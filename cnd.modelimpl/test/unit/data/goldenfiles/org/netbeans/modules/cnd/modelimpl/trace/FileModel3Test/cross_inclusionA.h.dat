@@ -1,0 +1,32 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["B",<ID>,line=3,col=9],offset=39,file=null'='["ClassBfromA",<ID>,line=3,col=11],offset=41,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE cross_inclusionA.h
+Includes:
+"cross_inclusionB.h" <RECURSIVE inclusion> [1:1/0-1:30/29]
+Macros:
+#define 'B' [3:1/31-3:22/52]
+CLASS A (A ) [5:1/54-6:2/66] lcurly=63 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+CLASS ClassAfromB (ClassAfromB ) [5:1/54-6:2/66] lcurly=63 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+
+========== Dumping model of PROJECT DummyProject
+CLASS A (A ) [5:1/54-6:2/66] lcurly=63 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+CLASS ClassAfromB (ClassAfromB ) [5:1/54-6:2/66] lcurly=63 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+CLASS ClassBfromA (ClassBfromA ) [5:1/54-6:2/66] lcurly=63 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+

@@ -1,0 +1,32 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug248661_2.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug248661_2 [1:1/0-11:2/219] SCOPE: bug248661_2.cpp
+    NAMESPACE DEFINITOIN blabla248661_2 [2:5/28-6:6/127] SCOPE: bug248661_2.cpp
+        ENUM MyEnum248661_2 [3:9/63-5:10/120] SCOPE: blabla248661_2 
+            VALUE248661_2
+    TYPEDEF type248661_2  [8:5/133-8:30/158] TYPE: int TEXT=int  [8:13/141-8:16/144] SCOPE: bug248661_2 
+    VARIABLE varOrFun [10:5/164-10:58/217]  TYPE: bug248661_2::type248661_2 TEXT=type248661_2  [10:5/164-10:17/176]  INIT: null  SCOPE: bug248661_2 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug248661_2 (bug248661_2) 
+    bug248661_2.cpp  [1:1/0-11:2/219]
+NAMESPACE bug248661_2 (bug248661_2) 
+    TYPEDEF type248661_2  [8:5/133-8:30/158] TYPE: int TEXT=int  [8:13/141-8:16/144] SCOPE: bug248661_2 
+    VARIABLE varOrFun [10:5/164-10:58/217]  TYPE: bug248661_2::type248661_2 TEXT=type248661_2  [10:5/164-10:17/176]  INIT: null  SCOPE: bug248661_2 
+    NAMESPACE DEFINITIONS for blabla248661_2 (bug248661_2::blabla248661_2) 
+        bug248661_2.cpp  [2:5/28-6:6/127]
+    NAMESPACE blabla248661_2 (bug248661_2::blabla248661_2) 
+        ENUM MyEnum248661_2 [3:9/63-5:10/120] SCOPE: blabla248661_2 
+            VALUE248661_2
+

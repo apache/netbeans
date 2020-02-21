@@ -1,0 +1,130 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug251329.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug251329 [1:1/0-24:2/513] SCOPE: bug251329.cpp
+    STRUCT AAA251329 (bug251329::AAA251329 ) [2:5/26-5:6/114] lcurly=43 SCOPE: bug251329 
+        BASE CLASSES:
+        MEMBERS:
+            TYPEDEF final  [3:9/53-3:27/71] TYPE: int TEXT=int  [3:17/61-3:20/64] SCOPE: AAA251329 
+            FUNCTION foo [4:9/80-4:37/108] MethodImpl SCOPE: AAA251329 
+                DEFINITION: null
+                SIGNATURE foo()
+                UNIQUE NAME F:bug251329::AAA251329::foo()
+                PARAMETERS:
+                RETURNS bug251329::AAA251329::final TEXT=final  [4:31/102-4:36/107]
+    STRUCT BBB251329 (bug251329::BBB251329 ) [7:5/124-9:6/198] lcurly=153 SCOPE: bug251329 
+        BASE CLASSES:
+            CLASS=bug251329::AAA251329 VISIBILITY==PUBLIC virtual==false text='AAA251329'
+        MEMBERS:
+            FUNCTION foo [8:9/163-8:38/192] MethodImpl SCOPE: BBB251329 
+                DEFINITION: null
+                SIGNATURE foo()
+                UNIQUE NAME F:bug251329::BBB251329::foo()
+                PARAMETERS:
+                RETURNS bug251329::AAA251329::final TEXT=final  [8:23/177-8:28/182]
+    STRUCT CCC251329 (bug251329::CCC251329 ) [11:5/205-14:6/299] lcurly=222 SCOPE: bug251329 
+        BASE CLASSES:
+        MEMBERS:
+            TYPEDEF override  [12:9/232-12:30/253] TYPE: int TEXT=int  [12:17/240-12:20/243] SCOPE: CCC251329 
+            FUNCTION foo [13:9/262-13:40/293] MethodImpl SCOPE: CCC251329 
+                DEFINITION: null
+                SIGNATURE foo()
+                UNIQUE NAME F:bug251329::CCC251329::foo()
+                PARAMETERS:
+                RETURNS bug251329::CCC251329::override TEXT=override  [13:31/284-13:39/292]
+    STRUCT DDD251329 (bug251329::DDD251329 ) [16:5/309-18:6/383] lcurly=338 SCOPE: bug251329 
+        BASE CLASSES:
+            CLASS=bug251329::CCC251329 VISIBILITY==PUBLIC virtual==false text='CCC251329'
+        MEMBERS:
+            FUNCTION foo [17:9/348-17:38/377] MethodImpl SCOPE: DDD251329 
+                DEFINITION: null
+                SIGNATURE foo()
+                UNIQUE NAME F:bug251329::DDD251329::foo()
+                PARAMETERS:
+                RETURNS bug251329::CCC251329::override TEXT=override  [17:23/362-17:31/370]
+    STRUCT EEE251329 (bug251329::EEE251329 ) [20:5/390-23:6/509] lcurly=407 SCOPE: bug251329 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION boo [21:9/417-21:41/449] MethodImpl SCOPE: EEE251329 
+                DEFINITION: null
+                SIGNATURE boo()
+                UNIQUE NAME F:bug251329::EEE251329::boo()
+                PARAMETERS:
+                RETURNS int TEXT=int  [21:31/439-21:34/442]
+            FUNCTION coo [22:9/458-22:54/503] MethodImpl SCOPE: EEE251329 
+                DEFINITION: null
+                SIGNATURE coo()
+                UNIQUE NAME F:bug251329::EEE251329::coo()
+                PARAMETERS:
+                RETURNS bug251329::AAA251329::final TEXT=AAA251329::final  [22:31/480-22:47/496]
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug251329 (bug251329) 
+    bug251329.cpp  [1:1/0-24:2/513]
+NAMESPACE bug251329 (bug251329) 
+    STRUCT AAA251329 (bug251329::AAA251329 ) [2:5/26-5:6/114] lcurly=43 SCOPE: bug251329 
+        BASE CLASSES:
+        MEMBERS:
+            TYPEDEF final  [3:9/53-3:27/71] TYPE: int TEXT=int  [3:17/61-3:20/64] SCOPE: AAA251329 
+            FUNCTION foo [4:9/80-4:37/108] MethodImpl SCOPE: AAA251329 
+                DEFINITION: null
+                SIGNATURE foo()
+                UNIQUE NAME F:bug251329::AAA251329::foo()
+                PARAMETERS:
+                RETURNS bug251329::AAA251329::final TEXT=final  [4:31/102-4:36/107]
+    STRUCT BBB251329 (bug251329::BBB251329 ) [7:5/124-9:6/198] lcurly=153 SCOPE: bug251329 
+        BASE CLASSES:
+            CLASS=bug251329::AAA251329 VISIBILITY==PUBLIC virtual==false text='AAA251329'
+        MEMBERS:
+            FUNCTION foo [8:9/163-8:38/192] MethodImpl SCOPE: BBB251329 
+                DEFINITION: null
+                SIGNATURE foo()
+                UNIQUE NAME F:bug251329::BBB251329::foo()
+                PARAMETERS:
+                RETURNS bug251329::AAA251329::final TEXT=final  [8:23/177-8:28/182]
+    STRUCT CCC251329 (bug251329::CCC251329 ) [11:5/205-14:6/299] lcurly=222 SCOPE: bug251329 
+        BASE CLASSES:
+        MEMBERS:
+            TYPEDEF override  [12:9/232-12:30/253] TYPE: int TEXT=int  [12:17/240-12:20/243] SCOPE: CCC251329 
+            FUNCTION foo [13:9/262-13:40/293] MethodImpl SCOPE: CCC251329 
+                DEFINITION: null
+                SIGNATURE foo()
+                UNIQUE NAME F:bug251329::CCC251329::foo()
+                PARAMETERS:
+                RETURNS bug251329::CCC251329::override TEXT=override  [13:31/284-13:39/292]
+    STRUCT DDD251329 (bug251329::DDD251329 ) [16:5/309-18:6/383] lcurly=338 SCOPE: bug251329 
+        BASE CLASSES:
+            CLASS=bug251329::CCC251329 VISIBILITY==PUBLIC virtual==false text='CCC251329'
+        MEMBERS:
+            FUNCTION foo [17:9/348-17:38/377] MethodImpl SCOPE: DDD251329 
+                DEFINITION: null
+                SIGNATURE foo()
+                UNIQUE NAME F:bug251329::DDD251329::foo()
+                PARAMETERS:
+                RETURNS bug251329::CCC251329::override TEXT=override  [17:23/362-17:31/370]
+    STRUCT EEE251329 (bug251329::EEE251329 ) [20:5/390-23:6/509] lcurly=407 SCOPE: bug251329 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION boo [21:9/417-21:41/449] MethodImpl SCOPE: EEE251329 
+                DEFINITION: null
+                SIGNATURE boo()
+                UNIQUE NAME F:bug251329::EEE251329::boo()
+                PARAMETERS:
+                RETURNS int TEXT=int  [21:31/439-21:34/442]
+            FUNCTION coo [22:9/458-22:54/503] MethodImpl SCOPE: EEE251329 
+                DEFINITION: null
+                SIGNATURE coo()
+                UNIQUE NAME F:bug251329::EEE251329::coo()
+                PARAMETERS:
+                RETURNS bug251329::AAA251329::final TEXT=AAA251329::final  [22:31/480-22:47/496]
+

@@ -1,0 +1,31 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 4):
+<U>#define '["FALSE",<ID>,line=6,col=9],offset=122,file=null'='["false",<ID>,line=6,col=15],offset=128,file=null'
+<U>#define '["TRUE",<ID>,line=5,col=9],offset=104,file=null'='["true",<ID>,line=5,col=14],offset=109,file=null'
+<U>#define '["__SUNPRO_CC",<ID>,line=2,col=9],offset=48,file=null'='["0x5120",<HEXADECIMALINT>,line=2,col=21],offset=60,file=null'
+<U>#define '["__cplusplus",<ID>,line=3,col=9],offset=75,file=null'='["199711L",<DECIMALINT>,line=3,col=21],offset=87,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE check.true.studio.cc
+Includes:
+    <no includes>
+Macros:
+#define 'FALSE' [6:1/114-6:20/133]
+#define 'TRUE' [5:1/96-5:18/113]
+#define '__SUNPRO_CC' [2:1/40-2:27/66]
+#define '__cplusplus' [3:1/67-3:28/94]
+VARIABLE _2_PARENS_visible [16:1/221-16:23/243]  TYPE: int TEXT=int  [16:1/221-16:4/224]  INIT: null  SCOPE: $Global$ 
+VARIABLE _2_visible [19:1/257-19:16/272]  TYPE: int TEXT=int  [19:1/257-19:4/260]  INIT: null  SCOPE: $Global$ 
+VARIABLE _1_PARENS_visible [23:1/289-23:23/311]  TYPE: int TEXT=int  [23:1/289-23:4/292]  INIT: null  SCOPE: $Global$ 
+VARIABLE _1_visible [26:1/325-26:16/340]  TYPE: int TEXT=int  [26:1/325-26:4/328]  INIT: null  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE _2_PARENS_visible [16:1/221-16:23/243]  TYPE: int TEXT=int  [16:1/221-16:4/224]  INIT: null  SCOPE: $Global$ 
+VARIABLE _2_visible [19:1/257-19:16/272]  TYPE: int TEXT=int  [19:1/257-19:4/260]  INIT: null  SCOPE: $Global$ 
+VARIABLE _1_PARENS_visible [23:1/289-23:23/311]  TYPE: int TEXT=int  [23:1/289-23:4/292]  INIT: null  SCOPE: $Global$ 
+VARIABLE _1_visible [26:1/325-26:16/340]  TYPE: int TEXT=int  [26:1/325-26:4/328]  INIT: null  SCOPE: $Global$ 
+

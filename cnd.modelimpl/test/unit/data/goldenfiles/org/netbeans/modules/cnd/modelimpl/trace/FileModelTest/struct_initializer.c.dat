@@ -1,0 +1,55 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE struct_initializer.c
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+STRUCT  ( ) [2:1/1-7:2/74] lcurly=21 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC src [4:5/27-4:13/35]  TYPE: int TEXT=int  [4:5/27-4:8/30]  INIT: null  SCOPE:  
+        FIELD PUBLIC p_dst [5:5/40-5:19/54]  TYPE: int[] TEXT=int[]  [5:5/40-5:8/43]  INIT: null  SCOPE:  
+        FIELD PUBLIC pf_blend [6:5/59-6:18/72]  TYPE: int TEXT=int  [6:5/59-6:8/62]  INIT: null  SCOPE:  
+VARIABLE p_blend_cfg [7:3/75-14:2/388]  TYPE: [] TEXT=p_blend_cfg [ ][]  [2:1/1-7:2/74]  INIT: text='{
+    { .src = 0, .p_dst = { 0, 0, 0 }, .pf_blend = 0 },
+    { .src = 0, .p_dst = { 0, 0, 0 }, .pf_blend = 0 },
+    { .src = 0, .p_dst = { 0, 0, 0 }, .pf_blend = 0 },
+    { .src = 0, .p_dst = { 0, 0, 0 }, .pf_blend = 0 },
+    { .src = 0, .p_dst = { 0, 0, 0 }, .pf_blend = 0 },
+    { 0, {0,}, 0 }
+}'  SCOPE: struct_initializer.c
+STRUCT  ( ) [16:1/391-19:2/435] lcurly=406 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC num [17:5/412-17:13/420]  TYPE: int TEXT=int  [17:5/412-17:8/415]  INIT: null  SCOPE:  
+        FIELD PUBLIC den [18:5/425-18:13/433]  TYPE: int TEXT=int  [18:5/425-18:8/428]  INIT: null  SCOPE:  
+TYPEDEF AVRational  [19:3/436-19:13/446] TYPE:  TEXT=typedef struct { int num ; int den ; } AVRational ;  [16:1/391-19:14/447] SCOPE: $Global$ 
+FUNCTION DEFINITION foo  [21:1/449-23:2/514] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [21:1/449-23:2/514]
+    PARAMETERS:
+    RETURNS void TEXT=void  [21:1/449-21:5/453]
+    STATEMENT COMPOUND  [21:12/460-23:2/514] SCOPE: foo 
+        STATEMENT DECLARATION  [22:9/470-22:43/504] SCOPE: Stmt  [21:12/460-23:2/514]
+            VARIABLE s [22:9/470-22:43/504]  TYPE: AVRational TEXT=AVRational  [22:9/470-22:19/480]  INIT: text='(AVRational){1, 2}'  SCOPE: Stmt  [21:12/460-23:2/514]
+
+========== Dumping model of PROJECT DummyProject
+TYPEDEF AVRational  [19:3/436-19:13/446] TYPE:  TEXT=typedef struct { int num ; int den ; } AVRational ;  [16:1/391-19:14/447] SCOPE: $Global$ 
+FUNCTION DEFINITION foo  [21:1/449-23:2/514] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [21:1/449-23:2/514]
+    PARAMETERS:
+    RETURNS void TEXT=void  [21:1/449-21:5/453]
+    STATEMENT COMPOUND  [21:12/460-23:2/514] SCOPE: foo 
+        STATEMENT DECLARATION  [22:9/470-22:43/504] SCOPE: Stmt  [21:12/460-23:2/514]
+            VARIABLE s [22:9/470-22:43/504]  TYPE: AVRational TEXT=AVRational  [22:9/470-22:19/480]  INIT: text='(AVRational){1, 2}'  SCOPE: Stmt  [21:12/460-23:2/514]
+

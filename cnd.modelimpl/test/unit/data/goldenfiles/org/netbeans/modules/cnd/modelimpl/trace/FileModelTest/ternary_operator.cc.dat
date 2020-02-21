@@ -1,0 +1,34 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE ternary_operator.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION foo  [2:1/1-4:2/39] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo(int)
+    UNIQUE NAME f:foo(int)
+    DECLARATION: foo  [2:1/1-4:2/39]
+    PARAMETERS:
+        i [2:9/9-2:14/14]  TYPE: int TEXT=int  [2:9/9-2:12/12]  INIT: null  SCOPE: foo 
+    RETURNS int TEXT=int  [2:1/1-2:4/4]
+    STATEMENT COMPOUND  [2:16/16-4:2/39] SCOPE: foo 
+        STATEMENT RETURN  [3:5/22-3:20/37] SCOPE: Stmt  [2:16/16-4:2/39] text: 'return i ? : 0;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION foo  [2:1/1-4:2/39] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo(int)
+    UNIQUE NAME f:foo(int)
+    DECLARATION: foo  [2:1/1-4:2/39]
+    PARAMETERS:
+        i [2:9/9-2:14/14]  TYPE: int TEXT=int  [2:9/9-2:12/12]  INIT: null  SCOPE: foo 
+    RETURNS int TEXT=int  [2:1/1-2:4/4]
+    STATEMENT COMPOUND  [2:16/16-4:2/39] SCOPE: foo 
+        STATEMENT RETURN  [3:5/22-3:20/37] SCOPE: Stmt  [2:16/16-4:2/39] text: 'return i ? : 0;'
+

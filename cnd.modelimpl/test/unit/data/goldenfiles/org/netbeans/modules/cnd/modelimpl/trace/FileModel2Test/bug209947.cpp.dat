@@ -1,0 +1,129 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug209947.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN DDD [1:1/0-3:2/33] SCOPE: bug209947.cpp
+    CLASS DDD (DDD::DDD ) [2:3/18-2:15/30] lcurly=28 SCOPE: DDD 
+        BASE CLASSES:
+        MEMBERS:
+NAMESPACE DEFINITOIN CCC [5:1/35-10:2/153] SCOPE: bug209947.cpp
+    CLASS CCC (CCC::CCC ) [6:3/53-6:15/65] lcurly=63 SCOPE: CCC 
+        BASE CLASSES:
+        MEMBERS:
+    FUNCTION func [7:3/69-7:18/84] FunctionImpl SCOPE: CCC 
+        DEFINITION: null
+        SIGNATURE func(CCC)
+        UNIQUE NAME F:CCC::func(CCC)
+        PARAMETERS:
+             [7:13/79-7:16/82]  TYPE: CCC::CCC TEXT=CCC  [7:13/79-7:16/82]  INIT: null  SCOPE: func 
+        RETURNS void TEXT=void  [7:3/69-7:7/73]
+    FUNCTION operator + [8:3/87-8:26/110] FunctionImpl SCOPE: CCC 
+        DEFINITION: null
+        SIGNATURE operator +(CCC,CCC)
+        UNIQUE NAME F:CCC::operator +(CCC,CCC)
+        PARAMETERS:
+             [8:17/101-8:20/104]  TYPE: CCC::CCC TEXT=CCC  [8:17/101-8:20/104]  INIT: null  SCOPE: operator + 
+             [8:21/105-8:24/108]  TYPE: CCC::CCC TEXT=CCC  [8:21/105-8:24/108]  INIT: null  SCOPE: operator + 
+        RETURNS CCC::CCC TEXT=CCC  [8:3/87-8:6/90]
+    FUNCTION operator + [9:3/113-9:41/151] FunctionImpl SCOPE: CCC 
+        DEFINITION: null
+        SIGNATURE operator +(DDD::DDD,DDD::DDD)
+        UNIQUE NAME F:CCC::operator +(DDD::DDD,DDD::DDD)
+        PARAMETERS:
+             [9:22/132-9:30/140]  TYPE: DDD::DDD TEXT=DDD::DDD  [9:22/132-9:30/140]  INIT: null  SCOPE: operator + 
+             [9:31/141-9:39/149]  TYPE: DDD::DDD TEXT=DDD::DDD  [9:31/141-9:39/149]  INIT: null  SCOPE: operator + 
+        RETURNS DDD::DDD TEXT=DDD::DDD  [9:3/113-9:11/121]
+CLASS AAA<class A> (AAA ) [12:1/155-20:2/237] lcurly=184 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION AAA [16:3/189-17:13/220] ConstructorImpl SCOPE: AAA 
+            DEFINITION: AAA  [22:1/240-25:5/306]
+            SIGNATURE AAA<class>(B)
+            UNIQUE NAME F:AAA::AAA<class>(B)
+            PARAMETERS:
+                b [17:8/215-17:11/218]  TYPE: AAA::AAA::B TEXT=B  [17:8/215-17:9/216]  INIT: null  SCOPE: AAA 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION AAA [19:4/228-19:10/234] ConstructorImpl SCOPE: AAA 
+            DEFINITION: AAA  [27:1/308-29:4/347]
+            SIGNATURE AAA()
+            UNIQUE NAME F:AAA::AAA()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+FUNCTION DEFINITION AAA  [22:1/240-25:5/306] ConstructorDefinitionImpl SCOPE: bug209947.cpp
+    SIGNATURE AAA<class>(B)
+    UNIQUE NAME f:AAA::AAA<class>(B)
+    DECLARATION: AAA  [16:3/189-17:13/220]
+    PARAMETERS:
+        b [24:16/297-24:19/300]  TYPE: AAA::AAA::B TEXT=B  [24:16/297-24:17/298]  INIT: null  SCOPE: AAA 
+    RETURNS <*no_classifier*> TEXT=  [null-null]
+    STATEMENT COMPOUND  [25:1/302-25:5/306] SCOPE: AAA 
+FUNCTION DEFINITION AAA  [27:1/308-29:4/347] ConstructorDefinitionImpl SCOPE: bug209947.cpp
+    SIGNATURE AAA()
+    UNIQUE NAME f:AAA::AAA()
+    DECLARATION: AAA  [19:4/228-19:10/234]
+    PARAMETERS:
+    RETURNS <*no_classifier*> TEXT=  [null-null]
+    STATEMENT COMPOUND  [29:1/344-29:4/347] SCOPE: AAA 
+
+========== Dumping model of PROJECT DummyProject
+CLASS AAA<class A> (AAA ) [12:1/155-20:2/237] lcurly=184 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION AAA [16:3/189-17:13/220] ConstructorImpl SCOPE: AAA 
+            DEFINITION: AAA  [22:1/240-25:5/306]
+            SIGNATURE AAA<class>(B)
+            UNIQUE NAME F:AAA::AAA<class>(B)
+            PARAMETERS:
+                b [17:8/215-17:11/218]  TYPE: AAA::AAA::B TEXT=B  [17:8/215-17:9/216]  INIT: null  SCOPE: AAA 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FUNCTION AAA [19:4/228-19:10/234] ConstructorImpl SCOPE: AAA 
+            DEFINITION: AAA  [27:1/308-29:4/347]
+            SIGNATURE AAA()
+            UNIQUE NAME F:AAA::AAA()
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+NAMESPACE DEFINITIONS for CCC (CCC) 
+    bug209947.cpp  [5:1/35-10:2/153]
+NAMESPACE CCC (CCC) 
+    CLASS CCC (CCC::CCC ) [6:3/53-6:15/65] lcurly=63 SCOPE: CCC 
+        BASE CLASSES:
+        MEMBERS:
+    FUNCTION func [7:3/69-7:18/84] FunctionImpl SCOPE: CCC 
+        DEFINITION: null
+        SIGNATURE func(CCC)
+        UNIQUE NAME F:CCC::func(CCC)
+        PARAMETERS:
+             [7:13/79-7:16/82]  TYPE: CCC::CCC TEXT=CCC  [7:13/79-7:16/82]  INIT: null  SCOPE: func 
+        RETURNS void TEXT=void  [7:3/69-7:7/73]
+    FUNCTION operator + [8:3/87-8:26/110] FunctionImpl SCOPE: CCC 
+        DEFINITION: null
+        SIGNATURE operator +(CCC,CCC)
+        UNIQUE NAME F:CCC::operator +(CCC,CCC)
+        PARAMETERS:
+             [8:17/101-8:20/104]  TYPE: CCC::CCC TEXT=CCC  [8:17/101-8:20/104]  INIT: null  SCOPE: operator + 
+             [8:21/105-8:24/108]  TYPE: CCC::CCC TEXT=CCC  [8:21/105-8:24/108]  INIT: null  SCOPE: operator + 
+        RETURNS CCC::CCC TEXT=CCC  [8:3/87-8:6/90]
+    FUNCTION operator + [9:3/113-9:41/151] FunctionImpl SCOPE: CCC 
+        DEFINITION: null
+        SIGNATURE operator +(DDD::DDD,DDD::DDD)
+        UNIQUE NAME F:CCC::operator +(DDD::DDD,DDD::DDD)
+        PARAMETERS:
+             [9:22/132-9:30/140]  TYPE: DDD::DDD TEXT=DDD::DDD  [9:22/132-9:30/140]  INIT: null  SCOPE: operator + 
+             [9:31/141-9:39/149]  TYPE: DDD::DDD TEXT=DDD::DDD  [9:31/141-9:39/149]  INIT: null  SCOPE: operator + 
+        RETURNS DDD::DDD TEXT=DDD::DDD  [9:3/113-9:11/121]
+NAMESPACE DEFINITIONS for DDD (DDD) 
+    bug209947.cpp  [1:1/0-3:2/33]
+NAMESPACE DDD (DDD) 
+    CLASS DDD (DDD::DDD ) [2:3/18-2:15/30] lcurly=28 SCOPE: DDD 
+        BASE CLASSES:
+        MEMBERS:
+

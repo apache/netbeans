@@ -1,0 +1,17 @@
+# Environment
+RM=rm
+CC=gcc
+
+# Include project Makefile
+include Makefile
+
+# Build Targets
+.build-conf: $(BUILD_SUBPROJECTS) dist/Debug/GNU-Solaris-x86/quote_1
+
+# Clean Targets
+.clean-conf:
+	-$(RM) -r build/Debug
+	-$(RM) -r dist/Debug/GNU-Solaris-x86
+
+.DONE:
+	echo "Done"

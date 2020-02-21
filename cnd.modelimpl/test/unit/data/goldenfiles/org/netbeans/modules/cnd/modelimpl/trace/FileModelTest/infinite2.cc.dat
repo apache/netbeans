@@ -1,0 +1,45 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE infinite2.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS Infinite2 (Infinite2 ) [1:1/0-4:2/52] lcurly=28 SCOPE: $Global$ 
+    BASE CLASSES:
+        CLASS=Infinite2 VISIBILITY==PRIVATE virtual==false text='Infinite2'
+    MEMBERS:
+        FUNCTION foo [2:5/34-2:16/45] MethodImpl SCOPE: Infinite2 
+            DEFINITION: foo  [6:1/58-9:2/98]
+            SIGNATURE foo()
+            UNIQUE NAME F:Infinite2::foo()
+            PARAMETERS:
+            RETURNS void TEXT=void  [2:5/34-2:9/38]
+FUNCTION DEFINITION foo  [6:1/58-9:2/98] FunctionDefinitionImpl SCOPE: infinite2.cc
+    SIGNATURE foo()
+    UNIQUE NAME f:Infinite2::foo()
+    DECLARATION: foo  [2:5/34-2:16/45]
+    PARAMETERS:
+    RETURNS void TEXT=void  [6:1/58-6:5/62]
+    STATEMENT COMPOUND  [6:23/80-9:2/98] SCOPE: foo 
+        STATEMENT DECLARATION  [7:5/86-7:9/90] SCOPE: Stmt  [6:23/80-9:2/98]
+            VARIABLE a [7:5/86-7:9/90]  TYPE: $unresolved$::C TEXT=C  [7:5/86-7:6/87]  INIT: null  SCOPE: Stmt  [6:23/80-9:2/98]
+
+========== Dumping model of PROJECT DummyProject
+CLASS Infinite2 (Infinite2 ) [1:1/0-4:2/52] lcurly=28 SCOPE: $Global$ 
+    BASE CLASSES:
+        CLASS=Infinite2 VISIBILITY==PRIVATE virtual==false text='Infinite2'
+    MEMBERS:
+        FUNCTION foo [2:5/34-2:16/45] MethodImpl SCOPE: Infinite2 
+            DEFINITION: foo  [6:1/58-9:2/98]
+            SIGNATURE foo()
+            UNIQUE NAME F:Infinite2::foo()
+            PARAMETERS:
+            RETURNS void TEXT=void  [2:5/34-2:9/38]
+

@@ -1,0 +1,198 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE explicit_specialization.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS SchoolStudentRelation (SchoolStudentRelation ) [1:1/0-19:2/975] lcurly=28 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        CLASS Row (SchoolStudentRelation::Row ) [3:4/41-8:5/226] lcurly=51 SCOPE: SchoolStudentRelation 
+            BASE CLASSES:
+            MEMBERS:
+                FIELD PUBLIC student [5:8/71-5:36/99]  TYPE: $unresolved$::litesql::Field TEXT=litesql::Field<int>  [5:8/71-5:27/90]  INIT: null  SCOPE: Row 
+                FIELD PUBLIC school [6:8/107-6:35/134]  TYPE: $unresolved$::litesql::Field TEXT=litesql::Field<int>  [6:8/107-6:27/126]  INIT: null  SCOPE: Row 
+                FUNCTION Row [7:8/142-7:87/221] ConstructorImpl SCOPE: Row 
+                    DEFINITION: null
+                    SIGNATURE Row(const litesql::Database&,const litesql::Record&)
+                    UNIQUE NAME F:SchoolStudentRelation::Row::Row(const litesql::Database&,const litesql::Record&)
+                    PARAMETERS:
+                        db [7:12/146-7:39/173]  TYPE: const &$unresolved$::litesql::Database TEXT=const litesql::Database&  [7:12/146-7:36/170]  INIT: null  SCOPE: Row 
+                        rec [7:41/175-7:85/219]  TYPE: const &$unresolved$::litesql::Record TEXT=const litesql::Record&  [7:41/175-7:63/197]  INIT: text='litesql::Record()'  SCOPE: Row 
+                    RETURNS <*no_classifier*> TEXT=  [null-null]
+        FIELD PUBLIC static table__ [9:4/231-9:37/264]  TYPE: const $unresolved$::std::string TEXT=const std::string  [9:4/231-9:28/255]  INIT: null  SCOPE: SchoolStudentRelation 
+        FIELD PUBLIC static School [10:4/268-10:43/307]  TYPE: const $unresolved$::litesql::FieldType TEXT=const litesql::FieldType  [10:4/268-10:35/299]  INIT: null  SCOPE: SchoolStudentRelation 
+        FIELD PUBLIC static Student [11:4/311-11:44/351]  TYPE: const $unresolved$::litesql::FieldType TEXT=const litesql::FieldType  [11:4/311-11:35/342]  INIT: null  SCOPE: SchoolStudentRelation 
+        FUNCTION link [12:4/355-12:105/456] MethodImpl SCOPE: SchoolStudentRelation 
+            DEFINITION: null
+            SIGNATURE link(const litesql::Database&,const example::School&,const example::Student&)
+            UNIQUE NAME F:SchoolStudentRelation::link(const litesql::Database&,const example::School&,const example::Student&)
+            PARAMETERS:
+                db [12:21/372-12:48/399]  TYPE: const &$unresolved$::litesql::Database TEXT=const litesql::Database&  [12:21/372-12:45/396]  INIT: null  SCOPE: link 
+                o0 [12:50/401-12:75/426]  TYPE: const &$unresolved$::example::School TEXT=const example::School&  [12:50/401-12:72/423]  INIT: null  SCOPE: link 
+                o1 [12:77/428-12:103/454]  TYPE: const &$unresolved$::example::Student TEXT=const example::Student&  [12:77/428-12:100/451]  INIT: null  SCOPE: link 
+            RETURNS void TEXT=void  [12:11/362-12:15/366]
+        FUNCTION unlink [13:4/460-13:107/563] MethodImpl SCOPE: SchoolStudentRelation 
+            DEFINITION: null
+            SIGNATURE unlink(const litesql::Database&,const example::School&,const example::Student&)
+            UNIQUE NAME F:SchoolStudentRelation::unlink(const litesql::Database&,const example::School&,const example::Student&)
+            PARAMETERS:
+                db [13:23/479-13:50/506]  TYPE: const &$unresolved$::litesql::Database TEXT=const litesql::Database&  [13:23/479-13:47/503]  INIT: null  SCOPE: unlink 
+                o0 [13:52/508-13:77/533]  TYPE: const &$unresolved$::example::School TEXT=const example::School&  [13:52/508-13:74/530]  INIT: null  SCOPE: unlink 
+                o1 [13:79/535-13:105/561]  TYPE: const &$unresolved$::example::Student TEXT=const example::Student&  [13:79/535-13:102/558]  INIT: null  SCOPE: unlink 
+            RETURNS void TEXT=void  [13:11/467-13:15/471]
+        FUNCTION del [14:4/567-14:92/655] MethodImpl SCOPE: SchoolStudentRelation 
+            DEFINITION: null
+            SIGNATURE del(const litesql::Database&,const litesql::Expr&)
+            UNIQUE NAME F:SchoolStudentRelation::del(const litesql::Database&,const litesql::Expr&)
+            PARAMETERS:
+                db [14:20/583-14:47/610]  TYPE: const &$unresolved$::litesql::Database TEXT=const litesql::Database&  [14:20/583-14:44/607]  INIT: null  SCOPE: del 
+                expr [14:49/612-14:90/653]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [14:49/612-14:69/632]  INIT: text='litesql::Expr()'  SCOPE: del 
+            RETURNS void TEXT=void  [14:11/574-14:15/578]
+        FUNCTION getRows [15:4/659-15:139/794] MethodImpl SCOPE: SchoolStudentRelation 
+            DEFINITION: null
+            SIGNATURE getRows(const litesql::Database&,const litesql::Expr&)
+            UNIQUE NAME F:SchoolStudentRelation::getRows(const litesql::Database&,const litesql::Expr&)
+            PARAMETERS:
+                db [15:67/722-15:94/749]  TYPE: const &$unresolved$::litesql::Database TEXT=const litesql::Database&  [15:67/722-15:91/746]  INIT: null  SCOPE: getRows 
+                expr [15:96/751-15:137/792]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [15:96/751-15:116/771]  INIT: text='litesql::Expr()'  SCOPE: getRows 
+            RETURNS $unresolved$::litesql::DataSource TEXT=litesql::DataSource<SchoolStudentRelation::Row>  [15:11/666-15:58/713]
+        FUNCTION get [16:4/798-16:175/969] MethodImpl SCOPE: SchoolStudentRelation 
+            DEFINITION: null
+            SIGNATURE get<class>(const litesql::Database&,const litesql::Expr&,const litesql::Expr&)
+            UNIQUE NAME F:SchoolStudentRelation::get<class>(const litesql::Database&,const litesql::Expr&,const litesql::Expr&)
+            PARAMETERS:
+                db [16:57/851-16:84/878]  TYPE: const &$unresolved$::litesql::Database TEXT=const litesql::Database&  [16:57/851-16:81/875]  INIT: null  SCOPE: get 
+                expr [16:86/880-16:127/921]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [16:86/880-16:106/900]  INIT: text='litesql::Expr()'  SCOPE: get 
+                srcExpr [16:129/923-16:173/967]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [16:129/923-16:149/943]  INIT: text='litesql::Expr()'  SCOPE: get 
+            RETURNS $unresolved$::litesql::DataSource TEXT=litesql::DataSource<T>  [16:30/824-16:52/846]
+FUNCTION DEFINITION get  [21:1/978-27:2/1324] FunctionDefinitionImpl SCOPE: explicit_specialization.cc
+    SIGNATURE get(const litesql::Database&,const litesql::Expr&,const litesql::Expr&)
+    UNIQUE NAME f:SchoolStudentRelation::get(const litesql::Database&,const litesql::Expr&,const litesql::Expr&)
+    DECLARATION: get  [16:4/798-16:175/969]
+    PARAMETERS:
+        db [21:77/1054-21:104/1081]  TYPE: const &$unresolved$::litesql::Database TEXT=const litesql::Database&  [21:77/1054-21:101/1078]  INIT: null  SCOPE: get 
+        expr [21:106/1083-21:131/1108]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [21:106/1083-21:126/1103]  INIT: null  SCOPE: get 
+        srcExpr [21:133/1110-21:161/1138]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [21:133/1110-21:153/1130]  INIT: null  SCOPE: get 
+    RETURNS $unresolved$::litesql::DataSource TEXT=litesql::DataSource<example::School>  [21:13/990-21:49/1026]
+    STATEMENT COMPOUND  [21:163/1140-27:2/1324] SCOPE: get 
+        STATEMENT DECLARATION  [22:4/1145-22:20/1161] SCOPE: Stmt  [21:163/1140-27:2/1324]
+            VARIABLE sel [22:4/1145-22:20/1161]  TYPE: $unresolved$::SelectQuery TEXT=SelectQuery  [22:4/1145-22:15/1156]  INIT: null  SCOPE: Stmt  [21:163/1140-27:2/1324]
+        STATEMENT EXPRESSION  [23:4/1165-23:23/1184] SCOPE: Stmt  [21:163/1140-27:2/1324] text: 'sel.source(table__)'
+        STATEMENT EXPRESSION  [24:4/1189-24:33/1218] SCOPE: Stmt  [21:163/1140-27:2/1324] text: 'sel.result(School.fullName())'
+        STATEMENT EXPRESSION  [25:4/1223-25:22/1241] SCOPE: Stmt  [21:163/1140-27:2/1324] text: 'sel.where(srcExpr)'
+        STATEMENT RETURN  [26:4/1246-26:80/1322] SCOPE: Stmt  [21:163/1140-27:2/1324] text: 'return DataSource<example::School>(db, example::School::Id.in(sel) && expr);'
+FUNCTION DEFINITION get  [28:1/1325-34:2/1675] FunctionDefinitionImpl SCOPE: explicit_specialization.cc
+    SIGNATURE get(const litesql::Database&,const litesql::Expr&,const litesql::Expr&)
+    UNIQUE NAME f:SchoolStudentRelation::get(const litesql::Database&,const litesql::Expr&,const litesql::Expr&)
+    DECLARATION: get  [16:4/798-16:175/969]
+    PARAMETERS:
+        db [28:78/1402-28:105/1429]  TYPE: const &$unresolved$::litesql::Database TEXT=const litesql::Database&  [28:78/1402-28:102/1426]  INIT: null  SCOPE: get 
+        expr [28:107/1431-28:132/1456]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [28:107/1431-28:127/1451]  INIT: null  SCOPE: get 
+        srcExpr [28:134/1458-28:162/1486]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [28:134/1458-28:154/1478]  INIT: null  SCOPE: get 
+    RETURNS $unresolved$::litesql::DataSource TEXT=litesql::DataSource<example::Student>  [28:13/1337-28:50/1374]
+    STATEMENT COMPOUND  [28:164/1488-34:2/1675] SCOPE: get 
+        STATEMENT DECLARATION  [29:4/1493-29:20/1509] SCOPE: Stmt  [28:164/1488-34:2/1675]
+            VARIABLE sel [29:4/1493-29:20/1509]  TYPE: $unresolved$::SelectQuery TEXT=SelectQuery  [29:4/1493-29:15/1504]  INIT: null  SCOPE: Stmt  [28:164/1488-34:2/1675]
+        STATEMENT EXPRESSION  [30:4/1513-30:23/1532] SCOPE: Stmt  [28:164/1488-34:2/1675] text: 'sel.source(table__)'
+        STATEMENT EXPRESSION  [31:4/1537-31:34/1567] SCOPE: Stmt  [28:164/1488-34:2/1675] text: 'sel.result(Student.fullName())'
+        STATEMENT EXPRESSION  [32:4/1572-32:22/1590] SCOPE: Stmt  [28:164/1488-34:2/1675] text: 'sel.where(srcExpr)'
+        STATEMENT RETURN  [33:4/1595-33:82/1673] SCOPE: Stmt  [28:164/1488-34:2/1675] text: 'return DataSource<example::Student>(db, example::Student::Id.in(sel) && expr);'
+FUNCTION DEFINITION get  [36:1/1677-38:2/1924] FunctionDefinitionImpl SCOPE: explicit_specialization.cc
+    SIGNATURE get(const litesql::Expr&,const litesql::Expr&)
+    UNIQUE NAME f:Student::SchoolHandle::get(const litesql::Expr&,const litesql::Expr&)
+    DECLARATION: null
+    PARAMETERS:
+        expr [36:56/1732-36:81/1757]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [36:56/1732-36:76/1752]  INIT: null  SCOPE: get 
+        srcExpr [36:83/1759-36:111/1787]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [36:83/1759-36:103/1779]  INIT: null  SCOPE: get 
+    RETURNS $unresolved$::litesql::DataSource TEXT=litesql::DataSource<School>  [36:1/1677-36:28/1704]
+    STATEMENT COMPOUND  [36:113/1789-38:2/1924] SCOPE: get 
+        STATEMENT RETURN  [37:4/1794-37:132/1922] SCOPE: Stmt  [36:113/1789-38:2/1924] text: 'return SchoolStudentRelation::get<School>(owner->getDatabase(), expr, (SchoolStudentRelation::Student == owner->id) && srcExpr);'
+
+========== Dumping model of PROJECT DummyProject
+CLASS SchoolStudentRelation (SchoolStudentRelation ) [1:1/0-19:2/975] lcurly=28 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        CLASS Row (SchoolStudentRelation::Row ) [3:4/41-8:5/226] lcurly=51 SCOPE: SchoolStudentRelation 
+            BASE CLASSES:
+            MEMBERS:
+                FIELD PUBLIC student [5:8/71-5:36/99]  TYPE: $unresolved$::litesql::Field TEXT=litesql::Field<int>  [5:8/71-5:27/90]  INIT: null  SCOPE: Row 
+                FIELD PUBLIC school [6:8/107-6:35/134]  TYPE: $unresolved$::litesql::Field TEXT=litesql::Field<int>  [6:8/107-6:27/126]  INIT: null  SCOPE: Row 
+                FUNCTION Row [7:8/142-7:87/221] ConstructorImpl SCOPE: Row 
+                    DEFINITION: null
+                    SIGNATURE Row(const litesql::Database&,const litesql::Record&)
+                    UNIQUE NAME F:SchoolStudentRelation::Row::Row(const litesql::Database&,const litesql::Record&)
+                    PARAMETERS:
+                        db [7:12/146-7:39/173]  TYPE: const &$unresolved$::litesql::Database TEXT=const litesql::Database&  [7:12/146-7:36/170]  INIT: null  SCOPE: Row 
+                        rec [7:41/175-7:85/219]  TYPE: const &$unresolved$::litesql::Record TEXT=const litesql::Record&  [7:41/175-7:63/197]  INIT: text='litesql::Record()'  SCOPE: Row 
+                    RETURNS <*no_classifier*> TEXT=  [null-null]
+        FIELD PUBLIC static table__ [9:4/231-9:37/264]  TYPE: const $unresolved$::std::string TEXT=const std::string  [9:4/231-9:28/255]  INIT: null  SCOPE: SchoolStudentRelation 
+        FIELD PUBLIC static School [10:4/268-10:43/307]  TYPE: const $unresolved$::litesql::FieldType TEXT=const litesql::FieldType  [10:4/268-10:35/299]  INIT: null  SCOPE: SchoolStudentRelation 
+        FIELD PUBLIC static Student [11:4/311-11:44/351]  TYPE: const $unresolved$::litesql::FieldType TEXT=const litesql::FieldType  [11:4/311-11:35/342]  INIT: null  SCOPE: SchoolStudentRelation 
+        FUNCTION link [12:4/355-12:105/456] MethodImpl SCOPE: SchoolStudentRelation 
+            DEFINITION: null
+            SIGNATURE link(const litesql::Database&,const example::School&,const example::Student&)
+            UNIQUE NAME F:SchoolStudentRelation::link(const litesql::Database&,const example::School&,const example::Student&)
+            PARAMETERS:
+                db [12:21/372-12:48/399]  TYPE: const &$unresolved$::litesql::Database TEXT=const litesql::Database&  [12:21/372-12:45/396]  INIT: null  SCOPE: link 
+                o0 [12:50/401-12:75/426]  TYPE: const &$unresolved$::example::School TEXT=const example::School&  [12:50/401-12:72/423]  INIT: null  SCOPE: link 
+                o1 [12:77/428-12:103/454]  TYPE: const &$unresolved$::example::Student TEXT=const example::Student&  [12:77/428-12:100/451]  INIT: null  SCOPE: link 
+            RETURNS void TEXT=void  [12:11/362-12:15/366]
+        FUNCTION unlink [13:4/460-13:107/563] MethodImpl SCOPE: SchoolStudentRelation 
+            DEFINITION: null
+            SIGNATURE unlink(const litesql::Database&,const example::School&,const example::Student&)
+            UNIQUE NAME F:SchoolStudentRelation::unlink(const litesql::Database&,const example::School&,const example::Student&)
+            PARAMETERS:
+                db [13:23/479-13:50/506]  TYPE: const &$unresolved$::litesql::Database TEXT=const litesql::Database&  [13:23/479-13:47/503]  INIT: null  SCOPE: unlink 
+                o0 [13:52/508-13:77/533]  TYPE: const &$unresolved$::example::School TEXT=const example::School&  [13:52/508-13:74/530]  INIT: null  SCOPE: unlink 
+                o1 [13:79/535-13:105/561]  TYPE: const &$unresolved$::example::Student TEXT=const example::Student&  [13:79/535-13:102/558]  INIT: null  SCOPE: unlink 
+            RETURNS void TEXT=void  [13:11/467-13:15/471]
+        FUNCTION del [14:4/567-14:92/655] MethodImpl SCOPE: SchoolStudentRelation 
+            DEFINITION: null
+            SIGNATURE del(const litesql::Database&,const litesql::Expr&)
+            UNIQUE NAME F:SchoolStudentRelation::del(const litesql::Database&,const litesql::Expr&)
+            PARAMETERS:
+                db [14:20/583-14:47/610]  TYPE: const &$unresolved$::litesql::Database TEXT=const litesql::Database&  [14:20/583-14:44/607]  INIT: null  SCOPE: del 
+                expr [14:49/612-14:90/653]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [14:49/612-14:69/632]  INIT: text='litesql::Expr()'  SCOPE: del 
+            RETURNS void TEXT=void  [14:11/574-14:15/578]
+        FUNCTION getRows [15:4/659-15:139/794] MethodImpl SCOPE: SchoolStudentRelation 
+            DEFINITION: null
+            SIGNATURE getRows(const litesql::Database&,const litesql::Expr&)
+            UNIQUE NAME F:SchoolStudentRelation::getRows(const litesql::Database&,const litesql::Expr&)
+            PARAMETERS:
+                db [15:67/722-15:94/749]  TYPE: const &$unresolved$::litesql::Database TEXT=const litesql::Database&  [15:67/722-15:91/746]  INIT: null  SCOPE: getRows 
+                expr [15:96/751-15:137/792]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [15:96/751-15:116/771]  INIT: text='litesql::Expr()'  SCOPE: getRows 
+            RETURNS $unresolved$::litesql::DataSource TEXT=litesql::DataSource<SchoolStudentRelation::Row>  [15:11/666-15:58/713]
+        FUNCTION get [16:4/798-16:175/969] MethodImpl SCOPE: SchoolStudentRelation 
+            DEFINITION: null
+            SIGNATURE get<class>(const litesql::Database&,const litesql::Expr&,const litesql::Expr&)
+            UNIQUE NAME F:SchoolStudentRelation::get<class>(const litesql::Database&,const litesql::Expr&,const litesql::Expr&)
+            PARAMETERS:
+                db [16:57/851-16:84/878]  TYPE: const &$unresolved$::litesql::Database TEXT=const litesql::Database&  [16:57/851-16:81/875]  INIT: null  SCOPE: get 
+                expr [16:86/880-16:127/921]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [16:86/880-16:106/900]  INIT: text='litesql::Expr()'  SCOPE: get 
+                srcExpr [16:129/923-16:173/967]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [16:129/923-16:149/943]  INIT: text='litesql::Expr()'  SCOPE: get 
+            RETURNS $unresolved$::litesql::DataSource TEXT=litesql::DataSource<T>  [16:30/824-16:52/846]
+FUNCTION DEFINITION get  [28:1/1325-34:2/1675] FunctionDefinitionImpl SCOPE: explicit_specialization.cc
+    SIGNATURE get(const litesql::Database&,const litesql::Expr&,const litesql::Expr&)
+    UNIQUE NAME f:SchoolStudentRelation::get(const litesql::Database&,const litesql::Expr&,const litesql::Expr&)
+    DECLARATION: get  [16:4/798-16:175/969]
+    PARAMETERS:
+        db [28:78/1402-28:105/1429]  TYPE: const &$unresolved$::litesql::Database TEXT=const litesql::Database&  [28:78/1402-28:102/1426]  INIT: null  SCOPE: get 
+        expr [28:107/1431-28:132/1456]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [28:107/1431-28:127/1451]  INIT: null  SCOPE: get 
+        srcExpr [28:134/1458-28:162/1486]  TYPE: const &$unresolved$::litesql::Expr TEXT=const litesql::Expr&  [28:134/1458-28:154/1478]  INIT: null  SCOPE: get 
+    RETURNS $unresolved$::litesql::DataSource TEXT=litesql::DataSource<example::Student>  [28:13/1337-28:50/1374]
+    STATEMENT COMPOUND  [28:164/1488-34:2/1675] SCOPE: get 
+        STATEMENT DECLARATION  [29:4/1493-29:20/1509] SCOPE: Stmt  [28:164/1488-34:2/1675]
+            VARIABLE sel [29:4/1493-29:20/1509]  TYPE: $unresolved$::SelectQuery TEXT=SelectQuery  [29:4/1493-29:15/1504]  INIT: null  SCOPE: Stmt  [28:164/1488-34:2/1675]
+        STATEMENT EXPRESSION  [30:4/1513-30:23/1532] SCOPE: Stmt  [28:164/1488-34:2/1675] text: 'sel.source(table__)'
+        STATEMENT EXPRESSION  [31:4/1537-31:34/1567] SCOPE: Stmt  [28:164/1488-34:2/1675] text: 'sel.result(Student.fullName())'
+        STATEMENT EXPRESSION  [32:4/1572-32:22/1590] SCOPE: Stmt  [28:164/1488-34:2/1675] text: 'sel.where(srcExpr)'
+        STATEMENT RETURN  [33:4/1595-33:82/1673] SCOPE: Stmt  [28:164/1488-34:2/1675] text: 'return DataSource<example::Student>(db, example::Student::Id.in(sel) && expr);'
+

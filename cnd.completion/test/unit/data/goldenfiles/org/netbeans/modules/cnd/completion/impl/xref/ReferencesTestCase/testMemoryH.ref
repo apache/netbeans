@@ -1,0 +1,138 @@
+'MEMORY_H', tokenID=preprocessor_identifier, offset=2113 [42:9/2113-42:17/2121]
+--OWNER:
+    null
+--RESOLVED TO:
+    MACROS #define 'MEMORY_H' [43:1/2122-43:17/2138]
+==============================================================
+'MEMORY_H', tokenID=preprocessor_identifier, offset=2130 [43:9/2130-43:17/2138]
+--OWNER:
+    MACROS #define 'MEMORY_H' [43:1/2122-43:17/2138]
+--RESOLVED TO:
+    MACROS #define 'MEMORY_H' [43:1/2122-43:17/2138]
+==============================================================
+'include', tokenID=preprocessor_include, offset=2140 [44:2/2140-44:9/2147]
+--OWNER:
+    INCLUDE "module.h" [44:1/2139-44:20/2158]
+--RESOLVED TO:
+    INCLUDE "module.h" [44:1/2139-44:20/2158]
+==============================================================
+'"module.h"', tokenID=preprocessor_user_include, offset=2148 [44:10/2148-44:20/2158]
+--OWNER:
+    INCLUDE "module.h" [44:1/2139-44:20/2158]
+--RESOLVED TO:
+    FILE ReferencesTestCase/module.h
+==============================================================
+'Memory', tokenID=identifier, offset=2166 [46:7/2166-46:13/2172]
+--OWNER:
+    CLASS Memory [46:1/2160-57:2/2512] ReferencesTestCase/memory.h
+--RESOLVED TO:
+    CLASS Memory [46:1/2160-57:2/2512] ReferencesTestCase/memory.h
+==============================================================
+'Module', tokenID=identifier, offset=2182 [46:23/2182-46:29/2188]
+--OWNER:
+     [46:16/2175-46:29/2188] ReferencesTestCase/memory.h
+--RESOLVED TO:
+    CLASS Module [51:1/2205-92:2/3420] ReferencesTestCase/module.h
+==============================================================
+'MemoryType', tokenID=identifier, offset=2208 [48:10/2208-48:20/2218]
+--OWNER:
+    ENUM Memory::MemoryType [48:5/2203-48:48/2246] ReferencesTestCase/memory.h
+--RESOLVED TO:
+    ENUM Memory::MemoryType [48:5/2203-48:48/2246] ReferencesTestCase/memory.h
+==============================================================
+'STANDARD', tokenID=identifier, offset=2221 [48:23/2221-48:31/2229]
+--OWNER:
+    ENUMERATOR Memory::MemoryType::STANDARD [48:23/2221-48:31/2229] ReferencesTestCase/memory.h
+--RESOLVED TO:
+    ENUMERATOR Memory::MemoryType::STANDARD [48:23/2221-48:31/2229] ReferencesTestCase/memory.h
+==============================================================
+'FAST', tokenID=identifier, offset=2232 [48:34/2232-48:38/2236]
+--OWNER:
+    ENUMERATOR Memory::MemoryType::FAST [48:34/2232-48:38/2236] ReferencesTestCase/memory.h
+--RESOLVED TO:
+    ENUMERATOR Memory::MemoryType::FAST [48:34/2232-48:38/2236] ReferencesTestCase/memory.h
+==============================================================
+'ULTRA', tokenID=identifier, offset=2239 [48:41/2239-48:46/2244]
+--OWNER:
+    ENUMERATOR Memory::MemoryType::ULTRA [48:41/2239-48:46/2244] ReferencesTestCase/memory.h
+--RESOLVED TO:
+    ENUMERATOR Memory::MemoryType::ULTRA [48:41/2239-48:46/2244] ReferencesTestCase/memory.h
+==============================================================
+'MemoryCategory', tokenID=identifier, offset=2257 [49:10/2257-49:24/2271]
+--OWNER:
+    ENUM Memory::MemoryCategory [49:5/2252-49:49/2296] ReferencesTestCase/memory.h
+--RESOLVED TO:
+    ENUM Memory::MemoryCategory [49:5/2252-49:49/2296] ReferencesTestCase/memory.h
+==============================================================
+'SMALL', tokenID=identifier, offset=2274 [49:27/2274-49:32/2279]
+--OWNER:
+    ENUMERATOR Memory::MemoryCategory::SMALL [49:27/2274-49:32/2279] ReferencesTestCase/memory.h
+--RESOLVED TO:
+    ENUMERATOR Memory::MemoryCategory::SMALL [49:27/2274-49:32/2279] ReferencesTestCase/memory.h
+==============================================================
+'MEDIUM', tokenID=identifier, offset=2282 [49:35/2282-49:41/2288]
+--OWNER:
+    ENUMERATOR Memory::MemoryCategory::MEDIUM [49:35/2282-49:41/2288] ReferencesTestCase/memory.h
+--RESOLVED TO:
+    ENUMERATOR Memory::MemoryCategory::MEDIUM [49:35/2282-49:41/2288] ReferencesTestCase/memory.h
+==============================================================
+'BIG', tokenID=identifier, offset=2291 [49:44/2291-49:47/2294]
+--OWNER:
+    ENUMERATOR Memory::MemoryCategory::BIG [49:44/2291-49:47/2294] ReferencesTestCase/memory.h
+--RESOLVED TO:
+    ENUMERATOR Memory::MemoryCategory::BIG [49:44/2291-49:47/2294] ReferencesTestCase/memory.h
+==============================================================
+'Memory', tokenID=identifier, offset=2308 [51:5/2308-51:11/2314]
+--OWNER:
+    FUNCTION Memory(int,int,int)  [51:5/2308-51:68/2371] ReferencesTestCase/memory.h
+--RESOLVED TO:
+    FUNCTION Memory(int,int,int)  [51:5/2308-51:68/2371] ReferencesTestCase/memory.h
+==============================================================
+'type', tokenID=identifier, offset=2319 [51:16/2319-51:20/2323]
+--OWNER:
+    VARIABLE type [51:12/2315-51:31/2334] ReferencesTestCase/memory.h  TYPE: int TEXT=int  [51:12/2315-51:15/2318]  INIT: text='STANDARD'  SCOPE: Memory 
+--RESOLVED TO:
+    VARIABLE type [51:12/2315-51:31/2334] ReferencesTestCase/memory.h  TYPE: int TEXT=int  [51:12/2315-51:15/2318]  INIT: text='STANDARD'  SCOPE: Memory 
+==============================================================
+'STANDARD', tokenID=identifier, offset=2326 [51:23/2326-51:31/2334]
+--OWNER:
+    VARIABLE type [51:12/2315-51:31/2334] ReferencesTestCase/memory.h  TYPE: int TEXT=int  [51:12/2315-51:15/2318]  INIT: text='STANDARD'  SCOPE: Memory 
+--RESOLVED TO:
+    ENUMERATOR Memory::MemoryType::STANDARD [48:23/2221-48:31/2229] ReferencesTestCase/memory.h
+==============================================================
+'size', tokenID=identifier, offset=2340 [51:37/2340-51:41/2344]
+--OWNER:
+    VARIABLE size [51:33/2336-51:50/2353] ReferencesTestCase/memory.h  TYPE: int TEXT=int  [51:33/2336-51:36/2339]  INIT: text='MEDIUM'  SCOPE: Memory 
+--RESOLVED TO:
+    VARIABLE size [51:33/2336-51:50/2353] ReferencesTestCase/memory.h  TYPE: int TEXT=int  [51:33/2336-51:36/2339]  INIT: text='MEDIUM'  SCOPE: Memory 
+==============================================================
+'MEDIUM', tokenID=identifier, offset=2347 [51:44/2347-51:50/2353]
+--OWNER:
+    VARIABLE size [51:33/2336-51:50/2353] ReferencesTestCase/memory.h  TYPE: int TEXT=int  [51:33/2336-51:36/2339]  INIT: text='MEDIUM'  SCOPE: Memory 
+--RESOLVED TO:
+    ENUMERATOR Memory::MemoryCategory::MEDIUM [49:35/2282-49:41/2288] ReferencesTestCase/memory.h
+==============================================================
+'units', tokenID=identifier, offset=2360 [51:57/2360-51:62/2365]
+--OWNER:
+    VARIABLE units [51:53/2356-51:66/2369] ReferencesTestCase/memory.h  TYPE: int TEXT=int  [51:53/2356-51:56/2359]  INIT: text='1'  SCOPE: Memory 
+--RESOLVED TO:
+    VARIABLE units [51:53/2356-51:66/2369] ReferencesTestCase/memory.h  TYPE: int TEXT=int  [51:53/2356-51:56/2359]  INIT: text='1'  SCOPE: Memory 
+==============================================================
+'GetType', tokenID=identifier, offset=2396 [52:25/2396-52:32/2403]
+--OWNER:
+    FUNCTION GetType() const  [52:5/2376-52:41/2412] ReferencesTestCase/memory.h
+--RESOLVED TO:
+    FUNCTION GetType() const  [52:5/2376-52:41/2412] ReferencesTestCase/memory.h
+==============================================================
+'GetCategory', tokenID=identifier, offset=2437 [53:25/2437-53:36/2448]
+--OWNER:
+    FUNCTION GetCategory() const  [53:5/2417-53:45/2457] ReferencesTestCase/memory.h
+--RESOLVED TO:
+    FUNCTION GetCategory() const  [53:5/2417-53:45/2457] ReferencesTestCase/memory.h
+==============================================================
+'ComputeSupportMetric', tokenID=identifier, offset=2487 [56:10/2487-56:30/2507]
+--OWNER:
+    FUNCTION ComputeSupportMetric()  [56:5/2482-56:33/2510] ReferencesTestCase/memory.h
+--RESOLVED TO:
+    FUNCTION ComputeSupportMetric()  [56:5/2482-56:33/2510] ReferencesTestCase/memory.h
+==============================================================

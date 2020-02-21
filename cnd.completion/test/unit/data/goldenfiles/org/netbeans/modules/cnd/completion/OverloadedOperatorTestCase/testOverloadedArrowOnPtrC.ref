@@ -1,0 +1,5 @@
+fieldCA A*	$	    pC->fieldCA
+fieldCB B*	$	    pC->fieldCB
+coo() void	$	    pC->coo()
+operator ->() B*	$	    pC->operator ->()
+operator [](int ind) B	$	    pC->operator []()

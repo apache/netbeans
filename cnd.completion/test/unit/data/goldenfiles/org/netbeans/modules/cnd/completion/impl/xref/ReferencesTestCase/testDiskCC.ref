@@ -1,0 +1,192 @@
+'include', tokenID=preprocessor_include, offset=2145 [44:2/2145-44:9/2152]
+--OWNER:
+    INCLUDE "disk.h" [44:1/2144-44:18/2161]
+--RESOLVED TO:
+    INCLUDE "disk.h" [44:1/2144-44:18/2161]
+==============================================================
+'"disk.h"', tokenID=preprocessor_user_include, offset=2153 [44:10/2153-44:18/2161]
+--OWNER:
+    INCLUDE "disk.h" [44:1/2144-44:18/2161]
+--RESOLVED TO:
+    FILE ReferencesTestCase/disk.h
+==============================================================
+'Disk', tokenID=identifier, offset=2163 [46:1/2163-46:5/2167]
+--OWNER:
+    FUNCTION_DEFINITION Disk(int,int,int)  [46:1/2163-49:2/2334] ReferencesTestCase/disk.cc
+--RESOLVED TO:
+    CLASS Disk [46:1/2156-57:2/2534] ReferencesTestCase/disk.h
+==============================================================
+'Disk', tokenID=identifier, offset=2169 [46:7/2169-46:11/2173]
+--OWNER:
+    FUNCTION_DEFINITION Disk(int,int,int)  [46:1/2163-49:2/2334] ReferencesTestCase/disk.cc
+--RESOLVED TO:
+    FUNCTION_DEFINITION Disk(int,int,int)  [46:1/2163-49:2/2334] ReferencesTestCase/disk.cc
+==============================================================
+'type', tokenID=identifier, offset=2178 [46:16/2178-46:20/2182]
+--OWNER:
+    VARIABLE type [46:12/2174-46:20/2182] ReferencesTestCase/disk.cc  TYPE: int TEXT=int  [46:12/2174-46:15/2177]  INIT: null  SCOPE: Disk 
+--RESOLVED TO:
+    VARIABLE type [46:12/2174-46:20/2182] ReferencesTestCase/disk.cc  TYPE: int TEXT=int  [46:12/2174-46:15/2177]  INIT: null  SCOPE: Disk 
+==============================================================
+'size', tokenID=identifier, offset=2202 [46:40/2202-46:44/2206]
+--OWNER:
+    VARIABLE size [46:36/2198-46:44/2206] ReferencesTestCase/disk.cc  TYPE: int TEXT=int  [46:36/2198-46:39/2201]  INIT: null  SCOPE: Disk 
+--RESOLVED TO:
+    VARIABLE size [46:36/2198-46:44/2206] ReferencesTestCase/disk.cc  TYPE: int TEXT=int  [46:36/2198-46:39/2201]  INIT: null  SCOPE: Disk 
+==============================================================
+'units', tokenID=identifier, offset=2224 [46:62/2224-46:67/2229]
+--OWNER:
+    VARIABLE units [46:58/2220-46:67/2229] ReferencesTestCase/disk.cc  TYPE: int TEXT=int  [46:58/2220-46:61/2223]  INIT: null  SCOPE: Disk 
+--RESOLVED TO:
+    VARIABLE units [46:58/2220-46:67/2229] ReferencesTestCase/disk.cc  TYPE: int TEXT=int  [46:58/2220-46:61/2223]  INIT: null  SCOPE: Disk 
+==============================================================
+'Module', tokenID=identifier, offset=2246 [47:5/2246-47:11/2252]
+--OWNER:
+    EXPR null text='Module("Disk storage", "generic", type, size, units)'
+--RESOLVED TO:
+    FUNCTION Module(const char*,const char*,int,int,int)  [54:5/2246-54:92/2333] ReferencesTestCase/module.h
+==============================================================
+'type', tokenID=identifier, offset=2280 [47:39/2280-47:43/2284]
+--OWNER:
+    EXPR null text='Module("Disk storage", "generic", type, size, units)'
+--RESOLVED TO:
+    VARIABLE type [46:12/2174-46:20/2182] ReferencesTestCase/disk.cc  TYPE: int TEXT=int  [46:12/2174-46:15/2177]  INIT: null  SCOPE: Disk 
+==============================================================
+'size', tokenID=identifier, offset=2286 [47:45/2286-47:49/2290]
+--OWNER:
+    EXPR null text='Module("Disk storage", "generic", type, size, units)'
+--RESOLVED TO:
+    VARIABLE size [46:36/2198-46:44/2206] ReferencesTestCase/disk.cc  TYPE: int TEXT=int  [46:36/2198-46:39/2201]  INIT: null  SCOPE: Disk 
+==============================================================
+'units', tokenID=identifier, offset=2292 [47:51/2292-47:56/2297]
+--OWNER:
+    EXPR null text='Module("Disk storage", "generic", type, size, units)'
+--RESOLVED TO:
+    VARIABLE units [46:58/2220-46:67/2229] ReferencesTestCase/disk.cc  TYPE: int TEXT=int  [46:58/2220-46:61/2223]  INIT: null  SCOPE: Disk 
+==============================================================
+'ComputeSupportMetric', tokenID=identifier, offset=2309 [48:9/2309-48:29/2329]
+--OWNER:
+    STMT EXPRESSION text='ComputeSupportMetric()'
+--RESOLVED TO:
+    FUNCTION ComputeSupportMetric()  [56:5/2504-56:33/2532] ReferencesTestCase/disk.h
+==============================================================
+'Disk', tokenID=identifier, offset=2510 [56:6/2510-56:10/2514]
+--OWNER:
+    FUNCTION_DEFINITION ComputeSupportMetric()  [56:1/2505-64:2/2683] ReferencesTestCase/disk.cc
+--RESOLVED TO:
+    CLASS Disk [46:1/2156-57:2/2534] ReferencesTestCase/disk.h
+==============================================================
+'ComputeSupportMetric', tokenID=identifier, offset=2516 [56:12/2516-56:32/2536]
+--OWNER:
+    FUNCTION_DEFINITION ComputeSupportMetric()  [56:1/2505-64:2/2683] ReferencesTestCase/disk.cc
+--RESOLVED TO:
+    FUNCTION_DEFINITION ComputeSupportMetric()  [56:1/2505-64:2/2683] ReferencesTestCase/disk.cc
+==============================================================
+'metric', tokenID=identifier, offset=2550 [57:9/2550-57:15/2556]
+--OWNER:
+    VARIABLE metric [57:5/2546-57:35/2576] ReferencesTestCase/disk.cc  TYPE: int TEXT=int  [57:5/2546-57:8/2549]  INIT: text='200 * GetUnits()'  SCOPE: Stmt  [56:35/2539-64:2/2683]
+--RESOLVED TO:
+    VARIABLE metric [57:5/2546-57:35/2576] ReferencesTestCase/disk.cc  TYPE: int TEXT=int  [57:5/2546-57:8/2549]  INIT: text='200 * GetUnits()'  SCOPE: Stmt  [56:35/2539-64:2/2683]
+==============================================================
+'GetUnits', tokenID=identifier, offset=2565 [57:24/2565-57:32/2573]
+--OWNER:
+    VARIABLE metric [57:5/2546-57:35/2576] ReferencesTestCase/disk.cc  TYPE: int TEXT=int  [57:5/2546-57:8/2549]  INIT: text='200 * GetUnits()'  SCOPE: Stmt  [56:35/2539-64:2/2683]
+--RESOLVED TO:
+    FUNCTION GetUnits() const  [75:5/2975-75:26/2996] ReferencesTestCase/module.h
+==============================================================
+'GetTypeID', tokenID=identifier, offset=2591 [59:9/2591-59:18/2600]
+--OWNER:
+     [59:9/2591-59:28/2610] ReferencesTestCase/disk.cc
+--RESOLVED TO:
+    FUNCTION GetTypeID() const  [67:5/2759-67:27/2781] ReferencesTestCase/module.h
+==============================================================
+'RAID', tokenID=identifier, offset=2606 [59:24/2606-59:28/2610]
+--OWNER:
+     [59:9/2591-59:28/2610] ReferencesTestCase/disk.cc
+--RESOLVED TO:
+    ENUMERATOR Disk::DiskType::RAID [48:30/2222-48:34/2226] ReferencesTestCase/disk.h
+==============================================================
+'metric', tokenID=identifier, offset=2622 [60:9/2622-60:15/2628]
+--OWNER:
+    STMT EXPRESSION text='metric += 500'
+--RESOLVED TO:
+    VARIABLE metric [57:5/2546-57:35/2576] ReferencesTestCase/disk.cc  TYPE: int TEXT=int  [57:5/2546-57:8/2549]  INIT: text='200 * GetUnits()'  SCOPE: Stmt  [56:35/2539-64:2/2683]
+==============================================================
+'SetSupportMetric', tokenID=identifier, offset=2656 [63:5/2656-63:21/2672]
+--OWNER:
+    STMT EXPRESSION text='SetSupportMetric(metric)'
+--RESOLVED TO:
+    FUNCTION SetSupportMetric(int)  [77:5/3002-77:34/3031] ReferencesTestCase/module.h
+==============================================================
+'metric', tokenID=identifier, offset=2673 [63:22/2673-63:28/2679]
+--OWNER:
+    STMT EXPRESSION text='SetSupportMetric(metric)'
+--RESOLVED TO:
+    VARIABLE metric [57:5/2546-57:35/2576] ReferencesTestCase/disk.cc  TYPE: int TEXT=int  [57:5/2546-57:8/2549]  INIT: text='200 * GetUnits()'  SCOPE: Stmt  [56:35/2539-64:2/2683]
+==============================================================
+'Disk', tokenID=identifier, offset=2701 [66:13/2701-66:17/2705]
+--OWNER:
+    FUNCTION_DEFINITION GetType() const  [66:1/2689-77:2/2931] ReferencesTestCase/disk.cc
+--RESOLVED TO:
+    CLASS Disk [46:1/2156-57:2/2534] ReferencesTestCase/disk.h
+==============================================================
+'GetType', tokenID=identifier, offset=2707 [66:19/2707-66:26/2714]
+--OWNER:
+    FUNCTION_DEFINITION GetType() const  [66:1/2689-77:2/2931] ReferencesTestCase/disk.cc
+--RESOLVED TO:
+    FUNCTION_DEFINITION GetType() const  [66:1/2689-77:2/2931] ReferencesTestCase/disk.cc
+==============================================================
+'GetTypeID', tokenID=identifier, offset=2737 [67:13/2737-67:22/2746]
+--OWNER:
+     [67:13/2737-67:24/2748] ReferencesTestCase/disk.cc
+--RESOLVED TO:
+    FUNCTION GetTypeID() const  [67:5/2759-67:27/2781] ReferencesTestCase/module.h
+==============================================================
+'SINGLE', tokenID=identifier, offset=2765 [68:14/2765-68:20/2771]
+--OWNER:
+    STMT CASE text='SINGLE'
+--RESOLVED TO:
+    ENUMERATOR Disk::DiskType::SINGLE [48:21/2213-48:27/2219] ReferencesTestCase/disk.h
+==============================================================
+'RAID', tokenID=identifier, offset=2830 [71:14/2830-71:18/2834]
+--OWNER:
+    STMT CASE text='RAID'
+--RESOLVED TO:
+    ENUMERATOR Disk::DiskType::RAID [48:30/2222-48:34/2226] ReferencesTestCase/disk.h
+==============================================================
+'Disk', tokenID=identifier, offset=2949 [79:13/2949-79:17/2953]
+--OWNER:
+    FUNCTION_DEFINITION GetCategory() const  [79:1/2937-93:2/3261] ReferencesTestCase/disk.cc
+--RESOLVED TO:
+    CLASS Disk [46:1/2156-57:2/2534] ReferencesTestCase/disk.h
+==============================================================
+'GetCategory', tokenID=identifier, offset=2955 [79:19/2955-79:30/2966]
+--OWNER:
+    FUNCTION_DEFINITION GetCategory() const  [79:1/2937-93:2/3261] ReferencesTestCase/disk.cc
+--RESOLVED TO:
+    FUNCTION_DEFINITION GetCategory() const  [79:1/2937-93:2/3261] ReferencesTestCase/disk.cc
+==============================================================
+'GetCategoryID', tokenID=identifier, offset=2989 [80:13/2989-80:26/3002]
+--OWNER:
+     [80:13/2989-80:28/3004] ReferencesTestCase/disk.cc
+--RESOLVED TO:
+    FUNCTION GetCategoryID() const  [71:5/2868-71:31/2894] ReferencesTestCase/module.h
+==============================================================
+'T100', tokenID=identifier, offset=3021 [81:14/3021-81:18/3025]
+--OWNER:
+    STMT CASE text='T100'
+--RESOLVED TO:
+    ENUMERATOR Disk::DiskCapacity::T100 [49:25/2254-49:29/2258] ReferencesTestCase/disk.h
+==============================================================
+'T200', tokenID=identifier, offset=3084 [84:14/3084-84:18/3088]
+--OWNER:
+    STMT CASE text='T200'
+--RESOLVED TO:
+    ENUMERATOR Disk::DiskCapacity::T200 [49:32/2261-49:36/2265] ReferencesTestCase/disk.h
+==============================================================
+'T500', tokenID=identifier, offset=3147 [87:14/3147-87:18/3151]
+--OWNER:
+    STMT CASE text='T500'
+--RESOLVED TO:
+    ENUMERATOR Disk::DiskCapacity::T500 [49:38/2267-49:42/2271] ReferencesTestCase/disk.h
+==============================================================

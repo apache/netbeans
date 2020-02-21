@@ -1,0 +1,87 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug243546.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug243546 [1:1/0-15:2/401] SCOPE: bug243546.cpp
+    STRUCT AAA_243546 (bug243546::AAA_243546 ) [2:5/26-4:6/92] lcurly=44 SCOPE: bug243546 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION operator T* [3:7/53-3:39/85] MethodImpl SCOPE: AAA_243546 
+                DEFINITION: operator T*  [6:5/99-6:63/157]
+                SIGNATURE operator T*<class>()
+                UNIQUE NAME F:bug243546::AAA_243546::operator T*<class>()
+                PARAMETERS:
+                RETURNS *bug243546::AAA_243546::operator T*::T TEXT=T*  [3:35/81-3:36/82]
+    FUNCTION DEFINITION operator T*  [6:5/99-6:63/157] FunctionDefinitionImpl SCOPE: bug243546.cpp
+        SIGNATURE operator T*<class>()
+        UNIQUE NAME f:bug243546::AAA_243546::operator T*<class>()
+        DECLARATION: operator T*  [3:7/53-3:39/85]
+        PARAMETERS:
+        RETURNS *bug243546::AAA_243546::operator T*::T TEXT=T*  [6:45/139-6:46/140]
+        STATEMENT COMPOUND  [6:50/144-6:63/157] SCOPE: operator T* 
+            STATEMENT RETURN  [6:52/146-6:61/155] SCOPE: Stmt  [6:50/144-6:63/157] text: 'return 0;'
+    FUNCTION DEFINITION operator char*  [7:5/162-7:58/215] FunctionDefinitionImpl SCOPE: bug243546.cpp
+        SIGNATURE operator char*()
+        UNIQUE NAME f:bug243546::AAA_243546::operator char*()
+        DECLARATION: null
+        PARAMETERS:
+        RETURNS *char TEXT=char*  [7:38/195-7:42/199]
+        STATEMENT COMPOUND  [7:45/202-7:58/215] SCOPE: operator char* 
+            STATEMENT RETURN  [7:47/204-7:56/213] SCOPE: Stmt  [7:45/202-7:58/215] text: 'return 0;'
+    FUNCTION_INSTANTIATION  [8:5/238-8:42/275]
+    FUNCTION DEFINITION main_243546  [10:5/308-14:6/399] FunctionDDImpl SCOPE: bug243546 
+        SIGNATURE main_243546()
+        UNIQUE NAME f:bug243546::main_243546()
+        DECLARATION: main_243546  [10:5/308-14:6/399]
+        PARAMETERS:
+        RETURNS int TEXT=int  [10:5/308-10:8/311]
+        STATEMENT COMPOUND  [10:23/326-14:6/399] SCOPE: main_243546 
+            STATEMENT DECLARATION  [11:7/334-11:20/347] SCOPE: Stmt  [10:23/326-14:6/399]
+                VARIABLE a [11:7/334-11:20/347]  TYPE: bug243546::AAA_243546 TEXT=AAA_243546  [11:7/334-11:17/344]  INIT: null  SCOPE: Stmt  [10:23/326-14:6/399]
+            STATEMENT DECLARATION  [12:7/354-12:15/362] SCOPE: Stmt  [10:23/326-14:6/399]
+                VARIABLE ip [12:7/354-12:15/362]  TYPE: *int TEXT=int*  [12:7/354-12:12/359]  INIT: null  SCOPE: Stmt  [10:23/326-14:6/399]
+            STATEMENT EXPRESSION  [13:7/370-13:29/392] SCOPE: Stmt  [10:23/326-14:6/399] text: 'ip = a.operator int*()'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug243546 (bug243546) 
+    bug243546.cpp  [1:1/0-15:2/401]
+NAMESPACE bug243546 (bug243546) 
+    STRUCT AAA_243546 (bug243546::AAA_243546 ) [2:5/26-4:6/92] lcurly=44 SCOPE: bug243546 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION operator T* [3:7/53-3:39/85] MethodImpl SCOPE: AAA_243546 
+                DEFINITION: operator T*  [6:5/99-6:63/157]
+                SIGNATURE operator T*<class>()
+                UNIQUE NAME F:bug243546::AAA_243546::operator T*<class>()
+                PARAMETERS:
+                RETURNS *bug243546::AAA_243546::operator T*::T TEXT=T*  [3:35/81-3:36/82]
+    FUNCTION DEFINITION operator char*  [7:5/162-7:58/215] FunctionDefinitionImpl SCOPE: bug243546.cpp
+        SIGNATURE operator char*()
+        UNIQUE NAME f:bug243546::AAA_243546::operator char*()
+        DECLARATION: null
+        PARAMETERS:
+        RETURNS *char TEXT=char*  [7:38/195-7:42/199]
+        STATEMENT COMPOUND  [7:45/202-7:58/215] SCOPE: operator char* 
+            STATEMENT RETURN  [7:47/204-7:56/213] SCOPE: Stmt  [7:45/202-7:58/215] text: 'return 0;'
+    FUNCTION DEFINITION main_243546  [10:5/308-14:6/399] FunctionDDImpl SCOPE: bug243546 
+        SIGNATURE main_243546()
+        UNIQUE NAME f:bug243546::main_243546()
+        DECLARATION: main_243546  [10:5/308-14:6/399]
+        PARAMETERS:
+        RETURNS int TEXT=int  [10:5/308-10:8/311]
+        STATEMENT COMPOUND  [10:23/326-14:6/399] SCOPE: main_243546 
+            STATEMENT DECLARATION  [11:7/334-11:20/347] SCOPE: Stmt  [10:23/326-14:6/399]
+                VARIABLE a [11:7/334-11:20/347]  TYPE: bug243546::AAA_243546 TEXT=AAA_243546  [11:7/334-11:17/344]  INIT: null  SCOPE: Stmt  [10:23/326-14:6/399]
+            STATEMENT DECLARATION  [12:7/354-12:15/362] SCOPE: Stmt  [10:23/326-14:6/399]
+                VARIABLE ip [12:7/354-12:15/362]  TYPE: *int TEXT=int*  [12:7/354-12:12/359]  INIT: null  SCOPE: Stmt  [10:23/326-14:6/399]
+            STATEMENT EXPRESSION  [13:7/370-13:29/392] SCOPE: Stmt  [10:23/326-14:6/399] text: 'ip = a.operator int*()'
+

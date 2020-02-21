@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.jellytools.cnd/3
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/jellytools/cnd/Bundle.properties
+OpenIDE-Module-Specification-Version: 3.27
+

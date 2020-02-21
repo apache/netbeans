@@ -1,0 +1,18 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug205526.f
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN PARTY [1:7/6-15:10/336] SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITOIN PARTY [1:7/6-15:10/336] SCOPE: $Global$ 
+

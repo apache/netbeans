@@ -1,0 +1,50 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz165038.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS_FORWARD_DECLARATION _GMutex [1:1/-1-1:1/-1]
+STRUCT _GMutex (_GMutex ) [1:1/0-2:2/17] lcurly=14 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+STRUCT _GStaticMutex (_GStaticMutex ) [4:1/20-13:2/209] lcurly=50 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC runtime_mutex [6:3/54-6:33/84]  TYPE: *_GMutex TEXT=_GMutex*  [6:10/61-6:19/70]  INIT: null  SCOPE: _GStaticMutex 
+        UNION  (_GStaticMutex:: ) [7:3/87-12:4/192] lcurly=93 SCOPE: _GStaticMutex 
+            BASE CLASSES:
+            MEMBERS:
+                FIELD PUBLIC pad [8:5/99-8:20/114]  TYPE: char[] TEXT=char[]  [8:5/99-8:9/103]  INIT: null  SCOPE:  
+                FIELD PUBLIC dummy_double [9:5/119-9:25/139]  TYPE: double TEXT=double  [9:5/119-9:11/125]  INIT: null  SCOPE:  
+                FIELD PUBLIC dummy_pointer [10:5/144-10:26/165]  TYPE: *void TEXT=void*  [10:5/144-10:12/151]  INIT: null  SCOPE:  
+                FIELD PUBLIC dummy_long [11:5/170-11:23/188]  TYPE: long TEXT=long  [11:5/170-11:9/174]  INIT: null  SCOPE:  
+        FIELD PUBLIC aligned_pad_u [12:5/193-12:18/206]  TYPE: _GStaticMutex:: TEXT=aligned_pad_u  [7:3/87-12:4/192]  INIT: null  SCOPE: _GStaticMutex 
+TYPEDEF GStaticMutex  [13:3/210-13:15/222] TYPE: _GStaticMutex TEXT=_GStaticMutex  [4:1/20-13:16/223] SCOPE: $Global$ 
+VARIABLE g__GModule_lock [16:1/226-16:118/343]  TYPE: GStaticMutex TEXT=GStaticMutex  [16:1/226-16:20/245]  INIT: text='{ ((void*) 0) , { { 0,0,0,0,0,0,88,77,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} } }'  SCOPE: iz165038.cc
+
+========== Dumping model of PROJECT DummyProject
+STRUCT _GMutex (_GMutex ) [1:1/0-2:2/17] lcurly=14 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+STRUCT _GStaticMutex (_GStaticMutex ) [4:1/20-13:2/209] lcurly=50 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC runtime_mutex [6:3/54-6:33/84]  TYPE: *_GMutex TEXT=_GMutex*  [6:10/61-6:19/70]  INIT: null  SCOPE: _GStaticMutex 
+        UNION  (_GStaticMutex:: ) [7:3/87-12:4/192] lcurly=93 SCOPE: _GStaticMutex 
+            BASE CLASSES:
+            MEMBERS:
+                FIELD PUBLIC pad [8:5/99-8:20/114]  TYPE: char[] TEXT=char[]  [8:5/99-8:9/103]  INIT: null  SCOPE:  
+                FIELD PUBLIC dummy_double [9:5/119-9:25/139]  TYPE: double TEXT=double  [9:5/119-9:11/125]  INIT: null  SCOPE:  
+                FIELD PUBLIC dummy_pointer [10:5/144-10:26/165]  TYPE: *void TEXT=void*  [10:5/144-10:12/151]  INIT: null  SCOPE:  
+                FIELD PUBLIC dummy_long [11:5/170-11:23/188]  TYPE: long TEXT=long  [11:5/170-11:9/174]  INIT: null  SCOPE:  
+        FIELD PUBLIC aligned_pad_u [12:5/193-12:18/206]  TYPE: _GStaticMutex:: TEXT=aligned_pad_u  [7:3/87-12:4/192]  INIT: null  SCOPE: _GStaticMutex 
+TYPEDEF GStaticMutex  [13:3/210-13:15/222] TYPE: _GStaticMutex TEXT=_GStaticMutex  [4:1/20-13:16/223] SCOPE: $Global$ 
+

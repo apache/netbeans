@@ -1,0 +1,6 @@
+${origin}/lexer_dots_at_eval.cc:1:7: error: remainder by zero in preprocessor expression
+#if 1 % 0
+    ~ ^ ~
+${origin}/lexer_dots_at_eval.cc:1:7: error: remainder by zero in preprocessor expression
+#if 1 % 0
+    ~ ^ ~

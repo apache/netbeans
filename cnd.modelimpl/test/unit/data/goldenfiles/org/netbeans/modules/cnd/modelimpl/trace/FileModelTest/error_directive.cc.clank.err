@@ -1,0 +1,3 @@
+${origin}/error_directive.cc:8:5: error: "qwe"	
+#                       error "qwe"     
+                        ^

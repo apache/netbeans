@@ -1,0 +1,4 @@
+24:INHERITED B1 single_inh_tree.cc:31,B1C1 single_inh_tree.cc:39,B1C2 single_inh_tree.cc:43,B1C3 single_inh_tree.cc:46,B2 single_inh_tree.cc:28,B2C1 single_inh_tree.cc:50,B2C2 single_inh_tree.cc:53,B2C3 single_inh_tree.cc:57,B3 single_inh_tree.cc:35,B3C1 single_inh_tree.cc:62,B3C2 single_inh_tree.cc:65,B3C3 single_inh_tree.cc:68
+28:INHERITED B2C1 single_inh_tree.cc:50,B2C2 single_inh_tree.cc:53,B2C3 single_inh_tree.cc:57
+31:INHERITED B1C1 single_inh_tree.cc:39,B1C2 single_inh_tree.cc:43,B1C3 single_inh_tree.cc:46
+35:INHERITED B3C1 single_inh_tree.cc:62,B3C2 single_inh_tree.cc:65,B3C3 single_inh_tree.cc:68

@@ -1,0 +1,95 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["RECENT_MENU",<ID>,line=36,col=9],offset=328,file=null'='["{",<LCURLY>,line=37,col=1],offset=342,file=null ["{",<LCURLY>,line=38,col=5],offset=350,file=null ["1",<DECIMALINT>,line=38,col=7],offset=352,file=null [",",<COMMA>,line=38,col=8],offset=353,file=null ["2",<DECIMALINT>,line=38,col=10],offset=355,file=null [",",<COMMA>,line=38,col=11],offset=356,file=null ["{",<LCURLY>,line=38,col=13],offset=358,file=null ["3",<DECIMALINT>,line=38,col=14],offset=359,file=null [",",<COMMA>,line=38,col=15],offset=360,file=null ["4",<DECIMALINT>,line=38,col=17],offset=362,file=null ["}",<RCURLY>,line=38,col=18],offset=363,file=null ["}",<RCURLY>,line=38,col=20],offset=365,file=null [",",<COMMA>,line=38,col=21],offset=366,file=null ["{",<LCURLY>,line=39,col=5],offset=374,file=null ["5",<DECIMALINT>,line=39,col=7],offset=376,file=null [",",<COMMA>,line=39,col=8],offset=377,file=null ["6",<DECIMALINT>,line=39,col=10],offset=379,file=null [",",<COMMA>,line=39,col=11],offset=380,file=null ["{",<LCURLY>,line=39,col=13],offset=382,file=null ["7",<DECIMALINT>,line=39,col=14],offset=383,file=null [",",<COMMA>,line=39,col=15],offset=384,file=null ["8",<DECIMALINT>,line=39,col=17],offset=386,file=null ["}",<RCURLY>,line=39,col=18],offset=387,file=null ["}",<RCURLY>,line=39,col=20],offset=389,file=null [",",<COMMA>,line=39,col=21],offset=390,file=null ["}",<RCURLY>,line=40,col=1],offset=394,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE init_array.cpp
+Includes:
+    <no includes>
+Macros:
+#define 'RECENT_MENU' [36:1/320-40:2/395]
+VARIABLE o [1:1/0-3:3/28]  TYPE: int[] TEXT=int[]  [1:1/0-1:4/3]  INIT: text='{
+        1,  2
+}'  SCOPE: $Global$ 
+VARIABLE o1 [5:1/30-7:3/60]  TYPE: int[] TEXT=int[]  [5:1/30-5:4/33]  INIT: text='{
+        1,  2,
+}'  SCOPE: $Global$ 
+VARIABLE options [9:1/62-12:3/131]  TYPE: int[][] TEXT=int[][]  [9:1/62-9:4/65]  INIT: text='{
+{ 3,              4 },
+{ 5,              6 },
+}'  SCOPE: $Global$ 
+STRUCT Menu (Menu ) [14:1/133-17:2/172] lcurly=145 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC a [15:5/151-15:11/157]  TYPE: int TEXT=int  [15:5/151-15:8/154]  INIT: null  SCOPE: Menu 
+        FIELD PUBLIC b [16:5/164-16:11/170]  TYPE: int TEXT=int  [16:5/164-16:8/167]  INIT: null  SCOPE: Menu 
+VARIABLE m [17:3/173-17:4/174]  TYPE: Menu TEXT=Menu  [14:1/133-17:2/172]  INIT: null  SCOPE: $Global$ 
+VARIABLE menus [20:1/178-23:3/222]  TYPE: Menu[] TEXT=Menu[]  [20:1/178-20:5/182]  INIT: text='{
+  { 7, 8},  
+  { 9, 10},
+}'  SCOPE: $Global$ 
+STRUCT Opt (Opt ) [25:1/224-28:2/260] lcurly=235 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC a [26:5/241-26:11/247]  TYPE: int TEXT=int  [26:5/241-26:8/244]  INIT: null  SCOPE: Opt 
+        FIELD PUBLIC b [27:5/252-27:11/258]  TYPE: int TEXT=int  [27:5/252-27:8/255]  INIT: null  SCOPE: Opt 
+STRUCT MMDesc (MMDesc ) [30:1/263-34:2/317] lcurly=277 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC a [31:5/283-31:11/289]  TYPE: int TEXT=int  [31:5/283-31:8/286]  INIT: null  SCOPE: MMDesc 
+        FIELD PUBLIC b [32:5/296-32:11/302]  TYPE: int TEXT=int  [32:5/296-32:8/299]  INIT: null  SCOPE: MMDesc 
+        FIELD PUBLIC c [33:5/307-33:11/313]  TYPE: Opt TEXT=Opt  [33:5/307-33:8/310]  INIT: null  SCOPE: MMDesc 
+VARIABLE command_recent_menu [42:1/397-42:44/440]  TYPE: MMDesc[] TEXT=MMDesc[]  [42:1/397-42:7/403]  INIT: text='RECENT_MENU'  SCOPE: $Global$ 
+FUNCTION DEFINITION foo  [44:1/442-46:2/461] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [44:1/442-46:2/461]
+    PARAMETERS:
+    RETURNS void TEXT=void  [44:1/442-44:5/446]
+    STATEMENT COMPOUND  [44:12/453-46:2/461] SCOPE: foo 
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE o [1:1/0-3:3/28]  TYPE: int[] TEXT=int[]  [1:1/0-1:4/3]  INIT: text='{
+        1,  2
+}'  SCOPE: $Global$ 
+VARIABLE o1 [5:1/30-7:3/60]  TYPE: int[] TEXT=int[]  [5:1/30-5:4/33]  INIT: text='{
+        1,  2,
+}'  SCOPE: $Global$ 
+VARIABLE options [9:1/62-12:3/131]  TYPE: int[][] TEXT=int[][]  [9:1/62-9:4/65]  INIT: text='{
+{ 3,              4 },
+{ 5,              6 },
+}'  SCOPE: $Global$ 
+STRUCT Menu (Menu ) [14:1/133-17:2/172] lcurly=145 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC a [15:5/151-15:11/157]  TYPE: int TEXT=int  [15:5/151-15:8/154]  INIT: null  SCOPE: Menu 
+        FIELD PUBLIC b [16:5/164-16:11/170]  TYPE: int TEXT=int  [16:5/164-16:8/167]  INIT: null  SCOPE: Menu 
+VARIABLE m [17:3/173-17:4/174]  TYPE: Menu TEXT=Menu  [14:1/133-17:2/172]  INIT: null  SCOPE: $Global$ 
+VARIABLE menus [20:1/178-23:3/222]  TYPE: Menu[] TEXT=Menu[]  [20:1/178-20:5/182]  INIT: text='{
+  { 7, 8},  
+  { 9, 10},
+}'  SCOPE: $Global$ 
+STRUCT Opt (Opt ) [25:1/224-28:2/260] lcurly=235 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC a [26:5/241-26:11/247]  TYPE: int TEXT=int  [26:5/241-26:8/244]  INIT: null  SCOPE: Opt 
+        FIELD PUBLIC b [27:5/252-27:11/258]  TYPE: int TEXT=int  [27:5/252-27:8/255]  INIT: null  SCOPE: Opt 
+STRUCT MMDesc (MMDesc ) [30:1/263-34:2/317] lcurly=277 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC a [31:5/283-31:11/289]  TYPE: int TEXT=int  [31:5/283-31:8/286]  INIT: null  SCOPE: MMDesc 
+        FIELD PUBLIC b [32:5/296-32:11/302]  TYPE: int TEXT=int  [32:5/296-32:8/299]  INIT: null  SCOPE: MMDesc 
+        FIELD PUBLIC c [33:5/307-33:11/313]  TYPE: Opt TEXT=Opt  [33:5/307-33:8/310]  INIT: null  SCOPE: MMDesc 
+VARIABLE command_recent_menu [42:1/397-42:44/440]  TYPE: MMDesc[] TEXT=MMDesc[]  [42:1/397-42:7/403]  INIT: text='RECENT_MENU'  SCOPE: $Global$ 
+FUNCTION DEFINITION foo  [44:1/442-46:2/461] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [44:1/442-46:2/461]
+    PARAMETERS:
+    RETURNS void TEXT=void  [44:1/442-44:5/446]
+    STATEMENT COMPOUND  [44:12/453-46:2/461] SCOPE: foo 
+

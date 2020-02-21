@@ -1,0 +1,5 @@
+25:OVERRIDDEN_PSEUDO B1::v_foo single_inh_tree.cc:32,B1C1::v_foo single_inh_tree.cc:40,B2C2::v_foo single_inh_tree.cc:54,B2C3::v_foo single_inh_tree.cc:58
+32:OVERRIDES_AND_OVERRIDDEN_PSEUDO A::v_foo single_inh_tree.cc:25,B1C1::v_foo single_inh_tree.cc:40
+40:OVERRIDES_PSEUDO A::v_foo single_inh_tree.cc:25,B1::v_foo single_inh_tree.cc:32
+54:OVERRIDES_PSEUDO A::v_foo single_inh_tree.cc:25
+58:OVERRIDES_PSEUDO A::v_foo single_inh_tree.cc:25

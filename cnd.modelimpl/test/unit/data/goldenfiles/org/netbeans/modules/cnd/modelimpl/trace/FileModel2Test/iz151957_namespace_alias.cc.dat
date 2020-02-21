@@ -1,0 +1,52 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz151957_namespace_alias.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN A [1:1/0-3:2/26] SCOPE: iz151957_namespace_alias.cc
+    VARIABLE i [2:5/18-2:11/24]  TYPE: int TEXT=int  [2:5/18-2:8/21]  INIT: null  SCOPE: A 
+STRUCT definition (definition ) [5:1/28-11:2/179] lcurly=46 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION definition  [6:5/52-10:6/177] ConstructorDDImpl SCOPE: definition 
+            SIGNATURE definition()
+            UNIQUE NAME f:definition::definition()
+            DECLARATION: definition  [6:5/52-10:6/177]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [6:18/65-10:6/177] SCOPE: definition 
+                STATEMENT DECLARATION  [7:9/75-7:26/92] SCOPE: Stmt  [6:18/65-10:6/177]
+                    USING NAMESPACE. A  [7:9/75-7:26/92]; REF NS: A SCOPE: null
+                STATEMENT DECLARATION  [8:9/102-8:24/117] SCOPE: Stmt  [6:18/65-10:6/177]
+                    ALIAS B A  [8:9/102-8:24/117] SCOPE: null
+                STATEMENT EXPRESSION  [9:9/166-9:13/170] SCOPE: Stmt  [6:18/65-10:6/177] text: 'B::i'
+
+========== Dumping model of PROJECT DummyProject
+STRUCT definition (definition ) [5:1/28-11:2/179] lcurly=46 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION definition  [6:5/52-10:6/177] ConstructorDDImpl SCOPE: definition 
+            SIGNATURE definition()
+            UNIQUE NAME f:definition::definition()
+            DECLARATION: definition  [6:5/52-10:6/177]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [6:18/65-10:6/177] SCOPE: definition 
+                STATEMENT DECLARATION  [7:9/75-7:26/92] SCOPE: Stmt  [6:18/65-10:6/177]
+                    USING NAMESPACE. A  [7:9/75-7:26/92]; REF NS: A SCOPE: null
+                STATEMENT DECLARATION  [8:9/102-8:24/117] SCOPE: Stmt  [6:18/65-10:6/177]
+                    ALIAS B A  [8:9/102-8:24/117] SCOPE: null
+                STATEMENT EXPRESSION  [9:9/166-9:13/170] SCOPE: Stmt  [6:18/65-10:6/177] text: 'B::i'
+NAMESPACE DEFINITIONS for A (A) 
+    iz151957_namespace_alias.cc  [1:1/0-3:2/26]
+NAMESPACE A (A) 
+    VARIABLE i [2:5/18-2:11/24]  TYPE: int TEXT=int  [2:5/18-2:8/21]  INIT: null  SCOPE: A 
+

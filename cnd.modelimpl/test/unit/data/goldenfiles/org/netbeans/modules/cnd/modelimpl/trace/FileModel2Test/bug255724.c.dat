@@ -1,0 +1,64 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug255724.c
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION test255724  [1:1/0-15:2/248] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE test255724()
+    UNIQUE NAME f:test255724()
+    DECLARATION: test255724  [1:1/0-15:2/248]
+    PARAMETERS:
+    RETURNS void TEXT=void  [1:1/0-1:5/4]
+    STATEMENT COMPOUND  [1:19/18-15:2/248] SCOPE: test255724 
+        STATEMENT DECLARATION  [2:5/24-8:7/149] SCOPE: Stmt  [1:19/18-15:2/248]
+            UNION Inner255724 (Inner255724 ) [4:9/69-7:10/139] lcurly=87 SCOPE: null
+                BASE CLASSES:
+                MEMBERS:
+                    FIELD PUBLIC j1 [5:13/101-5:20/108]  TYPE: int TEXT=int  [5:13/101-5:16/104]  INIT: null  SCOPE: Inner255724 
+                    FIELD PUBLIC j2 [6:13/121-6:21/129]  TYPE: char TEXT=char  [6:13/121-6:17/125]  INIT: null  SCOPE: Inner255724 
+            STRUCT Outer255724 (Outer255724 ) [2:5/24-8:6/148] lcurly=43 SCOPE: null
+                BASE CLASSES:
+                MEMBERS:
+                    FIELD PUBLIC f1 [3:9/53-3:16/60]  TYPE: int TEXT=int  [3:9/53-3:12/56]  INIT: null  SCOPE: Outer255724 
+                    FIELD PUBLIC u [7:11/140-7:12/141]  TYPE: Inner255724 TEXT=Inner255724  [4:9/69-7:10/139]  INIT: null  SCOPE: Outer255724 
+        STATEMENT DECLARATION  [10:5/159-10:28/182] SCOPE: Stmt  [1:19/18-15:2/248]
+            VARIABLE str [10:5/159-10:28/182]  TYPE: Outer255724 TEXT=Outer255724  [10:12/166-10:23/177]  INIT: null  SCOPE: Stmt  [1:19/18-15:2/248]
+        STATEMENT EXPRESSION  [11:5/187-11:17/199] SCOPE: Stmt  [1:19/18-15:2/248] text: 'str.u.j2 = 4'
+        STATEMENT DECLARATION  [13:5/210-13:26/231] SCOPE: Stmt  [1:19/18-15:2/248]
+            VARIABLE un [13:5/210-13:26/231]  TYPE: Inner255724 TEXT=Inner255724  [13:11/216-13:22/227]  INIT: null  SCOPE: Stmt  [1:19/18-15:2/248]
+        STATEMENT EXPRESSION  [14:5/236-14:14/245] SCOPE: Stmt  [1:19/18-15:2/248] text: 'un.j2 = 4'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION test255724  [1:1/0-15:2/248] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE test255724()
+    UNIQUE NAME f:test255724()
+    DECLARATION: test255724  [1:1/0-15:2/248]
+    PARAMETERS:
+    RETURNS void TEXT=void  [1:1/0-1:5/4]
+    STATEMENT COMPOUND  [1:19/18-15:2/248] SCOPE: test255724 
+        STATEMENT DECLARATION  [2:5/24-8:7/149] SCOPE: Stmt  [1:19/18-15:2/248]
+            UNION Inner255724 (Inner255724 ) [4:9/69-7:10/139] lcurly=87 SCOPE: null
+                BASE CLASSES:
+                MEMBERS:
+                    FIELD PUBLIC j1 [5:13/101-5:20/108]  TYPE: int TEXT=int  [5:13/101-5:16/104]  INIT: null  SCOPE: Inner255724 
+                    FIELD PUBLIC j2 [6:13/121-6:21/129]  TYPE: char TEXT=char  [6:13/121-6:17/125]  INIT: null  SCOPE: Inner255724 
+            STRUCT Outer255724 (Outer255724 ) [2:5/24-8:6/148] lcurly=43 SCOPE: null
+                BASE CLASSES:
+                MEMBERS:
+                    FIELD PUBLIC f1 [3:9/53-3:16/60]  TYPE: int TEXT=int  [3:9/53-3:12/56]  INIT: null  SCOPE: Outer255724 
+                    FIELD PUBLIC u [7:11/140-7:12/141]  TYPE: Inner255724 TEXT=Inner255724  [4:9/69-7:10/139]  INIT: null  SCOPE: Outer255724 
+        STATEMENT DECLARATION  [10:5/159-10:28/182] SCOPE: Stmt  [1:19/18-15:2/248]
+            VARIABLE str [10:5/159-10:28/182]  TYPE: Outer255724 TEXT=Outer255724  [10:12/166-10:23/177]  INIT: null  SCOPE: Stmt  [1:19/18-15:2/248]
+        STATEMENT EXPRESSION  [11:5/187-11:17/199] SCOPE: Stmt  [1:19/18-15:2/248] text: 'str.u.j2 = 4'
+        STATEMENT DECLARATION  [13:5/210-13:26/231] SCOPE: Stmt  [1:19/18-15:2/248]
+            VARIABLE un [13:5/210-13:26/231]  TYPE: Inner255724 TEXT=Inner255724  [13:11/216-13:22/227]  INIT: null  SCOPE: Stmt  [1:19/18-15:2/248]
+        STATEMENT EXPRESSION  [14:5/236-14:14/245] SCOPE: Stmt  [1:19/18-15:2/248] text: 'un.j2 = 4'
+

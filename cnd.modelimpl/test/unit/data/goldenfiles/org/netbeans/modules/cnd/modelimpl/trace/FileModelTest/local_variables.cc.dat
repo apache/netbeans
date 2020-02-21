@@ -1,0 +1,62 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE local_variables.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION foo  [2:1/1-5:2/58] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [2:1/1-5:2/58]
+    PARAMETERS:
+    RETURNS bool TEXT=bool  [2:1/1-2:5/5]
+    STATEMENT COMPOUND  [2:12/12-5:2/58] SCOPE: foo 
+        STATEMENT DECLARATION  [3:5/18-3:27/40] SCOPE: Stmt  [2:12/12-5:2/58]
+            VARIABLE val [3:17/30-3:26/39]  TYPE: bool TEXT=bool  [3:5/18-3:16/29]  INIT: null  SCOPE: Stmt  [2:12/12-5:2/58]
+        STATEMENT RETURN  [4:5/45-4:16/56] SCOPE: Stmt  [2:12/12-5:2/58] text: 'return val;'
+FUNCTION DEFINITION check  [7:1/60-11:2/149] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE check()
+    UNIQUE NAME f:check()
+    DECLARATION: check  [7:1/60-11:2/149]
+    PARAMETERS:
+    RETURNS int TEXT=int  [7:1/60-7:4/63]
+    STATEMENT COMPOUND  [7:13/72-11:2/149] SCOPE: check 
+        STATEMENT DECLARATION  [8:9/82-8:15/88] SCOPE: Stmt  [7:13/72-11:2/149]
+            VARIABLE i [8:9/82-8:15/88]  TYPE: int TEXT=int  [8:9/82-8:12/85]  INIT: null  SCOPE: Stmt  [7:13/72-11:2/149]
+        STATEMENT DECLARATION  [9:9/97-9:36/124] SCOPE: Stmt  [7:13/72-11:2/149]
+            VARIABLE kk [9:30/118-9:35/123]  TYPE: $unresolved$::Type::Inner TEXT=Type::Inner  [9:9/97-9:29/117]  INIT: null  SCOPE: Stmt  [7:13/72-11:2/149]
+        STATEMENT DECLARATION  [10:9/133-10:23/147] SCOPE: Stmt  [7:13/72-11:2/149]
+            VARIABLE v7 [10:17/141-10:22/146]  TYPE: const $unresolved$::A TEXT=const A  [10:9/133-10:16/140]  INIT: null  SCOPE: Stmt  [7:13/72-11:2/149]
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION foo  [2:1/1-5:2/58] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [2:1/1-5:2/58]
+    PARAMETERS:
+    RETURNS bool TEXT=bool  [2:1/1-2:5/5]
+    STATEMENT COMPOUND  [2:12/12-5:2/58] SCOPE: foo 
+        STATEMENT DECLARATION  [3:5/18-3:27/40] SCOPE: Stmt  [2:12/12-5:2/58]
+            VARIABLE val [3:17/30-3:26/39]  TYPE: bool TEXT=bool  [3:5/18-3:16/29]  INIT: null  SCOPE: Stmt  [2:12/12-5:2/58]
+        STATEMENT RETURN  [4:5/45-4:16/56] SCOPE: Stmt  [2:12/12-5:2/58] text: 'return val;'
+FUNCTION DEFINITION check  [7:1/60-11:2/149] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE check()
+    UNIQUE NAME f:check()
+    DECLARATION: check  [7:1/60-11:2/149]
+    PARAMETERS:
+    RETURNS int TEXT=int  [7:1/60-7:4/63]
+    STATEMENT COMPOUND  [7:13/72-11:2/149] SCOPE: check 
+        STATEMENT DECLARATION  [8:9/82-8:15/88] SCOPE: Stmt  [7:13/72-11:2/149]
+            VARIABLE i [8:9/82-8:15/88]  TYPE: int TEXT=int  [8:9/82-8:12/85]  INIT: null  SCOPE: Stmt  [7:13/72-11:2/149]
+        STATEMENT DECLARATION  [9:9/97-9:36/124] SCOPE: Stmt  [7:13/72-11:2/149]
+            VARIABLE kk [9:30/118-9:35/123]  TYPE: $unresolved$::Type::Inner TEXT=Type::Inner  [9:9/97-9:29/117]  INIT: null  SCOPE: Stmt  [7:13/72-11:2/149]
+        STATEMENT DECLARATION  [10:9/133-10:23/147] SCOPE: Stmt  [7:13/72-11:2/149]
+            VARIABLE v7 [10:17/141-10:22/146]  TYPE: const $unresolved$::A TEXT=const A  [10:9/133-10:16/140]  INIT: null  SCOPE: Stmt  [7:13/72-11:2/149]
+

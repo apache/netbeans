@@ -1,0 +1,55 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["M",<ID>,line=1,col=9],offset=8,file=null[["__VA_ARGS__",<ID>,line=0,col=0],offset=0,file=null]'='["f",<ID>,line=1,col=16],offset=15,file=null ["(",<LPAREN>,line=1,col=17],offset=16,file=null ["int",<ID>,line=1,col=18],offset=17,file=null ["i",<ID>,line=1,col=22],offset=21,file=null [",",<COMMA>,line=1,col=23],offset=22,file=null ["##",<DBL_SHARP>,line=1,col=25],offset=24,file=null ["__VA_ARGS__",<ID>,line=1,col=27],offset=26,file=null [",",<COMMA>,line=1,col=38],offset=37,file=null ["int",<ID>,line=1,col=40],offset=39,file=null ["j",<ID>,line=1,col=44],offset=43,file=null [")",<RPAREN>,line=1,col=45],offset=44,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz149505.cc
+Includes:
+    <no includes>
+Macros:
+#define 'M[__VA_ARGS__]' [1:1/0-1:46/45]
+FUNCTION DEFINITION f  [2:1/46-2:7/52] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f(int,int)
+    UNIQUE NAME f:f(int,int)
+    DECLARATION: f  [2:1/46-2:7/52]
+    PARAMETERS:
+        i [2:1/46-2:4/49]  TYPE: int TEXT=int  [2:1/46-2:4/49]  INIT: null  SCOPE: f 
+        j [2:1/46-2:4/49]  TYPE: int TEXT=int  [2:1/46-2:4/49]  INIT: null  SCOPE: f 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [2:5/50-2:7/52] SCOPE: f 
+FUNCTION DEFINITION f  [3:1/53-3:12/64] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f(int,int,int)
+    UNIQUE NAME f:f(int,int,int)
+    DECLARATION: f  [3:1/53-3:12/64]
+    PARAMETERS:
+        i [3:1/53-3:9/61]  TYPE: int TEXT=int  [3:1/53-3:9/61]  INIT: null  SCOPE: f 
+        k [3:1/53-3:9/61]  TYPE: int TEXT=int  [3:1/53-3:9/61]  INIT: null  SCOPE: f 
+        j [3:1/53-3:9/61]  TYPE: int TEXT=int  [3:1/53-3:9/61]  INIT: null  SCOPE: f 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [3:10/62-3:12/64] SCOPE: f 
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION f  [2:1/46-2:7/52] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f(int,int)
+    UNIQUE NAME f:f(int,int)
+    DECLARATION: f  [2:1/46-2:7/52]
+    PARAMETERS:
+        i [2:1/46-2:4/49]  TYPE: int TEXT=int  [2:1/46-2:4/49]  INIT: null  SCOPE: f 
+        j [2:1/46-2:4/49]  TYPE: int TEXT=int  [2:1/46-2:4/49]  INIT: null  SCOPE: f 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [2:5/50-2:7/52] SCOPE: f 
+FUNCTION DEFINITION f  [3:1/53-3:12/64] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE f(int,int,int)
+    UNIQUE NAME f:f(int,int,int)
+    DECLARATION: f  [3:1/53-3:12/64]
+    PARAMETERS:
+        i [3:1/53-3:9/61]  TYPE: int TEXT=int  [3:1/53-3:9/61]  INIT: null  SCOPE: f 
+        k [3:1/53-3:9/61]  TYPE: int TEXT=int  [3:1/53-3:9/61]  INIT: null  SCOPE: f 
+        j [3:1/53-3:9/61]  TYPE: int TEXT=int  [3:1/53-3:9/61]  INIT: null  SCOPE: f 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [3:10/62-3:12/64] SCOPE: f 
+

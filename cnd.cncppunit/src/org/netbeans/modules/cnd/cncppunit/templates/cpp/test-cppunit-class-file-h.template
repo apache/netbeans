@@ -1,0 +1,44 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+/*
+ * File:   ${nameAndExt}
+ * Author: ${user}
+ *
+ * Created on ${date}, ${time}
+ */
+
+#ifndef ${guardName}
+#define	${guardName}
+
+#include <cppunit/extensions/HelperMacros.h>
+
+class ${className} : public CPPUNIT_NS::TestFixture {
+    CPPUNIT_TEST_SUITE(${className});
+<#if testInits?? && testInits != "">
+
+${testInits}
+<#else>
+
+    CPPUNIT_TEST(testMethod);
+    CPPUNIT_TEST(testFailedMethod);
+
+    </#if>
+    CPPUNIT_TEST_SUITE_END();
+
+public:
+    ${className}();
+    virtual ~${className}();
+    void setUp();
+    void tearDown();
+
+private:<#if testDecls?? && testDecls != "">
+${testDecls}<#else>
+    void testMethod();
+    void testFailedMethod();</#if>
+};
+
+#endif	/* ${guardName} */
+

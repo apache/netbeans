@@ -1,0 +1,244 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE file2.f
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION d2ch  [3:17/57-19:10/426] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:d2ch
+    DECLARATION: d2ch  [3:17/57-19:10/426]
+    PARAMETERS:
+        idig [3:17/57-19:10/426]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION SetViewAngle  [22:7/502-46:10/1174] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:SetViewAngle
+    DECLARATION: SetViewAngle  [22:7/502-46:10/1174]
+    PARAMETERS:
+        dPhi [22:7/502-46:10/1174]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        dTheta [22:7/502-46:10/1174]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CTH [22:7/502-46:10/1174]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        STH [22:7/502-46:10/1174]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CPH [22:7/502-46:10/1174]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        SPH [22:7/502-46:10/1174]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION InitGIFDevice  [49:7/1223-67:10/1699] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:InitGIFDevice
+    DECLARATION: InitGIFDevice  [49:7/1223-67:10/1699]
+    PARAMETERS:
+        name [49:7/1223-67:10/1699]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION InitDevice  [70:15/1765-106:10/2628] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:InitDevice
+    DECLARATION: InitDevice  [70:15/1765-106:10/2628]
+    PARAMETERS:
+        name [70:15/1765-106:10/2628]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        nch [70:15/1765-106:10/2628]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        pgopen [70:15/1765-106:10/2628]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION DrawFrame  [111:7/2678-148:10/3961] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:DrawFrame
+    DECLARATION: DrawFrame  [111:7/2678-148:10/3961]
+    PARAMETERS:
+        F [111:7/2678-148:10/3961]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        psu [111:7/2678-148:10/3961]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION Line  [151:7/4013-173:10/4461] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:Line
+    DECLARATION: Line  [151:7/4013-173:10/4461]
+    PARAMETERS:
+        X1 [151:7/4013-173:10/4461]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        Y1 [151:7/4013-173:10/4461]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        X2 [151:7/4013-173:10/4461]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        Y2 [151:7/4013-173:10/4461]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION OnScreen  [176:7/4526-213:10/6109] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:OnScreen
+    DECLARATION: OnScreen  [176:7/4526-213:10/6109]
+    PARAMETERS:
+        X [176:7/4526-213:10/6109]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        Y [176:7/4526-213:10/6109]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        Z [176:7/4526-213:10/6109]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        psu [176:7/4526-213:10/6109]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        sX [176:7/4526-213:10/6109]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        sY [176:7/4526-213:10/6109]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION InitFrame  [216:7/6151-251:10/6821] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:InitFrame
+    DECLARATION: InitFrame  [216:7/6151-251:10/6821]
+    PARAMETERS:
+        F [216:7/6151-251:10/6821]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION PALETT  [254:7/6881-320:10/9447] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:PALETT
+    DECLARATION: PALETT  [254:7/6881-320:10/9447]
+    PARAMETERS:
+        TYPE [254:7/6881-320:10/9447]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CONTRA [254:7/6881-320:10/9447]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        BRIGHT [254:7/6881-320:10/9447]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION FIDDLE  [323:7/9511-326:10/9625] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:FIDDLE
+    DECLARATION: FIDDLE  [323:7/9511-326:10/9625]
+    PARAMETERS:
+        P [323:7/9511-326:10/9625]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        SIGN [323:7/9511-326:10/9625]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CONTRA [323:7/9511-326:10/9625]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        BRIGHT [323:7/9511-326:10/9625]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION SetViewAngle2  [327:7/9632-351:10/10305] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:SetViewAngle2
+    DECLARATION: SetViewAngle2  [327:7/9632-351:10/10305]
+    PARAMETERS:
+        dPhi [327:7/9632-351:10/10305]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        dTheta [327:7/9632-351:10/10305]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CTH [327:7/9632-351:10/10305]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        STH [327:7/9632-351:10/10305]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CPH [327:7/9632-351:10/10305]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        SPH [327:7/9632-351:10/10305]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION d2ch  [3:17/57-19:10/426] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:d2ch
+    DECLARATION: d2ch  [3:17/57-19:10/426]
+    PARAMETERS:
+        idig [3:17/57-19:10/426]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION SetViewAngle  [22:7/502-46:10/1174] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:SetViewAngle
+    DECLARATION: SetViewAngle  [22:7/502-46:10/1174]
+    PARAMETERS:
+        dPhi [22:7/502-46:10/1174]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        dTheta [22:7/502-46:10/1174]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CTH [22:7/502-46:10/1174]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        STH [22:7/502-46:10/1174]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CPH [22:7/502-46:10/1174]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        SPH [22:7/502-46:10/1174]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION InitGIFDevice  [49:7/1223-67:10/1699] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:InitGIFDevice
+    DECLARATION: InitGIFDevice  [49:7/1223-67:10/1699]
+    PARAMETERS:
+        name [49:7/1223-67:10/1699]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION InitDevice  [70:15/1765-106:10/2628] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:InitDevice
+    DECLARATION: InitDevice  [70:15/1765-106:10/2628]
+    PARAMETERS:
+        name [70:15/1765-106:10/2628]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        nch [70:15/1765-106:10/2628]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        pgopen [70:15/1765-106:10/2628]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION DrawFrame  [111:7/2678-148:10/3961] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:DrawFrame
+    DECLARATION: DrawFrame  [111:7/2678-148:10/3961]
+    PARAMETERS:
+        F [111:7/2678-148:10/3961]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        psu [111:7/2678-148:10/3961]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION Line  [151:7/4013-173:10/4461] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:Line
+    DECLARATION: Line  [151:7/4013-173:10/4461]
+    PARAMETERS:
+        X1 [151:7/4013-173:10/4461]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        Y1 [151:7/4013-173:10/4461]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        X2 [151:7/4013-173:10/4461]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        Y2 [151:7/4013-173:10/4461]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION OnScreen  [176:7/4526-213:10/6109] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:OnScreen
+    DECLARATION: OnScreen  [176:7/4526-213:10/6109]
+    PARAMETERS:
+        X [176:7/4526-213:10/6109]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        Y [176:7/4526-213:10/6109]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        Z [176:7/4526-213:10/6109]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        psu [176:7/4526-213:10/6109]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        sX [176:7/4526-213:10/6109]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        sY [176:7/4526-213:10/6109]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION InitFrame  [216:7/6151-251:10/6821] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:InitFrame
+    DECLARATION: InitFrame  [216:7/6151-251:10/6821]
+    PARAMETERS:
+        F [216:7/6151-251:10/6821]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION PALETT  [254:7/6881-320:10/9447] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:PALETT
+    DECLARATION: PALETT  [254:7/6881-320:10/9447]
+    PARAMETERS:
+        TYPE [254:7/6881-320:10/9447]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CONTRA [254:7/6881-320:10/9447]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        BRIGHT [254:7/6881-320:10/9447]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION FIDDLE  [323:7/9511-326:10/9625] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:FIDDLE
+    DECLARATION: FIDDLE  [323:7/9511-326:10/9625]
+    PARAMETERS:
+        P [323:7/9511-326:10/9625]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        SIGN [323:7/9511-326:10/9625]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CONTRA [323:7/9511-326:10/9625]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        BRIGHT [323:7/9511-326:10/9625]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION SetViewAngle2  [327:7/9632-351:10/10305] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:SetViewAngle2
+    DECLARATION: SetViewAngle2  [327:7/9632-351:10/10305]
+    PARAMETERS:
+        dPhi [327:7/9632-351:10/10305]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        dTheta [327:7/9632-351:10/10305]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CTH [327:7/9632-351:10/10305]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        STH [327:7/9632-351:10/10305]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CPH [327:7/9632-351:10/10305]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        SPH [327:7/9632-351:10/10305]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+

@@ -1,0 +1,30 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug252875_1.c
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION foo1_252875 [1:1/0-1:52/51] FunctionImpl SCOPE: bug252875_1.c
+    DEFINITION: null
+    SIGNATURE foo1_252875(char* const*)
+    UNIQUE NAME F:foo1_252875(char* const*)
+    PARAMETERS:
+        argv [1:24/23-1:50/49]  TYPE: *char[] TEXT=char* const[]  [1:24/23-1:35/34]  INIT: null  SCOPE: foo1_252875 
+    RETURNS int TEXT=int  [1:8/7-1:11/10]
+FUNCTION foo2_252875 [3:1/60-3:58/117] FunctionImpl SCOPE: bug252875_1.c
+    DEFINITION: null
+    SIGNATURE foo2_252875(char* const*)
+    UNIQUE NAME F:foo2_252875(char* const*)
+    PARAMETERS:
+        argv [3:24/83-3:56/115]  TYPE: *char[] TEXT=char* const[]  [3:24/83-3:35/94]  INIT: null  SCOPE: foo2_252875 
+    RETURNS int TEXT=int  [3:8/67-3:11/70]
+
+========== Dumping model of PROJECT DummyProject
+

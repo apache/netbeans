@@ -1,0 +1,4 @@
+org.netbeans.modules.cnd.debugger.common2.debugger.LocalModel
+org.netbeans.modules.debugger.ui.models.WatchesNodeModel-hidden
+org.netbeans.modules.cnd.debugger.common2.debugger.WatchModel
+

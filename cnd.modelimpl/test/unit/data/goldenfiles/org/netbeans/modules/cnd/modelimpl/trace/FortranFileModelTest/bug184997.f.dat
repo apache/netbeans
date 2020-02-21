@@ -1,0 +1,34 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug184997.f
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION swap_real  [1:1/0-24:15/358] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:swap_real
+    DECLARATION: swap_real  [1:1/0-24:15/358]
+    PARAMETERS:
+        a1 [1:1/0-24:15/358]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        a2 [1:1/0-24:15/358]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION swap_real  [1:1/0-24:15/358] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:swap_real
+    DECLARATION: swap_real  [1:1/0-24:15/358]
+    PARAMETERS:
+        a1 [1:1/0-24:15/358]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        a2 [1:1/0-24:15/358]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+

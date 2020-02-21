@@ -1,0 +1,116 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug243560.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug243560 [1:1/0-60:2/1428] SCOPE: bug243560.cpp
+    STRUCT X0243560_1<typename T> (bug243560::X0243560_1 ) [4:5/76-7:6/157] lcurly=119 SCOPE: bug243560 
+        BASE CLASSES:
+        MEMBERS:
+            UNION Inner243560_1 (bug243560::X0243560_1::Inner243560_1 ) [6:7/127-6:30/150] lcurly=147 SCOPE: X0243560_1 
+                BASE CLASSES:
+                MEMBERS:
+    FUNCTION_INSTANTIATION X0243560_1 [9:5/164-9:53/212]
+    STRUCT X2243560_2<typename T,typename U> (bug243560::X2243560_2 ) [13:5/272-20:6/411] lcurly=327 SCOPE: bug243560 
+        BASE CLASSES:
+        MEMBERS:
+            STRUCT Inner243560_2 (bug243560::X2243560_2::Inner243560_2 ) [15:7/335-18:8/403] lcurly=356 SCOPE: X2243560_2 
+                BASE CLASSES:
+                MEMBERS:
+                    FIELD PUBLIC member1 [16:9/366-16:19/376]  TYPE: bug243560::X2243560_2::T TEXT=T  [16:9/366-16:10/367]  INIT: null  SCOPE: Inner243560_2 
+                    FIELD PUBLIC member2 [17:9/385-17:19/395]  TYPE: bug243560::X2243560_2::U TEXT=U  [17:9/385-17:10/386]  INIT: null  SCOPE: Inner243560_2 
+    FUNCTION_INSTANTIATION X2243560_2 [22:5/418-22:59/472]
+    STRUCT X0243560_3<typename T> (bug243560::X0243560_3 ) [25:5/528-28:6/609] lcurly=571 SCOPE: bug243560 
+        BASE CLASSES:
+        MEMBERS:
+            STRUCT Inner243560_3 (bug243560::X0243560_3::Inner243560_3 ) [27:7/579-27:30/602] lcurly=600 SCOPE: X0243560_3 
+                BASE CLASSES:
+                MEMBERS:
+    TYPEDEF XInt243560_3  [30:5/616-30:42/653] TYPE: bug243560::X0243560_3 TEXT=X0243560_3<int>  [30:13/624-30:28/639] SCOPE: bug243560 
+    FUNCTION_INSTANTIATION XInt243560_3 [32:5/659-32:49/703]
+    NAMESPACE DEFINITOIN has_inline_namespaces [35:5/798-46:6/1107] SCOPE: bug243560.cpp
+        NAMESPACE DEFINITOIN inner [36:7/838-41:8/977] SCOPE: bug243560.cpp
+            STRUCT X0243560_4<class T> (bug243560::has_inline_namespaces::inner::X0243560_4 ) [37:9/871-40:10/968] lcurly=916 SCOPE: inner 
+                BASE CLASSES:
+                MEMBERS:
+                    STRUCT MemberClass243560_4 (bug243560::has_inline_namespaces::inner::X0243560_4::MemberClass243560_4 ) [39:11/928-39:40/957] lcurly=955 SCOPE: X0243560_4 
+                        BASE CLASSES:
+                        MEMBERS:
+        STRUCT X1243560_4 (bug243560::has_inline_namespaces::X1243560_4 ) [42:7/984-42:27/1004] lcurly=1002 SCOPE: has_inline_namespaces 
+            BASE CLASSES:
+            MEMBERS:
+        STRUCT X2243560_4 (bug243560::has_inline_namespaces::X2243560_4 ) [43:7/1012-43:27/1032] lcurly=1030 SCOPE: has_inline_namespaces 
+            BASE CLASSES:
+            MEMBERS:
+        FUNCTION_INSTANTIATION X0243560_4 [45:7/1041-45:67/1101]
+    CLASS_FORWARD_DECLARATION X4243560_4 [48:5/1113-48:23/1131]
+    FUNCTION_INSTANTIATION has_inline_namespaces [50:5/1137-50:88/1220]
+    STRUCT X0243560_5<typename T> (bug243560::X0243560_5 ) [54:5/1286-57:6/1367] lcurly=1329 SCOPE: bug243560 
+        BASE CLASSES:
+        MEMBERS:
+            STRUCT Inner243560_5 (bug243560::X0243560_5::Inner243560_5 ) [56:7/1337-56:30/1360] lcurly=1358 SCOPE: X0243560_5 
+                BASE CLASSES:
+                MEMBERS:
+    FUNCTION_INSTANTIATION X0243560_5 [59:5/1374-59:53/1422]
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug243560 (bug243560) 
+    bug243560.cpp  [1:1/0-60:2/1428]
+NAMESPACE bug243560 (bug243560) 
+    STRUCT X0243560_1<typename T> (bug243560::X0243560_1 ) [4:5/76-7:6/157] lcurly=119 SCOPE: bug243560 
+        BASE CLASSES:
+        MEMBERS:
+            UNION Inner243560_1 (bug243560::X0243560_1::Inner243560_1 ) [6:7/127-6:30/150] lcurly=147 SCOPE: X0243560_1 
+                BASE CLASSES:
+                MEMBERS:
+    STRUCT X2243560_2<typename T,typename U> (bug243560::X2243560_2 ) [13:5/272-20:6/411] lcurly=327 SCOPE: bug243560 
+        BASE CLASSES:
+        MEMBERS:
+            STRUCT Inner243560_2 (bug243560::X2243560_2::Inner243560_2 ) [15:7/335-18:8/403] lcurly=356 SCOPE: X2243560_2 
+                BASE CLASSES:
+                MEMBERS:
+                    FIELD PUBLIC member1 [16:9/366-16:19/376]  TYPE: bug243560::X2243560_2::T TEXT=T  [16:9/366-16:10/367]  INIT: null  SCOPE: Inner243560_2 
+                    FIELD PUBLIC member2 [17:9/385-17:19/395]  TYPE: bug243560::X2243560_2::U TEXT=U  [17:9/385-17:10/386]  INIT: null  SCOPE: Inner243560_2 
+    STRUCT X0243560_3<typename T> (bug243560::X0243560_3 ) [25:5/528-28:6/609] lcurly=571 SCOPE: bug243560 
+        BASE CLASSES:
+        MEMBERS:
+            STRUCT Inner243560_3 (bug243560::X0243560_3::Inner243560_3 ) [27:7/579-27:30/602] lcurly=600 SCOPE: X0243560_3 
+                BASE CLASSES:
+                MEMBERS:
+    TYPEDEF XInt243560_3  [30:5/616-30:42/653] TYPE: bug243560::X0243560_3 TEXT=X0243560_3<int>  [30:13/624-30:28/639] SCOPE: bug243560 
+    STRUCT X4243560_4 (bug243560::X4243560_4 ) [48:5/1113-48:23/1131] lcurly=1130 SCOPE: bug243560 
+        BASE CLASSES:
+        MEMBERS:
+    STRUCT X0243560_5<typename T> (bug243560::X0243560_5 ) [54:5/1286-57:6/1367] lcurly=1329 SCOPE: bug243560 
+        BASE CLASSES:
+        MEMBERS:
+            STRUCT Inner243560_5 (bug243560::X0243560_5::Inner243560_5 ) [56:7/1337-56:30/1360] lcurly=1358 SCOPE: X0243560_5 
+                BASE CLASSES:
+                MEMBERS:
+    NAMESPACE DEFINITIONS for has_inline_namespaces (bug243560::has_inline_namespaces) 
+        bug243560.cpp  [35:5/798-46:6/1107]
+    NAMESPACE has_inline_namespaces (bug243560::has_inline_namespaces) 
+        STRUCT X1243560_4 (bug243560::has_inline_namespaces::X1243560_4 ) [42:7/984-42:27/1004] lcurly=1002 SCOPE: has_inline_namespaces 
+            BASE CLASSES:
+            MEMBERS:
+        STRUCT X2243560_4 (bug243560::has_inline_namespaces::X2243560_4 ) [43:7/1012-43:27/1032] lcurly=1030 SCOPE: has_inline_namespaces 
+            BASE CLASSES:
+            MEMBERS:
+        NAMESPACE DEFINITIONS for inner (bug243560::has_inline_namespaces::inner) 
+            bug243560.cpp  [36:7/838-41:8/977]
+        NAMESPACE inner (bug243560::has_inline_namespaces::inner) 
+            STRUCT X0243560_4<class T> (bug243560::has_inline_namespaces::inner::X0243560_4 ) [37:9/871-40:10/968] lcurly=916 SCOPE: inner 
+                BASE CLASSES:
+                MEMBERS:
+                    STRUCT MemberClass243560_4 (bug243560::has_inline_namespaces::inner::X0243560_4::MemberClass243560_4 ) [39:11/928-39:40/957] lcurly=955 SCOPE: X0243560_4 
+                        BASE CLASSES:
+                        MEMBERS:
+

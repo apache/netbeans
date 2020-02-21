@@ -1,0 +1,84 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz229003.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+TYPEDEF __gnuc_va_list  [2:1/1-2:42/42] TYPE: __builtin_va_list TEXT=__builtin_va_list  [2:9/9-2:26/26] SCOPE: $Global$ 
+TYPEDEF va_list  [3:1/43-3:32/74] TYPE: __gnuc_va_list TEXT=__gnuc_va_list  [3:9/51-3:23/65] SCOPE: $Global$ 
+TYPEDEF A229003  [4:1/75-4:21/95] TYPE: int TEXT=int  [4:9/83-4:12/86] SCOPE: $Global$ 
+VARIABLE b229003 [5:1/96-5:14/109]  TYPE: int TEXT=int  [5:1/96-5:4/99]  INIT: null  SCOPE: $Global$ 
+VARIABLE c229003 [6:1/111-6:18/128]  TYPE: A229003 TEXT=A229003  [6:1/111-6:8/118]  INIT: null  SCOPE: $Global$ 
+FUNCTION DEFINITION foo229003  [8:1/134-13:2/295] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo229003(...)
+    UNIQUE NAME f:foo229003(...)
+    DECLARATION: foo229003  [8:1/134-13:2/295]
+    PARAMETERS:
+        ... [8:15/148-8:18/151]  TYPE: null   INIT: null  SCOPE: foo229003 
+    RETURNS int TEXT=int  [8:1/134-8:4/137]
+    STATEMENT COMPOUND  [8:20/153-13:2/295] SCOPE: foo229003 
+        STATEMENT DECLARATION  [9:5/159-9:28/182] SCOPE: Stmt  [8:20/153-13:2/295]
+            VARIABLE arglist229003 [9:5/159-9:28/182]  TYPE: va_list TEXT=va_list  [9:5/159-9:12/166]  INIT: null  SCOPE: Stmt  [8:20/153-13:2/295]
+        STATEMENT DECLARATION  [10:5/187-10:18/200] SCOPE: Stmt  [8:20/153-13:2/295]
+            VARIABLE a229003 [10:5/187-10:18/200]  TYPE: int TEXT=int  [10:5/187-10:8/190]  INIT: null  SCOPE: Stmt  [8:20/153-13:2/295]
+        STATEMENT EXPRESSION  [11:5/205-11:29/229] SCOPE: Stmt  [8:20/153-13:2/295] text: 'foo229003(arglist229003)'
+        STATEMENT RETURN  [12:5/235-12:63/293] SCOPE: Stmt  [8:20/153-13:2/295] text: 'return arglist229003 != 0 && a229003 == c229003 + b229003;'
+FUNCTION DEFINITION boo229003  [15:1/299-21:2/489] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE boo229003(void()(int),void(*)(void*),void()(double))
+    UNIQUE NAME f:boo229003(void()(int),void(*)(void*),void()(double))
+    DECLARATION: boo229003  [15:1/299-21:2/489]
+    PARAMETERS:
+        fun1 [15:15/313-15:37/335]  TYPE: void(int) TEXT=void()(int)  [15:15/313-15:37/335]  INIT: null  SCOPE: boo229003 
+        fun2 [15:39/337-15:64/362]  TYPE: void(void*) TEXT=void(*)(void*)  [15:39/337-15:64/362]  INIT: null  SCOPE: boo229003 
+        fun3 [15:66/364-15:91/389]  TYPE: void(double) TEXT=void()(double)  [15:66/364-15:91/389]  INIT: null  SCOPE: boo229003 
+    RETURNS int TEXT=int  [15:1/299-15:4/302]
+    STATEMENT COMPOUND  [15:93/391-21:2/489] SCOPE: boo229003 
+        STATEMENT EXPRESSION  [16:5/398-16:12/405] SCOPE: Stmt  [15:93/391-21:2/489] text: 'fun1(0)'
+        STATEMENT EXPRESSION  [17:5/412-17:12/419] SCOPE: Stmt  [15:93/391-21:2/489] text: 'fun2(0)'
+        STATEMENT EXPRESSION  [18:5/425-18:12/432] SCOPE: Stmt  [15:93/391-21:2/489] text: 'fun3(1)'
+        STATEMENT DECLARATION  [20:5/439-20:53/487] SCOPE: Stmt  [15:93/391-21:2/489]
+            VARIABLE aaa [20:13/447-20:52/486]  TYPE: A229003 TEXT=A229003  [20:5/439-20:12/446]  INIT: null  SCOPE: Stmt  [15:93/391-21:2/489]
+
+========== Dumping model of PROJECT DummyProject
+TYPEDEF __gnuc_va_list  [2:1/1-2:42/42] TYPE: __builtin_va_list TEXT=__builtin_va_list  [2:9/9-2:26/26] SCOPE: $Global$ 
+TYPEDEF va_list  [3:1/43-3:32/74] TYPE: __gnuc_va_list TEXT=__gnuc_va_list  [3:9/51-3:23/65] SCOPE: $Global$ 
+TYPEDEF A229003  [4:1/75-4:21/95] TYPE: int TEXT=int  [4:9/83-4:12/86] SCOPE: $Global$ 
+VARIABLE b229003 [5:1/96-5:14/109]  TYPE: int TEXT=int  [5:1/96-5:4/99]  INIT: null  SCOPE: $Global$ 
+VARIABLE c229003 [6:1/111-6:18/128]  TYPE: A229003 TEXT=A229003  [6:1/111-6:8/118]  INIT: null  SCOPE: $Global$ 
+FUNCTION DEFINITION foo229003  [8:1/134-13:2/295] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo229003(...)
+    UNIQUE NAME f:foo229003(...)
+    DECLARATION: foo229003  [8:1/134-13:2/295]
+    PARAMETERS:
+        ... [8:15/148-8:18/151]  TYPE: null   INIT: null  SCOPE: foo229003 
+    RETURNS int TEXT=int  [8:1/134-8:4/137]
+    STATEMENT COMPOUND  [8:20/153-13:2/295] SCOPE: foo229003 
+        STATEMENT DECLARATION  [9:5/159-9:28/182] SCOPE: Stmt  [8:20/153-13:2/295]
+            VARIABLE arglist229003 [9:5/159-9:28/182]  TYPE: va_list TEXT=va_list  [9:5/159-9:12/166]  INIT: null  SCOPE: Stmt  [8:20/153-13:2/295]
+        STATEMENT DECLARATION  [10:5/187-10:18/200] SCOPE: Stmt  [8:20/153-13:2/295]
+            VARIABLE a229003 [10:5/187-10:18/200]  TYPE: int TEXT=int  [10:5/187-10:8/190]  INIT: null  SCOPE: Stmt  [8:20/153-13:2/295]
+        STATEMENT EXPRESSION  [11:5/205-11:29/229] SCOPE: Stmt  [8:20/153-13:2/295] text: 'foo229003(arglist229003)'
+        STATEMENT RETURN  [12:5/235-12:63/293] SCOPE: Stmt  [8:20/153-13:2/295] text: 'return arglist229003 != 0 && a229003 == c229003 + b229003;'
+FUNCTION DEFINITION boo229003  [15:1/299-21:2/489] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE boo229003(void()(int),void(*)(void*),void()(double))
+    UNIQUE NAME f:boo229003(void()(int),void(*)(void*),void()(double))
+    DECLARATION: boo229003  [15:1/299-21:2/489]
+    PARAMETERS:
+        fun1 [15:15/313-15:37/335]  TYPE: void(int) TEXT=void()(int)  [15:15/313-15:37/335]  INIT: null  SCOPE: boo229003 
+        fun2 [15:39/337-15:64/362]  TYPE: void(void*) TEXT=void(*)(void*)  [15:39/337-15:64/362]  INIT: null  SCOPE: boo229003 
+        fun3 [15:66/364-15:91/389]  TYPE: void(double) TEXT=void()(double)  [15:66/364-15:91/389]  INIT: null  SCOPE: boo229003 
+    RETURNS int TEXT=int  [15:1/299-15:4/302]
+    STATEMENT COMPOUND  [15:93/391-21:2/489] SCOPE: boo229003 
+        STATEMENT EXPRESSION  [16:5/398-16:12/405] SCOPE: Stmt  [15:93/391-21:2/489] text: 'fun1(0)'
+        STATEMENT EXPRESSION  [17:5/412-17:12/419] SCOPE: Stmt  [15:93/391-21:2/489] text: 'fun2(0)'
+        STATEMENT EXPRESSION  [18:5/425-18:12/432] SCOPE: Stmt  [15:93/391-21:2/489] text: 'fun3(1)'
+        STATEMENT DECLARATION  [20:5/439-20:53/487] SCOPE: Stmt  [15:93/391-21:2/489]
+            VARIABLE aaa [20:13/447-20:52/486]  TYPE: A229003 TEXT=A229003  [20:5/439-20:12/446]  INIT: null  SCOPE: Stmt  [15:93/391-21:2/489]
+

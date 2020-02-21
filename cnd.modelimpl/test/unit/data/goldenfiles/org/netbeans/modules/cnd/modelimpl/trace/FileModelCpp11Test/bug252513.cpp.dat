@@ -1,0 +1,114 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug252513.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug252513 [1:1/0-46:2/1264] SCOPE: bug252513.cpp
+    NAMESPACE DEFINITOIN std252513 [2:3/24-8:4/139] SCOPE: bug252513.cpp
+        TYPEDEF string252513  [3:5/50-3:30/75] TYPE: int TEXT=int  [3:13/58-3:16/61] SCOPE: std252513 
+        FUNCTION DEFINITION to_string252513  [5:5/81-7:6/135] FunctionDDImpl SCOPE: std252513 
+            SIGNATURE to_string252513(int)
+            UNIQUE NAME f:bug252513::std252513::to_string252513(int)
+            DECLARATION: to_string252513  [5:5/81-7:6/135]
+            PARAMETERS:
+                var [5:25/101-5:32/108]  TYPE: int TEXT=int  [5:25/101-5:28/104]  INIT: null  SCOPE: to_string252513 
+            RETURNS int TEXT=int  [5:5/81-5:8/84]
+            STATEMENT COMPOUND  [5:34/110-7:6/135] SCOPE: to_string252513 
+                STATEMENT RETURN  [6:7/118-6:18/129] SCOPE: Stmt  [5:34/110-7:6/135] text: 'return var;'
+    FUNCTION DEFINITION foo252513  [11:3/144-45:4/1262] FunctionDDImpl SCOPE: bug252513 
+        SIGNATURE foo252513()
+        UNIQUE NAME f:bug252513::foo252513()
+        DECLARATION: foo252513  [11:3/144-45:4/1262]
+        PARAMETERS:
+        RETURNS int TEXT=int  [11:3/144-11:6/147]
+        STATEMENT COMPOUND  [11:19/160-45:4/1262] SCOPE: foo252513 
+            STATEMENT DECLARATION  [12:5/166-12:17/178] SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE x [12:9/170-12:10/171]  TYPE: int TEXT=int  [12:5/166-12:8/169]  INIT: null  SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE y [12:12/173-12:13/174]  TYPE: int TEXT=int  [12:5/166-12:8/169]  INIT: null  SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE z [12:15/176-12:16/177]  TYPE: int TEXT=int  [12:5/166-12:8/169]  INIT: null  SCOPE: Stmt  [11:19/160-45:4/1262]
+            STATEMENT DECLARATION  [14:5/184-16:7/358] SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE lambda0 [14:5/184-16:7/358]  TYPE: auto TEXT=auto  [14:5/184-14:9/188]  INIT: text='[=](int a, int b)->std252513::string252513 {
+      return std252513::to_string252513(a) + std252513::to_string252513(b) + std252513::to_string252513(x);
+    }'  SCOPE: Stmt  [11:19/160-45:4/1262]
+            STATEMENT DECLARATION  [19:5/387-21:7/528] SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE lambda1 [19:5/387-21:7/528]  TYPE: auto TEXT=auto  [19:5/387-19:9/391]  INIT: text='[](int a, int b)->std252513::string252513 {
+      return std252513::to_string252513(a) + std252513::to_string252513(b);
+    }'  SCOPE: Stmt  [11:19/160-45:4/1262]
+            STATEMENT DECLARATION  [24:5/552-26:7/694] SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE lambda2 [24:5/552-26:7/694]  TYPE: auto TEXT=auto  [24:5/552-24:9/556]  INIT: text='[&](int a, int b)->std252513::string252513 {
+      return std252513::to_string252513(a) + std252513::to_string252513(b);
+    }'  SCOPE: Stmt  [11:19/160-45:4/1262]
+            STATEMENT DECLARATION  [29:5/718-32:7/881] SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE lambda3 [29:5/718-32:7/881]  TYPE: auto TEXT=auto  [29:5/718-29:9/722]  INIT: text='[x](int a, int b)->std252513::string252513 {
+      int c = a + x;
+      return std252513::to_string252513(a) + std252513::to_string252513(b);
+    }'  SCOPE: Stmt  [11:19/160-45:4/1262]
+            STATEMENT DECLARATION  [38:5/1024-42:7/1239] SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE lambda4 [38:5/1024-42:7/1239]  TYPE: auto TEXT=auto  [38:5/1024-38:9/1028]  INIT: text='[x, y, z](int a, int b)->std252513::string252513 {
+    // unable to resolve identifier c
+      int c = a + x + y + z;
+      return std252513::to_string252513(a) + std252513::to_string252513(b);
+    }'  SCOPE: Stmt  [11:19/160-45:4/1262]
+            STATEMENT RETURN  [44:5/1249-44:14/1258] SCOPE: Stmt  [11:19/160-45:4/1262] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug252513 (bug252513) 
+    bug252513.cpp  [1:1/0-46:2/1264]
+NAMESPACE bug252513 (bug252513) 
+    FUNCTION DEFINITION foo252513  [11:3/144-45:4/1262] FunctionDDImpl SCOPE: bug252513 
+        SIGNATURE foo252513()
+        UNIQUE NAME f:bug252513::foo252513()
+        DECLARATION: foo252513  [11:3/144-45:4/1262]
+        PARAMETERS:
+        RETURNS int TEXT=int  [11:3/144-11:6/147]
+        STATEMENT COMPOUND  [11:19/160-45:4/1262] SCOPE: foo252513 
+            STATEMENT DECLARATION  [12:5/166-12:17/178] SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE x [12:9/170-12:10/171]  TYPE: int TEXT=int  [12:5/166-12:8/169]  INIT: null  SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE y [12:12/173-12:13/174]  TYPE: int TEXT=int  [12:5/166-12:8/169]  INIT: null  SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE z [12:15/176-12:16/177]  TYPE: int TEXT=int  [12:5/166-12:8/169]  INIT: null  SCOPE: Stmt  [11:19/160-45:4/1262]
+            STATEMENT DECLARATION  [14:5/184-16:7/358] SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE lambda0 [14:5/184-16:7/358]  TYPE: auto TEXT=auto  [14:5/184-14:9/188]  INIT: text='[=](int a, int b)->std252513::string252513 {
+      return std252513::to_string252513(a) + std252513::to_string252513(b) + std252513::to_string252513(x);
+    }'  SCOPE: Stmt  [11:19/160-45:4/1262]
+            STATEMENT DECLARATION  [19:5/387-21:7/528] SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE lambda1 [19:5/387-21:7/528]  TYPE: auto TEXT=auto  [19:5/387-19:9/391]  INIT: text='[](int a, int b)->std252513::string252513 {
+      return std252513::to_string252513(a) + std252513::to_string252513(b);
+    }'  SCOPE: Stmt  [11:19/160-45:4/1262]
+            STATEMENT DECLARATION  [24:5/552-26:7/694] SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE lambda2 [24:5/552-26:7/694]  TYPE: auto TEXT=auto  [24:5/552-24:9/556]  INIT: text='[&](int a, int b)->std252513::string252513 {
+      return std252513::to_string252513(a) + std252513::to_string252513(b);
+    }'  SCOPE: Stmt  [11:19/160-45:4/1262]
+            STATEMENT DECLARATION  [29:5/718-32:7/881] SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE lambda3 [29:5/718-32:7/881]  TYPE: auto TEXT=auto  [29:5/718-29:9/722]  INIT: text='[x](int a, int b)->std252513::string252513 {
+      int c = a + x;
+      return std252513::to_string252513(a) + std252513::to_string252513(b);
+    }'  SCOPE: Stmt  [11:19/160-45:4/1262]
+            STATEMENT DECLARATION  [38:5/1024-42:7/1239] SCOPE: Stmt  [11:19/160-45:4/1262]
+                VARIABLE lambda4 [38:5/1024-42:7/1239]  TYPE: auto TEXT=auto  [38:5/1024-38:9/1028]  INIT: text='[x, y, z](int a, int b)->std252513::string252513 {
+    // unable to resolve identifier c
+      int c = a + x + y + z;
+      return std252513::to_string252513(a) + std252513::to_string252513(b);
+    }'  SCOPE: Stmt  [11:19/160-45:4/1262]
+            STATEMENT RETURN  [44:5/1249-44:14/1258] SCOPE: Stmt  [11:19/160-45:4/1262] text: 'return 0;'
+    NAMESPACE DEFINITIONS for std252513 (bug252513::std252513) 
+        bug252513.cpp  [2:3/24-8:4/139]
+    NAMESPACE std252513 (bug252513::std252513) 
+        TYPEDEF string252513  [3:5/50-3:30/75] TYPE: int TEXT=int  [3:13/58-3:16/61] SCOPE: std252513 
+        FUNCTION DEFINITION to_string252513  [5:5/81-7:6/135] FunctionDDImpl SCOPE: std252513 
+            SIGNATURE to_string252513(int)
+            UNIQUE NAME f:bug252513::std252513::to_string252513(int)
+            DECLARATION: to_string252513  [5:5/81-7:6/135]
+            PARAMETERS:
+                var [5:25/101-5:32/108]  TYPE: int TEXT=int  [5:25/101-5:28/104]  INIT: null  SCOPE: to_string252513 
+            RETURNS int TEXT=int  [5:5/81-5:8/84]
+            STATEMENT COMPOUND  [5:34/110-7:6/135] SCOPE: to_string252513 
+                STATEMENT RETURN  [6:7/118-6:18/129] SCOPE: Stmt  [5:34/110-7:6/135] text: 'return var;'
+

@@ -1,0 +1,122 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz162280_friend_fwd_cls.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN boost [1:1/0-41:2/875] SCOPE: iz162280_friend_fwd_cls.cpp
+    NAMESPACE DEFINITOIN python [2:5/22-40:6/873] SCOPE: iz162280_friend_fwd_cls.cpp
+        CLASS_FORWARD_DECLARATION pickle_suite [3:9/49-3:29/69]
+        NAMESPACE DEFINITOIN detail [5:9/79-7:10/153] SCOPE: iz162280_friend_fwd_cls.cpp
+            CLASS_FORWARD_DECLARATION pickle_suite_registration [6:13/110-6:46/143]
+        STRUCT pickle_suite (boost::python::pickle_suite ) [9:9/163-32:10/700] lcurly=183 SCOPE: python 
+            BASE CLASSES:
+            MEMBERS:
+                STRUCT inaccessible (boost::python::pickle_suite::inaccessible ) [12:13/215-13:14/250] lcurly=235 SCOPE: pickle_suite 
+                    BASE CLASSES:
+                    MEMBERS:
+                FUNCTION DEFINITION getinitargs  [17:13/342-19:14/419] MethodDDImpl SCOPE: pickle_suite 
+                    SIGNATURE getinitargs()
+                    UNIQUE NAME f:boost::python::pickle_suite::getinitargs()
+                    DECLARATION: getinitargs  [17:13/342-19:14/419]
+                    PARAMETERS:
+                    RETURNS *boost::python::pickle_suite::inaccessible TEXT=inaccessible*  [17:20/349-17:34/363]
+                    STATEMENT COMPOUND  [17:49/378-19:14/419] SCOPE: getinitargs 
+                        STATEMENT RETURN  [18:17/396-18:26/405] SCOPE: Stmt  [17:49/378-19:14/419] text: 'return 0;'
+                FUNCTION DEFINITION getstate  [21:13/433-23:14/507] MethodDDImpl SCOPE: pickle_suite 
+                    SIGNATURE getstate()
+                    UNIQUE NAME f:boost::python::pickle_suite::getstate()
+                    DECLARATION: getstate  [21:13/433-23:14/507]
+                    PARAMETERS:
+                    RETURNS *boost::python::pickle_suite::inaccessible TEXT=inaccessible*  [21:20/440-21:34/454]
+                    STATEMENT COMPOUND  [21:46/466-23:14/507] SCOPE: getstate 
+                        STATEMENT RETURN  [22:17/484-22:26/493] SCOPE: Stmt  [21:46/466-23:14/507] text: 'return 0;'
+                FUNCTION DEFINITION setstate  [25:13/521-27:14/595] MethodDDImpl SCOPE: pickle_suite 
+                    SIGNATURE setstate()
+                    UNIQUE NAME f:boost::python::pickle_suite::setstate()
+                    DECLARATION: setstate  [25:13/521-27:14/595]
+                    PARAMETERS:
+                    RETURNS *boost::python::pickle_suite::inaccessible TEXT=inaccessible*  [25:20/528-25:34/542]
+                    STATEMENT COMPOUND  [25:46/554-27:14/595] SCOPE: setstate 
+                        STATEMENT RETURN  [26:17/572-26:26/581] SCOPE: Stmt  [25:46/554-27:14/595] text: 'return 0;'
+                FUNCTION DEFINITION getstate_manages_dict  [29:13/609-31:14/690] MethodDDImpl SCOPE: pickle_suite 
+                    SIGNATURE getstate_manages_dict()
+                    UNIQUE NAME f:boost::python::pickle_suite::getstate_manages_dict()
+                    DECLARATION: getstate_manages_dict  [29:13/609-31:14/690]
+                    PARAMETERS:
+                    RETURNS bool TEXT=bool  [29:20/616-29:24/620]
+                    STATEMENT COMPOUND  [29:49/645-31:14/690] SCOPE: getstate_manages_dict 
+                        STATEMENT RETURN  [30:17/663-30:30/676] SCOPE: Stmt  [29:49/645-31:14/690] text: 'return false;'
+            FRIENDS:
+                CLASS_FRIEND_DECLARATION detail::pickle_suite_registration [14:13/264-14:61/312] FriendClassImpl
+                    REFERENCED CLASS: S:boost::python::detail::pickle_suite_registration
+        NAMESPACE DEFINITOIN detail [34:9/711-39:10/867] SCOPE: iz162280_friend_fwd_cls.cpp
+            STRUCT pickle_suite_registration (boost::python::detail::pickle_suite_registration ) [36:13/743-38:14/856] lcurly=776 SCOPE: detail 
+                BASE CLASSES:
+                MEMBERS:
+                    TYPEDEF inaccessible  [37:17/794-37:65/842] TYPE: boost::python::pickle_suite::inaccessible TEXT=pickle_suite::inaccessible  [37:25/802-37:51/828] SCOPE: pickle_suite_registration 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for boost (boost) 
+    iz162280_friend_fwd_cls.cpp  [1:1/0-41:2/875]
+NAMESPACE boost (boost) 
+    NAMESPACE DEFINITIONS for python (boost::python) 
+        iz162280_friend_fwd_cls.cpp  [2:5/22-40:6/873]
+    NAMESPACE python (boost::python) 
+        STRUCT pickle_suite (boost::python::pickle_suite ) [9:9/163-32:10/700] lcurly=183 SCOPE: python 
+            BASE CLASSES:
+            MEMBERS:
+                STRUCT inaccessible (boost::python::pickle_suite::inaccessible ) [12:13/215-13:14/250] lcurly=235 SCOPE: pickle_suite 
+                    BASE CLASSES:
+                    MEMBERS:
+                FUNCTION DEFINITION getinitargs  [17:13/342-19:14/419] MethodDDImpl SCOPE: pickle_suite 
+                    SIGNATURE getinitargs()
+                    UNIQUE NAME f:boost::python::pickle_suite::getinitargs()
+                    DECLARATION: getinitargs  [17:13/342-19:14/419]
+                    PARAMETERS:
+                    RETURNS *boost::python::pickle_suite::inaccessible TEXT=inaccessible*  [17:20/349-17:34/363]
+                    STATEMENT COMPOUND  [17:49/378-19:14/419] SCOPE: getinitargs 
+                        STATEMENT RETURN  [18:17/396-18:26/405] SCOPE: Stmt  [17:49/378-19:14/419] text: 'return 0;'
+                FUNCTION DEFINITION getstate  [21:13/433-23:14/507] MethodDDImpl SCOPE: pickle_suite 
+                    SIGNATURE getstate()
+                    UNIQUE NAME f:boost::python::pickle_suite::getstate()
+                    DECLARATION: getstate  [21:13/433-23:14/507]
+                    PARAMETERS:
+                    RETURNS *boost::python::pickle_suite::inaccessible TEXT=inaccessible*  [21:20/440-21:34/454]
+                    STATEMENT COMPOUND  [21:46/466-23:14/507] SCOPE: getstate 
+                        STATEMENT RETURN  [22:17/484-22:26/493] SCOPE: Stmt  [21:46/466-23:14/507] text: 'return 0;'
+                FUNCTION DEFINITION setstate  [25:13/521-27:14/595] MethodDDImpl SCOPE: pickle_suite 
+                    SIGNATURE setstate()
+                    UNIQUE NAME f:boost::python::pickle_suite::setstate()
+                    DECLARATION: setstate  [25:13/521-27:14/595]
+                    PARAMETERS:
+                    RETURNS *boost::python::pickle_suite::inaccessible TEXT=inaccessible*  [25:20/528-25:34/542]
+                    STATEMENT COMPOUND  [25:46/554-27:14/595] SCOPE: setstate 
+                        STATEMENT RETURN  [26:17/572-26:26/581] SCOPE: Stmt  [25:46/554-27:14/595] text: 'return 0;'
+                FUNCTION DEFINITION getstate_manages_dict  [29:13/609-31:14/690] MethodDDImpl SCOPE: pickle_suite 
+                    SIGNATURE getstate_manages_dict()
+                    UNIQUE NAME f:boost::python::pickle_suite::getstate_manages_dict()
+                    DECLARATION: getstate_manages_dict  [29:13/609-31:14/690]
+                    PARAMETERS:
+                    RETURNS bool TEXT=bool  [29:20/616-29:24/620]
+                    STATEMENT COMPOUND  [29:49/645-31:14/690] SCOPE: getstate_manages_dict 
+                        STATEMENT RETURN  [30:17/663-30:30/676] SCOPE: Stmt  [29:49/645-31:14/690] text: 'return false;'
+            FRIENDS:
+                CLASS_FRIEND_DECLARATION detail::pickle_suite_registration [14:13/264-14:61/312] FriendClassImpl
+                    REFERENCED CLASS: S:boost::python::detail::pickle_suite_registration
+        NAMESPACE DEFINITIONS for detail (boost::python::detail) 
+            iz162280_friend_fwd_cls.cpp  [5:9/79-7:10/153]
+            iz162280_friend_fwd_cls.cpp  [34:9/711-39:10/867]
+        NAMESPACE detail (boost::python::detail) 
+            STRUCT pickle_suite_registration (boost::python::detail::pickle_suite_registration ) [36:13/743-38:14/856] lcurly=776 SCOPE: detail 
+                BASE CLASSES:
+                MEMBERS:
+                    TYPEDEF inaccessible  [37:17/794-37:65/842] TYPE: boost::python::pickle_suite::inaccessible TEXT=pickle_suite::inaccessible  [37:25/802-37:51/828] SCOPE: pickle_suite_registration 
+

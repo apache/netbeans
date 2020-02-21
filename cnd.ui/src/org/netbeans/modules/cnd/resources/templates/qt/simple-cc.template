@@ -1,0 +1,24 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+/*
+ * File:   ${NAME}.${EXTENSION}
+ * Author: ${user}
+ *
+ * Created on ${DATE}, ${TIME}
+ */
+
+#include <QApplication>
+
+int main(int argc, char *argv[]) {
+    // initialize resources, if needed
+    // Q_INIT_RESOURCE(resfile);
+
+    QApplication app(argc, argv);
+
+    // create and show your widgets here
+
+    return app.exec();
+}

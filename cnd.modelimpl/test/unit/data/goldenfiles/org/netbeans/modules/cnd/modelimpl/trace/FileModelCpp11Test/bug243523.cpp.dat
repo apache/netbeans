@@ -1,0 +1,46 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug243523.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug243523 [1:1/0-4:2/175] SCOPE: bug243523.cpp
+    STRUCT X_243523 (bug243523::X_243523 ) [2:5/26-2:24/45] lcurly=42 SCOPE: bug243523 
+        BASE CLASSES:
+        MEMBERS:
+    FUNCTION test_243523 [3:5/51-3:127/173] FunctionImpl SCOPE: bug243523 
+        DEFINITION: null
+        SIGNATURE test_243523(X_243523*,int(*)(int),int(*)(int),int(*)(int))
+        UNIQUE NAME F:bug243523::test_243523(X_243523*,int(*)(int),int(*)(int),int(*)(int))
+        PARAMETERS:
+            xp [3:22/68-3:34/80]  TYPE: *bug243523::X_243523 TEXT=X_243523*  [3:22/68-3:32/78]  INIT: null  SCOPE: test_243523 
+            pmf [3:36/82-3:61/107]  TYPE: int(int) TEXT=int(*)(int)  [3:36/82-3:61/107]  INIT: null  SCOPE: test_243523 
+            l_pmf [3:63/109-3:92/138]  TYPE: int(int) TEXT=int(*)(int)  [3:63/109-3:90/136]  INIT: null  SCOPE: test_243523 
+            r_pmf [3:95/141-3:125/171]  TYPE: int(int) TEXT=int(*)(int)  [3:95/141-3:122/168]  INIT: null  SCOPE: test_243523 
+        RETURNS void TEXT=void  [3:5/51-3:9/55]
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug243523 (bug243523) 
+    bug243523.cpp  [1:1/0-4:2/175]
+NAMESPACE bug243523 (bug243523) 
+    STRUCT X_243523 (bug243523::X_243523 ) [2:5/26-2:24/45] lcurly=42 SCOPE: bug243523 
+        BASE CLASSES:
+        MEMBERS:
+    FUNCTION test_243523 [3:5/51-3:127/173] FunctionImpl SCOPE: bug243523 
+        DEFINITION: null
+        SIGNATURE test_243523(X_243523*,int(*)(int),int(*)(int),int(*)(int))
+        UNIQUE NAME F:bug243523::test_243523(X_243523*,int(*)(int),int(*)(int),int(*)(int))
+        PARAMETERS:
+            xp [3:22/68-3:34/80]  TYPE: *bug243523::X_243523 TEXT=X_243523*  [3:22/68-3:32/78]  INIT: null  SCOPE: test_243523 
+            pmf [3:36/82-3:61/107]  TYPE: int(int) TEXT=int(*)(int)  [3:36/82-3:61/107]  INIT: null  SCOPE: test_243523 
+            l_pmf [3:63/109-3:92/138]  TYPE: int(int) TEXT=int(*)(int)  [3:63/109-3:90/136]  INIT: null  SCOPE: test_243523 
+            r_pmf [3:95/141-3:125/171]  TYPE: int(int) TEXT=int(*)(int)  [3:95/141-3:122/168]  INIT: null  SCOPE: test_243523 
+        RETURNS void TEXT=void  [3:5/51-3:9/55]
+

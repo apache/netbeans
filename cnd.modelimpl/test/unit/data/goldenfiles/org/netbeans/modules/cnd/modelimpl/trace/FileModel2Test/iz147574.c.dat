@@ -1,0 +1,56 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz147574.c
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION main_147574  [1:1/0-9:2/107] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main_147574()
+    UNIQUE NAME f:main_147574()
+    DECLARATION: main_147574  [1:1/0-9:2/107]
+    PARAMETERS:
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+    STATEMENT COMPOUND  [1:19/18-9:2/107] SCOPE: main_147574 
+        STATEMENT LABEL  [3:1/21-3:10/30] SCOPE: Stmt  [1:19/18-9:2/107] text: 'yyerrlab1'
+        STATEMENT GOTO  [5:3/64-5:18/79] SCOPE: Stmt  [1:19/18-9:2/107] text: 'goto yyerrlab2;'
+        STATEMENT LABEL  [7:1/81-7:10/90] SCOPE: Stmt  [1:19/18-9:2/107] text: 'yyerrlab2'
+        STATEMENT RETURN  [8:5/96-8:14/105] SCOPE: Stmt  [1:19/18-9:2/107] text: 'return 0;'
+FUNCTION DEFINITION yyerror  [11:1/109-15:2/167] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE yyerror(char*)
+    UNIQUE NAME f:yyerror(char*)
+    DECLARATION: yyerror  [11:1/109-15:2/167]
+    PARAMETERS:
+        s [12:1/120-12:9/128]  TYPE: *char TEXT=char*  [12:1/120-12:7/126]  INIT: null  SCOPE: yyerror 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [13:1/129-15:2/167] SCOPE: yyerror 
+        STATEMENT EXPRESSION  [14:5/135-14:34/164] SCOPE: Stmt  [13:1/129-15:2/167] text: 'printf("yacc error: %s\n", s)'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION main_147574  [1:1/0-9:2/107] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main_147574()
+    UNIQUE NAME f:main_147574()
+    DECLARATION: main_147574  [1:1/0-9:2/107]
+    PARAMETERS:
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+    STATEMENT COMPOUND  [1:19/18-9:2/107] SCOPE: main_147574 
+        STATEMENT LABEL  [3:1/21-3:10/30] SCOPE: Stmt  [1:19/18-9:2/107] text: 'yyerrlab1'
+        STATEMENT GOTO  [5:3/64-5:18/79] SCOPE: Stmt  [1:19/18-9:2/107] text: 'goto yyerrlab2;'
+        STATEMENT LABEL  [7:1/81-7:10/90] SCOPE: Stmt  [1:19/18-9:2/107] text: 'yyerrlab2'
+        STATEMENT RETURN  [8:5/96-8:14/105] SCOPE: Stmt  [1:19/18-9:2/107] text: 'return 0;'
+FUNCTION DEFINITION yyerror  [11:1/109-15:2/167] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE yyerror(char*)
+    UNIQUE NAME f:yyerror(char*)
+    DECLARATION: yyerror  [11:1/109-15:2/167]
+    PARAMETERS:
+        s [12:1/120-12:9/128]  TYPE: *char TEXT=char*  [12:1/120-12:7/126]  INIT: null  SCOPE: yyerror 
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT COMPOUND  [13:1/129-15:2/167] SCOPE: yyerror 
+        STATEMENT EXPRESSION  [14:5/135-14:34/164] SCOPE: Stmt  [13:1/129-15:2/167] text: 'printf("yacc error: %s\n", s)'
+

@@ -1,0 +1,95 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["_OPERATORS_H_",<ID>,line=2,col=9],offset=30,file=null'=''
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE operators.h
+Includes:
+    <no includes>
+Macros:
+#define '_OPERATORS_H_' [2:1/22-2:22/43]
+CLASS Cls (Cls ) [4:1/45-10:2/156] lcurly=55 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION operator = [6:17/71-6:47/101] MethodImpl SCOPE: Cls 
+            DEFINITION: null
+            SIGNATURE operator =(const Cls&)
+            UNIQUE NAME F:Cls::operator =(const Cls&)
+            PARAMETERS:
+                 [6:35/89-6:45/99]  TYPE: const &Cls TEXT=const Cls&  [6:35/89-6:45/99]  INIT: null  SCOPE: operator = 
+            RETURNS &Cls TEXT=Cls&  [6:17/71-6:21/75]
+        FUNCTION DEFINITION operator +=  [7:17/104-9:10/154] MethodDDImpl SCOPE: Cls 
+            SIGNATURE operator +=(const Cls&)
+            UNIQUE NAME f:Cls::operator +=(const Cls&)
+            DECLARATION: operator +=  [7:17/104-9:10/154]
+            PARAMETERS:
+                 [7:35/122-7:45/132]  TYPE: const &Cls TEXT=const Cls&  [7:35/122-7:45/132]  INIT: null  SCOPE: operator += 
+            RETURNS &Cls TEXT=Cls&  [7:17/104-7:21/108]
+            STATEMENT COMPOUND  [7:47/134-9:10/154] SCOPE: operator += 
+                STATEMENT RETURN  [8:17/138-8:30/151] SCOPE: Stmt  [7:47/134-9:10/154] text: 'return *this;'
+FUNCTION operator + [12:1/159-12:41/199] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE operator +(const Cls&,const Cls&)
+    UNIQUE NAME F:operator +(const Cls&,const Cls&)
+    PARAMETERS:
+         [12:17/175-12:27/185]  TYPE: const &Cls TEXT=const Cls&  [12:17/175-12:27/185]  INIT: null  SCOPE: operator + 
+         [12:29/187-12:39/197]  TYPE: const &Cls TEXT=const Cls&  [12:29/187-12:39/197]  INIT: null  SCOPE: operator + 
+    RETURNS Cls TEXT=Cls  [12:1/159-12:4/162]
+FUNCTION DEFINITION operator -  [14:1/201-17:2/271] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE operator -(const Cls&,const Cls&)
+    UNIQUE NAME f:operator -(const Cls&,const Cls&)
+    DECLARATION: operator -  [14:1/201-17:2/271]
+    PARAMETERS:
+        a [14:17/217-14:29/229]  TYPE: const &Cls TEXT=const Cls&  [14:17/217-14:27/227]  INIT: null  SCOPE: operator - 
+        b [14:31/231-14:43/243]  TYPE: const &Cls TEXT=const Cls&  [14:31/231-14:41/241]  INIT: null  SCOPE: operator - 
+    RETURNS Cls TEXT=Cls  [14:1/201-14:4/204]
+    STATEMENT COMPOUND  [14:45/245-17:2/271] SCOPE: operator - 
+        STATEMENT DECLARATION  [15:9/248-15:17/256] SCOPE: Stmt  [14:45/245-17:2/271]
+            VARIABLE cls [15:9/248-15:17/256]  TYPE: Cls TEXT=Cls  [15:9/248-15:12/251]  INIT: null  SCOPE: Stmt  [14:45/245-17:2/271]
+        STATEMENT RETURN  [16:9/258-16:20/269] SCOPE: Stmt  [14:45/245-17:2/271] text: 'return cls;'
+
+========== Dumping model of PROJECT DummyProject
+CLASS Cls (Cls ) [4:1/45-10:2/156] lcurly=55 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION operator = [6:17/71-6:47/101] MethodImpl SCOPE: Cls 
+            DEFINITION: null
+            SIGNATURE operator =(const Cls&)
+            UNIQUE NAME F:Cls::operator =(const Cls&)
+            PARAMETERS:
+                 [6:35/89-6:45/99]  TYPE: const &Cls TEXT=const Cls&  [6:35/89-6:45/99]  INIT: null  SCOPE: operator = 
+            RETURNS &Cls TEXT=Cls&  [6:17/71-6:21/75]
+        FUNCTION DEFINITION operator +=  [7:17/104-9:10/154] MethodDDImpl SCOPE: Cls 
+            SIGNATURE operator +=(const Cls&)
+            UNIQUE NAME f:Cls::operator +=(const Cls&)
+            DECLARATION: operator +=  [7:17/104-9:10/154]
+            PARAMETERS:
+                 [7:35/122-7:45/132]  TYPE: const &Cls TEXT=const Cls&  [7:35/122-7:45/132]  INIT: null  SCOPE: operator += 
+            RETURNS &Cls TEXT=Cls&  [7:17/104-7:21/108]
+            STATEMENT COMPOUND  [7:47/134-9:10/154] SCOPE: operator += 
+                STATEMENT RETURN  [8:17/138-8:30/151] SCOPE: Stmt  [7:47/134-9:10/154] text: 'return *this;'
+FUNCTION operator + [12:1/159-12:41/199] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE operator +(const Cls&,const Cls&)
+    UNIQUE NAME F:operator +(const Cls&,const Cls&)
+    PARAMETERS:
+         [12:17/175-12:27/185]  TYPE: const &Cls TEXT=const Cls&  [12:17/175-12:27/185]  INIT: null  SCOPE: operator + 
+         [12:29/187-12:39/197]  TYPE: const &Cls TEXT=const Cls&  [12:29/187-12:39/197]  INIT: null  SCOPE: operator + 
+    RETURNS Cls TEXT=Cls  [12:1/159-12:4/162]
+FUNCTION DEFINITION operator -  [14:1/201-17:2/271] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE operator -(const Cls&,const Cls&)
+    UNIQUE NAME f:operator -(const Cls&,const Cls&)
+    DECLARATION: operator -  [14:1/201-17:2/271]
+    PARAMETERS:
+        a [14:17/217-14:29/229]  TYPE: const &Cls TEXT=const Cls&  [14:17/217-14:27/227]  INIT: null  SCOPE: operator - 
+        b [14:31/231-14:43/243]  TYPE: const &Cls TEXT=const Cls&  [14:31/231-14:41/241]  INIT: null  SCOPE: operator - 
+    RETURNS Cls TEXT=Cls  [14:1/201-14:4/204]
+    STATEMENT COMPOUND  [14:45/245-17:2/271] SCOPE: operator - 
+        STATEMENT DECLARATION  [15:9/248-15:17/256] SCOPE: Stmt  [14:45/245-17:2/271]
+            VARIABLE cls [15:9/248-15:17/256]  TYPE: Cls TEXT=Cls  [15:9/248-15:12/251]  INIT: null  SCOPE: Stmt  [14:45/245-17:2/271]
+        STATEMENT RETURN  [16:9/258-16:20/269] SCOPE: Stmt  [14:45/245-17:2/271] text: 'return cls;'
+

@@ -1,0 +1,82 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug243513.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug243513 [1:1/0-12:2/299] SCOPE: bug243513.cpp
+    STRUCT S_243513 (bug243513::S_243513 ) [2:5/26-5:6/122] lcurly=42 SCOPE: bug243513 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION ~S_243513 [3:7/50-3:27/70] DestructorImpl SCOPE: S_243513 
+                DEFINITION: null
+                SIGNATURE ~S_243513()
+                UNIQUE NAME F:bug243513::S_243513::~S_243513()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION g_243513 [4:7/77-4:46/116] MethodImpl SCOPE: S_243513 
+                DEFINITION: null
+                SIGNATURE g_243513()
+                UNIQUE NAME F:bug243513::S_243513::g_243513()
+                PARAMETERS:
+                RETURNS void TEXT=void  [4:7/77-4:11/81]
+    FUNCTION DEFINITION g_243513  [7:5/133-11:6/296] FunctionDDImpl SCOPE: bug243513 
+        SIGNATURE g_243513(int(*)())
+        UNIQUE NAME f:bug243513::g_243513(int(*)())
+        DECLARATION: g_243513  [7:5/133-11:6/296]
+        PARAMETERS:
+            f1_243513 [7:19/147-7:45/173]  TYPE: int() TEXT=int(*)()  [7:19/147-7:45/173]  INIT: null  SCOPE: g_243513 
+        RETURNS void TEXT=void  [7:5/133-7:9/137]
+        STATEMENT COMPOUND  [7:47/175-11:6/296] SCOPE: g_243513 
+            STATEMENT TRY_CATCH  [8:7/183-10:55/290] SCOPE: Stmt  [7:47/175-11:6/296]
+                TRY:
+                STATEMENT COMPOUND  [8:11/187-8:14/190] SCOPE: Stmt  [8:7/183-10:55/290]
+                HANDLERS:
+                STATEMENT CATCH  [9:7/197-9:45/235] SCOPE: Stmt  [8:7/183-10:55/290]
+                    PARAMETER: f2_243513 [9:14/204-9:40/230]  TYPE: int() TEXT=int(*)()  [9:14/204-9:40/230]  INIT: null  SCOPE: Stmt  [9:7/197-9:45/235]
+                STATEMENT CATCH  [10:7/242-10:55/290] SCOPE: Stmt  [8:7/183-10:55/290]
+                    PARAMETER: f3_243513 [10:14/249-10:50/285]  TYPE: int()[] TEXT=int(*[])()  [10:14/249-10:50/285]  INIT: null  SCOPE: Stmt  [10:7/242-10:55/290]
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug243513 (bug243513) 
+    bug243513.cpp  [1:1/0-12:2/299]
+NAMESPACE bug243513 (bug243513) 
+    STRUCT S_243513 (bug243513::S_243513 ) [2:5/26-5:6/122] lcurly=42 SCOPE: bug243513 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION ~S_243513 [3:7/50-3:27/70] DestructorImpl SCOPE: S_243513 
+                DEFINITION: null
+                SIGNATURE ~S_243513()
+                UNIQUE NAME F:bug243513::S_243513::~S_243513()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION g_243513 [4:7/77-4:46/116] MethodImpl SCOPE: S_243513 
+                DEFINITION: null
+                SIGNATURE g_243513()
+                UNIQUE NAME F:bug243513::S_243513::g_243513()
+                PARAMETERS:
+                RETURNS void TEXT=void  [4:7/77-4:11/81]
+    FUNCTION DEFINITION g_243513  [7:5/133-11:6/296] FunctionDDImpl SCOPE: bug243513 
+        SIGNATURE g_243513(int(*)())
+        UNIQUE NAME f:bug243513::g_243513(int(*)())
+        DECLARATION: g_243513  [7:5/133-11:6/296]
+        PARAMETERS:
+            f1_243513 [7:19/147-7:45/173]  TYPE: int() TEXT=int(*)()  [7:19/147-7:45/173]  INIT: null  SCOPE: g_243513 
+        RETURNS void TEXT=void  [7:5/133-7:9/137]
+        STATEMENT COMPOUND  [7:47/175-11:6/296] SCOPE: g_243513 
+            STATEMENT TRY_CATCH  [8:7/183-10:55/290] SCOPE: Stmt  [7:47/175-11:6/296]
+                TRY:
+                STATEMENT COMPOUND  [8:11/187-8:14/190] SCOPE: Stmt  [8:7/183-10:55/290]
+                HANDLERS:
+                STATEMENT CATCH  [9:7/197-9:45/235] SCOPE: Stmt  [8:7/183-10:55/290]
+                    PARAMETER: f2_243513 [9:14/204-9:40/230]  TYPE: int() TEXT=int(*)()  [9:14/204-9:40/230]  INIT: null  SCOPE: Stmt  [9:7/197-9:45/235]
+                STATEMENT CATCH  [10:7/242-10:55/290] SCOPE: Stmt  [8:7/183-10:55/290]
+                    PARAMETER: f3_243513 [10:14/249-10:50/285]  TYPE: int()[] TEXT=int(*[])()  [10:14/249-10:50/285]  INIT: null  SCOPE: Stmt  [10:7/242-10:55/290]
+

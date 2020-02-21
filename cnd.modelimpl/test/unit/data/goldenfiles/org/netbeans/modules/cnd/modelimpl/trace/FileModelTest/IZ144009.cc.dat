@@ -1,0 +1,54 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE IZ144009.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION dtrace_dof_difo  [2:1/1-11:2/161] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE dtrace_dof_difo()
+    UNIQUE NAME f:dtrace_dof_difo()
+    DECLARATION: dtrace_dof_difo  [2:1/1-11:2/161]
+    PARAMETERS:
+    RETURNS void TEXT=void  [2:1/1-2:5/5]
+    STATEMENT COMPOUND  [2:24/24-11:2/161] SCOPE: dtrace_dof_difo 
+        STATEMENT DECLARATION  [3:5/30-8:7/121] SCOPE: Stmt  [2:24/24-11:2/161]
+            STRUCT  ( ) [3:5/30-5:6/78] lcurly=50 SCOPE: null
+                BASE CLASSES:
+                MEMBERS:
+                    FIELD PUBLIC section [4:9/60-4:21/72]  TYPE: int TEXT=int  [4:9/60-4:12/63]  INIT: null  SCOPE:  
+            VARIABLE difo [5:7/79-8:6/120]  TYPE: [] TEXT=difo [ ][]  [3:5/30-5:6/78]  INIT: text='{
+        {1},
+        {2}
+    }'  SCOPE: Stmt  [2:24/24-11:2/161]
+        STATEMENT DECLARATION  [9:5/126-9:29/150] SCOPE: Stmt  [2:24/24-11:2/161]
+            VARIABLE l [9:5/126-9:29/150]  TYPE: int TEXT=int  [9:5/126-9:8/129]  INIT: text='difo[0].section'  SCOPE: Stmt  [2:24/24-11:2/161]
+        STATEMENT EXPRESSION  [10:5/155-10:8/158] SCOPE: Stmt  [2:24/24-11:2/161] text: 'l++'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION dtrace_dof_difo  [2:1/1-11:2/161] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE dtrace_dof_difo()
+    UNIQUE NAME f:dtrace_dof_difo()
+    DECLARATION: dtrace_dof_difo  [2:1/1-11:2/161]
+    PARAMETERS:
+    RETURNS void TEXT=void  [2:1/1-2:5/5]
+    STATEMENT COMPOUND  [2:24/24-11:2/161] SCOPE: dtrace_dof_difo 
+        STATEMENT DECLARATION  [3:5/30-8:7/121] SCOPE: Stmt  [2:24/24-11:2/161]
+            STRUCT  ( ) [3:5/30-5:6/78] lcurly=50 SCOPE: null
+                BASE CLASSES:
+                MEMBERS:
+                    FIELD PUBLIC section [4:9/60-4:21/72]  TYPE: int TEXT=int  [4:9/60-4:12/63]  INIT: null  SCOPE:  
+            VARIABLE difo [5:7/79-8:6/120]  TYPE: [] TEXT=difo [ ][]  [3:5/30-5:6/78]  INIT: text='{
+        {1},
+        {2}
+    }'  SCOPE: Stmt  [2:24/24-11:2/161]
+        STATEMENT DECLARATION  [9:5/126-9:29/150] SCOPE: Stmt  [2:24/24-11:2/161]
+            VARIABLE l [9:5/126-9:29/150]  TYPE: int TEXT=int  [9:5/126-9:8/129]  INIT: text='difo[0].section'  SCOPE: Stmt  [2:24/24-11:2/161]
+        STATEMENT EXPRESSION  [10:5/155-10:8/158] SCOPE: Stmt  [2:24/24-11:2/161] text: 'l++'
+

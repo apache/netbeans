@@ -1,0 +1,18 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE preproc_concat_error.cc
+Includes:
+    <no includes>
+Macros:
+#define 'FUNC[a]' [2:1/41-2:21/61]
+VARIABLE FUNC [4:1/141-4:13/153]  TYPE: int TEXT=int  [4:1/141-4:4/144]  INIT: null  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE FUNC [4:1/141-4:13/153]  TYPE: int TEXT=int  [4:1/141-4:4/144]  INIT: null  SCOPE: $Global$ 
+

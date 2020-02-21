@@ -1,0 +1,110 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE conversion_operator.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN ns [1:1/0-3:2/42] SCOPE: conversion_operator.cc
+    TYPEDEF string  [2:5/19-2:26/40] TYPE: *char TEXT=char*  [2:13/27-2:18/32] SCOPE: ns 
+CLASS C (C ) [5:1/44-22:2/412] lcurly=52 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PRIVATE msg [7:5/67-7:15/77]  TYPE: *char TEXT=char*  [7:5/67-7:10/72]  INIT: null  SCOPE: C 
+        FUNCTION DEFINITION C  [9:5/90-9:33/118] ConstructorDDImpl SCOPE: C 
+            SIGNATURE C(char*)
+            UNIQUE NAME f:C::C(char*)
+            DECLARATION: C  [9:5/90-9:33/118]
+            PARAMETERS:
+                msg_ [9:7/92-9:17/102]  TYPE: *char TEXT=char*  [9:7/92-9:12/97]  INIT: null  SCOPE: C 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [9:31/116-9:33/118] SCOPE: C 
+        FUNCTION DEFINITION operator const char*  [10:5/123-12:6/179] MethodDDImpl SCOPE: C 
+            SIGNATURE operator const char*()
+            UNIQUE NAME f:C::operator const char*()
+            DECLARATION: operator const char*  [10:5/123-12:6/179]
+            PARAMETERS:
+            RETURNS const *char TEXT=const char*  [10:14/132-10:19/137]
+            STATEMENT COMPOUND  [10:34/152-12:6/179] SCOPE: operator const char* 
+                STATEMENT RETURN  [11:9/162-11:20/173] SCOPE: Stmt  [10:34/152-12:6/179] text: 'return msg;'
+        FUNCTION DEFINITION operator ns::string  [13:5/184-15:6/239] MethodDDImpl SCOPE: C 
+            SIGNATURE operator ns::string()
+            UNIQUE NAME f:C::operator ns::string()
+            DECLARATION: operator ns::string  [13:5/184-15:6/239]
+            PARAMETERS:
+            RETURNS ns::string TEXT=ns::string  [13:14/193-13:24/203]
+            STATEMENT COMPOUND  [13:33/212-15:6/239] SCOPE: operator ns::string 
+                STATEMENT RETURN  [14:9/222-14:20/233] SCOPE: Stmt  [13:33/212-15:6/239] text: 'return msg;'
+        FUNCTION DEFINITION toString  [16:5/244-18:6/323] MethodDDImpl SCOPE: C 
+            SIGNATURE toString() const
+            UNIQUE NAME f:C::toString() const
+            DECLARATION: toString  [16:5/244-18:6/323]
+            PARAMETERS:
+            RETURNS ns::string TEXT=ns::string  [16:5/244-16:15/254]
+            STATEMENT COMPOUND  [16:33/272-18:6/323] SCOPE: toString 
+                STATEMENT RETURN  [17:9/282-17:44/317] SCOPE: Stmt  [16:33/272-18:6/323] text: 'return this->operator ns::string();'
+        FUNCTION DEFINITION toCharPtr  [19:5/328-21:6/410] MethodDDImpl SCOPE: C 
+            SIGNATURE toCharPtr() const
+            UNIQUE NAME f:C::toCharPtr() const
+            DECLARATION: toCharPtr  [19:5/328-21:6/410]
+            PARAMETERS:
+            RETURNS const *char TEXT=const char*  [19:5/328-19:16/339]
+            STATEMENT COMPOUND  [19:35/358-21:6/410] SCOPE: toCharPtr 
+                STATEMENT RETURN  [20:9/368-20:45/404] SCOPE: Stmt  [19:35/358-21:6/410] text: 'return this->operator const char*();'
+
+========== Dumping model of PROJECT DummyProject
+CLASS C (C ) [5:1/44-22:2/412] lcurly=52 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PRIVATE msg [7:5/67-7:15/77]  TYPE: *char TEXT=char*  [7:5/67-7:10/72]  INIT: null  SCOPE: C 
+        FUNCTION DEFINITION C  [9:5/90-9:33/118] ConstructorDDImpl SCOPE: C 
+            SIGNATURE C(char*)
+            UNIQUE NAME f:C::C(char*)
+            DECLARATION: C  [9:5/90-9:33/118]
+            PARAMETERS:
+                msg_ [9:7/92-9:17/102]  TYPE: *char TEXT=char*  [9:7/92-9:12/97]  INIT: null  SCOPE: C 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [9:31/116-9:33/118] SCOPE: C 
+        FUNCTION DEFINITION operator const char*  [10:5/123-12:6/179] MethodDDImpl SCOPE: C 
+            SIGNATURE operator const char*()
+            UNIQUE NAME f:C::operator const char*()
+            DECLARATION: operator const char*  [10:5/123-12:6/179]
+            PARAMETERS:
+            RETURNS const *char TEXT=const char*  [10:14/132-10:19/137]
+            STATEMENT COMPOUND  [10:34/152-12:6/179] SCOPE: operator const char* 
+                STATEMENT RETURN  [11:9/162-11:20/173] SCOPE: Stmt  [10:34/152-12:6/179] text: 'return msg;'
+        FUNCTION DEFINITION operator ns::string  [13:5/184-15:6/239] MethodDDImpl SCOPE: C 
+            SIGNATURE operator ns::string()
+            UNIQUE NAME f:C::operator ns::string()
+            DECLARATION: operator ns::string  [13:5/184-15:6/239]
+            PARAMETERS:
+            RETURNS ns::string TEXT=ns::string  [13:14/193-13:24/203]
+            STATEMENT COMPOUND  [13:33/212-15:6/239] SCOPE: operator ns::string 
+                STATEMENT RETURN  [14:9/222-14:20/233] SCOPE: Stmt  [13:33/212-15:6/239] text: 'return msg;'
+        FUNCTION DEFINITION toString  [16:5/244-18:6/323] MethodDDImpl SCOPE: C 
+            SIGNATURE toString() const
+            UNIQUE NAME f:C::toString() const
+            DECLARATION: toString  [16:5/244-18:6/323]
+            PARAMETERS:
+            RETURNS ns::string TEXT=ns::string  [16:5/244-16:15/254]
+            STATEMENT COMPOUND  [16:33/272-18:6/323] SCOPE: toString 
+                STATEMENT RETURN  [17:9/282-17:44/317] SCOPE: Stmt  [16:33/272-18:6/323] text: 'return this->operator ns::string();'
+        FUNCTION DEFINITION toCharPtr  [19:5/328-21:6/410] MethodDDImpl SCOPE: C 
+            SIGNATURE toCharPtr() const
+            UNIQUE NAME f:C::toCharPtr() const
+            DECLARATION: toCharPtr  [19:5/328-21:6/410]
+            PARAMETERS:
+            RETURNS const *char TEXT=const char*  [19:5/328-19:16/339]
+            STATEMENT COMPOUND  [19:35/358-21:6/410] SCOPE: toCharPtr 
+                STATEMENT RETURN  [20:9/368-20:45/404] SCOPE: Stmt  [19:35/358-21:6/410] text: 'return this->operator const char*();'
+NAMESPACE DEFINITIONS for ns (ns) 
+    conversion_operator.cc  [1:1/0-3:2/42]
+NAMESPACE ns (ns) 
+    TYPEDEF string  [2:5/19-2:26/40] TYPE: *char TEXT=char*  [2:13/27-2:18/32] SCOPE: ns 
+

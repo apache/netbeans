@@ -1,0 +1,11 @@
+#org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.BreakpointColumnModels$Lwp
+org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.BreakpointColumnModels$Count
+org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.BreakpointColumnModels$CountLimit
+org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.BreakpointColumnModels$Id
+org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.BreakpointColumnModels$WhileIn
+org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.BreakpointColumnModels$Condition
+org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.BreakpointColumnModels$Thread
+#org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.BreakpointColumnModels$Temp
+#org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.BreakpointColumnModels$Java
+org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.BreakpointColumnModels$Context
+org.netbeans.modules.cnd.debugger.common2.debugger.breakpoints.BreakpointColumnModels$Timestamp

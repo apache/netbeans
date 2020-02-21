@@ -1,0 +1,66 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug225102.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug225102 [1:1/0-14:2/232] SCOPE: bug225102.cpp
+    STRUCT cls225102 (bug225102::cls225102 ) [3:5/26-13:6/229] lcurly=47 SCOPE: bug225102 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION operator double  [5:9/57-7:10/117] MethodDDImpl SCOPE: cls225102 
+                SIGNATURE operator double()
+                UNIQUE NAME f:bug225102::cls225102::operator double()
+                DECLARATION: operator double  [5:9/57-7:10/117]
+                PARAMETERS:
+                RETURNS double TEXT=double  [5:26/74-5:32/80]
+                STATEMENT COMPOUND  [5:50/98-7:10/117] SCOPE: operator double 
+            FUNCTION operator int [9:9/127-9:46/164] MethodImpl SCOPE: cls225102 
+                DEFINITION: null
+                SIGNATURE operator int()
+                UNIQUE NAME F:bug225102::cls225102::operator int()
+                PARAMETERS:
+                RETURNS int TEXT=int  [9:26/144-9:29/147]
+            FUNCTION DEFINITION operator float  [11:9/175-12:10/223] MethodDDImpl SCOPE: cls225102 
+                SIGNATURE operator float()
+                UNIQUE NAME f:bug225102::cls225102::operator float()
+                DECLARATION: operator float  [11:9/175-12:10/223]
+                PARAMETERS:
+                RETURNS float TEXT=float  [11:26/192-11:31/197]
+                STATEMENT COMPOUND  [11:46/212-12:10/223] SCOPE: operator float 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug225102 (bug225102) 
+    bug225102.cpp  [1:1/0-14:2/232]
+NAMESPACE bug225102 (bug225102) 
+    STRUCT cls225102 (bug225102::cls225102 ) [3:5/26-13:6/229] lcurly=47 SCOPE: bug225102 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION operator double  [5:9/57-7:10/117] MethodDDImpl SCOPE: cls225102 
+                SIGNATURE operator double()
+                UNIQUE NAME f:bug225102::cls225102::operator double()
+                DECLARATION: operator double  [5:9/57-7:10/117]
+                PARAMETERS:
+                RETURNS double TEXT=double  [5:26/74-5:32/80]
+                STATEMENT COMPOUND  [5:50/98-7:10/117] SCOPE: operator double 
+            FUNCTION operator int [9:9/127-9:46/164] MethodImpl SCOPE: cls225102 
+                DEFINITION: null
+                SIGNATURE operator int()
+                UNIQUE NAME F:bug225102::cls225102::operator int()
+                PARAMETERS:
+                RETURNS int TEXT=int  [9:26/144-9:29/147]
+            FUNCTION DEFINITION operator float  [11:9/175-12:10/223] MethodDDImpl SCOPE: cls225102 
+                SIGNATURE operator float()
+                UNIQUE NAME f:bug225102::cls225102::operator float()
+                DECLARATION: operator float  [11:9/175-12:10/223]
+                PARAMETERS:
+                RETURNS float TEXT=float  [11:26/192-11:31/197]
+                STATEMENT COMPOUND  [11:46/212-12:10/223] SCOPE: operator float 
+

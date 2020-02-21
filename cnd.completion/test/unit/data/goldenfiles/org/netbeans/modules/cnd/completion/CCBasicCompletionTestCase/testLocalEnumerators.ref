@@ -1,0 +1,14 @@
+action Action	$	    action = action
+A	$	    action = A
+Action	$	    action = Action
+B	$	    action = B
+C	$	    action = C
+In_Macro	$	    action = In_Macro
+DELETE	$	    action = DELETE
+RECEIVE	$	    action = RECEIVE
+SEND	$	    action = SEND
+local_enumerators_foo() void	$	    action = local_enumerators_foo()
+globInt int	$	    action = globInt
+checkZero() void	$	    action = checkZero()
+globFoo() void	$	    action = globFoo()
+main(int argc, char** argv) int	$	    action = main()

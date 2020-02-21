@@ -1,0 +1,87 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE mixed_c.c
+Includes:
+"mixed_header.h" [1:1/0-1:26/25]
+Macros:
+    <no macros>
+FUNCTION DEFINITION get_class  [2:1/26-4:2/63] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE get_class()
+    UNIQUE NAME f:get_class()
+    DECLARATION: get_class  [2:1/26-4:2/63]
+    PARAMETERS:
+    RETURNS int TEXT=int  [2:1/26-2:4/29]
+    STATEMENT COMPOUND  [2:17/42-4:2/63] SCOPE: get_class 
+        STATEMENT RETURN  [3:5/48-3:18/61] SCOPE: Stmt  [2:17/42-4:2/63] text: 'return class;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION get_class  [2:1/26-4:2/63] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE get_class()
+    UNIQUE NAME f:get_class()
+    DECLARATION: get_class  [2:1/26-4:2/63]
+    PARAMETERS:
+    RETURNS int TEXT=int  [2:1/26-2:4/29]
+    STATEMENT COMPOUND  [2:17/42-4:2/63] SCOPE: get_class 
+        STATEMENT RETURN  [3:5/48-3:18/61] SCOPE: Stmt  [2:17/42-4:2/63] text: 'return class;'
+FUNCTION DEFINITION getMixedClass  [4:1/101-6:2/163] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE getMixedClass()
+    UNIQUE NAME f:getMixedClass()
+    DECLARATION: getMixedClass  [4:1/101-6:2/163]
+    PARAMETERS:
+    RETURNS *MixedClass1 TEXT=MixedClass1*  [4:1/101-4:13/113]
+    STATEMENT COMPOUND  [4:30/130-6:2/163] SCOPE: getMixedClass 
+        STATEMENT RETURN  [5:5/136-5:30/161] SCOPE: Stmt  [4:30/130-6:2/163] text: 'return new MixedClass1();'
+CLASS MixedClass1 (MixedClass1 ) [2:1/19-3:2/40] lcurly=37 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+VARIABLE class [5:1/48-5:11/58]  TYPE: int TEXT=int  [5:1/48-5:4/51]  INIT: null  SCOPE: $Global$ 
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["__cplusplus",<ID>,line=1,col=9],offset=8,file=null'='["1998",<DECIMALINT>,line=1,col=21],offset=20,file=null ["<comment text skipped>",<CPP_COMMENT>,line=1,col=26],offset=25,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE mixed_cpp.cc
+Includes:
+"mixed_header.h" [2:1/74-2:26/99]
+Macros:
+#define '__cplusplus' [1:1/0-1:74/73]
+FUNCTION DEFINITION getMixedClass  [4:1/101-6:2/163] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE getMixedClass()
+    UNIQUE NAME f:getMixedClass()
+    DECLARATION: getMixedClass  [4:1/101-6:2/163]
+    PARAMETERS:
+    RETURNS *MixedClass1 TEXT=MixedClass1*  [4:1/101-4:13/113]
+    STATEMENT COMPOUND  [4:30/130-6:2/163] SCOPE: getMixedClass 
+        STATEMENT RETURN  [5:5/136-5:30/161] SCOPE: Stmt  [4:30/130-6:2/163] text: 'return new MixedClass1();'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION get_class  [2:1/26-4:2/63] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE get_class()
+    UNIQUE NAME f:get_class()
+    DECLARATION: get_class  [2:1/26-4:2/63]
+    PARAMETERS:
+    RETURNS int TEXT=int  [2:1/26-2:4/29]
+    STATEMENT COMPOUND  [2:17/42-4:2/63] SCOPE: get_class 
+        STATEMENT RETURN  [3:5/48-3:18/61] SCOPE: Stmt  [2:17/42-4:2/63] text: 'return class;'
+FUNCTION DEFINITION getMixedClass  [4:1/101-6:2/163] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE getMixedClass()
+    UNIQUE NAME f:getMixedClass()
+    DECLARATION: getMixedClass  [4:1/101-6:2/163]
+    PARAMETERS:
+    RETURNS *MixedClass1 TEXT=MixedClass1*  [4:1/101-4:13/113]
+    STATEMENT COMPOUND  [4:30/130-6:2/163] SCOPE: getMixedClass 
+        STATEMENT RETURN  [5:5/136-5:30/161] SCOPE: Stmt  [4:30/130-6:2/163] text: 'return new MixedClass1();'
+CLASS MixedClass1 (MixedClass1 ) [2:1/19-3:2/40] lcurly=37 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+VARIABLE class [5:1/48-5:11/58]  TYPE: int TEXT=int  [5:1/48-5:4/51]  INIT: null  SCOPE: $Global$ 
+

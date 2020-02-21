@@ -1,0 +1,5 @@
+1 leaveDirectory { depth: 0; dir: /tools/taiga/tools-com/projects/ojwc/build/jmee }
+2 error { file: D:\tools\taiga\javacall-com\implementation\rtx\networking\access_point.c; line: 19 }
+5 error { file: D:\tools\taiga\javacall-com\implementation\rtx\networking\access_point.c; line: 19 }
+8 error { file: D:\tools\taiga\javacall-com\implementation\rtx\networking\access_point.c; line: 28 }
+11 error { file: D:\tools\taiga\javacall-com\implementation\rtx\networking\access_point.c; line: 87 }

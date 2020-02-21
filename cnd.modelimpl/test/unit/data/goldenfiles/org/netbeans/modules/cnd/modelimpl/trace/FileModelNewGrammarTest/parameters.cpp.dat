@@ -1,0 +1,36 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE parameters.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION foo  [1:1/0-2:2/44] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo(int*,const int**,int&)
+    UNIQUE NAME f:foo(int*,const int**,int&)
+    DECLARATION: foo  [1:1/0-2:2/44]
+    PARAMETERS:
+        a [1:10/9-1:17/16]  TYPE: *int TEXT=int*  [1:10/9-1:13/12]  INIT: null  SCOPE: foo 
+        b [1:19/18-1:32/31]  TYPE: const **int TEXT=const int**  [1:25/24-1:28/27]  INIT: null  SCOPE: foo 
+        c [1:34/33-1:40/39]  TYPE: &int TEXT=int&  [1:34/33-1:37/36]  INIT: null  SCOPE: foo 
+    RETURNS void TEXT=void  [1:1/0-1:5/4]
+    STATEMENT COMPOUND  [1:42/41-2:2/44] SCOPE: foo 
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION foo  [1:1/0-2:2/44] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo(int*,const int**,int&)
+    UNIQUE NAME f:foo(int*,const int**,int&)
+    DECLARATION: foo  [1:1/0-2:2/44]
+    PARAMETERS:
+        a [1:10/9-1:17/16]  TYPE: *int TEXT=int*  [1:10/9-1:13/12]  INIT: null  SCOPE: foo 
+        b [1:19/18-1:32/31]  TYPE: const **int TEXT=const int**  [1:25/24-1:28/27]  INIT: null  SCOPE: foo 
+        c [1:34/33-1:40/39]  TYPE: &int TEXT=int&  [1:34/33-1:37/36]  INIT: null  SCOPE: foo 
+    RETURNS void TEXT=void  [1:1/0-1:5/4]
+    STATEMENT COMPOUND  [1:42/41-2:2/44] SCOPE: foo 
+

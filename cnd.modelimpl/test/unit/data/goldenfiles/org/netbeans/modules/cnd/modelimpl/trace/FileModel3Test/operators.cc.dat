@@ -1,0 +1,25 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE operators.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION operator =  [3:1/26-5:2/86] FunctionDefinitionImpl SCOPE: operators.cc
+    SIGNATURE operator =(const Cls&)
+    UNIQUE NAME f:Cls::operator =(const Cls&)
+    DECLARATION: null
+    PARAMETERS:
+        obj [3:24/49-3:38/63]  TYPE: const &$unresolved$::Cls TEXT=const Cls&  [3:24/49-3:34/59]  INIT: null  SCOPE: operator = 
+    RETURNS &$unresolved$::Cls TEXT=Cls&  [3:1/26-3:5/30]
+    STATEMENT COMPOUND  [3:40/65-5:2/86] SCOPE: operator = 
+        STATEMENT RETURN  [4:5/71-4:18/84] SCOPE: Stmt  [3:40/65-5:2/86] text: 'return *this;'
+
+========== Dumping model of PROJECT DummyProject
+

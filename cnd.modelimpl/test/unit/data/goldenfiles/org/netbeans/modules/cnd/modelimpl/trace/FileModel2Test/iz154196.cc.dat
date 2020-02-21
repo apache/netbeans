@@ -1,0 +1,52 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz154196.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS Student (Student ) [1:1/0-4:2/45] lcurly=14 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC name [3:5/28-3:20/43]  TYPE: char[] TEXT=char[]  [3:5/28-3:9/32]  INIT: null  SCOPE: Student 
+FUNCTION DEFINITION main  [6:1/48-10:2/181] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [6:1/48-10:2/181]
+    PARAMETERS:
+    RETURNS int TEXT=int  [6:1/48-6:4/51]
+    STATEMENT COMPOUND  [6:12/59-10:2/181] SCOPE: main 
+        STATEMENT DECLARATION  [7:5/65-7:36/96] SCOPE: Stmt  [6:12/59-10:2/181]
+            VARIABLE jackRole [7:13/73-7:23/83]  TYPE: Student TEXT=Student  [7:5/65-7:12/72]  INIT: null  SCOPE: Stmt  [6:12/59-10:2/181]
+            VARIABLE jillRole [7:25/85-7:35/95]  TYPE: Student TEXT=Student  [7:5/65-7:12/72]  INIT: null  SCOPE: Stmt  [6:12/59-10:2/181]
+        STATEMENT DECLARATION  [8:5/127-8:43/165] SCOPE: Stmt  [6:12/59-10:2/181]
+            VARIABLE b [8:13/135-8:23/145]  TYPE: Student TEXT=Student  [8:5/127-8:12/134]  INIT: null  SCOPE: Stmt  [6:12/59-10:2/181]
+            VARIABLE bbb [8:25/147-8:42/164]  TYPE: Student TEXT=Student  [8:5/127-8:12/134]  INIT: null  SCOPE: Stmt  [6:12/59-10:2/181]
+        STATEMENT RETURN  [9:5/170-9:14/179] SCOPE: Stmt  [6:12/59-10:2/181] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+CLASS Student (Student ) [1:1/0-4:2/45] lcurly=14 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC name [3:5/28-3:20/43]  TYPE: char[] TEXT=char[]  [3:5/28-3:9/32]  INIT: null  SCOPE: Student 
+FUNCTION DEFINITION main  [6:1/48-10:2/181] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [6:1/48-10:2/181]
+    PARAMETERS:
+    RETURNS int TEXT=int  [6:1/48-6:4/51]
+    STATEMENT COMPOUND  [6:12/59-10:2/181] SCOPE: main 
+        STATEMENT DECLARATION  [7:5/65-7:36/96] SCOPE: Stmt  [6:12/59-10:2/181]
+            VARIABLE jackRole [7:13/73-7:23/83]  TYPE: Student TEXT=Student  [7:5/65-7:12/72]  INIT: null  SCOPE: Stmt  [6:12/59-10:2/181]
+            VARIABLE jillRole [7:25/85-7:35/95]  TYPE: Student TEXT=Student  [7:5/65-7:12/72]  INIT: null  SCOPE: Stmt  [6:12/59-10:2/181]
+        STATEMENT DECLARATION  [8:5/127-8:43/165] SCOPE: Stmt  [6:12/59-10:2/181]
+            VARIABLE b [8:13/135-8:23/145]  TYPE: Student TEXT=Student  [8:5/127-8:12/134]  INIT: null  SCOPE: Stmt  [6:12/59-10:2/181]
+            VARIABLE bbb [8:25/147-8:42/164]  TYPE: Student TEXT=Student  [8:5/127-8:12/134]  INIT: null  SCOPE: Stmt  [6:12/59-10:2/181]
+        STATEMENT RETURN  [9:5/170-9:14/179] SCOPE: Stmt  [6:12/59-10:2/181] text: 'return 0;'
+

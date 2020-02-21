@@ -1,0 +1,48 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz227479.pc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+VARIABLE username227479 [2:1/1-2:26/26]  TYPE: char[] TEXT=char[]  [2:1/1-2:5/5]  INIT: null  SCOPE: $Global$ 
+VARIABLE password227479 [3:1/27-3:26/52]  TYPE: char[] TEXT=char[]  [3:1/27-3:5/31]  INIT: null  SCOPE: $Global$ 
+VARIABLE database227479 [4:1/53-4:26/78]  TYPE: char[] TEXT=char[]  [4:1/53-4:5/57]  INIT: null  SCOPE: $Global$ 
+FUNCTION DEFINITION sql_error227479  [7:1/243-16:2/566] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE sql_error227479()
+    UNIQUE NAME f:sql_error227479()
+    DECLARATION: sql_error227479  [7:1/243-16:2/566]
+    PARAMETERS:
+    RETURNS void TEXT=void  [7:1/243-7:5/247]
+    STATEMENT COMPOUND  [7:24/266-16:2/566] SCOPE: sql_error227479 
+        STATEMENT DECLARATION  [12:5/421-12:24/440] SCOPE: Stmt  [7:24/266-16:2/566]
+            VARIABLE username [12:5/421-12:24/440]  TYPE: char[] TEXT=char[]  [12:5/421-12:9/425]  INIT: null  SCOPE: Stmt  [7:24/266-16:2/566]
+        STATEMENT DECLARATION  [13:5/445-13:24/464] SCOPE: Stmt  [7:24/266-16:2/566]
+            VARIABLE password [13:5/445-13:24/464]  TYPE: char[] TEXT=char[]  [13:5/445-13:9/449]  INIT: null  SCOPE: Stmt  [7:24/266-16:2/566]
+        STATEMENT DECLARATION  [14:5/469-14:24/488] SCOPE: Stmt  [7:24/266-16:2/566]
+            VARIABLE database [14:5/469-14:24/488]  TYPE: char[] TEXT=char[]  [14:5/469-14:9/473]  INIT: null  SCOPE: Stmt  [7:24/266-16:2/566]
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE username227479 [2:1/1-2:26/26]  TYPE: char[] TEXT=char[]  [2:1/1-2:5/5]  INIT: null  SCOPE: $Global$ 
+VARIABLE password227479 [3:1/27-3:26/52]  TYPE: char[] TEXT=char[]  [3:1/27-3:5/31]  INIT: null  SCOPE: $Global$ 
+VARIABLE database227479 [4:1/53-4:26/78]  TYPE: char[] TEXT=char[]  [4:1/53-4:5/57]  INIT: null  SCOPE: $Global$ 
+FUNCTION DEFINITION sql_error227479  [7:1/243-16:2/566] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE sql_error227479()
+    UNIQUE NAME f:sql_error227479()
+    DECLARATION: sql_error227479  [7:1/243-16:2/566]
+    PARAMETERS:
+    RETURNS void TEXT=void  [7:1/243-7:5/247]
+    STATEMENT COMPOUND  [7:24/266-16:2/566] SCOPE: sql_error227479 
+        STATEMENT DECLARATION  [12:5/421-12:24/440] SCOPE: Stmt  [7:24/266-16:2/566]
+            VARIABLE username [12:5/421-12:24/440]  TYPE: char[] TEXT=char[]  [12:5/421-12:9/425]  INIT: null  SCOPE: Stmt  [7:24/266-16:2/566]
+        STATEMENT DECLARATION  [13:5/445-13:24/464] SCOPE: Stmt  [7:24/266-16:2/566]
+            VARIABLE password [13:5/445-13:24/464]  TYPE: char[] TEXT=char[]  [13:5/445-13:9/449]  INIT: null  SCOPE: Stmt  [7:24/266-16:2/566]
+        STATEMENT DECLARATION  [14:5/469-14:24/488] SCOPE: Stmt  [7:24/266-16:2/566]
+            VARIABLE database [14:5/469-14:24/488]  TYPE: char[] TEXT=char[]  [14:5/469-14:9/473]  INIT: null  SCOPE: Stmt  [7:24/266-16:2/566]
+

@@ -1,0 +1,61 @@
+<html>
+<head>
+<title>Unstable tests report</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+* { font-family: "Verdana", sans-serif; }
+h1 { font-size: 14pt; }
+h2 { font-size: 14pt; }
+h3 { font-size: 12pt; }
+p, ul, li { font-size: 12pt; }
+pre { font-family: "Courier New", monospace; font-size: 10pt; }
+.changeset { font-size: 9pt; }
+.SUCCESS { color: green; }
+.UNSTABLE { color: orange; }
+.FAILURE { color: red; }
+</style>
+</head>
+<body>
+
+<%
+def rootUrl = hudson.model.Hudson.instance.rootUrl
+def buildLimit = 10
+%>
+<h1>Unstable tests report for the past ${buildLimit} builds (winxp)</h1>
+<ul>
+<%
+def currBuild = build
+def failedTests = []
+
+def depth = buildLimit
+while (depth-- > 0) {
+  if (!currBuild) {
+   break
+  }
+  def currTestResult = currBuild.testResultAction
+  if (currTestResult) {
+    def currFailedTests = currTestResult.failedTests.collect {
+        [displayName: "${it.className}.${it.displayName}",
+            url: "${rootUrl}${currBuild.url}${currTestResult.urlName}${it.url}",
+            age: it.age]}
+        currFailedTests = currFailedTests.sort { String.format("%06d-", it.age) + it.displayName }
+        failedTests.addAll(currFailedTests)
+  }
+   currBuild = currBuild.previousNotFailedBuild
+}
+
+if (failedTests) {
+      def first = true
+      failedTests.each {
+          if (first) {
+              first = false
+          } else {
+             %><tr><%
+          }
+      %><li><a href="${it.url}" class="FAILURE">${it.displayName}</a></><%
+     }
+}
+%>
+</ul>
+</body>
+</html>

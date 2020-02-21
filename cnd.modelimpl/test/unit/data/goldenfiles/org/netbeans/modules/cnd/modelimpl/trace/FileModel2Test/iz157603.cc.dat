@@ -1,0 +1,50 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz157603.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION init_function  [1:1/0-6:2/58] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE init_function()
+    UNIQUE NAME f:init_function()
+    DECLARATION: init_function  [1:1/0-6:2/58]
+    PARAMETERS:
+    RETURNS void TEXT=void  [1:1/0-1:5/4]
+    STATEMENT COMPOUND  [4:1/54-6:2/58] SCOPE: init_function 
+FUNCTION DEFINITION main  [8:1/60-10:2/109] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main(int,char**)
+    UNIQUE NAME f:main(int,char**)
+    DECLARATION: main  [8:1/60-10:2/109]
+    PARAMETERS:
+        argc [8:10/69-8:18/77]  TYPE: int TEXT=int  [8:10/69-8:13/72]  INIT: null  SCOPE: main 
+        argv [8:20/79-8:31/90]  TYPE: **char TEXT=char**  [8:20/79-8:26/85]  INIT: null  SCOPE: main 
+    RETURNS int TEXT=int  [8:1/60-8:4/63]
+    STATEMENT COMPOUND  [8:33/92-10:2/109] SCOPE: main 
+        STATEMENT RETURN  [9:5/98-9:14/107] SCOPE: Stmt  [8:33/92-10:2/109] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION init_function  [1:1/0-6:2/58] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE init_function()
+    UNIQUE NAME f:init_function()
+    DECLARATION: init_function  [1:1/0-6:2/58]
+    PARAMETERS:
+    RETURNS void TEXT=void  [1:1/0-1:5/4]
+    STATEMENT COMPOUND  [4:1/54-6:2/58] SCOPE: init_function 
+FUNCTION DEFINITION main  [8:1/60-10:2/109] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main(int,char**)
+    UNIQUE NAME f:main(int,char**)
+    DECLARATION: main  [8:1/60-10:2/109]
+    PARAMETERS:
+        argc [8:10/69-8:18/77]  TYPE: int TEXT=int  [8:10/69-8:13/72]  INIT: null  SCOPE: main 
+        argv [8:20/79-8:31/90]  TYPE: **char TEXT=char**  [8:20/79-8:26/85]  INIT: null  SCOPE: main 
+    RETURNS int TEXT=int  [8:1/60-8:4/63]
+    STATEMENT COMPOUND  [8:33/92-10:2/109] SCOPE: main 
+        STATEMENT RETURN  [9:5/98-9:14/107] SCOPE: Stmt  [8:33/92-10:2/109] text: 'return 0;'
+

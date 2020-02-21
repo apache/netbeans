@@ -1,0 +1,17 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["BAR",<ID>,line=3,col=9],offset=26,file=null'='["2",<DECIMALINT>,line=3,col=13],offset=30,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz182510.cc
+Includes:
+    <no includes>
+Macros:
+#define 'BAR' [3:1/18-3:14/31]
+
+========== Dumping model of PROJECT DummyProject
+

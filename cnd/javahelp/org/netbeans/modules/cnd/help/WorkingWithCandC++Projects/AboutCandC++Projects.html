@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+
+Portions Copyrighted 2016 Sun Microsystems, Inc.
+ -->
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <link href="../ide.css" type="text/css" rel="StyleSheet">
+    <meta content="Helen" name="generator">
+    <title>About C/C++/Fortran Projects</title>
+  </head>
+  <body>
+    <h2>
+       About C/C++/Fortran Projects
+    </h2>
+    <p>
+       <small><a href="#seealso">See Also</a>&nbsp;</small>
+    </p>
+    <p>
+       A project is a group of C, C++, or Fortran source files, and the settings with which you
+      build, run, and debug those source files. In the IDE, all development has to take place
+      within a project.
+    </p>
+    <p>
+       The IDE stores all of the information about your project in makefiles, a properties file,
+      and a few XML configuration files. You can build and run your projects outside the IDE
+      exactly the same as inside the IDE.
+    </p>
+    <p>
+       The IDE provides the following C/C++ project templates:
+    </p>
+    <ul>
+      <li>
+        C/C++ Project With Existing Sources
+      </li>
+      <li>
+        C/C++ Project From Binary File
+      </li>
+      <li>
+        C/C++ Application
+      </li>
+      <li>
+        C/C++ Dynamic Library
+      </li>
+      <li>
+        C/C++ Static Library
+      </li>
+      <li>
+        C/C++ Qt Application
+      </li>
+      <li>
+        C/C++ Qt Dynamic Library
+      </li>
+      <li>
+        C/C++ Qt Static Library
+      </li>
+    </ul>
+    <p>
+       The C/C++ Project With Existing Sources template and the C/C++ Project With Remote Existing
+      Sources template import source code into the IDE project structure. The IDE relies on your
+      existing makefile for instructions on how to compile and run your application. The settings
+      you specify in the New Project wizard as well as in the Project Properties dialog box are
+      used to tell the IDE how your makefile manages your source code and must be consistent with
+      the settings in your makefile. These templates work for Fortran sources as well as C and C++.
+    </p>
+    <p>
+       The C/C++ Project from Binary File template lets you create a project from an existing
+      binary.
+    </p>
+    <p>
+       With a C/C++ Application, Dynamic Library, or Static Library project, the IDE controls all
+      aspects of how your application is built, run, and debugged. You specify project settings
+      when creating the project and in the Project Properties dialog box. The IDE generates a
+      makefile in which all of your settings are stored. The C/C++ Application, C/C++ Dynamic
+      Library, and C/C++ Static Library templates also work for Fortran projects.
+    </p>
+    <p>
+       With a C/C++ Qt Application, Qt Dynamic Library, or Qt Static Library project, the IDE uses
+      an IDE-generated makefile and qmake .pro file to build your project. These templates can only
+      be used with C and C++ because the qmake build system does not natively support Fortran. See
+      <a href="AboutQtProjects.html">About Qt Projects</a> for more information.
+    </p>
+    <table summary="related topics">
+      <tr valign="top">
+        <th colspan="2" align="left">
+          <a name="seealso">See Also</a> 
+        </th>
+      </tr>
+      <tr valign="top">
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="WorkingWithCandC++Projects.html">Working With C/C++ and Fortran Projects</a><br>
+           <a href="ProjectTasks.html">C and C++ Project Tasks: Quick Reference</a><br>
+           <a href="CreatingCorC++Project.html">Creating a C or C++ Project</a><br>
+           <a href="AboutQtProjects.html">About Qt C/C++ Projects</a><br>
+           <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+            <param name="content" value="http://www.netbeans.org/kb/docs/cnd/qt-applications.html">
+            <param name="text" value=
+            "<html><u>Working with Qt Applications tutorial (Web document)</u></html>">
+            <param name="textFontSize" value="medium">
+            <param name="textColor" value="blue">
+          </object> 
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <a href=
+      "nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;©&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a>
+    </p>
+    <table cellpadding="20" border="0">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+    <p>
+       &nbsp;
+    </p>
+    <p>
+       &nbsp;
+    </p>
+  </body>
+</html>

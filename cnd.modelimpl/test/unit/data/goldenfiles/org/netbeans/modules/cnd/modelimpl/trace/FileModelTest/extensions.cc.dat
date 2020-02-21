@@ -1,0 +1,46 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE extensions.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION foo  [2:1/1-11:2/151] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [2:1/1-11:2/151]
+    PARAMETERS:
+    RETURNS int TEXT=int  [2:1/1-2:4/4]
+    STATEMENT COMPOUND  [2:11/11-11:2/151] SCOPE: foo 
+        STATEMENT DECLARATION  [3:5/17-3:15/27] SCOPE: Stmt  [2:11/11-11:2/151]
+            VARIABLE i [3:5/17-3:15/27]  TYPE: int TEXT=int  [3:5/17-3:8/20]  INIT: text='0'  SCOPE: Stmt  [2:11/11-11:2/151]
+        STATEMENT EXPRESSION  [4:5/32-4:27/54] SCOPE: Stmt  [2:11/11-11:2/151] text: '__extension__ ({i++;})'
+        STATEMENT EXPRESSION  [5:5/60-5:34/89] SCOPE: Stmt  [2:11/11-11:2/151] text: '(void) __extension__ ({i--;})'
+        STATEMENT EXPRESSION  [7:5/100-7:13/108] SCOPE: Stmt  [2:11/11-11:2/151] text: '({i++;})'
+        STATEMENT EXPRESSION  [8:5/114-8:20/129] SCOPE: Stmt  [2:11/11-11:2/151] text: '(void) ({i--;})'
+        STATEMENT RETURN  [10:5/140-10:14/149] SCOPE: Stmt  [2:11/11-11:2/151] text: 'return i;'
+EXTERN VARIABLE bigVal [13:15/167-13:50/202]  TYPE: signed long long int TEXT=signed long long int  [13:15/167-13:42/194]  INIT: null  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION foo  [2:1/1-11:2/151] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [2:1/1-11:2/151]
+    PARAMETERS:
+    RETURNS int TEXT=int  [2:1/1-2:4/4]
+    STATEMENT COMPOUND  [2:11/11-11:2/151] SCOPE: foo 
+        STATEMENT DECLARATION  [3:5/17-3:15/27] SCOPE: Stmt  [2:11/11-11:2/151]
+            VARIABLE i [3:5/17-3:15/27]  TYPE: int TEXT=int  [3:5/17-3:8/20]  INIT: text='0'  SCOPE: Stmt  [2:11/11-11:2/151]
+        STATEMENT EXPRESSION  [4:5/32-4:27/54] SCOPE: Stmt  [2:11/11-11:2/151] text: '__extension__ ({i++;})'
+        STATEMENT EXPRESSION  [5:5/60-5:34/89] SCOPE: Stmt  [2:11/11-11:2/151] text: '(void) __extension__ ({i--;})'
+        STATEMENT EXPRESSION  [7:5/100-7:13/108] SCOPE: Stmt  [2:11/11-11:2/151] text: '({i++;})'
+        STATEMENT EXPRESSION  [8:5/114-8:20/129] SCOPE: Stmt  [2:11/11-11:2/151] text: '(void) ({i--;})'
+        STATEMENT RETURN  [10:5/140-10:14/149] SCOPE: Stmt  [2:11/11-11:2/151] text: 'return i;'
+EXTERN VARIABLE bigVal [13:15/167-13:50/202]  TYPE: signed long long int TEXT=signed long long int  [13:15/167-13:42/194]  INIT: null  SCOPE: $Global$ 
+

@@ -1,0 +1,362 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug186251.f
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION RODAS  [1:7/6-526:10/21862] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:RODAS
+    DECLARATION: RODAS  [1:7/6-526:10/21862]
+    PARAMETERS:
+        N [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FCN [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IFCN [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        X [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        Y [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        XEND [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        H [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        RTOL [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        ATOL [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        ITOL [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        JAC [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IJAC [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MLJAC [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MUJAC [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        DFX [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IDFX [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MAS [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IMAS [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MLMAS [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MUMAS [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        SOLOUT [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IOUT [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        WORK [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        LWORK [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IWORK [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        LIWORK [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        RPAR [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IPAR [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IDID [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FCN [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        JAC [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        DFX [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MAS [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        SOLOUT [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION ROSCOR  [532:7/21934-872:10/32348] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:ROSCOR
+    DECLARATION: ROSCOR  [532:7/21934-872:10/32348]
+    PARAMETERS:
+        N [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FCN [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        X [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        Y [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        XEND [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        HMAX [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        H [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        RTOL [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        ATOL [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        ITOL [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        JAC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IJAC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MLJAC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MUJAC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        DFX [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IDFX [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MAS [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MLMAS [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MUMAS [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        SOLOUT [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IOUT [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IDID [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NMAX [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        UROUND [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        METH [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IJOB [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FAC1 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FAC2 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        SAFE [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        AUTNMS [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IMPLCT [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        BANDED [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        PRED [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        LDJAC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        LDE [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        LDMAS [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        YNEW [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        DY1 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        DY [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        AK1 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        AK2 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        AK3 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        AK4 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        AK5 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        AK6 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FX [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FJAC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        E [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FMAS [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IP [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CONT [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        M1 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        M2 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NM1 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NFCN [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NJAC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NSTEP [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NACCPT [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NREJCT [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NDEC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NSOL [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        RPAR [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IPAR [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION CONTRO  [874:7/32358-887:10/32929] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:CONTRO
+    DECLARATION: CONTRO  [874:7/32358-887:10/32929]
+    PARAMETERS:
+        I [874:7/32358-887:10/32929]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        X [874:7/32358-887:10/32929]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CONT [874:7/32358-887:10/32929]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        LRC [874:7/32358-887:10/32929]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION ROCOE  [889:7/32938-1043:10/37960] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:ROCOE
+    DECLARATION: ROCOE  [889:7/32938-1043:10/37960]
+    PARAMETERS:
+        METH [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A21 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A31 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A32 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A41 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A42 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A43 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A51 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A52 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A53 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A54 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C21 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C31 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C32 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C41 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C42 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C43 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C51 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C52 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C53 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C54 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C61 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C62 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C63 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C64 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C65 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        GAMMA [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C2 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C3 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C4 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D1 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D2 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D3 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D4 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D21 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D22 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D23 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D24 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D25 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D31 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D32 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D33 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D34 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D35 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION RODAS  [1:7/6-526:10/21862] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:RODAS
+    DECLARATION: RODAS  [1:7/6-526:10/21862]
+    PARAMETERS:
+        N [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FCN [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IFCN [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        X [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        Y [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        XEND [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        H [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        RTOL [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        ATOL [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        ITOL [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        JAC [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IJAC [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MLJAC [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MUJAC [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        DFX [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IDFX [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MAS [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IMAS [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MLMAS [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MUMAS [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        SOLOUT [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IOUT [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        WORK [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        LWORK [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IWORK [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        LIWORK [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        RPAR [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IPAR [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IDID [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FCN [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        JAC [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        DFX [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MAS [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        SOLOUT [1:7/6-526:10/21862]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION ROSCOR  [532:7/21934-872:10/32348] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:ROSCOR
+    DECLARATION: ROSCOR  [532:7/21934-872:10/32348]
+    PARAMETERS:
+        N [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FCN [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        X [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        Y [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        XEND [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        HMAX [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        H [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        RTOL [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        ATOL [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        ITOL [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        JAC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IJAC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MLJAC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MUJAC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        DFX [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IDFX [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MAS [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MLMAS [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        MUMAS [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        SOLOUT [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IOUT [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IDID [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NMAX [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        UROUND [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        METH [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IJOB [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FAC1 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FAC2 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        SAFE [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        AUTNMS [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IMPLCT [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        BANDED [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        PRED [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        LDJAC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        LDE [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        LDMAS [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        YNEW [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        DY1 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        DY [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        AK1 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        AK2 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        AK3 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        AK4 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        AK5 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        AK6 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FX [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FJAC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        E [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        FMAS [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IP [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CONT [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        M1 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        M2 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NM1 [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NFCN [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NJAC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NSTEP [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NACCPT [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NREJCT [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NDEC [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        NSOL [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        RPAR [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        IPAR [532:7/21934-872:10/32348]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION CONTRO  [874:7/32358-887:10/32929] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:CONTRO
+    DECLARATION: CONTRO  [874:7/32358-887:10/32929]
+    PARAMETERS:
+        I [874:7/32358-887:10/32929]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        X [874:7/32358-887:10/32929]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        CONT [874:7/32358-887:10/32929]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        LRC [874:7/32358-887:10/32929]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+FUNCTION DEFINITION ROCOE  [889:7/32938-1043:10/37960] SubroutineImpl SCOPE: $Global$ 
+    SIGNATURE 
+    UNIQUE NAME f:ROCOE
+    DECLARATION: ROCOE  [889:7/32938-1043:10/37960]
+    PARAMETERS:
+        METH [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A21 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A31 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A32 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A41 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A42 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A43 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A51 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A52 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A53 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        A54 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C21 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C31 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C32 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C41 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C42 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C43 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C51 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C52 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C53 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C54 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C61 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C62 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C63 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C64 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C65 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        GAMMA [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C2 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C3 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        C4 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D1 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D2 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D3 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D4 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D21 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D22 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D23 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D24 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D25 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D31 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D32 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D33 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D34 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+        D35 [889:7/32938-1043:10/37960]  TYPE: int TEXT=int  [1:1/0-1:1/0]  INIT: null  SCOPE: null
+    RETURNS int TEXT=int  [1:1/0-1:1/0]
+    STATEMENT is null
+

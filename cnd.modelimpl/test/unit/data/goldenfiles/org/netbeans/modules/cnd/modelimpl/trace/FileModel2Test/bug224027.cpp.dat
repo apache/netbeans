@@ -1,0 +1,78 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug224027.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN  [1:1/0-11:2/140] SCOPE: bug224027.cpp
+    STRUCT A (<unnamed>::A ) [3:3/19-3:14/30] lcurly=28 SCOPE:  
+        BASE CLASSES:
+        MEMBERS:
+    STRUCT B (<unnamed>::B ) [5:3/35-9:4/132] lcurly=44 SCOPE:  
+        BASE CLASSES:
+        MEMBERS:
+        FRIENDS:
+            FUNCTION A [6:7/52-6:21/66] FriendFunctionImplEx SCOPE:  
+                DEFINITION: null
+                SIGNATURE A()
+                UNIQUE NAME D:<unnamed>::A::A()
+                REFERENCED FRIEND FUNCTION: A  [6:7/52-6:21/66]
+                PARAMETERS:
+                RETURNS int TEXT=int  [1:1/0-1:1/0]
+            FUNCTION ~A [7:7/73-7:22/88] FriendFunctionImplEx SCOPE:  
+                DEFINITION: null
+                SIGNATURE ~A()
+                UNIQUE NAME D:<unnamed>::A::~A()
+                REFERENCED FRIEND FUNCTION: ~A  [7:7/73-7:22/88]
+                PARAMETERS:
+                RETURNS int TEXT=int  [1:1/0-1:1/0]
+            FUNCTION operator = [8:7/95-8:40/128] FriendFunctionImplEx SCOPE:  
+                DEFINITION: null
+                SIGNATURE operator =(const A&)
+                UNIQUE NAME D:<unnamed>::A::operator =(const A&)
+                REFERENCED FRIEND FUNCTION: operator =  [8:7/95-8:40/128]
+                PARAMETERS:
+                     [8:30/118-8:38/126]  TYPE: const &<unnamed>::A TEXT=const A&  [8:30/118-8:38/126]  INIT: null  SCOPE: operator = 
+                RETURNS &<unnamed>::A TEXT=A&  [8:14/102-8:17/105]
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for  (<unnamed>) 
+    bug224027.cpp  [1:1/0-11:2/140]
+NAMESPACE  (<unnamed>) 
+    STRUCT A (<unnamed>::A ) [3:3/19-3:14/30] lcurly=28 SCOPE:  
+        BASE CLASSES:
+        MEMBERS:
+    STRUCT B (<unnamed>::B ) [5:3/35-9:4/132] lcurly=44 SCOPE:  
+        BASE CLASSES:
+        MEMBERS:
+        FRIENDS:
+            FUNCTION A [6:7/52-6:21/66] FriendFunctionImplEx SCOPE:  
+                DEFINITION: null
+                SIGNATURE A()
+                UNIQUE NAME D:<unnamed>::A::A()
+                REFERENCED FRIEND FUNCTION: A  [6:7/52-6:21/66]
+                PARAMETERS:
+                RETURNS int TEXT=int  [1:1/0-1:1/0]
+            FUNCTION ~A [7:7/73-7:22/88] FriendFunctionImplEx SCOPE:  
+                DEFINITION: null
+                SIGNATURE ~A()
+                UNIQUE NAME D:<unnamed>::A::~A()
+                REFERENCED FRIEND FUNCTION: ~A  [7:7/73-7:22/88]
+                PARAMETERS:
+                RETURNS int TEXT=int  [1:1/0-1:1/0]
+            FUNCTION operator = [8:7/95-8:40/128] FriendFunctionImplEx SCOPE:  
+                DEFINITION: null
+                SIGNATURE operator =(const A&)
+                UNIQUE NAME D:<unnamed>::A::operator =(const A&)
+                REFERENCED FRIEND FUNCTION: operator =  [8:7/95-8:40/128]
+                PARAMETERS:
+                     [8:30/118-8:38/126]  TYPE: const &<unnamed>::A TEXT=const A&  [8:30/118-8:38/126]  INIT: null  SCOPE: operator = 
+                RETURNS &<unnamed>::A TEXT=A&  [8:14/102-8:17/105]
+

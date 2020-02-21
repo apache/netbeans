@@ -1,0 +1,96 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug216084.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN ns216084 [1:1/0-16:2/280] SCOPE: bug216084.cpp
+    CLASS base (ns216084::base ) [2:5/25-7:6/168] lcurly=36 SCOPE: ns216084 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION ~base  [4:9/58-4:28/77] DestructorDDImpl SCOPE: base 
+                SIGNATURE ~base()
+                UNIQUE NAME f:ns216084::base::~base()
+                DECLARATION: ~base  [4:9/58-4:28/77]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [4:25/74-4:28/77] SCOPE: ~base 
+            FUNCTION operator int [5:9/86-5:41/118] MethodImpl SCOPE: base 
+                DEFINITION: null
+                SIGNATURE operator int()
+                UNIQUE NAME F:ns216084::base::operator int()
+                PARAMETERS:
+                RETURNS int TEXT=int  [5:26/103-5:29/106]
+            FUNCTION operator char [6:9/128-6:42/161] MethodImpl SCOPE: base 
+                DEFINITION: null
+                SIGNATURE operator char()
+                UNIQUE NAME F:ns216084::base::operator char()
+                PARAMETERS:
+                RETURNS char TEXT=char  [6:26/145-6:30/149]
+    CLASS AA (ns216084::AA ) [9:5/175-15:6/277] lcurly=184 SCOPE: ns216084 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION AA  [11:9/206-13:10/236] ConstructorDDImpl SCOPE: AA 
+                SIGNATURE AA()
+                UNIQUE NAME f:ns216084::AA::AA()
+                DECLARATION: AA  [11:9/206-13:10/236]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [11:14/211-13:10/236] SCOPE: AA 
+            FUNCTION ~AA [14:9/245-14:35/271] DestructorImpl SCOPE: AA 
+                DEFINITION: null
+                SIGNATURE ~AA()
+                UNIQUE NAME F:ns216084::AA::~AA()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for ns216084 (ns216084) 
+    bug216084.cpp  [1:1/0-16:2/280]
+NAMESPACE ns216084 (ns216084) 
+    CLASS base (ns216084::base ) [2:5/25-7:6/168] lcurly=36 SCOPE: ns216084 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION ~base  [4:9/58-4:28/77] DestructorDDImpl SCOPE: base 
+                SIGNATURE ~base()
+                UNIQUE NAME f:ns216084::base::~base()
+                DECLARATION: ~base  [4:9/58-4:28/77]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [4:25/74-4:28/77] SCOPE: ~base 
+            FUNCTION operator int [5:9/86-5:41/118] MethodImpl SCOPE: base 
+                DEFINITION: null
+                SIGNATURE operator int()
+                UNIQUE NAME F:ns216084::base::operator int()
+                PARAMETERS:
+                RETURNS int TEXT=int  [5:26/103-5:29/106]
+            FUNCTION operator char [6:9/128-6:42/161] MethodImpl SCOPE: base 
+                DEFINITION: null
+                SIGNATURE operator char()
+                UNIQUE NAME F:ns216084::base::operator char()
+                PARAMETERS:
+                RETURNS char TEXT=char  [6:26/145-6:30/149]
+    CLASS AA (ns216084::AA ) [9:5/175-15:6/277] lcurly=184 SCOPE: ns216084 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION AA  [11:9/206-13:10/236] ConstructorDDImpl SCOPE: AA 
+                SIGNATURE AA()
+                UNIQUE NAME f:ns216084::AA::AA()
+                DECLARATION: AA  [11:9/206-13:10/236]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [11:14/211-13:10/236] SCOPE: AA 
+            FUNCTION ~AA [14:9/245-14:35/271] DestructorImpl SCOPE: AA 
+                DEFINITION: null
+                SIGNATURE ~AA()
+                UNIQUE NAME F:ns216084::AA::~AA()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+

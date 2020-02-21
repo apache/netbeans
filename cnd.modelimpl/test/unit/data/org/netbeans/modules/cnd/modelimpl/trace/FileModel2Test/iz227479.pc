@@ -1,0 +1,16 @@
+
+char username227479[128];
+char password227479[128];
+char database227479[128];
+EXEC SQL DECLARE friends_cursor CURSOR FOR SELECT NAME, SURNAME FROM FRIENDS;
+EXEC SQL CONNECT :username227479 IDENTIFIED BY :password227479 USING :database227479;
+void sql_error227479() {
+    EXEC SQL DECLARE friends_cursor CURSOR FOR SELECT NAME, SURNAME FROM FRIENDS;
+
+    EXEC SQL WHENEVER SQLERROR DO sql_error("database error--");
+
+    char username[128];
+    char password[128];
+    char database[128];    
+    EXEC SQL CONNECT :username IDENTIFIED BY :password USING :database;
+}

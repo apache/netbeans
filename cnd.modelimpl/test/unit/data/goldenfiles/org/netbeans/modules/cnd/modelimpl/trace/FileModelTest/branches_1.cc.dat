@@ -1,0 +1,19 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["_SIZE_T",<ID>,line=2,col=9],offset=56,file=null'=''
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE branches_1.cc
+Includes:
+"branches_1.h" [2:1/16-2:24/39]
+"branches_1.h" [5:1/56-5:24/79]
+Macros:
+#define '_SIZE_T' [1:1/0-1:16/15]
+
+========== Dumping model of PROJECT DummyProject
+TYPEDEF size_t  [6:1/182-6:32/213] TYPE: unsigned int TEXT=unsigned int  [6:9/190-6:21/202] SCOPE: $Global$ 
+

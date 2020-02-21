@@ -1,0 +1,95 @@
+DummyProject AddModule(Module*)
+DummyProject BIG
+DummyProject CPU_H
+DummyProject ComputeSupportMetric()
+DummyProject ComputeSupportMetric()
+DummyProject ComputeSupportMetric()
+DummyProject ComputeSupportMetric()
+DummyProject Cpu
+DummyProject Cpu(int,int,int)
+DummyProject CpuArch
+DummyProject CpuType
+DummyProject Customer
+DummyProject Customer(const string,int)
+DummyProject DISK_H
+DummyProject Disk
+DummyProject Disk(int,int,int)
+DummyProject DiskCapacity
+DummyProject DiskType
+DummyProject FAST
+DummyProject GetCategory() const
+DummyProject GetCategory() const
+DummyProject GetCategory() const
+DummyProject GetCategory() const
+DummyProject GetCategoryID() const
+DummyProject GetDescription() const
+DummyProject GetDiscount() const
+DummyProject GetModule(int) const
+DummyProject GetModuleCount() const
+DummyProject GetName() const
+DummyProject GetSupportMetric() const
+DummyProject GetSupportMetric() const
+DummyProject GetType() const
+DummyProject GetType() const
+DummyProject GetType() const
+DummyProject GetType() const
+DummyProject GetTypeID() const
+DummyProject GetUnits() const
+DummyProject GetVendor() const
+DummyProject HIGH
+DummyProject INTEL
+DummyProject MEDIUM
+DummyProject MEDIUM
+DummyProject MEMORY_H
+DummyProject MODULE_H
+DummyProject Memory
+DummyProject Memory(int,int,int)
+DummyProject MemoryCategory
+DummyProject MemoryType
+DummyProject Module
+DummyProject Module()
+DummyProject Module(const Module&)
+DummyProject Module(const char*,const char*,int,int,int)
+DummyProject OPTERON
+DummyProject RAID
+DummyProject SINGLE
+DummyProject SMALL
+DummyProject SPARC
+DummyProject STANDARD
+DummyProject SYSTEM_H
+DummyProject SetCategory(int)
+DummyProject SetDescription(const char*)
+DummyProject SetSupportMetric(int)
+DummyProject SetType(int)
+DummyProject SetUnits(int)
+DummyProject SetVendor(const char*)
+DummyProject System
+DummyProject System()
+DummyProject System(const System&)
+DummyProject T100
+DummyProject T200
+DummyProject T500
+DummyProject ULTRA
+DummyProject _customer_H
+DummyProject category
+DummyProject customers
+DummyProject description
+DummyProject discount
+DummyProject fetchCustomersList()
+DummyProject getDiscountFor(string)
+DummyProject main(int,char**)
+DummyProject moduleList
+DummyProject name
+DummyProject operator <<(ostream&,const Customer&)
+DummyProject operator <<(ostream&,const Module&)
+DummyProject operator <<(ostream&,const System&)
+DummyProject operator =(const Module&)
+DummyProject outCustomersList()
+DummyProject readChar(const char*,char)
+DummyProject readNumberOf(const char*,int,int)
+DummyProject supportMetric
+DummyProject supportMetric
+DummyProject type
+DummyProject units
+DummyProject vendor
+DummyProject ~Module()

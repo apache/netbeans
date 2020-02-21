@@ -1,0 +1,28 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE IZ146150.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION __errno_location [2:1/1-2:35/35] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE __errno_location()
+    UNIQUE NAME F:__errno_location()
+    PARAMETERS:
+    RETURNS int TEXT=int  [2:8/8-2:14/14]
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION __errno_location [2:1/1-2:35/35] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE __errno_location()
+    UNIQUE NAME F:__errno_location()
+    PARAMETERS:
+    RETURNS int TEXT=int  [2:8/8-2:14/14]
+

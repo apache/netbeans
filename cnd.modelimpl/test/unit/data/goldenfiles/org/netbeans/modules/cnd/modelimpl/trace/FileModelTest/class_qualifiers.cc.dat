@@ -1,0 +1,65 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE class_qualifiers.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+STRUCT S1 (S1 ) [2:1/1-4:2/34] lcurly=20 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC i [3:5/26-3:11/32]  TYPE: int TEXT=int  [3:5/26-3:8/29]  INIT: null  SCOPE: S1 
+VARIABLE s1 [4:3/35-4:5/37]  TYPE: S1 TEXT=S1  [2:1/1-4:2/34]  INIT: null  SCOPE: $Global$ 
+STRUCT S2 (S2 ) [6:1/40-8:2/81] lcurly=67 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC i [7:5/73-7:11/79]  TYPE: int TEXT=int  [7:5/73-7:8/76]  INIT: null  SCOPE: S2 
+TYPEDEF ts1  [8:3/82-8:6/85] TYPE: S2 TEXT=S2  [6:1/40-8:7/86] SCOPE: $Global$ 
+STRUCT S3 (S3 ) [10:1/88-12:2/128] lcurly=114 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC i [11:5/120-11:11/126]  TYPE: int TEXT=int  [11:5/120-11:8/123]  INIT: null  SCOPE: S3 
+VARIABLE s3 [12:3/129-12:5/131]  TYPE: S3 TEXT=S3  [10:1/88-12:2/128]  INIT: null  SCOPE: class_qualifiers.cc
+CLASS C1 (C1 ) [14:1/134-16:2/166] lcurly=152 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PRIVATE i [15:5/158-15:11/164]  TYPE: int TEXT=int  [15:5/158-15:8/161]  INIT: null  SCOPE: C1 
+VARIABLE c1 [16:3/167-16:5/169]  TYPE: C1 TEXT=C1  [14:1/134-16:2/166]  INIT: null  SCOPE: $Global$ 
+CLASS C2 (C2 ) [18:1/172-20:2/212] lcurly=198 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PRIVATE i [19:5/204-19:11/210]  TYPE: int TEXT=int  [19:5/204-19:8/207]  INIT: null  SCOPE: C2 
+TYPEDEF tc1  [20:3/213-20:6/216] TYPE: C2 TEXT=C2  [18:1/172-20:7/217] SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+STRUCT S1 (S1 ) [2:1/1-4:2/34] lcurly=20 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC i [3:5/26-3:11/32]  TYPE: int TEXT=int  [3:5/26-3:8/29]  INIT: null  SCOPE: S1 
+VARIABLE s1 [4:3/35-4:5/37]  TYPE: S1 TEXT=S1  [2:1/1-4:2/34]  INIT: null  SCOPE: $Global$ 
+STRUCT S2 (S2 ) [6:1/40-8:2/81] lcurly=67 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC i [7:5/73-7:11/79]  TYPE: int TEXT=int  [7:5/73-7:8/76]  INIT: null  SCOPE: S2 
+TYPEDEF ts1  [8:3/82-8:6/85] TYPE: S2 TEXT=S2  [6:1/40-8:7/86] SCOPE: $Global$ 
+STRUCT S3 (S3 ) [10:1/88-12:2/128] lcurly=114 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC i [11:5/120-11:11/126]  TYPE: int TEXT=int  [11:5/120-11:8/123]  INIT: null  SCOPE: S3 
+CLASS C1 (C1 ) [14:1/134-16:2/166] lcurly=152 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PRIVATE i [15:5/158-15:11/164]  TYPE: int TEXT=int  [15:5/158-15:8/161]  INIT: null  SCOPE: C1 
+VARIABLE c1 [16:3/167-16:5/169]  TYPE: C1 TEXT=C1  [14:1/134-16:2/166]  INIT: null  SCOPE: $Global$ 
+CLASS C2 (C2 ) [18:1/172-20:2/212] lcurly=198 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PRIVATE i [19:5/204-19:11/210]  TYPE: int TEXT=int  [19:5/204-19:8/207]  INIT: null  SCOPE: C2 
+TYPEDEF tc1  [20:3/213-20:6/216] TYPE: C2 TEXT=C2  [18:1/172-20:7/217] SCOPE: $Global$ 
+

@@ -1,0 +1,54 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug246693.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug246693 [1:1/0-10:2/235] SCOPE: bug246693.cpp
+    FUNCTION DEFINITION main246693  [2:5/26-9:6/233] FunctionDDImpl SCOPE: bug246693 
+        SIGNATURE main246693()
+        UNIQUE NAME f:bug246693::main246693()
+        DECLARATION: main246693  [2:5/26-9:6/233]
+        PARAMETERS:
+        RETURNS int TEXT=int  [2:5/26-2:8/29]
+        STATEMENT COMPOUND  [2:22/43-9:6/233] SCOPE: main246693 
+            STATEMENT DECLARATION  [4:9/123-4:29/143] SCOPE: Stmt  [2:22/43-9:6/233]
+                VARIABLE var [4:9/123-4:29/143]  TYPE: int TEXT=int  [4:9/123-4:12/126]  INIT: text='(int) {0}'  SCOPE: Stmt  [2:22/43-9:6/233]
+            STATEMENT IF  [5:9/153-7:10/209] SCOPE: Stmt  [2:22/43-9:6/233]
+                CONDITION EXPRESSION text='(int) {var} == 5'
+                THEN: 
+                    STATEMENT COMPOUND  [5:32/176-7:10/209] SCOPE: Stmt  [5:9/153-7:10/209]
+                        STATEMENT RETURN  [6:13/190-6:22/199] SCOPE: Stmt  [5:32/176-7:10/209] text: 'return 0;'
+                ELSE: 
+                    STATEMENT is null
+            STATEMENT RETURN  [8:9/218-8:18/227] SCOPE: Stmt  [2:22/43-9:6/233] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug246693 (bug246693) 
+    bug246693.cpp  [1:1/0-10:2/235]
+NAMESPACE bug246693 (bug246693) 
+    FUNCTION DEFINITION main246693  [2:5/26-9:6/233] FunctionDDImpl SCOPE: bug246693 
+        SIGNATURE main246693()
+        UNIQUE NAME f:bug246693::main246693()
+        DECLARATION: main246693  [2:5/26-9:6/233]
+        PARAMETERS:
+        RETURNS int TEXT=int  [2:5/26-2:8/29]
+        STATEMENT COMPOUND  [2:22/43-9:6/233] SCOPE: main246693 
+            STATEMENT DECLARATION  [4:9/123-4:29/143] SCOPE: Stmt  [2:22/43-9:6/233]
+                VARIABLE var [4:9/123-4:29/143]  TYPE: int TEXT=int  [4:9/123-4:12/126]  INIT: text='(int) {0}'  SCOPE: Stmt  [2:22/43-9:6/233]
+            STATEMENT IF  [5:9/153-7:10/209] SCOPE: Stmt  [2:22/43-9:6/233]
+                CONDITION EXPRESSION text='(int) {var} == 5'
+                THEN: 
+                    STATEMENT COMPOUND  [5:32/176-7:10/209] SCOPE: Stmt  [5:9/153-7:10/209]
+                        STATEMENT RETURN  [6:13/190-6:22/199] SCOPE: Stmt  [5:32/176-7:10/209] text: 'return 0;'
+                ELSE: 
+                    STATEMENT is null
+            STATEMENT RETURN  [8:9/218-8:18/227] SCOPE: Stmt  [2:22/43-9:6/233] text: 'return 0;'
+

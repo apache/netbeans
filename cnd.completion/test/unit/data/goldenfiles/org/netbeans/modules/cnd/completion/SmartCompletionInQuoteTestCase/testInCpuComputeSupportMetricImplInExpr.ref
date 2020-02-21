@@ -1,0 +1,8 @@
+GetCategory() const char*	$	    int metric = 100 * GetCategory()
+GetCategoryID() int	$	    int metric = 100 * GetCategoryID()
+GetDescription() const char*	$	    int metric = 100 * GetDescription()
+GetSupportMetric() int	$	    int metric = 100 * GetSupportMetric()
+GetType() const char*	$	    int metric = 100 * GetType()
+GetTypeID() int	$	    int metric = 100 * GetTypeID()
+GetUnits() int	$	    int metric = 100 * GetUnits()
+GetVendor() const char*	$	    int metric = 100 * GetVendor()

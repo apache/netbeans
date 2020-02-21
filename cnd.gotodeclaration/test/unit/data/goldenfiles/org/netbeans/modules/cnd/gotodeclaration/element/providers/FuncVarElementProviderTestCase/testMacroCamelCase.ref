@@ -1,0 +1,2 @@
+DummyProject GetDescription() const
+DummyProject GetDiscount() const

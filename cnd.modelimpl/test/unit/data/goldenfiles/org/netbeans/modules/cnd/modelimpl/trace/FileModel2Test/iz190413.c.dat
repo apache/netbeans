@@ -1,0 +1,25 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 4):
+<U>#define '["HOST_CHARSET",<ID>,line=7,col=11],offset=202,file=null'='["HOST_CHARSET_ASCII",<ID>,line=7,col=24],offset=215,file=null'
+<U>#define '["HOST_CHARSET_ASCII",<ID>,line=2,col=9],offset=39,file=null'='["1",<DECIMALINT>,line=2,col=30],offset=60,file=null'
+<U>#define '["HOST_CHARSET_EBCDIC",<ID>,line=3,col=9],offset=70,file=null'='["2",<DECIMALINT>,line=3,col=30],offset=91,file=null'
+<U>#define '["HOST_CHARSET_UNKNOWN",<ID>,line=1,col=9],offset=8,file=null'='["0",<OCTALINT>,line=1,col=30],offset=29,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz190413.c
+Includes:
+    <no includes>
+Macros:
+#define 'HOST_CHARSET' [7:1/192-7:42/233]
+#define 'HOST_CHARSET_ASCII' [2:1/31-2:31/61]
+#define 'HOST_CHARSET_EBCDIC' [3:1/62-3:31/92]
+#define 'HOST_CHARSET_UNKNOWN' [1:1/0-1:31/30]
+VARIABLE out190413 [18:1/487-18:40/526]  TYPE: *char TEXT=char*  [18:1/487-18:6/492]  INIT: text='"HOST_CHARSET_ASCII"'  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE out190413 [18:1/487-18:40/526]  TYPE: *char TEXT=char*  [18:1/487-18:6/492]  INIT: text='"HOST_CHARSET_ASCII"'  SCOPE: $Global$ 
+

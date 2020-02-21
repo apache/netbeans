@@ -1,0 +1,22 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug256281.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug256281 [1:1/0-3:2/66] SCOPE: bug256281.cpp
+    TYPEDEF __builtin_va_list  [2:3/24-2:43/64] TYPE: $unresolved$::__sun_va_list TEXT=__sun_va_list  [2:11/32-2:24/45] SCOPE: bug256281 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug256281 (bug256281) 
+    bug256281.cpp  [1:1/0-3:2/66]
+NAMESPACE bug256281 (bug256281) 
+    TYPEDEF __builtin_va_list  [2:3/24-2:43/64] TYPE: $unresolved$::__sun_va_list TEXT=__sun_va_list  [2:11/32-2:24/45] SCOPE: bug256281 
+

@@ -1,0 +1,74 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz231216.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS A (A ) [1:1/0-7:2/126] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC i [3:5/22-3:11/28]  TYPE: int TEXT=int  [3:5/22-3:8/25]  INIT: null  SCOPE: A 
+        FUNCTION DEFINITION A  [4:5/33-4:22/50] ConstructorDDImpl SCOPE: A 
+            SIGNATURE A(int)
+            UNIQUE NAME f:A::A(int)
+            DECLARATION: A  [4:5/33-4:22/50]
+            PARAMETERS:
+                a [4:7/35-4:12/40]  TYPE: int TEXT=int  [4:7/35-4:10/38]  INIT: null  SCOPE: A 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [4:14/42-4:22/50] SCOPE: A 
+                STATEMENT EXPRESSION  [4:15/43-4:20/48] SCOPE: Stmt  [4:14/42-4:22/50] text: 'i = a'
+        FUNCTION DEFINITION operator ~  [5:5/55-5:37/87] MethodDDImpl SCOPE: A 
+            SIGNATURE operator ~()
+            UNIQUE NAME f:A::operator ~()
+            DECLARATION: operator ~  [5:5/55-5:37/87]
+            PARAMETERS:
+            RETURNS int TEXT=int  [5:5/55-5:8/58]
+            STATEMENT COMPOUND  [5:22/72-5:37/87] SCOPE: operator ~ 
+                STATEMENT RETURN  [5:23/73-5:36/86] SCOPE: Stmt  [5:22/72-5:37/87] text: 'return 1 + i;'
+        FUNCTION DEFINITION operator !  [6:5/92-6:37/124] MethodDDImpl SCOPE: A 
+            SIGNATURE operator !()
+            UNIQUE NAME f:A::operator !()
+            DECLARATION: operator !  [6:5/92-6:37/124]
+            PARAMETERS:
+            RETURNS int TEXT=int  [6:5/92-6:8/95]
+            STATEMENT COMPOUND  [6:22/109-6:37/124] SCOPE: operator ! 
+                STATEMENT RETURN  [6:23/110-6:36/123] SCOPE: Stmt  [6:22/109-6:37/124] text: 'return 2 + i;'
+
+========== Dumping model of PROJECT DummyProject
+CLASS A (A ) [1:1/0-7:2/126] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC i [3:5/22-3:11/28]  TYPE: int TEXT=int  [3:5/22-3:8/25]  INIT: null  SCOPE: A 
+        FUNCTION DEFINITION A  [4:5/33-4:22/50] ConstructorDDImpl SCOPE: A 
+            SIGNATURE A(int)
+            UNIQUE NAME f:A::A(int)
+            DECLARATION: A  [4:5/33-4:22/50]
+            PARAMETERS:
+                a [4:7/35-4:12/40]  TYPE: int TEXT=int  [4:7/35-4:10/38]  INIT: null  SCOPE: A 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [4:14/42-4:22/50] SCOPE: A 
+                STATEMENT EXPRESSION  [4:15/43-4:20/48] SCOPE: Stmt  [4:14/42-4:22/50] text: 'i = a'
+        FUNCTION DEFINITION operator ~  [5:5/55-5:37/87] MethodDDImpl SCOPE: A 
+            SIGNATURE operator ~()
+            UNIQUE NAME f:A::operator ~()
+            DECLARATION: operator ~  [5:5/55-5:37/87]
+            PARAMETERS:
+            RETURNS int TEXT=int  [5:5/55-5:8/58]
+            STATEMENT COMPOUND  [5:22/72-5:37/87] SCOPE: operator ~ 
+                STATEMENT RETURN  [5:23/73-5:36/86] SCOPE: Stmt  [5:22/72-5:37/87] text: 'return 1 + i;'
+        FUNCTION DEFINITION operator !  [6:5/92-6:37/124] MethodDDImpl SCOPE: A 
+            SIGNATURE operator !()
+            UNIQUE NAME f:A::operator !()
+            DECLARATION: operator !  [6:5/92-6:37/124]
+            PARAMETERS:
+            RETURNS int TEXT=int  [6:5/92-6:8/95]
+            STATEMENT COMPOUND  [6:22/109-6:37/124] SCOPE: operator ! 
+                STATEMENT RETURN  [6:23/110-6:36/123] SCOPE: Stmt  [6:22/109-6:37/124] text: 'return 2 + i;'
+

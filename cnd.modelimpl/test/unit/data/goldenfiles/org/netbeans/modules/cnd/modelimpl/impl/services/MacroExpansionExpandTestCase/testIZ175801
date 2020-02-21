@@ -1,0 +1,19 @@
+
+typedef enum
+{
+    CR_OK = 0,
+    CR_EEXISTS,
+    CR_ELAST
+} status_t;
+
+static const struct
+{
+    const char *name;
+    const char *desc;
+    const wchar_t *wname;
+    const wchar_t *wdesc;
+} err_list[CR_ELAST] = {
+    { "CR_OK" , "no error" , L"CR_OK" , L"no error" },
+    { "CR_EEXISTS" , "object already exists" , L"CR_EEXISTS" , L"object already exists" }
+};
+

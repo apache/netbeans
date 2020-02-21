@@ -1,0 +1,33 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 2):
+<U>#define '["F_TEST_PARAM",<ID>,line=2,col=9],offset=32,file=null'='["defined",<ID>,line=2,col=22],offset=45,file=null ["(",<LPAREN>,line=2,col=29],offset=52,file=null ["MY_TEST_PARAM",<ID>,line=2,col=30],offset=53,file=null [")",<RPAREN>,line=2,col=43],offset=66,file=null'
+<U>#define '["MY_TEST_PARAM",<ID>,line=1,col=9],offset=8,file=null'='["1",<DECIMALINT>,line=1,col=23],offset=22,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz197997.cc
+Includes:
+    <no includes>
+Macros:
+#define 'F_TEST_PARAM' [2:1/24-2:44/67]
+#define 'MY_TEST_PARAM' [1:1/0-1:24/23]
+FUNCTION DEFINITION function  [5:1/86-7:2/105] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE function()
+    UNIQUE NAME f:function()
+    DECLARATION: function  [5:1/86-7:2/105]
+    PARAMETERS:
+    RETURNS void TEXT=void  [5:1/86-5:5/90]
+    STATEMENT COMPOUND  [6:12/102-7:2/105] SCOPE: function 
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION function  [5:1/86-7:2/105] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE function()
+    UNIQUE NAME f:function()
+    DECLARATION: function  [5:1/86-7:2/105]
+    PARAMETERS:
+    RETURNS void TEXT=void  [5:1/86-5:5/90]
+    STATEMENT COMPOUND  [6:12/102-7:2/105] SCOPE: function 
+

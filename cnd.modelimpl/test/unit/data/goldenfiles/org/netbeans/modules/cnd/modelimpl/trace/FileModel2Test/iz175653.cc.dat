@@ -1,0 +1,20 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz175653.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+VARIABLE i [2:1/1-2:20/20]  TYPE: int TEXT=int  [2:1/1-2:4/4]  INIT: text='0b10101010'  SCOPE: $Global$ 
+VARIABLE j [3:1/21-3:20/40]  TYPE: int TEXT=int  [3:1/21-3:4/24]  INIT: text='0B10101010'  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE i [2:1/1-2:20/20]  TYPE: int TEXT=int  [2:1/1-2:4/4]  INIT: text='0b10101010'  SCOPE: $Global$ 
+VARIABLE j [3:1/21-3:20/40]  TYPE: int TEXT=int  [3:1/21-3:4/24]  INIT: text='0B10101010'  SCOPE: $Global$ 
+

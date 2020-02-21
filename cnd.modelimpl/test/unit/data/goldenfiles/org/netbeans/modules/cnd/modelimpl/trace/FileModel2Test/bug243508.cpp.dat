@@ -1,0 +1,81 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug243508.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug243508 [1:1/0-26:2/871] SCOPE: bug243508.cpp
+    NAMESPACE DEFINITOIN AN_243508 [2:3/24-4:4/71] SCOPE: bug243508.cpp
+        CLASS a243508 (bug243508::AN_243508::a243508 ) [3:5/50-3:21/66] lcurly=64 SCOPE: AN_243508 
+            BASE CLASSES:
+            MEMBERS:
+    NAMESPACE DEFINITOIN BN_243508 [6:3/75-8:4/130] SCOPE: bug243508.cpp
+        CLASS  (bug243508::BN_243508:: ) [7:5/101-7:21/117] lcurly=115 SCOPE: BN_243508 
+            BASE CLASSES:
+            MEMBERS:
+        TYPEDEF b243508  [7:22/118-7:29/125] TYPE: bug243508::BN_243508:: TEXT=typedef class { } b243508 ;  [7:5/101-7:30/126] SCOPE: BN_243508 
+    NAMESPACE DEFINITOIN DN_243508 [10:3/134-13:4/237] SCOPE: bug243508.cpp
+        USING DECL. AN_243508::a243508  [11:5/160-11:38/193]; REF DECL: bug243508::AN_243508::a243508  [3:5/50-3:21/66] SCOPE: DN_243508 
+        USING DECL. BN_243508::b243508  [12:5/199-12:38/232]; REF DECL: bug243508::BN_243508::b243508  [7:22/118-7:29/125] SCOPE: DN_243508 
+    STRUCT A243508<class T> (bug243508::A243508 ) [15:3/243-19:4/546] lcurly=277 SCOPE: bug243508 
+        BASE CLASSES:
+        MEMBERS:
+            TYPEDEF type243508  [16:5/283-16:28/306] TYPE: int TEXT=int  [16:13/291-16:16/294] SCOPE: A243508 
+            UNION  (bug243508::A243508:: ) [17:5/360-17:41/396] lcurly=366 SCOPE: A243508 
+                BASE CLASSES:
+                MEMBERS:
+                    FIELD PUBLIC union_member243508 [17:13/368-17:39/394]  TYPE: double TEXT=double  [17:13/368-17:19/374]  INIT: null  SCOPE:  
+            ENUM tagname243508 [18:5/451-18:44/490] SCOPE: A243508 
+                enumerator243508
+    STRUCT C243508<class T> (bug243508::C243508 ) [21:3/551-25:4/866] lcurly=598 SCOPE: bug243508 
+        BASE CLASSES:
+            CLASS=bug243508::A243508 VISIBILITY==PUBLIC virtual==false text='A243508<T>'
+        MEMBERS:
+            USING_DECLARATION PUBLIC A243508::type243508 [22:5/604-22:42/641] UsingDeclarationImpl
+            USING_DECLARATION PUBLIC A243508::union_member243508 [23:5/647-23:50/692] UsingDeclarationImpl
+            USING_DECLARATION PUBLIC A243508::enumerator243508 [24:5/758-24:48/801] UsingDeclarationImpl
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug243508 (bug243508) 
+    bug243508.cpp  [1:1/0-26:2/871]
+NAMESPACE bug243508 (bug243508) 
+    STRUCT A243508<class T> (bug243508::A243508 ) [15:3/243-19:4/546] lcurly=277 SCOPE: bug243508 
+        BASE CLASSES:
+        MEMBERS:
+            TYPEDEF type243508  [16:5/283-16:28/306] TYPE: int TEXT=int  [16:13/291-16:16/294] SCOPE: A243508 
+            UNION  (bug243508::A243508:: ) [17:5/360-17:41/396] lcurly=366 SCOPE: A243508 
+                BASE CLASSES:
+                MEMBERS:
+                    FIELD PUBLIC union_member243508 [17:13/368-17:39/394]  TYPE: double TEXT=double  [17:13/368-17:19/374]  INIT: null  SCOPE:  
+            ENUM tagname243508 [18:5/451-18:44/490] SCOPE: A243508 
+                enumerator243508
+    STRUCT C243508<class T> (bug243508::C243508 ) [21:3/551-25:4/866] lcurly=598 SCOPE: bug243508 
+        BASE CLASSES:
+            CLASS=bug243508::A243508 VISIBILITY==PUBLIC virtual==false text='A243508<T>'
+        MEMBERS:
+            USING_DECLARATION PUBLIC A243508::type243508 [22:5/604-22:42/641] UsingDeclarationImpl
+            USING_DECLARATION PUBLIC A243508::union_member243508 [23:5/647-23:50/692] UsingDeclarationImpl
+            USING_DECLARATION PUBLIC A243508::enumerator243508 [24:5/758-24:48/801] UsingDeclarationImpl
+    NAMESPACE DEFINITIONS for AN_243508 (bug243508::AN_243508) 
+        bug243508.cpp  [2:3/24-4:4/71]
+    NAMESPACE AN_243508 (bug243508::AN_243508) 
+        CLASS a243508 (bug243508::AN_243508::a243508 ) [3:5/50-3:21/66] lcurly=64 SCOPE: AN_243508 
+            BASE CLASSES:
+            MEMBERS:
+    NAMESPACE DEFINITIONS for BN_243508 (bug243508::BN_243508) 
+        bug243508.cpp  [6:3/75-8:4/130]
+    NAMESPACE BN_243508 (bug243508::BN_243508) 
+        TYPEDEF b243508  [7:22/118-7:29/125] TYPE: bug243508::BN_243508:: TEXT=typedef class { } b243508 ;  [7:5/101-7:30/126] SCOPE: BN_243508 
+    NAMESPACE DEFINITIONS for DN_243508 (bug243508::DN_243508) 
+        bug243508.cpp  [10:3/134-13:4/237]
+    NAMESPACE DN_243508 (bug243508::DN_243508) 
+        USING DECL. AN_243508::a243508  [11:5/160-11:38/193]; REF DECL: bug243508::AN_243508::a243508  [3:5/50-3:21/66] SCOPE: DN_243508 
+        USING DECL. BN_243508::b243508  [12:5/199-12:38/232]; REF DECL: bug243508::BN_243508::b243508  [7:22/118-7:29/125] SCOPE: DN_243508 
+

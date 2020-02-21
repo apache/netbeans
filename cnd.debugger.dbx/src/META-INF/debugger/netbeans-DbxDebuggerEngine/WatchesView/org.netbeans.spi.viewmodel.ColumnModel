@@ -1,0 +1,10 @@
+# disable debuggercore defaults in shared dbxgui
+org.netbeans.modules.debugger.ui.models.ColumnModels.createWatchToStringColumn()-hidden
+org.netbeans.modules.debugger.ui.models.ColumnModels.createWatchTypeColumn()-hidden
+org.netbeans.modules.debugger.ui.models.ColumnModels.createWatchValueColumn()-hidden
+# install our columns
+org.netbeans.modules.cnd.debugger.common2.debugger.VariableColumnModels$ValueColumn
+org.netbeans.modules.cnd.debugger.common2.debugger.VariableColumnModels$TypeColumn
+#org.netbeans.modules.cnd.debugger.common2.debugger.VariableColumnModels$DTypeColumn
+#org.netbeans.modules.cnd.debugger.common2.debugger.VariableColumnModels$AddressColumn
+

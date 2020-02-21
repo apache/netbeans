@@ -1,0 +1,34 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE function_returning_enum.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN function_returning_enum [1:1/0-10:2/324] SCOPE: function_returning_enum.cpp
+    ENUM _fre___codecvt_result [2:5/40-2:50/85] SCOPE: function_returning_enum 
+        _fre___codecvt_ok
+    STRUCT _fre__IO_codecvt (function_returning_enum::_fre__IO_codecvt ) [4:5/92-7:6/221] lcurly=120 SCOPE: function_returning_enum 
+        BASE CLASSES:
+        MEMBERS:
+            FIELD PUBLIC _fre___codecvt_do_out [6:7/128-6:94/215]  TYPE: _fre___codecvt_result(_fre__IO_codecvt*,int*) TEXT=_fre___codecvt_result(*)(_fre__IO_codecvt*,int*)  [6:12/133-6:93/214]  INIT: null  SCOPE: _fre__IO_codecvt 
+    VARIABLE _fre___codecvt_do_out_global [9:5/228-9:99/322]  TYPE: _fre___codecvt_result(_fre__IO_codecvt*,int*) TEXT=_fre___codecvt_result(*)(_fre__IO_codecvt*,int*)  [9:10/233-9:98/321]  INIT: null  SCOPE: function_returning_enum 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for function_returning_enum (function_returning_enum) 
+    function_returning_enum.cpp  [1:1/0-10:2/324]
+NAMESPACE function_returning_enum (function_returning_enum) 
+    ENUM _fre___codecvt_result [2:5/40-2:50/85] SCOPE: function_returning_enum 
+        _fre___codecvt_ok
+    STRUCT _fre__IO_codecvt (function_returning_enum::_fre__IO_codecvt ) [4:5/92-7:6/221] lcurly=120 SCOPE: function_returning_enum 
+        BASE CLASSES:
+        MEMBERS:
+            FIELD PUBLIC _fre___codecvt_do_out [6:7/128-6:94/215]  TYPE: _fre___codecvt_result(_fre__IO_codecvt*,int*) TEXT=_fre___codecvt_result(*)(_fre__IO_codecvt*,int*)  [6:12/133-6:93/214]  INIT: null  SCOPE: _fre__IO_codecvt 
+    VARIABLE _fre___codecvt_do_out_global [9:5/228-9:99/322]  TYPE: _fre___codecvt_result(_fre__IO_codecvt*,int*) TEXT=_fre___codecvt_result(*)(_fre__IO_codecvt*,int*)  [9:10/233-9:98/321]  INIT: null  SCOPE: function_returning_enum 
+

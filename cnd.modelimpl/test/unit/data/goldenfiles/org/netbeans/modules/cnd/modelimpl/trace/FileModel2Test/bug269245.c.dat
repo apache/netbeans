@@ -1,0 +1,52 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug269245.c
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION fooDecl269245 [1:1/0-1:67/66] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE fooDecl269245(int*,char*)
+    UNIQUE NAME F:fooDecl269245(int*,char*)
+    PARAMETERS:
+        arr [1:19/18-1:43/42]  TYPE: int[] TEXT=int[]  [1:19/18-1:22/21]  INIT: null  SCOPE: fooDecl269245 
+        str [1:45/44-1:65/64]  TYPE: char[] TEXT=char[]  [1:45/44-1:49/48]  INIT: null  SCOPE: fooDecl269245 
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+FUNCTION DEFINITION fooDef269245  [3:1/68-5:2/150] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE fooDef269245(int*,char*)
+    UNIQUE NAME f:fooDef269245(int*,char*)
+    DECLARATION: fooDef269245  [3:1/68-5:2/150]
+    PARAMETERS:
+        arr [3:18/85-3:42/109]  TYPE: int[] TEXT=int[]  [3:18/85-3:21/88]  INIT: null  SCOPE: fooDef269245 
+        str [3:44/111-3:64/131]  TYPE: char[] TEXT=char[]  [3:44/111-3:48/115]  INIT: null  SCOPE: fooDef269245 
+    RETURNS int TEXT=int  [3:1/68-3:4/71]
+    STATEMENT COMPOUND  [3:66/133-5:2/150] SCOPE: fooDef269245 
+        STATEMENT RETURN  [4:5/139-4:14/148] SCOPE: Stmt  [3:66/133-5:2/150] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION fooDecl269245 [1:1/0-1:67/66] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE fooDecl269245(int*,char*)
+    UNIQUE NAME F:fooDecl269245(int*,char*)
+    PARAMETERS:
+        arr [1:19/18-1:43/42]  TYPE: int[] TEXT=int[]  [1:19/18-1:22/21]  INIT: null  SCOPE: fooDecl269245 
+        str [1:45/44-1:65/64]  TYPE: char[] TEXT=char[]  [1:45/44-1:49/48]  INIT: null  SCOPE: fooDecl269245 
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+FUNCTION DEFINITION fooDef269245  [3:1/68-5:2/150] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE fooDef269245(int*,char*)
+    UNIQUE NAME f:fooDef269245(int*,char*)
+    DECLARATION: fooDef269245  [3:1/68-5:2/150]
+    PARAMETERS:
+        arr [3:18/85-3:42/109]  TYPE: int[] TEXT=int[]  [3:18/85-3:21/88]  INIT: null  SCOPE: fooDef269245 
+        str [3:44/111-3:64/131]  TYPE: char[] TEXT=char[]  [3:44/111-3:48/115]  INIT: null  SCOPE: fooDef269245 
+    RETURNS int TEXT=int  [3:1/68-3:4/71]
+    STATEMENT COMPOUND  [3:66/133-5:2/150] SCOPE: fooDef269245 
+        STATEMENT RETURN  [4:5/139-4:14/148] SCOPE: Stmt  [3:66/133-5:2/150] text: 'return 0;'
+

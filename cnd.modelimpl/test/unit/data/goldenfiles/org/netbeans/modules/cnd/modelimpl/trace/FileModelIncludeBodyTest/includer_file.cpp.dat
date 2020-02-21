@@ -1,0 +1,156 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["TOK",<ID>,line=51,col=13],offset=1477,file=null[["X",<ID>,line=51,col=17],offset=1481,file=null]'='["GLOBAL_",<ID>,line=51,col=20],offset=1484,file=null ["##",<DBL_SHARP>,line=51,col=27],offset=1491,file=null ["X",<ID>,line=51,col=29],offset=1493,file=null [",",<COMMA>,line=51,col=30],offset=1494,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE includer_file.cpp
+Includes:
+"innernsbody.h" [3:1/61-3:25/85]
+"enumbody.h" [7:17/239-7:38/260]
+"outerbody.h" [11:1/338-11:23/360]
+"innerbody.h" [14:1/414-14:23/436]
+"methodbody.h" [17:1/475-17:24/498]
+"enumbody.h" [21:25/668-21:46/689]
+"enumbody.h" [28:21/910-28:42/931]
+"outerbody.h" [33:1/1032-33:23/1054]
+"enumbody.h" [38:13/1180-38:34/1201]
+"outernsbody.h" [42:1/1261-42:25/1285]
+"enumbody.h" [45:9/1373-45:30/1394]
+"enumbody.h" [52:5/1500-52:26/1521]
+Macros:
+#define 'PART1' [10:1/324-10:14/337]
+#define 'PART2' [32:1/1018-32:14/1031]
+#define 'TOK[X]' [6:17/180-6:59/222]
+#define 'TOK[X]' [20:25/608-20:60/643]
+#define 'TOK[X]' [27:21/847-27:63/889]
+#define 'TOK[X]' [37:13/1127-37:53/1167]
+#define 'TOK[X]' [44:9/1325-44:48/1364]
+#define 'TOK[X]' [51:5/1469-51:31/1495]
+NAMESPACE DEFINITOIN OuterNSIncluder [1:1/0-48:2/1444] SCOPE: includer_file.cpp
+    VARIABLE outerNSVarIncluder [2:1/1-2:24/24]  TYPE: int TEXT=int  [2:1/1-2:4/4]  INIT: null  SCOPE: OuterNSIncluder 
+    NAMESPACE DEFINITOIN InnnerNSIncluder [2:5/32-41:6/1260] SCOPE: includer_file.cpp
+        VARIABLE innerNSVarIncluder [2:1/1-2:24/24]  TYPE: int TEXT=int  [2:1/1-2:4/4]  INIT: null  SCOPE: InnnerNSIncluder 
+        STRUCT OuterClassIncluder (OuterNSIncluder::InnnerNSIncluder::OuterClassIncluder ) [4:9/94-35:10/1077] lcurly=120 SCOPE: InnnerNSIncluder 
+            BASE CLASSES:
+            MEMBERS:
+                FIELD PUBLIC part1OuterIncluder [3:1/14-3:24/37]  TYPE: int TEXT=int  [3:1/14-3:4/17]  INIT: null  SCOPE: OuterClassIncluder 
+                FIELD PUBLIC part2OuterIncluder [5:1/58-5:24/81]  TYPE: int TEXT=int  [5:1/58-5:4/61]  INIT: null  SCOPE: OuterClassIncluder 
+                ENUM OuterClassIncluderEnum [5:13/134-9:14/322] SCOPE: OuterClassIncluder 
+                    OuterClassIncluder_NUM_ELEMENTS
+                    OuterClassIncluderEnum_unknown
+                    OuterClassIncluderEnum_eof
+                STRUCT InnerClassIncluder (OuterNSIncluder::InnnerNSIncluder::OuterClassIncluder::InnerClassIncluder ) [13:13/386-31:14/1016] lcurly=412 SCOPE: OuterClassIncluder 
+                    BASE CLASSES:
+                    MEMBERS:
+                        FIELD PUBLIC fieldIncluder [4:1/44-4:19/62]  TYPE: int TEXT=int  [4:1/44-4:4/47]  INIT: null  SCOPE: InnerClassIncluder 
+                        FUNCTION DEFINITION foooIncluder  [6:1/64-8:2/111] MethodDDImpl SCOPE: InnerClassIncluder 
+                            SIGNATURE foooIncluder()
+                            UNIQUE NAME f:OuterNSIncluder::InnnerNSIncluder::OuterClassIncluder::InnerClassIncluder::foooIncluder()
+                            DECLARATION: foooIncluder  [6:1/64-8:2/111]
+                            PARAMETERS:
+                            RETURNS void TEXT=void  [6:1/64-6:5/68]
+                            STATEMENT COMPOUND  [6:21/84-8:2/111] SCOPE: foooIncluder 
+                        FUNCTION DEFINITION booIncluder  [16:17/454-24:18/779] MethodDDImpl SCOPE: InnerClassIncluder 
+                            SIGNATURE booIncluder()
+                            UNIQUE NAME f:OuterNSIncluder::InnnerNSIncluder::OuterClassIncluder::InnerClassIncluder::booIncluder()
+                            DECLARATION: booIncluder  [16:17/454-24:18/779]
+                            PARAMETERS:
+                            RETURNS void TEXT=void  [16:17/454-16:21/458]
+                            STATEMENT COMPOUND  [16:36/473-24:18/779] SCOPE: booIncluder 
+                                STATEMENT EXPRESSION  [18:21/519-18:41/539] SCOPE: Stmt  [16:36/473-24:18/779] text: 'localvarIncluder = 1'
+                                STATEMENT DECLARATION  [19:21/561-23:22/760] SCOPE: Stmt  [16:36/473-24:18/779]
+                                    ENUM booIncluderEnum [19:21/561-23:22/760] SCOPE: null
+                                        booIncluder_NUM_ELEMENTS
+                        ENUM InnerClassIncluderEnum [26:17/797-30:18/1001] SCOPE: InnerClassIncluder 
+                            InnerClassIncluder_NUM_ELEMENTS
+                            InnerClassIncluderEnum_unknown
+                            InnerClassIncluderEnum_eof
+        ENUM InnnerNSIncluderEnum [36:9/1087-40:10/1253] SCOPE: InnnerNSIncluder 
+            InnnerNSIncluder_NUM_ELEMENTS
+            InnnerNSIncluderEnum_unknown
+            InnnerNSIncluderEnum_eof
+    ENUM OuterNSIncluderEnum [43:5/1290-47:6/1441] SCOPE: OuterNSIncluder 
+        OuterNSIncluderEnum_NUM_ELEMENTS
+        OuterNSIncluderEnum_unknown
+        OuterNSIncluderEnum_eof
+ENUM globalEnum [50:1/1447-54:2/1547] SCOPE: $Global$ 
+    GLOBAL_NUM_ELEMENTS
+    GLOBAL_unknown
+    GLOBAL_eof
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE deepFieldIncluder [2:1/1-2:23/23]  TYPE: int TEXT=int  [2:1/1-2:4/4]  INIT: null  SCOPE: $Global$ 
+VARIABLE OuterClassIncluderEnum_eof [7:1/85-8:9/134]  TYPE: $unresolved$::OuterClassIncluderEnum_unknown TEXT=OuterClassIncluderEnum_unknown  [7:1/85-7:13/97]  INIT: null  SCOPE: $Global$ 
+ENUM globalEnum [50:1/1447-54:2/1547] SCOPE: $Global$ 
+    GLOBAL_NUM_ELEMENTS
+    GLOBAL_unknown
+    GLOBAL_eof
+VARIABLE fieldIncluder [4:1/44-4:19/62]  TYPE: int TEXT=int  [4:1/44-4:4/47]  INIT: null  SCOPE: $Global$ 
+FUNCTION DEFINITION foooIncluder  [6:1/64-8:2/111] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foooIncluder()
+    UNIQUE NAME f:foooIncluder()
+    DECLARATION: foooIncluder  [6:1/64-8:2/111]
+    PARAMETERS:
+    RETURNS void TEXT=void  [6:1/64-6:5/68]
+    STATEMENT COMPOUND  [6:21/84-8:2/111] SCOPE: foooIncluder 
+VARIABLE innerNSVarIncluder [2:1/1-2:24/24]  TYPE: int TEXT=int  [2:1/1-2:4/4]  INIT: null  SCOPE: InnnerNSIncluder 
+VARIABLE localvarIncluder [2:1/1-2:22/22]  TYPE: int TEXT=int  [2:1/1-2:4/4]  INIT: null  SCOPE: $Global$ 
+VARIABLE part1OuterIncluder [3:1/14-3:24/37]  TYPE: int TEXT=int  [3:1/14-3:4/17]  INIT: null  SCOPE: $Global$ 
+VARIABLE part2OuterIncluder [5:1/58-5:24/81]  TYPE: int TEXT=int  [5:1/58-5:4/61]  INIT: null  SCOPE: $Global$ 
+VARIABLE outerNSVarIncluder [2:1/1-2:24/24]  TYPE: int TEXT=int  [2:1/1-2:4/4]  INIT: null  SCOPE: OuterNSIncluder 
+NAMESPACE DEFINITIONS for OuterNSIncluder (OuterNSIncluder) 
+    includer_file.cpp  [1:1/0-48:2/1444]
+NAMESPACE OuterNSIncluder (OuterNSIncluder) 
+    ENUM OuterNSIncluderEnum [43:5/1290-47:6/1441] SCOPE: OuterNSIncluder 
+        OuterNSIncluderEnum_NUM_ELEMENTS
+        OuterNSIncluderEnum_unknown
+        OuterNSIncluderEnum_eof
+    VARIABLE outerNSVarIncluder [2:1/1-2:24/24]  TYPE: int TEXT=int  [2:1/1-2:4/4]  INIT: null  SCOPE: OuterNSIncluder 
+    NAMESPACE DEFINITIONS for InnnerNSIncluder (OuterNSIncluder::InnnerNSIncluder) 
+        includer_file.cpp  [2:5/32-41:6/1260]
+    NAMESPACE InnnerNSIncluder (OuterNSIncluder::InnnerNSIncluder) 
+        STRUCT OuterClassIncluder (OuterNSIncluder::InnnerNSIncluder::OuterClassIncluder ) [4:9/94-35:10/1077] lcurly=120 SCOPE: InnnerNSIncluder 
+            BASE CLASSES:
+            MEMBERS:
+                FIELD PUBLIC part1OuterIncluder [3:1/14-3:24/37]  TYPE: int TEXT=int  [3:1/14-3:4/17]  INIT: null  SCOPE: OuterClassIncluder 
+                FIELD PUBLIC part2OuterIncluder [5:1/58-5:24/81]  TYPE: int TEXT=int  [5:1/58-5:4/61]  INIT: null  SCOPE: OuterClassIncluder 
+                ENUM OuterClassIncluderEnum [5:13/134-9:14/322] SCOPE: OuterClassIncluder 
+                    OuterClassIncluder_NUM_ELEMENTS
+                    OuterClassIncluderEnum_unknown
+                    OuterClassIncluderEnum_eof
+                STRUCT InnerClassIncluder (OuterNSIncluder::InnnerNSIncluder::OuterClassIncluder::InnerClassIncluder ) [13:13/386-31:14/1016] lcurly=412 SCOPE: OuterClassIncluder 
+                    BASE CLASSES:
+                    MEMBERS:
+                        FIELD PUBLIC fieldIncluder [4:1/44-4:19/62]  TYPE: int TEXT=int  [4:1/44-4:4/47]  INIT: null  SCOPE: InnerClassIncluder 
+                        FUNCTION DEFINITION foooIncluder  [6:1/64-8:2/111] MethodDDImpl SCOPE: InnerClassIncluder 
+                            SIGNATURE foooIncluder()
+                            UNIQUE NAME f:OuterNSIncluder::InnnerNSIncluder::OuterClassIncluder::InnerClassIncluder::foooIncluder()
+                            DECLARATION: foooIncluder  [6:1/64-8:2/111]
+                            PARAMETERS:
+                            RETURNS void TEXT=void  [6:1/64-6:5/68]
+                            STATEMENT COMPOUND  [6:21/84-8:2/111] SCOPE: foooIncluder 
+                        FUNCTION DEFINITION booIncluder  [16:17/454-24:18/779] MethodDDImpl SCOPE: InnerClassIncluder 
+                            SIGNATURE booIncluder()
+                            UNIQUE NAME f:OuterNSIncluder::InnnerNSIncluder::OuterClassIncluder::InnerClassIncluder::booIncluder()
+                            DECLARATION: booIncluder  [16:17/454-24:18/779]
+                            PARAMETERS:
+                            RETURNS void TEXT=void  [16:17/454-16:21/458]
+                            STATEMENT COMPOUND  [16:36/473-24:18/779] SCOPE: booIncluder 
+                                STATEMENT EXPRESSION  [18:21/519-18:41/539] SCOPE: Stmt  [16:36/473-24:18/779] text: 'localvarIncluder = 1'
+                                STATEMENT DECLARATION  [19:21/561-23:22/760] SCOPE: Stmt  [16:36/473-24:18/779]
+                                    ENUM booIncluderEnum [19:21/561-23:22/760] SCOPE: null
+                                        booIncluder_NUM_ELEMENTS
+                        ENUM InnerClassIncluderEnum [26:17/797-30:18/1001] SCOPE: InnerClassIncluder 
+                            InnerClassIncluder_NUM_ELEMENTS
+                            InnerClassIncluderEnum_unknown
+                            InnerClassIncluderEnum_eof
+        ENUM InnnerNSIncluderEnum [36:9/1087-40:10/1253] SCOPE: InnnerNSIncluder 
+            InnnerNSIncluder_NUM_ELEMENTS
+            InnnerNSIncluderEnum_unknown
+            InnnerNSIncluderEnum_eof
+        VARIABLE innerNSVarIncluder [2:1/1-2:24/24]  TYPE: int TEXT=int  [2:1/1-2:4/4]  INIT: null  SCOPE: InnnerNSIncluder 
+

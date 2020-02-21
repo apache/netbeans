@@ -1,0 +1,14 @@
+Running "C:\stv_sup1\mkPrj.bat  -f stv_sup1_1-Makefile.mk CONF=Default" in C:\stv_sup1\nb_prj
+make.exe: Entering directory `c:/stv_sup1'
+gcc -Wall -Wmissing-prototypes -Wredundant-decls  -Wmissing-declarations -Wstrict-prototypes -Wold-style-definition -Wsign-compare -Wfloat-equal -Wpacked -Winvalid-pch -Winline -Wshadow -Wpointer-arith -Wcast-align -Waggregate-return -Wdeclaration-after-statement -Wundef -Wendif-labels -Wbad-function-cast -Wmissing-format-attribute -Wnested-externs -Wwrite-strings -Werror  -m486 -O3 -DUSE_GRAPH -I../include -I./outils  -DETIQ -DSAUVE_FI2 -DVAL_PILOTCAL -DFRANCAIS -I../include -I./outils  -c modbus.c -o modbus.o
+modbus.c: In function `mb_tcp_write':
+modbus.c:135: warning: implicit declaration of function `tcp_write'
+modbus.c:135: warning: nested extern declaration of `tcp_write'
+modbus.c:135: error: `s' undeclared (first use in this function)
+modbus.c:135: error: (Each undeclared identifier is reported only once
+modbus.c:135: error: for each function it appears in.)
+make.exe: *** [modbus.o] Error 1
+make.exe: Leaving directory `c:/stv_sup1'
+        1 fichier(s) copi‚(s).
+        1 fichier(s) copi‚(s).
+Build successful. Exit value 0.

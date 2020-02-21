@@ -1,0 +1,37 @@
+architecture int	$	        architecture
+type int	$	        type
+units int	$	        units
+HIGH	$	        HIGH
+INTEL	$	        INTEL
+MEDIUM	$	        MEDIUM
+OPTERON	$	        OPTERON
+SPARC	$	        SPARC
+ComputeSupportMetric() void	$	        ComputeSupportMetric()
+GetCategory() const char*	$	        GetCategory()
+GetCategoryID() int	$	        GetCategoryID()
+GetDescription() const char*	$	        GetDescription()
+GetSupportMetric() int	$	        GetSupportMetric()
+GetType() const char*	$	        GetType()
+GetTypeID() int	$	        GetTypeID()
+GetUnits() int	$	        GetUnits()
+GetVendor() const char*	$	        GetVendor()
+SetCategory(int category) void	$	        SetCategory()
+SetDescription(const char* description) void	$	        SetDescription()
+SetSupportMetric(int m) void	$	        SetSupportMetric()
+SetType(int type) void	$	        SetType()
+SetUnits(int u) void	$	        SetUnits()
+SetVendor(const char* v) void	$	        SetVendor()
+operator =(const Module& obj) Module&	$	        operator =()
+~Module() 	$	        ~Module()
+Cpu(int type, int architecture, int units)	$	        Cpu()
+Module()	$	        Module()
+Module(const char* description, const char* vendor, int type, int category, int units)	$	        Module()
+Module(const Module& obj)	$	        Module()
+Cpu	$	        Cpu
+CpuArch	$	        CpuArch
+CpuType	$	        CpuType
+Customer	$	        Customer
+Disk	$	        Disk
+Memory	$	        Memory
+Module	$	        Module
+System	$	        System

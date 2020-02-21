@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.cnd.qnavigator/1
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Layer: org/netbeans/modules/cnd/qnavigator/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/cnd/qnavigator/Bundle.properties
+AutoUpdate-Show-In-Client: false
+

@@ -1,0 +1,164 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz159324.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN N [1:1/0-8:2/90] SCOPE: iz159324.cc
+    STRUCT A (N::A ) [2:5/18-7:6/87] lcurly=27 SCOPE: N 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION A  [3:9/37-4:10/52] ConstructorDDImpl SCOPE: A 
+                SIGNATURE A()
+                UNIQUE NAME f:N::A::A()
+                DECLARATION: A  [3:9/37-4:10/52]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [3:13/41-4:10/52] SCOPE: A 
+            FUNCTION DEFINITION A  [5:9/61-6:10/81] ConstructorDDImpl SCOPE: A 
+                SIGNATURE A(int)
+                UNIQUE NAME f:N::A::A(int)
+                DECLARATION: A  [5:9/61-6:10/81]
+                PARAMETERS:
+                    i [5:11/63-5:16/68]  TYPE: int TEXT=int  [5:11/63-5:14/66]  INIT: null  SCOPE: A 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [5:18/70-6:10/81] SCOPE: A 
+STRUCT String (String ) [10:1/92-10:17/108] lcurly=106 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+FUNCTION DEFINITION foo  [12:1/111-21:2/419] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [12:1/111-21:2/419]
+    PARAMETERS:
+    RETURNS void TEXT=void  [12:1/111-12:5/115]
+    STATEMENT COMPOUND  [12:13/123-21:2/419] SCOPE: foo 
+        STATEMENT DECLARATION  [13:5/129-13:11/135] SCOPE: Stmt  [12:13/123-21:2/419]
+            VARIABLE i [13:5/129-13:11/135]  TYPE: int TEXT=int  [13:5/129-13:8/132]  INIT: null  SCOPE: Stmt  [12:13/123-21:2/419]
+        STATEMENT DECLARATION  [14:5/140-14:20/155] SCOPE: Stmt  [12:13/123-21:2/419]
+            VARIABLE a1 [14:10/145-14:15/150]  TYPE: N::A TEXT=N::A  [14:5/140-14:9/144]  INIT: null  SCOPE: Stmt  [12:13/123-21:2/419]
+            VARIABLE a2 [14:17/152-14:19/154]  TYPE: N::A TEXT=N::A  [14:5/140-14:9/144]  INIT: null  SCOPE: Stmt  [12:13/123-21:2/419]
+        STATEMENT DECLARATION  [15:5/160-15:19/174] SCOPE: Stmt  [12:13/123-21:2/419]
+            VARIABLE i1 [15:9/164-15:14/169]  TYPE: int TEXT=int  [15:5/160-15:8/163]  INIT: null  SCOPE: Stmt  [12:13/123-21:2/419]
+            VARIABLE i2 [15:16/171-15:18/173]  TYPE: int TEXT=int  [15:5/160-15:8/163]  INIT: null  SCOPE: Stmt  [12:13/123-21:2/419]
+        STATEMENT DECLARATION  [16:5/179-16:19/193] SCOPE: Stmt  [12:13/123-21:2/419]
+            VARIABLE i3 [16:9/183-16:14/188]  TYPE: int TEXT=int  [16:5/179-16:8/182]  INIT: null  SCOPE: Stmt  [12:13/123-21:2/419]
+            VARIABLE i4 [16:16/190-16:18/192]  TYPE: int TEXT=int  [16:5/179-16:8/182]  INIT: null  SCOPE: Stmt  [12:13/123-21:2/419]
+        STATEMENT DECLARATION  [19:5/267-20:76/417] SCOPE: Stmt  [12:13/123-21:2/419]
+            FUNCTION com_nopager [19:16/278-19:47/309] FunctionImpl SCOPE: Stmt  [12:13/123-21:2/419]
+                DEFINITION: null
+                SIGNATURE com_nopager(String*,char*)
+                UNIQUE NAME F:com_nopager(String*,char*)
+                PARAMETERS:
+                    str [19:28/290-19:39/301]  TYPE: *String TEXT=String*  [19:28/290-19:36/298]  INIT: null  SCOPE: com_nopager 
+                     [19:41/303-19:46/308]  TYPE: *char TEXT=char*  [19:41/303-19:46/308]  INIT: null  SCOPE: com_nopager 
+                RETURNS int TEXT=int  [19:12/274-19:15/277]
+            FUNCTION com_pager [19:49/311-19:78/340] FunctionImpl SCOPE: Stmt  [12:13/123-21:2/419]
+                DEFINITION: null
+                SIGNATURE com_pager(String*,char*)
+                UNIQUE NAME F:com_pager(String*,char*)
+                PARAMETERS:
+                    str [19:59/321-19:70/332]  TYPE: *String TEXT=String*  [19:59/321-19:67/329]  INIT: null  SCOPE: com_pager 
+                     [19:72/334-19:77/339]  TYPE: *char TEXT=char*  [19:72/334-19:77/339]  INIT: null  SCOPE: com_pager 
+                RETURNS int TEXT=int  [19:12/274-19:15/277]
+            FUNCTION com_edit [20:16/357-20:43/384] FunctionImpl SCOPE: Stmt  [12:13/123-21:2/419]
+                DEFINITION: null
+                SIGNATURE com_edit(String*,char*)
+                UNIQUE NAME F:com_edit(String*,char*)
+                PARAMETERS:
+                    str [20:25/366-20:36/377]  TYPE: *String TEXT=String*  [20:25/366-20:33/374]  INIT: null  SCOPE: com_edit 
+                     [20:37/378-20:42/383]  TYPE: *char TEXT=char*  [20:37/378-20:42/383]  INIT: null  SCOPE: com_edit 
+                RETURNS int TEXT=int  [19:12/274-19:15/277]
+            FUNCTION com_shell [20:45/386-20:75/416] FunctionImpl SCOPE: Stmt  [12:13/123-21:2/419]
+                DEFINITION: null
+                SIGNATURE com_shell(String*,char*)
+                UNIQUE NAME F:com_shell(String*,char*)
+                PARAMETERS:
+                    str [20:55/396-20:66/407]  TYPE: *String TEXT=String*  [20:55/396-20:63/404]  INIT: null  SCOPE: com_shell 
+                     [20:68/409-20:74/415]  TYPE: *char TEXT=char*  [20:68/409-20:74/415]  INIT: null  SCOPE: com_shell 
+                RETURNS int TEXT=int  [19:12/274-19:15/277]
+
+========== Dumping model of PROJECT DummyProject
+STRUCT String (String ) [10:1/92-10:17/108] lcurly=106 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+FUNCTION DEFINITION foo  [12:1/111-21:2/419] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [12:1/111-21:2/419]
+    PARAMETERS:
+    RETURNS void TEXT=void  [12:1/111-12:5/115]
+    STATEMENT COMPOUND  [12:13/123-21:2/419] SCOPE: foo 
+        STATEMENT DECLARATION  [13:5/129-13:11/135] SCOPE: Stmt  [12:13/123-21:2/419]
+            VARIABLE i [13:5/129-13:11/135]  TYPE: int TEXT=int  [13:5/129-13:8/132]  INIT: null  SCOPE: Stmt  [12:13/123-21:2/419]
+        STATEMENT DECLARATION  [14:5/140-14:20/155] SCOPE: Stmt  [12:13/123-21:2/419]
+            VARIABLE a1 [14:10/145-14:15/150]  TYPE: N::A TEXT=N::A  [14:5/140-14:9/144]  INIT: null  SCOPE: Stmt  [12:13/123-21:2/419]
+            VARIABLE a2 [14:17/152-14:19/154]  TYPE: N::A TEXT=N::A  [14:5/140-14:9/144]  INIT: null  SCOPE: Stmt  [12:13/123-21:2/419]
+        STATEMENT DECLARATION  [15:5/160-15:19/174] SCOPE: Stmt  [12:13/123-21:2/419]
+            VARIABLE i1 [15:9/164-15:14/169]  TYPE: int TEXT=int  [15:5/160-15:8/163]  INIT: null  SCOPE: Stmt  [12:13/123-21:2/419]
+            VARIABLE i2 [15:16/171-15:18/173]  TYPE: int TEXT=int  [15:5/160-15:8/163]  INIT: null  SCOPE: Stmt  [12:13/123-21:2/419]
+        STATEMENT DECLARATION  [16:5/179-16:19/193] SCOPE: Stmt  [12:13/123-21:2/419]
+            VARIABLE i3 [16:9/183-16:14/188]  TYPE: int TEXT=int  [16:5/179-16:8/182]  INIT: null  SCOPE: Stmt  [12:13/123-21:2/419]
+            VARIABLE i4 [16:16/190-16:18/192]  TYPE: int TEXT=int  [16:5/179-16:8/182]  INIT: null  SCOPE: Stmt  [12:13/123-21:2/419]
+        STATEMENT DECLARATION  [19:5/267-20:76/417] SCOPE: Stmt  [12:13/123-21:2/419]
+            FUNCTION com_nopager [19:16/278-19:47/309] FunctionImpl SCOPE: Stmt  [12:13/123-21:2/419]
+                DEFINITION: null
+                SIGNATURE com_nopager(String*,char*)
+                UNIQUE NAME F:com_nopager(String*,char*)
+                PARAMETERS:
+                    str [19:28/290-19:39/301]  TYPE: *String TEXT=String*  [19:28/290-19:36/298]  INIT: null  SCOPE: com_nopager 
+                     [19:41/303-19:46/308]  TYPE: *char TEXT=char*  [19:41/303-19:46/308]  INIT: null  SCOPE: com_nopager 
+                RETURNS int TEXT=int  [19:12/274-19:15/277]
+            FUNCTION com_pager [19:49/311-19:78/340] FunctionImpl SCOPE: Stmt  [12:13/123-21:2/419]
+                DEFINITION: null
+                SIGNATURE com_pager(String*,char*)
+                UNIQUE NAME F:com_pager(String*,char*)
+                PARAMETERS:
+                    str [19:59/321-19:70/332]  TYPE: *String TEXT=String*  [19:59/321-19:67/329]  INIT: null  SCOPE: com_pager 
+                     [19:72/334-19:77/339]  TYPE: *char TEXT=char*  [19:72/334-19:77/339]  INIT: null  SCOPE: com_pager 
+                RETURNS int TEXT=int  [19:12/274-19:15/277]
+            FUNCTION com_edit [20:16/357-20:43/384] FunctionImpl SCOPE: Stmt  [12:13/123-21:2/419]
+                DEFINITION: null
+                SIGNATURE com_edit(String*,char*)
+                UNIQUE NAME F:com_edit(String*,char*)
+                PARAMETERS:
+                    str [20:25/366-20:36/377]  TYPE: *String TEXT=String*  [20:25/366-20:33/374]  INIT: null  SCOPE: com_edit 
+                     [20:37/378-20:42/383]  TYPE: *char TEXT=char*  [20:37/378-20:42/383]  INIT: null  SCOPE: com_edit 
+                RETURNS int TEXT=int  [19:12/274-19:15/277]
+            FUNCTION com_shell [20:45/386-20:75/416] FunctionImpl SCOPE: Stmt  [12:13/123-21:2/419]
+                DEFINITION: null
+                SIGNATURE com_shell(String*,char*)
+                UNIQUE NAME F:com_shell(String*,char*)
+                PARAMETERS:
+                    str [20:55/396-20:66/407]  TYPE: *String TEXT=String*  [20:55/396-20:63/404]  INIT: null  SCOPE: com_shell 
+                     [20:68/409-20:74/415]  TYPE: *char TEXT=char*  [20:68/409-20:74/415]  INIT: null  SCOPE: com_shell 
+                RETURNS int TEXT=int  [19:12/274-19:15/277]
+NAMESPACE DEFINITIONS for N (N) 
+    iz159324.cc  [1:1/0-8:2/90]
+NAMESPACE N (N) 
+    STRUCT A (N::A ) [2:5/18-7:6/87] lcurly=27 SCOPE: N 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION A  [3:9/37-4:10/52] ConstructorDDImpl SCOPE: A 
+                SIGNATURE A()
+                UNIQUE NAME f:N::A::A()
+                DECLARATION: A  [3:9/37-4:10/52]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [3:13/41-4:10/52] SCOPE: A 
+            FUNCTION DEFINITION A  [5:9/61-6:10/81] ConstructorDDImpl SCOPE: A 
+                SIGNATURE A(int)
+                UNIQUE NAME f:N::A::A(int)
+                DECLARATION: A  [5:9/61-6:10/81]
+                PARAMETERS:
+                    i [5:11/63-5:16/68]  TYPE: int TEXT=int  [5:11/63-5:14/66]  INIT: null  SCOPE: A 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [5:18/70-6:10/81] SCOPE: A 
+

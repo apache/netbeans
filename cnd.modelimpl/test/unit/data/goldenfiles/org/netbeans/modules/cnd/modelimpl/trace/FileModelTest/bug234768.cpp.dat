@@ -1,0 +1,130 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug234768.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN  [1:1/0-36:2/433] SCOPE: bug234768.cpp
+    TYPEALIAS A  [2:3/14-4:5/53] TYPE: <unnamed>::AA TEXT=AA  [2:13/24-4:4/52] SCOPE:  
+    STRUCT AA (<unnamed>::AA ) [2:13/24-4:4/52] lcurly=34 SCOPE:  
+        BASE CLASSES:
+        MEMBERS:
+            FIELD PUBLIC x [3:7/42-3:13/48]  TYPE: int TEXT=int  [3:7/42-3:10/45]  INIT: null  SCOPE: AA 
+    TYPEALIAS B  [6:3/57-8:5/89] TYPE: <unnamed>::BB TEXT=BB  [6:13/67-8:4/88] SCOPE:  
+    ENUM BB [6:13/67-8:4/88] SCOPE:  
+        Y
+    TYPEALIAS C  [10:3/93-14:5/165] TYPE: <unnamed>::CC TEXT=CC  [10:13/103-14:4/164] SCOPE:  
+    STRUCT CC (<unnamed>::CC ) [10:13/103-14:4/164] lcurly=113 SCOPE:  
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION foo  [11:7/121-13:8/160] MethodDDImpl SCOPE: CC 
+                SIGNATURE foo()
+                UNIQUE NAME f:<unnamed>::CC::foo()
+                DECLARATION: foo  [11:7/121-13:8/160]
+                PARAMETERS:
+                RETURNS int TEXT=int  [11:7/121-11:10/124]
+                STATEMENT COMPOUND  [11:17/131-13:8/160] SCOPE: foo 
+                    STATEMENT RETURN  [12:11/143-12:20/152] SCOPE: Stmt  [11:17/131-13:8/160] text: 'return 0;'
+    STRUCT AAA (<unnamed>::AAA ) [16:3/171-24:4/315] lcurly=182 SCOPE:  
+        BASE CLASSES:
+        MEMBERS:
+            TYPEALIAS AAA_B  [17:5/192-19:7/242] TYPE: <unnamed>::AAA::BBB TEXT=BBB  [17:19/206-19:6/241] SCOPE: AAA 
+            STRUCT BBB (<unnamed>::AAA::BBB ) [17:19/206-19:6/241] lcurly=217 SCOPE: AAA 
+                BASE CLASSES:
+                MEMBERS:
+                    FUNCTION foo [18:7/225-18:17/235] MethodImpl SCOPE: BBB 
+                        DEFINITION: null
+                        SIGNATURE foo()
+                        UNIQUE NAME F:<unnamed>::AAA::BBB::foo()
+                        PARAMETERS:
+                        RETURNS int TEXT=int  [18:7/225-18:10/228]
+            FUNCTION DEFINITION boo  [21:5/252-23:6/311] MethodDDImpl SCOPE: AAA 
+                SIGNATURE boo()
+                UNIQUE NAME f:<unnamed>::AAA::boo()
+                DECLARATION: boo  [21:5/252-23:6/311]
+                PARAMETERS:
+                RETURNS int TEXT=int  [21:5/252-21:8/255]
+                STATEMENT COMPOUND  [21:15/262-23:6/311] SCOPE: boo 
+                    STATEMENT RETURN  [22:7/270-22:42/305] SCOPE: Stmt  [21:15/262-23:6/311] text: 'return AAA_B().foo() + BBB().foo();'
+    FUNCTION DEFINITION foo  [27:3/321-35:4/429] FunctionDDImpl SCOPE:  
+        SIGNATURE foo()
+        UNIQUE NAME f:<unnamed>::foo()
+        DECLARATION: foo  [27:3/321-35:4/429]
+        PARAMETERS:
+        RETURNS int TEXT=int  [27:3/321-27:6/324]
+        STATEMENT COMPOUND  [27:13/331-35:4/429] SCOPE: foo 
+            STATEMENT DECLARATION  [28:7/339-28:11/343] SCOPE: Stmt  [27:13/331-35:4/429]
+                VARIABLE a [28:7/339-28:11/343]  TYPE: <unnamed>::A TEXT=A  [28:7/339-28:8/340]  INIT: null  SCOPE: Stmt  [27:13/331-35:4/429]
+            STATEMENT EXPRESSION  [29:7/354-29:14/361] SCOPE: Stmt  [27:13/331-35:4/429] text: 'a.x = Y'
+            STATEMENT DECLARATION  [31:7/370-31:11/374] SCOPE: Stmt  [27:13/331-35:4/429]
+                VARIABLE b [31:7/370-31:11/374]  TYPE: <unnamed>::B TEXT=B  [31:7/370-31:8/371]  INIT: null  SCOPE: Stmt  [27:13/331-35:4/429]
+            STATEMENT EXPRESSION  [32:7/381-32:12/386] SCOPE: Stmt  [27:13/331-35:4/429] text: 'b = Y'
+            STATEMENT RETURN  [34:7/395-34:37/425] SCOPE: Stmt  [27:13/331-35:4/429] text: 'return C().foo() + CC().foo();'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for  (<unnamed>) 
+    bug234768.cpp  [1:1/0-36:2/433]
+NAMESPACE  (<unnamed>) 
+    TYPEALIAS A  [2:3/14-4:5/53] TYPE: <unnamed>::AA TEXT=AA  [2:13/24-4:4/52] SCOPE:  
+    STRUCT AA (<unnamed>::AA ) [2:13/24-4:4/52] lcurly=34 SCOPE:  
+        BASE CLASSES:
+        MEMBERS:
+            FIELD PUBLIC x [3:7/42-3:13/48]  TYPE: int TEXT=int  [3:7/42-3:10/45]  INIT: null  SCOPE: AA 
+    TYPEALIAS B  [6:3/57-8:5/89] TYPE: <unnamed>::BB TEXT=BB  [6:13/67-8:4/88] SCOPE:  
+    ENUM BB [6:13/67-8:4/88] SCOPE:  
+        Y
+    TYPEALIAS C  [10:3/93-14:5/165] TYPE: <unnamed>::CC TEXT=CC  [10:13/103-14:4/164] SCOPE:  
+    STRUCT CC (<unnamed>::CC ) [10:13/103-14:4/164] lcurly=113 SCOPE:  
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION foo  [11:7/121-13:8/160] MethodDDImpl SCOPE: CC 
+                SIGNATURE foo()
+                UNIQUE NAME f:<unnamed>::CC::foo()
+                DECLARATION: foo  [11:7/121-13:8/160]
+                PARAMETERS:
+                RETURNS int TEXT=int  [11:7/121-11:10/124]
+                STATEMENT COMPOUND  [11:17/131-13:8/160] SCOPE: foo 
+                    STATEMENT RETURN  [12:11/143-12:20/152] SCOPE: Stmt  [11:17/131-13:8/160] text: 'return 0;'
+    STRUCT AAA (<unnamed>::AAA ) [16:3/171-24:4/315] lcurly=182 SCOPE:  
+        BASE CLASSES:
+        MEMBERS:
+            TYPEALIAS AAA_B  [17:5/192-19:7/242] TYPE: <unnamed>::AAA::BBB TEXT=BBB  [17:19/206-19:6/241] SCOPE: AAA 
+            STRUCT BBB (<unnamed>::AAA::BBB ) [17:19/206-19:6/241] lcurly=217 SCOPE: AAA 
+                BASE CLASSES:
+                MEMBERS:
+                    FUNCTION foo [18:7/225-18:17/235] MethodImpl SCOPE: BBB 
+                        DEFINITION: null
+                        SIGNATURE foo()
+                        UNIQUE NAME F:<unnamed>::AAA::BBB::foo()
+                        PARAMETERS:
+                        RETURNS int TEXT=int  [18:7/225-18:10/228]
+            FUNCTION DEFINITION boo  [21:5/252-23:6/311] MethodDDImpl SCOPE: AAA 
+                SIGNATURE boo()
+                UNIQUE NAME f:<unnamed>::AAA::boo()
+                DECLARATION: boo  [21:5/252-23:6/311]
+                PARAMETERS:
+                RETURNS int TEXT=int  [21:5/252-21:8/255]
+                STATEMENT COMPOUND  [21:15/262-23:6/311] SCOPE: boo 
+                    STATEMENT RETURN  [22:7/270-22:42/305] SCOPE: Stmt  [21:15/262-23:6/311] text: 'return AAA_B().foo() + BBB().foo();'
+    FUNCTION DEFINITION foo  [27:3/321-35:4/429] FunctionDDImpl SCOPE:  
+        SIGNATURE foo()
+        UNIQUE NAME f:<unnamed>::foo()
+        DECLARATION: foo  [27:3/321-35:4/429]
+        PARAMETERS:
+        RETURNS int TEXT=int  [27:3/321-27:6/324]
+        STATEMENT COMPOUND  [27:13/331-35:4/429] SCOPE: foo 
+            STATEMENT DECLARATION  [28:7/339-28:11/343] SCOPE: Stmt  [27:13/331-35:4/429]
+                VARIABLE a [28:7/339-28:11/343]  TYPE: <unnamed>::A TEXT=A  [28:7/339-28:8/340]  INIT: null  SCOPE: Stmt  [27:13/331-35:4/429]
+            STATEMENT EXPRESSION  [29:7/354-29:14/361] SCOPE: Stmt  [27:13/331-35:4/429] text: 'a.x = Y'
+            STATEMENT DECLARATION  [31:7/370-31:11/374] SCOPE: Stmt  [27:13/331-35:4/429]
+                VARIABLE b [31:7/370-31:11/374]  TYPE: <unnamed>::B TEXT=B  [31:7/370-31:8/371]  INIT: null  SCOPE: Stmt  [27:13/331-35:4/429]
+            STATEMENT EXPRESSION  [32:7/381-32:12/386] SCOPE: Stmt  [27:13/331-35:4/429] text: 'b = Y'
+            STATEMENT RETURN  [34:7/395-34:37/425] SCOPE: Stmt  [27:13/331-35:4/429] text: 'return C().foo() + CC().foo();'
+

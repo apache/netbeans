@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.cnd.repository
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/cnd/repository/resources/Bundle.properties
+OpenIDE-Module-Provides: org.netbeans.modules.cnd.repository.api.Repository
+AutoUpdate-Show-In-Client: false
+

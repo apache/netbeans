@@ -1,0 +1,32 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz166165.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+ENUM system_states [1:1/0-8:2/147] SCOPE: $Global$ 
+    SYSTEM_BOOTING
+    SYSTEM_RUNNING
+    SYSTEM_HALT
+    SYSTEM_POWER_OFF
+    SYSTEM_RESTART
+    SYSTEM_SUSPEND_DISK
+EXTERN VARIABLE system_state [8:3/148-8:15/160]  TYPE: system_states TEXT=system_states  [1:1/0-8:2/147]  INIT: null  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+ENUM system_states [1:1/0-8:2/147] SCOPE: $Global$ 
+    SYSTEM_BOOTING
+    SYSTEM_RUNNING
+    SYSTEM_HALT
+    SYSTEM_POWER_OFF
+    SYSTEM_RESTART
+    SYSTEM_SUSPEND_DISK
+EXTERN VARIABLE system_state [8:3/148-8:15/160]  TYPE: system_states TEXT=system_states  [1:1/0-8:2/147]  INIT: null  SCOPE: $Global$ 
+

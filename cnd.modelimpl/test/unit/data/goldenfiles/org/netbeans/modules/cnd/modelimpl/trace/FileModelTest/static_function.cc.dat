@@ -1,0 +1,207 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE static_function.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION _foo1  [2:1/28-2:23/50] FunctionDDImpl SCOPE: static_function.cc
+    SIGNATURE _foo1()
+    UNIQUE NAME f:_foo1()
+    DECLARATION: _foo1  [2:1/28-2:23/50]
+    PARAMETERS:
+    RETURNS void TEXT=void  [2:8/35-2:12/39]
+    STATEMENT COMPOUND  [2:21/48-2:23/50] SCOPE: _foo1 
+FUNCTION _foo2 [5:1/93-5:21/113] FunctionImpl SCOPE: static_function.cc
+    DEFINITION: _foo2  [6:1/114-6:23/136]
+    SIGNATURE _foo2()
+    UNIQUE NAME F:_foo2()
+    PARAMETERS:
+    RETURNS void TEXT=void  [5:8/100-5:12/104]
+FUNCTION DEFINITION _foo2  [6:1/114-6:23/136] FunctionDDImpl SCOPE: static_function.cc
+    SIGNATURE _foo2()
+    UNIQUE NAME f:_foo2()
+    DECLARATION: _foo2  [5:1/93-5:21/113]
+    PARAMETERS:
+    RETURNS void TEXT=void  [6:8/121-6:12/125]
+    STATEMENT COMPOUND  [6:21/134-6:23/136] SCOPE: _foo2 
+FUNCTION _foo4 [14:1/264-14:21/284] FunctionImpl SCOPE: static_function.cc
+    DEFINITION: _foo4  [15:1/285-15:16/300]
+    SIGNATURE _foo4()
+    UNIQUE NAME F:_foo4()
+    PARAMETERS:
+    RETURNS void TEXT=void  [14:8/271-14:12/275]
+FUNCTION DEFINITION _foo4  [15:1/285-15:16/300] FunctionDDImpl SCOPE: static_function.cc
+    SIGNATURE _foo4()
+    UNIQUE NAME f:_foo4()
+    DECLARATION: _foo4  [14:1/264-14:21/284]
+    PARAMETERS:
+    RETURNS void TEXT=void  [15:1/285-15:5/289]
+    STATEMENT COMPOUND  [15:14/298-15:16/300] SCOPE: _foo4 
+FUNCTION foo5 [18:1/361-18:13/373] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: foo5  [19:1/374-19:15/388]
+    SIGNATURE foo5()
+    UNIQUE NAME F:foo5()
+    PARAMETERS:
+    RETURNS void TEXT=void  [18:1/361-18:5/365]
+FUNCTION DEFINITION foo5  [19:1/374-19:15/388] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo5()
+    UNIQUE NAME f:foo5()
+    DECLARATION: foo5  [18:1/361-18:13/373]
+    PARAMETERS:
+    RETURNS void TEXT=void  [19:1/374-19:5/378]
+    STATEMENT COMPOUND  [19:13/386-19:15/388] SCOPE: foo5 
+FUNCTION DEFINITION foo6  [20:1/389-20:15/403] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo6()
+    UNIQUE NAME f:foo6()
+    DECLARATION: foo6  [20:1/389-20:15/403]
+    PARAMETERS:
+    RETURNS void TEXT=void  [20:1/389-20:5/393]
+    STATEMENT COMPOUND  [20:13/401-20:15/403] SCOPE: foo6 
+NAMESPACE DEFINITOIN NS [22:1/405-42:2/864] SCOPE: static_function.cc
+    FUNCTION DEFINITION _foo1  [24:9/450-24:31/472] FunctionDDImpl SCOPE: NS 
+        SIGNATURE _foo1()
+        UNIQUE NAME f:NS::_foo1()
+        DECLARATION: _foo1  [24:9/450-24:31/472]
+        PARAMETERS:
+        RETURNS void TEXT=void  [24:16/457-24:20/461]
+        STATEMENT COMPOUND  [24:29/470-24:31/472] SCOPE: _foo1 
+    FUNCTION _foo2 [27:9/518-27:29/538] FunctionImpl SCOPE: NS 
+        DEFINITION: _foo2  [28:9/540-28:31/562]
+        SIGNATURE _foo2()
+        UNIQUE NAME F:NS::_foo2()
+        PARAMETERS:
+        RETURNS void TEXT=void  [27:16/525-27:20/529]
+    FUNCTION DEFINITION _foo2  [28:9/540-28:31/562] FunctionDDImpl SCOPE: NS 
+        SIGNATURE _foo2()
+        UNIQUE NAME f:NS::_foo2()
+        DECLARATION: _foo2  [27:9/518-27:29/538]
+        PARAMETERS:
+        RETURNS void TEXT=void  [28:16/547-28:20/551]
+        STATEMENT COMPOUND  [28:29/560-28:31/562] SCOPE: _foo2 
+    FUNCTION _foo4 [35:9/717-35:29/737] FunctionImpl SCOPE: NS 
+        DEFINITION: _foo4  [36:9/739-36:24/754]
+        SIGNATURE _foo4()
+        UNIQUE NAME F:NS::_foo4()
+        PARAMETERS:
+        RETURNS void TEXT=void  [35:16/724-35:20/728]
+    FUNCTION DEFINITION _foo4  [36:9/739-36:24/754] FunctionDDImpl SCOPE: NS 
+        SIGNATURE _foo4()
+        UNIQUE NAME f:NS::_foo4()
+        DECLARATION: _foo4  [35:9/717-35:29/737]
+        PARAMETERS:
+        RETURNS void TEXT=void  [36:9/739-36:13/743]
+        STATEMENT COMPOUND  [36:22/752-36:24/754] SCOPE: _foo4 
+    FUNCTION foo5 [39:9/818-39:21/830] FunctionImpl SCOPE: NS 
+        DEFINITION: foo5  [40:9/832-40:23/846]
+        SIGNATURE foo5()
+        UNIQUE NAME F:NS::foo5()
+        PARAMETERS:
+        RETURNS void TEXT=void  [39:9/818-39:13/822]
+    FUNCTION DEFINITION foo5  [40:9/832-40:23/846] FunctionDDImpl SCOPE: NS 
+        SIGNATURE foo5()
+        UNIQUE NAME f:NS::foo5()
+        DECLARATION: foo5  [39:9/818-39:21/830]
+        PARAMETERS:
+        RETURNS void TEXT=void  [40:9/832-40:13/836]
+        STATEMENT COMPOUND  [40:21/844-40:23/846] SCOPE: foo5 
+    FUNCTION DEFINITION foo6  [41:9/848-41:23/862] FunctionDDImpl SCOPE: NS 
+        SIGNATURE foo6()
+        UNIQUE NAME f:NS::foo6()
+        DECLARATION: foo6  [41:9/848-41:23/862]
+        PARAMETERS:
+        RETURNS void TEXT=void  [41:9/848-41:13/852]
+        STATEMENT COMPOUND  [41:21/860-41:23/862] SCOPE: foo6 
+FUNCTION DEFINITION func_iz149125  [44:1/866-46:2/919] FunctionDDImpl SCOPE: static_function.cc
+    SIGNATURE func_iz149125()
+    UNIQUE NAME f:func_iz149125()
+    DECLARATION: func_iz149125  [44:1/866-46:2/919]
+    PARAMETERS:
+    RETURNS *char TEXT=char*  [44:15/880-44:21/886]
+    STATEMENT COMPOUND  [44:37/902-46:2/919] SCOPE: func_iz149125 
+        STATEMENT RETURN  [45:5/908-45:14/917] SCOPE: Stmt  [44:37/902-46:2/919] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION foo5 [18:1/361-18:13/373] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: foo5  [19:1/374-19:15/388]
+    SIGNATURE foo5()
+    UNIQUE NAME F:foo5()
+    PARAMETERS:
+    RETURNS void TEXT=void  [18:1/361-18:5/365]
+FUNCTION DEFINITION foo5  [19:1/374-19:15/388] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo5()
+    UNIQUE NAME f:foo5()
+    DECLARATION: foo5  [18:1/361-18:13/373]
+    PARAMETERS:
+    RETURNS void TEXT=void  [19:1/374-19:5/378]
+    STATEMENT COMPOUND  [19:13/386-19:15/388] SCOPE: foo5 
+FUNCTION DEFINITION foo6  [20:1/389-20:15/403] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo6()
+    UNIQUE NAME f:foo6()
+    DECLARATION: foo6  [20:1/389-20:15/403]
+    PARAMETERS:
+    RETURNS void TEXT=void  [20:1/389-20:5/393]
+    STATEMENT COMPOUND  [20:13/401-20:15/403] SCOPE: foo6 
+NAMESPACE DEFINITIONS for NS (NS) 
+    static_function.cc  [22:1/405-42:2/864]
+NAMESPACE NS (NS) 
+    FUNCTION DEFINITION _foo1  [24:9/450-24:31/472] FunctionDDImpl SCOPE: NS 
+        SIGNATURE _foo1()
+        UNIQUE NAME f:NS::_foo1()
+        DECLARATION: _foo1  [24:9/450-24:31/472]
+        PARAMETERS:
+        RETURNS void TEXT=void  [24:16/457-24:20/461]
+        STATEMENT COMPOUND  [24:29/470-24:31/472] SCOPE: _foo1 
+    FUNCTION _foo2 [27:9/518-27:29/538] FunctionImpl SCOPE: NS 
+        DEFINITION: _foo2  [28:9/540-28:31/562]
+        SIGNATURE _foo2()
+        UNIQUE NAME F:NS::_foo2()
+        PARAMETERS:
+        RETURNS void TEXT=void  [27:16/525-27:20/529]
+    FUNCTION DEFINITION _foo2  [28:9/540-28:31/562] FunctionDDImpl SCOPE: NS 
+        SIGNATURE _foo2()
+        UNIQUE NAME f:NS::_foo2()
+        DECLARATION: _foo2  [27:9/518-27:29/538]
+        PARAMETERS:
+        RETURNS void TEXT=void  [28:16/547-28:20/551]
+        STATEMENT COMPOUND  [28:29/560-28:31/562] SCOPE: _foo2 
+    FUNCTION _foo4 [35:9/717-35:29/737] FunctionImpl SCOPE: NS 
+        DEFINITION: _foo4  [36:9/739-36:24/754]
+        SIGNATURE _foo4()
+        UNIQUE NAME F:NS::_foo4()
+        PARAMETERS:
+        RETURNS void TEXT=void  [35:16/724-35:20/728]
+    FUNCTION DEFINITION _foo4  [36:9/739-36:24/754] FunctionDDImpl SCOPE: NS 
+        SIGNATURE _foo4()
+        UNIQUE NAME f:NS::_foo4()
+        DECLARATION: _foo4  [35:9/717-35:29/737]
+        PARAMETERS:
+        RETURNS void TEXT=void  [36:9/739-36:13/743]
+        STATEMENT COMPOUND  [36:22/752-36:24/754] SCOPE: _foo4 
+    FUNCTION foo5 [39:9/818-39:21/830] FunctionImpl SCOPE: NS 
+        DEFINITION: foo5  [40:9/832-40:23/846]
+        SIGNATURE foo5()
+        UNIQUE NAME F:NS::foo5()
+        PARAMETERS:
+        RETURNS void TEXT=void  [39:9/818-39:13/822]
+    FUNCTION DEFINITION foo5  [40:9/832-40:23/846] FunctionDDImpl SCOPE: NS 
+        SIGNATURE foo5()
+        UNIQUE NAME f:NS::foo5()
+        DECLARATION: foo5  [39:9/818-39:21/830]
+        PARAMETERS:
+        RETURNS void TEXT=void  [40:9/832-40:13/836]
+        STATEMENT COMPOUND  [40:21/844-40:23/846] SCOPE: foo5 
+    FUNCTION DEFINITION foo6  [41:9/848-41:23/862] FunctionDDImpl SCOPE: NS 
+        SIGNATURE foo6()
+        UNIQUE NAME f:NS::foo6()
+        DECLARATION: foo6  [41:9/848-41:23/862]
+        PARAMETERS:
+        RETURNS void TEXT=void  [41:9/848-41:13/852]
+        STATEMENT COMPOUND  [41:21/860-41:23/862] SCOPE: foo6 
+

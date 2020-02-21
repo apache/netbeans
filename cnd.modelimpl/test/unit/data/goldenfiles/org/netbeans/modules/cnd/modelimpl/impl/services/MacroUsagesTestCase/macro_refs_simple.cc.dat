@@ -1,0 +1,5 @@
+Macro references for macro_refs_simple.cc
+MACRO  [2:9/9-2:14/14] -> DECLARATION  [2:1/1-2:14/14] MacroUsagesTestCase/macro_refs_simple.cc
+VAL  [9:9/70-9:12/73] -> DECLARATION  [9:1/62-9:14/75] MacroUsagesTestCase/macro_refs_simple.cc
+MACRO  [11:8/84-11:13/89] -> DIRECT_USAGE  [2:1/1-2:14/14] MacroUsagesTestCase/macro_refs_simple.cc
+VAL  [12:14/103-12:17/106] -> DIRECT_USAGE  [9:1/62-9:14/75] MacroUsagesTestCase/macro_refs_simple.cc

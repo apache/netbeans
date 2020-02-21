@@ -1,0 +1,556 @@
+dmake -f nbproject/Makefile-Default.mk SUBPROJECTS= .clean-conf
+cd ../clucene-0.9.10 && make -f Makefile clean
+Making clean in test
+Making clean in data
+rm -rf .libs _libs
+rm -f *.lo
+Making clean in .
+test -z "cl_test_monolithic cl_test_monolithic" || rm -f cl_test_monolithic cl_test_monolithic
+ rm -f cl_test cl_test
+rm -f *.lo
+rm -rf .libs _libs
+rm -f *.o
+Making clean in src
+Making clean in demo
+rm -rf .libs _libs
+rm -f *.o
+ rm -f cl_demo cl_demo
+rm -f *.lo
+Making clean in .
+rm -f *.lo
+test -z "libclucene.la" || rm -f libclucene.la
+rm -f "./so_locations"
+rm -f *.o
+rm -rf .libs _libs
+Making clean in .
+rm -rf .libs _libs
+rm -f *.lo
+CLEAN SUCCESSFUL (total time: 1s)
+
+dmake -f nbproject/Makefile-Default.mk SUBPROJECTS= .build-conf
+cd ../clucene-0.9.10 && make -f Makefile
+dmake  all-recursive
+Making all in src
+Making all in .
+source='../src/CLucene/util/Arrays.cpp' object='Arrays.lo' libtool=yes \
+depfile='.deps/Arrays.Plo' tmpdepfile='.deps/Arrays.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o Arrays.lo `test -f '../src/CLucene/util/Arrays.cpp' || echo './'`../src/CLucene/util/Arrays.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/Arrays.cpp  -fPIC -DPIC -o .libs/Arrays.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/Arrays.cpp -o Arrays.o >/dev/null 2>&1
+source='../src/CLucene/debug/condition.cpp' object='condition.lo' libtool=yes \
+depfile='.deps/condition.Plo' tmpdepfile='.deps/condition.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o condition.lo `test -f '../src/CLucene/debug/condition.cpp' || echo './'`../src/CLucene/debug/condition.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/debug/condition.cpp  -fPIC -DPIC -o .libs/condition.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/debug/condition.cpp -o condition.o >/dev/null 2>&1
+source='../src/CLucene/document/Document.cpp' object='Document.lo' libtool=yes \
+depfile='.deps/Document.Plo' tmpdepfile='.deps/Document.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o Document.lo `test -f '../src/CLucene/document/Document.cpp' || echo './'`../src/CLucene/document/Document.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/document/Document.cpp  -fPIC -DPIC -o .libs/Document.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/document/Document.cpp -o Document.o >/dev/null 2>&1
+source='../src/CLucene/store/Lock.cpp' object='Lock.lo' libtool=yes \
+depfile='.deps/Lock.Plo' tmpdepfile='.deps/Lock.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o Lock.lo `test -f '../src/CLucene/store/Lock.cpp' || echo './'`../src/CLucene/store/Lock.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/store/Lock.cpp  -fPIC -DPIC -o .libs/Lock.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/store/Lock.cpp -o Lock.o >/dev/null 2>&1
+source='../src/CLucene/config/repl_wcs.cpp' object='repl_wcs.lo' libtool=yes \
+depfile='.deps/repl_wcs.Plo' tmpdepfile='.deps/repl_wcs.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o repl_wcs.lo `test -f '../src/CLucene/config/repl_wcs.cpp' || echo './'`../src/CLucene/config/repl_wcs.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/config/repl_wcs.cpp  -fPIC -DPIC -o .libs/repl_wcs.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/config/repl_wcs.cpp -o repl_wcs.o >/dev/null 2>&1
+source='../src/CLucene/config/repl_wchar.cpp' object='repl_wchar.lo' libtool=yes \
+depfile='.deps/repl_wchar.Plo' tmpdepfile='.deps/repl_wchar.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o repl_wchar.lo `test -f '../src/CLucene/config/repl_wchar.cpp' || echo './'`../src/CLucene/config/repl_wchar.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/config/repl_wchar.cpp  -fPIC -DPIC -o .libs/repl_wchar.o
+../src/CLucene/config/repl_wchar.cpp:8:3: warning: #warning "===== Using internal tcslwr function ====="
+../src/CLucene/config/repl_wchar.cpp:22:3: warning: #warning "===== Using internal _i64tot function ====="
+../src/CLucene/config/repl_wchar.cpp:115:3: warning: #warning "===== Using internal tcscasecmp function ====="
+../src/CLucene/config/repl_wchar.cpp:311:3: warning: #warning "===== Using internal snwprintf function ====="
+../src/CLucene/config/repl_wchar.cpp:326:3: warning: #warning "===== Using internal wprintf function ====="
+../src/CLucene/config/repl_wchar.cpp:341:3: warning: #warning "===== Using internal vsnwprintf function ====="
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/config/repl_wchar.cpp -o repl_wchar.o >/dev/null 2>&1
+source='../src/CLucene/util/BitVector.cpp' object='BitVector.lo' libtool=yes \
+depfile='.deps/BitVector.Plo' tmpdepfile='.deps/BitVector.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o BitVector.lo `test -f '../src/CLucene/util/BitVector.cpp' || echo './'`../src/CLucene/util/BitVector.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/BitVector.cpp  -fPIC -DPIC -o .libs/BitVector.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/BitVector.cpp -o BitVector.o >/dev/null 2>&1
+source='../src/CLucene/util/dirent.cpp' object='dirent.lo' libtool=yes \
+depfile='.deps/dirent.Plo' tmpdepfile='.deps/dirent.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o dirent.lo `test -f '../src/CLucene/util/dirent.cpp' || echo './'`../src/CLucene/util/dirent.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/dirent.cpp  -fPIC -DPIC -o .libs/dirent.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/dirent.cpp -o dirent.o >/dev/null 2>&1
+source='../src/CLucene/util/FastCharStream.cpp' object='FastCharStream.lo' libtool=yes \
+depfile='.deps/FastCharStream.Plo' tmpdepfile='.deps/FastCharStream.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o FastCharStream.lo `test -f '../src/CLucene/util/FastCharStream.cpp' || echo './'`../src/CLucene/util/FastCharStream.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/FastCharStream.cpp  -fPIC -DPIC -o .libs/FastCharStream.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/FastCharStream.cpp -o FastCharStream.o >/dev/null 2>&1
+source='../src/CLucene/util/MD5Digester.cpp' object='MD5Digester.lo' libtool=yes \
+depfile='.deps/MD5Digester.Plo' tmpdepfile='.deps/MD5Digester.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o MD5Digester.lo `test -f '../src/CLucene/util/MD5Digester.cpp' || echo './'`../src/CLucene/util/MD5Digester.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/MD5Digester.cpp  -fPIC -DPIC -o .libs/MD5Digester.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/MD5Digester.cpp -o MD5Digester.o >/dev/null 2>&1
+source='../src/CLucene/debug/mempool.cpp' object='mempool.lo' libtool=yes \
+depfile='.deps/mempool.Plo' tmpdepfile='.deps/mempool.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o mempool.lo `test -f '../src/CLucene/debug/mempool.cpp' || echo './'`../src/CLucene/debug/mempool.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/debug/mempool.cpp  -fPIC -DPIC -o .libs/mempool.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/debug/mempool.cpp -o mempool.o >/dev/null 2>&1
+source='../src/CLucene/debug/memtracking.cpp' object='memtracking.lo' libtool=yes \
+depfile='.deps/memtracking.Plo' tmpdepfile='.deps/memtracking.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o memtracking.lo `test -f '../src/CLucene/debug/memtracking.cpp' || echo './'`../src/CLucene/debug/memtracking.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/debug/memtracking.cpp  -fPIC -DPIC -o .libs/memtracking.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/debug/memtracking.cpp -o memtracking.o >/dev/null 2>&1
+source='../src/CLucene/analysis/AnalysisHeader.cpp' object='AnalysisHeader.lo' libtool=yes \
+depfile='.deps/AnalysisHeader.Plo' tmpdepfile='.deps/AnalysisHeader.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o AnalysisHeader.lo `test -f '../src/CLucene/analysis/AnalysisHeader.cpp' || echo './'`../src/CLucene/analysis/AnalysisHeader.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/analysis/AnalysisHeader.cpp  -fPIC -DPIC -o .libs/AnalysisHeader.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/analysis/AnalysisHeader.cpp -o AnalysisHeader.o >/dev/null 2>&1
+source='../src/CLucene/config/gunichartables.cpp' object='gunichartables.lo' libtool=yes \
+depfile='.deps/gunichartables.Plo' tmpdepfile='.deps/gunichartables.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o gunichartables.lo `test -f '../src/CLucene/config/gunichartables.cpp' || echo './'`../src/CLucene/config/gunichartables.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/config/gunichartables.cpp  -fPIC -DPIC -o .libs/gunichartables.o
+../src/CLucene/config/gunichartables.cpp:145:3: warning: #warning "===== Using internal character function ====="
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/config/gunichartables.cpp -o gunichartables.o >/dev/null 2>&1
+source='../src/CLucene/StdHeader.cpp' object='StdHeader.lo' libtool=yes \
+depfile='.deps/StdHeader.Plo' tmpdepfile='.deps/StdHeader.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o StdHeader.lo `test -f '../src/CLucene/StdHeader.cpp' || echo './'`../src/CLucene/StdHeader.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/StdHeader.cpp  -fPIC -DPIC -o .libs/StdHeader.o
+../src/CLucene/StdHeader.cpp:24:4: warning: #warning "==================Using clunky thread mutex!!!=================="
+../src/CLucene/StdHeader.cpp:40:4: warning: #warning "==================Hashing not available or is disabled! CLucene may run slower than optimal =================="
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/StdHeader.cpp -o StdHeader.o >/dev/null 2>&1
+source='../src/CLucene/util/Misc.cpp' object='Misc.lo' libtool=yes \
+depfile='.deps/Misc.Plo' tmpdepfile='.deps/Misc.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o Misc.lo `test -f '../src/CLucene/util/Misc.cpp' || echo './'`../src/CLucene/util/Misc.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/Misc.cpp  -fPIC -DPIC -o .libs/Misc.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/Misc.cpp -o Misc.o >/dev/null 2>&1
+source='../src/CLucene/util/Reader.cpp' object='Reader.lo' libtool=yes \
+depfile='.deps/Reader.Plo' tmpdepfile='.deps/Reader.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o Reader.lo `test -f '../src/CLucene/util/Reader.cpp' || echo './'`../src/CLucene/util/Reader.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/Reader.cpp  -fPIC -DPIC -o .libs/Reader.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/Reader.cpp -o Reader.o >/dev/null 2>&1
+source='../src/CLucene/util/StringBuffer.cpp' object='StringBuffer.lo' libtool=yes \
+depfile='.deps/StringBuffer.Plo' tmpdepfile='.deps/StringBuffer.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o StringBuffer.lo `test -f '../src/CLucene/util/StringBuffer.cpp' || echo './'`../src/CLucene/util/StringBuffer.cpp
+mkdir .libs
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/StringBuffer.cpp  -fPIC -DPIC -o .libs/StringBuffer.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/StringBuffer.cpp -o StringBuffer.o >/dev/null 2>&1
+source='../src/CLucene/util/StringIntern.cpp' object='StringIntern.lo' libtool=yes \
+depfile='.deps/StringIntern.Plo' tmpdepfile='.deps/StringIntern.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o StringIntern.lo `test -f '../src/CLucene/util/StringIntern.cpp' || echo './'`../src/CLucene/util/StringIntern.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/StringIntern.cpp  -fPIC -DPIC -o .libs/StringIntern.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/util/StringIntern.cpp -o StringIntern.o >/dev/null 2>&1
+source='../src/CLucene/store/FSDirectory.cpp' object='FSDirectory.lo' libtool=yes \
+depfile='.deps/FSDirectory.Plo' tmpdepfile='.deps/FSDirectory.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o FSDirectory.lo `test -f '../src/CLucene/store/FSDirectory.cpp' || echo './'`../src/CLucene/store/FSDirectory.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/store/FSDirectory.cpp  -fPIC -DPIC -o .libs/FSDirectory.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/store/FSDirectory.cpp -o FSDirectory.o >/dev/null 2>&1
+source='../src/CLucene/store/InputStream.cpp' object='InputStream.lo' libtool=yes \
+depfile='.deps/InputStream.Plo' tmpdepfile='.deps/InputStream.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o InputStream.lo `test -f '../src/CLucene/store/InputStream.cpp' || echo './'`../src/CLucene/store/InputStream.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/store/InputStream.cpp  -fPIC -DPIC -o .libs/InputStream.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/store/InputStream.cpp -o InputStream.o >/dev/null 2>&1
+source='../src/CLucene/store/OutputStream.cpp' object='OutputStream.lo' libtool=yes \
+depfile='.deps/OutputStream.Plo' tmpdepfile='.deps/OutputStream.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o OutputStream.lo `test -f '../src/CLucene/store/OutputStream.cpp' || echo './'`../src/CLucene/store/OutputStream.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/store/OutputStream.cpp  -fPIC -DPIC -o .libs/OutputStream.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/store/OutputStream.cpp -o OutputStream.o >/dev/null 2>&1
+source='../src/CLucene/store/RAMDirectory.cpp' object='RAMDirectory.lo' libtool=yes \
+depfile='.deps/RAMDirectory.Plo' tmpdepfile='.deps/RAMDirectory.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o RAMDirectory.lo `test -f '../src/CLucene/store/RAMDirectory.cpp' || echo './'`../src/CLucene/store/RAMDirectory.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/store/RAMDirectory.cpp  -fPIC -DPIC -o .libs/RAMDirectory.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/store/RAMDirectory.cpp -o RAMDirectory.o >/dev/null 2>&1
+source='../src/CLucene/debug/error.cpp' object='error.lo' libtool=yes \
+depfile='.deps/error.Plo' tmpdepfile='.deps/error.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o error.lo `test -f '../src/CLucene/debug/error.cpp' || echo './'`../src/CLucene/debug/error.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/debug/error.cpp  -fPIC -DPIC -o .libs/error.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/debug/error.cpp -o error.o >/dev/null 2>&1
+source='../src/CLucene/analysis/Analyzers.cpp' object='Analyzers.lo' libtool=yes \
+depfile='.deps/Analyzers.Plo' tmpdepfile='.deps/Analyzers.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o Analyzers.lo `test -f '../src/CLucene/analysis/Analyzers.cpp' || echo './'`../src/CLucene/analysis/Analyzers.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/analysis/Analyzers.cpp  -fPIC -DPIC -o .libs/Analyzers.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/analysis/Analyzers.cpp -o Analyzers.o >/dev/null 2>&1
+source='../src/CLucene/analysis/standard/StandardAnalyzer.cpp' object='StandardAnalyzer.lo' libtool=yes \
+depfile='.deps/StandardAnalyzer.Plo' tmpdepfile='.deps/StandardAnalyzer.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o StandardAnalyzer.lo `test -f '../src/CLucene/analysis/standard/StandardAnalyzer.cpp' || echo './'`../src/CLucene/analysis/standard/StandardAnalyzer.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/analysis/standard/StandardAnalyzer.cpp  -fPIC -DPIC -o .libs/StandardAnalyzer.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/analysis/standard/StandardAnalyzer.cpp -o StandardAnalyzer.o >/dev/null 2>&1
+source='../src/CLucene/analysis/standard/StandardFilter.cpp' object='StandardFilter.lo' libtool=yes \
+depfile='.deps/StandardFilter.Plo' tmpdepfile='.deps/StandardFilter.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o StandardFilter.lo `test -f '../src/CLucene/analysis/standard/StandardFilter.cpp' || echo './'`../src/CLucene/analysis/standard/StandardFilter.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/analysis/standard/StandardFilter.cpp  -fPIC -DPIC -o .libs/StandardFilter.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/analysis/standard/StandardFilter.cpp -o StandardFilter.o >/dev/null 2>&1
+source='../src/CLucene/analysis/standard/StandardTokenizer.cpp' object='StandardTokenizer.lo' libtool=yes \
+depfile='.deps/StandardTokenizer.Plo' tmpdepfile='.deps/StandardTokenizer.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o StandardTokenizer.lo `test -f '../src/CLucene/analysis/standard/StandardTokenizer.cpp' || echo './'`../src/CLucene/analysis/standard/StandardTokenizer.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/analysis/standard/StandardTokenizer.cpp  -fPIC -DPIC -o .libs/StandardTokenizer.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/analysis/standard/StandardTokenizer.cpp -o StandardTokenizer.o >/dev/null 2>&1
+source='../src/CLucene/document/DateField.cpp' object='DateField.lo' libtool=yes \
+depfile='.deps/DateField.Plo' tmpdepfile='.deps/DateField.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o DateField.lo `test -f '../src/CLucene/document/DateField.cpp' || echo './'`../src/CLucene/document/DateField.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/document/DateField.cpp  -fPIC -DPIC -o .libs/DateField.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/document/DateField.cpp -o DateField.o >/dev/null 2>&1
+source='../src/CLucene/document/Field.cpp' object='Field.lo' libtool=yes \
+depfile='.deps/Field.Plo' tmpdepfile='.deps/Field.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o Field.lo `test -f '../src/CLucene/document/Field.cpp' || echo './'`../src/CLucene/document/Field.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/document/Field.cpp  -fPIC -DPIC -o .libs/Field.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/document/Field.cpp -o Field.o >/dev/null 2>&1
+source='../src/CLucene/index/CompoundFile.cpp' object='CompoundFile.lo' libtool=yes \
+depfile='.deps/CompoundFile.Plo' tmpdepfile='.deps/CompoundFile.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o CompoundFile.lo `test -f '../src/CLucene/index/CompoundFile.cpp' || echo './'`../src/CLucene/index/CompoundFile.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/CompoundFile.cpp  -fPIC -DPIC -o .libs/CompoundFile.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/CompoundFile.cpp -o CompoundFile.o >/dev/null 2>&1
+source='../src/CLucene/store/TransactionalRAMDirectory.cpp' object='TransactionalRAMDirectory.lo' libtool=yes \
+depfile='.deps/TransactionalRAMDirectory.Plo' tmpdepfile='.deps/TransactionalRAMDirectory.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o TransactionalRAMDirectory.lo `test -f '../src/CLucene/store/TransactionalRAMDirectory.cpp' || echo './'`../src/CLucene/store/TransactionalRAMDirectory.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/store/TransactionalRAMDirectory.cpp  -fPIC -DPIC -o .libs/TransactionalRAMDirectory.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/store/TransactionalRAMDirectory.cpp -o TransactionalRAMDirectory.o >/dev/null 2>&1
+source='../src/CLucene/index/FieldsReader.cpp' object='FieldsReader.lo' libtool=yes \
+depfile='.deps/FieldsReader.Plo' tmpdepfile='.deps/FieldsReader.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o FieldsReader.lo `test -f '../src/CLucene/index/FieldsReader.cpp' || echo './'`../src/CLucene/index/FieldsReader.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/FieldsReader.cpp  -fPIC -DPIC -o .libs/FieldsReader.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/FieldsReader.cpp -o FieldsReader.o >/dev/null 2>&1
+source='../src/CLucene/index/SegmentMergeQueue.cpp' object='SegmentMergeQueue.lo' libtool=yes \
+depfile='.deps/SegmentMergeQueue.Plo' tmpdepfile='.deps/SegmentMergeQueue.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o SegmentMergeQueue.lo `test -f '../src/CLucene/index/SegmentMergeQueue.cpp' || echo './'`../src/CLucene/index/SegmentMergeQueue.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentMergeQueue.cpp  -fPIC -DPIC -o .libs/SegmentMergeQueue.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentMergeQueue.cpp -o SegmentMergeQueue.o >/dev/null 2>&1
+source='../src/CLucene/index/FieldsWriter.cpp' object='FieldsWriter.lo' libtool=yes \
+depfile='.deps/FieldsWriter.Plo' tmpdepfile='.deps/FieldsWriter.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o FieldsWriter.lo `test -f '../src/CLucene/index/FieldsWriter.cpp' || echo './'`../src/CLucene/index/FieldsWriter.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/FieldsWriter.cpp  -fPIC -DPIC -o .libs/FieldsWriter.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/FieldsWriter.cpp -o FieldsWriter.o >/dev/null 2>&1
+source='../src/CLucene/index/SegmentTermDocs.cpp' object='SegmentTermDocs.lo' libtool=yes \
+depfile='.deps/SegmentTermDocs.Plo' tmpdepfile='.deps/SegmentTermDocs.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o SegmentTermDocs.lo `test -f '../src/CLucene/index/SegmentTermDocs.cpp' || echo './'`../src/CLucene/index/SegmentTermDocs.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentTermDocs.cpp  -fPIC -DPIC -o .libs/SegmentTermDocs.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentTermDocs.cpp -o SegmentTermDocs.o >/dev/null 2>&1
+source='../src/CLucene/index/SegmentMergeInfo.cpp' object='SegmentMergeInfo.lo' libtool=yes \
+depfile='.deps/SegmentMergeInfo.Plo' tmpdepfile='.deps/SegmentMergeInfo.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o SegmentMergeInfo.lo `test -f '../src/CLucene/index/SegmentMergeInfo.cpp' || echo './'`../src/CLucene/index/SegmentMergeInfo.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentMergeInfo.cpp  -fPIC -DPIC -o .libs/SegmentMergeInfo.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentMergeInfo.cpp -o SegmentMergeInfo.o >/dev/null 2>&1
+source='../src/CLucene/index/TermInfo.cpp' object='TermInfo.lo' libtool=yes \
+depfile='.deps/TermInfo.Plo' tmpdepfile='.deps/TermInfo.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o TermInfo.lo `test -f '../src/CLucene/index/TermInfo.cpp' || echo './'`../src/CLucene/index/TermInfo.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/TermInfo.cpp  -fPIC -DPIC -o .libs/TermInfo.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/TermInfo.cpp -o TermInfo.o >/dev/null 2>&1
+source='../src/CLucene/index/SegmentInfos.cpp' object='SegmentInfos.lo' libtool=yes \
+depfile='.deps/SegmentInfos.Plo' tmpdepfile='.deps/SegmentInfos.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o SegmentInfos.lo `test -f '../src/CLucene/index/SegmentInfos.cpp' || echo './'`../src/CLucene/index/SegmentInfos.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentInfos.cpp  -fPIC -DPIC -o .libs/SegmentInfos.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentInfos.cpp -o SegmentInfos.o >/dev/null 2>&1
+source='../src/CLucene/index/IndexReader.cpp' object='IndexReader.lo' libtool=yes \
+depfile='.deps/IndexReader.Plo' tmpdepfile='.deps/IndexReader.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o IndexReader.lo `test -f '../src/CLucene/index/IndexReader.cpp' || echo './'`../src/CLucene/index/IndexReader.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/IndexReader.cpp  -fPIC -DPIC -o .libs/IndexReader.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/IndexReader.cpp -o IndexReader.o >/dev/null 2>&1
+source='../src/CLucene/index/DocumentWriter.cpp' object='DocumentWriter.lo' libtool=yes \
+depfile='.deps/DocumentWriter.Plo' tmpdepfile='.deps/DocumentWriter.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o DocumentWriter.lo `test -f '../src/CLucene/index/DocumentWriter.cpp' || echo './'`../src/CLucene/index/DocumentWriter.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/DocumentWriter.cpp  -fPIC -DPIC -o .libs/DocumentWriter.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/DocumentWriter.cpp -o DocumentWriter.o >/dev/null 2>&1
+source='../src/CLucene/index/TermInfosWriter.cpp' object='TermInfosWriter.lo' libtool=yes \
+depfile='.deps/TermInfosWriter.Plo' tmpdepfile='.deps/TermInfosWriter.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o TermInfosWriter.lo `test -f '../src/CLucene/index/TermInfosWriter.cpp' || echo './'`../src/CLucene/index/TermInfosWriter.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/TermInfosWriter.cpp  -fPIC -DPIC -o .libs/TermInfosWriter.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/TermInfosWriter.cpp -o TermInfosWriter.o >/dev/null 2>&1
+source='../src/CLucene/index/FieldInfos.cpp' object='FieldInfos.lo' libtool=yes \
+depfile='.deps/FieldInfos.Plo' tmpdepfile='.deps/FieldInfos.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o FieldInfos.lo `test -f '../src/CLucene/index/FieldInfos.cpp' || echo './'`../src/CLucene/index/FieldInfos.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/FieldInfos.cpp  -fPIC -DPIC -o .libs/FieldInfos.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/FieldInfos.cpp -o FieldInfos.o >/dev/null 2>&1
+source='../src/CLucene/index/SegmentTermVector.cpp' object='SegmentTermVector.lo' libtool=yes \
+depfile='.deps/SegmentTermVector.Plo' tmpdepfile='.deps/SegmentTermVector.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o SegmentTermVector.lo `test -f '../src/CLucene/index/SegmentTermVector.cpp' || echo './'`../src/CLucene/index/SegmentTermVector.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentTermVector.cpp  -fPIC -DPIC -o .libs/SegmentTermVector.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentTermVector.cpp -o SegmentTermVector.o >/dev/null 2>&1
+source='../src/CLucene/index/Term.cpp' object='Term.lo' libtool=yes \
+depfile='.deps/Term.Plo' tmpdepfile='.deps/Term.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o Term.lo `test -f '../src/CLucene/index/Term.cpp' || echo './'`../src/CLucene/index/Term.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/Term.cpp  -fPIC -DPIC -o .libs/Term.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/Term.cpp -o Term.o >/dev/null 2>&1
+source='../src/CLucene/search/ConjunctionScorer.cpp' object='ConjunctionScorer.lo' libtool=yes \
+depfile='.deps/ConjunctionScorer.Plo' tmpdepfile='.deps/ConjunctionScorer.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o ConjunctionScorer.lo `test -f '../src/CLucene/search/ConjunctionScorer.cpp' || echo './'`../src/CLucene/search/ConjunctionScorer.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/ConjunctionScorer.cpp  -fPIC -DPIC -o .libs/ConjunctionScorer.o
+../src/CLucene/search/ConjunctionScorer.cpp: In member function `lucene::search::Scorer* lucene::search::ConjunctionScorer::last()':
+../src/CLucene/search/ConjunctionScorer.cpp:21: error: expected `;' before '}' token
+*** Error code 1
+dmake: Fatal error: Command failed for target `ConjunctionScorer.lo'
+Current working directory /export/home/nk220367/test_projects/clucene-0.9.10/src
+Waiting for 30 jobs to finish
+source='../src/CLucene/index/IndexWriter.cpp' object='IndexWriter.lo' libtool=yes \
+depfile='.deps/IndexWriter.Plo' tmpdepfile='.deps/IndexWriter.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o IndexWriter.lo `test -f '../src/CLucene/index/IndexWriter.cpp' || echo './'`../src/CLucene/index/IndexWriter.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/IndexWriter.cpp  -fPIC -DPIC -o .libs/IndexWriter.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/IndexWriter.cpp -o IndexWriter.o >/dev/null 2>&1
+source='../src/CLucene/index/MultiReader.cpp' object='MultiReader.lo' libtool=yes \
+depfile='.deps/MultiReader.Plo' tmpdepfile='.deps/MultiReader.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o MultiReader.lo `test -f '../src/CLucene/index/MultiReader.cpp' || echo './'`../src/CLucene/index/MultiReader.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/MultiReader.cpp  -fPIC -DPIC -o .libs/MultiReader.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/MultiReader.cpp -o MultiReader.o >/dev/null 2>&1
+source='../src/CLucene/index/SegmentMerger.cpp' object='SegmentMerger.lo' libtool=yes \
+depfile='.deps/SegmentMerger.Plo' tmpdepfile='.deps/SegmentMerger.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o SegmentMerger.lo `test -f '../src/CLucene/index/SegmentMerger.cpp' || echo './'`../src/CLucene/index/SegmentMerger.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentMerger.cpp  -fPIC -DPIC -o .libs/SegmentMerger.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentMerger.cpp -o SegmentMerger.o >/dev/null 2>&1
+source='../src/CLucene/index/SegmentReader.cpp' object='SegmentReader.lo' libtool=yes \
+depfile='.deps/SegmentReader.Plo' tmpdepfile='.deps/SegmentReader.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o SegmentReader.lo `test -f '../src/CLucene/index/SegmentReader.cpp' || echo './'`../src/CLucene/index/SegmentReader.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentReader.cpp  -fPIC -DPIC -o .libs/SegmentReader.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentReader.cpp -o SegmentReader.o >/dev/null 2>&1
+source='../src/CLucene/queryParser/QueryToken.cpp' object='QueryToken.lo' libtool=yes \
+depfile='.deps/QueryToken.Plo' tmpdepfile='.deps/QueryToken.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o QueryToken.lo `test -f '../src/CLucene/queryParser/QueryToken.cpp' || echo './'`../src/CLucene/queryParser/QueryToken.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/queryParser/QueryToken.cpp  -fPIC -DPIC -o .libs/QueryToken.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/queryParser/QueryToken.cpp -o QueryToken.o >/dev/null 2>&1
+source='../src/CLucene/queryParser/TokenList.cpp' object='TokenList.lo' libtool=yes \
+depfile='.deps/TokenList.Plo' tmpdepfile='.deps/TokenList.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o TokenList.lo `test -f '../src/CLucene/queryParser/TokenList.cpp' || echo './'`../src/CLucene/queryParser/TokenList.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/queryParser/TokenList.cpp  -fPIC -DPIC -o .libs/TokenList.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/queryParser/TokenList.cpp -o TokenList.o >/dev/null 2>&1
+source='../src/CLucene/index/SegmentTermEnum.cpp' object='SegmentTermEnum.lo' libtool=yes \
+depfile='.deps/SegmentTermEnum.Plo' tmpdepfile='.deps/SegmentTermEnum.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o SegmentTermEnum.lo `test -f '../src/CLucene/index/SegmentTermEnum.cpp' || echo './'`../src/CLucene/index/SegmentTermEnum.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentTermEnum.cpp  -fPIC -DPIC -o .libs/SegmentTermEnum.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentTermEnum.cpp -o SegmentTermEnum.o >/dev/null 2>&1
+source='../src/CLucene/index/TermInfosReader.cpp' object='TermInfosReader.lo' libtool=yes \
+depfile='.deps/TermInfosReader.Plo' tmpdepfile='.deps/TermInfosReader.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o TermInfosReader.lo `test -f '../src/CLucene/index/TermInfosReader.cpp' || echo './'`../src/CLucene/index/TermInfosReader.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/TermInfosReader.cpp  -fPIC -DPIC -o .libs/TermInfosReader.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/TermInfosReader.cpp -o TermInfosReader.o >/dev/null 2>&1
+source='../src/CLucene/index/SegmentTermPositions.cpp' object='SegmentTermPositions.lo' libtool=yes \
+depfile='.deps/SegmentTermPositions.Plo' tmpdepfile='.deps/SegmentTermPositions.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o SegmentTermPositions.lo `test -f '../src/CLucene/index/SegmentTermPositions.cpp' || echo './'`../src/CLucene/index/SegmentTermPositions.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentTermPositions.cpp  -fPIC -DPIC -o .libs/SegmentTermPositions.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/SegmentTermPositions.cpp -o SegmentTermPositions.o >/dev/null 2>&1
+source='../src/CLucene/search/ExactPhraseScorer.cpp' object='ExactPhraseScorer.lo' libtool=yes \
+depfile='.deps/ExactPhraseScorer.Plo' tmpdepfile='.deps/ExactPhraseScorer.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o ExactPhraseScorer.lo `test -f '../src/CLucene/search/ExactPhraseScorer.cpp' || echo './'`../src/CLucene/search/ExactPhraseScorer.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/ExactPhraseScorer.cpp  -fPIC -DPIC -o .libs/ExactPhraseScorer.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/ExactPhraseScorer.cpp -o ExactPhraseScorer.o >/dev/null 2>&1
+source='../src/CLucene/queryParser/Lexer.cpp' object='Lexer.lo' libtool=yes \
+depfile='.deps/Lexer.Plo' tmpdepfile='.deps/Lexer.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o Lexer.lo `test -f '../src/CLucene/queryParser/Lexer.cpp' || echo './'`../src/CLucene/queryParser/Lexer.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/queryParser/Lexer.cpp  -fPIC -DPIC -o .libs/Lexer.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/queryParser/Lexer.cpp -o Lexer.o >/dev/null 2>&1
+source='../src/CLucene/search/Explanation.cpp' object='Explanation.lo' libtool=yes \
+depfile='.deps/Explanation.Plo' tmpdepfile='.deps/Explanation.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o Explanation.lo `test -f '../src/CLucene/search/Explanation.cpp' || echo './'`../src/CLucene/search/Explanation.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/Explanation.cpp  -fPIC -DPIC -o .libs/Explanation.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/Explanation.cpp -o Explanation.o >/dev/null 2>&1
+source='../src/CLucene/index/TermVectorReader.cpp' object='TermVectorReader.lo' libtool=yes \
+depfile='.deps/TermVectorReader.Plo' tmpdepfile='.deps/TermVectorReader.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o TermVectorReader.lo `test -f '../src/CLucene/index/TermVectorReader.cpp' || echo './'`../src/CLucene/index/TermVectorReader.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/TermVectorReader.cpp  -fPIC -DPIC -o .libs/TermVectorReader.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/TermVectorReader.cpp -o TermVectorReader.o >/dev/null 2>&1
+source='../src/CLucene/queryParser/MultiFieldQueryParser.cpp' object='MultiFieldQueryParser.lo' libtool=yes \
+depfile='.deps/MultiFieldQueryParser.Plo' tmpdepfile='.deps/MultiFieldQueryParser.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o MultiFieldQueryParser.lo `test -f '../src/CLucene/queryParser/MultiFieldQueryParser.cpp' || echo './'`../src/CLucene/queryParser/MultiFieldQueryParser.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/queryParser/MultiFieldQueryParser.cpp  -fPIC -DPIC -o .libs/MultiFieldQueryParser.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/queryParser/MultiFieldQueryParser.cpp -o MultiFieldQueryParser.o >/dev/null 2>&1
+source='../src/CLucene/search/DateFilter.cpp' object='DateFilter.lo' libtool=yes \
+depfile='.deps/DateFilter.Plo' tmpdepfile='.deps/DateFilter.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o DateFilter.lo `test -f '../src/CLucene/search/DateFilter.cpp' || echo './'`../src/CLucene/search/DateFilter.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/DateFilter.cpp  -fPIC -DPIC -o .libs/DateFilter.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/DateFilter.cpp -o DateFilter.o >/dev/null 2>&1
+source='../src/CLucene/index/TermVectorWriter.cpp' object='TermVectorWriter.lo' libtool=yes \
+depfile='.deps/TermVectorWriter.Plo' tmpdepfile='.deps/TermVectorWriter.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o TermVectorWriter.lo `test -f '../src/CLucene/index/TermVectorWriter.cpp' || echo './'`../src/CLucene/index/TermVectorWriter.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/TermVectorWriter.cpp  -fPIC -DPIC -o .libs/TermVectorWriter.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/index/TermVectorWriter.cpp -o TermVectorWriter.o >/dev/null 2>&1
+source='../src/CLucene/search/BooleanScorer.cpp' object='BooleanScorer.lo' libtool=yes \
+depfile='.deps/BooleanScorer.Plo' tmpdepfile='.deps/BooleanScorer.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o BooleanScorer.lo `test -f '../src/CLucene/search/BooleanScorer.cpp' || echo './'`../src/CLucene/search/BooleanScorer.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/BooleanScorer.cpp  -fPIC -DPIC -o .libs/BooleanScorer.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/BooleanScorer.cpp -o BooleanScorer.o >/dev/null 2>&1
+source='../src/CLucene/search/BooleanQuery.cpp' object='BooleanQuery.lo' libtool=yes \
+depfile='.deps/BooleanQuery.Plo' tmpdepfile='.deps/BooleanQuery.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o BooleanQuery.lo `test -f '../src/CLucene/search/BooleanQuery.cpp' || echo './'`../src/CLucene/search/BooleanQuery.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/BooleanQuery.cpp  -fPIC -DPIC -o .libs/BooleanQuery.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/BooleanQuery.cpp -o BooleanQuery.o >/dev/null 2>&1
+source='../src/CLucene/queryParser/QueryParser.cpp' object='QueryParser.lo' libtool=yes \
+depfile='.deps/QueryParser.Plo' tmpdepfile='.deps/QueryParser.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o QueryParser.lo `test -f '../src/CLucene/queryParser/QueryParser.cpp' || echo './'`../src/CLucene/queryParser/QueryParser.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/queryParser/QueryParser.cpp  -fPIC -DPIC -o .libs/QueryParser.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/queryParser/QueryParser.cpp -o QueryParser.o >/dev/null 2>&1
+source='../src/CLucene/queryParser/QueryParserBase.cpp' object='QueryParserBase.lo' libtool=yes \
+depfile='.deps/QueryParserBase.Plo' tmpdepfile='.deps/QueryParserBase.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o QueryParserBase.lo `test -f '../src/CLucene/queryParser/QueryParserBase.cpp' || echo './'`../src/CLucene/queryParser/QueryParserBase.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/queryParser/QueryParserBase.cpp  -fPIC -DPIC -o .libs/QueryParserBase.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/queryParser/QueryParserBase.cpp -o QueryParserBase.o >/dev/null 2>&1
+source='../src/CLucene/search/HitQueue.cpp' object='HitQueue.lo' libtool=yes \
+depfile='.deps/HitQueue.Plo' tmpdepfile='.deps/HitQueue.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o HitQueue.lo `test -f '../src/CLucene/search/HitQueue.cpp' || echo './'`../src/CLucene/search/HitQueue.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/HitQueue.cpp  -fPIC -DPIC -o .libs/HitQueue.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/HitQueue.cpp -o HitQueue.o >/dev/null 2>&1
+source='../src/CLucene/search/FilteredTermEnum.cpp' object='FilteredTermEnum.lo' libtool=yes \
+depfile='.deps/FilteredTermEnum.Plo' tmpdepfile='.deps/FilteredTermEnum.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o FilteredTermEnum.lo `test -f '../src/CLucene/search/FilteredTermEnum.cpp' || echo './'`../src/CLucene/search/FilteredTermEnum.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/FilteredTermEnum.cpp  -fPIC -DPIC -o .libs/FilteredTermEnum.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/FilteredTermEnum.cpp -o FilteredTermEnum.o >/dev/null 2>&1
+source='../src/CLucene/search/FieldCache.cpp' object='FieldCache.lo' libtool=yes \
+depfile='.deps/FieldCache.Plo' tmpdepfile='.deps/FieldCache.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o FieldCache.lo `test -f '../src/CLucene/search/FieldCache.cpp' || echo './'`../src/CLucene/search/FieldCache.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/FieldCache.cpp  -fPIC -DPIC -o .libs/FieldCache.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/FieldCache.cpp -o FieldCache.o >/dev/null 2>&1
+source='../src/CLucene/search/IndexSearcher.cpp' object='IndexSearcher.lo' libtool=yes \
+depfile='.deps/IndexSearcher.Plo' tmpdepfile='.deps/IndexSearcher.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o IndexSearcher.lo `test -f '../src/CLucene/search/IndexSearcher.cpp' || echo './'`../src/CLucene/search/IndexSearcher.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/IndexSearcher.cpp  -fPIC -DPIC -o .libs/IndexSearcher.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/IndexSearcher.cpp -o IndexSearcher.o >/dev/null 2>&1
+source='../src/CLucene/search/Hits.cpp' object='Hits.lo' libtool=yes \
+depfile='.deps/Hits.Plo' tmpdepfile='.deps/Hits.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o Hits.lo `test -f '../src/CLucene/search/Hits.cpp' || echo './'`../src/CLucene/search/Hits.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/Hits.cpp  -fPIC -DPIC -o .libs/Hits.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/Hits.cpp -o Hits.o >/dev/null 2>&1
+source='../src/CLucene/search/MultiSearcher.cpp' object='MultiSearcher.lo' libtool=yes \
+depfile='.deps/MultiSearcher.Plo' tmpdepfile='.deps/MultiSearcher.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o MultiSearcher.lo `test -f '../src/CLucene/search/MultiSearcher.cpp' || echo './'`../src/CLucene/search/MultiSearcher.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/MultiSearcher.cpp  -fPIC -DPIC -o .libs/MultiSearcher.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/MultiSearcher.cpp -o MultiSearcher.o >/dev/null 2>&1
+source='../src/CLucene/search/FuzzyQuery.cpp' object='FuzzyQuery.lo' libtool=yes \
+depfile='.deps/FuzzyQuery.Plo' tmpdepfile='.deps/FuzzyQuery.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o FuzzyQuery.lo `test -f '../src/CLucene/search/FuzzyQuery.cpp' || echo './'`../src/CLucene/search/FuzzyQuery.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/FuzzyQuery.cpp  -fPIC -DPIC -o .libs/FuzzyQuery.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/FuzzyQuery.cpp -o FuzzyQuery.o >/dev/null 2>&1
+source='../src/CLucene/search/FieldCacheImpl.cpp' object='FieldCacheImpl.lo' libtool=yes \
+depfile='.deps/FieldCacheImpl.Plo' tmpdepfile='.deps/FieldCacheImpl.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o FieldCacheImpl.lo `test -f '../src/CLucene/search/FieldCacheImpl.cpp' || echo './'`../src/CLucene/search/FieldCacheImpl.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/FieldCacheImpl.cpp  -fPIC -DPIC -o .libs/FieldCacheImpl.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/FieldCacheImpl.cpp -o FieldCacheImpl.o >/dev/null 2>&1
+source='../src/CLucene/search/FieldDocSortedHitQueue.cpp' object='FieldDocSortedHitQueue.lo' libtool=yes \
+depfile='.deps/FieldDocSortedHitQueue.Plo' tmpdepfile='.deps/FieldDocSortedHitQueue.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o FieldDocSortedHitQueue.lo `test -f '../src/CLucene/search/FieldDocSortedHitQueue.cpp' || echo './'`../src/CLucene/search/FieldDocSortedHitQueue.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/FieldDocSortedHitQueue.cpp  -fPIC -DPIC -o .libs/FieldDocSortedHitQueue.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/FieldDocSortedHitQueue.cpp -o FieldDocSortedHitQueue.o >/dev/null 2>&1
+source='../src/CLucene/search/FieldSortedHitQueue.cpp' object='FieldSortedHitQueue.lo' libtool=yes \
+depfile='.deps/FieldSortedHitQueue.Plo' tmpdepfile='.deps/FieldSortedHitQueue.TPlo' \
+depmode=none /bin/sh ../config/depcomp \
+/bin/sh ../libtool --mode=compile g++ -DHAVE_CONFIG_H -I. -I. -I..     -g -O2 -c -o FieldSortedHitQueue.lo `test -f '../src/CLucene/search/FieldSortedHitQueue.cpp' || echo './'`../src/CLucene/search/FieldSortedHitQueue.cpp
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/FieldSortedHitQueue.cpp  -fPIC -DPIC -o .libs/FieldSortedHitQueue.o
+ g++ -DHAVE_CONFIG_H -I. -I. -I.. -g -O2 -c ../src/CLucene/search/FieldSortedHitQueue.cpp -o FieldSortedHitQueue.o >/dev/null 2>&1
+*** Error code 1
+The following command caused the error:
+set fnord $MAKEFLAGS; amf=$2; \
+dot_seen=no; \
+target=`echo all-recursive | sed s/-recursive//`; \
+list='. demo'; for subdir in $list; do \
+  echo "Making $target in $subdir"; \
+  if test "$subdir" = "."; then \
+    dot_seen=yes; \
+    local_target="$target-am"; \
+  else \
+    local_target="$target"; \
+  fi; \
+  (cd $subdir && dmake  $local_target) \
+   || case "$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
+done; \
+if test "$dot_seen" = "no"; then \
+  dmake  "$target-am" || exit 1; \
+fi; test -z "$fail"
+dmake: Fatal error: Command failed for target `all-recursive'
+Current working directory /export/home/nk220367/test_projects/clucene-0.9.10/src
+*** Error code 1
+The following command caused the error:
+set fnord $MAKEFLAGS; amf=$2; \
+dot_seen=no; \
+target=`echo all-recursive | sed s/-recursive//`; \
+list='src test'; for subdir in $list; do \
+  echo "Making $target in $subdir"; \
+  if test "$subdir" = "."; then \
+    dot_seen=yes; \
+    local_target="$target-am"; \
+  else \
+    local_target="$target"; \
+  fi; \
+  (cd $subdir && dmake  $local_target) \
+   || case "$amf" in *=*) exit 1;; *k*) fail=yes;; *) exit 1;; esac; \
+done; \
+if test "$dot_seen" = "no"; then \
+  dmake  "$target-am" || exit 1; \
+fi; test -z "$fail"
+dmake: Fatal error: Command failed for target `all-recursive'
+Current working directory /export/home/nk220367/test_projects/clucene-0.9.10
+*** Error code 1
+make: Fatal error: Command failed for target `all'
+Current working directory /export/home/nk220367/test_projects/clucene-0.9.10
+*** Error code 1
+dmake: Fatal error: Command failed for target `.build-conf'
+Current working directory /export/home/nk220367/test_projects/clucene
+gmake: *** [.build-impl] Error 1
+BUILD FAILED (exit value 2, total time: 38s)
+

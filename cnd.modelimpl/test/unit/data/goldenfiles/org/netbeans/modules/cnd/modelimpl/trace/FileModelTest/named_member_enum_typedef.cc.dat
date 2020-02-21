@@ -1,0 +1,32 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE named_member_enum_typedef.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS Cls (Cls ) [1:1/0-3:2/59] lcurly=10 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        ENUM letters [2:9/13-2:41/45] SCOPE: Cls 
+            A
+            B
+            C
+        TYPEDEF pletters  [2:44/48-2:52/56] TYPE: *Cls::letters TEXT=letters*  [2:9/13-2:53/57] SCOPE: Cls 
+
+========== Dumping model of PROJECT DummyProject
+CLASS Cls (Cls ) [1:1/0-3:2/59] lcurly=10 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        ENUM letters [2:9/13-2:41/45] SCOPE: Cls 
+            A
+            B
+            C
+        TYPEDEF pletters  [2:44/48-2:52/56] TYPE: *Cls::letters TEXT=letters*  [2:9/13-2:53/57] SCOPE: Cls 
+

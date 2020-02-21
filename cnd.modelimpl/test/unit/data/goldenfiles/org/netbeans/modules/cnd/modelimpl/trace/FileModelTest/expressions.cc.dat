@@ -1,0 +1,140 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE expressions.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+STRUCT ct_imp2<typename T,bool small_> (ct_imp2 ) [3:1/77-7:2/162] lcurly=127 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF param_type  [6:4/132-6:32/160] TYPE: const &ct_imp2::T TEXT=const T&  [6:12/140-6:20/148] SCOPE: ct_imp2 
+STRUCT TT<typename T,bool isp> (TT ) [9:1/165-12:2/297] lcurly=207 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF param_type  [11:5/213-11:87/295] TYPE: ct_imp2::param_type TEXT=ct_imp2<T,sizeof (T) <= sizeof (void*)>::param_type  [11:22/230-11:75/283] SCOPE: TT 
+CLASS A (A ) [15:1/343-18:2/394] lcurly=351 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION f [17:5/365-17:32/392] MethodImpl SCOPE: A 
+            DEFINITION: null
+            SIGNATURE f<class>()
+            UNIQUE NAME F:A::f<class>()
+            PARAMETERS:
+            RETURNS void TEXT=void  [17:23/383-17:27/387]
+FUNCTION DEFINITION main  [20:1/397-25:2/547] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main(int,char**)
+    UNIQUE NAME f:main(int,char**)
+    DECLARATION: main  [20:1/397-25:2/547]
+    PARAMETERS:
+        argc [20:10/406-20:18/414]  TYPE: int TEXT=int  [20:10/406-20:13/409]  INIT: null  SCOPE: main 
+        argv [20:20/416-20:31/427]  TYPE: **char TEXT=char**  [20:20/416-20:26/422]  INIT: null  SCOPE: main 
+    RETURNS int TEXT=int  [20:1/397-20:4/400]
+    STATEMENT COMPOUND  [20:33/429-25:2/547] SCOPE: main 
+        STATEMENT DECLARATION  [21:5/435-21:20/450] SCOPE: Stmt  [20:33/429-25:2/547]
+            VARIABLE a [21:5/435-21:20/450]  TYPE: *A TEXT=A*  [21:5/435-21:7/437]  INIT: text='new A()'  SCOPE: Stmt  [20:33/429-25:2/547]
+        STATEMENT EXPRESSION  [22:5/455-22:14/464] SCOPE: Stmt  [20:33/429-25:2/547] text: 'a->f<A>()'
+        STATEMENT EXPRESSION  [23:5/507-23:16/518] SCOPE: Stmt  [20:33/429-25:2/547] text: '(*a).f<A>()'
+        STATEMENT EXPRESSION  [24:5/536-24:13/544] SCOPE: Stmt  [20:33/429-25:2/547] text: 'delete a'
+FUNCTION DEFINITION main2  [28:1/609-31:2/737] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main2(int,char**)
+    UNIQUE NAME f:main2(int,char**)
+    DECLARATION: main2  [28:1/609-31:2/737]
+    PARAMETERS:
+        argc [28:11/619-28:19/627]  TYPE: int TEXT=int  [28:11/619-28:14/622]  INIT: null  SCOPE: main2 
+        argv [28:21/629-28:32/640]  TYPE: **char TEXT=char**  [28:21/629-28:27/635]  INIT: null  SCOPE: main2 
+    RETURNS int TEXT=int  [28:1/609-28:4/612]
+    STATEMENT COMPOUND  [28:34/642-31:2/737] SCOPE: main2 
+        STATEMENT DECLARATION  [29:5/648-29:17/660] SCOPE: Stmt  [28:34/642-31:2/737]
+            VARIABLE a [29:5/648-29:17/660]  TYPE: *void TEXT=void*  [29:5/648-29:11/654]  INIT: text='0'  SCOPE: Stmt  [28:34/642-31:2/737]
+        STATEMENT EXPRESSION  [30:5/665-30:34/694] SCOPE: Stmt  [28:34/642-31:2/737] text: 'static_cast<int* (*)(int)>(a)'
+FUNCTION DEFINITION sort_getScores  [34:1/799-36:2/1010] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE sort_getScores()
+    UNIQUE NAME f:sort_getScores()
+    DECLARATION: sort_getScores  [34:1/799-36:2/1010]
+    PARAMETERS:
+    RETURNS int TEXT=int  [34:1/799-34:4/802]
+    STATEMENT COMPOUND  [34:22/820-36:2/1010] SCOPE: sort_getScores 
+        STATEMENT DECLARATION  [35:5/826-35:187/1008] SCOPE: Stmt  [34:22/820-36:2/1010]
+            VARIABLE scoreMap [35:5/826-35:187/1008]  TYPE: *$unresolved$::CLHashMap TEXT=CLHashMap<TCHAR*,float_t,Compare::TChar,Deletor::tcArray,Deletor::DummyFloat>*  [35:5/826-35:84/905]  INIT: text='CLHashMap<TCHAR*,float_t,Compare::TChar,Deletor::tcArray, Deletor::DummyFloat>(true,false)'  SCOPE: Stmt  [34:22/820-36:2/1010]
+VARIABLE DEFINITION npos [39:1/1074-41:96/1270]  TYPE: const $unresolved$::flex_string::size_type TEXT=const flex_string<E1,T,A,S>::size_type  [40:1/1124-40:51/1174]  INIT: text='static_cast<typename flex_string<E1, T, A, S>::size_type>(-1)'  SCOPE: expressions.cc
+    DECLARATION: null
+FUNCTION DEFINITION foo  [43:1/1272-45:2/1357] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [43:1/1272-45:2/1357]
+    PARAMETERS:
+    RETURNS int TEXT=int  [43:1/1272-43:4/1275]
+    STATEMENT COMPOUND  [43:11/1282-45:2/1357] SCOPE: foo 
+        STATEMENT EXPRESSION  [44:5/1288-44:71/1354] SCOPE: Stmt  [43:11/1282-45:2/1357] text: 'A<T, typename Private::Deleter<T>::Type>(pDynObject, longevity, d)'
+TYPEDEF type  [48:1/1435-50:28/1540] TYPE: $unresolved$::boost::mpl::if_c::type TEXT=boost::mpl::if_c<rank<T0>::value < rank<T1>::value,T1,T0>::type  [48:18/1452-50:22/1534] SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+STRUCT ct_imp2<typename T,bool small_> (ct_imp2 ) [3:1/77-7:2/162] lcurly=127 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF param_type  [6:4/132-6:32/160] TYPE: const &ct_imp2::T TEXT=const T&  [6:12/140-6:20/148] SCOPE: ct_imp2 
+STRUCT TT<typename T,bool isp> (TT ) [9:1/165-12:2/297] lcurly=207 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF param_type  [11:5/213-11:87/295] TYPE: ct_imp2::param_type TEXT=ct_imp2<T,sizeof (T) <= sizeof (void*)>::param_type  [11:22/230-11:75/283] SCOPE: TT 
+CLASS A (A ) [15:1/343-18:2/394] lcurly=351 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION f [17:5/365-17:32/392] MethodImpl SCOPE: A 
+            DEFINITION: null
+            SIGNATURE f<class>()
+            UNIQUE NAME F:A::f<class>()
+            PARAMETERS:
+            RETURNS void TEXT=void  [17:23/383-17:27/387]
+FUNCTION DEFINITION main  [20:1/397-25:2/547] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main(int,char**)
+    UNIQUE NAME f:main(int,char**)
+    DECLARATION: main  [20:1/397-25:2/547]
+    PARAMETERS:
+        argc [20:10/406-20:18/414]  TYPE: int TEXT=int  [20:10/406-20:13/409]  INIT: null  SCOPE: main 
+        argv [20:20/416-20:31/427]  TYPE: **char TEXT=char**  [20:20/416-20:26/422]  INIT: null  SCOPE: main 
+    RETURNS int TEXT=int  [20:1/397-20:4/400]
+    STATEMENT COMPOUND  [20:33/429-25:2/547] SCOPE: main 
+        STATEMENT DECLARATION  [21:5/435-21:20/450] SCOPE: Stmt  [20:33/429-25:2/547]
+            VARIABLE a [21:5/435-21:20/450]  TYPE: *A TEXT=A*  [21:5/435-21:7/437]  INIT: text='new A()'  SCOPE: Stmt  [20:33/429-25:2/547]
+        STATEMENT EXPRESSION  [22:5/455-22:14/464] SCOPE: Stmt  [20:33/429-25:2/547] text: 'a->f<A>()'
+        STATEMENT EXPRESSION  [23:5/507-23:16/518] SCOPE: Stmt  [20:33/429-25:2/547] text: '(*a).f<A>()'
+        STATEMENT EXPRESSION  [24:5/536-24:13/544] SCOPE: Stmt  [20:33/429-25:2/547] text: 'delete a'
+FUNCTION DEFINITION main2  [28:1/609-31:2/737] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main2(int,char**)
+    UNIQUE NAME f:main2(int,char**)
+    DECLARATION: main2  [28:1/609-31:2/737]
+    PARAMETERS:
+        argc [28:11/619-28:19/627]  TYPE: int TEXT=int  [28:11/619-28:14/622]  INIT: null  SCOPE: main2 
+        argv [28:21/629-28:32/640]  TYPE: **char TEXT=char**  [28:21/629-28:27/635]  INIT: null  SCOPE: main2 
+    RETURNS int TEXT=int  [28:1/609-28:4/612]
+    STATEMENT COMPOUND  [28:34/642-31:2/737] SCOPE: main2 
+        STATEMENT DECLARATION  [29:5/648-29:17/660] SCOPE: Stmt  [28:34/642-31:2/737]
+            VARIABLE a [29:5/648-29:17/660]  TYPE: *void TEXT=void*  [29:5/648-29:11/654]  INIT: text='0'  SCOPE: Stmt  [28:34/642-31:2/737]
+        STATEMENT EXPRESSION  [30:5/665-30:34/694] SCOPE: Stmt  [28:34/642-31:2/737] text: 'static_cast<int* (*)(int)>(a)'
+FUNCTION DEFINITION sort_getScores  [34:1/799-36:2/1010] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE sort_getScores()
+    UNIQUE NAME f:sort_getScores()
+    DECLARATION: sort_getScores  [34:1/799-36:2/1010]
+    PARAMETERS:
+    RETURNS int TEXT=int  [34:1/799-34:4/802]
+    STATEMENT COMPOUND  [34:22/820-36:2/1010] SCOPE: sort_getScores 
+        STATEMENT DECLARATION  [35:5/826-35:187/1008] SCOPE: Stmt  [34:22/820-36:2/1010]
+            VARIABLE scoreMap [35:5/826-35:187/1008]  TYPE: *$unresolved$::CLHashMap TEXT=CLHashMap<TCHAR*,float_t,Compare::TChar,Deletor::tcArray,Deletor::DummyFloat>*  [35:5/826-35:84/905]  INIT: text='CLHashMap<TCHAR*,float_t,Compare::TChar,Deletor::tcArray, Deletor::DummyFloat>(true,false)'  SCOPE: Stmt  [34:22/820-36:2/1010]
+FUNCTION DEFINITION foo  [43:1/1272-45:2/1357] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [43:1/1272-45:2/1357]
+    PARAMETERS:
+    RETURNS int TEXT=int  [43:1/1272-43:4/1275]
+    STATEMENT COMPOUND  [43:11/1282-45:2/1357] SCOPE: foo 
+        STATEMENT EXPRESSION  [44:5/1288-44:71/1354] SCOPE: Stmt  [43:11/1282-45:2/1357] text: 'A<T, typename Private::Deleter<T>::Type>(pDynObject, longevity, d)'
+TYPEDEF type  [48:1/1435-50:28/1540] TYPE: $unresolved$::boost::mpl::if_c::type TEXT=boost::mpl::if_c<rank<T0>::value < rank<T1>::value,T1,T0>::type  [48:18/1452-50:22/1534] SCOPE: $Global$ 
+

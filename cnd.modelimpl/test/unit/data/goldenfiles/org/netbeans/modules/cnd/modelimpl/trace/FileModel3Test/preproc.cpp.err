@@ -1,0 +1,40 @@
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=1,col=1],offset=0,file=null} INCLUDE{<S> ["<s1.h>",<SYS_INCLUDE_STRING>,line=1,col=10],offset=9,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=2,col=1],offset=27,file=null} INCLUDE{<U> [""h2.h"",<INCLUDE_STRING>,line=2,col=10],offset=36,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=3,col=1],offset=55,file=null} INCLUDE{<S> ["<s3.h>",<SYS_INCLUDE_STRING>,line=3,col=10],offset=64,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=4,col=1],offset=84,file=null} INCLUDE{<U> [""h4.h"",<INCLUDE_STRING>,line=4,col=10],offset=93,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=8,col=1],offset=166,file=null} INCLUDE{<S> ["<s11.h>",<SYS_INCLUDE_STRING>,line=8,col=10],offset=175,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=10,col=1],offset=196,file=null} INCLUDE{<U> [""h21.h"",<INCLUDE_STRING>,line=10,col=10],offset=205,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=12,col=1],offset=227,file=null} INCLUDE{<S> ["<s31.h>",<SYS_INCLUDE_STRING>,line=12,col=10],offset=236,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=14,col=1],offset=259,file=null} INCLUDE{<U> [""h41.h"",<INCLUDE_STRING>,line=14,col=10],offset=268,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=18,col=1],offset=346,file=null} INCLUDE{<S> ["<!!!Incorrent file #1,...>",<SYS_INCLUDE_STRING>,line=18,col=10],offset=355,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=19,col=1],offset=382,file=null} INCLUDE{<U> [""!!!Incorrent file #2,..."",<INCLUDE_STRING>,line=19,col=10],offset=391,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=1,col=1],offset=0,file=null} INCLUDE{<S> ["<s1.h>",<SYS_INCLUDE_STRING>,line=1,col=10],offset=9,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=2,col=1],offset=27,file=null} INCLUDE{<U> [""h2.h"",<INCLUDE_STRING>,line=2,col=10],offset=36,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=3,col=1],offset=55,file=null} INCLUDE{<S> ["<s3.h>",<SYS_INCLUDE_STRING>,line=3,col=10],offset=64,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=4,col=1],offset=84,file=null} INCLUDE{<U> [""h4.h"",<INCLUDE_STRING>,line=4,col=10],offset=93,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=8,col=1],offset=166,file=null} INCLUDE{<S> ["<s11.h>",<SYS_INCLUDE_STRING>,line=8,col=10],offset=175,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=10,col=1],offset=196,file=null} INCLUDE{<U> [""h21.h"",<INCLUDE_STRING>,line=10,col=10],offset=205,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=12,col=1],offset=227,file=null} INCLUDE{<S> ["<s31.h>",<SYS_INCLUDE_STRING>,line=12,col=10],offset=236,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=14,col=1],offset=259,file=null} INCLUDE{<U> [""h41.h"",<INCLUDE_STRING>,line=14,col=10],offset=268,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=18,col=1],offset=346,file=null} INCLUDE{<S> ["<!!!Incorrent file #1,...>",<SYS_INCLUDE_STRING>,line=18,col=10],offset=355,file=null}
+FAILED INCLUDE: from preproc.cpp for:
+	TOKEN{["#include ",<INCLUDE>,line=19,col=1],offset=382,file=null} INCLUDE{<U> [""!!!Incorrent file #2,..."",<INCLUDE_STRING>,line=19,col=10],offset=391,file=null}

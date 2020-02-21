@@ -1,0 +1,39 @@
+ERROR src/general_negative_test.cpp [133-158]: Wrong number of arguments
+ERROR src/general_negative_test.cpp [159-182]: Wrong number of arguments
+ERROR src/general_negative_test.cpp [183-200]: Wrong number of arguments
+ERROR src/general_negative_test.cpp [201-223]: Wrong number of arguments
+ERROR src/general_negative_test.cpp [237-240]: Precision must be of type int
+ERROR src/general_negative_test.cpp [250-271]: Wrong number of arguments
+ERROR src/general_negative_test.cpp [285-287]: Width must be of type int
+ERROR src/general_negative_test.cpp [315-318]: Using a flag character "#" that is incompatible with the conversion specifier "d"
+ERROR src/general_negative_test.cpp [339-341]: Using a length modifier "h" that is incompatible with the conversion specifier "f"
+ERROR src/general_negative_test.cpp [361-363]: Mismatching the argument type "float" and conversion specifier "ho"
+ERROR src/general_negative_test.cpp [383-386]: Using a flag character "'" that is incompatible with the conversion specifier "e"
+ERROR src/general_negative_test.cpp [383-386]: Using a length modifier "h" that is incompatible with the conversion specifier "e"
+ERROR src/general_negative_test.cpp [406-408]: Using a length modifier "h" that is incompatible with the conversion specifier "c"
+ERROR src/general_negative_test.cpp [433-437]: Using a flag character "#" that is incompatible with the conversion specifier "d"
+ERROR src/general_negative_test.cpp [458-461]: Using a length modifier "hh" that is incompatible with the conversion specifier "f"
+ERROR src/general_negative_test.cpp [481-484]: Mismatching the argument type "float" and conversion specifier "hho"
+ERROR src/general_negative_test.cpp [504-508]: Using a flag character "'" that is incompatible with the conversion specifier "e"
+ERROR src/general_negative_test.cpp [504-508]: Using a length modifier "hh" that is incompatible with the conversion specifier "e"
+ERROR src/general_negative_test.cpp [528-531]: Using a length modifier "hh" that is incompatible with the conversion specifier "c"
+ERROR src/general_negative_test.cpp [556-559]: Using a flag character "#" that is incompatible with the conversion specifier "d"
+ERROR src/general_negative_test.cpp [580-582]: Mismatching the argument type "float" and conversion specifier "lo"
+ERROR src/general_negative_test.cpp [602-604]: Mismatching the argument type "int" and conversion specifier "lc"
+ERROR src/general_negative_test.cpp [624-625]: Invalid conversion specifier "k"
+ERROR src/general_negative_test.cpp [645-649]: Using a flag character "#" that is incompatible with the conversion specifier "c"
+ERROR src/general_negative_test.cpp [645-649]: Using a flag character "'" that is incompatible with the conversion specifier "c"
+ERROR src/general_negative_test.cpp [645-649]: Using a flag character "0" that is incompatible with the conversion specifier "c"
+ERROR src/general_negative_test.cpp [674-678]: Using a flag character "#" that is incompatible with the conversion specifier "d"
+ERROR src/general_negative_test.cpp [699-702]: Mismatching the argument type "float" and conversion specifier "llo"
+ERROR src/general_negative_test.cpp [722-725]: Using a length modifier "ll" that is incompatible with the conversion specifier "c"
+ERROR src/general_negative_test.cpp [750-754]: Using a flag character "#" that is incompatible with the conversion specifier "d"
+ERROR src/general_negative_test.cpp [775-778]: Mismatching the argument type "float" and conversion specifier "llo"
+ERROR src/general_negative_test.cpp [798-801]: Using a length modifier "ll" that is incompatible with the conversion specifier "c"
+ERROR src/general_negative_test.cpp [826-829]: Using a flag character "#" that is incompatible with the conversion specifier "d"
+ERROR src/general_negative_test.cpp [850-852]: Mismatching the argument type "float" and conversion specifier "zo"
+ERROR src/general_negative_test.cpp [872-874]: Using a length modifier "z" that is incompatible with the conversion specifier "c"
+ERROR src/general_negative_test.cpp [899-902]: Using a flag character "#" that is incompatible with the conversion specifier "d"
+ERROR src/general_negative_test.cpp [923-925]: Mismatching the argument type "float" and conversion specifier "to"
+ERROR src/general_negative_test.cpp [945-947]: Using a length modifier "t" that is incompatible with the conversion specifier "c"
+ERROR src/general_negative_test.cpp [972-973]: Mismatching the argument type "long" and conversion specifier "d"

@@ -1,0 +1,67 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 3):
+<U>#define '["SYMTAB",<ID>,line=5,col=9],offset=60,file=null'='["Symtab",<ID>,line=5,col=16],offset=67,file=null'
+<U>#define '["sy_",<ID>,line=6,col=9],offset=82,file=null[["node",<ID>,line=6,col=13],offset=86,file=null]'='["SYMTAB",<ID>,line=6,col=41],offset=95,file=null ["[",<LSQUARE>,line=6,col=47],offset=101,file=null ["node",<ID>,line=6,col=48],offset=102,file=null ["]",<RSQUARE>,line=6,col=52],offset=106,file=null'
+<U>#define '["sy_defined_",<ID>,line=7,col=9],offset=116,file=null[["node",<ID>,line=7,col=21],offset=128,file=null]'='["sy_",<ID>,line=7,col=41],offset=136,file=null ["(",<LPAREN>,line=7,col=44],offset=139,file=null ["node",<ID>,line=7,col=45],offset=140,file=null [")",<RPAREN>,line=7,col=49],offset=144,file=null [".",<DOT>,line=7,col=50],offset=145,file=null ["defined",<ID>,line=7,col=51],offset=146,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz191085.cc
+Includes:
+    <no includes>
+Macros:
+#define 'SYMTAB' [5:1/52-5:22/73]
+#define 'sy_[node]' [6:1/74-6:53/107]
+#define 'sy_defined_[node]' [7:1/108-7:58/153]
+STRUCT Tab (Tab ) [1:1/0-3:2/31] lcurly=11 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC defined [2:5/17-2:17/29]  TYPE: int TEXT=int  [2:5/17-2:8/20]  INIT: null  SCOPE: Tab 
+VARIABLE Symtab [4:1/33-4:19/51]  TYPE: Tab[] TEXT=Tab[]  [4:1/33-4:4/36]  INIT: text='{}'  SCOPE: $Global$ 
+FUNCTION DEFINITION main  [11:1/177-16:2/283] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main(int,char**)
+    UNIQUE NAME f:main(int,char**)
+    DECLARATION: main  [11:1/177-16:2/283]
+    PARAMETERS:
+        argc [11:10/186-11:18/194]  TYPE: int TEXT=int  [11:10/186-11:13/189]  INIT: null  SCOPE: main 
+        argv [11:20/196-11:31/207]  TYPE: **char TEXT=char**  [11:20/196-11:26/202]  INIT: null  SCOPE: main 
+    RETURNS int TEXT=int  [11:1/177-11:4/180]
+    STATEMENT COMPOUND  [11:33/209-16:2/283] SCOPE: main 
+        STATEMENT DECLARATION  [12:5/215-12:18/228] SCOPE: Stmt  [11:33/209-16:2/283]
+            VARIABLE node [12:5/215-12:18/228]  TYPE: int TEXT=int  [12:5/215-12:8/218]  INIT: text='0'  SCOPE: Stmt  [11:33/209-16:2/283]
+        STATEMENT IF  [13:5/233-15:6/281] SCOPE: Stmt  [11:33/209-16:2/283]
+            CONDITION EXPRESSION text='sy_defined_(node)'
+            THEN: 
+                STATEMENT COMPOUND  [13:28/256-15:6/281] SCOPE: Stmt  [13:5/233-15:6/281]
+                    STATEMENT RETURN  [14:9/266-14:18/275] SCOPE: Stmt  [13:28/256-15:6/281] text: 'return 0;'
+            ELSE: 
+                STATEMENT is null
+
+========== Dumping model of PROJECT DummyProject
+STRUCT Tab (Tab ) [1:1/0-3:2/31] lcurly=11 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC defined [2:5/17-2:17/29]  TYPE: int TEXT=int  [2:5/17-2:8/20]  INIT: null  SCOPE: Tab 
+VARIABLE Symtab [4:1/33-4:19/51]  TYPE: Tab[] TEXT=Tab[]  [4:1/33-4:4/36]  INIT: text='{}'  SCOPE: $Global$ 
+FUNCTION DEFINITION main  [11:1/177-16:2/283] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main(int,char**)
+    UNIQUE NAME f:main(int,char**)
+    DECLARATION: main  [11:1/177-16:2/283]
+    PARAMETERS:
+        argc [11:10/186-11:18/194]  TYPE: int TEXT=int  [11:10/186-11:13/189]  INIT: null  SCOPE: main 
+        argv [11:20/196-11:31/207]  TYPE: **char TEXT=char**  [11:20/196-11:26/202]  INIT: null  SCOPE: main 
+    RETURNS int TEXT=int  [11:1/177-11:4/180]
+    STATEMENT COMPOUND  [11:33/209-16:2/283] SCOPE: main 
+        STATEMENT DECLARATION  [12:5/215-12:18/228] SCOPE: Stmt  [11:33/209-16:2/283]
+            VARIABLE node [12:5/215-12:18/228]  TYPE: int TEXT=int  [12:5/215-12:8/218]  INIT: text='0'  SCOPE: Stmt  [11:33/209-16:2/283]
+        STATEMENT IF  [13:5/233-15:6/281] SCOPE: Stmt  [11:33/209-16:2/283]
+            CONDITION EXPRESSION text='sy_defined_(node)'
+            THEN: 
+                STATEMENT COMPOUND  [13:28/256-15:6/281] SCOPE: Stmt  [13:5/233-15:6/281]
+                    STATEMENT RETURN  [14:9/266-14:18/275] SCOPE: Stmt  [13:28/256-15:6/281] text: 'return 0;'
+            ELSE: 
+                STATEMENT is null
+

@@ -1,0 +1,12 @@
+argc int	$	    foo(*argc
+argv char**	$	    foo(*argv
+pointer int*	$	    foo(*pointer
+value int	$	    foo(*value
+A	$	    foo(*A
+B	$	    foo(*B
+C	$	    foo(*C
+In_Macro	$	    foo(*In_Macro
+globInt int	$	    foo(*globInt
+checkZero() void	$	    foo(*checkZero()
+globFoo() void	$	    foo(*globFoo()
+main(int argc, char** argv) int	$	    foo(*main()

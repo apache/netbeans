@@ -1,0 +1,58 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE multipleDeclarativeRegions.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN BBB [1:1/0-3:2/46] SCOPE: multipleDeclarativeRegions.cpp
+    TYPEDEF dummy_type  [2:5/21-2:28/44] TYPE: int TEXT=int  [2:13/29-2:16/32] SCOPE: BBB 
+NAMESPACE DEFINITOIN AAA [5:1/58-11:2/149] SCOPE: multipleDeclarativeRegions.cpp
+    USING NAMESPACE. BBB  [6:5/78-6:25/98]; REF NS: BBB SCOPE: null
+    TYPEDEF type_1  [8:5/108-8:24/127] TYPE: int TEXT=int  [8:13/116-8:16/119] SCOPE: AAA 
+    CLASS_FORWARD_DECLARATION XXX [10:5/137-10:14/146]
+NAMESPACE DEFINITOIN BBB [13:1/151-17:2/222] SCOPE: multipleDeclarativeRegions.cpp
+    USING NAMESPACE. AAA  [14:5/171-14:25/191]; REF NS: AAA SCOPE: null
+    TYPEDEF type_2  [16:5/201-16:24/220] TYPE: int TEXT=int  [16:13/209-16:16/212] SCOPE: BBB 
+VARIABLE var1 [20:1/227-20:18/244]  TYPE: AAA::type_1 TEXT=BBB::type_1  [20:1/227-20:12/238]  INIT: null  SCOPE: $Global$ 
+VARIABLE var2 [21:1/245-21:18/262]  TYPE: BBB::type_2 TEXT=AAA::type_2  [21:1/245-21:12/256]  INIT: null  SCOPE: $Global$ 
+FUNCTION DEFINITION main  [24:1/266-26:2/294] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [24:1/266-26:2/294]
+    PARAMETERS:
+    RETURNS int TEXT=int  [24:1/266-24:4/269]
+    STATEMENT COMPOUND  [24:12/277-26:2/294] SCOPE: main 
+        STATEMENT RETURN  [25:5/283-25:14/292] SCOPE: Stmt  [24:12/277-26:2/294] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE var1 [20:1/227-20:18/244]  TYPE: AAA::type_1 TEXT=BBB::type_1  [20:1/227-20:12/238]  INIT: null  SCOPE: $Global$ 
+VARIABLE var2 [21:1/245-21:18/262]  TYPE: BBB::type_2 TEXT=AAA::type_2  [21:1/245-21:12/256]  INIT: null  SCOPE: $Global$ 
+FUNCTION DEFINITION main  [24:1/266-26:2/294] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [24:1/266-26:2/294]
+    PARAMETERS:
+    RETURNS int TEXT=int  [24:1/266-24:4/269]
+    STATEMENT COMPOUND  [24:12/277-26:2/294] SCOPE: main 
+        STATEMENT RETURN  [25:5/283-25:14/292] SCOPE: Stmt  [24:12/277-26:2/294] text: 'return 0;'
+NAMESPACE DEFINITIONS for AAA (AAA) 
+    multipleDeclarativeRegions.cpp  [5:1/58-11:2/149]
+NAMESPACE AAA (AAA) 
+    USING NAMESPACE. BBB  [6:5/78-6:25/98]; REF NS: BBB SCOPE: null
+    TYPEDEF type_1  [8:5/108-8:24/127] TYPE: int TEXT=int  [8:13/116-8:16/119] SCOPE: AAA 
+    CLASS_FORWARD_DECLARATION XXX [10:5/137-10:14/146]
+NAMESPACE DEFINITIONS for BBB (BBB) 
+    multipleDeclarativeRegions.cpp  [1:1/0-3:2/46]
+    multipleDeclarativeRegions.cpp  [13:1/151-17:2/222]
+NAMESPACE BBB (BBB) 
+    TYPEDEF dummy_type  [2:5/21-2:28/44] TYPE: int TEXT=int  [2:13/29-2:16/32] SCOPE: BBB 
+    USING NAMESPACE. AAA  [14:5/171-14:25/191]; REF NS: AAA SCOPE: null
+    TYPEDEF type_2  [16:5/201-16:24/220] TYPE: int TEXT=int  [16:13/209-16:16/212] SCOPE: BBB 
+

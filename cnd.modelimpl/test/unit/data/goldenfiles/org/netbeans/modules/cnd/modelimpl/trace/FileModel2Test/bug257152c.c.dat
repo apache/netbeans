@@ -1,0 +1,64 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug257152c.c
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+TYPEDEF my_type257152  [1:1/0-1:27/26] TYPE: int TEXT=int  [1:9/8-1:12/11] SCOPE: $Global$ 
+FUNCTION mycfoo257152 [2:1/27-2:34/60] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE mycfoo257152()
+    UNIQUE NAME F:mycfoo257152()
+    PARAMETERS:
+    RETURNS int TEXT=int  [2:1/27-2:4/30]
+FUNCTION DEFINITION mycroo257152  [3:1/61-5:2/111] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE mycroo257152()
+    UNIQUE NAME f:mycroo257152()
+    DECLARATION: mycroo257152  [3:1/61-5:2/111]
+    PARAMETERS:
+    RETURNS int TEXT=int  [3:1/61-3:4/64]
+    STATEMENT COMPOUND  [3:34/94-5:2/111] SCOPE: mycroo257152 
+        STATEMENT RETURN  [4:5/100-4:14/109] SCOPE: Stmt  [3:34/94-5:2/111] text: 'return 0;'
+FUNCTION DEFINITION mycboo257152  [6:1/112-8:2/178] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE mycboo257152(my_type257152)
+    UNIQUE NAME f:mycboo257152(my_type257152)
+    DECLARATION: mycboo257152  [6:1/112-8:2/178]
+    PARAMETERS:
+        param [6:25/136-6:45/156]  TYPE: my_type257152 TEXT=my_type257152  [6:25/136-6:38/149]  INIT: null  SCOPE: mycboo257152 
+    RETURNS int TEXT=int  [6:1/112-6:4/115]
+    STATEMENT COMPOUND  [6:46/157-8:2/178] SCOPE: mycboo257152 
+        STATEMENT RETURN  [7:5/163-7:18/176] SCOPE: Stmt  [6:46/157-8:2/178] text: 'return param;'
+
+========== Dumping model of PROJECT DummyProject
+TYPEDEF my_type257152  [1:1/0-1:27/26] TYPE: int TEXT=int  [1:9/8-1:12/11] SCOPE: $Global$ 
+FUNCTION mycfoo257152 [2:1/27-2:34/60] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE mycfoo257152()
+    UNIQUE NAME F:mycfoo257152()
+    PARAMETERS:
+    RETURNS int TEXT=int  [2:1/27-2:4/30]
+FUNCTION DEFINITION mycroo257152  [3:1/61-5:2/111] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE mycroo257152()
+    UNIQUE NAME f:mycroo257152()
+    DECLARATION: mycroo257152  [3:1/61-5:2/111]
+    PARAMETERS:
+    RETURNS int TEXT=int  [3:1/61-3:4/64]
+    STATEMENT COMPOUND  [3:34/94-5:2/111] SCOPE: mycroo257152 
+        STATEMENT RETURN  [4:5/100-4:14/109] SCOPE: Stmt  [3:34/94-5:2/111] text: 'return 0;'
+FUNCTION DEFINITION mycboo257152  [6:1/112-8:2/178] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE mycboo257152(my_type257152)
+    UNIQUE NAME f:mycboo257152(my_type257152)
+    DECLARATION: mycboo257152  [6:1/112-8:2/178]
+    PARAMETERS:
+        param [6:25/136-6:45/156]  TYPE: my_type257152 TEXT=my_type257152  [6:25/136-6:38/149]  INIT: null  SCOPE: mycboo257152 
+    RETURNS int TEXT=int  [6:1/112-6:4/115]
+    STATEMENT COMPOUND  [6:46/157-8:2/178] SCOPE: mycboo257152 
+        STATEMENT RETURN  [7:5/163-7:18/176] SCOPE: Stmt  [6:46/157-8:2/178] text: 'return param;'
+

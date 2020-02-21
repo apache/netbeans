@@ -1,0 +1,42 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE cast.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION main  [2:1/1-10:2/143] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [2:1/1-10:2/143]
+    PARAMETERS:
+    RETURNS int TEXT=int  [2:1/1-2:4/4]
+    STATEMENT COMPOUND  [2:12/12-10:2/143] SCOPE: main 
+        STATEMENT EXPRESSION  [3:5/18-3:33/46] SCOPE: Stmt  [2:12/12-10:2/143] text: 'static_cast<void (*) ()> (0)'
+        STATEMENT DECLARATION  [5:5/53-5:11/59] SCOPE: Stmt  [2:12/12-10:2/143]
+            VARIABLE v [5:5/53-5:11/59]  TYPE: int TEXT=int  [5:5/53-5:8/56]  INIT: null  SCOPE: Stmt  [2:12/12-10:2/143]
+        STATEMENT EXPRESSION  [6:5/64-6:31/90] SCOPE: Stmt  [2:12/12-10:2/143] text: 'reinterpret_cast<int*> (v)'
+        STATEMENT EXPRESSION  [7:5/96-7:34/125] SCOPE: Stmt  [2:12/12-10:2/143] text: 'reinterpret_cast<int (*)> (v)'
+        STATEMENT RETURN  [9:5/132-9:14/141] SCOPE: Stmt  [2:12/12-10:2/143] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION main  [2:1/1-10:2/143] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [2:1/1-10:2/143]
+    PARAMETERS:
+    RETURNS int TEXT=int  [2:1/1-2:4/4]
+    STATEMENT COMPOUND  [2:12/12-10:2/143] SCOPE: main 
+        STATEMENT EXPRESSION  [3:5/18-3:33/46] SCOPE: Stmt  [2:12/12-10:2/143] text: 'static_cast<void (*) ()> (0)'
+        STATEMENT DECLARATION  [5:5/53-5:11/59] SCOPE: Stmt  [2:12/12-10:2/143]
+            VARIABLE v [5:5/53-5:11/59]  TYPE: int TEXT=int  [5:5/53-5:8/56]  INIT: null  SCOPE: Stmt  [2:12/12-10:2/143]
+        STATEMENT EXPRESSION  [6:5/64-6:31/90] SCOPE: Stmt  [2:12/12-10:2/143] text: 'reinterpret_cast<int*> (v)'
+        STATEMENT EXPRESSION  [7:5/96-7:34/125] SCOPE: Stmt  [2:12/12-10:2/143] text: 'reinterpret_cast<int (*)> (v)'
+        STATEMENT RETURN  [9:5/132-9:14/141] SCOPE: Stmt  [2:12/12-10:2/143] text: 'return 0;'
+

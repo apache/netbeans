@@ -1,0 +1,20 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE preproc_defined_keyword.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+VARIABLE i [3:1/18-3:7/24]  TYPE: int TEXT=int  [3:1/18-3:4/21]  INIT: null  SCOPE: $Global$ 
+VARIABLE xx [8:1/50-8:8/57]  TYPE: int TEXT=int  [8:1/50-8:4/53]  INIT: null  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+VARIABLE i [3:1/18-3:7/24]  TYPE: int TEXT=int  [3:1/18-3:4/21]  INIT: null  SCOPE: $Global$ 
+VARIABLE xx [8:1/50-8:8/57]  TYPE: int TEXT=int  [8:1/50-8:4/53]  INIT: null  SCOPE: $Global$ 
+

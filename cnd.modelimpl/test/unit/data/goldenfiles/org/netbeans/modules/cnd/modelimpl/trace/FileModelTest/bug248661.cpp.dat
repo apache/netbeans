@@ -1,0 +1,50 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug248661.cpp
+Includes:
+"bug248661.h" [1:1/0-1:23/22]
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug248661 [3:1/24-7:2/180] SCOPE: bug248661.cpp
+    USING NAMESPACE. zzz248661  [4:5/50-4:30/75]; REF NS: zzz248661 SCOPE: null
+    FUNCTION foo248661 [5:5/85-5:37/117] FunctionImpl SCOPE: bug248661 
+        DEFINITION: null
+        SIGNATURE foo248661(MyStruct248661()())
+        UNIQUE NAME F:bug248661::foo248661(MyStruct248661()())
+        PARAMETERS:
+             [5:19/99-5:35/115]  TYPE: MyStruct248661() TEXT=MyStruct248661()()  [5:19/99-5:35/115]  INIT: null  SCOPE: foo248661 
+        RETURNS int TEXT=int  [5:5/85-5:8/88]
+    VARIABLE var248661 [6:5/134-6:37/166]  TYPE: int TEXT=int  [6:5/134-6:8/137]  INIT: null  SCOPE: bug248661 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug248661 (bug248661) 
+    bug248661.cpp  [3:1/24-7:2/180]
+NAMESPACE bug248661 (bug248661) 
+    USING NAMESPACE. zzz248661  [4:5/50-4:30/75]; REF NS: zzz248661 SCOPE: null
+    FUNCTION foo248661 [5:5/85-5:37/117] FunctionImpl SCOPE: bug248661 
+        DEFINITION: null
+        SIGNATURE foo248661(MyStruct248661()())
+        UNIQUE NAME F:bug248661::foo248661(MyStruct248661()())
+        PARAMETERS:
+             [5:19/99-5:35/115]  TYPE: MyStruct248661() TEXT=MyStruct248661()()  [5:19/99-5:35/115]  INIT: null  SCOPE: foo248661 
+        RETURNS int TEXT=int  [5:5/85-5:8/88]
+    VARIABLE var248661 [6:5/134-6:37/166]  TYPE: int TEXT=int  [6:5/134-6:8/137]  INIT: null  SCOPE: bug248661 
+NAMESPACE DEFINITIONS for zzz248661 (zzz248661) 
+    bug248661.h  [1:1/0-4:2/79]
+NAMESPACE zzz248661 (zzz248661) 
+    STRUCT MyStruct248661 (zzz248661::MyStruct248661 ) [2:5/26-2:29/50] lcurly=48 SCOPE: zzz248661 
+        BASE CLASSES:
+        MEMBERS:
+    FUNCTION function248661 [3:5/56-3:26/77] FunctionImpl SCOPE: zzz248661 
+        DEFINITION: null
+        SIGNATURE function248661()
+        UNIQUE NAME F:zzz248661::function248661()
+        PARAMETERS:
+        RETURNS int TEXT=int  [3:5/56-3:8/59]
+

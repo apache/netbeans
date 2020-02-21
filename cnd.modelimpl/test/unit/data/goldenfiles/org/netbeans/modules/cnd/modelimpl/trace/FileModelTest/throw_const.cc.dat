@@ -1,0 +1,150 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE throw_const.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS Exception (Exception ) [1:1/0-1:19/18] lcurly=16 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+NAMESPACE DEFINITOIN ns [3:1/21-5:2/61] SCOPE: throw_const.cc
+    CLASS Throwable (ns::Throwable ) [4:5/40-4:23/58] lcurly=56 SCOPE: ns 
+        BASE CLASSES:
+        MEMBERS:
+FUNCTION DEFINITION foo_1  [7:1/63-8:2/98] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_1()
+    UNIQUE NAME f:foo_1()
+    DECLARATION: foo_1  [7:1/63-8:2/98]
+    PARAMETERS:
+    RETURNS void TEXT=void  [7:1/63-7:5/67]
+    STATEMENT COMPOUND  [7:33/95-8:2/98] SCOPE: foo_1 
+FUNCTION DEFINITION foo_2  [10:1/100-11:2/136] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_2()
+    UNIQUE NAME f:foo_2()
+    DECLARATION: foo_2  [10:1/100-11:2/136]
+    PARAMETERS:
+    RETURNS void TEXT=void  [10:1/100-10:5/104]
+    STATEMENT COMPOUND  [10:34/133-11:2/136] SCOPE: foo_2 
+FUNCTION DEFINITION foo_3  [13:1/138-14:2/172] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_3()
+    UNIQUE NAME f:foo_3()
+    DECLARATION: foo_3  [13:1/138-14:2/172]
+    PARAMETERS:
+    RETURNS void TEXT=void  [13:1/138-13:5/142]
+    STATEMENT COMPOUND  [13:32/169-14:2/172] SCOPE: foo_3 
+FUNCTION DEFINITION foo_4  [16:1/174-17:2/215] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_4()
+    UNIQUE NAME f:foo_4()
+    DECLARATION: foo_4  [16:1/174-17:2/215]
+    PARAMETERS:
+    RETURNS void TEXT=void  [16:1/174-16:5/178]
+    STATEMENT COMPOUND  [16:39/212-17:2/215] SCOPE: foo_4 
+FUNCTION DEFINITION foo_5  [19:1/217-20:2/262] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_5()
+    UNIQUE NAME f:foo_5()
+    DECLARATION: foo_5  [19:1/217-20:2/262]
+    PARAMETERS:
+    RETURNS void TEXT=void  [19:1/217-19:5/221]
+    STATEMENT COMPOUND  [19:43/259-20:2/262] SCOPE: foo_5 
+FUNCTION DEFINITION foo_6  [23:1/265-24:2/290] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_6()
+    UNIQUE NAME f:foo_6()
+    DECLARATION: foo_6  [23:1/265-24:2/290]
+    PARAMETERS:
+    RETURNS void TEXT=void  [23:1/265-23:5/269]
+    STATEMENT COMPOUND  [23:23/287-24:2/290] SCOPE: foo_6 
+FUNCTION fun1 [26:1/292-26:20/311] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE fun1(int,int)
+    UNIQUE NAME F:fun1(int,int)
+    PARAMETERS:
+         [26:10/301-26:13/304]  TYPE: int TEXT=int  [26:10/301-26:13/304]  INIT: null  SCOPE: fun1 
+         [26:15/306-26:18/309]  TYPE: int TEXT=int  [26:15/306-26:18/309]  INIT: null  SCOPE: fun1 
+    RETURNS int TEXT=int  [26:1/292-26:4/295]
+VARIABLE fp_fun1 [27:1/312-27:33/344]  TYPE: int(int,int) TEXT=int(*)(int,int)  [27:1/312-27:25/336]  INIT: text='fun1'  SCOPE: $Global$ 
+FUNCTION DEFINITION foo_7  [30:1/376-32:2/435] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_7()
+    UNIQUE NAME f:foo_7()
+    DECLARATION: foo_7  [30:1/376-32:2/435]
+    PARAMETERS:
+    RETURNS void TEXT=void  [30:1/376-30:5/380]
+    STATEMENT COMPOUND  [30:40/415-32:2/435] SCOPE: foo_7 
+        STATEMENT EXPRESSION  [31:9/419-31:22/432] SCOPE: Stmt  [30:40/415-32:2/435] text: 'throw fp_fun1'
+
+========== Dumping model of PROJECT DummyProject
+CLASS Exception (Exception ) [1:1/0-1:19/18] lcurly=16 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+FUNCTION DEFINITION foo_1  [7:1/63-8:2/98] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_1()
+    UNIQUE NAME f:foo_1()
+    DECLARATION: foo_1  [7:1/63-8:2/98]
+    PARAMETERS:
+    RETURNS void TEXT=void  [7:1/63-7:5/67]
+    STATEMENT COMPOUND  [7:33/95-8:2/98] SCOPE: foo_1 
+FUNCTION DEFINITION foo_2  [10:1/100-11:2/136] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_2()
+    UNIQUE NAME f:foo_2()
+    DECLARATION: foo_2  [10:1/100-11:2/136]
+    PARAMETERS:
+    RETURNS void TEXT=void  [10:1/100-10:5/104]
+    STATEMENT COMPOUND  [10:34/133-11:2/136] SCOPE: foo_2 
+FUNCTION DEFINITION foo_3  [13:1/138-14:2/172] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_3()
+    UNIQUE NAME f:foo_3()
+    DECLARATION: foo_3  [13:1/138-14:2/172]
+    PARAMETERS:
+    RETURNS void TEXT=void  [13:1/138-13:5/142]
+    STATEMENT COMPOUND  [13:32/169-14:2/172] SCOPE: foo_3 
+FUNCTION DEFINITION foo_4  [16:1/174-17:2/215] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_4()
+    UNIQUE NAME f:foo_4()
+    DECLARATION: foo_4  [16:1/174-17:2/215]
+    PARAMETERS:
+    RETURNS void TEXT=void  [16:1/174-16:5/178]
+    STATEMENT COMPOUND  [16:39/212-17:2/215] SCOPE: foo_4 
+FUNCTION DEFINITION foo_5  [19:1/217-20:2/262] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_5()
+    UNIQUE NAME f:foo_5()
+    DECLARATION: foo_5  [19:1/217-20:2/262]
+    PARAMETERS:
+    RETURNS void TEXT=void  [19:1/217-19:5/221]
+    STATEMENT COMPOUND  [19:43/259-20:2/262] SCOPE: foo_5 
+FUNCTION DEFINITION foo_6  [23:1/265-24:2/290] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_6()
+    UNIQUE NAME f:foo_6()
+    DECLARATION: foo_6  [23:1/265-24:2/290]
+    PARAMETERS:
+    RETURNS void TEXT=void  [23:1/265-23:5/269]
+    STATEMENT COMPOUND  [23:23/287-24:2/290] SCOPE: foo_6 
+FUNCTION fun1 [26:1/292-26:20/311] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE fun1(int,int)
+    UNIQUE NAME F:fun1(int,int)
+    PARAMETERS:
+         [26:10/301-26:13/304]  TYPE: int TEXT=int  [26:10/301-26:13/304]  INIT: null  SCOPE: fun1 
+         [26:15/306-26:18/309]  TYPE: int TEXT=int  [26:15/306-26:18/309]  INIT: null  SCOPE: fun1 
+    RETURNS int TEXT=int  [26:1/292-26:4/295]
+VARIABLE fp_fun1 [27:1/312-27:33/344]  TYPE: int(int,int) TEXT=int(*)(int,int)  [27:1/312-27:25/336]  INIT: text='fun1'  SCOPE: $Global$ 
+FUNCTION DEFINITION foo_7  [30:1/376-32:2/435] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_7()
+    UNIQUE NAME f:foo_7()
+    DECLARATION: foo_7  [30:1/376-32:2/435]
+    PARAMETERS:
+    RETURNS void TEXT=void  [30:1/376-30:5/380]
+    STATEMENT COMPOUND  [30:40/415-32:2/435] SCOPE: foo_7 
+        STATEMENT EXPRESSION  [31:9/419-31:22/432] SCOPE: Stmt  [30:40/415-32:2/435] text: 'throw fp_fun1'
+NAMESPACE DEFINITIONS for ns (ns) 
+    throw_const.cc  [3:1/21-5:2/61]
+NAMESPACE ns (ns) 
+    CLASS Throwable (ns::Throwable ) [4:5/40-4:23/58] lcurly=56 SCOPE: ns 
+        BASE CLASSES:
+        MEMBERS:
+

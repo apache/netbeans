@@ -1,0 +1,50 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+/*
+ * File:   ${nameAndExt}
+ * Author: ${user}
+ *
+ * Created on ${DATE}, ${TIME}
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+<#if testIncludes?? && testIncludes != "">${testIncludes}</#if>
+/*
+ * Simple C Test Suite
+ */
+<#if testFunctions?? && testFunctions != "">
+
+${testFunctions}<#else>
+void test1() {
+    printf("${name} test 1\n");
+}
+
+void test2() {
+    printf("${name} test 2\n");
+    printf("%%TEST_FAILED%% time=0 testname=test2 (${name}) message=error message sample\n");
+}
+
+</#if>
+int main(int argc, char** argv) {
+    printf("%%SUITE_STARTING%% ${name}\n");
+    printf("%%SUITE_STARTED%%\n");
+<#if testCalls?? && testCalls != "">
+
+${testCalls}<#else>
+    printf("%%TEST_STARTED%% test1 (${name})\n");
+    test1();
+    printf("%%TEST_FINISHED%% time=0 test1 (${name}) \n");
+
+    printf("%%TEST_STARTED%% test2 (${name})\n");
+    test2();
+    printf("%%TEST_FINISHED%% time=0 test2 (${name}) \n");
+
+    </#if>
+    printf("%%SUITE_FINISHED%% time=0\n");
+
+    return (EXIT_SUCCESS);
+}

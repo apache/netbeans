@@ -1,0 +1,4 @@
+WARNING bug201258.cpp [6-12]: Unable to resolve forward declaration Fumble.
+WARNING bug201258.cpp [62-68]: Unable to resolve forward declaration Fumble.
+WARNING bug201258.cpp [123-130]: Unable to resolve forward declaration FooImpl.
+ERROR bug201258.cpp [213-219]: Unable to resolve identifier doWork.

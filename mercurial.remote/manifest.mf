@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.mercurial.remote
+OpenIDE-Module-Layer: org/netbeans/modules/mercurial/remote/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/mercurial/remote/Bundle.properties
+

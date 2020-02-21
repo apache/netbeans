@@ -1,0 +1,6 @@
+cPriv int	$	    c.cPriv
+cProt int	$	    c.cProt
+cPub int	$	    c.cPub
+cPrivFun() void	$	    c.cPrivFun()
+cProtFun() void	$	    c.cProtFun()
+cPubFun() void	$	    c.cPubFun()

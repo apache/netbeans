@@ -1,0 +1,34 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz158124.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION free  [1:1/0-3:2/51] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE free(void*)
+    UNIQUE NAME f:free(void*)
+    DECLARATION: free  [1:1/0-3:2/51]
+    PARAMETERS:
+        __ptr [1:13/12-1:24/23]  TYPE: *void TEXT=void*  [1:13/12-1:19/18]  INIT: null  SCOPE: free 
+    RETURNS void TEXT=void  [1:1/0-1:5/4]
+    STATEMENT COMPOUND  [1:27/26-3:2/51] SCOPE: free 
+        STATEMENT EXPRESSION  [2:5/32-2:21/48] SCOPE: Stmt  [1:27/26-3:2/51] text: 'printf("free\n")'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION free  [1:1/0-3:2/51] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE free(void*)
+    UNIQUE NAME f:free(void*)
+    DECLARATION: free  [1:1/0-3:2/51]
+    PARAMETERS:
+        __ptr [1:13/12-1:24/23]  TYPE: *void TEXT=void*  [1:13/12-1:19/18]  INIT: null  SCOPE: free 
+    RETURNS void TEXT=void  [1:1/0-1:5/4]
+    STATEMENT COMPOUND  [1:27/26-3:2/51] SCOPE: free 
+        STATEMENT EXPRESSION  [2:5/32-2:21/48] SCOPE: Stmt  [1:27/26-3:2/51] text: 'printf("free\n")'
+

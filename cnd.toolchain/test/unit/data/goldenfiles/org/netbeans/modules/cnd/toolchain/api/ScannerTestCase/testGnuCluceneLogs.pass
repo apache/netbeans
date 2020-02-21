@@ -1,0 +1,16 @@
+2 changeDirectory { dir: ../clucene-0.9.10 }
+31 changeDirectory { dir: ../clucene-0.9.10 }
+33 makeAllInDirectory { dir: src }
+34 makeAllInDirectory { dir: . }
+70 error { file: ../src/CLucene/config/repl_wchar.cpp; line: 8 }
+71 error { file: ../src/CLucene/config/repl_wchar.cpp; line: 22 }
+72 error { file: ../src/CLucene/config/repl_wchar.cpp; line: 115 }
+73 error { file: ../src/CLucene/config/repl_wchar.cpp; line: 311 }
+74 error { file: ../src/CLucene/config/repl_wchar.cpp; line: 326 }
+75 error { file: ../src/CLucene/config/repl_wchar.cpp; line: 341 }
+124 error { file: ../src/CLucene/config/gunichartables.cpp; line: 145 }
+131 error { file: ../src/CLucene/StdHeader.cpp; line: 24 }
+132 error { file: ../src/CLucene/StdHeader.cpp; line: 40 }
+321 error { file: ../src/CLucene/search/ConjunctionScorer.cpp; line: 21 }
+519 changeDirectory { dir: $subdir }
+540 changeDirectory { dir: $subdir }

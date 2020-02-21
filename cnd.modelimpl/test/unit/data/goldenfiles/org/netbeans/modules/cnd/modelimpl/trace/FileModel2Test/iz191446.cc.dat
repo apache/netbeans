@@ -1,0 +1,86 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 3):
+<U>#define '["INCL_FUN_NAME",<ID>,line=14,col=9],offset=224,file=null'='["cos1234",<ID>,line=14,col=23],offset=238,file=null'
+<U>#define '["RECURSIVE_HEADER_H",<ID>,line=3,col=9],offset=36,file=null'=''
+<U>#define '["TYPE",<ID>,line=15,col=9],offset=254,file=null'='["double",<ID>,line=15,col=14],offset=259,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz191446.cc
+Includes:
+"iz191446.h" [2:1/1-2:22/22]
+Macros:
+    <no macros>
+FUNCTION DEFINITION sin1234  [4:1/24-6:2/82] FunctionDefinitionImpl SCOPE: iz191446.cc
+    SIGNATURE sin1234(int,int)
+    UNIQUE NAME f:Outer191446::sin1234(int,int)
+    DECLARATION: sin1234  [25:1/348-25:36/383]
+    PARAMETERS:
+        p [4:26/49-4:31/54]  TYPE: int TEXT=int  [4:26/49-4:29/52]  INIT: null  SCOPE: sin1234 
+        v [4:33/56-4:38/61]  TYPE: int TEXT=int  [4:33/56-4:36/59]  INIT: null  SCOPE: sin1234 
+    RETURNS int TEXT=int  [4:1/24-4:4/27]
+    STATEMENT COMPOUND  [4:40/63-6:2/82] SCOPE: sin1234 
+        STATEMENT RETURN  [5:5/69-5:16/80] SCOPE: Stmt  [4:40/63-6:2/82] text: 'return p+v;'
+FUNCTION DEFINITION main191446  [8:1/84-10:2/118] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main191446()
+    UNIQUE NAME f:main191446()
+    DECLARATION: main191446  [8:1/84-10:2/118]
+    PARAMETERS:
+    RETURNS int TEXT=int  [8:1/84-8:4/87]
+    STATEMENT COMPOUND  [8:18/101-10:2/118] SCOPE: main191446 
+        STATEMENT RETURN  [9:5/107-9:14/116] SCOPE: Stmt  [8:18/101-10:2/118] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION main191446  [8:1/84-10:2/118] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main191446()
+    UNIQUE NAME f:main191446()
+    DECLARATION: main191446  [8:1/84-10:2/118]
+    PARAMETERS:
+    RETURNS int TEXT=int  [8:1/84-8:4/87]
+    STATEMENT COMPOUND  [8:18/101-10:2/118] SCOPE: main191446 
+        STATEMENT RETURN  [9:5/107-9:14/116] SCOPE: Stmt  [8:18/101-10:2/118] text: 'return 0;'
+USING NAMESPACE. Outer191446  [22:1/303-22:28/330]; REF NS: Outer191446 SCOPE: null
+FUNCTION sin1234 [25:1/348-25:36/383] FunctionImpl SCOPE: Outer191446 
+    DEFINITION: sin1234  [4:1/24-6:2/82]
+    SIGNATURE sin1234(int,int)
+    UNIQUE NAME F:Outer191446::sin1234(int,int)
+    PARAMETERS:
+        t [25:20/367-25:26/373]  TYPE: int TEXT=int  [25:20/367-25:24/371]  INIT: null  SCOPE: sin1234 
+        p [25:28/375-25:34/381]  TYPE: int TEXT=int  [25:28/375-25:32/379]  INIT: null  SCOPE: sin1234 
+    RETURNS int TEXT=int  [25:1/348-25:5/352]
+FUNCTION DEFINITION cos1234  [28:1/391-30:2/451] FunctionDDImpl SCOPE: Outer191446 
+    SIGNATURE cos1234(double,double)
+    UNIQUE NAME f:Outer191446::cos1234(double,double)
+    DECLARATION: cos1234  [28:1/391-30:2/451]
+    PARAMETERS:
+        p [28:20/410-28:26/416]  TYPE: double TEXT=double  [28:20/410-28:24/414]  INIT: null  SCOPE: cos1234 
+        t [28:28/418-28:34/424]  TYPE: double TEXT=double  [28:28/418-28:32/422]  INIT: null  SCOPE: cos1234 
+    RETURNS double TEXT=double  [28:1/391-28:5/395]
+    STATEMENT COMPOUND  [28:36/426-30:2/451] SCOPE: cos1234 
+        STATEMENT RETURN  [29:5/432-29:18/445] SCOPE: Stmt  [28:36/426-30:2/451] text: 'return p + v;'
+NAMESPACE DEFINITIONS for Outer191446 (Outer191446) 
+    iz191446.h  [5:1/56-18:2/294]
+NAMESPACE Outer191446 (Outer191446) 
+    USING NAMESPACE. Outer191446  [22:1/303-22:28/330]; REF NS: Outer191446 SCOPE: null
+    FUNCTION sin1234 [25:1/348-25:36/383] FunctionImpl SCOPE: Outer191446 
+        DEFINITION: sin1234  [4:1/24-6:2/82]
+        SIGNATURE sin1234(int,int)
+        UNIQUE NAME F:Outer191446::sin1234(int,int)
+        PARAMETERS:
+            t [25:20/367-25:26/373]  TYPE: int TEXT=int  [25:20/367-25:24/371]  INIT: null  SCOPE: sin1234 
+            p [25:28/375-25:34/381]  TYPE: int TEXT=int  [25:28/375-25:32/379]  INIT: null  SCOPE: sin1234 
+        RETURNS int TEXT=int  [25:1/348-25:5/352]
+    FUNCTION DEFINITION cos1234  [28:1/391-30:2/451] FunctionDDImpl SCOPE: Outer191446 
+        SIGNATURE cos1234(double,double)
+        UNIQUE NAME f:Outer191446::cos1234(double,double)
+        DECLARATION: cos1234  [28:1/391-30:2/451]
+        PARAMETERS:
+            p [28:20/410-28:26/416]  TYPE: double TEXT=double  [28:20/410-28:24/414]  INIT: null  SCOPE: cos1234 
+            t [28:28/418-28:34/424]  TYPE: double TEXT=double  [28:28/418-28:32/422]  INIT: null  SCOPE: cos1234 
+        RETURNS double TEXT=double  [28:1/391-28:5/395]
+        STATEMENT COMPOUND  [28:36/426-30:2/451] SCOPE: cos1234 
+            STATEMENT RETURN  [29:5/432-29:18/445] SCOPE: Stmt  [28:36/426-30:2/451] text: 'return p + v;'
+

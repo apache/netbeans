@@ -1,0 +1,10 @@
+fun_macro_ellipsis.cc:19:1: unexpected token: 1
+fun_macro_ellipsis.cc:19:1: unexpected token: ->
+fun_macro_ellipsis.cc:20:1: unexpected token: 1
+fun_macro_ellipsis.cc:20:1: unexpected token: ,
+fun_macro_ellipsis.cc:20:1: unexpected token: 2
+fun_macro_ellipsis.cc:21:1: unexpected token: ""
+fun_macro_ellipsis.cc:30:1: unexpected token: "1, 2, 3"
+fun_macro_ellipsis.cc:31:1: unexpected token: "1,2,3"
+fun_macro_ellipsis.cc:32:1: unexpected token: "1 , 2 , 3"
+fun_macro_ellipsis.cc:33:1: unexpected token: "1 , 2 , 3"

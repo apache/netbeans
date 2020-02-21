@@ -1,0 +1,142 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz157836.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION main  [1:1/0-32:2/585] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [1:1/0-32:2/585]
+    PARAMETERS:
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+    STATEMENT COMPOUND  [1:13/12-32:2/585] SCOPE: main 
+        STATEMENT DECLARATION  [2:5/18-2:25/38] SCOPE: Stmt  [1:13/12-32:2/585]
+            VARIABLE opcode [2:5/18-2:25/38]  TYPE: int TEXT=int  [2:5/18-2:17/30]  INIT: null  SCOPE: Stmt  [1:13/12-32:2/585]
+        STATEMENT DECLARATION  [3:5/64-3:11/70] SCOPE: Stmt  [1:13/12-32:2/585]
+            VARIABLE x [3:5/64-3:11/70]  TYPE: int TEXT=int  [3:5/64-3:8/67]  INIT: null  SCOPE: Stmt  [1:13/12-32:2/585]
+        STATEMENT SWITCH  [4:5/75-19:6/398] SCOPE: Stmt  [1:13/12-32:2/585]
+            CONDITION: EXPRESSION text='opcode'
+            BODY:
+                STATEMENT COMPOUND  [4:21/91-19:6/398] SCOPE: Stmt  [4:5/75-19:6/398]
+                    STATEMENT CASE  [6:14/107-6:16/109] SCOPE: Stmt  [4:21/91-19:6/398] EXPRESSION: text='12'
+                    STATEMENT GOTO  [7:13/123-7:27/137] SCOPE: Stmt  [4:21/91-19:6/398] text: 'goto slow_get;'
+                    STATEMENT IF  [8:13/150-11:34/246] SCOPE: Stmt  [4:21/91-19:6/398]
+                        CONDITION EXPRESSION text='1'
+                        THEN: 
+                            STATEMENT COMPOUND  [8:20/157-10:14/207] SCOPE: Stmt  [8:13/150-11:34/246]
+                                STATEMENT GOTO  [9:21/179-9:35/193] SCOPE: Stmt  [8:20/157-10:14/207] text: 'goto slow_get;'
+                        ELSE: 
+                            STATEMENT COMPOUND  [11:17/229-11:34/246] SCOPE: Stmt  [8:13/150-11:34/246]
+                                STATEMENT LABEL  [11:17/229-11:25/237] SCOPE: Stmt  [11:17/229-11:34/246] text: 'slow_get'
+                                STATEMENT EXPRESSION  [11:28/240-11:34/246] SCOPE: Stmt  [11:17/229-11:34/246] text: 'x = 14'
+                    STATEMENT IF  [15:13/320-17:14/373] SCOPE: Stmt  [4:21/91-19:6/398]
+                        CONDITION EXPRESSION text='1'
+                        THEN: 
+                            STATEMENT COMPOUND  [15:20/327-17:14/373] SCOPE: Stmt  [15:13/320-17:14/373]
+                                STATEMENT GOTO  [16:17/345-16:31/359] SCOPE: Stmt  [15:20/327-17:14/373] text: 'goto slow_get;'
+                        ELSE: 
+                            STATEMENT is null
+                    STATEMENT BREAK  [18:13/386-18:19/392] SCOPE: Stmt  [4:21/91-19:6/398]
+        STATEMENT DECLARATION  [21:5/404-21:11/410] SCOPE: Stmt  [1:13/12-32:2/585]
+            VARIABLE i [21:5/404-21:11/410]  TYPE: int TEXT=int  [21:5/404-21:8/407]  INIT: null  SCOPE: Stmt  [1:13/12-32:2/585]
+        STATEMENT FOR  [22:5/415-22:35/445] SCOPE: Stmt  [1:13/12-32:2/585]
+            INIT:
+                STATEMENT is null
+            ITERATION: text='i++'
+            CONDITION: EXPRESSION text='i < 10'
+            BODY:
+                STATEMENT COMPOUND  [22:25/435-22:35/445] SCOPE: Stmt  [22:5/415-22:35/445]
+                    STATEMENT LABEL  [22:25/435-22:30/440] SCOPE: Stmt  [22:25/435-22:35/445] text: 'label'
+                    STATEMENT EXPRESSION  [22:32/442-22:35/445] SCOPE: Stmt  [22:25/435-22:35/445] text: 'i++'
+        STATEMENT GOTO  [23:5/454-23:16/465] SCOPE: Stmt  [1:13/12-32:2/585] text: 'goto label;'
+        STATEMENT IF  [25:5/471-25:28/494] SCOPE: Stmt  [1:13/12-32:2/585]
+            CONDITION EXPRESSION text='i < 10'
+            THEN: 
+                STATEMENT COMPOUND  [25:17/483-25:28/494] SCOPE: Stmt  [25:5/471-25:28/494]
+                    STATEMENT LABEL  [25:17/483-25:23/489] SCOPE: Stmt  [25:17/483-25:28/494] text: 'label2'
+                    STATEMENT EXPRESSION  [25:25/491-25:28/494] SCOPE: Stmt  [25:17/483-25:28/494] text: 'i++'
+            ELSE: 
+                STATEMENT is null
+        STATEMENT GOTO  [26:5/503-26:17/515] SCOPE: Stmt  [1:13/12-32:2/585] text: 'goto label2;'
+        STATEMENT WHILE  [28:5/521-28:31/547] SCOPE: Stmt  [1:13/12-32:2/585]
+            CONDITION: EXPRESSION text='i < 10' isPostCheck()=false
+            BODY:
+                STATEMENT COMPOUND  [28:20/536-28:31/547] SCOPE: Stmt  [28:5/521-28:31/547]
+                    STATEMENT LABEL  [28:20/536-28:26/542] SCOPE: Stmt  [28:20/536-28:31/547] text: 'label3'
+                    STATEMENT EXPRESSION  [28:28/544-28:31/547] SCOPE: Stmt  [28:20/536-28:31/547] text: 'i++'
+        STATEMENT GOTO  [29:5/556-29:17/568] SCOPE: Stmt  [1:13/12-32:2/585] text: 'goto label3;'
+        STATEMENT RETURN  [31:5/574-31:14/583] SCOPE: Stmt  [1:13/12-32:2/585] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION main  [1:1/0-32:2/585] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [1:1/0-32:2/585]
+    PARAMETERS:
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+    STATEMENT COMPOUND  [1:13/12-32:2/585] SCOPE: main 
+        STATEMENT DECLARATION  [2:5/18-2:25/38] SCOPE: Stmt  [1:13/12-32:2/585]
+            VARIABLE opcode [2:5/18-2:25/38]  TYPE: int TEXT=int  [2:5/18-2:17/30]  INIT: null  SCOPE: Stmt  [1:13/12-32:2/585]
+        STATEMENT DECLARATION  [3:5/64-3:11/70] SCOPE: Stmt  [1:13/12-32:2/585]
+            VARIABLE x [3:5/64-3:11/70]  TYPE: int TEXT=int  [3:5/64-3:8/67]  INIT: null  SCOPE: Stmt  [1:13/12-32:2/585]
+        STATEMENT SWITCH  [4:5/75-19:6/398] SCOPE: Stmt  [1:13/12-32:2/585]
+            CONDITION: EXPRESSION text='opcode'
+            BODY:
+                STATEMENT COMPOUND  [4:21/91-19:6/398] SCOPE: Stmt  [4:5/75-19:6/398]
+                    STATEMENT CASE  [6:14/107-6:16/109] SCOPE: Stmt  [4:21/91-19:6/398] EXPRESSION: text='12'
+                    STATEMENT GOTO  [7:13/123-7:27/137] SCOPE: Stmt  [4:21/91-19:6/398] text: 'goto slow_get;'
+                    STATEMENT IF  [8:13/150-11:34/246] SCOPE: Stmt  [4:21/91-19:6/398]
+                        CONDITION EXPRESSION text='1'
+                        THEN: 
+                            STATEMENT COMPOUND  [8:20/157-10:14/207] SCOPE: Stmt  [8:13/150-11:34/246]
+                                STATEMENT GOTO  [9:21/179-9:35/193] SCOPE: Stmt  [8:20/157-10:14/207] text: 'goto slow_get;'
+                        ELSE: 
+                            STATEMENT COMPOUND  [11:17/229-11:34/246] SCOPE: Stmt  [8:13/150-11:34/246]
+                                STATEMENT LABEL  [11:17/229-11:25/237] SCOPE: Stmt  [11:17/229-11:34/246] text: 'slow_get'
+                                STATEMENT EXPRESSION  [11:28/240-11:34/246] SCOPE: Stmt  [11:17/229-11:34/246] text: 'x = 14'
+                    STATEMENT IF  [15:13/320-17:14/373] SCOPE: Stmt  [4:21/91-19:6/398]
+                        CONDITION EXPRESSION text='1'
+                        THEN: 
+                            STATEMENT COMPOUND  [15:20/327-17:14/373] SCOPE: Stmt  [15:13/320-17:14/373]
+                                STATEMENT GOTO  [16:17/345-16:31/359] SCOPE: Stmt  [15:20/327-17:14/373] text: 'goto slow_get;'
+                        ELSE: 
+                            STATEMENT is null
+                    STATEMENT BREAK  [18:13/386-18:19/392] SCOPE: Stmt  [4:21/91-19:6/398]
+        STATEMENT DECLARATION  [21:5/404-21:11/410] SCOPE: Stmt  [1:13/12-32:2/585]
+            VARIABLE i [21:5/404-21:11/410]  TYPE: int TEXT=int  [21:5/404-21:8/407]  INIT: null  SCOPE: Stmt  [1:13/12-32:2/585]
+        STATEMENT FOR  [22:5/415-22:35/445] SCOPE: Stmt  [1:13/12-32:2/585]
+            INIT:
+                STATEMENT is null
+            ITERATION: text='i++'
+            CONDITION: EXPRESSION text='i < 10'
+            BODY:
+                STATEMENT COMPOUND  [22:25/435-22:35/445] SCOPE: Stmt  [22:5/415-22:35/445]
+                    STATEMENT LABEL  [22:25/435-22:30/440] SCOPE: Stmt  [22:25/435-22:35/445] text: 'label'
+                    STATEMENT EXPRESSION  [22:32/442-22:35/445] SCOPE: Stmt  [22:25/435-22:35/445] text: 'i++'
+        STATEMENT GOTO  [23:5/454-23:16/465] SCOPE: Stmt  [1:13/12-32:2/585] text: 'goto label;'
+        STATEMENT IF  [25:5/471-25:28/494] SCOPE: Stmt  [1:13/12-32:2/585]
+            CONDITION EXPRESSION text='i < 10'
+            THEN: 
+                STATEMENT COMPOUND  [25:17/483-25:28/494] SCOPE: Stmt  [25:5/471-25:28/494]
+                    STATEMENT LABEL  [25:17/483-25:23/489] SCOPE: Stmt  [25:17/483-25:28/494] text: 'label2'
+                    STATEMENT EXPRESSION  [25:25/491-25:28/494] SCOPE: Stmt  [25:17/483-25:28/494] text: 'i++'
+            ELSE: 
+                STATEMENT is null
+        STATEMENT GOTO  [26:5/503-26:17/515] SCOPE: Stmt  [1:13/12-32:2/585] text: 'goto label2;'
+        STATEMENT WHILE  [28:5/521-28:31/547] SCOPE: Stmt  [1:13/12-32:2/585]
+            CONDITION: EXPRESSION text='i < 10' isPostCheck()=false
+            BODY:
+                STATEMENT COMPOUND  [28:20/536-28:31/547] SCOPE: Stmt  [28:5/521-28:31/547]
+                    STATEMENT LABEL  [28:20/536-28:26/542] SCOPE: Stmt  [28:20/536-28:31/547] text: 'label3'
+                    STATEMENT EXPRESSION  [28:28/544-28:31/547] SCOPE: Stmt  [28:20/536-28:31/547] text: 'i++'
+        STATEMENT GOTO  [29:5/556-29:17/568] SCOPE: Stmt  [1:13/12-32:2/585] text: 'goto label3;'
+        STATEMENT RETURN  [31:5/574-31:14/583] SCOPE: Stmt  [1:13/12-32:2/585] text: 'return 0;'
+

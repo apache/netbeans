@@ -1,0 +1,23 @@
+/** <code>Block comment</code> @since 1.1 */
+#include <iostream.h>
+#include "file.h"
+#define DEFINED_MACRO 1
+struct S {
+    char ch;
+};
+int main(int argc, char** argv) {
+    cout << "string \t \n";
+    // line comment
+    S var;
+    var.ch = '\0'; 
+    return 1234;
+}
+#if defined DEFINED_MACRO
+void foo(){
+    int i = __LINE__;
+    i += __STDC__ + DEFINED_MACRO;
+}
+#else
+void foo(){
+}
+#endif

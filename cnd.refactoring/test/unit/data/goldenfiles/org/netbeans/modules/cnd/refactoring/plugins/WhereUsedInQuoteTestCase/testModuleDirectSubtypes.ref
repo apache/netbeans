@@ -1,0 +1,6 @@
+References in file quote_nosyshdr/cpu.h
+[47:1-47:27] class Cpu : public Module {
+References in file quote_nosyshdr/disk.h
+[46:1-46:28] class Disk : public Module {
+References in file quote_nosyshdr/memory.h
+[46:1-46:30] class Memory : public Module {

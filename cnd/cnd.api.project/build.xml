@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="cnd.api.project">
+<project basedir="." default="netbeans" name="cnd/cnd.api.project">
     <description>Builds, tests, and runs the project org.netbeans.modules.cnd.api.project</description>
-    <import file="../nbbuild/templates/projectized.xml"/>
+    <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

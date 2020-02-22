@@ -69,12 +69,12 @@ public class DBElementsCollection implements DBElementProperties {
         DBElement[] oldElements = getElements();
         int oldLength = (oldElements == null) ? 0 : oldElements.length;
         int newLength = (elems == null) ? 0 : elems.size();
-        List<DBElement> list = null;
+        List list = null;
             
         switch (action) {
             case DBElement.Impl.ADD:
                 if (newLength > 0) {
-                    list = ((oldLength == 0) ? new ArrayList<DBElement>() : new ArrayList<DBElement>(Arrays.asList(oldElements)));
+                    list = ((oldLength == 0) ? new ArrayList() : new ArrayList(Arrays.asList(oldElements)));
                     list.addAll(elems);
                     changed = true;
                 }

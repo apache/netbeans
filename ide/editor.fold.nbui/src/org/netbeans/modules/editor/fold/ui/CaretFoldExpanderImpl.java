@@ -55,12 +55,12 @@ public final class CaretFoldExpanderImpl extends CaretFoldExpander {
                         endOffset = offset;
                     }
                     Iterator collapsedFoldIterator = FoldUtilities.collapsedFoldIterator(foldHierarchy, offset, endOffset);
-                    List<Fold> foldsToExpand;
+                    List foldsToExpand;
                     Fold lastFold;
                     boolean lastFoldExpandAdded = false;
                     if (collapsedFoldIterator.hasNext()) {
                         lastFold = (Fold) collapsedFoldIterator.next();
-                        foldsToExpand = new ArrayList<>(2);
+                        foldsToExpand = new ArrayList(2);
                     } else {
                         lastFold = null;
                         foldsToExpand = null;

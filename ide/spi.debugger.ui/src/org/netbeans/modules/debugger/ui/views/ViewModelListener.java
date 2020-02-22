@@ -551,7 +551,7 @@ public class ViewModelListener extends DebuggerManagerAdapter {
             models.add(joinLists(treeModelFilters));
         }
         synchronized (treeExpansionModels) {
-            models.add(new ArrayList<Object>(treeExpansionModels));
+            models.add(new ArrayList(treeExpansionModels));
         }
         synchronized (nodeModels) {
             models.add(joinLists(nodeModels));
@@ -563,25 +563,25 @@ public class ViewModelListener extends DebuggerManagerAdapter {
             models.add(joinLists(tableModels));
         }
         synchronized (tableModelFilters) {
-            models.add(new ArrayList<Object>(tableModelFilters));
+            models.add(new ArrayList(tableModelFilters));
         }
         synchronized (nodeActionsProviders) {
-            models.add(new ArrayList<Object>(nodeActionsProviders));
+            models.add(new ArrayList(nodeActionsProviders));
         }
         synchronized (nodeActionsProviderFilters) {
-            models.add(new ArrayList<Object>(nodeActionsProviderFilters));
+            models.add(new ArrayList(nodeActionsProviderFilters));
         }
         synchronized (columnModels) {
-            models.add(new ArrayList<Object>(columnModels));
+            models.add(new ArrayList(columnModels));
         }
         synchronized (mm) {
-            models.add(new ArrayList<Object>(mm));
+            models.add(new ArrayList(mm));
         }
         synchronized (treeExpansionModelFilters) {
-            models.add(new ArrayList<Object>(treeExpansionModelFilters));
+            models.add(new ArrayList(treeExpansionModelFilters));
         }
         synchronized (asynchModelFilters) {
-            models.add(new ArrayList<Object>(asynchModelFilters));
+            models.add(new ArrayList(asynchModelFilters));
         }
         synchronized (tableRenderers) {
             models.add(new ArrayList(tableRenderers));

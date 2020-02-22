@@ -712,7 +712,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
     }
     
     private List getOracleRecycleBinTables() {
-        List<String> result = new ArrayList<>();
+        List result = new ArrayList();
         try {
             if ( dmd.getDatabaseMajorVersion() < 10 ) {
                 return Collections.EMPTY_LIST;

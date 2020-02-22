@@ -192,7 +192,7 @@ public class SourceGroupSupport {
     private static List<SourceGroup> getTestTargets(SourceGroup sourceGroup, Map foldersToSourceGroupsMap) {
         final URL[] rootURLs = UnitTestForSourceQuery.findUnitTests(sourceGroup.getRootFolder());
         if (rootURLs.length == 0) {
-            return new ArrayList<SourceGroup>();
+            return new ArrayList();
         }
         List<SourceGroup> result = new ArrayList<>();
         List<FileObject> sourceRoots = getFileObjects(rootURLs, true);

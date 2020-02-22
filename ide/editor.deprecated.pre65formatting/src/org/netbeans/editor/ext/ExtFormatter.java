@@ -79,7 +79,7 @@ import org.openide.util.WeakListeners;
 public class ExtFormatter extends Formatter implements FormatLayer {
 
     /** List holding the format layers */
-    private List<FormatLayer> formatLayerList = new ArrayList<>();
+    private List formatLayerList = new ArrayList();
 
     /** Use this instead of testing by containsKey() */
     private static final Object NULL_VALUE = new Object();

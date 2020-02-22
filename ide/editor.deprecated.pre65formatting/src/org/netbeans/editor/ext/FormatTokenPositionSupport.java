@@ -20,7 +20,6 @@
 package org.netbeans.editor.ext;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.ArrayList;
 import javax.swing.text.Position;
 import org.netbeans.editor.TokenItem;
@@ -44,16 +43,16 @@ class FormatTokenPositionSupport {
     private SaveSet lastSet;
 
     /** Map holding the [token, token-position-list] pairs. */
-    private final HashMap<TokenItem, List<ExtTokenPosition>> tokens2positionLists = new HashMap<>();
+    private final HashMap<TokenItem, ArrayList> tokens2positionLists = new HashMap<>();
 
     FormatTokenPositionSupport(FormatWriter formatWriter) {
         this.formatWriter = formatWriter;
     }
 
-    private List<ExtTokenPosition> getPosList(TokenItem token) {
-        List<ExtTokenPosition> ret = tokens2positionLists.get(token);
+    private ArrayList getPosList(TokenItem token) {
+        ArrayList ret = (ArrayList)tokens2positionLists.get(token);
         if (ret == null) {
-            ret = new ArrayList<>(3);
+            ret = new ArrayList(3);
             tokens2positionLists.put(token, ret);
         }
         return ret;
@@ -78,7 +77,7 @@ class FormatTokenPositionSupport {
                     + " >= tokenLength=" + token.getImage().length()); // NOI18N
         }
 
-        List<ExtTokenPosition> posList = getPosList(token);
+        ArrayList posList = getPosList(token);
         int cnt = posList.size();
         ExtTokenPosition etp;
         for (int i = 0; i < cnt; i++) {
@@ -106,9 +105,9 @@ class FormatTokenPositionSupport {
         if (prevToken != null) {
             prevToken = formatWriter.findNonEmptyToken(prevToken, true);
         }
-        List<ExtTokenPosition> posList = getPosList(token);
+        ArrayList posList = getPosList(token);
         int len = posList.size();
-        List<ExtTokenPosition> prevPosList = getPosList(prevToken);
+        ArrayList prevPosList = getPosList(prevToken);
         for (int i = 0; i < len; i++) {
             ExtTokenPosition etp = (ExtTokenPosition)posList.get(i);
             if (etp.offset < startLength) { // move to prevToken
@@ -134,9 +133,9 @@ class FormatTokenPositionSupport {
         if (nextToken != null) {
             nextToken = formatWriter.findNonEmptyToken(nextToken, false);
         }
-        List<ExtTokenPosition> nextPosList = getPosList(nextToken);
+        ArrayList nextPosList = getPosList(nextToken);
 
-        List<ExtTokenPosition> posList = getPosList(token);
+        ArrayList posList = getPosList(token);
         int len = posList.size();
         int offset = token.getImage().length() - endLength;
         for (int i = 0; i < len; i++) {
@@ -154,7 +153,7 @@ class FormatTokenPositionSupport {
 
     /** Text in the token will be inserted. */
     synchronized void tokenTextInsert(TokenItem token, int offset, int length) {
-        List<ExtTokenPosition> posList = getPosList(token);
+        ArrayList posList = getPosList(token);
         int len = posList.size();
         // Add length to all positions after insertion point
         for (int i = 0; i < len; i++) {
@@ -187,10 +186,10 @@ class FormatTokenPositionSupport {
 
     /** Text in the token will be removed. */
     synchronized void tokenTextRemove(TokenItem token, int offset, int length) {
-        List<ExtTokenPosition> posList = getPosList(token);
+        ArrayList posList = getPosList(token);
         int len = posList.size();
         int newLen = token.getImage().length() - length;
-        List<ExtTokenPosition> nextList = getPosList(token.getNext());
+        ArrayList nextList = getPosList(token.getNext());
         for (int i = 0; i < len; i++) {
             ExtTokenPosition etp = (ExtTokenPosition)posList.get(i);
             if (etp.offset >= offset + length) { // move to nextToken
@@ -218,9 +217,9 @@ class FormatTokenPositionSupport {
         if (nextToken != null) {
             nextToken = formatWriter.findNonEmptyToken(nextToken, false);
         }
-        List<ExtTokenPosition> nextPosList = getPosList(nextToken);
+        ArrayList nextPosList = getPosList(nextToken);
 
-        List<ExtTokenPosition> posList = getPosList(token);
+        ArrayList posList = getPosList(token);
         int len = posList.size();
         for (int i = 0; i < len; i++) {
             ExtTokenPosition etp = (ExtTokenPosition)posList.get(i);
@@ -237,13 +236,13 @@ class FormatTokenPositionSupport {
     /** Given token was inserted into the chain */
     synchronized void tokenInsert(TokenItem token) {
         if (token.getImage().length() > 0) { // only for non-zero size
-            List<ExtTokenPosition> posList = getPosList(token);
+            ArrayList posList = getPosList(token);
 
             TokenItem nextToken = token.getNext();
             if (nextToken != null) {
                 nextToken = formatWriter.findNonEmptyToken(nextToken, false);
             }
-            List<ExtTokenPosition> nextPosList = getPosList(nextToken);
+            ArrayList nextPosList = getPosList(nextToken);
 
             int nextLen = nextPosList.size();
             for (int i = 0; i < nextLen; i++) {

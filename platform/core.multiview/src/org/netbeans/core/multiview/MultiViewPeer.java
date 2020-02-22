@@ -803,7 +803,7 @@ public final class MultiViewPeer implements PropertyChangeListener {
     boolean canClose() {
         Collection col = model.getCreatedElements();
         Iterator it = col.iterator();
-        Collection<CloseOperationState> badOnes = new ArrayList<>();
+        Collection badOnes = new ArrayList();
         while (it.hasNext()) {
            MultiViewElement el = (MultiViewElement)it.next();
            CloseOperationState state = el.canCloseElement();
@@ -1067,7 +1067,7 @@ public final class MultiViewPeer implements PropertyChangeListener {
     
     private class DelegateUndoRedo implements UndoRedo {
         
-        private List<ChangeListener> listeners = new ArrayList<>();
+        private List listeners = new ArrayList();
         
         public boolean canUndo() {
             return privateGetUndoRedo().canUndo();
@@ -1104,7 +1104,7 @@ public final class MultiViewPeer implements PropertyChangeListener {
         }
         
         private void fireElementChange() {
-            Iterator it = new ArrayList<ChangeListener>(listeners).iterator();
+            Iterator it = new ArrayList(listeners).iterator();
             while (it.hasNext()) {
                 ChangeListener elem = (ChangeListener) it.next();
                 ChangeEvent event = new ChangeEvent(this);

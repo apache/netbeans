@@ -43,7 +43,7 @@ final class CatalogMounterModel extends Object {
     
     private ComboBoxModel cxModel = null;  // model containig CatalogMounterModel.Entries
     
-    private List<ChangeListener> changeListeners = new ArrayList<>(2);
+    private List changeListeners = new ArrayList(2);
         
     
     /** Creates new CatalogMounterModel */

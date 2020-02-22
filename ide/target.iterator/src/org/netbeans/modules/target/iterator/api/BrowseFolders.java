@@ -25,7 +25,6 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -347,7 +346,7 @@ public class BrowseFolders extends JPanel implements ExplorerManager.Provider, L
             else {
                 FileObject files[] = fo.getChildren();
                 Arrays.sort(files,new BrowseFolders.FileObjectComparator());
-                List<Key> children = new ArrayList<>(files.length);
+                ArrayList children = new ArrayList( files.length );
                 
                 if (BrowseFolders.this.target==DataFolder.class)
                     for( int i = 0; i < files.length; i++ ) {

@@ -90,7 +90,7 @@ public abstract class HeapWalkerNode extends CCTNode {
     }
     
     public static TreePath fromNode(TreeNode node, TreeNode root) {
-        List<TreeNode> l = new ArrayList<>();
+        List l = new ArrayList();
         while (node != root) {
             l.add(0, node);
             node = node.getParent();

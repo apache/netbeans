@@ -1356,7 +1356,7 @@
                 <module codenamebase="org.openide.util.lookup" spec="8.0"/>
             </replace>
             <replace codenamebase="org.openide.nodes" addcompiletime="true" >
-                <module codenamebase="org.openide.nodes" spec="7.3.13"/>
+                <module codenamebase="org.openide.nodes" spec="7.23"/>
                 <module codenamebase="org.openide.awt" spec="7.33"/>
             </replace>
             <replace codenamebase="org.openide.filesystems" addcompiletime="true" >

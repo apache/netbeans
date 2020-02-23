@@ -30,7 +30,7 @@ import org.openide.util.NbBundle;
  * @author Rob Englander
  */
 public class ProcedureListNode extends BaseNode {
-    private static final String NAME = "Procedures"; // NOI18N
+    private static final String NAME = "Routines"; // NOI18N
     private static final String ICONBASE = "org/netbeans/modules/db/resources/folder.gif";
     private static final String FOLDER = "ProcedureList"; //NOI18N
 

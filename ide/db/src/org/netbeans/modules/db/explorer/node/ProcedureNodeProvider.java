@@ -48,7 +48,7 @@ import org.openide.util.Lookup;
 
 /**
  *
- * @author Rob Englander, Jiri Rechtacek
+ * @author Rob Englander, Jiri Rechtacek, Stjepan Brbot
  */
 public class ProcedureNodeProvider extends NodeProvider {
     private static final Logger LOG = Logger.getLogger(ProcedureNodeProvider.class.getName());
@@ -144,9 +144,10 @@ public class ProcedureNodeProvider extends NodeProvider {
     private Map<String, ProcedureNode.Type> object2type = null;
 
     private synchronized void refreshObjects() {
-        if (connection != null &&
-                DatabaseModule.IDENTIFIER_MYSQL.equalsIgnoreCase(connection.getDriverName())) {
+        if (connection != null && DatabaseModule.IDENTIFIER_MYSQL.equalsIgnoreCase(connection.getDriverName())) {
+            
             // MySQL
+            
             boolean connected = connection.isConnected();
             MetadataModel metaDataModel = connection.getMetadataModel();
             if (connected && metaDataModel != null) {
@@ -157,39 +158,32 @@ public class ProcedureNodeProvider extends NodeProvider {
                             public void run(Metadata metaData) {
                                 object2type = new HashMap<>();
                                 validObjects = new HashSet<>();
-                                String query = "SELECT NAME, TYPE" // NOI18N
-                                            + " FROM mysql.proc" // NOI18N
-                                            + " WHERE TYPE = 'PROCEDURE' OR TYPE = 'FUNCTION'"; // NOI18N
+                                String query = "SELECT routine_name,routine_type"
+                                            + " FROM information_schema.routines"
+                                            + " WHERE routine_type IN ('PROCEDURE','FUNCTION')";
                                 try(Statement stmt = connection.getJDBCConnection().createStatement();
                                     ResultSet rs = stmt.executeQuery(query)) {
                                     while(rs.next()) {
-                                        // name of procedure
-                                        String objectName = rs.getString("NAME"); // NOI18N
-                                        // type of procedure
-                                        String objectType = rs.getString("TYPE"); // NOI18N
+                                        String objectName = rs.getString("routine_name"); // NOI18N
+                                        String objectType = rs.getString("routine_type"); // NOI18N
                                         if ("PROCEDURE".equals(objectType)) { // NOI18N
                                             object2type.put(objectName, ProcedureNode.Type.Procedure);
                                         } else if ("FUNCTION".equals(objectType)) { // NOI18N
                                             object2type.put(objectName, ProcedureNode.Type.Function);
                                         } else {
-                                            assert false : "Unknown type " + objectType;
+                                            assert false : "Unknown routine type " + objectType;
                                         }
-                                        // XXX: all procedurec are valid in MySQL
                                         validObjects.add(objectName);
                                     }
                                 } catch (SQLException ex) {
                                     LOG.log(Level.INFO, ex + "{0} while refreshStatuses() of triggers in schema {1}", new Object[] {ex, schemaName});
                                 }
-                                String query2 = "SELECT TRIGGER_NAME" // NOI18N
-                                            + " FROM information_schema.triggers"; // NOI18N
+                                String query2 = "SELECT trigger_name FROM information_schema.triggers";
                                 try (Statement stmt = connection.getJDBCConnection().createStatement();
                                         ResultSet rs = stmt.executeQuery(query2)) {
                                     while (rs.next()) {
-                                        // name of procedure
-                                        String objectName = rs.getString("TRIGGER_NAME"); // NOI18N
-                                        // type of procedure is trigger
+                                        String objectName = rs.getString("trigger_name"); // NOI18N
                                         object2type.put(objectName, ProcedureNode.Type.Trigger);
-                                        // XXX: all triggers are valid in MySQL
                                         validObjects.add(objectName);
                                     }
                                 } catch (SQLException ex) {
@@ -202,9 +196,10 @@ public class ProcedureNodeProvider extends NodeProvider {
                     NodeRegistry.handleMetadataModelException(this.getClass(), connection, e, true);
                 }
             }
-        } else if (connection != null && connection.getDriverName() != null &&
-                connection.getDriverName().startsWith(DatabaseModule.IDENTIFIER_ORACLE)) {
+        } else if (connection != null && connection.getDriverName() != null && connection.getDriverName().startsWith(DatabaseModule.IDENTIFIER_ORACLE)) {
+            
             // Oracle
+            
             boolean connected = connection.isConnected();
             MetadataModel metaDataModel = connection.getMetadataModel();
             if (schemaName == null) {
@@ -220,23 +215,20 @@ public class ProcedureNodeProvider extends NodeProvider {
                                 validObjects = new HashSet<>();
                                 object2type = new HashMap<>();
                                 String schemaEscaped = schemaName.replace("'", "''");
-                                String query = "SELECT OBJECT_NAME, STATUS, OBJECT_TYPE" // NOI18N
-                                        + " FROM SYS.ALL_OBJECTS " // NOI18N
-                                        + " WHERE OWNER='" + schemaEscaped + "' "// NOI18N
-                                        + " AND ( OBJECT_TYPE = 'PROCEDURE' OR OBJECT_TYPE = 'TRIGGER' OR OBJECT_TYPE = 'FUNCTION' )";  // NOI18N
+                                String query = "SELECT object_name,status,object_type" // NOI18N
+                                             + " FROM sys.all_objects" // NOI18N
+                                             + " WHERE owner='" + schemaEscaped + "'"// NOI18N
+                                             + " AND object_type IN ('PROCEDURE','FUNCTION','TRIGGER')";  // NOI18N
                                 try (Statement stmt = connection.getJDBCConnection().createStatement();
                                         ResultSet rs = stmt.executeQuery(query);) {
                                     while(rs.next()) {
-                                        // name of procedure
-                                        String objectName = rs.getString("OBJECT_NAME"); // NOI18N
-                                        // valid or invalid
-                                        String status = rs.getString("STATUS"); // NOI18N
+                                        String objectName = rs.getString("object_name"); // NOI18N
+                                        String status = rs.getString("status"); // NOI18N
                                         boolean valid = "VALID".equals(status); // NOI18N
                                         if (valid) {
                                             validObjects.add(objectName);
                                         }
-                                        // type of procedure
-                                        String objectType = rs.getString("OBJECT_TYPE"); // NOI18N
+                                        String objectType = rs.getString("object_type"); // NOI18N
                                         if ("PROCEDURE".equals(objectType)) { // NOI18N
                                             object2type.put(objectName, ProcedureNode.Type.Procedure);
                                         } else if ("FUNCTION".equals(objectType)) { // NOI18N

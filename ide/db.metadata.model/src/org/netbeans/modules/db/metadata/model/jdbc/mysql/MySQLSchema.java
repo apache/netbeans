@@ -36,7 +36,7 @@ import org.netbeans.modules.db.metadata.model.jdbc.JDBCSchema;
 
 /**
  *
- * @author David, Jiri Rechtacek
+ * @author David, Jiri Rechtacek, Stjepan Brbot
  */
 public class MySQLSchema extends JDBCSchema {
     
@@ -48,21 +48,22 @@ public class MySQLSchema extends JDBCSchema {
 
     @Override
     protected void createProcedures() {
-        LOGGER.log(Level.FINE, "Initializing MySQL procedures in {0}", this);
+        LOGGER.log(Level.FINE, "Initializing MySQL routines in {0}", this);
         Map<String, Procedure> newProcedures = new LinkedHashMap<String, Procedure>();
-        // routines
+        // information_schema.routines
         try {
             DatabaseMetaData dmd = jdbcCatalog.getJDBCMetadata().getDmd();
             Statement stmt = dmd.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT NAME, TYPE" // NOI18N
-                                            + " FROM mysql.proc WHERE DB='" + jdbcCatalog.getName() + "'" // NOI18N
-                                            + " AND ( TYPE = 'PROCEDURE' OR TYPE = 'FUNCTION' )"); // NOI18N
+            ResultSet rs = stmt.executeQuery("SELECT routine_name,routine_type" // NOI18N
+                                           + " FROM information_schema.routines" // NOI18N
+                                           + " WHERE routine_type IN ('PROCEDURE','FUNCTION')" // NOI18N
+                                           + " AND routine_schema='" + jdbcCatalog.getName() + "'"); // NOI18N
             try {
                 while (rs.next()) {
-                    String procedureName = rs.getString("NAME"); // NOI18N
+                    String procedureName = rs.getString("routine_name"); // NOI18N
                     Procedure procedure = createJDBCProcedure(procedureName).getProcedure();
                     newProcedures.put(procedureName, procedure);
-                    LOGGER.log(Level.FINE, "Created MySQL procedure: {0}, type: {1}", new Object[]{procedure, rs.getString("TYPE")});
+                    LOGGER.log(Level.FINE, "Created MySQL routine: {0}, type: {1}", new Object[]{procedure, rs.getString("routine_type")});
                 }
             } finally {
                 if (rs != null) {
@@ -77,11 +78,12 @@ public class MySQLSchema extends JDBCSchema {
         try {
             DatabaseMetaData dmd = jdbcCatalog.getJDBCMetadata().getDmd();
             Statement stmt = dmd.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT TRIGGER_NAME" // NOI18N
-                                            + " FROM information_schema.triggers WHERE TRIGGER_SCHEMA='" + jdbcCatalog.getName() + "'"); // NOI18N
+            ResultSet rs = stmt.executeQuery("SELECT trigger_name" // NOI18N
+                                           + " FROM information_schema.triggers" // NOI18N
+                                           + " WHERE trigger_schema='" + jdbcCatalog.getName() + "'"); // NOI18N
             try {
                 while (rs.next()) {
-                    String procedureName = rs.getString("TRIGGER_NAME"); // NOI18N
+                    String procedureName = rs.getString("trigger_name"); // NOI18N
                     Procedure procedure = createJDBCProcedure(procedureName).getProcedure();
                     newProcedures.put(procedureName, procedure);
                     LOGGER.log(Level.FINE, "Created MySQL trigger: {0}", new Object[]{procedure});

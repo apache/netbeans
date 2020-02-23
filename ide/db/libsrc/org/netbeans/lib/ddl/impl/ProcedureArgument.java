@@ -150,8 +150,7 @@ public class ProcedureArgument implements Argument {
     /**
     * Returns full string representation of argument.
     */
-    public String getCommand(CreateProcedure cmd)
-    throws DDLException
+    public String getCommand(CreateProcedure cmd) throws DDLException
     {
         Map cprops;
         if (format == null) throw new DDLException(NbBundle.getBundle("org.netbeans.lib.ddl.resources.Bundle").getString("EXC_NoFormatSpec")); // NOI18N

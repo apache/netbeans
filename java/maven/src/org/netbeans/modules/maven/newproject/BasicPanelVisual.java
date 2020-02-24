@@ -509,13 +509,14 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         }
         String name = projectNameTextField.getText().trim();
         String folder = createdFolderTextField.getText().trim();
-        final File parentFolder = new File(folder);
+        final File projectFolder = new File(folder);
         
-        d.putProperty(CommonProjectActions.PROJECT_PARENT_FOLDER, parentFolder);
+        // PROJECT_PARENT_FOLDER confusing, better name is PROJECT_BASE_FOLDER
+        d.putProperty(CommonProjectActions.PROJECT_PARENT_FOLDER, projectFolder);
         if (d instanceof TemplateWizard) {
             ((TemplateWizard) d).setTargetFolderLazy(() -> {
-                parentFolder.mkdirs();
-                return DataFolder.findFolder(FileUtil.toFileObject(parentFolder));
+                projectFolder.mkdirs();
+                return DataFolder.findFolder(FileUtil.toFileObject(projectFolder));
             });
         }
         d.putProperty("name", name); //NOI18N
@@ -561,10 +562,14 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
                 handle = null;
             }
         }        
-        File projectLocation = (File) settings.getProperty(CommonProjectActions.PROJECT_PARENT_FOLDER); //NOI18N
-        if (projectLocation == null || projectLocation.getParentFile() == null || !projectLocation.getParentFile().isDirectory()) {
+        // PROJECT_PARENT_FOLDER confusing, better name is PROJECT_BASE_FOLDER
+        File projectFolder = (File) settings.getProperty(CommonProjectActions.PROJECT_PARENT_FOLDER); //NOI18N
+        File projectLocation;
+        if (projectFolder == null || projectFolder.getParentFile() == null || !projectFolder.getParentFile().isDirectory()) {
             projectLocation = ProjectChooser.getProjectsFolder();
-        } 
+        } else {
+            projectLocation = projectFolder.getParentFile();
+        }
         this.projectLocationTextField.setText(projectLocation.getAbsolutePath());
         
         String projectName = (String) settings.getProperty("name"); //NOI18N

@@ -362,7 +362,7 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f java/java.completion test
-            - ant $OPTS -f java/java.source.base test
+            - travis_retry ant $OPTS -f java/java.source.base test
 
         - name: Test Java modules with nb-javac on Java 13
           jdk: openjdk8
@@ -579,6 +579,7 @@ matrix:
             homebrew:
               packages:
                 - ant
+              update: true
           env:
             - OPTS="-silent -Dcluster.config=platform -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
           before_script:

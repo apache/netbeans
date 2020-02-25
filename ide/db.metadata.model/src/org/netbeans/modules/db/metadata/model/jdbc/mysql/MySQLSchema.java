@@ -39,16 +39,16 @@ import org.netbeans.modules.db.metadata.model.jdbc.JDBCSchema;
  * @author David, Jiri Rechtacek, Stjepan Brbot
  */
 public class MySQLSchema extends JDBCSchema {
-    
+
     private static final Logger LOGGER = Logger.getLogger(MySQLSchema.class.getName());
-    
+
     public MySQLSchema(JDBCCatalog jdbcCatalog, String name, boolean _default, boolean synthetic) {
         super(jdbcCatalog, name, _default, synthetic);
     }
 
     @Override
     protected void createProcedures() {
-        LOGGER.log(Level.FINE, "Initializing MySQL routines in {0}", this);
+        LOGGER.log(Level.FINE, "Initializing MySQL procedures in {0}", this);
         Map<String, Procedure> newProcedures = new LinkedHashMap<String, Procedure>();
         // information_schema.routines
         try {
@@ -63,7 +63,7 @@ public class MySQLSchema extends JDBCSchema {
                     String procedureName = rs.getString("routine_name"); // NOI18N
                     Procedure procedure = createJDBCProcedure(procedureName).getProcedure();
                     newProcedures.put(procedureName, procedure);
-                    LOGGER.log(Level.FINE, "Created MySQL routine: {0}, type: {1}", new Object[]{procedure, rs.getString("routine_type")});
+                    LOGGER.log(Level.FINE, "Created MySQL procedure: {0}, type: {1}", new Object[]{procedure, rs.getString("routine_type")});
                 }
             } finally {
                 if (rs != null) {
@@ -99,7 +99,7 @@ public class MySQLSchema extends JDBCSchema {
         }
         procedures = Collections.unmodifiableMap(newProcedures);
     }
-    
+
     @Override
     protected JDBCProcedure createJDBCProcedure(String procedureName) {
         return new MySQLProcedure(this, procedureName);

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.170.0
+#Version 0.171.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -1495,6 +1495,7 @@ meth public com.sun.source.tree.SwitchTree removeSwitchCase(com.sun.source.tree.
 meth public com.sun.source.tree.SwitchTree removeSwitchCase(com.sun.source.tree.SwitchTree,int)
 meth public com.sun.source.tree.SynchronizedTree Synchronized(com.sun.source.tree.ExpressionTree,com.sun.source.tree.BlockTree)
 meth public com.sun.source.tree.ThrowTree Throw(com.sun.source.tree.ExpressionTree)
+meth public com.sun.source.tree.Tree BindingPattern(java.lang.CharSequence,com.sun.source.tree.Tree)
 meth public com.sun.source.tree.Tree SwitchExpression(com.sun.source.tree.ExpressionTree,java.util.List<? extends com.sun.source.tree.CaseTree>)
 meth public com.sun.source.tree.Tree Type(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.NonNull()

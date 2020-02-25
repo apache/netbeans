@@ -71,10 +71,8 @@ public class ProcedureNode extends BaseNode {
 
     /**
      * Create an instance of ProcedureNode.
-     * 
+     *
      * @param dataLookup the lookup to use when creating node providers
-     * @param provider procedure node provider
-     * @param schema database schema
      * @return the ProcedureNode instance
      */
     public static ProcedureNode create(NodeDataLookup dataLookup, ProcedureNodeProvider provider, String schema) {
@@ -275,9 +273,6 @@ public class ProcedureNode extends BaseNode {
         Trigger
     }
 
-    /**
-     * https://dev.mysql.com/doc/refman/8.0/en/create-procedure.html
-     */
     public static class MySQL extends ProcedureNode {
         private final DatabaseConnection connection;
         private final ProcedureNodeProvider provider;
@@ -361,7 +356,7 @@ public class ProcedureNode extends BaseNode {
                             while (rs.next()) {
                                 String parent = rs.getString("routine_schema"); // NOI18N
                                 if (parent != null && parent.trim().length() > 0) {
-                                    parent += '.';
+                                    parent += '.'; //  NOI18N
                                 } else {
                                     parent = "";
                                 }
@@ -542,10 +537,13 @@ public class ProcedureNode extends BaseNode {
         public String getDDL() {
             StringBuilder expression = new StringBuilder();
             String escapedName = getName().replace("'", "''");
+            // set delimiter
             expression.append("DELIMITER ").append(DELIMITER).append(NEW_LINE); // NOI18N
-            expression.append("DROP ").append(getTypeName(getType())).append(" ").append(escapedName).append(SPACE).append(DELIMITER).append(NEW_LINE); // NOI18N
-            expression.append("CREATE ").append(getSource()); // NOI18N
+            // DDL
+            expression.append("DROP ").append(getTypeName(getType())).append(" ").append(escapedName).append(SPACE).append(DELIMITER).append(NEW_LINE);
+            expression.append("CREATE ").append(getSource());
             expression.append(SPACE).append(DELIMITER).append(SPACE).append(NEW_LINE); // NOI18N
+            // unset delimiter
             expression.append("DELIMITER ; ").append(NEW_LINE); // NOI18N
             return expression.toString();
         }
@@ -672,26 +670,29 @@ public class ProcedureNode extends BaseNode {
         @Override
         public String getDDL() {
             StringBuilder expression = new StringBuilder();
+            // set delimiter
             expression.append("DELIMITER ").append(DELIMITER).append(NEW_LINE); // NOI18N
-            expression.append("CREATE OR REPLACE ").append(getSource()); // NOI18N
+            // DDL
+            expression.append("CREATE OR REPLACE ").append(getSource());
             expression.append(SPACE).append(DELIMITER).append(NEW_LINE); // NOI18N
+            // unset delimiter
             expression.append("DELIMITER ; ").append(NEW_LINE); // NOI18N
             return expression.toString();
         }
 
         private String fqn(String source, String owner) {
             String upperSource = source.toUpperCase();
-            String toFind = getTypeName(getType()) + " ";
+            String toFind = getTypeName(getType()) + " "; // NOI18N
             String res = source;
             int nameIdx = upperSource.indexOf(toFind);
             if (nameIdx != -1) {
                 // don't duplicate owner
-                if (upperSource.substring(nameIdx + toFind.length()).trim().startsWith(owner.toUpperCase() + '.')) {
+                if (upperSource.substring(nameIdx + toFind.length()).trim().startsWith(owner.toUpperCase() + '.')) { // NOI18N
                     return source;
                 }
                 res = source.substring(0, nameIdx + toFind.length()) +
                         owner +
-                        '.' +
+                        '.' + // NOI18N
                         source.substring(nameIdx + toFind.length()).trim();
             }
             return res;
@@ -723,7 +724,7 @@ public class ProcedureNode extends BaseNode {
         node.addProperty(ps);
         Type type = provider.getType(node.getName());
         if (type == null) {
-            LOG.log(Level.INFO, "Unknown type of object {0}", node.getName());
+            LOG.log(Level.INFO, "Unknown type of object {0}", node.getName()); //NOI18N
             return;
         }
         switch (type) {
@@ -737,7 +738,8 @@ public class ProcedureNode extends BaseNode {
                 setTypeProperty(node, "StoredTrigger"); // NOI18N
                 break;
             default:
-                assert false : "Unknown type " + provider.getType(node.getName());
+                assert false : "Unknown type " //NOI18N
+                        + provider.getType(node.getName());
         }
     }
 

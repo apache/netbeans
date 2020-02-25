@@ -145,9 +145,9 @@ public class ProcedureNodeProvider extends NodeProvider {
 
     private synchronized void refreshObjects() {
         if (connection != null && DatabaseModule.IDENTIFIER_MYSQL.equalsIgnoreCase(connection.getDriverName())) {
-            
+
             // MySQL
-            
+
             boolean connected = connection.isConnected();
             MetadataModel metaDataModel = connection.getMetadataModel();
             if (connected && metaDataModel != null) {
@@ -158,9 +158,9 @@ public class ProcedureNodeProvider extends NodeProvider {
                             public void run(Metadata metaData) {
                                 object2type = new HashMap<>();
                                 validObjects = new HashSet<>();
-                                String query = "SELECT routine_name,routine_type"
-                                            + " FROM information_schema.routines"
-                                            + " WHERE routine_type IN ('PROCEDURE','FUNCTION')";
+                                String query = "SELECT routine_name,routine_type" // NOI18N
+                                            + " FROM information_schema.routines" // NOI18N
+                                            + " WHERE routine_type IN ('PROCEDURE','FUNCTION')"; // NOI18N
                                 try(Statement stmt = connection.getJDBCConnection().createStatement();
                                     ResultSet rs = stmt.executeQuery(query)) {
                                     while(rs.next()) {
@@ -171,14 +171,14 @@ public class ProcedureNodeProvider extends NodeProvider {
                                         } else if ("FUNCTION".equals(objectType)) { // NOI18N
                                             object2type.put(objectName, ProcedureNode.Type.Function);
                                         } else {
-                                            assert false : "Unknown routine type " + objectType;
+                                            assert false : "Unknown type " + objectType;
                                         }
                                         validObjects.add(objectName);
                                     }
                                 } catch (SQLException ex) {
                                     LOG.log(Level.INFO, ex + "{0} while refreshStatuses() of triggers in schema {1}", new Object[] {ex, schemaName});
                                 }
-                                String query2 = "SELECT trigger_name FROM information_schema.triggers";
+                                String query2 = "SELECT trigger_name FROM information_schema.triggers"; // NOI18N
                                 try (Statement stmt = connection.getJDBCConnection().createStatement();
                                         ResultSet rs = stmt.executeQuery(query2)) {
                                     while (rs.next()) {
@@ -197,9 +197,9 @@ public class ProcedureNodeProvider extends NodeProvider {
                 }
             }
         } else if (connection != null && connection.getDriverName() != null && connection.getDriverName().startsWith(DatabaseModule.IDENTIFIER_ORACLE)) {
-            
+
             // Oracle
-            
+
             boolean connected = connection.isConnected();
             MetadataModel metaDataModel = connection.getMetadataModel();
             if (schemaName == null) {
@@ -217,8 +217,8 @@ public class ProcedureNodeProvider extends NodeProvider {
                                 String schemaEscaped = schemaName.replace("'", "''");
                                 String query = "SELECT object_name,status,object_type" // NOI18N
                                              + " FROM sys.all_objects" // NOI18N
-                                             + " WHERE owner='" + schemaEscaped + "'"// NOI18N
-                                             + " AND object_type IN ('PROCEDURE','FUNCTION','TRIGGER')";  // NOI18N
+                                             + " WHERE owner='" + schemaEscaped + "'" // NOI18N
+                                             + " AND object_type IN ('PROCEDURE','FUNCTION','TRIGGER')"; // NOI18N
                                 try (Statement stmt = connection.getJDBCConnection().createStatement();
                                         ResultSet rs = stmt.executeQuery(query);) {
                                     while(rs.next()) {
@@ -237,7 +237,7 @@ public class ProcedureNodeProvider extends NodeProvider {
                                             object2type.put(objectName, ProcedureNode.Type.Trigger);
                                         } else {
                                             assert false : "Unknown type " + objectType;
-                                        }                                    
+                                        }
                                     }
                                 } catch (SQLException ex) {
                                     LOG.log(Level.INFO, "{0} while refreshStatuses() of procedures in schema {1}", new Object[] {ex, schemaName});

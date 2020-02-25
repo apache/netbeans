@@ -71,7 +71,7 @@ public class ProcedureNode extends BaseNode {
 
     /**
      * Create an instance of ProcedureNode.
-     *
+     * 
      * @param dataLookup the lookup to use when creating node providers
      * @param provider procedure node provider
      * @param schema database schema
@@ -681,17 +681,17 @@ public class ProcedureNode extends BaseNode {
 
         private String fqn(String source, String owner) {
             String upperSource = source.toUpperCase();
-            String toFind = getTypeName(getType()) + " "; // NOI18N
+            String toFind = getTypeName(getType()) + " ";
             String res = source;
             int nameIdx = upperSource.indexOf(toFind);
             if (nameIdx != -1) {
                 // don't duplicate owner
-                if (upperSource.substring(nameIdx + toFind.length()).trim().startsWith(owner.toUpperCase() + '.')) { // NOI18N
+                if (upperSource.substring(nameIdx + toFind.length()).trim().startsWith(owner.toUpperCase() + '.')) {
                     return source;
                 }
                 res = source.substring(0, nameIdx + toFind.length()) +
                         owner +
-                        '.' + // NOI18N
+                        '.' +
                         source.substring(nameIdx + toFind.length()).trim();
             }
             return res;
@@ -723,7 +723,7 @@ public class ProcedureNode extends BaseNode {
         node.addProperty(ps);
         Type type = provider.getType(node.getName());
         if (type == null) {
-            LOG.log(Level.INFO, "Unknown type of object {0}", node.getName()); //NOI18N
+            LOG.log(Level.INFO, "Unknown type of object {0}", node.getName());
             return;
         }
         switch (type) {

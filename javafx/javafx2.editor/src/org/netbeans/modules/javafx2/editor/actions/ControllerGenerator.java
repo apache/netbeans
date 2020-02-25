@@ -238,7 +238,7 @@ public class ControllerGenerator implements Task<WorkingCopy> {
             if (old instanceof Collection) {
                 c = (Collection)old;
             } else {
-                methods.put(key, c = new ArrayList());
+                methods.put(key, c = new ArrayList<Object>());
                 c.add(old);
             }
             c.add(mt);

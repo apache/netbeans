@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.4
+#Version 1.5
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1538,8 +1538,8 @@ meth public void addParameter(org.netbeans.modules.gradle.api.execute.GradleComm
 meth public void addProjectProperty(java.lang.String,java.lang.String)
 meth public void addSystemProperty(java.lang.String,java.lang.String)
 meth public void addTask(java.lang.String)
-meth public void configure(org.gradle.tooling.ConfigurableLauncher)
-meth public void configure(org.gradle.tooling.ConfigurableLauncher,java.io.File)
+meth public void configure(org.gradle.tooling.ConfigurableLauncher<?>)
+meth public void configure(org.gradle.tooling.ConfigurableLauncher<?>,java.io.File)
 meth public void removeFlag(org.netbeans.modules.gradle.api.execute.GradleCommandLine$Flag)
 meth public void removeParameter(org.netbeans.modules.gradle.api.execute.GradleCommandLine$Parameter,java.lang.String)
 meth public void removeParameters(org.netbeans.modules.gradle.api.execute.GradleCommandLine$Parameter)
@@ -1613,6 +1613,7 @@ fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLin
 fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLine$Parameter EXCLUDE_TASK
 fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLine$Parameter GRADLE_USER_HOME
 fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLine$Parameter IMPORT_BUILD
+fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLine$Parameter INCLUDE_BUILD
 fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLine$Parameter INIT_SCRIPT
 fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLine$Parameter MAX_WORKER
 fld public final static org.netbeans.modules.gradle.api.execute.GradleCommandLine$Parameter PROJECT_CACHE_DIR
@@ -1664,10 +1665,12 @@ CLSS public final org.netbeans.modules.gradle.api.execute.RunUtils
 fld public final static java.lang.String PROP_AUGMENTED_BUILD = "augmented.build"
 fld public final static java.lang.String PROP_COMPILE_ON_SAVE = "compile.on.save"
 fld public final static java.lang.String PROP_DEFAULT_CLI = "gradle.cli"
+fld public final static java.lang.String PROP_INCLUDE_OPEN_PROJECTS = "include.open.projects"
 fld public final static java.lang.String PROP_JDK_PLATFORM = "jdkPlatform"
 meth public static boolean cancelGradle(org.netbeans.modules.gradle.api.execute.RunConfig)
 meth public static boolean isAugmentedBuildEnabled(org.netbeans.api.project.Project)
 meth public static boolean isCompileOnSaveEnabled(org.netbeans.api.project.Project)
+meth public static boolean isIncludeOpenProjectsEnabled(org.netbeans.api.project.Project)
 meth public static java.io.File evaluateGradleDistribution(org.netbeans.api.project.Project,boolean)
 meth public static org.netbeans.modules.gradle.api.execute.GradleCommandLine getDefaultCommandLine(org.netbeans.api.project.Project)
 meth public static org.netbeans.modules.gradle.api.execute.RunConfig createRunConfig(org.netbeans.api.project.Project,java.lang.String,java.lang.String,java.lang.String[])
@@ -1708,8 +1711,10 @@ CLSS public final org.netbeans.modules.gradle.spi.GradleFiles
 cons public init(java.io.File)
 cons public init(java.io.File,boolean)
 fld public final static java.lang.String BUILD_FILE_NAME = "build.gradle"
+fld public final static java.lang.String BUILD_FILE_NAME_KTS = "build.gradle.kts"
 fld public final static java.lang.String GRADLE_PROPERTIES_NAME = "gradle.properties"
 fld public final static java.lang.String SETTINGS_FILE_NAME = "settings.gradle"
+fld public final static java.lang.String SETTINGS_FILE_NAME_KTS = "settings.gradle.kts"
 fld public final static java.lang.String WRAPPER_PROPERTIES = "gradle/wrapper/gradle-wrapper.properties"
 innr public final static !enum Kind
 innr public static SettingsFile

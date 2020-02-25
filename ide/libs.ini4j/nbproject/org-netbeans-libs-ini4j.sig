@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.40
+#Version 1.41
 
 CLSS public java.io.IOException
 cons public init()

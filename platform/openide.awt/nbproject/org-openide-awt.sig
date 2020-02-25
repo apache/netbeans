@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.74
+#Version 7.75
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -1748,6 +1748,7 @@ hfds allowCustomColors,lastSelection
 
 CLSS public final org.openide.awt.DropDownButtonFactory
 fld public final static java.lang.String PROP_DROP_DOWN_MENU = "dropDownMenu"
+meth public static javax.swing.Icon getArrowIcon(boolean)
 meth public static javax.swing.JButton createDropDownButton(javax.swing.Icon,javax.swing.JPopupMenu)
 meth public static javax.swing.JToggleButton createDropDownToggleButton(javax.swing.Icon,javax.swing.JPopupMenu)
 supr java.lang.Object

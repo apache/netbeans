@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.73
+#Version 7.74
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -2591,6 +2591,7 @@ hfds allowCustomColors,lastSelection
 
 CLSS public final org.openide.awt.DropDownButtonFactory
 fld public final static java.lang.String PROP_DROP_DOWN_MENU = "dropDownMenu"
+meth public static javax.swing.Icon getArrowIcon(boolean)
 meth public static javax.swing.JButton createDropDownButton(javax.swing.Icon,javax.swing.JPopupMenu)
 meth public static javax.swing.JToggleButton createDropDownToggleButton(javax.swing.Icon,javax.swing.JPopupMenu)
 supr java.lang.Object
@@ -3121,7 +3122,7 @@ meth public void setDnDListener(org.openide.awt.Toolbar$DnDListener)
 meth public void setUI(javax.swing.plaf.ToolBarUI)
 meth public void setVisible(boolean)
 supr org.openide.awt.ToolbarWithOverflow
-hfds LOG,backingFolder,displayName,emptyAction,emptyInsets,isMetalLaF,label,processor,serialVersionUID
+hfds LOG,backingFolder,displayName,emptyAction,emptyInsets,isFlatLaF,isMetalLaF,label,processor,serialVersionUID
 hcls DefaultIconButton,DefaultIconToggleButton,Folder
 
 CLSS public static org.openide.awt.Toolbar$DnDEvent

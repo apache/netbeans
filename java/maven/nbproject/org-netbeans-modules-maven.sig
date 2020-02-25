@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.135
+#Version 2.136
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1955,7 +1955,7 @@ meth public boolean cancel()
 meth public static org.openide.execution.ExecutorTask executeMaven(org.netbeans.modules.maven.api.execute.RunConfig,org.openide.windows.InputOutput,org.netbeans.modules.maven.execute.AbstractMavenExecutor$TabContext)
 meth public void run()
 supr org.netbeans.modules.maven.execute.AbstractMavenExecutor
-hfds ENV_JAVAHOME,ENV_PREFIX,KEY_UUID,LOGGER,RP,UPDATE_INDEX_RP,preProcess,preProcessUUID,process,processUUID
+hfds ENV_JAVAHOME,ENV_PREFIX,KEY_UUID,LOGGER,NETBEANS_MAVEN_COMMAND_LINE,RP,UPDATE_INDEX_RP,preProcess,preProcessUUID,process,processUUID
 
 CLSS public static org.netbeans.modules.maven.execute.MavenCommandLineExecutor$ExecuteMaven
  outer org.netbeans.modules.maven.execute.MavenCommandLineExecutor
@@ -2158,7 +2158,7 @@ meth public void write(java.io.Writer,org.netbeans.modules.maven.execute.model.A
 supr java.lang.Object
 hfds NAMESPACE
 
-CLSS public abstract interface org.netbeans.modules.maven.model.ModelOperation<%0 extends org.netbeans.modules.xml.xam.dom.AbstractDocumentModel>
+CLSS public abstract interface org.netbeans.modules.maven.model.ModelOperation<%0 extends org.netbeans.modules.xml.xam.dom.AbstractDocumentModel<? extends org.netbeans.modules.xml.xam.dom.DocumentComponent<?>>>
 meth public abstract void performOperation({org.netbeans.modules.maven.model.ModelOperation%0})
 
 CLSS public org.netbeans.modules.maven.spi.IconResources

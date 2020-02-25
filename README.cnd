@@ -17,15 +17,15 @@ To build the C/C++ support, please copy the following files from the original Ne
 
 * cnd.debugger.common2/src/org/netbeans/modules/cnd/debugger/common2/icons/debugger_log.png => cnd/cnd.debugger.common2/src/org/netbeans/modules/cnd/debugger/common2/icons/debugger_log.png
 * cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/CPPParserEx.java => cnd/cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/CPPParserEx.java
-* cnd/cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/CPPSymbol.java => cnd/cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/CPPSymbol.java
-* cnd/cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/cppparser.g => cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/cppparser.g
-* cnd/cnd.repository/src/org/netbeans/modules/cnd/repository/storage/data/UTF.java => cnd.repository/src/org/netbeans/modules/cnd/repository/storage/data/UTF.java
-* cnd/cnd.repository/src/org/netbeans/modules/cnd/repository/util/LongHashMap.java => cnd.repository/src/org/netbeans/modules/cnd/repository/util/LongHashMap.java
-* cnd/cnd.testrunner/src/org/netbeans/modules/cnd/testrunner/ui/CndUnitHandlerFactory.java => cnd.testrunner/src/org/netbeans/modules/cnd/testrunner/ui/CndUnitHandlerFactory.java
-* cnd/cnd.utils/src/org/netbeans/modules/cnd/utils/resources/mime-resolver-hex-based.xml => cnd.utils/src/org/netbeans/modules/cnd/utils/resources/mime-resolver-hex-based.xml
-* dlight/mercurial.remote/src/org/netbeans/modules/mercurial/remote/ui/update/ResolveConflictsExecutor.java => mercurial.remote/src/org/netbeans/modules/mercurial/remote/ui/update/ResolveConflictsExecutor.java
-* dlight/remotefs.versioning.api/src/org/netbeans/modules/remotefs/versioning/api/Scrambler.java => remotefs.versioning.api/src/org/netbeans/modules/remotefs/versioning/api/Scrambler.java
-* dlight/subversion.remote/src/org/netbeans/modules/subversion/remote/ui/update/ResolveConflictsExecutor.java => subversion.remote/src/org/netbeans/modules/subversion/remote/ui/update/ResolveConflictsExecutor.java
+* cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/CPPSymbol.java => cnd/cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/CPPSymbol.java
+* cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/cppparser.g => cnd/cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/cppparser.g
+* cnd.repository/src/org/netbeans/modules/cnd/repository/storage/data/UTF.java => cnd/cnd.repository/src/org/netbeans/modules/cnd/repository/storage/data/UTF.java
+* cnd.repository/src/org/netbeans/modules/cnd/repository/util/LongHashMap.java => cnd/cnd.repository/src/org/netbeans/modules/cnd/repository/util/LongHashMap.java
+* cnd.testrunner/src/org/netbeans/modules/cnd/testrunner/ui/CndUnitHandlerFactory.java => cnd/cnd.testrunner/src/org/netbeans/modules/cnd/testrunner/ui/CndUnitHandlerFactory.java
+* cnd.utils/src/org/netbeans/modules/cnd/utils/resources/mime-resolver-hex-based.xml => cnd/cnd.utils/src/org/netbeans/modules/cnd/utils/resources/mime-resolver-hex-based.xml
+* mercurial.remote/src/org/netbeans/modules/mercurial/remote/ui/update/ResolveConflictsExecutor.java => dlight/mercurial.remote/src/org/netbeans/modules/mercurial/remote/ui/update/ResolveConflictsExecutor.java
+* remotefs.versioning.api/src/org/netbeans/modules/remotefs/versioning/api/Scrambler.java => dlight/remotefs.versioning.api/src/org/netbeans/modules/remotefs/versioning/api/Scrambler.java
+* subversion.remote/src/org/netbeans/modules/subversion/remote/ui/update/ResolveConflictsExecutor.java => dlight/subversion.remote/src/org/netbeans/modules/subversion/remote/ui/update/ResolveConflictsExecutor.java
 
 Download the following files into the specified folders:
 

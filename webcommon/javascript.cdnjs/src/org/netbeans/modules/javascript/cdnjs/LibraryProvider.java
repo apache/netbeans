@@ -37,6 +37,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONArray;
@@ -109,7 +110,7 @@ public final class LibraryProvider {
      * Finds the libraries matching the given search term. The resulting
      * {@code Library} instances potentially don't have the versions property
      * set. If that is the case the Library needs to be updated with the
-     * updatedLibraryVersions call.
+     * {@link #updateLibraryVersions} call.
      *
      * @param searchTerm search term.
      * otherwise.
@@ -133,7 +134,15 @@ public final class LibraryProvider {
         return result;
     }
 
+    /**
+     * Update a library returned by {@link #findLibraries(java.lang.String)}.
+     * The full library data is fetched and the {@code versions} property is
+     * filled.
+     *
+     * @param library to be updated
+     */
     public void updateLibraryVersions(Library library) {
+        Objects.nonNull(library);
         if(library.getVersions() != null && library.getVersions().length > 0) {
             return;
         }
@@ -155,6 +164,13 @@ public final class LibraryProvider {
         }
     }
 
+    /**
+     * Load the full data for the supplied library. All fields are populated,
+     * including the {@code versions} property.
+     *
+     * @param libraryName
+     * @return
+     */
     public Library loadLibrary(String libraryName) {
         Library cachedLibrary = getCachedLibrary(libraryName);
         if(cachedLibrary != null) {

@@ -537,7 +537,7 @@ class SearchPanel extends javax.swing.JPanel {
 
     private void librariesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_librariesListValueChanged
         final Library library = librariesList.getSelectedValue();
-        if(library.getVersions() == null || library.getVersions().length == 0) {
+        if(library != null && (library.getVersions() == null || library.getVersions().length == 0)) {
             RP.execute(() -> {
                 LibraryProvider.getInstance().updateLibraryVersions(library);
                 SwingUtilities.invokeLater(() -> librarySelected(library));

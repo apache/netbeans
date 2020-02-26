@@ -1,8 +1,8 @@
 Name: Guava
-Version: 15.0
+Version: 27.0
 License: Apache-2.0
-Origin: https://code.google.com/p/guava-libraries/
-Description: collections, caching, primitives support, concurrency libraries, common annotations, string processing, I/O, and so forth
+Origin: https://github.com/google/guava
+Description: Guava is a set of core libraries that includes new collection types (such as multimap and multiset), immutable collections, a graph library, and utilities for concurrency, I/O, hashing, primitives, strings, and more.
 
 
                                  Apache License

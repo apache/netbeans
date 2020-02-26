@@ -265,8 +265,8 @@
                 <package>org.apache.maven.wagon.shared.http4</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/maven-dependency-tree-2.0.jar</runtime-relative-path>
-                <binary-origin>external/maven-dependency-tree-2.0.jar</binary-origin>
+                <runtime-relative-path>ext/maven/maven-dependency-tree-2.2.jar</runtime-relative-path>
+                <binary-origin>external/maven-dependency-tree-2.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/maven/jdom-1.0.jar</runtime-relative-path>

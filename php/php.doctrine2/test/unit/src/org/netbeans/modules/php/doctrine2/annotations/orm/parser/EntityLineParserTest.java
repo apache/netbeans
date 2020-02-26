@@ -162,4 +162,17 @@ public class EntityLineParserTest extends NbTestCase {
         assertEquals("MyProject\\UserRepository", type2);
     }
 
+    public void testValidUseCase_09() throws Exception {
+        AnnotationParsedLine parsedLine = parser.parse("\\Foo\\Bar\\entity(repositoryClass=\"MyProject\\UserRepository::class\")  \t");
+        assertEquals("Entity", parsedLine.getName());
+        assertEquals("(repositoryClass=\"MyProject\\UserRepository::class\")", parsedLine.getDescription());
+        Map<OffsetRange, String> types = parsedLine.getTypes();
+        assertNotNull(types);
+        assertEquals(2, types.size());
+        String type1 = types.get(new OffsetRange(0, 15));
+        assertEquals("\\Foo\\Bar\\entity", type1);
+        String type2 = types.get(new OffsetRange(33, 57));
+        assertEquals("MyProject\\UserRepository", type2);
+    }
+
 }

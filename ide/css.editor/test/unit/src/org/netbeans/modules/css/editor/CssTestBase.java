@@ -16,31 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.css.editor;
 
-package org.netbeans.modules.css.refactoring.api;
+import org.netbeans.modules.csl.api.test.CslTestBase;
+import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
+import org.netbeans.modules.css.editor.csl.CssLanguage;
 
-import org.netbeans.modules.css.indexing.CssIndexer;
+public class CssTestBase extends CslTestBase {
 
-/**
- *
- * @author mfukala@netbeans.org
- */
-public enum RefactoringElementType {
-
-    ID(CssIndexer.IDS_KEY),
-    CLASS(CssIndexer.CLASSES_KEY),
-    ELEMENT(CssIndexer.HTML_ELEMENTS_KEY),
-    COLOR(CssIndexer.COLORS_KEY),
-    IMPORT(CssIndexer.IMPORTS_KEY);
-
-    private final String indexKey;
-
-    private RefactoringElementType(String indexKey) {
-        this.indexKey = indexKey;
+    public CssTestBase(String testName) {
+        super(testName);
     }
 
-    public String getIndexKey() {
-        return indexKey;
+    @Override
+    protected DefaultLanguageConfig getPreferredLanguage() {
+        return new CssLanguage();
+    }
+
+    @Override
+    protected String getPreferredMimeType() {
+        return CssLanguage.CSS_MIME_TYPE;
     }
 
 }

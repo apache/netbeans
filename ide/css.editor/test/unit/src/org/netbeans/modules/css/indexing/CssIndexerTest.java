@@ -16,31 +16,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.css.indexing;
 
-package org.netbeans.modules.css.refactoring.api;
+import org.netbeans.modules.css.editor.CssTestBase;
+import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
 
-import org.netbeans.modules.css.indexing.CssIndexer;
+public class CssIndexerTest extends CssTestBase {
 
-/**
- *
- * @author mfukala@netbeans.org
- */
-public enum RefactoringElementType {
-
-    ID(CssIndexer.IDS_KEY),
-    CLASS(CssIndexer.CLASSES_KEY),
-    ELEMENT(CssIndexer.HTML_ELEMENTS_KEY),
-    COLOR(CssIndexer.COLORS_KEY),
-    IMPORT(CssIndexer.IMPORTS_KEY);
-
-    private final String indexKey;
-
-    private RefactoringElementType(String indexKey) {
-        this.indexKey = indexKey;
+    public CssIndexerTest(String testName) {
+        super(testName);
     }
 
-    public String getIndexKey() {
-        return indexKey;
+    public void testManyClasses() throws Exception {
+        checkIndexer("many-classes.css");
+    }
+
+    // TODO: add more tests
+
+    @Override
+    protected void checkIndexer(String relativePath) throws Exception {
+        super.checkIndexer("testfiles/index/" + relativePath);
+    }
+
+    @Override
+    public EmbeddingIndexerFactory getIndexerFactory() {
+        return new CssIndexer.Factory();
     }
 
 }

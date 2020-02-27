@@ -648,8 +648,6 @@ final class VanillaCompileWorker extends CompileWorker {
                     return false;
                 } else if (annotation instanceof Attribute.Enum) {
                     return false;
-                } else if (annotation instanceof Attribute.Enum) {
-                    return false;
                 } else if (annotation instanceof Attribute.Error) {
                     return true;
                 } else {

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.6.0
+#Version 1.7.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -1609,13 +1609,13 @@ meth public int checkCompletion(javax.swing.text.JTextComponent,java.lang.String
 meth public int[] findMatch(int,boolean) throws javax.swing.text.BadLocationException
 meth public int[] findMatchingBlock(int,boolean) throws javax.swing.text.BadLocationException
 meth public java.lang.String getEndTag(int) throws javax.swing.text.BadLocationException
-meth public java.util.List getFollowingLevelTags(int) throws javax.swing.text.BadLocationException
-meth public java.util.List getPreviousLevelTags(int) throws javax.swing.text.BadLocationException
+meth public java.util.List<java.lang.String> getFollowingLevelTags(int) throws javax.swing.text.BadLocationException
+meth public java.util.List<java.lang.String> getPreviousLevelTags(int) throws javax.swing.text.BadLocationException
 meth public org.netbeans.editor.TokenItem getPreviousToken(int) throws javax.swing.text.BadLocationException
 meth public org.netbeans.modules.xml.text.syntax.SyntaxElement createElement(org.netbeans.editor.TokenItem) throws javax.swing.text.BadLocationException
 meth public org.netbeans.modules.xml.text.syntax.SyntaxElement getElementChain(int) throws javax.swing.text.BadLocationException
 supr org.netbeans.editor.ext.ExtSyntaxSupport
-hfds CDATA_END,CDATA_START,documentMonitor,lastInsertedChar,publicId,reference,requestedAutoCompletion,systemId
+hfds CDATA_END,CDATA_START,documentMonitor,lastInsertedChar,publicId,requestedAutoCompletion,systemId
 hcls DocumentMonitor
 
 CLSS public org.netbeans.modules.xml.text.syntax.XMLSyntaxTokenMapper

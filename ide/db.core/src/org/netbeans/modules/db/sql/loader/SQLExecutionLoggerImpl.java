@@ -47,7 +47,7 @@ public class SQLExecutionLoggerImpl implements SQLExecutionLogger {
     private int errorCount;
 
     @NbBundle.Messages({
-        "# {0} - the name of the executed SQL file", 
+        "# {0} - the name of the executed SQL file",
         "LBL_SQLFileExecution={0} execution"})
     public SQLExecutionLoggerImpl(String displayName, LineCookie lineCookie) {
         this.lineCookie = lineCookie;
@@ -81,6 +81,7 @@ public class SQLExecutionLoggerImpl implements SQLExecutionLogger {
             writer.println(LBL_ExecutionFinished(
                     executionTime / 1000d,
                     errorCount));
+            writer.println("");
         }
         inputOutput.select();
     }

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.26
+#Version 1.27
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -164,6 +164,7 @@ CLSS public org.netbeans.modules.docker.api.DockerAction
 cons public init(org.netbeans.modules.docker.api.DockerInstance)
 fld public final static java.lang.String DOCKER_FILE = "Dockerfile"
 meth public boolean ping()
+meth public boolean pingWithExceptions() throws java.lang.Exception
 meth public java.util.List<org.netbeans.modules.docker.api.DockerContainer> getContainers()
 meth public java.util.List<org.netbeans.modules.docker.api.DockerImage> getImages()
 meth public java.util.List<org.netbeans.modules.docker.api.DockerRegistryImage> search(java.lang.String)

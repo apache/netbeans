@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.44.0
+#Version 1.45.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1554,7 +1554,7 @@ meth public void setActive(boolean)
 meth public void setHeaderActions(javax.swing.Action[])
 meth public void setIndex(int)
 supr javax.swing.JPanel
-hfds actionPanel,active,activeNode,contentPanel,fillerEnd,fillerLine,foldButton,foldable,headerButtons,headerSeparator,index,root,sectionCount,sectionView,title,titleButton,titlePanel
+hfds actionPanel,active,contentPanel,fillerEnd,fillerLine,foldButton,foldable,headerButtons,headerSeparator,index,root,sectionCount,sectionView,titleButton,titlePanel
 
 CLSS public org.netbeans.modules.xml.multiview.ui.SectionContainerNode
 cons public init(org.openide.nodes.Children)

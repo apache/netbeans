@@ -26,10 +26,14 @@ import org.netbeans.modules.css.indexing.CssIndexer;
  * @author mfukala@netbeans.org
  */
 public enum RefactoringElementType {
-    
-    ID(CssIndexer.IDS_KEY), CLASS(CssIndexer.CLASSES_KEY), ELEMENT(CssIndexer.HTML_ELEMENTS_KEY), COLOR(CssIndexer.COLORS_KEY), IMPORT(CssIndexer.IMPORTS_KEY);
 
-    private String indexKey;
+    ID(CssIndexer.IDS_KEY),
+    CLASS(CssIndexer.CLASSES_KEY),
+    ELEMENT(CssIndexer.HTML_ELEMENTS_KEY),
+    COLOR(CssIndexer.COLORS_KEY),
+    IMPORT(CssIndexer.IMPORTS_KEY);
+
+    private final String indexKey;
 
     private RefactoringElementType(String indexKey) {
         this.indexKey = indexKey;

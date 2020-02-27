@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.18.0
+#Version 1.19.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -689,6 +689,7 @@ meth public java.awt.Component getComponent()
 meth public java.awt.Image createImageOfTab(int)
 meth public java.awt.Rectangle getTabBounds(int)
 meth public java.awt.Rectangle getTabsArea()
+meth public static boolean isActive(java.awt.Component)
 meth public void addActionListener(java.awt.event.ActionListener)
 meth public void makeBusy(org.openide.windows.TopComponent,boolean)
 meth public void removeActionListener(java.awt.event.ActionListener)
@@ -698,7 +699,7 @@ meth public void setTitleAt(int,java.lang.String)
 meth public void setToolTipTextAt(int,java.lang.String)
 meth public void setTransparent(boolean)
 supr org.netbeans.core.windows.view.ui.tabcontrol.AbstractTabbedImpl
-hfds componentConverter,container,controller,tabModel
+hfds active,componentConverter,container,controller,tabModel
 
 CLSS public abstract org.netbeans.core.windows.view.ui.tabcontrol.AbstractTabbedImpl
 cons public init()

@@ -105,7 +105,7 @@ public class ServerTest extends NbTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         clearWorkDir();
-        ServerSocket srv = new ServerSocket(0);
+        ServerSocket srv = new ServerSocket(0, 1, InetAddress.getLoopbackAddress());
         serverThread = new Thread(() -> {
             try {
                 Socket server = srv.accept();
@@ -133,7 +133,7 @@ public class ServerTest extends NbTestCase {
             }
         });
         serverThread.start();
-        client = new Socket(InetAddress.getLocalHost(), srv.getLocalPort());
+        client = new Socket(srv.getInetAddress(), srv.getLocalPort());
     }
 
     @Override
@@ -239,6 +239,66 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, closingBrace), new Position(0, closingBrace)), 0, "private void assignToSelf(Object o) { o = o; }"))));
         assertDiags(diags, "Error:1:0-1:9");//errors
         assertDiags(diags, "Error:1:0-1:9", "Warning:0:148-0:153", "Warning:0:152-0:153");//hints
+    }
+
+    public void testCodeActionWithRemoval() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test { private String c(String s) {\nreturn s.toString();\n} }";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        List<Diagnostic>[] diags = new List[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
+        assertDiags(diags); //errors
+        List<Diagnostic> diagnostics = assertDiags(diags, "Warning:1:7-1:19");//hints
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(1);
+        id.setUri(src.toURI().toString());
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 7), new Position(1, 19)), new CodeActionContext(Arrays.asList(diagnostics.get(0))))).get();
+        String log = codeActions.toString();
+        assertEquals(log, 1, codeActions.size());
+        assertTrue(log, codeActions.get(0).isRight());
+        CodeAction action = codeActions.get(0).getRight();
+        assertEquals("Remove .toString()", action.getTitle());
+        assertEquals(1, action.getEdit().getDocumentChanges().size());
+        assertEquals(1, action.getEdit().getDocumentChanges().get(0).getEdits().size());
+        TextEdit edit = action.getEdit().getDocumentChanges().get(0).getEdits().get(0);
+        assertEquals(1, edit.getRange().getStart().getLine());
+        assertEquals(8, edit.getRange().getStart().getCharacter());
+        assertEquals(1, edit.getRange().getEnd().getLine());
+        assertEquals(19, edit.getRange().getEnd().getCharacter());
+        assertEquals("", edit.getNewText());
     }
 
     private List<Diagnostic> assertDiags(List<Diagnostic>[] diags, String... expected) {

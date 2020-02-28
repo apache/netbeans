@@ -235,7 +235,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
     }
     
     private static Object[] createArray(Object ... items) {
-        ArrayList a = new ArrayList();
+        List<Object> a = new ArrayList<>();
         for (Object o:items) {
             if (o!=null)
                 a.add(o);

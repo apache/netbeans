@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 8.39
+#Version 8.40
 
 CLSS public abstract interface java.io.Serializable
 
@@ -261,6 +261,7 @@ meth protected final void register(javax.lang.model.element.Element,java.lang.St
 meth protected final void register(javax.lang.model.element.TypeElement,java.lang.Class<? extends java.lang.annotation.Annotation>,javax.lang.model.type.TypeMirror,java.lang.String,int,java.lang.String[])
  anno 0 java.lang.Deprecated()
 meth public final boolean process(java.util.Set<? extends javax.lang.model.element.TypeElement>,javax.annotation.processing.RoundEnvironment)
+meth public javax.lang.model.SourceVersion getSupportedSourceVersion()
 supr javax.annotation.processing.AbstractProcessor
 hfds originatingElementsByProcessor,outputFilesByProcessor,verifiedClasses
 

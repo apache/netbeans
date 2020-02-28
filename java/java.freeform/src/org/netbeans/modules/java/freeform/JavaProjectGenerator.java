@@ -284,7 +284,6 @@ public class JavaProjectGenerator {
      */
     public static void putSourceViews(AntProjectHelper helper, List<SourceFolder> sources, String style) {
         //assert ProjectManager.mutex().isWriteAccess();
-        ArrayList list = new ArrayList();
         Element data = Util.getPrimaryConfigurationData(helper);
         Document doc = data.getOwnerDocument();
         Element viewEl = XMLUtil.findElement(data, "view", Util.NAMESPACE); // NOI18N
@@ -686,7 +685,6 @@ public class JavaProjectGenerator {
      */
     public static void putExports(AntProjectHelper helper, List<Export> exports) {
         //assert ProjectManager.mutex().isWriteAccess();
-        ArrayList list = new ArrayList();
         Element data = Util.getPrimaryConfigurationData(helper);
         Document doc = data.getOwnerDocument();
         
@@ -764,7 +762,6 @@ public class JavaProjectGenerator {
      */
     public static void putSubprojects(AntProjectHelper helper, List<String> subprojects) {
         //assert ProjectManager.mutex().isWriteAccess();
-        ArrayList list = new ArrayList();
         Element data = Util.getPrimaryConfigurationData(helper);
         Document doc = data.getOwnerDocument();
         Element subproject = XMLUtil.findElement(data, "subprojects", Util.NAMESPACE); // NOI18N

@@ -215,7 +215,7 @@ matrix:
             - ant $OPTS -f ide/csl.types test
             - ant $OPTS -f ide/css.editor test
             - ant $OPTS -f ide/css.lib test
-            - ant $OPTS -f ide/css.model test
+            - hide-logs.sh ant $OPTS -f ide/css.model test
             - travis_retry ant $OPTS -f ide/db test
             - ant $OPTS -f ide/db.dataview test
             - ant $OPTS -f ide/db.sql.editor test
@@ -224,14 +224,14 @@ matrix:
             - ant $OPTS -f ide/editor.bookmarks test
             #- ant $OPTS -f ide/editor.bracesmatching test
             - ant $OPTS -f ide/editor.document test
-            - ant $OPTS -f ide/editor.fold test
+            - hide-logs.sh ant $OPTS -f ide/editor.fold test
             - ant $OPTS -f ide/editor.fold.nbui test
             - ant $OPTS -f ide/editor.guards test
             - ant $OPTS -f ide/editor.indent test
             - ant $OPTS -f ide/editor.indent.project test
             - ant $OPTS -f ide/editor.macros test
-            - ant $OPTS -f ide/editor.search test
-            - ant $OPTS -f ide/editor.settings test
+            - hide-logs.sh ant $OPTS -f ide/editor.search test
+            - hide-logs.sh ant $OPTS -f ide/editor.settings test
             - ant $OPTS -f ide/editor.settings.storage test
             - ant $OPTS -f ide/editor.structure test
             - ant $OPTS -f ide/editor.tools.storage test
@@ -292,9 +292,13 @@ matrix:
             - ant $OPTS -f ide/web.webkit.debugging test
             - ant $OPTS -f ide/xml test
             - ant $OPTS -f ide/xml.axi test
+            - ant $OPTS -f ide/xml.catalog test-unit
             - ant $OPTS -f ide/xml.core test
             - ant $OPTS -f ide/xml.lexer test
             - ant $OPTS -f ide/xml.multiview test
+            - ant $OPTS -f ide/xml.retriever test
+            #- ant $OPTS -f ide/xml.schema.completion test
+            - ant $OPTS -f ide/xml.schema.model test
             - ant $OPTS -f ide/xml.text test
             - ant $OPTS -f ide/xml.text.obsolete90 test
             - travis_retry ant $OPTS -f ide/xml.wsdl.model test

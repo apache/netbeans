@@ -513,8 +513,10 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         
         d.putProperty(CommonProjectActions.PROJECT_PARENT_FOLDER, parentFolder);
         if (d instanceof TemplateWizard) {
-            parentFolder.mkdirs();
-            ((TemplateWizard) d).setTargetFolder(DataFolder.findFolder(FileUtil.toFileObject(parentFolder)));
+            ((TemplateWizard) d).setTargetFolderLazy(() -> {
+                parentFolder.mkdirs();
+                return DataFolder.findFolder(FileUtil.toFileObject(parentFolder));
+            });
         }
         d.putProperty("name", name); //NOI18N
         if (d instanceof TemplateWizard) {

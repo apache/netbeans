@@ -123,23 +123,23 @@ class HtmlLabelUI extends LabelUI {
             String key;
             switch(c.type()) {
                 case LIST :
-                    key = "List.font";
+                    key = "List.font"; // NOI18N
                     break;
                 case TABLE :
-                    key = "Table.font";
+                    key = "Table.font"; // NOI18N
                     break;
                 case TREE :
-                    key = "Tree.font";
+                    key = "Tree.font"; // NOI18N
                     break;
                 default :
-                    key = "Label.font";
+                    key = "Label.font"; // NOI18N
             }
             result = UIManager.getFont(key);
         }
         if (result == null) {
-            result = UIManager.getFont("controlFont");
+            result = UIManager.getFont("controlFont"); // NOI18N
             if (result == null) {
-                result = new Font("SansSerif", Font.PLAIN, 12);
+                result = new Font("SansSerif", Font.PLAIN, 12); // NOI18N
             }
         }
         return result;

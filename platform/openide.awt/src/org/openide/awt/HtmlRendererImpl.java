@@ -159,7 +159,7 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
         // ##93658: In GTK we have to paint borders in combo boxes 
         if (HtmlLabelUI.isGTK()) {
             if (index == -1) {
-                Color borderC = UIManager.getColor("controlShadow");
+                Color borderC = UIManager.getColor("controlShadow"); //NOI18N
                 borderC = borderC == null ? Color.GRAY : borderC;
                 setBorder(BorderFactory.createCompoundBorder(
                         BorderFactory.createLineBorder(borderC),
@@ -493,7 +493,7 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
      * internal HTML renderer is in effect, this will fire changes normally */
     protected @Override final void firePropertyChange(String name, Object old, Object nue) {
         if (swingRendering || !cellRenderer) {
-            if ("text".equals(name) && isHtml()) {
+            if ("text".equals(name) && isHtml()) {  //NOI18N
                 //Force in the HTML tags so the UI will set up swing HTML rendering appropriately
                 nue = getText();
             }

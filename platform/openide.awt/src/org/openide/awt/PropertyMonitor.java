@@ -58,7 +58,7 @@ class PropertyMonitor<T> implements ContextAction.StatefulMonitor<T>, PropertyCh
     static final String KEY_LISTEN_INTERFACE = "ChangeListener"; // NOI18N
     static final String KEY_INTERFACE_METHOD = "Method"; // NOI18N
     static final String KEY_CUSTOM_CHECK = "ActionProperty"; // NOI18N
-    static final String KEY_NULL = "Null"; // NO18N
+    static final String KEY_NULL = "Null"; // NOI18N
             
     /**
      * Reflection not initialized

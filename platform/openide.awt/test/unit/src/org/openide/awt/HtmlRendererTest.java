@@ -99,7 +99,6 @@ public class HtmlRendererTest extends TestCase {
         RepaintManager.setCurrentManager(mgr);
 
         Rectangle oldBounds = crp.lbl1.getBounds();
-        Rectangle oldBounds2 = crp.lbl2.getBounds();
 
         crp.lbl1.setText("<html><i>This text is longer!");
         crp.assertLabelFired("text");
@@ -111,12 +110,9 @@ public class HtmlRendererTest extends TestCase {
         crp.layout();
 
         Rectangle newBounds = crp.lbl1.getBounds();
-        Rectangle newBounds2 = crp.lbl2.getBounds();
 
         assertNotEquals(oldBounds, newBounds);
-        assertNotEquals(oldBounds2, newBounds2);
         assertTrue(newBounds.width > oldBounds.width);
-        assertTrue(newBounds2.width > oldBounds2.width);
     }
 
     static final class OffscreenRepaintManager extends RepaintManager {

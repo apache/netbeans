@@ -1,8 +1,8 @@
 Name: Javax Deploy API
-Version: 1.6
+Version: 1.7
 License: CDDL-1.1
-Description: Javax Deploy API 1.6
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.enterprise.deploy/javax.enterprise.deploy-api/1.6)
+Description: Javax Deploy API 1.7
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.enterprise.deploy/javax.enterprise.deploy-api/1.7)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

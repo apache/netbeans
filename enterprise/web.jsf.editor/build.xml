@@ -25,7 +25,7 @@
     <target name="-check-prepared-zip">
         <condition property="web.jsf.editor.generated-zip-created" value="present">
             <and>
-                <available file="external/generated-jsf-api-docs-2.0.zip" />
+                <available file="external/generated-jsf-api-docs-2.3.zip" />
             </and>
         </condition>
     </target>
@@ -39,10 +39,10 @@
             </condition>
         </fail>
         
-        <echo message="Creating generated-jsf-api-docs-2.0.zip"/>
+        <echo message="Creating generated-jsf-api-docs-2.3.zip"/>
         <mkdir dir="build/jsf_editor_api_location"/>
-        <unzip src="${jars_location}/javax.faces-api-2.0-javadoc.jar" dest="build/jsf_editor_api_location/" />
-        <zip destfile="./external/generated-jsf-api-docs-2.0.zip">
+        <unzip src="${jars_location}/javax.faces-api-2.3-javadoc.jar" dest="build/jsf_editor_api_location/" />
+        <zip destfile="./external/generated-jsf-api-docs-2.3.zip">
             <fileset dir="./build/jsf_editor_api_location/javadocs/">
                 <exclude name="**/*.png"/>
                 <exclude name="**/*.cur"/>

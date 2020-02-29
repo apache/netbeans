@@ -1,8 +1,8 @@
-Name: Javax Concurrent API
-Version: 1.0
+Name: Javax Management J2EE API
+Version: 1.1.2
 License: CDDL-1.1
-Description: Javax Concurrent API 1.0
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.enterprise.concurrent/javax.enterprise.concurrent-api/1.0)
+Description: Javax Management J2EE API 1.1.2
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.management.j2ee/javax.management.j2ee-api/1.1.2)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

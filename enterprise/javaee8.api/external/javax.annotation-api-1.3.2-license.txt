@@ -1,8 +1,8 @@
-Name: JavaMail API
-Version: 1.6.0
+Name: Javax Annotation API
+Version: 1.3.2
 License: CDDL-1.1
-Description: JavaMail API 1.6.0
-Origin: GlassFish Community (https://mvnrepository.com/artifact/com.sun.mail/javax.mail/1.6.0)
+Description: Javax Annotation API 1.3.2
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api/1.3.2)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

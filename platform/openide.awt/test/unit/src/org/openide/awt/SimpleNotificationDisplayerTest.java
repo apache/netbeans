@@ -30,11 +30,11 @@ import org.openide.awt.NotificationDisplayer.Priority;
  *
  * @author Hector Espert
  */
-public class NotificationDisplayerTest extends NbTestCase {
+public class SimpleNotificationDisplayerTest extends NbTestCase {
     
     private NotificationDisplayer notificationDisplayer;
 
-    public NotificationDisplayerTest(String name) {
+    public SimpleNotificationDisplayerTest(String name) {
         super(name);
     }
     
@@ -42,63 +42,38 @@ public class NotificationDisplayerTest extends NbTestCase {
     public void setUp() {
         notificationDisplayer = NotificationDisplayer.getDefault();
         assertNotNull(notificationDisplayer);
-        assertEquals("SimpleNotificationDisplayer", notificationDisplayer.getClass().getSimpleName());
+        assertEquals("Expected SimpleNotificationDisplayer implementation if any other is not loaded", "SimpleNotificationDisplayer", notificationDisplayer.getClass().getSimpleName());
     }
 
     @Test
-    public void testNotify_4args() {
+    public void testNotify() {
         Notification notification = notificationDisplayer.notify("title", null, "details", null);
         assertNotNull(notification);
-        assertEquals("NotificationImpl", notification.getClass().getSimpleName());
         assertEquals("title - details", StatusDisplayer.getDefault().getStatusText());
-    }
-
-    @Test
-    public void testNotify_5args_1() {
-        Notification notification = notificationDisplayer.notify("title", null, "details", null, Priority.LOW);
+        
+        notification = notificationDisplayer.notify("title", null, "details2", null, Priority.LOW);
         assertNotNull(notification);
-        assertEquals("NotificationImpl", notification.getClass().getSimpleName());
-        assertEquals("title - details", StatusDisplayer.getDefault().getStatusText());
-    }
-
-    @Test
-    public void testNotify_6args_1() {
-        Notification notification = notificationDisplayer.notify("title", null, "details", null, Priority.LOW, Category.ERROR);
+        assertEquals("title - details2", StatusDisplayer.getDefault().getStatusText());
+        
+        notification = notificationDisplayer.notify("title", null, "details3", null, Priority.LOW, Category.ERROR);
         assertNotNull(notification);
-        assertEquals("NotificationImpl", notification.getClass().getSimpleName());
-        assertEquals("title - details", StatusDisplayer.getDefault().getStatusText());
-    }
-
-    @Test
-    public void testNotify_6args_2() {
-        Notification notification = notificationDisplayer.notify("title", null, "details", null, Priority.LOW, "default_category_error");
+        assertEquals("title - details3", StatusDisplayer.getDefault().getStatusText());
+        
+        notification = notificationDisplayer.notify("title", null, "details4", null, Priority.LOW, "default_category_error");
         assertNotNull(notification);
-        assertEquals("NotificationImpl", notification.getClass().getSimpleName());
-        assertEquals("title - details", StatusDisplayer.getDefault().getStatusText());
-    }
-
-    @Test
-    public void testNotify_5args_2() {
-        Notification notification = notificationDisplayer.notify("title", null, (JComponent)null, (JComponent)null, Priority.LOW);
+        assertEquals("title - details4", StatusDisplayer.getDefault().getStatusText());
+        
+        notification = notificationDisplayer.notify("jcomponent1", null, (JComponent)null, (JComponent)null, Priority.LOW);
         assertNotNull(notification);
-        assertEquals("NotificationImpl", notification.getClass().getSimpleName());
-        assertEquals("title", StatusDisplayer.getDefault().getStatusText());
-    }
-
-    @Test
-    public void testNotify_6args_3() {
-        Notification notification = notificationDisplayer.notify("title", null, (JComponent)null, (JComponent)null, Priority.LOW, Category.ERROR);
+        assertEquals("jcomponent1", StatusDisplayer.getDefault().getStatusText());
+        
+        notification = notificationDisplayer.notify("jcomponent2", null, (JComponent)null, (JComponent)null, Priority.LOW, Category.ERROR);
         assertNotNull(notification);
-        assertEquals("NotificationImpl", notification.getClass().getSimpleName());
-        assertEquals("title", StatusDisplayer.getDefault().getStatusText());
-    }
-
-    @Test
-    public void testNotify_6args_4() {
-        Notification notification = notificationDisplayer.notify("title", null, (JComponent)null, (JComponent)null, Priority.LOW, "default_category_error");
+        assertEquals("jcomponent2", StatusDisplayer.getDefault().getStatusText());
+        
+        notification = notificationDisplayer.notify("jcomponent3", null, (JComponent)null, (JComponent)null, Priority.LOW, "default_category_error");
         assertNotNull(notification);
-        assertEquals("NotificationImpl", notification.getClass().getSimpleName());
-        assertEquals("title", StatusDisplayer.getDefault().getStatusText());
+        assertEquals("jcomponent3", StatusDisplayer.getDefault().getStatusText());
     }
 
     @Test

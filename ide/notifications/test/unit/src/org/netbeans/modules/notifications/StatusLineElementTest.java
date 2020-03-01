@@ -42,7 +42,7 @@ public class StatusLineElementTest extends NbTestCase {
         
         Component component = statusLineElementProvider.getStatusLineElement();
         assertNotNull(component);
-        assertEquals(FlashingIcon.class, component.getClass());
+        assertEquals("Expected that org.netbeans.modules.notifications.FlashingIcon is the default implementation", FlashingIcon.class, component.getClass());
     }
     
 }

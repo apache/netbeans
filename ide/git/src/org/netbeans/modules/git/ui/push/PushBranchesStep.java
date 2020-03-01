@@ -98,6 +98,13 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
         return new HelpCtx(PushBranchesStep.class);
     }
 
+    /**
+     * *
+     * @param cfg Congiruration of the remote repository including urls of
+     * remote
+     * @param branches list of all brances in the remote repo
+     * @param tags list of all tags in the remote repo
+     */
     public void fillRemoteBranches (final GitRemoteConfig cfg, final Map<String, GitBranch> branches,
             final Map<String, String> tags) {
         fillLocalObjects(Collections.<PushMapping>emptyList());
@@ -124,6 +131,7 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
                         continue;
                     }
                     if (!branch.isRemote()) {
+                        //get the remote branch that corresponds to local branch
                         GitBranch remoteBranch = branches.get(branch.getName());
                         boolean conflicted = false;
                         boolean updateNeeded = remoteBranch != null && !remoteBranch.getId().equals(branch.getId());
@@ -154,6 +162,8 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
                             }
                         }
                         boolean preselected = !conflicted && updateNeeded;
+
+                        //add current brunch in the list for update or for adding
                         l.add(new PushMapping.PushBranchMapping(remoteBranch == null ? null : remoteBranch.getName(),
                                 remoteBranch == null ? null : remoteBranch.getId(),
                                 branch, conflicted, preselected, updateNeeded));
@@ -170,13 +180,26 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
                         }
                     }
                 }
-                
+
+                //adding a new tag
                 for (GitTag tag : localTags.values()) {
                     String repoTagId = tags.get(tag.getTagName());
                     if (!tag.getTagId().equals(repoTagId)) {
+                        //in the remote there is no such tag, need to add it.
                         l.add(new PushMapping.PushTagMapping(tag, repoTagId == null ? null : tag.getTagName()));
                     }
                 }
+
+                //deletion of a tag
+                for (String tag : tags.keySet()) {
+                    //get the name of a corresponding local tag.
+                    GitTag localTag = localTags.get(tag);
+                    if (localTag == null) {
+                        //in the local repo no such tag. Probably we need to delete in the remote?
+                        l.add(new PushMapping.PushTagMapping(tag));
+                    }
+                }
+
                 EventQueue.invokeLater(new Runnable () {
                     @Override
                     public void run () {

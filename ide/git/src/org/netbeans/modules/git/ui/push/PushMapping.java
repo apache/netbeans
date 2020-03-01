@@ -224,18 +224,58 @@ public abstract class PushMapping extends ItemSelector.Item {
     }
     
     public static final class PushTagMapping extends PushMapping {
-        private final GitTag tag;
+        private final GitTag tag; //local tag
         private final boolean isUpdate;
-        
+        private final String remoteTagName;
+
+        /**
+         * *
+         * Tag that we need to delete in the remote repository
+         *
+         * @param remoteName remote tag name
+         */
+        public PushTagMapping(String remoteName) {
+            super(null, null, remoteName, false, false, remoteName != null);
+            this.tag = null;
+            this.isUpdate = remoteName != null;
+            this.remoteTagName = remoteName;
+        }
+
+        /**
+         * Adding or updating tag in the remote repository
+         *
+         * @param tag representation of a local tag
+         * @param remoteName remote tag name, can be null. If null than we crate
+         * tag.
+         */
         public PushTagMapping (GitTag tag, String remoteName) {
             super("tags/" + tag.getTagName(), tag.getTaggedObjectId(), remoteName, false, false, remoteName != null); //NOI18N
             this.tag = tag;
             this.isUpdate = remoteName != null;
+            this.remoteTagName = remoteName;
         }
 
         @Override
-        public String getRefSpec () {
-            return GitUtils.getPushTagRefSpec(tag.getTagName(), isUpdate);
+        public String getRefSpec() {
+            if (isDeletion()) {
+                //get command for tag deletion
+                return GitUtils.getPushDeletedTagRefSpec(remoteTagName);
+            } else {
+                return GitUtils.getPushTagRefSpec(tag.getTagName(), isUpdate);
+            }
+        }
+
+        @Override
+        @NbBundle.Messages({
+            "# {0} - tag name",
+            "MSG_PushMapping.toBeDeletedTag=Tag {0} will be permanently removed from the remote repository."
+        })
+        String getInfoMessage() {
+            if (isDeletion()) {
+                return Bundle.MSG_PushMapping_toBeDeletedTag(remoteTagName);
+            } else {
+                return super.getInfoMessage();
+            }
         }
 
         @Override

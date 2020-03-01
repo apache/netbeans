@@ -159,8 +159,11 @@ public class PushAction extends SingleRepositoryAction {
         "# {0} - branch name", "MSG_PushAction.branchDeleted=Branch {0} deleted in the local repository.",
         "# {0} - branch name", "# {1} - branch head id", "# {2} - result of the update",
         "MSG_PushAction.updates.deleteBranch=Branch Delete : {0}\n"
-            + "Id            : {1}\n"
-            + "Result        : {2}\n",
+        + "Id            : {1}\n"
+        + "Result        : {2}\n",
+        "MSG_PushAction.updates.deleteTag=Tag Delete    : {0}\n"
+        + "Id            : {1}\n"
+        + "Result        : {2}\n",
         "# {0} - branch name", "# {1} - branch head id", "# {2} - result of the update",
         "MSG_PushAction.updates.addBranch=Branch Add : {0}\n"
             + "Id         : {1}\n"
@@ -341,10 +344,20 @@ public class PushAction extends SingleRepositoryAction {
                                 }
                             }
                         } else {
-                            logger.outputLine(NbBundle.getMessage(PushAction.class, "MSG_PushAction.updates.updateTag", new Object[] { //NOI18N
-                                update.getLocalName(), 
-                                update.getResult(),
-                            }));
+                            //tag deleting or updating
+                            if (update.getNewObjectId() == null && update.getOldObjectId() != null) {
+                                //deleting tag from remote
+                                logger.outputLine(NbBundle.getMessage(PushAction.class, "MSG_PushAction.updates.deleteTag", new Object[]{ //NOI18N
+                                    update.getRemoteName(),
+                                    update.getOldObjectId(),
+                                    update.getResult(),}));
+                            } else {
+                                //updating or adding tag to the remoteё
+                                logger.outputLine(NbBundle.getMessage(PushAction.class, "MSG_PushAction.updates.updateTag", new Object[]{ //NOI18N
+                                    update.getLocalName(),
+                                    update.getResult(),}));
+                            }
+
                         }
                     }
                 }

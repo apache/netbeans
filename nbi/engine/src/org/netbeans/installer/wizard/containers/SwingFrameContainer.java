@@ -35,6 +35,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -418,23 +419,28 @@ public class SwingFrameContainer extends NbiFrame implements SwingContainer {
     
     private void initializeMacOS() {
         if (SystemUtils.isMacOS()) {
-            final Application application = Application.getApplication();
-            if(application == null) {
-                // e.g. running OpenJDK port via X11 on Mac OS X
-                return;
+            if (!initializeMacJDK("org.netbeans.installer.wizard.containers.initializeMacJDK8")) { // NOI18N
+               // JDK 8 failed, try JDK 9
+               initializeMacJDK("org.netbeans.installer.wizard.containers.initializeMacJDK9");
             }
-            application.removeAboutMenuItem();
-            application.removePreferencesMenuItem();
-            application.addApplicationListener(new ApplicationAdapter() {
-
-                @Override
-                public void handleQuit(ApplicationEvent event) {
-                    cancelContainer();
-                }
-            });
         }
     }
-    private void cancelContainer() {
+    
+    private boolean initializeMacJDK(String className) {
+        try {
+            Class initializer = Class.forName(className);
+            @SuppressWarnings("unchecked")
+            Method m = initializer.getDeclaredMethod("initialize", new Class[0] ); // NOI18N
+            m.invoke(initializer, this);
+            return true;
+        }catch (NoClassDefFoundError e) {
+        }catch (ClassNotFoundException e) {
+        }catch (Exception e) {
+        }
+        return false;
+    }   
+    
+    void cancelContainer() {
         if (currentUi != null) {
             if (contentPane.getCancelButton().isEnabled()) {
                 currentUi.evaluateCancelButtonClick();

@@ -226,7 +226,35 @@ is divided into following sections:
             </sequential>
         </macrodef>
     </target>
-    <target depends="-init-ap-cmdline-properties" if="ap.supported.internal" name="-init-macrodef-javac-with-processors">
+    
+    <target name="ap-supported-internal-add-bootclasspath">
+      <condition property="ap.supported.internal.add.bootclasspath" value="true">
+          <and>              
+              <not>
+                <isset property="permit.jdk9.builds"/>
+              </not>
+              <istrue value="${ap.supported.internal}"/>
+          </and>
+      </condition>
+      <condition property="ap.supported.internal.not.bootclasspath" value="true">
+          <and>
+              <istrue value="${ap.supported.internal}"/>
+              <istrue value="${permit.jdk9.builds}"/>
+          </and>
+      </condition>
+      <condition property="not.ap.supported.internal.not.bootclasspath" value="true">
+          <and>
+              <not>
+                <isset property="ap.supported.internal.add.bootclasspath"/>
+              </not>
+              <not>
+                <isset property="ap.supported.internal.not.bootclasspath"/>
+              </not>
+          </and>
+      </condition>
+    </target>
+    
+    <target depends="-init-ap-cmdline-properties,ap-supported-internal-add-bootclasspath" if="ap.supported.internal.not.bootclasspath" name="-init-macrodef-javac-with-processors">
         <macrodef name="javac" uri="http://www.netbeans.org/ns/j2se-project/3">
             <attribute default="${src.dir}" name="srcdir"/>
             <attribute default="${build.classes.dir}" name="destdir"/>
@@ -266,7 +294,49 @@ is divided into following sections:
             </sequential>
         </macrodef>
     </target>
-    <target depends="-init-ap-cmdline-properties" name="-init-macrodef-javac-without-processors" unless="ap.supported.internal">
+    <target depends="-init-ap-cmdline-properties,ap-supported-internal-add-bootclasspath" if="ap.supported.internal.add.bootclasspath" name="-init-macrodef-javac-with-processors-bootclasspath">
+        <macrodef name="javac" uri="http://www.netbeans.org/ns/j2se-project/3">
+            <attribute default="${src.dir}" name="srcdir"/>
+            <attribute default="${build.classes.dir}" name="destdir"/>
+            <attribute default="${javac.classpath}" name="classpath"/>
+            <attribute default="${javac.processorpath}" name="processorpath"/>
+            <attribute default="${build.generated.sources.dir}/ap-source-output" name="apgeneratedsrcdir"/>
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="${javac.debug}" name="debug"/>
+            <attribute default="${empty.dir}" name="sourcepath"/>
+            <attribute default="${empty.dir}" name="gensrcdir"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <property location="${build.dir}/empty" name="empty.dir"/>
+                <mkdir dir="${empty.dir}"/>
+                <mkdir dir="@{apgeneratedsrcdir}"/>
+                <javac debug="@{debug}" deprecation="${javac.deprecation}" destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" fork="${javac.fork}" includeantruntime="false" includes="@{includes}" source="${javac.source}" sourcepath="@{sourcepath}" srcdir="@{srcdir}" target="${javac.target}" tempdir="${java.io.tmpdir}">
+                    <src>
+                        <dirset dir="@{gensrcdir}" erroronmissingdir="false">
+                            <include name="*"/>
+                        </dirset>
+                    </src>
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <compilerarg line="${endorsed.classpath.cmd.line.arg}"/>
+                    <compilerarg line="${javac.compilerargs}"/>
+                    <compilerarg value="${javac.bootclassarg}"/>
+                    <compilerarg path="${javac.bootclasspath}"/>
+                    <compilerarg value="-processorpath"/>
+                    <compilerarg path="@{processorpath}:${empty.dir}"/>
+                    <compilerarg line="${ap.processors.internal}"/>
+                    <compilerarg line="${annotation.processing.processor.options}"/>
+                    <compilerarg value="-s"/>
+                    <compilerarg path="@{apgeneratedsrcdir}"/>
+                    <compilerarg line="${ap.proc.none.internal}"/>
+                    <customize/>
+                </javac>
+            </sequential>
+        </macrodef>
+    </target>
+    <target depends="-init-ap-cmdline-properties" name="-init-macrodef-javac-without-processors" if="not.ap.supported.internal.not.bootclasspath">
         <macrodef name="javac" uri="http://www.netbeans.org/ns/j2se-project/3">
             <attribute default="${src.dir}" name="srcdir"/>
             <attribute default="${build.classes.dir}" name="destdir"/>
@@ -298,7 +368,7 @@ is divided into following sections:
             </sequential>
         </macrodef>
     </target>
-    <target depends="-init-macrodef-javac-with-processors,-init-macrodef-javac-without-processors" name="-init-macrodef-javac">
+    <target depends="-init-macrodef-javac-with-processors,-init-macrodef-javac-with-processors-bootclasspath,-init-macrodef-javac-without-processors" name="-init-macrodef-javac">
         <macrodef name="depend" uri="http://www.netbeans.org/ns/j2se-project/3">
             <attribute default="${src.dir}" name="srcdir"/>
             <attribute default="${build.classes.dir}" name="destdir"/>

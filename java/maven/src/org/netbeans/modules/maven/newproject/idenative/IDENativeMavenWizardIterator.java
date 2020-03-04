@@ -39,6 +39,7 @@ import static org.netbeans.modules.maven.newproject.idenative.Bundle.LBL_CreateP
 import static org.netbeans.modules.maven.newproject.idenative.Bundle.NameFormat;
 
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
+import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.netbeans.validation.api.ui.ValidationGroup;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
@@ -82,6 +83,10 @@ public abstract class IDENativeMavenWizardIterator implements WizardDescriptor.I
             String[] splitlog = StringUtils.split(log, ":");
             ArchetypeWizardUtils.logUsage(splitlog[0], splitlog[1], splitlog[2]);
             File projFile = FileUtil.normalizeFile((File) wiz.getProperty(CommonProjectActions.PROJECT_PARENT_FOLDER)); // NOI18N
+            final File parent = projFile.getParentFile();
+            if (parent != null && parent.exists()) {
+                ProjectChooser.setProjectsFolder(parent);
+            }
             CreateProjectBuilder builder = createBuilder(projFile, vi, handle);
             builder.create();
             handle.progress(Bundle.PRG_FINISH());

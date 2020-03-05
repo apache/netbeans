@@ -548,6 +548,19 @@ matrix:
             - ant $OPTS -f php/php.composer test
             #- ant $OPTS -f php/php.dbgp test
             - ant $OPTS -f php/php.doctrine2 test
+            #- ant $OPTS -f php/php.editor test
+            #- ant $OPTS -f php/php.latte test
+            #- ant $OPTS -f php/php.nette.tester test
+            - ant $OPTS -f php/php.phpunit test
+            - ant $OPTS -f php/php.project test
+            - ant $OPTS -f php/php.refactoring test
+            #- ant $OPTS -f php/php.smarty test
+            #- ant $OPTS -f php/php.symfony test
+            #- ant $OPTS -f php/php.symfony2 test
+            - ant $OPTS -f php/php.twig test
+            - ant $OPTS -f php/php.zend test
+            - ant $OPTS -f php/php.zend2 test
+            - ant $OPTS -f php/spellchecker.bindings.php test
 
         - name: Build the Visual Studio Code extension for Java
           jdk: openjdk8

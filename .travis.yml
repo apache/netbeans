@@ -572,17 +572,21 @@ matrix:
             - nbbuild/travis/scripting.sh
 
         - name: MacOS tests
-          language: java
+          language: minimal
           os: osx
           osx_image: xcode10.1
-          jdk: openjdk11
           addons:
             homebrew:
               packages:
+                - openjdk@11
                 - ant
               update: true
           env:
             - OPTS="-silent -Dcluster.config=platform -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
+          install:
+            - sudo ln -sfn /usr/local/opt/openjdk@11/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-11.jdk
+            - export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
+            - export JAVA_HOME=`/usr/libexec/java_home -v 11`
           before_script:
             - ant $OPTS clean
             - ant $OPTS build

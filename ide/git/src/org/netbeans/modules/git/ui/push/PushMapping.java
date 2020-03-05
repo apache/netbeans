@@ -229,7 +229,6 @@ public abstract class PushMapping extends ItemSelector.Item {
         private final String remoteTagName;
 
         /**
-         * *
          * Tag that we need to delete in the remote repository
          *
          * @param remoteName remote tag name
@@ -245,8 +244,7 @@ public abstract class PushMapping extends ItemSelector.Item {
          * Adding or updating tag in the remote repository
          *
          * @param tag representation of a local tag
-         * @param remoteName remote tag name, can be null. If null than we crate
-         * tag.
+         * @param remoteName remote tag name, can be null. If null than we create tag.
          */
         public PushTagMapping (GitTag tag, String remoteName) {
             super("tags/" + tag.getTagName(), tag.getTaggedObjectId(), remoteName, false, false, remoteName != null); //NOI18N

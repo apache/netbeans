@@ -352,7 +352,7 @@ public class PushAction extends SingleRepositoryAction {
                                     update.getOldObjectId(),
                                     update.getResult(),}));
                             } else {
-                                //updating or adding tag to the remoteё
+                                //updating or adding tag to the remote
                                 logger.outputLine(NbBundle.getMessage(PushAction.class, "MSG_PushAction.updates.updateTag", new Object[]{ //NOI18N
                                     update.getLocalName(),
                                     update.getResult(),}));

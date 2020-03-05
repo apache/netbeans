@@ -99,10 +99,9 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
     }
 
     /**
-     * *
-     * @param cfg Congiruration of the remote repository including urls of
-     * remote
-     * @param branches list of all brances in the remote repo
+     *
+     * @param cfg configuration of the remote repository including URLs of remote
+     * @param branches list of all branches in the remote repo
      * @param tags list of all tags in the remote repo
      */
     public void fillRemoteBranches (final GitRemoteConfig cfg, final Map<String, GitBranch> branches,
@@ -163,7 +162,7 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
                         }
                         boolean preselected = !conflicted && updateNeeded;
 
-                        //add current brunch in the list for update or for adding
+                        //add current branch in the list for update or for adding
                         l.add(new PushMapping.PushBranchMapping(remoteBranch == null ? null : remoteBranch.getName(),
                                 remoteBranch == null ? null : remoteBranch.getId(),
                                 branch, conflicted, preselected, updateNeeded));

@@ -75,13 +75,11 @@ public final class GitTransportUpdate {
     }
 
     /**
-     * *
      *
      * @param uri uri of the repo.
      * @param update
      * @param remoteBranches key value list of remote branches.
-     * @param remoteTags key value list of remote tags. Key - name of the tag,
-     * value - id (hash) of the tag.
+     * @param remoteTags key value list of remote tags. Key - name of the tag, value - id (hash) of the tag.
      */
     GitTransportUpdate(URIish uri, RemoteRefUpdate update, Map<String, GitBranch> remoteBranches, Map<String, String> remoteTags) {
         this.localName = stripRefs(update.getSrcRef());

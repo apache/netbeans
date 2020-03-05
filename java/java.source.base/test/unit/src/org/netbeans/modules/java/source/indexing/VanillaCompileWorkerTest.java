@@ -19,19 +19,24 @@
 package org.netbeans.modules.java.source.indexing;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.stream.Collectors;
 import junit.framework.Test;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import org.netbeans.junit.NbTestSuite;
+import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.indexing.CompileWorker.ParsingOutput;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
@@ -402,6 +407,108 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         }
 
         assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+                     createdFiles);
+        //TODO: check file content!!!
+    }
+
+    public void testCyclic() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Cyclic.java", "package test; public class Cyclic extends Cyclic { }"),
+                                                         compileTuple("test/Test.java", "package test; public class Test { public class Cyclic extends Cyclic {} }"),
+                                                         compileTuple("test/Additional.java", "package test; public class Additional { }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Additional.sig",
+                                                       "cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+        //TODO: check file content!!!
+    }
+
+    public void testAnnotations() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/AnnUse.java", "package test; @Ann1(@Unknown) @Ann2({@Unknown}) @Ann3(Unknown.class) @Ann4(Ann4.E.UNKNOWN) @Ann5(0) public class AnnUse { }"),
+                                                         compileTuple("test/FirstAnnBroken.java", "package test; @Ann1(@Unknown) @Ann5(0) public class FirstAnnBroken{ }"),
+                                                         compileTuple("test/FirstTwoAnnBroken.java", "package test; @Ann1(@Unknown) @Ann2({@Unknown}) @Ann5(0) public class FirstTwoAnnBroken { }"),
+                                                         compileTuple("test/FirstAnnOK.java", "package test; @Ann5(0) @Ann1(@Unknown) @Ann2({@Unknown}) public class FirstAnnOK { }"),
+                                                         compileTuple("test/MiddleBroken.java", "package test; @Ann5(0) @Ann4(@Unknown) @Ann6(0) public class MiddleBroken { }"),
+                                                         compileTuple("test/WrongType.java", "package test; @Ann3(\"\") public class WrongType { }"),
+                                                         compileTuple("test/ManyWrongTrailing.java", "package test; @Ann5(0) @Ann1(@Unknown) @Ann2({@Unknown}) @Ann3(Unknown.class) @Ann4(Ann4.E.UNKNOWN) public class ManyWrongTrailing { }"),
+                                                         compileTuple("test/Ann1.java", "package test; public @interface Ann1 { public AnnExtra value(); }"),
+                                                         compileTuple("test/Ann2.java", "package test; public @interface Ann2 { public AnnExtra[] value(); }"),
+                                                         compileTuple("test/Ann3.java", "package test; public @interface Ann3 { public Class<?> value(); }"),
+                                                         compileTuple("test/Ann4.java", "package test; public @interface Ann4 { public EnumExtra value(); }"),
+                                                         compileTuple("test/Ann5.java", "package test; public @interface Ann5 { public int other(); }"),
+                                                         compileTuple("test/Ann6.java", "package test; public @interface Ann6 { public int other(); }"),
+                                                         compileTuple("test/AnnExtra.java", "package test; public @interface AnnExtra { }"),
+                                                         compileTuple("test/EnumExtra.java", "package test; public enum EnumExtra { A; }"),
+                                                         compileTuple("test/Additional.java", "package test; public class Additional { }"),
+                                                         compileTuple("test/WrongDefault.java", "package test; public @interface WrongDefault { public Unknown value() default @Unknown }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Map<String, File> createdFiles = new HashMap<>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.put(getWorkDir().toURI().relativize(created.toURI()).getPath(), created);
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/AnnUse.sig",
+                                                       "cache/s1/java/15/classes/test/FirstAnnBroken.sig",
+                                                       "cache/s1/java/15/classes/test/FirstTwoAnnBroken.sig",
+                                                       "cache/s1/java/15/classes/test/FirstAnnOK.sig",
+                                                       "cache/s1/java/15/classes/test/Ann1.sig",
+                                                       "cache/s1/java/15/classes/test/Ann2.sig",
+                                                       "cache/s1/java/15/classes/test/Ann3.sig",
+                                                       "cache/s1/java/15/classes/test/Ann4.sig",
+                                                       "cache/s1/java/15/classes/test/Ann5.sig",
+                                                       "cache/s1/java/15/classes/test/Ann6.sig",
+                                                       "cache/s1/java/15/classes/test/AnnExtra.sig",
+                                                       "cache/s1/java/15/classes/test/EnumExtra.sig",
+                                                       "cache/s1/java/15/classes/test/MiddleBroken.sig",
+                                                       "cache/s1/java/15/classes/test/WrongType.sig",
+                                                       "cache/s1/java/15/classes/test/Additional.sig",
+                                                       "cache/s1/java/15/classes/test/WrongDefault.sig",
+                                                       "cache/s1/java/15/classes/test/ManyWrongTrailing.sig")),
+                     createdFiles.keySet());
+        assertAnnotations("@test.Ann5 runtimeVisible=false",
+                          createdFiles.get("cache/s1/java/15/classes/test/FirstAnnBroken.sig"));
+        assertAnnotations("@test.Ann5 runtimeVisible=false",
+                          createdFiles.get("cache/s1/java/15/classes/test/FirstTwoAnnBroken.sig"));
+        assertAnnotations("@test.Ann5 runtimeVisible=false",
+                          createdFiles.get("cache/s1/java/15/classes/test/FirstAnnOK.sig"));
+        assertAnnotations("@test.Ann5 runtimeVisible=false, @test.Ann6 runtimeVisible=false",
+                          createdFiles.get("cache/s1/java/15/classes/test/MiddleBroken.sig"));
+    }
+
+    private static void assertAnnotations(String expected, File classfile) throws IOException {
+        ClassFile clazz = new ClassFile(classfile, false);
+        assertEquals(expected,
+                     clazz.getAnnotations().stream().map(ann -> ann.toString()).collect(Collectors.joining(", ")));
+    }
+
+    public void testPackageInfo() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/package-info.java", "@Deprecated package test;")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/package-info.sig")),
                      createdFiles);
         //TODO: check file content!!!
     }

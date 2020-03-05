@@ -1,8 +1,8 @@
-Name: Javax Annotation API 1.3.2
-Version: 1.3.2
+Name: Javax Annotation API 1.2
+Version: 1.2
 License: CDDL-1.1
 Description: Common Annotations for the JavaTM Platform API
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api/1.3.2)
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api/1.2)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

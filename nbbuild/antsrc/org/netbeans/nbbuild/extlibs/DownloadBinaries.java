@@ -141,6 +141,14 @@ public class DownloadBinaries extends Task {
     @Override
     public void execute() throws BuildException {
         boolean success = true;
+        if (report != null) {
+            try {
+                Files.deleteIfExists(report.toPath());
+                Files.createFile(report.toPath());
+            } catch (IOException x) {
+                throw new BuildException("Cannot create report file at : " + report + x, getLocation());
+            }
+        }
         for (FileSet fs : manifests) {
             DirectoryScanner scanner = fs.getDirectoryScanner(getProject());
             File basedir = scanner.getBasedir();
@@ -170,10 +178,7 @@ public class DownloadBinaries extends Task {
                                 success &= fillInFile(hashAndFile[0], hashAndFile[1], manifest, () -> legacyDownload(hashAndFile[0] + "-" + hashAndFile[1]));
                             }
                             if (report != null) {
-                                Files.write(
-                                        report.toPath(),
-                                        (hashAndFile[0] + ";" + hashAndFile[1] + ";" + include + "\n").getBytes(),
-                                        StandardOpenOption.APPEND);
+                                Files.write(report.toPath(), (hashAndFile[0] + ";" + hashAndFile[1] + ";" + include + "\n").getBytes("UTF-8"),StandardOpenOption.APPEND);
                             }
                             
                         }

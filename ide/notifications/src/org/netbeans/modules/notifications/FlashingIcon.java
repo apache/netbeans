@@ -41,10 +41,10 @@ import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.netbeans.modules.notifications.center.NotificationCenterManager;
+import org.netbeans.modules.notifications.spi.Notification;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.RequestProcessor.Task;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
@@ -60,7 +60,7 @@ class FlashingIcon extends JLabel implements MouseListener, PropertyChangeListen
     protected int STOP_FLASHING_DELAY = 5 * 1000;
     protected int DISAPPEAR_DELAY_MILLIS = STOP_FLASHING_DELAY + 50 * 1000;
     protected int FLASHING_FREQUENCY = 500;
-    private NotificationImpl currentNotification;
+    private Notification currentNotification;
     private final NotificationCenterManager manager;
 
     /**
@@ -154,14 +154,14 @@ class FlashingIcon extends JLabel implements MouseListener, PropertyChangeListen
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (NotificationCenterManager.PROP_NOTIFICATION_ADDED.equals(evt.getPropertyName())) {
-            final NotificationImpl ni = (NotificationImpl) evt.getNewValue();
+            final Notification ni = (Notification) evt.getNewValue();
             setNotification(ni, ni.showBallon());
         } else if (NotificationCenterManager.PROP_NOTIFICATION_READ.equals(evt.getPropertyName())) {
-            NotificationImpl top = manager.getLastUnreadNotification();
+            Notification top = manager.getLastUnreadNotification();
             setNotification(top, false);
             BalloonManager.dismiss();
         } else if (NotificationCenterManager.PROP_NOTIFICATIONS_CHANGED.equals(evt.getPropertyName())) {
-            NotificationImpl top = manager.getLastUnreadNotification();
+            Notification top = manager.getLastUnreadNotification();
             setNotification(top, false);
         }
     }
@@ -170,7 +170,7 @@ class FlashingIcon extends JLabel implements MouseListener, PropertyChangeListen
         return !Boolean.getBoolean("nb.notification.balloon.disable");
     }
 
-    private void setNotification(final NotificationImpl n, boolean showBalloon) {
+    private void setNotification(final Notification n, boolean showBalloon) {
         int notificationCount = manager.getUnreadCount();
         setToolTipText(getToolTip(notificationCount, n));
         setIcon(getNotificationsIcon(notificationCount, n != null ? n.getCategory() == NotificationDisplayer.Category.ERROR : false));
@@ -203,7 +203,7 @@ class FlashingIcon extends JLabel implements MouseListener, PropertyChangeListen
         }
     }
 
-    private String getToolTip(int unread, NotificationImpl n) {
+    private String getToolTip(int unread, Notification n) {
         if (unread < 1) {
             return null;
         }

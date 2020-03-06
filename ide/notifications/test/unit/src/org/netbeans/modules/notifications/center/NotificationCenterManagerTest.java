@@ -64,7 +64,7 @@ public class NotificationCenterManagerTest extends NbTestCase {
         size = manager.getTotalCount();
         assertEquals(1, size);
 
-        NotificationImpl last = manager.getLastUnreadNotification();
+        NotificationImpl last = (NotificationImpl) manager.getLastUnreadNotification();
         assertNotNull(last);
         assertEquals(n, last);
 
@@ -112,7 +112,7 @@ public class NotificationCenterManagerTest extends NbTestCase {
         manager.setMessageFilter("Title2");
         filtered = manager.getFilteredCount();
         assertEquals(1, filtered);
-        NotificationImpl get = manager.getFilteredNotifications().get(0);
+        NotificationImpl get = (NotificationImpl) manager.getFilteredNotifications().get(0);
         assertEquals(n2, get);
 
         manager.setMessageFilter("Title12");

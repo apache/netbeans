@@ -21,7 +21,7 @@ package org.netbeans.modules.notifications.center;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import org.netbeans.modules.notifications.NotificationImpl;
+import org.netbeans.modules.notifications.spi.Notification;
 
 /**
  *
@@ -36,19 +36,19 @@ public class NotificationTableModel extends AbstractTableModel {
 
     private static final int COLUMN_COUNT = 4;
 
-    private final List<NotificationImpl> entries;
+    private final List<Notification> entries;
 
     public NotificationTableModel() {
-        this.entries = new ArrayList<NotificationImpl>();
+        this.entries = new ArrayList<>();
     }
 
-    public void setEntries(List<NotificationImpl> entries) {
+    public void setEntries(List<Notification> entries) {
         this.entries.clear();
         this.entries.addAll(entries);
         fireTableDataChanged();
     }
 
-    public NotificationImpl getEntry(int index) {
+    public Notification getEntry(int index) {
         return entries.get(index);
     }
 
@@ -64,7 +64,7 @@ public class NotificationTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        NotificationImpl notification = getEntry(rowIndex);
+        Notification notification = getEntry(rowIndex);
         if (notification == null) {
             return null;
         }

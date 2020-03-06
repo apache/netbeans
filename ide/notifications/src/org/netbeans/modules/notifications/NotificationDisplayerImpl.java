@@ -20,8 +20,7 @@ package org.netbeans.modules.notifications;
 
 import org.netbeans.modules.notifications.center.NotificationCenterManager;
 import java.awt.event.ActionListener;
-import java.io.CharConversionException;
-import java.util.Calendar;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import org.openide.awt.Notification;
@@ -30,7 +29,7 @@ import org.openide.util.Lookup;
 import org.openide.util.Parameters;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.lookup.ServiceProviders;
-import org.openide.xml.XMLUtil;
+import org.netbeans.modules.notifications.spi.NotificationFactory;
 
 /**
  * Implementation of NotificationDisplayer which shows new Notifications as balloon-like tooltips and the list of all Notifications in a output window.
@@ -44,9 +43,16 @@ import org.openide.xml.XMLUtil;
     @ServiceProvider(service = NotificationDisplayerImpl.class)})
 public final class NotificationDisplayerImpl extends NotificationDisplayer {
 
-    private final NotificationCenterManager notificationCenter = NotificationCenterManager.getInstance();
+    private static final Logger LOG = Logger.getLogger(NotificationDisplayerImpl.class.getName());
+    
+    private final NotificationCenterManager notificationCenter;
 
     public NotificationDisplayerImpl() {
+        this.notificationCenter = NotificationCenterManager.getInstance();
+    }
+    
+    public NotificationDisplayerImpl(NotificationCenterManager notificationCenter) {
+        this.notificationCenter = notificationCenter;
     }
 
     public static NotificationDisplayerImpl getInstance() {
@@ -60,12 +66,15 @@ public final class NotificationDisplayerImpl extends NotificationDisplayer {
 
     @Override
     public Notification notify(String title, Icon icon, String detailsText, ActionListener detailsAction, Priority priority, Category category) {
+        Parameters.notNull("title", title); //NOI18N
+        Parameters.notNull("icon", icon); //NOI18N
+        Parameters.notNull("priority", priority); //NOI18N
+        Parameters.notNull("category", category); //NOI18N
         Parameters.notNull("detailsText", detailsText); //NOI18N
 
-        NotificationImpl n = createNotification(title, icon, priority, category);
-        n.setDetails(detailsText, detailsAction);
-        add(n);
-        return n;
+        org.netbeans.modules.notifications.spi.Notification notification = getNotificationProvider().createNotification(title, icon, priority, category, detailsText, detailsAction);
+        notificationCenter.add(notification);
+        return notification;
     }
 
     @Override
@@ -75,30 +84,20 @@ public final class NotificationDisplayerImpl extends NotificationDisplayer {
 
     @Override
     public Notification notify(String title, Icon icon, JComponent balloonDetails, JComponent popupDetails, Priority priority, Category category) {
-        Parameters.notNull("balloonDetails", balloonDetails); //NOI18N
-        Parameters.notNull("popupDetails", popupDetails); //NOI18N
-
-        NotificationImpl n = createNotification(title, icon, priority, category);
-        n.setDetails(balloonDetails, popupDetails);
-        add(n);
-        return n;
-    }
-
-    private void add(NotificationImpl n) {
-        notificationCenter.add(n);
-    }
-
-    private NotificationImpl createNotification(String title, Icon icon, Priority priority, Category category) {
         Parameters.notNull("title", title); //NOI18N
         Parameters.notNull("icon", icon); //NOI18N
         Parameters.notNull("priority", priority); //NOI18N
         Parameters.notNull("category", category); //NOI18N
+        Parameters.notNull("balloonDetails", balloonDetails); //NOI18N
+        Parameters.notNull("popupDetails", popupDetails); //NOI18N
 
-        try {
-            title = XMLUtil.toElementContent(title);
-        } catch (CharConversionException ex) {
-            throw new IllegalArgumentException(ex);
-        }
-        return new NotificationImpl(title, icon, priority, category, Calendar.getInstance());
+        org.netbeans.modules.notifications.spi.Notification notification = getNotificationProvider().createNotification(title, icon, priority, category, balloonDetails, popupDetails);
+        notificationCenter.add(notification);
+        return notification;
     }
+    
+    private NotificationFactory getNotificationProvider() {
+        return Lookup.getDefault().lookup(NotificationFactory.class);
+    }
+    
 }

@@ -30,6 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.CharConversionException;
 import java.util.Calendar;
+import java.util.Objects;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -38,8 +39,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
-import org.netbeans.modules.notifications.center.NotificationCenterManager;
-import org.openide.awt.Notification;
+import org.netbeans.modules.notifications.spi.Notification;
+import org.netbeans.modules.notifications.spi.NotificationListener;
 import org.openide.awt.NotificationDisplayer.Category;
 import org.openide.awt.NotificationDisplayer.Priority;
 import org.openide.util.NbBundle;
@@ -51,7 +52,7 @@ import org.openide.xml.XMLUtil;
  * @author S. Aubrecht
  * @author jpeska
  */
-public class NotificationImpl extends Notification implements Comparable<NotificationImpl> {
+public class NotificationImpl extends Notification {
 
     private final String title;
     private final Icon icon;
@@ -63,6 +64,8 @@ public class NotificationImpl extends Notification implements Comparable<Notific
     private final Category category;
     private final Calendar dateCreated;
     private boolean read;
+    
+    private NotificationListener notificationListener;
 
     public NotificationImpl(String title, Icon icon, Priority priority, Category category, Calendar dateCreated) {
         this.title = title;
@@ -72,33 +75,30 @@ public class NotificationImpl extends Notification implements Comparable<Notific
         this.dateCreated = dateCreated;
         this.read = false;
     }
+    
+    @Override
+    public void setNotificationListener(NotificationListener notificationListener) {
+        this.notificationListener = notificationListener;
+    }
 
     @Override
     public void clear() {
-        NotificationCenterManager.getInstance().delete(this);
-    }
-
-    public void markAsRead(boolean read) {
-        if (read != this.read) {
-            this.read = read;
-            NotificationCenterManager manager = NotificationCenterManager.getInstance();
-            manager.wasRead(this);
+        if (Objects.nonNull(notificationListener)) {
+            notificationListener.delete(this);
         }
     }
 
     @Override
-    public int compareTo(NotificationImpl n) {
-        int res = priority.compareTo(n.priority);
-        if (0 == res) {
-            //TODO ignore case??
-            res = category.getDisplayName().compareTo(n.category.getDisplayName());
+    public void markAsRead(boolean read) {
+        if (read != this.read) {
+            this.read = read;
+            if (Objects.nonNull(notificationListener)) {
+                notificationListener.wasRead(this);
+            }
         }
-        if (0 == res) {
-            res = title.compareTo(n.title);
-        }
-        return res;
     }
 
+    @Override
     public JComponent getBalloonComp() {
         return balloonComp;
     }
@@ -107,18 +107,22 @@ public class NotificationImpl extends Notification implements Comparable<Notific
         return icon;
     }
 
+    @Override
     public JComponent getDetailsComponent() {
         return detailsComp;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }
 
+    @Override
     public Priority getPriority() {
         return priority;
     }
 
+    @Override
     public Category getCategory() {
         return category;
     }
@@ -131,7 +135,7 @@ public class NotificationImpl extends Notification implements Comparable<Notific
         return read;
     }
 
-    boolean showBallon() {
+    public boolean showBallon() {
         //TODO where to show ballon
         return priority != Priority.SILENT;
     }

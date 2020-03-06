@@ -34,6 +34,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.netbeans.modules.notifications.NotificationImpl;
 import org.netbeans.modules.notifications.Utils;
+import org.netbeans.modules.notifications.spi.Notification;
 import org.netbeans.swing.etable.ETable;
 import org.netbeans.swing.etable.ETableColumn;
 import org.netbeans.swing.etable.ETableColumnModel;
@@ -98,7 +99,7 @@ public class NotificationTable extends ETable {
                         popup = Utilities.actionsToPopup(Utils.getGlobalNotificationActions(), (NotificationTable) e.getSource());
                     } else {
                         NotificationTableModel model = (NotificationTableModel) getModel();
-                        final NotificationImpl notification = model.getEntry(modelIndex);
+                        final Notification notification = model.getEntry(modelIndex);
                         popup = Utilities.actionsToPopup(Utils.getNotificationActions(notification), (NotificationTable) e.getSource());
                     }
                     popup.show(e.getComponent(), e.getX(), e.getY());
@@ -197,16 +198,16 @@ public class NotificationTable extends ETable {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            NotificationImpl notification = getNotification(table, row);
+            Notification notification = getNotification(table, row);
             if (!notification.isRead()) {
                 setFont(getFont().deriveFont(Font.BOLD));
             }
             return this;
         }
 
-        NotificationImpl getNotification(JTable table, int row) {
+        Notification getNotification(JTable table, int row) {
             NotificationTableModel model = (NotificationTableModel) table.getModel();
-            NotificationImpl notification = model.getEntry(table.convertRowIndexToModel(row));
+            Notification notification = model.getEntry(table.convertRowIndexToModel(row));
             return notification;
         }
     }

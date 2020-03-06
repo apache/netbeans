@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.notifications.center;
 
+import org.netbeans.modules.notifications.tool.DevelopmentToolMenuButton;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -42,9 +43,10 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.netbeans.modules.notifications.NotificationImpl;
 import org.netbeans.modules.notifications.NotificationSettings;
 import org.netbeans.modules.notifications.Utils;
+import org.netbeans.modules.notifications.spi.Notification;
+import org.netbeans.modules.notifications.tool.DevelopmentToolMenuButtonActionListener;
 import org.netbeans.swing.etable.ETable;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -128,9 +130,20 @@ public final class NotificationCenterTopComponent extends TopComponent {
         });
         toolBar.add(btnSearch);
         toolBar.add(new FiltersMenuButton(notificationManager.getActiveFilter()));
+        
+        // Add button to show notification generator dialog on development environment.
+        if (isDevelopmentToolEnabled()) {
+            DevelopmentToolMenuButton developmentToolMenuButton = DevelopmentToolMenuButton.getInstance();
+            developmentToolMenuButton.addActionListener(DevelopmentToolMenuButtonActionListener.getInstance());
+            toolBar.add(developmentToolMenuButton);
+        }
 
         initLeft();
         showDetails();
+    }
+    
+    private boolean isDevelopmentToolEnabled() {
+        return Boolean.getBoolean("org.netbeans.modules.notifications.tool.enabled") || Boolean.getBoolean("netbeans.full.hack");
     }
 
     private void initLeft() {
@@ -154,7 +167,7 @@ public final class NotificationCenterTopComponent extends TopComponent {
         notificationTable.getActionMap().put("delete", new AbstractAction() { // NOI18N
             @Override
             public void actionPerformed(ActionEvent e) {
-                NotificationImpl notification = getSelectedNotification();
+                Notification notification = getSelectedNotification();
                 if (notification != null) {
                     notification.clear();
                 }
@@ -202,7 +215,7 @@ public final class NotificationCenterTopComponent extends TopComponent {
         messageColumn.setPreferredWidth(remainingWidth);
     }
 
-    private NotificationImpl getSelectedNotification() {
+    private Notification getSelectedNotification() {
         int selectedRowIndex = notificationTable.convertRowIndexToModel(notificationTable.getSelectedRow());
         if (selectedRowIndex != -1 && selectedRowIndex < notificationTable.getRowCount()) {
             return ((NotificationTableModel) notificationTable.getModel()).getEntry(selectedRowIndex);
@@ -224,7 +237,7 @@ public final class NotificationCenterTopComponent extends TopComponent {
     }
 
     private void showDetails() {
-        NotificationImpl selected = getSelectedNotification();
+        Notification selected = getSelectedNotification();
         detailsPanel.removeAll();
         if (selected != null) {
             selected.markAsRead(true);

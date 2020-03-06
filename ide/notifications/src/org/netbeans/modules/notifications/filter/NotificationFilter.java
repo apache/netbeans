@@ -20,7 +20,7 @@ package org.netbeans.modules.notifications.filter;
 
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-import org.netbeans.modules.notifications.NotificationImpl;
+import org.netbeans.modules.notifications.spi.Notification;
 
 /**
  *
@@ -45,7 +45,7 @@ public class NotificationFilter {
         categoryFilter = null == src.categoryFilter ? null : src.categoryFilter.clone();
     }
 
-    public boolean isEnabled(NotificationImpl notification) {
+    public boolean isEnabled(Notification notification) {
         return categoryFilter == null ? true : categoryFilter.isEnabled(notification.getCategory().getName());
     }
 
@@ -103,7 +103,7 @@ public class NotificationFilter {
         }
 
         @Override
-        public boolean isEnabled(NotificationImpl notification) {
+        public boolean isEnabled(Notification notification) {
             return true;
         }
     }

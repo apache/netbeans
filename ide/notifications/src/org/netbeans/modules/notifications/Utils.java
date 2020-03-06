@@ -30,6 +30,7 @@ import static javax.swing.Action.ACCELERATOR_KEY;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import org.netbeans.modules.notifications.center.NotificationCenterManager;
+import org.netbeans.modules.notifications.spi.Notification;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 
@@ -127,7 +128,7 @@ public class Utils {
         return shadow != null ? shadow : Color.GRAY;
     }
 
-    public static Action[] getNotificationActions(NotificationImpl notification) {
+    public static Action[] getNotificationActions(Notification notification) {
         List<Action> actions = new ArrayList<Action>();
         actions.add(new MarkUnreadAction(notification));
         actions.add(new DeleteAction(notification));
@@ -146,9 +147,9 @@ public class Utils {
 
     private static class MarkUnreadAction extends AbstractAction {
 
-        private final NotificationImpl notification;
+        private final Notification notification;
 
-        public MarkUnreadAction(NotificationImpl notification) {
+        public MarkUnreadAction(Notification notification) {
             super(NbBundle.getMessage(Utils.class, "LBL_MarkUnread"));
             this.notification = notification;
         }
@@ -161,9 +162,9 @@ public class Utils {
 
     private static class DeleteAction extends AbstractAction {
 
-        private final NotificationImpl notification;
+        private final Notification notification;
 
-        public DeleteAction(NotificationImpl notification) {
+        public DeleteAction(Notification notification) {
             super(NbBundle.getMessage(Utils.class, "LBL_Delete"));
             putValue(ACCELERATOR_KEY, DELETE_KEY);
             this.notification = notification;

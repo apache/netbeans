@@ -31,13 +31,15 @@ import org.netbeans.modules.notifications.NotificationImpl;
 import org.netbeans.modules.notifications.filter.FilterRepository;
 import org.netbeans.modules.notifications.filter.TitleFilter;
 import org.netbeans.modules.notifications.filter.NotificationFilter;
+import org.netbeans.modules.notifications.spi.Notification;
+import org.netbeans.modules.notifications.spi.NotificationListener;
 import org.openide.awt.NotificationDisplayer.Category;
 
 /**
  *
  * @author jpeska
  */
-public class NotificationCenterManager {
+public class NotificationCenterManager implements NotificationListener {
 
     public static final String PROP_NOTIFICATIONS_CHANGED = "notificationsChanged"; //NOI18N
     public static final String PROP_NOTIFICATION_ADDED = "notificationAdded"; //NOI18N
@@ -45,8 +47,8 @@ public class NotificationCenterManager {
     private static final int NOTIFICATIONS_CAPACITY = 100;
     private static final PropertyChangeSupport propSupport = new PropertyChangeSupport(NotificationCenterManager.class);
     private static NotificationCenterManager instance = null;
-    private final List<NotificationImpl> notifications = new ArrayList<NotificationImpl>();
-    private final List<NotificationImpl> filteredNotifications = new ArrayList<NotificationImpl>();
+    private final List<Notification> notifications = new ArrayList<>();
+    private final List<Notification> filteredNotifications = new ArrayList<>();
     private NotificationTable notificationTable;
     private final FilterRepository filterRepository;
     private NotificationFilter notificationFilter;
@@ -64,7 +66,8 @@ public class NotificationCenterManager {
         return instance;
     }
 
-    public void add(NotificationImpl notification) {
+    public void add(Notification notification) {
+        notification.setNotificationListener(this);
         boolean capacityFull = false;
         synchronized (notifications) {
             capacityFull = notifications.size() == NOTIFICATIONS_CAPACITY;
@@ -80,7 +83,8 @@ public class NotificationCenterManager {
         updateTable(capacityFull);
     }
 
-    public void delete(NotificationImpl notification) {
+    @Override
+    public void delete(Notification notification) {
         synchronized (notifications) {
             if (!notifications.remove(notification)) {
                 return;
@@ -137,7 +141,7 @@ public class NotificationCenterManager {
 
     public void markAllRead() {
         synchronized (notifications) {
-            for (NotificationImpl n : notifications) {
+            for (Notification n : notifications) {
                 n.markAsRead(true);
             }
         }
@@ -145,6 +149,13 @@ public class NotificationCenterManager {
 
     public List<Category> getCategories() {
         return Category.getCategories();
+    }
+    
+    @Override
+    public void wasRead(Notification notification) {
+        if (notification instanceof NotificationImpl) {
+            wasRead((NotificationImpl) notification);
+        }
     }
 
     public void wasRead(NotificationImpl notification) {
@@ -167,7 +178,7 @@ public class NotificationCenterManager {
     public int getUnreadCount() {
         int count = 0;
         synchronized (notifications) {
-            for (NotificationImpl notification : notifications) {
+            for (Notification notification : notifications) {
                 if (!notification.isRead()) {
                     count++;
                 }
@@ -176,10 +187,10 @@ public class NotificationCenterManager {
         return count;
     }
 
-    public NotificationImpl getLastUnreadNotification() {
+    public Notification getLastUnreadNotification() {
         synchronized (notifications) {
             for (int i = filteredNotifications.size() - 1; i >= 0; i--) {
-                NotificationImpl n = filteredNotifications.get(i);
+                Notification n = filteredNotifications.get(i);
                 if (!n.isRead()) {
                     return n;
                 }
@@ -196,7 +207,7 @@ public class NotificationCenterManager {
         propSupport.removePropertyChangeListener(l);
     }
 
-    private void firePropertyChange(final String propName, final NotificationImpl notification) {
+    private void firePropertyChange(final String propName, final Notification notification) {
         Runnable r = new Runnable() {
             @Override
             public void run() {
@@ -225,7 +236,7 @@ public class NotificationCenterManager {
         return Logger.getLogger(NotificationCenterManager.class.getName());
     }
 
-    public boolean isEnabled(NotificationImpl notification) {
+    public boolean isEnabled(Notification notification) {
         boolean categoryEnabled = notificationFilter == null || (notificationFilter != null && notificationFilter.isEnabled(notification));
         boolean titleEnabled = true;
         if (categoryEnabled) {//save unnecessary condition check
@@ -238,7 +249,7 @@ public class NotificationCenterManager {
         notificationFilter = filterRepository.getActive();
         synchronized (notifications) {
             filteredNotifications.clear();
-            for (NotificationImpl notification : notifications) {
+            for (Notification notification : notifications) {
                 if (isEnabled(notification)) {
                     filteredNotifications.add(notification);
                 }
@@ -318,7 +329,7 @@ public class NotificationCenterManager {
     /**
      * for testing
      */
-    List<NotificationImpl> getFilteredNotifications() {
+    List<Notification> getFilteredNotifications() {
         return filteredNotifications;
     }
 }

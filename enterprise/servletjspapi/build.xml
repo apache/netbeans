@@ -89,6 +89,7 @@
                     <include name="web-common_4_0.xsd"/>
                     <include name="web-facelettaglibrary_2_0.xsd"/>
                     <include name="web-facelettaglibrary_2_2.xsd"/>
+                    <include name="web-facelettaglibrary_2_3.xsd"/>
                     <include name="web-fragment_3_0.xsd"/>
                     <include name="web-fragment_3_1.xsd"/>
                     <include name="web-fragment_4_0.xsd"/>

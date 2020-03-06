@@ -179,7 +179,7 @@ public class ConfigurationsComboModel extends AbstractListModel implements Combo
 
         @Override
         public void keyPressed(KeyEvent ke) {
-            if (ke.getKeyCode() == ke.VK_ENTER || ke.getKeyCode() == ke.VK_ESCAPE) {
+            if (ke.getKeyCode() == KeyEvent.VK_ENTER || ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 confirm(ke);
             }
         }

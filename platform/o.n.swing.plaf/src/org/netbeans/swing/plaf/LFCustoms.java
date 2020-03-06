@@ -311,11 +311,15 @@ public abstract class LFCustoms {
     //custom fonts based on this value
     protected static final String DEFAULT_FONT_SIZE = "nbDefaultFontSize"; //NOI18N
 
+    //Color Profile
+    protected static final String EDITOR_PREFERRED_COLOR_PROFILE = "nb.preferred.color.profile"; //NOI18N
+
     //Editor
     protected static final String EDITOR_STATUS_LEFT_BORDER = "Nb.Editor.Status.leftBorder"; //NOI18N
     protected static final String EDITOR_STATUS_INNER_BORDER = "Nb.Editor.Status.innerBorder"; //NOI18N
     protected static final String EDITOR_STATUS_RIGHT_BORDER = "Nb.Editor.Status.rightBorder"; //NOI18N
     protected static final String EDITOR_STATUS_ONLYONEBORDER = "Nb.Editor.Status.onlyOneBorder"; //NOI18N
+    protected static final String EDITOR_TABSCOMPONENT_BORDER = "Nb.Editor.TabsComponent.border"; //NOI18N
     protected static final String EDITOR_TOOLBAR_BORDER = "Nb.Editor.Toolbar.border"; //NOI18N
     protected static final String EDITOR_ERRORSTRIPE_SCROLLBAR_INSETS = "Nb.Editor.ErrorStripe.ScrollBar.Insets"; //NOI18N
 

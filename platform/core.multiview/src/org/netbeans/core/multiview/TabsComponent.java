@@ -79,9 +79,12 @@ class TabsComponent extends JPanel {
     /** Creates a new instance of TabsComponent */
     public TabsComponent(boolean toolVis) {
         super();
+        Border border = UIManager.getBorder("Nb.Editor.TabsComponent.border"); //NOI18N
+        if (border != null)
+            setBorder(border);
+
         bar = new JToolBar();
-        Border b = (Border)UIManager.get("Nb.Editor.Toolbar.border"); //NOI18N
-        bar.setBorder(b);
+        bar.setBorder(UIManager.getBorder("Nb.Editor.Toolbar.border")); //NOI18N
         bar.setFloatable(false);
         bar.setFocusable(true);
         if( "Windows".equals( UIManager.getLookAndFeel().getID())

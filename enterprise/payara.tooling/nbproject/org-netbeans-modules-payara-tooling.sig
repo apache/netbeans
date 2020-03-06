@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.1
+#Version 2.2
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -354,10 +354,10 @@ supr org.netbeans.modules.payara.tooling.admin.CommandTarget
 hfds COMMAND_PREFIX,cascade,cmdPropertyName,name
 
 CLSS public org.netbeans.modules.payara.tooling.admin.CommandDeploy
-cons public init(java.lang.String,java.lang.String,java.io.File,java.lang.String,java.util.Map<java.lang.String,java.lang.String>,java.io.File[])
+cons public init(java.lang.String,java.lang.String,java.io.File,java.lang.String,java.util.Map<java.lang.String,java.lang.String>,java.io.File[],boolean)
 meth public static org.netbeans.modules.payara.tooling.admin.ResultString deploy(org.netbeans.modules.payara.tooling.data.PayaraServer,java.io.File,org.netbeans.modules.payara.tooling.TaskStateListener)
 supr org.netbeans.modules.payara.tooling.admin.CommandTargetName
-hfds COMMAND,ERROR_MESSAGE,contextRoot,dirDeploy,libraries,path,properties
+hfds COMMAND,ERROR_MESSAGE,contextRoot,dirDeploy,hotDeploy,libraries,path,properties
 
 CLSS public org.netbeans.modules.payara.tooling.admin.CommandDisable
 cons public init(java.lang.String,java.lang.String)
@@ -431,9 +431,9 @@ supr org.netbeans.modules.payara.tooling.admin.Command
 hfds COMMAND
 
 CLSS public org.netbeans.modules.payara.tooling.admin.CommandRedeploy
-cons public init(java.lang.String,java.lang.String,java.lang.String,java.util.Map<java.lang.String,java.lang.String>,java.io.File[],boolean)
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.util.Map<java.lang.String,java.lang.String>,java.io.File[],boolean,boolean,boolean,java.util.List<java.lang.String>)
 supr org.netbeans.modules.payara.tooling.admin.CommandTargetName
-hfds COMMAND,contextRoot,keepState,libraries,properties
+hfds COMMAND,contextRoot,hotDeploy,keepState,libraries,metadataChanged,properties,sourcesChanged
 
 CLSS public org.netbeans.modules.payara.tooling.admin.CommandRestartDAS
 cons public init(boolean)
@@ -822,7 +822,7 @@ meth public java.lang.String getContentType()
 meth public java.lang.String getLastModified()
 meth public java.lang.String getRequestMethod()
 supr org.netbeans.modules.payara.tooling.admin.RunnerHttp
-hfds CTXROOT_PARAM,DEFAULT_PARAM,FORCE_PARAM,FORCE_VALUE,LIBRARIES_PARAM,LOGGER,NAME_PARAM,PROPERTIES_PARAM,TARGET_PARAM,command
+hfds CTXROOT_PARAM,DEFAULT_PARAM,FORCE_PARAM,FORCE_VALUE,HOT_DEPLOY_PARAM,LIBRARIES_PARAM,LOGGER,NAME_PARAM,PROPERTIES_PARAM,TARGET_PARAM,command
 
 CLSS public org.netbeans.modules.payara.tooling.admin.RunnerHttpEnableDisable
 cons public init(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command)
@@ -867,7 +867,7 @@ hfds result
 CLSS public org.netbeans.modules.payara.tooling.admin.RunnerHttpRedeploy
 cons public init(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command)
 supr org.netbeans.modules.payara.tooling.admin.RunnerHttp
-hfds CTXROOT_PARAM,KEEP_STATE_PARAM,LIBRARIES_PARAM,NAME_PARAM,PROPERTIES_PARAM,TARGET_PARAM,command
+hfds CTXROOT_PARAM,HOT_DEPLOY_PARAM,KEEP_STATE_PARAM,LIBRARIES_PARAM,METADATA_CHANGED_PARAM,NAME_PARAM,PROPERTIES_PARAM,SOURCES_CHANGED_PARAM,TARGET_PARAM,command
 
 CLSS public org.netbeans.modules.payara.tooling.admin.RunnerHttpRestartDAS
 cons public init(org.netbeans.modules.payara.tooling.data.PayaraServer,org.netbeans.modules.payara.tooling.admin.Command)
@@ -1237,13 +1237,15 @@ meth public java.lang.String toString()
 meth public java.util.Optional<java.lang.Short> getMinor()
 meth public java.util.Optional<java.lang.Short> getSubMinor()
 meth public java.util.Optional<java.lang.Short> getUpdate()
+meth public java.util.Optional<java.lang.String> getVendor()
 meth public short getMajor()
 meth public static boolean isCorrectJDK(java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>)
 meth public static boolean isCorrectJDK(org.netbeans.modules.payara.tooling.data.JDKVersion,java.util.Optional<java.lang.String>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>)
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion getDefaultPlatformVersion()
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion toValue(java.lang.String)
+meth public static org.netbeans.modules.payara.tooling.data.JDKVersion toValue(java.lang.String,java.lang.String)
 supr java.lang.Object
-hfds DEFAULT_VALUE,VERSION_MATCHER,VERSION_SPLITTER,major,minor,subminor,update
+hfds DEFAULT_VALUE,IDE_JDK_VERSION,MAJOR_INDEX,MINOR_INDEX,SUBMINOR_INDEX,UPDATE_INDEX,VERSION_MATCHER,major,minor,subminor,update,vendor
 
 CLSS public final !enum org.netbeans.modules.payara.tooling.data.PayaraAdminInterface
 fld public final static org.netbeans.modules.payara.tooling.data.PayaraAdminInterface HTTP
@@ -2073,6 +2075,7 @@ CLSS public static org.netbeans.modules.payara.tooling.server.parser.JvmConfigRe
 cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.String,java.lang.String)
 fld public final java.lang.String option
+fld public final java.util.Optional<java.lang.String> vendor
 fld public final java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion> maxVersion
 fld public final java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion> minVersion
 meth public boolean equals(java.lang.Object)

@@ -79,6 +79,7 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
         initComponents();
         setupCheckBox(cbCompileOnSave, RunUtils.PROP_COMPILE_ON_SAVE, false);
         setupCheckBox(cbAugmentedBuild, RunUtils.PROP_AUGMENTED_BUILD, true);
+        setupCheckBox(cbIncludeOpenProjects, RunUtils.PROP_INCLUDE_OPEN_PROJECTS, false);
         setupPlatform();
     }
 
@@ -150,6 +151,7 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
     private void save() {
         saveCheckBox(cbCompileOnSave, RunUtils.PROP_COMPILE_ON_SAVE);
         saveCheckBox(cbAugmentedBuild, RunUtils.PROP_AUGMENTED_BUILD);
+        saveCheckBox(cbIncludeOpenProjects, RunUtils.PROP_INCLUDE_OPEN_PROJECTS);
         savePlatform();
         try {
             NbGradleProject.getPreferences(project, false).flush();
@@ -172,6 +174,8 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
         cbPlatform = new javax.swing.JComboBox<>();
         btManagePlatforms = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        cbIncludeOpenProjects = new javax.swing.JCheckBox();
+        lbIncludeOpenProjects = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(cbCompileOnSave, org.openide.util.NbBundle.getMessage(CompileOptionsPanel.class, "CompileOptionsPanel.cbCompileOnSave.text")); // NOI18N
         cbCompileOnSave.setEnabled(false);
@@ -192,6 +196,12 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
         });
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(CompileOptionsPanel.class, "CompileOptionsPanel.jLabel2.text")); // NOI18N
+        jLabel2.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbIncludeOpenProjects, org.openide.util.NbBundle.getMessage(CompileOptionsPanel.class, "CompileOptionsPanel.cbIncludeOpenProjects.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(lbIncludeOpenProjects, org.openide.util.NbBundle.getMessage(CompileOptionsPanel.class, "CompileOptionsPanel.lbIncludeOpenProjects.text")); // NOI18N
+        lbIncludeOpenProjects.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -217,7 +227,16 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
                                 .addComponent(lbCompileOnSave, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(25, 25, 25)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(lbIncludeOpenProjects, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cbIncludeOpenProjects)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -235,8 +254,12 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbAugmentedBuild)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(cbIncludeOpenProjects)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbIncludeOpenProjects, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(67, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -278,9 +301,11 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JButton btManagePlatforms;
     private javax.swing.JCheckBox cbAugmentedBuild;
     private javax.swing.JCheckBox cbCompileOnSave;
+    private javax.swing.JCheckBox cbIncludeOpenProjects;
     private javax.swing.JComboBox<JavaPlatform> cbPlatform;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lbCompileOnSave;
+    private javax.swing.JLabel lbIncludeOpenProjects;
     private javax.swing.JLabel lbPlatform;
     // End of variables declaration//GEN-END:variables
 

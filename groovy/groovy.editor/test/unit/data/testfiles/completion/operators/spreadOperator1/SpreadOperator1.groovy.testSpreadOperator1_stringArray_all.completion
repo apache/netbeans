@@ -36,7 +36,7 @@ METHOD     decodeBase64Url()                          byte[]
 METHOD     decodeHex()                                byte[]
 METHOD     denormalize()                              String
 METHOD     digest(String)                             String
-METHOD     drop(int)                                  CharSequence
+METHOD     drop(int)                                  String
 METHOD     dropWhile(Closure)                         String
 METHOD     dump()                                     String
 METHOD     each(Closure)                              Object
@@ -180,6 +180,7 @@ METHOD     respondsTo(String)                         List
 METHOD     respondsTo(String, Object)                 List
 METHOD     reverse()                                  String
 METHOD     setMetaClass(MetaClass)                    void
+METHOD     sha256()                                   String
 METHOD     size()                                     int
 METHOD     sleep(long)                                void
 METHOD     sleep(long, Closure)                       void
@@ -202,7 +203,7 @@ METHOD     stripMargin(char)                          String
 METHOD     subSequence(int, int)           [PUBLIC]   CharSequence
 METHOD     substring(int)                  [PUBLIC]   String
 METHOD     substring(int, int)             [PUBLIC]   String
-METHOD     take(int)                                  CharSequence
+METHOD     take(int)                                  String
 METHOD     takeWhile(Closure)                         String
 METHOD     tap(Closure)                               Object
 METHOD     toBigDecimal()                             BigDecimal

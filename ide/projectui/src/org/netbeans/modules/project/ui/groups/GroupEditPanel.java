@@ -25,6 +25,7 @@ import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import static org.netbeans.modules.project.ui.groups.Bundle.*;
+import static org.netbeans.modules.project.ui.groups.ManageGroupsPanel.NONE_GOUP;
 import static org.netbeans.modules.project.ui.groups.NewGroupPanel.MAX_NAME;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer.Category;
@@ -57,6 +58,10 @@ public abstract class GroupEditPanel extends JPanel{
             }
             Set<Group> otherGroups = Group.allGroups();
             otherGroups.remove(actualGroup);
+            if (name.equalsIgnoreCase(NONE_GOUP)) {
+                getCategory().setErrorMessage(WARN_GroupExists());
+                return false;
+            }
             for (Group group : otherGroups) {
                 if (name.equalsIgnoreCase(group.getName())) {
                     getCategory().setErrorMessage(WARN_GroupExists());

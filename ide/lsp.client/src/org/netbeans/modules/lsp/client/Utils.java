@@ -20,12 +20,15 @@ package org.netbeans.modules.lsp.client;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
@@ -48,11 +51,13 @@ import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.openide.cookies.EditorCookie;
+import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
+import org.openide.text.Line;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
 
@@ -136,15 +141,37 @@ public class Utils {
     }
 
     public static void applyEditsNoLock(Document doc, List<? extends TextEdit> edits) {
+        applyEditsNoLock(doc, edits, null, null);
+    }
+
+    /**
+     * Apply edits to the document. The edits can be filtered to only cover
+     * parts of the documents.
+     *
+     * @param doc        {@link Document} the edits shall be applied to
+     * @param edits      list {@link TextEdit} to apply
+     * @param startLimit if not {@code null} only edits with a {@code start}
+     *                   larger than or equals to this offset are considered.
+     *                   The offset is expected to be apply to the original
+     *                   state of the document.
+     * @param endLimit   if not {@code null} only edits with an {@code end}
+     *                   lower than this offset are considered. The offset is
+     *                   expected to be apply to the original state of the
+     *                   document.
+     */
+    public static void applyEditsNoLock(Document doc, List<? extends TextEdit> edits, Integer startLimit, Integer endLimit) {
         edits
          .stream()
-         .sorted((te1, te2) -> te1.getRange().getEnd().getLine() == te2.getRange().getEnd().getLine() ? te1.getRange().getEnd().getCharacter() - te2.getRange().getEnd().getCharacter() : te1.getRange().getEnd().getLine() - te2.getRange().getEnd().getLine())
+         .sorted(rangeReverseSort)
          .forEach(te -> {
             try {
                 int start = Utils.getOffset(doc, te.getRange().getStart());
                 int end = Utils.getOffset(doc, te.getRange().getEnd());
-                doc.remove(start, end - start);
-                doc.insertString(start, te.getNewText(), null);
+                if ((startLimit == null || start >= startLimit)
+                    && (endLimit == null || end < endLimit)) {
+                    doc.remove(start, end - start);
+                    doc.insertString(start, te.getNewText(), null);
+                }
             } catch (BadLocationException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -220,4 +247,39 @@ public class Utils {
         }
         return edits;
     }
+
+    public static void open(String targetUri, Range targetRange) {
+        try {
+            URI target = URI.create(targetUri);
+            FileObject targetFile = URLMapper.findFileObject(target.toURL());
+
+            if (targetFile != null) {
+                LineCookie lc = targetFile.getLookup().lookup(LineCookie.class);
+
+                //TODO: expecting lc != null!
+
+                Line line = lc.getLineSet().getCurrent(targetRange.getStart().getLine());
+
+                SwingUtilities.invokeLater(() ->
+                    line.show(Line.ShowOpenType.OPEN, Line.ShowVisibilityType.FOCUS, targetRange.getStart().getCharacter())
+                );
+            } else {
+                //TODO: beep
+            }
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
+    private static final Comparator<TextEdit> rangeReverseSort = (s1, s2) -> {
+        int l1 = s1.getRange().getEnd().getLine();
+        int l2 = s2.getRange().getEnd().getLine();
+        int c1 = s1.getRange().getEnd().getCharacter();
+        int c2 = s2.getRange().getEnd().getCharacter();
+        if (l1 != l2) {
+            return l2 - l1;
+        } else {
+            return c2 - c1;
+        }
+    };
 }

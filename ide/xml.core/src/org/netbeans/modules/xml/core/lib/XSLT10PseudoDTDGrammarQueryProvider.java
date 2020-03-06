@@ -42,7 +42,7 @@ public class XSLT10PseudoDTDGrammarQueryProvider extends GrammarQueryManager {
         Enumeration en = ctx.getDocumentChildren();
         while (en.hasMoreElements()) {
             Node next = (Node) en.nextElement();
-            if (next.getNodeType() == next.ELEMENT_NODE) {
+            if (next.getNodeType() == Node.ELEMENT_NODE) {
                 boolean xslt = false;
                 boolean version1x = false;
                 NamedNodeMap attrs = next.getAttributes();

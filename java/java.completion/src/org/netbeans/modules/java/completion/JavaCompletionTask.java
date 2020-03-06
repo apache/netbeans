@@ -1522,6 +1522,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     private void insideMemberSelect(Env env) throws IOException {
         int offset = env.getOffset();
         String prefix = env.getPrefix();
@@ -2678,6 +2679,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     private void insideExpressionStatement(Env env) throws IOException {
         TreePath path = env.getPath();
         ExpressionStatementTree est = (ExpressionStatementTree) path.getLeaf();
@@ -2794,7 +2796,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 @Override
                 public boolean accept(Element e, TypeMirror t) {
                     return (method == null || method == e.getEnclosingElement() || e.getModifiers().contains(FINAL)
-                            || EnumSet.of(LOCAL_VARIABLE, PARAMETER, EXCEPTION_PARAMETER, RESOURCE_VARIABLE).contains(e.getKind()) && controller.getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0 && controller.getElementUtilities().isEffectivelyFinal((VariableElement)e))
+                            || EnumSet.of(LOCAL_VARIABLE, PARAMETER, EXCEPTION_PARAMETER, RESOURCE_VARIABLE).contains(simplifyElementKind(e.getKind())) && controller.getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0 && controller.getElementUtilities().isEffectivelyFinal((VariableElement)e))
                             && !illegalForwardRefs.containsKey(e.getSimpleName());
                 }
             };
@@ -2815,7 +2817,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 return;
             }
             TypeMirror tm = controller.getTrees().getTypeMirror(exPath);
-            switch (e.getKind()) {
+            switch (simplifyElementKind(e.getKind())) {
                 case ANNOTATION_TYPE:
                 case CLASS:
                 case ENUM:
@@ -2830,7 +2832,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                             @Override
                             public boolean accept(Element e, TypeMirror t) {
                                 return (method == null || method == e.getEnclosingElement() || e.getModifiers().contains(FINAL)
-                                        || EnumSet.of(LOCAL_VARIABLE, PARAMETER, EXCEPTION_PARAMETER, RESOURCE_VARIABLE).contains(e.getKind()) && controller.getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0 && controller.getElementUtilities().isEffectivelyFinal((VariableElement)e))
+                                        || EnumSet.of(LOCAL_VARIABLE, PARAMETER, EXCEPTION_PARAMETER, RESOURCE_VARIABLE).contains(simplifyElementKind(e.getKind())) && controller.getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0 && controller.getElementUtilities().isEffectivelyFinal((VariableElement)e))
                                         && !illegalForwardRefs.containsKey(e.getSimpleName());
                             }
                         };
@@ -2862,7 +2864,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                             @Override
                             public boolean accept(Element e, TypeMirror t) {
                                 return (method == null || method == e.getEnclosingElement() || e.getModifiers().contains(FINAL)
-                                        || EnumSet.of(LOCAL_VARIABLE, PARAMETER, EXCEPTION_PARAMETER, RESOURCE_VARIABLE).contains(e.getKind()) && controller.getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0 && controller.getElementUtilities().isEffectivelyFinal((VariableElement)e))
+                                        || EnumSet.of(LOCAL_VARIABLE, PARAMETER, EXCEPTION_PARAMETER, RESOURCE_VARIABLE).contains(simplifyElementKind(e.getKind())) && controller.getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0 && controller.getElementUtilities().isEffectivelyFinal((VariableElement)e))
                                         && !illegalForwardRefs.containsKey(e.getSimpleName());
                             }
                         };
@@ -2903,7 +2905,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 return;
             }
             TypeMirror tm = controller.getTrees().getTypeMirror(exPath);
-            switch (e.getKind()) {
+            switch (simplifyElementKind(e.getKind())) {
                 case ANNOTATION_TYPE:
                 case CLASS:
                 case ENUM:
@@ -2959,7 +2961,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
             return;
         }
-        switch (e.getKind()) {
+        switch (simplifyElementKind(e.getKind())) {
             case ANNOTATION_TYPE:
             case CLASS:
             case ENUM:
@@ -2972,7 +2974,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     @Override
                     public boolean accept(Element e, TypeMirror t) {
                         return (method == null || method == e.getEnclosingElement() || e.getModifiers().contains(FINAL)
-                                || EnumSet.of(LOCAL_VARIABLE, PARAMETER, EXCEPTION_PARAMETER, RESOURCE_VARIABLE).contains(e.getKind()) && controller.getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0 && controller.getElementUtilities().isEffectivelyFinal((VariableElement)e))
+                                || EnumSet.of(LOCAL_VARIABLE, PARAMETER, EXCEPTION_PARAMETER, RESOURCE_VARIABLE).contains(simplifyElementKind(e.getKind())) && controller.getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0 && controller.getElementUtilities().isEffectivelyFinal((VariableElement)e))
                                 && !illegalForwardRefs.containsKey(e.getSimpleName());
                     }
                 };
@@ -3072,7 +3074,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         final TypeElement enclClass = scope.getEnclosingClass();
         for (Element e : getLocalMembersAndVars(env)) {
-            switch (e.getKind()) {
+            switch (simplifyElementKind(e.getKind())) {
                 case FIELD:
                     if (((VariableElement) e).getConstantValue() != null) {
                         TypeMirror tm = asMemberOf(e, enclClass != null ? enclClass.asType() : null, types);
@@ -3147,7 +3149,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         final TypeElement enclClass = scope.getEnclosingClass();
         for (Element e : locals) {
-            switch (e.getKind()) {
+            switch (simplifyElementKind(e.getKind())) {
                 case ENUM_CONSTANT:
                 case EXCEPTION_PARAMETER:
                 case LOCAL_VARIABLE:
@@ -3184,7 +3186,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         Set<? extends TypeMirror> smartTypes = options.contains(Options.ALL_COMPLETION) ? null : getSmartTypes(env);
         final TypeElement enclClass = scope.getEnclosingClass();
         for (Element e : getLocalMembersAndVars(env)) {
-            switch (e.getKind()) {
+            switch (simplifyElementKind(e.getKind())) {
                 case ENUM_CONSTANT:
                 case EXCEPTION_PARAMETER:
                 case LOCAL_VARIABLE:
@@ -3216,7 +3218,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             final Set<? extends TypeMirror> smartTypes = options.contains(Options.ALL_COMPLETION) ? null : getSmartTypes(env);
             final TypeElement enclClass = scope.getEnclosingClass();
             for (Element e : getLocalMembersAndVars(env)) {
-                switch (e.getKind()) {
+                switch (simplifyElementKind(e.getKind())) {
                     case EXCEPTION_PARAMETER:
                     case LOCAL_VARIABLE:
                     case RESOURCE_VARIABLE:
@@ -3241,6 +3243,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     private Iterable<? extends Element> getLocalMembersAndVars(final Env env) throws IOException {
         final String prefix = env.getPrefix();
         final CompilationController controller = env.getController();
@@ -3258,7 +3261,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             @Override
             public boolean accept(Element e, TypeMirror t) {
                 boolean isStatic = ctxStatic || (t != null && t.getKind() == TypeKind.DECLARED && ((DeclaredType) t).asElement() != enclClass && enclStatic);
-                switch (e.getKind()) {
+                switch (simplifyElementKind(e.getKind())) {
                     case CONSTRUCTOR:
                         return false;
                     case LOCAL_VARIABLE:
@@ -3345,6 +3348,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     private void addChainedMembers(final Env env, final Iterable<? extends Element> locals) throws IOException {
         final Set<? extends TypeMirror> smartTypes = getSmartTypes(env);
         if (smartTypes != null && !smartTypes.isEmpty()) {
@@ -3358,7 +3362,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             for (Element localElement : locals) {
                 TypeMirror localElementType = null;
                 TypeMirror type = null;
-                switch (localElement.getKind()) {
+                switch (simplifyElementKind(localElement.getKind())) {
                     case EXCEPTION_PARAMETER:
                     case LOCAL_VARIABLE:
                     case RESOURCE_VARIABLE:
@@ -3441,6 +3445,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     private void addMemberConstantsAndTypes(final Env env, final TypeMirror type, final Element elem) throws IOException {
         Set<? extends TypeMirror> smartTypes = options.contains(Options.ALL_COMPLETION) ? null : getSmartTypes(env);
         final CompilationController controller = env.getController();
@@ -3563,7 +3568,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         ElementUtilities.ElementAcceptor acceptor = new ElementUtilities.ElementAcceptor() {
             @Override
             public boolean accept(Element e, TypeMirror t) {
-                switch (e.getKind()) {
+                switch (simplifyElementKind(e.getKind())) {
                     case FIELD:
                         if (!startsWith(env, e.getSimpleName().toString())) {
                             return false;
@@ -3656,7 +3661,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         };
         boolean addCast = actualType != type && elem instanceof VariableElement && !elem.getKind().isField();
         for (Element e : controller.getElementUtilities().getMembers(actualType, acceptor)) {
-            switch (e.getKind()) {
+            switch (simplifyElementKind(e.getKind())) {
                 case ENUM_CONSTANT:
                 case EXCEPTION_PARAMETER:
                 case FIELD:
@@ -4112,6 +4117,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         return subtypes;
     }
 
+    @SuppressWarnings("fallthrough")
     private void addMethodArguments(Env env, MethodInvocationTree mit) throws IOException {
         final CompilationController controller = env.getController();
         TreePath path = env.getPath();
@@ -4161,7 +4167,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     ElementUtilities.ElementAcceptor acceptor = new ElementUtilities.ElementAcceptor() {
                         @Override
                         public boolean accept(Element e, TypeMirror t) {
-                            switch (e.getKind()) {
+                            switch (simplifyElementKind(e.getKind())) {
                                 case LOCAL_VARIABLE:
                                 case RESOURCE_VARIABLE:
                                 case EXCEPTION_PARAMETER:
@@ -4446,6 +4452,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
 
+    @SuppressWarnings("fallthrough")
     private void addKeywordsForStatement(Env env) {
         String prefix = env.getPrefix();
         for (String kw : STATEMENT_KEYWORDS) {
@@ -4840,6 +4847,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         return null;
     }
 
+    @SuppressWarnings("fallthrough")
     private VariableElement getFieldOrVar(Env env, final String simpleName) throws IOException {
         if (simpleName == null || simpleName.length() == 0) {
             return null;
@@ -4857,7 +4865,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 if (!e.getSimpleName().contentEquals(simpleName)) {
                     return false;
                 }
-                switch (e.getKind()) {
+                switch (simplifyElementKind(e.getKind())) {
                     case LOCAL_VARIABLE:
                     case RESOURCE_VARIABLE:
                         if (isStatic && (e.getSimpleName().contentEquals(THIS_KEYWORD) || e.getSimpleName().contentEquals(SUPER_KEYWORD))) {
@@ -5034,6 +5042,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         return smartTypes;
     }
 
+    @SuppressWarnings("fallthrough")
     private Set<? extends TypeMirror> getSmartTypesImpl(Env env) throws IOException {
         int offset = env.getOffset();
         final CompilationController controller = env.getController();
@@ -6022,5 +6031,12 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         return isFirstParamVarType;
 
+    }
+    
+    private static ElementKind simplifyElementKind(ElementKind kind) {
+        if (TreeShims.BINDING_VARIABLE.equals(kind.name())) {
+            return ElementKind.LOCAL_VARIABLE;
+        }
+        return kind;
     }
 }

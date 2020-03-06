@@ -105,6 +105,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
 
     private static final String KEY_UUID = "NB_EXEC_MAVEN_PROCESS_UUID"; //NOI18N
     
+    private static final String NETBEANS_MAVEN_COMMAND_LINE = "NETBEANS_MAVEN_COMMAND_LINE"; //NOI18N
+    
     private Process process;
     private String processUUID;
     private Process preProcess;
@@ -562,15 +564,23 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             it.next(); //c
             String m = it.next();
             
-            sb.append("\"");
             sb.append(m);
             while (it.hasNext()) {
                 sb.append(" ").append(it.next());
             }
-            //XXX here we somehow assume that the last entry in line is the goal and it doesn't need to be enclosed in quotes itself. 3 quotes in line would break things.
-            sb.append("\""); //#237398 apparently one doublequote is more than enough. Not sure why 2 two doublequotes were initially added. but it broke issue 237398 and a single double quote appears to work fine with nb/maven/project in space in path combinations..
+            
+            // NETBEANS-3251, NETBEANS-3254: 
+            // JDK-8221858 (non public) / CVE-2019-2958 changed the way cmd 
+            // command lines are verified and made it "difficult" to have embedded 
+            // quotes in it, quotes that are needed for the mvn.bat and some
+            // parameters of the goals being run (particularly exec:exec).
+            // Setting the Maven command as an environment variable and
+            // using the cmd.exe variables extention mechanism when launching
+            // the command allows to bypass the new JDK check locally without 
+            // resorting to using the global jdk.lang.Process.allowAmbiguousCommands flag
+            envMap.put(NETBEANS_MAVEN_COMMAND_LINE, sb.toString());
             cmdLine = Arrays.asList(new String[] {
-                "cmd", "/c", sb.toString() //merge everything into one item here..
+                "cmd", "/c", "%" + NETBEANS_MAVEN_COMMAND_LINE + "%"
             });
         }
 
@@ -586,7 +596,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
             // TODO: do we really put *all* the env vars there? maybe filter, M2_HOME and JDK_HOME?
             builder.environment().put(env, val);
-            if (!env.equals(CosChecker.NETBEANS_PROJECT_MAPPINGS)) { //don't show to user
+            if (!env.equals(CosChecker.NETBEANS_PROJECT_MAPPINGS)
+                && !env.equals(NETBEANS_MAVEN_COMMAND_LINE)) { //don't show to user
                 display.append(Utilities.escapeParameters(new String[] {env + "=" + val})).append(' '); // NOI18N
             }
         }
@@ -598,15 +609,22 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             display.append(Utilities.escapeParameters(new String[] {"M2_HOME=" + mavenHome.getAbsolutePath()})).append(' '); // NOI18N
         }
 
-        //very hacky here.. have a way to remove
-        List<String> command = new ArrayList<String>(builder.command());
-        for (Iterator<String> it = command.iterator(); it.hasNext();) {
-            String s = it.next();
-            if (s.startsWith("-D" + CosChecker.MAVENEXTCLASSPATH + "=")) {
-                it.remove();
-            }
+        // hide the bypass command and output the command as it used to be (before the bypass command was added)
+        if (envMap.containsKey(NETBEANS_MAVEN_COMMAND_LINE)) {
+            display.append(Utilities.escapeParameters(new String[] {"cmd", "/c", envMap.get("NETBEANS_MAVEN_COMMAND_LINE")}));
         }
-        display.append(Utilities.escapeParameters(command.toArray(new String[command.size()])));
+        else {
+            //very hacky here.. have a way to remove
+            List<String> command = new ArrayList<String>(builder.command());
+            for (Iterator<String> it = command.iterator(); it.hasNext();) {
+                String s = it.next();
+                if (s.startsWith("-D" + CosChecker.MAVENEXTCLASSPATH + "=")) {
+                    it.remove();
+                }
+            }
+            display.append(Utilities.escapeParameters(command.toArray(new String[command.size()])));
+        }
+        
         printGray(ioput, display.toString());
         
         return builder;

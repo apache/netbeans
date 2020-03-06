@@ -37,6 +37,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyEvent;
 
 import java.beans.PropertyEditor;
 
@@ -478,17 +479,17 @@ class RadioInplaceEditor extends JPanel implements InplaceEditor, ActionListener
             return "InvRadioButton - " + getText(); //NOI18N
         }
 
-        public void processKeyEvent(java.awt.event.KeyEvent ke) {
+        public void processKeyEvent(KeyEvent ke) {
             super.processKeyEvent(ke);
 
             if (
-                ((ke.getKeyCode() == ke.VK_ENTER) || (ke.getKeyCode() == ke.VK_ESCAPE)) &&
-                    (ke.getID() == ke.KEY_PRESSED)
+                ((ke.getKeyCode() == KeyEvent.VK_ENTER) || (ke.getKeyCode() == KeyEvent.VK_ESCAPE)) &&
+                    (ke.getID() == KeyEvent.KEY_PRESSED)
             ) {
                 RadioInplaceEditor.this.fireActionPerformed(
                     new ActionEvent(
                         this, ActionEvent.ACTION_PERFORMED,
-                        (ke.getKeyCode() == ke.VK_ENTER) ? COMMAND_SUCCESS : COMMAND_FAILURE
+                        (ke.getKeyCode() == KeyEvent.VK_ENTER) ? COMMAND_SUCCESS : COMMAND_FAILURE
                     )
                 );
             }

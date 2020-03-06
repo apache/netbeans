@@ -32,6 +32,7 @@ import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -55,6 +56,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCModuleDecl;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
+import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.TreeMaker;
 import org.netbeans.lib.nbjavac.services.CancelAbort;
 import org.netbeans.lib.nbjavac.services.CancelService;
@@ -62,6 +64,7 @@ import com.sun.tools.javac.util.FatalError;
 import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
+import com.sun.tools.javac.util.Pair;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -218,6 +221,7 @@ final class VanillaCompileWorker extends CompileWorker {
             return null;
         }
         if (isLowMemory(null)) {
+            fallbackCopyExistingClassFiles(context, javaContext, files);
             return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
         }
         boolean aptEnabled = true;
@@ -229,6 +233,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 return null;
             }
             if (isLowMemory(null)) {
+                fallbackCopyExistingClassFiles(context, javaContext, files);
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             }
             final Map<Element, CompileTuple> clazz2Tuple = new IdentityHashMap<Element, CompileTuple>();
@@ -248,6 +253,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 return null;
             }
             if (isLowMemory(null)) {
+                fallbackCopyExistingClassFiles(context, javaContext, files);
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             }
             for (Entry<CompilationUnitTree, CompileTuple> unit : units.entrySet()) {
@@ -303,6 +309,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 return null;
             }
             if (isLowMemory(null)) {
+                fallbackCopyExistingClassFiles(context, javaContext, files);
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             }
             final JavacTaskImpl jtFin = jt;
@@ -318,7 +325,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     Modules modules = Modules.instance(jtFin.getContext());
                     compiler.shouldStopPolicyIfError = CompileState.FLOW; 
                     for (Element type : types) {
-                        if (type.asType() == null || type.asType().getKind() == TypeKind.ERROR) {
+                        if (isErroneousClass(type)) {
                             //likely a duplicate of another class, don't touch:
                             continue;
                         }
@@ -372,6 +379,7 @@ final class VanillaCompileWorker extends CompileWorker {
             }
         } catch (CancelAbort ca) {
             if (isLowMemory(null)) {
+                fallbackCopyExistingClassFiles(context, javaContext, files);
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             } else if (JavaIndex.LOG.isLoggable(Level.FINEST)) {
                 JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
@@ -394,42 +402,47 @@ final class VanillaCompileWorker extends CompileWorker {
                     JavaIndex.LOG.log(level, message, t);  //NOI18N
                 }
             }
-             //fallback: copy output classes to caches, so that editing is not extremely slow/broken:
-            BinaryForSourceQuery.Result res2 = BinaryForSourceQuery.findBinaryRoots(context.getRootURI());
-            Set<String> filter;
-            if (!context.isAllFilesIndexing()) {
-                filter = new HashSet<>();
-                for (CompileTuple toIndex : files) {
-                    String path = toIndex.indexable.getRelativePath();
-                    filter.add(path.substring(0, path.lastIndexOf(".")));
-                }
-            } else {
-                filter = null;
-            }
-            try {
-                final Future<Void> done = FileManagerTransaction.runConcurrent(() -> {
-                    File cache = JavaIndex.getClassFolder(context.getRootURI(), false, false);
-                    for (URL u : res2.getRoots()) {
-                        FileObject binaryFO = URLMapper.findFileObject(u);
-                        if (binaryFO == null)
-                            continue;
-                        FileManagerTransaction fmtx = TransactionContext.get().get(FileManagerTransaction.class);
-                        List<File> copied = new ArrayList<>();
-                        copyRecursively(binaryFO, cache, cache, filter, fmtx, copied);
-                        final ClassIndexImpl cii = javaContext.getClassIndexImpl();
-                        if (cii != null) {
-                            cii.getBinaryAnalyser().analyse(context, cache, copied);
-                        }
-                    }
-                });
-                done.get();
-            } catch (IOException | InterruptedException | ExecutionException ex) {
-                Exceptions.printStackTrace(ex);
-            }
         }
+        fallbackCopyExistingClassFiles(context, javaContext, files);
         return ParsingOutput.success(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
     }
 
+    private static void fallbackCopyExistingClassFiles(final Context context,
+                                                       final JavaParsingContext javaContext,
+                                                       final Collection<? extends CompileTuple> files) {
+        //fallback: copy output classes to caches, so that editing is not extremely slow/broken:
+        BinaryForSourceQuery.Result res2 = BinaryForSourceQuery.findBinaryRoots(context.getRootURI());
+        Set<String> filter;
+        if (!context.isAllFilesIndexing()) {
+            filter = new HashSet<>();
+            for (CompileTuple toIndex : files) {
+                String path = toIndex.indexable.getRelativePath();
+                filter.add(path.substring(0, path.lastIndexOf(".")));
+            }
+        } else {
+            filter = null;
+        }
+        try {
+            final Future<Void> done = FileManagerTransaction.runConcurrent(() -> {
+                File cache = JavaIndex.getClassFolder(context.getRootURI(), false, false);
+                for (URL u : res2.getRoots()) {
+                    FileObject binaryFO = URLMapper.findFileObject(u);
+                    if (binaryFO == null)
+                        continue;
+                    FileManagerTransaction fmtx = TransactionContext.get().get(FileManagerTransaction.class);
+                    List<File> copied = new ArrayList<>();
+                    copyRecursively(binaryFO, cache, cache, filter, fmtx, copied);
+                    final ClassIndexImpl cii = javaContext.getClassIndexImpl();
+                    if (cii != null) {
+                        cii.getBinaryAnalyser().analyse(context, cache, copied);
+                    }
+                }
+            });
+            done.get();
+        } catch (IOException | InterruptedException | ExecutionException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        }
     private static void copyRecursively(FileObject source, File targetRoot, File target, Set<String> filter, FileManagerTransaction fmtx, List<File> copied) throws IOException {
         if (source.isFolder()) {
             if (target.exists() && !target.isDirectory()) {
@@ -536,6 +549,9 @@ final class VanillaCompileWorker extends CompileWorker {
                 if (msym.erasure_field != null && msym.erasure_field.hasTag(TypeTag.METHOD))
                     clearMethodType((Type.MethodType) msym.erasure_field);
                 clearAnnotations(decl.sym.getMetadata());
+                if (decl.sym.defaultValue != null && isAnnotationErroneous(decl.sym.defaultValue)) {
+                    decl.sym.defaultValue = null;
+                }
                 return super.visitMethod(node, p);
             }
 
@@ -549,7 +565,7 @@ final class VanillaCompileWorker extends CompileWorker {
             public Void visitClass(ClassTree node, Void p) {
                 JCClassDecl clazz = (JCTree.JCClassDecl) node;
                 Symbol.ClassSymbol csym = clazz.sym;
-                if (csym.asType() == null || csym.asType().getKind() == TypeKind.ERROR) {
+                if (isErroneousClass(csym)) {
                     //likely a duplicate of another class, don't touch:
                     return null;
                 }
@@ -568,12 +584,19 @@ final class VanillaCompileWorker extends CompileWorker {
                     ct.supertype_field = error2Object(ct.supertype_field);
                 }
                 clearAnnotations(clazz.sym.getMetadata());
-                super.visitClass(node, p);
                 for (JCTree def : clazz.defs) {
-                    if (def.hasTag(JCTree.Tag.ERRONEOUS) || def.hasTag(JCTree.Tag.BLOCK)) {
+                    boolean errorClass = isErroneousClass(def);
+                    if (errorClass) {
+                        ClassSymbol member = ((JCClassDecl) def).sym;
+                        if (member != null) {
+                            csym.members_field.remove(member);
+                        }
+                    }
+                    if (errorClass || def.hasTag(JCTree.Tag.ERRONEOUS) || def.hasTag(JCTree.Tag.BLOCK)) {
                         clazz.defs = com.sun.tools.javac.util.List.filter(clazz.defs, def);
                     }
                 }
+                super.visitClass(node, p);
                 return null;
             }
 
@@ -585,16 +608,51 @@ final class VanillaCompileWorker extends CompileWorker {
                 com.sun.tools.javac.util.List<Attribute.Compound> annotations = metadata.getDeclarationAttributes();
                 com.sun.tools.javac.util.List<Attribute.Compound> prev = null;
                 while (annotations.nonEmpty()) {
-                    if (isErroneous(annotations.head.type)) {
+                    if (isAnnotationErroneous(annotations.head)) {
                         if (prev == null) {
                             metadata.reset();
                             metadata.setDeclarationAttributes(annotations.tail);
                         } else {
                             prev.tail = annotations.tail;
                         }
+                    } else {
+                        prev = annotations;
                     }
-                    prev = annotations;
                     annotations = annotations.tail;
+                }
+            }
+
+            private boolean isAnnotationErroneous(Attribute annotation) {
+                if (isErroneous(annotation.type)) {
+                    return true;
+                } else if (annotation instanceof Attribute.Array) {
+                    for (Attribute nested : ((Attribute.Array) annotation).values) {
+                        if (isAnnotationErroneous(nested)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                } else if (annotation instanceof Attribute.Class) {
+                    if (isErroneous(((Attribute.Class) annotation).classType)) {
+                        return true;
+                    }
+                    return false;
+                } else if (annotation instanceof Attribute.Compound) {
+                    for (Pair<MethodSymbol, Attribute> p : ((Attribute.Compound) annotation).values) {
+                        if (isAnnotationErroneous(p.snd)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                } else if (annotation instanceof Attribute.Constant) {
+                    return false;
+                } else if (annotation instanceof Attribute.Enum) {
+                    return false;
+                } else if (annotation instanceof Attribute.Error) {
+                    return true;
+                } else {
+                    //let's skip all unknown attributes, as we cannot check if they are fine or not
+                    return true;
                 }
             }
 
@@ -684,4 +742,19 @@ final class VanillaCompileWorker extends CompileWorker {
             }
         }.scan(cut, null);
     }
+
+    /**
+     * Check if a class is a duplicate, has cyclic dependencies,
+     * or has another critical issue.
+     */
+    private boolean isErroneousClass(JCTree tree) {
+        if (!tree.hasTag(Tag.CLASSDEF)) {
+            return false;
+        }
+        return isErroneousClass(((JCClassDecl) tree).sym);
+    }
+    private boolean isErroneousClass(Element el) {
+        return el instanceof ClassSymbol && (((ClassSymbol) el).asType() == null || ((ClassSymbol) el).asType().getKind() == TypeKind.ERROR);
+    }
+
 }

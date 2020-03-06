@@ -20,11 +20,12 @@
 set -e
 
 if [ -z "$GRAALVM" ]; then
-  VERSION=19.0.0
-  BASE=graalvm-ce-$VERSION
-  URL=https://github.com/oracle/graal/releases/download/vm-$VERSION/graalvm-ce-linux-amd64-$VERSION.tar.gz
+  VERSION=19.3.1
+  BASE=graalvm-ce-java8-$VERSION
+  URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$VERSION/graalvm-ce-java8-linux-amd64-$VERSION.tar.gz
   curl -L $URL --output graalvm.tgz
   tar fxz graalvm.tgz
+  ls -l
   GRAALVM=`pwd`/$BASE
 fi
 
@@ -39,4 +40,3 @@ JAVA_HOME=$GRAALVM ant -f ide/libs.graalsdk/build.xml test
 JAVA_HOME=$GRAALVM ant -f platform/core.network/build.xml test
 JAVA_HOME=$GRAALVM ant -f webcommon/libs.graaljs/build.xml test
 JAVA_HOME=$GRAALVM ant -f profiler/profiler.oql/build.xml test
-

@@ -221,6 +221,7 @@ public final class JavaElementFoldVisitor<T> extends CancellableTreePathScanner<
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     public Object visitCompilationUnit(CompilationUnitTree node, Object p) {
         int importsStart = Integer.MAX_VALUE;
         int importsEnd   = -1;

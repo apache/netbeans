@@ -66,6 +66,7 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.editor.GuardedException;
 import org.netbeans.modules.java.editor.codegen.ImplementOverrideMethodGenerator;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.JavaFix;
@@ -80,7 +81,7 @@ import org.openide.util.NbBundle;
 public final class ImplementAllAbstractMethods implements ErrorRule<Object>, OverrideErrorMessage<Object> {
 
     private static final String PREMATURE_EOF_CODE = "compiler.err.premature.eof"; // NOI18N
-    
+    private static final String RECORD = "RECORD"; // NOI18N
     /** Creates a new instance of ImplementAllAbstractMethodsCreator */
     public ImplementAllAbstractMethods() {
     }
@@ -179,7 +180,7 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
             return null;
         }
         List<Fix> fixes = new ArrayList<>();
-        if (TreeUtilities.CLASS_TREE_KINDS.contains(leaf.getKind())) {
+        if (TreeUtilities.CLASS_TREE_KINDS.contains(leaf.getKind()) || leaf.getKind().toString().equals(RECORD)) {
             CompilationUnitTree cut = info.getCompilationUnit();
             // do not offer for class declarations without body
             long start = info.getTrees().getSourcePositions().getStartPosition(cut, leaf);
@@ -559,7 +560,7 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
     // copy from GeneratorUtils, need to change the processing a little.
     public static Map<? extends ExecutableElement, ? extends ExecutableElement> generateAllAbstractMethodImplementations(
             WorkingCopy wc, TreePath path, List<ElementHandle<? extends Element>> toImplementHandles) {
-        assert TreeUtilities.CLASS_TREE_KINDS.contains(path.getLeaf().getKind());
+        assert TreeUtilities.CLASS_TREE_KINDS.contains(path.getLeaf().getKind()) || path.getLeaf().getKind().toString().equals(RECORD);
         TypeElement te = (TypeElement)wc.getTrees().getElement(path);
         if (te == null) {
             return null;

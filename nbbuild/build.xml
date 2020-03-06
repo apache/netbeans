@@ -1619,7 +1619,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <delete dir="${netbeans.dest.dir}/licenses" />
         <mkdir dir="${netbeans.dest.dir}/licenses" />
 
-        <createlicensesummary licenseStub="${nb_all}/LICENSE" 
+        <createlicensesummary licenseStub="license-stub.txt"
                               noticeStub="notice-stub.txt" 
                               report="${nb.build.dir}/createlicensesummary.xml" 
                               nball=".." 
@@ -1678,7 +1678,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <include name="libs.antlr3.devel/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
-    <createlicensesummary licenseStub="${nb_all}/LICENSE"
+    <createlicensesummary licenseStub="license-stub.txt"
                           noticeStub="notice-stub.txt"
                           report="${nb.build.dir}/createlicensesummary.xml"
                           nball=".."

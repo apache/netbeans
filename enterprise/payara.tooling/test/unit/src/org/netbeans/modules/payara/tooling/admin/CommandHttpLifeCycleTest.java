@@ -110,7 +110,10 @@ public class CommandHttpLifeCycleTest extends CommandHttpTest {
     @Test(groups = {"http-commands"}, dependsOnMethods = {"testCreateClusterInstance"})
     public void testDeployWebApplication() {
         PayaraServer server = payaraServer();
-        Command command = new CommandDeploy("Test", CLUSTER_NAME, new File("target/test/simpleWeb.war"), "simpleWeb", null, null);
+        Command command = new CommandDeploy(
+                "Test", CLUSTER_NAME, new File("target/test/simpleWeb.war"),
+                "simpleWeb", null, null, false
+        );
         ResultString result = null;
         String value = null;
         try {

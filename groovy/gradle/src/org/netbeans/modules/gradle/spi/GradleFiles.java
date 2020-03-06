@@ -139,10 +139,10 @@ public final class GradleFiles implements Serializable {
     }
 
     private void searchWrapper() {
-        File w = new File(rootDir, Utilities.isWindows() ? "gradlew.bat" : "gradlew");
+        File w = new File(rootDir, WRAPPER_PROPERTIES);
         if (w.isFile()) {
-            gradlew = w;
-            wrapperProperties = new File(rootDir, WRAPPER_PROPERTIES);
+            gradlew = new File(rootDir, Utilities.isWindows() ? "gradlew.bat" : "gradlew");
+            wrapperProperties = w;
         }
     }
 

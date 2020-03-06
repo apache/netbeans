@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.46
+#Version 6.47
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1046,6 +1046,18 @@ supr java.lang.Object
 hfds LOG,TRANS_LOCK,operatingSystem,pathURIConsistent,transExp,transLoader
 hcls RE
 
+CLSS public abstract org.openide.util.CachedHiDPIIcon
+cons protected init(int,int)
+intf javax.swing.Icon
+meth protected abstract java.awt.Image createAndPaintImage(java.awt.Component,java.awt.image.ColorModel,int,int,double)
+meth protected final static java.awt.image.BufferedImage createBufferedImage(java.awt.image.ColorModel,int,int)
+meth public final int getIconHeight()
+meth public final int getIconWidth()
+meth public final void paintIcon(java.awt.Component,java.awt.Graphics,int,int)
+supr java.lang.Object
+hfds MAX_CACHE_SIZE,cache,cacheSize,height,width
+hcls CachedImageKey
+
 CLSS public abstract interface org.openide.util.Cancellable
 meth public abstract boolean cancel()
 
@@ -1196,8 +1208,8 @@ meth public final static javax.swing.ImageIcon loadImageIcon(java.lang.String,bo
 meth public static java.awt.Image createDisabledImage(java.awt.Image)
 meth public static javax.swing.Icon createDisabledIcon(javax.swing.Icon)
 supr java.lang.Object
-hfds DARK_LAF_SUFFIX,ERR,LOGGER,NO_ICON,PNG_READER,TOOLTIP_SEPAR,cache,component,compositeCache,currentLoader,dummyIconComponent,extraInitialSlashes,imageIconFilter,imageToolTipCache,loaderQuery,localizedCache,mediaTrackerID,noLoaderWarned,tracker
-hcls ActiveRef,CompositeImageKey,DisabledButtonFilter,IconImageIcon,MergedIcon,ToolTipImage,ToolTipImageKey
+hfds DARK_LAF_SUFFIX,ERR,LOGGER,NO_ICON,PNG_READER,TOOLTIP_SEPAR,cache,classLoaderLoader,component,compositeCache,dummyIconComponent,extraInitialSlashes,imageIconFilter,imageToolTipCache,localizedCache,mediaTrackerID,svgLoaderLoader,tracker
+hcls ActiveRef,CachedLookupLoader,CompositeImageKey,DisabledButtonFilter,IconImageIcon,MergedIcon,ToolTipImage,ToolTipImageKey
 
 CLSS public abstract org.openide.util.Lookup
 cons public init()
@@ -1388,7 +1400,7 @@ meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> ja
 meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> checkedMapByFilter(java.util.Map,java.lang.Class<{%%0}>,java.lang.Class<{%%1}>,boolean)
 meth public static <%0 extends java.lang.Object> java.lang.Iterable<{%%0}> iterable(java.util.Enumeration<{%%0}>)
 meth public static <%0 extends java.lang.Object> java.lang.Iterable<{%%0}> iterable(java.util.Iterator<{%%0}>)
-meth public static <%0 extends java.lang.Object> java.util.Enumeration<{%%0}> checkedEnumerationByFilter(java.util.Enumeration,java.lang.Class<{%%0}>,boolean)
+meth public static <%0 extends java.lang.Object> java.util.Enumeration<{%%0}> checkedEnumerationByFilter(java.util.Enumeration<?>,java.lang.Class<{%%0}>,boolean)
 meth public static <%0 extends java.lang.Object> java.util.Iterator<{%%0}> checkedIteratorByFilter(java.util.Iterator,java.lang.Class<{%%0}>,boolean)
 meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> checkedListByCopy(java.util.List,java.lang.Class<{%%0}>,boolean)
 meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> checkedSetByCopy(java.util.Set,java.lang.Class<{%%0}>,boolean)

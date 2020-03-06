@@ -102,6 +102,7 @@ import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.JavadocHelper;
 import org.netbeans.modules.java.source.ModuleNames;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.indexing.FQN2Files;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.java.source.parsing.ClasspathInfoProvider;
@@ -195,7 +196,11 @@ public class SourceUtils {
     
     public static TypeMirror getBound(WildcardType wildcardType) {
         Type.TypeVar bound = ((Type.WildcardType)wildcardType).bound;
-        return bound != null ? bound.bound : null;
+        try {
+            return bound != null ? bound.bound : null;
+        } catch (NoSuchFieldError err) {
+            return bound != null ? bound.getUpperBound() : null;
+        }
     }
 
     /**
@@ -864,6 +869,15 @@ public class SourceUtils {
                                     return super.visitType(e, p);
                                 } else {
                                     return null;
+                                }
+                            }
+
+                            @Override
+                            public Void scan(Element e, Void p) {
+                                if (TreeShims.isRecordComponent(e)) {
+                                    return visitVariable((VariableElement) e, p);
+                                } else {
+                                    return super.scan(e, p);
                                 }
                             }
                         };

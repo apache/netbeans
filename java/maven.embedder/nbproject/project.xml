@@ -173,6 +173,9 @@
                 <!-- NetBeans support for Google App Engine -->
                 <friend>org.netbeans.modules.j2ee.appengine</friend>
                 <friend>org.netbeans.modules.maven.util</friend>
+                <friend>io.github.jeddict.jcode.util</friend>
+                <friend>io.github.jeddict.runtime</friend>
+                <friend>io.github.jeddict.rest.generator</friend>
                 <!-- XXX <subpackages> not permitted by schema -->
                 <package>javax.inject</package>
                 <package>com.google.inject</package>
@@ -262,8 +265,8 @@
                 <package>org.apache.maven.wagon.shared.http4</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/maven-dependency-tree-2.0.jar</runtime-relative-path>
-                <binary-origin>external/maven-dependency-tree-2.0.jar</binary-origin>
+                <runtime-relative-path>ext/maven/maven-dependency-tree-2.2.jar</runtime-relative-path>
+                <binary-origin>external/maven-dependency-tree-2.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/maven/jdom-1.0.jar</runtime-relative-path>

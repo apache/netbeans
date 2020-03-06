@@ -22,17 +22,12 @@ addons:
       - ant-optional
       - xvfb
       - openjfx
+      - libgfortran3
 install:
   - export PATH="$PATH:$TRAVIS_BUILD_DIR/nbbuild/travis"
   - export DISPLAY=:99.0
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
   - sleep 3
-script:
-  - if [ "x$OPTS" == "x" ]; then OPTS="-quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"; fi
-  - if [ "x$TARGET" == "x" ]; then TARGET="build"; fi
-  - ant $OPTS clean
-  - ant $OPTS $TARGET
-  - if [ "x$SCRIPT" != "x" ]; then ./$SCRIPT; fi
 
 matrix:
     include:
@@ -60,9 +55,20 @@ matrix:
             - ant $OPTS check-sigtests -Dfail.on.error=true
             - ant $OPTS gen-sigtests-release
 
-        - env: TARGET="build-platform" SCRIPT=nbbuild/travis/gensigtest.sh
+        - name: Run gen-sigtests-release for platform cluster
           jdk: openjdk8
-          
+          script:
+            - nbbuild/travis/gensigtest.sh
+        
+        - name: Pristine platform build
+          jdk: openjdk8
+          script: 
+            - ant -quiet build-source-config -Dcluster.config=platform
+            - mkdir tmpplatform
+            - cd tmpplatform
+            - unzip -qq ../nbbuild/build/platform-src*
+            - ant build -Dcluster.config=platform
+        
         - name: Compile all modules with OpenJDK8
           jdk: openjdk8
           env:
@@ -200,7 +206,7 @@ matrix:
             - ant $OPTS -f ide/api.xml test
             - ant $OPTS -f ide/api.xml.ui test
             - travis_retry ant $OPTS -f ide/bugtracking test
-            #- ant $OPTS -f ide/bugtracking.bridge test
+            - travis_retry ant $OPTS -f ide/bugtracking.bridge test
             - ant $OPTS -f ide/bugtracking.commons test
             #- ant $OPTS -f ide/bugzilla test
             - ant $OPTS -f ide/code.analysis test
@@ -209,7 +215,7 @@ matrix:
             - ant $OPTS -f ide/csl.types test
             - ant $OPTS -f ide/css.editor test
             - ant $OPTS -f ide/css.lib test
-            - ant $OPTS -f ide/css.model test
+            - hide-logs.sh ant $OPTS -f ide/css.model test
             - travis_retry ant $OPTS -f ide/db test
             - ant $OPTS -f ide/db.dataview test
             - ant $OPTS -f ide/db.sql.editor test
@@ -218,14 +224,14 @@ matrix:
             - ant $OPTS -f ide/editor.bookmarks test
             #- ant $OPTS -f ide/editor.bracesmatching test
             - ant $OPTS -f ide/editor.document test
-            - ant $OPTS -f ide/editor.fold test
+            - hide-logs.sh ant $OPTS -f ide/editor.fold test
             - ant $OPTS -f ide/editor.fold.nbui test
             - ant $OPTS -f ide/editor.guards test
             - ant $OPTS -f ide/editor.indent test
             - ant $OPTS -f ide/editor.indent.project test
             - ant $OPTS -f ide/editor.macros test
-            - ant $OPTS -f ide/editor.search test
-            - ant $OPTS -f ide/editor.settings test
+            - hide-logs.sh ant $OPTS -f ide/editor.search test
+            - hide-logs.sh ant $OPTS -f ide/editor.settings test
             - ant $OPTS -f ide/editor.settings.storage test
             - ant $OPTS -f ide/editor.structure test
             - ant $OPTS -f ide/editor.tools.storage test
@@ -286,15 +292,33 @@ matrix:
             - ant $OPTS -f ide/web.webkit.debugging test
             - ant $OPTS -f ide/xml test
             - ant $OPTS -f ide/xml.axi test
+            - ant $OPTS -f ide/xml.catalog test-unit
             - ant $OPTS -f ide/xml.core test
             - ant $OPTS -f ide/xml.lexer test
             - ant $OPTS -f ide/xml.multiview test
+            - ant $OPTS -f ide/xml.retriever test
+            #- ant $OPTS -f ide/xml.schema.completion test
+            - ant $OPTS -f ide/xml.schema.model test
             - ant $OPTS -f ide/xml.text test
             - ant $OPTS -f ide/xml.text.obsolete90 test
             - travis_retry ant $OPTS -f ide/xml.wsdl.model test
             - ant $OPTS -f ide/xml.xam test
             - ant $OPTS -f ide/xml.xdm test
             - ant $OPTS -f ide/xsl test
+            
+        - name: Test nb modules
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=minimal -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f nb/deadlock.detector test
+            - ant $OPTS -f nb/ide.branding test
+            - ant $OPTS -f nb/o.n.upgrader test
+            #- ant $OPTS -f nb/updatecenters test
+            - ant $OPTS -f nb/welcome test
             
         - name: Test extide modules
           jdk: openjdk8
@@ -342,7 +366,7 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f java/java.completion test
-            - ant $OPTS -f java/java.source.base test
+            - travis_retry ant $OPTS -f java/java.source.base test
 
         - name: Test Java modules with nb-javac on Java 13
           jdk: openjdk8
@@ -370,6 +394,32 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f java/java.completion test
+            
+        - name: Test apisupport modules
+          jdk: openjdk8
+          env: 
+            - OPTS="-quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            #- ant $OPTS -f apisupport/apisupport.ant test
+            - ant $OPTS -f apisupport/apisupport.project test
+            - ant $OPTS -f apisupport/apisupport.refactoring test
+            - ant $OPTS -f apisupport/apisupport.wizards test
+            - ant $OPTS -f apisupport/maven.apisupport test
+            - ant $OPTS -f apisupport/timers test -Dtest.config=stable
+
+        - name: Test JavaFX modules
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f javafx/javafx2.editor test -Dtest.config=stable
+            #- ant $OPTS -f javafx/javafx2.project test
 
         - name: Test ergonomics modules
           jdk: openjdk8
@@ -463,6 +513,22 @@ matrix:
           script:
             - ant $OPTS -f enterprise/spring.webmvc test
             
+        - name: Test groovy modules
+          jdk: openjdk8
+          env:
+            - BUILD_OPTS="-quiet -Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+            - TEST_OPTS="-Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $BUILD_OPTS clean
+            - ant $BUILD_OPTS build
+          script:
+            #- ant $TEST_OPTS -f groovy/groovy test
+            #- ant $TEST_OPTS -f groovy/groovy.java test
+            - ant $TEST_OPTS -f groovy/groovy.editor test
+            - ant $TEST_OPTS -f groovy/groovy.gsp test
+            #- ant $TEST_OPTS -f groovy/groovy.kit test
+            - ant $TEST_OPTS -f groovy/groovy.support test
+
         - name: Test php modules
           jdk: openjdk8
           env:
@@ -486,7 +552,32 @@ matrix:
             - ant $OPTS -f php/php.composer test
             #- ant $OPTS -f php/php.dbgp test
             - ant $OPTS -f php/php.doctrine2 test
-            
+            #- ant $OPTS -f php/php.editor test
+            #- ant $OPTS -f php/php.latte test
+            #- ant $OPTS -f php/php.nette.tester test
+            - ant $OPTS -f php/php.phpunit test
+            - ant $OPTS -f php/php.project test
+            - ant $OPTS -f php/php.refactoring test
+            #- ant $OPTS -f php/php.smarty test
+            #- ant $OPTS -f php/php.symfony test
+            #- ant $OPTS -f php/php.symfony2 test
+            - ant $OPTS -f php/php.twig test
+            - ant $OPTS -f php/php.zend test
+            - ant $OPTS -f php/php.zend2 test
+            - ant $OPTS -f php/spellchecker.bindings.php test
+
+        - name: Build the Visual Studio Code extension for Java
+          jdk: openjdk8
+          before_install:
+            - nvm install 8
+          env:
+            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - (cd java/java.lsp.server; ant build-vscode-ext)
+
         - name: GRAALVM Tests
           jdk: openjdk8
           env: 
@@ -498,15 +589,21 @@ matrix:
             - nbbuild/travis/scripting.sh
 
         - name: MacOS tests
-          language: java
+          language: minimal
           os: osx
-          jdk: openjdk11
+          osx_image: xcode10.1
           addons:
             homebrew:
               packages:
+                - openjdk@11
                 - ant
+              update: true
           env:
             - OPTS="-silent -Dcluster.config=platform -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
+          install:
+            - sudo ln -sfn /usr/local/opt/openjdk@11/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-11.jdk
+            - export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
+            - export JAVA_HOME=`/usr/libexec/java_home -v 11`
           before_script:
             - ant $OPTS clean
             - ant $OPTS build

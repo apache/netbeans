@@ -46,7 +46,7 @@ public final class AntGrammarQueryProvider extends GrammarQueryManager {
         Enumeration en = ctx.getDocumentChildren();
         while (en.hasMoreElements()) {
             Node next = (Node) en.nextElement();
-            if (next.getNodeType() == next.ELEMENT_NODE) {
+            if (next.getNodeType() == Node.ELEMENT_NODE) {
                 Element root = (Element) next;                
                 if ("project".equals(root.getNodeName())) { // NOI18N
                     return Enumerations.singleton (next);

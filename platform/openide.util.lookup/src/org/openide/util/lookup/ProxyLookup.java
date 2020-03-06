@@ -549,9 +549,9 @@ public class ProxyLookup extends Lookup {
             collectFires(null);
         }
         
-        private static ThreadLocal<R> IN = new ThreadLocal<R>();
+        private static ThreadLocal<R<?>> IN = new ThreadLocal<>();
         protected void collectFires(Collection<Object> evAndListeners) {
-            R prev = IN.get();
+            R<?> prev = IN.get();
             if (this == prev) {
 //                Thread.dumpStack();
                 return;

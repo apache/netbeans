@@ -1,14 +1,17 @@
 #Signature file v4.1
-#Version 1.38.0
+#Version 1.40.0
 
 CLSS public com.sun.faces.RIConstants
 fld public final static int FLOW_DEFINITION_ID_SUFFIX_LENGTH
 fld public final static int FLOW_IN_JAR_PREFIX_LENGTH
 fld public final static java.lang.Class[] EMPTY_CLASS_ARGS
-fld public final static java.lang.Object NO_VALUE
 fld public final static java.lang.Object[] EMPTY_METH_ARGS
 fld public final static java.lang.String ALL_MEDIA = "*/*"
+fld public final static java.lang.String ANNOTATED_CLASSES = "com.sun.faces.AnnotatedClasses"
 fld public final static java.lang.String APPLICATION_XML_CONTENT_TYPE = "application/xml"
+fld public final static java.lang.String CDI_1_1_OR_LATER = "com.sun.faces.cdi.OneOneOrLater"
+fld public final static java.lang.String CDI_AVAILABLE = "com.sun.faces.cdi.AvailableFlag"
+fld public final static java.lang.String CDI_BEAN_MANAGER = "com.sun.faces.cdi.BeanManager"
 fld public final static java.lang.String CHAR_ENCODING = "UTF-8"
 fld public final static java.lang.String CORE_NAMESPACE = "http://java.sun.com/jsf/core"
 fld public final static java.lang.String CORE_NAMESPACE_NEW = "http://xmlns.jcp.org/jsf/core"
@@ -21,6 +24,7 @@ fld public final static java.lang.String ERROR_PAGE_PRESENT_KEY_NAME = "com.sun.
 fld public final static java.lang.String FACELETS_ENCODING_KEY = "facelets.Encoding"
 fld public final static java.lang.String FACELET_NAMESPACE = "http://java.sun.com/jsf/facelets"
 fld public final static java.lang.String FACELET_NAMESPACE_NEW = "http://xmlns.jcp.org/jsf/facelets"
+fld public final static java.lang.String FACES_CONFIG_VERSION = "com.sun.faces.facesConfigVersion"
 fld public final static java.lang.String FACES_INITIALIZER_MAPPINGS_ADDED = "com.sun.faces.facesInitializerMappingsAdded"
 fld public final static java.lang.String FACES_PREFIX = "com.sun.faces."
 fld public final static java.lang.String FLOW_DEFINITION_ID_SUFFIX = "-flow.xml"
@@ -31,6 +35,8 @@ fld public final static java.lang.String HTML_CONTENT_TYPE = "text/html"
 fld public final static java.lang.String HTML_NAMESPACE = "http://java.sun.com/jsf/html"
 fld public final static java.lang.String HTML_NAMESPACE_NEW = "http://xmlns.jcp.org/jsf/html"
 fld public final static java.lang.String JAVAEE_XMLNS = "http://xmlns.jcp.org/xml/ns/javaee"
+fld public final static java.lang.String NO_VALUE = ""
+fld public final static java.lang.String PUSH_RESOURCE_URLS_KEY_NAME = "com.sun.faces.resourceUrls"
 fld public final static java.lang.String SAVED_STATE = "com.sun.faces.savedState"
 fld public final static java.lang.String SAVESTATE_FIELD_DELIMITER = "~"
 fld public final static java.lang.String SAVESTATE_FIELD_MARKER = "~com.sun.faces.saveStateFieldMarker~"

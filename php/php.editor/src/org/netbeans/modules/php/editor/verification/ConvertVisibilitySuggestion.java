@@ -121,7 +121,7 @@ public class ConvertVisibilitySuggestion extends SuggestionRule {
                 }
                 List<HintFix> createFixes = createFixes(fixInfo);
                 if (!createFixes.isEmpty()) {
-                    hints.add(new Hint(suggestion, Bundle.ConvertVisibilitySuggestion_Hint_Description(), fileObject, lineRange, createFixes, 500));
+                    hints.add(new Hint(suggestion, Bundle.ConvertVisibilitySuggestion_Hint_Description(), fileObject, lineRange, createFixes, 1000));
                 }
             }
             return hints;

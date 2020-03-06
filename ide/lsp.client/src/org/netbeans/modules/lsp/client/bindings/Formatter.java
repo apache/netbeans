@@ -19,7 +19,6 @@
 package org.netbeans.modules.lsp.client.bindings;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -32,7 +31,6 @@ import org.eclipse.lsp4j.FormattingOptions;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextEdit;
-import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.editor.indent.spi.Context;
@@ -47,12 +45,18 @@ public class Formatter implements ReformatTask {
 
     private static final Logger LOG = Logger.getLogger(Formatter.class.getName());
 
-    @MimeRegistration(mimeType = "", service = ReformatTask.Factory.class)
     public static class Factory implements ReformatTask.Factory {
 
         @Override
         public ReformatTask createTask(Context context) {
-            return new Formatter(context);
+            FileObject file = NbEditorUtilities.getFileObject(context.document());
+            if (file != null) {
+                LSPBindings bindings = LSPBindings.getBindings(file);
+                if (bindings != null) {
+                    return new Formatter(context);
+                }
+            }
+            return null;
         }
 
     }
@@ -66,7 +70,7 @@ public class Formatter implements ReformatTask {
     @Override
     public void reformat() throws BadLocationException {
         FileObject file = NbEditorUtilities.getFileObject(ctx.document());
-        if(file != null) {
+        if (file != null) {
             LSPBindings bindings = LSPBindings.getBindings(file);
             if (bindings != null) {
                 Boolean documentFormatting = bindings.getInitResult().getCapabilities().getDocumentFormattingProvider();
@@ -120,7 +124,7 @@ public class Formatter implements ReformatTask {
     }
 
     private void applyTextEdits(List<TextEdit> edits) {
-        if(ctx.document() instanceof StyledDocument) {
+        if (ctx.document() instanceof StyledDocument) {
             NbDocument.runAtomic((StyledDocument) ctx.document(), () -> {
                 Utils.applyEditsNoLock(ctx.document(), edits, ctx.startOffset(), ctx.endOffset());
             });

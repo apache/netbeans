@@ -33,6 +33,8 @@ import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -91,6 +93,12 @@ public class DownloadBinaries extends Task {
      */
     public void setRepos(String repos) {
         this.repos = repos;
+    }
+    
+    private File report = null;
+    
+    public void setReportToFile(File file) {
+        this.report = file;
     }
     
     private final List<FileSet> manifests = new ArrayList<>();
@@ -161,6 +169,13 @@ public class DownloadBinaries extends Task {
                             } else {
                                 success &= fillInFile(hashAndFile[0], hashAndFile[1], manifest, () -> legacyDownload(hashAndFile[0] + "-" + hashAndFile[1]));
                             }
+                            if (report != null) {
+                                Files.write(
+                                        report.toPath(),
+                                        (hashAndFile[0] + ";" + hashAndFile[1] + ";" + include + "\n").getBytes(),
+                                        StandardOpenOption.APPEND);
+                            }
+                            
                         }
                     }
                 } catch (IOException x) {

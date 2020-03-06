@@ -197,7 +197,9 @@ metabuild.hash=${metabuild.hash}</echo>
   <target name="getgitinformation" depends="-git.up,-git.down" />
   <target name="download-all-extbins" unless="ext.binaries.downloaded" depends="bootstrap">
     <echo>Downloading external binaries (*/external/ directories)...</echo>
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+    <delete file="${nb_all}/nbbuild/build/external.info" />
+    <touch file="${nb_all}/nbbuild/build/external.info" />
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" reporttofile="${nb_all}/nbbuild/build/external.info" >
         <manifest dir="${nb_all}">
             <include name="**/external/binaries-list"/>
         </manifest>

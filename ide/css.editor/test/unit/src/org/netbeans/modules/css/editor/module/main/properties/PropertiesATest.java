@@ -2713,4 +2713,11 @@ public class PropertiesATest extends CssModuleTestBase {
                 + "}";
         assertCssCode(code);
     }
+
+    public void testUnicodeRange() throws ParseException {
+        String code = "xxx {\n"
+            + "    unicode-range: U+0D01, U+0A01-00ff, U+0A??;\n"
+            + "}";
+        assertCssCode(code);
+    }
 }

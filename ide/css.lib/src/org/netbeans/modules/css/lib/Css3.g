@@ -915,6 +915,7 @@ term
         | VARIABLE
         | IDENT
         | NUMBER
+        | URANGE
         | PERCENTAGE
         | LENGTH
         | EMS
@@ -1898,6 +1899,10 @@ URI :   U R L
             ((WS)=>WS)? (URL|STRING) WS?
         ')'
     ;
+
+fragment HEXCHAR_WILDCARD: '?' | HEXCHAR;
+
+URANGE: ('u'|'U') PLUS HEXCHAR_WILDCARD+ (MINUS HEXCHAR_WILDCARD+)?;
 
 MOZ_URL_PREFIX
 	:

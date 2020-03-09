@@ -21,21 +21,30 @@ package org.netbeans.modules.refactoring.java.test;
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.lang.model.element.ElementKind;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
+import org.netbeans.api.java.classpath.JavaClassPathConstants;
+import org.netbeans.api.java.source.ClassIndex;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.TreeUtilities;
@@ -45,12 +54,15 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
+import org.netbeans.modules.java.source.usages.ClassIndexManager;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.modules.parsing.impl.indexing.MimeTypes;
 import org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater;
+import org.netbeans.modules.parsing.lucene.CacheCleaner;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.spi.editor.mimelookup.MimeDataProvider;
 import org.netbeans.spi.gototest.TestLocator;
@@ -73,6 +85,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class RefactoringTestBase extends NbTestCase {
     // Turning off annoying info messages from treeutilities
     private static final Logger TREEUTILITIESLOGGER = Logger.getLogger(TreeUtilities.class.getName());
+    private static final Logger REPOSITORY_UPDATER_LOGGER = Logger.getLogger(RepositoryUpdater.class.getName());
 
     public RefactoringTestBase(String name) {
         super(name);
@@ -122,7 +135,15 @@ public class RefactoringTestBase extends NbTestCase {
             assertNotNull(f);
             assertNotNull(f.content);
             assertNotNull("Cannot find " + f.filename + " in map " + content, fileContent);
+            try {
             assertEquals(getName() ,f.content.replaceAll("[ \t\r\n\n]+", " "), fileContent.replaceAll("[ \t\r\n\n]+", " "));
+            } catch (Throwable t) {
+                System.err.println("expected:");
+                System.err.println(f.content);
+                System.err.println("actual:");
+                System.err.println(fileContent);
+                throw t;
+            }
         }
 
         assertTrue(content.toString(), content.isEmpty());
@@ -193,6 +214,7 @@ public class RefactoringTestBase extends NbTestCase {
     protected void setUp() throws Exception {
         System.setProperty("org.netbeans.modules.java.source.usages.SourceAnalyser.fullIndex", "true");
         TREEUTILITIESLOGGER.setLevel(Level.SEVERE);
+        REPOSITORY_UPDATER_LOGGER.setLevel(Level.SEVERE);
         MimeTypes.setAllMimeTypes(new HashSet<String>());
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/openide/loaders/layer.xml",
                     "org/netbeans/modules/java/source/resources/layer.xml",
@@ -204,6 +226,9 @@ public class RefactoringTestBase extends NbTestCase {
                     if (sourcePath != null && sourcePath.contains(file)){
                                 if (ClassPath.BOOT.equals(type)) {
                                     return TestUtil.getBootClassPath();
+                                }
+                                if (JavaClassPathConstants.MODULE_BOOT_PATH.equals(type)) {
+                                    return BootClassPathUtil.getBootClassPath();
                                 }
                                 if (ClassPath.COMPILE.equals(type)) {
                                     return ClassPathSupport.createClassPath(new FileObject[0]);
@@ -340,6 +365,11 @@ public class RefactoringTestBase extends NbTestCase {
         super.tearDown();
         GlobalPathRegistry.getDefault().unregister(ClassPath.SOURCE, new ClassPath[] {sourcePath});
         org.netbeans.api.project.ui.OpenProjects.getDefault().close(new Project[] {prj});
+        CountDownLatch cdl = new CountDownLatch(1);
+        RepositoryUpdater.getDefault().stop(() -> {
+            cdl.countDown();;
+        });
+        cdl.await();
         prj = null;
     }
 
@@ -350,10 +380,10 @@ public class RefactoringTestBase extends NbTestCase {
         src = FileUtil.createFolder(projectFolder, "src");
         test = FileUtil.createFolder(projectFolder, "test");
 
-        FileObject cache = FileUtil.createFolder(workdir, "cache");
+            FileObject cache = FileUtil.createFolder(workdir, "cache");
 
-        CacheFolder.setCacheFolder(cache);
-    }
+            CacheFolder.setCacheFolder(cache);
+        }
 
     @ServiceProvider(service=MimeDataProvider.class)
     public static final class MimeDataProviderImpl implements MimeDataProvider {

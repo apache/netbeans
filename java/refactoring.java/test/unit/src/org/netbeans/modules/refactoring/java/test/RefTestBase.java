@@ -42,6 +42,7 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.modules.parsing.impl.indexing.MimeTypes;
@@ -178,7 +179,7 @@ public class RefTestBase extends NbTestCase {
                     if ((src != null && (file == src || FileUtil.isParentOf(src, file)))
                             || (test != null && (file == test || FileUtil.isParentOf(test, file)))){
                         if (ClassPath.BOOT.equals(type)) {
-                            return ClassPathSupport.createClassPath(System.getProperty("sun.boot.class.path"));
+                            return BootClassPathUtil.getBootClassPath();
                         }
                         if (ClassPath.COMPILE.equals(type)) {
                             return ClassPathSupport.createClassPath(new FileObject[0]);

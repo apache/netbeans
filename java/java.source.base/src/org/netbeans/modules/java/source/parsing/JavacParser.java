@@ -485,7 +485,7 @@ public class JavacParser extends Parser {
                 cancelService.mayCancel.set(true);
             }
             try {
-                reachedPhase = moveToPhase(requiredPhase, ciImpl, true);
+                reachedPhase = moveToPhase(requiredPhase, ciImpl, Collections.emptyList(), true);
             } catch (IOException ioe) {
                 throw new ParseException ("JavacParser failure", ioe);      //NOI18N
             } finally {
@@ -568,7 +568,7 @@ public class JavacParser extends Parser {
      * @return the reached phase
      * @throws IOException when the javac throws an exception
      */
-    Phase moveToPhase (final Phase phase, final CompilationInfoImpl currentInfo,
+    Phase moveToPhase (final Phase phase, final CompilationInfoImpl currentInfo, List<FileObject> forcedSources,
             final boolean cancellable) throws IOException {
         JavaSource.Phase parserError = currentInfo.parserCrashed;
         assert parserError != null;
@@ -586,7 +586,7 @@ public class JavacParser extends Parser {
                 if (sequentialParsing != null) {
                     trees = sequentialParsing.parse(currentInfo.getJavacTask(), currentInfo.jfo);
                 } else {
-                    trees = currentInfo.getJavacTask().parse();
+                    trees = currentInfo.getJavacTask(forcedSources).parse();
                 }
                 if (trees == null) {
                     LOGGER.log( Level.INFO, "Did not parse anything for: {0}", currentInfo.jfo.toUri()); //NOI18N
@@ -599,7 +599,12 @@ public class JavacParser extends Parser {
                 }
                 CompilationUnitTree unit = it.next();
                 currentInfo.setCompilationUnit(unit);
-                assert !it.hasNext();
+                List<JavaFileObject> parsedFiles = new ArrayList<>();
+                parsedFiles.add(unit.getSourceFile());
+                while (it.hasNext()) {
+                    parsedFiles.add(it.next().getSourceFile());
+                }
+                currentInfo.setParsedFiles(parsedFiles);
                 final Document doc = currentInfo.getDocument();
                 if (doc != null && supportsReparse) {
                     final FindMethodRegionsVisitor v = new FindMethodRegionsVisitor(doc,Trees.instance(currentInfo.getJavacTask()).getSourcePositions(),this.parserCanceled, unit);
@@ -674,7 +679,7 @@ public class JavacParser extends Parser {
                 JavaCompiler compiler = JavaCompiler.instance(jti.getContext());
                 List<Env<AttrContext>> savedTodo = new ArrayList<>(compiler.todo);
                 try {
-                    compiler.todo.retainFiles(Collections.singletonList(currentInfo.jfo));
+                    compiler.todo.retainFiles(currentInfo.getParsedFiles());
                     savedTodo.removeAll(compiler.todo);
                     PostFlowAnalysis.analyze(jti.analyze(), jti.getContext());
                 } finally {
@@ -721,7 +726,7 @@ public class JavacParser extends Parser {
 
     static JavacTaskImpl createJavacTask(
             final FileObject file,
-            final JavaFileObject jfo,
+            final List<JavaFileObject> jfos,
             final FileObject root,
             final ClasspathInfo cpInfo,
             final JavacParser parser,
@@ -789,7 +794,7 @@ public class JavacParser extends Parser {
                     APTUtils.get(root),
                     compilerOptions,
                     additionalModules,
-                    jfo != null ? Arrays.asList(jfo) : Collections.emptyList());
+                    jfos);
             Lookup.getDefault()
                   .lookupAll(TreeLoaderRegistry.class)
                   .stream()

@@ -26,7 +26,7 @@
 </apidefs>
 <changes>
     <change id="SourceUtils.forceSource">
-        <api name="forceSource" />
+        <api name="javasource_base" />
         <summary>Adding SourceUtils.forceSource(CompilationController, FileObject)</summary>
         <version major="1" minor="2.46"/>
         <date day="9" month="3" year="2020"/>

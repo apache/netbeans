@@ -60,6 +60,7 @@ import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.java.source.usages.ClassIndexManager;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
+import org.netbeans.modules.parsing.impl.indexing.LogContext;
 import org.netbeans.modules.parsing.impl.indexing.MimeTypes;
 import org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater;
 import org.netbeans.modules.parsing.lucene.CacheCleaner;
@@ -86,6 +87,7 @@ public class RefactoringTestBase extends NbTestCase {
     // Turning off annoying info messages from treeutilities
     private static final Logger TREEUTILITIESLOGGER = Logger.getLogger(TreeUtilities.class.getName());
     private static final Logger REPOSITORY_UPDATER_LOGGER = Logger.getLogger(RepositoryUpdater.class.getName());
+    private static final Logger LOG_CONTEXT_LOGGER = Logger.getLogger(LogContext.class.getName());
 
     public RefactoringTestBase(String name) {
         super(name);
@@ -215,6 +217,7 @@ public class RefactoringTestBase extends NbTestCase {
         System.setProperty("org.netbeans.modules.java.source.usages.SourceAnalyser.fullIndex", "true");
         TREEUTILITIESLOGGER.setLevel(Level.SEVERE);
         REPOSITORY_UPDATER_LOGGER.setLevel(Level.SEVERE);
+        LOG_CONTEXT_LOGGER.setLevel(Level.SEVERE);
         MimeTypes.setAllMimeTypes(new HashSet<String>());
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/openide/loaders/layer.xml",
                     "org/netbeans/modules/java/source/resources/layer.xml",

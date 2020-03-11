@@ -34,7 +34,9 @@ public class RootActionProvider extends DefaultGradleActionsProvider {
     private static final String[] SUPPORTED = new String[]{
         COMMAND_BUILD,
         COMMAND_CLEAN,
-        COMMAND_REBUILD,};
+        COMMAND_REBUILD,
+        COMMAND_DELETE,
+    };
 
     public RootActionProvider() {
         super(SUPPORTED);

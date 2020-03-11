@@ -98,31 +98,51 @@ class HtmlLabelUI extends LabelUI {
     private static int textWidth(String text, Graphics g, Font f, boolean html) {
         if (text != null) {
             if (html) {
-                return Math.round(
-                    Math.round(
-                        Math.ceil(
-                            HtmlRenderer.renderHTML(
+                return (int) Math.ceil(
+                        HtmlRenderer.renderHTML(
                                 text, g, 0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE, f, Color.BLACK,
                                 HtmlRenderer.STYLE_CLIP, false
-                            )
                         )
-                    )
                 );
             } else {
-                return Math.round(
-                    Math.round(
-                        Math.ceil(
-                            HtmlRenderer.renderPlainString(
+                return (int) Math.ceil(
+                        HtmlRenderer.renderPlainString(
                                 text, g, 0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE, f, Color.BLACK,
                                 HtmlRenderer.STYLE_CLIP, false
-                            )
                         )
-                    )
                 );
             }
         } else {
             return 0;
         }
+    }
+
+    private static Font font(HtmlRendererImpl c) {
+        Font result = c.getFont();
+        if (result == null) {
+            String key;
+            switch(c.type()) {
+                case LIST :
+                    key = "List.font"; // NOI18N
+                    break;
+                case TABLE :
+                    key = "Table.font"; // NOI18N
+                    break;
+                case TREE :
+                    key = "Tree.font"; // NOI18N
+                    break;
+                default :
+                    key = "Label.font"; // NOI18N
+            }
+            result = UIManager.getFont(key);
+        }
+        if (result == null) {
+            result = UIManager.getFont("controlFont"); // NOI18N
+            if (result == null) {
+                result = new Font("SansSerif", Font.PLAIN, 12); // NOI18N
+            }
+        }
+        return result;
     }
 
     private Dimension calcPreferredSize(HtmlRendererImpl r) {
@@ -132,9 +152,9 @@ class HtmlLabelUI extends LabelUI {
 
         Graphics g = r.getGraphics();
         Icon icon = r.getIcon();
-
+        Font font = font(r);
         if (text != null) {
-            FontMetrics fm = g.getFontMetrics(r.getFont());
+            FontMetrics fm = g.getFontMetrics(font);
             prefSize.height += (fm.getMaxAscent() + fm.getMaxDescent());
         }
 
@@ -153,7 +173,7 @@ class HtmlLabelUI extends LabelUI {
         //than the space actually needed
         ((Graphics2D) g).addRenderingHints(getHints());
 
-        int textwidth = textWidth(text, g, r.getFont(), r.isHtml()) + 4;
+        int textwidth = textWidth(text, g, font, r.isHtml()) + 4;
 
         if (r.isCentered()) {
             prefSize.width = Math.max(prefSize.width, textwidth + ins.right + ins.left);
@@ -239,7 +259,7 @@ class HtmlLabelUI extends LabelUI {
 
     /** Actually paint the icon and text using our own html rendering engine. */
     private void paintIconAndText(Graphics g, HtmlRendererImpl r) {
-        Font f = r.getFont();
+        Font f = font(r);
         g.setFont(f);
 
         FontMetrics fm = g.getFontMetrics();
@@ -348,7 +368,7 @@ class HtmlLabelUI extends LabelUI {
 
         int txtH = r.getHeight() - txtY;
 
-        Font f = r.getFont();
+        Font f = font(r);
         g.setFont(f);
 
         FontMetrics fm = g.getFontMetrics(f);
@@ -363,7 +383,7 @@ class HtmlLabelUI extends LabelUI {
             );
         } else {
             HtmlRenderer.renderString(
-                r.getText(), g, txtX, txtY, txtW, txtH, r.getFont(), foreground, r.getRenderStyle(), true
+                r.getText(), g, txtX, txtY, txtW, txtH, f, foreground, r.getRenderStyle(), true
             );
         }
     }

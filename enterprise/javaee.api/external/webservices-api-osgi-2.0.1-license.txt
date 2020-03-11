@@ -1,8 +1,8 @@
-Name: Javax XML RPC API
-Version: 1.1.1
+Name: Metro Web Services API OSGi Bundle 2.0.1
+Version: 2.0.1
 License: CDDL-1.1
-Description: Javax XML RPC API 1.1.1
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.xml.rpc/javax.xml.rpc-api/1.1.1)
+Description: Metro Web Services API OSGi Bundle
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.xml/webservices-api-osgi/2.0.1)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

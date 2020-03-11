@@ -33,6 +33,10 @@
         <args>clean build</args>
     </action>
 
+    <action name="delete" repeatable="false">
+        <args>clean</args>
+        <reload rule="NEVER"/>
+    </action>
     <action name="download.javadoc">
         <!--
             We do not really execute any tasks here, rather just reload the project

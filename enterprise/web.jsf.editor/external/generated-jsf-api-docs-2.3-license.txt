@@ -1,8 +1,9 @@
-Name: Javax XML Registry API
-Version: 1.0.7
+Name: Java Server Faces API documentation
+Version: 2.3
 License: CDDL-1.1
-Description: Javax XML Registry API 1.0.7
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.xml.registry/javax.xml.registry-api/1.0.7)
+Type: generated
+Description: Java Server Faces API documentation
+Origin: Oracle
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

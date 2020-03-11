@@ -1,8 +1,8 @@
-Name: Metro Web Services API OSGi Bundle 2.0
-Version: 2.0
+Name: Javax Resource API
+Version: 1.7.1
 License: CDDL-1.1
-Description: Metro Web Services API OSGi Bundle
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.xml/webservices-api-osgi/2.0)
+Description: Javax Resource API 1.7.1
+Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.resource/javax.resource-api/1.7.1)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

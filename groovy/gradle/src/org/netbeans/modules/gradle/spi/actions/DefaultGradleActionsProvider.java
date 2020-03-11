@@ -20,18 +20,11 @@
 package org.netbeans.modules.gradle.spi.actions;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import org.netbeans.api.project.Project;
-import org.netbeans.spi.project.SingleMethod;
-import org.openide.filesystems.FileObject;
-import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 
 /**

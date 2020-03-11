@@ -1,8 +1,8 @@
-Name: Java Authorization Contract For Containers API
-Version: 1.5
+Name: Java Architecture for XML Binding
+Version: 2.2.7
 License: CDDL-1.1
-Description: Java Authorization Contract For Containers API 1.5
-Origin: GlassFish Community (https://mvnrepository.com/artifact/javax.security.jacc/javax.security.jacc-api/1.5)
+Description: JAXB (JSR 222) API bundled for OSGi distribution
+Origin: Oracle (https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api-osgi/2.2.7)
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

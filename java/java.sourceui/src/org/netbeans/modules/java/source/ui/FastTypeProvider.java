@@ -98,6 +98,7 @@ public final class FastTypeProvider implements TypeProvider {
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     public void computeTypeNames(Context context, Result result) {
         StringBuilder pattern = new StringBuilder();
         boolean sensitive = true;

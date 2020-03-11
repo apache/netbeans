@@ -324,7 +324,7 @@ public abstract class JavaRefactoringPlugin extends ProgressProviderAdapter impl
             } else {
                 javaSource.runUserActionTask(cc -> {
                     if (cc.getFileObject() == fake) return ;
-                    currentTask.run(fake);
+                    currentTask.run(cc);
                 }, true);
             }
         }

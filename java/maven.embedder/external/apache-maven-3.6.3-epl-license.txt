@@ -1,3 +1,10 @@
+Name: Apache Maven components under EPL v1.0
+Description: These Apache Maven components are under EPL v1.0: org.eclipse.sisu.inject-0.3.4.jar org.eclipse.sisu.plexus-0.3.4.jar
+Version: 3.6.3
+License: Maven-EPL-v10
+Origin: Apache Software Foundation
+Files: apache-maven-3.6.3-bin.zip!/apache-maven-3.6.3/lib/org.eclipse.sisu.inject-0.3.4.jar apache-maven-3.6.3-bin.zip!/apache-maven-3.6.3/lib/org.eclipse.sisu.plexus-0.3.4.jar
+
 Eclipse Public License - v 1.0
 
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC

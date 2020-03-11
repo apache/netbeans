@@ -416,4 +416,22 @@ public class RefactoringTestBase extends NbTestCase {
         }
         return false;
     }
+
+    private static final int RETRIES = 3;
+
+    @Override
+    protected void runTest() throws Throwable {
+        //the tests are unfortunatelly not 100% stable, try to recover by retrying:
+        Throwable exc = null;
+        for (int i = 0; i < RETRIES; i++) {
+            try {
+                super.runTest();
+                return;
+            } catch (Throwable t) {
+                if (exc == null) exc = t;
+            }
+        }
+        throw exc;
+    }
+
 }

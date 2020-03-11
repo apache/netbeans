@@ -187,9 +187,9 @@ public class ExtFormatter extends Formatter implements FormatLayer {
     /** Remove the first layer which has the same name as the given one.
     */
     public synchronized void removeFormatLayer(String layerName) {
-        Iterator it = formatLayerIterator();
+        Iterator<FormatLayer> it = formatLayerIterator();
         while (it.hasNext()) {
-            if (layerName.equals(((FormatLayer)it.next()).getName())) {
+            if (layerName.equals(it.next().getName())) {
                 it.remove();
                 return;
             }

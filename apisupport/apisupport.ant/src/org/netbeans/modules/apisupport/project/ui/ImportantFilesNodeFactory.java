@@ -342,10 +342,10 @@ public class ImportantFilesNodeFactory implements NodeFactory {
         
         private void refreshKeys() {
             List<String> newVisibleFiles = new ArrayList<String>();
-            Iterator it = FILES.keySet().iterator();
+            Iterator<String> it = FILES.keySet().iterator();
             Set<FileObject> files = new HashSet<FileObject>();
             while (it.hasNext()) {
-                String loc = (String) it.next();
+                String loc = it.next();
                 String locEval = project.getEvaluator().evaluate(loc);
                 if (locEval == null) {
                     continue;

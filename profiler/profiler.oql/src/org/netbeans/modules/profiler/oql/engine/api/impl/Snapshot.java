@@ -167,7 +167,7 @@ public class Snapshot {
     }
 
     public Iterator getClassNames(String regex)  {
-        final Iterator delegated = delegate.getJavaClassesByRegExp(regex).iterator();
+        final Iterator<JavaClass> delegated = delegate.getJavaClassesByRegExp(regex).iterator();
         return new Iterator() {
 
             public boolean hasNext() {
@@ -175,7 +175,7 @@ public class Snapshot {
             }
 
             public Object next() {
-                return ((JavaClass)delegated.next()).getName();
+                return delegated.next().getName();
             }
 
             public void remove() {

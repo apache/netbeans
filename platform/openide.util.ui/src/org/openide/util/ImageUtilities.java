@@ -528,8 +528,9 @@ public final class ImageUtilities {
                 }
                 useLoaderQuery = loaderQuery;
             }
-            Iterator it = useLoaderQuery.allInstances().iterator();
-            toReturn = Optional.ofNullable(it.hasNext() ? (T) it.next() : null);
+
+            Iterator<? extends T> it = useLoaderQuery.allInstances().iterator();
+            toReturn = Optional.ofNullable(it.hasNext() ? it.next() : null);
             if (!toReturn.isPresent()) {
                 if (!noLoaderWarned.getAndSet(true)) {
                     ERR.log(Level.WARNING, "No {0} instance found in {1}", // NOI18N

@@ -895,9 +895,9 @@ public class AntDebugger extends ActionsProviderSupport {
                 }
                 try {
                     Set targets = TargetLister.getTargets (ant);
-                    Iterator it = targets.iterator ();
+                    Iterator<TargetLister.Target> it = targets.iterator ();
                     while (it.hasNext ()) {
-                        TargetLister.Target t = (TargetLister.Target) it.next ();
+                        TargetLister.Target t = it.next();
                         nameToTarget.put (t.getName (), t);
                     }
                 } catch (IOException ioex) {

@@ -162,7 +162,7 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
         if (doc == null) {
             return null;
         }
-        Iterator it;
+        Iterator<?> it;
         it = doc.getChildNodes().iterator();
         while (it.hasNext()) {
             Object next = it.next();
@@ -195,9 +195,9 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
                 remainder = name.substring(idx + 1);
             }
             TreeElement subel = null;
-            Iterator it = el.getChildNodes(TreeElement.class).iterator();
+            Iterator<TreeElement> it = el.getChildNodes(TreeElement.class).iterator();
             while (it.hasNext()) {
-                TreeElement e = (TreeElement) it.next();
+                TreeElement e = it.next();
                 if (e.getLocalName().equals("file") || // NOI18N
                         e.getLocalName().equals("folder")) { // NOI18N
                     TreeAttribute nameAttr = e.getAttribute("name"); // NOI18N
@@ -233,9 +233,9 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
         }
         ArrayList<String> kids = new ArrayList<String>();
         Set<String> allNames = new HashSet<String>();
-        Iterator it = el.getChildNodes(TreeElement.class).iterator();
+        Iterator<TreeElement> it = el.getChildNodes(TreeElement.class).iterator();
         while (it.hasNext()) {
-            TreeElement sub = (TreeElement) it.next();
+            TreeElement sub = it.next();
             if (sub.getLocalName().equals("file") || // NOI18N
                     sub.getLocalName().equals("folder")) { // NOI18N
                 TreeAttribute childName = sub.getAttribute("name"); // NOI18N
@@ -296,7 +296,7 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
             }
         } else {
             StringBuffer buf = new StringBuffer();
-            Iterator it = el.getChildNodes().iterator();
+            Iterator<?> it = el.getChildNodes().iterator();
             while (it.hasNext()) {
                 Object o = it.next();
                 if (o instanceof TreeCDATASection) {
@@ -560,9 +560,9 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
             return Enumerations.empty();
         }
         java.util.List<String> l = new ArrayList<String>(10);
-        Iterator it = el.getChildNodes(TreeElement.class).iterator();
+        Iterator<TreeElement> it = el.getChildNodes(TreeElement.class).iterator();
         while (it.hasNext()) {
-            TreeElement sub = (TreeElement) it.next();
+            TreeElement sub = it.next();
             if (sub.getLocalName().equals("attr")) { // NOI18N
                 TreeAttribute nameAttr = sub.getAttribute("name"); // NOI18N
                 if (nameAttr == null) {
@@ -836,9 +836,9 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
         }
         // Find any existing <attr>.
         TreeChild existingAttr = null;
-        Iterator it = el.getChildNodes(TreeElement.class).iterator();
+        Iterator<TreeElement> it = el.getChildNodes(TreeElement.class).iterator();
         while (it.hasNext()) {
-            TreeElement sub = (TreeElement) it.next();
+            TreeElement sub = it.next();
             if (sub.getLocalName().equals("attr")) { // NOI18N
                 TreeAttribute attr = sub.getAttribute("name"); // NOI18N
                 if (attr == null) {
@@ -1150,9 +1150,9 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
         TreeElement childe = (TreeElement) child;
         if (childe.getQName().equals("file") || childe.getQName().equals("folder")) { // NOI18N
             String name = childe.getAttribute("name").getValue(); // NOI18N
-            Iterator it = parent.getChildNodes(TreeElement.class).iterator();
+            Iterator<TreeElement> it = parent.getChildNodes(TreeElement.class).iterator();
             while (it.hasNext()) {
-                TreeElement kid = (TreeElement) it.next();
+                TreeElement kid = it.next();
                 if (kid.getQName().equals("file") || kid.getQName().equals("folder")) { // NOI18N
                     TreeAttribute attr = kid.getAttribute("name"); // NOI18N
                     if (attr != null) { // #66816 - layer might be malformed
@@ -1166,9 +1166,9 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
             return null;
         } else if (childe.getQName().equals("attr")) { // NOI18N
             String name = childe.getAttribute("name").getValue(); // NOI18N
-                Iterator it = parent.getChildNodes(TreeElement.class).iterator();
+                Iterator<TreeElement> it = parent.getChildNodes(TreeElement.class).iterator();
                 while (it.hasNext()) {
-                    TreeElement kid = (TreeElement) it.next();
+                    TreeElement kid = it.next();
                     if (kid.getQName().equals("file") || kid.getQName().equals("folder")) { // NOI18N
                         return kid;
                     } else if (kid.getQName().equals("attr")) { // NOI18N
@@ -1337,7 +1337,7 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
         TreeElement parent = (TreeElement) child.getParentNode();
         TreeObjectList list = parent.getChildNodes();
         boolean kill = true;
-        Iterator it = list.iterator();
+        Iterator<?> it = list.iterator();
         while (it.hasNext()) {
             Object o = it.next();
             if (o == child) {

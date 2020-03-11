@@ -108,9 +108,9 @@ public class GroovyBreakpointAnnotationListener extends DebuggerManagerAdapter {
     }
 
     public void updateGroovyLineBreakpoints () {
-        Iterator it = breakpointToAnnotation.keySet ().iterator (); 
+        Iterator<LineBreakpoint> it = breakpointToAnnotation.keySet ().iterator (); 
         while (it.hasNext ()) {
-            LineBreakpoint lb = (LineBreakpoint) it.next ();
+            LineBreakpoint lb = it.next();
             update (lb, null);
         }
     }

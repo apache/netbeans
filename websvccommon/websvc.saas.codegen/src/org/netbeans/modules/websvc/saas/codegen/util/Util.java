@@ -188,9 +188,9 @@ public class Util {
     public static JLabel findLabel(JComponent comp, String labelText) {
         Vector allComponents = new Vector();
         getAllComponents(comp.getComponents(), allComponents);
-        Iterator iterator = allComponents.iterator();
+        Iterator<Component> iterator = allComponents.iterator();
         while (iterator.hasNext()) {
-            Component c = (Component) iterator.next();
+            Component c = iterator.next();
             if (c instanceof JLabel) {
                 JLabel label = (JLabel) c;
                 if (label.getText().equals(labelText)) {

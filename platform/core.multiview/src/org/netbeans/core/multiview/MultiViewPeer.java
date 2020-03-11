@@ -297,9 +297,9 @@ public final class MultiViewPeer implements PropertyChangeListener {
     }        
     
     void peerComponentClosed() {
-        Iterator it = model.getCreatedElements().iterator();
+        Iterator<MultiViewElement> it = model.getCreatedElements().iterator();
         while (it.hasNext()) {
-            MultiViewElement el = (MultiViewElement)it.next();
+            MultiViewElement el = it.next();
             model.markAsHidden(el);
             el.componentClosed();
         }
@@ -802,10 +802,10 @@ public final class MultiViewPeer implements PropertyChangeListener {
      */
     boolean canClose() {
         Collection col = model.getCreatedElements();
-        Iterator it = col.iterator();
+        Iterator<MultiViewElement> it = col.iterator();
         Collection<CloseOperationState> badOnes = new ArrayList<>();
         while (it.hasNext()) {
-           MultiViewElement el = (MultiViewElement)it.next();
+           MultiViewElement el = it.next();
            CloseOperationState state = el.canCloseElement();
            if (!state.canClose()) {
                badOnes.add(state);
@@ -1104,9 +1104,9 @@ public final class MultiViewPeer implements PropertyChangeListener {
         }
         
         private void fireElementChange() {
-            Iterator it = new ArrayList<ChangeListener>(listeners).iterator();
+            Iterator<ChangeListener> it = new ArrayList<ChangeListener>(listeners).iterator();
             while (it.hasNext()) {
-                ChangeListener elem = (ChangeListener) it.next();
+                ChangeListener elem = it.next();
                 ChangeEvent event = new ChangeEvent(this);
                 elem.stateChanged(event);
             }
@@ -1114,9 +1114,9 @@ public final class MultiViewPeer implements PropertyChangeListener {
         }
         
         void updateListeners(MultiViewElement old, MultiViewElement fresh) {
-            Iterator it = listeners.iterator();
+            Iterator<ChangeListener> it = listeners.iterator();
             while (it.hasNext()) {
-                ChangeListener elem = (ChangeListener) it.next();
+                ChangeListener elem = it.next();
                 if (old.getUndoRedo() != null) {
                     old.getUndoRedo().removeChangeListener(elem);
                 }

@@ -394,7 +394,7 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f java/java.completion test
-            - ant $OPTS -f java/refactoring.java test
+            - ant $OPTS -f java/refactoring.java test-unit
 
         - name: Test apisupport modules
           jdk: openjdk8

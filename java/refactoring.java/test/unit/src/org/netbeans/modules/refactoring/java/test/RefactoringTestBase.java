@@ -21,11 +21,9 @@ package org.netbeans.modules.refactoring.java.test;
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -35,19 +33,13 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.lang.model.element.ElementKind;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
-import org.netbeans.api.java.source.ClassIndex;
-import org.netbeans.api.java.source.ClasspathInfo;
-import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.TestUtilities;
-import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.SourceGroup;
@@ -57,13 +49,10 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
-import org.netbeans.modules.java.source.usages.ClassIndexManager;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
-import org.netbeans.modules.parsing.impl.indexing.LogContext;
 import org.netbeans.modules.parsing.impl.indexing.MimeTypes;
 import org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater;
-import org.netbeans.modules.parsing.lucene.CacheCleaner;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.spi.editor.mimelookup.MimeDataProvider;
 import org.netbeans.spi.gototest.TestLocator;
@@ -84,10 +73,6 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
 public class RefactoringTestBase extends NbTestCase {
-    // Turning off annoying info messages from treeutilities
-    private static final Logger TREEUTILITIESLOGGER = Logger.getLogger(TreeUtilities.class.getName());
-    private static final Logger REPOSITORY_UPDATER_LOGGER = Logger.getLogger(RepositoryUpdater.class.getName());
-    private static final Logger LOG_CONTEXT_LOGGER = Logger.getLogger(LogContext.class.getName());
 
     public RefactoringTestBase(String name) {
         super(name);
@@ -215,9 +200,7 @@ public class RefactoringTestBase extends NbTestCase {
     @Override
     protected void setUp() throws Exception {
         System.setProperty("org.netbeans.modules.java.source.usages.SourceAnalyser.fullIndex", "true");
-        TREEUTILITIESLOGGER.setLevel(Level.SEVERE);
-        REPOSITORY_UPDATER_LOGGER.setLevel(Level.SEVERE);
-        LOG_CONTEXT_LOGGER.setLevel(Level.SEVERE);
+        Logger.getLogger("").setLevel(Level.SEVERE); //turn off chatty logs
         MimeTypes.setAllMimeTypes(new HashSet<String>());
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/openide/loaders/layer.xml",
                     "org/netbeans/modules/java/source/resources/layer.xml",

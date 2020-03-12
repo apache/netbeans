@@ -24,6 +24,13 @@
     <property file="build.properties"/>
     <property file="${native.dirname}/build.properties"/>
 
+    <!-- prepend bootclasspath for JDK 9+ JEP 272: Platform-Specific Desktop Features stubs -->
+    <condition else="" property="endorsed.classpath" value="${build.dir}/desktop-classes-classes">        
+      <not>
+        <isset property="permit.jdk9.builds"/>
+      </not>
+    </condition>
+
     <import file="nbproject/build-impl.xml"/>
     <import file="${native.dirname}/build.xml"/>
     
@@ -45,9 +52,6 @@
           <unzip src="external/applemenu-external-desktop-classes-8.2.zip" dest="${build.dir}/desktop-classes-src"/>
           <mkdir dir="${build.dir}/desktop-classes-classes" />
           <javac srcdir="${build.dir}/desktop-classes-src" destdir="${build.dir}/desktop-classes-classes"/>
-          
-          <property name="javac.bootclassarg" value="-bootclasspath"/>
-          <property name="javac.bootclasspath" value="${build.dir}/desktop-classes-classes:${nbjdk.bootclasspath}"/>
     </target>
     
     <!-- =======================================================================

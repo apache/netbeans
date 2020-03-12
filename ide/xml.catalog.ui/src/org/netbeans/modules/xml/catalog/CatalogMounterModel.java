@@ -118,8 +118,8 @@ final class CatalogMounterModel extends Object {
 
     private void fireStateChanged() {
 
-        for (Iterator it = changeListeners.iterator(); it.hasNext();) {
-            ChangeListener next = (ChangeListener) it.next();
+        for (Iterator<ChangeListener> it = changeListeners.iterator(); it.hasNext();) {
+            ChangeListener next = it.next();
             next.stateChanged(new ChangeEvent(this));
         }
     }

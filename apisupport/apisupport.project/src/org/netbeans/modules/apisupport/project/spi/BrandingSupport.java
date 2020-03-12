@@ -209,8 +209,8 @@ public abstract class BrandingSupport {
         BrandedFile retval = null;
         try {
             retval = new BrandedFile(moduleEntry, entryPath);
-            for (Iterator it = getBrandedFiles().iterator();it.hasNext() ;) {
-                BrandedFile bFile = (BrandedFile)it.next();
+            for (Iterator<BrandedFile> it = getBrandedFiles().iterator();it.hasNext() ;) {
+                BrandedFile bFile = it.next();
                 
                 if (retval.equals(bFile)) {
                     retval = bFile;

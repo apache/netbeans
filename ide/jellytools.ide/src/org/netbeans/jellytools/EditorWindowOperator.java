@@ -123,9 +123,9 @@ public class EditorWindowOperator {
             SwingUtilities.invokeAndWait(new Runnable() {
 
                 public void run() {
-                    Iterator iter = Arrays.asList(mode.getTopComponents()).iterator();
+                    Iterator<TopComponent> iter = Arrays.asList(mode.getTopComponents()).iterator();
                     while (iter.hasNext()) {
-                        EditorOperator.close((TopComponent) iter.next(), false);
+                        EditorOperator.close(iter.next(), false);
                     }
                 }
             });

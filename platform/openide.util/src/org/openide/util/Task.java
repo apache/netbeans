@@ -195,7 +195,7 @@ public class Task extends Object implements Runnable {
     * @see #run
     */
     protected final void notifyFinished() {
-        Iterator it;
+        Iterator<TaskListener> it;
 
         synchronized (this) {
             finished = true;
@@ -211,7 +211,7 @@ public class Task extends Object implements Runnable {
         }
 
         while (it.hasNext()) {
-            TaskListener l = (TaskListener) it.next();
+            TaskListener l = it.next();
             l.taskFinished(this);
         }
     }

@@ -362,9 +362,9 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     }
     
     public  void fireCatalogListeners() {
-        Iterator iter = catalogListeners.iterator();
+        Iterator<CatalogListener> iter = catalogListeners.iterator();
         while (iter.hasNext()) {
-            CatalogListener l = (CatalogListener) iter.next();
+            CatalogListener l = iter.next();
             l.notifyInvalidate();
         }
     }

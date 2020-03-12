@@ -411,12 +411,18 @@ public class GrammarResolver {
                         switch (group.getType()) {
                             case SET:
                             case COLLECTION:
-                            case ALL:
                                 if (LOG) {
                                     log(String.format(" added %s branch result: %s, %s", group.getType().name(), member, state));
                                 }
                                 branchesResults.put(member, state);
                                 backupInputState(enteringGroupState);
+                                break;
+                            case ALL:
+                                if (LOG) {
+                                    log(String.format(" added %s branch result: %s, %s", group.getType().name(), member, state));
+                                }
+                                branchesResults.put(member, state);
+                                backupInputState(atCollectionLoopStartState);
                                 break;
                             case LIST:
                                 if (!membersIterator.hasNext()) {

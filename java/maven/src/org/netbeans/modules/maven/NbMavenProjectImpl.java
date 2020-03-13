@@ -231,7 +231,7 @@ public final class NbMavenProjectImpl implements Project {
 
             @Override
             public File[] getFiles() {
-                File homeFile = FileUtil.normalizeFile(MavenCli.userMavenConfigurationHome);
+                File homeFile = FileUtil.normalizeFile(MavenCli.USER_MAVEN_CONFIGURATION_HOME);
                 return new File[] {
                     new File(projectFile.getParentFile(), "nb-configuration.xml"), //NOI18N
                     projectFile,

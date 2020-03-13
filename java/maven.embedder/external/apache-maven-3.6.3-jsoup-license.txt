@@ -1,3 +1,9 @@
+Name: jsoup
+Description: Part of Apache Maven Distribution
+Version: 3.6.3
+License: Maven-MIT
+Origin: Apache Software Foundation
+Files: apache-maven-3.6.3-bin.zip!/apache-maven-3.6.3/lib/jsoup-1.12.1.jar
 
 The MIT License
 

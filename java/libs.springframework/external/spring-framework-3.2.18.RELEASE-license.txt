@@ -1,11 +1,12 @@
 Name: Spring Framework
 Description: Java/J2EE application framework
-Version: 3.2.7.RELEASE
+Version: 3.2.18.RELEASE
 Origin: SpringSource
-License: Apache-2.0-spring3.2.7
-URL: http://www.springsource.org/download
+License: Apache-2.0-spring3.2.18
+Files: spring-aop-3.2.18.RELEASE.jar spring-aspects-3.2.18.RELEASE.jar spring-beans-3.2.18.RELEASE.jar spring-context-3.2.18.RELEASE.jar spring-context-support-3.2.18.RELEASE.jar spring-core-3.2.18.RELEASE.jar spring-expression-3.2.18.RELEASE.jar spring-instrument-3.2.18.RELEASE.jar spring-instrument-tomcat-3.2.18.RELEASE.jar spring-jdbc-3.2.18.RELEASE.jar spring-jms-3.2.18.RELEASE.jar spring-orm-3.2.18.RELEASE.jar spring-oxm-3.2.18.RELEASE.jar spring-struts-3.2.18.RELEASE.jar spring-test-3.2.18.RELEASE.jar spring-tx-3.2.18.RELEASE.jar spring-web-3.2.18.RELEASE.jar spring-webmvc-3.2.18.RELEASE.jar spring-webmvc-portlet-3.2.18.RELEASE.jar
+URL: https://spring.io/projects/spring-framework
 
-				  Apache License
+                                 Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
 
@@ -209,18 +210,19 @@ URL: http://www.springsource.org/download
 
 =======================================================================
 
-SPRING FRAMEWORK 3.1 SUBCOMPONENTS:
+SPRING FRAMEWORK 3.2.18.RELEASE SUBCOMPONENTS:
 
-Spring Framework 3.1 includes a number of subcomponents with
-separate copyright notices and license terms.  The product that
+Spring Framework 3.2.18.RELEASE includes a number of subcomponents
+with separate copyright notices and license terms. The product that
 includes this file does not necessarily use all the open source
 subcomponents referred to below. Your use of the source
 code for these subcomponents is subject to the terms and
 conditions of the following licenses.
 
->>> asm-2.2.3:
 
-Copyright (c) 2000-2005 INRIA, France Telecom
+>>> ASM 4.0 (org.ow2.asm:asm:4.0, org.ow2.asm:asm-commons:4.0):
+
+Copyright (c) 2000-2011 INRIA, France Telecom
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -252,17 +254,34 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 Copyright (c) 1999-2009, OW2 Consortium <http://www.ow2.org/>
 
+
+>>> CGLIB 3.0 (cglib:cglib:3.0):
+
+Per the LICENSE file in the CGLIB JAR distribution downloaded from
+http://sourceforge.net/projects/cglib/files/cglib3/3.0/cglib-3.0.jar/download,
+CGLIB 3.0 is licensed under the Apache License, version 2.0, the text of which
+is included above.
+
+
 =======================================================================
 
-To the extent any open source subcomponents are licensed under the EPL and/or other
-similar licenses that require the source code and/or modifications to
+To the extent any open source subcomponents are licensed under the EPL and/or
+other similar licenses that require the source code and/or modifications to
 source code to be made available (as would be noted above), you may obtain a
 copy of the source code corresponding to the binaries for such open source
 components and modifications thereto, if any, (the "Source Files"), by
-downloading the Source Files from http://www.springsource.org/download,
-or by sending a request, with your name and address to: VMware, Inc., 3401 Hillview
-Avenue, Palo Alto, CA 94304, United States of America or email info@vmware.com.  All
-such requests should clearly specify:  OPEN SOURCE FILES REQUEST, Attention General
-Counsel.  VMware shall mail a copy of the Source Files to you on a CD or equivalent
-physical medium.  This offer to obtain a copy of the Source Files is valid for three
-years from the date you acquired this Software product.
+downloading the Source Files from http://www.springsource.org/download, or by
+sending a request, with your name and address to:
+
+    Pivotal, Inc., 875 Howard St,
+    San Francisco, CA 94103
+    United States of America
+
+or email info@gopivotal.com.  All such requests should clearly specify:
+
+    OPEN SOURCE FILES REQUEST
+    Attention General Counsel
+
+Pivotal shall mail a copy of the Source Files to you on a CD or equivalent
+physical medium. This offer to obtain a copy of the Source Files is valid for
+three years from the date you acquired this Software product.

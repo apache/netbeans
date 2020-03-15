@@ -26,7 +26,7 @@
     <property name="profiler.cluster" value="./release"/>
     <property name="header.dir" value="${basedir}/native/build"/>
     <target name="-process.release.files">
-        <unzip src="external/profiler-external-binaries-8.2.zip" 
+        <unzip src="external/profiler-external-binaries-12.zip" 
                overwrite="false"
                dest="${profiler.cluster}"/>
     </target>

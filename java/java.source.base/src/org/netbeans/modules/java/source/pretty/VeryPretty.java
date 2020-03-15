@@ -1212,7 +1212,12 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitLambda(JCLambda tree) {
-        print(cs.spaceWithinLambdaParens() && tree.params.nonEmpty() ? "( " : "(");
+        boolean useParens = cs.parensAroundSingularLambdaParam() ||
+                            tree.params.size() != 1 ||
+                            tree.paramKind != JCLambda.ParameterKind.IMPLICIT;
+        if (useParens) {
+            print(cs.spaceWithinLambdaParens() && tree.params.nonEmpty() ? "( " : "(");
+        }
         boolean oldPrintingMethodParams = printingMethodParams;
         printingMethodParams = true;
         suppressVariableType = tree.paramKind == JCLambda.ParameterKind.IMPLICIT;
@@ -1221,9 +1226,11 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                   true);
         suppressVariableType = false;
         printingMethodParams = oldPrintingMethodParams;
-        if (cs.spaceWithinLambdaParens() && tree.params.nonEmpty())
-            needSpace();
-        print(')');
+        if (useParens) {
+            if (cs.spaceWithinLambdaParens() && tree.params.nonEmpty())
+                needSpace();
+            print(')');
+        }
         print(cs.spaceAroundLambdaArrow() ? " ->" : "->");
         if (tree.getBodyKind() == BodyKind.STATEMENT) {
             printBlock(tree.body, cs.getOtherBracePlacement(), cs.spaceAroundLambdaArrow());

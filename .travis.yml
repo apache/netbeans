@@ -449,16 +449,41 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - hide-logs.sh ant $OPTS -f webcommon/languages.apacheconf test
-            - hide-logs.sh ant $OPTS -f webcommon/languages.ini test
+            - hide-logs.sh ant $OPTS -f webcommon/api.knockout test
+            #- hide-logs.sh ant $OPTS -f webcommon/cordova test
+            #- hide-logs.sh ant $OPTS -f webcommon/html.angular test
+            - hide-logs.sh ant $OPTS -f webcommon/html.knockout test-unit
+            - hide-logs.sh ant $OPTS -f webcommon/html.ojet test
             - hide-logs.sh ant $OPTS -f webcommon/javascript.bower test
             - hide-logs.sh ant $OPTS -f webcommon/javascript.cdnjs test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript.grunt test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript.karma test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript.nodejs test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript.v8debug test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.doc test
+            #- hide-logs.sh ant $OPTS -f webcommon/javascript2.editor test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.extdoc test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.extjs test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.jade test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.jquery test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.jsdoc test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.json test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.knockout test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.lexer test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.model test
+            #- hide-logs.sh ant $OPTS -f webcommon/javascript2.nodejs test
+            #- hide-logs.sh ant $OPTS -f webcommon/javascript2.prototypejs test
+            #- hide-logs.sh ant $OPTS -f webcommon/javascript2.requirejs test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.sdoc test
+            - hide-logs.sh ant $OPTS -f webcommon/languages.apacheconf test
+            - hide-logs.sh ant $OPTS -f webcommon/languages.ini test
+            #- hide-logs.sh ant $OPTS -f webcommon/lib.v8debug test
             - hide-logs.sh ant $OPTS -f webcommon/libs.graaljs test
             - hide-logs.sh ant $OPTS -f webcommon/libs.truffleapi test
-            - hide-logs.sh ant $OPTS -f webcommon/javascript.grunt test
+            - hide-logs.sh ant $OPTS -f webcommon/selenium2.webclient test
             - hide-logs.sh ant $OPTS -f webcommon/web.clientproject test-unit
             - hide-logs.sh ant $OPTS -f webcommon/web.clientproject.api test
-            - hide-logs.sh ant $OPTS -f webcommon/javascript2.doc test
+            - hide-logs.sh ant $OPTS -f webcommon/web.inspect test
 
         - name: "Versioning modules (ide/versioning and ide/versioning.core) tests"
           jdk: openjdk8

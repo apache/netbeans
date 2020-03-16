@@ -109,8 +109,14 @@ public class WebApplicationProjectWizard extends SimpleGradleWizardIterator {
     private static List<String> webDependencies(String profileId) {
         Profile profile = Profile.fromPropertiesString(profileId);
         List<String> ret = new LinkedList<>();
+        if (profile == Profile.JAKARTA_EE_8_WEB) {
+            ret.add("providedCompile 'jakarta.platform:jakarta.jakartaee-web-api:8.0.0'");
+        }
+        if (profile == Profile.JAKARTA_EE_8_FULL) {
+            ret.add("providedCompile 'jakarta.platform:jakarta.jakartaee-api:8.0.0'");
+        }
         if (profile == Profile.JAVA_EE_8_WEB) {
-            ret.add("providedCompile 'javax:javaee-web-api:8.0'");            
+            ret.add("providedCompile 'javax:javaee-web-api:8.0'");
         }
         if (profile == Profile.JAVA_EE_8_FULL) {
             ret.add("providedCompile 'javax:javaee-api:8.0'");

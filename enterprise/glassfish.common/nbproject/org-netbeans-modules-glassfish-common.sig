@@ -1412,6 +1412,7 @@ CLSS public final org.netbeans.modules.glassfish.common.GlassfishInstanceProvide
 fld public final static java.lang.String EE6WC_DEPLOYER_FRAGMENT = "deployer:gfv3ee6wc"
 fld public final static java.lang.String EE6_DEPLOYER_FRAGMENT = "deployer:gfv3ee6"
 fld public final static java.lang.String EE8_DEPLOYER_FRAGMENT = "deployer:gfv5ee8"
+fld public final static java.lang.String JAKARTAEE8_DEPLOYER_FRAGMENT = "deployer:gfv510ee8"
 fld public final static java.lang.String GLASSFISH_AUTOREGISTERED_INSTANCE = "glassfish_autoregistered_instance"
 fld public final static java.lang.String PRELUDE_DEPLOYER_FRAGMENT = "deployer:gfv3"
 fld public final static java.util.Set<java.lang.String> activeRegistrationSet
@@ -1438,7 +1439,7 @@ meth public void addServerInstance(org.netbeans.modules.glassfish.common.Glassfi
 meth public void removeChangeListener(javax.swing.event.ChangeListener)
 meth public void resultChanged(org.openide.util.LookupEvent)
 supr java.lang.Object
-hfds AUTOINSTANCECOPIED,EE6WC_INSTANCES_PATH,EE6_INSTANCES_PATH,EE8_INSTANCES_PATH,LOGGER,activeDisplayNames,cf,displayName,glassFishProvider,instanceMap,instancesDirNames,lookupResult,needsJdk6,noPasswordOptions,support,uriFragments
+hfds AUTOINSTANCECOPIED,EE6WC_INSTANCES_PATH,EE6_INSTANCES_PATH,EE8_INSTANCES_PATH,JAKARTAEE8_INSTANCES_PATH,LOGGER,activeDisplayNames,cf,displayName,glassFishProvider,instanceMap,instancesDirNames,lookupResult,needsJdk6,noPasswordOptions,support,uriFragments
 
 CLSS public org.netbeans.modules.glassfish.common.Installer
 cons public init()
@@ -2546,4 +2547,3 @@ meth public void startPrefixMapping(java.lang.String,java.lang.String) throws or
 meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
 supr java.lang.Object
-

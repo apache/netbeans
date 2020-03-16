@@ -34,6 +34,7 @@ import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eePlatform;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.ServerManager;
 import org.openide.WizardDescriptor;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
@@ -126,6 +127,12 @@ public class ServerSelectionPanelVisual extends javax.swing.JPanel {
                 .addContainerGap(232, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    @Override
+    @Messages("ServerSelectionPanel=Settings")
+    public String getName() {
+        return Bundle.ServerSelectionPanel();
+    }
 
     private void btAddServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddServerButtonActionPerformed
         String newServerId = ServerManager.showAddServerInstanceWizard();

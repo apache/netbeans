@@ -219,7 +219,7 @@ ALL:
 
         Integer last = null;
 
-        Iterator it = item.iterator();
+        Iterator<?> it = item.iterator();
         int i = 0;
 
         while (it.hasNext()) {

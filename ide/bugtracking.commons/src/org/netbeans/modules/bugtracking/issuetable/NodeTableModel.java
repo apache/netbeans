@@ -208,10 +208,10 @@ class NodeTableModel extends AbstractTableModel {
         propertyColumns = new int[visibleCount];
 
         int j = 0;
-        Iterator it = sort.values().iterator();
+        Iterator<Integer> it = sort.values().iterator();
 
         while (it.hasNext()) {
-            i = ((Integer) it.next()).intValue();
+            i = it.next().intValue();
             allPropertyColumns[i].setVisibleIndex(j);
             propertyColumns[j] = i;
             j++;

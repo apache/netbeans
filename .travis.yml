@@ -215,7 +215,7 @@ matrix:
             - ant $OPTS -f ide/csl.types test
             - ant $OPTS -f ide/css.editor test
             - ant $OPTS -f ide/css.lib test
-            - ant $OPTS -f ide/css.model test
+            - hide-logs.sh ant $OPTS -f ide/css.model test
             - travis_retry ant $OPTS -f ide/db test
             - ant $OPTS -f ide/db.dataview test
             - ant $OPTS -f ide/db.sql.editor test
@@ -224,14 +224,14 @@ matrix:
             - ant $OPTS -f ide/editor.bookmarks test
             #- ant $OPTS -f ide/editor.bracesmatching test
             - ant $OPTS -f ide/editor.document test
-            - ant $OPTS -f ide/editor.fold test
+            - hide-logs.sh ant $OPTS -f ide/editor.fold test
             - ant $OPTS -f ide/editor.fold.nbui test
             - ant $OPTS -f ide/editor.guards test
             - ant $OPTS -f ide/editor.indent test
             - ant $OPTS -f ide/editor.indent.project test
             - ant $OPTS -f ide/editor.macros test
-            - ant $OPTS -f ide/editor.search test
-            - ant $OPTS -f ide/editor.settings test
+            - hide-logs.sh ant $OPTS -f ide/editor.search test
+            - hide-logs.sh ant $OPTS -f ide/editor.settings test
             - ant $OPTS -f ide/editor.settings.storage test
             - ant $OPTS -f ide/editor.structure test
             - ant $OPTS -f ide/editor.tools.storage test
@@ -292,9 +292,13 @@ matrix:
             - ant $OPTS -f ide/web.webkit.debugging test
             - ant $OPTS -f ide/xml test
             - ant $OPTS -f ide/xml.axi test
+            - ant $OPTS -f ide/xml.catalog test-unit
             - ant $OPTS -f ide/xml.core test
             - ant $OPTS -f ide/xml.lexer test
             - ant $OPTS -f ide/xml.multiview test
+            - ant $OPTS -f ide/xml.retriever test
+            #- ant $OPTS -f ide/xml.schema.completion test
+            - ant $OPTS -f ide/xml.schema.model test
             - ant $OPTS -f ide/xml.text test
             - ant $OPTS -f ide/xml.text.obsolete90 test
             - travis_retry ant $OPTS -f ide/xml.wsdl.model test
@@ -362,7 +366,7 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f java/java.completion test
-            - ant $OPTS -f java/java.source.base test
+            - travis_retry ant $OPTS -f java/java.source.base test
 
         - name: Test Java modules with nb-javac on Java 13
           jdk: openjdk8
@@ -378,13 +382,13 @@ matrix:
             - ant $OPTS -f java/java.completion test
             - ant $OPTS -f java/java.source.base test
 
-        - name: Test Java modules without nb-javac on Java 13
+        - name: Test Java modules without nb-javac on Java 14
           jdk: openjdk8
           env:
             - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
             - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
-            - export TEST_JDK=`bash install-jdk.sh --feature 13 --license GPL --emit-java-home --silent | tail -1`
+            - export TEST_JDK=`bash install-jdk.sh --feature 14 --license GPL --emit-java-home --silent | tail -1`
             - export OPTS="$OPTS -Dtest.nbjdk.home=$TEST_JDK -Dtest.use.jdk.javac=true"
             - ant $OPTS clean
             - ant $OPTS build
@@ -445,16 +449,41 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - hide-logs.sh ant $OPTS -f webcommon/languages.apacheconf test
-            - hide-logs.sh ant $OPTS -f webcommon/languages.ini test
+            - hide-logs.sh ant $OPTS -f webcommon/api.knockout test
+            #- hide-logs.sh ant $OPTS -f webcommon/cordova test
+            #- hide-logs.sh ant $OPTS -f webcommon/html.angular test
+            - hide-logs.sh ant $OPTS -f webcommon/html.knockout test-unit
+            - hide-logs.sh ant $OPTS -f webcommon/html.ojet test
             - hide-logs.sh ant $OPTS -f webcommon/javascript.bower test
             - hide-logs.sh ant $OPTS -f webcommon/javascript.cdnjs test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript.grunt test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript.karma test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript.nodejs test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript.v8debug test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.doc test
+            #- hide-logs.sh ant $OPTS -f webcommon/javascript2.editor test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.extdoc test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.extjs test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.jade test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.jquery test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.jsdoc test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.json test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.knockout test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.lexer test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.model test
+            #- hide-logs.sh ant $OPTS -f webcommon/javascript2.nodejs test
+            #- hide-logs.sh ant $OPTS -f webcommon/javascript2.prototypejs test
+            #- hide-logs.sh ant $OPTS -f webcommon/javascript2.requirejs test
+            - hide-logs.sh ant $OPTS -f webcommon/javascript2.sdoc test
+            - hide-logs.sh ant $OPTS -f webcommon/languages.apacheconf test
+            - hide-logs.sh ant $OPTS -f webcommon/languages.ini test
+            #- hide-logs.sh ant $OPTS -f webcommon/lib.v8debug test
             - hide-logs.sh ant $OPTS -f webcommon/libs.graaljs test
             - hide-logs.sh ant $OPTS -f webcommon/libs.truffleapi test
-            - hide-logs.sh ant $OPTS -f webcommon/javascript.grunt test
+            - hide-logs.sh ant $OPTS -f webcommon/selenium2.webclient test
             - hide-logs.sh ant $OPTS -f webcommon/web.clientproject test-unit
             - hide-logs.sh ant $OPTS -f webcommon/web.clientproject.api test
-            - hide-logs.sh ant $OPTS -f webcommon/javascript2.doc test
+            - hide-logs.sh ant $OPTS -f webcommon/web.inspect test
 
         - name: "Versioning modules (ide/versioning and ide/versioning.core) tests"
           jdk: openjdk8
@@ -518,7 +547,12 @@ matrix:
             - ant $BUILD_OPTS clean
             - ant $BUILD_OPTS build
           script:
+            #- ant $TEST_OPTS -f groovy/groovy test
+            #- ant $TEST_OPTS -f groovy/groovy.java test
             - ant $TEST_OPTS -f groovy/groovy.editor test
+            - ant $TEST_OPTS -f groovy/groovy.gsp test
+            #- ant $TEST_OPTS -f groovy/groovy.kit test
+            - ant $TEST_OPTS -f groovy/groovy.support test
 
         - name: Test php modules
           jdk: openjdk8
@@ -543,6 +577,19 @@ matrix:
             - ant $OPTS -f php/php.composer test
             #- ant $OPTS -f php/php.dbgp test
             - ant $OPTS -f php/php.doctrine2 test
+            #- ant $OPTS -f php/php.editor test
+            #- ant $OPTS -f php/php.latte test
+            #- ant $OPTS -f php/php.nette.tester test
+            - ant $OPTS -f php/php.phpunit test
+            - ant $OPTS -f php/php.project test
+            - ant $OPTS -f php/php.refactoring test
+            #- ant $OPTS -f php/php.smarty test
+            #- ant $OPTS -f php/php.symfony test
+            #- ant $OPTS -f php/php.symfony2 test
+            - ant $OPTS -f php/php.twig test
+            - ant $OPTS -f php/php.zend test
+            - ant $OPTS -f php/php.zend2 test
+            - ant $OPTS -f php/spellchecker.bindings.php test
 
         - name: Build the Visual Studio Code extension for Java
           jdk: openjdk8
@@ -567,15 +614,21 @@ matrix:
             - nbbuild/travis/scripting.sh
 
         - name: MacOS tests
-          language: java
+          language: minimal
           os: osx
-          jdk: openjdk11
+          osx_image: xcode10.1
           addons:
             homebrew:
               packages:
+                - openjdk@11
                 - ant
+              update: true
           env:
             - OPTS="-silent -Dcluster.config=platform -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
+          install:
+            - sudo ln -sfn /usr/local/opt/openjdk@11/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-11.jdk
+            - export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
+            - export JAVA_HOME=`/usr/libexec/java_home -v 11`
           before_script:
             - ant $OPTS clean
             - ant $OPTS build

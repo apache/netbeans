@@ -200,6 +200,7 @@ public class ProcessIOParser {
          * @return Next state transition based on current state
          *         and character class.
          */
+        @SuppressWarnings("fallthrough")
         protected State action(final char c) {
             Input cl = Input.value(c, content.getCurrentPrompt(), promptBuff);
             switch (state) {

@@ -47,6 +47,9 @@ enterprise/javaee7.api/external/javax.annotation-api-1.2.jar enterprise/javaee8.
 enterprise/javaee8.api/external/javax.annotation-api-1.2.jar enterprise/websvc.restlib/external/javax.annotation-api-1.2.jar
 enterprise/jakartaee8.api/external/javax.annotation-api-1.3.5.jar
 
+# jaxb-api-osgi is used by multiple modules.
+enterprise/javaee.api/external/jaxb-api-osgi-2.2.7.jar enterprise/javaee7.api/external/jaxb-api-osgi-2.2.7.jar
+
 #Struts taglib is used by both web.core.syntax and web.struts
 enterprise/web.core.syntax/external/struts-taglib-1.3.10.jar enterprise/web.struts/external/struts-taglib-1.3.10.jar
 
@@ -57,11 +60,11 @@ enterprise/web.core.syntax/external/struts-tiles-1.3.10.jar enterprise/web.strut
 groovy/gradle/external/gradle-4.10.2-bin.zip ide/c.google.gson/external/gson-2.7.jar
 groovy/gradle/external/gradle-4.10.2-bin.zip ide/c.jcraft.jsch/external/jsch-0.1.54.jar
 groovy/gradle/external/gradle-4.10.2-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
-groovy/gradle/external/gradle-4.10.2-bin.zip java/maven/external/aether-api-1.13.1.jar
-groovy/gradle/external/gradle-4.10.2-bin.zip java/maven.embedder/external/apache-maven-3.3.9-bin.zip
+groovy/gradle/external/gradle-4.10.2-bin.zip java/maven.embedder/external/apache-maven-3.6.3-bin.zip
 groovy/gradle/external/gradle-4.10.2-bin.zip platform/api.annotations.common/external/jsr305-3.0.2.jar
 groovy/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
 groovy/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/junit-4.12.jar
+groovy/gradle/external/gradle-4.10.2-bin.zip java/maven/external/aether-api-1.13.1.jar
 
 # These are the endorsed version of the javaee apis and create libraries, so they are better kept separate
 enterprise/javaee.api/external/javax.annotation-api-1.2.jar enterprise/javaee7.api/external/javax.annotation-api-1.2.jar

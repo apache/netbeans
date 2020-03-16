@@ -41,8 +41,8 @@
             <name>maven-dependencies</name>
             <value>
                 javax.annotation:javax.annotation-api:1.2
-                javax.xml.bind:jaxb-api-osgi:2.2
-                javax.xml:webservices-api-osgi:2.0
+                javax.xml.bind:jaxb-api-osgi:2.2.7
+                javax.xml:webservices-api-osgi:2.0.1
             </value>
         </property>
     </properties>

@@ -49,7 +49,6 @@
         <resource>jar:nbinst://org.netbeans.modules.websvc.jaxws21api/modules/ext/jaxws22/api/saaj-api.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.xml.jaxb.api/modules/ext/jaxb/activation.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.xml.jaxb.api/modules/ext/jaxb/api/jaxb-api.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.modules.xml.jaxb.api/modules/ext/jaxb/api/jsr173_1.0_api.jar!/</resource>
     </volume>
     <volume>
         <type>javadoc</type>

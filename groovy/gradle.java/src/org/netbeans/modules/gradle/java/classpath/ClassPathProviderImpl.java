@@ -315,7 +315,7 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
 
         public boolean  hasModuleInfo() {
             GradleJavaProject gjp = GradleJavaProject.get(ClassPathProviderImpl.this.project);
-            GradleJavaSourceSet ss = gjp.getSourceSets().get(group);
+            GradleJavaSourceSet ss = gjp != null ? gjp.getSourceSets().get(group) : null;
             return ss != null && ss.findResource(MODULE_INFO_JAVA, false, GradleJavaSourceSet.SourceType.JAVA) != null;
         }
 

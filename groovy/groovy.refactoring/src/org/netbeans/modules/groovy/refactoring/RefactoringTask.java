@@ -135,6 +135,7 @@ public abstract class RefactoringTask extends UserTask implements Runnable {
             }
         }
 
+        @SuppressWarnings("fallthrough")
         private RefactoringElement createRefactoringElement(AstPath path, ASTNode currentNode, ElementKind kind) {
             switch (kind) {
                 case CLASS:

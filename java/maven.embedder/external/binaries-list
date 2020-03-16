@@ -15,5 +15,5 @@
 # specific language governing permissions and limitations
 # under the License.
 A2AC1CD690AB4C80DEFE7F9BCE14D35934C35CEC jdom:jdom:1.0
-BF206C4AA93C74A739FBAF1F1C78E3AD5F167245 org.apache.maven.shared:maven-dependency-tree:2.0
-2DDF9BB8C3B41BC2891832A6D6FC25F8BF41D77F org.apache.maven:apache-maven:3.3.9:bin@zip
+5D9CE6ADD7B714B8095F0E3E396C5E9F8C5DCFEF org.apache.maven.shared:maven-dependency-tree:2.2
+B36434A3A5C7A6B75AC955DF152E4325765D0804 org.apache.maven:apache-maven:3.6.3:bin@zip

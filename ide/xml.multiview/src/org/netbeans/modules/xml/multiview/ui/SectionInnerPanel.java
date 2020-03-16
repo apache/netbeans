@@ -265,8 +265,8 @@ public abstract class SectionInnerPanel extends javax.swing.JPanel implements Li
      * Reloads data from data model
      */
     public void refreshView() {
-        for (Iterator it = refreshableList.iterator(); it.hasNext();) {
-            ((Refreshable) it.next()).refresh();
+        for (Iterator<Refreshable> it = refreshableList.iterator(); it.hasNext();) {
+            it.next().refresh();
         }
     }
     

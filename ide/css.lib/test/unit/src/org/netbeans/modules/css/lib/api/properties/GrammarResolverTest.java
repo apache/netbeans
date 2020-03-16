@@ -776,6 +776,12 @@ public class GrammarResolverTest extends CssTestBase {
         assertResolve(g, "a");
         assertResolve(g, "a c");
         assertResolve(g, "c a");
+
+        String g2 = "d? && e && f";
+        assertResolve(g2, "e f");
+        assertResolve(g2, "d e f");
+        assertResolve(g2, "e f d");
+        assertResolve(g2, "f e d");
     }
     
     public void testBackground() {

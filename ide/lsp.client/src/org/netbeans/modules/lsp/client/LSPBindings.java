@@ -33,6 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.WeakHashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -203,9 +204,10 @@ public class LSPBindings {
        wcc.getWorkspaceEdit().setDocumentChanges(true);
        wcc.getWorkspaceEdit().setResourceOperations(Arrays.asList(ResourceOperationKind.Create, ResourceOperationKind.Delete, ResourceOperationKind.Rename));
        initParams.setCapabilities(new ClientCapabilities(wcc, tdcc, null));
+       CompletableFuture<InitializeResult> initResult = server.initialize(initParams);
        while (true) {
            try {
-               return server.initialize(initParams).get(100, TimeUnit.MILLISECONDS);
+               return initResult.get(100, TimeUnit.MILLISECONDS);
            } catch (TimeoutException ex) {
                if (p != null && !p.isAlive()) {
                    InitializeResult emptyResult = new InitializeResult();

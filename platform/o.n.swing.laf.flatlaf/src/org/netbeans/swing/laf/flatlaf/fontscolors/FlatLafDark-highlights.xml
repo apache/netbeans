@@ -53,4 +53,6 @@
     <fontcolor name="coverage-uncovered" bgColor="813438"/>
     <fontcolor name="coverage-inferred" bgColor="1c501c"/>
     <fontcolor name="coverage-partial" bgColor="707000"/>
+    <fontcolor name="remove-surround-code-delete" foreColor="ff5A5A5A" bgColor="ff323232"/>
+    <fontcolor name="remove-surround-code-remain" bgColor="ff143C00"/>
 </fontscolors>

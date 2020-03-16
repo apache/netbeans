@@ -392,8 +392,8 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             }
             boolean first = true;
             
-            for (Iterator iterator = fields.iterator(); iterator.hasNext();) {
-                FieldNode fieldNode = (FieldNode) iterator.next();
+            for (Iterator<FieldNode> iterator = fields.iterator(); iterator.hasNext();) {
+                FieldNode fieldNode = iterator.next();
                 if (!first) {
                     out.print(", ");
                 } else {

@@ -220,9 +220,9 @@ public class GenerateDOMScannerSupport implements XMLGenerateCookie {
         
                         // no root element is obvious, go over all declated elements.
         
-                       Iterator it = dtd.getElementDeclarations().iterator();
+                       Iterator<TreeElementDecl> it = dtd.getElementDeclarations().iterator();
                        while (it.hasNext()) {
-                           String tagName = ((TreeElementDecl)it.next()).getName();
+                           String tagName = it.next().getName();
                            sb.append ("if ((").append (VARIABLE_ELEMENT).append (" != null) && "). // NOI18N
                            append (VARIABLE_ELEMENT).append (".getTagName().equals (\"").append (tagName).append ("\")) {\n"); // NOI18N
                            sb.append (METHOD_SCAN_ELEMENT).append ("_").append (GenerateSupportUtils.getJavaName (tagName)).append (" (").append (VARIABLE_ELEMENT). // NOI18N
@@ -263,14 +263,14 @@ public class GenerateDOMScannerSupport implements XMLGenerateCookie {
                             sb = new StringBuffer ();
                             sb.append("{");
                             sb.append (" // <").append (tagName).append (">\n// element.getValue();\n"); // NOI18N
-                            Iterator it2;
+                            Iterator<TreeAttlistDeclAttributeDef> it2;
                             if ((it2 = dtd.getAttributeDeclarations (tagName).iterator()).hasNext()) {
                                 sb.append (DOM_NAMED_NODE_MAP).append (" ").append (VARIABLE_ATTRS).append (" = "). // NOI18N
                                 append (VARIABLE_ELEMENT).append (".getAttributes();\n"); // NOI18N
                                 sb.append ("for (int i = 0; i < ").append (VARIABLE_ATTRS).append (".getLength(); i++) {\n"); // NOI18N
                                 sb.append ("org.w3c.dom.Attr attr = (org.w3c.dom.Attr)attrs.item(i);\n"); // NOI18N
                                 while (it2.hasNext()) {
-                                    TreeAttlistDeclAttributeDef attr = (TreeAttlistDeclAttributeDef)it2.next();
+                                    TreeAttlistDeclAttributeDef attr = it2.next();
                                     sb.append ("if (attr.getName().equals (\"").append (attr.getName()).append ("\")) { // <"). // NOI18N
                                     append (tagName).append (" ").append (attr.getName()).append ("=\"???\">\n"); // NOI18N
                                     sb.append ("// attr.getValue();\n}\n"); // NOI18N
@@ -310,7 +310,7 @@ public class GenerateDOMScannerSupport implements XMLGenerateCookie {
      */
     private String generateElementScanner(TreeElementDecl element) {
         
-        Iterator it;
+        Iterator<TreeElementDecl> it;
         Set<String> elements = new HashSet<>();
         
         TreeElementDecl.ContentType type = element.getContentType();
@@ -318,7 +318,7 @@ public class GenerateDOMScannerSupport implements XMLGenerateCookie {
         if (type instanceof ANYType) {
             it = dtd.getElementDeclarations().iterator();
             while (it.hasNext()) {
-                String tagName = ((TreeElementDecl)it.next()).getName();
+                String tagName = it.next().getName();
                 elements.add(tagName);
             }
             
@@ -365,8 +365,8 @@ public class GenerateDOMScannerSupport implements XMLGenerateCookie {
     private void addElements(TreeElementDecl.ContentType type, Set elements) {
         
         if (type instanceof ChildrenType) {
-            for (Iterator it = ((ChildrenType)type).getTypes().iterator(); it.hasNext(); ) {
-                TreeElementDecl.ContentType next = (TreeElementDecl.ContentType) it.next();
+            for (Iterator<TreeElementDecl.ContentType> it = ((ChildrenType)type).getTypes().iterator(); it.hasNext(); ) {
+                TreeElementDecl.ContentType next = it.next();
                 if (next instanceof ChildrenType) {
                     addElements(next, elements);
                 } else if ( next instanceof NameType) {

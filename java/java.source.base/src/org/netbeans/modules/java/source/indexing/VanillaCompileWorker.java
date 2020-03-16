@@ -32,6 +32,7 @@ import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -55,6 +56,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCModuleDecl;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
+import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.TreeMaker;
 import org.netbeans.lib.nbjavac.services.CancelAbort;
 import org.netbeans.lib.nbjavac.services.CancelService;
@@ -62,6 +64,7 @@ import com.sun.tools.javac.util.FatalError;
 import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
+import com.sun.tools.javac.util.Pair;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -322,7 +325,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     Modules modules = Modules.instance(jtFin.getContext());
                     compiler.shouldStopPolicyIfError = CompileState.FLOW; 
                     for (Element type : types) {
-                        if (type.asType() == null || type.asType().getKind() == TypeKind.ERROR) {
+                        if (isErroneousClass(type)) {
                             //likely a duplicate of another class, don't touch:
                             continue;
                         }
@@ -546,6 +549,9 @@ final class VanillaCompileWorker extends CompileWorker {
                 if (msym.erasure_field != null && msym.erasure_field.hasTag(TypeTag.METHOD))
                     clearMethodType((Type.MethodType) msym.erasure_field);
                 clearAnnotations(decl.sym.getMetadata());
+                if (decl.sym.defaultValue != null && isAnnotationErroneous(decl.sym.defaultValue)) {
+                    decl.sym.defaultValue = null;
+                }
                 return super.visitMethod(node, p);
             }
 
@@ -559,7 +565,7 @@ final class VanillaCompileWorker extends CompileWorker {
             public Void visitClass(ClassTree node, Void p) {
                 JCClassDecl clazz = (JCTree.JCClassDecl) node;
                 Symbol.ClassSymbol csym = clazz.sym;
-                if (csym.asType() == null || csym.asType().getKind() == TypeKind.ERROR) {
+                if (isErroneousClass(csym)) {
                     //likely a duplicate of another class, don't touch:
                     return null;
                 }
@@ -578,12 +584,19 @@ final class VanillaCompileWorker extends CompileWorker {
                     ct.supertype_field = error2Object(ct.supertype_field);
                 }
                 clearAnnotations(clazz.sym.getMetadata());
-                super.visitClass(node, p);
                 for (JCTree def : clazz.defs) {
-                    if (def.hasTag(JCTree.Tag.ERRONEOUS) || def.hasTag(JCTree.Tag.BLOCK)) {
+                    boolean errorClass = isErroneousClass(def);
+                    if (errorClass) {
+                        ClassSymbol member = ((JCClassDecl) def).sym;
+                        if (member != null) {
+                            csym.members_field.remove(member);
+                        }
+                    }
+                    if (errorClass || def.hasTag(JCTree.Tag.ERRONEOUS) || def.hasTag(JCTree.Tag.BLOCK)) {
                         clazz.defs = com.sun.tools.javac.util.List.filter(clazz.defs, def);
                     }
                 }
+                super.visitClass(node, p);
                 return null;
             }
 
@@ -595,16 +608,51 @@ final class VanillaCompileWorker extends CompileWorker {
                 com.sun.tools.javac.util.List<Attribute.Compound> annotations = metadata.getDeclarationAttributes();
                 com.sun.tools.javac.util.List<Attribute.Compound> prev = null;
                 while (annotations.nonEmpty()) {
-                    if (isErroneous(annotations.head.type)) {
+                    if (isAnnotationErroneous(annotations.head)) {
                         if (prev == null) {
                             metadata.reset();
                             metadata.setDeclarationAttributes(annotations.tail);
                         } else {
                             prev.tail = annotations.tail;
                         }
+                    } else {
+                        prev = annotations;
                     }
-                    prev = annotations;
                     annotations = annotations.tail;
+                }
+            }
+
+            private boolean isAnnotationErroneous(Attribute annotation) {
+                if (isErroneous(annotation.type)) {
+                    return true;
+                } else if (annotation instanceof Attribute.Array) {
+                    for (Attribute nested : ((Attribute.Array) annotation).values) {
+                        if (isAnnotationErroneous(nested)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                } else if (annotation instanceof Attribute.Class) {
+                    if (isErroneous(((Attribute.Class) annotation).classType)) {
+                        return true;
+                    }
+                    return false;
+                } else if (annotation instanceof Attribute.Compound) {
+                    for (Pair<MethodSymbol, Attribute> p : ((Attribute.Compound) annotation).values) {
+                        if (isAnnotationErroneous(p.snd)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                } else if (annotation instanceof Attribute.Constant) {
+                    return false;
+                } else if (annotation instanceof Attribute.Enum) {
+                    return false;
+                } else if (annotation instanceof Attribute.Error) {
+                    return true;
+                } else {
+                    //let's skip all unknown attributes, as we cannot check if they are fine or not
+                    return true;
                 }
             }
 
@@ -694,4 +742,19 @@ final class VanillaCompileWorker extends CompileWorker {
             }
         }.scan(cut, null);
     }
+
+    /**
+     * Check if a class is a duplicate, has cyclic dependencies,
+     * or has another critical issue.
+     */
+    private boolean isErroneousClass(JCTree tree) {
+        if (!tree.hasTag(Tag.CLASSDEF)) {
+            return false;
+        }
+        return isErroneousClass(((JCClassDecl) tree).sym);
+    }
+    private boolean isErroneousClass(Element el) {
+        return el instanceof ClassSymbol && (((ClassSymbol) el).asType() == null || ((ClassSymbol) el).asType().getKind() == TypeKind.ERROR);
+    }
+
 }

@@ -187,6 +187,7 @@ public class CasualDiff {
     private final Context context;
     private final Names names;
     private static final Logger LOG = Logger.getLogger(CasualDiff.class.getName());
+    public static final int GENERATED_MEMBER = 1<<24;
 
     private Map<Integer, String> diffInfo = new HashMap<>();
     private final Map<Tree, ?> tree2Tag;
@@ -2732,9 +2733,8 @@ public class CasualDiff {
     }
 
     protected int diffLiteral(JCLiteral oldT, JCLiteral newT, int[] bounds) {
-        if (oldT.typetag != newT.typetag ||
-           (oldT.value != null && !oldT.value.equals(newT.value)))
-        {
+        if (oldT.typetag != newT.typetag
+                || (oldT.value != null && !oldT.value.equals(newT.value)) || (oldT.getKind() == Tree.Kind.STRING_LITERAL && newT.getKind() == Tree.Kind.STRING_LITERAL)) {
             int localPointer = bounds[0];
             // literal
             int[] literalBounds = getBounds(oldT);
@@ -3914,7 +3914,11 @@ public class CasualDiff {
                     // collect enum constants, make a field group from them
                     // and set the flag.
                     enumConstants.add(var);
-                } else {
+                } // filter syntetic member variable, i.e. variable which are in
+                // the tree, but not available in the source.
+                else if ((var.mods.flags & GENERATED_MEMBER) != 0)
+                    continue;
+                else {
                     if (!fieldGroup.isEmpty()) {
                         int oldPos = getOldPos(fieldGroup.get(0));
 

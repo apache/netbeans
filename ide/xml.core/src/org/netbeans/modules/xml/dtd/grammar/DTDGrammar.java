@@ -86,9 +86,9 @@ class DTDGrammar implements ExtendedGrammarQuery {
         if (entities == null) return org.openide.util.Enumerations.empty();
         
         List<MyEntityReference> list = new LinkedList<>();
-        Iterator it = entities.iterator();
+        Iterator<String> it = entities.iterator();
         while ( it.hasNext()) {
-            String next = (String) it.next();
+            String next = it.next();
             if (next.startsWith(prefix)) {
                 list.add (new MyEntityReference(next));
             }
@@ -144,9 +144,9 @@ class DTDGrammar implements ExtendedGrammarQuery {
         String prefix = ctx.getCurrentPrefix();
         
         LinkedList list = new LinkedList ();
-        Iterator it = possibleAttributes.iterator();
+        Iterator<String> it = possibleAttributes.iterator();
         while ( it.hasNext()) {
-            String next = (String) it.next();
+            String next = it.next();
             if (next.startsWith(prefix)) {
                 if (existingAttributes.getNamedItem(next) == null ||
                         next.equals(currentAttrName)) {
@@ -217,9 +217,9 @@ class DTDGrammar implements ExtendedGrammarQuery {
         String prefix = ctx.getCurrentPrefix();
         
         LinkedList list = new LinkedList ();
-        Iterator it = elements.iterator();
+        Iterator<String> it = elements.iterator();
         while ( it.hasNext()) {
-            String next = (String) it.next();
+            String next = it.next();
             if (next.startsWith(prefix)) {
                 boolean empty = emptyElements.contains(next);
                 list.add(new MyElement(next, empty));
@@ -237,9 +237,9 @@ class DTDGrammar implements ExtendedGrammarQuery {
         if (notations == null) return org.openide.util.Enumerations.empty();;
         
         LinkedList list = new LinkedList ();
-        Iterator it = notations.iterator();
+        Iterator<String> it = notations.iterator();
         while ( it.hasNext()) {
-            String next = (String) it.next();
+            String next = it.next();
             if (next.startsWith(prefix)) {
                 list.add (new MyNotation(next));
             }

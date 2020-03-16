@@ -339,15 +339,16 @@ public class SpringWebModuleExtender extends WebModuleExtender implements Change
             FileObject jsp = FileUtil.createFolder(webInf, "jsp");
             // COPY TEMPLATE SPRING RESOURCES (JSP, XML, PROPERTIES)
             DataFolder webInfDO = DataFolder.findFolder(webInf);
-            final List<File> newConfigFiles = new ArrayList<File>(2);
-            HashMap<String, Object> params = new HashMap<String, Object>();
-            String appContextTemplateName = "applicationContext-4.0.xml"; //NOI18N
-            String dispServletTemplateName = "dispatcher-servlet-4.0.xml"; //NOI18N
+            final List<File> newConfigFiles = new ArrayList<>(2);
+            HashMap<String, Object> params = new HashMap<>();
+            
+            String appContextTemplateName = "applicationContext-4.xml"; //NOI18N
+            String dispServletTemplateName = "dispatcher-servlet-4.xml"; //NOI18N
             if (version.startsWith("3.")) {    //NOI18N
-//                params.put("springVersion3", Boolean.TRUE); //NOI18N
-                appContextTemplateName = "applicationContext-3.1.xml"; //NOI18N
-                dispServletTemplateName = "dispatcher-servlet-3.1.xml"; //NOI18N
+                appContextTemplateName = "applicationContext-3.xml"; //NOI18N
+                dispServletTemplateName = "dispatcher-servlet-3.xml"; //NOI18N
             }
+            
             FileObject configFile = createFromTemplate(appContextTemplateName, webInfDO, "applicationContext",params); // NOI18N
             addFileToOpen(configFile);
             newConfigFiles.add(FileUtil.toFile(configFile));

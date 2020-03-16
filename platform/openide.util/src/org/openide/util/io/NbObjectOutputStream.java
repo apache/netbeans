@@ -145,11 +145,11 @@ public class NbObjectOutputStream extends ObjectOutputStream {
             b.append(classname);
             b.append(" does not declare serialVersionUID field. Encountered while storing: ["); // NOI18N
 
-            Iterator it = serializing.iterator();
+            Iterator<Class> it = serializing.iterator();
             boolean first = true;
 
             while (it.hasNext()) {
-                Class c = (Class) it.next();
+                Class c = it.next();
 
                 if ((c != cl) && serializingUniq.add(c)) {
                     if (first) {

@@ -23,9 +23,7 @@
 package org.netbeans.modules.spring.webmvc;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
@@ -50,7 +48,7 @@ public class SpringConfigPanelVisual extends javax.swing.JPanel {
     private static final Logger LOG = Logger.getLogger(SpringConfigPanelVisual.class.getName());
     private static final long serialVersionUID = 1L;
     private boolean libsInitialized = false;
-    private List<SpringLibrary> springLibs = new ArrayList<>();
+    private final List<SpringLibrary> springLibs = new ArrayList<>();
     private SpringLibrary springLibrary;
     private final SpringWebModuleExtender extender;
     private final ChangeSupport changeSupport = new ChangeSupport(this);

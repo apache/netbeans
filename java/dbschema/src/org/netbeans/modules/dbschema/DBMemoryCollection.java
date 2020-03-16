@@ -70,7 +70,7 @@ class DBMemoryCollection {
             DBElement[] oldElements = getElements();
             int oldLength = (oldElements == null) ? 0 : oldElements.length;
             int newLength = (c == null) ? 0 : c.size();
-            List list = null;
+            List<DBElement> list = null;
 
             switch (action) {
                 case DBElement.Impl.ADD:
@@ -86,7 +86,7 @@ class DBMemoryCollection {
                     break;
                 case TableElement.Impl.REMOVE:
                     if (newLength > 0 && oldLength > 0) {
-                        list = new ArrayList(Arrays.asList(oldElements));
+                        list = new ArrayList<>(Arrays.asList(oldElements));
                         list.removeAll(c);
                         hasChange = true;
                     }

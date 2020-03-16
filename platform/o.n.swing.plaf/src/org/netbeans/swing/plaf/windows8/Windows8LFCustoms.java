@@ -180,7 +180,7 @@ public final class Windows8LFCustoms extends LFCustoms {
         not use the borders from UIManager. */
         for (String key : new String[] {
                 "TextField.border", "PasswordField.border", "FormattedTextField.border", //NOI18N
-                "ScrollPane.border" }) //NOI18N
+                "ScrollPane.border", "PopupMenu.border", "Menu.border" }) //NOI18N
         {
             Object value = UIManager.getDefaults().get(key);
             if (value instanceof Border) {
@@ -227,7 +227,7 @@ public final class Windows8LFCustoms extends LFCustoms {
             DESKTOP_BACKGROUND, new Color(226, 223, 214), //NOI18N
             SCROLLPANE_BORDER_COLOR, new Color(127, 157, 185),
             DESKTOP_BORDER, new EmptyBorder(6, 5, 4, 6),
-            SCROLLPANE_BORDER, UIManager.get("ScrollPane.border"),
+            SCROLLPANE_BORDER, new DPIUnscaledBorder((Border) UIManager.get("ScrollPane.border")),
             EXPLORER_STATUS_BORDER, new StatusLineBorder(StatusLineBorder.TOP),
             EXPLORER_FOLDER_ICON , explorerIcon,
             EXPLORER_FOLDER_OPENED_ICON, explorerIcon,

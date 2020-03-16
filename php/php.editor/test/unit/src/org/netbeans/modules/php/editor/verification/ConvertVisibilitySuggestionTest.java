@@ -165,6 +165,30 @@ public class ConvertVisibilitySuggestionTest extends PHPHintsTestBase {
         checkHints(new ConvertVisibilitySuggestion(), "testConvertVisibility.php", "    abstract protected static function abstractProtectedStat^ic();");
     }
 
+    public void testNETBEANS3968_01() throws Exception {
+        checkHints(new ConvertVisibilitySuggestion(), "testConvertVisibilityNETBEANS-3968.php", " ^   } // test1");
+    }
+
+    public void testNETBEANS3968_02() throws Exception {
+        checkHints(new ConvertVisibilitySuggestion(), "testConvertVisibilityNETBEANS-3968.php", "  ^  { // test2");
+    }
+
+    public void testNETBEANS3968_03() throws Exception {
+        checkHints(new ConvertVisibilitySuggestion(), "testConvertVisibilityNETBEANS-3968.php", "      ^  // test3");
+    }
+
+    public void testNETBEANS3968_04() throws Exception {
+        checkHints(new ConvertVisibilitySuggestion(), "testConvertVisibilityNETBEANS-3968.php", "    ^} // test4");
+    }
+
+    public void testNETBEANS3968_05() throws Exception {
+        checkHints(new ConvertVisibilitySuggestion(), "testConvertVisibilityNETBEANS-3968.php", "        $p^aram; // test5");
+    }
+
+    public void testNETBEANS3968_06() throws Exception {
+        checkHints(new ConvertVisibilitySuggestion(), "testConvertVisibilityNETBEANS-3968.php", "   ^ } // test6");
+    }
+
     // Fix
     public void testConvertVisibilitySuggestionPropertyFix_01() throws Exception {
         applyHint(new ConvertVisibilitySuggestion(), "testConvertVisibilityProperty.php", "    var ^$var = \"public\";", "Convert Visibility");

@@ -87,6 +87,7 @@ final class FileObjectCrawler extends Crawler {
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     protected boolean collectResources(Collection<Indexable> resources, Collection<Indexable> allResources) {
         boolean finished = true;
         final long tm1 = System.currentTimeMillis();

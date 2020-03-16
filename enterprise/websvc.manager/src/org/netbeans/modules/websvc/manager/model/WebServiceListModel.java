@@ -236,10 +236,10 @@ public class WebServiceListModel {
                 WebServiceManager.getInstance().removeWebService(getWebService(webserviceIds[ii]));
             }
             webServiceGroups.remove(group);
-            Iterator iter = listeners.iterator();
+            Iterator<WebServiceListModelListener> iter = listeners.iterator();
             while (iter.hasNext()) {
                 WebServiceListModelEvent evt = new WebServiceListModelEvent(groupId);
-                ((WebServiceListModelListener) iter.next()).webServiceGroupRemoved(evt);
+                iter.next().webServiceGroupRemoved(evt);
             }
         }
     }

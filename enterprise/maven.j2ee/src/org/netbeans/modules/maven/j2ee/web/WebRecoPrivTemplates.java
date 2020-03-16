@@ -32,7 +32,7 @@ import org.netbeans.spi.project.ui.RecommendedTemplates;
 
 /**
  * Maven Recommended and Privileged templates implementation for web applications
- * 
+ *
  * @author Martin Janicek
  */
 @org.netbeans.api.annotations.common.SuppressWarnings("EI_EXPOSE_REP")
@@ -46,14 +46,14 @@ import org.netbeans.spi.project.ui.RecommendedTemplates;
     }
 )
 public class WebRecoPrivTemplates implements RecommendedTemplates, PrivilegedTemplates {
-    
+
     private Project project;
 
     public WebRecoPrivTemplates(Project project) {
         this.project = project;
     }
-    
-    
+
+
     private static final String[] WEB_TYPES = new String[] {
         "html5",                // NOI18N
         "servlet-types",        // NOI18N
@@ -97,7 +97,7 @@ public class WebRecoPrivTemplates implements RecommendedTemplates, PrivilegedTem
         "ejb-deployment-descriptor", // NOI18N
     };
 
-    
+
     private static final String[] WEB_PRIVILEGED_NAMES = new String[] {
         "Templates/JSP_Servlet/JSP.jsp",            // NOI18N
         "Templates/JSP_Servlet/Html.html",          // NOI18N
@@ -135,7 +135,7 @@ public class WebRecoPrivTemplates implements RecommendedTemplates, PrivilegedTem
     private static final String[] WEB_PRIVILEGED_NAMES_EE7_WEB = new String[] {
         "Templates/J2EE/TimerSession"   // NOI18N
     };
-    
+
     @Override
     public String[] getRecommendedTypes() {
         WebModule web = WebModule.getWebModule(project.getProjectDirectory());
@@ -161,7 +161,7 @@ public class WebRecoPrivTemplates implements RecommendedTemplates, PrivilegedTem
         }
         return WEB_TYPES;
     }
-    
+
     @Override
     public String[] getPrivilegedTemplates() {
         WebModule web = WebModule.getWebModule(project.getProjectDirectory());
@@ -193,7 +193,8 @@ public class WebRecoPrivTemplates implements RecommendedTemplates, PrivilegedTem
     private boolean isServerSupportingEJB31() {
         if (ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_6_FULL) ||
             ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_7_FULL) ||
-            ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_8_FULL)) {
+            ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_8_FULL) ||
+            ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_8_FULL)) {
 
             return true;
         }

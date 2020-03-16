@@ -30,7 +30,7 @@ package org.netbeans.modules.glassfish.eecommon.api.config;
  *
  * @author Peter Williams
  */
-public final class J2EEVersion extends J2EEBaseVersion {	
+public final class J2EEVersion extends J2EEBaseVersion {
 
     /** Represents J2EE version 1.3
      */
@@ -42,13 +42,13 @@ public final class J2EEVersion extends J2EEBaseVersion {
      */
     public static final J2EEVersion J2EE_1_4 = new J2EEVersion(
             "1.4", 1400,    // NOI18N
-            "1.4", 1400);   // NOI18N	
+            "1.4", 1400);   // NOI18N
 
     /** Represents JavaEE version 5.0
      */
     public static final J2EEVersion JAVAEE_5_0 = new J2EEVersion(
             "5.0", 5000,    // NOI18N
-            "5.0", 5000);   // NOI18N	
+            "5.0", 5000);   // NOI18N
 
     /** Represents JavaEE version 6.0
      */
@@ -61,18 +61,24 @@ public final class J2EEVersion extends J2EEBaseVersion {
     public static final J2EEVersion JAVAEE_7_0 = new J2EEVersion(
             "7.0", 7000,    // NOI18N
             "7.0", 7000);   // NOI18N
-    
+
     /** Represents JavaEE version 8.0
      */
     public static final J2EEVersion JAVAEE_8_0 = new J2EEVersion(
             "8.0", 8000,    // NOI18N
             "8.0", 8000);   // NOI18N
 
+    /** Represents Jakarta EE version 8.0.0
+     */
+    public static final J2EEVersion JAKARTAEE_8_0 = new J2EEVersion(
+            "8.0.0", 80000,    // NOI18N
+            "8.0.0", 80000);   // NOI18N
+
     /** -----------------------------------------------------------------------
      *  Implementation
      */
 
-    /** Creates a new instance of J2EEVersion 
+    /** Creates a new instance of J2EEVersion
      */
     private J2EEVersion(String version, int nv, String specVersion, int nsv) {
         super(version, nv, specVersion, nsv);
@@ -105,8 +111,10 @@ public final class J2EEVersion extends J2EEBaseVersion {
             result = JAVAEE_7_0;
         } else if(JAVAEE_8_0.toString().equals(version)) {
             result = JAVAEE_8_0;
+        } else if(JAKARTAEE_8_0.toString().equals(version)) {
+            result = JAKARTAEE_8_0;
         }
 
         return result;
-    }	
+    }
 }

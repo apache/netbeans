@@ -154,11 +154,11 @@ public class ServerSelectionPanelVisual extends javax.swing.JPanel {
                 Set<Profile> availableProfiles = new TreeSet<>(Profile.UI_COMPARATOR);
                 for (Profile profile : platform.getSupportedProfiles(type)) {
                     if (type == J2eeModule.Type.WAR) {
-                        if (profile == Profile.JAVA_EE_6_FULL || profile == Profile.JAVA_EE_7_FULL || profile == Profile.JAVA_EE_8_FULL) {
+                        if (profile == Profile.JAVA_EE_6_FULL || profile == Profile.JAVA_EE_7_FULL || profile == Profile.JAVA_EE_8_FULL || profile == Profile.JAKARTA_EE_8_FULL) {
                             continue;
                         }
                     } else {
-                        if (profile == Profile.JAVA_EE_6_WEB || profile == Profile.JAVA_EE_7_WEB || profile == Profile.JAVA_EE_8_WEB) {
+                        if (profile == Profile.JAVA_EE_6_WEB || profile == Profile.JAVA_EE_7_WEB || profile == Profile.JAVA_EE_8_WEB || profile == Profile.JAKARTA_EE_8_WEB) {
                             continue;
                         }
                     }

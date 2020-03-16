@@ -1748,6 +1748,8 @@ fld public final static org.netbeans.modules.glassfish.tooling.server.config.Jav
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v1_7_web
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v1_8
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v1_8_web
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v8_0_0
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile v8_0_0_web
 innr public final static !enum Type
 innr public final static !enum Version
 meth public java.lang.String toString()
@@ -2454,4 +2456,3 @@ meth public void startPrefixMapping(java.lang.String,java.lang.String) throws or
 meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
 supr java.lang.Object
-

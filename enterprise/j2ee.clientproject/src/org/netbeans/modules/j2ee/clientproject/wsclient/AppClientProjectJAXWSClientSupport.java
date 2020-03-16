@@ -41,7 +41,7 @@ import org.openide.filesystems.FileObject;
  */
 public class AppClientProjectJAXWSClientSupport extends ProjectJAXWSClientSupport /*implements JAXWSClientSupportImpl*/ {
     AppClientProject project;
-    
+
     /**
      * Creates a new instance of AppClientProjectJAXWSClientSupport
      */
@@ -78,7 +78,7 @@ public class AppClientProjectJAXWSClientSupport extends ProjectJAXWSClientSuppor
             }
         }
     }
-    
+
     /** return root folder for xml artifacts
      */
     @Override
@@ -102,7 +102,11 @@ public class AppClientProjectJAXWSClientSupport extends ProjectJAXWSClientSuppor
                 return JAVA_EE_VERSION_18;
             } else if (Profile.JAVA_EE_8_FULL.equals(j2eeClientModule.getJ2eeProfile())) {
                 return JAVA_EE_VERSION_18;
-            } else if (Profile.JAVA_EE_5.equals(j2eeClientModule.getJ2eeProfile())) {
+            } else if (Profile.JAKARTA_EE_8_WEB.equals(j2eeClientModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_8;
+            } else if (Profile.JAKARTA_EE_8_FULL.equals(j2eeClientModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_8;
+            }else if (Profile.JAVA_EE_5.equals(j2eeClientModule.getJ2eeProfile())) {
                 return JAVA_EE_VERSION_15;
             }
         }

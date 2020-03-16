@@ -78,7 +78,7 @@ import com.sun.source.util.SourcePositions;
 
 /**
  * @author ads
- * 
+ *
  */
 public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
 
@@ -102,7 +102,7 @@ public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.netbeans.api.java.source.CancellableTask#cancel()
      */
     @Override
@@ -127,7 +127,8 @@ public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
         if (!Profile.JAVA_EE_7_WEB.equals(profile)
                 && !Profile.JAVA_EE_7_FULL.equals(profile)
                 && !Profile.JAVA_EE_8_WEB.equals(profile)
-                && !Profile.JAVA_EE_8_FULL.equals(profile)) {
+                && !Profile.JAVA_EE_8_FULL.equals(profile)
+                && !Profile.JAKARTA_EE_8_FULL.equals(profile)) {
             return false;
         }
         return true;

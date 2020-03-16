@@ -189,7 +189,9 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
             J2eePlatform j2eePlatform = ProjectUtil.getPlatform(project);
             if (j2eePlatform != null) {
                 Set<Profile> serverProfiles = j2eePlatform.getSupportedProfiles();
-                if (serverProfiles.contains(Profile.JAVA_EE_8_WEB) || serverProfiles.contains(Profile.JAVA_EE_8_FULL)) {
+                if (serverProfiles.contains(Profile.JAKARTA_EE_8_WEB) || serverProfiles.contains(Profile.JAKARTA_EE_8_FULL)) {
+                    return JSFCatalog.RES_FACES_CONFIG_2_3;
+                } else if (serverProfiles.contains(Profile.JAVA_EE_8_WEB) || serverProfiles.contains(Profile.JAVA_EE_8_FULL)) {
                     return JSFCatalog.RES_FACES_CONFIG_2_3;
                 } else if (serverProfiles.contains(Profile.JAVA_EE_7_WEB) || serverProfiles.contains(Profile.JAVA_EE_7_FULL)) {
                     return JSFCatalog.RES_FACES_CONFIG_2_2;
@@ -362,7 +364,7 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
             }
             return true;
         }
-        
+
     }
 
 }

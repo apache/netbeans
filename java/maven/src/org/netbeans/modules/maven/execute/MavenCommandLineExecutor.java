@@ -55,6 +55,7 @@ import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.netbeans.api.extexecution.base.Processes;
+import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.maven.api.Constants;
@@ -83,6 +84,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.Places;
+import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
@@ -111,7 +113,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     private String processUUID;
     private Process preProcess;
     private String preProcessUUID;
-    
+    private static final SpecificationVersion VER17 = new SpecificationVersion("1.7"); //NOI18N
     private static final Logger LOGGER = Logger.getLogger(MavenCommandLineExecutor.class.getName());
     
     private static final RequestProcessor RP = new RequestProcessor(MavenCommandLineExecutor.class.getName(),1);
@@ -241,7 +243,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         processInitialMessage();
         boolean isMaven3 = !isMaven2();
         boolean singlethreaded = !isMultiThreaded(clonedConfig);
-        if (isMaven3 && singlethreaded) {
+        boolean eventSpyCompatible = isEventSpyCompatible(clonedConfig);
+        if (isMaven3 && singlethreaded && eventSpyCompatible) {
             injectEventSpy( clonedConfig );
             if (clonedConfig.getPreExecution() != null) {
                 injectEventSpy( (BeanRunConfig) clonedConfig.getPreExecution());
@@ -328,6 +331,13 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             }
             
         }
+    }
+
+    private boolean isEventSpyCompatible(final BeanRunConfig clonedConfig) {
+        // EventSpy cannot work on jdk < 7
+        ActiveJ2SEPlatformProvider javaprov = clonedConfig.getProject().getLookup().lookup(ActiveJ2SEPlatformProvider.class);
+        JavaPlatform platform = javaprov.getJavaPlatform();
+        return (platform.getSpecification().getVersion().compareTo(VER17) >= 0);
     }
 
     private void kill(Process prcs, String uuid) {

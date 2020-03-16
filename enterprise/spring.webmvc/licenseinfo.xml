@@ -24,10 +24,10 @@
     <fileset>
         <file>src/org/netbeans/modules/spring/webmvc/resources/templates/AbstractController.template</file>
         <file>src/org/netbeans/modules/spring/webmvc/resources/templates/SimpleFormController.template</file>
-        <file>src/org/netbeans/modules/spring/webmvc/resources/templates/applicationContext31.template</file>
-        <file>src/org/netbeans/modules/spring/webmvc/resources/templates/applicationContext40.template</file>
-        <file>src/org/netbeans/modules/spring/webmvc/resources/templates/dispatcher-servlet31.template</file>
-        <file>src/org/netbeans/modules/spring/webmvc/resources/templates/dispatcher-servlet40.template</file>
+        <file>src/org/netbeans/modules/spring/webmvc/resources/templates/applicationContext3.template</file>
+        <file>src/org/netbeans/modules/spring/webmvc/resources/templates/applicationContext4.template</file>
+        <file>src/org/netbeans/modules/spring/webmvc/resources/templates/dispatcher-servlet3.template</file>
+        <file>src/org/netbeans/modules/spring/webmvc/resources/templates/dispatcher-servlet4.template</file>
         <file>src/org/netbeans/modules/spring/webmvc/resources/templates/index.template</file>
         <file>src/org/netbeans/modules/spring/webmvc/resources/templates/redirect.template</file>
         <license ref="Apache-2.0-ASF" />

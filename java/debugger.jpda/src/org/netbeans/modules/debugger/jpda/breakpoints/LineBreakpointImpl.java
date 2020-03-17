@@ -46,7 +46,9 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -72,7 +74,6 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.debugger.jpda.EditorContextBridge;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
-import org.netbeans.modules.debugger.jpda.SourcePath;
 import org.netbeans.modules.debugger.jpda.expr.JDIVariable;
 import org.netbeans.modules.debugger.jpda.jdi.ClassNotPreparedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
@@ -92,6 +93,11 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import java.util.LinkedHashMap;
+import java.util.Optional;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.minBy;
 
 
 
@@ -337,24 +343,27 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                     continue;
                 }
                 // Submit the breakpoint for the lowest location on the line only:
-                Location location = locations.get(0);
-                com.sun.jdi.Method m0 = location.method();
-                for (int li = 1; li < locations.size(); li++) {
-                    Location l = locations.get(li);
-                    if (l.codeIndex() < location.codeIndex()) {
-                        if (l.method().equals(m0)) {
-                            // Assure that we're still in the same method
-                            location = l;
-                        }
-                    }
-                }
+                /* If location contains multiple event breakpoint for the same line 
+                (e.g lambda expression along with any function calling 
+                map(n -> foo(
+                        boo(n)))) 
+                then take the lowest location from each type of event*/
+                Collection<Location> lowestLocationList = locations
+                        .stream()
+                        .collect(groupingBy(loc->loc.method().toString(),
+                                LinkedHashMap::new,
+                                collectingAndThen(minBy(Comparator.comparingLong(Location::codeIndex)), 
+                                        Optional::get))).values();
+                
                 try {
-                    BreakpointRequest br = EventRequestManagerWrapper.
-                        createBreakpointRequest (getEventRequestManager (), location);
-                    setFilters(br);
-                    addEventRequest (br);
-                    submitted = true;
-                    //System.out.println("Breakpoint " + br + location + "created");
+                    for (Iterator it = lowestLocationList.iterator(); it.hasNext();) {
+                        Location loc = (Location) it.next();
+                        BreakpointRequest brl = EventRequestManagerWrapper.
+                                createBreakpointRequest(getEventRequestManager(), loc);
+                        setFilters(brl);
+                        addEventRequest(brl);
+                        submitted = true;
+                    }
                 } catch (VMDisconnectedExceptionWrapper e) {
                 } catch (InternalExceptionWrapper e) {
                 } catch (ObjectCollectedExceptionWrapper e) {
@@ -362,7 +371,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                     Exceptions.printStackTrace(irse);
                 } catch (RequestNotSupportedException rnsex) {
                     setValidity(Breakpoint.VALIDITY.INVALID, NbBundle.getMessage(ClassBasedBreakpoint.class, "MSG_RequestNotSupported"));
-                    return ;
+                    return;
                 }
             } // for
             if (counter == 0) {

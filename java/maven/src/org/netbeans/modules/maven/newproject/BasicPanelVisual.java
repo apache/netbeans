@@ -555,7 +555,7 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         "# {0} - project count", "TXT_MavenProjectName=mavenproject{0}",
         "TXT_Checking1=Checking additional creation properties..."
     })
-    void read(WizardDescriptor settings) {
+    void read(WizardDescriptor settings, Map<String,String> defaultProps) {
         synchronized (HANDLE_LOCK) {
             if (handle != null) {
                 handle.finish();
@@ -603,7 +603,7 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
             RPprep.post(new Runnable() {
                 @Override
                 public void run() {
-                    prepareAdditionalProperties(archet);
+                    prepareAdditionalProperties(archet, defaultProps);
                 }
             });
         }
@@ -620,7 +620,7 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         "COL_Value=Value",
         "TXT_Checking2=A&dditional Creation Properties:"
     })
-    private void prepareAdditionalProperties(Archetype arch) {
+    private void prepareAdditionalProperties(Archetype arch, Map<String, String> defaultProps) {
         final DefaultTableModel dtm = new DefaultTableModel();
         dtm.addColumn(COL_Key());
         dtm.addColumn(COL_Value());
@@ -634,7 +634,13 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
                     if ("groupId".equals(key) || "artifactId".equals(key) || "version".equals(key)) {
                         continue; //don't show the basic props as additionals..
                     }
-                    dtm.addRow(new Object[] {key, defVal == null ? "" : defVal });
+                    if (defaultProps != null && defaultProps.containsKey(key)) {
+                        defVal = defaultProps.get(key);
+                    }
+                    if (defVal == null) {
+                        defVal = "";
+                    }
+                    dtm.addRow(new Object[] {key, defVal });
                 }
             }
         } catch (ArtifactResolutionException ex) {

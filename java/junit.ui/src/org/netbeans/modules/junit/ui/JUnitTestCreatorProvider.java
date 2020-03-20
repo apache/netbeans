@@ -21,7 +21,6 @@ package org.netbeans.modules.junit.ui;
 import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -76,15 +75,13 @@ public class JUnitTestCreatorProvider extends TestCreatorProvider {
                 && (getSourceGroup(fileObj, project) != null)) {
 
                 JUnitPlugin plugin = JUnitTestUtil.getPluginForProject(project);
-                return JUnitTestUtil.canCreateTests(plugin,
-                                                                    fileObj);
+                return JUnitTestUtil.canCreateTests(plugin, fileObj);
             } else {
                 return false;
             }
         }
 
-        final Collection<FileObject> fileObjs
-                = new ArrayList<FileObject>(activatedFOs.length);
+        final Collection<FileObject> fileObjs = new ArrayList<>(activatedFOs.length);
         Project theProject = null;
         boolean result = false;
         for (FileObject fileObj : activatedFOs) {

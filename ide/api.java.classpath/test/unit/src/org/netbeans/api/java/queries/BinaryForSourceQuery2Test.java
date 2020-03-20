@@ -30,13 +30,22 @@ import org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation2;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.URLMapper;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 public class BinaryForSourceQuery2Test extends NbTestCase {
     public BinaryForSourceQuery2Test (String n) {
         super(n);
+    }
+
+    @Override
+    public void setUp() {
+        URLMapper = org.openide.filesystems.URLMapper::findFileObject;
+    }
+
+    @Override
+    public void tearDown() {
+        URLMapper = (__) -> null;
     }
 
     public void testQuery2() throws Exception {
@@ -71,6 +80,12 @@ public class BinaryForSourceQuery2Test extends NbTestCase {
         assertSame("The result should be cached", result, result2);
     }
 
+    private static interface Find {
+        FileObject findFileObject(URL u);
+    }
+
+    private static Find URLMapper = (__) -> null;
+
     @SuppressWarnings("PackageVisibleField")
     // BEGIN: org.netbeans.api.java.queries.BinaryForSourceQuery2Test.SampleQuery
     @ServiceProvider(service = BinaryForSourceQueryImplementation.class)
@@ -82,8 +97,7 @@ public class BinaryForSourceQuery2Test extends NbTestCase {
         @Override
         public PrivateData findBinaryRoots2(URL sourceRoot) {
             final FileObject fo = URLMapper.findFileObject(sourceRoot);
-            assertNotNull("FileObject found", fo);
-            return new PrivateData(sourceRoot, fo);
+            return fo != null ? new PrivateData(sourceRoot, fo) : null;
         }
 
         @Override

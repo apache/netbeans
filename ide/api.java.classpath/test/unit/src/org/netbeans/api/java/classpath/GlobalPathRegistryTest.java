@@ -19,6 +19,10 @@
 
 package org.netbeans.api.java.classpath;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,6 +30,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Map;
+import java.util.jar.JarOutputStream;
+import java.util.zip.ZipEntry;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
@@ -36,7 +42,7 @@ import org.netbeans.spi.java.classpath.ClassPathFactory;
 import org.netbeans.spi.java.classpath.ClassPathImplementation;
 import org.netbeans.spi.java.classpath.FilteringPathResourceImplementation;
 import org.netbeans.spi.java.classpath.support.PathResourceBase;
-import org.openide.filesystems.FileStateInvalidException;
+import org.openide.filesystems.FileSystem.AtomicAction;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Lookup;
@@ -129,8 +135,36 @@ public class GlobalPathRegistryTest extends NbTestCase {
         assertFalse("was a removal", l.added());
         assertEquals("right changed paths", Collections.<ClassPath>singleton(cp2), e.getChangedPaths());
     }
-    
-    
+
+    public void testDontFireOnRebuiltJAR() throws Exception {
+        clearWorkDir();
+        FileObject dirFo = FileUtil.toFileObject(getWorkDir());
+        final FileObject jar = dirFo.createData("6.jar");
+        writeJarResource(jar, "x.txt", "Ahoj");
+        FileObject jarRoot = FileUtil.getArchiveRoot(jar);
+        ClassPath path = ClassPathSupport.createClassPath(new FileObject[] {jarRoot});
+        assertEquals("initially no paths of type b", Collections.<ClassPath>emptySet(), r.getPaths("b"));
+        r.register(ClassPath.SOURCE, new ClassPath[] {path});
+        try {
+            assertEquals("Ahoj", r.findResource("x.txt").asText());
+            L l = new L();
+            PropertyChangeEvent[] arr = { null };
+            PropertyChangeListener pcl = (ev) -> {
+                arr[0] = ev;
+            };
+            r.addGlobalPathRegistryListener(l);
+            path.addPropertyChangeListener(pcl);
+            FileUtil.runAtomicAction((AtomicAction) () -> {
+                writeJarResource(jar, "x.txt", "Bye!");
+            });
+            assertEquals("Bye!", r.findResource("x.txt").asText());
+            assertNull("No event on change of JAR content in GPR", l.event());
+            assertNull("No event on change of JAR content in CP", arr[0]);
+        } finally {
+            r.unregister(ClassPath.SOURCE, new ClassPath[] {path});
+        }
+    }
+
     public void testGetSourceRoots () throws Exception {
         SFBQImpl query = Lookup.getDefault().lookup(SFBQImpl.class);
         assertNotNull ("SourceForBinaryQueryImplementation not found in lookup",query);                
@@ -235,6 +269,15 @@ public class GlobalPathRegistryTest extends NbTestCase {
         //There shouldn't be registered source root
         assertTrue(reg.getSourceRoots().isEmpty());
         assertTrue(reg.getResults().isEmpty());
+    }
+
+    private static void writeJarResource(FileObject jar, String path, String ahoj) throws IOException {
+        try (JarOutputStream os = new JarOutputStream(jar.getOutputStream())) {
+            os.putNextEntry(new ZipEntry(path));
+            os.write(ahoj.getBytes());
+            os.closeEntry();
+            os.close();
+        }
     }
     
     private static final class L implements GlobalPathRegistryListener {

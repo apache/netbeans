@@ -238,7 +238,7 @@ public class ClassPathTest extends NbTestCase {
             out.close ();
         }
         archiveFile.refresh();
-        impl.assertEvents(ClassPath.PROP_ROOTS);
+        impl.assertEvents();
         root_1.delete();
         root_2.delete();
         root_3.delete();

@@ -1415,7 +1415,9 @@ public final class ClassPath {
 
         @Override
         public void fileChanged(FileEvent fe) {
-            processEvent(fe);
+            if (!fe.getFile().isValid()) {
+                processEvent(fe);
+            }
         }
 
         @Override

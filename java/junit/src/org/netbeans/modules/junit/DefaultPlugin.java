@@ -21,13 +21,11 @@ package org.netbeans.modules.junit;
 
 import org.netbeans.modules.junit.api.JUnitSettings;
 import org.netbeans.modules.junit.api.JUnitTestUtil;
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -45,11 +43,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.lang.model.element.TypeElement;
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.project.classpath.ProjectClassPathModifier;
@@ -128,7 +124,7 @@ public final class DefaultPlugin extends JUnitPlugin {
                                 = "org/junit/platform/commons/annotation/Testable.class";               //NOI18N
     
     /** */
-    private static JUnitVersion junitVer;
+    private JUnitVersion junitVer;
 
     /** name of FreeMarker template property - generate {@literal &#64;BeforeClass} method? */
     private static final String templatePropBeforeClass = "classSetUp"; //NOI18N
@@ -159,23 +155,23 @@ public final class DefaultPlugin extends JUnitPlugin {
     private static boolean generatingIntegrationTest = false;
     
     private static final String PROJECT_PROPERTIES_PATH = "nbproject/project.properties";
+
+    public DefaultPlugin(JUnitVersion v) {
+        junitVer = v;
+    }
     
     public static void logJUnitUsage(URI projectURI) {
         String version = "";
-        if (junitVer == null) {
-            Project project = FileOwnerQuery.getOwner(projectURI);
-            final ClassPath classPath = getTestClassPath(project);
-            if (classPath != null) {
-                if (classPath.findResource(JUNIT5_SPECIFIC) != null) {
-                    version = JUnitVersion.JUNIT5.toString();
-                } else if (classPath.findResource(JUNIT4_SPECIFIC) != null) {
-                    version = JUnitVersion.JUNIT4.toString();
-                } else if (classPath.findResource(JUNIT3_SPECIFIC) != null) {
-                    version = JUnitVersion.JUNIT3.toString();
-                }
+        Project project = FileOwnerQuery.getOwner(projectURI);
+        final ClassPath classPath = getTestClassPath(project);
+        if (classPath != null) {
+            if (classPath.findResource(JUNIT5_SPECIFIC) != null) {
+                version = JUnitVersion.JUNIT5.toString();
+            } else if (classPath.findResource(JUNIT4_SPECIFIC) != null) {
+                version = JUnitVersion.JUNIT4.toString();
+            } else if (classPath.findResource(JUNIT3_SPECIFIC) != null) {
+                version = JUnitVersion.JUNIT3.toString();
             }
-        } else {
-            version = junitVer.toString();
         }
         UnitTestsUsage.getInstance().logUnitTestUsage(projectURI, version);
     }

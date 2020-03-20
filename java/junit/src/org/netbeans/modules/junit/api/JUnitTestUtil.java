@@ -823,7 +823,7 @@ public class JUnitTestUtil extends CommonTestUtil {
      */
     public static JUnitPlugin getPluginForProject(final Project project) {
         JUnitPlugin pluginObj = project.getLookup().lookup(JUnitPlugin.class);
-        return pluginObj != null ? pluginObj : new DefaultPlugin();
+        return pluginObj != null ? pluginObj : new DefaultPlugin(null);
     }
     
     public static JUnitPlugin getITPluginForProject(final Project project) {

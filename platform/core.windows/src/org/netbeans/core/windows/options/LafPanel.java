@@ -27,6 +27,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -296,7 +297,11 @@ public class LafPanel extends javax.swing.JPanel {
         try {
             Class klz = cl.loadClass( COLOR_MODEL_CLASS_NAME );
             Object colorModel = klz.newInstance();
-            Method m = klz.getDeclaredMethod( "setCurrentProfile", String.class ); //NOI18N
+            Method m = klz.getDeclaredMethod( "getAnnotations", String.class ); //NOI18N
+            Object annotations = m.invoke( colorModel, preferredProfile );
+            m = klz.getDeclaredMethod( "setAnnotations", String.class, Collection.class ); //NOI18N
+            m.invoke( colorModel, preferredProfile, annotations );
+            m = klz.getDeclaredMethod( "setCurrentProfile", String.class ); //NOI18N
             m.invoke( colorModel, preferredProfile );
         } catch( Exception ex ) {
             //ignore

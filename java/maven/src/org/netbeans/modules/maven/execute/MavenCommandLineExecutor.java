@@ -335,9 +335,13 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
 
     private boolean isEventSpyCompatible(final BeanRunConfig clonedConfig) {
         // EventSpy cannot work on jdk < 7
-        ActiveJ2SEPlatformProvider javaprov = clonedConfig.getProject().getLookup().lookup(ActiveJ2SEPlatformProvider.class);
-        JavaPlatform platform = javaprov.getJavaPlatform();
-        return (platform.getSpecification().getVersion().compareTo(VER17) >= 0);
+        if (clonedConfig.getProject() != null) {
+            ActiveJ2SEPlatformProvider javaprov = clonedConfig.getProject().getLookup().lookup(ActiveJ2SEPlatformProvider.class);
+            JavaPlatform platform = javaprov.getJavaPlatform();
+            return (platform.getSpecification().getVersion().compareTo(VER17) >= 0);
+        } else {
+            return true;
+        }
     }
 
     private void kill(Process prcs, String uuid) {

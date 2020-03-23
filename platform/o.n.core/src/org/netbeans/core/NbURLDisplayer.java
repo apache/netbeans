@@ -107,7 +107,7 @@ public final class NbURLDisplayer extends URLDisplayer {
 
     @Override
     public void clearCache() {
-        super.clearCache(); //To change body of generated methods, choose Tools | Templates.
+        htmlViewer = null;
     }
 
     /**

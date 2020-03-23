@@ -105,6 +105,11 @@ public final class NbURLDisplayer extends URLDisplayer {
         }
     }
 
+    @Override
+    public void clearCache() {
+        super.clearCache(); //To change body of generated methods, choose Tools | Templates.
+    }
+
     /**
      * Able to reuse HtmlBrowserComponent.
      */
@@ -120,7 +125,7 @@ public final class NbURLDisplayer extends URLDisplayer {
             factoryResult.allItems();
             factoryResult.addLookupListener(new LookupListener() {
                 public void resultChanged(LookupEvent ev) {
-                    ((NbURLDisplayer) URLDisplayer.getDefault()).htmlViewer = null;
+                    URLDisplayer.getDefault().clearCache();
                 }
             });
         }
@@ -185,7 +190,7 @@ public final class NbURLDisplayer extends URLDisplayer {
                 idePCL = new PreferenceChangeListener() {
                     public void preferenceChange(PreferenceChangeEvent evt) {
                         if (IDESettings.PROP_WWWBROWSER.equals(evt.getKey())) {
-                            ((NbURLDisplayer) URLDisplayer.getDefault()).htmlViewer = null;
+                            URLDisplayer.getDefault().clearCache();
                             if (idePCL != null) {
                                 IDESettings.getPreferences().removePreferenceChangeListener(idePCL);
                                 idePCL = null;

@@ -21,13 +21,11 @@ package org.netbeans.modules.junit;
 
 import org.netbeans.modules.junit.api.JUnitSettings;
 import org.netbeans.modules.junit.api.JUnitTestUtil;
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -45,11 +43,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.lang.model.element.TypeElement;
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.project.classpath.ProjectClassPathModifier;
@@ -95,6 +91,7 @@ import org.netbeans.modules.gsf.testrunner.api.UnitTestsUsage;
 import org.netbeans.modules.java.testrunner.GuiUtils;
 import static org.netbeans.modules.java.testrunner.JavaUtils.PROP_JUNIT_SELECTED_VERSION;
 import org.netbeans.modules.junit.api.JUnitUtils;
+import org.netbeans.modules.junit.api.JUnitVersion;
 import static org.openide.ErrorManager.ERROR;
 import static org.openide.ErrorManager.WARNING;
 import static org.openide.NotifyDescriptor.CANCEL_OPTION;
@@ -128,7 +125,8 @@ public final class DefaultPlugin extends JUnitPlugin {
                                 = "org/junit/platform/commons/annotation/Testable.class";               //NOI18N
     
     /** */
-    private static JUnitVersion junitVer;
+    private final JUnitVersion generateVersion;
+    private JUnitVersion junitVer;
 
     /** name of FreeMarker template property - generate {@literal &#64;BeforeClass} method? */
     private static final String templatePropBeforeClass = "classSetUp"; //NOI18N
@@ -159,23 +157,23 @@ public final class DefaultPlugin extends JUnitPlugin {
     private static boolean generatingIntegrationTest = false;
     
     private static final String PROJECT_PROPERTIES_PATH = "nbproject/project.properties";
+
+    public DefaultPlugin(JUnitVersion v) {
+        generateVersion = v;
+    }
     
     public static void logJUnitUsage(URI projectURI) {
         String version = "";
-        if (junitVer == null) {
-            Project project = FileOwnerQuery.getOwner(projectURI);
-            final ClassPath classPath = getTestClassPath(project);
-            if (classPath != null) {
-                if (classPath.findResource(JUNIT5_SPECIFIC) != null) {
-                    version = JUnitVersion.JUNIT5.toString();
-                } else if (classPath.findResource(JUNIT4_SPECIFIC) != null) {
-                    version = JUnitVersion.JUNIT4.toString();
-                } else if (classPath.findResource(JUNIT3_SPECIFIC) != null) {
-                    version = JUnitVersion.JUNIT3.toString();
-                }
+        Project project = FileOwnerQuery.getOwner(projectURI);
+        final ClassPath classPath = getTestClassPath(project);
+        if (classPath != null) {
+            if (classPath.findResource(JUNIT5_SPECIFIC) != null) {
+                version = JUnitVersion.JUNIT5.toString();
+            } else if (classPath.findResource(JUNIT4_SPECIFIC) != null) {
+                version = JUnitVersion.JUNIT4.toString();
+            } else if (classPath.findResource(JUNIT3_SPECIFIC) != null) {
+                version = JUnitVersion.JUNIT3.toString();
             }
-        } else {
-            version = junitVer.toString();
         }
         UnitTestsUsage.getInstance().logUnitTestUsage(projectURI, version);
     }
@@ -840,7 +838,7 @@ public final class DefaultPlugin extends JUnitPlugin {
         progress.displayStatusText(msg);
         generatingIntegrationTest = Boolean.TRUE.equals(params.get(CreateTestParam.INC_GENERATE_INTEGRATION_TEST));
 
-        final TestCreator testCreator = new TestCreator(params, junitVer);
+        final TestCreator testCreator = new TestCreator(params, useVersion());
         
         CreationResults results;
         try {
@@ -1099,7 +1097,10 @@ public final class DefaultPlugin extends JUnitPlugin {
             return false;
         }
 
-        if (junitVer != null) {
+        GO_ON: if (junitVer != null) {
+            if (generateVersion != null && junitVer != generateVersion) {
+                break GO_ON;
+            }
             switch (junitVer) {
                 case JUNIT3:
                     return true;
@@ -1187,31 +1188,30 @@ public final class DefaultPlugin extends JUnitPlugin {
             }
         }
 
-        String msgKey;
-        boolean offerJUnit4;
-        boolean defaultToJUnit5 = false;
-        boolean showSourceLevelReqs;
-        String sourceLevel = JUnitTestUtil.getSourceLevel(selectedFiles[0]);
-        if (sourceLevel == null) {
-            msgKey = "MSG_select_junit_version_srclvl_unknown";         //NOI18N
-            offerJUnit4 = true;
-            showSourceLevelReqs = true;
+
+        if (generateVersion != null) {
+            junitVer = generateVersion;
         } else {
-            msgKey = "MSG_select_junit_version";                        //NOI18N
-            defaultToJUnit5 = (sourceLevel.compareTo("1.8") >= 0);      //NOI18N
-            offerJUnit4 = (sourceLevel.compareTo("1.5") >= 0);          //NOI18N
-            showSourceLevelReqs = !offerJUnit4;
-        }
-        loadJUnitToUseFromPropertiesFile(project);
-        if(junitVer == null) {
-            
-            if (defaultToJUnit5) {
-                // Java 8 and above should default to JUnit 5
-                junitVer = JUnitVersion.JUNIT5;
+            boolean offerJUnit4;
+            boolean defaultToJUnit5 = false;
+            String sourceLevel = JUnitTestUtil.getSourceLevel(selectedFiles[0]);
+            if (sourceLevel == null) {
+                offerJUnit4 = true;
             } else {
-                // probably new project after 8.1, since determining junitVer failed
-                // sofar, so as last resort default to 4.x
-                junitVer = JUnitVersion.JUNIT4;
+                defaultToJUnit5 = generateVersion == null && (sourceLevel.compareTo("1.8") >= 0);      //NOI18N
+                offerJUnit4 = (sourceLevel.compareTo("1.5") >= 0);          //NOI18N
+            }
+            loadJUnitToUseFromPropertiesFile(project);
+            if(junitVer == null) {
+
+                if (defaultToJUnit5) {
+                    // Java 8 and above should default to JUnit 5
+                    junitVer = JUnitVersion.JUNIT5;
+                } else {
+                    // probably new project after 8.1, since determining junitVer failed
+                    // sofar, so as last resort default to 4.x
+                    junitVer = JUnitVersion.JUNIT4;
+                }
             }
         }
         if ((junitVer != null) && storeSettings) {
@@ -2356,6 +2356,13 @@ public final class DefaultPlugin extends JUnitPlugin {
                 DefaultPlugin.class,
                 "FMT_generator_status_ignoring",                        //NOI18N
                 sourceName);
+    }
+
+    private JUnitVersion useVersion() {
+        if (generateVersion != null) {
+            return generateVersion;
+        }
+        return junitVer;
     }
 
     

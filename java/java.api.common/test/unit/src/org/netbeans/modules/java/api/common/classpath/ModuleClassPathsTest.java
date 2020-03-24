@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import javax.lang.model.element.ModuleElement;
 import javax.swing.event.ChangeListener;
+import org.junit.Assume;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -63,11 +64,14 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.api.common.TestJavaPlatform;
 import org.netbeans.modules.java.api.common.TestProject;
 import org.netbeans.modules.java.api.common.project.ProjectProperties;
+import org.netbeans.modules.java.classpath.SimpleClassPathImplementation;
 import org.netbeans.modules.java.j2seplatform.platformdefinition.Util;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.spi.java.classpath.ClassPathFactory;
+import org.netbeans.spi.java.classpath.ClassPathImplementation;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
+import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.netbeans.spi.project.support.ant.EditableProperties;
@@ -176,6 +180,44 @@ public class ModuleClassPathsTest extends NbTestCase {
         final Collection<URL> resURLs = collectEntries(cp);
         final Collection<URL> expectedURLs = reads(systemModules, NamePredicate.create("java.base"));  //NOI18N
         assertEquals(expectedURLs, resURLs);
+    }
+
+    public void testModuleInfoInJDK8Project() throws IOException {
+        assertNotNull(src);
+        createModuleInfo(src, "ModuleInfoDebris"); //NOI18N
+        setSourceLevel(tp, "1.8");   //NOI18N
+        final ClassPath base = systemModules == null ? ClassPath.EMPTY : systemModules;
+        final ClassPathImplementation mcp = ModuleClassPaths.createModuleInfoBasedPath(
+            base,
+            src,
+            base,
+            ClassPath.EMPTY,
+            null,
+            null
+        );
+        List<? extends PathResourceImplementation> resources = mcp.getResources();
+        assertEquals("No resources found as module-info.java is ignored: " + resources, 0, resources.size());
+    }
+
+    public void testModuleInfoInJDK11Project() throws IOException {
+        if (systemModules == null) {
+            System.out.println("No jdk 9 home configured.");    //NOI18N
+            return;
+        }
+
+        assertNotNull(src);
+        createModuleInfo(src, "ModuleInfoUsed"); //NOI18N
+        final ClassPath base = systemModules;
+        final ClassPathImplementation mcp = ModuleClassPaths.createModuleInfoBasedPath(
+            base,
+            src,
+            base,
+            ClassPath.EMPTY,
+            null,
+            null
+        );
+        List<? extends PathResourceImplementation> one = mcp.getResources();
+        assertEquals("One resource found as module-info.java is used: " + one, 1, one.size());
     }
 
     public void testModuleInfoBasedCp_SystemModules_in_NamedModule() throws IOException {

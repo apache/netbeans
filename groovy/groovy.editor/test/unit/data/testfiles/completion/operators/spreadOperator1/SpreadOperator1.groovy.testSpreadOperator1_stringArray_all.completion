@@ -112,6 +112,7 @@ METHOD     intern()                        [PUBLIC]   String
 METHOD     invokeMethod(String, Object)               Object
 METHOD     is(Object)                                 boolean
 METHOD     isAllWhitespace()                          boolean
+METHOD     isAtLeast(String)                          Boolean
 METHOD     isBigDecimal()                             boolean
 METHOD     isBigInteger()                             boolean
 METHOD     isBlank()                                  boolean

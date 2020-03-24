@@ -63,7 +63,7 @@ public class WildflyDatasourceNode extends AbstractNode {
         PropertySupport ps = new SimplePropertySupport(name, value, displayName, description);
         getSheet().get(Sheet.PROPERTIES).put(ps);
     }
-    
+
     @Override
     protected Sheet createSheet() {
         Sheet sheet = Sheet.createDefault();

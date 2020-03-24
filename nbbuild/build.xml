@@ -198,14 +198,34 @@ metabuild.hash=${metabuild.hash}</echo>
   <target name="download-all-extbins" unless="ext.binaries.downloaded" depends="bootstrap">
     <echo>Downloading external binaries (*/external/ directories)...</echo>
     <!-- optionnal reporttofile used to speed resolving artefacts resolution for maven artefacts -->
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" reporttofile="${nb_all}/nbbuild/build/external.info" >
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" >
         <manifest dir="${nb_all}">
             <include name="**/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
     <property name="ext.binaries.downloaded" value="true"/>
   </target>
-
+  <!-- create list of all maven coordinate -->
+  <target name="getallmavencoordinates">
+      <concat destfile="${nb_all}/nbbuild/build/external.info">
+          <fileset dir="${nb_all}" includes="**/external/binaries-list" />
+          <fileset dir="${nb_all}" includes="**/external/binariesembedded-list" />
+          <filterchain>
+              <!-- remove comment inline not inline -->
+              <tokenfilter>
+                  <replaceregex pattern="#(.*)$" replace="" flags="gim" />
+              </tokenfilter>
+              <!-- : is sparator for maven coordinate -->
+              <linecontains>
+                  <contains value=":"/>
+              </linecontains>
+              <!--  needed as separator -->
+              <tokenfilter>
+                  <replacestring from=" " to=";"/>
+              </tokenfilter>
+          </filterchain>
+      </concat>
+  </target>
   <target name="download-selected-extbins" unless="ext.binaries.downloaded" depends="init-module-list">
     <echo>Downloading external binaries (*/external/ directories) for cluster.config=${cluster.config}...</echo>
     <pathconvert property="modules.binaries-list" pathsep=",">

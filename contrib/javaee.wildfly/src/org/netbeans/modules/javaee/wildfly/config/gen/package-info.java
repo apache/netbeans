@@ -19,7 +19,7 @@
 
 @Multiple({
     @Schema2Beans(
-        schema="../../resources/jboss-client_4_0.dtd",
+        schema="../../resources/jboss-client_4_0_1.dtd",
         schemaType=SchemaType.DTD,
         outputType=OutputType.TRADITIONAL_BASEBEAN,
         validate=true,
@@ -29,7 +29,7 @@
         java5=true
     ),
     @Schema2Beans(
-        schema="../../resources/jboss-service_4_0.dtd",
+        schema="../../resources/jboss-service_4_0_1.dtd",
         schemaType=SchemaType.DTD,
         outputType=OutputType.TRADITIONAL_BASEBEAN,
         validate=true,
@@ -39,7 +39,7 @@
         java5=true
     ),
     @Schema2Beans(
-        schema="../../resources/jboss_4_0.dtd",
+        schema="../../resources/jboss_4_0_1.dtd",
         schemaType=SchemaType.DTD,
         outputType=OutputType.TRADITIONAL_BASEBEAN,
         validate=true,
@@ -49,7 +49,7 @@
         java5=true
     ),
     @Schema2Beans(
-        schema="../../resources/jboss-app_4_0.dtd",
+        schema="../../resources/jboss-app_4_0_1.dtd",
         schemaType=SchemaType.DTD,
         outputType=OutputType.TRADITIONAL_BASEBEAN,
         validate=true,
@@ -59,7 +59,7 @@
         java5=true
     ),
     @Schema2Beans(
-        schema="../../resources/jboss-web_7_2.xsd",
+        schema="../../resources/jboss-web_7_3_1.xsd",
         schemaType=SchemaType.XML_SCHEMA,
         outputType=OutputType.TRADITIONAL_BASEBEAN,
         validate=true,
@@ -69,7 +69,7 @@
         java5=true
     ),
     @Schema2Beans(
-        schema="../../resources/jboss-as-messaging-deployment_1_0.xsd",
+        schema="../../resources/jboss-as-messaging-deployment_1_0_1.xsd",
         schemaType=SchemaType.XML_SCHEMA,
         outputType=OutputType.TRADITIONAL_BASEBEAN,
         validate=true,

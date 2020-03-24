@@ -19,7 +19,7 @@
 
 @Multiple({
     @Schema2Beans(
-        schema="../../../resources/jboss-web_10_0.xsd",
+        schema="../../../resources/jboss-web_14_1.xsd",
         schemaType=SchemaType.XML_SCHEMA,
         outputType=OutputType.TRADITIONAL_BASEBEAN,
         validate=true,
@@ -29,7 +29,7 @@
         java5=true
     ),
     @Schema2Beans(
-        schema="../../../resources/wildfly-messaging-activemq-deployment_1_0.xsd",
+        schema="../../../resources/wildfly-messaging-activemq-deployment_1_0_1.xsd",
         schemaType=SchemaType.XML_SCHEMA,
         outputType=OutputType.TRADITIONAL_BASEBEAN,
         validate=true,

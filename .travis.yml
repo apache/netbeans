@@ -538,7 +538,7 @@ matrix:
           script:
             - ant $OPTS -f enterprise/spring.webmvc test
             
-        - name: Test groovy modules
+        - name: Test groovy modules on Java 8
           jdk: openjdk8
           env:
             - BUILD_OPTS="-quiet -Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
@@ -546,6 +546,44 @@ matrix:
           before_script:
             - ant $BUILD_OPTS clean
             - ant $BUILD_OPTS build
+          script:
+            #- ant $TEST_OPTS -f groovy/groovy test
+            #- ant $TEST_OPTS -f groovy/groovy.java test
+            - ant $TEST_OPTS -f groovy/groovy.editor test
+            - ant $TEST_OPTS -f groovy/groovy.gsp test
+            #- ant $TEST_OPTS -f groovy/groovy.kit test
+            - ant $TEST_OPTS -f groovy/groovy.support test
+            
+        - name: Test groovy modules on Java 11
+          jdk: openjdk8
+          env:
+            - BUILD_OPTS="-quiet -Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+            - TEST_OPTS="-Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $BUILD_OPTS clean
+            - ant $BUILD_OPTS build
+            - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+            - export TEST_JDK=`bash install-jdk.sh --feature 11 --license GPL --emit-java-home --silent | tail -1`
+            - export OPTS="$OPTS  -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"            
+          script:
+            #- ant $TEST_OPTS -f groovy/groovy test
+            #- ant $TEST_OPTS -f groovy/groovy.java test
+            - ant $TEST_OPTS -f groovy/groovy.editor test
+            - ant $TEST_OPTS -f groovy/groovy.gsp test
+            #- ant $TEST_OPTS -f groovy/groovy.kit test
+            - ant $TEST_OPTS -f groovy/groovy.support test
+            
+        - name: Test groovy modules on Java 14
+          jdk: openjdk8
+          env:
+            - BUILD_OPTS="-quiet -Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+            - TEST_OPTS="-Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $BUILD_OPTS clean
+            - ant $BUILD_OPTS build
+            - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+            - export TEST_JDK=`bash install-jdk.sh --feature 11 --license GPL --emit-java-home --silent | tail -1`
+            - export OPTS="$OPTS  -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"            
           script:
             #- ant $TEST_OPTS -f groovy/groovy test
             #- ant $TEST_OPTS -f groovy/groovy.java test

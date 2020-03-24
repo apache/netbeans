@@ -16,28 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.javaee.wildfly.nodes;
 
-import org.netbeans.modules.j2ee.deployment.plugins.spi.RegistryNodeFactory;
-import org.openide.nodes.Children;
-import org.openide.nodes.Node;
-import org.openide.util.Lookup;
+package org.netbeans.modules.junit.api;
 
-/**
- *
- * @author Kirill Sorokin <Kirill.Sorokin@Sun.COM>
+/** Supported JUnit versions.
+ * @since 2.82
  */
-@Deprecated
-public class WildflyRegistryNodeFactory implements RegistryNodeFactory {
-
-    @Override
-    public Node getTargetNode(Lookup lookup) {
-        return new WildflyTargetNode(lookup);
-    }
-
-    @Override
-    public Node getManagerNode(Lookup lookup) {
-        return new WildflyManagerNode(new Children.Map(), lookup);
-    }
-
+public enum JUnitVersion {
+    JUNIT3,
+    JUNIT4,
+    JUNIT5;
 }

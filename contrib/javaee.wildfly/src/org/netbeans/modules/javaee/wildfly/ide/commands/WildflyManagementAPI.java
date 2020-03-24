@@ -19,6 +19,7 @@
 package org.netbeans.modules.javaee.wildfly.ide.commands;
 
 import static org.netbeans.modules.javaee.wildfly.ide.commands.Constants.DEPLOYMENT;
+import static org.netbeans.modules.javaee.wildfly.ide.commands.Constants.INCLUDE_RUNTIME;
 import static org.netbeans.modules.javaee.wildfly.ide.commands.Constants.UNDEFINED;
 
 import java.lang.reflect.Array;
@@ -117,12 +118,14 @@ public class WildflyManagementAPI {
     }
 
     // ModelNode
-    static Object createReadResourceOperation(WildflyDeploymentFactory.WildFlyClassLoader cl, Object modelNode, boolean recursive)
-            throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        Class<?> clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
+    static Object createReadResourceOperation(WildflyDeploymentFactory.WildFlyClassLoader cl, Object modelNode, boolean recursive, boolean runtime)
+            throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Class clazz = cl.loadClass("org.jboss.as.controller.client.helpers.Operations"); // NOI18N
         Class modelClazz = cl.loadClass("org.jboss.dmr.ModelNode"); // NOI18N
         Method method = clazz.getDeclaredMethod("createReadResourceOperation", new Class[]{modelClazz, boolean.class});
-        return method.invoke(null, modelNode, recursive);
+        Object op =  method.invoke(null, modelNode, recursive);
+        setModelNodeChild(cl, getModelNodeChild(cl, op, INCLUDE_RUNTIME), runtime);
+        return op;
     }
 
     // ModelNode

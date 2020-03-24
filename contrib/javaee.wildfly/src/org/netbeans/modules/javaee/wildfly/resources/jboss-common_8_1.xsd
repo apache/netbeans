@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+~ JBoss, Home of Professional Open Source
+~ Copyright 2019, Red Hat, Inc., and individual contributors as indicated
+~ by the @authors tag.
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.jboss.com/xml/ns/javaee"
+            xmlns:javaee="http://xmlns.jcp.org/xml/ns/javaee"
+            xmlns:jboss="http://www.jboss.com/xml/ns/javaee"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            version="8.1">
+   <xsd:annotation>
+      <xsd:documentation>
+         <![CDATA[
+
+	This XML Schema defines types, elements and model groups that common to all application-specific JBoss schemas.
+        The target namespace is
+
+	http://www.jboss.com/xml/ns/javaee
+
+        Online URL http://www.jboss.org/j2ee/schema/jboss-common_8_1.xsd
+	]]>
+      </xsd:documentation>
+   </xsd:annotation>
+
+   <xsd:annotation>
+      <xsd:documentation> The following conventions apply to all Java EE deployment descriptor
+         elements unless indicated otherwise. - In elements that specify a pathname to a file within
+         the same JAR file, relative filenames (i.e., those not starting with "/") are considered
+         relative to the root of the JAR file's namespace. Absolute filenames (i.e., those starting
+         with "/") also specify names in the root of the JAR file's namespace. In general, relative
+         names are preferred. The exception is .war files where absolute names are preferred for
+         consistency with the Servlet API. </xsd:documentation>
+   </xsd:annotation>
+
+   <xsd:import namespace="http://xmlns.jcp.org/xml/ns/javaee" schemaLocation="http://www.jboss.org/schema/jbossas/javaee_8.xsd"/>
+
+   <xsd:group name="descriptionGroup">
+      <xsd:sequence>
+         <xsd:element name="description" type="javaee:descriptionType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="display-name" type="javaee:display-nameType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="icon" type="javaee:iconType" minOccurs="0" maxOccurs="unbounded" />
+      </xsd:sequence>
+   </xsd:group>
+
+   <xsd:group name="jndiEnvironmentRefsGroup">
+      <xsd:sequence>
+         <xsd:element name="env-entry" type="jboss:env-entryType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="ejb-ref" type="jboss:ejb-refType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="ejb-local-ref" type="jboss:ejb-local-refType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:group ref="jboss:service-refGroup" />
+         <xsd:element name="resource-ref" type="jboss:resource-refType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="resource-env-ref" type="jboss:resource-env-refType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="message-destination-ref" type="jboss:message-destination-refType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="persistence-context-ref" type="jboss:persistence-context-refType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="persistence-unit-ref" type="jboss:persistence-unit-refType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="post-construct" type="jboss:lifecycle-callbackType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="pre-destroy" type="jboss:lifecycle-callbackType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="data-source" type="jboss:data-sourceType" minOccurs="0" maxOccurs="unbounded" />
+      </xsd:sequence>
+   </xsd:group>
+
+   <xsd:complexType name="env-entryType">
+      <xsd:sequence>
+         <xsd:element name="description" type="javaee:descriptionType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="env-entry-name" type="javaee:jndi-nameType" />
+         <xsd:element name="env-entry-type" type="javaee:env-entry-type-valuesType" minOccurs="0" />
+         <xsd:element name="env-entry-value" type="javaee:xsdStringType" minOccurs="0" />
+         <xsd:group ref="jboss:resourceGroup" />
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" />
+   </xsd:complexType>
+
+   <xsd:complexType name="injection-targetType">
+      <xsd:sequence>
+         <xsd:element name="injection-target-class" type="javaee:fully-qualified-classType" />
+         <xsd:element name="injection-target-name" type="javaee:java-identifierType" />
+      </xsd:sequence>
+   </xsd:complexType>
+
+   <xsd:complexType name="lifecycle-callbackType">
+      <xsd:sequence>
+         <xsd:element name="lifecycle-callback-class" type="javaee:fully-qualified-classType" minOccurs="0" />
+         <xsd:element name="lifecycle-callback-method" type="javaee:java-identifierType" />
+      </xsd:sequence>
+   </xsd:complexType>
+
+   <xsd:complexType name="message-destination-refType">
+      <xsd:sequence>
+         <xsd:element name="description" type="javaee:descriptionType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="message-destination-ref-name" type="javaee:jndi-nameType"/>
+         <xsd:element name="message-destination-type" type="javaee:message-destination-typeType" minOccurs="0" />
+         <xsd:element name="message-destination-usage" type="javaee:message-destination-usageType" minOccurs="0" />
+         <xsd:element name="message-destination-link" type="javaee:message-destination-linkType" minOccurs="0" />
+         <xsd:group ref="jboss:resourceGroup" />
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" />
+   </xsd:complexType>
+
+   <!-- Bring persistence-context-refType info jboss namespace -->
+   <xsd:complexType name="persistence-context-refType">
+      <xsd:sequence>
+         <xsd:element name="description" type="javaee:descriptionType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="persistence-context-ref-name" type="javaee:jndi-nameType" />
+         <xsd:element name="persistence-unit-name" type="javaee:string" minOccurs="0" />
+         <xsd:element name="persistence-context-type" type="javaee:persistence-context-typeType" minOccurs="0" />
+         <xsd:element name="persistence-property" type="javaee:propertyType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:group ref="jboss:resourceGroup" />
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" />
+   </xsd:complexType>
+
+   <xsd:complexType name="persistence-unit-refType">
+      <xsd:sequence>
+         <xsd:element name="description" type="javaee:descriptionType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="persistence-unit-ref-name" type="javaee:jndi-nameType" />
+         <xsd:element name="persistence-unit-name" type="javaee:string" minOccurs="0" />
+         <xsd:group ref="jboss:resourceGroup" />
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" />
+   </xsd:complexType>
+
+   <xsd:complexType name="resource-env-refType">
+      <xsd:sequence>
+         <xsd:element name="description" type="javaee:descriptionType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="resource-env-ref-name" type="javaee:jndi-nameType" />
+         <xsd:element name="resource-env-ref-type" type="javaee:fully-qualified-classType" minOccurs="0" />
+         <xsd:group ref="jboss:resourceGroup" />
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" />
+   </xsd:complexType>
+
+  <xsd:complexType name="data-sourceType">
+    <xsd:sequence>
+      <xsd:element name="description" type="javaee:descriptionType" minOccurs="0" />
+      <xsd:element name="name" type="javaee:jndi-nameType" />
+      <xsd:element name="class-name" type="javaee:fully-qualified-classType" minOccurs="0" />
+      <xsd:element name="server-name" type="javaee:string" minOccurs="0" />
+      <xsd:element name="port-number" type="javaee:xsdIntegerType" minOccurs="0" />
+      <xsd:element name="database-name" type="javaee:string" minOccurs="0" />
+      <xsd:element name="url" type="javaee:jdbc-urlType" minOccurs="0" />
+      <xsd:element name="user" type="javaee:string" minOccurs="0" />
+      <xsd:element name="password" type="javaee:string" minOccurs="0" />
+      <xsd:element name="property" type="javaee:propertyType" minOccurs="0" maxOccurs="unbounded" />
+      <xsd:element name="login-timeout" type="javaee:xsdIntegerType" minOccurs="0" />
+      <xsd:element name="transactional" type="javaee:xsdBooleanType" minOccurs="0" />
+      <xsd:element name="isolation-level" type="javaee:isolation-levelType" minOccurs="0" />
+      <xsd:element name="initial-pool-size" type="javaee:xsdIntegerType" minOccurs="0" />
+      <xsd:element name="max-pool-size" type="javaee:xsdIntegerType" minOccurs="0" />
+      <xsd:element name="min-pool-size" type="javaee:xsdIntegerType" minOccurs="0" />
+      <xsd:element name="max-idle-time" type="javaee:xsdIntegerType" minOccurs="0" />
+      <xsd:element name="max-statements" type="javaee:xsdIntegerType" minOccurs="0" />
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:ID"/>
+   </xsd:complexType>
+
+   <xsd:group name="resourceGroup">
+      <xsd:sequence>
+         <!-- In jboss xml we allow the use of jndi-name instead of mapped-name -->
+         <xsd:choice minOccurs="0">
+            <xsd:element name="jndi-name" type="javaee:jndi-nameType"/>
+            <xsd:element name="mapped-name" type="javaee:xsdStringType"/>
+         </xsd:choice>
+         <xsd:element name="injection-target" type="jboss:injection-targetType" minOccurs="0" maxOccurs="unbounded" />
+         <xsd:element name="ignore-dependency" type="javaee:emptyType" minOccurs="0"/>
+      </xsd:sequence>
+   </xsd:group>
+
+   <xsd:group name="service-refGroup">
+      <xsd:sequence>
+         <xsd:element name="service-ref" type="jboss:service-refType" minOccurs="0" maxOccurs="unbounded">
+            <xsd:key name="service-ref_handler-name-key">
+               <xsd:selector xpath="javaee:handler" />
+               <xsd:field xpath="javaee:handler-name" />
+            </xsd:key>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:group>
+
+  <xsd:complexType name="jndi-binding-policyType">
+    <xsd:annotation>
+      <xsd:documentation>
+	<![CDATA[
+
+	  The jndiBindingPolicyType defines the fully-qualified name of
+	  a class that implements the JNDI binding policy.
+
+	  ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="javaee:fully-qualified-classType"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+   <xsd:complexType name="jmx-nameType">
+      <xsd:annotation>
+         <xsd:documentation> The jmx-name element allows one to specify the JMX ObjectName to use for
+            the MBean associated with the ejb-jar module. This must be a unique name and valid JMX
+            ObjectName string. </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:restriction base="javaee:string"/>
+      </xsd:simpleContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="security-domainType">
+      <xsd:annotation>
+         <xsd:documentation> The security-domain element specifies the JNDI name of the security
+            manager that implements the EJBSecurityManager and RealmMapping for the domain. When
+            specified at the jboss level it specifies the security domain for all j2ee components in the
+            deployment unit. One can override the global security-domain at the container level using
+            the security-domain element at the container-configuration level. </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:restriction base="javaee:string"/>
+      </xsd:simpleContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="security-roleType">
+      <xsd:annotation>
+         <xsd:documentation> The security-role element contains the definition of a security role.
+            The definition consists of an the security role name and principal name element(s). </xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="description"
+            type="javaee:descriptionType"
+            minOccurs="0"
+            maxOccurs="unbounded"/>
+         <xsd:element name="role-name"
+            type="javaee:role-nameType"/>
+         <xsd:element name="principal-name" type="jboss:principal-nameType" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID"/>
+   </xsd:complexType>
+
+   <xsd:complexType name="principal-nameType">
+      <xsd:annotation>
+         <xsd:documentation> The principal-name element is the name of the principal that is mapped
+            to the assembly role-name. </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:restriction base="javaee:string"/>
+      </xsd:simpleContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="dependsType">
+      <xsd:annotation>
+         <xsd:documentation> The depends element gives a JMX ObjectName of a service on which the
+            container or ejb depends. (default) </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:restriction base="javaee:string"/>
+      </xsd:simpleContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="local-jndi-nameType">
+      <xsd:annotation>
+         <xsd:documentation> The JNDI name under with the local interface should be bound. If it is not
+            provided jboss will assume "jndi-name" = "beanClass/local" </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:restriction base="javaee:string"/>
+      </xsd:simpleContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="ejb-refType">
+      <xsd:annotation>
+         <xsd:documentation> The ejb-ref element is used to give the jndi-name of an external ejb
+            reference. In the case of an external ejb reference, you don't provide a ejb-link element in
+            ejb-jar.xml, but you provide a jndi-name in jboss.xml Used in: entity, session,
+            message-driven, consumer, and service </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:sequence>
+         <xsd:element name="description" type="javaee:descriptionType" minOccurs="0" maxOccurs="unbounded"/>
+         <xsd:element name="ejb-ref-name" type="javaee:ejb-ref-nameType" minOccurs="0"/>
+         <xsd:element name="ejb-ref-type" type="javaee:ejb-ref-typeType" minOccurs="0"/>
+         <xsd:element name="home" type="javaee:homeType" minOccurs="0"/>
+         <xsd:element name="remote" type="javaee:remoteType" minOccurs="0"/>
+         <xsd:element name="ejb-link" type="javaee:ejb-linkType" minOccurs="0"/>
+         <xsd:group ref="jboss:resourceGroup"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID"/>
+
+      <!--
+      <xsd:complexContent>
+         <xsd:extension base="javaee:ejb-refType">
+            <xsd:sequence>
+               <xsd:element name="jndi-name" type="javaee:jndi-nameType" minOccurs="0"/>
+               <xsd:element name="ignore-dependency" type="javaee:emptyType" minOccurs="0"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+      -->
+   </xsd:complexType>
+
+   <xsd:complexType name="ejb-local-refType">
+      <xsd:annotation>
+         <xsd:documentation> The ejb-local-ref element is used to give the jndi-name of an external ejb
+            reference. In the case of an external ejb reference, you don't provide a ejb-link element in
+            ejb-jar.xml, but you provide a jndi-name in jboss.xml </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:sequence>
+         <xsd:element name="description" type="javaee:descriptionType" minOccurs="0" maxOccurs="unbounded"/>
+         <xsd:element name="ejb-ref-name" type="javaee:ejb-ref-nameType" minOccurs="0"/>
+         <xsd:element name="ejb-ref-type" type="javaee:ejb-ref-typeType" minOccurs="0"/>
+         <xsd:element name="local-home" type="javaee:local-homeType" minOccurs="0"/>
+         <xsd:element name="local" type="javaee:localType" minOccurs="0"/>
+         <xsd:element name="ejb-link" type="javaee:ejb-linkType" minOccurs="0"/>
+         <xsd:element name="local-jndi-name" type="javaee:jndi-nameType" minOccurs="0"/>
+         <xsd:group ref="jboss:resourceGroup"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID"/>
+   </xsd:complexType>
+
+   <xsd:complexType name="resource-refType">
+      <xsd:annotation>
+         <xsd:documentation> The resource-ref element gives a mapping between the "code name" of a
+            resource (res-ref-name, provided by the Bean Developer) and its "xml name" (resource-name,
+            provided by the Application Assembler). If no resource-ref is provided, jboss will assume
+            that "xml-name" = "code name" See resource-managers. </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:sequence>
+         <xsd:element name="description" type="javaee:descriptionType" minOccurs="0" maxOccurs="unbounded"/>
+         <xsd:element name="res-ref-name" type="javaee:jndi-nameType" minOccurs="0">
+            <xsd:annotation>
+               <xsd:documentation> The res-ref-name element specifies the name of a resource manager
+                  connection factory reference. The name is a JNDI name relative to the java:comp/env
+                  context. The name must be unique within a Deployment File. </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+
+         <xsd:element name="res-type" type="javaee:fully-qualified-classType" minOccurs="0">
+            <xsd:annotation>
+               <xsd:documentation> The res-type element specifies the type of the data source. The type
+                  is specified by the fully qualified Java language class or interface expected to be
+                  implemented by the data source. </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+
+         <xsd:element name="res-auth" type="javaee:res-authType" minOccurs="0"/>
+
+         <xsd:element name="res-sharing-scope" type="javaee:res-sharing-scopeType" minOccurs="0"/>
+
+         <!-- We redefine part of the resourceGroup here, so we can't ref it -->
+         <xsd:choice>
+            <xsd:element name="resource-name" type="javaee:xsdStringType"/>
+            <xsd:element name="jndi-name" type="javaee:xsdStringType"/>
+            <xsd:element name="mapped-name" type="javaee:xsdStringType"/>
+            <xsd:element name="res-url" type="javaee:xsdStringType"/>
+         </xsd:choice>
+
+         <xsd:element name="injection-target" type="jboss:injection-targetType" minOccurs="0" maxOccurs="unbounded" />
+
+         <xsd:element name="ignore-dependency" type="javaee:emptyType" minOccurs="0"/>
+
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID"/>
+   </xsd:complexType>
+
+   <xsd:complexType name="service-ref-nameType">
+      <xsd:annotation>
+         <xsd:documentation> The service-ref-name element gives the ENC relative name used in the
+            ejb-jar.xml service-ref-name element. </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+         <xsd:restriction base="javaee:string"/>
+      </xsd:simpleContent>
+   </xsd:complexType>
+
+   <xsd:complexType name="loader-repositoryType" mixed="true">
+      <xsd:annotation>
+         <xsd:documentation>
+            <![CDATA[
+      The loader-repository specifies the name of the UnifiedLoaderRepository
+   MBean to use for the ear to provide ear level scoping of classes deployed
+   in the ear. It is a unique JMX ObjectName string. It may also specify
+   an arbitrary configuration by including a loader-repository-config element.
+
+Examples:
+   <loader-repository>jboss.test:loader=cts-cmp2v1-sar.ear</loader-repository>
+
+   <loader-repository loaderRepositoryClass='dot.com.LoaderRepository'>
+      dot.com:loader=unique-archive-name
+      <loader-repository-config configParserClass='dot.com.LoaderParser'>
+         java2ParentDelegaton=true
+      </loader-repository-config>
+   </loader-repository>
+        </loader-repository>
+        ]]>
+         </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:sequence>
+         <xsd:element name="loader-repository-config" type="jboss:loader-repository-configType"
+                      minOccurs="0" maxOccurs="unbounded"/>
+
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID"/>
+      <xsd:attribute name="loaderRepositoryClass" type="xsd:string"/>
+   </xsd:complexType>
+
+   <!-- **************************************************** -->
+
+   <xsd:complexType name="loader-repository-configType" mixed="true">
+      <xsd:annotation>
+         <xsd:documentation> The loader-repository-config element specifies any arbitrary configuration
+            fragment for use in configuring the loader-repository instance. The actual content of this
+            element is specific to the loaderRepositoryClass and the code parsing the element.
+         </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:attribute name="id" type="xsd:ID"/>
+      <xsd:attribute name="configParserClass" type="xsd:string"/>
+   </xsd:complexType>
+
+   <xsd:complexType name="service-refType">
+      <xsd:annotation>
+         <xsd:documentation>
+            <![CDATA[
+  Runtime settings for a web service reference. In the simplest case,
+  there is no runtime information required for a service ref.  Runtime info
+  is only needed in the following cases :
+
+  * to define the port that should be used to resolve a container-managed port
+  * to define default Stub property settings for Stub objects
+  * to define the URL of a final WSDL document to be used
+
+  Example:
+
+  <service-ref>
+   <service-ref-name>OrganizationService</service-ref-name>
+   <wsdl-override>file:/wsdlRepository/organization-service.wsdl</wsdl-override>
+  </service-ref>
+
+  <service-ref>
+   <service-ref-name>OrganizationService</service-ref-name>
+   <config-name>Secure Client Config</config-name>
+   <config-file>META-INF/jbossws-client-config.xml</config-file>
+   <handler-chain>META-INF/jbossws-client-handlers.xml</handler-chain>
+  </service-ref>
+
+  <service-ref>
+   <service-ref-name>SecureService</service-ref-name>
+   <service-impl-class>org.jboss.tests.ws.jaxws.webserviceref.SecureEndpointService</service-impl-class>
+   <service-qname>{http://org.jboss.ws/wsref}SecureEndpointService</service-qname>
+    <port-component-ref>
+     <service-endpoint-interface>org.jboss.tests.ws.jaxws.webserviceref.SecureEndpoint</service-endpoint-interface>
+     <port-qname>{http://org.jboss.ws/wsref}SecureEndpointPort</port-qname>
+     <stub-property>
+      <name>javax.xml.ws.security.auth.username</name>
+      <value>kermit</value>
+     </stub-property>
+     <stub-property>
+      <name>javax.xml.ws.security.auth.password</name>
+      <value>thefrog</value>
+     </stub-property>
+   </port-component-ref>
+  </service-ref>
+    ]]>
+         </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:sequence>
+         <xsd:element name="service-ref-name" type="xsd:string"/>
+         <xsd:element name="service-impl-class" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="service-qname" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="config-name" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="config-file" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="handler-chain" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="port-component-ref" type="jboss:port-component-refType" minOccurs="0" maxOccurs="unbounded"/>
+         <xsd:element name="wsdl-override" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID"/>
+   </xsd:complexType>
+
+   <!--
+     Information for a port within a service-ref.
+
+     Either service-endpoint-interface or wsdl-port or both
+     (service-endpoint-interface and wsdl-port) should be specified.
+
+     If both are specified, wsdl-port represents the
+     port the container should choose for container-managed port selection.
+
+     The same wsdl-port value must not appear in
+     more than one port-component-ref entry within the same service-ref.
+
+     If a particular service-endpoint-interface is using container-managed port
+     selection, it must not appear in more than one port-component-ref entry
+     within the same service-ref.
+   -->
+   <xsd:complexType name="port-component-refType">
+      <xsd:sequence>
+         <xsd:element name="service-endpoint-interface" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="port-qname" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="config-name" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="config-file" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="stub-property" type="jboss:stub-propertyType" minOccurs="0" maxOccurs="unbounded"/>
+         <xsd:element name="call-property" type="jboss:call-propertyType" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+   </xsd:complexType>
+
+   <xsd:complexType name="stub-propertyType">
+      <xsd:sequence>
+         <xsd:element name="prop-name" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="prop-value" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+   </xsd:complexType>
+
+   <xsd:complexType name="call-propertyType">
+      <xsd:sequence>
+         <xsd:element name="prop-name" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+         <xsd:element name="prop-value" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+   </xsd:complexType>
+
+   <xsd:complexType name="message-destinationType">
+      <xsd:annotation>
+         <xsd:documentation> The message-destination element is used to configure the jndi-name for a
+            message-destination in ejb-jar.xml Used in: assembly-descriptor </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:sequence>
+         <xsd:group ref="jboss:descriptionGroup"/>
+         <xsd:element name="message-destination-name" type="javaee:xsdStringType"/>
+         <xsd:choice>
+            <xsd:element name="jndi-name" type="javaee:xsdStringType"/>
+            <xsd:element name="mapped-name" type="javaee:xsdStringType"/>
+         </xsd:choice>
+         <xsd:element name="lookup-name" type="javaee:xsdStringType"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID"/>
+   </xsd:complexType>
+
+   <xsd:complexType name="webservice-descriptionType">
+      <xsd:annotation>
+         <xsd:documentation>
+            <![CDATA[
+            Runtime information about a web service.
+            wsdl-publish-location is optionally used to specify
+            where the final wsdl and any dependent files should be stored.  This location
+            resides on the file system from which deployment is initiated.
+            ]]>
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+         <xsd:element name="webservice-description-name" type="xsd:string"/>
+         <xsd:element name="config-name" type="xsd:string" minOccurs="0"/>
+         <xsd:element name="config-file" type="xsd:string" minOccurs="0"/>
+         <xsd:element name="wsdl-publish-location" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="xsd:ID" />
+   </xsd:complexType>
+
+</xsd:schema>

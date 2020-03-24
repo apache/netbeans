@@ -33,9 +33,10 @@ import org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException;
 import org.netbeans.modules.j2ee.deployment.common.api.MessageDestination;
 import org.netbeans.modules.javaee.wildfly.WildflyDeploymentManager;
 import org.netbeans.modules.javaee.wildfly.config.ResourceConfigurationHelper;
-import org.netbeans.modules.javaee.wildfly.config.gen.Depends;
-import org.netbeans.modules.javaee.wildfly.config.gen.Mbean;
-import org.netbeans.modules.javaee.wildfly.config.gen.Server;
+import org.netbeans.modules.javaee.wildfly.config.gen.HornetqServerType;
+import org.netbeans.modules.javaee.wildfly.config.gen.JmsQueueType;
+import org.netbeans.modules.javaee.wildfly.config.gen.JmsTopicType;
+import org.netbeans.modules.javaee.wildfly.config.gen.MessagingDeployment;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.cookies.EditorCookie;
@@ -64,7 +65,7 @@ public class MessageDestinationSupportImpl implements MessageDestinationSupport 
     private File resourceDir;
 
     //model of the destination service file
-    private Server destinationServiceModel;
+    private MessagingDeployment destinationServiceModel;
 
     //destination service file (placed in the resourceDir)
     private File destinationsFile;
@@ -114,41 +115,25 @@ public class MessageDestinationSupportImpl implements MessageDestinationSupport 
         return getMessageDestinations(getMessageDestinationModel(false));
     }
 
-    private static Set<MessageDestination> getMessageDestinations(Server model) throws ConfigurationException {
+    private static Set<MessageDestination> getMessageDestinations(MessagingDeployment model) throws ConfigurationException {
 
         if (model == null) {
             return Collections.<MessageDestination>emptySet();
         }
 
-        HashSet<MessageDestination> destinations = new HashSet<MessageDestination>();
+        HashSet<MessageDestination> destinations = new HashSet<>();
 
-        for (Mbean mbean : model.getMbean()) {
-            String mbeanNameAttribute = mbean.getName();
-            if (mbeanNameAttribute == null) {
+        for (HornetqServerType serverType : model.getHornetqServer()) {
+            if(serverType.getJmsDestinations() == null) {
                 continue;
             }
-
-            MessageDestination.Type type = null;
-            if (mbeanNameAttribute.indexOf("service=Queue") > -1) { // NOI18N
-                type = MessageDestination.Type.QUEUE;
-            } else if (mbeanNameAttribute.indexOf("service=Topic") > -1) { // NOI18N
-                type = MessageDestination.Type.TOPIC;
+            JmsQueueType[] queues = serverType.getJmsDestinations().getJmsQueue();
+            for(JmsQueueType queue : serverType.getJmsDestinations().getJmsQueue()) {
+                destinations.add(new WildflyMessageDestination(queue.getName(), MessageDestination.Type.QUEUE));
             }
-            if (type == null) {
-                continue;
+            for(JmsTopicType topic : serverType.getJmsDestinations().getJmsTopic()) {
+                destinations.add(new WildflyMessageDestination(topic.getName(), MessageDestination.Type.TOPIC));
             }
-
-            int nameIndex = mbeanNameAttribute.indexOf("name="); // NOI18N
-            if (nameIndex == -1) {
-                continue;
-            }
-
-            String name = mbeanNameAttribute.substring(nameIndex + 5); // "name=".length() == 5
-            if (name.indexOf(",") > -1) {
-                name = name.substring(0, name.indexOf(",")); // NOI18N
-            }
-
-            destinations.add(new WildflyMessageDestination(name, type));
         }
 
         return destinations;
@@ -161,14 +146,14 @@ public class MessageDestinationSupportImpl implements MessageDestinationSupport 
      * @return Destination service graph or null if the
      * jboss#-netbeans-destinations-service.xml file is not parseable.
      */
-    private synchronized Server getMessageDestinationModel(boolean create) {
+    private synchronized MessagingDeployment getMessageDestinationModel(boolean create) {
 
         try {
             if (destinationsFile.exists()) {
                 // load configuration if already exists
                 try {
                     if (destinationServiceModel == null) {
-                        destinationServiceModel = Server.createGraph(destinationsFile);
+                        destinationServiceModel = MessagingDeployment.createGraph(destinationsFile);
                     }
                 } catch (IOException ioe) {
                     Exceptions.printStackTrace(ioe);
@@ -177,7 +162,7 @@ public class MessageDestinationSupportImpl implements MessageDestinationSupport 
                 }
             } else if (create) {
                 // create netbeans-destinations-service.xml if it does not exist yet
-                destinationServiceModel = new Server();
+                destinationServiceModel = new MessagingDeployment();
                 ResourceConfigurationHelper.writeFile(destinationsFile, destinationServiceModel);
                 ensureDestinationsFOExists();
             }
@@ -216,7 +201,7 @@ public class MessageDestinationSupportImpl implements MessageDestinationSupport 
 
         // Model for the editor content or the latest saved model
         // if the editor content is not parseable or valid for any reason.
-        Server newDestinationServiceModel = null;
+        MessagingDeployment newDestinationServiceModel = null;
 
         StyledDocument doc = null;
         try {
@@ -228,7 +213,7 @@ public class MessageDestinationSupportImpl implements MessageDestinationSupport 
             }
             // try to create a graph from the editor content
             byte[] docString = doc.getText(0, doc.getLength()).getBytes();
-            newDestinationServiceModel = Server.createGraph(new ByteArrayInputStream(docString));
+            newDestinationServiceModel = MessagingDeployment.createGraph(new ByteArrayInputStream(docString));
         } catch (IOException ioe) {
             String msg = NbBundle.getMessage(MessageDestinationSupportImpl.class,
                     "MSG_CannotUpdateFile", destinationsFile.getAbsolutePath());    // NOI18N
@@ -237,7 +222,7 @@ public class MessageDestinationSupportImpl implements MessageDestinationSupport 
             // this should not occur, just log it if it happens
             Logger.getLogger("global").log(Level.INFO, null, ble);
         } catch (RuntimeException e) {
-            Server oldDestinationServiceModel = getMessageDestinationModel(true);
+            MessagingDeployment oldDestinationServiceModel = getMessageDestinationModel(true);
             if (oldDestinationServiceModel == null) {
                 // neither the old graph is parseable, there is not much we can do here
                 // TODO: should we notify the user?
@@ -282,13 +267,12 @@ public class MessageDestinationSupportImpl implements MessageDestinationSupport 
 
     }
 
-    private WildflyMessageDestination modifyMessageDestinationModel(
-            Server model, String name, MessageDestination.Type type) throws ConfigurationException {
 
+    private WildflyMessageDestination modifyMessageDestinationModel(
+            MessagingDeployment model, String name, MessageDestination.Type type) throws ConfigurationException {
         if (model == null) {
             return null;
         }
-
         // check whether the destination doesn't exist yet
         for (MessageDestination destination : getMessageDestinations(model)) {
             if (name.equals(destination.getName()) && type == destination.getType()) {
@@ -296,28 +280,20 @@ public class MessageDestinationSupportImpl implements MessageDestinationSupport 
                 return null;
             }
         }
-
-        // <depends optional-attribute-name="DestinationManager">jboss.mq:service=DestinationManager</depends>
-        Depends depends = new Depends();
-        depends.setOptionalAttributeName("DestinationManager");     // NOI18N
-        // TODO uncomment as soon as the issue #102128 is fixed
-//        depends.addpcdata("jboss.mq:service=DestinationManager");   // NOI18N
-
-        Mbean mbean = new Mbean();
-        if (type == MessageDestination.Type.QUEUE) {
-            // <mbean code="org.jboss.mq.server.jmx.Queue" name="jboss.mq.destination:service=Queue,name={name}">
-            mbean.setCode("org.jboss.mq.server.jmx.Queue");                     // NOI18N
-            mbean.setName("jboss.mq.destination:service=Queue,name=" + name);   // NOI18N
-        } else if (type == MessageDestination.Type.TOPIC) {
-            // <mbean code="org.jboss.mq.server.jmx.Topic" name="jboss.mq.destination:service=Queue,name={name}">
-            mbean.setCode("org.jboss.mq.server.jmx.Topic");                     // NOI18N
-            mbean.setName("jboss.mq.destination:service=Topic,name=" + name);   // NOI18N
+        if(model.getHornetqServer(0) == null) {
+            HornetqServerType server = new HornetqServerType();
+            server.setJmsDestinations(server.newJmsDestinations());
+            model.addHornetqServer(server);
         }
-
-        mbean.addDepends(depends);
-
-        model.addMbean(mbean);
-
+        if (type == MessageDestination.Type.QUEUE) {
+            JmsQueueType queue = new JmsQueueType();
+            queue.setName(name);
+            model.getHornetqServer(0).getJmsDestinations().addJmsQueue(queue);
+        } else if (type == MessageDestination.Type.TOPIC) {
+           JmsTopicType topic = new JmsTopicType();
+            topic.setName(name);
+            model.getHornetqServer(0).getJmsDestinations().addJmsTopic(topic);
+        }
         return new WildflyMessageDestination(name, type);
     }
 

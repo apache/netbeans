@@ -5,14 +5,14 @@
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             elementFormDefault="qualified"
             attributeFormDefault="unqualified"
-            version="3.1">
+            version="4.0">
   <xsd:annotation>
     <xsd:documentation>
 
       DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
-      
-      Copyright (c) 2009-2013 Oracle and/or its affiliates. All rights reserved.
-      
+
+      Copyright (c) 2009-2017 Oracle and/or its affiliates. All rights reserved.
+
       The contents of this file are subject to the terms of either the GNU
       General Public License Version 2 only ("GPL") or the Common Development
       and Distribution License("CDDL") (collectively, the "License").  You
@@ -21,20 +21,20 @@
       https://glassfish.dev.java.net/public/CDDL+GPL_1_1.html
       or packager/legal/LICENSE.txt.  See the License for the specific
       language governing permissions and limitations under the License.
-      
+
       When distributing the software, include this License Header Notice in each
       file and include the License file at packager/legal/LICENSE.txt.
-      
+
       GPL Classpath Exception:
       Oracle designates this particular file as subject to the "Classpath"
       exception as provided by Oracle in the GPL Version 2 section of the License
       file that accompanied this code.
-      
+
       Modifications:
       If applicable, add the following below the License Header, with the fields
       enclosed by brackets [] replaced by your own identifying information:
       "Portions Copyright [year] [name of copyright owner]"
-      
+
       Contributor(s):
       If you wish your version of this file to be governed by only the CDDL or
       only the GPL Version 2, indicate your decision by adding "[Contributor]
@@ -46,37 +46,37 @@
       and therefore, elected the GPL Version 2 license, then the option applies
       only if the new code is made subject to such option by the copyright
       holder.
-      
+
     </xsd:documentation>
   </xsd:annotation>
 
   <xsd:annotation>
     <xsd:documentation>
-      <![CDATA[[
-      This is the XML Schema for the Servlet 3.1 deployment descriptor.
-      The deployment descriptor must be named "WEB-INF/web.xml" in the
-      web application's war file.  All Servlet deployment descriptors
+      <![CDATA[
+      This is the XML Schema for the Servlet 4.0 deployment descriptor.
+      The deployment descriptor must be named "META-INF/web-fragment.xml"
+      in the web fragment's jar file.  All Servlet deployment descriptors
       must indicate the web application schema by using the Java EE
       namespace:
-      
-      http://xmlns.jcp.org/xml/ns/javaee 
-      
-      and by indicating the version of the schema by 
-      using the version element as shown below: 
-      
-      <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+
+      http://xmlns.jcp.org/xml/ns/javaee
+
+      and by indicating the version of the schema by
+      using the version element as shown below:
+
+      <web-fragment xmlns="http://xmlns.jcp.org/xml/ns/javaee"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="..."
-      version="3.1"> 
+      version="4.0">
       ...
-      </web-app>
-      
+      </web-fragment>
+
       The instance documents may indicate the published version of
       the schema using the xsi:schemaLocation attribute for Java EE
       namespace with the following location:
-      
-      http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd
-      
+
+      http://xmlns.jcp.org/xml/ns/javaee/web-fragment_4_0.xsd
+
       ]]>
     </xsd:documentation>
   </xsd:annotation>
@@ -86,7 +86,7 @@
 
       The following conventions apply to all Java EE
       deployment descriptor elements unless indicated otherwise.
-      
+
       - In elements that specify a pathname to a file within the
       same JAR file, relative filenames (i.e., those not
       starting with "/") are considered relative to the root of
@@ -95,22 +95,22 @@
       JAR file's namespace.  In general, relative names are
       preferred.  The exception is .war files where absolute
       names are preferred for consistency with the Servlet API.
-      
+
     </xsd:documentation>
   </xsd:annotation>
 
-  <xsd:include schemaLocation="web-common_3_1.xsd"/>
+  <xsd:include schemaLocation="web-common_4_0.xsd"/>
 
 
 <!-- **************************************************** -->
 
-  <xsd:element name="web-app"
-               type="javaee:web-appType">
+  <xsd:element name="web-fragment"
+               type="javaee:web-fragmentType">
     <xsd:annotation>
       <xsd:documentation>
 
-        The web-app element is the root of the deployment
-        descriptor for a web application.  Note that the sub-elements
+        The web-fragment element is the root of the deployment
+        descriptor for a web fragment.  Note that the sub-elements
         of this element can be in the arbitrary order. Because of
         that, the multiplicity of the elements of distributable,
         session-config, welcome-file-list, jsp-config, login-config,
@@ -122,8 +122,8 @@
         must concatenate the element contents.  The multiple occurence
         of the element distributable is redundant and the container
         treats that case exactly in the same way when there is only
-        one distributable. 
-        
+        one distributable.
+
       </xsd:documentation>
     </xsd:annotation>
     <xsd:unique name="web-common-servlet-name-uniqueness">
@@ -132,7 +132,7 @@
 
           The servlet element contains the name of a servlet.
           The name must be unique within the web application.
-          
+
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:servlet"/>
@@ -144,7 +144,7 @@
 
           The filter element contains the name of a filter.
           The name must be unique within the web application.
-          
+
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:filter"/>
@@ -159,9 +159,9 @@
           application's environment and is relative to the
           java:comp/env context.  The name must be unique within
           the web application.
-          
+
           It is recommended that name is prefixed with "ejb/".
-          
+
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:ejb-local-ref"/>
@@ -176,9 +176,9 @@
           application's environment and is relative to the
           java:comp/env context.  The name must be unique within
           the web application.
-          
+
           It is recommended that name is prefixed with "ejb/".
-          
+
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:ejb-ref"/>
@@ -193,7 +193,7 @@
           environment entry name used in the web application code.
           The name is a JNDI name relative to the java:comp/env
           context and must be unique within a web application.
-          
+
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:resource-env-ref"/>
@@ -208,7 +208,7 @@
           environment entry name used in the web application code.
           The name is a JNDI name relative to the java:comp/env
           context and must be unique within a web application.
-          
+
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:message-destination-ref"/>
@@ -222,7 +222,7 @@
           resource manager connection factory reference.  The name
           is a JNDI name relative to the java:comp/env context.
           The name must be unique within a web application.
-          
+
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:resource-ref"/>
@@ -236,7 +236,7 @@
           application's environment entry.  The name is a JNDI
           name relative to the java:comp/env context.  The name
           must be unique within a web application.
-          
+
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:env-entry"/>
@@ -248,7 +248,7 @@
 
           A role-name-key is specified to allow the references
           from the security-role-refs.
-          
+
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:security-role"/>
@@ -261,7 +261,7 @@
 
           The keyref indicates the references from
           security-role-ref to a specified role-name.
-          
+
         </xsd:documentation>
       </xsd:annotation>
       <xsd:selector xpath="javaee:servlet/javaee:security-role-ref"/>
@@ -272,29 +272,14 @@
 
 <!-- **************************************************** -->
 
-  <xsd:complexType name="web-appType">
+  <xsd:complexType name="web-fragmentType">
     <xsd:choice minOccurs="0"
                 maxOccurs="unbounded">
-      <xsd:element name="module-name"
-                   type="javaee:string"
-                   minOccurs="0"/>
+      <xsd:element name="name"
+                   type="javaee:java-identifierType"/>
       <xsd:group ref="javaee:web-commonType"/>
-      <xsd:element name="deny-uncovered-http-methods"
-                   type="javaee:emptyType">
-        <xsd:annotation>
-          <xsd:documentation>
-
-            When specified, this element causes uncovered http methods
-            to be denied. For every url-pattern that is the target of a 
-            security-constrant, this element causes all HTTP methods that
-            are NOT covered (by a security constraint) at the url-pattern
-            to be denied.
-            
-          </xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element name="absolute-ordering"
-                   type="javaee:absoluteOrderingType"/>
+      <xsd:element name="ordering"
+                   type="javaee:orderingType"/>
     </xsd:choice>
     <xsd:attributeGroup ref="javaee:web-common-attributes"/>
   </xsd:complexType>
@@ -302,16 +287,45 @@
 
 <!-- **************************************************** -->
 
-  <xsd:complexType name="absoluteOrderingType">
+  <xsd:complexType name="orderingType">
     <xsd:annotation>
       <xsd:documentation>
 
         Please see section 8.2.2 of the specification for details.
-        
+
       </xsd:documentation>
     </xsd:annotation>
-    <xsd:choice minOccurs="0"
-                maxOccurs="unbounded">
+    <xsd:sequence>
+      <xsd:element name="after"
+                   type="javaee:ordering-orderingType"
+                   minOccurs="0"
+                   maxOccurs="1"/>
+      <xsd:element name="before"
+                   type="javaee:ordering-orderingType"
+                   minOccurs="0"
+                   maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+<!-- **************************************************** -->
+
+  <xsd:complexType name="ordering-orderingType">
+    <xsd:annotation>
+      <xsd:documentation>
+
+        This element contains a sequence of "name" elements, each of
+        which
+        refers to an application configuration resource by the "name"
+        declared on its web.xml fragment.  This element can also contain
+        a single "others" element which specifies that this document
+        comes
+        before or after other documents within the application.
+        See section 8.2.2 of the specification for details.
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
       <xsd:element name="name"
                    type="javaee:java-identifierType"
                    minOccurs="0"
@@ -320,7 +334,7 @@
                    type="javaee:ordering-othersType"
                    minOccurs="0"
                    maxOccurs="1"/>
-    </xsd:choice>
+    </xsd:sequence>
   </xsd:complexType>
 
 </xsd:schema>

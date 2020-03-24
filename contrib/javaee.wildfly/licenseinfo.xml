@@ -21,21 +21,18 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>src/org/netbeans/modules/javaee/wildfly/resources/application-client_7.xsd</file>
-        <file>src/org/netbeans/modules/javaee/wildfly/resources/javaee_7.xsd</file>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/javaee_8.xsd</file>
         <file>src/org/netbeans/modules/javaee/wildfly/resources/javaee_web_services_client_1_4.xsd</file>
         <file>src/org/netbeans/modules/javaee/wildfly/resources/jsp_2_3.xsd</file>
-        <file>src/org/netbeans/modules/javaee/wildfly/resources/web-app_3_1.xsd</file>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/web-app_4_0.xsd</file>
         <file>src/org/netbeans/modules/javaee/wildfly/resources/web-common_3_1.xsd</file>
-        <file>src/org/netbeans/modules/javaee/wildfly/resources/web-fragment_3_1.xsd</file>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/web-fragment_4_0.xsd</file>
         <license ref="CDDL-1.1" />
         <comment type="CATEGORY_B" />
     </fileset>
     <fileset>
         <file>src/org/netbeans/modules/javaee/wildfly/resources/javaee_6.xsd</file>
-        <file>src/org/netbeans/modules/javaee/wildfly/resources/javaee_web_services_1_3.xsd</file>
         <file>src/org/netbeans/modules/javaee/wildfly/resources/javaee_web_services_client_1_3.xsd</file>
-        <file>src/org/netbeans/modules/javaee/wildfly/resources/jsp_2_2.xsd</file>
         <file>src/org/netbeans/modules/javaee/wildfly/resources/web-app_3_0.xsd</file>
         <file>src/org/netbeans/modules/javaee/wildfly/resources/web-common_3_0.xsd</file>
         <file>src/org/netbeans/modules/javaee/wildfly/resources/web-fragment_3_0.xsd</file>
@@ -46,5 +43,30 @@
         <file>src/org/netbeans/modules/javaee/wildfly/resources/xml.xsd</file>
         <license ref="W3C2" />
         <comment type="CATEGORY_B" />
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/datasources_1_4_1.xsd</file>
+        <license ref="EPL-v10" />
+        <comment type="CATEGORY_B" />
+    </fileset>
+    <fileset>
+        <!-- see https://github.com/jbosstools/jbosstools-server/blob/master/as/plugins/org.jboss.ide.eclipse.as.ui/icons/wildfly_icon_16.png -->
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/wildfly.png</file>
+        <license ref="EPL-v20" />
+        <comment type="CATEGORY_B" />
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/jboss-web_14_1.xsd</file>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/jboss-web_7_3_1.xsd</file>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/jboss-web_4_0_1.dtd</file>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/jboss-common_8_1.xsd</file>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/jboss-common_6_0_1.xsd</file>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/jboss_4_0_1.dtd</file>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/jboss-app_4_0_1.dtd</file>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/jboss-service_4_0_1.dtd</file>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/jboss-as-messaging-deployment_1_0_1.xsd</file>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/wildfly-messaging-activemq-deployment_1_0_1.xsd</file>
+        <license ref="Apache-2.0" />
+        <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
 </licenseinfo>

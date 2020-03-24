@@ -56,7 +56,7 @@ public class WildflyResourcesItemNode extends AbstractNode {
     }
 
     @Override
-    public Image getOpenedIcon(int type) {        
+    public Image getOpenedIcon(int type) {
         return ImageUtilities.loadImage(icon);
     }
 

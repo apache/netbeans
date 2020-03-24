@@ -35,7 +35,6 @@ import org.netbeans.modules.j2ee.deployment.plugins.spi.config.ModuleConfigurati
 import org.netbeans.modules.javaee.wildfly.config.gen.EjbRef;
 import org.netbeans.modules.javaee.wildfly.config.gen.JbossClient;
 import org.netbeans.modules.javaee.wildfly.config.gen.ResourceRef;
-import org.netbeans.modules.javaee.wildfly.config.gen.ServiceRef;
 import org.netbeans.modules.javaee.wildfly.config.mdb.MessageDestinationSupportImpl;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils;
 import org.openide.DialogDisplayer;
@@ -340,9 +339,9 @@ implements ModuleConfiguration, DatasourceConfiguration, DeploymentPlanConfigura
             public void modify(JbossClient modifiedJbossClient) {
 
                 // check whether resource not already defined
-                ServiceRef serviceRefs[] = modifiedJbossClient.getServiceRef();
+                String serviceRefs[] = modifiedJbossClient.getServiceRef();
                 for (int i = 0; i < serviceRefs.length; i++) {
-                    String srn = serviceRefs[i].getServiceRefName();
+                    String srn = serviceRefs[i];
                     if (name.equals(srn)) {
                         // already exists
                         return;
@@ -350,9 +349,7 @@ implements ModuleConfiguration, DatasourceConfiguration, DeploymentPlanConfigura
                 }
 
                 //if it doesn't exist yet, create a new one
-                ServiceRef newSR = new ServiceRef();
-                newSR.setServiceRefName(name);
-                modifiedJbossClient.addServiceRef(newSR);
+                modifiedJbossClient.addServiceRef(name);
             }
         });
     }

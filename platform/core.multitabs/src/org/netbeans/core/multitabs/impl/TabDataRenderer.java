@@ -110,7 +110,6 @@ public class TabDataRenderer implements TableCellRenderer {
             renderer.tabData = tab;
             renderer.isSelected = isSelected;
             renderer.isActive = isActive;
-            renderer.isHover = isHover;
             renderer.tabsLocation = (table instanceof TabTable) ? ((TabTable)table).getTabsLocation() : JTabbedPane.TOP;
 
             if( table instanceof TabTable ) {
@@ -196,7 +195,6 @@ public class TabDataRenderer implements TableCellRenderer {
         private TabData tabData;
         private boolean isSelected;
         private boolean isActive;
-        private boolean isHover;
         private int tabsLocation = JTabbedPane.TOP;
 
         public RendererPanel() {
@@ -255,10 +253,8 @@ public class TabDataRenderer implements TableCellRenderer {
             }
 
             // paint tab decorators
-            if (!isHover) {
-                for( TabDecorator td : decorators ) {
-                    td.paintAfter( tabData, g, rect, isSelected );
-                }
+            for( TabDecorator td : decorators ) {
+                td.paintAfter( tabData, g, rect, isSelected );
             }
         }
 

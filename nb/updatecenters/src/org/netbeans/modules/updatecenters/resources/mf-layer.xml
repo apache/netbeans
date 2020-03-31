@@ -46,6 +46,16 @@
          <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
       </file>
       
+      <file name="legacy-pluginportal-update-provider.instance">
+         <attr name="displayName" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#Services/AutoupdateType/pluginportal-update-provider.instance"/>
+         <attr name="iconBase" stringvalue="org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
+         <attr name="url" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#URL_LegacyPluginPortal"/>
+         <attr name="category" stringvalue="COMMUNITY"/>
+         <attr name="enabled" boolvalue="true"/>
+         <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
+         <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
+      </file>
+      
       <file name="82pluginportal-update-provider.instance">
           <attr name="displayName" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#Services/AutoupdateType/82pluginportal-update-provider.instance"/>
           <attr name="iconBase" stringvalue="org/netbeans/modules/updatecenters/resources/updateAction.gif"/>

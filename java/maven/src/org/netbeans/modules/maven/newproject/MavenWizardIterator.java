@@ -93,13 +93,13 @@ public class MavenWizardIterator implements WizardDescriptor.BackgroundInstantia
     @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position = 925, displayName = "#LBL_Maven_FXML_Archetype", iconBase = "org/netbeans/modules/maven/resources/jaricon.png", description = "javafx.html")
     @Messages("LBL_Maven_FXML_Archetype=FXML JavaFX Maven Archetype (Gluon)")
     public static WizardDescriptor.InstantiatingIterator<?> openJFXFML() {
-       return definedFXArchetype("com.raelity.jfx", "javafx-archetype-fxml-netbeans", "0.0.1", LBL_Maven_FXML_Archetype());
+       return definedFXArchetype("com.raelity.jfx", "javafx-archetype-fxml-netbeans", "0.0.3", LBL_Maven_FXML_Archetype());
     }
 
     @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position = 926, displayName = "#LBL_Maven_Simple_Archetype", iconBase = "org/netbeans/modules/maven/resources/jaricon.png", description = "javafx.html")
     @Messages("LBL_Maven_Simple_Archetype=Simple JavaFX Maven Archetype (Gluon)")
     public static WizardDescriptor.InstantiatingIterator<?> openJFXSimple() {
-       return definedFXArchetype("com.raelity.jfx", "javafx-archetype-simple-netbeans", "0.0.1", LBL_Maven_Simple_Archetype());
+       return definedFXArchetype("com.raelity.jfx", "javafx-archetype-simple-netbeans", "0.0.3", LBL_Maven_Simple_Archetype());
     }
 
     private static WizardDescriptor.InstantiatingIterator<?> definedFXArchetype(String g, String a, String v, String name) {
@@ -107,6 +107,7 @@ public class MavenWizardIterator implements WizardDescriptor.BackgroundInstantia
         if (System.getProperty("java.version").startsWith("1.8")) {
             props.put("javafx-version", "1.8");
         }
+        props.put("add-debug-configuration", "Y");
         return ArchetypeWizards.definedArchetype(g, a, v, null, name, props);
     }
 

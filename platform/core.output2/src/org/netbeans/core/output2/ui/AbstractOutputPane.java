@@ -822,7 +822,8 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
         } else if (e.isShiftDown()) { // horizontal scrolling
             BoundedRangeModel sbmodel = getHorizontalScrollBar().getModel();
             int currPosition = sbmodel.getValue();
-            int newPosition = Math.max(0, Math.min(sbmodel.getMaximum(), currPosition + (e.getUnitsToScroll()) * fontWidth));
+            int newPosition = Math.max(0, Math.min(sbmodel.getMaximum(), currPosition
+                    + (int) (e.getPreciseWheelRotation() * e.getScrollAmount() * fontWidth)));
             sbmodel.setValue (newPosition);
             return;
         }
@@ -832,7 +833,8 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
 
         int currPosition = sbmodel.getValue();
         if (e.getSource() == textView) {
-            int newPosition = Math.max(0, Math.min(sbmodel.getMaximum(), currPosition + (e.getUnitsToScroll() * fontHeight)));
+            int newPosition = Math.max(0, Math.min(sbmodel.getMaximum(), currPosition
+                    + (int) (e.getPreciseWheelRotation() * e.getScrollAmount() * fontHeight)));
             // height is a magic constant because of #57532
             sbmodel.setValue (newPosition);
             if (newPosition + range >= max) {

@@ -339,7 +339,7 @@ matrix:
             - ant $OPTS build
           script:
             #- ant $OPTS -f java/ant.debugger test
-            - ant $OPTS -f java/ant.freeform test
+            - hide-logs.sh ant $OPTS -f java/ant.freeform test
             #- ant $OPTS -f java/ant.grammar test
             - ant $OPTS -f java/api.debugger.jpda test
             - ant $OPTS -f java/api.java test
@@ -347,12 +347,67 @@ matrix:
             #- ant $OPTS -f java/beans test
             - ant $OPTS -f java/classfile test
             - ant $OPTS -f java/dbschema test -Dtest.config=stable
+            #- ant $OPTS -f java/debugger.jpda test
+            - hide-logs.sh ant $OPTS -f java/debugger.jpda.js test
+            - hide-logs.sh ant $OPTS -f java/debugger.jpda.projects test
+            - hide-logs.sh ant $OPTS -f java/debugger.jpda.projectsui test
+            #- ant $OPTS -f java/debugger.jpda.truffle test
+            #- ant $OPTS -f java/debugger.jpda.ui test
+            - travis_wait hide-logs.sh ant $OPTS -f java/editor.htmlui test
+            #- travis_wait 30 hide-logs.sh  ant $OPTS -f java/form test
             - ant $OPTS -f java/hudson.maven test
             - ant $OPTS -f java/java.completion test
-            - ant $OPTS -f java/java.hints.declarative test
+            - hide-logs.sh ant $OPTS -f java/java.hints.declarative test
+            #- ant $OPTS -f java/java.kit test
+            #- ant $OPTS -f java/java.lexer test
+            #- ant $OPTS -f java/java.lexer test
+            #- ant $OPTS -f java/java.lsp.server test
+            #- ant $OPTS -f java/java.metrics test
+            - ant $OPTS -f java/java.module.graph test
+            - ant $OPTS -f java/java.navigation test
+            #- ant $OPTS -f java/java.openjdk.project test
+            - ant $OPTS -f java/java.platform test
+            - ant $OPTS -f java/java.platform.ui test
+            - ant $OPTS -f java/java.preprocessorbridge test
+            - hide-logs.sh ant $OPTS -f java/java.project test
+            #- ant $OPTS -f java/java.project.ui test
+            #- ant $OPTS -f java/java.source test
+            #- ant $OPTS -f java/java.source.ant test
             - ant $OPTS -f java/java.source.base test
+            - ant $OPTS -f java/java.source.compat8 test
+            - ant $OPTS -f java/java.source.nbjavac test
+            - ant $OPTS -f java/java.source.queriesimpl test
+            #- ant $OPTS -f java/java.sourceui test
+            - ant $OPTS -f java/java.testrunner test
+            - ant $OPTS -f java/java.testrunner.ant test
+            #- ant $OPTS -f java/javadoc test
+            - ant $OPTS -f java/javawebstart test
+            #- ant $OPTS -f java/jellytools.java test
+            #- ant $OPTS -f java/jshell.support test
+            #- ant $OPTS -f java/junit test
+            - ant $OPTS -f java/junit.ant.ui test
+            - ant $OPTS -f java/lib.nbjavac test
+            #- ant $OPTS -f java/maven test
+            #- ant $OPTS -f java/maven.embedder test
+            - ant $OPTS -f java/maven.grammar test
+            #- ant $OPTS -f java/maven.hints test
+            #- ant $OPTS -f java/maven.htmlui test
+            - ant $OPTS -f java/maven.indexer test
+            - ant $OPTS -f java/maven.junit test
+            - ant $OPTS -f java/maven.model test
+            - ant $OPTS -f java/maven.osgi test
+            #- ant $OPTS -f java/performance test
+            #- ant $OPTS -f java/performance.java test
+            #- ant $OPTS -f java/projectimport.eclipse.core test
+            #- ant $OPTS -f java/refactoring.java test
+            - ant $OPTS -f java/spellchecker.bindings.java test
             #- ant $OPTS -f java/spi.java.hints test
             - ant $OPTS -f java/spring.beans test
+            - ant $OPTS -f java/testng test
+            #- ant $OPTS -f java/testng.ant test
+            #- ant $OPTS -f java/testng.ui test
+            - ant $OPTS -f java/whitelist test
+            - ant $OPTS -f java/xml.jaxb test
 
         - name: Test Java modules with nb-javac on Java 11
           jdk: openjdk8

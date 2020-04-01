@@ -1,6 +1,6 @@
 Name: OW2 ASM
-Version: 7.2
-Files: asm-tree-7.2.jar asm-commons-7.2.jar asm-7.2.jar
+Version: 8.0
+Files: asm-tree-8.0.jar asm-commons-8.0.jar asm-8.0.jar
 License: BSD-INRIA
 Origin: OW2 Consortium
 URL: https://repository.ow2.org/nexus/content/repositories/releases/org/ow2/asm/

@@ -39,13 +39,13 @@
                 <pathelement location="${cluster}/tasks.jar"></pathelement>
             </classpath>
         </taskdef>
-        <echo file="build/binaries-list">FA637EB67EB7628C915D73762B681AE7FF0B9731 org.ow2.asm:asm:7.2</echo>
+        <echo file="build/binaries-list">D1A17D07C60E9E82C8B31B1D8F9CA98726418DB4 org.ow2.asm:asm:8.0</echo>
         <TestDownload>
             <manifest dir="build">
                 <include name="binaries-list"/>
             </manifest>
         </TestDownload>
-        <delete file="build/asm-7.2.jar"/>
+        <delete file="build/asm-8.0.jar"/>
     </target>
 
     <target name="compile-jnlp-launcher" depends="init,compile">

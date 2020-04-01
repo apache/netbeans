@@ -207,14 +207,17 @@ final class TabTableUI extends BasicTableUI {
                     return;
                 }
 
-                if (hoverRow != -1 && hoverColumn != -1) {
-                    table.repaint(table.getCellRect(hoverRow, hoverColumn, true));
+                int oldRow = hoverRow;
+                int oldColumn = hoverColumn;
+                hoverRow = row;
+                hoverColumn = column;
+
+                if (oldRow != -1 && oldColumn != -1) {
+                    table.repaint(table.getCellRect(oldRow, oldColumn, true));
                 }
                 if (row != -1 && column != -1) {
                     table.repaint(table.getCellRect(row, column, true));
                 }
-                hoverRow = row;
-                hoverColumn = column;
             }
         };
     }

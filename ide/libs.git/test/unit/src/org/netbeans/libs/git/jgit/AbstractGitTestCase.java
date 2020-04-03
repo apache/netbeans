@@ -132,6 +132,24 @@ public class AbstractGitTestCase extends NbTestCase {
         return sb.toString();
     }
 
+    protected boolean containsCRorLF(File file) throws IOException {
+        BufferedReader r = null;
+        try {
+            r = new BufferedReader(new FileReader(file));
+            int i;
+            while((i = r.read()) >-1)
+            {
+                if( i=='\n' || i=='\r')
+                    return true;
+            }
+        } finally {
+            if (r != null) {
+                r.close();
+            }
+        }
+        return false;
+    }
+
     protected static void assertStatus (Map<File, GitStatus> statuses, File workDir, File file, boolean tracked, Status headVsIndex, Status indexVsWorking, Status headVsWorking, boolean conflict) {
         GitStatus status = statuses.get(file);
         assertNotNull(file.getAbsolutePath() + " not in " + statuses.keySet(), status);

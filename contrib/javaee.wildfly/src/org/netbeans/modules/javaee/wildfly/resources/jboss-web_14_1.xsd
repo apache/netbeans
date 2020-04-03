@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+~ JBoss, Home of Professional Open Source
+~ Copyright 2019, Red Hat, Inc., and individual contributors as indicated
+~ by the @authors tag.
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.jboss.com/xml/ns/javaee"
+            xmlns:javaee="http://xmlns.jcp.org/xml/ns/javaee"
+            xmlns:jboss="http://www.jboss.com/xml/ns/javaee"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            version="14.1">
+
+    <xsd:annotation>
+        <xsd:documentation>
+            <![CDATA[
+
+	This is the XML Schema for the WildFly 14.1 web application deployment descriptor.
+	The deployment descriptor must be named "WEB-INF/jboss-web.xml" in
+	the WAR file.  All JBoss Web deployment descriptors must indicate
+	the JBoss schema by using the Java EE namespace:
+
+        http://www.jboss.com/xml/ns/javaee
+
+	and by indicating the version of the schema using the version element as shown below:
+
+        <jboss-web xmlns="http://www.jboss.com/xml/ns/javaee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.jboss.com/xml/ns/javaee http://www.jboss.org/schema/jbossas/jboss-web_14_1.xsd"
+           version="14.0">
+
+	       ...
+
+        </jboss-web>
+
+	Instance documents may indicate the published version of
+	the schema using the xsi:schemaLocation attribute for the
+	Java EE namespace with the following location:
+
+	http://www.jboss.org/j2ee/schema/jboss-web_14_1.xsd
+
+	]]>
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:annotation>
+        <xsd:documentation>
+            The following conventions apply to all Java EE deployment descriptor
+            elements unless indicated otherwise. - In elements that specify a pathname to a file within
+            the same JAR file, relative filenames (i.e., those not starting with "/") are considered
+            relative to the root of the JAR file's namespace. Absolute filenames (i.e., those starting
+            with "/") also specify names in the root of the JAR file's namespace. In general, relative
+            names are preferred. The exception is .war files where absolute names are preferred for
+            consistency with the Servlet API.
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:import namespace="http://xmlns.jcp.org/xml/ns/javaee" schemaLocation="http://www.jboss.org/schema/jbossas/web-app_4_0.xsd"/>
+    <xsd:include schemaLocation="jboss-common_8_1.xsd"/>
+
+    <xsd:element name="jboss-web" type="jboss:jboss-webType">
+        <xsd:annotation>
+            <xsd:documentation>
+                This is the root element of jboss-web deployment descriptor.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:simpleType name="jboss-web-versionType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="14.0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="jboss-webType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The jboss-web element is the root element of jboss-web.xml file. It contains
+                all the information used by jboss but not described in the web.xml file. All of it is optional.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:element name="deny-uncovered-http-methods" type="xsd:boolean" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="executor-name" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="context-root" type="jboss:context-rootType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="virtual-host" type="jboss:virtual-hostType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="servlet-container" type="jboss:servlet-containerType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="server-instance" type="jboss:server-instanceType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="default-encoding" type="jboss:defaultEncodingType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="annotation" type="jboss:annotationType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="session-config" type="javaee:session-configType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="http-handler" type="jboss:httpHandlerType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="overlay" type="jboss:overlayType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="security-domain" type="jboss:web-security-domainType" minOccurs="0"/>
+            <xsd:element name="security-role" type="jboss:security-roleType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="jacc-star-role-allow" type="jboss:jacc-star-role-allowType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="jacc-context-id" type="jboss:jacc-context-idType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="disable-cross-context" type="jboss:disable-cross-contextType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="use-jboss-authorization" type="jboss:use-jboss-authorizationType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="disable-audit" type="jboss:disable-auditType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="servlet" type="jboss:servletType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="max-active-sessions" type="javaee:xsdIntegerType" minOccurs="0" maxOccurs="1" default="-1">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Determines the maximum number of sessions to retain in memory. If the application attempts to exceed
+                        this limit, the resulting behavior is determined by the session manager.
+
+                        If the session manager supports passivation, then sessions accessed least recently will be
+                        passivated to make room for new sessions.
+                        If the session manager does not support passivation then any attempt to create more than
+                        max-active-sessions will fail.
+
+                        If undefined, or if set to -1, then no limit is placed on the number of sessions retained in memory,
+                        and sessions will never passivate.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="distinct-name" type="jboss:distinct-nameType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="symbolic-linking-enabled" type="jboss:symbolic-linked-allowedType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="proactive-authentication" type="jboss:proactive-authenticationType" minOccurs="0" maxOccurs="1"/>
+            <xsd:group ref="jboss:jndiEnvironmentRefsGroup"/>
+            <xsd:element name="enable-websockets" type="jboss:enable-websocketsType" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+        <xsd:attribute name="version" type="jboss:jboss-web-versionType" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="container-listenerType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Defines a web container listener. The module element allows specifying from which
+                module in the application server the specified class will be loaded. The listener type
+                element defines which events the listener will receive from the web container.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:element name="class-name" type="javaee:string" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="module" type="javaee:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="listener-type" type="jboss:container-listener-typeType" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="param" type="javaee:param-valueType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="container-listener-typeType">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[
+
+            Sets the type of the container listener:
+                    1 - "LIFECYCLE": webapp lifecycle listener
+                    2 - "CONTAINER": webapp container listener
+                    3 - "SERVLET_INSTANCE": servlet instance listener
+                    4 - "SERVLET_LIFECYCLE": servlet lifecycle listener
+                    5 - "SERVLET_CONTAINER": servlet container (Catalina wrapper) listener
+
+            Example:
+                  <listener-type>LIFECYCLE</listener-type>
+
+            ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:string">
+                <xsd:enumeration value="LIFECYCLE"/>
+                <xsd:enumeration value="CONTAINER"/>
+                <xsd:enumeration value="SERVLET_INSTANCE"/>
+                <xsd:enumeration value="SERVLET_LIFECYCLE"/>
+                <xsd:enumeration value="SERVLET_CONTAINER"/>
+            </xsd:restriction>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="valveType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Defines a web container valve. The module element allows specifying from which
+                module in the application server the specified class will be loaded. A container
+                valve is used to intercept the request that will be processed by the servlet. It
+                is invoked as part of a chain, before the invocation of the webapp's filter chain.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:element name="class-name" type="javaee:string" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="module" type="javaee:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="param" type="javaee:param-valueType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="httpHandlerType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Defines a web container HTTPHandler. The module element allows specifying from which
+                module in the application server the specified class will be loaded. A handler
+                is used to intercept the request that will be processed by the servlet. It
+                is invoked as part of a chain, before the invocation of the webapp's filter chain.
+
+                The class specified can either be a HttpHandler that has a constructor that takes the
+                next HttpHandler, or can be a HandlerWrapper that produces the next handler.
+            </xsd:documentation>
+        </xsd:annotation>
+
+        <xsd:sequence>
+            <xsd:element name="class-name" type="javaee:string" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="module" type="javaee:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="param" type="javaee:param-valueType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="overlayType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The overlay element specifies additional static files overlays for this
+                web application. The content of the element should be a folder in the
+                filesystem containing the static files that will overlay the webapp's
+                static files, similar to what happens with regular JAR overlays.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:string"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="web-security-domainType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The name of a security-domain that will be used to authenticate and authorize users.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="javaee:string">
+                <xsd:attribute name="flushOnSessionInvalidation" type="xsd:boolean" use="optional" default="false">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Whether the domain's cache should be flushed when the session invalidates.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="disable-cross-contextType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The disable-cross-context element specifies if cross context
+                access should be enabled for this webapp, allowing it to use the
+                request dispatcher to access other webapps deployed in the
+                application server.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:generic-booleanType"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="use-jboss-authorizationType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The use-jboss-authorization element specifies if the JBoss
+                authorization layer should be used.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:generic-booleanType"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="disable-auditType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The disable-audit element specifies if the security audit logging
+                should be disabled.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:generic-booleanType"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="proactive-authenticationType">
+        <xsd:annotation>
+            <xsd:documentation>
+                If this is set to false then authentication will not be performed unless it is required,
+                even if credentials are present.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:generic-booleanType"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    <xsd:complexType name="distinct-nameType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The distinct-name element specifies the EJB 3 distinct name for this
+                web application.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:string"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="symbolic-linked-allowedType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The symbolic-linked-allowed element specifies if symlinking is allowed in exploded deployments.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:boolean"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="jacc-star-role-allowType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The jacc-star-role-allow element specifies whether the
+                jacc permission generating agent in the web layer needs to generate a
+                WebResourcePermission(url,null) permission such that the jacc provider can
+                make a decision as to bypass authorization or not.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:generic-booleanType"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="jacc-context-idType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The jacc-context-id element allows for the specification of the JACC contextID that should
+                be used to identify the web application when checking for permissions. If not set the deployment
+                unit name is used as JACC contextID.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:string"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="context-rootType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The context-root element specifies the context root of a web
+                application. This is normally specified at the ear level using the standard
+                JEE application.xml descriptor, but it may be given here for standalone wars.
+                This should not override the application.xml level specification.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:string"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="servlet-containerType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The servlet-container element specifies the which servlet container this application
+                should be using.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:string"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="server-instanceType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The server-instance element specifies the which server instance configuration this application belongs to.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:string"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="defaultEncodingType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Default encoding to use for this application
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:string"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="virtual-hostType">
+        <xsd:annotation>
+            <xsd:documentation>
+                <![CDATA[
+
+            The virtual-host element allows one to specify which virtual host the war
+            should be deployed to. Example, to specify that a war should be deployed to the
+            www.jboss-store.org virtual host add the following virtual-host element:
+            <virtual-host>www.jboss-store.org</virtual-host>
+
+            ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:string"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="servletType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The servlet element specifies servlet specific bindings. Currently this
+                is only the run-as principal identity.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="servlet-name" type="javaee:string"/>
+            <xsd:element name="executor-name" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="run-as-principal" type="javaee:role-nameType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        The run-as-principal element specifies whether a specific run-as identity is
+                        to be used. If there is a run-as role defined for a servlet, there can also
+                        be a run-as-principal defined here. If you don't define a run-as principal
+                        the callee will see ctx.getUserPrincipal() == 'anonymous'
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="servlet-security" type="jboss:servlet-securityType" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="max-active-sessionsType">
+        <xsd:restriction base="xsd:integer"/>
+    </xsd:simpleType>
+
+    <xsd:complexType name="annotationType">
+        <xsd:annotation>
+            <xsd:documentation>
+                The annotation element specifies annotation specific bindings. This allows
+                overriding the @ServletSecurity, @RunAs and @MultipartConfig, which apply
+                on a Servlet class rather than a Servlet name. They have the same structure
+                and element names as the corresponding annotation.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="class-name" type="javaee:string"/>
+            <xsd:element name="servlet-security" type="jboss:servlet-securityType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="run-as" type="jboss:run-asType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="multipart-config" type="jboss:multipart-configType" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="run-asType">
+        <xsd:sequence>
+            <xsd:element name="description" type="javaee:descriptionType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="role-name" type="javaee:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="servlet-securityType">
+        <xsd:sequence>
+            <xsd:element name="empty-role-semantic" type="javaee:string"/>
+            <xsd:element name="transport-guarantee" type="javaee:transport-guaranteeType"/>
+            <xsd:element name="roles-allowed" type="javaee:role-nameType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="http-method-constraint" type="jboss:http-method-constraintType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="http-method-constraintType">
+        <xsd:sequence>
+            <xsd:element name="method" type="javaee:string" minOccurs="1" maxOccurs="1"/>
+            <xsd:element name="empty-role-semantic" type="jboss:empty-role-semanticType"/>
+            <xsd:element name="transport-guarantee" type="javaee:transport-guaranteeType"/>
+            <xsd:element name="roles-allowed" type="javaee:role-nameType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="empty-role-semanticType">
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:string">
+                <xsd:enumeration value="PERMIT"/>
+                <xsd:enumeration value="DENY"/>
+            </xsd:restriction>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="multipart-configType">
+        <xsd:sequence>
+            <xsd:element name="location" type="javaee:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="max-file-size" type="xsd:long" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="max-request-size" type="xsd:long" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="file-size-threshold" type="xsd:integer" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="enable-websocketsType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Legacy enable-websockets option. Websockets are enabled by default, this option allows them to be
+                turned off.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleContent>
+            <xsd:restriction base="javaee:generic-booleanType"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+</xsd:schema>

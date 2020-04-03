@@ -509,13 +509,14 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         }
         String name = projectNameTextField.getText().trim();
         String folder = createdFolderTextField.getText().trim();
-        final File parentFolder = new File(folder);
+        final File projectFolder = new File(folder);
         
-        d.putProperty(CommonProjectActions.PROJECT_PARENT_FOLDER, parentFolder);
+        // PROJECT_PARENT_FOLDER confusing, better name is PROJECT_BASE_FOLDER
+        d.putProperty(CommonProjectActions.PROJECT_PARENT_FOLDER, projectFolder);
         if (d instanceof TemplateWizard) {
             ((TemplateWizard) d).setTargetFolderLazy(() -> {
-                parentFolder.mkdirs();
-                return DataFolder.findFolder(FileUtil.toFileObject(parentFolder));
+                projectFolder.mkdirs();
+                return DataFolder.findFolder(FileUtil.toFileObject(projectFolder));
             });
         }
         d.putProperty("name", name); //NOI18N
@@ -554,17 +555,21 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         "# {0} - project count", "TXT_MavenProjectName=mavenproject{0}",
         "TXT_Checking1=Checking additional creation properties..."
     })
-    void read(WizardDescriptor settings) {
+    void read(WizardDescriptor settings, Map<String,String> defaultProps) {
         synchronized (HANDLE_LOCK) {
             if (handle != null) {
                 handle.finish();
                 handle = null;
             }
         }        
-        File projectLocation = (File) settings.getProperty(CommonProjectActions.PROJECT_PARENT_FOLDER); //NOI18N
-        if (projectLocation == null || projectLocation.getParentFile() == null || !projectLocation.getParentFile().isDirectory()) {
+        // PROJECT_PARENT_FOLDER confusing, better name is PROJECT_BASE_FOLDER
+        File projectFolder = (File) settings.getProperty(CommonProjectActions.PROJECT_PARENT_FOLDER); //NOI18N
+        File projectLocation;
+        if (projectFolder == null || projectFolder.getParentFile() == null || !projectFolder.getParentFile().isDirectory()) {
             projectLocation = ProjectChooser.getProjectsFolder();
-        } 
+        } else {
+            projectLocation = projectFolder.getParentFile();
+        }
         this.projectLocationTextField.setText(projectLocation.getAbsolutePath());
         
         String projectName = (String) settings.getProperty("name"); //NOI18N
@@ -598,7 +603,7 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
             RPprep.post(new Runnable() {
                 @Override
                 public void run() {
-                    prepareAdditionalProperties(archet);
+                    prepareAdditionalProperties(archet, defaultProps);
                 }
             });
         }
@@ -615,7 +620,7 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         "COL_Value=Value",
         "TXT_Checking2=A&dditional Creation Properties:"
     })
-    private void prepareAdditionalProperties(Archetype arch) {
+    private void prepareAdditionalProperties(Archetype arch, Map<String, String> defaultProps) {
         final DefaultTableModel dtm = new DefaultTableModel();
         dtm.addColumn(COL_Key());
         dtm.addColumn(COL_Value());
@@ -629,7 +634,13 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
                     if ("groupId".equals(key) || "artifactId".equals(key) || "version".equals(key)) {
                         continue; //don't show the basic props as additionals..
                     }
-                    dtm.addRow(new Object[] {key, defVal == null ? "" : defVal });
+                    if (defaultProps != null && defaultProps.containsKey(key)) {
+                        defVal = defaultProps.get(key);
+                    }
+                    if (defVal == null) {
+                        defVal = "";
+                    }
+                    dtm.addRow(new Object[] {key, defVal });
                 }
             }
         } catch (ArtifactResolutionException ex) {

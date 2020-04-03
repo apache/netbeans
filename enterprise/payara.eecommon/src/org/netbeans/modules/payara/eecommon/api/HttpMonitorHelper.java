@@ -32,6 +32,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.j2ee.dd.api.web.DDProvider;
@@ -442,11 +443,11 @@ public class HttpMonitorHelper {
     private static void startModuleSpy (final ModuleSpy spy) {
         // trying to hang a listener on monitor module 
         res = Lookup.getDefault().lookup(new Lookup.Template<ModuleInfo>(ModuleInfo.class));
-        java.util.Iterator it = res.allInstances ().iterator ();
+        Iterator<ModuleInfo> it = res.allInstances().iterator();
         final String moduleId = spy.getModuleId();        
        // boolean found = false;
         while (it.hasNext ()) {
-            org.openide.modules.ModuleInfo mi = (ModuleInfo)it.next ();
+            org.openide.modules.ModuleInfo mi = it.next();
             if (mi.getCodeName ().startsWith(moduleId)) {
                 httpMonitorInfo=mi;
                 spy.setEnabled(mi.isEnabled());
@@ -525,10 +526,10 @@ public class HttpMonitorHelper {
         
         @Override
         public void resultChanged(LookupEvent lookupEvent) {
-            java.util.Iterator it = res.allInstances ().iterator ();
+            Iterator<ModuleInfo> it = res.allInstances().iterator();
             boolean moduleFound=false;
             while (it.hasNext ()) {
-                ModuleInfo mi = (ModuleInfo)it.next ();
+                ModuleInfo mi = it.next();
                 if (mi.getCodeName ().startsWith(spy.getModuleId())) {
                     spy.setEnabled(mi.isEnabled());
                     if (httpMonitorInfo==null) {

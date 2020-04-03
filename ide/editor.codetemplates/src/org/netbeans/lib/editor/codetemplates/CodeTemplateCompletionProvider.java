@@ -209,8 +209,8 @@ public final class CodeTemplateCompletionProvider implements CompletionProvider 
         }
         
         private static boolean accept(CodeTemplate template, Collection/*<CodeTemplateFilter>*/ filters) {
-            for(Iterator it = filters.iterator(); it.hasNext();) {
-                CodeTemplateFilter filter = (CodeTemplateFilter)it.next();
+            for(Iterator<CodeTemplateFilter> it = filters.iterator(); it.hasNext();) {
+                CodeTemplateFilter filter = it.next();
                 if (!filter.accept(template))
                     return false;                
             }

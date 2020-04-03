@@ -21,7 +21,10 @@ package org.netbeans.modules.java.source.parsing;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.util.JavacTask;
+import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
@@ -58,6 +61,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -73,6 +77,7 @@ import javax.annotation.processing.Processor;
 import javax.swing.event.ChangeEvent;
 import  javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
+import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
@@ -153,6 +158,7 @@ public class JavacParser extends Parser {
     //Command line switch disabling partial reparse
     private static final boolean DISABLE_PARTIAL_REPARSE = Boolean.getBoolean("org.netbeans.modules.java.source.parsing.JavacParser.no_reparse");   //NOI18N
     private static final boolean DISABLE_PARAMETER_NAMES_READING = Boolean.getBoolean("org.netbeans.modules.java.source.parsing.JavacParser.no_parameter_names");   //NOI18N
+    private static final boolean VERIFY_PARTIAL_REPARSE = Boolean.getBoolean("org.netbeans.modules.java.source.parsing.JavacParser.verify_partial_reparse");   //NOI18N
     public static final String LOMBOK_DETECTED = "lombokDetected";
 
     /**
@@ -411,6 +417,9 @@ public class JavacParser extends Parser {
                         positions.clear();
                         ciImpl = createCurrentInfo (this, file, root, snapshot, null, null);
                         LOGGER.fine("\t:created new javac");                                    //NOI18N
+                    } else if (VERIFY_PARTIAL_REPARSE) {
+                        CompilationInfoImpl verifyInfo = new CompilationInfoImpl(this, file, root, null, null, snapshot, true);
+                        verifyCompilationInfos(ciImpl, verifyInfo);
                     }
                     break;
                 default:
@@ -826,6 +835,66 @@ public class JavacParser extends Parser {
                 compilerOptions,
                 Collections.emptySet(),
                 files);
+    }
+
+    private void verifyCompilationInfos(CompilationInfoImpl reparsed, CompilationInfoImpl verifyInfo) throws IOException {
+        String failInfo = "";
+        //move to phase, and verify
+        if (verifyInfo.toPhase(reparsed.getPhase()) != reparsed.getPhase()) {
+            failInfo += "Expected phase: " + reparsed.getPhase() + ", actual phase: " + verifyInfo.getPhase();
+        }
+        //verify diagnostics:
+        Set<String> reparsedDiags = (Set<String>) reparsed.getDiagnostics().stream().map(this::diagnosticToString).collect(Collectors.toSet());
+        Set<String> verifyDiags = (Set<String>) verifyInfo.getDiagnostics().stream().map(this::diagnosticToString).collect(Collectors.toSet());
+        System.err.println("reparsedDiags=" + reparsedDiags);
+        System.err.println("verifyDiags=" + verifyDiags);
+        if (!Objects.equals(reparsedDiags, verifyDiags)) {
+            failInfo += "Expected diags: " + reparsedDiags + ", actual diags: " + verifyDiags;
+        }
+        String reparsedTree = treeToString(reparsed, reparsed.getCompilationUnit());
+        String verifyTree = treeToString(verifyInfo, verifyInfo.getCompilationUnit());
+        System.err.println("reparsedTree=" + reparsedTree);
+        System.err.println("verifyTree=" + verifyTree);
+        if (!Objects.equals(reparsedTree, verifyTree)) {
+            failInfo += "Expected tree: " + reparsedTree + ", actual tree: " + verifyTree;
+        }
+        if (!failInfo.isEmpty()) {
+            throw new IllegalStateException("Partial reparse didn't work properly; original text: " + ciImpl.getText() + ", new text: " + verifyInfo.getText() + "; failInfo=" + failInfo);
+        }
+    }
+
+    private String diagnosticToString(Diagnostic<JavaFileObject> d) {
+        return d.getSource().toUri().toString() + ":" +
+               d.getKind() + ":" +
+               d.getStartPosition() + ":" +
+               d.getPosition() + ":" +
+               d.getEndPosition() + ":" +
+               d.getLineNumber() + ":" +
+               d.getColumnNumber() + ":" +
+               d.getCode() + ":" +
+               d.getMessage(null);
+    }
+
+    private String treeToString(CompilationInfoImpl info, CompilationUnitTree cut) {
+        StringBuilder dump = new StringBuilder();
+        new TreePathScanner<Void, Void>() {
+            @Override
+            public Void scan(Tree tree, Void p) {
+                if (tree == null) {
+                    dump.append("null,");
+                } else {
+                    TreePath tp = new TreePath(getCurrentPath(), tree);
+                    dump.append(tree.getKind()).append(":");
+                    dump.append(Trees.instance(info.getJavacTask()).getSourcePositions().getStartPosition(tp.getCompilationUnit(), tree)).append(":");
+                    dump.append(Trees.instance(info.getJavacTask()).getSourcePositions().getEndPosition(tp.getCompilationUnit(), tree)).append(":");
+                    dump.append(String.valueOf(Trees.instance(info.getJavacTask()).getElement(tp))).append(":");
+                    dump.append(String.valueOf(Trees.instance(info.getJavacTask()).getTypeMirror(tp))).append(":");
+                    dump.append(",");
+                }
+                return super.scan(tree, p);
+            }
+        }.scan(cut, null);
+        return dump.toString();
     }
 
     private static enum ConfigFlags {

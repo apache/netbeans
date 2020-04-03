@@ -37,6 +37,18 @@
         </description>
         <class name="SourceUtils" package="org.netbeans.api.java.source"/>
     </change>
+    <change id="CodeStyle.parensAroundSingularLambdaParam">
+        <api name="javasource_base" />
+        <summary>CodeStyle.parensAroundSingularLambdaParam() added</summary>
+        <version major="1" minor="2.45"/>
+        <date day="8" month="2" year="2020"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+                Method CodeStyle.parensAroundSingularLambdaParam() has been added.
+        </description>
+        <class name="CodeStyle" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="TreeMaker.SwitchExpression">
         <api name="javasource_base" />
         <summary>Creates a new SwitchExpressionTree</summary>

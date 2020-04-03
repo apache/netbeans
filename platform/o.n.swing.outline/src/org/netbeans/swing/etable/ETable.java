@@ -2225,8 +2225,8 @@ public class ETable extends JTable {
                 int rows[] = getSelectedRows();
                 int selectedRowIndex = (rows == null || rows.length == 0) ? 0 : rows[0];
                 int r = 0;
-                for (Iterator it = results.iterator(); it.hasNext(); r++) {
-                    int curResult = ((Integer)it.next()).intValue();
+                for (Iterator<Integer> it = results.iterator(); it.hasNext(); r++) {
+                    int curResult = it.next().intValue();
                     if (selectedRowIndex <= curResult) {
                         currentSelectionIndex = r;
                         break;

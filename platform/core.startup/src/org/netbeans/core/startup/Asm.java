@@ -127,8 +127,8 @@ final class Asm {
      * @param mn method to process
      */
     private static void replaceSuperCtorCalls(final ClassNode theClass, final ClassNode extenderClass, MethodNode mn) {
-        for (Iterator it = mn.instructions.iterator(); it.hasNext(); ) {
-            AbstractInsnNode aIns = (AbstractInsnNode)it.next();
+        for (Iterator<AbstractInsnNode> it = mn.instructions.iterator(); it.hasNext(); ) {
+            AbstractInsnNode aIns = it.next();
             if (aIns.getOpcode() == Opcodes.INVOKESPECIAL) {
                 MethodInsnNode mins = (MethodInsnNode)aIns;
                 if (CONSTRUCTOR_NAME.equals(mins.name) && mins.owner.equals(extenderClass.superName)) {

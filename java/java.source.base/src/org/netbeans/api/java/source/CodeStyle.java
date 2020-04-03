@@ -944,6 +944,13 @@ public final class CodeStyle {
         return preferences.getBoolean(spaceWithinLambdaParens, getDefaultAsBoolean(spaceWithinLambdaParens));
     }
 
+    /**
+     * @since 2.45
+     */
+    public boolean parensAroundSingularLambdaParam() {
+        return preferences.getBoolean(parensAroundSingularLambdaParam, getDefaultAsBoolean(parensAroundSingularLambdaParam));
+    }
+
     public boolean spaceWithinMethodCallParens() {
         return preferences.getBoolean(spaceWithinMethodCallParens, getDefaultAsBoolean(spaceWithinMethodCallParens));
     }

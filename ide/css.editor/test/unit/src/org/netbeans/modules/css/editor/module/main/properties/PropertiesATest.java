@@ -2713,4 +2713,22 @@ public class PropertiesATest extends CssModuleTestBase {
                 + "}";
         assertCssCode(code);
     }
+
+    public void testUnicodeRange() throws ParseException {
+        String code = "xxx {\n"
+            + "    unicode-range: U+0D01, U+0A01-00ff, U+0A??;\n"
+            + "}";
+        assertCssCode(code);
+    }
+
+    public void testDisplay() throws ParseException {
+        assertCssCode(".demo {display: block}");
+        assertCssCode(".demo {display: inline-block}");
+        assertCssCode(".demo {display: inline flow}");
+        assertCssCode(".demo {display: block table}");
+        assertCssCode(".demo {display: block flex}");
+        assertCssCode(".demo {display: block flow list-item}");
+        assertCssCode(".demo {display: flow list-item}");
+        assertCssCode(".demo {display: list-item flow}");
+    }
 }

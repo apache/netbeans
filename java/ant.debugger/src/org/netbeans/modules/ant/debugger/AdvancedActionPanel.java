@@ -96,9 +96,9 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
         assert script != null : "No file found for " + project;
         String initialTargets = (String) script.getAttribute(ATTR_TARGETS);
         SortedSet<String> relevantTargets = new TreeSet<>(Collator.getInstance());
-        Iterator it = allTargets.iterator();
+        Iterator<TargetLister.Target> it = allTargets.iterator();
         while (it.hasNext()) {
-            TargetLister.Target target = (TargetLister.Target) it.next();
+            TargetLister.Target target = it.next();
             if (!target.isOverridden() && !target.isInternal()) {
                 relevantTargets.add(target.getName());
                 if (defaultTarget == null && target.isDefault()) {
@@ -253,9 +253,9 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
         String description = "";
         if (targetsL.size() == 1) {
             String targetName = (String) targetsL.get(0);
-            Iterator it = allTargets.iterator();
+            Iterator<TargetLister.Target> it = allTargets.iterator();
             while (it.hasNext()) {
-                TargetLister.Target target = (TargetLister.Target) it.next();
+                TargetLister.Target target = it.next();
                 if (!target.isOverridden() && target.getName().equals(targetName)) {
                     description = target.getElement().getAttribute("description"); // NOI18N
                     // may still be "" if not defined

@@ -366,7 +366,7 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
     public int getPort() {
         String port = InstanceProperties.getInstanceProperties(realUri).
                 getProperty(WildflyPluginProperties.PROPERTY_PORT);
-        return new Integer(port).intValue();
+        return Integer.parseInt(port);
     }
 
     public Version getServerVersion() {
@@ -413,6 +413,7 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
     }
 
     @Override
+    @Deprecated
     public ProgressObject distribute(Target[] targets, InputStream in, InputStream in1) throws IllegalStateException {
         throw new UnsupportedOperationException("This method should never be called!"); // NOI18N
     }

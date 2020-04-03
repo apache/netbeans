@@ -60,9 +60,9 @@ public class DebuggerAntLogger extends AntLogger {
     
     
     static DebuggerAntLogger getDefault () {
-        Iterator it = Lookup.getDefault ().lookupAll (AntLogger.class).iterator ();
+        Iterator<? extends AntLogger> it = Lookup.getDefault().lookupAll(AntLogger.class).iterator();
         while (it.hasNext ()) {
-            AntLogger al = (AntLogger) it.next ();
+            AntLogger al = it.next();
             if (al instanceof DebuggerAntLogger) {
                 return (DebuggerAntLogger) al;
             }

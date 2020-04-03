@@ -1,0 +1,9 @@
+Code completion result for source line:
+display: list-item |;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+GLOBAL     block                                      <font color=999999>display</font>
+GLOBAL     flow                                       <font color=999999>display</font>
+GLOBAL     flow-root                                  <font color=999999>display</font>
+GLOBAL     inline                                     <font color=999999>display</font>
+GLOBAL     run-in                                     <font color=999999>display</font>

@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -228,6 +229,18 @@ public abstract class Lookup {
      *         implementation is found
      */
     public abstract <T> T lookup(Class<T> clazz);
+    
+    /**
+     * Look up an object matching a given interface, optional version.
+     * Method to support Java Optional.
+     * If more than one object matches, the first will be returned.
+     * @param clazz class of the object we are searching for
+     * @return an optional that contains an object implementing the given class 
+     * or an empty optional if no such implementation is found
+     */
+    public <T> Optional<T> lookupOptional(Class<T> clazz) {
+        return Optional.ofNullable(lookup(clazz));
+    }
 
     /** The general lookup method. Callers can get list of all instances and classes
      * that match the given <code>template</code>, request more info about

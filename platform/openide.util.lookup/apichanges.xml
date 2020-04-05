@@ -25,6 +25,20 @@
     <apidef name="lookup">Lookup API</apidef>
 </apidefs>
 <changes>
+    <change id="OptionalLookup">
+        <api name="lookup"/>
+        <summary>Add optional support</summary>
+        <version major="8" minor="42"/>
+        <date year="2020" month="4" day="5"/>
+        <author login="hectorespert"/>
+        <compatibility addition="yes" source="compatible" semantic="incompatible" binary="compatible"/>
+        <description>
+            <p>
+                Add <code>lookupOptional</code> method to <a href="@TOP@/org/openide/util/Lookup.html">Lookup</a> interface.
+            </p>
+        </description>
+        <class name="Lookup" package="org.openide.util"/>
+    </change>
     <change id="AbstractProcessorSupportedSource">
         <api name="lookup"/>
         <summary>Declare support for all source levels.</summary>

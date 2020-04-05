@@ -42,14 +42,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingUtilities;
-import org.netbeans.api.autoupdate.InstallSupport;
-import org.netbeans.api.autoupdate.OperationContainer;
 import org.netbeans.api.autoupdate.UpdateElement;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.netbeans.modules.autoupdate.ui.api.PluginManager;
 import org.openide.awt.Mnemonics;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor.Task;
@@ -65,7 +61,7 @@ import org.openide.util.Lookup;
  * @author Tomas Mysik
  * @author Pavel Flaska
  */
-public class ConfigurationPanel extends JPanel implements Runnable {
+public class ConfigurationPanel extends JPanel {
 
     private static final long serialVersionUID = 27938464212508L;
 
@@ -93,7 +89,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
     public void setInfo(FeatureInfo info, String displayName, Collection<UpdateElement> toInstall,
             Collection<FeatureInfo.ExtraModuleInfo> missingModules,
             Map<FeatureInfo.ExtraModuleInfo, FeatureInfo> extrasMap, boolean required) {
-        this.extrasFilter = new HashSet<FeatureInfo.ExtraModuleInfo>();
+        this.extrasFilter = new HashSet<>();
         this.featureInfo = info;
         this.featureInstall = toInstall;
         boolean activateNow = toInstall.isEmpty() && missingModules.isEmpty();
@@ -306,59 +302,63 @@ public class ConfigurationPanel extends JPanel implements Runnable {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    public void run() {
-        ModulesInstaller.installModules(progressMonitor, featureInfo, featureInstall, extrasFilter);
-    }
-
     private void activateButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_activateButtonActionPerformed
         FeatureManager.logUI("ERGO_DOWNLOAD");
         activateButton.setEnabled(false);
         downloadButton.setEnabled(false);
-        Task task = FeatureManager.getInstance().create(this);
-        task.addTaskListener(new TaskListener() {
-
-            public void taskFinished(org.openide.util.Task task) {
-                if (!progressMonitor.error) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        private String msg;
-
-                        public void run() {
-                            ConfigurationPanel.this.removeAll();
-                            ConfigurationPanel.this.setLayout(new BorderLayout());
-                            try {
-                                ConfigurationPanel.this.add(callable.call(), BorderLayout.CENTER);
-                            } catch (Exception ex) {
-                                // TODO: add warning panel
-                                Exceptions.printStackTrace(ex);
-                            }
-                            ConfigurationPanel.this.invalidate();
-                            ConfigurationPanel.this.revalidate();
-                            ConfigurationPanel.this.repaint();
-                            if (featureInfo != null && featureInfo.isPresent()) {
-                                msg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_EnableFailed");
-                            } else {
-                                msg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_DownloadFailed");
-                            }
-                            setError(msg);
-                            activateButton.setEnabled(true);
-                            progressPanel.removeAll();
-                            progressPanel.revalidate();
-                            progressPanel.repaint();
-                        }
-                    });
-                }
-            }
+        selectionsPanel.setEnabled(false);
+        Task task = FeatureManager.getInstance().create(() -> {
+            ModulesInstaller.activateModules(false, progressMonitor, featureInfo, featureInstall, extrasFilter);
         });
+        task.addTaskListener(onActivationFinished());
         task.schedule(0);
     }//GEN-LAST:event_activateButtonActionPerformed
 
     private void downloadButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
-        OperationContainer<InstallSupport> op = OperationContainer.createForInstall();
-        op.add(featureInstall);
-        if (PluginManager.openInstallWizard(op)) {
-            activateButtonActionPerformed(null);
-        }
+        FeatureManager.logUI("ERGO_DOWNLOAD");
+        activateButton.setEnabled(false);
+        downloadButton.setEnabled(false);
+        selectionsPanel.setEnabled(false);
+        Task task = FeatureManager.getInstance().create(() -> {
+            ModulesInstaller.activateModules(true, progressMonitor, featureInfo, Collections.emptyList(), extrasFilter);
+        });
+        task.addTaskListener(onActivationFinished());
+        task.schedule(0);
     }//GEN-LAST:event_downloadButtonActionPerformed
+
+    private TaskListener onActivationFinished() {
+        return (task) -> {
+            if (!progressMonitor.error) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    private String msg;
+
+                    public void run() {
+                        ConfigurationPanel.this.removeAll();
+                        ConfigurationPanel.this.setLayout(new BorderLayout());
+                        try {
+                            ConfigurationPanel.this.add(callable.call(), BorderLayout.CENTER);
+                        } catch (Exception ex) {
+                            // TODO: add warning panel
+                            Exceptions.printStackTrace(ex);
+                        }
+                        ConfigurationPanel.this.invalidate();
+                        ConfigurationPanel.this.revalidate();
+                        ConfigurationPanel.this.repaint();
+                        if (featureInfo != null && featureInfo.isPresent()) {
+                            msg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_EnableFailed");
+                        } else {
+                            msg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_DownloadFailed");
+                        }
+                        setError(msg);
+                        activateButton.setEnabled(true);
+                        progressPanel.removeAll();
+                        progressPanel.revalidate();
+                        progressPanel.repaint();
+                    }
+                });
+            }
+        };
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton activateButton;
@@ -372,7 +372,7 @@ public class ConfigurationPanel extends JPanel implements Runnable {
 
     private final class DownloadProgressMonitor implements ProgressMonitor {
 
-        private boolean error = false;
+        boolean error = false;
 
         public void onDownload(ProgressHandle progressHandle) {
             updateProgress(progressHandle);

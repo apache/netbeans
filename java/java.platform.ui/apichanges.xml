@@ -83,6 +83,31 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="platform.combobox">
+            <api name="java_platform_ui"/>
+            <summary>Desktop dependent java platform UI extracted</summary>
+            <version major="1" minor="51"/>
+            <date day="4" month="4" year="2020"/>
+            <author login="lkishalmi"/>
+            <compatibility modification="no" addition="yes">
+                <p>
+                    Moves the Java Platform Selection Combo Box related code
+                    into the rightful place. There is only addition in this
+                    change, so it is compatible with the previous versions.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    The new API parts provide modules to initialize and display
+                    a Java Platform selector combo box.<br/>
+                    The following class was added to serve as model for the Java
+                    platform combo box:
+                    <a href="@org-netbeans-modules-java-platform-ui@/org/netbeans/api/java/platform/PlatformComboBoxModel.html">PlatformComboBoxModel</a> and
+                    <a href="@org-netbeans-modules-java-platform-ui@/org/netbeans/api/java/platform/PlatformsCustomizer.html">PlatformCustomizer</a> got two
+                    new static method to create Java platform combo boxes.
+                </p>
+            </description>
+        </change>
         <change id="server.is.free">
             <api name="java_platform_ui"/>
             <summary>Desktop dependent java platform UI extracted</summary>

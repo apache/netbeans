@@ -24,6 +24,13 @@ import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 
 import java.awt.*;
+import javax.swing.ComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+import javax.swing.UIManager;
+import javax.swing.plaf.UIResource;
 
 public final class PlatformsCustomizer {
 
@@ -33,7 +40,7 @@ public final class PlatformsCustomizer {
 
 
     /**
-     * Shows platforms customizer
+     * Shows platforms customizer.
      * @param  platform which should be selected, may be null
      * @return boolean for future extension, currently always true
      */
@@ -54,5 +61,76 @@ public final class PlatformsCustomizer {
         }
         return true;
     }
+
+    /**
+     * Returns an initialized ComboBox displaying all the installed JavaSE
+     * platforms.
+     *
+     * @since 1.51
+     * @see PlatformComboBoxModel#PlatformComboBoxModel()
+     *
+     * @return a combo box initialized with a suitable
+     *         model and renderer to display the installed Java Platforms.
+     */
+    public static JComboBox<JavaPlatform> createPlatformComboBox() {
+        return createPlatformComboBox(new PlatformComboBoxModel());
+    }
+
+    /**
+     * Utility method to create a combo box with Java platforms.
+     *
+     * @since 1.51
+     * @param model The model for the Java Platform ComboBox.
+     * @return a combo box initialized with the given model and a suitable
+     *         renderer to display the installed Java Platforms.
+     */
+    public static JComboBox<JavaPlatform> createPlatformComboBox(ComboBoxModel<JavaPlatform> model) {
+        JComboBox<JavaPlatform> ret = new JComboBox<>(model);
+        ret.setRenderer(new PlatformRenderer());
+        return ret;
+    }
+
+    private static class PlatformRenderer extends JLabel implements ListCellRenderer, UIResource {
+
+        @SuppressWarnings("OverridableMethodCallInConstructor")
+        public PlatformRenderer() {
+            setOpaque(true);
+        }
+
+        @Override
+        @NbBundle.Messages({"# {0} - platformId", "LBL_MissingPlatform=Missing platform: {0}"})
+        public Component getListCellRendererComponent(JList list, Object value,
+                int index, boolean isSelected,
+                boolean cellHasFocus) {
+            // #89393: GTK needs name to render cell renderer "natively"
+            setName("ComboBox.listRenderer"); // NOI18N
+            if (value instanceof JavaPlatform) {
+                JavaPlatform jp = (JavaPlatform)value;
+                setText(jp.getDisplayName());
+                if ( isSelected ) {
+                    setBackground(list.getSelectionBackground());
+                    setForeground(list.getSelectionForeground());
+                } else {
+                    setBackground(list.getBackground());
+                    setForeground(list.getForeground());
+                }
+            } else {
+                if (value == null) {
+                    setText("");
+                } else {
+                    setText(Bundle.LBL_MissingPlatform(value));
+                    setForeground(UIManager.getColor("nb.errorForeground")); //NOI18N
+                }
+            }
+            return this;
+        }
+
+        // #89393: GTK needs name to render cell renderer "natively"
+        @Override
+        public String getName() {
+            String name = super.getName();
+            return name == null ? "ComboBox.renderer" : name;  // NOI18N
+        }
+    } // end of PlatformsRenderer
 
 }

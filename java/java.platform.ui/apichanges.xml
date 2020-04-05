@@ -100,11 +100,8 @@ is the proper place.
                 <p>
                     The new API parts provide modules to initialize and display
                     a Java Platform selector combo box.<br/>
-                    The following class was added to serve as model for the Java
-                    platform combo box:
-                    <a href="@org-netbeans-modules-java-platform-ui@/org/netbeans/api/java/platform/PlatformComboBoxModel.html">PlatformComboBoxModel</a> and
                     <a href="@org-netbeans-modules-java-platform-ui@/org/netbeans/api/java/platform/PlatformsCustomizer.html">PlatformCustomizer</a> got two
-                    new static method to create Java platform combo boxes.
+                    new static methods to create Java platform combo boxes and supporting models for them.
                 </p>
             </description>
         </change>

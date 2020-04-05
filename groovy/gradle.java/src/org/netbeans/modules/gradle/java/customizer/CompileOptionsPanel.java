@@ -22,24 +22,11 @@ package org.netbeans.modules.gradle.java.customizer;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
-import javax.swing.AbstractListModel;
-import javax.swing.ComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
-import javax.swing.UIManager;
-import javax.swing.plaf.UIResource;
 import org.netbeans.api.java.platform.*;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.AuxiliaryProperties;
@@ -47,7 +34,6 @@ import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.WeakListeners;
 
 /**
  *
@@ -55,17 +41,10 @@ import org.openide.util.WeakListeners;
  */
 public class CompileOptionsPanel extends javax.swing.JPanel {
 
-    private static final Logger LOG = Logger.getLogger(CompileOptionsPanel.class.getName());
     public static final String HINT_JDK_PLATFORM = "netbeans.hint.jdkPlatform"; //NOI18N
     private static final String PROP_PLATFORM_ID = "platform.ant.name"; //NOI18N
 
     final Project project;
-    private final ActionListener storeListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            save();
-        }
-    };
 
     /**
      * Creates new form CompileOptionsPanel
@@ -119,11 +98,7 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
             }
 
             JavaPlatform sel = RunUtils.getActivePlatform(platformId).second();
-
-            PlatformsModel model = new PlatformsModel();
-            model.setSelectedItem(sel != null ? sel : platformId);
-            cbPlatform.setModel(model);
-            cbPlatform.setRenderer(new PlatformsRenderer());
+            cbPlatform.setSelectedItem(sel != null ? sel : platformId);
         } 
     }
     
@@ -171,7 +146,7 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
         lbCompileOnSave = new javax.swing.JLabel();
         cbAugmentedBuild = new javax.swing.JCheckBox();
         lbPlatform = new javax.swing.JLabel();
-        cbPlatform = new javax.swing.JComboBox<>();
+        cbPlatform = PlatformsCustomizer.createPlatformComboBox();
         btManagePlatforms = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         cbIncludeOpenProjects = new javax.swing.JCheckBox();
@@ -291,7 +266,7 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
             public JComponent createComponent(ProjectCustomizer.Category category, Lookup context) {
                 Project project = context.lookup(Project.class);
                 CompileOptionsPanel customizer = new CompileOptionsPanel(project);
-                category.setStoreListener(customizer.storeListener);
+                category.setStoreListener((ActionEvent evt) -> customizer.save());
                 return customizer;
             }
         };
@@ -309,107 +284,4 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lbPlatform;
     // End of variables declaration//GEN-END:variables
 
-    private static class PlatformsModel extends AbstractListModel<JavaPlatform> implements ComboBoxModel<JavaPlatform>, PropertyChangeListener {
-
-        private JavaPlatform[] data;
-        private Object sel;
-
-        @SuppressWarnings("LeakingThisInConstructor")
-        public PlatformsModel() {
-            JavaPlatformManager jpm = JavaPlatformManager.getDefault();
-            getPlatforms(jpm);
-            jpm.addPropertyChangeListener(WeakListeners.propertyChange(this, jpm));
-        }
-
-        @Override
-        public int getSize() {
-            return data.length;
-        }
-
-        @Override
-        public JavaPlatform getElementAt(int index) {
-            return data[index];
-        }
-
-        @Override
-        public void setSelectedItem(Object anItem) {
-            sel = anItem;
-            fireContentsChanged(this, 0, data.length);
-        }
-
-        @Override
-        public Object getSelectedItem() {
-            return sel;
-        }
-
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            String current = sel instanceof JavaPlatform ? ((JavaPlatform)sel).getProperties().get(PROP_PLATFORM_ID):sel.toString();
-            JavaPlatformManager jpm = JavaPlatformManager.getDefault();
-            getPlatforms(jpm);
-            JavaPlatform found = null;
-            for (int i = 0; i < data.length; i++) {
-                JavaPlatform pf = data[i];
-                if (current.equals(pf.getProperties().get(PROP_PLATFORM_ID))) {
-                    found = pf;
-                    break;
-                }
-            }
-            setSelectedItem(found != null ? found : current);
-        }
-
-        private void getPlatforms(JavaPlatformManager jpm) {
-            data = jpm.getPlatforms(null, new Specification ("j2se", null)); //NOI18N
-            if(LOG.isLoggable(Level.FINE)) {
-                for (JavaPlatform jp : data) {
-                    LOG.log(Level.FINE, "Adding JavaPlaform: {0}", jp.getDisplayName());
-                }
-            }
-        }
-
-    }
-
-    private class PlatformsRenderer extends JLabel implements ListCellRenderer, UIResource {
-
-        @SuppressWarnings("OverridableMethodCallInConstructor")
-        public PlatformsRenderer() {
-            setOpaque(true);
-        }
-
-        @Override
-        @NbBundle.Messages({"# {0} - platformId", "LBL_MissingPlatform=Missing platform: {0}"})
-        public Component getListCellRendererComponent(JList list, Object value,
-                int index, boolean isSelected,
-                boolean cellHasFocus) {
-            // #89393: GTK needs name to render cell renderer "natively"
-            setName("ComboBox.listRenderer"); // NOI18N
-            if (value instanceof JavaPlatform) {
-                JavaPlatform jp = (JavaPlatform)value;
-                setText(jp.getDisplayName());
-                if ( isSelected ) {
-                    setBackground(list.getSelectionBackground());
-                    setForeground(list.getSelectionForeground());
-                } else {
-                    setBackground(list.getBackground());
-                    setForeground(list.getForeground());
-                }
-            } else {
-                if (value == null) {
-                    setText("");
-                } else {
-                    setText(Bundle.LBL_MissingPlatform(value));
-                    setForeground(UIManager.getColor("nb.errorForeground")); //NOI18N
-                }
-            }
-            return this;
-        }
-
-        // #89393: GTK needs name to render cell renderer "natively"
-        @Override
-        public String getName() {
-            String name = super.getName();
-            return name == null ? "ComboBox.renderer" : name;  // NOI18N
-        }
-    } // end of PlatformsRenderer
-    
 }

@@ -144,6 +144,7 @@
     </Component>
     <Component class="javax.swing.JComboBox" name="cbPlatform">
       <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="PlatformsCustomizer.createPlatformComboBox()"/>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;JavaPlatform&gt;"/>
       </AuxValues>
     </Component>

@@ -120,7 +120,7 @@ public class LSPBindings {
                                                    if (p != null) {
                                                        LSPBindings b = project2MimeType2Server.getOrDefault(p, Collections.emptyMap()).remove(mimeType);
 
-                                                       if (b != null) {
+                                                       if (b != null && b.process != null) {
                                                            b.process.destroy();
                                                        }
                                                    }
@@ -131,6 +131,10 @@ public class LSPBindings {
                                                LanguageServerDescription desc = provider.startServer(Lookups.fixed(prj, mimeTypeInfo, restarter));
 
                                                if (desc != null) {
+                                                   LSPBindings b = LanguageServerProviderAccessor.getINSTANCE().getBindings(desc);
+                                                   if (b != null) {
+                                                       return b;
+                                                   }
                                                    try {
                                                        LanguageClientImpl lci = new LanguageClientImpl();
                                                        InputStream in = LanguageServerProviderAccessor.getINSTANCE().getInputStream(desc);
@@ -140,8 +144,9 @@ public class LSPBindings {
                                                        launcher.startListening();
                                                        LanguageServer server = launcher.getRemoteProxy();
                                                        InitializeResult result = initServer(p, server, prj.getProjectDirectory()); //XXX: what if a different root is expected????
-                                                       LSPBindings b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
+                                                       b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
                                                        lci.setBindings(b);
+                                                       LanguageServerProviderAccessor.getINSTANCE().setBindings(desc, b);
                                                        return b;
                                                    } catch (InterruptedException | ExecutionException ex) {
                                                        LOG.log(Level.WARNING, null, ex);

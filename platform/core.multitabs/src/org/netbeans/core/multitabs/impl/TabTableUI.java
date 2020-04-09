@@ -28,6 +28,7 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.event.MouseInputListener;
+import javax.swing.plaf.TableUI;
 import javax.swing.plaf.basic.BasicTableUI;
 
 /**
@@ -37,7 +38,11 @@ import javax.swing.plaf.basic.BasicTableUI;
 final class TabTableUI extends BasicTableUI {
 
     static final boolean IS_AQUA = "Aqua".equals( UIManager.getLookAndFeel().getID() );
-    
+
+    private boolean hoverSupport;
+    private int hoverRow = -1;
+    private int hoverColumn = -1;
+
     static Border createTabBorder( JTable table, int tabsLocation ) {
         if( IS_AQUA ) {
             return BorderFactory.createMatteBorder( 1, 0, 0, 0, table.getGridColor());
@@ -46,6 +51,15 @@ final class TabTableUI extends BasicTableUI {
                 return BorderFactory.createMatteBorder( 1, 0, 0, 0, table.getGridColor());
         }
         return BorderFactory.createEmptyBorder();
+    }
+
+    static boolean isHover( JTable table, int row, int column ) {
+        TableUI ui = table.getUI();
+        if( !(ui instanceof TabTableUI) )
+            return false;
+
+        TabTableUI tabUI = (TabTableUI) ui;
+        return tabUI.hoverRow == row && tabUI.hoverColumn == column;
     }
 
     @Override
@@ -118,6 +132,8 @@ final class TabTableUI extends BasicTableUI {
                 table.setSelectionForeground(selectedForeground);
             if (gridColor != null)
                 table.setGridColor(gridColor);
+
+            hoverSupport = UIManager.getColor("nb.multitabs.hoverBackground") != null; //NOI18N
         }
     }
 
@@ -163,6 +179,10 @@ final class TabTableUI extends BasicTableUI {
             @Override
             public void mouseExited( MouseEvent e ) {
                 orig.mouseExited( e );
+
+                if (hoverSupport) {
+                    setHover( -1, -1 );
+                }
             }
 
             @Override
@@ -173,6 +193,31 @@ final class TabTableUI extends BasicTableUI {
             @Override
             public void mouseMoved( MouseEvent e ) {
                 orig.mouseMoved( e );
+
+                if (hoverSupport) {
+                    Point p = e.getPoint();
+                    int row = table.rowAtPoint( p );
+                    int column = table.columnAtPoint( p );
+                    setHover(row, column);
+                }
+            }
+
+            private void setHover( int row, int column ) {
+                if (row == hoverRow && column == hoverColumn) {
+                    return;
+                }
+
+                int oldRow = hoverRow;
+                int oldColumn = hoverColumn;
+                hoverRow = row;
+                hoverColumn = column;
+
+                if (oldRow != -1 && oldColumn != -1) {
+                    table.repaint(table.getCellRect(oldRow, oldColumn, true));
+                }
+                if (row != -1 && column != -1) {
+                    table.repaint(table.getCellRect(row, column, true));
+                }
             }
         };
     }

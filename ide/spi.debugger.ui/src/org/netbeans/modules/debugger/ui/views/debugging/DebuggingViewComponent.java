@@ -873,7 +873,7 @@ public class DebuggingViewComponent extends TopComponent implements org.openide.
     public void mouseWheelMoved(MouseWheelEvent e) {
         JScrollBar scrollBar = mainScrollPane.getVerticalScrollBar();
         if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
-            int totalScrollAmount = e.getUnitsToScroll() * scrollBar.getUnitIncrement();
+            int totalScrollAmount = (int) (e.getPreciseWheelRotation() * e.getScrollAmount() * scrollBar.getUnitIncrement());
             scrollBar.setValue(scrollBar.getValue() + totalScrollAmount);
         }
     }

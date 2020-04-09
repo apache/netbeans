@@ -201,12 +201,18 @@ public class MoveMembersRefactoringPlugin extends JavaRefactoringPlugin {
             }
         }
 
-        TreePath targetPath = target.resolve(javac);
-        if(targetPath == null) {
+        Element targetElement = target.resolveElement(javac);
+        Element targetClass = targetElement;
+        if(targetClass == null) {
             return new Problem(true, NbBundle.getMessage(MoveMembersRefactoringPlugin.class, "ERR_TargetNotResolved"));
         }
-        TreePath targetClass = JavaRefactoringUtils.findEnclosingClass(javac, targetPath, true, true, true, true, true);
-        TypeMirror targetType = javac.getTrees().getTypeMirror(targetClass);
+        while (targetClass != null && !targetClass.getKind().isClass() && !targetClass.getKind().isInterface()) {
+            targetClass = targetClass.getEnclosingElement();
+        }
+        if(targetClass == null) {
+            return new Problem(true, NbBundle.getMessage(MoveMembersRefactoringPlugin.class, "ERR_TargetNotResolved"));
+        }
+        TypeMirror targetType = targetClass.asType();
         if(targetType == null) {
             return new Problem(true, NbBundle.getMessage(MoveMembersRefactoringPlugin.class, "ERR_TargetNotResolved"));
         }
@@ -227,7 +233,6 @@ public class MoveMembersRefactoringPlugin extends JavaRefactoringPlugin {
             return new Problem(true, NbBundle.getMessage(MoveMembersRefactoringPlugin.class, "ERR_MoveToSubClass")); //NOI18N
         }
         
-        Element targetElement = target.resolveElement(javac);
         PackageElement targetPackage = (PackageElement) javac.getElementUtilities().outermostTypeElement(targetElement).getEnclosingElement();
         Element sourceElement = sourceTph.resolveElement(javac);
         PackageElement sourcePackage = (PackageElement) javac.getElementUtilities().outermostTypeElement(sourceElement).getEnclosingElement();

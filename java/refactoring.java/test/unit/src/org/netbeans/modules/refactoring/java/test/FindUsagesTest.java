@@ -34,6 +34,7 @@ import org.netbeans.api.fileinfo.NonRecursiveFolder;
 import org.netbeans.api.java.source.*;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.refactoring.api.RefactoringElement;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
 import org.netbeans.modules.refactoring.api.Scope;
@@ -384,8 +385,9 @@ public class FindUsagesTest extends NbTestCase {
     }
     
     public static Test suite() throws InterruptedException {
-        return NbModuleSuite.createConfiguration(FindUsagesTest.class)
-                .clusters(".*").enableModules(".*")
-                .gui(false).suite();
+//        return NbModuleSuite.createConfiguration(FindUsagesTest.class)
+//                .clusters(".*").enableModules(".*")
+//                .gui(false).suite();
+        return NbTestSuite.createTest(Noop.class, "noop");
     }
 }

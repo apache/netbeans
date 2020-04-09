@@ -25,6 +25,18 @@
     <apidef name="javasource_base">Java Source API</apidef>
 </apidefs>
 <changes>
+    <change id="SourceUtils.forceSource">
+        <api name="javasource_base" />
+        <summary>Adding SourceUtils.forceSource(CompilationController, FileObject)</summary>
+        <version major="1" minor="2.46"/>
+        <date day="9" month="3" year="2020"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+                Adding SourceUtils.forceSource(CompilationController, FileObject).
+        </description>
+        <class name="SourceUtils" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="CodeStyle.parensAroundSingularLambdaParam">
         <api name="javasource_base" />
         <summary>CodeStyle.parensAroundSingularLambdaParam() added</summary>

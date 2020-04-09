@@ -520,7 +520,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.extdoc test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.extjs test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.jade test
-            - hide-logs.sh ant $OPTS -f webcommon/javascript2.jquery test
+            - travis_retry hide-logs.sh ant $OPTS -f webcommon/javascript2.jquery test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.jsdoc test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.json test
             - hide-logs.sh ant $OPTS -f webcommon/javascript2.knockout test

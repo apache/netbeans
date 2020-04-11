@@ -98,23 +98,15 @@ public class AbstractGitTestCase extends NbTestCase {
     }
 
     protected void write(File file, String str) throws IOException {
-        FileWriter w = null;
-        try {
-            w = new FileWriter(file);
+        try (FileWriter w = new FileWriter(file)) {
             w.write(str);
             w.flush();
-        } finally {
-            if (w != null) {
-                w.close();
-            }
         }
     }
 
     protected String read(File file) throws IOException {
         StringBuilder sb = new StringBuilder();
-        BufferedReader r = null;
-        try {
-            r = new BufferedReader(new FileReader(file));
+        try (BufferedReader r = new BufferedReader(new FileReader(file))) {
             String s = r.readLine();
             if (s != null) {
                 while( true ) {
@@ -124,27 +116,17 @@ public class AbstractGitTestCase extends NbTestCase {
                     sb.append('\n');
                 }
             }
-        } finally {
-            if (r != null) {
-                r.close();
-            }
         }
         return sb.toString();
     }
 
     protected boolean containsCRorLF(File file) throws IOException {
-        BufferedReader r = null;
-        try {
-            r = new BufferedReader(new FileReader(file));
+        try (BufferedReader r = new BufferedReader(new FileReader(file))) {
             int i;
-            while((i = r.read()) >-1)
-            {
-                if( i=='\n' || i=='\r')
+            while ((i = r.read()) > -1) {
+                if (i == '\n' || i == '\r') {
                     return true;
-            }
-        } finally {
-            if (r != null) {
-                r.close();
+                }
             }
         }
         return false;

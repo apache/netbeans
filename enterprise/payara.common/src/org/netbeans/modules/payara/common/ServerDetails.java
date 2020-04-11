@@ -264,7 +264,17 @@ public enum ServerDetails {
     PAYARA_SERVER_5_201(NbBundle.getMessage(ServerDetails.class, "STR_5201_SERVER_NAME", new Object[]{}), // NOI18N
             "deployer:pfv5ee8", // NOI18N
             5201,
-            "", // NOI18N
+            "https://oss.sonatype.org/service/local/repositories/releases/content/fish/payara/distributions/payara/5.201/payara-5.201.zip", // NOI18N
+            null,
+            "https://raw.githubusercontent.com/payara/Payara/master/LICENSE.txt"
+    ),
+    /**
+     * details for an instance of Payara Server 5.202
+     */
+    PAYARA_SERVER_5_202(NbBundle.getMessage(ServerDetails.class, "STR_5202_SERVER_NAME", new Object[]{}), // NOI18N
+            "deployer:pfv5ee8", // NOI18N
+            5202,
+            "https://oss.sonatype.org/service/local/repositories/releases/content/fish/payara/distributions/payara/5.202/payara-5.202.zip", // NOI18N
             null,
             "https://raw.githubusercontent.com/payara/Payara/master/LICENSE.txt"
     );
@@ -280,6 +290,7 @@ public enum ServerDetails {
         return new ServerWizardIterator(
                 //add new version
                 new ServerDetails[]{
+                    PAYARA_SERVER_5_202,
                     PAYARA_SERVER_5_201,
                     PAYARA_SERVER_5_194,
                     PAYARA_SERVER_5_193,
@@ -305,6 +316,7 @@ public enum ServerDetails {
                     PAYARA_SERVER_4_1_144
                 },
                 new ServerDetails[]{
+                    PAYARA_SERVER_5_201,
                     PAYARA_SERVER_5_194,
                     PAYARA_SERVER_5_193,
                     PAYARA_SERVER_5_192,
@@ -385,6 +397,8 @@ public enum ServerDetails {
                     return PAYARA_SERVER_5_194.getVersion();
                 case PF_5_201:
                     return PAYARA_SERVER_5_201.getVersion();
+                case PF_5_202:
+                    return PAYARA_SERVER_5_202.getVersion();
                 default:
                     return -1;
             }

@@ -14,32 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-# platform cluster first
-platform
-# application cluster second
-nb
-# ergonomics cluster if present
-ergonomics
-# and now the rest
-ide
-extide
-java
-apisupport
-webcommon
-websvccommon
-enterprise
-mobility
-profiler
-python
-php
-identity
-harness
-cnd
-cndext
-cpplite
-dlight
-groovy
-extra
-javacard
-javafx
+7E2B3E2AB5EBCABF3971F118A4D288A7E5DAC1DF cpplite-mi-1.0-SNAPSHOT.jar

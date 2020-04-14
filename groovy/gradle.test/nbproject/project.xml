@@ -26,12 +26,20 @@
             <code-name-base>org.netbeans.modules.gradle.test</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.libs.gradle</code-name-base>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>6</release-version>
+                        <specification-version>6.3</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.gradle</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.4</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>2.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

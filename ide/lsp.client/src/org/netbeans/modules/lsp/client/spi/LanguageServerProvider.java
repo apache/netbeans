@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.LanguageServerProviderAccessor;
 import org.openide.util.Lookup;
 
@@ -62,6 +63,7 @@ public interface LanguageServerProvider {
         private final InputStream in;
         private final OutputStream out;
         private final Process process;
+        private LSPBindings bindings;
 
         private LanguageServerDescription(InputStream in, OutputStream out, Process process) {
             this.in = in;
@@ -84,6 +86,16 @@ public interface LanguageServerProvider {
                 @Override
                 public Process getProcess(LanguageServerDescription desc) {
                     return desc.process;
+                }
+
+                @Override
+                public LSPBindings getBindings(LanguageServerDescription desc) {
+                    return desc.bindings;
+                }
+
+                @Override
+                public void setBindings(LanguageServerDescription desc, LSPBindings bindings) {
+                    desc.bindings = bindings;
                 }
             });
         }

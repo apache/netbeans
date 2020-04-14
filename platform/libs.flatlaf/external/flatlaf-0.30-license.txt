@@ -1,10 +1,10 @@
-Name: Gradle Wrapper
-Description: Gradle Tooling API
-Version: 6.0
-Files: gradle-tooling-api-6.0.jar
+Name: FlatLaf Look and Feel
+Description: FlatLaf Look and Feel
+Version: 0.30
+Files: flatlaf-0.30.jar
 License: Apache-2.0
-Origin: Gradle Inc.
-URL: https://gradle.org/
+Origin: FormDev Software GmbH.
+URL: https://www.formdev.com/flatlaf/
 
                                  Apache License
                            Version 2.0, January 2004

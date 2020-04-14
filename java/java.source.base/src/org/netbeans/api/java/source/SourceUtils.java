@@ -1366,4 +1366,21 @@ public class SourceUtils {
     public static Object getDiagnosticParam(Diagnostic<?> d, int index) {
         return Hacks.getDiagnosticParam(d, index);
     }
+
+    /**
+     * Ensure that the given file is parsed from source, in the context of the
+     * provided parser instance.
+     *
+     * Please note this only has an effect before invoking {@link CompilationController#toPhase(org.netbeans.api.java.source.JavaSource.Phase) }.
+     *
+     * @param cc the parser instance that should be augmented
+     * @param file the input source file
+     * @since 2.46
+     */
+    public static void forceSource(CompilationController cc, FileObject file) {
+        if (cc.getPhase() != Phase.MODIFIED) {
+            throw new IllegalStateException("Must invoke before running toPhase!");
+        }
+        cc.addForceSource(file);
+    }
 }

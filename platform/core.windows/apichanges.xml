@@ -84,6 +84,26 @@ is the proper place.
 
   <changes>
 
+    <change id="preferred-color-profile-spi" >
+        <api name="winsys"/>
+        <summary>Add SPI support for preferred color profile change.</summary>
+        <version major="2" minor="91"/>
+        <date day="18" month="3" year="2020"/>
+        <author login="lkishalmi"/>
+        <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+        <description>
+            A new interface <code>PreferredColorProfileSupport</code> has been
+            added in order to let other modules reflect on preferred color profile
+            change when the user requests for that during Look and Feel change.
+            Look and Feels can register a color profile name as <code>String</code>
+            named <code>nb.preferred.color.profile</code> in their UIDefaults.
+            Changing the Look and Feel would offer the user to change the color
+            profile of additional components (most likely the Editor), if it's
+            current profile does not match the one preferred by the
+            selected Look and Feel.
+        </description>
+        <issue number="NETBEANS-4039"/>
+    </change>
     <change id="sort-editor-tabs" >
         <api name="winsys"/>
         <summary>Add preference for sorting editor tabs</summary>

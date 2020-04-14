@@ -71,9 +71,11 @@ import org.openide.filesystems.FileUtil;
 import org.openide.text.CloneableEditorSupport;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
+import org.netbeans.core.windows.options.spi.PreferredColorProfileSupport;
 
-
-public final class ColorModel {
+@ServiceProvider(service = PreferredColorProfileSupport.class)
+public final class ColorModel implements PreferredColorProfileSupport {
 
     private static final Logger LOG = Logger.getLogger(ColorModel.class.getName());
     
@@ -93,6 +95,12 @@ public final class ColorModel {
     public boolean isCustomProfile (String profile) {
         if (!getProfiles ().contains (profile)) return true;
         return EditorSettings.getDefault().isCustomFontColorProfile (profile);
+    }
+    
+    @Override
+    public String getCurrentProfileName () {
+        String name = getCurrentProfile();
+        return isCustomProfile(name) ? null : name;
     }
     
     public void setCurrentProfile (String profile) {
@@ -289,6 +297,13 @@ public final class ColorModel {
     public Component getSyntaxColoringPreviewComponent(String language) {
         String mimeType = getMimeType(language);
         return new Preview("test" + hashCode(), mimeType); //NOI18N
+    }
+
+    @Override
+    public void setPreferredProfile(String profileName) {
+        setCurrentProfile(profileName);
+        Collection<AttributeSet> annotations = getAnnotations(profileName);
+        setAnnotations(profileName, annotations);
     }
 
     final class Preview extends JPanel {

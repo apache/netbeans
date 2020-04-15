@@ -182,7 +182,7 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
 
         setSelected(selected);
 
-        if (selected) {
+        if (selected && leadSelection) {
             setParentFocused(checkFocused(target));
         } else {
             setParentFocused(false);

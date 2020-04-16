@@ -27,7 +27,6 @@ import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -35,6 +34,8 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -46,8 +47,6 @@ import java.beans.PropertyChangeSupport;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -57,8 +56,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.Preferences;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -111,23 +108,22 @@ import org.netbeans.modules.terminal.nb.actions.ActionFactory;
 import org.netbeans.modules.terminal.nb.actions.PinTabAction;
 import org.netbeans.modules.terminal.api.IOResizable;
 import org.netbeans.modules.terminal.api.ui.TerminalContainer;
+import org.netbeans.modules.terminal.nb.AdditionalTerminalOptions;
 import org.netbeans.modules.terminal.spi.ui.ExternalCommandActionProvider;
 import org.netbeans.modules.terminal.support.TerminalPinSupport;
 import org.netbeans.modules.terminal.support.TerminalPinSupport.DetailsStateListener;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
+import org.openide.LifecycleManager;
 import org.openide.cookies.*;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
-import org.openide.text.Line;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.datatransfer.MultiTransferObject;
@@ -443,6 +439,15 @@ public final class Terminal extends JComponent {
 
 
 	};
+        term.getScreen().addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (AdditionalTerminalOptions.getDefault().getSaveAllOnFocus()) {
+                    LifecycleManager.getDefault().saveAll();
+                }
+            }
+
+        });
         term.getScreen().addMouseListener(mouseAdapter);
 
         term.getScreen().getActionMap().put("org.openide.actions.PopupAction", new AbstractAction() { //NOI18N

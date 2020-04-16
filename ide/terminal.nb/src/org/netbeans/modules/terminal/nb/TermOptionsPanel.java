@@ -48,6 +48,8 @@ public final class TermOptionsPanel extends JPanel {
     private final PropertyChangeListener propertyListener;
     private boolean inApplyingModel;
     private TermOptions termOptions;
+    private final AdditionalTerminalOptions additionalOptions = AdditionalTerminalOptions.getDefault();
+    private boolean saveAllOption;
     
     /**
      * Creates new form TermOptionPanel
@@ -146,6 +148,7 @@ public final class TermOptionsPanel extends JPanel {
         previewLabel = new javax.swing.JLabel();
         previewPanel = new javax.swing.JPanel();
         altSendsEscapeCheckBox = new javax.swing.JCheckBox();
+        cbSaveAll = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(descriptionLabel, org.openide.util.NbBundle.getMessage(TermOptionsPanel.class, "TermOptionsPanel.descriptionLabel.text")); // NOI18N
 
@@ -170,7 +173,7 @@ public final class TermOptionsPanel extends JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(fontSizeLabel, org.openide.util.NbBundle.getMessage(TermOptionsPanel.class, "TermOptionsPanel.fontSizeLabel.text")); // NOI18N
 
-        fontSizeSpinner.setModel(new SpinnerNumberModel(12, TermOptions.MIN_FONT_SIZE, TermOptions.MAX_FONT_SIZE, 1));
+        fontSizeSpinner.setModel(new SpinnerNumberModel(12, termOptions.MIN_FONT_SIZE, termOptions.MAX_FONT_SIZE, 1));
         fontSizeSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 fontSizeSpinnerStateChanged(evt);
@@ -274,6 +277,14 @@ public final class TermOptionsPanel extends JPanel {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(cbSaveAll, org.openide.util.NbBundle.getMessage(TermOptionsPanel.class, "TermOptionsPanel.cbSaveAll.text")); // NOI18N
+        cbSaveAll.setToolTipText(org.openide.util.NbBundle.getMessage(TermOptionsPanel.class, "TermOptionsPanel.cbSaveAll.toolTipText")); // NOI18N
+        cbSaveAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbSaveAllActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -323,6 +334,10 @@ public final class TermOptionsPanel extends JPanel {
                         .addGap(31, 31, 31)
                         .addComponent(lineWrapCheckBox)))
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cbSaveAll)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -378,8 +393,9 @@ public final class TermOptionsPanel extends JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(previewLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbSaveAll))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -514,10 +530,18 @@ public final class TermOptionsPanel extends JPanel {
 	termOptions.setAltSendsEscape(altSendsEscapeCheckBox.isSelected());
     }//GEN-LAST:event_altSendsEscapeCheckBoxActionPerformed
 
+    private void cbSaveAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbSaveAllActionPerformed
+        if (inApplyingModel) {
+            return;
+        }
+        saveAllOption = cbSaveAll.isSelected();
+    }//GEN-LAST:event_cbSaveAllActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox altSendsEscapeCheckBox;
     private org.openide.awt.ColorComboBox backgroundComboBox;
     private javax.swing.JLabel backgroundLabel;
+    private javax.swing.JCheckBox cbSaveAll;
     private javax.swing.JCheckBox clickToTypeCheckBox;
     private javax.swing.JLabel descriptionLabel;
     private javax.swing.JButton fontButton;
@@ -587,7 +611,10 @@ public final class TermOptionsPanel extends JPanel {
 	    lineWrapCheckBox.setSelected(termOptions.getLineWrap());
 	    ignoreKeymapCheckBox.setSelected(termOptions.getIgnoreKeymap());
 	    altSendsEscapeCheckBox.setSelected(termOptions.getAltSendsEscape());
-	} finally {
+
+            saveAllOption = additionalOptions.getSaveAllOnFocus();
+            cbSaveAll.setSelected(saveAllOption);
+        } finally {
 	    inApplyingModel = false;
 	}
     }
@@ -653,5 +680,9 @@ public final class TermOptionsPanel extends JPanel {
 	this.validate();
 
 	this.invalidate();
+    }
+
+    boolean getSaveAllOption() {
+        return saveAllOption;
     }
 }

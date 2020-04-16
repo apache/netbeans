@@ -94,20 +94,23 @@ public final class TermAdvancedOption extends OptionsPanelController {
 	// assign will fire a property change
 	termOptions.assign(clonedTermOptions);
 	termOptions.storeTo(prefs);
+        AdditionalTerminalOptions.getDefault().setSaveAllOnFocus(panel.getSaveAllOption());
     }
 
     // implement OptionsPanelController
     @Override
     public boolean isChanged() {
+        AdditionalTerminalOptions opts = AdditionalTerminalOptions.getDefault();
+        boolean ret = panel.getSaveAllOption() != opts.getSaveAllOnFocus();
 	if (termOptions == null) {
 	    // update wasn't called => no changes
-	    return false;
+	    return ret;
 	}
 
 	if (clonedTermOptions == null) {
-	    return false;
+	    return ret;
 	} else {
-	    return clonedTermOptions.isDirty();
+	    return clonedTermOptions.isDirty() || ret;
 	}
     }
 

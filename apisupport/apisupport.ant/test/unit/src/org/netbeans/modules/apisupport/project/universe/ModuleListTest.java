@@ -61,6 +61,7 @@ public class ModuleListTest extends TestBase {
     
     private File suite1, suite2, standaloneSuite3;
     
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         suite1 = resolveEEPFile("suite1");
@@ -307,7 +308,7 @@ public class ModuleListTest extends TestBase {
         assertEquals("right codeNameBase", "org.netbeans.examples.modules.action", e.getCodeNameBase());
         e = ml.getEntry("org.netbeans.modules.classfile");
         assertNotNull("can find nb.org sources too (classfile module must be built)", e);
-        assertEquals("correct nb.org source location", file("classfile"), e.getSourceLocation());
+        assertEquals("correct nb.org source location", file("java/classfile"), e.getSourceLocation());
         assertNotNull("localized name", e.getLocalizedName());
         assertNotNull("display category", e.getCategory());
         assertNotNull("short description", e.getShortDescription());
@@ -345,7 +346,7 @@ public class ModuleListTest extends TestBase {
         assertEquals("number of public packages for " + e, new Integer(1), new Integer(e.getPublicPackages().length));
         e = ml.getEntry("org.netbeans.libs.xerces");
         assertNotNull("can find nb.org binary module too", e);
-        assertEquals("have sources for that", file("libs.xerces"), e.getSourceLocation());
+        assertEquals("have sources for that", file("ide/libs.xerces"), e.getSourceLocation());
         assertEquals("and correct JAR location", file("nbbuild/netbeans/" + TestBase.CLUSTER_IDE + "/modules/org-netbeans-libs-xerces.jar"), e.getJarLocation());
         assertEquals("and correct CP exts (using Class-Path only)",
             ":" + file("nbbuild/netbeans/" + TestBase.CLUSTER_IDE + "/modules/ext/xerces-2.8.0.jar"),
@@ -375,8 +376,8 @@ public class ModuleListTest extends TestBase {
     }
     
     public void testFindNetBeansOrg() throws Exception {
-        assertEquals(nbRootFile(), ModuleList.findNetBeansOrg(file("xml.tax")));
-        assertEquals(null, ModuleList.findNetBeansOrg(file("xml.tax/lib")));
+        assertEquals(nbRootFile(), ModuleList.findNetBeansOrg(file("ide/xml.tax")));
+        assertEquals(nbRootFile(), ModuleList.findNetBeansOrg(file("ide/xml.tax/lib")));
         assertEquals(null, ModuleList.findNetBeansOrg(File.listRoots()[0]));
     }
     

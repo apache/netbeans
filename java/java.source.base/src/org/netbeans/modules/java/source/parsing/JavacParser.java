@@ -184,6 +184,8 @@ public class JavacParser extends Parser {
     private ClasspathInfo cpInfo;
     //all the files for which parser was created for
     private final Collection<Snapshot> snapshots;
+    //size of all the files to check the memory leack
+    private long snapshotSize;
     //Incremental parsing support
     private final boolean supportsReparse;
     //Incremental parsing support
@@ -216,6 +218,10 @@ public class JavacParser extends Parser {
         this.snapshots = snapshots;
         final boolean singleJavaFile = this.snapshots.size() == 1 && MIME_TYPE.equals(snapshots.iterator().next().getSource().getMimeType());
         this.supportsReparse = singleJavaFile && !DISABLE_PARTIAL_REPARSE;
+        this.snapshotSize=0;
+        for (Snapshot snapshot : snapshots) {
+            this.snapshotSize+=snapshot.getSource().getFileObject().getSize();
+        }
         JavaFileFilterImplementation filter = null;
         if (singleJavaFile) {
             final Source source = snapshots.iterator().next().getSource();
@@ -419,7 +425,7 @@ public class JavacParser extends Parser {
                     init (snapshot, task, false);
                     DiagnosticListener<JavaFileObject> diagnosticListener;
                     JavacTaskImpl javacTask;
-                    if (sequentialParsing == null && ciImpl == null) {
+                    if (sequentialParsing == null && ciImpl == null && this.snapshotSize <= (5<<20)) {
                         List<JavaFileObject> jfos = new ArrayList<>();
                         for (Snapshot s : snapshots) {
                             jfos.add(FileObjects.sourceFileObject(s.getSource().getFileObject(), root, JavaFileFilterQuery.getFilter(s.getSource().getFileObject()), s.getText()));
@@ -427,7 +433,7 @@ public class JavacParser extends Parser {
                         diagnosticListener = new CompilationInfoImpl.DiagnosticListenerImpl(this.root, jfos.get(0), this.cpInfo);
                         javacTask = JavacParser.createJavacTask(this.file, jfos, this.root, this.cpInfo,
                                 this, diagnosticListener, false);
-                    } else if (ciImpl != null) {
+                    } else if (ciImpl != null &&  this.snapshotSize <= (5<<20)) {
                         diagnosticListener = ciImpl.getDiagnosticListener();
                         javacTask = ciImpl.getJavacTask();
                         oldParsedTrees=ciImpl.getParsedTrees();

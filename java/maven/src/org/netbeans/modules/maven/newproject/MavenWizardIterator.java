@@ -22,7 +22,9 @@ package org.netbeans.modules.maven.newproject;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,6 +35,7 @@ import org.netbeans.api.validation.adapters.WizardDescriptorAdapter;
 import org.netbeans.modules.maven.api.archetype.Archetype;
 import org.netbeans.modules.maven.api.archetype.ArchetypeWizards;
 import static org.netbeans.modules.maven.newproject.Bundle.*;
+import org.netbeans.modules.maven.options.MavenSettings;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.validation.api.ui.ValidationGroup;
 import org.openide.WizardDescriptor;
@@ -57,14 +60,16 @@ public class MavenWizardIterator implements WizardDescriptor.BackgroundInstantia
     private final Archetype archetype;
     private final AtomicBoolean hasNextCalled = new AtomicBoolean(); //#216236
     private final String titlename;
+    private final Map<String, String> defaultProps;
 
     public MavenWizardIterator() {
-        this(null, null);
+        this(null, null, null);
     }
     
-    public MavenWizardIterator(Archetype archetype, String titleName) {
+    public MavenWizardIterator(Archetype archetype, String titleName, Map<String,String> defaultProps) {
         this.archetype = archetype;
         this.titlename = titleName;
+        this.defaultProps = defaultProps;
     }
 
 //    @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position=100, displayName="#LBL_Maven_Quickstart_Archetype", iconBase="org/netbeans/modules/maven/resources/jaricon.png", description="quickstart.html")
@@ -88,14 +93,24 @@ public class MavenWizardIterator implements WizardDescriptor.BackgroundInstantia
     @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position = 925, displayName = "#LBL_Maven_FXML_Archetype", iconBase = "org/netbeans/modules/maven/resources/jaricon.png", description = "javafx.html")
     @Messages("LBL_Maven_FXML_Archetype=FXML JavaFX Maven Archetype (Gluon)")
     public static WizardDescriptor.InstantiatingIterator<?> openJFXFML() {
-       return ArchetypeWizards.definedArchetype("com.raelity.jfx", "javafx-archetype-fxml-netbeans", "0.0.1", null, LBL_Maven_FXML_Archetype());
+       return definedFXArchetype("com.raelity.jfx", "javafx-archetype-fxml-netbeans", "0.0.3", LBL_Maven_FXML_Archetype());
     }
 
     @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position = 926, displayName = "#LBL_Maven_Simple_Archetype", iconBase = "org/netbeans/modules/maven/resources/jaricon.png", description = "javafx.html")
     @Messages("LBL_Maven_Simple_Archetype=Simple JavaFX Maven Archetype (Gluon)")
     public static WizardDescriptor.InstantiatingIterator<?> openJFXSimple() {
-       return ArchetypeWizards.definedArchetype("com.raelity.jfx", "javafx-archetype-simple-netbeans", "0.0.1", null, LBL_Maven_Simple_Archetype());
+       return definedFXArchetype("com.raelity.jfx", "javafx-archetype-simple-netbeans", "0.0.3", LBL_Maven_Simple_Archetype());
     }
+
+    private static WizardDescriptor.InstantiatingIterator<?> definedFXArchetype(String g, String a, String v, String name) {
+        Map<String,String> props = new HashMap<>();
+        if (System.getProperty("java.version").startsWith("1.8")) {
+            props.put("javafx-version", "1.8");
+        }
+        props.put("add-debug-configuration", "Y");
+        return ArchetypeWizards.definedArchetype(g, a, v, null, name, props);
+    }
+
 //    @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position=980, displayName="#LBL_Maven_POM_Archetype", iconBase="org/netbeans/modules/maven/resources/Maven2Icon.gif", description="pom-root.html")
 //    @Messages("LBL_Maven_POM_Archetype=POM Project")
 //    public static WizardDescriptor.InstantiatingIterator<?> pomRoot() {
@@ -120,7 +135,7 @@ public class MavenWizardIterator implements WizardDescriptor.BackgroundInstantia
             panels.add(new ChooseWizardPanel());
             steps.add(LBL_CreateProjectStep());
         }
-        panels.add(new BasicWizardPanel(vg, null, true, true)); //only download archetype (for additional props) when unknown archetype is used.
+        panels.add(new BasicWizardPanel(vg, null, true, true, defaultProps)); //only download archetype (for additional props) when unknown archetype is used.
         steps.add(LBL_CreateProjectStep2());
         for (int i = 0; i < panels.size(); i++) {
             JComponent c = (JComponent) panels.get(i).getComponent();

@@ -586,7 +586,7 @@ public class InnerToOuterTransformer extends RefactoringVisitor {
             for (Tree member:newInnerClass.getMembers()) {
                 if (member.getKind() == Tree.Kind.METHOD) {
                     MethodTree m = (MethodTree) member;
-                    if (m.getReturnType()==null) {
+                    if (m.getName().contentEquals("<init>") || m.getReturnType() == null) {
                         VariableTree parameter = make.Variable(make.Modifiers(EnumSet.of(Modifier.FINAL)), refactoring.getReferenceName(), make.Type(outerType), null);
                         MethodTree newConstructor = hasVarArgs(m) ?
                             make.insertMethodParameter(m, m.getParameters().size() - 1, parameter) : 

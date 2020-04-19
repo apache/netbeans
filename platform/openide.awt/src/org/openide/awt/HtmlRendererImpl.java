@@ -21,6 +21,9 @@ package org.openide.awt;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 
 import java.beans.PropertyChangeListener;
 import java.beans.VetoableChangeListener;
@@ -60,7 +63,7 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
     //For experimentation - holding the graphics object may be the source of some
     //strange painting problems on Apple
     private static boolean noCacheGraphics = Boolean.getBoolean("nb.renderer.nocache"); //NOI18N
-    private static Reference<Graphics2D> scratchGraphics = null;
+    private ScratchGraphics cachedScratchGraphics = null;
     private boolean centered = false;
     private boolean parentFocused = false;
     private Boolean html = null;
@@ -593,28 +596,60 @@ class HtmlRendererImpl extends JLabel implements HtmlRenderer.Renderer {
         return result;
     }
 
+    private static final class ScratchGraphics {
+        private final GraphicsConfiguration configuration;
+        private Reference<Graphics2D> graphics = new SoftReference<>(null);
+
+        public ScratchGraphics(GraphicsConfiguration configuration) {
+            if (configuration == null) {
+                throw new NullPointerException();
+            }
+            this.configuration = configuration;
+        }
+
+        public boolean isConfigurationCompatible(GraphicsConfiguration other) {
+          return configuration.getColorModel().equals(other.getColorModel())
+              && configuration.getDefaultTransform().equals(other.getDefaultTransform());
+        }
+
+        public Graphics2D getGraphics() {
+          Graphics2D result = graphics.get();
+          if (result == null) {
+              /* Equivalent to configuration.createCompatibleImage(int, int), just to show that only the
+              ColorModel field of the GraphicsConfiguration is really relevant here. */
+              ColorModel model = configuration.getColorModel();
+              WritableRaster raster = model.createCompatibleWritableRaster(1, 1);
+              BufferedImage img = new BufferedImage(model, raster, model.isAlphaPremultiplied(), null);
+              result = img.createGraphics();
+              this.graphics = new SoftReference<>(result);
+          }
+          // Restore state on every call, just in case a client modified it for some reason.
+          result.setClip(null);
+          /* NETBEANS-2543: Apply the scaling HiDPI transform. This affects font measurements, via
+                            FontRenderContext.getTransform(). */
+          result.setTransform(configuration.getDefaultTransform());
+          return result;
+        }
+    }
+
     /** Fetch a scratch graphics object for calculating preferred sizes while
      * offscreen */
-    private static final Graphics2D scratchGraphics() {
-        Graphics2D result = null;
-
-        if (scratchGraphics != null) {
-            result = scratchGraphics.get();
-
-            if (result != null) {
-                result.setClip(null); //just in case somebody did something nasty
-            }
+    private final Graphics2D scratchGraphics() {
+        GraphicsConfiguration gc = getGraphicsConfiguration();
+        if (gc == null) {
+            gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
         }
 
-        if (result == null) {
-            result = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration()
-                                        .createCompatibleImage(1, 1).createGraphics();
-            if (!noCacheGraphics) {
-                scratchGraphics = new SoftReference<>(result);
-            }
+        ScratchGraphics scratchGraphics = cachedScratchGraphics;
+        if (scratchGraphics != null && scratchGraphics.isConfigurationCompatible(gc)) {
+            return scratchGraphics.getGraphics();
         }
 
-        return result;
+        scratchGraphics = new ScratchGraphics(gc);
+        if (!noCacheGraphics) {
+            cachedScratchGraphics = scratchGraphics;
+        }
+        return scratchGraphics.getGraphics();
     }
 
     public @Override void setBounds(int x, int y, int w, int h) {

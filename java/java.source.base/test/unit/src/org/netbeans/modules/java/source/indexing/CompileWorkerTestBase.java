@@ -168,6 +168,8 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
 
         ParsingOutput result = runCompileWorker(ctx, javaContext, toIndex);
         
+        javaContext.finish();
+        javaContext.store();
         txc.commit();
         
         return result;

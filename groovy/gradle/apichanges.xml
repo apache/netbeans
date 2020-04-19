@@ -83,8 +83,48 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
-        <change>
-            <api name="execution"/>
+        <change id="gradle-tooling-api-split">
+            <api name="general"/>
+            <summary>Move Gradle Tooling API to a separate module.</summary>
+            <version major="2" minor="0"/>
+            <date year="2020" month="4" day="4"/>
+            <author login="lkishalmi"/>
+            <compatibility binary="incompatible" source="compatible"/>
+            <description>
+                <p>
+                    The Gradle Tooling API has been removed from this module to
+                    its own into: <code>org.netbeans.modules.libs.gradle</code>
+                </p>
+                <p>
+                    Modules depending on previous versions of this module need
+                    an additional dependency on the new library module. The
+                    main reason behind this split is that it is easier to do
+                    Gradle Tooling API update in the future.
+                </p>
+                <pre>
+                    &lt;dependency&gt;
+                        &lt;code-name-base&gt;org.netbeans.modules.libs.gradle&lt;/code-name-base&gt;
+                        &lt;compile-dependency/&gt;
+                        &lt;run-dependency&gt;
+                            &lt;release-version&gt;6&lt;/release-version&gt;
+                            &lt;specification-version&gt;6.3&lt;/specification-version&gt;
+                        &lt;/run-dependency&gt;
+                    &lt;/dependency&gt;
+                </pre>
+                <p>
+                    <b>Note:</b> The specification version of the <code>org.netbeans.modules.libs.gradle</code>
+                    module is matching the provided Gradle Tooling API version. The release version number
+                    follows the major version.
+                </p>
+                <p>
+                    Besides of the library removal the source code provided in
+                    this module are backward compatible.
+                </p>
+            </description>
+            <issue number="NETBEANS-4118"/>
+        </change>
+        <change id="allow-cancelling-gradle-process">
+            <api name="general"/>
             <summary>Added <code>RunUtils.cancelGradle(RunConfig)</code> to allow plugins to cancel an executed Gradle process.</summary>
             <version major="1" minor="4"/>
             <date year="2019" month="10" day="22"/>
@@ -103,7 +143,7 @@ is the proper place.
     <!-- Now the surrounding HTML text and document structure: -->
 
     <htmlcontents>
-<!--
+        <!--
 
                             NO NO NO NO NO!
 

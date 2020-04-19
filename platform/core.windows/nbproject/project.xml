@@ -208,13 +208,12 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <friend-packages>
-                <friend>org.netbeans.core.multitabs</friend>
-                <friend>org.netbeans.core.nativeaccess</friend>
+            <public-packages>
                 <package>org.netbeans.core.windows.nativeaccess</package>
                 <package>org.netbeans.core.windows.options</package>
+                <package>org.netbeans.core.windows.options.spi</package>
                 <package>org.netbeans.core.windows.view.ui.tabcontrol</package>
-            </friend-packages>
+            </public-packages>
         </data>
     </configuration>
 </project>

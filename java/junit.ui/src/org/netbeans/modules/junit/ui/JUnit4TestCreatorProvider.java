@@ -16,13 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.junit.ui;
 
-package org.netbeans.modules.junit;
+import org.netbeans.modules.gsf.testrunner.api.TestCreatorProvider.Registration;
+import org.netbeans.modules.java.testrunner.GuiUtils;
+import org.netbeans.modules.junit.api.JUnitVersion;
 
-/**
- */
-public enum JUnitVersion {
-    JUNIT3,
-    JUNIT4,
-    JUNIT5
+@Registration(displayName="JUnit4", identifier = GuiUtils.JUNIT_TEST_FRAMEWORK, position = 100000)
+public final class JUnit4TestCreatorProvider extends AbstractJUnitTestCreatorProvider {
+    @Override
+    JUnitVersion useVersion() {
+        return JUnitVersion.JUNIT4;
+    }
 }

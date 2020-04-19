@@ -65,18 +65,18 @@ public class MessageDestinationSupportImpl implements MessageDestinationSupport 
     public static final String CONN_FACTORY_JNDI_NAME_JB4 = "ConnectionFactory"; // NOI18N
 
 // the directory with resources - supplied by the configuration support in the construction time
-    private File resourceDir;
+    private final File resourceDir;
 
     //model of the destination service file
     private MessagingDeployment destinationServiceModel;
 
     //destination service file (placed in the resourceDir)
-    private File destinationsFile;
+    private final File destinationsFile;
 
     //destination service file object
     private FileObject destinationsFO;
     
-    private WildflyDeploymentManager dm;
+    private final WildflyDeploymentManager dm;
 
     public MessageDestinationSupportImpl(File resourceDir, String moduleName) throws IOException {
         this.resourceDir = resourceDir;
@@ -90,11 +90,13 @@ public class MessageDestinationSupportImpl implements MessageDestinationSupport 
      */
     private class MessageDestinationFileListener extends FileChangeAdapter {
 
+        @Override
         public void fileChanged(FileEvent fe) {
             assert (fe.getSource() == destinationsFO);
             destinationServiceModel = null;
         }
 
+        @Override
         public void fileDeleted(FileEvent fe) {
             assert (fe.getSource() == destinationsFO);
             destinationServiceModel = null;
@@ -281,7 +283,7 @@ public class MessageDestinationSupportImpl implements MessageDestinationSupport 
         }
         if(model.getServer(0) == null) {
             ServerType server = new ServerType();
-            server.setJmsDestinations(server.newJmsDestinations());            
+            server.setJmsDestinations(server.newJmsDestinations());
             model.addServer(server);
         }
         if (type == MessageDestination.Type.QUEUE) {

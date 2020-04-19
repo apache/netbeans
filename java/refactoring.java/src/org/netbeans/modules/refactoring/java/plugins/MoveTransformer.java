@@ -122,7 +122,7 @@ public class MoveTransformer extends RefactoringVisitor {
                         }
                         }
                     } else {
-                        if (el.getKind()!=ElementKind.PACKAGE) {
+                        if (el.getKind()!=ElementKind.PACKAGE && el.getKind() != ElementKind.MODULE) {
                             Element enclosingTypeElement = workingCopy.getElementUtilities().enclosingTypeElement(el);
 
                             EnumSet<Modifier> neededMods = EnumSet.of(Modifier.PUBLIC);
@@ -196,7 +196,7 @@ public class MoveTransformer extends RefactoringVisitor {
                         if (!RefactoringUtils.getPackageName(workingCopy.getCompilationUnit()).equals(targetPackageName)) {
                             elementsToImport.add(el);
                         }
-                } else if (el.getKind() != ElementKind.PACKAGE) {
+                } else if (el.getKind() != ElementKind.PACKAGE && el.getKind() != ElementKind.MODULE) {
                         Element enclosingTypeElement = workingCopy.getElementUtilities().enclosingTypeElement(el);
                         
                         EnumSet<Modifier> neededMods = EnumSet.of(Modifier.PUBLIC);

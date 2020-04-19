@@ -34,6 +34,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.modules.j2ee.earproject.EarProjectGenerator;
+import org.netbeans.modules.j2ee.ejbjarproject.api.EjbJarProjectCreateData;
 import org.netbeans.modules.java.j2seproject.J2SEProjectGenerator;
 import org.netbeans.modules.project.ui.OpenProjectList;
 import org.netbeans.modules.web.api.webmodule.WebModule;
@@ -42,6 +43,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Mutex;
 import org.netbeans.modules.web.project.api.WebProjectUtilities;
 import org.netbeans.modules.j2ee.ejbjarproject.api.EjbJarProjectGenerator;
+import org.netbeans.modules.web.project.api.WebProjectCreateData;
 
 
 /**
@@ -153,8 +155,7 @@ public class Util {
      * @param type type of project
      * @param params parameters passed to created project
      */
-    public static Object createProject(File projectParentDir, String name,
-            int type, String[] params) {
+    public static Object createProject(File projectParentDir, String name, int type, String[] params) {
         String mainClass = null;
         try {
             File projectDir = new File(projectParentDir, name);
@@ -169,7 +170,14 @@ public class Util {
                     if (params == null){
                         params = new String[] {DEFAULT_APPSRV_ID, DEFAULT_SRC_STRUCTURE, DEFAULT_J2EE_LEVEL};
                     }
-                    WebProjectUtilities.createProject(projectDir, name, params[0], params[1], params[2], name);
+                    WebProjectCreateData createWebData = new WebProjectCreateData();
+                    createWebData.setProjectDir(projectDir);
+                    createWebData.setName(name);
+                    createWebData.setServerInstanceID(params[0]);
+                    createWebData.setSourceStructure(params[1]);
+                    createWebData.setJavaEEProfile(Profile.fromPropertiesString(params[2]));
+                    createWebData.setContextPath(name);
+                    WebProjectUtilities.createProject(createWebData);
                     break;
                 case EJB_PROJECT:
                     //params[0] = j2eeLevel
@@ -177,7 +185,13 @@ public class Util {
                     if (params == null){
                         params = new String[] {DEFAULT_J2EE_LEVEL, DEFAULT_APPSRV_ID};
                     }
-                    EjbJarProjectGenerator.createProject(projectDir, name, params[0], params[1]);
+                    EjbJarProjectCreateData createEjbData = new EjbJarProjectCreateData();
+                    createEjbData.setProjectDir(projectDir);
+                    createEjbData.setName(name);
+                    createEjbData.setJavaEEProfile(Profile.fromPropertiesString(params[0]));
+                    createEjbData.setServerInstanceID(params[1]);
+                    createEjbData.setLibrariesDefinition(null);
+                    EjbJarProjectGenerator.createProject(createEjbData);
                     break;
                 case J2EE_PROJECT:
                     //params[0] = j2eeLevel

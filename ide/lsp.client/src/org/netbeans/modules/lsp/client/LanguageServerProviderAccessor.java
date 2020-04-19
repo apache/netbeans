@@ -51,4 +51,6 @@ public abstract class LanguageServerProviderAccessor {
     public abstract InputStream getInputStream(LanguageServerDescription desc);
     public abstract OutputStream getOutputStream(LanguageServerDescription desc);
     public abstract Process getProcess(LanguageServerDescription desc);
+    public abstract LSPBindings getBindings(LanguageServerDescription desc);
+    public abstract void setBindings(LanguageServerDescription desc, LSPBindings bindings);
 }

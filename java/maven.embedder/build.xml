@@ -27,5 +27,19 @@
             <mapper type="glob" from="${bundled.maven}/*" to="*"/>
         </unzip>                
     </target>
-        
+    <!-- To check sha1 binaries that are in maven zip (better maven artefacts generation 
+         Call manually on maven upgrade
+    -->
+    <target name="checkhash" depends="init">
+        <taskdef name="checkjarssha1" classname="org.netbeans.nbbuild.extlibs.CheckEmbeddedBinaries" classpath="${nbantext.jar}"/>
+        <mkdir dir="tmptesting"/>
+        <unzip src="external/${bundled.maven}-bin.zip" dest="tmptesting">
+            <patternset>
+                <include name="**/*.jar"/>
+            </patternset>
+            <mapper type="flatten"/>
+        </unzip>
+        <checkjarssha1 dir="tmptesting" shalist="external/binariesembedded-list" />
+        <delete dir="tmptesting"/>
+    </target>
 </project>

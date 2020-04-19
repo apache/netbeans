@@ -17,7 +17,7 @@
  * under the License.
  */
 @Schema2Beans(
-        schema = "../../../resources/datasources_1_1.xsd",
+        schema = "../../../resources/datasources_1_4_1.xsd",
         schemaType = SchemaType.XML_SCHEMA,
         outputType = OutputType.TRADITIONAL_BASEBEAN,
         validate = true,

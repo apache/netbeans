@@ -35,6 +35,9 @@ import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.lexer.Language;
+import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
@@ -42,6 +45,8 @@ import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
+import org.netbeans.modules.textmate.lexer.TextmateTokenId;
+import org.netbeans.spi.lexer.LanguageHierarchy;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
@@ -76,7 +81,17 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
         try {
             //XXX: not really using the server, are we?
-            return Utilities.getIdentifierBlock((BaseDocument) doc, offset);
+            int[] ident = Utilities.getIdentifierBlock((BaseDocument) doc, offset);
+            TokenSequence<?> ts = TokenHierarchy.get(doc).tokenSequence();
+            ts.move(offset);
+            if (ts.moveNext() && ts.token().id() == TextmateTokenId.TEXTMATE) {
+                if (ident != null) {
+                    return new int[] {ts.offset(), ts.offset() + ts.token().length()};
+                } else {
+                    return null;
+                }
+            }
+            return ident;
         } catch (BadLocationException ex) {
             return null;
         }

@@ -51,9 +51,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.jar.JarOutputStream;
-import java.util.jar.Pack200;
-import java.util.jar.Pack200.Unpacker;
+//commented below 3 lines, bacause pack200 is not supported from jdk 14 onwards 
+//import java.util.jar.JarOutputStream;
+//import java.util.jar.Pack200;
+//import java.util.jar.Pack200.Unpacker;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -78,7 +79,8 @@ import org.netbeans.installer.utils.system.WindowsNativeUtils;
 public final class FileUtils {
     /////////////////////////////////////////////////////////////////////////////////
     // Static
-    private final static Unpacker unpacker = Pack200.newUnpacker();
+    //commented below line, bacause pack200 is not supported from jdk 14 onwards 
+    //private final static Unpacker unpacker = Pack200.newUnpacker();
 
     // file/stream read/write ///////////////////////////////////////////////////////
     public static String readFile(
@@ -1170,11 +1172,12 @@ public final class FileUtils {
     }
     
     // pack200/unpack200 ////////////////////////////////////////////////////////////
-    public static File pack(
+    //commented below method, bacause pack200 is not supported from jdk 14 onwards 
+    /*public static File pack(
             final File source) throws IOException {
         final File target = new File(source.getParentFile(),
                 source.getName() + PACK_GZ_SUFFIX);
-        if(SystemUtils.isWindows() && source.getAbsolutePath().length() > 255) {
+        if(SystemUtils.isWindows() && source.getAbsolutePath().length() > 255) {*/
             /*
              * WORKAROUND for two issues (and 6612389 in BugTrack):
              * http://www.netbeans.org/issues/show_bug.cgi?id=96548
@@ -1182,6 +1185,8 @@ public final class FileUtils {
              * The issue is that unpack200/pack200 doesn`t support long path names
              * Copy source to tmp dir, unpack it there and copy to target.
              */
+             /*
+    
             File tmpSource = null;
             File tmpTarget = null;
             try {
@@ -1214,15 +1219,15 @@ public final class FileUtils {
         }
         
         return target;
-    }
-    
-    public static File unpack(
+    }*/
+    //commented below method, bacause pack200 is not supported from jdk 14 onwards 
+    /*public static File unpack(
             final File source) throws IOException {
         final String name = source.getName();
         final File target = new File(source.getParentFile(),
                 name.substring(0, name.length() - PACK_GZ_SUFFIX.length()));
 
-        if(SystemUtils.isWindows() && source.getAbsolutePath().length() > 255) {
+        if(SystemUtils.isWindows() && source.getAbsolutePath().length() > 255) {*/
             /*
              * WORKAROUND for two issues (and 6612389 in BugTrack):
              * http://www.netbeans.org/issues/show_bug.cgi?id=96548
@@ -1230,6 +1235,7 @@ public final class FileUtils {
              * The issue is that unpack200/pack200 doesn`t support long path names
              * Copy source to tmp dir, unpack it there and copy to target.
              */
+    /*
             File tmpSource = null;
             File tmpTarget = null;
             try {
@@ -1282,9 +1288,10 @@ public final class FileUtils {
             }
         }
         return target;
-    }
+    }*/
 
-    private static void unpack200Internal (File source, File target) throws IOException {
+    //commented below method, bacause pack200 is not supported from jdk 14 onwards 
+    /*private static void unpack200Internal (File source, File target) throws IOException {
         InputStream is = null;
         JarOutputStream os = null;
         try {
@@ -1301,7 +1308,7 @@ public final class FileUtils {
                 os.close();
             }
         }
-    }
+    }*/
     
     // miscellaneous ////////////////////////////////////////////////////////////////
     public static FilesList mkdirs(
@@ -1826,7 +1833,8 @@ public final class FileUtils {
                     }
                 }
                 
-                if (listEntry.isPackedJarFile()) {
+                //commented below code, bacause pack200 is not supported from jdk 14 onwards 
+                /*if (listEntry.isPackedJarFile()) {
                     final File packed   = listEntry.getFile();;
                     final File unpacked = unpack(packed);
                     
@@ -1841,7 +1849,7 @@ public final class FileUtils {
                             listEntry.isSignedJarFile(),
                             listEntry.getLastModified(),
                             listEntry.getPermissions());
-                }
+                }*/
                 
                 listEntryFile.setLastModified(listEntry.getLastModified());
                 
@@ -2082,10 +2090,11 @@ public final class FileUtils {
     public static final String MESSAGE_DELETE_DIR =
             ResourceUtils.getString(FileUtils.class,
             "FU.message.delete.dir");//NOI18N
-    public static final String ERROR_PACK200_FAILED_KEY =
+    //commented below lines, bacause pack200 is not supported from jdk 14 onwards 
+    /*public static final String ERROR_PACK200_FAILED_KEY =
             "FU.error.pack200.failed";//NOI18N
     public static final String ERROR_UNPACK200_FAILED_KEY =
             "FU.error.unpack200.failed";//NOI18N
     public static final String USE_INTERNAL_UNPACK200_PROPERTY =
-            "nbi.use.internal.unpack200";//NOI18N
+            "nbi.use.internal.unpack200";//NOI18N*/
 }

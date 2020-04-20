@@ -218,6 +218,8 @@ public class Package extends Task {
                 
                 browse(child, output, offset);
             } else {
+                //commented below code, bacause pack200 is not supported from jdk 14 onwards 
+                /*
                 // if pack200.enabled property is set to false then disable packing
                 // otherwise do repacking
                 boolean packedProp = false;                
@@ -319,8 +321,8 @@ public class Package extends Task {
                         packed.delete();
                         backup.delete();
                     }                    
-                }
-                
+                }*/
+                entry = new FileEntry(child, name);
                 log("        archiving file: " + name); // NOI18N
                 jarEntry = new JarEntry(name);
                 jarEntry.setTime(entry.getLastModified());

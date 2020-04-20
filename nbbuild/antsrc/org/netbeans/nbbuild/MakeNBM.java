@@ -307,8 +307,8 @@ public class MakeNBM extends Task {
     private Path updaterJar;
     private FileSet executablesSet;
     private ZipFileSet extraNBMFiles;
-    private boolean usePack200;
-    private String pack200excludes;
+    //private boolean usePack200;
+    //private String pack200excludes;
     private boolean alwaysCreateNBM;
 
     /** Try to find and create localized info.xml files */
@@ -334,14 +334,14 @@ public class MakeNBM extends Task {
     public void setFile(File file) {
         this.file = file;
     }
-
-    public void setUsePack200(boolean usePack200) {
+    //Commented below code, as pack200 is not supported from jdk 14 onwards
+    /*public void setUsePack200(boolean usePack200) {
         this.usePack200 = usePack200;
     }
 
     public void setPack200Excludes(String pack200excludes) {
         this.pack200excludes = pack200excludes;
-    }
+    }*/
 
     public void setAlwaysCreateNBM(boolean alwaysCreateNBM) {
         this.alwaysCreateNBM = alwaysCreateNBM;
@@ -674,7 +674,8 @@ public class MakeNBM extends Task {
         List <String> moduleFiles = new ArrayList <>();
  	fs.setDir( productDir );
         String [] filesForPackaging = null;
-        if(usePack200 && pack200excludes!=null && !pack200excludes.equals("")) {
+        //Commented below code, as pack200 is not supported from jdk 14 onwards
+        /*if(usePack200 && pack200excludes!=null && !pack200excludes.equals("")) {
             FileSet pack200Files = new FileSet();
             pack200Files.setDir(productDir);
             pack200Files.setExcludes(pack200excludes);
@@ -685,11 +686,12 @@ public class MakeNBM extends Task {
             DirectoryScanner ds = pack200Files.getDirectoryScanner();
             ds.scan();
             filesForPackaging = ds.getIncludedFiles();            
-        }
+        }*/
 
         List<File> packedFiles = new ArrayList<>();
         for (int i = 0; i < files.length; i++) {
-            if (usePack200) {
+            //Commented below code, as pack200 is not supported from jdk 14 onwards
+            /*if (usePack200) {
                 File sourceFile = new File(productDir, files[i]);
                 if (sourceFile.isFile() && sourceFile.getName().endsWith(".jar")) {
 
@@ -730,7 +732,7 @@ public class MakeNBM extends Task {
                         }
                     }
                 }
-            }
+            }*/
 
             fs.createInclude().setName(files[i]);
             moduleFiles.add(files[i]);

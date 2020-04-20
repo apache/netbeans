@@ -137,7 +137,7 @@
             <replacefilter token="{product-platforms}"             value="${generate.installer.for.platforms}"/>
             <replacefilter token="{generator-jdk-location-forward-slashes}"         value="${generator-jdk-location-forward-slashes}"/>
             <replacefilter token="{generated-installers-location-forward-slashes}"  value="${suite.dist.directory}"/>
-            <replacefilter token="{pack200.enabled}"               value="${pack200.enabled}"/>
+            <!--<replacefilter token="{pack200.enabled}"               value="${pack200.enabled}"/>-->
             <replacefilter token="{generated-installers-prefix}"   value="${installers.file.prefix}"/>
             <replacefilter token="{product-uid}"                   value="${product-uid}"/>
         </replace>

@@ -118,8 +118,10 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         "ERR_Project_Folder_cannot_be_created=Project Folder cannot be created.",
         "ERR_Project_Folder_is_not_valid_path=Project Folder is not a valid path.",
         "ERR_Project_Folder_is_UNC=Project Folder cannot be located on UNC path.",
+        "ERR_Package_ends_in_dot=Package name can not end in '.'.",
         "# {0} - version", "ERR_old_maven=Maven {0} is too old, version 2.0.7 or newer is needed.",
-        "ERR_Project_Folder_exists=Project Folder already exists and is not empty."
+        "ERR_Project_Folder_exists=Project Folder already exists and is not empty.",
+        "ERR_Project_Folder_not_directory=Project Folder is not a directory."
     })
     BasicPanelVisual(BasicWizardPanel panel, Archetype arch) {
         this.panel = panel;
@@ -158,7 +160,17 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
                 vg.add(txtGroupId, MavenValidators.createGroupIdValidators());
                 vg.add(txtArtifactId, MavenValidators.createArtifactIdValidators());
                 vg.add(txtVersion, MavenValidators.createVersionValidators());
-                vg.add(txtPackage, StringValidators.JAVA_PACKAGE_NAME);
+                vg.add(txtPackage, ValidatorUtils.merge(
+                        StringValidators.JAVA_PACKAGE_NAME,
+                        new AbstractValidator<String>(String.class) {
+                        @Override
+                        public void validate(Problems problems, String compName, String model)
+                        {
+                            // MAY_NOT_END_WITH_PERIOD validator broken in NB's
+                            // version (empty string); so copy current version' code.
+                            if(model != null && !model.isEmpty() && model.charAt(model.length() - 1) == '.')
+                                problems.add(ERR_Package_ends_in_dot());
+                        }}));
                 vg.add(projectNameTextField, ValidatorUtils.merge(
                         MavenValidators.createArtifactIdValidators(),
                         StringValidators.REQUIRE_VALID_FILENAME
@@ -198,6 +210,10 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
                             return;
                         }
                         File destFolder = FileUtil.normalizeFile(new File(new File(projectLocationTextField.getText().trim()), projectNameTextField.getText().trim()).getAbsoluteFile());
+                        if(destFolder.exists() && !destFolder.isDirectory()) {
+                            problems.add(ERR_Project_Folder_not_directory());
+                            return;
+                        }
                         File[] kids = destFolder.listFiles();
                         if (destFolder.exists() && kids != null && kids.length > 0) {
                             // Folder exists and is not empty

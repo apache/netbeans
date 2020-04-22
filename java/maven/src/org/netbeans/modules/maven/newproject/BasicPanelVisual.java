@@ -567,6 +567,7 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         });
     }
     
+    private static final String SETTINGS_HAVE_READ = "BasicPanelVisual-read-properties-before"; //NOI18N
     @Messages({
         "# {0} - project count", "TXT_MavenProjectName=mavenproject{0}",
         "TXT_Checking1=Checking additional creation properties..."
@@ -578,13 +579,27 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
                 handle = null;
             }
         }        
-        // PROJECT_PARENT_FOLDER confusing, better name is PROJECT_BASE_FOLDER
+        // PROJECT_PARENT_FOLDER usage is confusing. Sometimes it's the
+        // parent directory, sometimes it's the project directory.
+        // Maybe introduce PROJECT_BASE_FOLDER, to clarify and differentiate.
+        // But for local fix [NETBEANS-4206] keep track of whether
+        // these properties have been read before.
+        boolean haveRead =  Boolean.parseBoolean((String)settings.getProperty(SETTINGS_HAVE_READ)); //NOI18N
         File projectFolder = (File) settings.getProperty(CommonProjectActions.PROJECT_PARENT_FOLDER); //NOI18N
         File projectLocation;
-        if (projectFolder == null || projectFolder.getParentFile() == null || !projectFolder.getParentFile().isDirectory()) {
-            projectLocation = ProjectChooser.getProjectsFolder();
+        if(!haveRead && projectFolder != null) {
+            // First time in here, dialog was started with project folder;
+            // example is creating a project from pom parent
+            projectLocation = projectFolder;
         } else {
-            projectLocation = projectFolder.getParentFile();
+            if (projectFolder == null || projectFolder.getParentFile() == null || !projectFolder.getParentFile().isDirectory()) {
+                projectLocation = ProjectChooser.getProjectsFolder();
+            } else {
+                projectLocation = projectFolder.getParentFile();
+            }
+        }
+        if(!haveRead) {
+            settings.putProperty(SETTINGS_HAVE_READ, "true"); //NOI18N
         }
         this.projectLocationTextField.setText(projectLocation.getAbsolutePath());
         

@@ -368,7 +368,7 @@ public class AbstractNode extends Node {
     *
     * @param s the sheet to use
     */
-    protected final synchronized void setSheet(Sheet s) {
+    protected synchronized void setSheet(Sheet s) {
         setSheetImpl(s);
         firePropertySetsChange(null, null);
     }
@@ -408,7 +408,7 @@ public class AbstractNode extends Node {
      *
      * @return the sheet (never <code>null</code>)
      */
-    protected final synchronized Sheet getSheet() {
+    protected synchronized Sheet getSheet() {
         if (sheet != null) {
             return sheet;
         }
@@ -434,7 +434,7 @@ public class AbstractNode extends Node {
         return s.toArray();
     }
 
-    boolean propertySetsAreKnown() {
+    public boolean propertySetsAreKnown() {
         return (sheet != null);
     }
 

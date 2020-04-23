@@ -34,16 +34,16 @@ import org.openide.nodes.Node.PropertySet;
  * more nodes.
  * @author David Strupl
  */
-final class ProxyNode extends AbstractNode {
+public class ProxyNode extends AbstractNode {
     private static final int MAX_NAMES = 2;
     private volatile Node[] original;
     private volatile ArrayList<Node.PropertySet[]> originalPropertySets;
     private NodeListener nl;
     private NodeListener pcl;
-    String displayName = null;
+    public String displayName = null;
     private String shortDescription = null;
 
-    ProxyNode(Node... original) {
+    public ProxyNode(Node... original) {
         super(Children.LEAF);
         this.original = original;
         nl = new NodeAdapterImpl(true);
@@ -83,7 +83,7 @@ final class ProxyNode extends AbstractNode {
     }
 
     /** */
-    Node[] getOriginalNodes() {
+    public Node[] getOriginalNodes() {
         return original;
     }
 
@@ -97,7 +97,7 @@ final class ProxyNode extends AbstractNode {
         return displayName;
     }
 
-    private String getConcatenatedName(int limit) {
+    protected String getConcatenatedName(int limit) {
         Node[] n = getOriginalNodes();
         StringBuffer name = new StringBuffer();
         String delim = NbBundle.getMessage(ProxyNode.class, "CTL_List_Delimiter"); //NOI18N
@@ -131,7 +131,7 @@ final class ProxyNode extends AbstractNode {
         }
     }
     
-    private ArrayList<Node.PropertySet[]> getOriginalPropertySets(Node[] forWhat) {
+    protected ArrayList<Node.PropertySet[]> getOriginalPropertySets(Node[] forWhat) {
         if( null == originalPropertySets ) {
             ArrayList<PropertySet[]> arr = new ArrayList<Node.PropertySet[]>( forWhat.length );
             
@@ -150,7 +150,7 @@ final class ProxyNode extends AbstractNode {
     /** Computes intersection of tabs and intersection
      * of properties in those tabs.
      */
-    private Sheet.Set[] computePropertySets() {
+    protected Sheet.Set[] computePropertySets() {
         Node[] copy = original;
         if (copy.length > 0) {
             final ArrayList<PropertySet[]> ops = getOriginalPropertySets(copy);
@@ -231,7 +231,7 @@ final class ProxyNode extends AbstractNode {
     /** Finds properties in original with specified
      * name in all tabs and constructs a ProxyProperty instance.
      */
-    private ProxyProperty createProxyProperty(Node[] copy, String propName, String setName) {
+    protected ProxyProperty createProxyProperty(Node[] copy, String propName, String setName) {
         Node.Property[] arr = new Node.Property[copy.length];
 
         for (int i = 0; i < copy.length; i++) {
@@ -257,8 +257,8 @@ final class ProxyNode extends AbstractNode {
      * delegates to original[0] or applies changes to all
      * original properties.
      */
-    static final class ProxyProperty extends Node.Property {
-        private Node.Property[] original;
+    public static class ProxyProperty extends Node.Property {
+        protected Node.Property[] original;
 
         /** It sets name, displayName and short description.
          * Remembers original.
@@ -313,7 +313,7 @@ final class ProxyNode extends AbstractNode {
             return o;
         }
 
-        static boolean equals (Object a, Object b) {
+        public static boolean equals (Object a, Object b) {
             boolean aIsNull = a == null;
             boolean bIsNull = b == null;
             boolean bothNull = aIsNull && (aIsNull == bIsNull);
@@ -453,7 +453,7 @@ final class ProxyNode extends AbstractNode {
     }
 
     /** We cannot return a single value when there are different values */
-    static class DifferentValuesException extends RuntimeException {
+    public static class DifferentValuesException extends RuntimeException {
         public DifferentValuesException() {
             super();
         }
@@ -463,7 +463,7 @@ final class ProxyNode extends AbstractNode {
         }
     }
 
-    private class NodeAdapterImpl extends NodeAdapter {
+    protected class NodeAdapterImpl extends NodeAdapter {
         private final boolean nodeListener;
 
         public NodeAdapterImpl(boolean b) {
@@ -520,7 +520,7 @@ final class ProxyNode extends AbstractNode {
             }
         }
 
-        private void realPropertyChange(PropertyChangeEvent pce) {
+        protected void realPropertyChange(PropertyChangeEvent pce) {
             String nm = pce.getPropertyName();
             Node.PropertySet[] pss = getPropertySets();
             boolean exists = false;

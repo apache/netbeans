@@ -239,6 +239,12 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
             }
         }
 
+
+        /** Returns the getter method reference or null if not set. */
+        public Method getGetter() {
+            return getter;
+        }
+        
         /* Can read the value of the property.
         * @return <CODE>true</CODE> if the read of the value is supported
         */
@@ -285,6 +291,11 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
             }
         }
 
+        /** Returns the setter method reference or null if not set. */
+        public Method getSetter() {
+            return setter;
+        }
+        
         /* Can write the value of the property.
         * @return <CODE>true</CODE> if the read of the value is supported
         */
@@ -341,6 +352,11 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
         */
         public void setPropertyEditorClass(Class<? extends PropertyEditor> clazz) {
             propertyEditorClass = clazz;
+        }
+        
+        /** Returns the property editor class. */
+        public Class<? extends PropertyEditor> getPropertyEditorClass() {
+            return propertyEditorClass;
         }
     }
 

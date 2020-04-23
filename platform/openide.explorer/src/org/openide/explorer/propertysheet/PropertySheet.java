@@ -209,7 +209,7 @@ public class PropertySheet extends JPanel {
 
     /** Temporary storage for the last selected node in the case the property
      * sheet was removed temporarily from a container (winsys DnD) */
-    private Reference<Node> storedNode;
+    protected Reference<Node> storedNode;
 
     //Package private for unit tests
     SheetTable table = new SheetTable();
@@ -396,12 +396,12 @@ public class PropertySheet extends JPanel {
     }
  
     /** Enable/disable display of the description area */
-    void setDescriptionVisible(boolean val) {
+    public void setDescriptionVisible(boolean val) {
         setDescriptionAreaVisible (val);
         PropUtils.saveShowDescription(val);
     }
 
-    boolean isDescriptionVisible() {
+    public boolean isDescriptionVisible() {
         return (psheet.getState() & PSheet.STATE_HAS_DESCRIPTION) != 0;
     }
 
@@ -430,7 +430,7 @@ public class PropertySheet extends JPanel {
      *
      * @param nodes nodes to be explored
      */
-    private void doSetNodes(Node[] nodes) {
+    protected void doSetNodes(Node[] nodes) {
         if ((nodes == null) || (nodes.length == 0)) {
             table.getPropertySetModel().setPropertySets(null);
             table.getReusablePropertyEnv().clear();
@@ -576,7 +576,7 @@ public class PropertySheet extends JPanel {
         }
     }
 
-    private synchronized RequestProcessor.Task getScheduleTask() {
+    protected synchronized RequestProcessor.Task getScheduleTask() {
         if (scheduleTask == null) {
             scheduleTask = RP.post(new Runnable() {
                 @Override
@@ -625,7 +625,7 @@ public class PropertySheet extends JPanel {
     // end of delayed    
 
     /** This has to be called from the AWT thread. */
-    void setCurrentNode(Node node) {
+    public void setCurrentNode(Node node) {
         Node old = pclistener.getNode();
 
         if (old != node) {
@@ -831,7 +831,7 @@ public class PropertySheet extends JPanel {
         return false;
     }
 
-    final void showPopup(Point p) {
+    public void showPopup(Point p) {
         if( !popupEnabled )
             return;
 
@@ -917,11 +917,11 @@ public class PropertySheet extends JPanel {
      * @param fd Property to select
      * @param startEditing True to start editing of that property.
      */
-    private void select( FeatureDescriptor fd, boolean startEditing ) {
+    protected void select( FeatureDescriptor fd, boolean startEditing ) {
         table.select( fd, startEditing );
     }
 
-    Node[] getCurrentNodes() {
+    public Node[] getCurrentNodes() {
         Node n = pclistener.getNode();
 
         if (n != null) {
@@ -935,7 +935,7 @@ public class PropertySheet extends JPanel {
         return new Node[0];
     }
 
-    private static final boolean needTabs(Node n) {
+    protected static final boolean needTabs(Node n) {
         boolean needTabs = true;
 
         if (forceTabs) {
@@ -971,7 +971,7 @@ public class PropertySheet extends JPanel {
         return needTabs;
     }
 
-    private static final TabInfo getTabItems(Node n) {
+    protected static final TabInfo getTabItems(Node n) {
         Map<String, List<PropertySet>> titlesToContents = new HashMap<String, List<PropertySet>>();
         ArrayList<String> order = new ArrayList<String>();
 
@@ -1024,7 +1024,7 @@ public class PropertySheet extends JPanel {
         }
     }
 
-    private class TabSelectionListener implements ChangeListener, FocusListener {
+    protected class TabSelectionListener implements ChangeListener, FocusListener {
         public void stateChanged(ChangeEvent e) {
             helpAction.checkContext();
 
@@ -1087,7 +1087,7 @@ public class PropertySheet extends JPanel {
         }
     }
 
-    final class HelpAction extends AbstractAction {
+    public final class HelpAction extends AbstractAction {
         HelpCtx.Provider provider = null;
 
         //XXX MERGE THIS CLASS WITH PROXYHELPPROVIDER 
@@ -1201,7 +1201,7 @@ public class PropertySheet extends JPanel {
     /**
      * Convenience action class to eliminate a few action subclasses.
      */
-    private static class MutableAction extends AbstractAction {
+    protected static class MutableAction extends AbstractAction {
         private static final int SORT_NAMES = 0;
         private static final int UNSORT = 1;
         private static final int INVOKE_POPUP = 2;
@@ -1323,7 +1323,7 @@ public class PropertySheet extends JPanel {
         }
     }
 
-    private final class SheetPCListener extends NodeAdapter {
+    protected class SheetPCListener extends NodeAdapter {
         private PropertyChangeListener inner;
 
         /** Cache the current node locally only in the listener */
@@ -1446,7 +1446,7 @@ public class PropertySheet extends JPanel {
             }
         }
 
-        private final class PCL implements PropertyChangeListener {
+        protected class PCL implements PropertyChangeListener {
             /** Receives property change events directed to PropertyChangeListeners,
              * not NodeListeners */
             public void propertyChange(final PropertyChangeEvent evt) {
@@ -1488,7 +1488,7 @@ public class PropertySheet extends JPanel {
         }
     }
     
-    private static final class TabInfo {
+    protected static class TabInfo {
         public String[] titles;
         public Object[] sets;
 

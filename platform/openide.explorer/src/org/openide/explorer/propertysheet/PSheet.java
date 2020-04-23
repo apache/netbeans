@@ -80,7 +80,7 @@ import org.netbeans.modules.openide.explorer.TabbedContainerBridge;
  *
  * @author  Tim Boudreau
  */
-class PSheet extends JPanel implements MouseListener {
+public class PSheet extends JPanel implements MouseListener {
     public final static int STATE_HAS_DESCRIPTION = 1;
     public final static int STATE_HAS_TABS = 2;
     private int addCount = 0;
@@ -111,7 +111,7 @@ class PSheet extends JPanel implements MouseListener {
         }
     }
 
-    SelectionAndScrollPositionManager manager() {
+    public SelectionAndScrollPositionManager manager() {
         return manager;
     }
 
@@ -661,11 +661,11 @@ class PSheet extends JPanel implements MouseListener {
 
     /**
      * Create a description component */
-    private DescriptionComponent createDescriptionComponent() {
+    protected DescriptionComponent createDescriptionComponent() {
         return new DescriptionComponent();
     }
 
-    private JSplitPane createSplitPane(Component lower) {
+    protected JSplitPane createSplitPane(Component lower) {
         JSplitPane pane = new JSplitPane();
 
         if (firstSplit == null) {
@@ -695,7 +695,7 @@ class PSheet extends JPanel implements MouseListener {
         return pane;
     }
 
-    private JScrollPane createScrollPane(Component inner) {
+    protected JScrollPane createScrollPane(Component inner) {
         JScrollPane result = new JScrollPane(inner);
         JViewport vp = result.getViewport();
         vp.addMouseListener(this);
@@ -711,7 +711,7 @@ class PSheet extends JPanel implements MouseListener {
         return result;
     }
 
-    private JComponent createTabbedContainer() {
+    protected JComponent createTabbedContainer() {
         JComponent result = TabbedContainerBridge.getDefault().createTabbedContainer();
         result.putClientProperty("tc", Boolean.TRUE);
         configureTabbedContainer(tabbedContainerObjects, tabbedContainerTitles, result);
@@ -805,14 +805,14 @@ class PSheet extends JPanel implements MouseListener {
         }
     }
 
-    private static boolean isTabbedContainer(Component comp) {
+    protected static boolean isTabbedContainer(Component comp) {
         return comp instanceof JComponent && Boolean.TRUE.equals(((JComponent) comp).getClientProperty("tc")); //NOI18N
     }
 
     /**
      * Find the currently in use description component.
      */
-    private DescriptionComponent findDescriptionComponent() {
+    protected DescriptionComponent findDescriptionComponent() {
         return (DescriptionComponent) findChildOfClass(findSplitPane(), DescriptionComponent.class);
     }
 
@@ -820,7 +820,7 @@ class PSheet extends JPanel implements MouseListener {
      * Find the currently in use scroll pane, if any (there should always be
      * one)
      */
-    private JScrollPane findScrollPane() {
+    protected JScrollPane findScrollPane() {
         JScrollPane result = (JScrollPane) findChildOfClass(this, JScrollPane.class);
 
         if (result == null) {
@@ -837,7 +837,7 @@ class PSheet extends JPanel implements MouseListener {
     /**
      * Find the currently in use split pane, if any
      */
-    private JSplitPane findSplitPane() {
+    protected JSplitPane findSplitPane() {
         JSplitPane result = (JSplitPane) findChildOfClass(this, JSplitPane.class);
 
         if (result == null) {
@@ -850,7 +850,7 @@ class PSheet extends JPanel implements MouseListener {
     /**
      * Find the currently in use tabbed container, if any
      */
-    private JComponent findTabbedContainer() {
+    protected JComponent findTabbedContainer() {
         Component[] c = getComponents();
 
         for (int i = 0; i < c.length; i++) {
@@ -865,7 +865,7 @@ class PSheet extends JPanel implements MouseListener {
     /**
      * Search one container for component of the requested class
      */
-    private static Component findChildOfClass(Container container, Class clazz) {
+    protected static Component findChildOfClass(Container container, Class clazz) {
         if (container == null) {
             return null;
         }
@@ -948,13 +948,13 @@ class PSheet extends JPanel implements MouseListener {
         //do nothing
     }
 
-    private class PopupAction extends AbstractAction {
+    protected class PopupAction extends AbstractAction {
         public void actionPerformed(ActionEvent actionEvent) {
             popupRequested(new Point(0, 0));
         }
     }
     
-    private class SwitchTabAction extends AbstractAction {
+    protected class SwitchTabAction extends AbstractAction {
         private int increment;
         public SwitchTabAction( int increment ) {
             this.increment = increment;

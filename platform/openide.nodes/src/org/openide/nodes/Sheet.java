@@ -31,7 +31,7 @@ import java.util.*;
 *
 * @author Jaroslav Tulach, Dafe Simonek
 */
-public final class Sheet extends Object {
+public class Sheet extends Object {
     /** Name for regular Bean property set. */
     public static final String PROPERTIES = "properties"; // NOI18N
 
@@ -39,18 +39,18 @@ public final class Sheet extends Object {
     public static final String EXPERT = "expert"; // NOI18N
 
     /** list of sets (Sheet.Set) */
-    private ArrayList<Set> sets;
+    protected ArrayList<Set> sets;
 
     /** array of sets 
      * @GuardedBy("this")
      */
-    private Node.PropertySet[] array;
+    protected Node.PropertySet[] array;
 
     /** support for changes */
-    private PropertyChangeSupport supp = new PropertyChangeSupport(this);
+    protected PropertyChangeSupport supp = new PropertyChangeSupport(this);
 
     /** change listener that is attached to each set added to this object */
-    private PropertyChangeListener propL = new PropertyChangeListener() {
+    protected PropertyChangeListener propL = new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent ev) {
                 supp.firePropertyChange(null, null, null);
             }
@@ -65,14 +65,14 @@ public final class Sheet extends Object {
     /** Copy constrcutor.
     * @param ar array to use
     */
-    Sheet(ArrayList<Set> ar) {
+    public Sheet(ArrayList<Set> ar) {
         sets = ar;
     }
 
     /** Obtain the array of property sets.
     * @return the array
     */
-    public final Node.PropertySet[] toArray() {
+    public Node.PropertySet[] toArray() {
         for (;;) {
             synchronized (this) {
                 if (array != null) {
@@ -209,7 +209,7 @@ public final class Sheet extends Object {
     * @param name of the property
     * @return the index or -1 if not found
     */
-    private int findIndex(String name) {
+    protected int findIndex(String name) {
         int s = sets.size();
 
         for (int i = 0; i < s; i++) {
@@ -225,7 +225,7 @@ public final class Sheet extends Object {
 
     /** Refreshes and fire info about the set
     */
-    private void refresh() {
+    protected void refresh() {
         synchronized (this) {
             array = null;
         }
@@ -236,15 +236,15 @@ public final class Sheet extends Object {
      * A list of bean properties.
      * While there can only be one property of a given name, insertion order is significant.
      */
-    public static final class Set extends Node.PropertySet {
+    public static class Set extends Node.PropertySet {
         /** list of properties (Node.Property) */
-        private List<Node.Property<?>> props;
+        protected List<Node.Property<?>> props;
 
         /** array of properties */
-        private Node.Property<?>[] array;
+        protected Node.Property<?>[] array;
 
         /** change listeners listening on this set */
-        private PropertyChangeSupport supp = new PropertyChangeSupport(this);
+        protected PropertyChangeSupport supp = new PropertyChangeSupport(this);
 
         /** Default constructor.
         */
@@ -254,7 +254,7 @@ public final class Sheet extends Object {
 
         /** @param al array list to use for this property set
         */
-        private Set(List<Node.Property<?>> al) {
+        public Set(List<Node.Property<?>> al) {
             props = al;
         }
 
@@ -368,7 +368,7 @@ public final class Sheet extends Object {
         * @param name of the property
         * @return the index or -1 if not found
         */
-        private int findIndex(String name) {
+        protected int findIndex(String name) {
             int s = props.size();
 
             for (int i = 0; i < s; i++) {
@@ -384,7 +384,7 @@ public final class Sheet extends Object {
 
         /** Notifies change of properties.
         */
-        private void refresh() {
+        protected void refresh() {
             array = null;
             supp.firePropertyChange(null, null, null);
         }

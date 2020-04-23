@@ -27,7 +27,7 @@ import org.openide.util.Mutex;
  *
  * @author  Jaroslav Tulach
  */
-abstract class TMUtil extends Object {
+public abstract class TMUtil extends Object {
     /** variable that will contain the argument to a call and then a result.
      */
     private static final ThreadLocal<Object> TALK = new ThreadLocal<Object>();
@@ -57,7 +57,7 @@ abstract class TMUtil extends Object {
      * @param bean the object to create cookie for
      * @return Node.Cookie or null
      */
-    static Node.Cookie createInstanceCookie(Object bean) {
+    public static Node.Cookie createInstanceCookie(Object bean) {
         try {
             TALK.set(bean);
 
@@ -72,7 +72,7 @@ abstract class TMUtil extends Object {
      * @param maybeDialogDescriptor an object
      * @return a dialog or null
      */
-    static java.awt.Dialog createDialog(Object maybeDialogDescriptor) {
+    public static java.awt.Dialog createDialog(Object maybeDialogDescriptor) {
         try {
             TALK.set(maybeDialogDescriptor);
 
@@ -86,7 +86,7 @@ abstract class TMUtil extends Object {
      * @param node the bean node
      * @param cust customizer to attach
      */
-    static void attachCustomizer(Node node, java.beans.Customizer cust) {
+    public static void attachCustomizer(Node node, java.beans.Customizer cust) {
         try {
             TALK.set(new Object[] { node, cust });
             exec("Cust"); // NOI18N
@@ -98,7 +98,7 @@ abstract class TMUtil extends Object {
     /** Finds main window.
      * @return main window or null
      */
-    static java.awt.Frame mainWindow() {
+    public static java.awt.Frame mainWindow() {
         try {
             if (exec("Win")) { // NOI18N
 
@@ -118,7 +118,7 @@ abstract class TMUtil extends Object {
 
     /** Finds usable list cell renderer.
      */
-    static javax.swing.ListCellRenderer findListCellRenderer() {
+    public static javax.swing.ListCellRenderer findListCellRenderer() {
         try {
             if (exec("Rend")) { // NOI18N
 
@@ -132,7 +132,7 @@ abstract class TMUtil extends Object {
     }
 
     /** Invoke an indexed customizer. */
-    static void showIndexedCustomizer(Index idx) {
+    public static void showIndexedCustomizer(Index idx) {
         try {
             TALK.set(idx);
 
@@ -204,7 +204,7 @@ abstract class TMUtil extends Object {
     /** Creates instance of InstanceCookie for given object.
      * ARGUMENT contains the bean to create instance for.
      */
-    static final class Bean implements Runnable, org.openide.cookies.InstanceCookie {
+    public static final class Bean implements Runnable, org.openide.cookies.InstanceCookie {
         private Object bean;
 
         public void run() {

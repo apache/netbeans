@@ -21,6 +21,7 @@ package org.netbeans.modules.git.utils;
 
 import java.io.File;
 import java.io.IOException;
+import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -71,6 +72,14 @@ public class JGitUtils {
             }
         }
         return userExists;
+    }
+    
+    public static boolean isGPGSignEnabled (File root) {
+        Repository repository = getRepository(root);
+        boolean gpgSigningEnabled = false;
+        
+        gpgSigningEnabled = repository.getConfig().getBoolean(ConfigConstants.CONFIG_COMMIT_SECTION, null, ConfigConstants.CONFIG_KEY_GPGSIGN, false);
+        return gpgSigningEnabled;
     }
 
     public static void persistUser (File root, GitUser author) throws GitException {

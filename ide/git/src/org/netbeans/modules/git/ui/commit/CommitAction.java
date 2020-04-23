@@ -119,6 +119,7 @@ public class CommitAction extends SingleRepositoryAction {
         final GitRepositoryState state = info.getRepositoryState();
         final GitUser user = identifyUser(repository);
         final String mergeCommitMessage = getMergeCommitMessage(repository, state);
+        final String gpgPrivateKeyPassphase = getGPGPrivateKeyPassphase(repository);
         final String title = Bundle.CTL_CommitPanel_title(Utils.getContextDisplayName(context), info.getActiveBranch().getName());
         EventQueue.invokeLater(new Runnable() {
             @Override
@@ -138,7 +139,7 @@ public class CommitAction extends SingleRepositoryAction {
 
                     final VCSCommitFilter selectedFilter = panel.getSelectedFilter();
                     RequestProcessor rp = Git.getInstance().getRequestProcessor(repository);
-                    GitProgressSupport support = new CommitProgressSupport(panel, commitFiles, selectedFilter, state);
+                    GitProgressSupport support = new CommitProgressSupport(panel, commitFiles, selectedFilter, state, gpgPrivateKeyPassphase);
                     support.start(rp, repository, org.openide.util.NbBundle.getMessage(CommitAction.class, "LBL_Commit_Progress")); // NOI18N
                 } else if (!panel.getParameters().getCommitMessage().isEmpty()) {
                     GitModuleConfig.getDefault().setLastCanceledCommitMessage(panel.getParameters().getCommitMessage());
@@ -182,12 +183,14 @@ public class CommitAction extends SingleRepositoryAction {
         private final List<GitLocalFileNode> commitFiles;
         private final VCSCommitFilter selectedFilter;
         private final GitRepositoryState state;
+        private final String gpgPrivateKeyPassphase;
 
-        private CommitProgressSupport (GitCommitPanel panel, List<GitLocalFileNode> commitFiles, VCSCommitFilter selectedFilter, GitRepositoryState state) {
+        private CommitProgressSupport (GitCommitPanel panel, List<GitLocalFileNode> commitFiles, VCSCommitFilter selectedFilter, GitRepositoryState state, String gpgPrivateKeyPassphase) {
             this.panel = panel;
             this.commitFiles = commitFiles;
             this.selectedFilter = selectedFilter;
             this.state = state;
+            this.gpgPrivateKeyPassphase = gpgPrivateKeyPassphase;
         }
 
         @Override
@@ -230,7 +233,7 @@ public class CommitAction extends SingleRepositoryAction {
                     message = beforeCommitHook(commitCandidates, hooks, message);
 
                     GitRepositoryState prevState = RepositoryInfo.getInstance(getRepositoryRoot()).getRepositoryState();
-                    GitRevisionInfo info = commit(commitCandidates, message, author, commiter, amend);
+                    GitRevisionInfo info = commit(commitCandidates, message, author, commiter, amend, gpgPrivateKeyPassphase);
 
                     GitModuleConfig.getDefault().putRecentCommitAuthors(GitCommitParameters.getUserString(author));
                     GitModuleConfig.getDefault().putRecentCommiter(GitCommitParameters.getUserString(commiter));
@@ -334,7 +337,7 @@ public class CommitAction extends SingleRepositoryAction {
             }
         }
 
-        private GitRevisionInfo commit (Collection<File> commitCandidates, String message, GitUser author, GitUser commiter, boolean amend) throws GitException {
+        private GitRevisionInfo commit (Collection<File> commitCandidates, String message, GitUser author, GitUser commiter, boolean amend, String gpgPrivateKeyPassphase) throws GitException {
             try {
                 if (!JGitUtils.isUserSetup(getRepositoryRoot()) && askToPersistUser(author)) {
                     JGitUtils.persistUser(getRepositoryRoot(), author);
@@ -342,7 +345,7 @@ public class CommitAction extends SingleRepositoryAction {
                 GitRevisionInfo info = getClient().commit(
                         state == GitRepositoryState.MERGING_RESOLVED || state == GitRepositoryState.CHERRY_PICKING_RESOLVED
                                 ? new File[0] : commitCandidates.toArray(new File[commitCandidates.size()]),
-                        message, author, commiter, amend, getProgressMonitor());
+                        message, author, commiter, amend, gpgPrivateKeyPassphase, getProgressMonitor());
                 printInfo(info);
                 return info;
             } catch (GitException ex) {
@@ -379,6 +382,26 @@ public class CommitAction extends SingleRepositoryAction {
                 FileUtil.refreshFor(filesToRefresh.toArray(new File[filesToRefresh.size()]));
             }
         }, 100);
+    }
+    
+    @NbBundle.Messages({
+        "MSG_CommitAction.askForGPGPrivateKeyPassphrase=Please provide the GPG Private Key Passphase.\n\n",
+        "LBL_CommitAction.askForGPGPrivateKeyPassphrase.title=GPG Private Key Passphase"
+    })
+    private String getGPGPrivateKeyPassphase (File repository) {
+        String gpgPrivateKeyPassphase = null;
+        
+        if(JGitUtils.isGPGSignEnabled(repository)) {
+            NotifyDescriptor.InputLine pass = new NotifyDescriptor.InputLine(
+                    Bundle.MSG_CommitAction_askForGPGPrivateKeyPassphrase(),
+                    Bundle.LBL_CommitAction_askForGPGPrivateKeyPassphrase_title()
+            );
+            
+            Object retval = DialogDisplayer.getDefault().notify(pass);
+            gpgPrivateKeyPassphase = NotifyDescriptor.OK_OPTION == retval ? pass.getInputText() : null;
+        }
+        
+        return gpgPrivateKeyPassphase;
     }
 
     @NbBundle.Messages({

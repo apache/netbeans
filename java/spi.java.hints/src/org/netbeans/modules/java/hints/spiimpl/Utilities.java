@@ -1370,6 +1370,25 @@ public class Utilities {
             return super.formalParameter(lambdaParam);
         }
 
+        public JCVariableDecl formalParameter(boolean lambdaParam, boolean recordComponent) throws Throwable {
+            if (token.kind == TokenKind.IDENTIFIER) {
+                if (token.name().startsWith(dollar)) {
+                    com.sun.tools.javac.util.Name name = token.name();
+
+                    Token peeked = S.token(1);
+
+                    if (peeked.kind == TokenKind.COMMA || peeked.kind == TokenKind.RPAREN) {
+                        nextToken();
+                        return JackpotTrees.createVariableWildcard(ctx, name);
+                    }
+                }
+            }
+
+            return (JCVariableDecl) MethodHandles.lookup()
+                                         .findSpecial(NBJavacParser.class, "formalParameter", MethodType.methodType(JCVariableDecl.class, new Class[] {boolean.class, boolean.class}), JackpotJavacParser.class)
+                                         .invoke(this, lambdaParam, recordComponent);
+        }
+
         @Override
         protected JCVariableDecl implicitParameter() {
             if (token.kind == TokenKind.IDENTIFIER) {
@@ -1427,7 +1446,27 @@ public class Utilities {
             }
             return super.classOrInterfaceBodyDeclaration(className, isInterface);
         }
-        
+
+        protected com.sun.tools.javac.util.List<JCTree> classOrInterfaceOrRecordBodyDeclaration(com.sun.tools.javac.util.Name className, boolean isInterface, boolean isRecord) throws Throwable {
+            if (token.kind == TokenKind.IDENTIFIER) {
+                if (token.name().startsWith(dollar)) {
+                    com.sun.tools.javac.util.Name name = token.name();
+
+                    Token peeked = S.token(1);
+
+                    if (peeked.kind == TokenKind.SEMI) {
+                        nextToken();
+                        nextToken();
+                        
+                        return com.sun.tools.javac.util.List.<JCTree>of(F.Ident(name));
+                    }
+                }
+            }
+            return (com.sun.tools.javac.util.List) MethodHandles.lookup()
+                                         .findSpecial(NBJavacParser.class, "classOrInterfaceOrRecordBodyDeclaration", MethodType.methodType(com.sun.tools.javac.util.List.class, new Class[] {com.sun.tools.javac.util.Name.class, boolean.class, boolean.class}), JackpotJavacParser.class)
+                                         .invoke(this, className, isInterface, isRecord);
+        }
+
         @Override
         protected JCExpression checkExprStat(JCExpression t) {
             if (t.getTag() == JCTree.Tag.IDENT) {

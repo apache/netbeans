@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.hints.jdk;
 
+import javax.lang.model.SourceVersion;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.api.HintTest;
 
@@ -139,4 +140,15 @@ public class ConvertToPatternInstanceOfTest extends NbTestCase {
                               "}\n");
     }
 
+    @Override
+    protected void runTest() throws Throwable {
+        try {
+            SourceVersion.valueOf("RELEASE_14");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
+        super.runTest();
+    }
+    
 }

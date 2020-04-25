@@ -45,6 +45,7 @@ class NashornPlatformComboBoxModel implements ComboBoxModel {
     @Override
     public void setSelectedItem(Object anItem) {
         delegate.setSelectedItem(anItem);
+        Thread.dumpStack();
     }
 
     @Override
@@ -53,7 +54,7 @@ class NashornPlatformComboBoxModel implements ComboBoxModel {
         if (selObj == null) {
             return null;
         } else {
-            if (NashornPlatform.isNashornPlatform(PlatformUiSupport.getPlatform(selObj))) {
+            if (NashornPlatform.isJsJvmPlatform(PlatformUiSupport.getPlatform(selObj))) {
                 return selObj;
             } else {
                 return null;
@@ -68,7 +69,7 @@ class NashornPlatformComboBoxModel implements ComboBoxModel {
         if (size == 1) {
             // It's possible that the default platform is there, but is not Nashorn
             Object elm = delegate.getElementAt(0);
-            if (!NashornPlatform.isNashornPlatform(PlatformUiSupport.getPlatform(elm))) {
+            if (!NashornPlatform.isJsJvmPlatform(PlatformUiSupport.getPlatform(elm))) {
                 size = 0;
             }
         }

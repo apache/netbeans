@@ -422,7 +422,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - hide-logs.sh ant $OPTS -Dtest.config=batch1 -f java/java.hints test
+            - ant $OPTS -Dtest.config=batch1 -f java/java.hints test
 
         - name: Test java.hints batch 2 with nb-javac on Java 8
           jdk: openjdk8
@@ -432,7 +432,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - hide-logs.sh ant $OPTS -Dtest.config=batch2 -f java/java.hints test
+            - ant $OPTS -Dtest.config=batch2 -f java/java.hints test
 
         - name: Test Java modules with nb-javac on Java 11
           jdk: openjdk8
@@ -501,7 +501,7 @@ matrix:
           script:
             - ant $OPTS -f java/java.completion test
             - travis_retry ant $OPTS -f java/refactoring.java test-unit
-            - hide-logs ant $OPTS -Dtest.config=vanilla-javac -f java/java.source.base test
+            - ant $OPTS -Dtest.config=vanilla-javac -f java/java.source.base test
 
         - name: Test java.hints batch1 without nb-javac on Java 14
           jdk: openjdk8
@@ -514,7 +514,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - ant $OPTS -Dtest.config=batch1-vanilla-javac -f java/hints test
+            - ant $OPTS -Dtest.config=batch1-vanilla-javac -f java/java.hints test
 
         - name: Test java.hints batch2 without nb-javac on Java 14
           jdk: openjdk8
@@ -527,7 +527,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - ant $OPTS -Dtest.config=batch2-vanilla-javac -f java/hints test
+            - ant $OPTS -Dtest.config=batch2-vanilla-javac -f java/java.hints test
 #
 #        - name: Test apisupport modules
 #          jdk: openjdk8

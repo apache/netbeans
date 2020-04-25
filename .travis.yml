@@ -473,7 +473,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - ant $OPTS -Dtest.config=batch1 -f java/hints test
+            - ant $OPTS -Dtest.config=batch1 -f java/java.hints test
 
         - name: Test java.hints batch 2 with nb-javac on Java 13
           jdk: openjdk8
@@ -486,7 +486,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - ant $OPTS -Dtest.config=batch2 -f java/hints test
+            - ant $OPTS -Dtest.config=batch2 -f java/java.hints test
 
         - name: Test Java modules without nb-javac on Java 14
           jdk: openjdk8

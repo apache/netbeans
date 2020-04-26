@@ -500,8 +500,20 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f java/java.completion test
-            - travis_retry ant $OPTS -f java/refactoring.java test-unit
             - ant $OPTS -Dtest.config=vanilla-javac -f java/java.source.base test
+
+        - name: Test refactoring.java without nb-javac on Java 14
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+            - export TEST_JDK=`bash install-jdk.sh --feature 14 --license GPL --emit-java-home --silent | tail -1`
+            - export OPTS="$OPTS -Dtest.nbjdk.home=$TEST_JDK -Dtest.use.jdk.javac=true"
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - travis_retry ant $OPTS -f java/refactoring.java test-unit
 
         - name: Test java.hints batch1 without nb-javac on Java 14
           jdk: openjdk8

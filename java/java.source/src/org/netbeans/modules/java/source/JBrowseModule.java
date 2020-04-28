@@ -22,6 +22,7 @@ package org.netbeans.modules.java.source;
 import java.awt.Dialog;
 import java.awt.GraphicsEnvironment;
 import java.util.prefs.Preferences;
+import javax.lang.model.SourceVersion;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.modules.autoupdate.ui.api.PluginManager;
 import org.netbeans.modules.java.source.usages.ClassIndexManager;
@@ -91,7 +92,7 @@ public class JBrowseModule extends ModuleInstall {
                     prefs.putBoolean(KEY_WARNING_SHOWN, true);
                 }
 
-                if (!NoJavacHelper.hasNbJavac()) {
+                if (!NoJavacHelper.hasNbJavac() && !hasJDK14OrAboveJavac()) {
                     NotificationDisplayer.getDefault().notify("Install nb-javac Library", ImageUtilities.loadImageIcon(WARNING_ICON, false), Bundle.DESC_InstallNbJavac(), evt -> {
                         PluginManager.installSingle("org.netbeans.modules.nbjavac", Bundle.DN_nbjavac());
                     }, prefs.getBoolean(KEY_WARNING_SHOWN, false) ? Priority.SILENT : Priority.HIGH);
@@ -100,6 +101,15 @@ public class JBrowseModule extends ModuleInstall {
             });
         });
         super.restored();
+    }
+
+    private boolean hasJDK14OrAboveJavac() {
+        try {
+            SourceVersion.valueOf("RELEASE_14");
+            return true;
+        } catch (IllegalArgumentException ex) {
+            return false;
+        }
     }
 
     @Override

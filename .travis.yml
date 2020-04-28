@@ -23,11 +23,16 @@ addons:
       - xvfb
       - openjfx
       - libgfortran3
+
 install:
   - export PATH="$PATH:$TRAVIS_BUILD_DIR/nbbuild/travis"
   - export DISPLAY=:99.0
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
   - sleep 3
+
+cache:
+  directories:
+  - $HOME/.hgexternalcache
 
 matrix:
     include:
@@ -449,7 +454,7 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f java/java.completion test
-            - ant $OPTS -f java/refactoring.java test-unit
+            - travis_retry ant $OPTS -f java/refactoring.java test-unit
 
         - name: Test apisupport modules
           jdk: openjdk8

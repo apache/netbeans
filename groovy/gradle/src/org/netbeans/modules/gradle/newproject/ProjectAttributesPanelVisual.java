@@ -368,8 +368,10 @@ public final class ProjectAttributesPanelVisual extends JPanel implements Docume
     }
 
     void write(WizardDescriptor settings) {
+        File projectFolder = new File(tfProjectLocation.getText());
+        ProjectChooser.setProjectsFolder(projectFolder);
         settings.putProperty(CommonProjectActions.PROJECT_PARENT_FOLDER,
-                new File(tfProjectLocation.getText()));
+                projectFolder);
         settings.putProperty(PROP_NAME, tfProjectName.getText());
         settings.putProperty(PROP_GROUP, tfGroup.getText());
         settings.putProperty(PROP_VERSION, tfVersion.getText());

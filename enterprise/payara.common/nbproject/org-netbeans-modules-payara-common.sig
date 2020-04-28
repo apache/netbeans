@@ -1523,6 +1523,7 @@ fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_193
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_194
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_201
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_202
 meth public boolean isInstalledInDirectory(java.io.File)
 meth public int getVersion()
 meth public java.lang.String getDirectUrl()

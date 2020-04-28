@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.debugger.jpda.truffle.ast;
 
+import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
+
 /**
  * A representation of Truffle Node class.
  */
@@ -34,6 +36,7 @@ public final class TruffleNode {
     private final String tags;
     private final TruffleNode[] ch;
     private boolean current;
+    private boolean currentEncapsulating;
 
     public TruffleNode(String className, String description, String sourceURI, int l1, int c1, int l2, int c2, String tags, int numCh) {
         this.className = className;
@@ -101,6 +104,10 @@ public final class TruffleNode {
         return current;
     }
 
+    public boolean isCurrentEncapsulating() {
+        return currentEncapsulating;
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -108,7 +115,7 @@ public final class TruffleNode {
     public static class Builder {
 
         private TruffleNode node;
-        private int currentLine;
+        private SourcePosition currentPosition;
 
         private Builder() {}
 
@@ -119,29 +126,26 @@ public final class TruffleNode {
         }
 
         public TruffleNode build() {
-            if (currentLine > 0) {
-                markCurrent(node, currentLine);
+            if (currentPosition != null) {
+                markCurrent(node, currentPosition);
             }
             return node;
         }
 
         /** Mark all node paths which are currently being executed as current. */
-        private boolean markCurrent(TruffleNode node, int currentLine) {
-            if (node.getChildren().length == 0) {
-                if (node.getStartLine() <= currentLine && currentLine <= node.getEndLine()) {
-                    node.current = true;
-                    return true;
-                } else {
-                    return false;
-                }
+        private static boolean markCurrent(TruffleNode node, SourcePosition currentPosition) {
+            if (node.getStartLine() == currentPosition.getStartLine() && node.getEndLine() == currentPosition.getEndLine() &&
+                    node.getStartColumn() == currentPosition.getStartColumn() && node.getEndColumn() == currentPosition.getEndColumn()) {
+                node.current = true;
+                return true;
             } else {
                 boolean isSomeCurrent = false;
                 for (TruffleNode ch : node.getChildren()) {
-                    if (markCurrent(ch, currentLine)) {
+                    if (markCurrent(ch, currentPosition)) {
                         isSomeCurrent = true;
                     }
                 }
-                node.current = isSomeCurrent;
+                node.currentEncapsulating = isSomeCurrent;
                 return isSomeCurrent;
             }
         }
@@ -180,8 +184,8 @@ public final class TruffleNode {
             return node;
         }
 
-        public Builder currentLine(int line) {
-            this.currentLine = line;
+        public Builder currentPosition(SourcePosition position) {
+            this.currentPosition = position;
             return this;
         }
 

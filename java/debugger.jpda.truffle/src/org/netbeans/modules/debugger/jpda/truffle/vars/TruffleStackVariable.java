@@ -22,17 +22,21 @@ package org.netbeans.modules.debugger.jpda.truffle.vars;
 import java.util.function.Supplier;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
+import org.netbeans.modules.debugger.jpda.truffle.LanguageName;
 import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
 
 public class TruffleStackVariable implements TruffleVariable {
     
     private final JPDADebugger debugger;
     private final String name;
+    private final LanguageName language;
     private String type;
     private final boolean readable;
     private final boolean writable;
     private final boolean internal;
     private String valueStr;
+    private boolean hasValueSource;
+    private boolean hasTypeSource;
     private Supplier<SourcePosition> valueSourceSupp;
     private Supplier<SourcePosition> typeSourceSupp;
     private SourcePosition valueSource;
@@ -40,18 +44,21 @@ public class TruffleStackVariable implements TruffleVariable {
     private ObjectVariable guestObj;
     private boolean leaf;
     
-    public TruffleStackVariable(JPDADebugger debugger, String name, String type,
-                                boolean readable, boolean writable, boolean internal,
-                                 String valueStr, Supplier<SourcePosition> valueSource,
-                                Supplier<SourcePosition> typeSource,
+    public TruffleStackVariable(JPDADebugger debugger, String name, LanguageName language,
+                                String type, boolean readable, boolean writable, boolean internal,
+                                String valueStr, boolean hasValueSource, Supplier<SourcePosition> valueSource,
+                                boolean hasTypeSource, Supplier<SourcePosition> typeSource,
                                 ObjectVariable truffleObj) {
         this.debugger = debugger;
         this.name = name;
+        this.language = language;
         this.type = type;
         this.readable = readable;
         this.writable = writable;
         this.internal = internal;
         this.valueStr = valueStr;
+        this.hasValueSource = hasValueSource;
+        this.hasTypeSource = hasTypeSource;
         this.valueSourceSupp = valueSource;
         this.typeSourceSupp = typeSource;
         this.guestObj = truffleObj;
@@ -61,6 +68,11 @@ public class TruffleStackVariable implements TruffleVariable {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public LanguageName getLanguage() {
+        return language;
     }
 
     @Override
@@ -90,6 +102,9 @@ public class TruffleStackVariable implements TruffleVariable {
 
     @Override
     public ObjectVariable setValue(JPDADebugger debugger, String newExpression) {
+        if (this.valueStr.equals(newExpression)) {
+            return null;
+        }
         ObjectVariable newGuestObject = TruffleVariableImpl.setValue(debugger, guestObj, newExpression);
         if (newGuestObject != null) {
             this.guestObj = newGuestObject;
@@ -97,6 +112,8 @@ public class TruffleStackVariable implements TruffleVariable {
             this.type = newVar.getType();
             this.valueStr = newVar.getValue().toString();
             this.valueSource = this.typeSource = null;
+            this.hasValueSource = newVar.hasValueSource();
+            this.hasTypeSource = newVar.hasTypeSource();
             this.valueSourceSupp = () -> newVar.getValueSource();
             this.typeSourceSupp = () -> newVar.getTypeSource();
             this.leaf = TruffleVariableImpl.isLeaf(guestObj);
@@ -105,11 +122,21 @@ public class TruffleStackVariable implements TruffleVariable {
     }
 
     @Override
+    public boolean hasValueSource() {
+        return hasValueSource;
+    }
+
+    @Override
     public synchronized SourcePosition getValueSource() {
         if (valueSource == null) {
             valueSource = valueSourceSupp.get();
         }
         return valueSource;
+    }
+
+    @Override
+    public boolean hasTypeSource() {
+        return hasTypeSource;
     }
 
     @Override

@@ -598,6 +598,8 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f enterprise/spring.webmvc test
+            - ant $OPTS -f enterprise/websvc.websvcapi test
+            - ant $OPTS -f enterprise/websvc.wsstackapi test
             
         - name: Test groovy modules on Java 8
           jdk: openjdk8

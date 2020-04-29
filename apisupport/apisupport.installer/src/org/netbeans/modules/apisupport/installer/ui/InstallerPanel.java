@@ -38,8 +38,6 @@ public class InstallerPanel extends javax.swing.JPanel {
         jCheckBox2.setModel(installerProps.linuxModel);
         jCheckBox3.setModel(installerProps.macModel);
         jCheckBox4.setModel(installerProps.solarisModel);
-		//pack200 is not supported from jdk 14 onwards
-        //jCheckBox5.setModel(installerProps.pack200Model);
         
         licenseComboBox.setModel(installerProps.licenseModel);
     }

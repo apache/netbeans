@@ -149,7 +149,6 @@ public final class BuildInstallersAction extends AbstractAction implements Conte
                     //    licenseFile = null;
                     //}
                 }
-                //boolean usePack200 = prefs.getBoolean(SuiteInstallerProjectProperties.USE_PACK200_COMPRESSION, false);
 
                 //${harness.dir}/etc/applicationIcon.icns
                 appIconIcnsFile = new File(InstalledFileLocator.getDefault().locate(
@@ -322,9 +321,6 @@ public final class BuildInstallersAction extends AbstractAction implements Conte
                 "generated-installers-location-forward-slashes",
                 new File(suiteLocation, "dist").getAbsolutePath().replace("\\", "/"));
                  */
-                //pack200 is not supported from jdk 14 onwards
-                /*props.put(
-                        "pack200.enabled", "" + usePack200);*/
 
                 /*
                 if(appIcon!=null) {

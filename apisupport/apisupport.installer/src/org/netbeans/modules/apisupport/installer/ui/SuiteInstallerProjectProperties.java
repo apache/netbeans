@@ -44,7 +44,6 @@ public class SuiteInstallerProjectProperties {
     public static final String GENERATE_FOR_LINUX = "os-linux";
     public static final String GENERATE_FOR_SOLARIS = "os-solaris";
     public static final String GENERATE_FOR_MAC = "os-macosx";
-    //public static final String USE_PACK200_COMPRESSION = "pack200-enabled";
 
     public static final String LICENSE_TYPE = "license-type";
     public static final String LICENSE_TYPE_NO = "no";
@@ -57,8 +56,6 @@ public class SuiteInstallerProjectProperties {
     final JToggleButton.ToggleButtonModel linuxModel;
     final JToggleButton.ToggleButtonModel solarisModel;
     final JToggleButton.ToggleButtonModel macModel;
-	//pack200 is not supported from jdk 14 onwards
-    //final JToggleButton.ToggleButtonModel pack200Model;
     final LicenseComboBoxModel licenseModel;
 
     public SuiteInstallerProjectProperties(Project suiteProject) {
@@ -72,9 +69,6 @@ public class SuiteInstallerProjectProperties {
         solarisModel.setSelected(prefs.getBoolean(GENERATE_FOR_SOLARIS, Utilities.getOperatingSystem() == Utilities.OS_SOLARIS));
         macModel = new JToggleButton.ToggleButtonModel();
         macModel.setSelected(prefs.getBoolean(GENERATE_FOR_MAC, Utilities.isMac()));
-		//pack200 is not supported from jdk 14 onwards
-        //pack200Model = new JToggleButton.ToggleButtonModel();
-        //pack200Model.setSelected(prefs.getBoolean(USE_PACK200_COMPRESSION, false));
 
         // license model:
         ResourceBundle rb = NbBundle.getBundle(SuiteInstallerProjectProperties.class);
@@ -128,8 +122,6 @@ public class SuiteInstallerProjectProperties {
         prefs.putBoolean(GENERATE_FOR_LINUX, linuxModel.isSelected());
         prefs.putBoolean(GENERATE_FOR_SOLARIS, solarisModel.isSelected());
         prefs.putBoolean(GENERATE_FOR_MAC, macModel.isSelected());
-		//pack200 is not supported from jdk 14 onwards
-        //prefs.putBoolean(USE_PACK200_COMPRESSION, pack200Model.isSelected());
         String licenseName = (String) licenseModel.getSelectedItem();
         if (licenseName != null) {
             int index = licenseModel.getNames().indexOf(licenseName);

@@ -26,8 +26,7 @@ import com.oracle.truffle.api.debug.SuspendAnchor;
 import com.oracle.truffle.api.debug.SuspendedCallback;
 import com.oracle.truffle.api.debug.SuspendedEvent;
 import com.oracle.truffle.api.debug.SuspensionFilter;
-import com.oracle.truffle.api.source.Source;
-import com.oracle.truffle.api.source.SourceSection;
+
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
@@ -41,16 +40,20 @@ class JPDATruffleDebugManager implements SuspendedCallback {
     private final Reference<DebuggerSession> session;
     private final ThreadLocal<SuspendedEvent> suspendedEvents = new ThreadLocal<>();
 
-    public JPDATruffleDebugManager(Debugger debugger, boolean doStepInto) {
+    public JPDATruffleDebugManager(Debugger debugger, boolean includeInternal, boolean doStepInto) {
         this.debugger = new WeakReference<>(debugger);
         DebuggerSession debuggerSession = debugger.startSession(this);
-        debuggerSession.setSteppingFilter(SuspensionFilter.newBuilder().ignoreLanguageContextInitialization(true).build());
+        debuggerSession.setSteppingFilter(createSteppingFilter(includeInternal));
         if (doStepInto) {
             debuggerSession.suspendNextExecution();
         }
         this.session = new WeakReference<>(debuggerSession);
     }
-    
+
+    static SuspensionFilter createSteppingFilter(boolean includeInternal) {
+        return SuspensionFilter.newBuilder().ignoreLanguageContextInitialization(true).includeInternal(includeInternal).build();
+    }
+
     Debugger getDebugger() {
         return debugger.get();
     }
@@ -63,18 +66,6 @@ class JPDATruffleDebugManager implements SuspendedCallback {
         return suspendedEvents.get();
     }
     
-    static SourcePosition getPosition(SourceSection sourceSection) {
-        int line = sourceSection.getStartLine();
-        Source source = sourceSection.getSource();
-        String name = source.getName();
-        String path = source.getPath();
-        if (path == null) {
-            path = name;
-        }
-        String code = source.getCharacters().toString();
-        return new SourcePosition(source, name, path, line, code);
-    }
-
     void dispose() {
         DebuggerSession ds = session.get();
         if (ds != null) {
@@ -116,7 +107,7 @@ class JPDATruffleDebugManager implements SuspendedCallback {
         }
         suspendedEvents.set(event);
         try {
-            SourcePosition position = getPosition(event.getSourceSection());
+            SourcePosition position = new SourcePosition(event.getSourceSection());
             int stepCmd = JPDATruffleAccessor.executionHalted(
                     this, position,
                     event.getSuspendAnchor() == SuspendAnchor.BEFORE,

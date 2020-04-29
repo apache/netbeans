@@ -112,10 +112,12 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
         COMMON_NAMES.put("main.JAVA", "01main.java");
         COMMON_NAMES.put("main.GROOVY", "02main.groovy");
         COMMON_NAMES.put("main.SCALA", "03main.scala");
+        COMMON_NAMES.put("main.GENERATED", "04main.generated");
         COMMON_NAMES.put("main.RESOURCES", "09main.resources");
         COMMON_NAMES.put("test.JAVA", "11test.java");
         COMMON_NAMES.put("test.GROOVY", "12test.groovy");
         COMMON_NAMES.put("test.SCALA", "13test.scala");
+        COMMON_NAMES.put("test.GENERATED", "14test.generated");
         COMMON_NAMES.put("test.RESOURCES", "19test.resources");
         COMMON_NAMES.put("gatling.SCALA", "41gatling.scala");
         COMMON_NAMES.put("gatling.RESOURCES.data", "42gatling.data");
@@ -140,7 +142,7 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
 
     private Map<String, GradleJavaSourceSet> gradleSources = Collections.emptyMap();
     private Map<String, Collection<File>> sourceGroups;
-    private final Map<Pair<SourceType, File>, SourceGroup> cache = new HashMap<>();
+    private final Map<Pair<String, File>, SourceGroup> cache = new HashMap<>();
 
     public GradleSourcesImpl(Project proj) {
         this.proj = proj;
@@ -172,7 +174,7 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
 
     SourceGroup createSourceGroup(boolean unique, String group, File dir,
             SourceType lang) {
-        SourceGroup ret = cache.get(Pair.of(lang, dir));
+        SourceGroup ret = cache.get(Pair.of(lang.name(), dir));
         if (ret == null) {
             String msgKey = group + "." + lang.name();
             String groupKey = sourceGroupName(msgKey, dir);
@@ -180,7 +182,21 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
                     ? sourceGroupDisplayName(unique, group, dir, lang)
                     : gatlingSourceGroupDisplayName(unique, dir, lang);
             ret = new GradleSourceGroup(FileUtil.toFileObject(dir), groupKey, sgDisplayName);
-            cache.put(Pair.of(lang, dir), ret);
+            cache.put(Pair.of(lang.name(), dir), ret);
+        }
+        return ret;
+    }
+
+    SourceGroup createGeneratedSourceGroup(boolean unique, String group, File dir) {
+        SourceGroup ret = cache.get(Pair.of("GENERATED", dir)); //NOI18N
+        if (ret == null) {
+            String msgKey = group + ".GENERATED"; //NOI18N
+            String groupKey = sourceGroupName(msgKey, dir);
+            String sgDisplayName = !"gatling".equals(group) //NOI18N
+                    ? sourceGroupDisplayName(unique, group, dir, lang)
+                    : gatlingSourceGroupDisplayName(unique, dir, lang);
+            ret = new GradleSourceGroup(FileUtil.toFileObject(dir), groupKey, sgDisplayName);
+            cache.put(Pair.of("GENERATED", dir), ret);
         }
         return ret;
     }

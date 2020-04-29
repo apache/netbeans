@@ -111,7 +111,7 @@ class NbProjectInfoBuilder {
 
         Map<String, File> ib = new HashMap<>();
         println "Gradle Version: $gradleVersion"
-        if (gradleVersion.compareTo(VersionNumber.parse('3.1')) >= 0) {
+        sinceGradle '3.1' {
             for(IncludedBuild p: project.gradle.includedBuilds) {
                 println "Include Build: ${p.name}"
                 ib.put(p.name, p.projectDir);
@@ -119,7 +119,7 @@ class NbProjectInfoBuilder {
         }
         model.info.project_includedBuilds = ib;
 
-        if (gradleVersion.compareTo(VersionNumber.parse('3.3')) >= 0) {
+        sinceGradle '3.3' {
             model.info.project_display_name = project.displayName;
         }
         try {
@@ -158,11 +158,12 @@ class NbProjectInfoBuilder {
 
     private void detectTests(NbProjectInfoModel model) {
         Set<File> testClassesRoots = new HashSet<>()
-        if (gradleVersion.compareTo(VersionNumber.parse('4.0')) >= 0) {
+        sinceGradle '4.0' {
             project.tasks.withType(Test) { task ->
-                task.testClassesDirs.each() { it -> testClassesRoots.add(it) }
+                task.testClassesDirs.each() { dir -> testClassesRoots.add(dir) }
             }
-        } else {
+        }
+        beforeGradle '4.0' {
             project.tasks.withType(Test) { task ->
                 testClassesRoots.add(task.testClassesDir)
             }
@@ -219,25 +220,37 @@ class NbProjectInfoBuilder {
                     model.info["sourceset_${sourceSet.name}_JAVA"] = storeSet(sourceSet.java.srcDirs);
                     model.info["sourceset_${sourceSet.name}_RESOURCES"] = storeSet(sourceSet.resources.srcDirs);
                     if (hasGroovy)
-                        model.info["sourceset_${sourceSet.name}_GROOVY"] = storeSet(sourceSet.groovy.srcDirs);
+                    model.info["sourceset_${sourceSet.name}_GROOVY"] = storeSet(sourceSet.groovy.srcDirs);
                     if (hasScala)
-                        model.info["sourceset_${sourceSet.name}_SCALA"] = storeSet(sourceSet.scala.srcDirs);
-                    if (gradleVersion.compareTo(VersionNumber.parse('4.0')) >= 0) {
+                    model.info["sourceset_${sourceSet.name}_SCALA"] = storeSet(sourceSet.scala.srcDirs);
+                    sinceGradle '4.0' {
                         def dirs = new LinkedHashSet<File>();
-                        // classesDirs is just an iteratable
+                        // classesDirs is just an iterable
                         for (def dir in sourceSet.output.classesDirs) {
                             dirs.add(dir);
                         }
                         model.info["sourceset_${sourceSet.name}_output_classes"] = storeSet(dirs);
-                    } else {
+                    }
+                    beforeGradle '4.0' {
                         model.info["sourceset_${sourceSet.name}_output_classes"] = Collections.singleton(sourceSet.output.classesDir);
                     }
                     model.info["sourceset_${sourceSet.name}_output_resources"] = sourceSet.output.resourcesDir;
+                    sinceGradle '5.2' {
+                        model.info["sourceset_${sourceSet.name}_output_generated"] = storeSet(sourceSet.output.generatedSourcesDirs);
+                    }
                     try {
                         model.info["sourceset_${sourceSet.name}_classpath_compile"] = storeSet(sourceSet.compileClasspath.files);
                         model.info["sourceset_${sourceSet.name}_classpath_runtime"] = storeSet(sourceSet.runtimeClasspath.files);
                     } catch(Exception e) {
                         model.noteProblem(e)
+                    }
+                    sinceGradle '4.6' {
+                        try {
+                            model.info["sourceset_${sourceSet.name}_classpath_annotation"] = storeSet(sourceSet.annotationProcessorPath.files);
+                        } catch(Exception e) {
+                            model.noteProblem(e)
+                        }
+                        model.info["sourceset_${sourceSet.name}_configuration_annotation"] = sourceSet.annotationProcessorConfigurationName();
                     }
                     model.info["sourceset_${sourceSet.name}_configuration_compile"] = sourceSet.compileConfigurationName;
                     model.info["sourceset_${sourceSet.name}_configuration_runtime"] = sourceSet.runtimeConfigurationName;
@@ -260,7 +273,7 @@ class NbProjectInfoBuilder {
             model.info.webapp_dir = project.webAppDir
             model.info.webxml = project.war.webXml
             try {
-              model.info.exploded_war_dir = project.explodedWar.destinationDir
+                model.info.exploded_war_dir = project.explodedWar.destinationDir
             } catch(Exception e) {
                 model.noteProblem(e)
             }
@@ -444,16 +457,16 @@ class NbProjectInfoBuilder {
             deps.addAll(model.info["configuration_${confiurationName}_unresolved"])
             deps.addAll(model.info["configuration_${confiurationName}_files"])
         }
-            model.info["configuration_${confiurationName}_extendsFrom"].each {
-                collectModuleDependencies(model, it, true, deps)
-            }
+        model.info["configuration_${confiurationName}_extendsFrom"].each {
+            collectModuleDependencies(model, it, true, deps)
         }
+    }
 
     private static <T extends Serializable> Set<T> storeSet(Collection<? extends T> c) {
         switch (c.size()) {
-            case 0: return Collections.emptySet();
-            case 1: return Collections.singleton(c.first())
-            default: return new LinkedHashSet(c)
+        case 0: return Collections.emptySet();
+        case 1: return Collections.singleton(c.first())
+        default: return new LinkedHashSet(c)
         }
     }
 
@@ -467,5 +480,18 @@ class NbProjectInfoBuilder {
         }
         return ret
     }
+
+    private void sinceGradle(String version, Closure cl) {
+        if (gradleVersion.compareTo(VersionNumber.parse(version)) >= 0) {
+            cl()
+        }
+    }
+
+    private void beforeGradle(String version, Closure cl) {
+        if (gradleVersion.compareTo(VersionNumber.parse(version)) < 0) {
+            cl()
+        }
+    }
+
 }
 

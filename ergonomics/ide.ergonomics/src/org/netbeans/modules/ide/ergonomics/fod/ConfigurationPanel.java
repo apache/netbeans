@@ -30,6 +30,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import static java.util.Objects.nonNull;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import javax.swing.Box;
@@ -188,7 +190,7 @@ public class ConfigurationPanel extends JPanel {
         List<String> descriptionsList = new ArrayList<>();
         for (FeatureInfo fi : features) {
             String s = required ? fi.getExtraModulesRequiredText(): fi.getExtraModulesRecommendedText();
-            if (!descriptionsList.contains(s)) {
+            if (nonNull(s) && !descriptionsList.contains(s)) {
                 descriptionsList.add(s);
             }
         }

@@ -338,7 +338,7 @@ public class Snapshot {
         
         List<ReferenceChain> result = new ArrayList<>();
         
-        Iterator toInspect = getRoots();
+        Iterator<Instance> toInspect = getRoots();
         ReferenceChain path = null;
         State s = new State(path, toInspect);
         

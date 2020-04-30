@@ -23,7 +23,9 @@
 <filesystem>
     <folder name="org-netbeans-api-project-libraries">
         <folder name="Libraries">
-            <file name="graaljs.xml" url="graaljs.xml"/>
+            <file name="graaljs.xml" url="graaljs.xml">
+                <attr name="displayName" bundlevalue="org/netbeans/libs/graaljs/Bundle#LBL_LibraryName"/>
+            </file>
         </folder>
     </folder>
 </filesystem>

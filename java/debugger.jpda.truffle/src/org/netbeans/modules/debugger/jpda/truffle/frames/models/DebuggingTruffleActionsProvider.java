@@ -107,7 +107,7 @@ public class DebuggingTruffleActionsProvider implements NodeActionsProviderFilte
             public void run () {
                 EditorContextBridge.getContext().showSource (
                     sourcePosition.getSource().getUrl().toExternalForm(),
-                    sourcePosition.getLine(),
+                    sourcePosition.getStartLine(),
                     f.getDebugger()
                 );
             }

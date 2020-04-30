@@ -16,17 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.api.debugger.jpda.testapps;
 
-import javax.jws.WebMethod;
-import javax.jws.WebService;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- *
- * @author Ajit
+ * Sample lambda expression breakpoints application.
+ * @author aksinsin
  */
-@WebService
-public class InvalidExcludeAttributeTest {
-    @WebMethod(operationName = "", exclude=true)
-    public void getNamespace(){
+public class ExpressionLambdaBreakpointApp {
+
+    public static void main(String... args) {
+        
+        List<String> nonEmptyListCollection = Arrays.stream(new String[]{"a", "", "b", "", "c"})
+                .filter(s -> !s.isEmpty())          // LBREAKPOINT
+                .collect(Collectors.toList());
+        System.out.println(nonEmptyListCollection); // LBREAKPOINT
     }
 }

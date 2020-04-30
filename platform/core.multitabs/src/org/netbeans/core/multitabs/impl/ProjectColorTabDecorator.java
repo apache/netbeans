@@ -161,8 +161,16 @@ public class ProjectColorTabDecorator extends TabDecorator {
         }
         g.setColor( c );
         Rectangle rect = new Rectangle( tabRect );
-        rect.y += rect.height - 3;
-        rect.grow( -1, -1 );
+        int underlineHeight = UIManager.getInt("nb.multitabs.underlineHeight"); // NOI18N
+        if( underlineHeight > 0 ) {
+            // if the selected tab is highlighted with an "underline" (e.g. in FlatLaf)
+            // then paint the project color bar at the top of the tab
+            rect.height = underlineHeight;
+        } else {
+            // bottom project color bar
+            rect.y += rect.height - 3;
+            rect.grow( -1, -1 );
+        }
         g.fillRect( rect.x, rect.y, rect.width, rect.height );
     }
 

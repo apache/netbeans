@@ -151,7 +151,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/libs.javafx test
             - travis_retry hide-logs.sh ant $OPTS -f platform/masterfs test
             - hide-logs.sh ant $OPTS -f platform/masterfs.linux test
-            #- hide-logs.sh ant $OPTS -f platform/netbinox test
+            - hide-logs.sh ant $OPTS -f platform/netbinox test  -Dtest.config=stableBTD
             - hide-logs.sh ant $OPTS -f platform/o.n.bootstrap test
             - hide-logs.sh ant $OPTS -f platform/o.n.core test-unit
             - hide-logs.sh ant $OPTS -f platform/o.n.swing.outline test

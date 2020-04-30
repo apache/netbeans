@@ -57,6 +57,7 @@ import org.netbeans.modules.debugger.jpda.expr.InvocationExceptionTranslated;
 import org.netbeans.modules.debugger.jpda.expr.JDIVariable;
 import org.netbeans.modules.debugger.jpda.models.JPDAClassTypeImpl;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
+import org.netbeans.modules.debugger.jpda.truffle.LanguageName;
 import org.netbeans.modules.debugger.jpda.truffle.RemoteServices;
 import org.netbeans.modules.debugger.jpda.truffle.TruffleDebugManager;
 import org.netbeans.modules.debugger.jpda.truffle.actions.StepActionProvider;
@@ -90,7 +91,7 @@ public class TruffleAccess implements JPDABreakpointListener {
     private static final String VAR_SRC_URI = "uri";                            // NOI18N
     private static final String VAR_SRC_NAME = "name";                          // NOI18N
     private static final String VAR_SRC_PATH = "path";                          // NOI18N
-    private static final String VAR_SRC_LINE = "line";                          // NOI18N
+    private static final String VAR_SRC_SOURCESECTION = "sourceSection";        // NOI18N
     private static final String VAR_SRC_CODE = "code";
     private static final String VAR_STACK_TRACE = "stackTrace";
     private static final String VAR_TOP_FRAME = "topFrame";                     // NOI18N
@@ -231,7 +232,7 @@ public class TruffleAccess implements JPDABreakpointListener {
             TruffleStackFrame topFrame = new TruffleStackFrame(debugger, thread, 0, frame, topFrameDescription, null/*code*/, scopes, thisObject, true);
             TruffleStackInfo stack = new TruffleStackInfo(debugger, thread, stackTrace);
             return new CurrentPCInfo(haltedInfo.stepCmd, thread, sp, scopes, topFrame, stack, depth -> {
-                return getTruffleAST(debugger, (JPDAThreadImpl) thread, depth, sp.getLine(), stack);
+                return getTruffleAST(debugger, (JPDAThreadImpl) thread, depth, sp, stack);
             });
         } catch (AbsentInformationException | IllegalStateException ex) {
             Exceptions.printStackTrace(ex);
@@ -239,7 +240,7 @@ public class TruffleAccess implements JPDABreakpointListener {
         }
     }
 
-    private static TruffleNode getTruffleAST(JPDADebugger debugger, JPDAThreadImpl thread, int depth, int topLine, TruffleStackInfo stack) {
+    private static TruffleNode getTruffleAST(JPDADebugger debugger, JPDAThreadImpl thread, int depth, SourcePosition topPosition, TruffleStackInfo stack) {
         JPDAClassType debugAccessor = TruffleDebugManager.getDebugAccessorJPDAClass(debugger);
         Lock lock = thread.accessLock.writeLock();
         lock.lock();
@@ -273,8 +274,17 @@ public class TruffleAccess implements JPDABreakpointListener {
                                                       METHOD_GET_AST_SGN,
                                                       new Variable[] { debugger.createMirrorVar(depth, true) });
             Variable[] astInfo = ((ObjectVariable) ast).getFields(0, Integer.MAX_VALUE);
-            int line = (depth == 0) ? topLine : stack.getStackFrames(true)[depth].getSourcePosition().getLine();
-            return TruffleNode.newBuilder().nodes((String) astInfo[0].createMirrorObject()).currentLine(line).build();
+            SourcePosition position;
+            if (depth == 0) {
+                position = topPosition;
+            } else {
+                TruffleStackFrame[] stackFrames = stack.getStackFrames(true);
+                if (depth >= stackFrames.length) {
+                    return null;
+                }
+                position = stackFrames[depth].getSourcePosition();
+            }
+            return TruffleNode.newBuilder().nodes((String) astInfo[0].createMirrorObject()).currentPosition(position).build();
         } catch (InvalidExpressionException | InvalidObjectException | NoSuchMethodException ex) {
             Exceptions.printStackTrace(ex);
             return null;
@@ -292,7 +302,7 @@ public class TruffleAccess implements JPDABreakpointListener {
             return null;
         }
         long id = (Long) varSrcId.createMirrorObject();
-        int line = (Integer) sourcePositionVar.getField(VAR_SRC_LINE).createMirrorObject();
+        String sourceSection = (String) sourcePositionVar.getField(VAR_SRC_SOURCESECTION).createMirrorObject();
         Source src = Source.getExistingSource(debugger, id);
         if (src == null) {
             String name = (String) sourcePositionVar.getField(VAR_SRC_NAME).createMirrorObject();
@@ -301,7 +311,7 @@ public class TruffleAccess implements JPDABreakpointListener {
             StringReference codeRef = (StringReference) ((JDIVariable) sourcePositionVar.getField(VAR_SRC_CODE)).getJDIValue();
             src = Source.getSource(debugger, id, name, path, uri, codeRef);
         }
-        return new SourcePosition(debugger, id, src, line);
+        return new SourcePosition(debugger, id, src, sourceSection);
     }
     
     private static TruffleScope[] createScopes(JPDADebugger debugger, ObjectVariable varsArrVar) {
@@ -335,21 +345,27 @@ public class TruffleAccess implements JPDABreakpointListener {
     private static int fillVars(JPDADebugger debugger, TruffleVariable[] vars, Field[] varsArr, int i) {
         for (int vi = 0; vi < vars.length; vi++) {
             String name = (String) varsArr[i++].createMirrorObject();
+            LanguageName language = LanguageName.parse((String) varsArr[i++].createMirrorObject());
             String type = (String) varsArr[i++].createMirrorObject();
             boolean readable = (Boolean) varsArr[i++].createMirrorObject();
             boolean writable = (Boolean) varsArr[i++].createMirrorObject();
             boolean internal = (Boolean) varsArr[i++].createMirrorObject();
             String valueStr = (String) varsArr[i++].createMirrorObject();
+            ObjectVariable valueSourceDef = (ObjectVariable) varsArr[i++];
             Supplier<SourcePosition> valueSource = parseSourceLazy(debugger,
-                                                                   varsArr[i++],
+                                                                   valueSourceDef,
                                                                    (JDIVariable) varsArr[i++]);
+            ObjectVariable typeSourceDef = (ObjectVariable) varsArr[i++];
             Supplier<SourcePosition> typeSource = parseSourceLazy(debugger,
-                                                                  varsArr[i++],
+                                                                  typeSourceDef,
                                                                   (JDIVariable) varsArr[i++]);
             ObjectVariable value = (ObjectVariable) varsArr[i++];
-            vars[vi] = new TruffleStackVariable(debugger, name, type, readable,
+            vars[vi] = new TruffleStackVariable(debugger, name, language, type, readable,
                                                 writable, internal, valueStr,
-                                                valueSource, typeSource, value);
+                                                valueSourceDef.getUniqueID() != 0L,
+                                                valueSource,
+                                                typeSourceDef.getUniqueID() != 0L,
+                                                typeSource, value);
         }
         return i;
     }
@@ -392,7 +408,7 @@ public class TruffleAccess implements JPDABreakpointListener {
         String sourceName;
         String sourcePath;
         URI sourceURI;
-        int sourceLine;
+        String sourceSection;
         try {
             int i1 = 0;
             int i2 = sourceDef.indexOf('\n', i1);
@@ -411,12 +427,16 @@ public class TruffleAccess implements JPDABreakpointListener {
                 throw new IllegalStateException("Bad URI: "+sourceDef.substring(i1, i2), usex);
             }
             i1 = i2 + 1;
-            sourceLine = Integer.parseInt(sourceDef.substring(i1));
+            i2 = sourceDef.indexOf('\n', i1);
+            if (i2 < 0) {
+                i2 = sourceDef.length();
+            }
+            sourceSection = sourceDef.substring(i1, i2);
         } catch (IndexOutOfBoundsException ioob) {
             throw new IllegalStateException("var source definition='"+sourceDef+"'", ioob);
         }
         Source src = Source.getSource(debugger, sourceId, sourceName, sourcePath, sourceURI, codeRef);
-        return new SourcePosition(debugger, sourceId, src, sourceLine);
+        return new SourcePosition(debugger, sourceId, src, sourceSection);
     }
     
     public static TruffleScope[] createFrameScopes(final JPDADebugger debugger,

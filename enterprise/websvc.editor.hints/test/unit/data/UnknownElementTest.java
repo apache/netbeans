@@ -16,17 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import javax.jws.WebMethod;
 import javax.jws.WebService;
 
-/**
- *
- * @author Ajit
- */
 @WebService
-public class InvalidExcludeAttributeTest {
-    @WebMethod(operationName = "", exclude=true)
-    public void getNamespace(){
+public class UnknownElementTest {
+
+    record Point(int x, int y) {
     }
 }

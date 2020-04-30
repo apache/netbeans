@@ -47,7 +47,7 @@ import org.netbeans.spi.viewmodel.UnknownTypeException;
                              types={ TreeModelFilter.class })
 public class DebuggingTruffleTreeModel implements TreeModelFilter {
     
-    private static final Predicate<String> PREDICATE1 = Pattern.compile("^((com|org)\\.\\p{Alpha}*\\.truffle|(com|org)\\.graalvm)\\..*$").asPredicate();
+    private static final Predicate<String> PREDICATE1 = Pattern.compile("^((com|org)\\.\\p{Alpha}*\\.truffle|(com|org)(\\.graalvm|\\.truffleruby))\\..*$").asPredicate();
     private static final String FILTER1 = "com.[A-z]*.truffle.";                     // NOI18N
     private static final String FILTER2 = "com.oracle.graal.";                  // NOI18N
     private static final String FILTER3 = "org.netbeans.modules.debugger.jpda.backend.";    // NOI18N

@@ -59,82 +59,77 @@ public class IndexBuilderTest extends NbTestCase {
     public void testTitleInJDK14() throws Exception {
         FileObject html = fs.findResource(JDK14_INDEX_PATH + "/index-4.html");
 
-        InputStream is = new BufferedInputStream(html.getInputStream(), 1024);
-        SimpleTitleParser tp = new SimpleTitleParser(is);
-        try {
+        try (InputStream is = new BufferedInputStream(html.getInputStream(), 1024)) {
+            SimpleTitleParser tp = new SimpleTitleParser(is);
             tp.parse();
             String titlestr = tp.getTitle();
             assertEquals("wrong title", "D-Index (Java 2 Platform SE v1.4.2)", titlestr);
-        } finally {
-            is.close();
         }
     }
 
     public void testTitleInJDK15() throws Exception {
         FileObject html = fs.findResource(JDK15_INDEX_PATH + "/index-4.html");
 
-        InputStream is = new BufferedInputStream(html.getInputStream(), 1024);
-        SimpleTitleParser tp = new SimpleTitleParser(is);
-        try {
+        try (InputStream is = new BufferedInputStream(html.getInputStream(), 1024)) {
+            SimpleTitleParser tp = new SimpleTitleParser(is);
             tp.parse();
             String titlestr = tp.getTitle();
             assertEquals("wrong title", "D-Index (Java 2 Platform SE 5.0)", titlestr);
-        } finally {
-            is.close();
         }
     }
     
     public void testTitleInJDK7() throws Exception {
         FileObject html = fs.findResource(JDK7_INDEX_PATH + "/index-4.html");
 
-        InputStream is = new BufferedInputStream(html.getInputStream(), 1024);
-        SimpleTitleParser tp = new SimpleTitleParser(is);
-        try {
+        try (InputStream is = new BufferedInputStream(html.getInputStream(), 1024)) {
+            SimpleTitleParser tp = new SimpleTitleParser(is);
             tp.parse();
             String titlestr = tp.getTitle();
             assertEquals("wrong title", "D-Index (Java Platform SE 7 )", titlestr);
-        } finally {
-            is.close();
         }
     }
     
     public void testTitleInJDK8() throws Exception {
         FileObject html = fs.findResource(JDK8_INDEX_PATH + "/index-4.html");
 
-        InputStream is = new BufferedInputStream(html.getInputStream(), 1024);
-        SimpleTitleParser tp = new SimpleTitleParser(is);
-        try {
+        try (InputStream is = new BufferedInputStream(html.getInputStream(), 1024)) {
+            SimpleTitleParser tp = new SimpleTitleParser(is);
             tp.parse();
             String titlestr = tp.getTitle();
             assertEquals("wrong title", "D-Index (Java Platform SE 8 )", titlestr);
-        } finally {
-            is.close();
         }
     }
 
     public void testEmptyTitle() throws Exception {
         String content = "<HTML><HEAD><TITLE></TITLE></HEAD></HTML>";
-        InputStream is = new ByteArrayInputStream(content.getBytes());
-        SimpleTitleParser tp = new SimpleTitleParser(is);
-        try {
+        
+        try (InputStream is = new ByteArrayInputStream(content.getBytes())) {
+            SimpleTitleParser tp = new SimpleTitleParser(is);
             tp.parse();
             String titlestr = tp.getTitle();
             assertEquals("wrong title", "", titlestr);
-        } finally {
-            is.close();
         }
     }
 
     public void testMissingTitle() throws Exception {
         String content = "<HTML><HEAD></HEAD></HTML>";
-        InputStream is = new ByteArrayInputStream(content.getBytes());
-        SimpleTitleParser tp = new SimpleTitleParser(is);
-        try {
+        
+        try (InputStream is = new ByteArrayInputStream(content.getBytes())) {
+            SimpleTitleParser tp = new SimpleTitleParser(is);
             tp.parse();
             String titlestr = tp.getTitle();
             assertNull("wrong title", titlestr);
-        } finally {
-            is.close();
+        }
+    }
+    
+    public void testEscapedHtmlTitle() throws Exception {
+        String content = "<HTML><HEAD><TITLE>Overview (Java SE 11 &amp; JDK 11 )</TITLE></HEAD></HTML>";
+        
+        try (InputStream is = new ByteArrayInputStream(content.getBytes())) {
+            SimpleTitleParser tp = new SimpleTitleParser(is);
+            tp.parse();
+            String titlestr = tp.getTitle();
+            assertEquals("wrong title", "Java SE 11 & JDK 11", titlestr);
         }
     }
 
@@ -166,14 +161,11 @@ public class IndexBuilderTest extends NbTestCase {
             r.close();
         }
 
-        InputStream is = new BufferedInputStream(html.getInputStream(), 1024);
-        SimpleTitleParser tp = new SimpleTitleParser(is);
-        try {
+        try (InputStream is = new BufferedInputStream(html.getInputStream(), 1024)) {
+            SimpleTitleParser tp = new SimpleTitleParser(is);
             tp.parse();
             String titlestr = tp.getTitle();
             assertEquals("wrong title", sb.toString(), titlestr);
-        } finally {
-            is.close();
         }
     }
 }

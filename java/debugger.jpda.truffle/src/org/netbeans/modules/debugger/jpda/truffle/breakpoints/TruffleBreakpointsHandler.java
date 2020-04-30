@@ -245,11 +245,14 @@ public class TruffleBreakpointsHandler {
             }
         }
         bp.addPropertyChangeListener(breakpointsChangeListener);
-        List<Value> values = bpRef[0].getValues();
         Set<ObjectReference> breakpoints = new HashSet<>();
-        for (Value v : values) {
-            if (v instanceof ObjectReference) {
-                breakpoints.add((ObjectReference) v);
+        ArrayReference bpArray = bpRef[0];
+        if (bpArray != null) {
+            List<Value> values = bpArray.getValues();
+            for (Value v : values) {
+                if (v instanceof ObjectReference) {
+                    breakpoints.add((ObjectReference) v);
+                }
             }
         }
         if (!breakpoints.isEmpty()) {

@@ -1,6 +1,6 @@
 Name: JGit Library
 Origin: Eclipse
-Version: 5.5.0.201909110433-r
+Version: 5.7.0.202003110725-r
 Description: Integration library for Git client
 License: EDL-1.0
 URL: http://www.eclipse.org/jgit/download/

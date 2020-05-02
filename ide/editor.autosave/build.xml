@@ -20,7 +20,7 @@
 
 -->
 
-<project basedir="." default="netbeans" name="ide/editor.autosave">
+<project basedir="." default="build" name="ide/editor.autosave">
     <description>Builds, tests, and runs the project org.netbeans.modules.editor.autosave</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

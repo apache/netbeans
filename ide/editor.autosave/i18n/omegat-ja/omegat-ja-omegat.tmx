@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tmx SYSTEM "tmx11.dtd">
+<tmx version="1.1">
+  <header
+    creationtool="OmegaT"
+    creationtoolversion="1.6.1"
+    segtype="paragraph"
+    o-tmf="OmegaT TMX"
+    adminlang="EN-US"
+    srclang="EN-US"
+    datatype="plaintext"
+  >
+  </header>
+  <body>
+    <tu>
+      <tuv lang="EN-US">
+        <seg>About Save Automatically</seg>
+      </tuv>
+      <tuv lang="JA">
+        <seg>自動保存について</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN-US">
+        <seg>nbdocs:/org/netbeans/modules/usersguide/ide.css</seg>
+      </tuv>
+      <tuv lang="JA">
+        <seg>nbdocs:/org/netbeans/modules/usersguide/ja/ide.css</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN-US">
+        <seg>This module provides the functionality to automatically save all yours unsaved opened files.</seg>
+      </tuv>
+      <tuv lang="JA">
+        <seg>このモジュールは編集中のすべてのファイルを保存する機能を提供します。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN-US">
+        <seg>It is possible too define if this feature will be enabled or not, and the interval between save actions, by the appropriate option in &lt;b0&gt;Tools &gt; Options &gt; Miscellaneous &gt; Save Automatically&lt;/b0&gt;. To enable/disable this feature, is possible use the &lt;b1&gt;File &gt; &lt;i2/&gt; Save Automatically&lt;/b1&gt; option too.</seg>
+      </tuv>
+      <tuv lang="JA">
+        <seg>この機能の有効/無効、自動保存の間隔はオプションダイアログで設定することができます。オプションは &lt;b0&gt;ツール &gt; オプション &gt; その他 &gt; 自動保存&lt;/b0&gt;で設定できます。有効/無効を設定するには &lt;b1&gt;ファイル &gt; &lt;i2/&gt;自動保存&lt;/b1&gt; オプションも使用できます。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN-US">
+        <seg>Save Automatically</seg>
+      </tuv>
+      <tuv lang="JA">
+        <seg>自動保存</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN-US">
+        <seg>Settings for save automatically feature</seg>
+      </tuv>
+      <tuv lang="JA">
+        <seg>自動保存の設定</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN-US">
+        <seg>Editing</seg>
+      </tuv>
+      <tuv lang="JA">
+        <seg>編集</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN-US">
+        <seg>Save automatically unsaved files between a predefined interval.
+The module options can be changed on Tools &gt; Options &gt; Miscellaneous &gt; Save Automatically section. It is possible too activate/deactivate this feature by the File &gt; Save Automatically option.</seg>
+      </tuv>
+      <tuv lang="JA">
+        <seg>未保存のファイルを設定した間隔で自動的に保存します。モジュールのオプションは ツール &gt; オプション &gt; その他 &gt; 自動保存 で設定できます。有効/無効を設定するには ファイル &gt; 自動保存 オプションも使用できます。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN-US">
+        <seg>Save files every</seg>
+      </tuv>
+      <tuv lang="JA">
+        <seg>保存する間隔: </seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN-US">
+        <seg>minute(s).</seg>
+      </tuv>
+      <tuv lang="JA">
+        <seg>分毎</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN-US">
+        <seg>Define the interval between save operations.</seg>
+      </tuv>
+      <tuv lang="JA">
+        <seg>保存する間隔を設定します。</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN-US">
+        <seg>Use save automatically feature.</seg>
+      </tuv>
+      <tuv lang="JA">
+        <seg>自動保存を有効</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="EN-US">
+        <seg>Save automatically unsaved files between a predefined interval.</seg>
+      </tuv>
+      <tuv lang="JA">
+        <seg>未保存のファイルを自動保存する間隔。</seg>
+      </tuv>
+    </tu>
+  </body>
+</tmx>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tmx SYSTEM "tmx14.dtd">
+<tmx version="1.4">
+  <header
+    creationtool="OmegaT"
+    creationtoolversion="1.6.1"
+    segtype="sentence"
+    o-tmf="OmegaT TMX"
+    adminlang="EN-US"
+    srclang="EN-US"
+    datatype="plaintext"
+  >
+  </header>
+  <body>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>About AutoSave Module</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>Sobre Salvar automaticamente</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>This module provides the functionality to automatically save all yours unsaved opened files.</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>Este módulo provê a funcionalidade de salvar automaticamente todos os arquivos não salvos abertos.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>It is possible too define if this feature will be enabled or not, and the interval between save actions, by the appropriate option in <bpt i='0' x='0'>&lt;b0&gt;</bpt>Tools &gt; Options &gt; Miscellaneous &gt; Save Automatically<ept i='0'>&lt;/b0&gt;</ept>.</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>É possível ainda definir se este recurso estará habilitado ou não, bem como o intervalo de tempo entre as operações de salvar. Para alterar estas opções, favor utilizar as opções em <bpt i='0' x='0'>&lt;b0&gt;</bpt>Feramentas &gt; Opções &gt; Miscelâneas &gt; Salvar automaticamente<ept i='0'>&lt;/b0&gt;</ept>.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>To enable/disable this feature, is possible use the <bpt i='1' x='1'>&lt;b1&gt;</bpt>File &gt; <ph x='2'>&lt;i2/&gt;</ph> Save Automatically<ept i='1'>&lt;/b1&gt;</ept> option too.</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>Para habilitar/desabilitar este recurso, é possível utilizar-se ainda a opção <bpt i='1' x='1'>&lt;b1&gt;</bpt>Arquivo &gt; <ph x='2'>&lt;i2/&gt;</ph> Salvar automaticamente<ept i='1'>&lt;/b1&gt;</ept>.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>&lt;tocitem text=&quot;Save Automatically&quot;&gt;</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>&lt;tocitem text=&quot;Salvar automaticamente&quot;&gt;</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>&lt;tocitem text=&quot;About AutoSave Module&quot; target=&quot;org.netbeans.modules.autosave.about&quot;/&gt;</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>&lt;tocitem text=&quot;Sobre Salvar automaticamente&quot; target=&quot;org.netbeans.modules.autosave.about&quot;/&gt;</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>Save Automatically</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>Salvar automaticamente</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>Settings for save automatically feature</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>Configurações para o recurso de salvamento automático.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>Editing</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>Edição</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>Save automatically unsaved files between a predefined interval.</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>Salva automaticamente todos os arquivos não salvos dentro de um intervalo de tempo predefinido.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>The module options can be changed on Tools &gt; Options &gt; Miscellaneous &gt; Save Automatically section.</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>As opções do módulo podem ser personalizadas através da seção 'Salvar automaticamente' em Ferramentas &gt; Opções &gt; Miscelâneas.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>It is possible too activate/deactivate this feature by the File &gt; Save Automatically option.</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>Para habilitar/desabilitar este recurso, é possível utilizar-se ainda a opção Arquivo &gt; Salvar automaticamente.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>AutoSave Module</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>AutoSave</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>Save files every</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>Salvar arquivos a cada</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>minute(s).</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>minuto(s).</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>Define the interval between save operations.</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>Define o intervalo entre as operações de salvar.</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="EN-US">
+        <seg>Use save automatically feature.</seg>
+      </tuv>
+      <tuv xml:lang="PT-BR">
+        <seg>Utilizar o recurso de salvar automaticamente.</seg>
+      </tuv>
+    </tu>
+  </body>
+</tmx>

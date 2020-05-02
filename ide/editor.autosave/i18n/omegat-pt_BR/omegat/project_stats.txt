@@ -1,0 +1,24 @@
+Estatística do projeto
+
+Total:
+	Segmentos	25
+	Palavras	185
+	Caracteres (sem espaços)	1226
+	Caracteres (incluindo espaços)	1368
+Únicos:
+	Segmentos	21
+	Palavras	168
+	Caracteres (sem espaços)	1106
+	Caracteres (incluindo espaços)	1235
+Segmentos únicos restantes:
+	Segmentos	4
+	Palavras	38
+	Caracteres (sem espaços)	257
+	Caracteres (incluindo espaços)	270
+
+Estatística do arquivo individual:
+
+Nome do arquivo	Total de palavras	Palavras restantes para traduzir	Total de caracteres (sem espaços)	Caracteres restantes (sem espaços)	Total de caracteres (incluindo espaços)	Caracteres restantes (incluindo espaços)
+javahelp\org\netbeans\modules\autosave\docs\autosave-about.html	69	7	433	60	494	60
+javahelp\org\netbeans\modules\autosave\docs\autosave-toc.xml	42	31	310	197	329	210
+src\org\netbeans\modules\autosave\Bundle.properties	74	0	483	0	545	0

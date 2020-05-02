@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<omegat>
+  <project version="1.0">
+    <source_dir>__DEFAULT__</source_dir>
+    <target_dir>__DEFAULT__</target_dir>
+    <tm_dir>__DEFAULT__</tm_dir>
+    <glossary_dir>__DEFAULT__</glossary_dir>
+    <source_lang>EN-US</source_lang>
+    <target_lang>PT-BR</target_lang>
+    <sentence_seg>true</sentence_seg>
+  </project>
+</omegat>

@@ -2864,6 +2864,7 @@ public class Reformatter implements ReformatTask {
             if(statements != null)
             accept(COLON);
             else {
+                space();
                 accept(ARROW);
                 caseBody = TreeShims.getBody(node);
                 if (caseBody instanceof StatementTree)
@@ -3468,8 +3469,6 @@ public class Reformatter implements ReformatTask {
                             ? getIndent()
                             : after == 2 //after javadoc comment
                             ? getNewlines(1) + getIndent()
-                            : id == ARROW
-                            ? SPACE
                             : null;
                     if (lastWSToken != null) {
                         if (spaces == null || !spaces.contentEquals(lastWSToken.text()))

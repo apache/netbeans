@@ -19,8 +19,11 @@
 
 package org.netbeans.modules.java.source.indexing;
 
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.PackageTree;
@@ -28,7 +31,9 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
+import com.sun.source.util.TreeScanner;
 import com.sun.source.util.Trees;
+import com.sun.tools.javac.api.BasicJavacTask;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Flags;
@@ -59,6 +64,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCModuleDecl;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
+import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.TreeMaker;
 import org.netbeans.lib.nbjavac.services.CancelAbort;
@@ -78,8 +84,11 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -87,6 +96,7 @@ import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -94,6 +104,7 @@ import org.netbeans.api.java.queries.BinaryForSourceQuery;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.lib.nbjavac.services.NBJavaCompiler;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
@@ -305,7 +316,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     modifiedTypes.addAll(aTypes);
                 }
                 ExecutableFilesIndex.DEFAULT.setMainClass(context.getRoot().toURL(), active.indexable.getURL(), main[0]);
-                dropMethodsAndErrors(jt.getContext(), unit.getKey());
+                dropMethodsAndErrors(jt.getContext(), unit.getKey(), dc);
                 JavaCustomIndexer.setErrors(context, active, dc);
             }
             if (context.isCancelled()) {
@@ -320,7 +331,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 if (env == null) {
                     return;
                 }
-                dropMethodsAndErrors(jtFin.getContext(), env.toplevel);
+                dropMethodsAndErrors(jtFin.getContext(), env.toplevel, dc);
             });
             final Future<Void> done = FileManagerTransaction.runConcurrent(new FileSystem.AtomicAction() {
                 @Override
@@ -496,7 +507,9 @@ final class VanillaCompileWorker extends CompileWorker {
         public final List<CompilationUnitTree> handled = new ArrayList<>();
     }
 
-    private void dropMethodsAndErrors(com.sun.tools.javac.util.Context ctx, CompilationUnitTree cut) {
+    public static BiConsumer<JavaFileObject, CompilationUnitTree> fixedListener = (file, cut) -> {};
+
+    private void dropMethodsAndErrors(com.sun.tools.javac.util.Context ctx, CompilationUnitTree cut, DiagnosticListenerImpl dc) {
         HandledUnits hu = ctx.get(HandledUnits.class);
         if (hu == null) {
             ctx.put(HandledUnits.class, hu = new HandledUnits());
@@ -507,18 +520,51 @@ final class VanillaCompileWorker extends CompileWorker {
         }
         hu.handled.add(cut);
         Symtab syms = Symtab.instance(ctx);
-        Names names = Names.instance(ctx);
+        Trees trees = Trees.instance(BasicJavacTask.instance(ctx));
         Types types = Types.instance(ctx);
         TreeMaker make = TreeMaker.instance(ctx);
         //TODO: should preserve error types!!!
         new TreePathScanner<Void, Void>() {
-            private List<JCNewClass> anonymousClasses = new ArrayList<>();
+            private Set<JCNewClass> anonymousClasses = Collections.newSetFromMap(new IdentityHashMap<>());
+            private TreeMap<Long, List<Diagnostic<? extends JavaFileObject>>> diags;
+
+            @Override
+            public Void visitCompilationUnit(CompilationUnitTree node, Void p) {
+                diags = dc.getDiagnostics(cut.getSourceFile())
+                          .stream()
+                          .collect(Collectors.toMap(d -> d.getPosition(),
+                                                    d -> Collections.singletonList(d),
+                                                    (dl1, dl2) -> Stream.of(dl1, dl2)
+                                                                        .flatMap(dl -> dl.stream())
+                                                                        .collect(Collectors.toList()),
+                                                    () -> new TreeMap<>()));
+                super.visitCompilationUnit(node, p);
+                //TODO: if diagnostics are remaining, make all classes non-usable
+                return null;
+            }
+            
             @Override
             public Void visitVariable(VariableTree node, Void p) {
                 JCTree.JCVariableDecl decl = (JCTree.JCVariableDecl) node;
-                super.visitVariable(node, p);
-                if ((decl.mods.flags & Flags.ENUM) == 0) {
-                    decl.init = null;
+                scan(node.getModifiers(), null);
+                scan(node.getType(), null);
+                scan(node.getNameExpression(), null);
+                if (TreeUtilities.CLASS_TREE_KINDS.contains(getCurrentPath().getParentPath().getLeaf().getKind())) {
+                    boolean prevErrorFound = errorFound;
+                    errorFound = false;
+                    scan(node.getInitializer(), null);
+                    SortedMap<Long, List<Diagnostic<? extends JavaFileObject>>> blockDiags = treeDiags(node.getInitializer());
+                    if (errorFound || !blockDiags.isEmpty()) {
+                        if ((decl.mods.flags & Flags.ENUM) == 0) {
+                            decl.init = null;
+                        }
+                        JCClassDecl clazz = (JCClassDecl) getCurrentPath().getParentPath().getLeaf();
+                        clazz.defs = clazz.defs.prepend(make.Block(node.getModifiers().getFlags().contains(Modifier.STATIC) ? Flags.STATIC : 0, com.sun.tools.javac.util.List.of(throwTree(blockDiags))));
+                        blockDiags.clear();
+                    }
+                    errorFound = prevErrorFound;
+                } else {
+                    scan(node.getInitializer(), null);
                 }
                 decl.sym.type = decl.type = error2Object(decl.type);
                 clearAnnotations(decl.sym.getMetadata());
@@ -530,21 +576,22 @@ final class VanillaCompileWorker extends CompileWorker {
                 JCTree.JCMethodDecl decl = (JCTree.JCMethodDecl) node;
                 Symbol.MethodSymbol msym = decl.sym;
                 super.visitMethod(node, p);
-                if (Collections.disjoint(msym.getModifiers(), EnumSet.of(Modifier.NATIVE, Modifier.ABSTRACT))) {
-                    JCTree.JCNewClass nct =
-                            make.NewClass(null,
-                                          com.sun.tools.javac.util.List.nil(),
-                                          make.QualIdent(syms.runtimeExceptionType.tsym),
-                                          com.sun.tools.javac.util.List.of(make.Literal("")),
-                                          null);
-                    nct.type = syms.runtimeExceptionType;
-                    nct.constructor = syms.runtimeExceptionType.tsym.members().getSymbols(
-                            s -> s.getKind() == ElementKind.CONSTRUCTOR && s.type.getParameterTypes().size() == 1 && s.type.getParameterTypes().head.tsym == syms.stringType.tsym
-                    ).iterator().next();
-                    decl.body = make.Block(0, com.sun.tools.javac.util.List.of(make.Throw(nct)));
-                } else {
-                    decl.body = null;
-                }
+                //TODO: fix up modifiers:
+//                if (Collections.disjoint(msym.getModifiers(), EnumSet.of(Modifier.NATIVE, Modifier.ABSTRACT))) {
+//                    JCTree.JCNewClass nct =
+//                            make.NewClass(null,
+//                                          com.sun.tools.javac.util.List.nil(),
+//                                          make.QualIdent(syms.runtimeExceptionType.tsym),
+//                                          com.sun.tools.javac.util.List.of(make.Literal("")),
+//                                          null);
+//                    nct.type = syms.runtimeExceptionType;
+//                    nct.constructor = syms.runtimeExceptionType.tsym.members().getSymbols(
+//                            s -> s.getKind() == ElementKind.CONSTRUCTOR && s.type.getParameterTypes().size() == 1 && s.type.getParameterTypes().head.tsym == syms.stringType.tsym
+//                    ).iterator().next();
+//                    decl.body = make.Block(0, com.sun.tools.javac.util.List.of(make.Throw(nct)));
+//                } else {
+//                    decl.body = null;
+//                }
                 Type.MethodType mt;
                 if (msym.type.hasTag(TypeTag.FORALL)) {
                     ForAll fa = (ForAll) msym.type;
@@ -570,10 +617,42 @@ final class VanillaCompileWorker extends CompileWorker {
             }
 
             @Override
+            public Void visitBlock(BlockTree node, Void p) {
+                boolean prevErrorFound = errorFound;
+                errorFound = false;
+                super.visitBlock(node, p);
+                SortedMap<Long, List<Diagnostic<? extends JavaFileObject>>> blockDiags = treeDiags(node);
+                if (errorFound || !blockDiags.isEmpty()) {
+                    ((JCBlock) node).stats = com.sun.tools.javac.util.List.of(throwTree(blockDiags));
+                    blockDiags.clear();
+                }
+                errorFound = prevErrorFound;
+                return null;
+            }
+
+            private JCStatement throwTree(SortedMap<Long, List<Diagnostic<? extends JavaFileObject>>> diags) {
+                String message = diags.isEmpty() ? "Uncompilable code"
+                                                 : "Uncompilable code - " + DIAGNOSTIC_TO_TEXT.apply(diags.values().iterator().next().get(0));
+                JCNewClass nct =
+                        make.NewClass(null,
+                                      com.sun.tools.javac.util.List.nil(),
+                                      make.QualIdent(syms.runtimeExceptionType.tsym),
+                                      com.sun.tools.javac.util.List.of(make.Literal(message)),
+                                      null);
+                nct.type = syms.runtimeExceptionType;
+                nct.constructor = syms.runtimeExceptionType.tsym.members().getSymbols(
+                        s -> s.getKind() == ElementKind.CONSTRUCTOR && s.type.getParameterTypes().size() == 1 && s.type.getParameterTypes().head.tsym == syms.stringType.tsym
+                ).iterator().next();
+                return make.Throw(nct);
+            }
+
+            @Override
             public Void visitClass(ClassTree node, Void p) {
-                List<JCNewClass> oldAnonymousClasses = anonymousClasses;
+                Set<JCNewClass> oldAnonymousClasses = anonymousClasses;
+                boolean prevErrorFound = errorFound;
+                errorFound = false;
                 try {
-                    anonymousClasses = new ArrayList<>();
+                    anonymousClasses = Collections.newSetFromMap(new IdentityHashMap<>());
                 JCClassDecl clazz = (JCTree.JCClassDecl) node;
                 Symbol.ClassSymbol csym = clazz.sym;
                 if (isErroneousClass(csym)) {
@@ -608,11 +687,42 @@ final class VanillaCompileWorker extends CompileWorker {
                     }
                 }
                 super.visitClass(node, p);
-                clazz.defs = clazz.defs.prepend(make.Block(0, anonymousClasses.stream().map(nc -> make.Exec(nc)).collect(com.sun.tools.javac.util.List.collector())));
+                //remove anonymous classes that remained in the tree from anonymousClasses:
+                new TreeScanner<Void, Void>() {
+                        @Override
+                        public Void visitNewClass(NewClassTree node, Void p) {
+                            anonymousClasses.remove(node);
+                            return super.visitNewClass(node, p);
+                        }
+
+                        @Override
+                        public Void visitClass(ClassTree nestedNode, Void p) {
+                            if (nestedNode == node) {
+                                return super.visitClass(nestedNode, p);
+                            }
+                            return null;
+                        }
+                }.scan(node, null);
+                if (!anonymousClasses.isEmpty()) {
+                    clazz.defs = clazz.defs.prepend(make.Block(0, anonymousClasses.stream().map(nc -> make.Exec(nc)).collect(com.sun.tools.javac.util.List.collector())));
+                }
+                SortedMap<Long, List<Diagnostic<? extends JavaFileObject>>> classDiags = treeDiags(node);
+                if (errorFound || !classDiags.isEmpty()) {
+                    clazz.defs = clazz.defs.prepend(make.Block(Flags.STATIC, com.sun.tools.javac.util.List.of(throwTree(classDiags))));
+                    classDiags.clear();
+                }
                 } finally {
+                    errorFound = prevErrorFound;
                     anonymousClasses = oldAnonymousClasses;
                 }
                 return null;
+            }
+
+            private SortedMap<Long, List<Diagnostic<? extends JavaFileObject>>> treeDiags(Tree node) {
+                long start = trees.getSourcePositions().getStartPosition(cut, node);
+                long end = trees.getSourcePositions().getEndPosition(cut, node);
+                SortedMap<Long, List<Diagnostic<? extends JavaFileObject>>> classDiags = start < end ? diags.subMap(start, end) : new TreeMap<>();
+                return classDiags;
             }
 
             @Override
@@ -632,6 +742,18 @@ final class VanillaCompileWorker extends CompileWorker {
 //                    nct.constructorType = constructor.type;
 //                    nct.def = null;
                 return super.visitNewClass(node, p);
+            }
+
+            @Override
+            public Void visitIdentifier(IdentifierTree node, Void p) {
+                errorFound |= isErroneous(trees.getTypeMirror(getCurrentPath())); //isErroneous - enough?
+                return super.visitIdentifier(node, p);
+            }
+
+            @Override
+            public Void visitMemberSelect(MemberSelectTree node, Void p) {
+                errorFound |= isErroneous(trees.getTypeMirror(getCurrentPath())); //isErroneous - enough?
+                return super.visitMemberSelect(node, p);
             }
 
             private void clearAnnotations(SymbolMetadata metadata) {
@@ -694,7 +816,8 @@ final class VanillaCompileWorker extends CompileWorker {
                 return type == null || type.getKind() == TypeKind.ERROR || type.getKind() == TypeKind.NONE || type.getKind() == TypeKind.OTHER;
             }
 
-            private Set<Type> seen = Collections.newSetFromMap(new IdentityHashMap<>());
+            private boolean errorFound;
+            private Map<Type, Boolean> seen = new IdentityHashMap<>();
 
             private Type error2Object(Type t) {
                 if (t == null)
@@ -704,9 +827,15 @@ final class VanillaCompileWorker extends CompileWorker {
                     return syms.objectType;
                 }
 
-                if (!seen.add(t))
+                Boolean err = seen.get(t);
+                if (err != null) {
+                    errorFound |= err;
                     return t;
+                }
 
+                seen.put(t, false);
+                boolean prevErrorFound = errorFound;
+                errorFound = false;
                 switch (t.getKind()) {
                     case DECLARED: {
                         resolveErrors((ClassType) t);
@@ -734,6 +863,8 @@ final class VanillaCompileWorker extends CompileWorker {
                         break;
                     }
                 }
+                seen.put(t, errorFound);
+                errorFound |= prevErrorFound;
 
                 return t;
             }
@@ -775,6 +906,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 ct.supertype_field = error2Object(ct.supertype_field);
             }
         }.scan(cut, null);
+        fixedListener.accept(((JCCompilationUnit) cut).sourcefile, cut);
     }
 
     /**
@@ -791,4 +923,5 @@ final class VanillaCompileWorker extends CompileWorker {
         return el instanceof ClassSymbol && (((ClassSymbol) el).asType() == null || ((ClassSymbol) el).asType().getKind() == TypeKind.ERROR);
     }
 
+    public static Function<Diagnostic<?>, String> DIAGNOSTIC_TO_TEXT = d -> d.getMessage(null);
 }

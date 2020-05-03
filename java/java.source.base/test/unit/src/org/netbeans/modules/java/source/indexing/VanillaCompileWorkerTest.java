@@ -20,6 +20,7 @@ package org.netbeans.modules.java.source.indexing;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,6 +53,9 @@ import org.netbeans.modules.java.source.indexing.CompileWorker.ParsingOutput;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
 
 /**
  *
@@ -611,6 +615,199 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                      createdFiles);
     }
 
+    public void testPreserveValidMethods1() throws Exception {
+        Map<String, String> file2Fixed = new HashMap<>();
+        VanillaCompileWorker.fixedListener = (file, cut) -> {
+            try {
+                FileObject source = URLMapper.findFileObject(file.toUri().toURL());
+                file2Fixed.put(FileUtil.getRelativePath(getRoot(), source), cut.toString());
+            } catch (MalformedURLException ex) {
+                throw new IllegalStateException(ex);
+            }
+        };
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", 
+                                                                      "package test;\n" +
+                                                                      "public class Test {\n" +
+                                                                      "    public static void main(String... args) { System.err.println(\"Hello, world!\"); }\n" +
+                                                                      "}\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+        Map<String, String> expected = Collections.singletonMap("test/Test.java",
+                "package test;\n" +
+                "\n" +
+                "public class Test {\n" +
+                "    \n" +
+                "    public Test() {\n" +
+                "        super();\n" +
+                "    }\n" +
+                "    \n" +
+                "    public static void main(String... args) {\n" +
+                "        System.err.println(\"Hello, world!\");\n" +
+                "    }\n" +
+                "}");
+        assertEquals(expected, file2Fixed);
+    }
+
+    public void testClearInvalidMethod() throws Exception {
+        Map<String, String> file2Fixed = new HashMap<>();
+        VanillaCompileWorker.fixedListener = (file, cut) -> {
+            try {
+                FileObject source = URLMapper.findFileObject(file.toUri().toURL());
+                file2Fixed.put(FileUtil.getRelativePath(getRoot(), source), cut.toString());
+            } catch (MalformedURLException ex) {
+                throw new IllegalStateException(ex);
+            }
+        };
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", 
+                                                                      "package test;\n" +
+                                                                      "public class Test {\n" +
+                                                                      "    public static void main(String... args) { System.err.println(undefined); }\n" +
+                                                                      "}\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+        Map<String, String> expected = Collections.singletonMap("test/Test.java",
+                "package test;\n" +
+                "\n" +
+                "public class Test {\n" +
+                "    \n" +
+                "    public Test() {\n" +
+                "        super();\n" +
+                "    }\n" +
+                "    \n" +
+                "    public static void main(String... args) {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.cant.resolve.location\");\n" +
+                "    }\n" +
+                "}");
+        assertEquals(expected, file2Fixed);
+    }
+
+    public void testPreserveValidInitializers() throws Exception {
+        Map<String, String> file2Fixed = new HashMap<>();
+        VanillaCompileWorker.fixedListener = (file, cut) -> {
+            try {
+                FileObject source = URLMapper.findFileObject(file.toUri().toURL());
+                file2Fixed.put(FileUtil.getRelativePath(getRoot(), source), cut.toString());
+            } catch (MalformedURLException ex) {
+                throw new IllegalStateException(ex);
+            }
+        };
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", 
+                                                                      "package test;\n" +
+                                                                      "public class Test {\n" +
+                                                                      "    private static int F1 = 0;\n" +
+                                                                      "    private static int F2a = undef;\n" +
+                                                                      "    private static int F2b = undef;\n" +
+                                                                      "    private int F4 = 0;\n" +
+                                                                      "    private int F5a = undef;\n" +
+                                                                      "    private int F5b = undef;\n" +
+                                                                      "}\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+        Map<String, String> expected = Collections.singletonMap("test/Test.java",
+                "package test;\n" +
+                "\n" +
+                "public class Test {\n" +
+                "    {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.cant.resolve.location\");\n" +
+                "    }\n" +
+                "    {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.cant.resolve.location\");\n" +
+                "    }\n" +
+                "    static {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.cant.resolve.location\");\n" +
+                "    }\n" +
+                "    static {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.cant.resolve.location\");\n" +
+                "    }\n" +
+                "    \n" +
+                "    public Test() {\n" +
+                "        super();\n" +
+                "    }\n" +
+                "    private static int F1 = 0;\n" +
+                "    private static int F2a;\n" +
+                "    private static int F2b;\n" +
+                "    private int F4 = 0;\n" +
+                "    private int F5a;\n" +
+                "    private int F5b;\n" +
+                "}");
+        assertEquals(expected, file2Fixed);
+    }
+
+    public void testBrokenClassHeader1() throws Exception {
+        Map<String, String> file2Fixed = new HashMap<>();
+        VanillaCompileWorker.fixedListener = (file, cut) -> {
+            try {
+                FileObject source = URLMapper.findFileObject(file.toUri().toURL());
+                file2Fixed.put(FileUtil.getRelativePath(getRoot(), source), cut.toString());
+            } catch (MalformedURLException ex) {
+                throw new IllegalStateException(ex);
+            }
+        };
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", 
+                                                                      "package test;\n" +
+                                                                      "public class Test extends Undef {\n" +
+                                                                      "}\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+        Map<String, String> expected = Collections.singletonMap("test/Test.java",
+                "package test;\n" +
+                "\n" +
+                "public class Test extends Undef {\n" +
+                "    static {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.cant.resolve\");\n" +
+                "    }\n" +
+                "    \n" +
+                "    public Test() {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code\");\n" +
+                "    }\n" +
+                "}");
+        assertEquals(expected, file2Fixed);
+    }
+
     public static void noop() {}
 
     @Override
@@ -642,11 +839,22 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         }
     }
 
+    @Override
+    protected void tearDown() throws Exception {
+        VanillaCompileWorker.fixedListener = (file, cut) -> {};
+    }
+
     public static Test suite() {
         if (NoJavacHelper.hasNbJavac()) {
             return new VanillaCompileWorkerTest("noop");
         } else {
+//            return new VanillaCompileWorkerTest("testAnonymousClasses");
+//            return new VanillaCompileWorkerTest("testPreserveValidInitializers");
             return new NbTestSuite(VanillaCompileWorkerTest.class);
         }
+    }
+
+    static {
+        VanillaCompileWorker.DIAGNOSTIC_TO_TEXT = d -> d.getCode();
     }
 }

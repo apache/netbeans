@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check author name and email
-      uses: hectorespert/check-commit-author-action@1.0.0
+      uses: hectorespert/check-commit-author-action@1.1.0
       with:
         # The GITHUB_TOKEN secret
         repo-token: ${{ secrets.GITHUB_TOKEN }}

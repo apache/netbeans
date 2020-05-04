@@ -175,6 +175,7 @@ public class HintMetadata {
                     this.sourceVersion = SourceVersion.valueOf("RELEASE_" + version);
                 } catch (IllegalArgumentException ex) {
                     this.sourceVersion = SourceVersion.RELEASE_3;
+                    setEnabled(false);
                 }
             }
             return this;

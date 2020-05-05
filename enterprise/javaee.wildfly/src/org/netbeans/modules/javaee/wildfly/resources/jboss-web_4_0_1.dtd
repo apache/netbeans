@@ -1,0 +1,469 @@
+<!--
+~ JBoss, Home of Professional Open Source
+~ Copyright 2019, Red Hat, Inc., and individual contributors as indicated
+~ by the @authors tag.
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+
+<!-- The JBoss specific elements used to integrate the servlet 2.4 web.xml
+elements into a JBoss deployment. This version applies to the JBoss 4.0.x
+releases.
+
+  <!DOCTYPE jboss-web PUBLIC
+    "-//JBoss//DTD Web Application 2.4//EN"
+    "http://www.jboss.org/j2ee/dtd/jboss-web_4_0_1.dtd">
+-->
+
+<!ENTITY % service-ref PUBLIC
+   "-//JBoss//DTD Web Service Reference 4.0//EN"
+   "http://www.jboss.org/j2ee/dtd/service-ref_4_0_1.dtd">
+
+%service-ref;
+
+<!-- The jboss-web element is the root element.
+-->
+<!ELEMENT jboss-web (class-loading?, security-domain?, context-root?,
+   virtual-host*, use-session-cookies?, replication-config?, resource-env-ref*,
+   resource-ref*, security-role*, ejb-ref*, ejb-local-ref*,
+   message-destination-ref*, message-destination*,
+   webservice-description*, service-ref*, depends*, servlet*, authenticators*)>
+
+<!-- The class-loading element allows one to override the default class
+loading behavior of the web container. You can specify the
+Examples:
+   <class-loading java2ClassLoadingCompliance='false'/>
+
+   <class-loading java2ClassLoadingCompliance='false'>
+      <loader-repository loaderRepositoryClass='dot.com.LoaderRepository'>
+         ...
+      </loader-repository>
+   </class-loading>
+-->
+<!ELEMENT class-loading (loader-repository?)>
+<!-- The java2ClassLoadingCompliance attribute indicates if the normal Java2
+parent first class loading model should be used over the servlet 2.3 web
+container first model.
+-->
+<!ATTLIST class-loading java2ClassLoadingCompliance CDATA #IMPLIED>
+
+<!-- The loader-repository specifies the name of the UnifiedLoaderRepository
+   MBean to use for the ear to provide ear level scoping of classes deployed
+   in the ear. It is a unique JMX ObjectName string. It may also specify
+   an arbitrary configuration by including a loader-repository-config element.
+
+Examples:
+   <class-loading>
+   <loader-repository>jboss.test:loader=cts-cmp2v1-sar.ear</loader-repository>
+   </class-loading>
+
+   <class-loading java2ClassLoadingCompliance='false'>
+   <loader-repository loaderRepositoryClass='dot.com.LoaderRepository'>
+      dot.com:loader=unique-archive-name
+      <loader-repository-config configParserClass='dot.com.LoaderParser'>
+         java2ParentDelegaton=true
+      </loader-repository-config>
+   </loader-repository>
+   </class-loading>
+-->
+<!ELEMENT loader-repository (#PCDATA | loader-repository-config)*>
+<!-- The loaderRepositoryClass attribute gives the classname of the
+org.jboss.mx.loading.LoaderRepository implementation.
+-->
+<!ATTLIST loader-repository loaderRepositoryClass CDATA #IMPLIED>
+
+<!-- The loader-repository-config element specifies any arbitrary configuration
+fragment for use in configuring the loader-repository instance. The actual
+content of this element is specific to the loaderRepositoryClass and the
+code parsing the element.
+-->
+<!ELEMENT loader-repository-config (#PCDATA)>
+<!-- The configParserClass attribute gives the classname of the
+org.jboss.mx.loading.LoaderRepositoryFactory.LoaderRepositoryConfigParser
+implementation to use to parse the loader-repository-config content.
+-->
+<!ATTLIST loader-repository-config configParserClass CDATA #IMPLIED>
+
+<!-- The context-root element specifies the context root of a web
+application. This is normally specified at the ear level using the standard
+J2EE application.xml descriptor, but it may be given here for standalone wars.
+This should not override the application.xml level specification.
+-->
+<!ELEMENT context-root (#PCDATA)>
+
+<!-- The security-domain element allows one to specify a module wide
+security manager domain. It specifies the JNDI name of the security
+manager that implements the org.jboss.security.AuthenticationManager and
+org.jboss.security.RealmMapping interfaces for the domain.
+-->
+<!ELEMENT security-domain (#PCDATA)>
+
+<!-- The flushOnSessionInvalidation attribute is a boolean indicating whether
+the associated security domain cache should be flushed when the web session is
+invalidated. If true, the security manager service
+flushAuthenticationCache(String, java.security.Principal) is called when the
+session is seen to be invalid due to expiration or explicit invalidation.
+-->
+<!ATTLIST security-domain flushOnSessionInvalidation (true|false) 'false'>
+
+<!-- The virtual-host element allows one to specify which virtual host the war
+should be deployed to. Example, to specify that a war should be deployed to the
+www.jboss-store.org virtual host add the following virtual-host element:
+   <virtual-host>www.jboss-store.org</virtual-host>
+-->
+<!ELEMENT virtual-host (#PCDATA)>
+
+<!--The resource-env-ref element maps from the servlet ENC relative name
+of the resource-env-ref to the deployment environment JNDI name of
+the administered object resource.
+Example:
+    <resource-env-ref>
+        <resource-env-ref-name>jms/NewsTopic</resource-env-ref-name>
+        <jndi-name>topic/NewsTopic</jndi-name>
+    </resource-env-ref>
+-->
+<!ELEMENT resource-env-ref (resource-env-ref-name , jndi-name)>
+
+<!-- The resource-env-ref-name specifies the name of the web.xml
+resource-env-ref-name element which this mapping applies.
+-->
+<!ELEMENT resource-env-ref-name (#PCDATA)>
+
+<!--The resource-ref element maps from the servlet ENC relative name
+of the resource-ref to the deployment environment JNDI name of
+the resource manager connection factory.
+Example:
+    <resource-ref>
+        <res-ref-name>jdbc/TheDataSource</res-ref-name>
+        <jndi-name>java:/DefaultDS</jndi-name>
+    </resource-ref>
+
+    <resource-ref>
+        <res-ref-name>jdbc/TheDataSource</res-ref-name>
+        <res-url>http://x.y.z</res-url>
+    </resource-ref>
+-->
+<!ELEMENT resource-ref (res-ref-name , (jndi-name | res-url))>
+
+<!-- The res-ref-name specifies the name of the web.xml res-ref-name element
+which this mapping applies.
+-->
+<!ELEMENT res-ref-name (#PCDATA)>
+
+<!--
+  The security-role element contains the definition of a security role.
+  The definition consists of an the security role name and principal name element(s).
+
+Used in: jboss-web
+
+Example:
+		<security-role>
+      <role-name>Manager</role-name>
+      <principal-name>j2ee</principal-name>
+      <principal-name>javajoe</principal-name>
+		</security-role>
+-->
+<!ELEMENT security-role (role-name, principal-name+)>
+
+<!--
+  The role-name element is the name of the role.
+
+  Used in: security-role
+-->
+<!ELEMENT role-name (#PCDATA)>
+
+<!--
+  The principal-name element is the name of the principal that is mapped
+  to the assembly role-name.
+
+  Used in: security-role
+-->
+<!ELEMENT principal-name (#PCDATA)>
+
+<!-- The ejb-ref element maps from the servlet ENC relative name
+of the ejb reference to the deployment environment JNDI name of
+the bean.
+Example:
+    <ejb-ref>
+        <ejb-ref-name>ejb/Bean0</ejb-ref-name>
+        <jndi-name>deployed/ejbs/Bean0</jndi-name>
+    </ejb-ref>
+-->
+<!ELEMENT ejb-ref (ejb-ref-name , jndi-name)>
+
+<!-- The ejb-local-ref element maps from the servlet ENC relative name
+of the ejb local reference to the deployment environment JNDI name of
+the bean.
+Example:
+    <ejb-local-ref>
+        <ejb-ref-name>ejb/Bean0</ejb-ref-name>
+        <local-jndi-name>deployed/ejbs/Bean0</local-jndi-name>
+    </ejb-local-ref>
+-->
+<!ELEMENT ejb-local-ref (ejb-ref-name , (local-jndi-name|jndi-name))>
+
+<!-- The ejb-ref-name element gives the ENC relative name used
+in the web.xml ejb-ref-name element.
+
+Used in: ejb-ref
+-->
+<!ELEMENT ejb-ref-name (#PCDATA)>
+
+<!-- The jndi-name element specifies the JNDI name of the deployed
+object to which the servlet ENC binding will link to via a JNDI
+LinkRef.
+
+Used in: resource-ref, resource-env-ref, ejb-ref,
+         message-destination-ref, message-destination
+-->
+<!ELEMENT jndi-name (#PCDATA)>
+
+<!--
+  The JNDI name under with the local home interface should be bound
+
+  Used in: ejb-local-ref
+-->
+<!ELEMENT local-jndi-name (#PCDATA)>
+
+<!-- The res-url element value is a URL string for a resource-ref of
+res-type = java.net.URL. Using a res-url creates a binding of the URL
+instance under the java:comp/env. If you want to link to another binding
+of a URL, you can use the jndi-name to do so.
+
+// Binds the URL(http://x.y.z) under java:comp/env/jdbc/XYZHome
+<resource-ref>
+    <res-ref-name>jdbc/XYZHome</res-ref-name>
+    <res-url>http://x.y.z</res-url>
+</resource-ref>
+// Binds a link to urls/XYZHomePage under java:comp/env/jdbc/XYZHome
+<resource-ref>
+    <res-ref-name>jdbc/XYZHome</res-ref-name>
+    <res-url>urls/XYZHomePage</res-url>
+</resource-ref>
+
+   Used in: resource-ref
+-->
+<!ELEMENT res-url (#PCDATA)>
+
+<!--
+  The message-destination-ref element is used to configure the
+  jndi-name for a message-destination-ref in ejb-jar.xml
+
+  Used in: jboss-web
+-->
+<!ELEMENT message-destination-ref (message-destination-ref-name, jndi-name)>
+
+<!--
+  The message-destination-ref-name element identifies the
+  message-destination-ref. It must match the name in ejb-jar.xml
+
+  Used in: message-destination-ref
+-->
+<!ELEMENT message-destination-ref-name (#PCDATA)>
+
+<!--
+  The message-destination element is used to configure the
+  jndi-name for a message-destination in ejb-jar.xml
+
+  Used in: jboss-web
+-->
+<!ELEMENT message-destination (message-destination-name, jndi-name)>
+
+<!--
+  The message-destination-name element identifies the
+  message-destination. It must match the name in ejb-jar.xml
+
+  Used in: message-destination
+-->
+<!ELEMENT message-destination-name (#PCDATA)>
+
+<!-- The depends element gives a JMX ObjectName of a service on which the
+container or ejb depends.
+-->
+<!ELEMENT depends (#PCDATA)>
+
+<!-- The use-session-cookies element controls wether this context uses session cookies
+     or not.
+
+Example:
+     <use-session-cookies>true</use-session-cookies>
+-->
+<!ELEMENT use-session-cookies (#PCDATA)>
+
+
+<!--
+   HTTP Session clustering configuration (optional tags)
+-->
+<!ELEMENT replication-config (replication-trigger?, replication-granularity, replication-field-batch-mode?)>
+
+<!--
+   Clustering only: Determines when the container should consider that a session
+                    must be replicated accross the cluster.
+                    Possible values are:
+                    1 - "SET_AND_GET"
+                    2 - "SET_AND_NON_PRIMITIVE_GET" (default value)
+                    3 - "SET"
+
+   The first option is conservative but not optimal (performance-wise): it will replicate the
+   session even if its content has not been modified but simply accessed. There is no deterministic
+   way to know if the content of an attribute is not itself modified. Consequently, by default, no
+   hypothesis can be done. It is up to the developer to tell us if we can trust this policy.
+
+   The second option is conservative but will only replicate if a non-primitive Object has been
+   accessed (Integer, Long, String, etc. which are immutables). It is the default value.
+
+   The third option considers that the developer will explicitely call setAttribute on the session
+   if it has to be replicated.
+
+Examples:
+         <replication-trigger>SET_AND_GET</replication-trigger>
+      or
+         <replication-trigger>SET_AND_NON_PRIMITIVE_GET</replication-trigger>
+      or
+         <replication-trigger>SET</replication-trigger>
+-->
+<!ELEMENT replication-trigger (#PCDATA)>
+
+<!--
+   Clustering only: Determines the session replication granularity level.
+                    Possible values are:
+                    1 - "SESSION" (default)
+                    2 - "ATTRIBUTE"
+                    3 - "FIELD"
+
+   The first option indicates that replication is done per session instance, i.e. when
+   the session is considered modified, the whole session object will be serialized
+   and replicated. This is the preferred policy when the sessions are generally small.
+
+   The second option indicates that replication is performed only for the the dirty
+   attributes in the session, plus some session data, like lastAccessTime. For sessions
+   carrying large amounts of data, parts of which are infrequently accessed,
+   this option can increase replication performance.
+
+Examples:
+         <replication-granularity>SESSION</replication-granularity>
+      or
+         <replication-granularity>ATTRIBUTE</replication-granularity>
+-->
+<!ELEMENT replication-granularity (#PCDATA)>
+
+<!--
+   Determine whether to batch the replication when the granularity level is set to FIELD.
+   Default is true.
+
+   If this is set to TRUE, that means we will replicate the pojo changes only during the
+   http request is finished. To use this, the JBossCacheAop transaction manager class will
+   need to be configured as BatchModeTransactionManager such that a user can still have
+   UserTransaction inside the http request. However, note that the cache will not particiapte
+   in the UserTransaction in this case.
+
+   If you want cache to participate in the UserTransaction, you can configure the transaction
+   manager class to JBossTransactionManager and set this option to FALSE. The result is for
+   those session attribute changes that are not under transaction will replicate instantaneously,
+   while those particiate under transaction will replicate only when the transaction is
+   completed.
+
+Examples:
+         <replication-field-batch-mode>TRUE</replication-field-batch-mode>
+      or
+         <replication-field-batch-mode>FALSE</replication-field-batch-mode>
+-->
+<!ELEMENT replication-field-batch-mode (true|false)>
+
+<!--
+Runtime information about a web service.
+
+wsdl-publish-location is optionally used to specify
+where the final wsdl and any dependent files should be stored.  This location
+resides on the file system from which deployment is initiated.
+
+-->
+<!ELEMENT webservice-description ( webservice-description-name, config-name?, config-file?, wsdl-publish-location? )>
+
+<!--
+Unique name of a webservice within a module
+-->
+<!ELEMENT webservice-description-name ( #PCDATA )>
+
+<!--
+file: URL of a directory to which a web-service-description's wsdl should be
+published during deployment.  Any required files will be published to this
+directory, preserving their location relative to the module-specific
+wsdl directory(META-INF/wsdl or WEB-INF/wsdl).
+
+Example :
+
+  For an ejb.jar whose webservices.xml wsdl-file element contains
+    META-INF/wsdl/a/Foo.wsdl
+
+  <wsdl-publish-location>file:/home/user1/publish
+  </wsdl-publish-location>
+
+  The final wsdl will be stored in /home/user1/publish/a/Foo.wsdl
+
+-->
+<!ELEMENT wsdl-publish-location ( #PCDATA )>
+
+<!-- The servlet element specifies servlet specific bindings. Currently this
+is only the run-as principal identity.
+
+   Used in: jboss-web
+-->
+<!ELEMENT servlet (servlet-name, run-as-principal?)>
+
+<!-- The servlet-name maps from the web.xml servlet/servlet-name to the
+jboss-web/servlet/servlet-name.
+   Used in: servlet
+-->
+<!ELEMENT servlet-name ( #PCDATA )>
+
+<!--
+  The run-as-principal element specifies whether a specific run-as identity is
+  to be used. If there is a run-as role defined for a servlet, there can also
+  be a run-as-principal defined here. If you don't define a run-as principal
+  the callee will see ctx.getUserPrincipal() == 'anonymous'
+
+  Used in: servlet
+-->
+<!ELEMENT run-as-principal ( #PCDATA )>
+
+<!--
+	Customize the tomcat authenticators at the context or web-app level.
+	These are keyed in by http-auth method specified in login-config in web.xml
+
+	<authenticators>
+	    <authenticator>
+	      <key>BASIC</key>
+	      <value>org.apache.catalina.authenticator.BasicAuthenticator</value>
+	    </authenticator>
+	    <authenticator>
+	      <key>CLIENT-CERT</key>
+	      <value>org.apache.catalina.authenticator.SSLAuthenticator</value>
+	    </authenticator>
+	    <authenticator>
+	      <key>DIGEST</key>
+	      <value>org.apache.catalina.authenticator.DigestAuthenticator</value>
+	    </authenticator>
+	    <authenticator>
+	      <key>FORM</key>
+	      <value>org.apache.catalina.authenticator.FormAuthenticator</value>
+	    </authenticator>
+	    <authenticator>
+	      <key>NONE</key>
+	      <value>org.apache.catalina.authenticator.NonLoginAuthenticator</value>
+	    </authenticator>
+	 </authenticators>
+-->
+
+<!ELEMENT authenticators (authenticator+)>
+<!ELEMENT authenticator ( key, value )>

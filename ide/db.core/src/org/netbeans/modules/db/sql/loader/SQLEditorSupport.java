@@ -481,7 +481,7 @@ public class SQLEditorSupport extends DataEditorSupport
         }
     }
     
-    private synchronized void closeLogger() {
+    private void closeLogger() {
         synchronized (loggerLock) {
             if (logger != null) {
                 logger.close();

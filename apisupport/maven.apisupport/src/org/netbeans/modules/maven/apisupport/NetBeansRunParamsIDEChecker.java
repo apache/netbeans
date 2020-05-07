@@ -123,7 +123,7 @@ public class NetBeansRunParamsIDEChecker implements PrerequisitesChecker {
                     plg.setExtensions(Boolean.TRUE);
                     bld.addPlugin(plg);
                 }
-                plg.setVersion(MavenNbModuleImpl.LATEST_NBM_PLUGIN_VERSION); //
+                plg.setVersion(MavenNbModuleImpl.getLatestNbmPluginVersion()); //
             }
         };
     }

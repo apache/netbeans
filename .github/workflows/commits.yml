@@ -8,12 +8,14 @@ jobs:
     name: Verify commits
     runs-on: ubuntu-latest
     steps:
-    - name: Check author name and email
-      uses: hectorespert/check-commit-author-action@1.2.0
-      with:
-        # The GITHUB_TOKEN secret
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        # Fails on commits using Github private email address, like netbeans@users.noreply.github.com
-        allow_private_email: false
-        # Whitelist of authors
-        whitelist: .authors.yml 
+      - uses: actions/checkout@v2
+        
+      - name: Check author name and email
+        uses: hectorespert/check-commit-author-action@1.2.0
+        with:
+          # The GITHUB_TOKEN secret
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          # Fails on commits using Github private email address, like netbeans@users.noreply.github.com
+          allow_private_email: false
+          # Whitelist of authors
+          whitelist: .authors.yml

@@ -17,4 +17,4 @@
 
 whitelist:
   - username: hectorespert
-    md5: 4c49d58f19c10b3055ca3aea46f37b7c
+    md5: 4c49d58f19c10b3055ca3aea46f37b7c #md5("Name:Email")

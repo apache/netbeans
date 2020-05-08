@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check author name and email
-      uses: hectorespert/check-commit-author-action@1.1.1
+      uses: hectorespert/check-commit-author-action@1.2.0
       with:
         # The GITHUB_TOKEN secret
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         # Fails on commits using Github private email address, like netbeans@users.noreply.github.com
         allow_private_email: false
-        # Author name should be match this regex
-        allow_name_regex: '^[A-Z]' # TODO: Improve regex
+        # Whitelist of authors
+        whitelist: .authors.yml 

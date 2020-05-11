@@ -30,22 +30,25 @@
                 <subpackages>javax.persistence</subpackages>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/eclipselink/org.eclipse.persistence.core-2.5.2.jar</runtime-relative-path>
+                <runtime-relative-path>ext/eclipselink/org.eclipse.persistence.core-2.7.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/eclipselink/org.eclipse.persistence.asm-2.5.2.jar</runtime-relative-path>
+                <runtime-relative-path>ext/eclipselink/org.eclipse.persistence.asm-2.7.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/eclipselink/org.eclipse.persistence.antlr-2.5.2.jar</runtime-relative-path>
+                <runtime-relative-path>ext/eclipselink/org.eclipse.persistence.antlr-2.7.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/eclipselink/org.eclipse.persistence.jpa-2.5.2.jar</runtime-relative-path>
+                <runtime-relative-path>ext/eclipselink/org.eclipse.persistence.jpa-2.7.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/eclipselink/org.eclipse.persistence.jpa.jpql-2.5.2.jar</runtime-relative-path>
+                <runtime-relative-path>ext/eclipselink/org.eclipse.persistence.jpa.jpql-2.7.7.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/eclipselink/javax.persistence-2.1.0.jar</runtime-relative-path>
+                <runtime-relative-path>ext/eclipselink/org.eclipse.persistence.moxy-2.7.7.jar</runtime-relative-path>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/eclipselink/javax.persistence-2.2.1.jar</runtime-relative-path>
             </class-path-extension>
         </data>
     </configuration>

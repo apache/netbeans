@@ -247,6 +247,8 @@ public class CachingFileManager implements JavaFileManager, PropertyChangeListen
                 Archive archive = provider.getArchive( entry.getURL(), cacheFile );
                 if (archive != null) {
                     final Iterable<JavaFileObject> entries;
+                    // multi-release code here duplicated in ModuleFileManager
+                    // fixes should be ported across, or ideally this logic abstracted
                     if (supportsMultiRelease && archive.isMultiRelease()) {
                         if (prefixes == null) {
                             prefixes = multiReleaseRelocations();
@@ -267,11 +269,12 @@ public class CachingFileManager implements JavaFileManager, PropertyChangeListen
                                 }
                                 final String fqn = inferBinaryName(l, fo);
                                 final String pkg = FileObjects.getPackageAndName(fqn)[0];
+                                final String name = pkg + "/" + FileObjects.getName(fo, false);
                                 if (base) {
                                     seenPackages.add(pkg);
-                                    fqn2f.put(fqn, fo);
+                                    fqn2f.put(name, fo);
                                 } else if (seenPackages.contains(pkg)) {
-                                    fqn2f.put(fqn, fo);
+                                    fqn2f.put(name, fo);
                                 }
                             }
                         }

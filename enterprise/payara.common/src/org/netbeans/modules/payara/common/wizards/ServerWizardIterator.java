@@ -82,13 +82,16 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         this.targetValue = targetValue;
     }
 
-    public ServerWizardIterator(ServerDetails[] possibleValues, ServerDetails[] downloadableValues) {
+    public ServerWizardIterator(ServerDetails[] possibleValues) {
         this.acceptedValues = possibleValues;
-        this.downloadableValues = downloadableValues;
+        this.downloadableValues = Arrays.stream(possibleValues)
+                .filter(ServerDetails::isDownloadable)
+                .sorted(Collections.reverseOrder())
+                .toArray(ServerDetails[]::new);
         this.instanceProvider = PayaraInstanceProvider.getProvider();
         this.hostName = "localhost"; // NOI18N
     }
-    
+
     @Override
     public void removeChangeListener(ChangeListener l) {
         listeners.remove(l);

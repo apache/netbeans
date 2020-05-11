@@ -535,8 +535,14 @@ public class CasualDiff {
             VariableTree vt = fgt.getVariables().get(fgt.getVariables().size() - 1);
             return TreeInfo.getEndPos((JCTree)vt, oldTopLevel.endPositions);
         }
-        return TreeInfo.getEndPos(t, oldTopLevel.endPositions);
+        int endPos = TreeInfo.getEndPos(t, oldTopLevel.endPositions);
+
+        // [NETBEANS-4299], might be a synthetic annotation attribute, try rhs
+        if (endPos == Position.NOPOS && t instanceof JCAssign) {
+            endPos = TreeInfo.getEndPos(((JCAssign)t).rhs, oldTopLevel.endPositions);
         }
+        return endPos;
+    }
 
     private int endPos(com.sun.tools.javac.util.List<? extends JCTree> trees) {
         int result = -1;
@@ -2734,7 +2740,7 @@ public class CasualDiff {
 
     protected int diffLiteral(JCLiteral oldT, JCLiteral newT, int[] bounds) {
         if (oldT.typetag != newT.typetag
-                || (oldT.value != null && !oldT.value.equals(newT.value)) || (oldT.getKind() == Tree.Kind.STRING_LITERAL && newT.getKind() == Tree.Kind.STRING_LITERAL)) {
+                || (oldT.value != null && !oldT.value.equals(newT.value)) || possibleTextBlock(oldT, newT)) {
             int localPointer = bounds[0];
             // literal
             int[] literalBounds = getBounds(oldT);
@@ -5851,9 +5857,13 @@ public class CasualDiff {
     }
 
     private boolean matchLiteral(JCLiteral t1, JCLiteral t2) {
-        return t1.typetag == t2.typetag && (t1.value == t2.value || (t1.value != null && t1.value.equals(t2.value)));
+        return t1.typetag == t2.typetag && (t1.value == t2.value || (t1.value != null && t1.value.equals(t2.value))) && !(possibleTextBlock(t1, t2));
     }
 
+    private boolean possibleTextBlock(JCLiteral t1, JCLiteral t2) {
+        return t1.getKind() == Tree.Kind.STRING_LITERAL && t2.getKind() == Tree.Kind.STRING_LITERAL;
+    }
+    
     private boolean matchTypeApply(JCTypeApply t1, JCTypeApply t2) {
         return treesMatch(t1.clazz, t2.clazz) &&
                listsMatch(t1.arguments, t2.arguments);

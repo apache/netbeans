@@ -621,8 +621,8 @@
             <depend srcdir="${test.@{test.type}.src.dir}" destdir="${build.test.@{test.type}.classes.dir}" cache="${build.test.@{test.type}.dir}/depcache">
                 <classpath refid="test.@{test.type}.cp"/>
             </depend>
-            <property name="test.excludes" value=""/> <!-- # 113770 -->
-            <nb-javac srcdir="${test.@{test.type}.src.dir}" destdir="${build.test.@{test.type}.classes.dir}" excludes="${test.excludes}"
+            <property name="test.javac.excludes" value=""/> <!-- # 113770 -->
+            <nb-javac srcdir="${test.@{test.type}.src.dir}" destdir="${build.test.@{test.type}.classes.dir}" excludes="${test.javac.excludes}"
                       debug="true" deprecation="${build.compiler.deprecation}" encoding="UTF-8"
                       source="${javac.source}" target="${javac.target}" optimize="${build.compiler.optimize}" includeantruntime="false">
                 <classpath refid="test.@{test.type}.cp"/>

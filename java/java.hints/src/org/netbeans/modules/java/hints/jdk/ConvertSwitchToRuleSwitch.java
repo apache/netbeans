@@ -22,6 +22,7 @@ import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
+import javax.lang.model.SourceVersion;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.errors.Utilities;
@@ -43,11 +44,13 @@ import org.openide.util.NbBundle.Messages;
     "DESC_org.netbeans.modules.java.hints.jdk.ConvertSwitchStatementToSwitchExpression=Converts to switch expression",
 })
 public class ConvertSwitchToRuleSwitch {
-    
+
+    private static final int SWITCH_RULE_PREVIEW_JDK_VERSION = 13;
+
     @TriggerTreeKind(Tree.Kind.SWITCH)
     @Messages({"ERR_ConvertSwitchToRuleSwitch=Convert switch to rule switch", "ERR_ConvertSwitchToSwitchExpression=Convert to switch expression"})
     public static ErrorDescription switch2RuleSwitch(HintContext ctx) {
-        if (!CompilerOptionsQuery.getOptions(ctx.getInfo().getFileObject()).getArguments().contains("--enable-preview"))
+        if (Utilities.isJDKVersionLower(SWITCH_RULE_PREVIEW_JDK_VERSION) && !CompilerOptionsQuery.getOptions(ctx.getInfo().getFileObject()).getArguments().contains("--enable-preview"))
             return null;
         SwitchTree st = (SwitchTree) ctx.getPath().getLeaf();
         boolean completesNormally = false;

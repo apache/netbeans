@@ -46,6 +46,7 @@ import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.java.JavaDataLoader;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.usages.IndexUtil;
+import org.netbeans.modules.java.ui.FmtOptions;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.cookies.EditorCookie;
@@ -4830,7 +4831,18 @@ public class FormatingTest extends NbTestCase {
                 + "        java.util.Arrays.asList(args).map((val) -> val.length());\n"
                 + "    }\n"
                 + "}\n";
+        // Testing with wrapping lambda arrow deactivated
         reformat(doc, content, golden);
+
+        final String wrapAfterLambdaArrow = FmtOptions.wrapAfterLambdaArrow;
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        preferences.putBoolean(wrapAfterLambdaArrow, true);
+
+        // Testing with wrapping lambda arrow activated
+        reformat(doc, content, golden);
+
+        // Returning the setting to the default value
+        preferences.putBoolean(wrapAfterLambdaArrow, FmtOptions.getDefaultAsBoolean(wrapAfterLambdaArrow));
     }
 
     public void testForNoCondition() throws Exception {

@@ -23,11 +23,16 @@ addons:
       - xvfb
       - openjfx
       - libgfortran3
+
 install:
   - export PATH="$PATH:$TRAVIS_BUILD_DIR/nbbuild/travis"
   - export DISPLAY=:99.0
   - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
   - sleep 3
+
+cache:
+  directories:
+  - $HOME/.hgexternalcache
 
 matrix:
     include:
@@ -146,7 +151,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/libs.javafx test
             - travis_retry hide-logs.sh ant $OPTS -f platform/masterfs test
             - hide-logs.sh ant $OPTS -f platform/masterfs.linux test
-            #- hide-logs.sh ant $OPTS -f platform/netbinox test
+            - hide-logs.sh ant $OPTS -f platform/netbinox test  -Dtest.config=stableBTD
             - hide-logs.sh ant $OPTS -f platform/o.n.bootstrap test
             - hide-logs.sh ant $OPTS -f platform/o.n.core test-unit
             - hide-logs.sh ant $OPTS -f platform/o.n.swing.outline test
@@ -297,7 +302,7 @@ matrix:
             - ant $OPTS -f ide/xml.lexer test
             - ant $OPTS -f ide/xml.multiview test
             - ant $OPTS -f ide/xml.retriever test
-            #- ant $OPTS -f ide/xml.schema.completion test
+            - ant $OPTS -f ide/xml.schema.completion test -Dtest.config=stableBTD
             - ant $OPTS -f ide/xml.schema.model test
             - ant $OPTS -f ide/xml.text test
             - ant $OPTS -f ide/xml.text.obsolete90 test
@@ -449,7 +454,7 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f java/java.completion test
-            - ant $OPTS -f java/refactoring.java test-unit
+            - travis_retry ant $OPTS -f java/refactoring.java test-unit
 
         - name: Test apisupport modules
           jdk: openjdk8
@@ -593,6 +598,9 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f enterprise/spring.webmvc test
+            - ant $OPTS -f enterprise/websvc.editor.hints test
+            - ant $OPTS -f enterprise/websvc.websvcapi test
+            - ant $OPTS -f enterprise/websvc.wsstackapi test
             
         - name: Test groovy modules on Java 8
           jdk: openjdk8

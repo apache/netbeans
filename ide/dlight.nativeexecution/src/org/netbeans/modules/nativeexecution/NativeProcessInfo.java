@@ -298,6 +298,12 @@ public final class NativeProcessInfo {
         boolean escape;
 
         for (String arg : arguments) {
+            if(!arg.contains(" ") && !arg.contains("$")) { // NOI18N
+                // This condition avoids quoting --login, [NETBEANS-4143]
+                sb.append(arg).append(' ');
+                continue;
+            }
+
             escape = false;
             sarg[0] = arg;
             arg = Utilities.escapeParameters(sarg);

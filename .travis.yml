@@ -222,19 +222,19 @@ matrix:
             - ant $OPTS -f ide/css.editor test
             - ant $OPTS -f ide/css.lib test
             - hide-logs.sh ant $OPTS -f ide/css.model test
-            - ant $OPTS -f ide/css.prep test -Dtest.config=stableBTD
+            #- ant $OPTS -f ide/css.prep test -Dtest.config=stableBTD
             - ant $OPTS -f ide/css.visual test
             - travis_retry ant $OPTS -f ide/db test
             - ant $OPTS -f ide/db.core test
             - ant $OPTS -f ide/db.dataview test
             - ant $OPTS -f ide/db.sql.editor test
             - ant $OPTS -f ide/dbapi test
-            - ant $OPTS -f ide/derbi test -Dtest.config=stableBTD
+            #- ant $OPTS -f ide/derbi test -Dtest.config=stableBTD
             - ant $OPTS -f ide/diff test
             - ant $OPTS -f ide/dlight.nativeexecution test -Dtest.config=stableBTD
             - ant $OPTS -f ide/docker.api test
             - ant $OPTS -f ide/docker.ui test
-            - ant $OPTS -f ide/editor test -Dtest.config=stableBTD
+            - hide-logs.sh ant $OPTS -f ide/editor test -Dtest.config=stableBTD
             - ant $OPTS -f ide/editor.bookmarks test
             - ant $OPTS -f ide/editor.bracesmatching test
             - ant $OPTS -f ide/editor.document test

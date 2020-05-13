@@ -45,7 +45,6 @@ class NashornPlatformComboBoxModel implements ComboBoxModel {
     @Override
     public void setSelectedItem(Object anItem) {
         delegate.setSelectedItem(anItem);
-        Thread.dumpStack();
     }
 
     @Override

@@ -68,7 +68,7 @@ public class JSExecutor {
         }
         if (preferNashorn) {
             try {
-                path.getClassLoader(true).loadClass(NASHORN_SHELL);
+                javaPlatform.getBootstrapLibraries().getClassLoader(true).loadClass(NASHORN_SHELL);
                 properties.put(JavaRunner.PROP_CLASSNAME, NASHORN_SHELL);
             } catch (ClassNotFoundException ex) {
                 properties.put(JavaRunner.PROP_CLASSNAME, JS_SHELL);

@@ -1268,13 +1268,15 @@ public class Reformatter implements ReformatTask {
             return true;
         }
 
-        public Boolean scanRecord(ClassTree node, Void p) {
+        private Boolean scanRecord(ClassTree node, Void p) {
             boolean old = continuationIndent;
+            int oldIndent = indent;
             try {
+                continuationIndent = true;
                 ModifiersTree mods = node.getModifiers();
                 if (mods != null) {
                     if (scan(mods, p)) {
-                        continuationIndent = true;
+
                         if (cs.placeNewLineAfterModifiers()) {
                             newline();
                         } else {
@@ -1287,12 +1289,17 @@ public class Reformatter implements ReformatTask {
                 }
                 accept(IDENTIFIER);
                 space();
+
+                if (!ERROR.contentEquals(node.getSimpleName())) {
+                    accept(IDENTIFIER, UNDERSCORE);
+                }
+
                 List<? extends TypeParameterTree> tparams = node.getTypeParameters();
                 if (tparams != null && !tparams.isEmpty()) {
                     if (LT == accept(LT)) {
                         tpLevel++;
                     }
-                    continuationIndent = true;
+
                     for (Iterator<? extends TypeParameterTree> it = tparams.iterator(); it.hasNext();) {
                         TypeParameterTree tparam = it.next();
                         scan(tparam, p);
@@ -1316,16 +1323,11 @@ public class Reformatter implements ReformatTask {
                                 break;
                         }
                     }
-                    spaces(1, true);
+                    spaces(0, true);
                 }
 
-                if (!ERROR.contentEquals(node.getSimpleName())) {
-                    accept(IDENTIFIER, UNDERSCORE);
-                }
-                //continuationIndent = true;
                 spaces(cs.spaceBeforeMethodDeclParen() ? 1 : 0);
                 accept(LPAREN);
-                int oldIndent = indent;
                 List<? extends Tree> members = node.getMembers();
                 List recParams = new ArrayList<Tree>();
 
@@ -1333,52 +1335,112 @@ public class Reformatter implements ReformatTask {
                     if (member.getKind() == Tree.Kind.VARIABLE) {
                         ModifiersTree modifiers = ((VariableTree) member).getModifiers();
                         Set<Modifier> modifierSet = modifiers.getFlags();
-                        boolean isPublicModPresent = false;
 
-                        if (modifiers == null || !modifierSet.contains(Modifier.STATIC)) {
+                        if (!modifierSet.contains(Modifier.STATIC)) {
                             recParams.add(member);
                         }
                     }
                 }
 
-                if (members != null && !members.isEmpty()) {
-                    int oldLastIndent = lastIndent;
-                    try {
-                        spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
-                        wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, recParams);
-                        accept(RPAREN);
-                        spaces(true ? 1 : 0, tokens.offset() < startOffset);
-                        accept(LBRACE);
-                        continuationIndent = old;
-                        indent += indentSize;
+                if (!recParams.isEmpty()) {
+                    spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
+                    wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, recParams);
+                }
+                accept(RPAREN);
+                List<? extends Tree> impls = node.getImplementsClause();
+                if (impls != null && !impls.isEmpty()) {
+                    wrapToken(cs.wrapExtendsImplementsKeyword(), 1, IMPLEMENTS);
+                    wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, impls);
+                }
+                int oldLastIndent = lastIndent;
+                int lastMaxPreservedBlankLines = maxPreservedBlankLines;
+                maxPreservedBlankLines = cs.getMaximumBlankLinesInDeclarations();
+                classLeftBracePlacement();
 
+                continuationIndent = old;
+                try {
+                    if (members != null && !members.isEmpty()) {
+
+                        boolean isFirstMember = true;
+                        blankLines(node.getSimpleName().length() == 0 ? 0 : cs.getBlankLinesAfterClassHeader());
                         for (Tree member : members) {
-                            if (member.getKind() != Tree.Kind.VARIABLE || !recParams.contains(member)) {
-                                newline();
-                                scan(member, p);
+                            if (recParams.contains(member)) {
+                                continue;
+                            }
+                            blankLines(0);
+                            switch (member.getKind()) {
+                                case VARIABLE:
+                                    boolean b = tokens.moveNext();
+                                    if (b) {
+                                        tokens.movePrevious();
+                                        if (!isFirstMember) {
+                                            blankLines(cs.getBlankLinesBeforeFields());
+                                        }
+                                        scan(member, p);
+                                        blankLines(cs.getBlankLinesAfterFields());
+                                    }
+                                    break;
+                                default:
+                                    if (!isFirstMember) {
+                                        blankLines(cs.getBlankLinesBeforeMethods());
+                                    }
+                                    scan(member, p);
+                                    blankLines(cs.getBlankLinesAfterMethods());
+                            }
+                            if (isFirstMember) {
+                                isFirstMember = false;
                             }
                         }
 
-                    } finally {
-                        indent = oldIndent;
-                        lastIndent = oldLastIndent;
-                        continuationIndent = isLastIndentContinuation;
+                        spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
                     }
-                    spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
-                } else {
-                    accept(RPAREN);
-                    accept(LBRACE);
+                } finally {
+                    indent = oldIndent;
+                    lastIndent = oldLastIndent;
+                    continuationIndent = old;
+                    maxPreservedBlankLines = lastMaxPreservedBlankLines;
                 }
-
                 newline();
-                indent = oldIndent;
                 accept(RBRACE);
             } finally {
                 continuationIndent = old;
             }
-
             return true;
         }
+
+        private void classLeftBracePlacement() {
+            CodeStyle.BracePlacement bracePlacement = cs.getClassDeclBracePlacement();
+            boolean spaceBeforeLeftBrace = cs.spaceBeforeClassDeclLeftBrace();
+            int old = indent = lastIndent;
+            int halfIndent = lastIndent;
+            switch (bracePlacement) {
+                case SAME_LINE:
+                    spaces(spaceBeforeLeftBrace ? 1 : 0, tokens.offset() < startOffset);
+                    accept(LBRACE);
+                    indent = lastIndent + indentSize;
+                    break;
+                case NEW_LINE:
+                    newline();
+                    accept(LBRACE);
+                    indent = lastIndent + indentSize;
+                    break;
+                case NEW_LINE_HALF_INDENTED:
+                    int oldLast = lastIndent;
+                    indent = lastIndent + (indentSize >> 1);
+                    halfIndent = indent;
+                    newline();
+                    accept(LBRACE);
+                    indent = oldLast + indentSize;
+                    break;
+                case NEW_LINE_INDENTED:
+                    indent = lastIndent + indentSize;
+                    halfIndent = indent;
+                    newline();
+                    accept(LBRACE);
+                    break;
+            }
+        }
+
         @Override
         public Boolean visitMethod(MethodTree node, Void p) {
             boolean old = continuationIndent;

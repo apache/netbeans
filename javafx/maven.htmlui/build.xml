@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="java/maven.htmlui">
+<project basedir="." default="build" name="javafx/maven.htmlui">
     <description>Builds, tests, and runs the project org.netbeans.modules.maven.htmlui</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

@@ -27,5 +27,6 @@ SUPPORTED_ACTIONS: build,clean,rebuild,run.single,debug.single,compile.single,ru
             <available file="javac.exe" filepath="${nb.jdk.project.target.java.home}/bin" />
         </or>
     </condition>
-    <import file="${basedir}/make/langtools/netbeans/langtools/build.xml"/>
+    <property name="langtools.build.location" value="make/langtools/netbeans/langtools/build.xml" />
+    <import file="${basedir}/${langtools.build.location}"/>
 </project>

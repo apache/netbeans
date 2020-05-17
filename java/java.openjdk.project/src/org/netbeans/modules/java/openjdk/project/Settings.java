@@ -33,6 +33,10 @@ public class Settings {
 
     private static final String KEY_BUILD_BEFORE_TESTS = "build-before-test";
     private static final String KEY_JTREG_LOCATION = "jtreg-location";
+    private static final String KEY_USE_ANT_BUILD = "use-langtools-ant-build";
+    private static final String KEY_ANT_BUILD_LOCATION = "langtools-ant-build-location";
+
+    private static final String DEF_ANT_BUILD_LOCATION = "make/langtools/netbeans/langtools/build.xml";
 
     private final Project prj;
 
@@ -62,6 +66,22 @@ public class Settings {
 
     public void setJTregLocation(String jtregLocation) {
         getPrivatePreferences().put(KEY_JTREG_LOCATION, jtregLocation);
+    }
+
+    public boolean isUseAntBuild() {
+        return getPrivatePreferences().getBoolean(KEY_USE_ANT_BUILD, true);
+    }
+
+    public void setUseAntBuild(boolean useAntBuild) {
+        getPrivatePreferences().putBoolean(KEY_USE_ANT_BUILD, useAntBuild);
+    }
+
+    public String getAntBuildLocation() {
+        return getPrivatePreferences().get(KEY_ANT_BUILD_LOCATION, DEF_ANT_BUILD_LOCATION);
+    }
+
+    public void setAntBuildLocation(String antBuildLocation) {
+        getPrivatePreferences().put(KEY_ANT_BUILD_LOCATION, antBuildLocation);
     }
 
     public void flush() {

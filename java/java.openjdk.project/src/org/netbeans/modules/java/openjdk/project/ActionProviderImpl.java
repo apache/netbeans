@@ -171,8 +171,14 @@ public class ActionProviderImpl implements ActionProvider {
             }
         }
         FileObject scriptFO = script;
+        Settings settings = project.getLookup().lookup(Settings.class);
+        Properties props = new Properties();
+        if (settings.isUseAntBuild()) {
+            props.put("langtools.build.location", settings.getAntBuildLocation());
+        } else {
+            command = COMMAND_BUILD_GENERIC_FAST;
+        }
         if (COMMAND_BUILD_GENERIC_FAST.equals(command)) {
-            Settings settings = project.getLookup().lookup(Settings.class);
             switch (settings.getRunBuildSetting()) {
                 case NEVER:
                     ActionProgress.start(context).finished(true);
@@ -184,7 +190,6 @@ public class ActionProviderImpl implements ActionProvider {
             scriptFO = genericScript;
             command = COMMAND_BUILD_FAST; //XXX: should only do this if genericScript supports it
         }
-        Properties props = new Properties();
         FileObject basedirFO = project.currentModule != null ? scriptFO == genericScript ? project.moduleRepository.getJDKRoot()
                                                                                          : repository
                                                              : repository.getParent();

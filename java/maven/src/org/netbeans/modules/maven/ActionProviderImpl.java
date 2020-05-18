@@ -211,6 +211,8 @@ public class ActionProviderImpl implements ActionProvider {
     
     //TODO these effectively need updating once in a while
     private static final String SUREFIRE_VERSION_SAFE = "2.15"; //2.16 is broken
+    // surefire 2.22 is needed for JUnit 5
+    private static final String SUREFIRE_VERSION_SAFE_5 = "2.22.0";
     private static final String JUNIT_VERSION_SAFE = "4.11";
 
     @Override public void invokeAction(final String action, final Lookup lookup) {
@@ -288,14 +290,17 @@ public class ActionProviderImpl implements ActionProvider {
 
     @Messages({
         "run_single_method_disabled=Surefire 2.8+ with JUnit 4.8+ or TestNG needed to run a single test method.",
+        "run_single_method_disabled5=Surefire 2.22.0 is required to run a single test method with JUnit5.",
         "TIT_RequiresUpdateOfPOM=Feature requires update of POM",
-        "TXT_Run_Single_method=<html>Executing single test method requires Surefire 2.8+ and JUnit in version 4.8 and bigger. <br/><br/>Update your pom.xml?</html>"
+        "TXT_Run_Single_method=<html>Executing single test method requires Surefire 2.8+ and JUnit in version 4.8 and bigger. <br/><br/>Update your pom.xml?</html>",
+        "TXT_Run_Single_method5=<html>Executing single test method with JUnit 5 requires Surefire 2.22.0. <br/><br/>Update your pom.xml?</html>"
     })    
     private boolean checkSurefire(final String action) {
         if (action.equals(SingleMethod.COMMAND_RUN_SINGLE_METHOD) || action.equals(SingleMethod.COMMAND_DEBUG_SINGLE_METHOD)) {
             if (!runSingleMethodEnabled()) {
+                boolean ju5 = usingJUnit5();
                 if (NbPreferences.forModule(ActionProviderImpl.class).getBoolean(SHOW_SUREFIRE_WARNING, true)) {
-                    WarnPanel pnl = new WarnPanel(TXT_Run_Single_method());
+                    WarnPanel pnl = new WarnPanel(ju5 ? TXT_Run_Single_method5() : TXT_Run_Single_method());
                     Object o = DialogDisplayer.getDefault().notify(new NotifyDescriptor.Confirmation(pnl, TIT_RequiresUpdateOfPOM(), NotifyDescriptor.YES_NO_OPTION));
                     if (pnl.disabledWarning()) {
                         NbPreferences.forModule(ActionProviderImpl.class).putBoolean(SHOW_SUREFIRE_WARNING, false);
@@ -304,9 +309,24 @@ public class ActionProviderImpl implements ActionProvider {
                         RequestProcessor.getDefault().post(new Runnable() {
                             @Override
                             public void run() {
+                                String surefireVersion = null;
+                                String junitVersion = null;
+                                
+                                if (ju5 && !usingSurefire2_22()) {
+                                    surefireVersion = SUREFIRE_VERSION_SAFE_5;
+                                } else if (!usingSurefire28()) {
+                                    surefireVersion = SUREFIRE_VERSION_SAFE;
+                                }
+                                if (!ju5) {
+                                    junitVersion = usingJUnit4() || usingTestNG() ? null : JUNIT_VERSION_SAFE;
+                                }
+                                
                                 Utilities.performPOMModelOperations(
                                         proj.getProjectDirectory().getFileObject("pom.xml"),
-                                        Collections.singletonList(new UpdateSurefireOperation(usingSurefire28() ? null : SUREFIRE_VERSION_SAFE, usingJUnit4() || usingTestNG() ? null : JUNIT_VERSION_SAFE)));
+                                        Collections.singletonList(new UpdateSurefireOperation(
+                                                surefireVersion, junitVersion
+                                        ))
+                                );
                                 //this appears to run too fast, before the resolved model is updated.
 //                                SwingUtilities.invokeLater(new Runnable() {
 //                                    @Override
@@ -319,7 +339,8 @@ public class ActionProviderImpl implements ActionProvider {
                         return false;
                     }
                 }
-                StatusDisplayer.getDefault().setStatusText(run_single_method_disabled());
+                StatusDisplayer.getDefault().setStatusText(
+                        ju5 ? run_single_method_disabled5() : run_single_method_disabled());
                 return false;
             }
         }

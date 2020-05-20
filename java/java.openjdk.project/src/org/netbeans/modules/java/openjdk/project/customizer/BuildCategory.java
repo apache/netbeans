@@ -122,7 +122,7 @@ public class BuildCategory extends javax.swing.JPanel {
                 BuildCategory panel = new BuildCategory(settings.isUseAntBuild(), settings.getAntBuildLocation());
                 category.setOkButtonListener(evt -> {
                     settings.setUseAntBuild(panel.useAntBuild.isSelected());
-                    settings.setJTregLocation(panel.antBuildLocation.getText());
+                    settings.setAntBuildLocation(panel.antBuildLocation.getText());
                 });
                 category.setStoreListener(evt -> settings.flush());
                 return panel;

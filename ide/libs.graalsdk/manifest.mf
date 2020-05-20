@@ -5,3 +5,4 @@ OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/graalsdk/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.5
 OpenIDE-Module-Provides: org.netbeans.spi.scripting.EngineProvider
 OpenIDE-Module-Recommends: com.oracle.truffle.polyglot.PolyglotImpl
+Truffle-Class-Path-Append: false

@@ -99,6 +99,7 @@ public class ActionProviderImpl implements ActionProvider {
     private final FileObject script;
     private final FileObject genericScript;
     private final String[] supportedActions;
+    private final String[] genericSupportedActions;
 
     public ActionProviderImpl(JDKProject project) {
         this.project = project;
@@ -128,10 +129,15 @@ public class ActionProviderImpl implements ActionProvider {
 
         script = FileUtil.toFileObject(scriptFile);
 
+        supportedActions = readSupportedActions(script);
+        genericSupportedActions = readSupportedActions(genericScript);
+    }
+
+    private String[] readSupportedActions(FileObject from) {
         String[] supported = new String[0];
 
         try {
-            for (String l : script.asLines("UTF-8")) {
+            for (String l : from.asLines("UTF-8")) {
                 if (l.contains("SUPPORTED_ACTIONS:")) {
                     String[] actions = l.substring(l.indexOf(':') + 1).trim().split(",");
                     Set<String> filteredActions = new HashSet<>();
@@ -151,13 +157,13 @@ public class ActionProviderImpl implements ActionProvider {
             //???
             Exceptions.printStackTrace(ex);
         }
-        
-        supportedActions = supported;
+        return supported;
     }
 
     @Override
     public String[] getSupportedActions() {
-        return supportedActions;
+        Settings settings = project.getLookup().lookup(Settings.class);
+        return settings.isUseAntBuild() ? supportedActions : genericSupportedActions;
     }
 
     @Override
@@ -176,7 +182,10 @@ public class ActionProviderImpl implements ActionProvider {
         if (settings.isUseAntBuild()) {
             props.put("langtools.build.location", settings.getAntBuildLocation());
         } else {
-            command = COMMAND_BUILD_GENERIC_FAST;
+            scriptFO = genericScript;
+            if (COMMAND_BUILD_FAST.equals(command)) {
+                command = COMMAND_BUILD_GENERIC_FAST;
+            }
         }
         if (COMMAND_BUILD_GENERIC_FAST.equals(command)) {
             switch (settings.getRunBuildSetting()) {

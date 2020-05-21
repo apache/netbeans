@@ -116,7 +116,8 @@ public class JPQLExecutor {
             });
             Query query = em.createQuery(jpql);
             String queryStr = null;
-            if (provider.equals(ProviderUtil.ECLIPSELINK_PROVIDER2_0) || provider.equals(ProviderUtil.ECLIPSELINK_PROVIDER)) {//NOI18N
+            if (provider.equals(ProviderUtil.ECLIPSELINK_PROVIDER2_0) || provider.equals(ProviderUtil.ECLIPSELINK_PROVIDER2_1)
+                    || provider.equals(ProviderUtil.ECLIPSELINK_PROVIDER2_2)) {//NOI18N
                 Class qClass = Thread.currentThread().getContextClassLoader().loadClass(ECLIPSELINK_QUERY);
                 if (qClass != null) {
                     Method method = qClass.getMethod(ECLIPSELINK_QUERY_SQL0);

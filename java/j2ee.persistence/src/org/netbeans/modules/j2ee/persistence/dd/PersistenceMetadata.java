@@ -79,7 +79,9 @@ public final class PersistenceMetadata {
                 }
 
                 try (InputStream is=fo.getInputStream()) {
-                    if(Persistence.VERSION_2_1.equals(version)) {
+                    if(Persistence.VERSION_2_2.equals(version)) {
+                        persistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.Persistence.createGraph(is);
+                    } else if(Persistence.VERSION_2_1.equals(version)) {
                         persistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.Persistence.createGraph(is);
                     } else if(Persistence.VERSION_2_0.equals(version)) {
                         persistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.Persistence.createGraph(is);

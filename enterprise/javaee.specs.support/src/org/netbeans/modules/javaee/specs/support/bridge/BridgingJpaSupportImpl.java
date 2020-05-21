@@ -63,12 +63,14 @@ public class BridgingJpaSupportImpl implements JpaSupportImplementation {
                 || platform.isToolSupported(JPAModuleInfo.JPAVERSIONPREFIX + Persistence.VERSION_2_0);
         boolean jpa21 = !check
                 || platform.isToolSupported(JPAModuleInfo.JPAVERSIONPREFIX + Persistence.VERSION_2_1);
+        boolean jpa22 = !check
+                || platform.isToolSupported(JPAModuleInfo.JPAVERSIONPREFIX + Persistence.VERSION_2_2);
         
         for (Map.Entry<Provider, String> entry : getPossibleContainerProviders().entrySet()) {
             Provider provider = entry.getKey();
             if (platform.isToolSupported(provider.getProviderClass())) {
                 JpaProvider jpaProvider = JpaProviderFactory.createJpaProvider(
-                        provider.getProviderClass(), platform.isToolSupported(entry.getValue()), jpa1, jpa2, jpa21);
+                        provider.getProviderClass(), platform.isToolSupported(entry.getValue()), jpa1, jpa2, jpa21, jpa22);
                 result.add(jpaProvider);
             }
         }
@@ -87,7 +89,8 @@ public class BridgingJpaSupportImpl implements JpaSupportImplementation {
         candidates.put(ProviderUtil.OPENJPA_PROVIDER1_0, "openJpaPersistenceProviderIsDefault1.0"); // NOI18N
         candidates.put(ProviderUtil.ECLIPSELINK_PROVIDER1_0, "eclipseLinkPersistenceProviderIsDefault1.0"); // NOI18N
         candidates.put(ProviderUtil.ECLIPSELINK_PROVIDER2_0, "eclipseLinkPersistenceProviderIsDefault2.0"); // NOI18N
-        candidates.put(ProviderUtil.ECLIPSELINK_PROVIDER, "eclipseLinkPersistenceProviderIsDefault2.1"); // NOI18N
+        candidates.put(ProviderUtil.ECLIPSELINK_PROVIDER2_1, "eclipseLinkPersistenceProviderIsDefault2.1"); // NOI18N
+        candidates.put(ProviderUtil.ECLIPSELINK_PROVIDER2_2, "eclipseLinkPersistenceProviderIsDefault2.2"); // NOI18N
         return candidates;
     }
 }

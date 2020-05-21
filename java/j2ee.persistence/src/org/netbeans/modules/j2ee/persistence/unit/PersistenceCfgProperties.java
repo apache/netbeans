@@ -50,7 +50,7 @@ public class PersistenceCfgProperties {
     private final static String[] EL_LOGGER = new String[]{"DefaultLogger", "JavaLogger", "ServerLogger"};//NOI18N
     private final static String[] EL_LOGGER_LEVEL = new String[]{"OFF", "SEVERE", "WARNING", "INFO", "CONFIG", "FINE", "FINER", "FINEST", "ALL"};//NOI18N
     private final static String[] EL_TARGET_DATABASE = new String[]{"Access", "Attunity", "Auto", "Cloudscape", "Database", "DB2Mainframe", "DB2", "DB2Z", "DBase", "Derby", "Firebird", "H2", "HANA", "HSQL", "Informix11", "Informix", "JavaDB", "MaxDB", "MySQL", "Oracle10", "Oracle11", "Oracle12", "Oracle18", "Oracle19", "Oracle8", "Oracle9", "Oracle", "Pervasive", "PointBase", "PostgreSQL", "SQLAnywhere", "SQLServer", "Sybase", "Symfoware", "TimesTen7", "TimesTen"};//NOI18N
-    private final static String[] EL_TARGET_SERVER = new String[]{"None", "Glassfish", "JBoss", "Oc4j", "SAPNetWeaver_7_1", "SunAS9Server", "WebLogic_10_", "WebLogic_12", "WebLogic_9", "WebLogic", "WebSphere_6_1", "WebSphere_7", "WebSphere_EJBEmbeddable", "WebSphere_Liberty", "WebSphere"};//NOI18N
+    private final static String[] EL_TARGET_SERVER = new String[]{"None", "Glassfish", "JBoss", "Oc4j", "SAPNetWeaver_7_1", "SunAS9Server", "WebLogic_10", "WebLogic_12", "WebLogic_9", "WebLogic", "WebSphere_6_1", "WebSphere_7", "WebSphere_EJBEmbeddable", "WebSphere_Liberty", "WebSphere"};//NOI18N
     private final static String[] EL_DDL_GEN_MODE = new String[]{"both", "database", "sql-script"};//NOI18N
     
     private static final Map<Provider, Map<String, String[]>> possiblePropertyValues = new HashMap<Provider, Map<String, String[]>>();

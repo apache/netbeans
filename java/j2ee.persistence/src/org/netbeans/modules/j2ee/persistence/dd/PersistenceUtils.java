@@ -213,8 +213,12 @@ public class PersistenceUtils {
         SourceGroup firstGroup=groups[0];
         FileObject fo=firstGroup.getRootFolder();
         ClassPath compile=ClassPath.getClassPath(fo, ClassPath.COMPILE);
-        if(compile.findResource("javax/persistence/criteria/CriteriaUpdate.class")!=null) {
+        if(compile.findResource("javax/persistence/TableGenerators.class")!=null) {
+            version=Persistence.VERSION_2_2;
+            LOG.log(Level.INFO, "(228) ===== Persistence.VERSION_2_2: {0}", true);
+        } else if(compile.findResource("javax/persistence/criteria/CriteriaUpdate.class")!=null) {
             version=Persistence.VERSION_2_1;
+            LOG.log(Level.INFO, "(231) ===== Persistence.VERSION_2_1: {0}", true);
         } else if(compile.findResource("javax/persistence/criteria/JoinType.class")!=null) {
             version=Persistence.VERSION_2_0;
         } else if(compile.findResource("javax/persistence/Entity.class")!=null) {
@@ -227,8 +231,12 @@ public class PersistenceUtils {
         List<URL> roots=lib.getContent("classpath");
         ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
         String version=null;
-        if(cp.findResource("javax/persistence/criteria/CriteriaUpdate.class")!=null) {
+        if(cp.findResource("javax/persistence/TableGenerators.class")!=null) {
+            version=Persistence.VERSION_2_2;
+            LOG.log(Level.INFO, "(246) ===== Persistence.VERSION_2_2: {0}", true);
+        } else if(cp.findResource("javax/persistence/criteria/CriteriaUpdate.class")!=null) {
             version=Persistence.VERSION_2_1;
+            LOG.log(Level.INFO, "(249) ===== Persistence.VERSION_2_1: {0}", true);
         } else if(cp.findResource("javax/persistence/criteria/JoinType.class")!=null) {
             version=Persistence.VERSION_2_0;
         } else if(cp.findResource("javax/persistence/Entity.class")!=null) {

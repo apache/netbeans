@@ -103,7 +103,7 @@ public class FoDUpdateUnitProvider implements UpdateProvider {
                 boolean required = false;
 
                 if (mi.isRequiredFor(jdk)) {
-                    required = true;
+//                    required = true;
                 }
                 if (fi.getExtraModulesRequiredText() != null && fi.getExtraModulesRecommendedText() == null) {
                     required = true;

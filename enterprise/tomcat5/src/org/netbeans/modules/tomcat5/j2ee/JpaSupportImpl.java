@@ -48,7 +48,8 @@ class JpaSupportImpl implements JpaSupportImplementation {
                     true, 
                     instance.isJpa10(), 
                     instance.isJpa20(), 
-                    instance.isJpa21());
+                    instance.isJpa21(),
+                    instance.isJpa22());
     }
 
     @Override
@@ -67,7 +68,8 @@ class JpaSupportImpl implements JpaSupportImplementation {
                     true, 
                     instance.isJpa10(), 
                     instance.isJpa20(), 
-                    instance.isJpa21()));
+                    instance.isJpa21(),
+                    instance.isJpa22()));
         }
         return providers;
     }

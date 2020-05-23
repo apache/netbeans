@@ -1999,6 +1999,9 @@ public final class EditorCaret implements Caret {
                 if (cbounds != null) {
                     // save relative position of the main caret
                     maybeSaveCaretOffset(cbounds);
+                    if (log) {
+                        LOG.fine("EditorCaret.update: forced:true, savedBounds=" + cbounds + ", relativeOffset=" + lastCaretVisualOffset + "\n"); // NOI18N
+                    }
                 }
             }
             if (!calledFromPaint && !c.isValid() /* && maintainVisible == null */) {
@@ -2025,6 +2028,11 @@ public final class EditorCaret implements Caret {
                         scroll = scrollToLastCaret;
                         scrollToLastCaret = false;
                     }
+                    if (lastCaretVisualOffset == -1) {
+                        // wasn't able to save the visual offset, the caret was already off screen. Do not scroll just because of fold updates.
+                        forceUpdate = false;
+                        c.putClientProperty("editorcaret.updateRetainsVisibleOnce", null); // NOI18N
+                    }
                     if (scroll || forceUpdate) {
                         Rectangle caretBounds;
                         Rectangle oldCaretBounds;
@@ -2034,6 +2042,10 @@ public final class EditorCaret implements Caret {
                         } else {
                             caretBounds = lastCaretItem.getCaretBounds();
                             oldCaretBounds = caretBounds;
+                        }
+                        if (log) {
+                            LOG.fine("EditorCaret.update: caretBounds=" + caretBounds + "\n"); // NOI18N
+                            LOG.fine("EditorCaret.update: oldCaretBounds=" + oldCaretBounds + "\n"); // NOI18N
                         }
                         if (caretBounds != null) {
                             Rectangle scrollBounds = new Rectangle(caretBounds); // Must possibly be cloned upon change

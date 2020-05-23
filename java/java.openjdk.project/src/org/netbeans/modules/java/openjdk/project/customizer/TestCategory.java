@@ -141,7 +141,7 @@ public class TestCategory extends javax.swing.JPanel {
         put(RunBuild.NEVER, "Never");
     }};
 
-    @CompositeCategoryProvider.Registration(projectType=JDKProject.PROJECT_KEY)
+    @CompositeCategoryProvider.Registration(projectType=JDKProject.PROJECT_KEY, position=200)
     public static CompositeCategoryProvider createCategoryProvider() {
         return new CompositeCategoryProvider() {
             @Override

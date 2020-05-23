@@ -99,6 +99,7 @@ public class ActionProviderImpl implements ActionProvider {
     private final FileObject script;
     private final FileObject genericScript;
     private final String[] supportedActions;
+    private final String[] genericSupportedActions;
 
     public ActionProviderImpl(JDKProject project) {
         this.project = project;
@@ -128,10 +129,15 @@ public class ActionProviderImpl implements ActionProvider {
 
         script = FileUtil.toFileObject(scriptFile);
 
+        supportedActions = readSupportedActions(script);
+        genericSupportedActions = readSupportedActions(genericScript);
+    }
+
+    private String[] readSupportedActions(FileObject from) {
         String[] supported = new String[0];
 
         try {
-            for (String l : script.asLines("UTF-8")) {
+            for (String l : from.asLines("UTF-8")) {
                 if (l.contains("SUPPORTED_ACTIONS:")) {
                     String[] actions = l.substring(l.indexOf(':') + 1).trim().split(",");
                     Set<String> filteredActions = new HashSet<>();
@@ -151,13 +157,13 @@ public class ActionProviderImpl implements ActionProvider {
             //???
             Exceptions.printStackTrace(ex);
         }
-        
-        supportedActions = supported;
+        return supported;
     }
 
     @Override
     public String[] getSupportedActions() {
-        return supportedActions;
+        Settings settings = project.getLookup().lookup(Settings.class);
+        return settings.isUseAntBuild() ? supportedActions : genericSupportedActions;
     }
 
     @Override
@@ -171,8 +177,17 @@ public class ActionProviderImpl implements ActionProvider {
             }
         }
         FileObject scriptFO = script;
+        Settings settings = project.getLookup().lookup(Settings.class);
+        Properties props = new Properties();
+        if (settings.isUseAntBuild()) {
+            props.put("langtools.build.location", settings.getAntBuildLocation());
+        } else {
+            scriptFO = genericScript;
+            if (COMMAND_BUILD_FAST.equals(command)) {
+                command = COMMAND_BUILD_GENERIC_FAST;
+            }
+        }
         if (COMMAND_BUILD_GENERIC_FAST.equals(command)) {
-            Settings settings = project.getLookup().lookup(Settings.class);
             switch (settings.getRunBuildSetting()) {
                 case NEVER:
                     ActionProgress.start(context).finished(true);
@@ -184,7 +199,6 @@ public class ActionProviderImpl implements ActionProvider {
             scriptFO = genericScript;
             command = COMMAND_BUILD_FAST; //XXX: should only do this if genericScript supports it
         }
-        Properties props = new Properties();
         FileObject basedirFO = project.currentModule != null ? scriptFO == genericScript ? project.moduleRepository.getJDKRoot()
                                                                                          : repository
                                                              : repository.getParent();

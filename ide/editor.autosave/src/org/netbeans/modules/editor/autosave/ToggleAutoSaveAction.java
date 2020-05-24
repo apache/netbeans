@@ -18,19 +18,24 @@
  */
 package org.netbeans.modules.editor.autosave;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.lang.ref.WeakReference;
-import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
-import org.netbeans.modules.editor.autosave.command.AutoSaveController;
-
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.BooleanStateAction;
 
+@ActionID(id = "org.netbeans.modules.editor.autosave.ToggleAutoSaveAction", category = "Edit")
+@ActionRegistration(displayName = "#CTL_AutoSave", lazy = false)
+@ActionReference(path = "Menu/File", position = 1490)
+@NbBundle.Messages("CTL_AutoSave=Autosave")
 public final class ToggleAutoSaveAction extends BooleanStateAction {
 
+    private final PreferenceChangeListener pcl = evt -> setBooleanState(AutoSaveController.prefs()
+            .getBoolean(AutoSaveController.KEY_ACTIVE, AutoSaveController.KEY_ACTIVE_DEFAULT));
+
+    @Override
     public String getName() {
         return NbBundle.getMessage(ToggleAutoSaveAction.class, "CTL_AutoSave");
     }
@@ -39,15 +44,10 @@ public final class ToggleAutoSaveAction extends BooleanStateAction {
     protected void initialize() {
         super.initialize();
 
-        AutoSaveController.prefs().
-                addPreferenceChangeListener(new WeakReference<PreferenceChangeListener>(evt -> {
-                    setBooleanState(AutoSaveController.prefs().getBoolean(AutoSaveController.KEY_ACTIVE,
-                            AutoSaveController.KEY_ACTIVE_DEFAULT));
-                }).get());
+        AutoSaveController.prefs().addPreferenceChangeListener(pcl);
 
-        this.addPropertyChangeListener(evt -> {
-            if (BooleanStateAction.PROP_BOOLEAN_STATE.equals(
-                    evt.getPropertyName())) {
+        this.addPropertyChangeListener(evt  -> {
+            if (BooleanStateAction.PROP_BOOLEAN_STATE.equals(evt.getPropertyName())) {
                 AutoSaveController.prefs().putBoolean(AutoSaveController.KEY_ACTIVE, getBooleanState());
             }
         });
@@ -60,6 +60,7 @@ public final class ToggleAutoSaveAction extends BooleanStateAction {
         return "org/netbeans/modules/editor/autosave/auto_save.png";
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }

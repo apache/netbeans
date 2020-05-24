@@ -21,24 +21,4 @@
 -->
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
 <filesystem>
-    <folder name="Actions">
-        <folder name="Edit">
-            <file name="org-netbeans-modules-editor-autosave-ToggleAutoSaveAction.instance"/>
-        </folder>
-    </folder>
-    <folder name="Menu">
-        <folder name="File">
-            <file name="org-netbeans-modules-editor-autosave-ToggleAutoSaveAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-editor-autosave-ToggleAutoSaveAction.instance"/>
-                <attr name="position" intvalue="1490"/>
-            </file>
-        </folder>
-    </folder>
-    <folder name="Services">
-        <folder name="JavaHelp">
-            <file name="autosave-helpset.xml" url="autosave-helpset.xml">
-                <attr name="position" intvalue="277"/>
-            </file>
-        </folder>
-    </folder>
 </filesystem>

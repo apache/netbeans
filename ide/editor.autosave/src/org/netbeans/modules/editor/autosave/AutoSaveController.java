@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.editor.autosave.command;
+package org.netbeans.modules.editor.autosave;
 
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -25,10 +25,10 @@ import javax.swing.Timer;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.EditorRegistry;
+import org.openide.LifecycleManager;
 import org.openide.cookies.SaveCookie;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
-import org.openide.util.Mutex;
 import org.openide.util.NbPreferences;
 
 /**
@@ -45,7 +45,7 @@ public final class AutoSaveController {
 
     private static AutoSaveController controller;
 
-    private final PropertyChangeListener listener = evt -> {
+    private final PropertyChangeListener listener = evt  -> {
         final String name = evt.getPropertyName();
         if (EditorRegistry.FOCUS_LOST_PROPERTY.equals(name)) {
             final Object old = evt.getOldValue();
@@ -91,13 +91,14 @@ public final class AutoSaveController {
         if (timer == null) {
             timer = new Timer(delay, event -> {
                 if (prefs().getBoolean(KEY_ACTIVE, KEY_ACTIVE_DEFAULT)) {
-                    AutoSaveCommand.saveAll();
+                    LifecycleManager.getDefault().saveAll();
                 }
             });
         } else {
             timer.stop();
         }
 
+        timer.setInitialDelay(delay);
         timer.setDelay(delay);
         timer.start();
     }
@@ -124,13 +125,14 @@ public final class AutoSaveController {
     public void synchronize() {
         if (prefs().getBoolean(KEY_ACTIVE, KEY_ACTIVE_DEFAULT)) {
             startTimerSave();
-            if (prefs().getBoolean(KEY_SAVE_ON_FOCUS_LOST, false)) {
-                startFocusSave();
-            } else {
-                stopFocusSave();
-            }
         } else {
-            stop();
+            stopTimerSave();
+        }
+
+        if (prefs().getBoolean(KEY_SAVE_ON_FOCUS_LOST, false)) {
+            startFocusSave();
+        } else {
+            stopFocusSave();
         }
     }
 }

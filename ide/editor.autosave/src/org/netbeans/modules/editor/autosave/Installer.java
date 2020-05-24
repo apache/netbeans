@@ -18,9 +18,6 @@
  */
 package org.netbeans.modules.editor.autosave;
 
-import java.lang.ref.WeakReference;
-import java.util.prefs.PreferenceChangeListener;
-import org.netbeans.modules.editor.autosave.command.AutoSaveController;
 import org.openide.modules.ModuleInstall;
 
 public class Installer extends ModuleInstall {
@@ -28,13 +25,15 @@ public class Installer extends ModuleInstall {
     @Override
     public void restored() {
         AutoSaveController.getInstance().synchronize();
-        AutoSaveController.prefs().
-                addPreferenceChangeListener(new WeakReference<PreferenceChangeListener>(evt ->
-                        AutoSaveController.getInstance().synchronize()).get());
+    }
+
+    @Override
+    public void close() {
+        AutoSaveController.getInstance().stop();
     }
 
     @Override
     public void uninstalled() {
-        AutoSaveController.getInstance().stop();
+        close();
     }
 }

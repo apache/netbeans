@@ -25,8 +25,10 @@ import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 
 @OptionsPanelController.SubRegistration(location = OptionsDisplayer.EDITOR, displayName = "#AdvancedOption_DisplayName")
+@NbBundle.Messages("AdvancedOption_DisplayName=Autosave")
 public final class AutoSaveOptionsPanelController extends OptionsPanelController {
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -34,40 +36,51 @@ public final class AutoSaveOptionsPanelController extends OptionsPanelController
     private AutoSavePanel panel;
     private boolean changed;
 
+    @Override
     public void update() {
         getPanel().load();
         changed = false;
     }
 
+    @Override
     public void applyChanges() {
         getPanel().store();
+        AutoSaveController.getInstance().synchronize();
+
         changed = false;
     }
 
+    @Override
     public void cancel() {
         // need not do anything special, if no changes have been persisted yet
     }
 
+    @Override
     public boolean isValid() {
-        return getPanel().valid();
+        return true;
     }
 
+    @Override
     public boolean isChanged() {
         return changed;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return null; // new HelpCtx("...ID") if you have a help set
     }
 
+    @Override
     public JComponent getComponent(Lookup masterLookup) {
         return getPanel();
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener l) {
         pcs.addPropertyChangeListener(l);
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener l) {
         pcs.removePropertyChangeListener(l);
     }

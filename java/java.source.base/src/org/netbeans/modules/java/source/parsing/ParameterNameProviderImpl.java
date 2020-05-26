@@ -208,7 +208,7 @@ public class ParameterNameProviderImpl {
 
     static void capCache(LinkedHashMap<String, ?> map) {
         Iterator<String> it = map.keySet().iterator();
-        while (map.size() > MAX_CACHE_SIZE) {
+        while (map.size() > MAX_CACHE_SIZE && it.hasNext()) {
             it.next();
             it.remove();
         }

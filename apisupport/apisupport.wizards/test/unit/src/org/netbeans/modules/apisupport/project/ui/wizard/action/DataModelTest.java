@@ -20,7 +20,7 @@
 package org.netbeans.modules.apisupport.project.ui.wizard.action;
 
 import org.netbeans.junit.NbTestCase;
-import org.openide.awt.ActionReference;
+import org.netbeans.modules.apisupport.project.ui.wizard.action.DataModel.ActionReferenceModel;
 
 /**
  * Tests {@link DataModel}.
@@ -34,7 +34,7 @@ public class DataModelTest extends NbTestCase {
     }
     
     public void testActionReferenceCreate() throws Exception {
-        ActionReference res = DataModel.createActionReference("mypath/sub", 30, 130, 100, "myname");
+        ActionReferenceModel res = DataModel.createActionReference("mypath/sub", 30, 130, 100, "myname");
         assertEquals("mypath/sub", res.path());
         assertEquals(100, res.position());
         assertEquals("myname", res.name());

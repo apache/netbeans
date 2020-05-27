@@ -21,9 +21,7 @@ package org.netbeans.modules.apisupport.project.ui.wizard.action;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,7 +38,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.apisupport.project.ui.wizard.common.CreatedModifiedFiles;
 import org.netbeans.modules.apisupport.project.ui.wizard.common.BasicWizardIterator;
 import org.openide.WizardDescriptor;
-import org.openide.awt.ActionReference;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
@@ -253,7 +250,7 @@ final class DataModel extends BasicWizardIterator.BasicDataModel {
         }
         
         if (annotations) {
-            List<ActionReference> refs = new ArrayList<ActionReference>();
+            List<ActionReferenceModel> refs = new ArrayList<>();
             // create layer entry for global menu item
             if (globalMenuItemEnabled) {
                 refs.add(createActionReference(
@@ -624,46 +621,58 @@ final class DataModel extends BasicWizardIterator.BasicDataModel {
         this.edContextSeparatorBefore = separator;
     }
 
-    static ActionReference createActionReference(
+    static class ActionReferenceModel implements Serializable {
+        String parentPath;
+        String name;
+        int beforeSep;
+        int afterSep;
+        int position;
+
+        public ActionReferenceModel(String parentPath, String name, int beforeSep, int afterSep, int position) {
+            this.parentPath = parentPath;
+            this.name = name;
+            this.beforeSep = beforeSep;
+            this.afterSep = afterSep;
+            this.position = position;
+        }
+
+        public String path() {
+            return parentPath;
+        }
+
+        public int position() {
+            return position;
+        }
+
+        public String name() {
+            return name == null ? "" : name;
+        }
+
+        public int separatorBefore() {
+            return beforeSep;
+        }
+
+        public int separatorAfter() {
+            return afterSep;
+        }
+
+        @Override
+        public String toString() {
+            return "ActionReferenceModel{" + "parentPath=" + parentPath + ", name=" + name + ", beforeSep=" + beforeSep + ", afterSep=" + afterSep + ", position=" + position + '}';
+        }
+
+
+    }
+
+    static ActionReferenceModel createActionReference(
         final String parentPath, 
         final int beforeSep, 
         final int afterSep, 
         final int position, 
         final String name
     ) {
-        class H implements InvocationHandler {
-            @Override
-            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                if (method.getName().equals("path")) {
-                    return parentPath;
-                }
-                if (method.getName().equals("position")) {
-                    return position;
-                }
-                if (method.getName().equals("separatorBefore")) {
-                    return beforeSep;
-                }
-                if (method.getName().equals("separatorAfter")) {
-                    return afterSep;
-                }
-                if (method.getName().equals("name")) {
-                    return name == null ? "" : name;
-                }
-                if (method.getName().equals("equals")) {
-                    return this == Proxy.getInvocationHandler(proxy);
-                }
-                if (method.getName().equals("hashCode")) {
-                    return hashCode();
-                }
-                return null;
-            }
-        }
-                
-        return (ActionReference) Proxy.newProxyInstance(
-            ActionReference.class.getClassLoader(), 
-            new Class[] { ActionReference.class }, 
-            new H()
-        );
+
+        return new ActionReferenceModel(parentPath, name, beforeSep, afterSep, position);
     }
 
     void setSFS(FileSystem sfs) {

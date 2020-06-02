@@ -17,5 +17,3 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           # Fails on commits using Github private email address, like netbeans@users.noreply.github.com
           allow_private_email: false
-          # Whitelist of authors
-          whitelist: .authors.yml

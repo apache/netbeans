@@ -49,6 +49,7 @@ import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ant.AntBuildExtender;
 import org.netbeans.api.project.ant.AntBuildExtender.Extension;
 import org.netbeans.modules.project.ant.AntBuildExtenderAccessor;
+import org.netbeans.modules.project.ant.ShowModifiedBuildImplXMLWarning;
 import org.netbeans.modules.project.spi.intern.ProjectIDEServices;
 import org.netbeans.modules.project.spi.intern.ProjectIDEServicesImplementation.UserQuestionExceptionCallback;
 import org.netbeans.spi.project.ant.GeneratedFilesInterceptor;
@@ -59,6 +60,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.modules.SpecificationVersion;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.MutexException;
 import org.openide.util.NbBundle;
@@ -794,7 +796,7 @@ public final class GeneratedFilesHelper {
             return ProjectManager.mutex().writeAccess(new Mutex.ExceptionAction<Boolean>() {
                 public Boolean run() throws IOException {
                     int flags = getBuildScriptState(path, stylesheet);
-                    if (shouldGenerateBuildScript(flags, checkForProjectXmlModified)) {
+                    if (shouldGenerateBuildScript(path, flags, checkForProjectXmlModified)) {
                         generateBuildScriptFromStylesheet(path, stylesheet);
                         return true;
                     } else {
@@ -819,17 +821,22 @@ public final class GeneratedFilesHelper {
             }
         }
     }
-    
-    private static boolean shouldGenerateBuildScript(int flags, boolean checkForProjectXmlModified) {
+
+    private boolean shouldGenerateBuildScript(String path, int flags, boolean checkForProjectXmlModified) {
         if ((flags & GeneratedFilesHelper.FLAG_MISSING) != 0) {
             // Yes, need it.
             return true;
         }
         if ((flags & GeneratedFilesHelper.FLAG_MODIFIED) != 0) {
+            if (BUILD_IMPL_XML_PATH.equals(path)) {
+                //modified build-impl.xml, warn the user:
+                ShowModifiedBuildImplXMLWarning showWarning = Lookup.getDefault().lookup(ShowModifiedBuildImplXMLWarning.class);
+                if (showWarning != null) {
+                    showWarning.showModifiedBuildImplXMLWarning(dir, path);
+                }
+                return false;
+            }
             // No, don't overwrite a user build script.
-            // XXX modified build-impl.xml probably counts as a serious condition
-            // to warn the user about...
-            // Modified build.xml is no big deal.
             return false;
         }
         if (!checkForProjectXmlModified) {

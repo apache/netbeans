@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <link href="../ide.css" type="text/css" rel="StyleSheet">
+
+    <title>New Remote Host Setup Wizard: Summary</title>
+  </head>
+  <body>
+    <h2>
+       New Remote Host Setup Wizard: Summary
+    </h2>
+    <p>
+       <a href="#seealso"><small>See Also</small></a><small>&nbsp;</small>
+    </p>
+    <p>
+      The New Remote Host Setup summary page lets you specify some settings to be used in
+      the IDE for the remote host.
+    </p>
+    <p>
+       <b>Display Name.</b> Type the name you want to display for this host. The display name is
+      used anywhere the build host is listed in the IDE. By default, the display name is
+      <i>username@hostname</i>, which indicates the user name you used to log in and the remote host name.
+    </p>
+    <p>
+       <b>Default Tool Collection.</b> Select the tool collection that you want the IDE to use on the remote
+      build host. The options in the list indicate the tool collections that the IDE was able to locate on the
+      remote server. If you know that a set of tools should be available on the host, but it is not
+      listed here, you might need to tell the IDE where to find it after you finish setting up the
+      host. See <a href="../WorkingWithCandC++Projects/ConfiguringBuildTools.html">Configuring
+      Build Tools</a>.
+    </p>
+    <p>
+       <b>Access project files via.</b> Select the method you want to use to make the
+      project files accessible to the remote server.  If the project files are located
+      on a shared file system where the local host and the remote host can both
+      access the files, you can select System level file sharing. Otherwise you can
+      select either SFTP or Automatic Copying. With SFTP the IDE copies all project
+      files to the remote host the first time you build the project. On subsequent builds
+      on the remote host, the IDE copies only changed files.  With Automatic Copying, the IDE
+      can on demand automatically copy the necessary files between the local and remote hosts.
+      Automatic Copying only copies when the remote host needs to open the files. This means
+      that files that are not needed to build are never copied to the remote host and the first build
+      begins sooner than with SFTP.
+    </p>
+    <p>Click Finish.</p>
+    <p>The Build Hosts Manager dialog box displays the list of build hosts
+with the new remote host added.</p>
+    <p><b>Note:</b> If the projects you build on the remote host are graphical applications,
+        select the host in the Build Hosts Manager dialog and click Properties. Select
+        Enable X11 Forwarding and click OK. This allows you to run the application on
+        the remote host, and have the windows shown on your local desktop.</p>
+    <table>
+        <tr>
+        <th colspan="2" align="left">
+          <a name="seealso">See also</a>
+        </th>
+      </tr>
+      <tr>
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="RemoteDevelopment.html">Overview of Remote Development</a><br>
+           
+        </td>
+      </tr>
+    </table>
+    <hr>
+       <a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a>
+    <table border="0" cellpadding="20">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

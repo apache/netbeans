@@ -1,0 +1,3 @@
+pPtrS5Class S5Class*	$	    S3::S4::S5::S5Class::pPtrS5Class
+s5Class S5Class	$	    S3::S4::S5::S5Class::s5Class
+stS5ClassFun() S5Class*	$	    S3::S4::S5::S5Class::stS5ClassFun()

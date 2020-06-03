@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <link rel="StyleSheet" href="../ide.css" type="text/css">
+    <meta name="generator" content="Helen">
+    <title>Pinning a Terminal</title>
+  </head>
+  <body>
+    <h2>
+       Pinning a Terminal
+    </h2>
+    <p>
+       <small><a href="#seealso">See Also</a>&nbsp;</small>
+    </p>
+    <p>
+       You can save settings for a terminal session for a local or remote host by pinning it
+       and specifying a title and a working directory when prompted. Thereafter,
+       each time you open a terminal the IDE uses these settings for the terminals
+       even if you have restarted the IDE.
+    </p>
+    <p>The terminal window must already be open on the local host, or connected
+        to a remote host before you pin it. The IDE enables you to specify a custom
+    title and the current working directory for the pinned terminal.</p>
+    <p>
+       <b>To pin a terminal window:</b>
+    </p>
+    <ol>
+      <li>
+          Open a terminal window as described in <a href="RemoteDevelopmentTerminal.html">
+              Opening a Terminal Window for a Build Host</a>.
+      </li>
+      <li>
+        Right-click inside the terminal window and choose Pin Tab.
+      </li>
+      <li>
+        In the Pin Tab dialog, select the Custom checkbox if you want to set the title,
+        and type a new title.
+      </li>
+      <li>In the Directory field, type the path that you want to use as the current working directory
+      when this terminal starts.</li>
+      <li>Click OK.</li>
+    </ol>
+    <p>The hostname, terminal title, and working directory are saved in your user settings
+        so that the IDE can reuse them when you open a terminal window. </p>
+    <p>When you no longer want to use these settings, you can unpin the terminal.</p>
+    <p>
+       <b>To unpin a terminal window:</b>
+    </p>
+    <ul>
+       <li>
+        Right-click inside the terminal window and choose Unpin Tab.
+        <p>The IDE deletes the saved settings so that when you start a terminal
+            it will not use the hostname, title, and working directory you
+            had previously set.</p>
+      </li>
+    </ul>
+    <table>
+      <tr>
+        <th align="left" colspan="2">
+          <a name="seealso">See also</a>
+        </th>
+      </tr>
+      <tr>
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="RemoteDevelopment.html">Overview of C/C++ Remote Development</a><br>
+           <a href="RemoteDevelopmentManaging.html">Managing Build Hosts</a><br>
+           <a href="ConfiguringBuildTools.html">Configuring Build Tools</a><br>
+           <a href="RemoteDevelopmentToolbar.html">Working on Remote Hosts Using the Toolbar</a><br>
+           <a href="RemoteDevelopmentTerminal.html">Opening a Terminal Window for a Build Host</a><br>
+
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <small><a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+    </p>
+    <table border="0" cellpadding="20">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

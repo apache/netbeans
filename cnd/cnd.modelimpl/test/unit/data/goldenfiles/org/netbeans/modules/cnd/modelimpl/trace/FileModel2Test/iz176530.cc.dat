@@ -1,0 +1,36 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz176530.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+STRUCT tok_state (tok_state ) [1:1/0-3:2/31] lcurly=17 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC k [2:5/23-2:11/29]  TYPE: int TEXT=int  [2:5/23-2:8/26]  INIT: null  SCOPE: tok_state 
+FUNCTION DEFINITION check_bom  [5:1/34-12:2/232] FunctionDDImpl SCOPE: iz176530.cc
+    SIGNATURE check_bom(int()(tok_state*),void()(int,tok_state*),int()(tok_state*,const char*),tok_state*)
+    UNIQUE NAME f:check_bom(int()(tok_state*),void()(int,tok_state*),int()(tok_state*,const char*),tok_state*)
+    DECLARATION: check_bom  [5:1/34-12:2/232]
+    PARAMETERS:
+        get_char [6:11/55-6:43/87]  TYPE: int(tok_state*) TEXT=int()(tok_state*)  [6:11/55-6:43/87]  INIT: null  SCOPE: check_bom 
+        unget_char [7:11/92-7:51/132]  TYPE: void(int,tok_state*) TEXT=void()(int,tok_state*)  [7:11/92-7:51/132]  INIT: null  SCOPE: check_bom 
+        set_readline [8:11/137-8:61/187]  TYPE: int(tok_state*,const char*) TEXT=int()(tok_state*,const char*)  [8:11/137-8:61/187]  INIT: null  SCOPE: check_bom 
+        tok [9:11/192-9:32/213]  TYPE: *tok_state TEXT=tok_state*  [9:18/199-9:29/210]  INIT: null  SCOPE: check_bom 
+    RETURNS int TEXT=int  [5:8/41-5:11/44]
+    STATEMENT COMPOUND  [10:1/215-12:2/232] SCOPE: check_bom 
+        STATEMENT RETURN  [11:5/221-11:14/230] SCOPE: Stmt  [10:1/215-12:2/232] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+STRUCT tok_state (tok_state ) [1:1/0-3:2/31] lcurly=17 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC k [2:5/23-2:11/29]  TYPE: int TEXT=int  [2:5/23-2:8/26]  INIT: null  SCOPE: tok_state 
+

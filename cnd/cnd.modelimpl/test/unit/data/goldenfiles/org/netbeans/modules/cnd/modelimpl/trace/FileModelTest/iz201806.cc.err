@@ -1,0 +1,6 @@
+FileModelTest/iz201806.cc, line 8: warning: unexpected token .
+FileModelTest/iz201806.cc, line 10: warning: unexpected token ,
+FileModelTest/iz201806.cc, line 12: no macro name given in #ifdef directive
+FileModelTest/iz201806.cc, line 18: no macro name given in #ifndef directive
+INCORRECT #define directive: in iz201806.cc for:
+	TOKEN{["#define",<DEFINE>,line=8,col=1],offset=36,file=null} MACRO{["<<DUMMY>>",<<0>>,line=-1,col=-1],offset=-1,file=null}{NO BODY}

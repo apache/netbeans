@@ -1,0 +1,43 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["mode",<ID>,line=13,col=9],offset=201,file=null'='["100001",<DECIMALINT>,line=13,col=14],offset=206,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE elif_else_simple.cc
+Includes:
+"elif_else_simple.h" [2:1/15-2:30/44]
+"elif_else_simple.h" [5:1/63-5:30/92]
+"elif_else_simple.h" [8:1/112-8:30/141]
+"elif_else_simple.h" [11:1/162-11:30/191]
+"elif_else_simple.h" [14:1/213-14:30/242]
+Macros:
+#define 'mode' [1:1/0-1:15/14]
+#define 'mode' [4:1/46-4:17/62]
+#define 'mode' [7:1/94-7:18/111]
+#define 'mode' [10:1/143-10:19/161]
+#define 'mode' [13:1/193-13:20/212]
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for elif_else_simple (elif_else_simple) 
+    elif_else_simple.h  [1:1/0-13:2/294]
+NAMESPACE elif_else_simple (elif_else_simple) 
+    CLASS Tiny (elif_else_simple::Tiny ) [3:5/71-3:18/84] lcurly=82 SCOPE: elif_else_simple 
+        BASE CLASSES:
+        MEMBERS:
+    CLASS Small (elif_else_simple::Small ) [5:5/128-5:19/142] lcurly=140 SCOPE: elif_else_simple 
+        BASE CLASSES:
+        MEMBERS:
+    CLASS Medium (elif_else_simple::Medium ) [7:5/186-7:20/201] lcurly=199 SCOPE: elif_else_simple 
+        BASE CLASSES:
+        MEMBERS:
+    CLASS Large (elif_else_simple::Large ) [9:5/245-9:19/259] lcurly=257 SCOPE: elif_else_simple 
+        BASE CLASSES:
+        MEMBERS:
+    CLASS Huge (elif_else_simple::Huge ) [11:5/271-11:18/284] lcurly=282 SCOPE: elif_else_simple 
+        BASE CLASSES:
+        MEMBERS:
+

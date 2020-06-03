@@ -1,0 +1,44 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE accessModifiers.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS ABC (ABC ) [1:1/0-9:2/114] lcurly=10 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PRIVATE iDefault [2:5/16-2:18/29]  TYPE: int TEXT=int  [2:5/16-2:8/19]  INIT: null  SCOPE: ABC 
+        FIELD PUBLIC iPublic [4:5/42-4:17/54]  TYPE: int TEXT=int  [4:5/42-4:8/45]  INIT: null  SCOPE: ABC 
+        FIELD PROTECTED iProtected [6:5/70-6:20/85]  TYPE: int TEXT=int  [6:5/70-6:8/73]  INIT: null  SCOPE: ABC 
+        FIELD PRIVATE iPrivate [8:5/99-8:18/112]  TYPE: int TEXT=int  [8:5/99-8:8/102]  INIT: null  SCOPE: ABC 
+STRUCT ABC (ABC ) [11:1/117-19:2/232] lcurly=128 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC iDefault [12:5/134-12:18/147]  TYPE: int TEXT=int  [12:5/134-12:8/137]  INIT: null  SCOPE: ABC 
+        FIELD PUBLIC iPublic [14:5/160-14:17/172]  TYPE: int TEXT=int  [14:5/160-14:8/163]  INIT: null  SCOPE: ABC 
+        FIELD PROTECTED iProtected [16:5/188-16:20/203]  TYPE: int TEXT=int  [16:5/188-16:8/191]  INIT: null  SCOPE: ABC 
+        FIELD PRIVATE iPrivate [18:5/217-18:18/230]  TYPE: int TEXT=int  [18:5/217-18:8/220]  INIT: null  SCOPE: ABC 
+
+========== Dumping model of PROJECT DummyProject
+CLASS ABC (ABC ) [1:1/0-9:2/114] lcurly=10 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PRIVATE iDefault [2:5/16-2:18/29]  TYPE: int TEXT=int  [2:5/16-2:8/19]  INIT: null  SCOPE: ABC 
+        FIELD PUBLIC iPublic [4:5/42-4:17/54]  TYPE: int TEXT=int  [4:5/42-4:8/45]  INIT: null  SCOPE: ABC 
+        FIELD PROTECTED iProtected [6:5/70-6:20/85]  TYPE: int TEXT=int  [6:5/70-6:8/73]  INIT: null  SCOPE: ABC 
+        FIELD PRIVATE iPrivate [8:5/99-8:18/112]  TYPE: int TEXT=int  [8:5/99-8:8/102]  INIT: null  SCOPE: ABC 
+STRUCT ABC (ABC ) [11:1/117-19:2/232] lcurly=128 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC iDefault [12:5/134-12:18/147]  TYPE: int TEXT=int  [12:5/134-12:8/137]  INIT: null  SCOPE: ABC 
+        FIELD PUBLIC iPublic [14:5/160-14:17/172]  TYPE: int TEXT=int  [14:5/160-14:8/163]  INIT: null  SCOPE: ABC 
+        FIELD PROTECTED iProtected [16:5/188-16:20/203]  TYPE: int TEXT=int  [16:5/188-16:8/191]  INIT: null  SCOPE: ABC 
+        FIELD PRIVATE iPrivate [18:5/217-18:18/230]  TYPE: int TEXT=int  [18:5/217-18:8/220]  INIT: null  SCOPE: ABC 
+

@@ -1,0 +1,8 @@
+${origin}/preproc_defined_keyword.cc:11:16: warning: extra tokens at end of #ifdef directive
+#ifdef defined B1
+               ^
+               //
+${origin}/preproc_defined_keyword.cc:16:15: warning: extra tokens at end of #ifdef directive
+#ifdef defined(A)
+              ^
+              //

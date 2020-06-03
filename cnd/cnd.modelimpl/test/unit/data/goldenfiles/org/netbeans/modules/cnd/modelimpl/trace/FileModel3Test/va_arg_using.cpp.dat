@@ -1,0 +1,145 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 3):
+<U>#define '["va_arg",<ID>,line=4,col=9],offset=127,file=null[["v",<ID>,line=4,col=16],offset=134,file=null, ["l",<ID>,line=4,col=18],offset=136,file=null]'='["__builtin_va_arg",<ID>,line=4,col=25],offset=139,file=null ["(",<LPAREN>,line=4,col=41],offset=155,file=null ["v",<ID>,line=4,col=42],offset=156,file=null [",",<COMMA>,line=4,col=43],offset=157,file=null ["l",<ID>,line=4,col=44],offset=158,file=null [")",<RPAREN>,line=4,col=45],offset=159,file=null'
+<U>#define '["va_end",<ID>,line=3,col=9],offset=89,file=null[["v",<ID>,line=3,col=16],offset=96,file=null]'='["__builtin_va_end",<ID>,line=3,col=25],offset=99,file=null ["(",<LPAREN>,line=3,col=41],offset=115,file=null ["v",<ID>,line=3,col=42],offset=116,file=null [")",<RPAREN>,line=3,col=43],offset=117,file=null'
+<U>#define '["va_start",<ID>,line=2,col=9],offset=43,file=null[["v",<ID>,line=2,col=18],offset=52,file=null, ["l",<ID>,line=2,col=20],offset=54,file=null]'='["__builtin_va_start",<ID>,line=2,col=25],offset=57,file=null ["(",<LPAREN>,line=2,col=43],offset=75,file=null ["v",<ID>,line=2,col=44],offset=76,file=null [",",<COMMA>,line=2,col=45],offset=77,file=null ["l",<ID>,line=2,col=46],offset=78,file=null [")",<RPAREN>,line=2,col=47],offset=79,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE va_arg_using.cpp
+Includes:
+    <no includes>
+Macros:
+#define 'va_arg[v, l]' [4:1/119-4:46/160]
+#define 'va_end[v]' [3:1/81-3:44/118]
+#define 'va_start[v, l]' [2:1/35-2:48/80]
+TYPEDEF va_list  [1:1/0-1:35/34] TYPE: __builtin_va_list TEXT=__builtin_va_list  [1:9/8-1:26/25] SCOPE: $Global$ 
+FUNCTION DEFINITION myprintf  [6:1/162-12:2/356] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE myprintf(const wchar_t*,...)
+    UNIQUE NAME f:myprintf(const wchar_t*,...)
+    DECLARATION: myprintf  [6:1/162-12:2/356]
+    PARAMETERS:
+        format [6:15/176-6:37/198]  TYPE: const *wchar_t TEXT=const wchar_t*  [6:15/176-6:30/191]  INIT: null  SCOPE: myprintf 
+        ... [6:39/200-6:42/203]  TYPE: null   INIT: null  SCOPE: myprintf 
+    RETURNS void TEXT=void  [6:1/162-6:5/166]
+    STATEMENT COMPOUND  [6:43/204-12:2/356] SCOPE: myprintf 
+        STATEMENT DECLARATION  [7:5/210-7:16/221] SCOPE: Stmt  [6:43/204-12:2/356]
+            VARIABLE ap [7:5/210-7:16/221]  TYPE: va_list TEXT=va_list  [7:5/210-7:12/217]  INIT: null  SCOPE: Stmt  [6:43/204-12:2/356]
+        STATEMENT EXPRESSION  [8:5/226-8:25/246] SCOPE: Stmt  [6:43/204-12:2/356] text: 'va_start(ap, format)'
+        STATEMENT DECLARATION  [9:5/252-9:36/283] SCOPE: Stmt  [6:43/204-12:2/356]
+            VARIABLE fieldlen [9:5/252-9:36/283]  TYPE: int TEXT=int  [9:5/252-9:8/255]  INIT: text='va_arg(ap, int)'  SCOPE: Stmt  [6:43/204-12:2/356]
+        STATEMENT DECLARATION  [10:5/288-10:54/337] SCOPE: Stmt  [6:43/204-12:2/356]
+            VARIABLE wstr [10:5/288-10:54/337]  TYPE: const *wchar_t TEXT=const wchar_t*  [10:5/288-10:20/303]  INIT: text='va_arg(ap,const wchar_t *)'  SCOPE: Stmt  [6:43/204-12:2/356]
+        STATEMENT EXPRESSION  [11:5/342-11:15/352] SCOPE: Stmt  [6:43/204-12:2/356] text: 'va_end(ap)'
+NAMESPACE DEFINITOIN A [14:1/358-17:2/389] SCOPE: va_arg_using.cpp
+    STRUCT C (A::C ) [15:9/373-16:10/386] lcurly=382 SCOPE: A 
+        BASE CLASSES:
+        MEMBERS:
+CLASS B (B ) [19:1/391-20:2/402] lcurly=399 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+FUNCTION DEFINITION cf  [22:1/405-44:2/1110] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE cf(const A::C*,...)
+    UNIQUE NAME f:cf(const A::C*,...)
+    DECLARATION: cf  [22:1/405-44:2/1110]
+    PARAMETERS:
+        cc [22:9/413-22:23/427]  TYPE: const *A::C TEXT=const A::C*  [22:9/413-22:20/424]  INIT: null  SCOPE: cf 
+        ... [22:25/429-22:28/432]  TYPE: null   INIT: null  SCOPE: cf 
+    RETURNS void TEXT=void  [22:1/405-22:5/409]
+    STATEMENT COMPOUND  [22:29/433-44:2/1110] SCOPE: cf 
+        STATEMENT DECLARATION  [23:5/439-23:16/450] SCOPE: Stmt  [22:29/433-44:2/1110]
+            VARIABLE ap [23:5/439-23:16/450]  TYPE: va_list TEXT=va_list  [23:5/439-23:12/446]  INIT: null  SCOPE: Stmt  [22:29/433-44:2/1110]
+        STATEMENT DECLARATION  [24:5/455-24:25/475] SCOPE: Stmt  [22:29/433-44:2/1110]
+            VARIABLE p_va [24:5/455-24:25/475]  TYPE: *va_list TEXT=va_list*  [24:5/455-24:14/464]  INIT: text='&ap'  SCOPE: Stmt  [22:29/433-44:2/1110]
+        STATEMENT EXPRESSION  [25:5/480-25:21/496] SCOPE: Stmt  [22:29/433-44:2/1110] text: 'va_start(ap, cc)'
+        STATEMENT DECLARATION  [26:5/502-26:36/533] SCOPE: Stmt  [22:29/433-44:2/1110]
+            VARIABLE fieldlen [26:5/502-26:36/533]  TYPE: int TEXT=int  [26:5/502-26:8/505]  INIT: text='va_arg(ap, int)'  SCOPE: Stmt  [22:29/433-44:2/1110]
+        STATEMENT EXPRESSION  [27:5/538-27:33/566] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, char *)'
+        STATEMENT EXPRESSION  [28:5/572-28:34/601] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, short *)'
+        STATEMENT EXPRESSION  [29:5/607-29:43/645] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, unsigned short *)'
+        STATEMENT EXPRESSION  [30:5/651-30:32/678] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, int *)'
+        STATEMENT EXPRESSION  [31:5/684-31:33/712] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, long *)'
+        STATEMENT EXPRESSION  [32:5/718-32:34/747] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, float *)'
+        STATEMENT EXPRESSION  [33:5/753-33:35/783] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, double *)'
+        STATEMENT EXPRESSION  [34:5/789-34:33/817] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, char *)'
+        STATEMENT EXPRESSION  [35:5/823-35:34/852] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, char **)'
+        STATEMENT DECLARATION  [36:5/858-36:27/880] SCOPE: Stmt  [22:29/433-44:2/1110]
+            VARIABLE b1 [36:5/858-36:27/880]  TYPE: B TEXT=B  [36:5/858-36:6/859]  INIT: text='va_arg(ap, B)'  SCOPE: Stmt  [22:29/433-44:2/1110]
+        STATEMENT DECLARATION  [37:5/885-37:44/924] SCOPE: Stmt  [22:29/433-44:2/1110]
+            VARIABLE c [37:5/885-37:44/924]  TYPE: const *A::C TEXT=const A::C*  [37:5/885-37:17/897]  INIT: text='va_arg(ap,const A::C*)'  SCOPE: Stmt  [22:29/433-44:2/1110]
+        STATEMENT DECLARATION  [38:5/929-38:32/956] SCOPE: Stmt  [22:29/433-44:2/1110]
+            VARIABLE c1 [38:5/929-38:32/956]  TYPE: A::C TEXT=A::C  [38:5/929-38:9/933]  INIT: text='*va_arg(ap, A::C*)'  SCOPE: Stmt  [22:29/433-44:2/1110]
+        STATEMENT DECLARATION  [39:5/961-39:32/988] SCOPE: Stmt  [22:29/433-44:2/1110]
+            VARIABLE b [39:5/961-39:32/988]  TYPE: *B TEXT=B*  [39:5/961-39:7/963]  INIT: text='(B*)va_arg(ap, B *)'  SCOPE: Stmt  [22:29/433-44:2/1110]
+        STATEMENT EXPRESSION  [40:5/993-40:32/1020] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, B ***)'
+        STATEMENT EXPRESSION  [41:5/1026-41:37/1058] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, const B **)'
+        STATEMENT EXPRESSION  [43:5/1097-43:15/1107] SCOPE: Stmt  [22:29/433-44:2/1110] text: 'va_end(ap)'
+
+========== Dumping model of PROJECT DummyProject
+TYPEDEF va_list  [1:1/0-1:35/34] TYPE: __builtin_va_list TEXT=__builtin_va_list  [1:9/8-1:26/25] SCOPE: $Global$ 
+FUNCTION DEFINITION myprintf  [6:1/162-12:2/356] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE myprintf(const wchar_t*,...)
+    UNIQUE NAME f:myprintf(const wchar_t*,...)
+    DECLARATION: myprintf  [6:1/162-12:2/356]
+    PARAMETERS:
+        format [6:15/176-6:37/198]  TYPE: const *wchar_t TEXT=const wchar_t*  [6:15/176-6:30/191]  INIT: null  SCOPE: myprintf 
+        ... [6:39/200-6:42/203]  TYPE: null   INIT: null  SCOPE: myprintf 
+    RETURNS void TEXT=void  [6:1/162-6:5/166]
+    STATEMENT COMPOUND  [6:43/204-12:2/356] SCOPE: myprintf 
+        STATEMENT DECLARATION  [7:5/210-7:16/221] SCOPE: Stmt  [6:43/204-12:2/356]
+            VARIABLE ap [7:5/210-7:16/221]  TYPE: va_list TEXT=va_list  [7:5/210-7:12/217]  INIT: null  SCOPE: Stmt  [6:43/204-12:2/356]
+        STATEMENT EXPRESSION  [8:5/226-8:25/246] SCOPE: Stmt  [6:43/204-12:2/356] text: 'va_start(ap, format)'
+        STATEMENT DECLARATION  [9:5/252-9:36/283] SCOPE: Stmt  [6:43/204-12:2/356]
+            VARIABLE fieldlen [9:5/252-9:36/283]  TYPE: int TEXT=int  [9:5/252-9:8/255]  INIT: text='va_arg(ap, int)'  SCOPE: Stmt  [6:43/204-12:2/356]
+        STATEMENT DECLARATION  [10:5/288-10:54/337] SCOPE: Stmt  [6:43/204-12:2/356]
+            VARIABLE wstr [10:5/288-10:54/337]  TYPE: const *wchar_t TEXT=const wchar_t*  [10:5/288-10:20/303]  INIT: text='va_arg(ap,const wchar_t *)'  SCOPE: Stmt  [6:43/204-12:2/356]
+        STATEMENT EXPRESSION  [11:5/342-11:15/352] SCOPE: Stmt  [6:43/204-12:2/356] text: 'va_end(ap)'
+CLASS B (B ) [19:1/391-20:2/402] lcurly=399 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+FUNCTION DEFINITION cf  [22:1/405-44:2/1110] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE cf(const A::C*,...)
+    UNIQUE NAME f:cf(const A::C*,...)
+    DECLARATION: cf  [22:1/405-44:2/1110]
+    PARAMETERS:
+        cc [22:9/413-22:23/427]  TYPE: const *A::C TEXT=const A::C*  [22:9/413-22:20/424]  INIT: null  SCOPE: cf 
+        ... [22:25/429-22:28/432]  TYPE: null   INIT: null  SCOPE: cf 
+    RETURNS void TEXT=void  [22:1/405-22:5/409]
+    STATEMENT COMPOUND  [22:29/433-44:2/1110] SCOPE: cf 
+        STATEMENT DECLARATION  [23:5/439-23:16/450] SCOPE: Stmt  [22:29/433-44:2/1110]
+            VARIABLE ap [23:5/439-23:16/450]  TYPE: va_list TEXT=va_list  [23:5/439-23:12/446]  INIT: null  SCOPE: Stmt  [22:29/433-44:2/1110]
+        STATEMENT DECLARATION  [24:5/455-24:25/475] SCOPE: Stmt  [22:29/433-44:2/1110]
+            VARIABLE p_va [24:5/455-24:25/475]  TYPE: *va_list TEXT=va_list*  [24:5/455-24:14/464]  INIT: text='&ap'  SCOPE: Stmt  [22:29/433-44:2/1110]
+        STATEMENT EXPRESSION  [25:5/480-25:21/496] SCOPE: Stmt  [22:29/433-44:2/1110] text: 'va_start(ap, cc)'
+        STATEMENT DECLARATION  [26:5/502-26:36/533] SCOPE: Stmt  [22:29/433-44:2/1110]
+            VARIABLE fieldlen [26:5/502-26:36/533]  TYPE: int TEXT=int  [26:5/502-26:8/505]  INIT: text='va_arg(ap, int)'  SCOPE: Stmt  [22:29/433-44:2/1110]
+        STATEMENT EXPRESSION  [27:5/538-27:33/566] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, char *)'
+        STATEMENT EXPRESSION  [28:5/572-28:34/601] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, short *)'
+        STATEMENT EXPRESSION  [29:5/607-29:43/645] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, unsigned short *)'
+        STATEMENT EXPRESSION  [30:5/651-30:32/678] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, int *)'
+        STATEMENT EXPRESSION  [31:5/684-31:33/712] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, long *)'
+        STATEMENT EXPRESSION  [32:5/718-32:34/747] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, float *)'
+        STATEMENT EXPRESSION  [33:5/753-33:35/783] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, double *)'
+        STATEMENT EXPRESSION  [34:5/789-34:33/817] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, char *)'
+        STATEMENT EXPRESSION  [35:5/823-35:34/852] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, char **)'
+        STATEMENT DECLARATION  [36:5/858-36:27/880] SCOPE: Stmt  [22:29/433-44:2/1110]
+            VARIABLE b1 [36:5/858-36:27/880]  TYPE: B TEXT=B  [36:5/858-36:6/859]  INIT: text='va_arg(ap, B)'  SCOPE: Stmt  [22:29/433-44:2/1110]
+        STATEMENT DECLARATION  [37:5/885-37:44/924] SCOPE: Stmt  [22:29/433-44:2/1110]
+            VARIABLE c [37:5/885-37:44/924]  TYPE: const *A::C TEXT=const A::C*  [37:5/885-37:17/897]  INIT: text='va_arg(ap,const A::C*)'  SCOPE: Stmt  [22:29/433-44:2/1110]
+        STATEMENT DECLARATION  [38:5/929-38:32/956] SCOPE: Stmt  [22:29/433-44:2/1110]
+            VARIABLE c1 [38:5/929-38:32/956]  TYPE: A::C TEXT=A::C  [38:5/929-38:9/933]  INIT: text='*va_arg(ap, A::C*)'  SCOPE: Stmt  [22:29/433-44:2/1110]
+        STATEMENT DECLARATION  [39:5/961-39:32/988] SCOPE: Stmt  [22:29/433-44:2/1110]
+            VARIABLE b [39:5/961-39:32/988]  TYPE: *B TEXT=B*  [39:5/961-39:7/963]  INIT: text='(B*)va_arg(ap, B *)'  SCOPE: Stmt  [22:29/433-44:2/1110]
+        STATEMENT EXPRESSION  [40:5/993-40:32/1020] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, B ***)'
+        STATEMENT EXPRESSION  [41:5/1026-41:37/1058] SCOPE: Stmt  [22:29/433-44:2/1110] text: '(void) va_arg(*p_va, const B **)'
+        STATEMENT EXPRESSION  [43:5/1097-43:15/1107] SCOPE: Stmt  [22:29/433-44:2/1110] text: 'va_end(ap)'
+NAMESPACE DEFINITIONS for A (A) 
+    va_arg_using.cpp  [14:1/358-17:2/389]
+NAMESPACE A (A) 
+    STRUCT C (A::C ) [15:9/373-16:10/386] lcurly=382 SCOPE: A 
+        BASE CLASSES:
+        MEMBERS:
+

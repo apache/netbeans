@@ -1,0 +1,190 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE partial_specializations.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS C<class T1,class T2> (C ) [1:1/0-3:2/67] lcurly=37 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [2:9/42-2:32/65] MethodImpl SCOPE: C 
+            DEFINITION: null
+            SIGNATURE foo(T1,T2)
+            UNIQUE NAME F:C::foo(T1,T2)
+            PARAMETERS:
+                t1 [2:18/51-2:23/56]  TYPE: C::T1 TEXT=T1  [2:18/51-2:20/53]  INIT: null  SCOPE: foo 
+                t2 [2:25/58-2:30/63]  TYPE: C::T2 TEXT=T2  [2:25/58-2:27/60]  INIT: null  SCOPE: foo 
+            RETURNS void TEXT=void  [2:9/42-2:13/46]
+CLASS C<int,class> (C<int,class> ) [5:1/70-7:2/132] lcurly=104 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [6:9/107-6:32/130] MethodImpl SCOPE: C 
+            DEFINITION: null
+            SIGNATURE foo(int,T)
+            UNIQUE NAME F:C<int,class>::foo(int,T)
+            PARAMETERS:
+                t1 [6:18/116-6:24/122]  TYPE: int TEXT=int  [6:18/116-6:21/119]  INIT: null  SCOPE: foo 
+                t2 [6:26/124-6:30/128]  TYPE: C<int,class>::T TEXT=T  [6:26/124-6:27/125]  INIT: null  SCOPE: foo 
+            RETURNS void TEXT=void  [6:9/107-6:13/111]
+CLASS C<class,int> (C<class,int> ) [9:1/135-11:2/197] lcurly=169 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [10:9/172-10:32/195] MethodImpl SCOPE: C 
+            DEFINITION: null
+            SIGNATURE foo(T,int)
+            UNIQUE NAME F:C<class,int>::foo(T,int)
+            PARAMETERS:
+                t1 [10:18/181-10:22/185]  TYPE: C<class,int>::T TEXT=T  [10:18/181-10:19/182]  INIT: null  SCOPE: foo 
+                t2 [10:24/187-10:30/193]  TYPE: int TEXT=int  [10:24/187-10:27/190]  INIT: null  SCOPE: foo 
+            RETURNS void TEXT=void  [10:9/172-10:13/176]
+CLASS C<class*,class> (C<class*,class> ) [13:1/200-15:2/274] lcurly=246 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [14:9/249-14:32/272] MethodImpl SCOPE: C 
+            DEFINITION: null
+            SIGNATURE foo(T1,T2)
+            UNIQUE NAME F:C<class*,class>::foo(T1,T2)
+            PARAMETERS:
+                t1 [14:18/258-14:23/263]  TYPE: C<class*,class>::T1 TEXT=T1  [14:18/258-14:20/260]  INIT: null  SCOPE: foo 
+                t2 [14:25/265-14:30/270]  TYPE: C<class*,class>::T2 TEXT=T2  [14:25/265-14:27/267]  INIT: null  SCOPE: foo 
+            RETURNS void TEXT=void  [14:9/249-14:13/253]
+CLASS C<class,class*> (C<class,class*> ) [17:1/277-19:2/351] lcurly=323 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [18:9/326-18:32/349] MethodImpl SCOPE: C 
+            DEFINITION: null
+            SIGNATURE foo(T1,T2)
+            UNIQUE NAME F:C<class,class*>::foo(T1,T2)
+            PARAMETERS:
+                t1 [18:18/335-18:23/340]  TYPE: C<class,class*>::T1 TEXT=T1  [18:18/335-18:20/337]  INIT: null  SCOPE: foo 
+                t2 [18:25/342-18:30/347]  TYPE: C<class,class*>::T2 TEXT=T2  [18:25/342-18:27/344]  INIT: null  SCOPE: foo 
+            RETURNS void TEXT=void  [18:9/326-18:13/330]
+CLASS C<class*,class*> (C<class*,class*> ) [21:1/354-23:2/429] lcurly=401 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [22:9/404-22:32/427] MethodImpl SCOPE: C 
+            DEFINITION: null
+            SIGNATURE foo(T1,T2)
+            UNIQUE NAME F:C<class*,class*>::foo(T1,T2)
+            PARAMETERS:
+                t1 [22:18/413-22:23/418]  TYPE: C<class*,class*>::T1 TEXT=T1  [22:18/413-22:20/415]  INIT: null  SCOPE: foo 
+                t2 [22:25/420-22:30/425]  TYPE: C<class*,class*>::T2 TEXT=T2  [22:25/420-22:27/422]  INIT: null  SCOPE: foo 
+            RETURNS void TEXT=void  [22:9/404-22:13/408]
+CLASS C<class,class> (C<class,class> ) [25:1/432-27:2/490] lcurly=464 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [26:9/467-26:30/488] MethodImpl SCOPE: C 
+            DEFINITION: null
+            SIGNATURE foo(T,T)
+            UNIQUE NAME F:C<class,class>::foo(T,T)
+            PARAMETERS:
+                t1 [26:18/476-26:22/480]  TYPE: C<class,class>::T TEXT=T  [26:18/476-26:19/477]  INIT: null  SCOPE: foo 
+                t2 [26:24/482-26:28/486]  TYPE: C<class,class>::T TEXT=T  [26:24/482-26:25/483]  INIT: null  SCOPE: foo 
+            RETURNS void TEXT=void  [26:9/467-26:13/471]
+FUNCTION DEFINITION operator <  [29:1/493-31:2/561] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE operator <<class,class>(T,P)
+    UNIQUE NAME f:operator <<class,class>(T,P)
+    DECLARATION: operator <  [29:1/493-31:2/561]
+    PARAMETERS:
+        x [29:43/535-29:46/538]  TYPE: operator <::T TEXT=T  [29:43/535-29:44/536]  INIT: null  SCOPE: operator < 
+        y [29:48/540-29:51/543]  TYPE: operator <::P TEXT=P  [29:48/540-29:49/541]  INIT: null  SCOPE: operator < 
+    RETURNS bool TEXT=bool  [29:28/520-29:32/524]
+    STATEMENT COMPOUND  [29:53/545-31:2/561] SCOPE: operator < 
+        STATEMENT RETURN  [30:9/548-30:20/559] SCOPE: Stmt  [29:53/545-31:2/561] text: 'return x<y;'
+
+========== Dumping model of PROJECT DummyProject
+CLASS C<class T1,class T2> (C ) [1:1/0-3:2/67] lcurly=37 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [2:9/42-2:32/65] MethodImpl SCOPE: C 
+            DEFINITION: null
+            SIGNATURE foo(T1,T2)
+            UNIQUE NAME F:C::foo(T1,T2)
+            PARAMETERS:
+                t1 [2:18/51-2:23/56]  TYPE: C::T1 TEXT=T1  [2:18/51-2:20/53]  INIT: null  SCOPE: foo 
+                t2 [2:25/58-2:30/63]  TYPE: C::T2 TEXT=T2  [2:25/58-2:27/60]  INIT: null  SCOPE: foo 
+            RETURNS void TEXT=void  [2:9/42-2:13/46]
+CLASS C<int,class> (C<int,class> ) [5:1/70-7:2/132] lcurly=104 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [6:9/107-6:32/130] MethodImpl SCOPE: C 
+            DEFINITION: null
+            SIGNATURE foo(int,T)
+            UNIQUE NAME F:C<int,class>::foo(int,T)
+            PARAMETERS:
+                t1 [6:18/116-6:24/122]  TYPE: int TEXT=int  [6:18/116-6:21/119]  INIT: null  SCOPE: foo 
+                t2 [6:26/124-6:30/128]  TYPE: C<int,class>::T TEXT=T  [6:26/124-6:27/125]  INIT: null  SCOPE: foo 
+            RETURNS void TEXT=void  [6:9/107-6:13/111]
+CLASS C<class,int> (C<class,int> ) [9:1/135-11:2/197] lcurly=169 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [10:9/172-10:32/195] MethodImpl SCOPE: C 
+            DEFINITION: null
+            SIGNATURE foo(T,int)
+            UNIQUE NAME F:C<class,int>::foo(T,int)
+            PARAMETERS:
+                t1 [10:18/181-10:22/185]  TYPE: C<class,int>::T TEXT=T  [10:18/181-10:19/182]  INIT: null  SCOPE: foo 
+                t2 [10:24/187-10:30/193]  TYPE: int TEXT=int  [10:24/187-10:27/190]  INIT: null  SCOPE: foo 
+            RETURNS void TEXT=void  [10:9/172-10:13/176]
+CLASS C<class*,class> (C<class*,class> ) [13:1/200-15:2/274] lcurly=246 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [14:9/249-14:32/272] MethodImpl SCOPE: C 
+            DEFINITION: null
+            SIGNATURE foo(T1,T2)
+            UNIQUE NAME F:C<class*,class>::foo(T1,T2)
+            PARAMETERS:
+                t1 [14:18/258-14:23/263]  TYPE: C<class*,class>::T1 TEXT=T1  [14:18/258-14:20/260]  INIT: null  SCOPE: foo 
+                t2 [14:25/265-14:30/270]  TYPE: C<class*,class>::T2 TEXT=T2  [14:25/265-14:27/267]  INIT: null  SCOPE: foo 
+            RETURNS void TEXT=void  [14:9/249-14:13/253]
+CLASS C<class,class*> (C<class,class*> ) [17:1/277-19:2/351] lcurly=323 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [18:9/326-18:32/349] MethodImpl SCOPE: C 
+            DEFINITION: null
+            SIGNATURE foo(T1,T2)
+            UNIQUE NAME F:C<class,class*>::foo(T1,T2)
+            PARAMETERS:
+                t1 [18:18/335-18:23/340]  TYPE: C<class,class*>::T1 TEXT=T1  [18:18/335-18:20/337]  INIT: null  SCOPE: foo 
+                t2 [18:25/342-18:30/347]  TYPE: C<class,class*>::T2 TEXT=T2  [18:25/342-18:27/344]  INIT: null  SCOPE: foo 
+            RETURNS void TEXT=void  [18:9/326-18:13/330]
+CLASS C<class*,class*> (C<class*,class*> ) [21:1/354-23:2/429] lcurly=401 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [22:9/404-22:32/427] MethodImpl SCOPE: C 
+            DEFINITION: null
+            SIGNATURE foo(T1,T2)
+            UNIQUE NAME F:C<class*,class*>::foo(T1,T2)
+            PARAMETERS:
+                t1 [22:18/413-22:23/418]  TYPE: C<class*,class*>::T1 TEXT=T1  [22:18/413-22:20/415]  INIT: null  SCOPE: foo 
+                t2 [22:25/420-22:30/425]  TYPE: C<class*,class*>::T2 TEXT=T2  [22:25/420-22:27/422]  INIT: null  SCOPE: foo 
+            RETURNS void TEXT=void  [22:9/404-22:13/408]
+CLASS C<class,class> (C<class,class> ) [25:1/432-27:2/490] lcurly=464 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION foo [26:9/467-26:30/488] MethodImpl SCOPE: C 
+            DEFINITION: null
+            SIGNATURE foo(T,T)
+            UNIQUE NAME F:C<class,class>::foo(T,T)
+            PARAMETERS:
+                t1 [26:18/476-26:22/480]  TYPE: C<class,class>::T TEXT=T  [26:18/476-26:19/477]  INIT: null  SCOPE: foo 
+                t2 [26:24/482-26:28/486]  TYPE: C<class,class>::T TEXT=T  [26:24/482-26:25/483]  INIT: null  SCOPE: foo 
+            RETURNS void TEXT=void  [26:9/467-26:13/471]
+FUNCTION DEFINITION operator <  [29:1/493-31:2/561] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE operator <<class,class>(T,P)
+    UNIQUE NAME f:operator <<class,class>(T,P)
+    DECLARATION: operator <  [29:1/493-31:2/561]
+    PARAMETERS:
+        x [29:43/535-29:46/538]  TYPE: operator <::T TEXT=T  [29:43/535-29:44/536]  INIT: null  SCOPE: operator < 
+        y [29:48/540-29:51/543]  TYPE: operator <::P TEXT=P  [29:48/540-29:49/541]  INIT: null  SCOPE: operator < 
+    RETURNS bool TEXT=bool  [29:28/520-29:32/524]
+    STATEMENT COMPOUND  [29:53/545-31:2/561] SCOPE: operator < 
+        STATEMENT RETURN  [30:9/548-30:20/559] SCOPE: Stmt  [29:53/545-31:2/561] text: 'return x<y;'
+

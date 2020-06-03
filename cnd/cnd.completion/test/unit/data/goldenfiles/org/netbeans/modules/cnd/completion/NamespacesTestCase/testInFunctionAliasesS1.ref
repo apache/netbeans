@@ -1,0 +1,7 @@
+str	$	    AliasS1::str
+i1 int	$	    AliasS1::i1
+q str	$	    AliasS1::q
+f1() void	$	    AliasS1::f1()
+sfoo() void	$	    AliasS1::sfoo()
+sfoo2() void	$	    AliasS1::sfoo2()
+S2	$	    AliasS1::S2

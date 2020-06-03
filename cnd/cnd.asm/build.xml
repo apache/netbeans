@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
+<!-- for some information on what you could do (e.g. targets to override). -->
+<!-- If you delete this file and reopen the project it will be recreated. -->
+
+<project name="cnd/cnd.asm" default="netbeans" basedir=".">
+    <description>Builds, tests, and runs the project org.netbeans.modules.cnd.asm.</description>
+
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <target name="compile" depends="antlr,projectized-common.compile">
+    </target>
+
+    <target name="init-antlr">
+        <property name="asm.output.dir" location="src/org/netbeans/modules/cnd/asm/base/generated"/>
+        <property name="asm.base.dir" location="src/org/netbeans/modules/cnd/asm/base"/>
+        <property name="antlr.jar" location="${cluster}/modules/ext/org-netbeans-modules-cnd-antlr.jar"/>
+        <property name="d_antlr.jar" location="../../antlr/build/org-netbeans-modules-cnd-antlr.jar"/>
+        <property name="asm.grammar.dir.att" location="src/org/netbeans/modules/cnd/asm/base/att"/>
+        <property name="asm.grammar.dir.dis" location="src/org/netbeans/modules/cnd/asm/base/dis"/>
+        <property name="asm.grammar.dir.ident" location="src/org/netbeans/modules/cnd/asm/base/ident"/>
+    </target>
+    
+    <target name="clean-antlr" depends="projectized-common.clean, init-antlr">
+        <delete dir="${asm.grammar.dir.att}"/>           
+        <delete dir="${asm.grammar.dir.dis}"/> 
+    </target>
+    
+    <target name="antlr" depends="init-antlr" unless="up-to-date">
+        <mkdir dir="${asm.output.dir}"/>   
+        <copy file="${asm.base.dir}/AntlrTokenTypes.txt" 
+              tofile="${asm.output.dir}/AntlrTokenTypes.txt"
+              overwrite="true"/>
+        <java classname="org.netbeans.modules.cnd.antlr.Tool" fork="true">
+            <arg value="-o"/>
+            <arg value="${asm.output.dir}"/>
+            <arg value="${asm.grammar.dir.att}/ATTScanner.g"/>
+            <classpath path="${antlr.jar}"/>
+        </java> 
+        <java classname="org.netbeans.modules.cnd.antlr.Tool" fork="true">
+            <arg value="-o"/>
+            <arg value="${asm.output.dir}"/>
+            <arg value="${asm.grammar.dir.dis}/DisScanner.g"/>
+            <classpath path="${antlr.jar}"/>
+        </java> 
+        <java classname="org.netbeans.modules.cnd.antlr.Tool" fork="true">
+            <arg value="-o"/>
+            <arg value="${asm.output.dir}"/>
+            <arg value="${asm.grammar.dir.ident}/IdentScanner.g"/>
+            <classpath path="${antlr.jar}"/>
+        </java>       
+    </target>   
+                
+</project>
+

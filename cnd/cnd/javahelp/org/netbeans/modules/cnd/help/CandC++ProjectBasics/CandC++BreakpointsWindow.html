@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="StyleSheet" href="../ide.css"
+type="text/css">
+<title>C and C++ Breakpoints Window</title>
+</head>
+<body>
+<h2>C and C++ Breakpoints Window</h2>
+<p><small><a href="#seealso">See Also</a>&nbsp; </small>
+<p>The Breakpoints window lists the breakpoints set in the
+current project. You can open the Breakpoints window by choosing
+Window &gt; Debugging &gt; Breakpoints. If you open the Breakpoints
+window when a debugging session is running, it closes automatically
+when you end the debugging session. If you open the window when no
+debugging session is running, it stays open until you close it.
+</p>
+<p>
+By default, each entry contains a short text description of the
+breakpoint and a checkbox to indicate whether the breakpoint is
+enabled or disabled. You can enable or disable a breakpoint directly
+in the Breakpoints window using the checkbox.
+</p>
+<h3>Icons</h3>
+The icon to the left of the breakpoint summary indicates the type
+of the breakpoint.
+<table border="1" cellpadding="5" cellspacing="0" summary="The left column shows
+the icon. The right column describes the icon.">
+<tr valign="top">
+<th scope="col" align="left">Icon</th>
+<th scope="col" align="left">Description</th>
+</tr>
+<tr valign="top">
+<td><img src="../images/Breakpoint.gif" alt="Breakpoint icon"></td>
+<td>Breakpoint</td>
+</tr>
+<tr valign="top">
+<td><img src="../images/DisabledBreakpoint.gif" alt="Disabled breakpoint icon"></td>
+<td>Disabled breakpoint</td>
+</tr>
+<tr valign="top">
+<td><img src="../images/ConditionalBreakpoint.gif" alt="Conditional breakpoint icon"></td>
+<td>Conditional breakpoint</td>
+</tr>
+<tr valign="top">
+<td><img src="../images/DisabledConditionalBreakpoint.gif" alt="Disabled conditional
+breakpoint icon"></td>
+<td>Disabled conditional breakpoint</td>
+</tr>
+</table>
+<h3>Buttons</h3>
+<p>The left margin of the Breakpoints window includes the following items.</p>
+<table border="1" cellpadding="5" cellspacing="0" summary="The left column lists
+the item. The right column describes the item.">
+<tr valign="top">
+<th scope="col" align="left">Button</th>
+<th scope="col" align="left">Description</th>
+</tr>
+<tr valign="top">
+<td><img src="../images/NewBreakpoint.png" alt="New Breakpoint button"></td>
+<td>Opens dialog to create a new breakpoint</td>
+</tr>
+<tr valign="top">
+<td><img src="../images/BreakpointGroups_options_16.png" alt="Select Breakpoint Groups button"></td>
+<td>Opens pop-up menu for <a href="GroupingBreakpoints.html">grouping breakpoints</a></td>
+</tr>
+</table>
+<h3>Actions</h3>
+The pop-up menu in the Breakpoints window includes the following
+items.
+<table border="1" cellpadding="5" cellspacing="0" summary="The left column lists
+the item. The right column describes the item.">
+<tr valign="top">
+<th scope="col" align="left">Menu Item</th>
+<th scope="col" align="left">Description</th>
+</tr>
+<tr valign="top">
+<td>Go To Source</td>
+<td>For a line breakpoint only. Finds the location of the selected 
+breakpoint in the source code.</td>
+</tr>
+<tr valign="top">
+<td>Disable</td>
+<td>Turns off the selected breakpoint, but preserves an entry for 
+it in this window.</td>
+</tr>
+<tr valign="top">
+<td>New Breakpoint</td>
+<td>Opens a dialog box enabling you to create a new breakpoint.</td>
+</tr>
+<tr valign="top">
+<td>Enable All</td>
+<td>Enables all the breakpoints in this window.</td>
+</tr>
+<tr valign="top">
+<td>Disable All</td>
+<td>Disables all breakpoints in this window.</td>
+</tr>
+<tr valign="top">
+<td>Delete</td>
+<td>Deletes the selected breakpoint.
+</td>
+</tr>
+<tr valign="top">
+<td>Delete All</td>
+<td>
+Deletes all breakpoints in this window.
+<p><img alt="Warning icon" src="../images/warn.gif"> If you choose this option, all 
+breakpoints are deleted immediately. There is no confirmation 
+dialog box.
+</p>
+</td>
+</tr>
+<tr valign="top">
+<td>Delete Inapplicable</td>
+<td>Deletes all global breakpoints that are not applicable to the program currently being debugged. 
+</td>
+</tr>
+<tr valign="top">
+<td>Customize</td>
+<td>Opens a dialog box that lets you specify behavior of the 
+breakpoint.</td>
+</tr>
+</table>
+<table summary="related topics">
+<tr valign="top">
+<th colspan=2 align=left><a name="seealso">See Also</a></th>
+</tr>
+<tr valign="top">
+<td width="23"></td>
+<td>
+  <a href="SettingCorC++Breakpoint.html">Setting a Breakpoint in a C or C++ Program</a><br>
+<a href="DebuggerWindows.html">C and C++ Debugger Windows</a><br>
+<a href="GroupingBreakpoints.html">Organizing C/C++ Breakpoints Into Groups</a>
+</td>
+</tr>
+</table>
+<hr>
+<small>
+<a href="nbdocs://org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+<table border="0" cellpadding="20">
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+</body>
+</html>
+

@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN"
+                     "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+
+<toc version="2.0">
+	<tocitem text="C/C++/Fortran Development" expand="false">
+		<tocitem text="Getting Started">
+			<tocitem text="Workflow for C/C++/Fortran Projects" target="WorkingWithCandC++Projects1" />
+			<tocitem text="IDE Tools for C/C++/Fortran Development" target="IDEToolsOverview" />
+			<tocitem text="About Projects and Makefiles" target="CandC++ProjectsMakefiles" />
+			<tocitem text="Creating a C/C++/Fortran Project" target="CreatingCorC++Project" />
+		</tocitem>
+		<tocitem text="Working With C/C++/Fortran Projects">
+			<tocitem text="About C/C++/Fortran Projects" target="AboutCandC++Projects" />
+			<tocitem text="About Qt Projects" target="AboutQtProjects" />
+			<tocitem text="Project Tasks: Quick Reference" target="ProjectTasks" />
+			<tocitem text="Configuring Default Settings for C/C++/Fortran Projects">
+				<tocitem text="About Configuring Default Settings" target="ConfiguringProjectDefaults" />
+				<tocitem text="Configuring Build Tools" target="ConfiguringBuildTools" />
+				<tocitem text="Configuring General Project Options" target="Configuring" />
+				<tocitem text="Configuring Code Formatting Style" target="ConfiguringCodeStyle" />
+				<tocitem text="Configuring Code Assistance Settings" target="ConfiguringParsingSettings" />
+				<tocitem text="Configuring Highlighting Settings" target="ConfiguringSemanticHighlighting" />
+				<tocitem text="Configuring File Extensions" target="ConfiguringFileExtensions" />
+				<tocitem text="Memory Requirements for Large Projects" target="Memory" />
+				<tocitem text="Cleaning Cache Directory" target="CleanCacheDir" />
+			</tocitem>
+			<tocitem text="Creating and Modifying C/C++/Fortran Projects">
+				<tocitem text="Creating a C/C++/Fortran Project" target="CreatingCorC++Project" />
+				<tocitem text="Creating a C or C++ Project from a Binary File" target="CreatingCorC++ProjectBinary" />
+				<tocitem text="Configuring Code Assistance for Projects from Existing Sources" target="CodeAssistance" />
+				<tocitem text="Relocating the Code Assistance Cache for Version Controlled Projects" target="CodeAssistanceCache" />
+				<tocitem text="Using Properties Files for Verson Controlled Projects" target="PublicPrivateProperties" />
+				<tocitem text="Setting the Main C/C++/Fortran Project" target="SettingMainCorC++Project." />
+				<tocitem text="Setting Project Properties for a Single Project" target="SettingProjectProperties" />
+				<tocitem text="Setting Folder Properties" target="SettingCandC++FolderProperties" />
+				<tocitem text="Setting File Properties" target="SettingCandC++FileProperties" />
+				<tocitem text="Creating a Makefile for a Project with Existing Sources" target="CreatingMakefile" />
+				<tocitem text="Managing Project Configurations" target="ManagingProjectConfigurations" />
+				<tocitem text="Adding Files and Folders to a C/C++/Fortran Project" target="AddingFilesandFolders" />
+				<tocitem text="Adding Unit Tests to a C/C++/Fortran Project" target="AddingUnitTests" />
+				<tocitem text="Running a C/C++/Fortran Project" target="RunningCorC++Project1" />
+				<tocitem text="Using C or C++ Project Launchers" target="UsingCandC++Launchers" />
+				<tocitem text="Using the Manage Launchers Dialog" target="ManageLaunchers" />
+				<tocitem text="Moving, Copying, or Renaming a C/C++/Fortran Project" target="MovingCorC++Project" />
+				<tocitem text="Deleting a C/C++/Fortran Project" target="DeletingCorC++Project" />
+			</tocitem>
+			<tocitem text="Building and Running C/C++/Fortran Projects">
+				<tocitem text="Building Tasks: Quick Reference" target="CandC++BuildingTasks" />
+				<tocitem text="Setting C and C++ Compiler Options" target="CompilerOptions" />
+				<tocitem text="Setting C and C++ Linker Options" target="LinkerOptions" />
+				<tocitem text="Creating Dependencies Between C or C++ Projects" target="CreatingDependencies" />
+				<tocitem text="Building a C or C++ Project" target="BuildingCorC++Project" />
+				<tocitem text="Running a C or C++ Project" target="RunningCorC++Project" />
+				<tocitem text="Packaging an Application" target="Packaging" />
+				<tocitem text="Setting Up a C/C++/Fortran Project for Remote Development" target="RemoteDevelopmentProjects" />
+			</tocitem>
+			<tocitem text="Editing Source Files in C/C++/Fortran Projects">
+				<tocitem text="About Editing C and C++ Files" target="EditingSourceFiles" />
+				<tocitem text="About Editing Fortran Files" target="EditingFortranSourceFiles" />
+				<tocitem text="Using Code Completion" target="UsingCodeCompletion" />
+				<tocitem text="Using Code Templates" target="UsingAbbreviations" />
+				<tocitem text="Error Highlighting" target="ErrorHighlighting" />
+				<tocitem text="Finding Text in Projects" target="FindinProject" />
+				<tocitem text="Using Pair Completion" target="UsingPairCompletion" />
+				<tocitem text="Folding Blocks of Code" target="CandC++CodeFolding" />
+				<tocitem text="Commenting Lines in Your Code" target="Commenting" />
+				<tocitem text="Refactoring Source Files" target="Refactoring" />
+				<tocitem text="Adding Documentation to Your Code" target="Documenting" />
+				<tocitem text="Viewing C/C++ Documentation" target="CppDocumentation" />
+				<tocitem text="Terminal Feature Extensions" target="TerminalExtensions" />
+			</tocitem>
+			<tocitem text="Navigating Source Files and Projects">
+				<tocitem text="Using Hyperlink Navigation" target="UsingHyperlinks" />
+				<tocitem text="Using Breadcrumb Navigation" target="UsingBreadcrumbs" />
+				<tocitem text="Switching Between Source and Header Files" target="SourceHeaderSwitch" />
+				<tocitem text="Going to an Included File" target="GoToInclude" />
+				<tocitem text="Going to a Symbol" target="GoToDeclaration" />
+				<tocitem text="Going to a Declaration" target="GoToDeclaration1" />
+				<tocitem text="Going to a Type" target="GoToType" />
+				<tocitem text="Going to an Overridden or Overriding Method" target="GoToOverride" />
+				<tocitem text="Using the Call Graph" target="CallGraphView" />
+				<tocitem text="Using the Classes Window" target="UsingClassView" />
+				<tocitem text="Using the Navigator Window" target="UsingNavigator" />
+				<tocitem text="Finding Class, Method, and Field Usages" target="FindingUsages" />
+				<tocitem text="Usages Window" target="UsagesWindow" />
+				<tocitem text="Using the Type Hierarchy Window" target="TypeView" />
+				<tocitem text="Using the Include Hierarchy Window" target="IncludeView" />
+				<tocitem text="Using the Macro Expansion Window" target="MacroExpansionWindow" />
+				<tocitem text="Using the C/C++ Documentation Window" target="CppDocumentation" />
+				<tocitem text="Navigating to the Build Log" target="NavigateToBuildLog" />
+			</tocitem>
+		</tocitem>
+		<tocitem text="Using Docker in the IDE">
+			<tocitem text="About Docker" target="AboutDocker"/>
+			<tocitem text="Adding a Docker Instance" target="AddingDockerInstance"/>
+			<tocitem text="Building Docker Image" target="BuildImageDialog"/>
+			<tocitem text="Running a Docker Container" target="RunningDockerContainers"/>
+		</tocitem>
+		<tocitem text="Using Remote Development for C/C++/Fortran Projects">
+			<tocitem text="Overview of C/C++ Remote Development" target="RemoteDevelopment" />
+			<tocitem text="Configuring C/C++ Remote Build Hosts" target="RemoteDevelopmentConfigureHost" />
+			<tocitem text="Setting Remote Host Properties" target="RemoteDevelopmentManageHosts" />
+			<tocitem text="C/C++ Remote Development Modes" target="RemoteModes" />
+			<tocitem text="Sharing Files With Remote Build Hosts" target="RemoteDevelopmentFileSharing" />
+			<tocitem text="Setting Up C/C++ Projects for Remote Development" target="RemoteDevelopmentProjects" />
+			<tocitem text="Opening a Terminal Window for a Build Host" target="RemoteDevelopmentTerminal" />
+			<tocitem text="Pinning a Terminal Window" target="SavingTerminalSettings" />
+			<tocitem text="Managing Build Hosts" target="RemoteDevelopmentBrowsing" />
+			<tocitem text="Working with Remote Build Hosts Using the Toolbar" target="RemoteDevelopmentToolbar" />
+			<tocitem text="Using Full Remote Mode with Version Control" target="RemoteVCS" />
+		</tocitem>
+		<tocitem text="Testing C/C++ Projects">
+			<tocitem text="About C and C++ Unit Tests" target="c_unit_about" />
+			<tocitem text="Overview of C/C++ Unit Tests" target="c_unit_overview" />
+			<tocitem text="C/C++ Unit Test Tasks: Quick Reference" target="c_unit_quickref" />
+			<tocitem text="Creating C/C++ Unit Tests" target="c_unit_creatingtests" />
+			<tocitem text="Running C/C++ Unit Tests" target="c_unit_runningtests" />
+			<tocitem text="Viewing C/C++ Test Results" target="c_unit_resultswindow" />
+			<tocitem text="Debugging C/C++ Unit Tests" target="c_unit_debuggingtests" />
+		</tocitem>
+		<tocitem text="Debugging C/C++/Fortran Applications With gdb">
+			<tocitem text="About Debugging C and C++ and Fortran Applications with gdb" target="DebuggingCorC++Project" />
+			<tocitem text="Working With gdb Debugging" target="WorkingWithDebugging" />
+			<tocitem text="C/C++ and Fortran gdb Debugging Tasks: Quick Reference" target="CandC++DebuggingTasks" />
+			<tocitem text="C/C++ and Fortran Debugger Windows" target="DebuggerWindows" />
+			<tocitem text="Current Context in the Debugger" target="CandC++DebuggerContext" />
+			<tocitem text="Debugging Threads" target="Threads" />
+			<tocitem text="Setting C/C++/Fortran Breakpoints">
+				<tocitem text="C/C++/Fortran Breakpoints in the IDE" target="CandC++Breakpoints" />
+				<tocitem text="Setting a C/C++/Fortran gdb Breakpoint" target="SettingCorC++Breakpoint" />
+			</tocitem>
+			<tocitem text="C/C++/Fortran Debugging Sessions">
+				<tocitem text="Starting a Local C/C++/Fortran Debugging Session" target="StartingLocalDebuggingSession" />
+				<tocitem text="Attaching the Debugger to a Running Process" target="Attaching" />
+				<tocitem text="Debugging a Core File" target="DebuggingCoreFile" />
+				<tocitem text="Stepping Through Your C/C++/Fortran Program" target="SteppingThroughCorC++" />
+				<tocitem text="Running to the Cursor" target="RunToCursor" />
+				<tocitem text="Finishing a C/C++/Fortran Debugging Session" target="FinishingCorC++DebugSession" />
+			</tocitem>
+			<tocitem text="Viewing C and C++ Program Information">
+				<tocitem text="C and C++ Variables and Expressions in the IDE" target="CorC++VariablesandExpressions" />
+				<tocitem text="Using the C or C++ Call Stack" target="UsingCorC++CallStack" />
+				<tocitem text="Popping a Call From the Stack" target="PoppingCorC++Stack" />
+				<tocitem text="Using Balloon Evaluation" target="BalloonEvaluation" />
+				<tocitem text="Evaluating an Expression" target="EvaluatingExpression" />
+				<tocitem text="Creating a C or C++ Watch" target="debug.add.watch" />
+			</tocitem>
+		</tocitem>
+		<tocitem text="Using the SendTo Script Utility">
+			<tocitem text="About the SendTo Utility" target="sendto-about" />
+			<tocitem text="SendTo Scripts" target="sendto-script" />
+			<tocitem text="SendTo Validation Scripts" target="sendto-vscript"/>
+			<tocitem text="Creating and Modifying Scripts" target="sendto-createmodify" />
+			<tocitem text="Executing Scripts" target="sendto-execute" />
+		</tocitem>
+		<tocitem text="Working with Mixed Native and Java Applications">
+			<tocitem text="Mixed Development of Native and Java Applications" target="CppJavaDevelopment" />
+			<tocitem text="Working with JNI in Mixed Development Projects" target="WorkingWithJNI" />
+			<tocitem text="Working with JNA in Mixed Development Projects" target="WorkingWithJNA" />
+		</tocitem>
+	</tocitem>
+</toc>

@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    
+    <folder name="CND">
+        <folder name="BuildAction">
+            <folder name="pre_build">
+                <file name="save">
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="validate-toolchain">
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="pre-build">
+                    <attr name="position" intvalue="300"/>
+                </file>
+            </folder>
+            <folder name="build">
+                <file name="save">
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="validate-toolchain">
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="pre-build">
+                    <attr name="flag" stringvalue="pre-build-first"/>
+                    <attr name="position" intvalue="290"/>
+                </file>
+                <file name="build">
+                    <attr name="position" intvalue="300"/>
+                </file>
+            </folder>
+            <folder name="build_packages">
+                <file name="save">
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="validate-toolchain">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="pre-build">
+                    <attr name="flag" stringvalue="pre-build-first,build-first"/>
+                    <attr name="position" intvalue="290"/>
+                </file>
+                <file name="build">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="300"/>
+                </file>
+                <file name="build-package">
+                    <attr name="position" intvalue="400"/>
+                </file>
+            </folder>
+            <folder name="clean">
+                <file name="save">
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="validate-toolchain">
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="clean">
+                    <attr name="position" intvalue="300"/>
+                </file>
+            </folder>
+            <folder name="compile.single">
+                <file name="save">
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="validate-toolchain">
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="compile-single">
+                    <attr name="position" intvalue="300"/>
+                </file>
+            </folder>
+            <folder name="custom.action">
+                <file name="save">
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="validate-toolchain">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="pre-build">
+                    <attr name="flag" stringvalue="pre-build-first,build-first"/>
+                    <attr name="position" intvalue="290"/>
+                </file>
+                <file name="build">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="300"/>
+                </file>
+                <file name="custom-action">
+                    <attr name="position" intvalue="400"/>
+                </file>
+            </folder>
+            <folder name="debug">
+                <file name="save">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="validate-toolchain">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="pre-build">
+                    <attr name="flag" stringvalue="pre-build-first,build-first"/>
+                    <attr name="position" intvalue="290"/>
+                </file>
+                <file name="build">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+                <file name="debug">
+                    <attr name="position" intvalue="500"/>
+                </file>
+            </folder>
+            <folder name="debug.test">
+                <file name="save">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="validate-toolchain">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="pre-build">
+                    <attr name="flag" stringvalue="pre-build-first,build-first"/>
+                    <attr name="position" intvalue="290"/>
+                </file>
+                <file name="build">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+                <file name="build-tests">
+                    <attr name="position" intvalue="450"/>
+                </file>
+                <file name="debug-test">
+                    <attr name="position" intvalue="500"/>
+                </file>
+            </folder>
+            <folder name="debug.test.single">
+                <file name="save">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="validate-toolchain">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="pre-build">
+                    <attr name="flag" stringvalue="pre-build-first"/>
+                    <attr name="position" intvalue="290"/>
+                </file>
+                <file name="build">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+                <file name="build-tests">
+                    <attr name="position" intvalue="450"/>
+                </file>
+                <file name="debug-test">
+                    <attr name="position" intvalue="500"/>
+                </file>
+            </folder>
+            <folder name="debug.single">
+                <file name="debug-single">
+                    <attr name="position" intvalue="100"/>
+                </file>
+            </folder>
+            <folder name="debug.stepinto">
+                <file name="save">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="validate-toolchain">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="pre-build">
+                    <attr name="flag" stringvalue="pre-build-first,build-first"/>
+                    <attr name="position" intvalue="290"/>
+                </file>
+                <file name="build">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+                <file name="debug-stepinto">
+                    <attr name="position" intvalue="500"/>
+                </file>
+            </folder>
+            <folder name="debug.stepinto.test">
+                <file name="save">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="validate-toolchain">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="pre-build">
+                    <attr name="flag" stringvalue="pre-build-first,build-first"/>
+                    <attr name="position" intvalue="290"/>
+                </file>
+                <file name="build">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+                <file name="build-tests">
+                    <attr name="position" intvalue="450"/>
+                </file>
+                <file name="debug-stepinto-test">
+                    <attr name="position" intvalue="500"/>
+                </file>
+            </folder>
+            <folder name="rebuild">
+                <file name="save">
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="validate-toolchain">
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="pre-build">
+                    <attr name="flag" stringvalue="pre-build-first"/>
+                    <attr name="position" intvalue="290"/>
+                </file>
+                <file name="clean">
+                    <attr name="position" intvalue="300"/>
+                </file>
+                <file name="build">
+                    <attr name="position" intvalue="400"/>
+                </file>
+            </folder>
+            <folder name="run">
+                <file name="save">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="validate-toolchain">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="pre-build">
+                    <attr name="flag" stringvalue="pre-build-first,build-first"/>
+                    <attr name="position" intvalue="290"/>
+                </file>
+                <file name="build">
+                    <attr name="flag" stringvalue="build-first"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+                <file name="run">
+                    <attr name="position" intvalue="500"/>
+                </file>
+            </folder>
+            <folder name="run.single">
+                <file name="run-single">
+                    <attr name="position" intvalue="100"/>
+                </file>
+            </folder>
+            <folder name="test">
+                <file name="save">
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="validate-toolchain">
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="pre-build">
+                    <attr name="flag" stringvalue="pre-build-first"/>
+                    <attr name="position" intvalue="290"/>
+                </file>
+                <file name="build">
+                    <attr name="position" intvalue="400"/>
+                </file>
+                <file name="build-tests">
+                    <attr name="position" intvalue="500"/>
+                </file>
+                <file name="test">
+                    <attr name="position" intvalue="600"/>
+                </file>
+            </folder>
+            <folder name="test.single">
+                <file name="save">
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="validate-toolchain">
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="pre-build">
+                    <attr name="flag" stringvalue="pre-build-first"/>
+                    <attr name="position" intvalue="290"/>
+                </file>
+                <file name="build">
+                    <attr name="position" intvalue="400"/>
+                </file>
+                <file name="build-tests">
+                    <attr name="position" intvalue="500"/>
+                </file>
+                <file name="test-single">
+                    <attr name="position" intvalue="600"/>
+                </file>
+            </folder>
+        </folder>        <!-- BuildAction -->
+    </folder>       <!-- CND -->
+</filesystem>

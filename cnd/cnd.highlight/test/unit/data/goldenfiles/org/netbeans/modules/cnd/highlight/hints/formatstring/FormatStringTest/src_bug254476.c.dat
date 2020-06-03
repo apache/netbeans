@@ -1,0 +1,1 @@
+ERROR src/bug254476.c [91-92]: Mismatching the argument type "int*" and conversion specifier "d"

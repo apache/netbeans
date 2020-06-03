@@ -1,0 +1,52 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE complex.c
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION complex_foo  [1:1/0-3:2/107] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE complex_foo(float __complex__)
+    UNIQUE NAME f:complex_foo(float __complex__)
+    DECLARATION: complex_foo  [1:1/0-3:2/107]
+    PARAMETERS:
+        v [1:31/30-1:50/49]  TYPE: float __complex__ TEXT=float __complex__  [1:31/30-1:48/47]  INIT: null  SCOPE: complex_foo 
+    RETURNS float __complex__ TEXT=float __complex__  [1:1/0-1:18/17]
+    STATEMENT COMPOUND  [1:52/51-3:2/107] SCOPE: complex_foo 
+        STATEMENT RETURN  [2:5/57-2:53/105] SCOPE: Stmt  [1:52/51-3:2/107] text: 'return (float __complex__) (v + 1 * _Complex_I);'
+FUNCTION DEFINITION complex_foo  [5:1/109-7:2/225] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE complex_foo(long double _Complex)
+    UNIQUE NAME f:complex_foo(long double _Complex)
+    DECLARATION: complex_foo  [5:1/109-7:2/225]
+    PARAMETERS:
+        v [5:34/142-5:56/164]  TYPE: long double _Complex TEXT=long double _Complex  [5:34/142-5:54/162]  INIT: null  SCOPE: complex_foo 
+    RETURNS long double _Complex TEXT=long double _Complex  [5:1/109-5:21/129]
+    STATEMENT COMPOUND  [5:58/166-7:2/225] SCOPE: complex_foo 
+        STATEMENT RETURN  [6:5/172-6:56/223] SCOPE: Stmt  [5:58/166-7:2/225] text: 'return (long double _Complex) (v + 1 * _Complex_I);'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION complex_foo  [1:1/0-3:2/107] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE complex_foo(float __complex__)
+    UNIQUE NAME f:complex_foo(float __complex__)
+    DECLARATION: complex_foo  [1:1/0-3:2/107]
+    PARAMETERS:
+        v [1:31/30-1:50/49]  TYPE: float __complex__ TEXT=float __complex__  [1:31/30-1:48/47]  INIT: null  SCOPE: complex_foo 
+    RETURNS float __complex__ TEXT=float __complex__  [1:1/0-1:18/17]
+    STATEMENT COMPOUND  [1:52/51-3:2/107] SCOPE: complex_foo 
+        STATEMENT RETURN  [2:5/57-2:53/105] SCOPE: Stmt  [1:52/51-3:2/107] text: 'return (float __complex__) (v + 1 * _Complex_I);'
+FUNCTION DEFINITION complex_foo  [5:1/109-7:2/225] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE complex_foo(long double _Complex)
+    UNIQUE NAME f:complex_foo(long double _Complex)
+    DECLARATION: complex_foo  [5:1/109-7:2/225]
+    PARAMETERS:
+        v [5:34/142-5:56/164]  TYPE: long double _Complex TEXT=long double _Complex  [5:34/142-5:54/162]  INIT: null  SCOPE: complex_foo 
+    RETURNS long double _Complex TEXT=long double _Complex  [5:1/109-5:21/129]
+    STATEMENT COMPOUND  [5:58/166-7:2/225] SCOPE: complex_foo 
+        STATEMENT RETURN  [6:5/172-6:56/223] SCOPE: Stmt  [5:58/166-7:2/225] text: 'return (long double _Complex) (v + 1 * _Complex_I);'
+

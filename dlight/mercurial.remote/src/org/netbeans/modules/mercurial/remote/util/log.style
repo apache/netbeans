@@ -1,0 +1,7 @@
+changeset = changeset.tmpl
+file     = '{file}\t'
+file_add     = '{file_add}\t'
+file_del     = '{file_del}\t'
+file_copy     = '{name}\t{source}\t'
+branch    = '{branch}\t'
+tag       = '{tag}\t'

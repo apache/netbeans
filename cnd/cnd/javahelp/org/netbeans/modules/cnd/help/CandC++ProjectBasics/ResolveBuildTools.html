@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="StyleSheet" href="../ide.css"
+type="text/css">
+<title>Resolve Missing Native Build Tools Dialog Box</title>
+</head>
+<body>
+<h2>Resolve Missing Native Build Tools Dialog Box</h2>
+
+<p>If the tools required to build the project are not in the
+collection specified for the project, the
+Resolve Missing Native Build Tools dialog box opens.</p>
+<p>
+To resolve the missing build tools, you can set the following properties:</p>
+<ul>
+<li><b>Build Host.</b> The Build Host drop-down list includes
+your local host and any remote hosts you have defined. For information
+on using remote hosts, see <a href="../WorkingWithCandC++Projects/RemoteDevelopment.html">Remote Development</a>.
+You can add and remove
+remote build hosts, change the default host, and share project sources
+on the local host with the remote host.
+<ul>
+<li>To add a remote host, click Edit. In the Build Hosts Manager
+dialog box, click Add. In the Add New Server dialog box, type the
+name of the host in the Build Server field. Change
+the default Login name if needed. Type your password
+in the Password field and click OK.
+</li>
+<li>To remove a remote host, click Edit. In the Build Hosts Manager
+dialog box, select the host you want to remove, click Remove, then click OK.
+</li>
+<li>To set a host as the default build host, select the host
+from the Build Host drop-down list.
+</li>
+<li>To map the project sources on the local host to a remote host,
+click Path Mapper. In the Edit Path's Map dialog box, select the
+remote host in the Host drop-down list. For each mapping, type
+the local path to project sources in the Local Path field and the
+corresponding remote path in the Remote Path field.
+</li>
+</ul>
+<li><b>Tool Collection.</b> The tool collection list displays
+the collections found on the current build host and the local
+host. The default
+collection is listed in bold type. For the local host, you can modify
+the list by adding or removing collections.
+<ul>
+<li>To add a collection to the list, click Add and specify the
+base directory in the Add New Tool Collection dialog box. The Tool Collection
+Family and Tool Collection Name are filled in automatically. You can specify
+a different name for the collection. If you change the family,
+make sure that the family you specify is the correct family for the
+collection or the compiler flags might not be valid.
+</li>
+<li>To remove a collection from the list, select the collection and
+click Remove.
+</li>
+<li>To duplicate a collection, select the collection from the list
+and modify the base directory, tool collection family, or tool collection name in
+the dialog box.
+</li>
+<li>To make a collection the default, select the collection and
+click Default.
+</li>
+</ul>
+</li>
+<li><b>Base Directory.</b> The base directory where the compilers are located on
+the current build host. The base directory is typically a <tt>bin</tt>
+directory. To change the base directory,
+click the browse button and select a new directory.
+These fields can be edited for the local host 
+but not for remote hosts.  For a remote build host, you must enter the
+full path to the tools on the remote host.
+<p>For each tool, the default command is the first one found in the
+base directory. To select a different command from the base directory
+or another directory, click the browse button and navigate to a different
+command in the Select Tool dialog box.</p></li>
+<ul>
+<li><b>C Compiler.</b> The C compiler command to use for building C projects.
+</li>
+<li><b>C++ Compiler.</b> The C++ compiler command to use for building C++ projects.
+</li>
+<li><b>Fortran Compiler.</b> The Fortran compiler command to use for building Fortran projects.
+</li>
+<li><b>Assembler.</b> The assembler program command to use for projects in assembly code.
+</li>
+</ul>
+<li><b>Make Command.</b> The make command to use for building projects. 
+</li>
+<li><b>Debugger Command.</b> The gdb command to use when debugging projects.  
+</li>
+<li><b>QMake Command.</b> The command for generating makefiles from qmake <tt>.pro</tt> project files.</li>
+<li><b>CMake Command.</b> The command for generating makefies from <tt>CMakeLists.txt</tt> configuration files.</li>
+</ul>
+<hr>
+<small>
+<a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+<table border="0" cellpadding="20">
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+</body>
+</html>

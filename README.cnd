@@ -1,0 +1,41 @@
+C/C++ Support
+-------------
+
+This is a work-in-progress attempt to incorporate the C/C++ support, as donated by Oracle, to Apache NetBeans.
+
+There are many caveats currently, a possibly incomplete list:
+
+* not all license headers have been changed; many files are missing the license headers; binary files need licenseinfo.xml to be filled
+* building requires a number of files from the original repository - work by NetBeans C/C++ enthusiasts is needed to resolve this in one way or another
+* building requires a number of binaries to be added manually
+* external libraries/dependencies need to be reviewed and put up to Apache standard
+
+Building
+--------
+
+To build the C/C++ support, please copy the following files from the original NetBeans repository to your clone:
+
+* cnd.debugger.common2/src/org/netbeans/modules/cnd/debugger/common2/icons/debugger_log.png => cnd/cnd.debugger.common2/src/org/netbeans/modules/cnd/debugger/common2/icons/debugger_log.png
+* cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/CPPParserEx.java => cnd/cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/CPPParserEx.java
+* cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/CPPSymbol.java => cnd/cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/CPPSymbol.java
+* cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/cppparser.g => cnd/cnd.modelimpl/src/org/netbeans/modules/cnd/modelimpl/parser/cppparser.g
+* cnd.repository/src/org/netbeans/modules/cnd/repository/storage/data/UTF.java => cnd/cnd.repository/src/org/netbeans/modules/cnd/repository/storage/data/UTF.java
+* cnd.repository/src/org/netbeans/modules/cnd/repository/util/LongHashMap.java => cnd/cnd.repository/src/org/netbeans/modules/cnd/repository/util/LongHashMap.java
+* cnd.testrunner/src/org/netbeans/modules/cnd/testrunner/ui/CndUnitHandlerFactory.java => cnd/cnd.testrunner/src/org/netbeans/modules/cnd/testrunner/ui/CndUnitHandlerFactory.java
+* cnd.utils/src/org/netbeans/modules/cnd/utils/resources/mime-resolver-hex-based.xml => cnd/cnd.utils/src/org/netbeans/modules/cnd/utils/resources/mime-resolver-hex-based.xml
+* mercurial.remote/src/org/netbeans/modules/mercurial/remote/ui/update/ResolveConflictsExecutor.java => dlight/mercurial.remote/src/org/netbeans/modules/mercurial/remote/ui/update/ResolveConflictsExecutor.java
+* remotefs.versioning.api/src/org/netbeans/modules/remotefs/versioning/api/Scrambler.java => dlight/remotefs.versioning.api/src/org/netbeans/modules/remotefs/versioning/api/Scrambler.java
+* subversion.remote/src/org/netbeans/modules/subversion/remote/ui/update/ResolveConflictsExecutor.java => dlight/subversion.remote/src/org/netbeans/modules/subversion/remote/ui/update/ResolveConflictsExecutor.java
+
+Download the following files into the specified folders:
+
+* https://netbeans.osuosl.org/binaries/47F0DB803884692F28A26A2FF80A7D6756B091DB-cnd-build-trace-1.0.zip => cnd/cnd.discovery/external/cnd-build-trace-1.0.zip
+* https://netbeans.osuosl.org/binaries/E59851B0E49C05D728D5C653E52750FA5B6A8F0E-cnd-rfs-1.0.zip => cnd/cnd.remote/external/cnd-rfs-1.0.zip
+* https://netbeans.osuosl.org/binaries/5CAB59D859CAA6598E28131D30DD2E89806DB57F-antlr-3.4.jar => cnd/cnd.modelimpl/external/antlr-3.4.jar
+
+From NetBeans 8.2 binary, copy file:
+* cnd/modules/org-netbeans-modules-cnd-antlr.jar => cnd/libs.antlr.cnd/external
+
+To build the C/C++ support, invoke:
+
+ant -Dcluster.config=cnd

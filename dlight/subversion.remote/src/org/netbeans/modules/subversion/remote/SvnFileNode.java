@@ -1,0 +1,160 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.netbeans.modules.subversion.remote;
+
+import org.openide.filesystems.FileObject;
+import java.util.List;
+import java.util.ArrayList;
+import org.netbeans.modules.subversion.remote.api.SVNClientException;
+import org.netbeans.modules.subversion.remote.client.SvnClientExceptionHandler;
+import org.netbeans.modules.subversion.remote.util.Context;
+import org.netbeans.modules.subversion.remote.util.SvnUtils;
+import org.netbeans.modules.versioning.core.api.VCSFileProxy;
+import org.openide.util.NbBundle;
+
+/**
+ * Represents real or virtual (non-local) file.
+ *
+ * 
+ */
+public class SvnFileNode {
+
+    /**
+     * Careful, may not be normalized
+     * @return 
+     */
+    private final VCSFileProxy file;
+    private final VCSFileProxy normalizedFile;
+    private FileObject fileObject;
+    private String relativePath;
+    private String copy;
+    private boolean copyScanned;
+    private Boolean fileFlag;
+    private String mimeType;
+
+    public SvnFileNode(VCSFileProxy file) {
+        this.file = file;
+        VCSFileProxy norm = file.normalizeFile();
+        FileInformation fi = Subversion.getInstance().getStatusCache().getStatus(file);
+        FileInformation fiNorm = Subversion.getInstance().getStatusCache().getStatus(norm);
+        if (fi.getStatus() != fiNorm.getStatus()) {
+            norm = null;
+        }
+        normalizedFile = norm;
+    }
+
+    public String getName() {
+        return file.getName();
+    }
+
+    public FileInformation getInformation() {
+        return Subversion.getInstance().getStatusCache().getStatus(file); 
+    }
+
+    /**
+     * Careful, returned file may not be normalized
+     * @return 
+     */
+    public VCSFileProxy getFile() {
+        return file;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        return o instanceof SvnFileNode && file.equals(((SvnFileNode) o).file);
+    }
+
+    @Override
+    public int hashCode() {
+        return file.hashCode();
+    }
+
+    public FileObject getFileObject() {
+        if (fileObject == null && normalizedFile != null) {
+            fileObject = normalizedFile.toFileObject();
+        }
+        return fileObject;
+    }
+
+    public Object[] getLookupObjects() {
+        List<Object> list = new ArrayList<>(2);
+        list.add(file);
+        FileObject fo = getFileObject();
+        if (fo != null) {
+            list.add(fo);
+        }
+        return list.toArray(new Object[list.size()]);
+    }
+
+    /**
+     * Returns relativePath of this node's file or the full resourceUrl if explicitly selected in Options.
+     * @return relative path of this node's file.
+     */
+    public String getLocation() {
+        if (relativePath == null) {
+            final Context context = new Context(file);
+            try {
+                assert !java.awt.EventQueue.isDispatchThread();
+                relativePath = SvnModuleConfig.getDefault(context.getFileSystem()).isRepositoryPathPrefixed()
+                        ? SvnUtils.decodeToString(SvnUtils.getRepositoryUrl(getFile())) : SvnUtils.getRelativePath(getFile());
+            } catch (SVNClientException ex) {
+                SvnClientExceptionHandler.notifyException(context, ex, false, false);
+            }
+            if (relativePath == null) {
+                relativePath = NbBundle.getMessage(SvnFileNode.class, "SvnFileNode.relativePath.unknown"); //NOI18N
+            }
+        }
+        return relativePath;
+    }
+
+    public String getCopy () {
+        if (!copyScanned) {
+            assert !java.awt.EventQueue.isDispatchThread();
+            copy = SvnUtils.getCopy(getFile());
+            copyScanned = true;
+        }
+        return copy;
+    }
+
+    public boolean isFile () {
+        if (fileFlag == null) {
+            fileFlag = file.isFile();
+        }
+        return fileFlag;
+    }
+
+    public String getMimeType () {
+        if (isFile() && mimeType == null) {
+            mimeType = SvnUtils.getMimeType(normalizedFile == null ? file.normalizeFile() : normalizedFile);
+        }
+        return mimeType;
+    }
+
+    public void initializeProperties() {
+        getLocation();
+        getCopy();
+        isFile();
+        getMimeType();
+        getInformation().getEntry(file); // CommitTableModel.getValueAt may trigger status
+    }
+}

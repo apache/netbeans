@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="StyleSheet" href="../ide.css" type="text/css">
+    <meta name="generator" content="Helen">
+    <title>Using Full Remote Mode with Version Control Systems</title>
+  </head>
+  <body>
+    <h2>
+       Using Full Remote Mode with Version Control Systems
+    </h2>
+    <p>
+       <a href="#seealso"><small>See Also</small></a><small>&nbsp;</small>
+    </p>
+    <p>
+       The IDE offers three modes of remote development described in
+       <a href="RemoteModes.html">C/C++ Remote Development Modes</a>.
+   </p>
+    <p>
+       When you use full remote development, the source files reside on the
+       remote host. The IDE enables you to use Git, Mercurial, and Subversion
+       version control systems (VCS)
+            in full remote mode on the remote source files.</p>
+    <p>After you configure the IDE for your remote projects, you can configure the VCS settings
+    for the remote projects.</p>
+    <p>
+       <b>To specify VCS settings for full remote projects:</b>
+    </p>
+    <ol>
+      <li>
+        In the IDE menu bar, choose Tools &gt; Options (NetBeans &gt; Preferences
+        on OS X) to display the Options dialog.
+      </li>
+      <li>Select the Team category and then click the Versioning tab.</li>
+      <li>
+        In the Versioning Systems list, select the remote VCS you want to work with.
+        <ul>
+            <li>Remote Git: Specify the options for using Git on the remote source files. They are
+                    the same as the Git options for local projects. For more information see the
+                    NetBeans document  <a href="http://www.oracle.com/pls/topic/lookup?ctx=nb8000&id=NBDAG272">
+                        How to Set Git Global Options</a> which you can view in a web browser.
+            </li>
+            <li>Remote Mercurial: Select the build host, and specify the Mercurial
+                username to use with remote projects you work with on the host.
+               Type or browse to the Mercurial executable file path on the build host. You should
+                not include the executable itself (for example the hg command) in the path.
+                For more information see the NetBeans document
+                    <a href="http://www.oracle.com/pls/topic/lookup?ctx=nb8000&id=NBDAG318">Versioning
+                    Applications with Mercurial</a> which you can view in a web browser.
+           </li>
+           <li>Remote Subversion: Select the build host and
+               type or browse to the Subversion executable file path on the build host. You should
+                not include the executable itself (for example the svn command) in the path.
+                For more information see the NetBeans document
+                    <a href="http://www.oracle.com/pls/topic/lookup?ctx=nb8000&id=NBDAG274">Versioning
+                    Applications with Subversion</a> which you can view in a web browser.</li></ul>
+      </li>
+      <li>Click OK.</li>
+      <li>
+        Work with your projects with the VCS just the same as local projects.
+      </li>
+    </ol>
+    <p><b>To set colors used in the IDE for VCS information highlighting:</b></p>
+    <ol> <li>
+        In the IDE menu bar, choose Tools &gt; Options (NetBeans &gt; Preferences 
+        on OS X) to display the Options dialog.
+      </li>
+      <li>Select the Fonts &amp; Colors category and then click the Versioning tab.</li>
+      <li>In the Versioning Systems list, select the remote VCS you want to work with.
+</li>
+<li>Select the highlighting category, choose colors as you like, then click OK.</li></ol>
+    <table>
+      <tr>
+        <th colspan="2" align="left">
+          <a name="seealso">See also</a> 
+        </th>
+      </tr>
+      <tr>
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="RemoteDevelopment.html">Overview of C/C++ Remote Development</a><br>
+           <a href="RemoteDevelopmentProjects.html">Setting Up C/C++/Fortran Projects for Remote
+          Development</a><br>
+           <a href="RemoteDevelopmentToolbar.html">Working on Remote Hosts Using the
+          Toolbar</a><br>
+           <a href="ConfiguringBuildTools.html">Configuring Build Tools</a><br>
+           <a href="ProjectPropsBuild.html">C/C++ Project Properties Dialog Box: Build</a><br>
+           
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a>
+    </p>
+    <table border="0" cellpadding="20">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+    <p>
+       &nbsp;
+    </p>
+  </body>
+</html>

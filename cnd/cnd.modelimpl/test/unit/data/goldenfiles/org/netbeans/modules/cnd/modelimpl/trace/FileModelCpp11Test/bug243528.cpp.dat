@@ -1,0 +1,125 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug243528.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug243528 [1:1/0-17:2/464] SCOPE: bug243528.cpp
+    STRUCT X1_243528<typename T> (bug243528::X1_243528 ) [2:5/26-11:6/220] lcurly=68 SCOPE: bug243528 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION X1_243528 [5:7/77-5:22/92] ConstructorImpl SCOPE: X1_243528 
+                DEFINITION: X1_243528  [13:5/227-13:55/277]
+                SIGNATURE X1_243528()
+                UNIQUE NAME F:bug243528::X1_243528::X1_243528()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION X1_243528 [6:7/99-6:25/117] ConstructorImpl SCOPE: X1_243528 
+                DEFINITION: X1_243528  [14:5/282-14:58/335]
+                SIGNATURE X1_243528(int)
+                UNIQUE NAME F:bug243528::X1_243528::X1_243528(int)
+                PARAMETERS:
+                     [6:20/112-6:23/115]  TYPE: int TEXT=int  [6:20/112-6:23/115]  INIT: null  SCOPE: X1_243528 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION X1_243528 [7:7/124-7:27/144] ConstructorImpl SCOPE: X1_243528 
+                DEFINITION: X1_243528  [15:5/340-15:63/398]
+                SIGNATURE X1_243528(double)
+                UNIQUE NAME F:bug243528::X1_243528::X1_243528(double)
+                PARAMETERS:
+                     [7:19/136-7:25/142]  TYPE: double TEXT=double  [7:19/136-7:25/142]  INIT: null  SCOPE: X1_243528 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION X1_243528 [8:7/151-8:28/172] ConstructorImpl SCOPE: X1_243528 
+                DEFINITION: X1_243528  [16:5/403-16:64/462]
+                SIGNATURE X1_243528(char*)
+                UNIQUE NAME F:bug243528::X1_243528::X1_243528(char*)
+                PARAMETERS:
+                     [8:20/164-8:25/169]  TYPE: *char TEXT=char*  [8:20/164-8:25/169]  INIT: null  SCOPE: X1_243528 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION X1_243528 [10:7/180-10:41/214] ConstructorImpl SCOPE: X1_243528 
+                DEFINITION: null
+                SIGNATURE X1_243528<class>(U)
+                UNIQUE NAME F:bug243528::X1_243528::X1_243528<class>(U)
+                PARAMETERS:
+                     [10:38/211-10:39/212]  TYPE: bug243528::X1_243528::X1_243528::U TEXT=U  [10:38/211-10:39/212]  INIT: null  SCOPE: X1_243528 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+    FUNCTION DEFINITION X1_243528  [13:5/227-13:55/277] ConstructorDefinitionImpl SCOPE: bug243528.cpp
+        SIGNATURE X1_243528()
+        UNIQUE NAME f:bug243528::X1_243528::X1_243528()
+        DECLARATION: X1_243528  [5:7/77-5:22/92]
+        PARAMETERS:
+        RETURNS <*no_classifier*> TEXT=  [null-null]
+        STATEMENT COMPOUND  [13:52/274-13:55/277] SCOPE: X1_243528 
+    FUNCTION DEFINITION X1_243528  [14:5/282-14:58/335] ConstructorDefinitionImpl SCOPE: bug243528.cpp
+        SIGNATURE X1_243528(int)
+        UNIQUE NAME f:bug243528::X1_243528::X1_243528(int)
+        DECLARATION: X1_243528  [6:7/99-6:25/117]
+        PARAMETERS:
+             [14:50/327-14:53/330]  TYPE: int TEXT=int  [14:50/327-14:53/330]  INIT: null  SCOPE: X1_243528 
+        RETURNS <*no_classifier*> TEXT=  [null-null]
+        STATEMENT COMPOUND  [14:55/332-14:58/335] SCOPE: X1_243528 
+    FUNCTION DEFINITION X1_243528  [15:5/340-15:63/398] ConstructorDefinitionImpl SCOPE: bug243528.cpp
+        SIGNATURE X1_243528(double)
+        UNIQUE NAME f:bug243528::X1_243528::X1_243528(double)
+        DECLARATION: X1_243528  [7:7/124-7:27/144]
+        PARAMETERS:
+             [15:52/387-15:58/393]  TYPE: double TEXT=double  [15:52/387-15:58/393]  INIT: null  SCOPE: X1_243528 
+        RETURNS <*no_classifier*> TEXT=  [null-null]
+        STATEMENT COMPOUND  [15:60/395-15:63/398] SCOPE: X1_243528 
+    FUNCTION DEFINITION X1_243528  [16:5/403-16:64/462] ConstructorDefinitionImpl SCOPE: bug243528.cpp
+        SIGNATURE X1_243528(char*)
+        UNIQUE NAME f:bug243528::X1_243528::X1_243528(char*)
+        DECLARATION: X1_243528  [8:7/151-8:28/172]
+        PARAMETERS:
+             [16:53/451-16:58/456]  TYPE: *char TEXT=char*  [16:53/451-16:58/456]  INIT: null  SCOPE: X1_243528 
+        RETURNS <*no_classifier*> TEXT=  [null-null]
+        STATEMENT COMPOUND  [16:61/459-16:64/462] SCOPE: X1_243528 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug243528 (bug243528) 
+    bug243528.cpp  [1:1/0-17:2/464]
+NAMESPACE bug243528 (bug243528) 
+    STRUCT X1_243528<typename T> (bug243528::X1_243528 ) [2:5/26-11:6/220] lcurly=68 SCOPE: bug243528 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION X1_243528 [5:7/77-5:22/92] ConstructorImpl SCOPE: X1_243528 
+                DEFINITION: X1_243528  [13:5/227-13:55/277]
+                SIGNATURE X1_243528()
+                UNIQUE NAME F:bug243528::X1_243528::X1_243528()
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION X1_243528 [6:7/99-6:25/117] ConstructorImpl SCOPE: X1_243528 
+                DEFINITION: X1_243528  [14:5/282-14:58/335]
+                SIGNATURE X1_243528(int)
+                UNIQUE NAME F:bug243528::X1_243528::X1_243528(int)
+                PARAMETERS:
+                     [6:20/112-6:23/115]  TYPE: int TEXT=int  [6:20/112-6:23/115]  INIT: null  SCOPE: X1_243528 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION X1_243528 [7:7/124-7:27/144] ConstructorImpl SCOPE: X1_243528 
+                DEFINITION: X1_243528  [15:5/340-15:63/398]
+                SIGNATURE X1_243528(double)
+                UNIQUE NAME F:bug243528::X1_243528::X1_243528(double)
+                PARAMETERS:
+                     [7:19/136-7:25/142]  TYPE: double TEXT=double  [7:19/136-7:25/142]  INIT: null  SCOPE: X1_243528 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION X1_243528 [8:7/151-8:28/172] ConstructorImpl SCOPE: X1_243528 
+                DEFINITION: X1_243528  [16:5/403-16:64/462]
+                SIGNATURE X1_243528(char*)
+                UNIQUE NAME F:bug243528::X1_243528::X1_243528(char*)
+                PARAMETERS:
+                     [8:20/164-8:25/169]  TYPE: *char TEXT=char*  [8:20/164-8:25/169]  INIT: null  SCOPE: X1_243528 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+            FUNCTION X1_243528 [10:7/180-10:41/214] ConstructorImpl SCOPE: X1_243528 
+                DEFINITION: null
+                SIGNATURE X1_243528<class>(U)
+                UNIQUE NAME F:bug243528::X1_243528::X1_243528<class>(U)
+                PARAMETERS:
+                     [10:38/211-10:39/212]  TYPE: bug243528::X1_243528::X1_243528::U TEXT=U  [10:38/211-10:39/212]  INIT: null  SCOPE: X1_243528 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+

@@ -1,0 +1,1 @@
+typedef C::C C;

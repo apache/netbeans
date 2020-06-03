@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.cnd.api.model/1
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/cnd/api/model/resources/Bundle.properties
+OpenIDE-Module-Recommends: org.netbeans.modules.cnd.api.model.CsmModel
+AutoUpdate-Show-In-Client: false
+

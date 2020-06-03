@@ -1,0 +1,7 @@
+#changeset:   21704:717eaec19c30
+#branch:      jclank
+#tag:         tip
+#user:        
+#date:        Wed Nov 30 19:00:21 2016 +0300
+#summary:     fixing #269068 - [newcodemodel] AssertionError: Invalid index!
+BBEBAEE8729CCF165E2080A915542C6875208F97 clank_0.3.9.zip

@@ -1,0 +1,175 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<DRDConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="config-scheme.xsd">
+    <!--NB: the less instrumentation scope is, the less is overhead, that DRD imposes on target application-->
+    <InstrumentationScope>
+        <!--
+        Sync instrumentation scope configuration
+
+        For any loading class rules are analyzed top down until any matching is found to determine whether
+        class should be instrumented to detect synchronization operations in it, or not.
+        Rule matches iff class.getName().startsWith(rule.path)
+        If no matching rule found, default policy is used.
+
+        NB: if some synchronization events are not detected, false positives (race reported, but it couldn't happen) may occur.
+         To avoid this effect use sync scope configuration and "hb-config.xml" together carefully -
+         describe synchronization contracts for certain classes/packages in hb-config.xml and exclude
+         corresponding classes from sync instrumentation scope.
+        -->
+
+        <!--Detect synchronization operations in all classes by default-->
+        <SyncInterception defaultPolicy="exclude">
+			<Rule type="include" path="org/netbeans/modules/cnd/"/>
+        </SyncInterception>
+
+        <!--
+
+        Coarse-grained race detection instrumentation scope configuration
+
+        For any loading class rules are analyzed top down until any matching is found to determine whether
+        class should be instrumented to detect data access operations (and find races on them) in it, or not.
+        Rule matches iff class.getName().startsWith(rule.path)
+        If no matching rule found, default policy is used.
+
+        Detect data operations is necessary for detecting races on these data.
+
+         -->
+
+        <!--Detect data operations only in "com.devexperts" package by default-->
+        <RaceDetection defaultPolicy="exclude">
+            <Rule type="include" path="org/netbeans/modules/cnd/repository/"/>
+        </RaceDetection>
+
+        <!--Races wouldn't be detected on fields, listed in SkipOurFields tag
+        -->
+        <SkipOurFields>
+            <!--<Target clazz="java.awt" name="*" type="field"/>-->
+            <!--Both "clazz" and "name" attributes may be sequence of strings, separated by commas(,) or semicolons(;)
+            At most one of these attributes may be "*", which means "any"
+            -->
+
+            <!--Do not detect races on fields named "log" and "logger" despite of class name-->
+            <Target clazz="*" name="log,logger"/>
+            <!--Do not detect races on fields in classes, whose names start with "com.devexperts.util."
+            (i.e., classes from package "com.devexperts.util" and subpackages) -->
+            <Target clazz="com.devexperts.util." name="*"/>
+            <!--Do not detect races on field "my_field" of class "com.devexperts.jtt.ABC",
+            because we know that it's racy and don't want to see races on this field in output furthermore-->
+            <Target clazz="com.devexperts.jtt.ABC" name="my_field"/>
+        </SkipOurFields>
+
+        <!--Races wouldn't be detected on foreign calls, listed in SkipForeignCalls tag
+        Foreign call is method call of object not from race detection scope
+        -->
+        <SkipForeignCalls>
+            <Target clazz="com/sun/org/apache/xalan/internal/xsltc/trax" name="*"/>
+            
+            <!--Well, we believe, that any call to System is thread safe, so do not detect races on it,
+            because we have a lot of System.currentTimeMillis() calls from different threads and do not want to
+            see them in DRD output file-->
+            <Target clazz="java/lang/System" name="*"/>
+            <Target clazz="java/security/AccessController" name="*"/>
+
+            <!--Do not detect races on box classes for simple types-->
+            <Target clazz="java/lang/Integer" name="*"/>
+            <Target clazz="java/lang/String" name="*"/>
+            <Target clazz="java/lang/Long" name="*"/>
+            <Target clazz="java/lang/Boolean" name="*"/>
+            <Target clazz="java/lang/Character" name="*"/>
+            <Target clazz="java/lang/Byte" name="*"/>
+
+            <!--Calendar.getInstance() is thread-safe-->
+            <Target clazz="java/util/Calendar" name="getInstance"/>
+            <Target clazz="java/util/Properties" name="*"/>
+            <Target clazz="sun/misc/Unsafe" name="*"/>
+            <Target clazz="org/apache/log4j/Logger" name="*"/>
+            <Target clazz="javax/swing/SwingUtilities" name="*"/>
+            <Target clazz="java/io/PrintStream" name="*"/>
+            <Target clazz="org/jdesktop" name="*"/>
+            <Target clazz="com/thoughtworks/xstream/" name="*"/>
+            <Target clazz="java/lang/Thread" name="*"/>
+            <Target clazz="java/lang/Math" name="*"/>
+            <Target clazz="java/util/concurrent/" name="*"/>
+            <Target clazz="java/util/Arrays/" name="*"/>
+            <Target clazz="org/zk" name="*"/>
+            <Target clazz="com/google/common/base/Preconditions" name="*"/>
+			<Target clazz="java/lang/reflect" name="*"/>
+			<Target clazz="java/util/logging/" name="*"/>
+			<Target clazz="java.lang.EnumSet" name="*"/>
+			<Target clazz="java/util/regex/Pattern" name="*"/>
+			<Target clazz="com/google/common/collect/ImmutableList" name="*"/>
+			<Target clazz="javax.net.SocketFactory" name="*"/>
+			<Target clazz="java.lang.Runtime" name="*"/>
+        </SkipForeignCalls>
+    </InstrumentationScope>
+
+    <!--Contracts determine, if foreign call should be treated as read or as write operation-->
+    <Contracts>
+        <!--Contracts are analyzed top down until some matches. If no one matches, foreign call would be treated as write-->
+
+        <!--If write="*", treat all methods, not listed in "read", as writes. Same for read="*"-->
+
+        <!--Methods "keySet","values" and "entrySet" of java.util.Map are reads-->
+        <Contract clazz="java.util.Map" read="keySet,values,entrySet"/>
+        <!--Methods java.util.List.listIterator() is read too -->
+        <Contract clazz="java.util.List" read="listIterator"/>
+        <!--If method name is "hashCode", "toString" or "equals", or method name starts with "get", "is",
+        "contains", "iter" or "has", than this method is read-->
+        <Contract clazz="*" read="get*,toString,hashCode,equals,is*,contains*,iter*,has*,size"/>
+        <!--All other foreign calls are writes-->
+    </Contracts>
+
+    <!--When DRD should print additional info on accessing field of instrumented class or foreign call?
+    traceDataOperations = trace clocks for each read/write operation on this field/call.
+    traceSyncOperations = trace all sync operations in this class
+    These two options would help to detect bugs in DRD itself
+
+    storeThreadAccesses = store last thread accesses to specified field/call. If field is racy,
+      enabling this option would make it possible to see stack traces of both threads, when race occurs
+      (by default only one stack trace is displayed - stack trace of current thread. For second thread only brief location is available)
+    printThreadAccess = print all thread accesses to specified field/call
+
+    By default all these options are true
+    -->
+    <TraceTracking>
+        <!--We've found race in JTT on WorkTimeTrackerImpl.activeIssue field and want to get both stack traces.
+        We enable storing Thread Accesses for this field and restart JTT-->
+        <Target clazz="org/netbeans/modules/cnd/repository/queue/BaseQueue*" name="*" storeThreadAccesses="true"/>
+        <Target clazz="org/netbeans/modules/cnd/repository/queue/BaseQueue$Queue" name="*" storeThreadAccesses="true"/>
+        <Target clazz="org/netbeans/modules/cnd/repository/queue/KeyValueQueue" name="*" storeThreadAccesses="true"/>
+        <Target clazz="org/netbeans/modules/cnd/repository/queue/RepositoryWritingThread" name="*" storeThreadAccesses="true"/>
+        <Target clazz="org/netbeans/modules/cnd/repository/queue/TickingRepositoryQueue" name="*" storeThreadAccesses="true"/>
+        <Target clazz="org/netbeans/modules/cnd/repository/disk/MemoryCache" name="*" storeThreadAccesses="true"/>
+        <Target clazz="org/netbeans/modules/cnd/repository/disk/FilesAccessStrategyImpl" name="*" storeThreadAccesses="true"/>
+        <Target clazz="org/netbeans/modules/cnd/repository/impl/DelegateRepository" name="*" storeThreadAccesses="true"/>
+        <Target clazz="org/netbeans/modules/cnd/repository/translator/UnitsCache" name="*" storeThreadAccesses="true"/>
+        <Target clazz="org/netbeans/modules/cnd/repository/translator/RepositoryTranslatorImpl" name="*" storeThreadAccesses="true"/>
+        <Target clazz="org/netbeans/modules/cnd/repository/sfs/IndexedStorageFile" name="*" storeThreadAccesses="true"/>
+        <Target clazz="org/netbeans/modules/cnd/repository/sfs/BufferedRWAccess" name="*" storeThreadAccesses="true"/>
+        <Target clazz="org/netbeans/modules/cnd/repository/sfs/UTF" name="*" storeThreadAccesses="true"/>
+        <Target clazz="org/netbeans/modules/cnd/repository/util/IntToStringCache" name="*" storeThreadAccesses="true"/>
+        <Target clazz="org/netbeans/modules/cnd/repository/util/SlicedLongHashMap" name="*" storeThreadAccesses="true"/>
+        <!--We've found races on various calls on same java.util.Set object and want to get both stack traces.
+        We enable storing Thread Accesses for this field and restart JTT-->
+        <!--<Target clazz="java/util/Set" name="*" storeThreadAccesses="true"/>-->
+    </TraceTracking>
+</DRDConfig>

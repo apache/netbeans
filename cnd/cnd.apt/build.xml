@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
+<!-- for some information on what you could do (e.g. targets to override). -->
+<!-- If you delete this file and reopen the project it will be recreated. -->
+<project name="cnd/cnd.apt" default="netbeans" basedir=".">
+    <description>Builds, tests, and runs the project org.netbeans.modules.cnd.apt.</description>
+    <import file="../../nbbuild/templates/projectized.xml"/>
+    
+    <target name="compile" depends="antlr,projectized-common.compile">
+    </target>
+ 
+    <target name="init-antlr">
+        <property name="antlr.apt.output.dir" location="src/org/netbeans/modules/cnd/apt/impl/support/generated"/>
+        <property name="antlr.jar" location="${cluster}/modules/ext/org-netbeans-modules-cnd-antlr.jar"/>
+        <property name="antlr.apt.grammar.dir" location="src/org/netbeans/modules/cnd/apt/impl/support"/>
+        <property name="antlr.apt.output.tokenTypes" location="src/org/netbeans/modules/cnd/apt/support/APTTokenTypes.java"/>
+    </target>
+    
+    <target name="clean" depends="projectized-common.clean, init-antlr">
+        <delete dir="${antlr.apt.output.dir}"/>   
+        <delete file="${antlr.apt.output.tokenTypes}"/>
+    </target>
+    
+    <target name="check-up-to-date">
+        <uptodate property="antlr.up-to-date" targetfile="${antlr.apt.output.dir}/APTGeneratedTokenTypes.txt">
+            <srcfiles dir="${antlr.apt.grammar.dir}" includes="*.g"/>
+        </uptodate>
+        <echo message="antlr checkUptodate result: ${antlr.up-to-date}"/>
+    </target>
+    
+    <target name="antlr" depends="init-antlr, check-up-to-date" unless="antlr.up-to-date">
+        <mkdir dir="${antlr.apt.output.dir}"/>
+        <java classname="org.netbeans.modules.cnd.antlr.Tool" fork="true">
+            <arg value="-o"/>
+            <arg value="${antlr.apt.output.dir}"/>
+            <arg value="${antlr.apt.grammar.dir}/aptlexer.g"/>
+            <classpath path="${antlr.jar}"/>
+        </java>        
+        <java classname="org.netbeans.modules.cnd.antlr.Tool" fork="true">
+            <arg value="-o"/>
+            <arg value="${antlr.apt.output.dir}"/>
+            <arg value="${antlr.apt.grammar.dir}/aptexpr.g"/>
+            <classpath path="${antlr.jar}"/>
+        </java>
+        <java classname="org.netbeans.modules.cnd.antlr.Tool" fork="true">
+            <arg value="-o"/>
+            <arg value="${antlr.apt.output.dir}"/>
+            <arg value="${antlr.apt.grammar.dir}/aptBigIntegerExpr.g"/>
+            <classpath path="${antlr.jar}"/>
+        </java>
+        <copy file="${antlr.apt.output.dir}/APTGeneratedTokenTypes.txt" 
+                tofile="${antlr.apt.output.dir}/APTTokenTypes.txt"
+                overwrite="true"/>
+
+        <copy file="${antlr.apt.output.dir}/APTGeneratedTokenTypes.java"
+            tofile="${antlr.apt.output.tokenTypes}"/>
+        <!-- change class name -->
+        <replaceregexp file="${antlr.apt.output.tokenTypes}" byline="true">
+            <regexp pattern="APTGeneratedTokenTypes"/>
+            <substitution expression="APTTokenTypes"/>
+        </replaceregexp>
+        <!-- remove unnecessary import statements -->
+        <replaceregexp file="${antlr.apt.output.tokenTypes}" byline="true">
+            <regexp pattern="import.*"/>
+            <substitution expression=""/>
+        </replaceregexp>        
+        <!-- change package name -->
+        <replaceregexp file="${antlr.apt.output.tokenTypes}" byline="true">
+            <regexp pattern="package org.netbeans.modules.cnd.apt.impl.support.generated;"/>
+            <substitution expression="package org.netbeans.modules.cnd.apt.support;"/>
+        </replaceregexp>                
+    </target>    
+</project>

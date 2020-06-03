@@ -1,0 +1,46 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz158872.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS Realbase_for<class T> (Realbase_for ) [1:1/0-7:2/95] lcurly=38 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION Realbase_for [4:3/50-4:28/75] ConstructorImpl SCOPE: Realbase_for 
+            DEFINITION: null
+            SIGNATURE Realbase_for(const T&)
+            UNIQUE NAME F:Realbase_for::Realbase_for(const T&)
+            PARAMETERS:
+                k [4:16/63-4:26/73]  TYPE: const &Realbase_for::T TEXT=const T&  [4:16/63-4:24/71]  INIT: null  SCOPE: Realbase_for 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FIELD PRIVATE ker [6:3/87-6:9/93]  TYPE: Realbase_for::T TEXT=T  [6:3/87-6:4/88]  INIT: null  SCOPE: Realbase_for 
+FUNCTION DEFINITION Realbase_for  [9:1/98-11:2/176] ConstructorDefinitionImpl SCOPE: iz158872.cc
+    SIGNATURE Realbase_for(const long&)
+    UNIQUE NAME f:Realbase_for<long>::Realbase_for(const long&)
+    DECLARATION: Realbase_for  [4:3/50-4:28/75]
+    PARAMETERS:
+        l [10:41/149-10:54/162]  TYPE: const &long TEXT=const long&  [10:41/149-10:52/160]  INIT: null  SCOPE: Realbase_for 
+    RETURNS <*no_classifier*> TEXT=  [null-null]
+    STATEMENT COMPOUND  [10:65/173-11:2/176] SCOPE: Realbase_for 
+
+========== Dumping model of PROJECT DummyProject
+CLASS Realbase_for<class T> (Realbase_for ) [1:1/0-7:2/95] lcurly=38 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION Realbase_for [4:3/50-4:28/75] ConstructorImpl SCOPE: Realbase_for 
+            DEFINITION: null
+            SIGNATURE Realbase_for(const T&)
+            UNIQUE NAME F:Realbase_for::Realbase_for(const T&)
+            PARAMETERS:
+                k [4:16/63-4:26/73]  TYPE: const &Realbase_for::T TEXT=const T&  [4:16/63-4:24/71]  INIT: null  SCOPE: Realbase_for 
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+        FIELD PRIVATE ker [6:3/87-6:9/93]  TYPE: Realbase_for::T TEXT=T  [6:3/87-6:4/88]  INIT: null  SCOPE: Realbase_for 
+

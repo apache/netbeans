@@ -1,0 +1,6 @@
+cPriv int	$	    ClassC::cPriv
+cProt int	$	    ClassC::cProt
+cPub int	$	    ClassC::cPub
+cPrivFun() void	$	    ClassC::cPrivFun()
+cProtFun() void	$	    ClassC::cProtFun()
+cPubFun() void	$	    ClassC::cPubFun()

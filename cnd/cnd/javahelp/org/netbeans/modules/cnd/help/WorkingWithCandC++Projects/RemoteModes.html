@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="StyleSheet" href="../ide.css" type="text/css">
+    <meta name="generator" content="Helen">
+    <title>C/C++ Remote Development Modes</title>
+  </head>
+  <body>
+    <h2>
+       C/C++ Remote Development Modes
+    </h2>
+    <p>
+       <a href="#seealso"><small>See Also</small></a><small>&nbsp;</small>
+    </p>
+    <p>
+       The IDE offers three modes of remote development: <a href="#simple">simple</a>, <a href=
+      "#mixed">mixed</a>,&nbsp;and <a href="#full">full</a>. The main difference between the modes
+      is where the source files reside.
+    </p>
+    <h3>
+       <a name="simple">Simple Remote Development Mode</a>
+    </h3>
+    <p>
+       In simple remote development mode,&nbsp;the source files reside primarily on your local
+      host. When you build your project, the source files are delivered to the remote
+      Linux or Oracle Solaris host using SSH File Transfer Protocol (SFTP).
+    </p>
+    <p>
+       Use simple remote development if you develop mostly on local files, but your application is
+      targeted at platforms such as Linux or&nbsp;Oracle Solaris. &nbsp;
+    </p>
+    <p>
+       Simple mode provides these benefits:
+    </p>
+    <ul>
+      <li>
+        You can use the same IDE for local and remote development.
+      </li>
+      <li>
+        You can switch easily between hosts and platforms in the IDE.
+      </li>
+      <li>
+        You can use the IDE in an SSH-only environment.
+      </li>
+      <li>
+        Your mobility is improved.
+      </li>
+    </ul>
+    <p>
+       <b>To use simple remote development:</b>
+    </p>
+    <ol>
+      <li>
+        <a href="RemoteDevelopmentConfigureHost.html">Set up a remote build host</a>
+      </li>
+      <li>
+          Set the remote build host's Access Project Files Via property to <b>SFTP</b> or <b>Automatic Copying</b>.
+      </li>
+      <li>
+        <a href="RemoteDevelopmentProjects.html">Set up your project to use the remote build
+        host</a>
+      </li>
+    </ol>
+    <h3>
+       <a id="mixed" name="mixed">Mixed or Shared Remote Development Mode</a>
+    </h3>
+    <p>
+       In mixed or shared mode, the source files reside in a location that is shared between the
+      local host and remote host using NFS, Samba, WebDAV, or another file sharing system. This
+      mode is a good choice if your source files are located on a file server on a network that
+      is&nbsp;accessible to your development system and target platform systems.&nbsp;
+    </p>
+    <p>
+       The benefits of using mixed mode in this environment are:
+    </p>
+    <ul>
+      <li>
+        You can easily switch between hosts and platforms in the IDE.
+      </li>
+      <li>
+        There is no duplication of files (caching) such as would occur in the other two modes.
+      </li>
+      <li>
+        The network throughput will be as good as your file sharing mechanism (for example, NFS,
+        Samba, or WebDAV) can provide.
+      </li>
+    </ul>
+    <p>
+       <b>To use mixed remote development:</b>
+    </p>
+    <ol>
+      <li>
+        <a href="RemoteDevelopmentConfigureHost.html">Set up a remote build host</a>
+      </li>
+      <li>
+        Set the remote build host's Access Project Files Via property to <b>System-level File
+        Sharing</b>.
+      </li>
+      <li>
+        <a href="RemoteDevelopmentProjects.html">Set up your project to use the remote build
+        host</a>
+      </li>
+    </ol>
+    <h3>
+       <a name="full">Full Remote Development Mode</a>
+    </h3>
+    <p>
+       In full remote mode, the source files reside on the remote host. The IDE runs on the local
+      host and accesses the files using SFTP.
+    </p>
+    <p>
+       Full remote development is useful when the remote host is set up with a development
+      environment that you are sharing with other users, and accessing through remote windowing
+      technologies such as VNC.
+    </p>
+    <p>
+       The benefits of using full remote mode in this environment are:
+    </p>
+    <ul>
+      <li>
+        Migration from using X-window forwarding or VNC is virtually seamless.
+      </li>
+      <li>
+        Your IDE response time improves.
+      </li>
+      <li>
+        You are less dependent on the resources of the remote development host.
+      </li>
+      <li>
+        A smaller load on the development host reduces the load on the server.
+      </li>
+      <li>
+        You can create new remote projects from remote binary files.
+      </li>
+    </ul>
+    <p>
+       <b>To use full remote development:</b>
+    </p>
+    <ol>
+      <li>
+        <a href="RemoteDevelopmentConfigureHost.html">Set up a remote build host</a>
+      </li>
+      <li>
+        Set the remote build host's Access Project Files Via property to anything
+        because this property is not relevant in full remote mode. SFTP is used to transfer
+        files.
+      </li>
+      <li>
+        Use the <a href="RemoteDevelopmentToolbar.html">Remote Development toolbar</a> to select a
+        remote host, and create remote projects, and open remote projects.
+      </li>
+      <li>
+        Work with your projects just the same as local projects.
+      </li>
+      <li>If you are using a version control system, see <a href="RemoteVCS.html">
+              Using Full Remote Mode with Version Control Systems</a></li>
+    </ol>
+    <table>
+      <tr>
+        <th colspan="2" align="left">
+          <a name="seealso">See also</a> 
+        </th>
+      </tr>
+      <tr>
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="RemoteDevelopment.html">Overview of C/C++ Remote Development</a><br>
+           <a href="RemoteDevelopmentProjects.html">Setting Up C/C++/Fortran Projects for Remote
+          Development</a><br>
+           <a href="RemoteDevelopmentToolbar.html">Working on Remote Hosts Using the
+          Toolbar</a><br>
+           <a href="ConfiguringBuildTools.html">Configuring Build Tools</a><br>
+           <a href="ProjectPropsBuild.html">C/C++ Project Properties Dialog Box: Build</a><br>
+           
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a>
+    </p>
+    <table border="0" cellpadding="20">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+    <p>
+       &nbsp;
+    </p>
+  </body>
+</html>

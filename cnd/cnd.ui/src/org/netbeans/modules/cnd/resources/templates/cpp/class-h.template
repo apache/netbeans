@@ -1,0 +1,25 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+/* 
+ * File:   ${NAME}.${EXTENSION}
+ * Author: ${user}
+ *
+ * Created on ${DATE}, ${TIME}
+ */
+
+#ifndef ${GUARD_NAME}
+#define	${GUARD_NAME}
+class ${CLASSNAME} {
+public:
+	${CLASSNAME}();
+	${CLASSNAME}(const ${CLASSNAME}& orig);
+	virtual ~${CLASSNAME}();
+private:
+
+};
+
+#endif	/* ${GUARD_NAME} */
+

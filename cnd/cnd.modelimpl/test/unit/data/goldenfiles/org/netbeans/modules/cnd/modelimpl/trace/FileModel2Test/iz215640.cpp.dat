@@ -1,0 +1,22 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz215640.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN NS215640 [4:1/18-6:2/54] SCOPE: iz215640.cpp
+    VARIABLE x215640 [5:2/40-5:14/52]  TYPE: int TEXT=int  [5:2/40-5:5/43]  INIT: null  SCOPE: NS215640 
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for NS215640 (NS215640) 
+    iz215640.cpp  [4:1/18-6:2/54]
+NAMESPACE NS215640 (NS215640) 
+    VARIABLE x215640 [5:2/40-5:14/52]  TYPE: int TEXT=int  [5:2/40-5:5/43]  INIT: null  SCOPE: NS215640 
+

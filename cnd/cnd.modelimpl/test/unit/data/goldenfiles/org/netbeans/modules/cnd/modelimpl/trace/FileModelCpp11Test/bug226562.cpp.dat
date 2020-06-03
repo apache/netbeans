@@ -1,0 +1,38 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug226562.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug226562 [1:1/0-8:2/97] SCOPE: bug226562.cpp
+    FUNCTION DEFINITION test_226562  [3:3/25-6:4/94] FunctionDDImpl SCOPE: bug226562 
+        SIGNATURE test_226562<class>(int)
+        UNIQUE NAME f:bug226562::test_226562<class>(int)
+        DECLARATION: test_226562  [3:3/25-6:4/94]
+        PARAMETERS:
+            a [4:19/64-4:29/74]  TYPE: int TEXT=int  [4:19/64-4:22/67]  INIT: text='{}'  SCOPE: test_226562 
+        RETURNS int TEXT=int  [4:3/48-4:6/51]
+        STATEMENT COMPOUND  [4:30/75-6:4/94] SCOPE: test_226562 
+            STATEMENT RETURN  [5:5/81-5:14/90] SCOPE: Stmt  [4:30/75-6:4/94] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug226562 (bug226562) 
+    bug226562.cpp  [1:1/0-8:2/97]
+NAMESPACE bug226562 (bug226562) 
+    FUNCTION DEFINITION test_226562  [3:3/25-6:4/94] FunctionDDImpl SCOPE: bug226562 
+        SIGNATURE test_226562<class>(int)
+        UNIQUE NAME f:bug226562::test_226562<class>(int)
+        DECLARATION: test_226562  [3:3/25-6:4/94]
+        PARAMETERS:
+            a [4:19/64-4:29/74]  TYPE: int TEXT=int  [4:19/64-4:22/67]  INIT: text='{}'  SCOPE: test_226562 
+        RETURNS int TEXT=int  [4:3/48-4:6/51]
+        STATEMENT COMPOUND  [4:30/75-6:4/94] SCOPE: test_226562 
+            STATEMENT RETURN  [5:5/81-5:14/90] SCOPE: Stmt  [4:30/75-6:4/94] text: 'return 0;'
+

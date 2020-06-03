@@ -1,0 +1,17 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["__SEGREGS_PUSH",<ID>,line=1,col=9],offset=8,file=null'='["subl",<ID>,line=2,col=9],offset=27,file=null ["$16",<ID>,line=2,col=17],offset=32,file=null [",",<COMMA>,line=2,col=20],offset=35,file=null ["%",<MOD>,line=2,col=22],offset=37,file=null ["esp",<ID>,line=2,col=23],offset=38,file=null [";",<SEMICOLON>,line=2,col=26],offset=41,file=null ["movw",<ID>,line=3,col=9],offset=46,file=null ["%",<MOD>,line=3,col=17],offset=51,file=null ["ds",<ID>,line=3,col=18],offset=52,file=null [",",<COMMA>,line=3,col=20],offset=54,file=null ["12",<DECIMALINT>,line=3,col=22],offset=56,file=null ["(",<LPAREN>,line=3,col=24],offset=58,file=null ["%",<MOD>,line=3,col=25],offset=59,file=null ["esp",<ID>,line=3,col=26],offset=60,file=null [")",<RPAREN>,line=3,col=29],offset=63,file=null [";",<SEMICOLON>,line=3,col=30],offset=64,file=null ["movw",<ID>,line=4,col=9],offset=69,file=null ["%",<MOD>,line=4,col=17],offset=74,file=null ["es",<ID>,line=4,col=18],offset=75,file=null [",",<COMMA>,line=4,col=20],offset=77,file=null ["8",<DECIMALINT>,line=4,col=22],offset=79,file=null ["(",<LPAREN>,line=4,col=23],offset=80,file=null ["%",<MOD>,line=4,col=24],offset=81,file=null ["esp",<ID>,line=4,col=25],offset=82,file=null [")",<RPAREN>,line=4,col=28],offset=85,file=null [";",<SEMICOLON>,line=4,col=29],offset=86,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE lexer_dollar.cc
+Includes:
+    <no includes>
+Macros:
+#define '__SEGREGS_PUSH' [1:1/0-4:30/87]
+
+========== Dumping model of PROJECT DummyProject
+

@@ -1,0 +1,274 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link type="text/css" href="../ide.css" rel="StyleSheet">
+
+    <title>C and C++ Variables Window</title>
+  </head>
+  <body>
+    <h2>
+       C and C++ Variables Window
+    </h2>
+    <p>
+       <a href="#seealso"><small>See Also</small></a><small>&nbsp;</small>
+    </p>
+    <p>
+       The Variables window lists the local variables in the current stack frame. By default, the
+      Variables window opens automatically whenever you start a debugging session. You can open the
+      Variables window by choosing Window &gt; Debugging &gt; Variables.
+    </p>
+    <p>
+       If you open the Variables window when a debugging session is running, it closes
+      automatically when you end the debugging session. If you open the window when no debugging
+      session is running, it stays open until you close it.
+    </p>
+    <p>
+       The information given for each variable includes the variable name and value. You can
+      click the control to the left of the name to expand or collapse the variable. You can click
+      the Value cell to edit the value directly in the Variables window.
+To display additional information, click the
+Change Visible Columns button <img src="../images/visibleColumns.png" alt="Change visible columns icon">&nbsp;and
+select columns in the Change Visible Columns dialog box.
+    <p>
+       In some cases, the debugger assigns a pound sign (#) and a number as the variable's value.
+      This number is a unique identifier of the given instance. You can use this identifier to
+      determine if a variable points to the same or to a different instance. You cannot edit this
+      value.
+    </p>
+    <h3>
+       Icons
+    </h3>
+    <p>
+       The following table describes the icons displayed to the left of the object name in the
+      Variables window.
+    </p>
+    <table cellpadding="5" cellspacing="0" summary=
+    "The left column shows the icon. The right column describes the icon." border="1">
+      <tr valign="top">
+        <th scope="col" align="left">
+          Icon
+        </th>
+        <th scope="col" align="left">
+          Description
+        </th>
+      </tr>
+      <tr valign="top">
+        <td>
+          <img src="../images/LocalVariable.gif" alt="Local variable icon">
+        </td>
+        <td>
+          Local variable
+        </td>
+      </tr>
+      <tr valign="top">
+        <td>
+          <img src="../images/Local_Variable_Pointer.gif" alt="Local pointer variable icon">
+        </td>
+        <td>
+          Local pointer variable
+        </td>
+      </tr>
+      <tr valign="top">
+        <td>
+          <img src="../images/Static_Local_Variable.gif" alt="Static local variable icon">
+        </td>
+        <td>
+          Static local variable
+        </td>
+      </tr>
+      <tr valign="top">
+        <td>
+          <img src="../images/Static_Local_Pointer.gif" alt="Static local pointer variable icon">
+        </td>
+        <td>
+          Static local pointer variable
+        </td>
+      </tr>
+      <tr valign="top">
+        <td>
+          <img src="../images/Field.gif" alt="Field icon">
+        </td>
+        <td>Field</td>
+      </tr>
+      <tr valign="top">
+        <td>
+          <img src="../images/Pointer_Field.gif" alt="Pointer field icon">
+        </td>
+        <td>Pointer field</td>
+      </tr>
+      <tr valign="top">
+        <td>
+          <img src="../images/Static_Field.gif" alt="Static field icon">
+        </td>
+        <td>Static field</td>
+      </tr>
+      <tr valign="top">
+        <td>
+          <img src="../images/Static_Pointer_Field.gif" alt="Static pointer field icon">
+        </td>
+        <td>Static pointer field</td>
+      </tr>
+    </table>
+    <h3>
+       Actions
+    </h3>
+    <p>
+       The following table lists the actions you can perform using buttons in the Variables window
+    </p>
+    <table cellpadding="5" cellspacing="0" summary=
+    "The left column shows the icon. The right column describes the icon." border="1">
+      <tr valign="top">
+        <th scope="col" align="left">
+          Button
+        </th>
+        <th scope="col" align="left">
+          Description
+        </th>
+      </tr>
+      <!--
+      <tr valign="top">
+      <td>Display As</td>
+      <td>For objects of type integer only. Determines how the value
+      of the selected object is shown. The choices are decimal,
+      hexadecimal, octal, and binary</td>
+      </tr>
+      -->
+      <tr valign="top">
+        <td>
+          <img src="../images/AutoLocalVariables.png" alt="Auto Local Variables button"> 
+        </td>
+        <td>
+Shows variables only for the current source code line and the previous source code line
+        </td>
+      </tr>
+      <tr valign="top">
+        <td>
+          <img src="../images/Show_Watches.gif" alt="Show Watches button"> 
+        </td>
+        <td>
+          Displays watches in the window.
+        </td>
+      </tr>
+      <tr valign="top">
+        <td>
+          <img src="../images/Create_Watch.gif" alt="Create Watch button"> 
+        </td>
+        <td>
+          Opens the New Watch dialog box
+        </td>
+      </tr>
+    </table>
+<h3>Actions</h3>
+The pop-up menu in the Variables window includes the following 
+items.
+<table border="1" cellpadding="5" cellspacing="0" summary="The left column lists  
+the item. The right column describes the item.">
+<tr valign="top">
+<th scope="col" align="left">Menu Item</th>
+<th scope="col" align="left">Description</th>
+</tr>
+<tr valign="top">
+<td>New Watch</td>
+<td>Lets you create a new watch</td>
+</tr>
+<tr valign="top">
+<td>Delete All</td>
+<td>Removes all objects from the Variables window</td>
+</tr>
+<tr valign="top">
+<td>Inherited Members</td>
+<td>Includes inherited members when debugging a C++ program
+</td>
+</tr>
+<tr valign="top">
+<td>Dynamic Type</td>
+<td>Automatically casts C++ variables to dynamic type</td>
+</tr>
+<tr valign="top">
+<td>Static Members</td>
+<td>Shows static members</td>
+</tr>
+<tr valign="top">
+<td>Output Base</td>
+<td>Lets you set the outputbase to octal (8), decimal (10), hexadecimal (16), or 
+automatic (pointers in hexadecimal characters, all else in decimal)
+</td>
+</tr>
+<tr valign="top">
+<td>Set Max Object Size</td>
+<td>Allows you to increase the default maximum variable value of 4096 bytes
+</td>
+</tr>
+</table>
+    <p>
+       <!--
+      <h3>Properties</h3>
+      You can see all the properties for a variable by right-clicking the node
+      for the variable and choosing Properties.
+      By default, all properties are also displayed directly in the
+      Variables window, except for the toString() property.
+      -->
+    </p>
+    <table summary="related topics">
+      <tr valign="top">
+        <th align="left" colspan="2">
+          <a name="seealso">See Also</a> 
+        </th>
+      </tr>
+      <tr valign="top">
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="CandC++DebuggerContext.html">Current Context in the Debugger</a><br>
+           <a href="CandC++DebuggingTasks.html">C and C++ Debugging Tasks: Quick Reference</a><br>
+           <a href="CorC++VariablesandExpressions.html">C and C++ Variables and Expressions in the
+          IDE</a><br>
+           <a href="DebuggerWindows.html">C and C++ Debugger Windows</a> 
+        </td>
+      </tr>
+    </table>
+    <hr>
+       <p>
+       <a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a>
+    </p>
+    <table border="0" cellpadding="20">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

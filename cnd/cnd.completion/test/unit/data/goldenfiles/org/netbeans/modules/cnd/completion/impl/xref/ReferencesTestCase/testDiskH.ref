@@ -1,0 +1,132 @@
+'DISK_H', tokenID=preprocessor_identifier, offset=2113 [42:9/2113-42:15/2119]
+--OWNER:
+    null
+--RESOLVED TO:
+    MACROS #define 'DISK_H' [43:1/2120-43:15/2134]
+==============================================================
+'DISK_H', tokenID=preprocessor_identifier, offset=2128 [43:9/2128-43:15/2134]
+--OWNER:
+    MACROS #define 'DISK_H' [43:1/2120-43:15/2134]
+--RESOLVED TO:
+    MACROS #define 'DISK_H' [43:1/2120-43:15/2134]
+==============================================================
+'include', tokenID=preprocessor_include, offset=2136 [44:2/2136-44:9/2143]
+--OWNER:
+    INCLUDE "module.h" [44:1/2135-44:20/2154]
+--RESOLVED TO:
+    INCLUDE "module.h" [44:1/2135-44:20/2154]
+==============================================================
+'"module.h"', tokenID=preprocessor_user_include, offset=2144 [44:10/2144-44:20/2154]
+--OWNER:
+    INCLUDE "module.h" [44:1/2135-44:20/2154]
+--RESOLVED TO:
+    FILE ReferencesTestCase/module.h
+==============================================================
+'Disk', tokenID=identifier, offset=2162 [46:7/2162-46:11/2166]
+--OWNER:
+    CLASS Disk [46:1/2156-57:2/2534] ReferencesTestCase/disk.h
+--RESOLVED TO:
+    CLASS Disk [46:1/2156-57:2/2534] ReferencesTestCase/disk.h
+==============================================================
+'Module', tokenID=identifier, offset=2176 [46:21/2176-46:27/2182]
+--OWNER:
+     [46:14/2169-46:27/2182] ReferencesTestCase/disk.h
+--RESOLVED TO:
+    CLASS Module [51:1/2205-92:2/3420] ReferencesTestCase/module.h
+==============================================================
+'DiskType', tokenID=identifier, offset=2202 [48:10/2202-48:18/2210]
+--OWNER:
+    ENUM Disk::DiskType [48:5/2197-48:36/2228] ReferencesTestCase/disk.h
+--RESOLVED TO:
+    ENUM Disk::DiskType [48:5/2197-48:36/2228] ReferencesTestCase/disk.h
+==============================================================
+'SINGLE', tokenID=identifier, offset=2213 [48:21/2213-48:27/2219]
+--OWNER:
+    ENUMERATOR Disk::DiskType::SINGLE [48:21/2213-48:27/2219] ReferencesTestCase/disk.h
+--RESOLVED TO:
+    ENUMERATOR Disk::DiskType::SINGLE [48:21/2213-48:27/2219] ReferencesTestCase/disk.h
+==============================================================
+'RAID', tokenID=identifier, offset=2222 [48:30/2222-48:34/2226]
+--OWNER:
+    ENUMERATOR Disk::DiskType::RAID [48:30/2222-48:34/2226] ReferencesTestCase/disk.h
+--RESOLVED TO:
+    ENUMERATOR Disk::DiskType::RAID [48:30/2222-48:34/2226] ReferencesTestCase/disk.h
+==============================================================
+'DiskCapacity', tokenID=identifier, offset=2239 [49:10/2239-49:22/2251]
+--OWNER:
+    ENUM Disk::DiskCapacity [49:5/2234-49:44/2273] ReferencesTestCase/disk.h
+--RESOLVED TO:
+    ENUM Disk::DiskCapacity [49:5/2234-49:44/2273] ReferencesTestCase/disk.h
+==============================================================
+'T100', tokenID=identifier, offset=2254 [49:25/2254-49:29/2258]
+--OWNER:
+    ENUMERATOR Disk::DiskCapacity::T100 [49:25/2254-49:29/2258] ReferencesTestCase/disk.h
+--RESOLVED TO:
+    ENUMERATOR Disk::DiskCapacity::T100 [49:25/2254-49:29/2258] ReferencesTestCase/disk.h
+==============================================================
+'T200', tokenID=identifier, offset=2261 [49:32/2261-49:36/2265]
+--OWNER:
+    ENUMERATOR Disk::DiskCapacity::T200 [49:32/2261-49:36/2265] ReferencesTestCase/disk.h
+--RESOLVED TO:
+    ENUMERATOR Disk::DiskCapacity::T200 [49:32/2261-49:36/2265] ReferencesTestCase/disk.h
+==============================================================
+'T500', tokenID=identifier, offset=2267 [49:38/2267-49:42/2271]
+--OWNER:
+    ENUMERATOR Disk::DiskCapacity::T500 [49:38/2267-49:42/2271] ReferencesTestCase/disk.h
+--RESOLVED TO:
+    ENUMERATOR Disk::DiskCapacity::T500 [49:38/2267-49:42/2271] ReferencesTestCase/disk.h
+==============================================================
+'Disk', tokenID=identifier, offset=2330 [51:5/2330-51:9/2334]
+--OWNER:
+    FUNCTION Disk(int,int,int)  [51:5/2330-51:60/2385] ReferencesTestCase/disk.h
+--RESOLVED TO:
+    FUNCTION Disk(int,int,int)  [51:5/2330-51:60/2385] ReferencesTestCase/disk.h
+==============================================================
+'type', tokenID=identifier, offset=2339 [51:14/2339-51:18/2343]
+--OWNER:
+    VARIABLE type [51:10/2335-51:27/2352] ReferencesTestCase/disk.h  TYPE: int TEXT=int  [51:10/2335-51:13/2338]  INIT: text='SINGLE'  SCOPE: Disk 
+--RESOLVED TO:
+    VARIABLE type [51:10/2335-51:27/2352] ReferencesTestCase/disk.h  TYPE: int TEXT=int  [51:10/2335-51:13/2338]  INIT: text='SINGLE'  SCOPE: Disk 
+==============================================================
+'SINGLE', tokenID=identifier, offset=2346 [51:21/2346-51:27/2352]
+--OWNER:
+    VARIABLE type [51:10/2335-51:27/2352] ReferencesTestCase/disk.h  TYPE: int TEXT=int  [51:10/2335-51:13/2338]  INIT: text='SINGLE'  SCOPE: Disk 
+--RESOLVED TO:
+    ENUMERATOR Disk::DiskType::SINGLE [48:21/2213-48:27/2219] ReferencesTestCase/disk.h
+==============================================================
+'size', tokenID=identifier, offset=2358 [51:33/2358-51:37/2362]
+--OWNER:
+    VARIABLE size [51:29/2354-51:44/2369] ReferencesTestCase/disk.h  TYPE: int TEXT=int  [51:29/2354-51:32/2357]  INIT: text='T100'  SCOPE: Disk 
+--RESOLVED TO:
+    VARIABLE size [51:29/2354-51:44/2369] ReferencesTestCase/disk.h  TYPE: int TEXT=int  [51:29/2354-51:32/2357]  INIT: text='T100'  SCOPE: Disk 
+==============================================================
+'T100', tokenID=identifier, offset=2365 [51:40/2365-51:44/2369]
+--OWNER:
+    VARIABLE size [51:29/2354-51:44/2369] ReferencesTestCase/disk.h  TYPE: int TEXT=int  [51:29/2354-51:32/2357]  INIT: text='T100'  SCOPE: Disk 
+--RESOLVED TO:
+    ENUMERATOR Disk::DiskCapacity::T100 [49:25/2254-49:29/2258] ReferencesTestCase/disk.h
+==============================================================
+'units', tokenID=identifier, offset=2375 [51:50/2375-51:55/2380]
+--OWNER:
+    VARIABLE units [51:46/2371-51:58/2383] ReferencesTestCase/disk.h  TYPE: int TEXT=int  [51:46/2371-51:49/2374]  INIT: text='1'  SCOPE: Disk 
+--RESOLVED TO:
+    VARIABLE units [51:46/2371-51:58/2383] ReferencesTestCase/disk.h  TYPE: int TEXT=int  [51:46/2371-51:49/2374]  INIT: text='1'  SCOPE: Disk 
+==============================================================
+'GetType', tokenID=identifier, offset=2410 [52:25/2410-52:32/2417]
+--OWNER:
+    FUNCTION GetType() const  [52:5/2390-52:41/2426] ReferencesTestCase/disk.h
+--RESOLVED TO:
+    FUNCTION GetType() const  [52:5/2390-52:41/2426] ReferencesTestCase/disk.h
+==============================================================
+'GetCategory', tokenID=identifier, offset=2451 [53:25/2451-53:36/2462]
+--OWNER:
+    FUNCTION GetCategory() const  [53:5/2431-53:45/2471] ReferencesTestCase/disk.h
+--RESOLVED TO:
+    FUNCTION GetCategory() const  [53:5/2431-53:45/2471] ReferencesTestCase/disk.h
+==============================================================
+'ComputeSupportMetric', tokenID=identifier, offset=2509 [56:10/2509-56:30/2529]
+--OWNER:
+    FUNCTION ComputeSupportMetric()  [56:5/2504-56:33/2532] ReferencesTestCase/disk.h
+--RESOLVED TO:
+    FUNCTION ComputeSupportMetric()  [56:5/2504-56:33/2532] ReferencesTestCase/disk.h
+==============================================================

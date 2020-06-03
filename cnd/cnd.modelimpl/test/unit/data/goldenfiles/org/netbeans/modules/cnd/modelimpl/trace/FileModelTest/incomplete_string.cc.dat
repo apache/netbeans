@@ -1,0 +1,62 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE incomplete_string.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION foo_incomplete_string [5:1/37-5:29/65] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo_incomplete_string()
+    UNIQUE NAME F:foo_incomplete_string()
+    PARAMETERS:
+    RETURNS int TEXT=int  [5:1/37-5:4/40]
+FUNCTION DEFINITION foo_incomplete_char  [13:1/131-16:2/186] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_incomplete_char()
+    UNIQUE NAME f:foo_incomplete_char()
+    DECLARATION: foo_incomplete_char  [13:1/131-16:2/186]
+    PARAMETERS:
+    RETURNS int TEXT=int  [13:1/131-13:4/134]
+    STATEMENT COMPOUND  [13:27/157-16:2/186] SCOPE: foo_incomplete_char 
+        STATEMENT DECLARATION  [14:2/160-15:6/184] SCOPE: Stmt  [13:27/157-16:2/186]
+            VARIABLE c [14:2/160-15:6/184]  TYPE: char TEXT=char  [14:2/160-14:6/164]  INIT: text=''asdfasdf
+ c++'  SCOPE: Stmt  [13:27/157-16:2/186]
+FUNCTION DEFINITION foo_incomplete_char_ok  [18:1/188-20:2/221] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_incomplete_char_ok()
+    UNIQUE NAME f:foo_incomplete_char_ok()
+    DECLARATION: foo_incomplete_char_ok  [18:1/188-20:2/221]
+    PARAMETERS:
+    RETURNS int TEXT=int  [18:1/188-18:4/191]
+    STATEMENT COMPOUND  [18:30/217-20:2/221] SCOPE: foo_incomplete_char_ok 
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION foo_incomplete_string [5:1/37-5:29/65] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo_incomplete_string()
+    UNIQUE NAME F:foo_incomplete_string()
+    PARAMETERS:
+    RETURNS int TEXT=int  [5:1/37-5:4/40]
+FUNCTION DEFINITION foo_incomplete_char  [13:1/131-16:2/186] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_incomplete_char()
+    UNIQUE NAME f:foo_incomplete_char()
+    DECLARATION: foo_incomplete_char  [13:1/131-16:2/186]
+    PARAMETERS:
+    RETURNS int TEXT=int  [13:1/131-13:4/134]
+    STATEMENT COMPOUND  [13:27/157-16:2/186] SCOPE: foo_incomplete_char 
+        STATEMENT DECLARATION  [14:2/160-15:6/184] SCOPE: Stmt  [13:27/157-16:2/186]
+            VARIABLE c [14:2/160-15:6/184]  TYPE: char TEXT=char  [14:2/160-14:6/164]  INIT: text=''asdfasdf
+ c++'  SCOPE: Stmt  [13:27/157-16:2/186]
+FUNCTION DEFINITION foo_incomplete_char_ok  [18:1/188-20:2/221] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_incomplete_char_ok()
+    UNIQUE NAME f:foo_incomplete_char_ok()
+    DECLARATION: foo_incomplete_char_ok  [18:1/188-20:2/221]
+    PARAMETERS:
+    RETURNS int TEXT=int  [18:1/188-18:4/191]
+    STATEMENT COMPOUND  [18:30/217-20:2/221] SCOPE: foo_incomplete_char_ok 
+

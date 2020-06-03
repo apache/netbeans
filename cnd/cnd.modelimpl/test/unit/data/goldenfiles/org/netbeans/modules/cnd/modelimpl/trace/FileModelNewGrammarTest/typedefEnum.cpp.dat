@@ -1,0 +1,24 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE typedefEnum.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+TYPEDEF MyEnum  [2:1/1-2:40/40] TYPE: TRATATA TEXT=TRATATA  [2:9/9-2:32/32] SCOPE: $Global$ 
+ENUM TRATATA [2:9/9-2:32/32] SCOPE: $Global$ 
+    A
+    B
+
+========== Dumping model of PROJECT DummyProject
+TYPEDEF MyEnum  [2:1/1-2:40/40] TYPE: TRATATA TEXT=TRATATA  [2:9/9-2:32/32] SCOPE: $Global$ 
+ENUM TRATATA [2:9/9-2:32/32] SCOPE: $Global$ 
+    A
+    B
+

@@ -1,0 +1,25 @@
+GtkZZZZZ	$	        GtkZZZZZ
+s2Struct	$	        s2Struct
+str	$	        str
+si int	$	        si
+ssi int	$	        ssi
+i1 int	$	        i1
+i2 int	$	        i2
+q str	$	        q
+sss s2Struct	$	        sss
+aliases() void	$	        aliases()
+f1() void	$	        f1()
+f2() void	$	        f2()
+foo() int	$	        foo()
+innerNS3Func() void	$	        innerNS3Func()
+main(int argc, char** argv) int	$	        main(int argc, char** argv)
+sfoo() void	$	        sfoo()
+sfoo2() void	$	        sfoo2()
+ssfoo() void	$	        ssfoo()
+usingS1() void	$	        usingS1()
+usingS1S2() void	$	        usingS1S2()
+usingS2() void	$	        usingS2()
+Gtk	$	        Gtk
+S1	$	        S1
+S2	$	        S2
+S3	$	        S3

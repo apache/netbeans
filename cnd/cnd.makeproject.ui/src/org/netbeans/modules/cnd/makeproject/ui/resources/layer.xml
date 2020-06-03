@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Templates">
+        <folder name="Project">
+            <folder name="Native">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/ui/resources/desktop.html"/>
+
+                <attr name="position" intvalue="850"/>
+                <file name="makefile.xml">
+                    <attr name="position" intvalue="100"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.NewMakeProjectWizardIterator.makefile"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-unmanaged.png"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/ui/resources/makefile.html"/>
+                </file>
+
+                <file name="binary.xml">
+                    <attr name="position" intvalue="120"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.NewMakeProjectWizardIterator.binary"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-unmanaged.png"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/ui/resources/binary.html"/>
+                </file>
+
+                <file name="newApplication.xml">
+                    <attr name="position" intvalue="200"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.NewMakeProjectWizardIterator.newApplication"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-managed.png"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/ui/resources/newApplication.html"/>
+                </file>
+
+                <file name="newDynamicLibrary.xml">
+                    <attr name="position" intvalue="300"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.NewMakeProjectWizardIterator.newDynamicLibrary"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-managed-dynamic.png"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/ui/resources/newDynamicLibrary.html"/>
+                </file>
+
+                <file name="newStaticLibrary.xml">
+                    <attr name="position" intvalue="400"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.NewMakeProjectWizardIterator.newStaticLibrary"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-managed-static.png"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/ui/resources/newStaticLibrary.html"/>
+                </file>
+
+                <file name="newQtApplication.xml">
+                    <attr name="position" intvalue="500"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.NewMakeProjectWizardIterator.newQtApplication"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-Qt.png"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/ui/resources/newQtApplication.html"/>
+                </file>
+
+                <file name="newQtDynamicLibrary.xml">
+                    <attr name="position" intvalue="600"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.NewMakeProjectWizardIterator.newQtDynamicLibrary"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-Qt-dynamic.png"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/ui/resources/newQtDynamicLibrary.html"/>
+                </file>
+
+                <file name="newQtStaticLibrary.xml">
+                    <attr name="position" intvalue="700"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="templateWizardIterator" methodvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.NewMakeProjectWizardIterator.newQtStaticLibrary"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-Qt-static.png"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/ui/resources/newQtStaticLibrary.html"/>
+                </file>
+
+            </folder>
+
+            <folder name="Samples">
+                <folder name="Native">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                    <attr name="position" intvalue="650"/>
+
+                    <!--
+                    <folder name="Applications">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                        <attr name="position" intvalue="100"/>
+                    -->
+
+                        <file name="Welcome" url="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/welcome.zip">
+                            <attr name="position" intvalue="100"/>
+                            <attr name="template" boolvalue="true"/>
+                            <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/welcome.html"/>
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                            <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-managed.png"/>
+                            <attr name="instantiatingIterator" newvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator"/>
+                        </file>
+
+                        <file name="Arguments" url="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/args.zip">
+                            <attr name="position" intvalue="200"/>
+                            <attr name="template" boolvalue="true"/>
+                            <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/args.html"/>
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                            <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-managed.png"/>
+                            <attr name="instantiatingIterator" newvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator"/>
+                        </file>
+
+                        <file name="Freeway" url="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/freeway.zip">
+                            <attr name="position" intvalue="300"/>
+                            <attr name="template" boolvalue="true"/>
+                            <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/freeway.html"/>
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                            <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-managed.png"/>
+                            <attr name="instantiatingIterator" newvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator"/>
+                        </file>
+
+                        <file name="SubProjects" url="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/helloapp.zip">
+                            <attr name="position" intvalue="400"/>
+                            <attr name="template" boolvalue="true"/>
+                            <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/helloapp.html"/>
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                            <attr name="mainProjectLocation" stringvalue="main"/>
+                            <attr name="subProjectLocations" stringvalue="hello1lib,hello2lib,hello3lib,hello4lib"/>
+                            <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-managed.png"/>
+                            <attr name="instantiatingIterator" newvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator"/>
+                        </file>
+
+                        <file name="InputOutput" url="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/io.zip">
+                            <attr name="position" intvalue="500"/>
+                            <attr name="template" boolvalue="true"/>
+                            <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/io.html"/>
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                            <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-managed.png"/>
+                            <attr name="instantiatingIterator" newvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator"/>
+                        </file>
+
+                        <file name="MP" url="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/mp.zip">
+                            <attr name="position" intvalue="600"/>
+                            <attr name="template" boolvalue="true"/>
+                            <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/mp.html"/>
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                            <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-managed.png"/>
+                            <attr name="instantiatingIterator" newvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator"/>
+                        </file>
+
+                        <file name="Quote" url="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/quote.zip">
+                            <attr name="position" intvalue="700"/>
+                            <attr name="template" boolvalue="true"/>
+                            <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/quote.html"/>
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                            <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-managed.png"/>
+                            <attr name="instantiatingIterator" newvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator"/>
+                        </file>
+
+                        <file name="LexYacc" url="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/lexyacc.zip">
+                            <attr name="position" intvalue="800"/>
+                            <attr name="template" boolvalue="true"/>
+                            <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/lexyacc.html"/>
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                            <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-managed.png"/>
+                            <attr name="instantiatingIterator" newvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator"/>
+                        </file>
+
+                        <file name="Fractal" url="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/fractal.zip">
+                            <attr name="position" intvalue="810"/>
+                            <attr name="template" boolvalue="true"/>
+                            <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/fractal.html"/>
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                            <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-managed.png"/>
+                            <attr name="instantiatingIterator" newvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator"/>
+                        </file>
+
+                        <file name="Hello" url="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/hello.zip">
+                            <attr name="position" intvalue="820"/>
+                            <attr name="template" boolvalue="true"/>
+                            <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/hello.html"/>
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                            <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-managed.png"/>
+                            <attr name="instantiatingIterator" newvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator"/>
+                        </file>
+
+                        <file name="Pi" url="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/pi.zip">
+                            <attr name="position" intvalue="830"/>
+                            <attr name="template" boolvalue="true"/>
+                            <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/pi.html"/>
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                            <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-managed.png"/>
+                            <attr name="instantiatingIterator" newvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator"/>
+                        </file>
+
+                        <file name="HelloCMakeWorld" url="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/hellocmake.zip">
+                            <attr name="position" intvalue="835"/>
+                            <attr name="template" boolvalue="true"/>
+                            <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/hellocmake.html"/>
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                            <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-unmanaged.png"/>
+                            <attr name="instantiatingIterator" newvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator"/>
+                        </file>
+
+                        <file name="HelloQtWorld" url="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/helloqt.zip">
+                            <attr name="position" intvalue="840"/>
+                            <attr name="template" boolvalue="true"/>
+                            <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/samples/helloqt.html"/>
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                            <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/projects-Qt.png"/>
+                            <attr name="instantiatingIterator" newvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.MakeSampleProjectIterator"/>
+                        </file>
+
+                    </folder>
+
+                    <!--
+                    <folder name="Packaging">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.ui.wizards.Bundle"/>
+                        <attr name="position" intvalue="200"/>
+                    </folder>
+                    -->
+                <!--
+                </folder>
+                -->
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Services">
+        <file name="org-netbeans-modules-cnd-makeproject-MakeOptions.settings" url="MakeOptions.settings">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.cnd.makeproject.Bundle"/>
+            <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/cnd/makeproject/resources/makeProject.gif"/>
+        </file>
+    </folder>
+
+    <folder name="Actions">
+        <folder name="Project">
+            <!-- Project operations -->
+            <file name="org-netbeans-modules-cnd-makeproject-api-ui-actions-AddExistingItemAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makeproject.api.ui.actions.AddExistingItemAction"/>
+            </file>
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-AddExistingFolderItemsAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makeproject.ui.actions.AddExistingFolderItemsAction"/>
+            </file>
+            <file name="org-netbeans-modules-cnd-makeproject-api-ui-actions-NewFolderAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makeproject.api.ui.actions.NewFolderAction"/>
+            </file>
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-RunTestAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makeproject.ui.actions.RunTestAction"/>
+            </file>
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-DebugTestAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makeproject.ui.actions.DebugTestAction"/>
+            </file>
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-StepIntoTestAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makeproject.ui.actions.StepIntoTestAction"/>
+            </file>
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-BatchBuildAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.makeproject.ui.actions.BatchBuildAction.mainBatchBuildAction"/>
+            </file>
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-ConfigurationManagerAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makeproject.ui.actions.ConfigurationManagerAction"/>
+            </file>            
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-MoreBuildActionsAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makeproject.ui.actions.MoreBuildActionsAction"/>
+            </file>                        
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-MakeProjectConfigurationAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makeproject.ui.actions.MakeProjectConfigurationAction"/>
+            </file>                                    
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-MakeProjectBuildHostAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makeproject.ui.actions.MakeProjectBuildHostAction"/>
+            </file>                                                
+            <file name="org-netbeans-modules-cnd-makeproject-ui-UploadAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.makeproject.ui.RemoteSyncActions.createUploadAction"/>
+            </file>                                                                        
+            <file name="org-netbeans-modules-cnd-makeproject-ui-DownloadAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.makeproject.ui.RemoteSyncActions.createDownloadAction"/>
+            </file>                                                                        
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-BatchBuildProject.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.makeproject.ui.actions.MakeProjectActionsSupport.batchBuildAction"/>            
+            </file>
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-BuildPackageAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.makeproject.ui.actions.MakeProjectActionsSupport.buildPackageAction"/>            
+            </file>                           
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-PreBuildAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.makeproject.ui.actions.MakeProjectActionsSupport.preBuildAction"/>            
+            </file>                           
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-DebugAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.makeproject.ui.actions.MakeProjectActionsSupport.debugAction"/>            
+            </file>                           
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-StepIntoAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.makeproject.ui.actions.MakeProjectActionsSupport.stepIntoAction"/>            
+            </file>
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-TestAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.makeproject.ui.actions.MakeProjectActionsSupport.testAction"/>            
+            </file>
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-MakeProjectManageLaunchersAction.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makeproject.ui.actions.MakeProjectManageLaunchersAction"/>
+            </file>
+             <file name="org-netbeans-modules-cnd-makeproject-ui-launchers-actions-BuildAsAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.makeproject.ui.launchers.actions.LauncherAction.buildAsAction"/>            
+            </file>           
+            <file name="org-netbeans-modules-cnd-makeproject-ui-launchers-actions-RunAsAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.makeproject.ui.launchers.actions.LauncherAction.runAsAction"/>            
+            </file>
+            <file name="org-netbeans-modules-cnd-makeproject-ui-launchers-actions-DebugAsAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.makeproject.ui.launchers.actions.LauncherAction.debugAsAction"/>            
+            </file>
+            <file name="org-netbeans-modules-cnd-makeproject-ui-launchers-actions-StepIntoAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.makeproject.ui.launchers.actions.LauncherAction.stepIntoAction"/>            
+            </file>
+        </folder>
+        <folder name="Tools">
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-TestSubmenuAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.cnd.makeproject.ui.actions.NewTestActionFactory.createNewTestsSubmenu"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="Menu"> <!-- Hacking menus -->
+        <folder name="BuildProject">
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-BatchBuildAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-actions-BatchBuildAction.instance"/>
+                <attr name="position" intvalue="210"/>
+            </file>
+        </folder>
+        <!--
+        <folder name="File">
+            <file name="org-netbeans-modules-cnd-makeproject-ui-actions-AddExistingItemAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-actions-AddExistingItemAction.instance"/>
+                <attr name="position" intvalue="300"/>
+            </file>
+        </folder>
+        -->
+    </folder>
+
+    <folder name="Loaders">
+        <folder name="application">
+            <folder name="x-executable+elf">
+                <folder name="Actions">
+                    <file name="RunDialogAction.instance">
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makeproject.ui.actions.RunDialogAction"/>
+                        <attr name="position" intvalue="100"/>
+                        <attr name="misplaced.action.allowed" boolvalue="true"/>
+                    </file>
+                    <file name="DebugDialogAction.instance">
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makeproject.ui.actions.DebugDialogAction"/>
+                        <attr name="position" intvalue="110"/>
+                        <attr name="misplaced.action.allowed" boolvalue="true"/>
+                    </file>
+                    <file name="CreateProjectAction.instance">
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.cnd.makeproject.ui.actions.CreateProjectAction"/>
+                        <attr name="position" intvalue="130"/>
+                        <attr name="misplaced.action.allowed" boolvalue="true"/>
+                    </file>
+                    <file name="Separator0.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="200"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Projects">
+        <!-- MakeProject Extension Points-->
+        <folder name="org-netbeans-modules-cnd-makeproject">
+            <folder name="MoreBuildActions">
+                <file name="org-netbeans-modules-cnd-makeproject-ui-actions-PreBuildAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-actions-PreBuildAction.instance"/>
+                    <attr name="position" intvalue="50"/>
+                </file>                                
+                <file name="org-netbeans-modules-project-ui-CleanProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-CleanProject.instance"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="org-netbeans-modules-cnd-makeproject-ui-actions-BatchBuildProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-actions-BatchBuildProject.instance"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="org-netbeans-modules-cnd-makeproject-ui-actions-BuildPackageAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-actions-BuildPackageAction.instance"/>
+                    <attr name="position" intvalue="300"/>
+                </file>                                
+            </folder>
+            
+            <folder name="Nodes"/>
+            <folder name="ImportantFiles"/>
+            <folder name="Customizer"/>
+            <folder name="Actions">        
+                <file name="org-netbeans-modules-project-ui-NewFile$WithSubMenu.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-NewFile$WithSubMenu.instance"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="sep-1.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="org-netbeans-modules-cnd-makeproject-api-ui-actions-AddExistingItemAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-api-ui-actions-AddExistingItemAction.instance"/>
+                    <attr name="position" intvalue="300"/>
+                </file>
+                <file name="org-netbeans-modules-cnd-makeproject-ui-actions-AddExistingFolderItemsAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-actions-AddExistingFolderItemsAction.instance"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+                <file name="org-netbeans-modules-cnd-makeproject-api-ui-actions-NewFolderAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-api-ui-actions-NewFolderAction.instance"/>
+                    <attr name="position" intvalue="500"/>
+                </file>                                        
+                <file name="sep-1.1.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="600"/>
+                </file>                
+<!--                <file name="org-netbeans-modules-project-ui-BuildProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-BuildProject.instance"/>
+                    <attr name="position" intvalue="700"/>
+                </file>-->
+                <file name="org-netbeans-modules-cnd-makeproject-ui-launchers-actions-BuildAsAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-launchers-actions-BuildAsAction.instance"/>
+                    <attr name="position" intvalue="700"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-RebuildProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RebuildProject.instance"/>
+                    <attr name="position" intvalue="800"/>
+                </file>
+                <file name="org-netbeans-modules-cnd-makeproject-ui-actions-MoreBuildActionsAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-actions-MoreBuildActionsAction.instance"/>
+                    <attr name="position" intvalue="900"/>
+                </file>                                        
+                <file name="org-netbeans-modules-cnd-makeproject-ui-actions-MakeProjectConfigurationAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-actions-MakeProjectConfigurationAction.instance"/>
+                    <attr name="position" intvalue="1000"/>
+                </file>                                        
+                <file name="org-netbeans-modules-cnd-makeproject-ui-actions-MakeProjectBuildHostAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-actions-MakeProjectBuildHostAction.instance"/>
+                    <attr name="position" intvalue="1100"/>
+                </file>                                    
+                <file name="org-netbeans-modules-cnd-makeproject-ui-UploadAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-UploadAction.instance"/>
+                    <attr name="position" intvalue="1120"/>
+                </file>                             
+                <file name="org-netbeans-modules-cnd-makeproject-ui-DownloadAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-DownloadAction.instance"/>
+                    <attr name="position" intvalue="1130"/>
+                </file>                                                             
+                                                    
+                <file name="sep-2.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="1200"/>
+                </file>                
+<!--                <file name="org-netbeans-modules-project-ui-RunProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunProject.instance"/>
+                    <attr name="position" intvalue="1300"/>
+                </file>                -->
+                <file name="org-netbeans-modules-cnd-makeproject-ui-launchers-actions-RunAsAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-launchers-actions-RunAsAction.instance"/>
+                    <attr name="position" intvalue="1350"/>                                        
+                </file>
+<!--                <file name="org-netbeans-modules-cnd-makeproject-ui-actions-DebugAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-actions-DebugAction.instance"/>
+                    <attr name="position" intvalue="1400"/>
+                </file>-->                                  
+                <file name="org-netbeans-modules-cnd-makeproject-ui-launchers-actions-DebugAsAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-launchers-actions-DebugAsAction.instance"/>
+                    <attr name="position" intvalue="1450"/>                                        
+                </file>
+<!--                <file name="org-netbeans-modules-cnd-makeproject-ui-actions-StepIntoAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-actions-StepIntoAction.instance"/>
+                    <attr name="position" intvalue="1500"/>
+                </file>                                                                        -->
+                <file name="org-netbeans-modules-cnd-makeproject-ui-launchers-actions-StepIntoAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-launchers-actions-StepIntoAction.instance"/>
+                    <attr name="position" intvalue="1550"/>                                        
+                </file>
+                <file name="org-netbeans-modules-cnd-makeproject-ui-actions-TestAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-actions-TestAction.instance"/>
+                    <attr name="position" intvalue="1600"/>
+                </file>                                                                                                        
+                <file name="org-netbeans-modules-cnd-makeproject-ui-actions-MakeProjectManageLaunchersAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-cnd-makeproject-ui-actions-MakeProjectManageLaunchersAction.instance"/>
+                    <attr name="position" intvalue="1650"/>
+                </file>
+                <file name="sep-3.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="1700"/>
+                </file>      
+                <file name="org-netbeans-modules-project-ui-SetMainProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-SetMainProject.instance"/>
+                    <attr name="position" intvalue="1800"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-actions-OpenSubprojects.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-actions-OpenSubprojects.instance"/>
+                    <attr name="position" intvalue="1900"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-CloseProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-CloseProject.instance"/>
+                    <attr name="position" intvalue="2000"/>
+                </file>
+                <file name="sep-4.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="2100"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-RenameProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RenameProject.instance"/>
+                    <attr name="position" intvalue="2200"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-MoveProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-MoveProject.instance"/>
+                    <attr name="position" intvalue="2300"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-CopyProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-CopyProject.instance"/>
+                    <attr name="position" intvalue="2400"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-DeleteProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-DeleteProject.instance"/>
+                    <attr name="position" intvalue="2500"/>
+                </file>
+                <file name="sep-5.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="2600"/>
+                </file>                
+                <file name="org-openide-actions-FindAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-FindAction.instance"/>
+                    <attr name="position" intvalue="2700"/>
+                </file>
+                <file name="general.shadow">
+                    <attr name="originalFile" stringvalue="Projects/Actions"/>
+                    <attr name="position" intvalue="2800"/>
+                </file>
+                <file name="sep-6.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="2900"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-problems-BrokenProjectActionFactory.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-problems-BrokenProjectActionFactory.instance"/>
+                    <attr name="position" intvalue="2944"/>
+                </file>                
+                <file name="org-netbeans-modules-project-ui-CustomizeProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-CustomizeProject.instance"/>
+                    <attr name="position" intvalue="3000"/>
+                </file>                
+            </folder>                                                
+            <folder name="ActionsFolder"/>
+            <folder name="ActionsExtFolder"/>
+            <folder name="Lookup">
+                <!-- put org.netbeans.spi.project.LookupProvider here
+                    or use @LookupProvider.Registration in code
+                -->
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

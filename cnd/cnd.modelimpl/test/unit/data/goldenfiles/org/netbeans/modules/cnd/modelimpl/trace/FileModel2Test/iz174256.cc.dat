@@ -1,0 +1,39 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 2):
+<U>#define '["OMP",<ID>,line=2,col=9],offset=38,file=null[["directive",<ID>,line=2,col=13],offset=42,file=null]'='["Pragma",<ID>,line=2,col=24],offset=53,file=null ["(",<LPAREN>,line=2,col=30],offset=59,file=null ["omp",<ID>,line=2,col=31],offset=60,file=null ["directive",<ID>,line=2,col=35],offset=64,file=null [")",<RPAREN>,line=2,col=44],offset=73,file=null'
+<U>#define '["Pragma",<ID>,line=1,col=9],offset=8,file=null[["x",<ID>,line=1,col=16],offset=15,file=null]'='["_Pragma",<ID>,line=1,col=19],offset=18,file=null ["(",<LPAREN>,line=1,col=26],offset=25,file=null ["#",<SHARP>,line=1,col=27],offset=26,file=null ["x",<ID>,line=1,col=28],offset=27,file=null [")",<RPAREN>,line=1,col=29],offset=28,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz174256.cc
+Includes:
+    <no includes>
+Macros:
+#define 'OMP[directive]' [2:1/30-2:45/74]
+#define 'Pragma[x]' [1:1/0-1:30/29]
+FUNCTION DEFINITION main  [4:1/76-9:2/133] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [4:1/76-9:2/133]
+    PARAMETERS:
+    RETURNS void TEXT=void  [4:1/76-4:5/80]
+    STATEMENT COMPOUND  [4:13/88-9:2/133] SCOPE: main 
+        STATEMENT COMPOUND  [6:19/109-8:6/131] SCOPE: Stmt  [4:13/88-9:2/133]
+            STATEMENT DECLARATION  [7:9/119-7:15/125] SCOPE: Stmt  [6:19/109-8:6/131]
+                VARIABLE i [7:9/119-7:15/125]  TYPE: int TEXT=int  [7:9/119-7:12/122]  INIT: null  SCOPE: Stmt  [6:19/109-8:6/131]
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION main  [4:1/76-9:2/133] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [4:1/76-9:2/133]
+    PARAMETERS:
+    RETURNS void TEXT=void  [4:1/76-4:5/80]
+    STATEMENT COMPOUND  [4:13/88-9:2/133] SCOPE: main 
+        STATEMENT COMPOUND  [6:19/109-8:6/131] SCOPE: Stmt  [4:13/88-9:2/133]
+            STATEMENT DECLARATION  [7:9/119-7:15/125] SCOPE: Stmt  [6:19/109-8:6/131]
+                VARIABLE i [7:9/119-7:15/125]  TYPE: int TEXT=int  [7:9/119-7:12/122]  INIT: null  SCOPE: Stmt  [6:19/109-8:6/131]
+

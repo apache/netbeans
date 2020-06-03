@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <link rel="StyleSheet" href="../ide.css" type="text/css">
+    <meta name="generator" content="Helen">
+    <title>Opening a Terminal Window for a Build Host</title>
+  </head>
+  <body>
+    <h2>
+       Opening a Terminal Window for a Build Host
+    </h2>
+    <p>
+       <small><a href="#seealso">See Also</a>&nbsp;</small>
+    </p>
+    <p>
+       You can open a terminal window in the IDE for a local or remote host. A remote host does not
+      need to be set up in advance for the IDE, but must be running the SSH daemon.
+    </p>
+    <p>
+       <b>To open a Terminal window when the IDE&nbsp;is already connected to the remote host:</b>
+    </p>
+    <ol>
+      <li>
+        Open the Services window by choosing Window &gt; Services.
+      </li>
+      <li>
+        In the Services window, expand the C/C++ Build Hosts node.
+      </li>
+      <li>
+        Right-click the remote host and choose Open Terminal.
+      </li>
+      <li>
+        Select one of the following:
+        <ul>
+          <li>
+            Home Folder - Opens a terminal window in the IDE with the directory set to the current
+            directory on the remote host
+          </li>
+          <li>
+            Remote Mirror of Local Files - Opens a terminal window in the IDE with the directory set to the remote
+            mirror copy of local files, if one exists.
+          </li>
+        </ul>
+      </li>
+      <li style=" list-style-type: none; list-style-image: none;">
+        A new tab opens in the Terminal window with a shell prompt for your account on the remote
+        host.
+      </li>
+    </ol>
+    <p>
+       <b>To open a terminal window when the IDE is <i>not</i> connected to the remote
+      host:</b>
+    </p>
+    <ol>
+      <li>
+        Open the Terminal window by choosing Window &gt; IDE Tools &gt; Terminal.
+      </li>
+      <li>
+        Click the Create New Remote Terminal button <img src="../images/remote-terminal-icon.png"
+        alt="New Remote terminal button"> in the left margin.
+      </li>
+      <li>
+        In the SSH Connection dialog box, select a host from the Known Hosts list, or select Other
+        Host, and enter your user name, host name, and SSH port. Click OK.
+      </li>
+      <li>
+        If the Authentication Type dialog box opens, select the authentication type to use,
+        password or SSH key, and click OK.
+      </li>
+      <li>
+        Enter your password if prompted.
+      </li>
+      <li>Optionally select Remember Password to have the IDE encrypt and save
+          the password on the local disk.</li>
+    </ol>
+    <p>
+       When you are successfully authenticated and logged in&nbsp;to the remote host using your
+      password or SSH key, the IDE&nbsp;opens a new tab in the Terminal window with a shell prompt
+      for your account on the remote host.
+    </p>
+    <p>
+       &nbsp;
+    </p>
+    <p>
+       <b>To open a terminal window on the local host:</b>
+    </p>
+    <ol>
+      <li>
+        Open the Terminal window by choosing Window &gt; Output &gt; Terminal.
+      </li>
+      <li>
+        Click the Create New Local Terminal button <img src="../images/terminal-icon.png" alt=
+        "New Local Terminal icon">&nbsp; in the Terminal window.
+      </li>
+    </ol>
+    <p>
+       &nbsp;&nbsp;&nbsp;&nbsp;or
+    </p>
+    <ol>
+      <li>
+        Right-click localhost under the C/C++ Build Hosts node in the Services window
+      </li>
+      <li>
+        Choose Open Terminal.
+      </li>
+    </ol>
+    <p>
+       <b>To end a terminal session:</b>
+    </p>
+    <ul>
+      <li>
+        Type <tt>exit</tt> at the shell prompt or close the tab.
+      </li>
+    </ul>
+    <table>
+      <tr>
+        <th align="left" colspan="2">
+          <a name="seealso">See also</a> 
+        </th>
+      </tr>
+      <tr>
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="RemoteDevelopment.html">Overview of C/C++ Remote Development</a><br>
+           <a href="RemoteDevelopmentManaging.html">Managing Build Hosts</a><br>
+           <a href="ConfiguringBuildTools.html">Configuring Build Tools</a><br>
+           <a href="RemoteDevelopmentToolbar.html">Working on Remote Hosts Using the Toolbar</a><br>   
+           <a href="SavingTerminalSettings.html">Pinning a Terminal</a><br>
+           <a href="ProjectPropsBuild.html">C/C++ Project Properties Dialog Box: Build</a>
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <small><a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+    </p>
+    <table border="0" cellpadding="20">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

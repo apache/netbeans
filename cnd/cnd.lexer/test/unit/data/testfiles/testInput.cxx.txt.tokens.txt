@@ -1,0 +1,258 @@
+.t.e.s.t. Comments
+BLOCK_COMMENT   "/*ml-comment*/"
+BLOCK_COMMENT   "/**/"
+JAVADOC_COMMENT  "/***/"
+JAVADOC_COMMENT  "/**\n*javadoc-comment*/"
+BLOCK_COMMENT   "/* a", la=1
+----- EOF -----
+
+.t.e.s.t. Identifiers
+IDENTIFIER      "a", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "ab", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "aB2", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "2", la=1
+IDENTIFIER      "a", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "x", la=1
+WHITESPACE      "\n", la=1
+IDENTIFIER      "yZ", la=1
+WHITESPACE      "\r", la=1
+IDENTIFIER      "z", la=1
+----- EOF -----
+
+.t.e.s.t. Character Literals
+CHAR_LITERAL    "''"
+WHITESPACE      " ", la=1
+CHAR_LITERAL    "'a'"
+CHAR_LITERAL    "''"
+WHITESPACE      " ", la=1
+CHAR_LITERAL    "'\\''"
+WHITESPACE      " ", la=1
+CHAR_LITERAL    "'\\\\'"
+WHITESPACE      " ", la=1
+CHAR_LITERAL    "'\\\\\\''"
+WHITESPACE      " ", la=1
+CHAR_LITERAL    "'\\n'"
+WHITESPACE      " ", la=1
+CHAR_LITERAL    "'a", la=1
+----- EOF -----
+
+.t.e.s.t. String Literals
+STRING_LITERAL  """"
+WHITESPACE      " ", la=1
+STRING_LITERAL  ""a""
+WHITESPACE      "\n", la=1
+STRING_LITERAL  ""\\" ""
+WHITESPACE      "\n", la=1
+STRING_LITERAL  ""\\\\""
+WHITESPACE      "\n", la=1
+STRING_LITERAL  ""\\\\\\\\\\\\\\"\\"""
+WHITESPACE      "\n", la=1
+STRING_LITERAL  ""\\n\\" \\"a", la=1
+----- EOF -----
+
+.t.e.s.t. Number Literals
+INT_LITERAL     "0", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "00", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "09", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "1", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "12", la=1
+WHITESPACE      " ", la=1
+LONG_LITERAL    "0L"
+WHITESPACE      " ", la=1
+LONG_LITERAL    "1l"
+WHITESPACE      " ", la=1
+LONG_LITERAL    "12L"
+WHITESPACE      " ", la=1
+INT_LITERAL     "0x1", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "0xf", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "0XdE", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "0Xbc", la=1
+IDENTIFIER      "y", la=1
+WHITESPACE      " ", la=1
+DOUBLE_LITERAL  "09.5", la=1
+WHITESPACE      " ", la=1
+FLOAT_LITERAL   "1.5f"
+WHITESPACE      " ", la=1
+DOUBLE_LITERAL  "2.5d"
+WHITESPACE      " ", la=1
+DOUBLE_LITERAL  "6d"
+WHITESPACE      " ", la=1
+DOUBLE_LITERAL  "7e3", la=1
+WHITESPACE      " ", la=1
+FLOAT_LITERAL   "6.1E-7f"
+WHITESPACE      " ", la=1
+DOUBLE_LITERAL  "0xa.5dp+12d"
+WHITESPACE      " ", la=1
+DOUBLE_LITERAL  ".3", la=1
+----- EOF -----
+
+.t.e.s.t. Operators
+CARET           "^", la=1
+WHITESPACE      " ", la=1
+CARETEQ         "^="
+WHITESPACE      " ", la=1
+PERCENT         "%", la=1
+WHITESPACE      " ", la=1
+PERCENTEQ       "%="
+WHITESPACE      " ", la=1
+STAR            "*", la=1
+WHITESPACE      " ", la=1
+STAREQ          "*="
+WHITESPACE      " ", la=1
+SLASH           "/", la=1
+WHITESPACE      " ", la=1
+SLASHEQ         "/="
+WHITESPACE      " ", la=1
+EQ              "=", la=1
+WHITESPACE      " ", la=1
+EQEQ            "=="
+----- EOF -----
+
+.t.e.s.t. Keywords
+WHITESPACE      " \n", la=1
+ABSTRACT        "abstract", la=1
+WHITESPACE      " ", la=1
+ASSERT          "assert", la=1
+WHITESPACE      " ", la=1
+BOOLEAN         "boolean", la=1
+WHITESPACE      " ", la=1
+BREAK           "break", la=1
+WHITESPACE      " ", la=1
+BYTE            "byte", la=1
+WHITESPACE      " ", la=1
+CASE            "case", la=1
+WHITESPACE      " ", la=1
+CATCH           "catch", la=1
+WHITESPACE      " ", la=1
+CHAR            "char", la=1
+WHITESPACE      " ", la=1
+CLASS           "class", la=1
+WHITESPACE      " ", la=1
+CONST           "const", la=1
+WHITESPACE      " ", la=1
+CONTINUE        "continue", la=1
+WHITESPACE      "\n", la=1
+DEFAULT         "default", la=1
+WHITESPACE      " ", la=1
+DO              "do", la=1
+WHITESPACE      " ", la=1
+DOUBLE          "double", la=1
+WHITESPACE      " ", la=1
+ELSE            "else", la=1
+WHITESPACE      " ", la=1
+ENUM            "enum", la=1
+WHITESPACE      " ", la=1
+EXTENDS         "extends", la=1
+WHITESPACE      " ", la=1
+FINAL           "final", la=1
+WHITESPACE      " ", la=1
+FINALLY         "finally", la=1
+WHITESPACE      " ", la=1
+FLOAT           "float", la=1
+WHITESPACE      " ", la=1
+FOR             "for", la=1
+WHITESPACE      " ", la=1
+GOTO            "goto", la=1
+WHITESPACE      " ", la=1
+IF              "if", la=1
+WHITESPACE      "\n", la=1
+IMPLEMENTS      "implements", la=1
+WHITESPACE      " ", la=1
+IMPORT          "import", la=1
+WHITESPACE      " ", la=1
+INSTANCEOF      "instanceof", la=1
+WHITESPACE      " ", la=1
+INT             "int", la=1
+WHITESPACE      " ", la=1
+INTERFACE       "interface", la=1
+WHITESPACE      " ", la=1
+LONG            "long", la=1
+WHITESPACE      " ", la=1
+NATIVE          "native", la=1
+WHITESPACE      " ", la=1
+NEW             "new", la=1
+WHITESPACE      " ", la=1
+PACKAGE         "package", la=1
+WHITESPACE      "\n", la=1
+PRIVATE         "private", la=1
+WHITESPACE      " ", la=1
+PROTECTED       "protected", la=1
+WHITESPACE      " ", la=1
+PUBLIC          "public", la=1
+WHITESPACE      " ", la=1
+RETURN          "return", la=1
+WHITESPACE      " ", la=1
+SHORT           "short", la=1
+WHITESPACE      " ", la=1
+STATIC          "static", la=1
+WHITESPACE      " ", la=1
+STRICTFP        "strictfp", la=1
+WHITESPACE      " ", la=1
+SUPER           "super", la=1
+WHITESPACE      " ", la=1
+SWITCH          "switch", la=1
+WHITESPACE      "\n", la=1
+SYNCHRONIZED    "synchronized", la=1
+WHITESPACE      " ", la=1
+THIS            "this", la=1
+WHITESPACE      " ", la=1
+THROW           "throw", la=1
+WHITESPACE      " ", la=1
+THROWS          "throws", la=1
+WHITESPACE      " ", la=1
+TRANSIENT       "transient", la=1
+WHITESPACE      " ", la=1
+TRY             "try", la=1
+WHITESPACE      " ", la=1
+VOID            "void", la=1
+WHITESPACE      " ", la=1
+VOLATILE        "volatile", la=1
+WHITESPACE      " ", la=1
+WHILE           "while", la=1
+WHITESPACE      "\n", la=1
+NULL            "null", la=1
+WHITESPACE      " ", la=1
+TRUE            "true", la=1
+WHITESPACE      " ", la=1
+FALSE           "false", la=1
+----- EOF -----
+
+.t.e.s.t. Non-keywords
+IDENTIFIER      "abstracta", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "assertx", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "b", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "br", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "car", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "dou", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "doubl", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "finall", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "im", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "i", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "ifa", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "inti", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "throwsx", la=1
+----- EOF -----
+

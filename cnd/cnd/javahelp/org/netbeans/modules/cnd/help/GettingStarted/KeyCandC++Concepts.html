@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+ <!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="StyleSheet" href="../ide.css"
+type="text/css">
+<title>Key C and C++ Development Concepts</title>
+</head>
+<body>
+<h2>Key C and C++ Development Concepts
+</h2>
+<p><small><a href="#seealso">See Also</a>&nbsp; </small>
+<p>Before you begin developing C and C++ applications in the IDE, you should be
+familiar with the following concepts:
+</p>
+<ul>
+<li><a href="#projects">Projects</a></li>
+<li><a href="#makefiles">Makefiles</a></li>
+</ul>
+<h3>
+Projects<a name="projects"></a></h3>
+<p>
+A C or C++ project is a group of C or C++ source files and associated information about
+how to build and run the project. The IDE stores project information
+in a project folder that includes a makefile and metadata files. Your source directories do not need to be located in the project folder.
+</p>
+<p>
+In the IDE, you always work inside of a project. You can create projects
+that use an IDE-generated makefile to build the project, or create
+projects that are based on your existing makefiles.
+</p>
+<h3>Makefiles<a name="makefiles"></a></h3>
+<p>A makefile is a file of shell commands that the <tt>make</tt> utility uses. Typically,
+the <tt>make</tt> utility uses the makefile to determine which portions of a program to
+compile, but there are other uses also.
+</p>
+<p>
+The C and C++ project system is built directly on top of the <tt>make</tt> utility.
+All of the project commands, like Build Project or Run Project, call targets in
+the project's makefile. You can therefore build and run your C, C++, or Fortran project outside the
+IDE exactly as it is built and run inside the IDE.
+</p>
+<p>
+You do not need to know the <tt>make</tt> utility to work with the IDE. For a
+C/C++ Application, Dynamic Library, or Static Library project, you can set all the basic
+compilation and runtime options in the project's Project Properties dialog box
+and the IDE automatically updates your makefile. If you know how to work with makefiles,
+you can customize a project's makefile or write your own makefile
+for your project. You can create a makefile with the Makefile wizard in the IDE.
+</p>
+<p>For a C/C++ Project with Existing Makefile, the makefile is not
+updated when you set project properties in the IDE. To change a makefile that was
+created outside the IDE, you must edit the makefile manually.
+</p>
+<p>If a C/C++ Project with Existing Makefile has a configure script, a qmake *.pro
+    script, or CMakeLists.txt script, the script is
+    run during project creation to create the makefile.  After the project
+    is created, if you need to change the makefile, you can rerun the project's
+    script from the command line. If you prefer to work within the IDE, you
+    can reconfigure the project by right-clicking the project node and selecting
+    Code Assistance &gt; Reconfigure Project...  The IDE will run the project's
+script to regenerate the makefile, and do a clean build of the project.</p>
+<p>If the project is a qmake or cmake project, you can edit the *.pro or CMakeLists.txt file
+before reconfiguring if you want.</p>
+<table>
+<tr>
+<th colspan="2" align="left"><a name="seealso">See also</a></th>
+</tr>
+<tr>
+<td width="23"></td> 
+<a href="CandC++Overview.html">C and C++ Development Overview</a><br>
+<a href="../WorkingWithCandC++Projects/AboutCandC++Projects.html">About C and C++ 
+Projects</a><br>
+<a href="../CreatingMakefile/CreatingMakefile.html">Creating a Makefile</a>
+</td>
+</tr>
+</table>
+<hr>
+<small>
+<a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+<table border="0" cellpadding="20">
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+</body>
+</html>

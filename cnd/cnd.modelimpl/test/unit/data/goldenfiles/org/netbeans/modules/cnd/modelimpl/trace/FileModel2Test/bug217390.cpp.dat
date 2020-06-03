@@ -1,0 +1,32 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug217390.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION foo [1:5/4-1:23/22] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo(type*)
+    UNIQUE NAME F:foo(type*)
+    PARAMETERS:
+        a [1:14/13-1:21/20]  TYPE: *$unresolved$::type TEXT=type*  [1:14/13-1:20/19]  INIT: null  SCOPE: foo 
+    RETURNS $unresolved$::type TEXT=type  [1:5/4-1:9/8]
+VARIABLE bar [2:5/27-2:20/42]  TYPE: const $unresolved$::type TEXT=const type  [2:5/27-2:15/37]  INIT: null  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION foo [1:5/4-1:23/22] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE foo(type*)
+    UNIQUE NAME F:foo(type*)
+    PARAMETERS:
+        a [1:14/13-1:21/20]  TYPE: *$unresolved$::type TEXT=type*  [1:14/13-1:20/19]  INIT: null  SCOPE: foo 
+    RETURNS $unresolved$::type TEXT=type  [1:5/4-1:9/8]
+VARIABLE bar [2:5/27-2:20/42]  TYPE: const $unresolved$::type TEXT=const type  [2:5/27-2:15/37]  INIT: null  SCOPE: $Global$ 
+

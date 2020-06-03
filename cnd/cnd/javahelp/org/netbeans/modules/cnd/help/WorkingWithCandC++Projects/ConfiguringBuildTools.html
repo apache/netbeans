@@ -1,0 +1,234 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <link rel="StyleSheet" href="../ide.css" type="text/css">
+    <meta name="generator" content="Helen">
+    <title>Configuring Build Tools for C/C++/Fortran Projects</title>
+  </head>
+  <body>
+    <h2>
+       Configuring Build Tools for C/C++/Fortran Projects
+    </h2>
+    <p>
+       <small><a href="#seealso">See Also</a>&nbsp;</small>
+    </p>
+    <p>
+       The IDE uses the build tools (compilers, debuggers, make utility) that are installed on your
+      system, or on a remote system that you set up as a remote build host. The IDE looks for
+      installed compilers debuggers, and make utility on your path. You cannot work with C, C++, or
+      Fortran projects without these build tools. If the IDE does not find your compilers, you can
+      configure build tools to show the IDE where to find them.
+    </p>
+    <p>
+       You can use the Options window to configure build tools for your C/C++/Fortran projects. The
+      options that you specify are used by default for all new C/C++/Fortran projects.
+    </p>
+    <p>
+       <b>To configure build tools:</b>
+    </p>
+    <ol>
+      <li>
+        Choose Tools &gt; Options.
+      </li>
+      <li>
+        Click C/C++ in the top pane of the window.
+      </li>
+      <li>
+        Click the Build Tools tab.
+      </li>
+      <li>
+        Modify the properties as desired.
+      </li>
+    </ol>
+    <p>
+       You can set the following properties:
+    </p>
+    <ul>
+      <li>
+        <b>Build Host.</b> The Build Host list includes your local host and any remote hosts you
+        have defined. For information on using remote hosts, see <a href=
+        "RemoteDevelopment.html">Overview of Remote Development</a>. You can add and remove remote
+        build hosts, change the default host, and change IDE properties of remote build hosts. 
+        <ul>
+          <li>
+            To add a remote host, click Edit. In the Build Hosts Manager dialog box, click Add. The
+            New Remote Host Setup wizard starts. See the help for the <a href=
+            "NewRemoteDevelopmentHostWizardP1.html">New Remote Host Setup wizard</a> for more
+            information.
+          </li>
+          <li>
+            To remove a remote host, click Edit. In the Build Hosts Manager dialog box, select the
+            host you want to remove, click Remove, then click OK.
+          </li>
+          <li>
+            To set a host as the default build host, select the host from the build Host list and
+            click Set as Default.
+          </li>
+          <li>
+            To change IDE properties related to a remote build host, click Edit. In the Build Hosts
+            Manager dialog box, select the host you want to change and click Properties. In the
+            Host Properties dialog box, you can change the name displayed in the IDE for the host
+            by typing in the Display Name field. To change the way project files are shared with
+            the remote host, select the file synchronization method in the Synchronization list. If
+            the project files are in a shared folder that is accessible from the local host and
+            remote host, you can select System-level File Sharing. If sharing the files is not
+            possible, select Automatic Copying to copy the files. The files are copied using SSH
+            protocols to your .netbeans directory on the remote host by default.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <b>Tool Collection.</b> The tool collection list displays the collections found on the
+        current build host and the local host. The default collection is listed in bold type. This
+        collection is selected by default for any new project you create. You can change the
+        default tool collection for a specific project in the project properties. You can manually
+        add and remove tool collections. 
+        <ul>
+          <li>
+            To add a collection to the list, click Add and specify the base directory in the Add
+            New Tool Set dialog box. The Tool Set Family and Tool Set Name are filled in
+            automatically. You can specify a different name for the collection. If you change the
+            family, make sure that the family you specify is the correct family for the collection
+            or the compiler flags might not be valid.
+          </li>
+          <li>
+            To remove a collection from the list, select the collection and click Remove.
+          </li>
+          <li>
+            To duplicate a collection, select the collection from the list and modify the base
+            directory, tool set family, or tool set name in the dialog box. This might be useful if
+            you have two releases of the same tool collection. You can edit the path to the base
+            directory in the duplicate tool collection to specify the path to the other release.
+          </li>
+          <li>
+            To make a collection the default, select the collection and click Default.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <b>Base Directory.</b> The base directory for compilers for the current build host. The
+        base directory is often the <tt>bin</tt> directory of the tool collection.
+      </li>
+      <li style=" list-style-type: none; list-style-image: none;">
+        <ul>
+          <li>
+            <b>C Compiler.</b> The path to the C compiler to use for building projects. The default
+            compiler is the first one found in the base directory.
+          </li>
+          <li>
+            <b>C++ Compiler.</b> The path to the C++ compiler to use for building projects. The
+            default compiler is the first one found in the base directory.
+          </li>
+          <li>
+            <b>Fortran Compiler.</b> The path to the Fortran compiler to use for building projects.
+            The default compiler is the first one found in the base directory.
+          </li>
+          <li>
+            <b>Assembler.</b> The path to the assembler program to use for translating assembly
+            instructions.
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="noindent">
+      <li>
+        <b>Make Command.</b> The path to the make command to use for building projects. The default
+        command is the first one found in the base directory. To select a different command from
+        the base directory or another directory, click the browse button and navigate to a
+        different command in the Select Tool dialog box.
+      </li>
+      <li>
+        <b>Debugger Command.</b> The path to the gdb command to use when debugging projects. The
+        default command is the first one found in the base directory. To select a different command
+        from the base directory or another directory, click the browse button and navigate to a
+        different command in the Select Tool dialog box.
+      </li>
+      <li>
+        <b>QMake Command.</b> The path to the qmake command, which is used to generate makefiles
+        for Qt projects.
+      </li>
+      <li>
+        <b>CMake Command.</b> The path to the cmake command to use for projects with existing
+        sources that use the CMake cross compiler.
+      </li>
+    </ul>
+    <p>
+       To display the versions of all of the selected tools, click Versions.
+    </p>
+    <p>
+       To restore all of the tool selections to the defaults, click Restore Defaults.
+    </p>
+    <p>
+       To set the build tools properties for a specific project, right-click the project and choose
+      Properties.
+    </p>
+    <table>
+      <tr>
+        <th align="left" colspan="2">
+          <a name="seealso">See also</a> 
+        </th>
+      </tr>
+      <tr>
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="ConfiguringProjectSettings.html">Configuring Project Options for C/C++/Fortran
+          Projects</a><br>
+           <a href="ConfiguringParsingSettings.html">Configuring Code Assistance Settings for C and
+          C++ Projects</a><br>
+           <a href="ConfiguringCodeStyle.html">Configuring Formatting Style for C/C++/Fortran
+          Projects</a><br>
+           <a href="ConfiguringSemanticHighlighting.html">Configuring Highlighting for
+          C/C++/Fortran Projects</a><br>
+           <a href="ConfiguringFileExtensions.html">Configuring File Extensions for C/C++/Fortran
+          Projects</a><br>
+           <a href="SettingCandC++ProjectProperties.html">Setting Project Properties</a><br>
+           <a href="ProjectPropsBuild.html">C/C++ Properties Dialog Box: Build</a> 
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <small><a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+    </p>
+    <table border="0" cellpadding="20">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

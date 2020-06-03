@@ -1,0 +1,45 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 4):
+<U>#define '["A",<ID>,line=25,col=9],offset=407,file=null'=''
+<U>#define '["B",<ID>,line=26,col=9],offset=417,file=null'=''
+<U>#define '["C",<ID>,line=27,col=9],offset=427,file=null'=''
+<U>#define '["E",<ID>,line=21,col=9],offset=297,file=null'=''
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE smart_headers_simple_1e.cc
+Includes:
+"smart_headers_simple_1.h" [11:1/159-11:36/194]
+"smart_headers_simple_1.h" [17:1/234-17:36/269]
+"smart_headers_simple_1.h" [22:1/299-22:36/334]
+"smart_headers_simple_1.h" [28:1/429-28:36/464]
+Macros:
+#define 'A' [9:1/139-9:10/148]
+#define 'A' [25:1/399-25:10/408]
+#define 'B' [10:1/149-10:10/158]
+#define 'B' [26:1/409-26:10/418]
+#define 'C' [15:1/214-15:10/223]
+#define 'C' [27:1/419-27:10/428]
+#define 'D' [16:1/224-16:10/233]
+#define 'E' [21:1/289-21:10/298]
+
+========== Dumping model of PROJECT DummyProject
+CLASS ClassA (ClassA ) [2:1/9-2:16/24] lcurly=22 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+CLASS ClassB (ClassB ) [6:1/43-6:16/58] lcurly=56 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+CLASS ClassC (ClassC ) [10:1/77-10:16/92] lcurly=90 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+CLASS classD (classD ) [14:1/111-14:16/126] lcurly=124 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+CLASS classE (classE ) [18:1/145-18:16/160] lcurly=158 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+

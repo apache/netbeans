@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="StyleSheet" href="../ide.css">
+    <meta name="generator" content="Helen">
+    <title>Using the Macro Expansion Window</title>
+  </head>
+  <body>
+    <h2>
+       Using the Macro Expansion Window
+    </h2>
+    <p>
+       The Macro Expansion window enables you to investigate source code with complex multiple-line
+      macros. Macros are often used to define constants, but can also be used to define code
+      fragments that can be used like functions. When you work with code that uses macros in this
+      way, it might be difficult to understand what is happening in the code. You may need to
+      examine the macros in context with the source code that is calling the macro.
+    </p>
+    <p>
+       <b>To view the source code with expanded macro code:</b>
+    </p>
+    <ul>
+      <li>
+        Right-click on the macro and select Navigate &gt; View Macro Expansion from the pop-up
+        menu.<br>
+         The Macro Expansion window opens to display the expanded macro in context with the code
+        that calls it.
+      </li>
+      <li>
+        You can also mouse over the code of interest while pressing Ctrl+Alt, and click the
+        hyperlink to open the Macro Expansion window.
+      </li>
+    </ul>
+    <p>
+       In the Macro Expansions window, the macro contents are located inside guarded blocks.
+      Semantic highlighting is provided for expanded code. You can use hyperlinks in the Macro
+      Expansion window to go to other source files. Also there is highlighting for macro parameter
+      usages.
+    </p>
+    <p>
+       The left column of the Macro Expansion window includes several toolbar buttons:
+    </p>
+    <ul>
+      <li>
+        Synchronize caret, content and context<br>
+         This option synchronizes caret position and content in the source file in the Editor
+        window and in the Macro Expansion window.<br>
+         It also changes context to make it relevant to caret position (if expand local context
+        only selected).
+      </li>
+      <li>
+        Expand local context only Only the macros in the code block where the caret is located are
+        expanded in the Macro Expansion window.
+      </li>
+      <li>
+        Expand whole file<br>
+         All macros in the source file are expanded in the Macro Expansion window.
+      </li>
+      <li>
+        Up and down arrows<br>
+         These buttons are for quick navigation to go to the next macro or go to the previous
+        macro.
+      </li>
+    </ul>
+    <hr>
+    <p>
+       <a href=
+      "nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;©&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a>
+    </p>
+    <table border="0" cellpadding="20">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

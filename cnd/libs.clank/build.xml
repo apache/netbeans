@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project name="cnd/libs.clank" default="netbeans" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <property name="clank.dest.zip" value="${basedir}/external/clank_0.3.9.zip"/>
+
+    <target name="-overwrite-clank-zip" if="${copy.clank.jars}">
+
+      <property name="clank.suite.dir" value="${sputnik}/clank.suite"/>
+      <property name="clank.suite.jars.dir" value="${clank.suite.dir}/build/cluster/modules"/>
+
+      <condition property="SPUTNIK.found">
+          <isset property="sputnik"/>
+      </condition>
+      <fail unless="SPUTNIK.found" message="${sputnik} property is not set."/>      
+      
+      <condition property="clank.suite.built">
+        <available file="${clank.suite.jars.dir}" type="dir"/>
+      </condition>      
+      <fail unless="clank.suite.built" message="${clank.suite.jars.dir} doesn't exist. ${clank.suite.dir} was not built?"/>      
+
+      <fileset dir="${clank.suite.jars.dir}" id="clank.jars.fileset" includes="*.jar"/>
+      <pathconvert refid="clank.jars.fileset" property="clank.suite.contains-files" setonempty="false"/>  
+      <fail unless="clank.suite.contains-files" message="${clank.suite.jars.dir} doesn't contain jar files. ${clank.suite.dir} was not built?"/>        
+      <echo level="warning" message="################################################################################"></echo>
+      <echo message="Zipping .jar files from ${clank.suite.jars.dir}/*.jar into ${clank.dest.zip}" />
+      <echo message="${clank.dest.zip} is overwritten" />
+      <echo level="warning" message="################################################################################"></echo>
+      <zip basedir="${clank.suite.jars.dir}" destfile="${clank.dest.zip}">
+          <fileset dir="${clank.suite.jars.dir}" includes="*.jar"/>
+      </zip>
+      <echo message="need to unzip replaced clank; copy.clank.jars=${copy.clank.jars}" />
+      <unzip src="${clank.dest.zip}" dest="${basedir}/external" overwrite="true">
+      </unzip>
+    </target>
+    
+    <!-- We distribute zip, but use unpacked jars, replace projectized.-release.files to insert unzip -->
+    
+    <!-- remove when https://netbeans.org/bugzilla/show_bug.cgi?id=253923  is implemented-->
+    <!-- See: http://wiki.netbeans.org/wiki/view/DevFaqExternalLibrariesUpdated -->
+    <target name="-clank-release.files" depends="projectized-common.-release.files,projectized.-define-downloadbinaries-task">
+        <echo message="overridden -release.files by libs.clank with copy.clank.jars=${copy.clank.jars}" /> 
+        <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+            <manifest dir=".">
+                <include name="external/binaries-list"/>
+            </manifest>
+        </downloadbinaries>
+        <echo message="need to unzip clank.zip to get jar files (copy.clank.jars=${copy.clank.jars})" />
+        <unzip src="${clank.dest.zip}" dest="${basedir}/external" overwrite="true"/>
+        <taskdef name="releasefilesextra" classname="org.netbeans.nbbuild.extlibs.ReleaseFilesExtra" classpath="${nbantext.jar}"/>
+        <releasefilesextra property="release.files.extra"/>        
+    </target>
+    
+    <target name="-release.files" depends="-clank-release.files,-overwrite-clank-zip">
+    </target>
+
+<!-- it can be uncommented instead of -release.files above when https://netbeans.org/bugzilla/show_bug.cgi?id=253923  is implemented    
+    <target name="-post.release.files.download" depends="-overwrite-clank-zip,projectized.-post.release.files.download">
+        <echo message="need to unzip clank.zip to get jar files (copy.clank.jars=${copy.clank.jars})" />
+        <unzip src="${clank.dest.zip}" dest="${basedir}/external" overwrite="true"/>
+    </target>-->
+        
+    <target name="netbeans" depends="projectized-common.netbeans,-post-build-clank"/>
+    
+    <target name="-post-build-clank" if="${copy.clank.jars}">
+        <!-- The only purpose of this target is to print warning below in the very end, rather than in the middle -->
+        <echo level="warning" message="################################################################################"></echo>
+        <echo level="warning" message="# Attention: clank was not downloaded, but copied from here:"></echo>
+        <echo level="warning" message="# ${clank.suite.jars.dir}"></echo>
+        <echo level="warning" message="################################################################################"></echo>
+    </target>
+</project>

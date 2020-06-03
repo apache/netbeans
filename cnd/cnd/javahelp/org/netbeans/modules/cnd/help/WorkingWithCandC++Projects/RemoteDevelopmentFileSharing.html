@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="StyleSheet" href="../ide.css" type="text/css">
+    <meta name="generator" content="Helen">
+    <title>Sharing Files With Remote Build Hosts</title>
+  </head>
+  <body>
+    <h2>
+       Sharing Files With Remote Build Hosts
+    </h2>
+    <p>
+       <a href="#seealso"><small>See Also</small></a><small>&nbsp;</small>
+    </p>
+    <p>
+       When you use a remote development host, the local and remote hosts both need to access the
+      project files. This access can be accomplished through file sharing or securely copying the
+      files. Before the IDE can use file sharing between the local and remote systems, the shared
+      file system or folder must be set up and accessible to both systems. Remote files are
+      accessed through SFTP or another file sharing mechanism available in the operating system the
+      host is running, for example, Network File System (NFS), Samba, or WebDAV.
+    </p>
+    <p>
+       If file sharing is not possible, use Automatic Copying&nbsp;to copy the files to the server
+      using Secure Shell (SSH) protocol. The files will be copied to a <tt>.netbeans/remote</tt>
+      subdirectory located in your home user directory on the remote host.
+    </p>
+    <p>
+       <b>To set up the remote host to use existing network file sharing:</b>
+    </p>
+    <ol>
+      <li>
+        In the Services window, expand the C/C++ Build Hosts node.
+      </li>
+      <li>
+        Right-click the server you want to change and choose Properties.
+      </li>
+      <li>
+        In the Host Properties dialog box, select System-level File Sharing from the Access Project
+        Files Via&nbsp;list
+      </li>
+      <li>
+        Click OK.
+      </li>
+    </ol>
+    <p>
+       When you use the System-level File Sharing option for making project files available for
+      local and remote build hosts, you might need to provide path mapping information to help the
+      IDE use the shared file system.
+    </p>
+    <p>
+       <b>To set the path mapping for a remote host that uses file sharing:</b>
+    </p>
+    <ol>
+      <li>
+        Select Tools &gt; Options, and click the C/C++ category.
+      </li>
+      <li>
+        Select the Build Tools tab.
+      </li>
+      <li>
+        Click Edit next to the Build Host list.
+      </li>
+      <li>
+        In the Build Hosts Manager dialog box, select the remote host that you have set up to use
+        File Sharing.
+      </li>
+      <li>
+        Click Path Mapper...
+      </li>
+      <li>
+        Double-click the text entry line under Local Path, and type the full path to the shared
+        directory as seen from the local machine. For example, if you are storing your project in a
+        <tt>/export/home/user/NetBeansProjects</tt> directory on <tt>myserver</tt>, you might
+        access that directory as <tt>/Volumes/NET/myserver/export/home/user/NetBeansProjects</tt>
+        on a Mac client. You can click the button next to the path field to use a file browser to
+        navigate to the directory if you prefer.
+      </li>
+      <li>
+        Double-click the text entry line under Remote Path and type the full path to the shared
+        directory as seen from the remote host. If you use
+        <tt>/export/home/user/NetBeansProjects</tt> from the remote server, enter that path as the
+        Remote Path.
+      </li>
+      <li>
+        Click OK in the Edit Path's Map dialog, and click OK in the Build Host Manager dialog.
+      </li>
+    </ol>
+    <table>
+      <tr>
+        <th colspan="2" align="left">
+          <a name="seealso">See also</a> 
+        </th>
+      </tr>
+      <tr>
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="RemoteDevelopment.html">Overview of C/C++ Remote Development</a><br>
+           <a href="RemoteDevelopmentProjects.html">Setting Up C/C++/Fortran Projects for Remote
+          Development</a><br>
+           <a href="RemoteDevelopmentToolbar.html">Working on Remote Hosts Using the
+          Toolbar</a><br>
+           <a href="ConfiguringBuildTools.html">Configuring Build Tools</a><br>
+           <a href="ProjectPropsBuild.html">C/C++ Project Properties Dialog Box: Build</a><br>
+           
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a>
+    </p>
+    <table border="0" cellpadding="20">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

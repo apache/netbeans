@@ -1,0 +1,16 @@
+org.netbeans.modules.debugger.ui.models.ColumnModels.createThreadStateColumn()-hidden
+org.netbeans.modules.debugger.ui.models.ColumnModels.createThreadSuspendedColumn()-hidden
+org.netbeans.modules.cnd.debugger.common2.debugger.ThreadColumnModels$State
+org.netbeans.modules.cnd.debugger.common2.debugger.ThreadColumnModels$Suspended
+org.netbeans.modules.cnd.debugger.common2.debugger.ThreadColumnModels$Priority
+org.netbeans.modules.cnd.debugger.common2.debugger.ThreadColumnModels$Lwp
+org.netbeans.modules.cnd.debugger.common2.debugger.ThreadColumnModels$StartupFlags
+org.netbeans.modules.cnd.debugger.common2.debugger.ThreadColumnModels$ExecutingFunction
+org.netbeans.modules.cnd.debugger.common2.debugger.ThreadColumnModels$StartFunction
+org.netbeans.modules.cnd.debugger.common2.debugger.ThreadColumnModels$Address
+# GDB org.netbeans.modules.cnd.debugger.common2.debugger.ThreadColumnModels$File
+# GDB org.netbeans.modules.cnd.debugger.common2.debugger.ThreadColumnModels$Line
+org.netbeans.modules.cnd.debugger.common2.debugger.ThreadColumnModels$Size
+#org.netbeans.modules.debugger.ui.models.ColumnModels.createThreadStateColumn()
+#org.netbeans.modules.debugger.ui.models.ColumnModels.createThreadSuspendedColumn()
+

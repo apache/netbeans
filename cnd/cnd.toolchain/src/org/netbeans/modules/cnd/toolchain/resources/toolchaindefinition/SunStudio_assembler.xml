@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<toolchaindefinition xmlns="http://www.netbeans.org/ns/cnd-toolchain-definition/1">
+    <assembler>
+        <compiler name="as"/>
+        <alternative_path>
+            <path directory="$PATH"/>
+        </alternative_path>
+        <version flags="-V"/>
+        <development_mode>
+            <fast_build flags=""/>
+            <debug flags="" default="true"/>
+            <performance_debug flags=""/>
+            <test_coverage flags=""/>
+            <diagnosable_release flags=""/>
+            <release flags=""/>
+            <performance_release flags=""/>
+        </development_mode>
+        <warning_level>
+            <no_warnings flags=""/>
+            <default flags="" default="true"/>
+            <more_warnings flags=""/>
+            <warning2error flags=""/>
+        </warning_level>
+        <architecture>
+            <default flags="" default="true"/>
+            <bits_32 flags=""/>
+            <bits_64 flags="-xarch=generic64"/>
+        </architecture>
+        <output_object_file flags="-o " />
+    </assembler>
+</toolchaindefinition>

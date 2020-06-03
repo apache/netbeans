@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <link rel="StyleSheet" href="../ide.css" type="text/css">
+    <meta content="Helen" name="generator">
+    <title>Using Code Completion</title>
+  </head>
+  <body>
+    <h2>
+       Using Code Completion
+    </h2>
+    <p>
+       <a href="#seealso"><small>See Also</small></a>
+    </p>
+    <p>
+       The IDE has a dynamic C and C++ code completion feature that enables you to type a few
+      characters and then see a list of possible classes, methods, variables, and so on that can be
+      used to complete the expression. You can disable this automatic feature so that code
+      completion suggestions only appear when you press Ctrl-Space.
+    </p>
+    <p>
+       <b>To complete a C or C++ expression:</b>
+    </p>
+    <ol>
+      <li>
+        In the Editor window, type a few characters of an expression and press Ctrl-Space or Ctrl-\
+        to open the code completion box.
+        <p>
+           The code completion box displays a scrolling list of possible classes, methods,
+          variables, functions, and so on that can complete your expression.
+        </p>
+        <p>
+           If the IDE can determine only one possible completion for the expression, the expression
+          is completed automatically. If the IDE cannot determine how to complete the expression,
+          the code completion box displays "No suggestions."
+        </p>
+      </li>
+      <li>
+        Use the most convenient combination of the following options to select an item from the
+        code completion box:
+        <ul>
+          <li>
+            Continue typing to narrow down the selection of items in the list.
+          </li>
+          <li>
+            Use the mouse or navigation keys to scroll through the list and select an item. If the
+            IDE can locate documentation for the items in the list, the documentation is displayed
+            in another popup window.
+          </li>
+          <li>
+            Press Enter or Return to enter the selection in the code completion box into your file.
+          </li>
+          <li>
+            Press Escape to close the code completion box without entering the selection.
+          </li>
+        </ul>
+      </li>
+    </ol>
+    <p>
+       <b>Notes:</b>
+    </p>
+    <ul>
+      <li>
+        If you press Enter for a method with parameters, the parentheses are added and your
+        insertion point is placed inside. A tooltip shows you the types that you have to fill in
+        for the parameters. When you select a method from the code completion list, and the method
+        is inserted in the file, a tooltip displays the method's parameters.
+      </li>
+      <li>
+        You can display suggestions for parameters by putting the cursor after the "(" or "," in a
+        method invocation and pressing Alt-P.
+      </li>
+    </ul>
+    <p>
+       <b>To disable the automatic display of the completion box:</b>
+    </p>
+    <ol>
+      <li>
+        Choose Tools &gt; Options and click Editor.
+      </li>
+      <li>
+        In the Code Completion&nbsp;tab, choose All Languages, and deselect the Auto Popup
+        Completion Window checkbox.
+      </li>
+    </ol>
+    <p>
+       <b>To change automatic code completion options:</b>
+    </p>
+    <ol>
+      <li>
+        Choose Tools &gt;&nbsp;Options and click Editor.
+      </li>
+      <li>
+        In the Code Completion tab, choose C/C++&nbsp;Source.
+      </li>
+    </ol>
+    <table summary="related topics">
+      <tr valign="top">
+        <th align="left" colspan="2">
+          <a name="seealso">See Also</a> 
+        </th>
+      </tr>
+      <tr valign="top">
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="../WorkingWithCandC++Projects/CodeCompletionOptions.html">C/C++ Code Completion
+          Options</a> 
+        </td>
+      </tr>
+      <tr>
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="UsingAbbreviations.html">Using Code Templates</a> 
+        </td>
+      </tr>
+    </table>
+        <p>
+       <a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a>
+    </p>
+    <table border="0" cellpadding="20">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+    <p>
+       &nbsp;
+    </p>
+  </body>
+</html>

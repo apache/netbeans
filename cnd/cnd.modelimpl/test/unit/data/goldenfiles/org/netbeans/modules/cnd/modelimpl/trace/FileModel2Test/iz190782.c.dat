@@ -1,0 +1,64 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz190782.c
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+ENUM STATE [2:1/1-7:2/48] SCOPE: $Global$ 
+    START
+    MEDIUM
+    LAST
+FUNCTION DEFINITION main  [9:1/51-16:2/174] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main(int,char**)
+    UNIQUE NAME f:main(int,char**)
+    DECLARATION: main  [9:1/51-16:2/174]
+    PARAMETERS:
+        argc [9:10/60-9:18/68]  TYPE: int TEXT=int  [9:10/60-9:13/63]  INIT: null  SCOPE: main 
+        argv [9:20/70-9:30/80]  TYPE: **char TEXT=char**  [9:20/70-9:26/76]  INIT: null  SCOPE: main 
+    RETURNS int TEXT=int  [9:1/51-9:4/54]
+    STATEMENT COMPOUND  [9:32/82-16:2/174] SCOPE: main 
+        STATEMENT FOR  [11:5/89-13:6/157] SCOPE: Stmt  [9:32/82-16:2/174]
+            INIT:
+                STATEMENT DECLARATION  [11:10/94-11:31/115] SCOPE: Stmt  [11:5/89-13:6/157]
+                    VARIABLE i [11:10/94-11:31/115]  TYPE: STATE TEXT=STATE  [11:15/99-11:20/104]  INIT: text='START'  SCOPE: Stmt  [11:5/89-13:6/157]
+            ITERATION: text='i++'
+            CONDITION: EXPRESSION text='i < LAST'
+            BODY:
+                STATEMENT COMPOUND  [11:47/131-13:6/157] SCOPE: Stmt  [11:5/89-13:6/157]
+                    STATEMENT DECLARATION  [12:9/141-12:19/151] SCOPE: Stmt  [11:47/131-13:6/157]
+                        VARIABLE j [12:9/141-12:19/151]  TYPE: int TEXT=int  [12:9/141-12:12/144]  INIT: text='i'  SCOPE: Stmt  [11:47/131-13:6/157]
+        STATEMENT RETURN  [15:5/163-15:14/172] SCOPE: Stmt  [9:32/82-16:2/174] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+ENUM STATE [2:1/1-7:2/48] SCOPE: $Global$ 
+    START
+    MEDIUM
+    LAST
+FUNCTION DEFINITION main  [9:1/51-16:2/174] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main(int,char**)
+    UNIQUE NAME f:main(int,char**)
+    DECLARATION: main  [9:1/51-16:2/174]
+    PARAMETERS:
+        argc [9:10/60-9:18/68]  TYPE: int TEXT=int  [9:10/60-9:13/63]  INIT: null  SCOPE: main 
+        argv [9:20/70-9:30/80]  TYPE: **char TEXT=char**  [9:20/70-9:26/76]  INIT: null  SCOPE: main 
+    RETURNS int TEXT=int  [9:1/51-9:4/54]
+    STATEMENT COMPOUND  [9:32/82-16:2/174] SCOPE: main 
+        STATEMENT FOR  [11:5/89-13:6/157] SCOPE: Stmt  [9:32/82-16:2/174]
+            INIT:
+                STATEMENT DECLARATION  [11:10/94-11:31/115] SCOPE: Stmt  [11:5/89-13:6/157]
+                    VARIABLE i [11:10/94-11:31/115]  TYPE: STATE TEXT=STATE  [11:15/99-11:20/104]  INIT: text='START'  SCOPE: Stmt  [11:5/89-13:6/157]
+            ITERATION: text='i++'
+            CONDITION: EXPRESSION text='i < LAST'
+            BODY:
+                STATEMENT COMPOUND  [11:47/131-13:6/157] SCOPE: Stmt  [11:5/89-13:6/157]
+                    STATEMENT DECLARATION  [12:9/141-12:19/151] SCOPE: Stmt  [11:47/131-13:6/157]
+                        VARIABLE j [12:9/141-12:19/151]  TYPE: int TEXT=int  [12:9/141-12:12/144]  INIT: text='i'  SCOPE: Stmt  [11:47/131-13:6/157]
+        STATEMENT RETURN  [15:5/163-15:14/172] SCOPE: Stmt  [9:32/82-16:2/174] text: 'return 0;'
+

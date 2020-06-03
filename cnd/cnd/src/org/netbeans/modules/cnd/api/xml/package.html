@@ -1,0 +1,383 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<html>
+<body>
+Overview of XML package.
+<pre>
+
+<h2>Terms</h2>
+codec	Abbreviation for Coder/Decoder
+terminal node	
+	A XML node of the form
+		&lt;tag&gt;content&lt;/tag&gt;
+
+<h2>Goals</h2>
+R1 XML writing utility.
+   SAX parses but there's no utiltity to help with indentation, attributes,
+   escaping and XML document headers and footers.
+
+R2 codec to be separate from actual object.
+   Alternative schemes involve serializable objects to implement
+   a particular codec interface.
+   Separate codecs are good for these reasons:
+   - Allows us to write codecs for classes which we can't modify.
+   - Decoding typically benefits from class extension. But extending a decoder
+     class might conflict with the object classes existing inheritance.
+     Sure, one can use interfaces and then create "Support" classes to be
+     delagated to, but that becomes increasingly inconvenient.
+
+R3 codecs to not be associated with documents.
+   We might have an XML document which contains &lt;breakpoints&gt; at the top level.
+   Some other day we might want to embed the &lt;breakpoints&gt; as part of
+   &lt;profile&gt; in another document. 
+   The &lt;breakpoints&gt; codec should not have to know about whether it's in
+   a document or where it is embedded.
+
+R4 Single codec class
+   Not have to write a separate class for encoding and another for decoding.
+   This will allow the encapsulation of all XML-specific codecing, primarily
+   tag and attribute names, info in one class.
+   
+R* tags to driver object construction [ tentative ]
+
+<h2>Motivational history</h2>
+- While developing SunStudio we found that we often migrated where colelctions
+  of data are stored (both in mmeory and under persistence) and adapting to
+  distinct XML persistence infrastructures was a PIB.
+  From this we get R3.
+
+- The cnd makeproject introduced the notion of dispatching the parsing and
+  writing of sub-systems to ... the sub-systems via the so-called 
+  ConfigurationAuxObject interface. But this mechanism was hard-coded in 
+  ConfigurationDescriptorHelper and no-one else could benefit from it.
+  That implementation was a first-approximation solution to R3 and
+  in this package we generalize it.
+
+- A large amount of copy-pasted code, especially in the area of writing out
+  XML, would drop various features:
+  - Proper XML encoding attribute (sometimes it needs to be other than "UTF-8".
+  - Inconsistent quoting. Attribute value quoting, via XMLUtil.toAttributeValue
+    was used only in some places. Content coding, via XMLUtil.toElementContent
+    wasn't used _anywhere_.
+  - Lot of code relied on converting to XML strings before passing them on to
+    other places. Having Codecs just write to a stream is more efficient.
+
+</pre>
+<h2>Example</h2>
+In the following example Methods with empty definitions are elided for
+brevity although in actual code they need to be implemented to 
+satisfy interfaces.
+
+Consider data which would be stored as follows:
+<pre>
+	&lt;family&gt;
+		&lt;father&gt;
+			&lt;person firstName="X"
+				lastName="L"
+				gender="M"/&gt;
+		&lt;/father&gt;
+		&lt;mother&gt;
+			&lt;person firstName="Y"
+				lastName="L"
+				gender="F"/&gt;
+		&lt;/mother&gt;
+		&lt;children&gt;
+			&lt;person firstName="Z"
+				lastName="L"
+				gender="M"/&gt;
+		&lt;/children&gt;
+	&lt;/family&gt;
+</pre>
+based on
+<pre>
+	class Family {
+		Person mother;
+		Person father;
+		Vector&lt;Person&gt; children;
+	}
+</pre>
+Let's see how one would write this out.
+<pre>
+
+	FamilyXMLDocWriter writer = new FamilyXMLDocWriter(family);
+	writer.setIndentChars(4);	// as opposed to default of 2
+	writer.write(new File("family.html");
+
+
+	FamilyXMLDocWriter extends XMLDocWriter {
+
+		FamilyXMLCodec codec;
+
+		FamilyXMLDocWriter(Family family) {
+			codec = new FamilyXMLCodec(family);
+		}
+
+		public void write(File file) {
+			OutputStream os = file.<convert to OutputStream>();
+			write(os);
+		}
+
+
+		// interface XMLEncoder
+		public void encode(XMLEncoderStream xes) {
+			codec.encode(xes);
+		}
+	}
+
+	FamilyXMLCodec extends XMLDecoder implements XMLEncoder {
+
+		private Family family		// being written out
+		private PersonXMLCodec personCodec;
+		private ChildrenXMLCodec childrenCodec;
+
+		FamilyXMLCodec(Family family) {
+			this.family = family;
+			personCodec = new PersonXMLCodec();
+			childrenCodec = new ChildrenXMLCodec(family.children);
+		}
+
+		// interface XMLDecoder
+		protected String tag() {
+			return "family"
+		}
+
+		// interface XMLEncoder
+		public void encode(XMLEncoderStream xes) {
+			xes.elementOpen(tag());
+				xes.elementOpen("father");
+					personCodec.setPerson(father);
+					personCodec.encode(xes)
+				xes.elementClose("father");
+
+				xes.elementOpen("mother");
+					personCodec.setPerson(mother);
+					personCodec.encode(xes)
+				xes.elementClose("mother");
+
+				childrenCodec.encode(xes);
+			xes.elementClose(tag());
+		}
+	}
+
+	ChildrenXMLCodec extends XMLDecoder implements XMLEncoder {
+
+		private Vector&lt;PErson&gt; children;
+		private PersonXMLCodec personCodec;
+
+		ChildrenXMLCodec(Vector&lt;Person&gt; children) {
+			this.children = children;
+			personCodec = new PersonXMLCodec();
+		}
+
+		// interface XMLDecoder
+		protected String tag() {
+			return "children"
+		}
+
+		// interface XMLEncoder
+		public void encode(XMLEncoderStream xes) {
+			xes.elementOpen(tag());
+			for (Person p in children) {
+				personCodec.setPerson(p);
+				personCodec.encode(xes);
+			}
+			xes.elementClose(tag());
+		}
+	}
+
+	PersonXMLCodec extends XMLDecoder implements XMLEncoder {
+
+		private Person person;
+		private Vector&lt;Person&gt; list;
+
+		PersonXMLCodec(Person person {
+			this.person = person;
+		}
+
+		PersonXMLCodec(Vector&lt;Person&gt; list) {
+			this.list = list;
+		}
+
+		public void setPerson(Person person) {
+			this.person = person;
+		}
+
+		// interface XMLDecoder
+		protected String tag() {
+			return "person"
+		}
+
+		// interface XMLEncoder
+		public void encode(XMLEncoderStream xes) {
+			AttrValuePair attrs[] = new AttrValuePair[] {
+				new AttrValuePair("firstName",
+						  person.firstName);
+				new AttrValuePair("lastName",
+						  person.lastName);
+				new AttrValuePair("gender",
+						  person.gender);
+			}
+			xes.element(tag(), attrs);
+		}
+	}
+</pre>
+
+Now let's see how one would read it in.
+<p>
+These are the same classes as above but with the encoding related code
+taken out and only decoding code appearing.
+
+<pre>
+	FamilyXMLDocReader writer = new FamilyXMLDocReader(family);
+	writer.write(new File("family.html");
+
+
+	FamilyXMLDocReader extends XMLDocReader {
+
+		FamilyXMLCodec codec;
+
+		FamilyXMLDocReader(Family family) {
+			codec = new FamilyXMLCodec(family);
+			registerXMLDecoder(codec);
+		}
+
+		public void write(File file) {
+			InputStream is = file.<convert to InputStream>();
+			String what = "family"
+			read(is, what);
+		}
+	}
+
+	FamilyXMLCodec extends XMLDecoder implements XMLEncoder {
+
+		private Family family
+		private PersonXMLCodec personCodec;
+		private ChildrenXMLCodec childrenCodec;
+
+		FamilyXMLCodec(Family family) {
+			this.family = family;
+
+			personCodec = new PersonXMLCodec();
+			registerXMLEncoder(personCodec);
+
+			childrenCodec = new ChildrenXMLCodec(family.children);
+			registerXMLEncoder(childrenCodec);
+		}
+
+		// interface XMLDecoder
+		protected String tag() {
+			return "family"
+		}
+
+		// interface XMLDecoder
+		protected void startElement(String name, Attributes atts) {
+
+			// personCode.start() will automatically be called when
+			// <person> is seen due to the above registration.
+			// Here we just ensure that we decode into the 
+			// right Person instance
+
+			if (name.equals("mother")) {
+				family.mother = new Person();
+				personCodec.setPerson(family.mother);
+			}
+			else if (name.equals("father")) {
+				family.father = new Person();
+				personCodec.setPerson(family.father);
+			}
+
+			// children handled by registration
+		}
+	}
+
+	/**
+	 * For decosing children we cheat a bit.
+	 * We instantiate and register a version of PersonXMLCodec which
+	 * takes a container (Vector<children>) to stuff new Persons into.
+	 */
+	ChildrenXMLCodec extends XMLDecoder implements XMLEncoder {
+
+		private Vector&lt;PErson&gt; children;
+		private PersonXMLCodec personCodec;
+
+		ChildrenXMLCodec(Vector&lt;Person&gt; children) {
+			this.children = children;
+
+			personCodec = new PersonXMLCodec(children);
+			registerXMLEncoder(personCodec);
+		}
+
+		// interface XMLDecoder
+		protected String tag() {
+			return "children"
+		}
+	}
+
+	PersonXMLCodec extends XMLDecoder implements XMLEncoder {
+
+		private Person person;
+		private Vector&lt;Person&gt; list;
+
+		PersonXMLCodec(Person person {
+			this.person = person;
+		}
+
+		/**
+		 * Form used when we delay setting the person to be decoded
+		 * into til setPerson().
+		 */
+		PersonXMLCodec(Person person {
+			this.person = null;
+		}
+
+		/**
+		 * Form used when we create Persons, decode them and add them
+		 * to 'list'
+		 */
+		PersonXMLCodec(Vector&lt;Person&gt; list) {
+			this.list = list;
+		}
+
+		public void setPerson(Person person) {
+			this.person = person;
+		}
+
+		// interface XMLDecoder
+		protected String tag() {
+			return "person"
+		}
+
+		// interface XMLDecoder
+		protected void start(Attributes atts) {
+			Person newPerson = person;
+			if (!newPerson)
+				newPerson = new Person();
+			person.firstName = atts.getValue("firstName");
+			person.familyName = atts.getValue("familyName");
+			person.gender = atts.getValue("gender");
+			if (list != null)
+				list.add(newPerson);
+		}
+	}
+</pre>
+</body>
+</html>

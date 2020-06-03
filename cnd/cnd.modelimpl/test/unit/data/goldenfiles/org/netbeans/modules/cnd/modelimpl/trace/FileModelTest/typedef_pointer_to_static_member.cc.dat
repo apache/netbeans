@@ -1,0 +1,46 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE typedef_pointer_to_static_member.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN N [2:1/1-4:2/26] SCOPE: typedef_pointer_to_static_member.cc
+    VARIABLE i [3:5/18-3:11/24]  TYPE: int TEXT=int  [3:5/18-3:8/21]  INIT: null  SCOPE: N 
+TYPEDEF P  [6:1/29-6:21/49] TYPE: int TEXT=int  [6:9/37-6:18/46] SCOPE: $Global$ 
+FUNCTION DEFINITION main  [8:1/51-13:2/108] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [8:1/51-13:2/108]
+    PARAMETERS:
+    RETURNS int TEXT=int  [8:1/51-8:4/54]
+    STATEMENT COMPOUND  [8:11/61-13:2/108] SCOPE: main 
+        STATEMENT DECLARATION  [9:5/67-9:17/79] SCOPE: Stmt  [8:11/61-13:2/108]
+            VARIABLE p [9:5/67-9:17/79]  TYPE: P TEXT=P  [9:5/67-9:6/68]  INIT: text='&N::i'  SCOPE: Stmt  [8:11/61-13:2/108]
+        STATEMENT EXPRESSION  [10:5/84-10:11/90] SCOPE: Stmt  [8:11/61-13:2/108] text: '(*p)++'
+        STATEMENT RETURN  [12:5/97-12:14/106] SCOPE: Stmt  [8:11/61-13:2/108] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+TYPEDEF P  [6:1/29-6:21/49] TYPE: int TEXT=int  [6:9/37-6:18/46] SCOPE: $Global$ 
+FUNCTION DEFINITION main  [8:1/51-13:2/108] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [8:1/51-13:2/108]
+    PARAMETERS:
+    RETURNS int TEXT=int  [8:1/51-8:4/54]
+    STATEMENT COMPOUND  [8:11/61-13:2/108] SCOPE: main 
+        STATEMENT DECLARATION  [9:5/67-9:17/79] SCOPE: Stmt  [8:11/61-13:2/108]
+            VARIABLE p [9:5/67-9:17/79]  TYPE: P TEXT=P  [9:5/67-9:6/68]  INIT: text='&N::i'  SCOPE: Stmt  [8:11/61-13:2/108]
+        STATEMENT EXPRESSION  [10:5/84-10:11/90] SCOPE: Stmt  [8:11/61-13:2/108] text: '(*p)++'
+        STATEMENT RETURN  [12:5/97-12:14/106] SCOPE: Stmt  [8:11/61-13:2/108] text: 'return 0;'
+NAMESPACE DEFINITIONS for N (N) 
+    typedef_pointer_to_static_member.cc  [2:1/1-4:2/26]
+NAMESPACE N (N) 
+    VARIABLE i [3:5/18-3:11/24]  TYPE: int TEXT=int  [3:5/18-3:8/21]  INIT: null  SCOPE: N 
+

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<debugtargets version="2">
+  <debugtarget id="1 /bin/cat  [localhost] [dbx]">
+    <engine>dbx</engine>
+    <settings>
+      <exec>/bin/cat</exec>
+      <args></args>
+      <host>localhost</host>
+      <rundir>.</rundir>
+      <environment>
+      </environment>
+    </settings>
+    <dbxdebugger version="1">
+      <pathmaps>
+      </pathmaps>
+      <interceptlist>
+        <interceptoptions all="false" unhandled="true" unexpected="true"/>
+      </interceptlist>
+      <signals>
+      </signals>
+      <options>
+        <DebugOptions>
+        </DebugOptions>
+      </options>
+      <buildfirst buildfirst_overriden="false" buildfirst_old="false"/>
+    </dbxdebugger>
+    <dbx_gdbdebugger version="1">
+      <gdb_pathmaps>
+      </gdb_pathmaps>
+      <gdb_interceptlist>
+        <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+      </gdb_interceptlist>
+      <gdb_options>
+        <DebugOptions>
+        </DebugOptions>
+      </gdb_options>
+      <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+    </dbx_gdbdebugger>
+    <dbxrtc version="1">
+      <options>
+        <RtcOptions>
+          <option name="rtc_error_log_file_name" value="/dev/null"/>
+        </RtcOptions>
+      </options>
+      <loadobjs>
+        <lo name="/bin/cat" skip="false"/>
+        <lo name="/usr/lib/ld.so.1" skip="false"/>
+      </loadobjs>
+    </dbxrtc>
+  </debugtarget>
+  <debugtarget id="2 /bin/ls  [localhost] [dbx]">
+    <engine>dbx</engine>
+    <settings>
+      <exec>/bin/ls</exec>
+      <args></args>
+      <host>localhost</host>
+      <rundir>.</rundir>
+      <environment>
+      </environment>
+    </settings>
+    <dbxdebugger version="1">
+      <pathmaps>
+      </pathmaps>
+      <interceptlist>
+        <interceptoptions all="false" unhandled="true" unexpected="true"/>
+      </interceptlist>
+      <signals>
+      </signals>
+      <options>
+        <DebugOptions>
+          <option name="output_base" value="10"/>
+        </DebugOptions>
+      </options>
+      <buildfirst buildfirst_overriden="false" buildfirst_old="false"/>
+    </dbxdebugger>
+    <dbx_gdbdebugger version="1">
+      <gdb_pathmaps>
+      </gdb_pathmaps>
+      <gdb_interceptlist>
+        <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+      </gdb_interceptlist>
+      <gdb_options>
+        <DebugOptions>
+        </DebugOptions>
+      </gdb_options>
+      <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+    </dbx_gdbdebugger>
+    <dbxrtc version="1">
+      <options>
+        <RtcOptions>
+          <option name="rtc_error_log_file_name" value="/dev/null"/>
+        </RtcOptions>
+      </options>
+      <loadobjs>
+        <lo name="/bin/ls" skip="false"/>
+        <lo name="/usr/lib/ld.so.1" skip="false"/>
+        <lo name="/lib/libsec.so.1" skip="false"/>
+        <lo name="/lib/libavl.so.1" skip="false"/>
+      </loadobjs>
+    </dbxrtc>
+  </debugtarget>
+</debugtargets>

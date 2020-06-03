@@ -1,0 +1,73 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 1):
+<U>#define '["$",<ID>,line=1,col=9],offset=8,file=null[["type",<ID>,line=1,col=11],offset=10,file=null, ["x",<ID>,line=1,col=17],offset=16,file=null]'='["type",<ID>,line=1,col=20],offset=19,file=null ["*",<STAR>,line=1,col=24],offset=23,file=null ["x",<ID>,line=1,col=26],offset=25,file=null ["=",<ASSIGNEQUAL>,line=1,col=28],offset=27,file=null ["new",<ID>,line=1,col=30],offset=29,file=null ["type",<ID>,line=1,col=34],offset=33,file=null'
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE expand_dollar.cc
+Includes:
+    <no includes>
+Macros:
+#define '$[type, x]' [1:1/0-1:38/37]
+CLASS widget (widget ) [3:1/39-7:2/94] lcurly=52 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION widget  [5:3/64-5:14/75] ConstructorDDImpl SCOPE: widget 
+            SIGNATURE widget()
+            UNIQUE NAME f:widget::widget()
+            DECLARATION: widget  [5:3/64-5:14/75]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [5:12/73-5:14/75] SCOPE: widget 
+        FUNCTION DEFINITION show  [6:3/78-6:17/92] MethodDDImpl SCOPE: widget 
+            SIGNATURE show()
+            UNIQUE NAME f:widget::show()
+            DECLARATION: show  [6:3/78-6:17/92]
+            PARAMETERS:
+            RETURNS void TEXT=void  [6:3/78-6:7/82]
+            STATEMENT COMPOUND  [6:15/90-6:17/92] SCOPE: show 
+FUNCTION DEFINITION main  [9:1/97-13:2/158] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [9:1/97-13:2/158]
+    PARAMETERS:
+    RETURNS int TEXT=int  [9:1/97-9:4/100]
+    STATEMENT COMPOUND  [9:12/108-13:2/158] SCOPE: main 
+        STATEMENT DECLARATION  [10:5/114-10:18/127] SCOPE: Stmt  [9:12/108-13:2/158]
+            VARIABLE x [10:5/114-10:18/127]  TYPE: *widget TEXT=widget*  [10:5/114-10:17/126]  INIT: text='$(widget, x)'  SCOPE: Stmt  [9:12/108-13:2/158]
+        STATEMENT EXPRESSION  [11:5/132-11:14/141] SCOPE: Stmt  [9:12/108-13:2/158] text: 'x->show()'
+        STATEMENT RETURN  [12:5/147-12:14/156] SCOPE: Stmt  [9:12/108-13:2/158] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+CLASS widget (widget ) [3:1/39-7:2/94] lcurly=52 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION widget  [5:3/64-5:14/75] ConstructorDDImpl SCOPE: widget 
+            SIGNATURE widget()
+            UNIQUE NAME f:widget::widget()
+            DECLARATION: widget  [5:3/64-5:14/75]
+            PARAMETERS:
+            RETURNS <*no_classifier*> TEXT=  [null-null]
+            STATEMENT COMPOUND  [5:12/73-5:14/75] SCOPE: widget 
+        FUNCTION DEFINITION show  [6:3/78-6:17/92] MethodDDImpl SCOPE: widget 
+            SIGNATURE show()
+            UNIQUE NAME f:widget::show()
+            DECLARATION: show  [6:3/78-6:17/92]
+            PARAMETERS:
+            RETURNS void TEXT=void  [6:3/78-6:7/82]
+            STATEMENT COMPOUND  [6:15/90-6:17/92] SCOPE: show 
+FUNCTION DEFINITION main  [9:1/97-13:2/158] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [9:1/97-13:2/158]
+    PARAMETERS:
+    RETURNS int TEXT=int  [9:1/97-9:4/100]
+    STATEMENT COMPOUND  [9:12/108-13:2/158] SCOPE: main 
+        STATEMENT DECLARATION  [10:5/114-10:18/127] SCOPE: Stmt  [9:12/108-13:2/158]
+            VARIABLE x [10:5/114-10:18/127]  TYPE: *widget TEXT=widget*  [10:5/114-10:17/126]  INIT: text='$(widget, x)'  SCOPE: Stmt  [9:12/108-13:2/158]
+        STATEMENT EXPRESSION  [11:5/132-11:14/141] SCOPE: Stmt  [9:12/108-13:2/158] text: 'x->show()'
+        STATEMENT RETURN  [12:5/147-12:14/156] SCOPE: Stmt  [9:12/108-13:2/158] text: 'return 0;'
+

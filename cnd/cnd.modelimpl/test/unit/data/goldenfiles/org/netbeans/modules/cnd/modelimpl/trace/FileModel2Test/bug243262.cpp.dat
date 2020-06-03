@@ -1,0 +1,82 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug243262.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug243262 [1:1/0-12:2/261] SCOPE: bug243262.cpp
+    STRUCT NodeOption243262<typename T> (bug243262::NodeOption243262 ) [2:5/30-6:6/146] lcurly=80 SCOPE: bug243262 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION parse243262 [4:9/90-4:34/115] MethodImpl SCOPE: NodeOption243262 
+                DEFINITION: null
+                SIGNATURE parse243262(int)
+                UNIQUE NAME F:bug243262::NodeOption243262::parse243262(int)
+                PARAMETERS:
+                    val [4:25/106-4:32/113]  TYPE: int TEXT=int  [4:25/106-4:28/109]  INIT: null  SCOPE: parse243262 
+                RETURNS int TEXT=int  [4:9/90-4:12/93]
+            FIELD PUBLIC value243262 [5:9/124-5:25/140]  TYPE: int TEXT=int  [5:9/124-5:12/127]  INIT: null  SCOPE: NodeOption243262 
+    CLASS NodeOption243262<int> (bug243262::NodeOption243262<int> ) [8:5/157-8:5/157] lcurly=157 SCOPE: bug243262 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION parse243262 [4:9/90-4:34/115] Instantiation$Method SCOPE: NodeOption243262 
+                DEFINITION: parse243262  [8:5/157-11:6/256]
+                SIGNATURE parse243262(int)
+                UNIQUE NAME F:bug243262::NodeOption243262::parse243262(int)
+                PARAMETERS:
+                    val [4:25/106-4:32/113]  TYPE: int TEXT=int  [4:25/106-4:28/109]  INIT: null  SCOPE: parse243262 
+                RETURNS int TEXT=int  [4:9/90-4:12/93]
+            FIELD PUBLIC value243262 [5:9/124-5:25/140]  TYPE: int TEXT=int  [5:9/124-5:12/127]  INIT: null  SCOPE: NodeOption243262 
+    FUNCTION DEFINITION parse243262  [8:5/157-11:6/256] FunctionDefinitionImpl SCOPE: bug243262.cpp
+        SIGNATURE parse243262(int)
+        UNIQUE NAME f:bug243262::NodeOption243262<int>::parse243262(int)
+        DECLARATION: parse243262  [4:9/90-4:34/115]
+        PARAMETERS:
+            val [9:44/212-9:51/219]  TYPE: int TEXT=int  [9:44/212-9:47/215]  INIT: null  SCOPE: parse243262 
+        RETURNS int TEXT=int  [9:5/173-9:8/176]
+        STATEMENT COMPOUND  [9:53/221-11:6/256] SCOPE: parse243262 
+            STATEMENT RETURN  [10:9/231-10:28/250] SCOPE: Stmt  [9:53/221-11:6/256] text: 'return value243262;'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug243262 (bug243262) 
+    bug243262.cpp  [1:1/0-12:2/261]
+NAMESPACE bug243262 (bug243262) 
+    STRUCT NodeOption243262<typename T> (bug243262::NodeOption243262 ) [2:5/30-6:6/146] lcurly=80 SCOPE: bug243262 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION parse243262 [4:9/90-4:34/115] MethodImpl SCOPE: NodeOption243262 
+                DEFINITION: null
+                SIGNATURE parse243262(int)
+                UNIQUE NAME F:bug243262::NodeOption243262::parse243262(int)
+                PARAMETERS:
+                    val [4:25/106-4:32/113]  TYPE: int TEXT=int  [4:25/106-4:28/109]  INIT: null  SCOPE: parse243262 
+                RETURNS int TEXT=int  [4:9/90-4:12/93]
+            FIELD PUBLIC value243262 [5:9/124-5:25/140]  TYPE: int TEXT=int  [5:9/124-5:12/127]  INIT: null  SCOPE: NodeOption243262 
+    CLASS NodeOption243262<int> (bug243262::NodeOption243262<int> ) [8:5/157-8:5/157] lcurly=157 SCOPE: bug243262 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION parse243262 [4:9/90-4:34/115] Instantiation$Method SCOPE: NodeOption243262 
+                DEFINITION: parse243262  [8:5/157-11:6/256]
+                SIGNATURE parse243262(int)
+                UNIQUE NAME F:bug243262::NodeOption243262::parse243262(int)
+                PARAMETERS:
+                    val [4:25/106-4:32/113]  TYPE: int TEXT=int  [4:25/106-4:28/109]  INIT: null  SCOPE: parse243262 
+                RETURNS int TEXT=int  [4:9/90-4:12/93]
+            FIELD PUBLIC value243262 [5:9/124-5:25/140]  TYPE: int TEXT=int  [5:9/124-5:12/127]  INIT: null  SCOPE: NodeOption243262 
+    FUNCTION DEFINITION parse243262  [8:5/157-11:6/256] FunctionDefinitionImpl SCOPE: bug243262.cpp
+        SIGNATURE parse243262(int)
+        UNIQUE NAME f:bug243262::NodeOption243262<int>::parse243262(int)
+        DECLARATION: parse243262  [4:9/90-4:34/115]
+        PARAMETERS:
+            val [9:44/212-9:51/219]  TYPE: int TEXT=int  [9:44/212-9:47/215]  INIT: null  SCOPE: parse243262 
+        RETURNS int TEXT=int  [9:5/173-9:8/176]
+        STATEMENT COMPOUND  [9:53/221-11:6/256] SCOPE: parse243262 
+            STATEMENT RETURN  [10:9/231-10:28/250] SCOPE: Stmt  [9:53/221-11:6/256] text: 'return value243262;'
+

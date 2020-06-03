@@ -1,0 +1,35 @@
+TODO:
+
+- pass directory structure to the remote controller
+
+- check Sun Studio tool chain
+
+- check Linux
+
+- when storing file information, paths are duplicated
+(absolute paths! this consumes lots of memory)
+
+- optimize file copying (ssh + scp? own agent?)
+
+- remote controller: make sending reqs/receiving responses concurrent
+
+- fix: call realpath on directories, not files (fie inexistent?)
+
+- replace realpath w/ tracking chdir
+
+- don't wait for file forever; make kindof "alive" confirmations
+
+- copy files in background upon user saves them
+
+DONE:
+
+- optimize: if the file is open for writing, do not ask controller
+
+- don't ask NB site twice about the same file:
+implement logic that tracks files in remote controller
+
+- host setup: copying binaries to the remote host
+
+- write tests
+
+- track filestamps on local host

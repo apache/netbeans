@@ -1,0 +1,92 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug242729.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug242729 [1:1/0-23:2/545] SCOPE: bug242729.cpp
+    FUNCTION func242729 [3:5/31-4:44/110] FunctionImpl SCOPE: bug242729 
+        DEFINITION: null
+        SIGNATURE func242729<class,class>(T1,T2)
+        UNIQUE NAME F:bug242729::func242729<class,class>(T1,T2)
+        PARAMETERS:
+            t1 [4:21/87-4:26/92]  TYPE: bug242729::func242729::T1 TEXT=T1  [4:21/87-4:23/89]  INIT: null  SCOPE: func242729 
+            t2 [4:28/94-4:33/99]  TYPE: bug242729::func242729::T2 TEXT=T2  [4:28/94-4:30/96]  INIT: null  SCOPE: func242729 
+        RETURNS void TEXT=void  [4:5/71-4:9/75]
+    NAMESPACE DEFINITOIN std242729 [6:5/120-9:6/216] SCOPE: bug242729.cpp
+        FUNCTION DEFINITION declval242729  [7:9/150-8:38/209] FunctionDDImpl SCOPE: std242729 
+            SIGNATURE declval242729<class>()
+            UNIQUE NAME f:bug242729::std242729::declval242729<class>()
+            DECLARATION: declval242729  [7:9/150-8:38/209]
+            PARAMETERS:
+            RETURNS bug242729::std242729::declval242729::T TEXT=T  [8:9/180-8:10/181]
+            STATEMENT COMPOUND  [8:36/207-8:38/209] SCOPE: declval242729 
+    STRUCT array242729<typename _Tp> (bug242729::array242729 ) [11:5/222-22:6/542] lcurly=297 SCOPE: bug242729 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION swap242729  [14:7/305-16:9/456] MethodDDImpl SCOPE: array242729 
+                SIGNATURE swap242729(array242729&)
+                UNIQUE NAME f:bug242729::array242729::swap242729(array242729&)
+                DECLARATION: swap242729  [14:7/305-16:9/456]
+                PARAMETERS:
+                    __other [14:23/321-14:43/341]  TYPE: &bug242729::array242729 TEXT=array242729&  [14:23/321-14:35/333]  INIT: null  SCOPE: swap242729 
+                RETURNS void TEXT=void  [14:7/305-14:11/309]
+                STATEMENT COMPOUND  [16:7/454-16:9/456] SCOPE: swap242729 
+            FUNCTION DEFINITION begin242729  [19:7/484-21:20/536] MethodDDImpl SCOPE: array242729 
+                SIGNATURE begin242729()
+                UNIQUE NAME f:bug242729::array242729::begin242729()
+                DECLARATION: begin242729  [19:7/484-21:20/536]
+                PARAMETERS:
+                RETURNS int TEXT=int  [19:7/484-19:10/487]
+                STATEMENT COMPOUND  [21:7/523-21:20/536] SCOPE: begin242729 
+                    STATEMENT RETURN  [21:9/525-21:18/534] SCOPE: Stmt  [21:7/523-21:20/536] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug242729 (bug242729) 
+    bug242729.cpp  [1:1/0-23:2/545]
+NAMESPACE bug242729 (bug242729) 
+    FUNCTION func242729 [3:5/31-4:44/110] FunctionImpl SCOPE: bug242729 
+        DEFINITION: null
+        SIGNATURE func242729<class,class>(T1,T2)
+        UNIQUE NAME F:bug242729::func242729<class,class>(T1,T2)
+        PARAMETERS:
+            t1 [4:21/87-4:26/92]  TYPE: bug242729::func242729::T1 TEXT=T1  [4:21/87-4:23/89]  INIT: null  SCOPE: func242729 
+            t2 [4:28/94-4:33/99]  TYPE: bug242729::func242729::T2 TEXT=T2  [4:28/94-4:30/96]  INIT: null  SCOPE: func242729 
+        RETURNS void TEXT=void  [4:5/71-4:9/75]
+    STRUCT array242729<typename _Tp> (bug242729::array242729 ) [11:5/222-22:6/542] lcurly=297 SCOPE: bug242729 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION swap242729  [14:7/305-16:9/456] MethodDDImpl SCOPE: array242729 
+                SIGNATURE swap242729(array242729&)
+                UNIQUE NAME f:bug242729::array242729::swap242729(array242729&)
+                DECLARATION: swap242729  [14:7/305-16:9/456]
+                PARAMETERS:
+                    __other [14:23/321-14:43/341]  TYPE: &bug242729::array242729 TEXT=array242729&  [14:23/321-14:35/333]  INIT: null  SCOPE: swap242729 
+                RETURNS void TEXT=void  [14:7/305-14:11/309]
+                STATEMENT COMPOUND  [16:7/454-16:9/456] SCOPE: swap242729 
+            FUNCTION DEFINITION begin242729  [19:7/484-21:20/536] MethodDDImpl SCOPE: array242729 
+                SIGNATURE begin242729()
+                UNIQUE NAME f:bug242729::array242729::begin242729()
+                DECLARATION: begin242729  [19:7/484-21:20/536]
+                PARAMETERS:
+                RETURNS int TEXT=int  [19:7/484-19:10/487]
+                STATEMENT COMPOUND  [21:7/523-21:20/536] SCOPE: begin242729 
+                    STATEMENT RETURN  [21:9/525-21:18/534] SCOPE: Stmt  [21:7/523-21:20/536] text: 'return 0;'
+    NAMESPACE DEFINITIONS for std242729 (bug242729::std242729) 
+        bug242729.cpp  [6:5/120-9:6/216]
+    NAMESPACE std242729 (bug242729::std242729) 
+        FUNCTION DEFINITION declval242729  [7:9/150-8:38/209] FunctionDDImpl SCOPE: std242729 
+            SIGNATURE declval242729<class>()
+            UNIQUE NAME f:bug242729::std242729::declval242729<class>()
+            DECLARATION: declval242729  [7:9/150-8:38/209]
+            PARAMETERS:
+            RETURNS bug242729::std242729::declval242729::T TEXT=T  [8:9/180-8:10/181]
+            STATEMENT COMPOUND  [8:36/207-8:38/209] SCOPE: declval242729 
+

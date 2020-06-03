@@ -1,0 +1,18 @@
+/usr/bin/gmake -f nbproject/Makefile-Debug.mk SUBPROJECTS= .build-conf
+gmake[1]: Entering directory `/home/av202691/NetBeansProjects/Hello_1'
+/usr/bin/gmake  -f nbproject/Makefile-Debug.mk dist/Debug/GNU-Linux-x86/hello_1
+gmake[2]: Entering directory `/home/av202691/NetBeansProjects/Hello_1'
+mkdir -p build/Debug/GNU-Linux-x86
+gfortran   -c -g -o build/Debug/GNU-Linux-x86/foo.o foo.f
+foo.f:30.13:
+
+      printt *, 'hello from foo...'
+            1
+Error: Expected comma in I/O list at (1)
+gmake[2]: *** [build/Debug/GNU-Linux-x86/foo.o] Error 1
+gmake[2]: Leaving directory `/home/av202691/NetBeansProjects/Hello_1'
+gmake[1]: *** [.build-conf] Error 2
+gmake[1]: Leaving directory `/home/av202691/NetBeansProjects/Hello_1'
+gmake: *** [.build-impl] Error 2
+BUILD FAILED (exit value 2, total time: 446ms)
+

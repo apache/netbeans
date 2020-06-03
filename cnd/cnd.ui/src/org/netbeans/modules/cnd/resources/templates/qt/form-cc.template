@@ -1,0 +1,20 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+/*
+ * File:   ${NAME}.${EXTENSION}
+ * Author: ${user}
+ *
+ * Created on ${DATE}, ${TIME}
+ */
+
+#include ${QUOTES}${NAME}.${DEFAULT_HEADER_EXT}${QUOTES}
+
+${CLASSNAME}::${CLASSNAME}() {
+    widget.setupUi(this);
+}
+
+${CLASSNAME}::~${CLASSNAME}() {
+}

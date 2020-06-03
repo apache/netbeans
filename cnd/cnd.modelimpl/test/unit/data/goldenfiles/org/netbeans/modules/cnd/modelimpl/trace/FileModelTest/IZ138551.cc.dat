@@ -1,0 +1,26 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE IZ138551.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN A [1:1/0-3:2/47] SCOPE: IZ138551.cc
+    CLASS B<int N> (A::B ) [2:5/18-2:31/44] lcurly=42 SCOPE: A 
+        BASE CLASSES:
+        MEMBERS:
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for A (A) 
+    IZ138551.cc  [1:1/0-3:2/47]
+NAMESPACE A (A) 
+    CLASS B<int N> (A::B ) [2:5/18-2:31/44] lcurly=42 SCOPE: A 
+        BASE CLASSES:
+        MEMBERS:
+

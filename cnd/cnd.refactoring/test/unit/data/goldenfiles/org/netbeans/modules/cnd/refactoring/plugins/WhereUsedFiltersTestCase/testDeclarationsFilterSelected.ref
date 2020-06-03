@@ -1,0 +1,7 @@
+References in file WhereUsedFiltersTestCase/testFUFilters.c
+[1:6-1:9] void <b>foo</b>();
+[3:6-3:9] void <b>foo</b>();
+[5:6-5:9] void <b>foo</b>();
+[7:6-7:9] void <b>foo</b>();
+[9:6-9:9] void <b>foo</b>() {
+[13:5-13:8] <b>foo</b>();

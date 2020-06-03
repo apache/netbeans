@@ -1,0 +1,52 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE clearingImportedSymbols.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+STRUCT ctype (ctype ) [1:1/0-3:2/30] lcurly=13 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC type [2:5/19-2:14/28]  TYPE: int TEXT=int  [2:5/19-2:8/22]  INIT: null  SCOPE: ctype 
+CLASS AAA (AAA ) [5:1/33-12:2/129] lcurly=43 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        CLASS _Impl (AAA::_Impl ) [7:5/61-9:6/89] lcurly=73 SCOPE: AAA 
+            BASE CLASSES:
+            MEMBERS:
+        FIELD PUBLIC static ctype [11:5/100-11:32/127]  TYPE: const int TEXT=const int  [11:18/113-11:21/116]  INIT: text='= 1'  SCOPE: AAA 
+CLASS BBB (BBB ) [14:1/132-19:2/215] lcurly=142 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC variable [18:5/192-18:26/213]  TYPE: const ctype TEXT=const ctype  [18:11/198-18:16/203]  INIT: null  SCOPE: BBB 
+    FRIENDS:
+        CLASS_FRIEND_DECLARATION _Impl [16:5/156-16:28/179] FriendClassImpl
+            REFERENCED CLASS: C:$unresolved$::_Impl
+
+========== Dumping model of PROJECT DummyProject
+STRUCT ctype (ctype ) [1:1/0-3:2/30] lcurly=13 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC type [2:5/19-2:14/28]  TYPE: int TEXT=int  [2:5/19-2:8/22]  INIT: null  SCOPE: ctype 
+CLASS AAA (AAA ) [5:1/33-12:2/129] lcurly=43 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        CLASS _Impl (AAA::_Impl ) [7:5/61-9:6/89] lcurly=73 SCOPE: AAA 
+            BASE CLASSES:
+            MEMBERS:
+        FIELD PUBLIC static ctype [11:5/100-11:32/127]  TYPE: const int TEXT=const int  [11:18/113-11:21/116]  INIT: text='= 1'  SCOPE: AAA 
+CLASS BBB (BBB ) [14:1/132-19:2/215] lcurly=142 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC variable [18:5/192-18:26/213]  TYPE: const ctype TEXT=const ctype  [18:11/198-18:16/203]  INIT: null  SCOPE: BBB 
+    FRIENDS:
+        CLASS_FRIEND_DECLARATION _Impl [16:5/156-16:28/179] FriendClassImpl
+            REFERENCED CLASS: C:$unresolved$::_Impl
+

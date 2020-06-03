@@ -1,0 +1,126 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug240723_m.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug240723 [1:1/0-30:2/665] SCOPE: bug240723_m.cpp
+    CLASS MyClass240723_1 (bug240723::MyClass240723_1 ) [2:5/26-17:6/377] lcurly=48 SCOPE: bug240723 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION MyClass240723_1  [4:9/67-4:29/87] ConstructorDDImpl SCOPE: MyClass240723_1 
+                SIGNATURE MyClass240723_1()
+                UNIQUE NAME f:bug240723::MyClass240723_1::MyClass240723_1()
+                DECLARATION: MyClass240723_1  [4:9/67-4:29/87]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [4:27/85-4:29/87] SCOPE: MyClass240723_1 
+            FUNCTION DEFINITION MyClass240723_1  [6:9/105-6:34/130] ConstructorDDImpl SCOPE: MyClass240723_1 
+                SIGNATURE MyClass240723_1(int)
+                UNIQUE NAME f:bug240723::MyClass240723_1::MyClass240723_1(int)
+                DECLARATION: MyClass240723_1  [6:9/105-6:34/130]
+                PARAMETERS:
+                    x [6:25/121-6:30/126]  TYPE: int TEXT=int  [6:25/121-6:28/124]  INIT: null  SCOPE: MyClass240723_1 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [6:32/128-6:34/130] SCOPE: MyClass240723_1 
+            FUNCTION DEFINITION myFunc_1  [9:9/157-12:10/274] MethodDDImpl SCOPE: MyClass240723_1 
+                SIGNATURE myFunc_1<class>() const
+                UNIQUE NAME f:bug240723::MyClass240723_1::myFunc_1<class>() const
+                DECLARATION: myFunc_1  [9:9/157-12:10/274]
+                PARAMETERS:
+                RETURNS decltype TEXT=decltype  [10:43/221-10:56/234]
+                STATEMENT COMPOUND  [10:57/235-12:10/274] SCOPE: myFunc_1 
+                    STATEMENT RETURN  [11:17/254-11:27/264] SCOPE: Stmt  [10:57/235-12:10/274] text: 'return 42;'
+            FUNCTION DEFINITION boo  [14:9/303-16:10/371] MethodDDImpl SCOPE: MyClass240723_1 
+                SIGNATURE boo()
+                UNIQUE NAME f:bug240723::MyClass240723_1::boo()
+                DECLARATION: boo  [14:9/303-16:10/371]
+                PARAMETERS:
+                RETURNS int TEXT=int  [14:9/303-14:12/306]
+                STATEMENT COMPOUND  [14:19/313-16:10/371] SCOPE: boo 
+                    STATEMENT EXPRESSION  [15:13/327-15:46/360] SCOPE: Stmt  [14:19/313-16:10/371] text: 'myFunc_1<MyClass240723_1>().boo()'
+    CLASS MyClass240723_2 (bug240723::MyClass240723_2 ) [19:5/391-29:6/655] lcurly=413 SCOPE: bug240723 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION myFunc_2  [21:9/434-24:10/552] MethodDDImpl SCOPE: MyClass240723_2 
+                SIGNATURE myFunc_2<class>() const
+                UNIQUE NAME f:bug240723::MyClass240723_2::myFunc_2<class>() const
+                DECLARATION: myFunc_2  [21:9/434-24:10/552]
+                PARAMETERS:
+                RETURNS decltype TEXT=decltype  [22:43/498-22:56/511]
+                STATEMENT COMPOUND  [22:57/512-24:10/552] SCOPE: myFunc_2 
+                    STATEMENT RETURN  [23:17/531-23:28/542] SCOPE: Stmt  [22:57/512-24:10/552] text: 'return K();'
+            FUNCTION DEFINITION boo  [26:9/581-28:10/649] MethodDDImpl SCOPE: MyClass240723_2 
+                SIGNATURE boo()
+                UNIQUE NAME f:bug240723::MyClass240723_2::boo()
+                DECLARATION: boo  [26:9/581-28:10/649]
+                PARAMETERS:
+                RETURNS int TEXT=int  [26:9/581-26:12/584]
+                STATEMENT COMPOUND  [26:19/591-28:10/649] SCOPE: boo 
+                    STATEMENT EXPRESSION  [27:13/605-27:46/638] SCOPE: Stmt  [26:19/591-28:10/649] text: 'myFunc_2<MyClass240723_2>().boo()'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug240723 (bug240723) 
+    bug240723_m.cpp  [1:1/0-30:2/665]
+NAMESPACE bug240723 (bug240723) 
+    CLASS MyClass240723_1 (bug240723::MyClass240723_1 ) [2:5/26-17:6/377] lcurly=48 SCOPE: bug240723 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION MyClass240723_1  [4:9/67-4:29/87] ConstructorDDImpl SCOPE: MyClass240723_1 
+                SIGNATURE MyClass240723_1()
+                UNIQUE NAME f:bug240723::MyClass240723_1::MyClass240723_1()
+                DECLARATION: MyClass240723_1  [4:9/67-4:29/87]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [4:27/85-4:29/87] SCOPE: MyClass240723_1 
+            FUNCTION DEFINITION MyClass240723_1  [6:9/105-6:34/130] ConstructorDDImpl SCOPE: MyClass240723_1 
+                SIGNATURE MyClass240723_1(int)
+                UNIQUE NAME f:bug240723::MyClass240723_1::MyClass240723_1(int)
+                DECLARATION: MyClass240723_1  [6:9/105-6:34/130]
+                PARAMETERS:
+                    x [6:25/121-6:30/126]  TYPE: int TEXT=int  [6:25/121-6:28/124]  INIT: null  SCOPE: MyClass240723_1 
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [6:32/128-6:34/130] SCOPE: MyClass240723_1 
+            FUNCTION DEFINITION myFunc_1  [9:9/157-12:10/274] MethodDDImpl SCOPE: MyClass240723_1 
+                SIGNATURE myFunc_1<class>() const
+                UNIQUE NAME f:bug240723::MyClass240723_1::myFunc_1<class>() const
+                DECLARATION: myFunc_1  [9:9/157-12:10/274]
+                PARAMETERS:
+                RETURNS decltype TEXT=decltype  [10:43/221-10:56/234]
+                STATEMENT COMPOUND  [10:57/235-12:10/274] SCOPE: myFunc_1 
+                    STATEMENT RETURN  [11:17/254-11:27/264] SCOPE: Stmt  [10:57/235-12:10/274] text: 'return 42;'
+            FUNCTION DEFINITION boo  [14:9/303-16:10/371] MethodDDImpl SCOPE: MyClass240723_1 
+                SIGNATURE boo()
+                UNIQUE NAME f:bug240723::MyClass240723_1::boo()
+                DECLARATION: boo  [14:9/303-16:10/371]
+                PARAMETERS:
+                RETURNS int TEXT=int  [14:9/303-14:12/306]
+                STATEMENT COMPOUND  [14:19/313-16:10/371] SCOPE: boo 
+                    STATEMENT EXPRESSION  [15:13/327-15:46/360] SCOPE: Stmt  [14:19/313-16:10/371] text: 'myFunc_1<MyClass240723_1>().boo()'
+    CLASS MyClass240723_2 (bug240723::MyClass240723_2 ) [19:5/391-29:6/655] lcurly=413 SCOPE: bug240723 
+        BASE CLASSES:
+        MEMBERS:
+            FUNCTION DEFINITION myFunc_2  [21:9/434-24:10/552] MethodDDImpl SCOPE: MyClass240723_2 
+                SIGNATURE myFunc_2<class>() const
+                UNIQUE NAME f:bug240723::MyClass240723_2::myFunc_2<class>() const
+                DECLARATION: myFunc_2  [21:9/434-24:10/552]
+                PARAMETERS:
+                RETURNS decltype TEXT=decltype  [22:43/498-22:56/511]
+                STATEMENT COMPOUND  [22:57/512-24:10/552] SCOPE: myFunc_2 
+                    STATEMENT RETURN  [23:17/531-23:28/542] SCOPE: Stmt  [22:57/512-24:10/552] text: 'return K();'
+            FUNCTION DEFINITION boo  [26:9/581-28:10/649] MethodDDImpl SCOPE: MyClass240723_2 
+                SIGNATURE boo()
+                UNIQUE NAME f:bug240723::MyClass240723_2::boo()
+                DECLARATION: boo  [26:9/581-28:10/649]
+                PARAMETERS:
+                RETURNS int TEXT=int  [26:9/581-26:12/584]
+                STATEMENT COMPOUND  [26:19/591-28:10/649] SCOPE: boo 
+                    STATEMENT EXPRESSION  [27:13/605-27:46/638] SCOPE: Stmt  [26:19/591-28:10/649] text: 'myFunc_2<MyClass240723_2>().boo()'
+

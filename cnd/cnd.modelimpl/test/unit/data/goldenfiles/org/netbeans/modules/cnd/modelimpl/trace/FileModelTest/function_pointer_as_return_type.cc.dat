@@ -1,0 +1,139 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE function_pointer_as_return_type.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION get_ptr [1:1/0-1:45/44] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: get_ptr  [6:1/131-11:2/236]
+    SIGNATURE get_ptr(const char)
+    UNIQUE NAME F:get_ptr(const char)
+    PARAMETERS:
+        opCode [1:15/14-1:32/31]  TYPE: const char TEXT=const char  [1:15/14-1:25/24]  INIT: null  SCOPE: get_ptr 
+    RETURNS int(int,int) TEXT=int(*)(int,int)  [1:1/0-1:44/43]
+FUNCTION DEFINITION plus  [3:1/46-3:42/87] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE plus(int,int)
+    UNIQUE NAME f:plus(int,int)
+    DECLARATION: plus  [3:1/46-3:42/87]
+    PARAMETERS:
+        x [3:10/55-3:15/60]  TYPE: int TEXT=int  [3:10/55-3:13/58]  INIT: null  SCOPE: plus 
+        y [3:17/62-3:22/67]  TYPE: int TEXT=int  [3:17/62-3:20/65]  INIT: null  SCOPE: plus 
+    RETURNS int TEXT=int  [3:1/46-3:4/49]
+    STATEMENT COMPOUND  [3:25/70-3:42/87] SCOPE: plus 
+        STATEMENT RETURN  [3:27/72-3:40/85] SCOPE: Stmt  [3:25/70-3:42/87] text: 'return x + y;'
+FUNCTION DEFINITION minus  [4:1/88-4:42/129] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE minus(int,int)
+    UNIQUE NAME f:minus(int,int)
+    DECLARATION: minus  [4:1/88-4:42/129]
+    PARAMETERS:
+        x [4:11/98-4:16/103]  TYPE: int TEXT=int  [4:11/98-4:14/101]  INIT: null  SCOPE: minus 
+        y [4:18/105-4:23/110]  TYPE: int TEXT=int  [4:18/105-4:21/108]  INIT: null  SCOPE: minus 
+    RETURNS int TEXT=int  [4:1/88-4:4/91]
+    STATEMENT COMPOUND  [4:25/112-4:42/129] SCOPE: minus 
+        STATEMENT RETURN  [4:27/114-4:40/127] SCOPE: Stmt  [4:25/112-4:42/129] text: 'return x - y;'
+FUNCTION DEFINITION get_ptr  [6:1/131-11:2/236] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE get_ptr(const char)
+    UNIQUE NAME f:get_ptr(const char)
+    DECLARATION: get_ptr  [1:1/0-1:45/44]
+    PARAMETERS:
+        opCode [6:15/145-6:32/162]  TYPE: const char TEXT=const char  [6:15/145-6:25/155]  INIT: null  SCOPE: get_ptr 
+    RETURNS int(int,int) TEXT=int(*)(int,int)  [6:1/131-6:44/174]
+    STATEMENT COMPOUND  [6:45/175-11:2/236] SCOPE: get_ptr 
+        STATEMENT IF  [7:9/178-10:31/234] SCOPE: Stmt  [6:45/175-11:2/236]
+            CONDITION EXPRESSION text='opCode == '+''
+            THEN: 
+                STATEMENT RETURN  [8:17/198-8:30/211] SCOPE: Stmt  [7:9/178-10:31/234] text: 'return &plus;'
+            ELSE: 
+                STATEMENT RETURN  [10:17/220-10:31/234] SCOPE: Stmt  [7:9/178-10:31/234] text: 'return &minus;'
+FUNCTION DEFINITION __set_malloc_handler  [13:1/238-16:2/308] FunctionDDImpl SCOPE: function_pointer_as_return_type.cc
+    SIGNATURE __set_malloc_handler(void(*)())
+    UNIQUE NAME f:__set_malloc_handler(void(*)())
+    DECLARATION: __set_malloc_handler  [13:1/238-16:2/308]
+    PARAMETERS:
+        __f [13:37/274-13:50/287]  TYPE: void() TEXT=void(*)()  [13:37/274-13:50/287]  INIT: null  SCOPE: __set_malloc_handler 
+    RETURNS void() TEXT=void(*)()  [13:8/245-13:54/291]
+    STATEMENT COMPOUND  [14:1/292-16:2/308] SCOPE: __set_malloc_handler 
+        STATEMENT RETURN  [15:4/297-15:13/306] SCOPE: Stmt  [14:1/292-16:2/308] text: 'return 0;'
+FUNCTION genxGetAlloc [18:1/310-18:51/360] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: genxGetAlloc  [20:1/362-23:2/448]
+    SIGNATURE genxGetAlloc(genxWriter)
+    UNIQUE NAME F:genxGetAlloc(genxWriter)
+    PARAMETERS:
+         [18:22/331-18:32/341]  TYPE: $unresolved$::genxWriter TEXT=genxWriter  [18:22/331-18:32/341]  INIT: null  SCOPE: genxGetAlloc 
+    RETURNS int*(void*,int) TEXT=int*(*)(void*,int)  [18:1/310-18:50/359]
+FUNCTION DEFINITION genxGetAlloc  [20:1/362-23:2/448] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE genxGetAlloc(genxWriter)
+    UNIQUE NAME f:genxGetAlloc(genxWriter)
+    DECLARATION: genxGetAlloc  [18:1/310-18:51/360]
+    PARAMETERS:
+        w [20:22/383-20:34/395]  TYPE: $unresolved$::genxWriter TEXT=genxWriter  [20:22/383-20:32/393]  INIT: null  SCOPE: genxGetAlloc 
+    RETURNS int*(void*,int) TEXT=int*(*)(void*,int)  [20:1/362-20:64/425]
+    STATEMENT COMPOUND  [21:1/426-23:2/448] SCOPE: genxGetAlloc 
+        STATEMENT RETURN  [22:3/430-22:19/446] SCOPE: Stmt  [21:1/426-23:2/448] text: 'return w->alloc;'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION get_ptr [1:1/0-1:45/44] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: get_ptr  [6:1/131-11:2/236]
+    SIGNATURE get_ptr(const char)
+    UNIQUE NAME F:get_ptr(const char)
+    PARAMETERS:
+        opCode [1:15/14-1:32/31]  TYPE: const char TEXT=const char  [1:15/14-1:25/24]  INIT: null  SCOPE: get_ptr 
+    RETURNS int(int,int) TEXT=int(*)(int,int)  [1:1/0-1:44/43]
+FUNCTION DEFINITION plus  [3:1/46-3:42/87] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE plus(int,int)
+    UNIQUE NAME f:plus(int,int)
+    DECLARATION: plus  [3:1/46-3:42/87]
+    PARAMETERS:
+        x [3:10/55-3:15/60]  TYPE: int TEXT=int  [3:10/55-3:13/58]  INIT: null  SCOPE: plus 
+        y [3:17/62-3:22/67]  TYPE: int TEXT=int  [3:17/62-3:20/65]  INIT: null  SCOPE: plus 
+    RETURNS int TEXT=int  [3:1/46-3:4/49]
+    STATEMENT COMPOUND  [3:25/70-3:42/87] SCOPE: plus 
+        STATEMENT RETURN  [3:27/72-3:40/85] SCOPE: Stmt  [3:25/70-3:42/87] text: 'return x + y;'
+FUNCTION DEFINITION minus  [4:1/88-4:42/129] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE minus(int,int)
+    UNIQUE NAME f:minus(int,int)
+    DECLARATION: minus  [4:1/88-4:42/129]
+    PARAMETERS:
+        x [4:11/98-4:16/103]  TYPE: int TEXT=int  [4:11/98-4:14/101]  INIT: null  SCOPE: minus 
+        y [4:18/105-4:23/110]  TYPE: int TEXT=int  [4:18/105-4:21/108]  INIT: null  SCOPE: minus 
+    RETURNS int TEXT=int  [4:1/88-4:4/91]
+    STATEMENT COMPOUND  [4:25/112-4:42/129] SCOPE: minus 
+        STATEMENT RETURN  [4:27/114-4:40/127] SCOPE: Stmt  [4:25/112-4:42/129] text: 'return x - y;'
+FUNCTION DEFINITION get_ptr  [6:1/131-11:2/236] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE get_ptr(const char)
+    UNIQUE NAME f:get_ptr(const char)
+    DECLARATION: get_ptr  [1:1/0-1:45/44]
+    PARAMETERS:
+        opCode [6:15/145-6:32/162]  TYPE: const char TEXT=const char  [6:15/145-6:25/155]  INIT: null  SCOPE: get_ptr 
+    RETURNS int(int,int) TEXT=int(*)(int,int)  [6:1/131-6:44/174]
+    STATEMENT COMPOUND  [6:45/175-11:2/236] SCOPE: get_ptr 
+        STATEMENT IF  [7:9/178-10:31/234] SCOPE: Stmt  [6:45/175-11:2/236]
+            CONDITION EXPRESSION text='opCode == '+''
+            THEN: 
+                STATEMENT RETURN  [8:17/198-8:30/211] SCOPE: Stmt  [7:9/178-10:31/234] text: 'return &plus;'
+            ELSE: 
+                STATEMENT RETURN  [10:17/220-10:31/234] SCOPE: Stmt  [7:9/178-10:31/234] text: 'return &minus;'
+FUNCTION genxGetAlloc [18:1/310-18:51/360] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: genxGetAlloc  [20:1/362-23:2/448]
+    SIGNATURE genxGetAlloc(genxWriter)
+    UNIQUE NAME F:genxGetAlloc(genxWriter)
+    PARAMETERS:
+         [18:22/331-18:32/341]  TYPE: $unresolved$::genxWriter TEXT=genxWriter  [18:22/331-18:32/341]  INIT: null  SCOPE: genxGetAlloc 
+    RETURNS int*(void*,int) TEXT=int*(*)(void*,int)  [18:1/310-18:50/359]
+FUNCTION DEFINITION genxGetAlloc  [20:1/362-23:2/448] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE genxGetAlloc(genxWriter)
+    UNIQUE NAME f:genxGetAlloc(genxWriter)
+    DECLARATION: genxGetAlloc  [18:1/310-18:51/360]
+    PARAMETERS:
+        w [20:22/383-20:34/395]  TYPE: $unresolved$::genxWriter TEXT=genxWriter  [20:22/383-20:32/393]  INIT: null  SCOPE: genxGetAlloc 
+    RETURNS int*(void*,int) TEXT=int*(*)(void*,int)  [20:1/362-20:64/425]
+    STATEMENT COMPOUND  [21:1/426-23:2/448] SCOPE: genxGetAlloc 
+        STATEMENT RETURN  [22:3/430-22:19/446] SCOPE: Stmt  [21:1/426-23:2/448] text: 'return w->alloc;'
+

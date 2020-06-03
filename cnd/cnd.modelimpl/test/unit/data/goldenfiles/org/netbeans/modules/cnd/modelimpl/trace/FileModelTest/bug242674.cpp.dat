@@ -1,0 +1,34 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug242674.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN Outer242674 [1:1/0-5:2/109] SCOPE: bug242674.cpp
+    STRUCT Outer242674 (Outer242674::Outer242674 ) [2:5/28-4:6/105] lcurly=47 SCOPE: Outer242674 
+        BASE CLASSES:
+        MEMBERS:
+            STRUCT Inner242674 (Outer242674::Outer242674::Inner242674 ) [3:9/57-3:50/98] lcurly=96 SCOPE: Outer242674 
+                BASE CLASSES:
+                    CLASS=$unresolved$::Inner242674::base VISIBILITY==PUBLIC virtual==false text='Inner242674::base'
+                MEMBERS:
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for Outer242674 (Outer242674) 
+    bug242674.cpp  [1:1/0-5:2/109]
+NAMESPACE Outer242674 (Outer242674) 
+    STRUCT Outer242674 (Outer242674::Outer242674 ) [2:5/28-4:6/105] lcurly=47 SCOPE: Outer242674 
+        BASE CLASSES:
+        MEMBERS:
+            STRUCT Inner242674 (Outer242674::Outer242674::Inner242674 ) [3:9/57-3:50/98] lcurly=96 SCOPE: Outer242674 
+                BASE CLASSES:
+                    CLASS=$unresolved$::Inner242674::base VISIBILITY==PUBLIC virtual==false text='Inner242674::base'
+                MEMBERS:
+

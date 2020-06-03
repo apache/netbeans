@@ -1,0 +1,40 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug250243.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug250243 [1:1/0-9:2/151] SCOPE: bug250243.cpp
+    NAMESPACE DEFINITOIN XXX250243 [2:5/26-4:6/79] SCOPE: bug250243.cpp
+        CLASS_FORWARD_DECLARATION BBB250243 [3:9/56-3:26/73]
+    CLASS AAA (bug250243::AAA ) [6:5/85-8:6/148] lcurly=95 SCOPE: bug250243 
+        BASE CLASSES:
+        MEMBERS:
+        FRIENDS:
+            CLASS_FRIEND_DECLARATION XXX250243::BBB250243 [7:9/105-7:46/142] FriendClassImpl
+                REFERENCED CLASS: S:bug250243::XXX250243::BBB250243
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug250243 (bug250243) 
+    bug250243.cpp  [1:1/0-9:2/151]
+NAMESPACE bug250243 (bug250243) 
+    CLASS AAA (bug250243::AAA ) [6:5/85-8:6/148] lcurly=95 SCOPE: bug250243 
+        BASE CLASSES:
+        MEMBERS:
+        FRIENDS:
+            CLASS_FRIEND_DECLARATION XXX250243::BBB250243 [7:9/105-7:46/142] FriendClassImpl
+                REFERENCED CLASS: S:bug250243::XXX250243::BBB250243
+    NAMESPACE DEFINITIONS for XXX250243 (bug250243::XXX250243) 
+        bug250243.cpp  [2:5/26-4:6/79]
+    NAMESPACE XXX250243 (bug250243::XXX250243) 
+        STRUCT BBB250243 (bug250243::XXX250243::BBB250243 ) [3:9/56-3:26/73] lcurly=72 SCOPE: XXX250243 
+            BASE CLASSES:
+            MEMBERS:
+

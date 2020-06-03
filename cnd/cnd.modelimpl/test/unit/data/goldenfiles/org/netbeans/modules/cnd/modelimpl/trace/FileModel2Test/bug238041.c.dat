@@ -1,0 +1,76 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug238041.c
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION strcmp_238041 [2:1/1-2:48/48] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE strcmp_238041(const char*,const char*)
+    UNIQUE NAME F:strcmp_238041(const char*,const char*)
+    PARAMETERS:
+         [2:20/20-2:32/32]  TYPE: const *char TEXT=const char*  [2:20/20-2:32/32]  INIT: null  SCOPE: strcmp_238041 
+         [2:34/34-2:46/46]  TYPE: const *char TEXT=const char*  [2:34/34-2:46/46]  INIT: null  SCOPE: strcmp_238041 
+    RETURNS void TEXT=void  [2:1/1-2:5/5]
+FUNCTION DEFINITION foo_238041  [4:1/50-11:2/183] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_238041(int)
+    UNIQUE NAME f:foo_238041(int)
+    DECLARATION: foo_238041  [4:1/50-11:2/183]
+    PARAMETERS:
+        y [4:16/65-4:21/70]  TYPE: int TEXT=int  [4:16/65-4:19/68]  INIT: null  SCOPE: foo_238041 
+    RETURNS int TEXT=int  [4:1/50-4:4/53]
+    STATEMENT COMPOUND  [4:23/72-11:2/183] SCOPE: foo_238041 
+        STATEMENT DECLARATION  [5:5/78-8:6/156] SCOPE: Stmt  [4:23/72-11:2/183]
+            FUNCTION DEFINITION boo  [5:5/78-8:6/156] FunctionDDImpl SCOPE: null
+                SIGNATURE boo(int)
+                UNIQUE NAME f:boo(int)
+                DECLARATION: boo  [5:5/78-8:6/156]
+                PARAMETERS:
+                    a [5:13/86-5:18/91]  TYPE: int TEXT=int  [5:13/86-5:16/89]  INIT: null  SCOPE: boo 
+                RETURNS int TEXT=int  [5:5/78-5:8/81]
+                STATEMENT COMPOUND  [5:20/93-8:6/156] SCOPE: boo 
+                    STATEMENT DECLARATION  [6:9/103-6:23/117] SCOPE: Stmt  [5:20/93-8:6/156]
+                        VARIABLE x [6:9/103-6:23/117]  TYPE: int TEXT=int  [6:9/103-6:12/106]  INIT: text='a + y'  SCOPE: Stmt  [5:20/93-8:6/156]
+                    STATEMENT EXPRESSION  [7:9/126-7:32/149] SCOPE: Stmt  [5:20/93-8:6/156] text: 'strcmp_238041("1", "2")'
+        STATEMENT DECLARATION  [10:5/166-10:20/181] SCOPE: Stmt  [4:23/72-11:2/183]
+            VARIABLE z [10:5/166-10:20/181]  TYPE: int TEXT=int  [10:5/166-10:8/169]  INIT: text='boo(y)'  SCOPE: Stmt  [4:23/72-11:2/183]
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION strcmp_238041 [2:1/1-2:48/48] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE strcmp_238041(const char*,const char*)
+    UNIQUE NAME F:strcmp_238041(const char*,const char*)
+    PARAMETERS:
+         [2:20/20-2:32/32]  TYPE: const *char TEXT=const char*  [2:20/20-2:32/32]  INIT: null  SCOPE: strcmp_238041 
+         [2:34/34-2:46/46]  TYPE: const *char TEXT=const char*  [2:34/34-2:46/46]  INIT: null  SCOPE: strcmp_238041 
+    RETURNS void TEXT=void  [2:1/1-2:5/5]
+FUNCTION DEFINITION foo_238041  [4:1/50-11:2/183] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo_238041(int)
+    UNIQUE NAME f:foo_238041(int)
+    DECLARATION: foo_238041  [4:1/50-11:2/183]
+    PARAMETERS:
+        y [4:16/65-4:21/70]  TYPE: int TEXT=int  [4:16/65-4:19/68]  INIT: null  SCOPE: foo_238041 
+    RETURNS int TEXT=int  [4:1/50-4:4/53]
+    STATEMENT COMPOUND  [4:23/72-11:2/183] SCOPE: foo_238041 
+        STATEMENT DECLARATION  [5:5/78-8:6/156] SCOPE: Stmt  [4:23/72-11:2/183]
+            FUNCTION DEFINITION boo  [5:5/78-8:6/156] FunctionDDImpl SCOPE: null
+                SIGNATURE boo(int)
+                UNIQUE NAME f:boo(int)
+                DECLARATION: boo  [5:5/78-8:6/156]
+                PARAMETERS:
+                    a [5:13/86-5:18/91]  TYPE: int TEXT=int  [5:13/86-5:16/89]  INIT: null  SCOPE: boo 
+                RETURNS int TEXT=int  [5:5/78-5:8/81]
+                STATEMENT COMPOUND  [5:20/93-8:6/156] SCOPE: boo 
+                    STATEMENT DECLARATION  [6:9/103-6:23/117] SCOPE: Stmt  [5:20/93-8:6/156]
+                        VARIABLE x [6:9/103-6:23/117]  TYPE: int TEXT=int  [6:9/103-6:12/106]  INIT: text='a + y'  SCOPE: Stmt  [5:20/93-8:6/156]
+                    STATEMENT EXPRESSION  [7:9/126-7:32/149] SCOPE: Stmt  [5:20/93-8:6/156] text: 'strcmp_238041("1", "2")'
+        STATEMENT DECLARATION  [10:5/166-10:20/181] SCOPE: Stmt  [4:23/72-11:2/183]
+            VARIABLE z [10:5/166-10:20/181]  TYPE: int TEXT=int  [10:5/166-10:8/169]  INIT: text='boo(y)'  SCOPE: Stmt  [4:23/72-11:2/183]
+

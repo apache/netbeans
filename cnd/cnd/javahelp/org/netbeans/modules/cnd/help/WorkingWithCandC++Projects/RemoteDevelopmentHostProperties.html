@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="StyleSheet" href="../ide.css" type="text/css">
+    <meta name="generator" content="Helen">
+    <title>Setting Remote Host Properties</title>
+  </head>
+  <body>
+    <h2>
+       Setting Remote Host Properties
+    </h2>
+    <p>
+       <a href="#seealso"><small>See Also</small></a><small>&nbsp;</small>
+    </p>
+    <p>
+       After you have configured a remote build host, you can set properties that specify how the
+      IDE uses the host for C/C++/Fortran projects.
+    </p>
+    <p>
+       <b>To set remote host properties:</b>
+    </p>
+    <ol>
+      <li>
+        Open the Services window by choosing Window &gt; Services.
+      </li>
+      <li>
+        In the Services window, expand the C/C++ Build Hosts node.
+      </li>
+      <li>
+        Right-click the remote host and choose Properties.
+      </li>
+      <li>
+        In the Host Properties dialog box, you can set the following properties:
+        <ul>
+          <li>
+            <b>Authentication.</b> Select Password to authenticate by entering a password, or SSH
+            Key File to authenticate with an encryption key.
+          </li>
+          <li>
+            <b>Display Name.</b> To change the name displayed in the IDE for the host, type a new
+            name in the Display Name field.
+          </li>
+          <li>
+            <b>Access Project Files via.</b> To change the way project files are shared with the
+            remote host, select the file access method from the list. If the project files are in a
+            shared folder accessible from the local host and remote host, select System-level File
+            Sharing. If sharing the files is not possible, select Automatic Copying to copy the
+            files. The files are copied to your <tt>.netbeans</tt> directory on the remote host.
+          </li>
+          <li><b>Check ACL-based remote file permissions.</b> This option enables the IDE
+              to recognize POSIX-style access control lists assigned to files. If you cannot access
+              project files located on a remote server through the IDE even when Unix permissions
+              are correct, try enabling this option.  Note that enabling it can cause significant slowdown if the
+              system has broken automounts.  The option should only be enabled if the remote
+              server is using POSIX-style ACLs.
+</li>
+          <li>
+            <b>Enable X11 Forwarding.</b> If the projects you build on the remote host are graphical
+            applications, select Enable X11 Forwarding. This allows you to run the application on
+            the remote host, and have the windows shown on your local desktop.
+          </li>
+        </ul>
+      </li>
+    </ol>
+    <p>
+       <b>To set a host as the default build host:</b>
+    </p>
+    <ul>
+      <li>
+        In the Services window, expand the C/C++ Build Hosts node, right-click the host, and choose
+        Set as Default. This host is used by default for new projects.
+      </li>
+    </ul>
+    <table>
+      <tr>
+        <th colspan="2" align="left">
+          <a name="seealso">See also</a> 
+        </th>
+      </tr>
+      <tr>
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="RemoteDevelopment.html">Overview of C/C++ Remote Development</a><br>
+           <a href="RemoteDevelopmentManaging.html">Managing Build Hosts</a><br>
+           <a href="ConfiguringBuildTools.html">Configuring Build Tools</a><br>
+           <a href="RemoteModes.html">C/C++ Remote Development Modes</a><br>
+           
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a>
+    </p>
+    <table border="0" cellpadding="20">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

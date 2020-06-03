@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="StyleSheet" href="../ide.css"
+type="text/css">
+<title>Popping a Call From the Call Stack</title>
+</head>
+<body>
+<h2>Popping a Call From the Call Stack
+</h2>
+<p><small><a href="#seealso">See Also</a>&nbsp; </small>
+<p>You can change the execution of your program so that the next statement to be
+executed is one of the calls made earlier on the stack. In general, popping, or
+removing, a call from the call stack does not undo any effects that the call
+caused. For example, if a call opened a database connection and then that call
+is removed, the database connection will remain open.
+</p>
+<p>You can only pop a call if the program being debugged is paused.
+</p>
+<p>To make a frame in the call stack the current frame:
+<ul>
+<li>Right-click on the frame in the Call Stack window and choose Make Current.
+</li>
+</ul>
+<p><b>To remove a series of frames from the call stack:</b></p>
+<ul>
+<li>Right-click a frame in the Call Stack window and choose Pop To Here.
+Frames are removed from the stack. Program execution resumes at the beginning of
+the line in the new current frame.
+</li>
+</ul>
+<p><b>To pop the most recent call from the call stack:</b></p>
+<ul>
+<li>Right-click in the Call Stack window and choose Pop Topmost Call.
+<p>The call is removed from the call stack. The program counter is moved to the
+line before the instruction that made the removed call. If the source code is
+available, the focus of the Source Editor is set to that line. When you continue
+program execution, the call is repeated.
+</p>
+</li>
+</ul>
+<table summary="related topics">
+<tr valign="top">
+<th colspan=2 align=left><a name="seealso">See Also</a></th>
+</tr>
+<tr valign="top">
+<td width="23"></td>
+<td>
+    <a href="UsingCorC++CallStack.html">Using the Call Stack</a>
+</td>
+</tr>
+</table>
+<hr>
+<small>
+<a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+<table border="0" cellpadding="20">
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+</body>
+</html>

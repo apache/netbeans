@@ -1,0 +1,10 @@
+#define N 10
+! loop
+do i = 1, N
+ if ( mod(i,2) == 0 ) then
+   print *, "even string"   ! even
+ else
+   print *, "odd string"    ! odd
+ end if
+end do
+end

@@ -1,0 +1,327 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <link type="text/css" href="../ide.css" rel="StyleSheet">
+
+    <title>Options Window: C/C++</title>
+  </head>
+  <body>
+    <h2>
+       Options Window: C/C++
+    </h2>
+    <p>
+       <small><a href="#seealso">See Also</a>&nbsp;</small>
+    </p>
+    <p>
+       You can access this panel by choosing Tools &gt; Options and clicking the C/C++ category.
+    </p>
+    <p>
+       The C/C++ panel of the Options window lets you configure build tools, project settings, code
+      assistance settings, highlighting settings, and accepted file extensions for your C and C++
+      projects. These options are used as default values for new C and C++ projects. Some of these
+      settings can be overridden on individual projects by <a href=
+      "../WorkingWithCandC++Projects/SettingCandC++ProjectProperties.html">setting project
+      properties</a>.
+    </p>
+    <ul>
+      <li>
+        <a href="#buildtoolstab">Build Tools</a>
+      </li>
+      <li>
+        <a href="#projectoptionstab">Project Options</a>
+      </li>
+      <li>
+        <a href="#codeassistancetab">Code Assistance</a>
+      </li>
+      <li>
+        <a href="#debuggingtab">Debugging</a>
+      </li>
+      <li>
+        <a href="#othertab">Other</a>
+      </li>
+    </ul>
+    <h3>
+       <a name="buildtoolstab"></a>Build Tools tab
+    </h3>
+    <p>
+       <b>Build Host</b>. The list includes your local host and any remote hosts you have defined.
+      You can add and remove remote build hosts, change the default host, and specify how to share
+      project sources on the local host with the remote host. For information on using remote
+      hosts, see <a href="../WorkingWithCandC++Projects/RemoteDevelopment.html">Remote
+      Development</a>.
+    </p>
+    <ul>
+      <li>
+        To add a remote host, click Edit. In the Build Hosts Manager dialog box, click Add. The New
+        Remote Host Setup wizard starts. See the help for the <a href=
+        "../WorkingWithCandC++Projects/NewRemoteDevelopmentHostWizardP1.html">New Remote Host Setup
+        wizard</a> for more information.
+      </li>
+      <li>
+        To set a host as the default build host, click Edit. In the Build Hosts Manager dialog box,
+        select the host, click Set as Default, then click OK. This host is used by default for new
+        projects.
+      </li>
+      <li>
+        To remove a remote host, click Edit. In the Build Hosts Manager dialog box, select the host
+        you want to remove, click Remove, then click OK.
+      </li>
+      <li>
+        To map shared project sources on the local host to a remote host, click Edit. In the Build
+        Host Manager dialog box, click Path Mapper. In the Edit Path's Map dialog box, select the
+        remote host in the Host list. For each mapping, in the Local Path field, type the path used
+        to access the shared project sources from the local host. In the Remote Path field, type
+        the path used to access the shared project sources from the remote host.
+      </li>
+      <li>
+        To change IDE properties related to the remote build host, click Properties. In the Host
+        Properties dialog box, you can change the name displayed in the IDE for the host by typing
+        in the Display Name field. To change the way project files are shared with the remote host,
+        select the file access method in the Access Project Files Via list. If the project files
+        are in a shared folder accessible from the local host and remote host, select System-level
+        File Sharing. If sharing the files is not possible, select Automatic Copying&nbsp;to copy
+        the files. The files are copied to your <tt>.netbeans</tt> directory on the remote host.
+      </li>
+    </ul>
+    <p>
+       <b>Tool Collection.</b> The tool collection list displays the collections found on the
+      currently selected build host. The default collection for that selected host is listed in
+      bold type. You can modify the tool collection list by adding or removing collections. Be sure
+      to select the Build Host before you modify any information about the tool collection.
+    </p>
+    <ul>
+      <li>
+        To add a collection to the list, click Add and specify the base directory in the Add New
+        Tool Set dialog box. The base directory is usually a <tt>bin</tt> subdirectory. The Tool
+        Set Family and Tool Set Name are filled in automatically by the IDE after it analyzes the
+        tools in the base directory. You can specify a different name for the collection. If you
+        change the family, make sure that the family you specify is the correct family for the
+        collection or the compiler flags might not be valid.
+      </li>
+      <li>
+        To remove a collection from the list, select the collection and click Remove.
+      </li>
+      <li>
+        To duplicate a collection, select the collection from the list and modify the base
+        directory, tool set family, or tool set name in the dialog box.
+      </li>
+      <li>
+        To make a collection the default, select the collection and click Default. The default
+        collection is used by default for new projects.
+      </li>
+    </ul>
+    <p>
+       <b>Base Directory.</b> The base directory for compilers for the current build host. The path
+      can be edited for the local host or remote hosts, but browsing to select a different path
+      only works on the local host.
+    </p>
+    <p>
+       <b>C Compiler.</b> The C compiler command to use for building projects. The default compiler
+      is the first one found in the base directory. You can type a different path to a compiler, or
+      click the browse button to navigate to a different compiler on the local host.
+    </p>
+    <p>
+       <b>C++ Compiler.</b> The C++ compiler command to use for building projects. The default
+      compiler is the first one found in the base directory. You can type a different path to a
+      compiler, or click the browse button to navigate to a different compiler on the local host.
+    </p>
+    <p>
+       <b>Fortran Compiler.</b> The Fortran compiler command to use for building projects. The
+      default compiler is the first one found in the base directory. You can type a different path
+      to a compiler, or click the browse button to navigate to a different compiler on the local
+      host.
+    </p>
+    <p>
+       <b>Assembler.</b> The assembler utility to use to translate assembly language projects into
+      machine code. The default assembler, if any, is the first one found in the base directory.
+      You can type a different path to an assembler, or click the browse button to navigate to a
+      different assembler on the local host.
+    </p>
+    <p>
+       <b>Make Command.</b> The make command to use for building projects. The default command is
+      the first one found in the base directory. You can type a different path to a make command,
+      or click the browse button and navigate to a different command on the local host.
+    </p>
+    <p>
+       <b>Debugger Command.</b> The gdb command to use when debugging projects. The default command
+      is the first one found in the base directory. You can type a different path to a gdb command,
+      or click the browse button and navigate to a different command on the local host.
+    </p>
+    <p>
+       <!--these might move somewhere else-->
+    </p>
+    <p>
+       <b>QMake Command.</b> The path to the qmake command, which is used to generate makefiles for
+      Qt projects. You can type the path to a qmake command, or click the browse button and
+      navigate to a different command on the local host.
+    </p>
+    <p>
+       <b>CMake Command.</b> The path to the cmake command to use for projects with existing
+      sources that use the CMake cross compiler. You can type a path to the cmake command, or click
+      the browse button and navigate to a different command on the local host.
+    </p>
+    <p>
+       The <b>Versions...</b> button displays the version numbers of each tool in the selected Tool
+      Collection.
+    </p>
+    <p>
+       The <b>Restore Defaults</b> button can be used to make the IDE search your environment for
+      tool collections and update the paths to all the tools. If you have manually added a tool
+      collection, the paths will not be changed.
+    </p>
+    <h3>
+       <a name="projectoptionstab"></a> Project Options Tab
+    </h3>
+    <ul>
+      <li>
+        <b>Make Options.</b> Global options for the <tt>make</tt> command.
+      </li>
+      <li>
+        <b>File Path Mode.</b> The mode for storing file paths in a project. Always Relative mode
+        stores paths as relative to the project root. Always Absolute mode stores paths as absolute
+        paths. Auto mode stores paths as relative to the project root if inside the project,
+        otherwise as absolute path.
+      </li>
+      <li>
+        <b>Reuse Output Tabs from Finished Processes.</b> If selected, writes make output to a
+        single Output window tab, deleting the output from the previous process. If not selected,
+        opens a new tab for each make process.
+      </li>
+      <li>
+        <b>Enable dependency checking in generated makefiles.</b> Add <tt>make state</tt>
+        statements to the makefile.
+      </li>
+      <li>
+        <b>Show binary files in Projects view.</b> If selected, the Projects view shows all files
+        in a directory tree, including binary objects. This option is most relevant to projects
+        created with existing sources, which might place sources and binaries in the same location.
+        Deselect this option to more easily see your C/C++ source files and header files.
+      </li>
+      <li>
+        <b>Show warning dialog about missing makefiles due to mismatched platforms.</b> If
+        selected, the IDE will warn you if you attempt to run a project that was created on a
+        platform that is not the same as your current build host's platform.
+      </li>
+      <li>
+        <b>Rebuild entire project if project properties have changed.</b> If selected, the IDE
+        rebuilds the project if you change any project properties, even ones that should have no
+        effect on build products. By default, this is not selected because dependency checking
+        should ensure most required rebuilds. You might want to enable this option if you are using
+        GNU tools and changing compiler or linker options does not cause a rebuild.
+      </li>
+      <li>
+        <b>Resolve symbolic links.</b> If selected, and the build system uses symbolic links to source files,
+        the IDE will add the original files to the project instead of the links. 
+      </li>
+    </ul>
+    <h3>
+       <a name="codeassistancetab"></a> Code Assistance Tab
+    </h3>
+    <p>
+       Select the appropriate tool collection and compiler tab. Modify the settings for include
+      files and macro definitions that are used by the built-in parser. For tool collections on
+      remote build hosts, the include files are located in your .netbeans directory
+    </p>
+    <h3>
+       <a name="debuggingtab">Debugging Options Tab</a>
+    </h3>
+    <p>
+       For information on setting global debugging options for C/C++ projects, see <a href=
+      "GlobalDebuggingOptions.html">Setting Global Debugging Options</a>.
+    </p>
+    <h3>
+       <a name="othertab"></a> Other Tab
+    </h3>
+    <p>
+       <b>Language</b> <b>File Extensions:</b> You can edit the lists of accepted file extensions
+        for C, C++, Fortran, and Assembler source files, and C and C++ header files.
+    </p>
+ <!--    <ul>
+      <li>
+        <b>Language</b> <b>File Extensions:</b> You can edit the lists of accepted file extensions
+        for C, C++, Fortran, and Assembler source files, and C and C++ header files.
+      </li>
+     <li>
+        <b>Support indexing of non C/C++/Fortran files in projects (slows down parsing)</b> If
+        selected, the IDE indexes project files that are not C, C++, or Fortran source files. By
+        default, this option is not selected to speed up parsing.
+      </li>
+      <li>
+        <b>Reparse on File Change.</b> If this option is selected, your project is reparsed
+        whenever files are modified. Normally this option should be enabled for code assistance to
+        work correctly. However, if the project is very large, reparsing might cause delays, so you
+        can deselect this option and reparse manually. Right-click the project and select Code
+        Assistance &gt; Reparse Project.
+      </li>
+    </ul> -->
+    <p>
+       &nbsp;
+    </p>
+    <table>
+      <tr valign="top">
+        <th colspan="2" align="left">
+          <a name="seealso">See Also</a> 
+        </th>
+      </tr>
+      <tr valign="top">
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+            <param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb7400&id=NBDAG117">
+            <param name="text" value=
+            "<html><u>Working with the Options Window</u></html>">
+            <param name="textFontSize" value="medium">
+            <param name="textColor" value="blue">
+          </object>
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <small><a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+    </p>
+    <p>
+       &nbsp;
+    </p>
+    <table border="0" cellpadding="20">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

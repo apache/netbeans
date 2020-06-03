@@ -1,0 +1,7 @@
+WARNING templates.cpp [111-116]: Unable to resolve template based identifier sayHi.
+WARNING templates.cpp [156-161]: Unable to resolve template based identifier sayHi.
+WARNING templates.cpp [176-187]: Unable to resolve template based identifier sayHiStatic.
+WARNING templates.cpp [242-253]: Unable to resolve template based identifier doSomething.
+WARNING templates.cpp [268-269]: Unable to resolve template based identifier n.
+WARNING templates.cpp [305-311]: Unable to resolve template based identifier Rebind.
+WARNING templates.cpp [412-415]: Unable to resolve template based identifier foo.

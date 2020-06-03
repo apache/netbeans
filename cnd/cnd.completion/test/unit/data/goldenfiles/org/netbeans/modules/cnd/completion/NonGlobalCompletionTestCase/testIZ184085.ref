@@ -1,0 +1,4 @@
+bitfields bitfields	$	   err_tmp.bitfields
+extra char[]	$	   err_tmp.extra
+len char	$	   err_tmp.len
+time short	$	   err_tmp.time

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<project name="cnd" default="build" basedir=".">
+
+    <property name="nbroot" location=".."/>
+    <property name="nbbuild" location="${nbroot}/nbbuild"/>
+    
+    <!-- When updating an entry within ZIP archive, Ant compares
+         timestamps of the entry and the replacement file. If entry
+         is newer that replacement file, no update is performed.
+         In our case the replacement must be unconditional. -->
+    <macrodef name="replace-zip-entry">
+        <attribute name="zipfile"/>
+        <attribute name="oldentry"/>
+        <attribute name="newentry"/>
+        <sequential>
+            <zip destfile="@{zipfile}.tmp">
+                <zipfileset
+                    src="@{zipfile}"
+                    excludes="@{oldentry}"/>
+                <zipfileset
+                    file="@{newentry}"
+                    fullpath="@{oldentry}"/>
+            </zip>
+            <move overwrite="true"
+                  file="@{zipfile}.tmp"
+                  tofile="@{zipfile}"/>
+        </sequential>
+    </macrodef>
+
+    <target name="-init-tasks">
+        <taskdef name="sortmodules"
+                classname="org.netbeans.nbbuild.SortSuiteModules"
+                classpath="${nbbuild}/build/nbantext.jar"/>
+    </target>
+
+    <target name="-init-modules" depends="-init-tasks">
+        <loadproperties srcfile="${nbbuild}/cluster.properties"/>
+        <pathconvert property="cnd.modules.fullpath">
+            <path>
+                <dirset dir="${nbroot}" includes="${nb.cluster.cnd}" excludes="jellytools.cnd"/>
+            </path>
+            <mapper type="identity"/>
+        </pathconvert>
+        <sortmodules unsortedmodules="${cnd.modules.fullpath}" sortedmodulesproperty="cnd.modules.sorted" sorttests="true"/>
+        <pathconvert property="cnd.modules.xref.fullpath">
+            <path>
+                <dirset dir="${nbroot}" includes="cnd.callgraph, cnd.classview, cnd.completion, cnd.gotodeclaration, cnd.highlight, cnd.navigation, cnd.refactoring"/>
+            </path>
+            <mapper type="identity"/>
+        </pathconvert>
+        <pathconvert property="cnd.modules.model.fullpath">
+            <path>
+                <!-- add all from xref as well -->
+                <dirset dir="${nbroot}" includes="cnd.apt, cnd.modelimpl, cnd.repository, 
+                        cnd.callgraph, cnd.classview, cnd.completion, cnd.gotodeclaration, cnd.highlight, cnd.navigation, cnd.refactoring"/>
+            </path>
+            <mapper type="identity"/>
+        </pathconvert>
+    </target>
+
+    <target name="clean">
+        <!-- Regular "clean" fails if external files content is changed.
+             So we first delete these files by hand. -->
+        <delete>
+             <fileset dir="${nbroot}">
+                  <include name="*/external/*.jar"/>
+                  <include name="*/external/*.zip"/>
+             </fileset>
+        </delete>
+        <subant buildpath="${nbroot}" target="clean">
+            <property name="cluster.config" value="cndext"/>
+        </subant>
+    </target>
+
+    <target name="build">
+        <subant buildpath="${nbroot}" target="build">
+            <property name="cluster.config" value="cndext"/>
+            <property name="buildnum" value="dev"/>
+        </subant>
+        <antcall target="-replace-jsch-in-build"/>
+    </target>
+
+    <target name="-replace-jsch-in-build" if="replace.jsch.jar">
+        <replace-zip-entry
+            zipfile="${nbbuild}/NetBeans-dev-cnd.zip"
+            oldentry="netbeans/ide/modules/ext/jsch-0.1.41.jar"
+            newentry="${replace.jsch.jar}"/>
+    </target>
+
+    <target name="build-test-dist">
+        <subant buildpath="${nbroot}" target="build-test-dist">
+            <property name="cluster.config" value="cnd"/>
+            <property name="test.fail.on.error" value="true"/>
+        </subant>
+        <antcall target="-replace-jsch-in-testdist"/>
+    </target>
+
+    <target name="-replace-jsch-in-testdist" if="replace.jsch.jar">
+        <replace-zip-entry
+            zipfile="${nbbuild}/build/testdist.zip"
+            oldentry="extralibs/jsch-0.1.41.jar"
+            newentry="${replace.jsch.jar}"/>
+    </target>
+
+    <target name="test-build" depends="-init-modules">
+        <subant buildpath="${cnd.modules.sorted}" target="test-build">
+            <property name="cluster.config" value="cnd"/>
+        </subant>
+    </target>
+
+    <target name="test" depends="-init-modules" description="run tests">
+        <subant buildpath="${cnd.modules.sorted}" target="test">
+            <property name="cluster.config" value="cnd"/>
+            <property name="continue.after.failing.tests" value="true"/>
+        </subant>
+    </target>
+
+    <target name="test-xref" depends="-init-modules" description="run xRef tests only">
+        <subant buildpath="${cnd.modules.xref.fullpath}" target="test">
+            <property name="cluster.config" value="cnd"/>
+            <property name="continue.after.failing.tests" value="true"/>
+        </subant>
+    </target>
+
+    <target name="test-model" depends="-init-modules" description="run Model sensitive tests only">
+        <subant buildpath="${cnd.modules.model.fullpath}" target="test">
+            <property name="cluster.config" value="cnd"/>
+            <property name="continue.after.failing.tests" value="true"/>
+        </subant>
+    </target>
+
+    <target name="coverage-report" depends="-init-modules">
+        <subant buildpath="${cnd.modules.sorted}" target="coverage-report">
+            <property name="cluster.config" value="cnd"/>
+            <property name="coverage.report.format" value="xml"/>
+        </subant>
+    </target>
+
+    <target name="rebuild-dlight" description="rebuild dlight cluster">
+        <exec executable="bash">
+            <arg value="../cnd.modelimpl/build.sh"/>
+            <arg value="dlight"/>
+        </exec>
+    </target>
+
+    <target name="rebuild-cnd" description="rebuild cnd cluster">
+        <exec executable="bash">
+            <arg value="../cnd.modelimpl/build.sh"/>
+        </exec>
+    </target>
+    
+    <target name="rebuild-cndext" description="rebuild cndext cluster">
+        <exec executable="bash">
+            <arg value="../cnd.modelimpl/build.sh"/>
+            <arg value="cndext"/>
+        </exec>
+    </target>
+
+    <target name="i18n-check" description="I18n check for CND modules">
+        <exec executable="sh">
+            <arg value="i18n-check.sh"/>
+        </exec>
+    </target>
+
+    <target name="i18n-check-local" description="I18n check for CND modules">
+        <exec executable="sh">
+            <arg value="i18n-check-local.sh"/>
+        </exec>
+    </target>
+
+    <target name="bundle-check" description="Bundle check for CND modules">
+        <exec executable="sh">
+            <arg value="bundle-check.sh"/>
+        </exec>
+    </target>
+    
+    <target name="CheckSignatures" description="Sig Test for CND/DLight modules">
+        <subant buildpath="${nbroot}" target="check-sigtests-version">
+            <property name="sigtest.fail.on.error" value="true"/>
+            <property name="sigtest.skip.check" value="false"/>
+            <property name="validation.nb.cluster.cnd" value=""/>
+            <property name="cluster.config" value="cndext"/>
+        </subant>
+    </target>
+    
+</project>

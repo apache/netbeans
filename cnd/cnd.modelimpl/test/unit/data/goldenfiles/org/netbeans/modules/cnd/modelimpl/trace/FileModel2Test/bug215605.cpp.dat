@@ -1,0 +1,100 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug215605.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN boost [1:1/0-10:2/169] SCOPE: bug215605.cpp
+    NAMESPACE DEFINITOIN mpl [2:5/22-9:6/167] SCOPE: bug215605.cpp
+        CLASS_FORWARD_DECLARATION bool_ [3:9/46-3:21/58]
+        CLASS if_ (boost::mpl::if_ ) [4:9/67-7:10/140] lcurly=77 SCOPE: mpl 
+            BASE CLASSES:
+            MEMBERS:
+                TYPEDEF type  [5:13/91-5:30/108] TYPE: int TEXT=int  [5:21/99-5:24/102] SCOPE: if_ 
+                FIELD PRIVATE type [6:13/121-6:22/130]  TYPE: int TEXT=int  [6:13/121-6:16/124]  INIT: null  SCOPE: if_ 
+        CLASS_FORWARD_DECLARATION int_ [8:9/150-8:20/161]
+CLASS_FORWARD_DECLARATION DummyThisT [12:1/171-12:18/188]
+CLASS_FORWARD_DECLARATION ThisT [13:1/189-13:13/201]
+NAMESPACE DEFINITOIN RCF [14:1/202-16:2/238] SCOPE: bug215605.cpp
+    VARIABLE defined_ [15:5/222-15:19/236]  TYPE: bool TEXT=bool  [15:5/222-15:9/226]  INIT: null  SCOPE: RCF 
+CLASS A (A ) [18:1/241-230:2/36154] lcurly=249 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF next_dispatch_id  [19:1/251-225:22/35899] TYPE: boost::mpl::if_::type TEXT=boost::mpl::if_<boost::mpl::int_<0> >::type  [20:5/428-224:12/35876] SCOPE: A 
+        FIELD PRIVATE k [228:5/36135-228:11/36141]  TYPE: int TEXT=int  [228:5/36135-228:8/36138]  INIT: null  SCOPE: A 
+        FIELD PRIVATE t [229:5/36146-229:11/36152]  TYPE: int TEXT=int  [229:5/36146-229:8/36149]  INIT: null  SCOPE: A 
+    FRIENDS:
+        FUNCTION RCF_make_next_dispatch_id_func [226:5/36030-226:100/36125] FriendFunctionImpl SCOPE: $Global$ 
+            DEFINITION: null
+            SIGNATURE RCF_make_next_dispatch_id_func(DummyThisT*,ThisT*,next_dispatch_id*)
+            UNIQUE NAME D:RCF_make_next_dispatch_id_func(DummyThisT*,ThisT*,next_dispatch_id*)
+            REFERENCED FRIEND FUNCTION: RCF_make_next_dispatch_id_func  [226:5/36030-226:100/36125]
+            PARAMETERS:
+                 [226:57/36082-226:69/36094]  TYPE: *DummyThisT TEXT=DummyThisT*  [226:57/36082-226:69/36094]  INIT: null  SCOPE: RCF_make_next_dispatch_id_func 
+                 [226:71/36096-226:78/36103]  TYPE: *ThisT TEXT=ThisT*  [226:71/36096-226:78/36103]  INIT: null  SCOPE: RCF_make_next_dispatch_id_func 
+                 [226:80/36105-226:98/36123]  TYPE: *A::next_dispatch_id TEXT=next_dispatch_id*  [226:80/36105-226:98/36123]  INIT: null  SCOPE: RCF_make_next_dispatch_id_func 
+            RETURNS $unresolved$::RCF::defined_ TEXT=RCF::defined_  [226:12/36037-226:25/36050]
+
+========== Dumping model of PROJECT DummyProject
+CLASS DummyThisT (DummyThisT ) [12:1/171-12:18/188] lcurly=187 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+CLASS ThisT (ThisT ) [13:1/189-13:13/201] lcurly=200 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+CLASS A (A ) [18:1/241-230:2/36154] lcurly=249 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        TYPEDEF next_dispatch_id  [19:1/251-225:22/35899] TYPE: boost::mpl::if_::type TEXT=boost::mpl::if_<boost::mpl::int_<0> >::type  [20:5/428-224:12/35876] SCOPE: A 
+        FIELD PRIVATE k [228:5/36135-228:11/36141]  TYPE: int TEXT=int  [228:5/36135-228:8/36138]  INIT: null  SCOPE: A 
+        FIELD PRIVATE t [229:5/36146-229:11/36152]  TYPE: int TEXT=int  [229:5/36146-229:8/36149]  INIT: null  SCOPE: A 
+    FRIENDS:
+        FUNCTION RCF_make_next_dispatch_id_func [226:5/36030-226:100/36125] FriendFunctionImpl SCOPE: $Global$ 
+            DEFINITION: null
+            SIGNATURE RCF_make_next_dispatch_id_func(DummyThisT*,ThisT*,next_dispatch_id*)
+            UNIQUE NAME D:RCF_make_next_dispatch_id_func(DummyThisT*,ThisT*,next_dispatch_id*)
+            REFERENCED FRIEND FUNCTION: RCF_make_next_dispatch_id_func  [226:5/36030-226:100/36125]
+            PARAMETERS:
+                 [226:57/36082-226:69/36094]  TYPE: *DummyThisT TEXT=DummyThisT*  [226:57/36082-226:69/36094]  INIT: null  SCOPE: RCF_make_next_dispatch_id_func 
+                 [226:71/36096-226:78/36103]  TYPE: *ThisT TEXT=ThisT*  [226:71/36096-226:78/36103]  INIT: null  SCOPE: RCF_make_next_dispatch_id_func 
+                 [226:80/36105-226:98/36123]  TYPE: *A::next_dispatch_id TEXT=next_dispatch_id*  [226:80/36105-226:98/36123]  INIT: null  SCOPE: RCF_make_next_dispatch_id_func 
+            RETURNS $unresolved$::RCF::defined_ TEXT=RCF::defined_  [226:12/36037-226:25/36050]
+FUNCTION RCF_make_next_dispatch_id_func [226:5/36030-226:100/36125] FriendFunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE RCF_make_next_dispatch_id_func(DummyThisT*,ThisT*,next_dispatch_id*)
+    UNIQUE NAME D:RCF_make_next_dispatch_id_func(DummyThisT*,ThisT*,next_dispatch_id*)
+    REFERENCED FRIEND FUNCTION: RCF_make_next_dispatch_id_func  [226:5/36030-226:100/36125]
+    PARAMETERS:
+         [226:57/36082-226:69/36094]  TYPE: *DummyThisT TEXT=DummyThisT*  [226:57/36082-226:69/36094]  INIT: null  SCOPE: RCF_make_next_dispatch_id_func 
+         [226:71/36096-226:78/36103]  TYPE: *ThisT TEXT=ThisT*  [226:71/36096-226:78/36103]  INIT: null  SCOPE: RCF_make_next_dispatch_id_func 
+         [226:80/36105-226:98/36123]  TYPE: *A::next_dispatch_id TEXT=next_dispatch_id*  [226:80/36105-226:98/36123]  INIT: null  SCOPE: RCF_make_next_dispatch_id_func 
+    RETURNS $unresolved$::RCF::defined_ TEXT=RCF::defined_  [226:12/36037-226:25/36050]
+NAMESPACE DEFINITIONS for RCF (RCF) 
+    bug215605.cpp  [14:1/202-16:2/238]
+NAMESPACE RCF (RCF) 
+    VARIABLE defined_ [15:5/222-15:19/236]  TYPE: bool TEXT=bool  [15:5/222-15:9/226]  INIT: null  SCOPE: RCF 
+NAMESPACE DEFINITIONS for boost (boost) 
+    bug215605.cpp  [1:1/0-10:2/169]
+NAMESPACE boost (boost) 
+    NAMESPACE DEFINITIONS for mpl (boost::mpl) 
+        bug215605.cpp  [2:5/22-9:6/167]
+    NAMESPACE mpl (boost::mpl) 
+        CLASS bool_ (boost::mpl::bool_ ) [3:9/46-3:21/58] lcurly=57 SCOPE: mpl 
+            BASE CLASSES:
+            MEMBERS:
+        CLASS if_ (boost::mpl::if_ ) [4:9/67-7:10/140] lcurly=77 SCOPE: mpl 
+            BASE CLASSES:
+            MEMBERS:
+                TYPEDEF type  [5:13/91-5:30/108] TYPE: int TEXT=int  [5:21/99-5:24/102] SCOPE: if_ 
+                FIELD PRIVATE type [6:13/121-6:22/130]  TYPE: int TEXT=int  [6:13/121-6:16/124]  INIT: null  SCOPE: if_ 
+        CLASS int_ (boost::mpl::int_ ) [8:9/150-8:20/161] lcurly=160 SCOPE: mpl 
+            BASE CLASSES:
+            MEMBERS:
+

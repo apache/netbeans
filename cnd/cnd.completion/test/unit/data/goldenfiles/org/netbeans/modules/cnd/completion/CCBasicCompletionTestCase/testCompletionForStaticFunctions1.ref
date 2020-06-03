@@ -1,0 +1,13 @@
+A	$	    A
+B	$	    B
+C	$	    C
+In_Macro	$	    In_Macro
+bar5() double	$	    bar5()
+funcion4() double	$	    funcion4()
+function1() void	$	    function1()
+function2(double d, int i) int	$	    function2()
+function3() int	$	    function3()
+globInt int	$	    globInt
+checkZero() void	$	    checkZero()
+globFoo() void	$	    globFoo()
+main(int argc, char** argv) int	$	    main()

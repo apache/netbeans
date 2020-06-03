@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="96">
+  <projectmakefile>build/Debug/Makefile</projectmakefile>
+  <defaultConf>0</defaultConf>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <developmentServer>X-HOST-UID-X</developmentServer>
+        <platform>X-PLATFORM-INDEX-X</platform>
+      </toolsSet>
+      <runprofile version="8">
+        <buildfirst>true</buildfirst>
+      </runprofile>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <developmentServer>X-HOST-UID-X</developmentServer>
+        <platform>X-PLATFORM-INDEX-X</platform>
+      </toolsSet>
+      <runprofile version="8">
+        <buildfirst>true</buildfirst>
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>

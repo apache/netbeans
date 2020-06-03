@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE MIME-Resolver PUBLIC "-//NetBeans//DTD MIME Resolver 1.1//EN"
+		    "http://www.netbeans.org/dtds/mime-resolver-1_1.dtd">
+<MIME-resolver>
+    <file>
+        <!-- Only files without extension. -->
+        <ext name=""/>
+        <!-- Pattern // in first 2 bytes and pattern -*- C++ -*- in first 80 bytes. -->
+        <pattern value="//" range="2">
+            <pattern value="-*- C++ -*-" range="80"/>
+        </pattern>
+        <pattern value="//" range="2">
+            <pattern value="standard header" range="80"/>
+        </pattern>
+        <resolver mime="text/x-h"/>
+    </file>
+    <file>
+        <!-- Do not resolve FreeMaker templates with <#include directive. -->
+        <ext name=""/>
+        <pattern value="&lt;#include" range="128"/>
+        <exit/>
+    </file>
+    <file>
+        <!-- Only files without extension. -->
+        <ext name=""/>
+        <!-- preprocessor directives in the first 128 bytes. -->
+        <pattern value="#include" range="128"/>
+        <pattern value="#pragma" range="128"/>
+        <!-- preprocessor directives after copyrigh -->
+        <pattern  value="/*" range="2">
+            <pattern value="#include" range="4000"/>
+        </pattern>
+        <pattern  value="/*" range="2">
+            <pattern value="#pragma" range="4000"/>
+        </pattern>
+        <pattern  value="/*" range="2">
+            <pattern value="#if" range="4000"/>
+        </pattern>
+        <resolver mime="text/x-h"/>
+    </file>
+</MIME-resolver>

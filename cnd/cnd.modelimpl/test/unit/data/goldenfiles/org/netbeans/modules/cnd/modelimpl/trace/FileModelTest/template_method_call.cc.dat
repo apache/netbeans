@@ -1,0 +1,60 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE template_method_call.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+CLASS C (C ) [1:1/0-6:2/76] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION foo  [3:5/22-5:6/73] MethodDDImpl SCOPE: C 
+            SIGNATURE foo<class>()
+            UNIQUE NAME f:C::foo<class>()
+            DECLARATION: foo  [3:5/22-5:6/73]
+            PARAMETERS:
+            RETURNS int TEXT=int  [3:22/39-3:25/42]
+            STATEMENT COMPOUND  [3:31/48-5:6/73] SCOPE: foo 
+                STATEMENT RETURN  [4:9/58-4:18/67] SCOPE: Stmt  [3:31/48-5:6/73] text: 'return i;'
+FUNCTION DEFINITION main  [8:1/79-12:2/135] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [8:1/79-12:2/135]
+    PARAMETERS:
+    RETURNS int TEXT=int  [8:1/79-8:4/82]
+    STATEMENT COMPOUND  [8:11/89-12:2/135] SCOPE: main 
+        STATEMENT DECLARATION  [9:5/99-9:9/103] SCOPE: Stmt  [8:11/89-12:2/135]
+            VARIABLE c [9:5/99-9:9/103]  TYPE: C TEXT=C  [9:5/99-9:6/100]  INIT: null  SCOPE: Stmt  [8:11/89-12:2/135]
+        STATEMENT EXPRESSION  [10:5/108-10:15/118] SCOPE: Stmt  [8:11/89-12:2/135] text: 'c.foo<1>()'
+        STATEMENT RETURN  [11:5/124-11:14/133] SCOPE: Stmt  [8:11/89-12:2/135] text: 'return 0;'
+
+========== Dumping model of PROJECT DummyProject
+CLASS C (C ) [1:1/0-6:2/76] lcurly=8 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FUNCTION DEFINITION foo  [3:5/22-5:6/73] MethodDDImpl SCOPE: C 
+            SIGNATURE foo<class>()
+            UNIQUE NAME f:C::foo<class>()
+            DECLARATION: foo  [3:5/22-5:6/73]
+            PARAMETERS:
+            RETURNS int TEXT=int  [3:22/39-3:25/42]
+            STATEMENT COMPOUND  [3:31/48-5:6/73] SCOPE: foo 
+                STATEMENT RETURN  [4:9/58-4:18/67] SCOPE: Stmt  [3:31/48-5:6/73] text: 'return i;'
+FUNCTION DEFINITION main  [8:1/79-12:2/135] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE main()
+    UNIQUE NAME f:main()
+    DECLARATION: main  [8:1/79-12:2/135]
+    PARAMETERS:
+    RETURNS int TEXT=int  [8:1/79-8:4/82]
+    STATEMENT COMPOUND  [8:11/89-12:2/135] SCOPE: main 
+        STATEMENT DECLARATION  [9:5/99-9:9/103] SCOPE: Stmt  [8:11/89-12:2/135]
+            VARIABLE c [9:5/99-9:9/103]  TYPE: C TEXT=C  [9:5/99-9:6/100]  INIT: null  SCOPE: Stmt  [8:11/89-12:2/135]
+        STATEMENT EXPRESSION  [10:5/108-10:15/118] SCOPE: Stmt  [8:11/89-12:2/135] text: 'c.foo<1>()'
+        STATEMENT RETURN  [11:5/124-11:14/133] SCOPE: Stmt  [8:11/89-12:2/135] text: 'return 0;'
+

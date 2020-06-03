@@ -1,0 +1,1 @@
+ERROR src/bug257545.c [96-98]: Mismatching the argument type "int" and conversion specifier "ld"

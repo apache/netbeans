@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <link href="../ide.css" rel="StyleSheet" type="text/css">
+    <meta content="Helen" name="generator">
+    <title>Configure Code Assistance Wizard: Configure Code Assistance</title>
+  </head>
+  <body>
+    <h2>
+       Configure Code Assistance Wizard: Configure Code Assistance
+    </h2>
+    <p>
+       <small><a href="#seealso">See Also</a>&nbsp;</small>
+    </p>
+    <p>
+       For a C/C++ Project With Existing Sources, the Configure Code Assistance wizard lets you
+      specify how your code will be parsed by the built-in parser used for the code assistance
+      features of the IDE.
+    </p>
+    <p>
+       The Configure Code Assistance page lets you specify the folder that contains the source
+      files for your project and how it should be explored to determine the parsing options.
+    </p>
+    <ul>
+      <li>
+        <b>Source files root folder.</b> Lets you specify the folder that contains the source files
+        for your project.
+      </li>
+      <li>
+        <b>Select analyzer.</b>
+        <ul>
+          <li>
+            <b>Explore Build Log File.</b> Explore the log file produced when you build the project.
+            Often the build log contains enough information for the IDE to determine the necessary
+            options and the exact list of files to be built. To use the log as an information
+            source, save your build log in a file and specify this file location in the next step.
+          </li>
+          <li>
+            <b>Explore Exec Log File.</b> Explore the system library exec calls collected by build analyzer.
+          </li>
+          <li>
+            <b>Explore Executable or Library File.</b> Explore the debugging information in
+            executables and library files.
+          </li>
+           <li>
+            <b>Explore Object Files in Folder.</b> Explore debugging information in object files.
+          </li>
+          <li>
+            <b>Search file system for C/C++ headers.</b> Gather information from the header files
+            referenced in the project. Deprecated.
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p>
+       The Explore Executable or Library File mode and the Explore Object Files in Folder mode
+      require that the project has been built with debugging information. If you are using a Oracle
+      Developer Studio compiler, building with the <tt>-g</tt> option is sufficient. If you are using
+      a GNU compiler, use the following options:
+    </p>
+<pre>
+-g3 -gdwarf-2
+</pre>
+    <table>
+      <tr>
+        <th colspan="2" align="left">
+          <a name="seealso">See also</a>
+        </th>
+      </tr>
+      <tr>
+        <td width="23">
+          &nbsp;
+        </td>
+        <td>
+          <a href="CodeAssistanceWizardP1.html">Configure Code Assistance Wizard: Select
+          Mode</a><br>
+           <a href="CodeAssistanceWizardP3.html">Configure Code Assistance Wizard: Select Analyzed
+          File(s)</a><br>
+           <a href="CodeAssistanceWizardP4.html">Configure Code Assistance Wizard: Configuration
+          Level</a><br>
+           <a href="CodeAssistanceWizardP5.html">Configure Code Assistance Wizard: View
+          Configuration</a> 
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <p>
+       <small><a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+    </p>
+    <table cellpadding="20" border="0">
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+4:OVERRIDDEN PrimitiveDescendant::v_func primitive.cc:15
+5:OVERRIDDEN PrimitiveDescendant::v_inline_func primitive.cc:16
+7:OVERRIDDEN_PSEUDO PrimitiveDescendant::nv_func primitive.cc:18
+8:OVERRIDDEN_PSEUDO PrimitiveDescendant::nv_inline_func primitive.cc:19
+15:OVERRIDES PrimitiveAncestor::v_func primitive.cc:4
+16:OVERRIDES PrimitiveAncestor::v_inline_func primitive.cc:5
+18:OVERRIDES_PSEUDO PrimitiveAncestor::nv_func primitive.cc:7
+19:OVERRIDES_PSEUDO PrimitiveAncestor::nv_inline_func primitive.cc:8
+26:OVERRIDDEN PrimitiveDescendant::v_func primitive.cc:15
+29:OVERRIDDEN_PSEUDO PrimitiveDescendant::nv_func primitive.cc:18
+35:OVERRIDES PrimitiveAncestor::v_func primitive.cc:4
+38:OVERRIDES_PSEUDO PrimitiveAncestor::nv_func primitive.cc:7

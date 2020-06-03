@@ -1,0 +1,86 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!--
+-//SolarisNativeSupport//DTD debugconfiguration 1.0//EN
+nbrescurr:/com/sun/tools/dbxgui/resources/debugconfiguration-1_0.dtd
+Document type declaration for a Debugging Configuration.
+-->
+   <!-- Missing: libs? loadobjects? -->
+<!ELEMENT DebugConfiguration (runargs?,arguments?,environment?,pathmap?,signals?,
+    exceptions?,options?)>
+
+<!ATTLIST DebugConfiguration
+	name CDATA #REQUIRED
+	executable CDATA #REQUIRED
+	rundir CDATA #IMPLIED>
+
+<!ELEMENT runargs CDATA #IMPLIED>
+
+<!ELEMENT arguments (arg+)>
+<!ATTLIST arguments redirection CDATA #IMPLIED>
+<!ELEMENT arg EMPTY>
+<!ATTLIST arg value CDATA #REQUIRED>
+
+<!ELEMENT environment (var+)>
+<!ELEMENT var EMPTY>
+<!ATTLIST var value CDATA #REQUIRED>
+
+<!ELEMENT pathmap (pathprefix+)>
+<!ELEMENT pathprefix EMPTY>
+<!ATTLIST pathprefix
+	replace CDATA #REQUIRED
+	with CDATA #REQUIRED>
+
+<!ELEMENT signals (signal+)>
+<!ELEMENT signal EMPTY>
+<!ATTLIST signal
+	number CDATA #REQUIRED
+	name CDATA #IMPLIED
+	do (catch|ignore|default) "default">
+
+<!ELEMENT exceptions (intercept+,ignore+)>
+<!ATTLIST exceptions 
+	unhandled CDATA #IMPLIED
+	unexpected CDATA #IMPLIED>
+<!ELEMENT intercept EMPTY>
+<!ATTLIST intercept
+	typename CDATA #REQUIRED>
+<!ELEMENT ignore EMPTY>
+<!ATTLIST ignore
+	typename CDATA #REQUIRED>
+
+<!ELEMENT loadobjects (loadobject+)>
+<!ELEMENT loadobject EMPTY>
+<!ATTLIST loadobject 
+	path CDATA #REQUIRED
+	do (preload|exclude) "preload">
+
+<!ELEMENT breakpoints (breakpoint+)>
+<!ELEMENT breakpoint EMPTY>
+<!ATTLIST breakpoint 
+	dbx CDATA #REQUIRED>
+
+<!ELEMENT options (option+)>
+<!ELEMENT option EMPTY>
+<!ATTLIST option 
+	name CDATA #REQUIRED
+	value CDATA #REQUIRED>
+

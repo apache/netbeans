@@ -1,0 +1,74 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE bug246534.cpp
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN bug246534 [1:1/0-18:2/577] SCOPE: bug246534.cpp
+    TYPEDEF CharType246534  [2:5/26-2:33/54] TYPE: char TEXT=char  [2:13/34-2:17/38] SCOPE: bug246534 
+    STRUCT AAA246534 (bug246534::AAA246534 ) [4:5/60-6:6/103] lcurly=77 SCOPE: bug246534 
+        BASE CLASSES:
+        MEMBERS:
+            FIELD PUBLIC field [5:9/87-5:19/97]  TYPE: int TEXT=int  [5:9/87-5:12/90]  INIT: null  SCOPE: AAA246534 
+    FUNCTION DEFINITION checkCpp11_246534  [8:5/110-17:6/575] FunctionDDImpl SCOPE: bug246534 
+        SIGNATURE checkCpp11_246534()
+        UNIQUE NAME f:bug246534::checkCpp11_246534()
+        DECLARATION: checkCpp11_246534  [8:5/110-17:6/575]
+        PARAMETERS:
+        RETURNS int TEXT=int  [8:5/110-8:8/113]
+        STATEMENT COMPOUND  [8:29/134-17:6/575] SCOPE: checkCpp11_246534 
+            STATEMENT DECLARATION  [9:9/144-9:25/160] SCOPE: Stmt  [8:29/134-17:6/575]
+                VARIABLE var1 [9:9/144-9:25/160]  TYPE: int TEXT=int  [9:9/144-9:12/147]  INIT: null  SCOPE: Stmt  [8:29/134-17:6/575]
+            STATEMENT DECLARATION  [10:9/169-10:28/188] SCOPE: Stmt  [8:29/134-17:6/575]
+                VARIABLE var2 [10:9/169-10:28/188]  TYPE: int TEXT=int  [10:9/169-10:12/172]  INIT: null  SCOPE: Stmt  [8:29/134-17:6/575]
+            STATEMENT DECLARATION  [11:9/197-11:21/209] SCOPE: Stmt  [8:29/134-17:6/575]
+                VARIABLE var3 [11:9/197-11:21/209]  TYPE: int TEXT=int  [11:9/197-11:12/200]  INIT: null  SCOPE: Stmt  [8:29/134-17:6/575]
+            STATEMENT DECLARATION  [12:9/218-12:46/255] SCOPE: Stmt  [8:29/134-17:6/575]
+                VARIABLE array1 [12:9/218-12:46/255]  TYPE: int[] TEXT=int[]  [12:9/218-12:12/221]  INIT: text='{var1, var2, 5, var3}'  SCOPE: Stmt  [8:29/134-17:6/575]
+            STATEMENT DECLARATION  [13:9/264-13:80/335] SCOPE: Stmt  [8:29/134-17:6/575]
+                VARIABLE array2 [13:9/264-13:80/335]  TYPE: const bug246534::CharType246534[][] TEXT=const CharType246534[][]  [13:9/264-13:29/284]  INIT: text='{{(char)var1, (char)var2}, {1, 3}}'  SCOPE: Stmt  [8:29/134-17:6/575]
+            STATEMENT DECLARATION  [14:9/344-14:52/387] SCOPE: Stmt  [8:29/134-17:6/575]
+                VARIABLE varAAA1 [14:9/344-14:52/387]  TYPE: bug246534::AAA246534 TEXT=AAA246534  [14:9/344-14:18/353]  INIT: text='{(CharType246534){42}}'  SCOPE: Stmt  [8:29/134-17:6/575]
+            STATEMENT DECLARATION  [15:9/396-15:91/478] SCOPE: Stmt  [8:29/134-17:6/575]
+                VARIABLE varAAA2 [15:9/396-15:91/478]  TYPE: bug246534::AAA246534 TEXT=AAA246534  [15:9/396-15:18/405]  INIT: text='{.field =  (CharType246534){(char)var1} + (int){var2} + var3}'  SCOPE: Stmt  [8:29/134-17:6/575]
+            STATEMENT RETURN  [16:9/495-16:83/569] SCOPE: Stmt  [8:29/134-17:6/575] text: 'return varAAA1.field + (CharType246534){varAAA2.field} + (int){var1 + 42};'
+
+========== Dumping model of PROJECT DummyProject
+NAMESPACE DEFINITIONS for bug246534 (bug246534) 
+    bug246534.cpp  [1:1/0-18:2/577]
+NAMESPACE bug246534 (bug246534) 
+    TYPEDEF CharType246534  [2:5/26-2:33/54] TYPE: char TEXT=char  [2:13/34-2:17/38] SCOPE: bug246534 
+    STRUCT AAA246534 (bug246534::AAA246534 ) [4:5/60-6:6/103] lcurly=77 SCOPE: bug246534 
+        BASE CLASSES:
+        MEMBERS:
+            FIELD PUBLIC field [5:9/87-5:19/97]  TYPE: int TEXT=int  [5:9/87-5:12/90]  INIT: null  SCOPE: AAA246534 
+    FUNCTION DEFINITION checkCpp11_246534  [8:5/110-17:6/575] FunctionDDImpl SCOPE: bug246534 
+        SIGNATURE checkCpp11_246534()
+        UNIQUE NAME f:bug246534::checkCpp11_246534()
+        DECLARATION: checkCpp11_246534  [8:5/110-17:6/575]
+        PARAMETERS:
+        RETURNS int TEXT=int  [8:5/110-8:8/113]
+        STATEMENT COMPOUND  [8:29/134-17:6/575] SCOPE: checkCpp11_246534 
+            STATEMENT DECLARATION  [9:9/144-9:25/160] SCOPE: Stmt  [8:29/134-17:6/575]
+                VARIABLE var1 [9:9/144-9:25/160]  TYPE: int TEXT=int  [9:9/144-9:12/147]  INIT: null  SCOPE: Stmt  [8:29/134-17:6/575]
+            STATEMENT DECLARATION  [10:9/169-10:28/188] SCOPE: Stmt  [8:29/134-17:6/575]
+                VARIABLE var2 [10:9/169-10:28/188]  TYPE: int TEXT=int  [10:9/169-10:12/172]  INIT: null  SCOPE: Stmt  [8:29/134-17:6/575]
+            STATEMENT DECLARATION  [11:9/197-11:21/209] SCOPE: Stmt  [8:29/134-17:6/575]
+                VARIABLE var3 [11:9/197-11:21/209]  TYPE: int TEXT=int  [11:9/197-11:12/200]  INIT: null  SCOPE: Stmt  [8:29/134-17:6/575]
+            STATEMENT DECLARATION  [12:9/218-12:46/255] SCOPE: Stmt  [8:29/134-17:6/575]
+                VARIABLE array1 [12:9/218-12:46/255]  TYPE: int[] TEXT=int[]  [12:9/218-12:12/221]  INIT: text='{var1, var2, 5, var3}'  SCOPE: Stmt  [8:29/134-17:6/575]
+            STATEMENT DECLARATION  [13:9/264-13:80/335] SCOPE: Stmt  [8:29/134-17:6/575]
+                VARIABLE array2 [13:9/264-13:80/335]  TYPE: const bug246534::CharType246534[][] TEXT=const CharType246534[][]  [13:9/264-13:29/284]  INIT: text='{{(char)var1, (char)var2}, {1, 3}}'  SCOPE: Stmt  [8:29/134-17:6/575]
+            STATEMENT DECLARATION  [14:9/344-14:52/387] SCOPE: Stmt  [8:29/134-17:6/575]
+                VARIABLE varAAA1 [14:9/344-14:52/387]  TYPE: bug246534::AAA246534 TEXT=AAA246534  [14:9/344-14:18/353]  INIT: text='{(CharType246534){42}}'  SCOPE: Stmt  [8:29/134-17:6/575]
+            STATEMENT DECLARATION  [15:9/396-15:91/478] SCOPE: Stmt  [8:29/134-17:6/575]
+                VARIABLE varAAA2 [15:9/396-15:91/478]  TYPE: bug246534::AAA246534 TEXT=AAA246534  [15:9/396-15:18/405]  INIT: text='{.field =  (CharType246534){(char)var1} + (int){var2} + var3}'  SCOPE: Stmt  [8:29/134-17:6/575]
+            STATEMENT RETURN  [16:9/495-16:83/569] SCOPE: Stmt  [8:29/134-17:6/575] text: 'return varAAA1.field + (CharType246534){varAAA2.field} + (int){var1 + 42};'
+

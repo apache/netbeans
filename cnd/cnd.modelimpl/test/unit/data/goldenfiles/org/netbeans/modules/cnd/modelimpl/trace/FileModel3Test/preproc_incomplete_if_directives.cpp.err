@@ -1,0 +1,4 @@
+FileModel3Test/preproc_incomplete_if_directives.cpp, line 1: #if with no expression
+FileModel3Test/preproc_incomplete_if_directives.cpp, line 3: #elif with no expression
+FileModel3Test/preproc_incomplete_if_directives.cpp, line 7: no macro name given in #ifdef directive
+FileModel3Test/preproc_incomplete_if_directives.cpp, line 11: no macro name given in #ifndef directive

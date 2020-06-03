@@ -1,0 +1,1 @@
+method() void	$	    select<Person>().one().method()

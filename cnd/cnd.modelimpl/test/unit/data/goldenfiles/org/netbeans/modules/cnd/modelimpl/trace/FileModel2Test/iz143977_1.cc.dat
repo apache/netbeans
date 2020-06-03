@@ -1,0 +1,122 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz143977_1.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+NAMESPACE DEFINITOIN iz143977_1 [2:1/21-40:2/1332] SCOPE: iz143977_1.cc
+    CLASS NullType (iz143977_1::NullType ) [3:5/48-3:22/65] lcurly=63 SCOPE: iz143977_1 
+        BASE CLASSES:
+        MEMBERS:
+    CLASS EmptyType (iz143977_1::EmptyType ) [4:5/71-4:23/89] lcurly=87 SCOPE: iz143977_1 
+        BASE CLASSES:
+        MEMBERS:
+    CLASS DefaultFactoryError<class T1,class T2> (iz143977_1::DefaultFactoryError ) [5:5/95-5:63/153] lcurly=151 SCOPE: iz143977_1 
+        BASE CLASSES:
+        MEMBERS:
+    STRUCT Typelist<class T,class U> (iz143977_1::Typelist ) [6:5/159-6:51/205] lcurly=203 SCOPE: iz143977_1 
+        BASE CLASSES:
+        MEMBERS:
+    STRUCT FactoryImplBase (iz143977_1::FactoryImplBase ) [7:5/211-10:6/307] lcurly=234 SCOPE: iz143977_1 
+        BASE CLASSES:
+        MEMBERS:
+            TYPEDEF Parm1  [8:9/244-8:33/268] TYPE: iz143977_1::EmptyType TEXT=EmptyType  [8:17/252-8:26/261] SCOPE: FactoryImplBase 
+            TYPEDEF Parm2  [9:9/277-9:33/301] TYPE: iz143977_1::EmptyType TEXT=EmptyType  [9:17/285-9:26/294] SCOPE: FactoryImplBase 
+    STRUCT FactoryImpl<typename AP,typename Id,typename TList> (iz143977_1::FactoryImpl ) [11:5/313-13:6/395] lcurly=388 SCOPE: iz143977_1 
+        BASE CLASSES:
+        MEMBERS:
+    STRUCT FactoryImpl<class,class,NullType> (iz143977_1::FactoryImpl<class,class,NullType> ) [14:5/401-18:6/525] lcurly=518 SCOPE: iz143977_1 
+        BASE CLASSES:
+            CLASS=iz143977_1::FactoryImplBase VISIBILITY==PUBLIC virtual==false text='public FactoryImplBase'
+        MEMBERS:
+    STRUCT FactoryImpl<class,class,Typelist<class,NullType> > (iz143977_1::FactoryImpl<class,class,Typelist<class,NullType> > ) [19:5/531-25:6/781] lcurly=681 SCOPE: iz143977_1 
+        BASE CLASSES:
+            CLASS=iz143977_1::FactoryImplBase VISIBILITY==PUBLIC virtual==false text='public FactoryImplBase'
+        MEMBERS:
+            FUNCTION DEFINITION ~FactoryImpl  [23:9/691-23:34/716] DestructorDDImpl SCOPE: FactoryImpl 
+                SIGNATURE ~FactoryImpl()
+                UNIQUE NAME f:iz143977_1::FactoryImpl<class,class,Typelist<class,NullType> >::~FactoryImpl()
+                DECLARATION: ~FactoryImpl  [23:9/691-23:34/716]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [23:32/714-23:34/716] SCOPE: ~FactoryImpl 
+            FUNCTION CreateObject [24:9/725-24:59/775] MethodImpl SCOPE: FactoryImpl 
+                DEFINITION: null
+                SIGNATURE CreateObject(const Id&,Parm1)
+                UNIQUE NAME F:iz143977_1::FactoryImpl<class,class,Typelist<class,NullType> >::CreateObject(const Id&,Parm1)
+                PARAMETERS:
+                    id [24:34/750-24:46/762]  TYPE: const &iz143977_1::FactoryImpl<class,class,Typelist<class,NullType> >::Id TEXT=const Id&  [24:34/750-24:43/759]  INIT: null  SCOPE: CreateObject 
+                     [24:47/763-24:52/768]  TYPE: iz143977_1::FactoryImplBase::Parm1 TEXT=Parm1  [24:47/763-24:52/768]  INIT: null  SCOPE: CreateObject 
+                RETURNS *iz143977_1::FactoryImpl<class,class,Typelist<class,NullType> >::AP TEXT=AP*  [24:17/733-24:20/736]
+    CLASS Factory<class AbstractProduct,typename IdentifierType,typename CreatorParmTList=NullType,template<typename,class> class FactoryErrorPolicy=DefaultFactoryError> (iz143977_1::Factory ) [26:5/787-39:6/1329] lcurly=1082 SCOPE: iz143977_1 
+        BASE CLASSES:
+            CLASS=iz143977_1::Factory::FactoryErrorPolicy VISIBILITY==PUBLIC virtual==false text='public FactoryErrorPolicy<IdentifierType, AbstractProduct>'
+        MEMBERS:
+            TYPEDEF Impl  [35:9/1092-35:87/1170] TYPE: iz143977_1::FactoryImpl TEXT=FactoryImpl<AbstractProduct,IdentifierType,CreatorParmTList>  [35:17/1100-35:81/1164] SCOPE: Factory 
+            TYPEDEF Parm1  [37:9/1188-37:44/1223] TYPE: $unresolved$::Impl::Parm1 TEXT=Impl::Parm1  [37:26/1205-37:37/1216] SCOPE: Factory 
+            TYPEDEF Parm2  [38:9/1260-38:44/1295] TYPE: $unresolved$::Impl::Parm2 TEXT=Impl::Parm2  [38:26/1277-38:37/1288] SCOPE: Factory 
+USING NAMESPACE. iz143977_1  [41:1/1333-41:27/1359]; REF NS: iz143977_1 SCOPE: null
+
+========== Dumping model of PROJECT DummyProject
+USING NAMESPACE. iz143977_1  [41:1/1333-41:27/1359]; REF NS: iz143977_1 SCOPE: null
+NAMESPACE DEFINITIONS for iz143977_1 (iz143977_1) 
+    iz143977_1.cc  [2:1/21-40:2/1332]
+NAMESPACE iz143977_1 (iz143977_1) 
+    CLASS NullType (iz143977_1::NullType ) [3:5/48-3:22/65] lcurly=63 SCOPE: iz143977_1 
+        BASE CLASSES:
+        MEMBERS:
+    CLASS EmptyType (iz143977_1::EmptyType ) [4:5/71-4:23/89] lcurly=87 SCOPE: iz143977_1 
+        BASE CLASSES:
+        MEMBERS:
+    CLASS DefaultFactoryError<class T1,class T2> (iz143977_1::DefaultFactoryError ) [5:5/95-5:63/153] lcurly=151 SCOPE: iz143977_1 
+        BASE CLASSES:
+        MEMBERS:
+    STRUCT Typelist<class T,class U> (iz143977_1::Typelist ) [6:5/159-6:51/205] lcurly=203 SCOPE: iz143977_1 
+        BASE CLASSES:
+        MEMBERS:
+    STRUCT FactoryImplBase (iz143977_1::FactoryImplBase ) [7:5/211-10:6/307] lcurly=234 SCOPE: iz143977_1 
+        BASE CLASSES:
+        MEMBERS:
+            TYPEDEF Parm1  [8:9/244-8:33/268] TYPE: iz143977_1::EmptyType TEXT=EmptyType  [8:17/252-8:26/261] SCOPE: FactoryImplBase 
+            TYPEDEF Parm2  [9:9/277-9:33/301] TYPE: iz143977_1::EmptyType TEXT=EmptyType  [9:17/285-9:26/294] SCOPE: FactoryImplBase 
+    STRUCT FactoryImpl<typename AP,typename Id,typename TList> (iz143977_1::FactoryImpl ) [11:5/313-13:6/395] lcurly=388 SCOPE: iz143977_1 
+        BASE CLASSES:
+        MEMBERS:
+    STRUCT FactoryImpl<class,class,NullType> (iz143977_1::FactoryImpl<class,class,NullType> ) [14:5/401-18:6/525] lcurly=518 SCOPE: iz143977_1 
+        BASE CLASSES:
+            CLASS=iz143977_1::FactoryImplBase VISIBILITY==PUBLIC virtual==false text='public FactoryImplBase'
+        MEMBERS:
+    STRUCT FactoryImpl<class,class,Typelist<class,NullType> > (iz143977_1::FactoryImpl<class,class,Typelist<class,NullType> > ) [19:5/531-25:6/781] lcurly=681 SCOPE: iz143977_1 
+        BASE CLASSES:
+            CLASS=iz143977_1::FactoryImplBase VISIBILITY==PUBLIC virtual==false text='public FactoryImplBase'
+        MEMBERS:
+            FUNCTION DEFINITION ~FactoryImpl  [23:9/691-23:34/716] DestructorDDImpl SCOPE: FactoryImpl 
+                SIGNATURE ~FactoryImpl()
+                UNIQUE NAME f:iz143977_1::FactoryImpl<class,class,Typelist<class,NullType> >::~FactoryImpl()
+                DECLARATION: ~FactoryImpl  [23:9/691-23:34/716]
+                PARAMETERS:
+                RETURNS <*no_classifier*> TEXT=  [null-null]
+                STATEMENT COMPOUND  [23:32/714-23:34/716] SCOPE: ~FactoryImpl 
+            FUNCTION CreateObject [24:9/725-24:59/775] MethodImpl SCOPE: FactoryImpl 
+                DEFINITION: null
+                SIGNATURE CreateObject(const Id&,Parm1)
+                UNIQUE NAME F:iz143977_1::FactoryImpl<class,class,Typelist<class,NullType> >::CreateObject(const Id&,Parm1)
+                PARAMETERS:
+                    id [24:34/750-24:46/762]  TYPE: const &iz143977_1::FactoryImpl<class,class,Typelist<class,NullType> >::Id TEXT=const Id&  [24:34/750-24:43/759]  INIT: null  SCOPE: CreateObject 
+                     [24:47/763-24:52/768]  TYPE: iz143977_1::FactoryImplBase::Parm1 TEXT=Parm1  [24:47/763-24:52/768]  INIT: null  SCOPE: CreateObject 
+                RETURNS *iz143977_1::FactoryImpl<class,class,Typelist<class,NullType> >::AP TEXT=AP*  [24:17/733-24:20/736]
+    CLASS Factory<class AbstractProduct,typename IdentifierType,typename CreatorParmTList=NullType,template<typename,class> class FactoryErrorPolicy=DefaultFactoryError> (iz143977_1::Factory ) [26:5/787-39:6/1329] lcurly=1082 SCOPE: iz143977_1 
+        BASE CLASSES:
+            CLASS=iz143977_1::Factory::FactoryErrorPolicy VISIBILITY==PUBLIC virtual==false text='public FactoryErrorPolicy<IdentifierType, AbstractProduct>'
+        MEMBERS:
+            TYPEDEF Impl  [35:9/1092-35:87/1170] TYPE: iz143977_1::FactoryImpl TEXT=FactoryImpl<AbstractProduct,IdentifierType,CreatorParmTList>  [35:17/1100-35:81/1164] SCOPE: Factory 
+            TYPEDEF Parm1  [37:9/1188-37:44/1223] TYPE: $unresolved$::Impl::Parm1 TEXT=Impl::Parm1  [37:26/1205-37:37/1216] SCOPE: Factory 
+            TYPEDEF Parm2  [38:9/1260-38:44/1295] TYPE: $unresolved$::Impl::Parm2 TEXT=Impl::Parm2  [38:26/1277-38:37/1288] SCOPE: Factory 
+

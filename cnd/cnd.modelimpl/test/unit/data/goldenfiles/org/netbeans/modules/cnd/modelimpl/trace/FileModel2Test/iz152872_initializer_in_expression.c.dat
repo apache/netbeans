@@ -1,0 +1,50 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz152872_initializer_in_expression.c
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+STRUCT AVRational (AVRational ) [1:1/0-4:2/55] lcurly=26 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC num [2:5/32-2:13/40]  TYPE: int TEXT=int  [2:5/32-2:8/35]  INIT: null  SCOPE: AVRational 
+        FIELD PUBLIC den [3:5/45-3:13/53]  TYPE: int TEXT=int  [3:5/45-3:8/48]  INIT: null  SCOPE: AVRational 
+TYPEDEF AVRational  [4:3/56-4:13/66] TYPE: AVRational TEXT=AVRational  [1:1/0-4:14/67] SCOPE: $Global$ 
+FUNCTION DEFINITION foo  [6:1/69-9:2/150] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [6:1/69-9:2/150]
+    PARAMETERS:
+    RETURNS void TEXT=void  [6:1/69-6:5/73]
+    STATEMENT COMPOUND  [6:12/80-9:2/150] SCOPE: foo 
+        STATEMENT DECLARATION  [7:5/86-7:31/112] SCOPE: Stmt  [6:12/80-9:2/150]
+            VARIABLE av1 [7:16/97-7:25/106]  TYPE: AVRational TEXT=AVRational  [7:5/86-7:15/96]  INIT: null  SCOPE: Stmt  [6:12/80-9:2/150]
+            VARIABLE av2 [7:27/108-7:30/111]  TYPE: AVRational TEXT=AVRational  [7:5/86-7:15/96]  INIT: null  SCOPE: Stmt  [6:12/80-9:2/150]
+        STATEMENT EXPRESSION  [8:5/117-8:35/147] SCOPE: Stmt  [6:12/80-9:2/150] text: 'av2 = (AVRational){1, av1.den}'
+
+========== Dumping model of PROJECT DummyProject
+STRUCT AVRational (AVRational ) [1:1/0-4:2/55] lcurly=26 SCOPE: $Global$ 
+    BASE CLASSES:
+    MEMBERS:
+        FIELD PUBLIC num [2:5/32-2:13/40]  TYPE: int TEXT=int  [2:5/32-2:8/35]  INIT: null  SCOPE: AVRational 
+        FIELD PUBLIC den [3:5/45-3:13/53]  TYPE: int TEXT=int  [3:5/45-3:8/48]  INIT: null  SCOPE: AVRational 
+TYPEDEF AVRational  [4:3/56-4:13/66] TYPE: AVRational TEXT=AVRational  [1:1/0-4:14/67] SCOPE: $Global$ 
+FUNCTION DEFINITION foo  [6:1/69-9:2/150] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE foo()
+    UNIQUE NAME f:foo()
+    DECLARATION: foo  [6:1/69-9:2/150]
+    PARAMETERS:
+    RETURNS void TEXT=void  [6:1/69-6:5/73]
+    STATEMENT COMPOUND  [6:12/80-9:2/150] SCOPE: foo 
+        STATEMENT DECLARATION  [7:5/86-7:31/112] SCOPE: Stmt  [6:12/80-9:2/150]
+            VARIABLE av1 [7:16/97-7:25/106]  TYPE: AVRational TEXT=AVRational  [7:5/86-7:15/96]  INIT: null  SCOPE: Stmt  [6:12/80-9:2/150]
+            VARIABLE av2 [7:27/108-7:30/111]  TYPE: AVRational TEXT=AVRational  [7:5/86-7:15/96]  INIT: null  SCOPE: Stmt  [6:12/80-9:2/150]
+        STATEMENT EXPRESSION  [8:5/117-8:35/147] SCOPE: Stmt  [6:12/80-9:2/150] text: 'av2 = (AVRational){1, av1.den}'
+

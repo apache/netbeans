@@ -1,0 +1,26 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE iz145280.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION my_coll_init_8bit_bin  [1:1/0-6:2/124] FunctionDDImpl SCOPE: iz145280.cc
+    SIGNATURE my_coll_init_8bit_bin(void*,void*(*)(int))
+    UNIQUE NAME f:my_coll_init_8bit_bin(void*,void*(*)(int))
+    DECLARATION: my_coll_init_8bit_bin  [1:1/0-6:2/124]
+    PARAMETERS:
+        cs [2:23/34-2:31/42]  TYPE: *void TEXT=void*  [2:23/34-2:29/40]  INIT: null  SCOPE: my_coll_init_8bit_bin 
+        alloc [3:23/66-3:42/85]  TYPE: void*(int) TEXT=void*(*)(int)  [3:23/66-3:42/85]  INIT: null  SCOPE: my_coll_init_8bit_bin 
+    RETURNS void TEXT=void  [1:8/7-1:12/11]
+    STATEMENT COMPOUND  [4:1/111-6:2/124] SCOPE: my_coll_init_8bit_bin 
+        STATEMENT RETURN  [5:3/115-5:10/122] SCOPE: Stmt  [4:1/111-6:2/124] text: 'return;'
+
+========== Dumping model of PROJECT DummyProject
+

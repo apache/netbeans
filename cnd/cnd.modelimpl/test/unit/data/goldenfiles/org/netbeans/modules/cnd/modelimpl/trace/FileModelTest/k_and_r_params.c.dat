@@ -1,0 +1,40 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE k_and_r_params.c
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION DEFINITION unvis  [1:1/0-8:2/126] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE unvis(char*,int,int*,int)
+    UNIQUE NAME f:unvis(char*,int,int*,int)
+    DECLARATION: unvis  [1:1/0-8:2/126]
+    PARAMETERS:
+        cp [3:4/34-3:13/43]  TYPE: *char TEXT=char*  [3:4/34-3:10/40]  INIT: null  SCOPE: unvis 
+        c [4:4/47-4:10/53]  TYPE: int TEXT=int  [4:4/47-4:7/50]  INIT: null  SCOPE: unvis 
+        astate [5:9/62-5:15/68]  TYPE: *int TEXT=int*  [5:4/57-5:9/62]  INIT: null  SCOPE: unvis 
+        flag [5:17/70-5:21/74]  TYPE: int TEXT=int  [5:4/57-5:9/62]  INIT: null  SCOPE: unvis 
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+    STATEMENT COMPOUND  [6:1/76-8:2/126] SCOPE: unvis 
+        STATEMENT RETURN  [7:4/81-7:47/124] SCOPE: Stmt  [6:1/76-8:2/126] text: 'return __unvis13(cp, (int)c, astate, flag);'
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION DEFINITION unvis  [1:1/0-8:2/126] FunctionDDImpl SCOPE: $Global$ 
+    SIGNATURE unvis(char*,int,int*,int)
+    UNIQUE NAME f:unvis(char*,int,int*,int)
+    DECLARATION: unvis  [1:1/0-8:2/126]
+    PARAMETERS:
+        cp [3:4/34-3:13/43]  TYPE: *char TEXT=char*  [3:4/34-3:10/40]  INIT: null  SCOPE: unvis 
+        c [4:4/47-4:10/53]  TYPE: int TEXT=int  [4:4/47-4:7/50]  INIT: null  SCOPE: unvis 
+        astate [5:9/62-5:15/68]  TYPE: *int TEXT=int*  [5:4/57-5:9/62]  INIT: null  SCOPE: unvis 
+        flag [5:17/70-5:21/74]  TYPE: int TEXT=int  [5:4/57-5:9/62]  INIT: null  SCOPE: unvis 
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+    STATEMENT COMPOUND  [6:1/76-8:2/126] SCOPE: unvis 
+        STATEMENT RETURN  [7:4/81-7:47/124] SCOPE: Stmt  [6:1/76-8:2/126] text: 'return __unvis13(cp, (int)c, astate, flag);'
+

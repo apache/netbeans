@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="StyleSheet" type="text/css" href="../ide.css">
+    <meta content="Helen" name="generator">
+    <title>Running Docker Containers</title>
+  </head>
+  <body>
+    <h2>
+      Running Docker Containers
+    </h2>
+    <p>
+       <a href="#seealso"><small>See Also</small></a>
+    </p>
+    <p>A container is a runtime instance of a Docker image. A Docker container consists of the following
+    components:</p>
+    <ul>
+      <li>A Docker image</li>
+      <li>An execution environment</li>
+      <li>A standard set of instructions</li>
+    </ul>
+    <br>
+    <p><b>To Run Docker Containers:</b></p>
+    <ol>
+      <li>In the services window, right click on the image you want to run and select Run.</li>
+      <li>In Container Properties, fill in the Name, Command, and User fields.</li>
+      <li>Select the options that you want to use and then click Next.
+      <ul>
+        <li><b>Keep STDIN open even if not attached</b> (-i, --interactive)
+          <p>When set to true, keep stdin open even if not attached.</p>
+        </li>
+        <li><b>Allocate a pseudo-TTY</b> (-t or --tty flag)
+          <p>When set to true, Docker can allocate a pseudo-tty and attach to
+            the standard input of any container. For example, this can be used to run a throwaway 
+            interactive shell. The default is false.</p></li>
+        <li><b>Run in privileged mode</b> (--privileged)
+          <p>Gives extended privileges to this container. A <i>privileged</i> container
+            is given access to all devices.</p>
+          <p>By default, Docker containers are <i>unprivileged</i> and cannot run a Docker daemon 
+            inside the Docker container. This is because, by default, a container is not allowed
+            to access any devices.</p></li>
+        <li><b>Mount Volumes</b> (-v or --volume)
+          <p>Creates a bind mount. When you specify the Source and Target directories, 
+            Docker bind mounts Source directory in the host to Target directory in the Docker container.</p></li>
+      </ul></li>
+      <li>Specify the Port Bindings property during the Run Image action. You can view the port 
+        bindings by selecting View Port Bindings on the running container.</li>
+    </ol>
+      <p>For more information on Port Bindings, see 
+        <a href="https://docs.docker.com/engine/userguide/networking/default_network/binding/"
+          <b>Bind container ports to the host</b></a> on the Docker Documentation website.</p>
+    <p>The mount volume table enables you to specify the directory on
+      the host Docker machine that you want to mount into a container.</p>
+      <br>
+    <p><strong><a name="#seealso">See Also</a></strong></p>
+      <ul>
+        <td>
+          <a href="AddingDockerInstance.html">Adding a Docker Instance</a><br>
+            <a href="BuildImageDialog.html">Build Image Window&nbsp;</a><br>
+        </td>
+      </ul>
+    <hr>
+    <p>
+       <a href=
+      "nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm"><small>Copyright&nbsp;©&nbsp;2017,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</small></a>
+    </p>
+  </body>
+</html>

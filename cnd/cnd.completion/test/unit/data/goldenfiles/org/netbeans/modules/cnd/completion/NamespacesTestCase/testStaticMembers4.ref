@@ -1,0 +1,8 @@
+si int	$	S1::si
+str	$	S1::str
+i1 int	$	S1::i1
+q str	$	S1::q
+f1() void	$	S1::f1()
+sfoo() void	$	S1::sfoo()
+sfoo2() void	$	S1::sfoo2()
+S2	$	S1::S2

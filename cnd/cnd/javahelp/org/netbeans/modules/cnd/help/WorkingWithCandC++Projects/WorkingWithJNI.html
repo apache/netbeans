@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <link href="../ide.css" type="text/css" rel="StyleSheet">
+    <meta content="Helen" name="generator">
+    <title>Working with JNI</title>
+  </head>
+  <body>
+    <h2>
+       Working with JNI in Mixed Development Projects
+    </h2>
+    <p>
+       If you have a Java project that uses JNI&nbsp;methods, you can generate a
+      C++&nbsp;JNI&nbsp;project from the Java project. &nbsp;The JNI&nbsp;project implements all
+      the native interfaces in Java code.
+    </p>
+    <p>
+       &nbsp;<b>To create a C++&nbsp;JNI&nbsp;Library project:</b>
+    </p>
+    <ol>
+      <li>
+        Open the Java project that uses JNI&nbsp;methods.
+      </li>
+      <li>
+        In the Project view, right-click a Java class with JNI&nbsp;methods in it and select
+        Generate JNI&nbsp;Library Project.<br>
+
+        <p>
+           The New JNI&nbsp;Library Library Project dialog opens.
+        </p>
+      </li>
+      <li>
+        Type a project name and optionally change the Project Location and Tool Collection. The
+        default Project Name is&nbsp;CppJNILibrary for a C++&nbsp;project.
+      </li>
+      <li>
+        Click Finish.
+      </li>
+    </ol>
+    <p>
+       &nbsp;
+    </p>
+    <p>
+       The C++ JNI&nbsp;Library project is created with default implementations of all native
+      functions.
+    </p>
+    <p>
+       The property <b>java.library.path</b> is added to the Java project's Run properties for the
+      Java VM so that the new C++ library can be loaded using the call
+      System.loadLibrary("name-of-your-CppJNILibrary").
+    </p>
+    <p>
+       &nbsp;
+    </p>
+    <p>
+       The following IDE&nbsp;features are supported for the associated Java and native projects.
+    </p>
+    <table summary="Tasks related to JNI mixed development and descriptions" width="100%" border=
+    "1">
+      <tr>
+        <td width="50%">
+          <b>Feature</b>
+        </td>
+        <td width="50%">
+          <b>Description</b>
+        </td>
+      </tr>
+      <tr>
+        <td width="50%">
+          Navigating in the code editor from Java methods to their C/C++ implementation
+        </td>
+        <td width="50%">
+          Ctrl-click on the Java method and the code editor jumps to the C/C+ declaration or
+          definition if it is found.
+        </td>
+      </tr>
+      <tr>
+        <td width="50%">
+          Generating boilerplate code to call Java methods or access Java fields from the native
+          side.
+        </td>
+        <td width="50%">
+          Use the&nbsp;context menu&nbsp;to automatically generate code. Right-click a Java entity and choose Mixed
+          Development &gt; Copy JNI Signature. &nbsp;The signature of the entity is copied
+          into your clipboard and you can paste it where appropriate.
+          <p>
+          The same works for boilerplate code to access (set or get) Java fields or call Java methods.
+          Right-click on a Java field or method, then select Mixed Development &gt; Copy call method code 
+          / Copy get field code / Copy set field code. The requested code is then copied into the clipboard.</p>
+        </td>
+      </tr>
+      <tr>
+        <td width="50%">
+          Regenerating JNI header files if interface in Java classes has been changed.
+        </td>
+        <td width="50%">
+          Right-click on the Java class, then select Mixed Development &gt;&nbsp; Generate JNI
+          header<br>
+           If a header file for that class exists in the open C++&nbsp;projects, the
+          IDE&nbsp;regenerates that existing header file.<br>
+           If a header file for that class doesn't exist in the open C++ projects, the IDE asks
+          you&nbsp;to choose a directory for the new header file. The IDE&nbsp;generates both the
+          header and '.cpp' files in the project. The C++ file contains empty implementations of
+          all functions.<br>
+           
+        </td>
+      </tr>
+      <tr>
+        <td width="50%">
+          Debugging both Java and C++ code at once.
+        </td>
+        <td width="50%">
+          If you run into a native method call while debugging Java code, you can&nbsp;step into
+          it. The&nbsp;IDE will automatically attach the debugger and place a breakpoint in the
+          beginning of the native method.
+        </td>
+      </tr>
+    </table>
+    <p>
+       &nbsp;
+    </p>
+    <p>
+       &nbsp;
+    </p>
+    <hr>
+    <p>
+       <a href=
+      "nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;©&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a>
+    </p>
+    <p>
+       &nbsp;
+    </p>
+    <p>
+       &nbsp;
+    </p>
+    <p>
+       &nbsp;
+    </p>
+    <p>
+       &nbsp;
+    </p>
+    <p>
+       &nbsp;
+    </p>
+    <p>
+       &nbsp;
+    </p>
+  </body>
+</html>

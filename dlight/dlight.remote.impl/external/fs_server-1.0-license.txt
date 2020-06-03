@@ -1,0 +1,13 @@
+Name: fs_server
+Version: 1.0
+Description: binaries that provide remote file system support
+License: TBD
+OSR: -
+Origin: -
+Files: fs_server-1.0.zip
+Source: -
+Comment: needed for dlight.remote.impl module to provide remote file system
+
+Use of fs_server version 1.0 is governed by the terms of the license below:
+
+TBD

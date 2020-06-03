@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="StyleSheet" type="text/css" href="../ide.css">
+    <meta content="Helen" name="generator">
+    <title>Building a Docker Image</title>
+  </head>
+  <body>
+    <h2>
+      Building a Docker Image
+    </h2>
+    <p>
+       <a href="#seealso"><small>See Also</small></a>
+    </p>
+    <p>A Dockerfile is a text document that contains a set of
+      instructions which is used for building an image.</p>
+    <br>
+    <b>To Build a Docker Image</b>
+        <p>Before building an image you can setup a Docker Instance, see
+        <a href="AddingDockerInstance.html">Adding a Docker Instance</a>.</p><br>
+    <ol>
+      <li>In the Projects window, right click on Dockerfile and click Build to open the Build Image wizard.</li>
+      <li>In the Build Image wizard, select Build Instance or click on the Add option.</li>
+        <p>A Build Instance is a host machine on which build action will be executed.</p>
+        <li>Click Next and on the Build Context step, fill in the following fields:
+            <ul>
+              <li>Build Context: A directory which is uploaded with all the contents
+                to the Build Instance host.</li>
+              <li>Repository [Optional]: The set of Docker images that can be shared by pushing it to a registry server. The different images in the repository can be labelled using tags.</li> 
+              <li>Tag [Optional]: The label applied to the Docker image in a repository. Using Tag, various images can be distinguished.</li>
+            </ul>
+        </li>
+      <li>Click Next and on the Build Options step, fill the following:
+          <ul>
+            <li>Dockerfile: Select the relative path to the Dockerfile.</li>
+            <li>Build-time variables: Specify the values for the several Build-time variables.</li>
+        </li>
+        </ul>
+        <li>Click Finish. </li>
+        <p>After you click Finish, the new Docker Image is built. It appears in the Images tab of the corresponding Build Instance.<p>
+    </ol>
+    <br>
+    <p><strong><a name="#seealso">See Also</a></strong></p>
+    <ul>
+        <td>
+          <a href="AddingDockerInstance.html">Adding a Docker Instance</a><br>
+            <a href="../Docker/ContainerProperties.html">Docker Container Properties&nbsp;</a><br>
+        </td>
+</ul>
+    <hr>
+    <p>
+       <a href=
+      "nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm"><small>Copyright&nbsp;©&nbsp;2017,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</small></a>
+    </p>
+  </body>
+</html>

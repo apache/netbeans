@@ -1,0 +1,5 @@
+foo() int	$	            d.ptr()->foo()
+pPtr() PClass97120	$	            d.ptr()->pPtr()
+ppPtr() PPClass97120	$	            d.ptr()->ppPtr()
+pppPtr() PPPClass97120	$	            d.ptr()->pppPtr()
+ptr() Class97120*	$	            d.ptr()->ptr()

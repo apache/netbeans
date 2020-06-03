@@ -1,0 +1,330 @@
+'include', tokenID=preprocessor_include, offset=2163 [44:2/2163-44:9/2170]
+--OWNER:
+    INCLUDE "system.h" [44:1/2162-44:20/2181]
+--RESOLVED TO:
+    INCLUDE "system.h" [44:1/2162-44:20/2181]
+==============================================================
+'"system.h"', tokenID=preprocessor_user_include, offset=2171 [44:10/2171-44:20/2181]
+--OWNER:
+    INCLUDE "system.h" [44:1/2162-44:20/2181]
+--RESOLVED TO:
+    FILE ReferencesTestCase/system.h
+==============================================================
+'System', tokenID=identifier, offset=2227 [48:1/2227-48:7/2233]
+--OWNER:
+    FUNCTION_DEFINITION System()  [48:1/2227-50:2/2270] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    CLASS System [52:1/2246-68:2/2615] ReferencesTestCase/system.h
+==============================================================
+'System', tokenID=identifier, offset=2235 [48:9/2235-48:15/2241]
+--OWNER:
+    FUNCTION_DEFINITION System()  [48:1/2227-50:2/2270] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    FUNCTION_DEFINITION System()  [48:1/2227-50:2/2270] ReferencesTestCase/system.cc
+==============================================================
+'supportMetric', tokenID=identifier, offset=2250 [49:5/2250-49:18/2263]
+--OWNER:
+    EXPR null text='supportMetric(0)'
+--RESOLVED TO:
+    VARIABLE supportMetric [65:5/2540-65:23/2558] ReferencesTestCase/system.h  TYPE: int TEXT=int  [65:5/2540-65:8/2543]  INIT: null  SCOPE: System 
+==============================================================
+'System', tokenID=identifier, offset=2277 [52:6/2277-52:12/2283]
+--OWNER:
+    FUNCTION_DEFINITION AddModule(Module*)  [52:1/2272-55:2/2397] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    CLASS System [52:1/2246-68:2/2615] ReferencesTestCase/system.h
+==============================================================
+'AddModule', tokenID=identifier, offset=2285 [52:14/2285-52:23/2294]
+--OWNER:
+    FUNCTION_DEFINITION AddModule(Module*)  [52:1/2272-55:2/2397] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    FUNCTION_DEFINITION AddModule(Module*)  [52:1/2272-55:2/2397] ReferencesTestCase/system.cc
+==============================================================
+'Module', tokenID=identifier, offset=2295 [52:24/2295-52:30/2301]
+--OWNER:
+    TYPE *Module TEXT=Module*  [52:24/2295-52:31/2302] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    CLASS Module [51:1/2205-92:2/3420] ReferencesTestCase/module.h
+==============================================================
+'module', tokenID=identifier, offset=2303 [52:32/2303-52:38/2309]
+--OWNER:
+    VARIABLE module [52:24/2295-52:38/2309] ReferencesTestCase/system.cc  TYPE: *Module TEXT=Module*  [52:24/2295-52:31/2302]  INIT: null  SCOPE: AddModule 
+--RESOLVED TO:
+    VARIABLE module [52:24/2295-52:38/2309] ReferencesTestCase/system.cc  TYPE: *Module TEXT=Module*  [52:24/2295-52:31/2302]  INIT: null  SCOPE: AddModule 
+==============================================================
+'moduleList', tokenID=identifier, offset=2317 [53:5/2317-53:15/2327]
+--OWNER:
+    STMT EXPRESSION text='moduleList.push_back(module)'
+--RESOLVED TO:
+    VARIABLE moduleList [64:5/2507-64:33/2535] ReferencesTestCase/system.h  TYPE: $unresolved$::vector TEXT=vector<Module*>  [64:5/2507-64:21/2523]  INIT: null  SCOPE: System 
+==============================================================
+'push_back', tokenID=identifier, offset=2328 [53:16/2328-53:25/2337]
+--OWNER:
+    STMT EXPRESSION text='moduleList.push_back(module)'
+--RESOLVED TO:
+    null
+==============================================================
+'module', tokenID=identifier, offset=2338 [53:26/2338-53:32/2344]
+--OWNER:
+    STMT EXPRESSION text='moduleList.push_back(module)'
+--RESOLVED TO:
+    VARIABLE module [52:24/2295-52:38/2309] ReferencesTestCase/system.cc  TYPE: *Module TEXT=Module*  [52:24/2295-52:31/2302]  INIT: null  SCOPE: AddModule 
+==============================================================
+'supportMetric', tokenID=identifier, offset=2351 [54:5/2351-54:18/2364]
+--OWNER:
+    STMT EXPRESSION text='supportMetric += module->GetSupportMetric()'
+--RESOLVED TO:
+    VARIABLE supportMetric [65:5/2540-65:23/2558] ReferencesTestCase/system.h  TYPE: int TEXT=int  [65:5/2540-65:8/2543]  INIT: null  SCOPE: System 
+==============================================================
+'module', tokenID=identifier, offset=2368 [54:22/2368-54:28/2374]
+--OWNER:
+    STMT EXPRESSION text='supportMetric += module->GetSupportMetric()'
+--RESOLVED TO:
+    VARIABLE module [52:24/2295-52:38/2309] ReferencesTestCase/system.cc  TYPE: *Module TEXT=Module*  [52:24/2295-52:31/2302]  INIT: null  SCOPE: AddModule 
+==============================================================
+'GetSupportMetric', tokenID=identifier, offset=2376 [54:30/2376-54:46/2392]
+--OWNER:
+    STMT EXPRESSION text='supportMetric += module->GetSupportMetric()'
+--RESOLVED TO:
+    FUNCTION GetSupportMetric() const  [78:5/3036-78:34/3065] ReferencesTestCase/module.h
+==============================================================
+'Module', tokenID=identifier, offset=2399 [57:1/2399-57:7/2405]
+--OWNER:
+    TYPE &Module TEXT=Module&  [57:1/2399-57:8/2406] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    CLASS Module [51:1/2205-92:2/3420] ReferencesTestCase/module.h
+==============================================================
+'System', tokenID=identifier, offset=2407 [57:9/2407-57:15/2413]
+--OWNER:
+    FUNCTION_DEFINITION GetModule(int) const  [57:1/2399-61:2/2530] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    CLASS System [52:1/2246-68:2/2615] ReferencesTestCase/system.h
+==============================================================
+'GetModule', tokenID=identifier, offset=2415 [57:17/2415-57:26/2424]
+--OWNER:
+    FUNCTION_DEFINITION GetModule(int) const  [57:1/2399-61:2/2530] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    FUNCTION_DEFINITION GetModule(int) const  [57:1/2399-61:2/2530] ReferencesTestCase/system.cc
+==============================================================
+'i', tokenID=identifier, offset=2429 [57:31/2429-57:32/2430]
+--OWNER:
+    VARIABLE i [57:27/2425-57:32/2430] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [57:27/2425-57:30/2428]  INIT: null  SCOPE: GetModule 
+--RESOLVED TO:
+    VARIABLE i [57:27/2425-57:32/2430] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [57:27/2425-57:30/2428]  INIT: null  SCOPE: GetModule 
+==============================================================
+'assert', tokenID=identifier, offset=2444 [58:5/2444-58:11/2450]
+--OWNER:
+    STMT EXPRESSION text='assert(i >= 0 && (unsigned)i < moduleList.size())'
+--RESOLVED TO:
+    null
+==============================================================
+'i', tokenID=identifier, offset=2451 [58:12/2451-58:13/2452]
+--OWNER:
+    STMT EXPRESSION text='assert(i >= 0 && (unsigned)i < moduleList.size())'
+--RESOLVED TO:
+    VARIABLE i [57:27/2425-57:32/2430] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [57:27/2425-57:30/2428]  INIT: null  SCOPE: GetModule 
+==============================================================
+'i', tokenID=identifier, offset=2471 [58:32/2471-58:33/2472]
+--OWNER:
+    STMT EXPRESSION text='assert(i >= 0 && (unsigned)i < moduleList.size())'
+--RESOLVED TO:
+    VARIABLE i [57:27/2425-57:32/2430] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [57:27/2425-57:30/2428]  INIT: null  SCOPE: GetModule 
+==============================================================
+'moduleList', tokenID=identifier, offset=2475 [58:36/2475-58:46/2485]
+--OWNER:
+    STMT EXPRESSION text='assert(i >= 0 && (unsigned)i < moduleList.size())'
+--RESOLVED TO:
+    VARIABLE moduleList [64:5/2507-64:33/2535] ReferencesTestCase/system.h  TYPE: $unresolved$::vector TEXT=vector<Module*>  [64:5/2507-64:21/2523]  INIT: null  SCOPE: System 
+==============================================================
+'size', tokenID=identifier, offset=2486 [58:47/2486-58:51/2490]
+--OWNER:
+    STMT EXPRESSION text='assert(i >= 0 && (unsigned)i < moduleList.size())'
+--RESOLVED TO:
+    null
+==============================================================
+'moduleList', tokenID=identifier, offset=2513 [60:14/2513-60:24/2523]
+--OWNER:
+    STMT RETURN text='return (*moduleList[i]);'
+--RESOLVED TO:
+    VARIABLE moduleList [64:5/2507-64:33/2535] ReferencesTestCase/system.h  TYPE: $unresolved$::vector TEXT=vector<Module*>  [64:5/2507-64:21/2523]  INIT: null  SCOPE: System 
+==============================================================
+'i', tokenID=identifier, offset=2524 [60:25/2524-60:26/2525]
+--OWNER:
+    STMT RETURN text='return (*moduleList[i]);'
+--RESOLVED TO:
+    VARIABLE i [57:27/2425-57:32/2430] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [57:27/2425-57:30/2428]  INIT: null  SCOPE: GetModule 
+==============================================================
+'System', tokenID=identifier, offset=2536 [63:5/2536-63:11/2542]
+--OWNER:
+    FUNCTION_DEFINITION GetModuleCount() const  [63:1/2532-65:2/2600] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    CLASS System [52:1/2246-68:2/2615] ReferencesTestCase/system.h
+==============================================================
+'GetModuleCount', tokenID=identifier, offset=2544 [63:13/2544-63:27/2558]
+--OWNER:
+    FUNCTION_DEFINITION GetModuleCount() const  [63:1/2532-65:2/2600] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    FUNCTION_DEFINITION GetModuleCount() const  [63:1/2532-65:2/2600] ReferencesTestCase/system.cc
+==============================================================
+'moduleList', tokenID=identifier, offset=2580 [64:12/2580-64:22/2590]
+--OWNER:
+    STMT RETURN text='return moduleList.size();'
+--RESOLVED TO:
+    VARIABLE moduleList [64:5/2507-64:33/2535] ReferencesTestCase/system.h  TYPE: $unresolved$::vector TEXT=vector<Module*>  [64:5/2507-64:21/2523]  INIT: null  SCOPE: System 
+==============================================================
+'size', tokenID=identifier, offset=2591 [64:23/2591-64:27/2595]
+--OWNER:
+    STMT RETURN text='return moduleList.size();'
+--RESOLVED TO:
+    null
+==============================================================
+'System', tokenID=identifier, offset=2606 [67:5/2606-67:11/2612]
+--OWNER:
+    FUNCTION_DEFINITION GetSupportMetric() const  [67:1/2602-69:2/2668] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    CLASS System [52:1/2246-68:2/2615] ReferencesTestCase/system.h
+==============================================================
+'GetSupportMetric', tokenID=identifier, offset=2614 [67:13/2614-67:29/2630]
+--OWNER:
+    FUNCTION_DEFINITION GetSupportMetric() const  [67:1/2602-69:2/2668] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    FUNCTION_DEFINITION GetSupportMetric() const  [67:1/2602-69:2/2668] ReferencesTestCase/system.cc
+==============================================================
+'supportMetric', tokenID=identifier, offset=2652 [68:12/2652-68:25/2665]
+--OWNER:
+    STMT RETURN text='return supportMetric;'
+--RESOLVED TO:
+    VARIABLE supportMetric [65:5/2540-65:23/2558] ReferencesTestCase/system.h  TYPE: int TEXT=int  [65:5/2540-65:8/2543]  INIT: null  SCOPE: System 
+==============================================================
+'ostream', tokenID=identifier, offset=2671 [71:1/2671-71:8/2678]
+--OWNER:
+    TYPE &$unresolved$::ostream TEXT=ostream&  [71:1/2671-71:9/2679] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    null
+==============================================================
+'ostream', tokenID=identifier, offset=2692 [71:22/2692-71:29/2699]
+--OWNER:
+    TYPE &$unresolved$::ostream TEXT=ostream&  [71:22/2692-71:30/2700] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    null
+==============================================================
+'output', tokenID=identifier, offset=2701 [71:31/2701-71:37/2707]
+--OWNER:
+    VARIABLE output [71:22/2692-71:37/2707] ReferencesTestCase/system.cc  TYPE: &$unresolved$::ostream TEXT=ostream&  [71:22/2692-71:30/2700]  INIT: null  SCOPE: operator << 
+--RESOLVED TO:
+    VARIABLE output [71:22/2692-71:37/2707] ReferencesTestCase/system.cc  TYPE: &$unresolved$::ostream TEXT=ostream&  [71:22/2692-71:30/2700]  INIT: null  SCOPE: operator << 
+==============================================================
+'System', tokenID=identifier, offset=2715 [71:45/2715-71:51/2721]
+--OWNER:
+    TYPE const &System TEXT=const System&  [71:39/2709-71:52/2722] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    CLASS System [52:1/2246-68:2/2615] ReferencesTestCase/system.h
+==============================================================
+'system', tokenID=identifier, offset=2723 [71:53/2723-71:59/2729]
+--OWNER:
+    VARIABLE system [71:39/2709-71:59/2729] ReferencesTestCase/system.cc  TYPE: const &System TEXT=const System&  [71:39/2709-71:52/2722]  INIT: null  SCOPE: operator << 
+--RESOLVED TO:
+    VARIABLE system [71:39/2709-71:59/2729] ReferencesTestCase/system.cc  TYPE: const &System TEXT=const System&  [71:39/2709-71:52/2722]  INIT: null  SCOPE: operator << 
+==============================================================
+'size', tokenID=identifier, offset=2741 [72:9/2741-72:13/2745]
+--OWNER:
+    VARIABLE size [72:5/2737-72:40/2772] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [72:5/2737-72:8/2740]  INIT: text='system.GetModuleCount()'  SCOPE: Stmt  [71:61/2731-81:2/2976]
+--RESOLVED TO:
+    VARIABLE size [72:5/2737-72:40/2772] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [72:5/2737-72:8/2740]  INIT: text='system.GetModuleCount()'  SCOPE: Stmt  [71:61/2731-81:2/2976]
+==============================================================
+'system', tokenID=identifier, offset=2748 [72:16/2748-72:22/2754]
+--OWNER:
+    VARIABLE size [72:5/2737-72:40/2772] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [72:5/2737-72:8/2740]  INIT: text='system.GetModuleCount()'  SCOPE: Stmt  [71:61/2731-81:2/2976]
+--RESOLVED TO:
+    VARIABLE system [71:39/2709-71:59/2729] ReferencesTestCase/system.cc  TYPE: const &System TEXT=const System&  [71:39/2709-71:52/2722]  INIT: null  SCOPE: operator << 
+==============================================================
+'GetModuleCount', tokenID=identifier, offset=2755 [72:23/2755-72:37/2769]
+--OWNER:
+    VARIABLE size [72:5/2737-72:40/2772] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [72:5/2737-72:8/2740]  INIT: text='system.GetModuleCount()'  SCOPE: Stmt  [71:61/2731-81:2/2976]
+--RESOLVED TO:
+    FUNCTION GetModuleCount() const  [60:5/2431-60:32/2458] ReferencesTestCase/system.h
+==============================================================
+'output', tokenID=identifier, offset=2782 [74:5/2782-74:11/2788]
+--OWNER:
+    STMT EXPRESSION text='output << "System consists of " << size << " module(s):" << endl << endl'
+--RESOLVED TO:
+    VARIABLE output [71:22/2692-71:37/2707] ReferencesTestCase/system.cc  TYPE: &$unresolved$::ostream TEXT=ostream&  [71:22/2692-71:30/2700]  INIT: null  SCOPE: operator << 
+==============================================================
+'size', tokenID=identifier, offset=2817 [74:40/2817-74:44/2821]
+--OWNER:
+    STMT EXPRESSION text='output << "System consists of " << size << " module(s):" << endl << endl'
+--RESOLVED TO:
+    VARIABLE size [72:5/2737-72:40/2772] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [72:5/2737-72:8/2740]  INIT: text='system.GetModuleCount()'  SCOPE: Stmt  [71:61/2731-81:2/2976]
+==============================================================
+'endl', tokenID=identifier, offset=2842 [74:65/2842-74:69/2846]
+--OWNER:
+    STMT EXPRESSION text='output << "System consists of " << size << " module(s):" << endl << endl'
+--RESOLVED TO:
+    null
+==============================================================
+'endl', tokenID=identifier, offset=2850 [74:73/2850-74:77/2854]
+--OWNER:
+    STMT EXPRESSION text='output << "System consists of " << size << " module(s):" << endl << endl'
+--RESOLVED TO:
+    null
+==============================================================
+'i', tokenID=identifier, offset=2874 [76:14/2874-76:15/2875]
+--OWNER:
+    VARIABLE i [76:10/2870-76:20/2880] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [76:10/2870-76:13/2873]  INIT: text='0'  SCOPE: Stmt  [76:5/2865-78:6/2950]
+--RESOLVED TO:
+    VARIABLE i [76:10/2870-76:20/2880] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [76:10/2870-76:13/2873]  INIT: text='0'  SCOPE: Stmt  [76:5/2865-78:6/2950]
+==============================================================
+'i', tokenID=identifier, offset=2881 [76:21/2881-76:22/2882]
+--OWNER:
+     [76:21/2881-76:29/2889] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    VARIABLE i [76:10/2870-76:20/2880] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [76:10/2870-76:13/2873]  INIT: text='0'  SCOPE: Stmt  [76:5/2865-78:6/2950]
+==============================================================
+'size', tokenID=identifier, offset=2885 [76:25/2885-76:29/2889]
+--OWNER:
+     [76:21/2881-76:29/2889] ReferencesTestCase/system.cc
+--RESOLVED TO:
+    VARIABLE size [72:5/2737-72:40/2772] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [72:5/2737-72:8/2740]  INIT: text='system.GetModuleCount()'  SCOPE: Stmt  [71:61/2731-81:2/2976]
+==============================================================
+'i', tokenID=identifier, offset=2891 [76:31/2891-76:32/2892]
+--OWNER:
+    EXPR null text='i++'
+--RESOLVED TO:
+    VARIABLE i [76:10/2870-76:20/2880] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [76:10/2870-76:13/2873]  INIT: text='0'  SCOPE: Stmt  [76:5/2865-78:6/2950]
+==============================================================
+'output', tokenID=identifier, offset=2906 [77:9/2906-77:15/2912]
+--OWNER:
+    STMT EXPRESSION text='output << system.GetModule(i) << endl'
+--RESOLVED TO:
+    VARIABLE output [71:22/2692-71:37/2707] ReferencesTestCase/system.cc  TYPE: &$unresolved$::ostream TEXT=ostream&  [71:22/2692-71:30/2700]  INIT: null  SCOPE: operator << 
+==============================================================
+'system', tokenID=identifier, offset=2916 [77:19/2916-77:25/2922]
+--OWNER:
+    STMT EXPRESSION text='output << system.GetModule(i) << endl'
+--RESOLVED TO:
+    VARIABLE system [71:39/2709-71:59/2729] ReferencesTestCase/system.cc  TYPE: const &System TEXT=const System&  [71:39/2709-71:52/2722]  INIT: null  SCOPE: operator << 
+==============================================================
+'GetModule', tokenID=identifier, offset=2923 [77:26/2923-77:35/2932]
+--OWNER:
+    STMT EXPRESSION text='output << system.GetModule(i) << endl'
+--RESOLVED TO:
+    FUNCTION GetModule(int) const  [57:5/2346-57:40/2381] ReferencesTestCase/system.h
+==============================================================
+'i', tokenID=identifier, offset=2933 [77:36/2933-77:37/2934]
+--OWNER:
+    STMT EXPRESSION text='output << system.GetModule(i) << endl'
+--RESOLVED TO:
+    VARIABLE i [76:10/2870-76:20/2880] ReferencesTestCase/system.cc  TYPE: int TEXT=int  [76:10/2870-76:13/2873]  INIT: text='0'  SCOPE: Stmt  [76:5/2865-78:6/2950]
+==============================================================
+'endl', tokenID=identifier, offset=2939 [77:42/2939-77:46/2943]
+--OWNER:
+    STMT EXPRESSION text='output << system.GetModule(i) << endl'
+--RESOLVED TO:
+    null
+==============================================================
+'output', tokenID=identifier, offset=2967 [80:12/2967-80:18/2973]
+--OWNER:
+    STMT RETURN text='return output;'
+--RESOLVED TO:
+    VARIABLE output [71:22/2692-71:37/2707] ReferencesTestCase/system.cc  TYPE: &$unresolved$::ostream TEXT=ostream&  [71:22/2692-71:30/2700]  INIT: null  SCOPE: operator << 
+==============================================================

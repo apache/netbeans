@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Find in Projects Dialog Box</title>
+<link rel="StyleSheet" href="../ide.css" type="text/css">
+</head>
+<body>
+<h2>Find in Projects Dialog Box</h2>
+<p><small> <a href="#seealso">See Also</a></small></p>
+<p>The Find in Projects dialog box lets you search
+projects for instances of specified text or a regular
+expression.
+</p>
+<p>To open the Find in Projects dialog box, choose Edit >
+Find in Projects, or right-click a
+project in the Projects window and choose Find.
+</p>
+<p>
+The Find in Projects dialog box contains two tabs,
+Default Search and Grep.
+The Default Search tab uses the default search utility.
+The <a href="#grep">Grep tab</a> uses the <tt>grep</tt>
+utility, which provides a faster search, especially for
+remote projects.
+</p>
+<p><b>Default Search tab</b>
+<ul>
+<li>
+<b>Containing Text.</b> In this field, type or paste
+the text or regular expression for which you want to search,
+or select an expression from the drop-down list of previously used search
+expressions.
+<ul>
+<li><b>Match Case.</b> Select this checkbox to search
+for only instances of the
+text or expression that match the exact upper and lower
+case characters entered in the Containing Text field.
+</li>
+<li>
+<b>Whole Words.</b> Select this checkbox to search for
+only whole words, and ignore
+longer words that are made up in part of the text in
+the Containing Text field
+</li>
+<li>
+<b>Regular Expression.</b> Select this checkbox if the
+entry in the containing text field is a regular
+expression. Click test to open the File Path Pattern
+dialog box, where you can search for a specific text
+pattern.
+</li>
+</ul>
+</li>
+<li>
+<b>Scope.</b> Specify the scope of projects to search. You
+can either search the projects you selected in the
+Projects window or all open projects.
+</li>
+</ul>
+</li>
+<li>
+<b>File Name Patterns.</b> Type the pattern of file names,
+such as *.html, to search through, or select a pattern from
+the drop-down list of previously used patterns.
+<ul>
+<li>
+<b>Search in Archives.</b> Select this checkbox to
+include JAR, ZIP and other
+archive files in the search scope.
+</li>
+<li>
+<b>Search in Generated Sources.</b> Select this checkbox
+to include generated
+source files in the search scope.
+</li>
+<li>
+<b>Use Ignore List.</b> Select this checkbox to use a list of files to ignore
+when performing the search. Click edit to open the List
+of Ignored Folders and Path Patterns dialog box,
+where you can add or remove files and file paths from
+the ignore list.
+</li>
+<li>
+<b>Regular Expression.</b> Select this checkbox if the entry in
+the file name pattern field is a regular expression.
+Click test to open the File Path Pattern
+dialog box, where you can search for a specific text pattern.
+</li>
+</ul>
+</li>
+</ul>
+<p><b><a name="grep">Grep tab</a></b>
+<ul>
+<li>
+<b>Regexpr to find.</b> In this field, type or paste
+the regular expression for which you want to search, using
+grep syntax, 
+or select an expression from the drop-down list of 
+previously used search 
+expressions. 
+<ul>
+<li><b>Match Case.</b> Select this checkbox to search 
+for only instances of the 
+text or expression that match the exact upper and lower 
+case characters entered in the Regexpr to find field.
+</li>
+<li>
+<b>Whole Words.</b> Select this checkbox to search for  
+only whole words, and ignore 
+longer words that are made up in part of the text in 
+the Regexpr to find field
+</li>
+</ul>
+</li>
+<li>
+<b>Search Scope.</b> Specify the scope of projects or files to search. You 
+can choose from the list to search the projects you selected in the 
+Projects window, or all open projects, or browse for a local or remote file or project.
+</li>
+<li>
+<b>Filename Pattern.</b> Type the pattern of file names, 
+such as *.html, to search through, or select a pattern from 
+the drop-down list of previously used patterns.
+</li>
+<li><b>Open in New Tab.</b>Select this checkbox to open a new tab to show the search results. If you do not select this option, previous search results are replaced with the new search results. </li>
+</ul>
+<table summary="related topics">
+<tr valign="top">
+<th colspan=2 align=left><a name="seealso">See Also</a></th>
+</tr>
+<tr valign="top">
+<td width="23"></td>
+<td>
+<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
+            <param name="content" value="http://www.oracle.com/pls/topic/lookup?ctx=nb7400&id=NBDAG217">
+            <param name="text" value=
+            "<html><u>Working with Source Files in the IDE</u></html>">
+            <param name="textFontSize" value="medium">
+            <param name="textColor" value="blue">
+          </object></td>
+</tr>
+</table>
+<hr>
+<small>
+<a href="nbdocs:/org/netbeans/modules/usersguide/legal_notice.htm">Copyright&nbsp;&copy;&nbsp;2015,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</a></small>
+<table border="0" cellpadding="20">
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+</body>
+</html>
+
+

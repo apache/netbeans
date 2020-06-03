@@ -1,0 +1,60 @@
+
+State of macro map:
+Own Map:
+MACROS (sorted 0):
+System Map:
+MACROS (sorted 0):
+
+
+========== Dumping model of FILE function_pointer_as_var_type.cc
+Includes:
+    <no includes>
+Macros:
+    <no macros>
+FUNCTION fun1 [1:1/0-1:20/19] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE fun1(int,int)
+    UNIQUE NAME F:fun1(int,int)
+    PARAMETERS:
+         [1:10/9-1:13/12]  TYPE: int TEXT=int  [1:10/9-1:13/12]  INIT: null  SCOPE: fun1 
+         [1:15/14-1:18/17]  TYPE: int TEXT=int  [1:15/14-1:18/17]  INIT: null  SCOPE: fun1 
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+VARIABLE fp_fun1 [2:1/20-2:33/52]  TYPE: int(int,int) TEXT=int(*)(int,int)  [2:1/20-2:25/44]  INIT: text='fun1'  SCOPE: $Global$ 
+VARIABLE fpp_fun1 [3:1/53-3:39/91]  TYPE: int(int,int) TEXT=int(**)(int,int)  [3:1/53-3:27/79]  INIT: text='&fp_fun1'  SCOPE: $Global$ 
+VARIABLE fppp_fun1 [4:1/92-4:42/133]  TYPE: int(int,int) TEXT=int(***)(int,int)  [4:1/92-4:29/120]  INIT: text='&fpp_fun1'  SCOPE: $Global$ 
+FUNCTION fun2 [6:1/135-6:21/155] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE fun2(int,int)
+    UNIQUE NAME F:fun2(int,int)
+    PARAMETERS:
+         [6:11/145-6:14/148]  TYPE: int TEXT=int  [6:11/145-6:14/148]  INIT: null  SCOPE: fun2 
+         [6:16/150-6:19/153]  TYPE: int TEXT=int  [6:16/150-6:19/153]  INIT: null  SCOPE: fun2 
+    RETURNS *int TEXT=int*  [6:1/135-6:5/139]
+VARIABLE fp_fun2 [7:1/156-7:34/189]  TYPE: int*(int,int) TEXT=int*(*)(int,int)  [7:1/156-7:26/181]  INIT: text='fun2'  SCOPE: $Global$ 
+VARIABLE fpp_fun2 [8:1/190-8:40/229]  TYPE: int*(int,int) TEXT=int*(**)(int,int)  [8:1/190-8:28/217]  INIT: text='&fp_fun2'  SCOPE: $Global$ 
+VARIABLE fppp_fun2 [9:1/230-9:43/272]  TYPE: int*(int,int) TEXT=int*(***)(int,int)  [9:1/230-9:30/259]  INIT: text='&fpp_fun2'  SCOPE: $Global$ 
+
+========== Dumping model of PROJECT DummyProject
+FUNCTION fun1 [1:1/0-1:20/19] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE fun1(int,int)
+    UNIQUE NAME F:fun1(int,int)
+    PARAMETERS:
+         [1:10/9-1:13/12]  TYPE: int TEXT=int  [1:10/9-1:13/12]  INIT: null  SCOPE: fun1 
+         [1:15/14-1:18/17]  TYPE: int TEXT=int  [1:15/14-1:18/17]  INIT: null  SCOPE: fun1 
+    RETURNS int TEXT=int  [1:1/0-1:4/3]
+VARIABLE fp_fun1 [2:1/20-2:33/52]  TYPE: int(int,int) TEXT=int(*)(int,int)  [2:1/20-2:25/44]  INIT: text='fun1'  SCOPE: $Global$ 
+VARIABLE fpp_fun1 [3:1/53-3:39/91]  TYPE: int(int,int) TEXT=int(**)(int,int)  [3:1/53-3:27/79]  INIT: text='&fp_fun1'  SCOPE: $Global$ 
+VARIABLE fppp_fun1 [4:1/92-4:42/133]  TYPE: int(int,int) TEXT=int(***)(int,int)  [4:1/92-4:29/120]  INIT: text='&fpp_fun1'  SCOPE: $Global$ 
+FUNCTION fun2 [6:1/135-6:21/155] FunctionImpl SCOPE: $Global$ 
+    DEFINITION: null
+    SIGNATURE fun2(int,int)
+    UNIQUE NAME F:fun2(int,int)
+    PARAMETERS:
+         [6:11/145-6:14/148]  TYPE: int TEXT=int  [6:11/145-6:14/148]  INIT: null  SCOPE: fun2 
+         [6:16/150-6:19/153]  TYPE: int TEXT=int  [6:16/150-6:19/153]  INIT: null  SCOPE: fun2 
+    RETURNS *int TEXT=int*  [6:1/135-6:5/139]
+VARIABLE fp_fun2 [7:1/156-7:34/189]  TYPE: int*(int,int) TEXT=int*(*)(int,int)  [7:1/156-7:26/181]  INIT: text='fun2'  SCOPE: $Global$ 
+VARIABLE fpp_fun2 [8:1/190-8:40/229]  TYPE: int*(int,int) TEXT=int*(**)(int,int)  [8:1/190-8:28/217]  INIT: text='&fp_fun2'  SCOPE: $Global$ 
+VARIABLE fppp_fun2 [9:1/230-9:43/272]  TYPE: int*(int,int) TEXT=int*(***)(int,int)  [9:1/230-9:30/259]  INIT: text='&fpp_fun2'  SCOPE: $Global$ 
+

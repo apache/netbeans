@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>org.netbeans.modules.dlight.remote.ui</code-name-base>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.dlight.libs.common</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.36.2</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.dlight.nativeexecution</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.39.13</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.dlight.remote</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.29.3</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.awt</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.67</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.dialogs</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.42</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.filesystems</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.10</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.filesystems.nb</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.9.2</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.7</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.lookup</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8.33</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.ui</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.6</specification-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
+            <friend-packages>
+                <friend>com.oracle.tools.ide.binary.dependencies</friend>
+                <friend>com.oracle.tools.ide.binary.dependencies.cm</friend>
+                <friend>com.oracle.tools.ide.projectless.debug.impl</friend>
+                <friend>com.oracle.tools.ide.projectless.debug.impl.dbx</friend>
+                <friend>com.oracle.tools.ide.projectless.debug.impl.gdb</friend>
+                <friend>com.oracle.tools.ide.projectless.impl</friend>
+                <friend>com.sun.cloud.cnd</friend>
+                <friend>com.sun.cloud.cnd.remote.ext</friend>
+                <friend>com.sun.tools.analytics.codemodel.bridge</friend>
+                <friend>com.sun.tools.analytics.indicators</friend>
+                <friend>com.sun.tools.analytics.oss.support.ui</friend>
+                <friend>com.sun.tools.analytics.targets.gui</friend>
+                <friend>com.sun.tools.analytics.utils</friend>
+                <friend>com.sun.tools.analytics.utils.ui</friend>
+                <friend>com.sun.tools.cnd.accessor</friend>
+                <friend>com.sun.tools.debugger.common</friend>
+                <friend>com.sun.tools.debugger.dbx</friend>
+                <friend>com.sun.tools.debugger.dbxgui</friend>
+                <friend>com.sun.tools.debugger.gdb</friend>
+                <friend>com.sun.tools.discovery</friend>
+                <friend>com.sun.tools.dlight.accessor</friend>
+                <friend>com.sun.tools.dlight.spi.impl</friend>
+                <friend>com.sun.tools.dlight.targets</friend>
+                <friend>com.sun.tools.dlight.ui</friend>
+                <friend>com.sun.tools.ide.analysis.analytics</friend>
+                <friend>com.sun.tools.ide.analysis.common</friend>
+                <friend>com.sun.tools.ide.analysis.discover</friend>
+                <friend>com.sun.tools.ide.analysis.modernize</friend>
+                <friend>com.sun.tools.ide.analysis.parfait</friend>
+                <friend>com.sun.tools.ide.analysis.previse</friend>
+                <friend>com.sun.tools.ide.analysis.tha</friend>
+                <friend>com.sun.tools.ide.remote</friend>
+                <friend>com.sun.tools.ide.remote.project</friend>
+                <friend>com.sun.tools.ide.remote.projectui</friend>
+                <friend>com.sun.tools.odb</friend>
+                <friend>com.sun.tools.sendto</friend>
+                <friend>com.sun.tools.swdev.sunstudio.server</friend>
+                <friend>com.sun.tools.swdev.sunstudio.windistr</friend>
+                <friend>com.sun.tools.tuxedo.codemodel.bridge</friend>
+                <friend>com.sun.tools.tuxedo.model</friend>
+                <friend>com.sun.tools.tuxedo.project</friend>
+                <friend>com.sun.tools.tuxedo.source</friend>
+                <friend>com.sun.tools.tuxedo.testrunner</friend>
+                <friend>org.netbeans.modules.cnd</friend>
+                <friend>org.netbeans.modules.cnd.analysis.api</friend>
+                <friend>org.netbeans.modules.cnd.api.remote</friend>
+                <friend>org.netbeans.modules.cnd.api.remote.ui</friend>
+                <friend>org.netbeans.modules.cnd.audit</friend>
+                <friend>org.netbeans.modules.cnd.debugger.common2</friend>
+                <friend>org.netbeans.modules.cnd.debugger.gdb2</friend>
+                <friend>org.netbeans.modules.cnd.discovery</friend>
+                <friend>org.netbeans.modules.cnd.dwarfdiscovery</friend>
+                <friend>org.netbeans.modules.cnd.gizmo</friend>
+                <friend>org.netbeans.modules.cnd.highlight</friend>
+                <friend>org.netbeans.modules.cnd.makeproject</friend>
+                <friend>org.netbeans.modules.cnd.mixeddev</friend>
+                <friend>org.netbeans.modules.cnd.modeldiscovery</friend>
+                <friend>org.netbeans.modules.cnd.remote</friend>
+                <friend>org.netbeans.modules.cnd.remote.projectui</friend>
+                <friend>org.netbeans.modules.cnd.remote.ui</friend>
+                <friend>org.netbeans.modules.cnd.search</friend>
+                <friend>org.netbeans.modules.cnd.tha</friend>
+                <friend>org.netbeans.modules.cnd.toolchain</friend>
+                <friend>org.netbeans.modules.cnd.toolchain.ui</friend>
+                <friend>org.netbeans.modules.dlight.annotationsupport</friend>
+                <friend>org.netbeans.modules.dlight.discover</friend>
+                <friend>org.netbeans.modules.dlight.perfan</friend>
+                <friend>org.netbeans.modules.dlight.previse</friend>
+                <friend>org.netbeans.modules.dlight.remote.impl</friend>
+                <friend>org.netbeans.modules.dlight.terminal</friend>
+                <friend>org.netbeans.modules.dlight.uncover</friend>
+                <friend>org.netbeans.modules.remotefs.versioning</friend>
+                <friend>org.netbeans.modules.subversion.remote</friend>
+                <package>org.netbeans.modules.remote.api.ui</package>
+                <package>org.netbeans.modules.remote.ui.spi</package>
+            </friend-packages>
+        </data>
+    </configuration>
+</project>

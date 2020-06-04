@@ -81,10 +81,14 @@ public final class ActiveQueue {
         static synchronized void ping() {
             if (running == null) {
                 Daemon t = new Daemon();
-                t.setPriority(Thread.MIN_PRIORITY);
-                t.setDaemon(true);
-                t.start();
-                LOGGER.fine("starting thread");
+                try {
+                    t.setPriority(Thread.MIN_PRIORITY);
+                    t.setDaemon(true);
+                    t.start();
+                    LOGGER.fine("starting thread");
+                } catch (SecurityException ex) {
+                    LOGGER.log(Level.FINE, "cannot start thread", ex);
+                }
                 running = t;
             }
         }

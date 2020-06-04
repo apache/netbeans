@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.32
+#Version 1.33
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -186,7 +186,7 @@ meth public static org.netbeans.modules.profiler.nbimpl.actions.ProfilerLauncher
  anno 2 org.netbeans.api.annotations.common.NonNull()
 meth public static void clearLastSession()
 supr java.lang.Object
-hfds AGENT_ARGS,LINUX_THREAD_TIMER_KEY,LOG,lastSession
+hfds AGENT_ARGS,ARGS_PREFIX,LINUX_THREAD_TIMER_KEY,LOG,lastSession
 hcls AntLauncher,ProfilerSessionImpl
 
 CLSS public final static org.netbeans.modules.profiler.nbimpl.actions.ProfilerLauncher$AntLauncherFactory

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.74
+#Version 7.76
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -4131,12 +4131,13 @@ meth public static void setDescriptionAsResource(org.openide.loaders.DataObject,
 meth public static void setIterator(org.openide.loaders.DataObject,org.openide.loaders.TemplateWizard$Iterator) throws java.io.IOException
  anno 0 java.lang.Deprecated()
 meth public void setTargetFolder(org.openide.loaders.DataFolder)
+meth public void setTargetFolderLazy(java.util.function.Supplier<org.openide.loaders.DataFolder>)
 meth public void setTargetName(java.lang.String)
 meth public void setTemplate(org.openide.loaders.DataObject)
 meth public void setTemplatesFolder(org.openide.loaders.DataFolder)
 meth public void setTitleFormat(java.text.MessageFormat)
 supr org.openide.WizardDescriptor
-hfds CUSTOM_DESCRIPTION,CUSTOM_ITERATOR,EA_DESCRIPTION,EA_DESC_RESOURCE,EA_ITERATOR,LOG,PREF_DIM,isInstantiating,iterator,lastComp,newObjects,pcl,progressHandle,showTargetChooser,targetChooser,targetDataFolder,targetIterator,targetName,template,templateChooser,templatesFolder,titleFormatSet
+hfds CUSTOM_DESCRIPTION,CUSTOM_ITERATOR,EA_DESCRIPTION,EA_DESC_RESOURCE,EA_ITERATOR,LOG,PREF_DIM,isInstantiating,iterator,lastComp,newObjects,pcl,progressHandle,showTargetChooser,targetChooser,targetDataFolder,targetDataFolderCreator,targetIterator,targetName,template,templateChooser,templatesFolder,titleFormatSet
 hcls DefaultIterator,InstantiatingIteratorBridge
 
 CLSS public abstract interface static org.openide.loaders.TemplateWizard$Iterator

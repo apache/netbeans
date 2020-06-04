@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.2
+#Version 2.3
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1524,13 +1524,15 @@ fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_194
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_201
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_202
+meth public boolean isDownloadable()
 meth public boolean isInstalledInDirectory(java.io.File)
-meth public int getVersion()
+meth public int getVersionInt()
 meth public java.lang.String getDirectUrl()
 meth public java.lang.String getIndirectUrl()
 meth public java.lang.String getLicenseUrl()
 meth public java.lang.String getUriFragment()
 meth public java.lang.String toString()
+meth public org.netbeans.modules.payara.tooling.data.PayaraVersion getVersion()
 meth public static int getVersionFromDomainXml(java.io.File)
  anno 0 java.lang.Deprecated()
 meth public static int getVersionFromInstallDirectory(java.io.File)
@@ -1538,7 +1540,7 @@ meth public static org.netbeans.modules.payara.common.ServerDetails valueOf(java
 meth public static org.netbeans.modules.payara.common.ServerDetails[] values()
 meth public static org.openide.WizardDescriptor$InstantiatingIterator getInstantiatingIterator()
 supr java.lang.Enum<org.netbeans.modules.payara.common.ServerDetails>
-hfds directUrl,displayName,indirectUrl,licenseUrl,uriFragment,versionInt
+hfds CDDL_LICENSE,DOWNLOAD_URL,directUrl,displayName,downloadable,indirectUrl,licenseUrl,uriFragment,version,versionInt
 hcls DomainParser
 
 CLSS public org.netbeans.modules.payara.common.SimpleIO

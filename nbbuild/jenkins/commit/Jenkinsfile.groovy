@@ -20,9 +20,9 @@
 pipeline {
 
     agent { 
-      node { 
-        label 'ubuntu' 
-      } 
+        node { 
+            label 'ubuntu' 
+        } 
     }
     
     stages {
@@ -30,7 +30,7 @@ pipeline {
         stage("PR Commit validation") {
 
             steps {
-                step {
+                script {
                     if (env.CHANGE_ID) {
                         echo "Hello"
                     }    

@@ -30,16 +30,11 @@ pipeline {
         stage("PR Commit validation") {
 
             steps {
-              echo "Test"
-                try {
-            echo 'Hello World'
-        } catch (err) {
-            // CHANGE_ID is set only for pull requests, so it is safe to access the pullRequest global variable
-            if (env.CHANGE_ID) {
-                pullRequest.addLabel('Build Failed')
-            }
-            throw err
-        }
+                step {
+                    if (env.CHANGE_ID) {
+                        echo "Hello"
+                    }    
+                }
             }
         }
         

@@ -30,7 +30,7 @@ pipeline {
         stage("PR Commit validation") {
 
             steps {
-                echo "Hello"
+                echo "Test hook"
                 script {
                     if (env.CHANGE_ID) {
                         pullRequest.comment('This PR is highly illogical..')

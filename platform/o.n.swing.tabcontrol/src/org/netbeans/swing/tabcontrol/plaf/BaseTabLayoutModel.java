@@ -89,7 +89,7 @@ class BaseTabLayoutModel implements TabLayoutModel {
     protected int textWidth(int index) {
         try {
             String text = model.getTab(index).getText();
-            return textWidth(text, getFont());
+            return textWidth(text, getFont(), renderTarget);
         } catch (NullPointerException npe) {
             IllegalArgumentException iae = new IllegalArgumentException(
                     "Error fetching width for tab " + //NOI18N
@@ -104,32 +104,27 @@ class BaseTabLayoutModel implements TabLayoutModel {
         }
     }
 
-    private static Map<String,Integer> widthMap = new HashMap<String,Integer>(31);
-
-    static int textWidth(String text, Font f) {
-        //Note:  If we choose to support multiple fonts in different
-        //tab controls in the system, make the cache non-static and
-        //dump it if the font changes.
-        Integer result = widthMap.get(text);
-        if (result == null) {
-            double wid = HtmlRenderer.renderString(text, BasicScrollingTabDisplayerUI.getOffscreenGraphics(), 0, 0,
-                                           Integer.MAX_VALUE,
-                                           Integer.MAX_VALUE, f,
-                                           Color.BLACK, HtmlRenderer.STYLE_TRUNCATE,
-                                           false);
-            result = new Integer(Math.round(Math.round(wid)));
-            widthMap.put(text, result);
-        }
-        return result.intValue();
+    static int textWidth(String text, Font f, JComponent component) {
+        /* The results of this method used to be cached, but the cache had memory leak problems as
+        well as problems in multi-monitor setups with different HiDPI scale factors (NETBEANS-4066).
+        Some investigation suggest this method is not being called very often, however. In fact, it
+        is usually called only in cases where the string would have to be repainted in any case. So
+        it seems safe to just do the measurement every time here. */
+        double wid = HtmlRenderer.renderString(text, BasicScrollingTabDisplayerUI.getOffscreenGraphics(component), 0, 0,
+                                       Integer.MAX_VALUE,
+                                       Integer.MAX_VALUE, f,
+                                       Color.BLACK, HtmlRenderer.STYLE_TRUNCATE,
+                                       false);
+        return Math.round(Math.round(wid));
     }
 
-    protected int textHeight(int index) {
+    protected int textHeight(int index, JComponent component) {
         if (textHeight == -1) {
             //No need to calculate for every string
             String testStr = "Zgj"; //NOI18N
             Font f = getFont();
             textHeight = new Double(f.getStringBounds(testStr, 
-            BasicScrollingTabDisplayerUI.getOffscreenGraphics().getFontRenderContext()).getWidth()).intValue() + 2;
+            BasicScrollingTabDisplayerUI.getOffscreenGraphics(component).getFontRenderContext()).getWidth()).intValue() + 2;
         }
         return textHeight;
     }
@@ -147,7 +142,7 @@ class BaseTabLayoutModel implements TabLayoutModel {
     }
 
     public int getH(int index) {
-        return Math.max (textHeight(index) + padY, model.getTab(index).getIcon().getIconHeight() + padY);
+        return Math.max (textHeight(index, renderTarget) + padY, model.getTab(index).getIcon().getIconHeight() + padY);
     }
 
     public int getW(int index) {

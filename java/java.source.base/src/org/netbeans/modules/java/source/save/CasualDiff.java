@@ -535,18 +535,17 @@ public class CasualDiff {
             VariableTree vt = fgt.getVariables().get(fgt.getVariables().size() - 1);
             return TreeInfo.getEndPos((JCTree)vt, oldTopLevel.endPositions);
         }
-        int res = TreeInfo.getEndPos(t, oldTopLevel.endPositions);
-        if (res == (-1)) {
-            if (t.getKind() == Kind.ASSIGNMENT) {
-                JCAssign at = (JCAssign) t;
-                if (res == TreeInfo.getEndPos(at.lhs, oldTopLevel.endPositions)) {
-                    //XXX: workaround for vanilla javac not setting a meaningful end position for implicit annotation attribute assignments:
-                    return endPos(at.rhs);
-                }
+        int endPos = TreeInfo.getEndPos(t, oldTopLevel.endPositions);
+
+        if (endPos == Position.NOPOS && ) {
+            if (t instanceof JCAssign) {
+                // [NETBEANS-4299], might be a synthetic annotation attribute, try rhs
+                endPos = TreeInfo.getEndPos(((JCAssign)t).rhs, oldTopLevel.endPositions);
+            } else {
+                res = getOldPos(t);
             }
-            res = getOldPos(t);
         }
-        return res;
+        return endPos;
     }
 
     private int endPos(com.sun.tools.javac.util.List<? extends JCTree> trees) {

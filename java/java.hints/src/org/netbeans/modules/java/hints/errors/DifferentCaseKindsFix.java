@@ -44,6 +44,8 @@ import org.openide.util.NbBundle;
  */
 public class DifferentCaseKindsFix implements ErrorRule<Void> {
 
+    private static final int SWITCH_RULE_PREVIEW_JDK_VERSION = 13;
+
     private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
             "compiler.err.switch.mixing.case.types")); // NOI18N
     
@@ -54,7 +56,7 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
 
     @Override
     public List<Fix> run(CompilationInfo info, String diagnosticKey, int offset, TreePath treePath, Data<Void> data) {
-        if (!CompilerOptionsQuery.getOptions(info.getFileObject()).getArguments().contains("--enable-preview")) {
+        if (Utilities.isJDKVersionLower(SWITCH_RULE_PREVIEW_JDK_VERSION) && !CompilerOptionsQuery.getOptions(info.getFileObject()).getArguments().contains("--enable-preview")) {
             return null;
         }
         TreePath parentPath = treePath.getParentPath();

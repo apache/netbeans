@@ -386,6 +386,9 @@ abstract class BaseTask extends UserTask {
                         }
                         sourcePositions = new SourcePositionsImpl(block, sourcePositions, sp[0], blockPos, -1);
                         path = tu.getPathElementOfKind(Tree.Kind.LAMBDA_EXPRESSION, tu.pathFor(new TreePath(blockPath.getParentPath(), block), offset, sourcePositions));
+                        if (path == null) {
+                            return null;
+                        }
                         lambdaBody = ((LambdaExpressionTree) path.getLeaf()).getBody();
                         bodyPos = (int) sourcePositions.getStartPosition(root, lambdaBody);
                         if (bodyPos >= offset) {

@@ -24,10 +24,13 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import static java.util.Objects.nonNull;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import javax.swing.Box;
@@ -114,7 +117,7 @@ public class ConfigurationPanel extends JPanel {
             
             if (extraModule.isRequiredFor(jdk)) {
                 jCheckBox.setSelected(true);
-                jCheckBox.setEnabled(false);
+//                jCheckBox.setEnabled(false);
                 extrasFilter.add(extraModule);
             }
             jCheckBox.addActionListener(e -> {
@@ -138,29 +141,17 @@ public class ConfigurationPanel extends JPanel {
             downloadLabel.setVisible(true);
             activateButton.setVisible(true);
             downloadButton.setVisible(true);
-            StringBuilder sbDownload = new StringBuilder();
-
+            
             // collect descriptions from features contributing installed extras
-            for (FeatureInfo fi : extrasMap.values()) {
-                String s = required
-                        ? fi.getExtraModulesRequiredText()
-                        : fi.getExtraModulesRecommendedText();
-                if (s != null) {
-                    if (sbDownload.length() > 0) {
-                        sbDownload.append("\n");
-                    }
-                    sbDownload.append(s);
-                }
-            }
+            List<String> downloadStringList = collectExtraModulesTextsFromFeatures(extrasMap.values(), required);
+            String lblDownloadMsg = generateDownloadMessageFromExtraModulesTexts(downloadStringList);
+            
             if (required) {
                 activateButton.setEnabled(false);
             } else {
                 activateButton.setEnabled(true);
             }
 
-            String lblDownloadMsg = sbDownload.toString();
-
-            String list = "";
             if (!missingModules.isEmpty()) {
                 StringBuilder sb = new StringBuilder();
                 for (FeatureInfo.ExtraModuleInfo s : missingModules) {
@@ -169,7 +160,7 @@ public class ConfigurationPanel extends JPanel {
                     }
                     sb.append(s.displayName());
                 }
-                list = sb.toString();
+                String list = sb.toString();
                 if (required) {
                     lblDownloadMsg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_MissingRequiredModules", displayName, list);
                     activateButton.setEnabled(false);
@@ -189,6 +180,40 @@ public class ConfigurationPanel extends JPanel {
             org.openide.awt.Mnemonics.setLocalizedText(downloadLabel, lblDownloadMsg);
             org.openide.awt.Mnemonics.setLocalizedText(downloadButton, btnDownloadMsg);
         }
+    }
+    
+    /**
+     * Collect extra modules texts
+     */
+    protected List<String> collectExtraModulesTextsFromFeatures(Collection<FeatureInfo> features, boolean required) {
+        List<String> descriptionsList = new ArrayList<>();
+        for (FeatureInfo fi : features) {
+            String s = required ? fi.getExtraModulesRequiredText(): fi.getExtraModulesRecommendedText();
+            if (nonNull(s) && !descriptionsList.contains(s)) {
+                descriptionsList.add(s);
+            }
+        }
+        return descriptionsList;
+    } 
+    
+    /**
+     * Generate download message from extra modules texts
+     * @param extraModulesTexts
+     * @return String Text to set in download label
+     */
+    protected String generateDownloadMessageFromExtraModulesTexts(List<String> extraModulesTexts) {
+        StringBuilder sbDownload = new StringBuilder();
+        if (!extraModulesTexts.isEmpty()) {
+            sbDownload.append("<html><body>");
+            for (int i = 0; i < extraModulesTexts.size(); i++) {
+                sbDownload.append(extraModulesTexts.get(i));
+                if (extraModulesTexts.size() > 1 && i < extraModulesTexts.size() - 1) {
+                    sbDownload.append("<br>");
+                }
+            }
+            sbDownload.append("</body></html>");
+        }
+        return sbDownload.toString();
     }
 
     @Override

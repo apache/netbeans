@@ -537,12 +537,12 @@ public class CasualDiff {
         }
         int endPos = TreeInfo.getEndPos(t, oldTopLevel.endPositions);
 
-        if (endPos == Position.NOPOS && ) {
+        if (endPos == Position.NOPOS) {
             if (t instanceof JCAssign) {
                 // [NETBEANS-4299], might be a synthetic annotation attribute, try rhs
                 endPos = TreeInfo.getEndPos(((JCAssign)t).rhs, oldTopLevel.endPositions);
             } else {
-                res = getOldPos(t);
+                endPos = getOldPos(t);
             }
         }
         return endPos;

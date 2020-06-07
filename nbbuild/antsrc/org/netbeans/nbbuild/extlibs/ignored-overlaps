@@ -56,14 +56,14 @@ enterprise/web.core.syntax/external/struts-taglib-1.3.10.jar enterprise/web.stru
 enterprise/web.core.syntax/external/struts-tiles-1.3.10.jar enterprise/web.struts/external/struts-tiles-1.3.10.jar
 
 # gradle is used at build-time, so we can ignore the duplicates
-groovy/gradle/external/gradle-4.10.2-bin.zip ide/c.google.gson/external/gson-2.7.jar
-groovy/gradle/external/gradle-4.10.2-bin.zip ide/c.jcraft.jsch/external/jsch-0.1.54.jar
-groovy/gradle/external/gradle-4.10.2-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
-groovy/gradle/external/gradle-4.10.2-bin.zip java/maven.embedder/external/apache-maven-3.6.3-bin.zip
-groovy/gradle/external/gradle-4.10.2-bin.zip platform/api.annotations.common/external/jsr305-3.0.2.jar
-groovy/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
-groovy/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/junit-4.12.jar
-groovy/gradle/external/gradle-4.10.2-bin.zip java/maven/external/aether-api-1.13.1.jar
+extide/gradle/external/gradle-4.10.2-bin.zip ide/c.google.gson/external/gson-2.7.jar
+extide/gradle/external/gradle-4.10.2-bin.zip ide/c.jcraft.jsch/external/jsch-0.1.54.jar
+extide/gradle/external/gradle-4.10.2-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
+extide/gradle/external/gradle-4.10.2-bin.zip java/maven.embedder/external/apache-maven-3.6.3-bin.zip
+extide/gradle/external/gradle-4.10.2-bin.zip platform/api.annotations.common/external/jsr305-3.0.2.jar
+extide/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
+extide/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/junit-4.12.jar
+extide/gradle/external/gradle-4.10.2-bin.zip java/maven/external/aether-api-1.13.1.jar
 
 # These are the endorsed version of the javaee apis and create libraries, so they are better kept separate
 enterprise/javaee.api/external/javax.annotation-api-1.2.jar enterprise/javaee7.api/external/javax.annotation-api-1.2.jar
@@ -87,9 +87,9 @@ ide/derby/external/derby-10.14.2.0.jar ide/db.metadata.model/external/derby-10.1
 ide/libs.antlr4.runtime/external/antlr4-runtime-4.7.2.jar java/debugger.jpda.truffle/external/antlr4-runtime-4.7.2.jar
 
 # Amazon Beanstalk SDK has frequently changing dependencies, so they are better kept separate
-enterprise/libs.amazon/external/httpclient-4.5.5.jar groovy/gradle/external/gradle-4.10.2-bin.zip
-enterprise/libs.amazon/external/ion-java-1.0.2.jar groovy/gradle/external/gradle-4.10.2-bin.zip
-enterprise/libs.amazon/external/httpcore-4.4.9.jar groovy/gradle/external/gradle-4.10.2-bin.zip
+enterprise/libs.amazon/external/httpclient-4.5.5.jar extide/gradle/external/gradle-4.10.2-bin.zip
+enterprise/libs.amazon/external/ion-java-1.0.2.jar extide/gradle/external/gradle-4.10.2-bin.zip
+enterprise/libs.amazon/external/httpcore-4.4.9.jar extide/gradle/external/gradle-4.10.2-bin.zip
 
 # Only used as testdata (not redistributed) and modules should be testable independed of each other
 webcommon/javascript2.doc/external/testfiles-jsdoc-1.zip webcommon/javascript2.editor/external/testfiles-jsdoc-1.zip are identical

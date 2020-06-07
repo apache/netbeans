@@ -20,7 +20,6 @@ package org.netbeans.modules.editor.autosave;
 
 import java.util.prefs.PreferenceChangeListener;
 import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;

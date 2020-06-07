@@ -28,7 +28,6 @@ import org.openide.util.actions.BooleanStateAction;
 
 @ActionID(id = "org.netbeans.modules.editor.autosave.ToggleAutoSaveAction", category = "Edit")
 @ActionRegistration(displayName = "#CTL_AutoSave", lazy = false)
-@ActionReference(path = "Menu/File", position = 1490)
 @NbBundle.Messages("CTL_AutoSave=Autosave")
 public final class ToggleAutoSaveAction extends BooleanStateAction {
 

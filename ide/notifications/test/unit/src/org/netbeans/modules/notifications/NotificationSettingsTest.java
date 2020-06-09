@@ -16,31 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.notifications;
 
-package org.netbeans.modules.notifications.filter;
-
-import org.openide.util.NbBundle;
+import org.junit.Test;
+import org.netbeans.junit.NbTestCase;
 
 /**
- * Utilities
+ *
+ * @author Hector Espert
  */
-final class Util {
+public class NotificationSettingsTest extends NbTestCase {
 
-    public static String getString(String key) {
-        return NbBundle.getMessage(Util.class, key);
+    public NotificationSettingsTest(String name) {
+        super(name);
     }
 
-    public static char getChar(String key) {
-        return NbBundle.getMessage(Util.class, key).charAt(0);
-    }
-
-    public static String getMessage(String key, Object obj) {
-        return NbBundle.getMessage(Util.class, key, obj);
-    }
-
-    public static String getMessage(String key, Object obj, Object obj2) {
-        return NbBundle.getMessage(Util.class,key, obj, obj2);
+    @Test
+    public void testIsSearchVisible() {
+        NotificationSettings.setSearchVisible(false);
+        assertFalse(NotificationSettings.isSearchVisible());
+        
+        NotificationSettings.setSearchVisible(true);
+        assertTrue(NotificationSettings.isSearchVisible());
     }
     
-
 }

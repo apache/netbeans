@@ -16,31 +16,39 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.notifications.filter;
 
-import org.openide.util.NbBundle;
+import org.junit.Test;
+import org.netbeans.junit.NbTestCase;
 
 /**
- * Utilities
+ *
+ * @author Hector Espert
  */
-final class Util {
+public class UtilTest extends NbTestCase {
 
-    public static String getString(String key) {
-        return NbBundle.getMessage(Util.class, key);
+    public UtilTest(String name) {
+        super(name);
     }
 
-    public static char getChar(String key) {
-        return NbBundle.getMessage(Util.class, key).charAt(0);
+    @Test
+    public void testGetString() {
+        assertEquals("No Filter", Util.getString("no-filter"));
     }
 
-    public static String getMessage(String key, Object obj) {
-        return NbBundle.getMessage(Util.class, key, obj);
+    @Test
+    public void testGetChar() {
+        assertEquals('N', Util.getChar("no-filter"));
     }
 
-    public static String getMessage(String key, Object obj, Object obj2) {
-        return NbBundle.getMessage(Util.class,key, obj, obj2);
+    @Test
+    public void testGetMessage_String_Object() {
+        assertEquals("No Filter", Util.getMessage("no-filter", "test"));
+    }
+
+    @Test
+    public void testGetMessage_3args() {
+        assertEquals("No Filter", Util.getMessage("no-filter", "test", "object"));
     }
     
-
 }

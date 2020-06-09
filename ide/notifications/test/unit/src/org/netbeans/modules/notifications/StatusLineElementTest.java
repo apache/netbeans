@@ -16,32 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.notifications;
 
 import java.awt.Component;
+import org.junit.Test;
+import org.netbeans.junit.NbTestCase;
 import org.openide.awt.StatusLineElementProvider;
-import org.openide.util.lookup.ServiceProvider;
+import org.openide.util.Lookup;
 
 /**
- * Status line element showing icon for Notifications.
  *
- * @author S. Aubrecht
+ * @author Hector Espert
  */
-@ServiceProvider(service=StatusLineElementProvider.class, position=600)
-public final class StatusLineElement implements StatusLineElementProvider {
+public class StatusLineElementTest extends NbTestCase {
 
-    @Override
-    public Component getStatusLineElement () {
-        return getVisualizer ();
+    public StatusLineElementTest(String name) {
+        super(name);
     }
 
-    private static FlashingIcon icon = null;
-
-    private static Component getVisualizer () {
-        if (null == icon) {
-            icon = new FlashingIcon();
-        }
-        return icon;
+    @Test
+    public void testGetStatusLineElement() {
+        StatusLineElementProvider statusLineElementProvider = Lookup.getDefault().lookup(StatusLineElementProvider.class);
+        assertNotNull(statusLineElementProvider);
+        assertEquals(StatusLineElement.class, statusLineElementProvider.getClass());
+        
+        Component component = statusLineElementProvider.getStatusLineElement();
+        assertNotNull(component);
+        assertEquals("Expected that org.netbeans.modules.notifications.FlashingIcon is the default implementation", FlashingIcon.class, component.getClass());
     }
+    
 }

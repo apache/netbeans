@@ -149,6 +149,8 @@ public class JavacParser extends Parser {
     public static final String MIME_TYPE = "text/x-java";
     //No output writer like /dev/null
     private static final PrintWriter DEV_NULL = new PrintWriter(new NullWriter(), false);
+    //Maximum threshold size after which parse use one instance for one file
+    private static final int MAX_FILE_SIZE = (5<<20);    
     //Max number of dump files
     private static final int MAX_DUMPS = Integer.getInteger("org.netbeans.modules.java.source.parsing.JavacParser.maxDumps", 255);  //NOI18N
     //Command line switch disabling partial reparse
@@ -425,7 +427,8 @@ public class JavacParser extends Parser {
                     init (snapshot, task, false);
                     DiagnosticListener<JavaFileObject> diagnosticListener;
                     JavacTaskImpl javacTask;
-                    if (sequentialParsing == null && ciImpl == null && this.snapshotSize <= (5<<20)) {
+                    boolean oneInstanceJava=Boolean.getBoolean("java.enable.single.javac") && this.snapshotSize <= this.MAX_FILE_SIZE;
+                    if (sequentialParsing == null && ciImpl == null && oneInstanceJava) {
                         List<JavaFileObject> jfos = new ArrayList<>();
                         for (Snapshot s : snapshots) {
                             jfos.add(FileObjects.sourceFileObject(s.getSource().getFileObject(), root, JavaFileFilterQuery.getFilter(s.getSource().getFileObject()), s.getText()));
@@ -433,7 +436,7 @@ public class JavacParser extends Parser {
                         diagnosticListener = new CompilationInfoImpl.DiagnosticListenerImpl(this.root, jfos.get(0), this.cpInfo);
                         javacTask = JavacParser.createJavacTask(this.file, jfos, this.root, this.cpInfo,
                                 this, diagnosticListener, false);
-                    } else if (ciImpl != null &&  this.snapshotSize <= (5<<20)) {
+                    } else if (ciImpl != null &&  oneInstanceJava) {
                         diagnosticListener = ciImpl.getDiagnosticListener();
                         javacTask = ciImpl.getJavacTask();
                         oldParsedTrees=ciImpl.getParsedTrees();

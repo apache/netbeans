@@ -1400,7 +1400,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                 JsObject parentObject = parentFqn.isEmpty() ? getGlobalObject() : ModelUtils.getJsObject(modelBuilder, parentFqn, true);
                 JsFunctionImpl callBackFunction = new JsFunctionImpl(
                         parentObject instanceof DeclarationScope ? (DeclarationScope) parentObject : ModelUtils.getDeclarationScope(parentObject),
-                        parentObject, fqn.get(fqn.size() - 1), Collections.EMPTY_LIST,
+                        parentObject, fqn.get(fqn.size() - 1), Collections.emptyList(),
                         callBack.getOffset() > -1 ? new OffsetRange(callBack.getOffset(), callBack.getOffset() + callBack.getType().length()) : OffsetRange.NONE,
                         JsTokenId.JAVASCRIPT_MIME_TYPE, null);
                 parentObject.addProperty(callBackFunction.getName(), callBackFunction);

@@ -36,7 +36,7 @@ public enum DependencyType {
     private final List<String> scopes;
 
     private DependencyType(String... artifactScopes) {
-        this.scopes = Collections.unmodifiableList(artifactScopes == null || artifactScopes.length == 0 ? Collections.EMPTY_LIST : Arrays.asList(artifactScopes));
+        this.scopes = Collections.unmodifiableList(artifactScopes == null || artifactScopes.length == 0 ? Collections.emptyList() : Arrays.asList(artifactScopes));
     }        
 
     public List<String> artifactScopes() {

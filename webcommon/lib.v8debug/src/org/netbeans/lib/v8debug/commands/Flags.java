@@ -75,7 +75,7 @@ public final class Flags {
         private final Map<String, Boolean> flags;
         
         public ResponseBody() {
-            this(Collections.EMPTY_MAP);
+            this(Collections.<String, Boolean>emptyMap());
         }
         
         public ResponseBody(Map<String, Boolean> flags) {

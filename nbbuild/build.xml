@@ -2041,6 +2041,15 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         </subant>
     </target>
 
+    <target name="test-unit" depends="init" description="Runs unit tests.">
+        <property name="test.modules" value="${allmodules}"/>
+        <property name="test.modules.exclude" value=""/>
+        <subant target="test-unit">
+            <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
+            <dirset dir=".." includes="${test.modules}" excludes="${test.modules.exclude}"/>
+        </subant>
+    </target>
+
     <target name="update-copyright-owner">
         <taskdef name="checklicense" classname="org.netbeans.nbbuild.CheckLicense" classpath="${nbantext.jar}"/>
         <fileset id="fs" dir="..">

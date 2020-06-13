@@ -94,20 +94,6 @@ matrix:
             - ant $OPTS build
             - ant $OPTS test -Dtest.includes=NoTestsJustBuild
 
-        - name: Test harness modules
-          jdk: openjdk8
-          env:
-            - OPTS="-silent -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
-          before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
-          script:
-            - OPTS="-quiet -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
-            - ant $OPTS -f harness/o.n.insane test
-            - ant $OPTS -f harness/apisupport.harness test
-            - ant $OPTS -f harness/nbjunit test
-            - ant $OPTS -f harness/jellytools.platform test -Dtest.config=stable
-
         - name: Test platform modules, Batch 1
           jdk: openjdk8
           env:
@@ -714,26 +700,3 @@ matrix:
             - ant $OPTS build
           script:
             - nbbuild/travis/scripting.sh
-
-        - name: MacOS tests
-          language: minimal
-          os: osx
-          osx_image: xcode10.1
-          addons:
-            homebrew:
-              packages:
-                - openjdk@11
-                - ant
-              update: true
-          env:
-            - OPTS="-silent -Dcluster.config=platform -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
-          install:
-            - sudo ln -sfn /usr/local/opt/openjdk@11/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-11.jdk
-            - export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
-            - export JAVA_HOME=`/usr/libexec/java_home -v 11`
-          before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
-          script:
-            - ant $OPTS -f platform/masterfs.macosx test
-            - ant $OPTS -f platform/core.network test

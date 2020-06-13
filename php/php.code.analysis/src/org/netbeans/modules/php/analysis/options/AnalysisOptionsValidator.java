@@ -83,7 +83,7 @@ public final class AnalysisOptionsValidator {
 
     @NbBundle.Messages("AnalysisOptionsValidator.codeSniffer.standard.empty=Valid code sniffer standard must be set.")
     public AnalysisOptionsValidator validateCodeSnifferStandard(String codeSnifferStandard) {
-        if (!StringUtils.hasText(codeSnifferStandard)) {
+        if (codeSnifferStandard == null) {
             result.addWarning(new ValidationResult.Message("codeSniffer.standard", Bundle.AnalysisOptionsValidator_codeSniffer_standard_empty())); // NOI18N
         }
         return this;

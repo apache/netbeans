@@ -28,6 +28,8 @@ import org.netbeans.api.editor.EditorRegistry;
 import org.openide.LifecycleManager;
 import org.openide.cookies.SaveCookie;
 import org.openide.loaders.DataObject;
+import org.openide.modules.OnStart;
+import org.openide.modules.OnStop;
 import org.openide.util.Exceptions;
 import org.openide.util.NbPreferences;
 
@@ -45,7 +47,7 @@ public final class AutoSaveController {
 
     private static AutoSaveController controller;
 
-    private final PropertyChangeListener listener = evt  -> {
+    private final PropertyChangeListener listener = evt -> {
         final String name = evt.getPropertyName();
         if (EditorRegistry.FOCUS_LOST_PROPERTY.equals(name)) {
             final Object old = evt.getOldValue();
@@ -134,5 +136,25 @@ public final class AutoSaveController {
         } else {
             stopFocusSave();
         }
+    }
+
+    @OnStart
+    public static class InitializeMe implements Runnable {
+
+        @Override
+        public void run() {
+            AutoSaveController.getInstance().synchronize();
+        }
+
+    }
+
+    @OnStop
+    public static class Cleanup implements Runnable {
+
+        @Override
+        public void run() {
+            AutoSaveController.getInstance().stop();
+        }
+
     }
 }

@@ -19,6 +19,7 @@
 package org.netbeans.modules.editor.autosave;
 
 import java.util.prefs.PreferenceChangeListener;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
@@ -29,6 +30,9 @@ import org.openide.util.actions.BooleanStateAction;
 @ActionRegistration(displayName = "#CTL_AutoSave", lazy = false)
 @NbBundle.Messages("CTL_AutoSave=Autosave")
 public final class ToggleAutoSaveAction extends BooleanStateAction {
+
+    @StaticResource
+    public static final String ICON = "org/netbeans/modules/editor/autosave/auto_save.png"; //NOI18N
 
     private final PreferenceChangeListener pcl = evt -> setBooleanState(AutoSaveController.prefs()
             .getBoolean(AutoSaveController.KEY_ACTIVE, AutoSaveController.KEY_ACTIVE_DEFAULT));
@@ -44,7 +48,7 @@ public final class ToggleAutoSaveAction extends BooleanStateAction {
 
         AutoSaveController.prefs().addPreferenceChangeListener(pcl);
 
-        this.addPropertyChangeListener(evt  -> {
+        this.addPropertyChangeListener(evt -> {
             if (BooleanStateAction.PROP_BOOLEAN_STATE.equals(evt.getPropertyName())) {
                 AutoSaveController.prefs().putBoolean(AutoSaveController.KEY_ACTIVE, getBooleanState());
             }
@@ -55,7 +59,7 @@ public final class ToggleAutoSaveAction extends BooleanStateAction {
 
     @Override
     protected String iconResource() {
-        return "org/netbeans/modules/editor/autosave/auto_save.png";
+        return ICON;
     }
 
     @Override

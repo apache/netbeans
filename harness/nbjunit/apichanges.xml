@@ -34,6 +34,20 @@
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="ignore.support">
+        <api name="nbjunit"/>
+        <summary>JUnit ignore annotation</summary>
+        <version major="1" minor="98"/>
+        <date day="21" month="6" year="2020"/>
+        <author login="hectorespert"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Add support for JUnit <a href="http://junit.sourceforge.net/javadoc/org/junit/Ignore.html">@Ignore</a> annotation on NbTestCase test case extension.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbTestCase"/>
+    </change>
     <change id="NbModuleSuite.Configuration.parentClassLoader">
         <api name="nbjunit"/>
         <summary>NbModuleSuite.Configuration.parentClassLoader()</summary>

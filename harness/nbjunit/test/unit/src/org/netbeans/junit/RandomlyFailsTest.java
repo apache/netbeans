@@ -83,7 +83,7 @@ public class RandomlyFailsTest extends TestCase {
     }
 
     private void run(Class... tests) {
-        runs = new ArrayList<Integer>();
+        runs = new ArrayList<>();
         BaseTestRunner runner = new TestRunner();
         for (Class test : tests) {
             TestResult result = new TestResult();

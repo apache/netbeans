@@ -21,6 +21,8 @@ package org.netbeans.modules.php.composer.files;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileUtil;
 
@@ -73,6 +75,25 @@ public class ComposerJsonTest extends NbTestCase {
         ComposerJson composerJson = new ComposerJson(FileUtil.toFileObject(getDataDir()), "nonexisting-composer.json");
         assertFalse(composerJson.getFile().getAbsolutePath(), composerJson.exists());
         assertEquals(new File(getDataDir(), ComposerJson.DEFAULT_VENDOR_DIR), composerJson.getVendorDir());
+    }
+
+    public void testScripts() {
+        ComposerJson composerJson = new ComposerJson(FileUtil.toFileObject(getDataDir()), "composer-scripts.json");
+        assertTrue(composerJson.getFile().getAbsolutePath(), composerJson.exists());
+        Set<String> scripts = composerJson.getScripts();
+        assertEquals(3, scripts.size());
+        Set<String> expectedScripts = new TreeSet<>();
+        expectedScripts.add("ci");
+        expectedScripts.add("analyze");
+        expectedScripts.add("test");
+        assertEquals(expectedScripts, scripts);
+    }
+
+    public void testNoScripts() {
+        ComposerJson composerJson = new ComposerJson(FileUtil.toFileObject(getDataDir()), "composer-vendor.json");
+        assertTrue(composerJson.getFile().getAbsolutePath(), composerJson.exists());
+        Set<String> scripts = composerJson.getScripts();
+        assertTrue(scripts.isEmpty());
     }
 
 }

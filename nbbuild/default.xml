@@ -119,6 +119,31 @@
     <property name="tasks-already-set" value="true"/>
   </target>
 
+  <condition property="auto.proxy" value="true">
+    <not>  
+      <isset property="auto.proxy"/>
+    </not>
+  </condition>
+
+  <condition property="proxy.host+port">
+    <and>
+        <isset property="proxy.host"/>
+        <isset property="proxy.port"/>
+    </and>
+  </condition>
+  
+  <target name="-manual-proxy" if="proxy.host+port">
+    <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}"/>
+  </target>
+    
+  <target name="-auto-proxy" unless="proxy.host+port" if="auto.proxy">
+    <taskdef name="configureproxy" classname="org.netbeans.nbbuild.extlibs.ConfigureProxy" classpath="${nbantext.jar}"/>
+    <configureproxy connectTo="http://netbeans.apache.org" hostProperty="proxyHost" portProperty="proxyPort"/>
+    <setproxy proxyhost="${proxyHost}" proxyPort="${proxyPort}"/>
+  </target>
+  
+  <target name="-proxy-configuration" depends="-manual-proxy,-auto-proxy"/>
+
   <target name="init" depends="init-tasks,-define-cluster-path">
     <!-- Gets the module name -->
     <getmodulename name="module.name" id="module.id" root="${nb_all}"/>

@@ -35,7 +35,7 @@
     </target>
 
     <target name="common-init" depends="default.init,-build-dir-init"/>
-    <target name="init" depends="basic-init,files-init,build-init,-javac-init,-init-proxy"/>
+    <target name="init" depends="basic-init,files-init,build-init,-javac-init,-proxy-configuration"/>
     
     <target name="files-init" depends="projectized-common.files-init">
         <property name="locales" value=""/>
@@ -46,13 +46,6 @@
             basefilesref="module.files"
         />
     </target>
-    
-    <condition property="proxy.host+port">
-        <and>
-            <isset property="proxy.host"/>
-            <isset property="proxy.port"/>
-        </and>
-    </condition>
 
     <property name="ant.file.1" location="${ant.file}"/>
     <property name="ant.file.2" location="${nb_all}/${ant.project.name}/build.xml"/>
@@ -63,10 +56,6 @@
             </not>
         </condition>
     </fail>
-    
-    <target name="-init-proxy" if="proxy.host+port">
-        <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}"/>
-    </target>
 
     <target name="jdk-8-check" depends="-jdk-init" if="have-jdk-1.9" unless="permit.jdk9.builds">
         <property name="user.build.properties" location="${nb_all}/nbbuild/user.build.properties"/>

@@ -134,12 +134,18 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
         TestOutputDescriptor desc = evt.getDescriptor();
         OperationDescriptor parent = desc.getParent();
         CoreManager manager = getManager();
-        if (manager != null) {
-            manager.displayOutput(session, desc.getMessage(), desc.getDestination().equals(Destination.StdErr));
-        }
-        if ((parent != null) && (parent instanceof JvmTestOperationDescriptor)) {
-            Testcase tc = runningTests.get(getTestOpKey((JvmTestOperationDescriptor) parent));
-            tc.addOutputLines(Arrays.asList(desc.getMessage().split("\\R")));
+        String msg = desc.getMessage();
+        if (msg != null && msg.endsWith("\n")) {
+            msg = msg.substring(0, msg.length() - 1);
+            if (manager != null) {
+                manager.displayOutput(session, msg, desc.getDestination().equals(Destination.StdErr));
+            }
+            if ((parent != null) && (parent instanceof JvmTestOperationDescriptor)) {
+                Testcase tc = runningTests.get(getTestOpKey((JvmTestOperationDescriptor) parent));
+                if (tc != null) {
+                    tc.addOutputLines(Arrays.asList(msg.split("\\R")));
+                }
+            }
         }
     }
 

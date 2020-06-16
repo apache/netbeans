@@ -476,7 +476,7 @@ public class XMLDocumentModelProvider implements DocumentModelProvider {
     }
     
     
-    private List/*<DocumentElement>*/ getDescendantsOfNotSkippedElements(DocumentElement de, List/*<DocumentElement>*/ skippedElements) {
+    private List<DocumentElement> getDescendantsOfNotSkippedElements(DocumentElement de, List<DocumentElement> skippedElements) {
         ArrayList desc = new ArrayList();
         Iterator children = de.getChildren().iterator();
         while(children.hasNext()) {

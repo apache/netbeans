@@ -44,6 +44,9 @@ jobs:
         
       - name: Test
         run: ant -f platform/core.network test
+
+      - name: Codeception test
+        run: ant -f php/php.codeception test
         
   linux:
     name: Check Build System

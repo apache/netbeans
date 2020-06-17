@@ -118,7 +118,13 @@
     </condition>
     <configureproxy connectTo="${metabuild.jsonurl}" hostProperty="proxyHost" portProperty="proxyPort"/>
     <setproxy proxyhost="${proxyHost}" proxyPort="${proxyPort}"/>
-    <get dest="${metabuild.releasejson}" skipexisting="false" src="${metabuild.jsonurl}" />
+    
+    <!-- Download release json properties -->
+    <taskdef name="downloadreleasejson" classname="org.netbeans.nbbuild.DownloadReleaseJsonProperties" classpath="${nbantext.jar}" />
+    <property name="metabuild.releasejson.cache" value="${binaries.cache}/netbeansrelease.json"/>
+    <property name="metabuild.releasejson.cache.refresh" value="86400"/>
+    <downloadreleasejson dest="${metabuild.releasejson}" src="${metabuild.jsonurl}" cache="${metabuild.releasejson.cache}" refresh="${metabuild.releasejson.cache.refresh}" ignoreerrors="true"/>
+
     <!-- read info from gitinfo.properties , if present in source bundle copy gitinfo-->
     <copy file="${nb_all}/nbbuild/gitinfo.properties" tofile="${nb_all}/nbbuild/build/gitinfo.properties" failonerror="false"/>
     <copy file="${nb_all}/nbbuild/netbeansrelease.properties" tofile="${nb_all}/nbbuild/build/netbeansrelease.properties" failonerror="false"/>

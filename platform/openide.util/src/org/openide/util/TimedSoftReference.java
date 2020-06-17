@@ -62,7 +62,7 @@ final class TimedSoftReference<T> extends SoftReference<T> implements Runnable {
      * @param m a map in which this reference may serve as a value
      * @param k the key whose value in <code>m</code> may be this reference
      */
-    public TimedSoftReference(T o, Map m, Object k) {
+    TimedSoftReference(T o, Map m, Object k) {
         super(o, BaseUtilities.activeReferenceQueue());
         this.o = o;
         this.m = m;

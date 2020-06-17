@@ -137,7 +137,7 @@ public final class CodeSniffer {
         assert file.isValid() : "Invalid file given: " + file;
         try {
             Integer result = getExecutable(Bundle.CodeSniffer_analyze(analyzeGroupCounter++), findWorkDir(file))
-                    .additionalParameters(getParameters(ensureStandard(standard), file, noRecursion))
+                    .additionalParameters(getParameters(standard, file, noRecursion))
                     .runAndWait(getDescriptor(), "Running code sniffer..."); // NOI18N
             if (result == null) {
                 return null;
@@ -239,7 +239,8 @@ public final class CodeSniffer {
         Charset encoding = FileEncodingQuery.getEncoding(file);
         List<String> params = new ArrayList<>();
         // NETBEANS-3243 the path of Code Sniffer may have --standard parameter
-        if (!codeSnifferPath.contains(STANDARD_PARAM + "=") // NOI18N
+        if (StringUtils.hasText(standard)
+                && !codeSnifferPath.contains(STANDARD_PARAM + "=") // NOI18N
                 && !codeSnifferPath.contains(STANDARD_PARAM + " ")) { // NOI18N
             // #270987 use --standard
             params.add(String.format(STANDARD_PARAM_FORMAT, standard));
@@ -253,18 +254,6 @@ public final class CodeSniffer {
         }
         params.add(FileUtil.toFile(file).getAbsolutePath());
         return params;
-    }
-
-    private String ensureStandard(String standard) {
-        if (standard != null) {
-            return standard;
-        }
-        List<String> standards = getStandards();
-        if (standards == null) {
-            // fallback
-            return "PEAR"; // NOI18N
-        }
-        return standards.get(0);
     }
 
     private void addIgnoredFiles(List<String> params, FileObject file) {

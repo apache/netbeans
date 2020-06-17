@@ -258,7 +258,7 @@ public class DocRendererTest extends PHPTestBase {
 
     public void testReplaceInlineInheritdoc_04() {
         checkReplaceInlineInheritdoc(
-                null,
+                "Parent Description",
                 null,
                 "Parent Description"
         );

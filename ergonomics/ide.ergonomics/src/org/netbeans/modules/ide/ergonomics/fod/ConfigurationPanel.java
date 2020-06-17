@@ -117,7 +117,7 @@ public class ConfigurationPanel extends JPanel {
             
             if (extraModule.isRequiredFor(jdk)) {
                 jCheckBox.setSelected(true);
-                jCheckBox.setEnabled(false);
+//                jCheckBox.setEnabled(false);
                 extrasFilter.add(extraModule);
             }
             jCheckBox.addActionListener(e -> {

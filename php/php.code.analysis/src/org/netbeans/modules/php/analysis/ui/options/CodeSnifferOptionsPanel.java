@@ -360,7 +360,7 @@ public class CodeSnifferOptionsPanel extends AnalysisCategoryPanel {
 
     private void codeSnifferLearnMoreLabelMousePressed(MouseEvent evt) {//GEN-FIRST:event_codeSnifferLearnMoreLabelMousePressed
         try {
-            URL url = new URL("http://pear.php.net/package/PHP_CodeSniffer"); // NOI18N
+            URL url = new URL("https://github.com/squizlabs/PHP_CodeSniffer"); // NOI18N
             HtmlBrowser.URLDisplayer.getDefault().showURL(url);
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);

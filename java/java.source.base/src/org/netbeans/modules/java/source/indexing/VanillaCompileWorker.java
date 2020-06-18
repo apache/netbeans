@@ -622,7 +622,11 @@ final class VanillaCompileWorker extends CompileWorker {
                 if (node.getClassBody() != null && !nc.clazz.type.hasTag(TypeTag.ERROR)) {
                     MethodSymbol constructor = (MethodSymbol) nc.constructor;
                     ListBuffer<JCExpression> args = new ListBuffer<>();
-                    for (VarSymbol param : constructor.params) {
+                    int startIdx = 0;
+                    if (node.getEnclosingExpression() != null) {
+                        startIdx = 1;
+                    }
+                    for (VarSymbol param : constructor.params.subList(startIdx, constructor.params.size())) {
                         args.add(make.TypeCast(param.type, make.Literal(TypeTag.BOT, null).setType(syms.botType)));
                     }
                     nc.args = args.toList();

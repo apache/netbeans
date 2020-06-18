@@ -611,6 +611,33 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                      createdFiles);
     }
 
+    public void testBasedAnonymous() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java",
+                                                                      "package test;\n" +
+                                                                      "public class Test {\n" +
+                                                                      "    private int i;\n" +
+                                                                      "    static void test(Test t) {\n" +
+                                                                      "        t.new Inner() {};\n" +
+                                                                      "    }\n" +
+                                                                      "    class Inner {}\n" +
+                                                                      "}\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig",
+                                                       "cache/s1/java/15/classes/test/Test$Inner.sig",
+                                                       "cache/s1/java/15/classes/test/Test$1.sig")),
+                     createdFiles);
+    }
+
     public static void noop() {}
 
     @Override

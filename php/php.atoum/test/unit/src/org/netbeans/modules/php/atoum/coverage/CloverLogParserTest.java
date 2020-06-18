@@ -36,7 +36,6 @@ import org.netbeans.modules.php.spi.testing.coverage.FileMetrics;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
-import org.openide.filesystems.FileUtil;
 
 public class CloverLogParserTest extends NbTestCase {
 

@@ -41,9 +41,9 @@ public final class AutoSaveController {
 
     public static final String KEY_ACTIVE = "autoSaveActive";
     public static final String KEY_INTERVAL = "autoSaveInterval";
-    public static final String KEY_SAVE_ON_FOCUS_LOST = "autoSaveOnLostFocus";
+    public static final String KEY_SAVE_ON_FOCUS_LOST = "autoSaveOnFocusLost";
 
-    public static final boolean KEY_ACTIVE_DEFAULT = true;
+    public static final boolean KEY_ACTIVE_DEFAULT = false;
 
     private static AutoSaveController controller;
 

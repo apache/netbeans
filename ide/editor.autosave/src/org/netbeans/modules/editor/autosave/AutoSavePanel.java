@@ -104,6 +104,7 @@ final class AutoSavePanel extends javax.swing.JPanel {
         chkSaveOnFocusLost.setSelected(AutoSaveController.prefs().getBoolean(AutoSaveController.KEY_SAVE_ON_FOCUS_LOST,
                 false));
         spnModel.setValue(AutoSaveController.prefs().getInt(AutoSaveController.KEY_INTERVAL, 10));
+        spnMinutes.setEnabled(chkUseFeature.isSelected());
     }
 
     void store() {

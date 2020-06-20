@@ -681,7 +681,7 @@ matrix:
             - ant $OPTS -f php/php.doctrine2 test
             #- ant $OPTS -f php/php.editor test
             #- ant $OPTS -f php/php.latte test
-            #- ant $OPTS -f php/php.nette.tester test
+            - ant $OPTS -f php/php.nette.tester test
             - ant $OPTS -f php/php.phpunit test
             - ant $OPTS -f php/php.project test
             - ant $OPTS -f php/php.refactoring test

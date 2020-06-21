@@ -1377,7 +1377,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <element name="test" implicit="true"/>
             <sequential>
                 <mkdir dir="${nb.build.dir}/test/unit/classes"/>
-                <javac srcdir="test/unit/src" destdir="${nb.build.dir}/test/unit/classes" debug="true" source="1.7">
+                <javac srcdir="test/unit/src" destdir="${nb.build.dir}/test/unit/classes" debug="true" source="1.8">
                     <classpath path="${test.unit.cp}"/>
                     <compilerarg line="-Xlint -Xlint:-serial"/>
                 </javac>

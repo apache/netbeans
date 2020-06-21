@@ -3,7 +3,7 @@ Description: Graal SDK and Truffle API
 License: UPL
 Origin: https://github.com/oracle/graal
 Version: 19.3.0
-Files: graal-sdk-19.3.0.jar
+Files: graal-sdk-19.3.0.jar launcher-common-19.3.0.jar
 
 Copyright (c) 2018, Oracle and/or its affiliates. All rights reserved.
 

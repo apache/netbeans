@@ -19,7 +19,18 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="java/maven.htmlui">
-    <description>Builds, tests, and runs the project org.netbeans.modules.maven.htmlui</description>
-    <import file="../../nbbuild/templates/projectized.xml"/>
-</project>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Templates">
+            
+        <folder name="Project">
+            <folder name="Samples">
+                <folder name="JavaFXMaven">
+                    <attr name="position" intvalue="50"/>
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.kit.Bundle#Templates/Samples/JavaFXMaven"/>
+                </folder>
+            </folder>        
+        </folder>
+    </folder>
+    
+</filesystem>

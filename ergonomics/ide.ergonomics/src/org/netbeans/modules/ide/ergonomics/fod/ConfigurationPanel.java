@@ -439,6 +439,7 @@ public class ConfigurationPanel extends JPanel {
                     setError("<html>" + message + "</html>"); // NOI18N
                     progressPanel.removeAll();
                     progressPanel.add(errorLabel);
+                    downloadButton.setEnabled(true);
                 }
             });
         }

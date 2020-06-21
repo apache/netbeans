@@ -83,9 +83,6 @@ final class IllegalModuleException extends IllegalArgumentException {
     IllegalModuleException(Reason reason, Set<Module> bogus) {
         this.reason = reason;
         this.bogus = bogus;
-        if (reason == Reason.ENABLE_MISSING) {
-            throw new AssertionError(this);
-        }
     }
 
     @Override

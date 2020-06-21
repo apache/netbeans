@@ -1,0 +1,237 @@
+{*
+ * New BSD License
+ * ---------------
+ *
+ * Copyright (c) 2009, Ondřej Brejla <ondrej@brejla.cz>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the "Eciovni" nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*}
+{*
+ * @param string $title
+ * @param string $id
+ *
+ * @param string $supplierName
+ * @param string $supplierStreet
+ * @param string $supplierHouseNumber
+ * @param string $supplierCity
+ * @param string $supplierZip
+ * @param string $supplierIn
+ * @param string $supplierTin
+ * @param string $supplierAccountNumber
+ *
+ * @param string $dateOfIssuance
+ * @param string $expirationDate
+ * @param string $dateOfVatRevenueRecognition
+ *
+ * @param string $variableSymbol
+ * @param string $specificSymbol
+ * @param string $constantSymbol
+ *
+ * @param string $customerName
+ * @param string $customerStreet
+ * @param string $customerHouseNumber
+ * @param string $customerCity
+ * @param string $customerZip
+ * @param string $customerIn
+ * @param string $customerTin
+ * @param string $customerAccountNumber
+ *
+ * @param Item[] $items
+ *
+ * @param float $finalUntaxedValue
+ * @param float $finalTaxValue
+ * @param float $finalValue
+*}
+<html lang="cs">
+    <head>
+        <meta http-equiv="Content-Language" content="cs">
+    </head>
+    <body>
+        <style type="text/css">
+            body {
+                font-family: Arial;
+            }
+
+            table {
+                font-size: 12px;
+            }
+        </style>
+        <div>
+            <div style="text-align:right;border-bottom:2px solid #000000;color:#1A5DAC;font-weight:bold;font-size:20px">
+                {$title} - {$id}
+            </div>
+            <table>
+                <tr>
+                    <td width="{$contactSizeRatio}%">
+                        <span style="color:#1A5DAC;font-weight:bold;font-size:12px">Dodavatel:</span>
+                        <table style="font-weight:bold;margin-bottom:15px">
+                            <tr>
+                                <td>{$supplierName}</td>
+                            </tr>
+                            <tr>
+                                <td>{$supplierStreet} {$supplierHouseNumber}</td>
+                            </tr>
+                            <tr>
+                                <td>{$supplierCity}, {$supplierZip}</td>
+                            </tr>
+                        </table>
+
+                        <table style="color:#1A5DAC;margin-bottom:15px">
+                            <tr n:if="$supplierIn">
+                                <td>IČ:</td>
+                                <td>{$supplierIn}</td>
+                            </tr>
+                            <tr n:if="$supplierTin">
+                                <td>DIČ:</td>
+                                <td>{$supplierTin}</td>
+                            </tr>
+                        </table>
+
+                        <table style="width:100%;margin-bottom:15px" n:if="$supplierAccountNumber">
+                            <tr>
+                                <td>Číslo účtu:</td>
+                                <td style="text-align:center;border:3px solid #000000;font-weight:bold" width="220">
+                                    {$supplierAccountNumber}
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table style="width:100%">
+                            <tr>
+                                <td>Forma úhrady:</td>
+                                <td style="text-align:right">{$paymentMethod}</td>
+                            </tr>
+                            <tr n:if="$dateOfIssuance">
+                                <td>Datum vystavení:</td>
+                                <td style="text-align:right">{$dateOfIssuance|replace:' ':'&nbsp;'|noescape}</td>
+                            </tr>
+                            <tr n:if="$expirationDate">
+                                <td>Datum splatnosti:</td>
+                                <td style="text-align:right">{$expirationDate|replace:' ':'&nbsp;'|noescape}</td>
+                            </tr>
+                            <tr n:if="$dateOfVatRevenueRecognition">
+                                <td>Datum uskutečnění zdanitelného plnění:</td>
+                                <td style="text-align:right">{$dateOfVatRevenueRecognition|replace:' ':'&nbsp;'|noescape}</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="{100 - $contactSizeRatio}%" align="right">
+                        <table style="margin-bottom:15px" n:if="$constantSymbol || $specificSymbol || $variableSymbol">
+                            <tr n:if="$variableSymbol">
+                                <td style="text-align:right">Variabilní symbol:</td>
+                                <td style="text-align:left">{$variableSymbol}</td>
+                            </tr>
+                            <tr n:if="$specificSymbol">
+                                <td style="text-align:right">Specifický symbol:</td>
+                                <td style="text-align:left">{$specificSymbol}</td>
+                            </tr>
+                            <tr n:if="$constantSymbol">
+                                <td style="text-align:right">Konstantní symbol:</td>
+                                <td style="text-align:left">{$constantSymbol}</td>
+                            </tr>
+                        </table>
+
+                        <table style="border: 3px solid #000000">
+                            <tr>
+                                <td width="350">
+                                    <span style="color:#1A5DAC;font-weight:bold;font-size:12px">Odběratel:</span>
+                                    <table style="margin-bottom:15px">
+                                        <tr n:if="$customerIn">
+                                            <td>IČ:</td>
+                                            <td>{$customerIn == 0 ? '' : $customerIn}</td>
+                                        </tr>
+                                        <tr n:if="$customerTin">
+                                            <td>DIČ:</td>
+                                            <td>{$customerTin}</td>
+                                        </tr>
+                                        <tr n:if="$customerAccountNumber">
+                                            <td>Číslo účtu:</td>
+                                            <td>{$customerAccountNumber}</td>
+                                        </tr>
+                                    </table>
+
+                                    <table style="font-weight:bold;margin-bottom:15px">
+                                        <tr n:if="$customerName">
+                                            <td>{$customerName}</td>
+                                        </tr>
+                                        <tr n:if="$customerStreet || $customerHouseNumber">
+                                            <td>{$customerStreet} {$customerHouseNumber}</td>
+                                        </tr>
+                                        <tr n:if="$customerCity || $customerZip">
+                                            <td>{$customerCity}, {$customerZip}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <div style="border:1px solid #BEC8CE;clear:both;margin-bottom:15px">
+                <table style="width:100%">
+                    <tr>
+                        <td><strong>Položka</strong></td>
+                        <td style="text-align:right"><strong>Cena/jedn.</strong></td>
+                        <td style="text-align:right"><strong>Počet</strong></td>
+                        <td style="text-align:right"><strong>%DPH</strong></td>
+                        <td style="text-align:right"><strong>DPH</strong></td>
+                        <td style="text-align:right"><strong>Cena (Kč)</strong></td>
+                    </tr>
+                    {foreach $items as $item}
+                        <tr>
+                            <td>{$item->getDescription()}</td>
+                            <td style="text-align:right">{$item->countUntaxedUnitValue()|round|replace:' ':'&nbsp;'|noescape}</td>
+                            <td style="text-align:right">{$item->getUnits()|round|replace:' ':'&nbsp;'|noescape}</td>
+                            <td style="text-align:right">{$item->getTax()->inUpperDecimal() * 100 - 100|round|replace:' ':'&nbsp;'|noescape}</td>
+                            <td style="text-align:right">{$item->countTaxValue()|round|replace:' ':'&nbsp;'|noescape}</td>
+                            <td style="text-align:right">{$item->countFinalValue()|round|replace:' ':'&nbsp;'|noescape}</td>
+                        </tr>
+                    {/foreach}
+                </table>
+            </div>
+
+            <div style="border:2px solid #000000;margin-bottom:15px">
+                <table style="width:100%">
+                    <tr>
+                        <td>Celkem bez DPH (Kč):</td>
+                        <td style="text-align:right">{$finalUntaxedValue|round|replace:' ':'&nbsp;'|noescape}</td>
+                    </tr>
+                    <tr>
+                        <td>DPH (Kč):</td>
+                        <td style="text-align:right">{$finalTaxValue|round|replace:' ':'&nbsp;'|noescape}</td>
+                    </tr>
+                    <tr style="font-size:20px">
+                        <td><strong>Cena celkem s DPH (Kč):</strong></td>
+                        <td style="text-align:right"><strong>{$finalValue|round|replace:' ':'&nbsp;'|noescape}</strong></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div n:if="$stampPath" style="text-align:right;padding-right:100px">
+                <div style="font-weight:bold">Vystavil, razítko, podpis:</div>
+                <img src="data:image/png;base64,{base64_encode(file_get_contents($stampPath))|noescape}" alt="Razitko s podpisem"/>
+            </div>
+        </div>
+    </body>
+</html>

@@ -97,12 +97,11 @@ matrix:
         - name: Test harness modules
           jdk: openjdk8
           env:
-            - OPTS="-silent -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
+            - OPTS="-quiet -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
           before_script:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - OPTS="-quiet -Dcluster.config=platform -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true -Dvanilla.javac.exists=true"
             - ant $OPTS -f harness/o.n.insane test
             - ant $OPTS -f harness/apisupport.harness test
             - ant $OPTS -f harness/nbjunit test
@@ -149,6 +148,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f platform/keyring.impl test
             - hide-logs.sh ant $OPTS -f platform/lib.uihandler test
             - hide-logs.sh ant $OPTS -f platform/libs.javafx test
+            - hide-logs.sh ant $OPTS -f platform/libs.junit4 test
             - travis_retry hide-logs.sh ant $OPTS -f platform/masterfs test
             - hide-logs.sh ant $OPTS -f platform/masterfs.linux test
             - hide-logs.sh ant $OPTS -f platform/netbinox test  -Dtest.config=stableBTD
@@ -681,7 +681,7 @@ matrix:
             - ant $OPTS -f php/php.doctrine2 test
             #- ant $OPTS -f php/php.editor test
             #- ant $OPTS -f php/php.latte test
-            #- ant $OPTS -f php/php.nette.tester test
+            - ant $OPTS -f php/php.nette.tester test
             - ant $OPTS -f php/php.phpunit test
             - ant $OPTS -f php/php.project test
             - ant $OPTS -f php/php.refactoring test

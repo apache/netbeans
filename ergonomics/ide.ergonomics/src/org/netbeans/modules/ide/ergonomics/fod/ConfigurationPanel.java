@@ -33,6 +33,7 @@ import java.util.Map;
 import static java.util.Objects.nonNull;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
@@ -363,18 +364,21 @@ public class ConfigurationPanel extends JPanel {
                         try {
                             ConfigurationPanel.this.add(callable.call(), BorderLayout.CENTER);
                         } catch (Exception ex) {
-                            // TODO: add warning panel
+                            Exceptions.attachSeverity(ex, Level.INFO);
                             Exceptions.printStackTrace(ex);
                         }
                         ConfigurationPanel.this.invalidate();
                         ConfigurationPanel.this.revalidate();
                         ConfigurationPanel.this.repaint();
-                        if (featureInfo != null && featureInfo.isPresent()) {
-                            msg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_EnableFailed");
-                        } else {
-                            msg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_DownloadFailed");
+                        if (featureInfo != null && !featureInfo.isEnabled()) {
+                            if (featureInfo.isPresent()) {
+                                msg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_EnableFailed");
+                            } else {
+                                msg = NbBundle.getMessage(ConfigurationPanel.class, "MSG_DownloadFailed");
+                            }
+                            progressMonitor.onError(msg);
+                            return;
                         }
-                        setError(msg);
                         activateButton.setEnabled(true);
                         progressPanel.removeAll();
                         progressPanel.revalidate();
@@ -435,10 +439,10 @@ public class ConfigurationPanel extends JPanel {
             SwingUtilities.invokeLater(new Runnable() {
 
                 public void run() {
-                    // TODO: mark as html
                     setError("<html>" + message + "</html>"); // NOI18N
                     progressPanel.removeAll();
                     progressPanel.add(errorLabel);
+                    downloadButton.setEnabled(true);
                 }
             });
         }

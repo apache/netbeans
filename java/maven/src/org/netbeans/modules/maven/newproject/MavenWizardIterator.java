@@ -22,7 +22,6 @@ package org.netbeans.modules.maven.newproject;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -35,8 +34,6 @@ import org.netbeans.api.validation.adapters.WizardDescriptorAdapter;
 import org.netbeans.modules.maven.api.archetype.Archetype;
 import org.netbeans.modules.maven.api.archetype.ArchetypeWizards;
 import static org.netbeans.modules.maven.newproject.Bundle.*;
-import org.netbeans.modules.maven.options.MavenSettings;
-import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.validation.api.ui.ValidationGroup;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
@@ -53,7 +50,6 @@ public class MavenWizardIterator implements WizardDescriptor.BackgroundInstantia
     private static final long serialVersionUID = 1L;
     static final String PROPERTY_CUSTOM_CREATOR = "customCreator"; //NOI18N
     static final String PROP_ARCHETYPE = "archetype";
-    static final String JAVAFX_SAMPLES_TEMPLATE_FOLDER = "Project/Samples/JavaFXMaven";
     private transient int index;
     private transient List<WizardDescriptor.Panel<WizardDescriptor>> panels;
     private transient WizardDescriptor wiz;
@@ -78,38 +74,6 @@ public class MavenWizardIterator implements WizardDescriptor.BackgroundInstantia
 //        return ArchetypeWizards.definedArchetype("org.apache.maven.archetypes", "maven-archetype-quickstart", "1.1", null, LBL_Maven_Quickstart_Archetype());
 //    }
     
-//    @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position=920, displayName="#LBL_Maven_JavaFx_Archetype", iconBase="org/netbeans/modules/maven/resources/jaricon.png", description="javafx.html")
-//    @Messages("LBL_Maven_JavaFx_Archetype=JavaFX Application")
-//    public static WizardDescriptor.InstantiatingIterator<?> javafx() {
-//        return ArchetypeWizards.definedArchetype("org.codehaus.mojo.archetypes", "javafx", "0.6", null, LBL_Maven_JavaFx_Archetype());
-//    }
-
-//    @TemplateRegistration(folder=JAVAFX_SAMPLES_TEMPLATE_FOLDER, position=2450, displayName="#LBL_Maven_JavaFx_Sample_Archetype", iconBase="org/netbeans/modules/maven/resources/jaricon.png", description="javafx.html")
-//    @Messages("LBL_Maven_JavaFx_Sample_Archetype=Maven FXML MigPane Sample")
-//    public static WizardDescriptor.InstantiatingIterator<?> javafxSample() {
-//        return ArchetypeWizards.definedArchetype("org.codehaus.mojo.archetypes", "sample-javafx", "0.5", null, LBL_Maven_JavaFx_Sample_Archetype());
-//    }
-    
-    @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position = 925, displayName = "#LBL_Maven_FXML_Archetype", iconBase = "org/netbeans/modules/maven/resources/jaricon.png", description = "javafx.html")
-    @Messages("LBL_Maven_FXML_Archetype=FXML JavaFX Maven Archetype (Gluon)")
-    public static WizardDescriptor.InstantiatingIterator<?> openJFXFML() {
-       return definedFXArchetype("com.raelity.jfx", "javafx-archetype-fxml-netbeans", "0.0.4", LBL_Maven_FXML_Archetype());
-    }
-
-    @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position = 926, displayName = "#LBL_Maven_Simple_Archetype", iconBase = "org/netbeans/modules/maven/resources/jaricon.png", description = "javafx.html")
-    @Messages("LBL_Maven_Simple_Archetype=Simple JavaFX Maven Archetype (Gluon)")
-    public static WizardDescriptor.InstantiatingIterator<?> openJFXSimple() {
-       return definedFXArchetype("com.raelity.jfx", "javafx-archetype-simple-netbeans", "0.0.4", LBL_Maven_Simple_Archetype());
-    }
-
-    private static WizardDescriptor.InstantiatingIterator<?> definedFXArchetype(String g, String a, String v, String name) {
-        Map<String,String> props = new HashMap<>();
-        if (System.getProperty("java.version").startsWith("1.8")) {
-            props.put("javafx-version", "1.8");
-        }
-        props.put("add-debug-configuration", "Y");
-        return ArchetypeWizards.definedArchetype(g, a, v, null, name, props);
-    }
 
 //    @TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position=980, displayName="#LBL_Maven_POM_Archetype", iconBase="org/netbeans/modules/maven/resources/Maven2Icon.gif", description="pom-root.html")
 //    @Messages("LBL_Maven_POM_Archetype=POM Project")

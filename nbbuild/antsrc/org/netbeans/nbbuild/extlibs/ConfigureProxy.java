@@ -84,51 +84,21 @@ public final class ConfigureProxy extends Task {
     static URLConnection openConnection(Task task, final URL url, URI[] connectedVia) throws IOException {
         final URLConnection[] conn = { null };
         final List<Exception> errs = new CopyOnWriteArrayList<>();
+        final StringBuilder msgs = new StringBuilder();
         final CountDownLatch connected = new CountDownLatch(1);
         ExecutorService connectors = Executors.newFixedThreadPool(3);
         connectors.submit(() -> {
-            String httpProxy = System.getenv("http_proxy");
-            if (httpProxy != null) {
-                try {
-                    URI uri = new URI(httpProxy);
-                    InetSocketAddress address = InetSocketAddress.createUnresolved(uri.getHost(), uri.getPort());
-                    Proxy proxy = new Proxy(Proxy.Type.HTTP, address);
-                    URLConnection test = url.openConnection(proxy);
-                    test.connect();
-                    conn[0] = test;
-                    connected.countDown();
-                    if (connectedVia != null) {
-                        connectedVia[0] = uri;
-                    }
-                } catch (IOException | URISyntaxException ex) {
-                    errs.add(ex);
-                }
-            }
+            checkProxyProperty("http_proxy", url, conn, connectedVia, connected, errs, msgs);
         });
         connectors.submit(() -> {
-            String httpProxy = System.getenv("https_proxy");
-            if (httpProxy != null) {
-                try {
-                    URI uri = new URI(httpProxy);
-                    InetSocketAddress address = InetSocketAddress.createUnresolved(uri.getHost(), uri.getPort());
-                    Proxy proxy = new Proxy(Proxy.Type.HTTP, address);
-                    URLConnection test = url.openConnection(proxy);
-                    test.connect();
-                    conn[0] = test;
-                    connected.countDown();
-                    if (connectedVia != null) {
-                        connectedVia[0] = uri;
-                    }
-                } catch (IOException | URISyntaxException ex) {
-                    errs.add(ex);
-                }
-            }
+            checkProxyProperty("https_proxy", url, conn, connectedVia, connected, errs, msgs);
         });
         connectors.submit(() -> {
             try {
-                URLConnection test = url.openConnection();
+                URLConnection test = url.openConnection(Proxy.NO_PROXY);
                 test.connect();
                 conn[0] = test;
+                msgs.append("\nNo proxy connected");
                 connected.countDown();
             } catch (IOException ex) {
                 errs.add(ex);
@@ -142,9 +112,42 @@ public final class ConfigureProxy extends Task {
             for (Exception ex : errs) {
                 task.log(ex, Project.MSG_ERR);
             }
+            task.log(msgs.toString(), Project.MSG_ERR);
             throw new IOException("Cannot connect to " + url);
+        } else {
+            task.log(msgs.toString(), Project.MSG_DEBUG);
         }
         return conn[0];
+    }
+
+    private static void checkProxyProperty(
+        String propertyName, final URL url,
+        final URLConnection[] conn, URI[] connectedVia,
+        final CountDownLatch connected, 
+        final List<Exception> errs,
+        StringBuilder msgs
+    ) {
+        String httpProxy = System.getenv(propertyName);
+        msgs.append("\n[" + propertyName + "] set to " + httpProxy);
+        if (httpProxy != null) {
+            try {
+                URI uri = new URI(httpProxy);
+                InetSocketAddress address = InetSocketAddress.createUnresolved(uri.getHost(), uri.getPort());
+                Proxy proxy = new Proxy(Proxy.Type.HTTP, address);
+                URLConnection test = url.openConnection(proxy);
+                test.connect();
+                msgs.append("\n[" + propertyName + "] connected");
+                conn[0] = test;
+                if (connectedVia != null) {
+                    connectedVia[0] = uri;
+                }
+                connected.countDown();
+                msgs.append("\n[" + propertyName + "] countDown");
+            } catch (IOException | URISyntaxException ex) {
+                errs.add(ex);
+                msgs.append("\n[" + propertyName + "] exception " + ex.getMessage());
+            }
+        }
     }
 
 }

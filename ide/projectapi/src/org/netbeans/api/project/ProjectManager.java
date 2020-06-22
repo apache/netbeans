@@ -32,6 +32,7 @@ import org.netbeans.modules.projectapi.SimpleFileOwnerQueryImplementation;
 import org.netbeans.spi.project.FileOwnerQueryImplementation;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectManagerImplementation;
+import org.netbeans.spi.project.ProjectManagerImplementation2;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
@@ -207,7 +208,42 @@ public final class ProjectManager {
         }
         return impl.isProject(projectDirectory);
     }
-        
+
+    /**
+     * Returns all {@link  ProjectManager.Result} that can be associated with
+     * the given folder. If the actual implementation does not support
+     * {@link ProjectManagerImplementation2} this method just fallback to
+     * {@link ProjectManagerImplementation#isProject(org.openide.filesystems.FileObject)} method.
+     *
+     * @since 1.73
+     * @param projectDirectory the folder for inspection
+     * @return {@link  ProjectManager.Result} that can be associated with the
+     *         folder or an empty array if none has found.
+     * @throws IllegalArgumentException
+     */
+    public Result[] checkProject(@NonNull final FileObject projectDirectory) throws IllegalArgumentException {
+        if (projectDirectory == null) {
+            throw new IllegalArgumentException("Attempted to pass a null directory to isProject"); // NOI18N
+        }
+        if (!projectDirectory.isFolder() ) {
+            //#78215 it can happen that a no longer existing folder is queried. throw
+            // exception only for real wrong usage..
+            if (projectDirectory.isValid()) {
+                throw new IllegalArgumentException("Attempted to pass a non-directory to isProject: " + projectDirectory); // NOI18N
+            } else {
+                return null;
+            }
+        }
+        Result[] ret = new Result[0];
+        if (impl instanceof ProjectManagerImplementation2) {
+            ret = ((ProjectManagerImplementation2) impl).checkProject(projectDirectory);
+        } else {
+            Result p = impl.isProject(projectDirectory);
+            ret = p != null ? new Result[] {p} : ret;
+        }
+        return ret;
+    }
+
     /**
      * Clear the cached list of folders thought <em>not</em> to be projects.
      * This may be useful after creating project metadata in a folder, etc.

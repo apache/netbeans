@@ -52,6 +52,8 @@ import org.netbeans.modules.parsing.spi.TaskFactory;
 public final class JsEmbeddingProvider extends EmbeddingProvider {
 
     private static final int PRIORITY = 0;  //First one
+    private static final String JS_MIMETYPE = "text/javascript"; // NOI18N
+    private static final String SCRIPT_TYPE_MODULE = "module"; // NOI18N
 
     public static final String NETBEANS_IMPORT_FILE = "__netbeans_import__"; // NOI18N
     // ------------------------------------------------------------------------
@@ -699,7 +701,7 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
             HTMLTokenId htmlId = htmlToken.id();
             if (htmlId == HTMLTokenId.SCRIPT) {
                 String scriptType = (String)htmlToken.getProperty(HTMLTokenId.SCRIPT_TYPE_TOKEN_PROPERTY);
-                if(scriptType == null || "text/javascript".equals(scriptType)) {
+                if(scriptType == null || JS_MIMETYPE.equals(scriptType) || SCRIPT_TYPE_MODULE.equals(scriptType)) {
                     state.in_javascript = true;
                     // Emit the block verbatim
                     int sourceStart = ts.offset();

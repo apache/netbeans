@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.gradle.execute;
 
 import org.netbeans.modules.gradle.GradleDaemon;
@@ -51,10 +50,12 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.api.execute.ExecutionResultChecker;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
@@ -115,6 +116,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         final InputOutput ioput = getInputOutput();
         actionStatesAtStart();
         handle.start();
+        int executionresult = -10;
         try {
 
             BuildExecutionSupport.registerRunningItem(item);
@@ -181,6 +183,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             }
             buildLauncher.run();
             StatusDisplayer.getDefault().setStatusText(Bundle.BUILD_SUCCESS(getProjectName()));
+
         } catch (BuildCancelledException ex) {
             showAbort();
         } catch (UncheckedException | BuildException ex) {
@@ -205,17 +208,32 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 }
                 th = th.getCause();
             }
-            if (!handled) throw ex;
-        } finally {
-            BuildExecutionSupport.registerFinishedItem(item);
-            if (pconn != null) {
-                pconn.close();
+            if (!handled) {
+                throw ex;
             }
-            closeInOutErr();
-            checkForExternalModifications();
-            handle.finish();
-            markFreeTab();
-            actionStatesAtFinish();
+        } finally {
+
+            BuildExecutionSupport.registerFinishedItem(item);
+
+            try {
+
+                if (config.getProject() != null) {
+                    Lookup.Result<ExecutionResultChecker> result = config.getProject().getLookup().lookupResult(ExecutionResultChecker.class);
+                    for (ExecutionResultChecker elem : result.allInstances()) {
+                        elem.executionResult(config, executionresult);
+                    }
+                }
+            } finally {
+
+                if (pconn != null) {
+                    pconn.close();
+                }
+                closeInOutErr();
+                checkForExternalModifications();
+                handle.finish();
+                markFreeTab();
+                actionStatesAtFinish();
+            }
         }
     }
 
@@ -246,19 +264,19 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 && new GradleFiles(gbp.getProjectDir(), true).hasWrapper()
                 && GradleSettings.getDefault().isWrapperPreferred()) {
 
-                Path rootPath = gbp.getRootDir().toPath();
-                Path projectPath = gbp.getProjectDir().toPath();
+            Path rootPath = gbp.getRootDir().toPath();
+            Path projectPath = gbp.getProjectDir().toPath();
 
-                String relRoot = projectPath.relativize(rootPath).toString();
-                relRoot = relRoot.isEmpty() ? "." : relRoot;
-                commandLine.append(relRoot).append("/gradlew"); //NOI18N
-            } else {
-                File gradleDistribution = RunUtils.evaluateGradleDistribution(null, false);
-                if (gradleDistribution != null) {
-                    File gradle = new File(gradleDistribution, "bin/gradle"); //NOI18N
-                    commandLine.append(gradle.getAbsolutePath());
-                }
+            String relRoot = projectPath.relativize(rootPath).toString();
+            relRoot = relRoot.isEmpty() ? "." : relRoot;
+            commandLine.append(relRoot).append("/gradlew"); //NOI18N
+        } else {
+            File gradleDistribution = RunUtils.evaluateGradleDistribution(null, false);
+            if (gradleDistribution != null) {
+                File gradle = new File(gradleDistribution, "bin/gradle"); //NOI18N
+                commandLine.append(gradle.getAbsolutePath());
             }
+        }
 
         for (String arg : config.getCommandLine().getSupportedCommandLine()) {
             commandLine.append(' ');
@@ -281,9 +299,18 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
     }
 
     private synchronized void closeInOutErr() {
-        if (inStream != null) try {inStream.close();} catch (IOException ex) {}
-        if (outStream != null) try {outStream.close();} catch (IOException ex) {}
-        if (errStream != null) try {errStream.close();} catch (IOException ex)  {}
+        if (inStream != null) try {
+            inStream.close();
+        } catch (IOException ex) {
+        }
+        if (outStream != null) try {
+            outStream.close();
+        } catch (IOException ex) {
+        }
+        if (errStream != null) try {
+            errStream.close();
+        } catch (IOException ex) {
+        }
     }
 
     @NbBundle.Messages("TXT_BUILD_ABORTED=\nBUILD ABORTED\n")

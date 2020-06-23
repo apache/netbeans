@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.gradle.api.execute;
 
 import java.io.File;
@@ -57,6 +56,7 @@ import org.netbeans.api.java.platform.Specification;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gradle.GradleDistributionManager;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
+import org.netbeans.modules.gradle.execute.PrerequisitesChecker;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
@@ -66,6 +66,7 @@ import org.openide.util.Pair;
 
 /**
  * Utilities, that allow to invoke Gradle.
+ *
  * @since 1.0
  * @author Laszlo Kishalmi
  */
@@ -78,7 +79,8 @@ public final class RunUtils {
     public static final String PROP_INCLUDE_OPEN_PROJECTS = "include.open.projects"; //NOI18N
     public static final String PROP_DEFAULT_CLI = "gradle.cli"; //NOI18N
 
-    private RunUtils() {}
+    private RunUtils() {
+    }
     private static final Map<RunConfig, GradleExecutor> GRADLE_TASKS = new WeakHashMap<>();
 
     public static FileObject extractFileObjectfromLookup(Lookup lookup) {
@@ -108,8 +110,8 @@ public final class RunUtils {
      * execution takes over the output handling.
      *
      * @param config the configuration of the Gradle execution
-     * @param initialOutput the initial message to be displayed,
-     *        can be {@code null} for no message.
+     * @param initialOutput the initial message to be displayed, can be
+     * {@code null} for no message.
      * @return The Gradle Execution task
      */
     public static ExecutorTask executeGradle(RunConfig config, String initialOutput) {
@@ -118,6 +120,13 @@ public final class RunUtils {
         GradleExecutor exec = new GradleDaemonExecutor(config);
         ExecutorTask task = executeGradleImpl(config.getTaskDisplayName(), exec, initialOutput);
         GRADLE_TASKS.put(config, exec);
+
+        for (PrerequisitesChecker elem : config.getProject().getLookup().lookupAll(PrerequisitesChecker.class)) {
+            if (!elem.checkRunConfig(config)) {
+                return null;
+            }
+
+        }
 
         return task;
     }
@@ -154,7 +163,6 @@ public final class RunUtils {
         validateExclude(basecmd, gbp, GradleCommandLine.TEST_TASK);
         validateExclude(basecmd, gbp, GradleCommandLine.CHECK_TASK); //NOI18N
 
-
         GradleCommandLine cmd = GradleCommandLine.combine(basecmd, new GradleCommandLine(args));
         RunConfig ret = new RunConfig(project, action, displayName, flags, cmd);
         return ret;
@@ -170,7 +178,8 @@ public final class RunUtils {
      * @param displayName The display name of the output tab
      * @param args Gradle command line arguments
      * @return the Gradle execution configuration.
-     * @deprecated use {@link #createRunConfig(org.netbeans.api.project.Project, java.lang.String, java.lang.String, java.util.Set, java.lang.String...) } instead.
+     * @deprecated use {@link #createRunConfig(org.netbeans.api.project.Project, java.lang.String, java.lang.String, java.util.Set, java.lang.String...)
+     * } instead.
      */
     @Deprecated
     public static RunConfig createRunConfig(Project project, String action, String displayName, String[] args) {
@@ -179,11 +188,12 @@ public final class RunUtils {
 
     /**
      * Enable plugins to Cancel a currently running Gradle execution.
-     * 
-     * @param config the RunConfig with which the Gradle execution has been started.
+     *
+     * @param config the RunConfig with which the Gradle execution has been
+     * started.
      * @return {@code true} if the current execution was cancelled successfully,
-     *         {@code false} if the execution was already cancelled or it cannot
-     *         be cancelled for some reason.
+     * {@code false} if the execution was already cancelled or it cannot be
+     * cancelled for some reason.
      * @since 1.4
      */
     public static boolean cancelGradle(RunConfig config) {
@@ -219,8 +229,8 @@ public final class RunUtils {
     }
 
     /**
-     * Returns true if the include open projects checkbox is marked
-     * in the project configuration.
+     * Returns true if the include open projects checkbox is marked in the
+     * project configuration.
      *
      * @param project the given project.
      * @return true if the settings has been enabled.
@@ -245,7 +255,7 @@ public final class RunUtils {
 
         if ((gbp != null) && settings.isWrapperPreferred()) {
             GradleDistributionManager.NbGradleVersion ngv = mgr.evaluateGradleWrapperDistribution(gbp.getRootDir());
-            if ( (ngv != null) && forceCompatibility && !ngv.isCompatibleWithSystemJava()) {
+            if ((ngv != null) && forceCompatibility && !ngv.isCompatibleWithSystemJava()) {
                 ngv = mgr.defaultToolingVersion();
             }
             if ((ngv != null) && ngv.isAvailable()) {
@@ -261,7 +271,7 @@ public final class RunUtils {
         }
         if (ret == null) {
             GradleDistributionManager.NbGradleVersion ngv = mgr.createVersion(settings.getGradleVersion());
-            if ( (ngv != null) && forceCompatibility && !ngv.isCompatibleWithSystemJava()) {
+            if ((ngv != null) && forceCompatibility && !ngv.isCompatibleWithSystemJava()) {
                 ngv = mgr.defaultToolingVersion();
             }
             if ((ngv != null) && ngv.isAvailable()) {
@@ -270,7 +280,6 @@ public final class RunUtils {
         }
         return ret;
     }
-
 
     private static boolean isOptionEnabled(Project project, String option, boolean defaultValue) {
         GradleBaseProject gbp = GradleBaseProject.get(project);
@@ -286,8 +295,8 @@ public final class RunUtils {
     }
 
     /**
-     * Validate if a certain excluded task can be applied on a project.
-     * Used for skipping 'test' and 'check' tasks.
+     * Validate if a certain excluded task can be applied on a project. Used for
+     * skipping 'test' and 'check' tasks.
      */
     private static void validateExclude(GradleCommandLine cmd, GradleBaseProject gbp, String task) {
         boolean exclude = gbp.getTaskNames().contains(task) || (gbp.isRoot() && !gbp.getSubProjects().isEmpty());
@@ -313,13 +322,14 @@ public final class RunUtils {
         };
     }
 
- /**
+    /**
      * Returns the active platform used by the project or null if the active
      * project platform is broken.
+     *
      * @param activePlatformId the name of platform used by Ant script or null
      * for default platform.
-     * @return active {@link JavaPlatform} or null if the project's platform
-     * is broken
+     * @return active {@link JavaPlatform} or null if the project's platform is
+     * broken
      */
     public static Pair<String, JavaPlatform> getActivePlatform(final String activePlatformId) {
         final JavaPlatformManager pm = JavaPlatformManager.getDefault();
@@ -351,7 +361,7 @@ public final class RunUtils {
     static GradleCommandLine getIncludedOpenProjects(Project project) {
         GradleCommandLine ret = new GradleCommandLine();
         Set<File> openRoots = new HashSet<>();
-        for (Project openProject : OpenProjects.getDefault().getOpenProjects()){
+        for (Project openProject : OpenProjects.getDefault().getOpenProjects()) {
             GradleBaseProject gpb = GradleBaseProject.get(openProject);
             if (gpb != null) {
                 openRoots.add(gpb.getRootDir());

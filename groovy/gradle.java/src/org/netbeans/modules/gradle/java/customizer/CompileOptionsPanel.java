@@ -178,6 +178,7 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
         lbIncludeOpenProjects = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(cbCompileOnSave, org.openide.util.NbBundle.getMessage(CompileOptionsPanel.class, "CompileOptionsPanel.cbCompileOnSave.text")); // NOI18N
+        cbCompileOnSave.setEnabled(false);
 
         org.openide.awt.Mnemonics.setLocalizedText(lbCompileOnSave, org.openide.util.NbBundle.getMessage(CompileOptionsPanel.class, "CompileOptionsPanel.lbCompileOnSave.text")); // NOI18N
         lbCompileOnSave.setVerticalAlignment(javax.swing.SwingConstants.TOP);

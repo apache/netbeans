@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.netbeans.modules.gradle.api;
 
 import org.netbeans.modules.gradle.spi.WatchedResourceProvider;
@@ -33,7 +34,6 @@ import javax.swing.ImageIcon;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.modules.gradle.GradleProject;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
@@ -55,18 +55,17 @@ public final class NbGradleProject {
     /**
      * As loading a Gradle project information into the memory could be a time
      * consuming task each the Gradle Plugin uses heuristics and offline
-     * evaluation of a project in order to provide optimal responsiveness. E.g.
-     * If we just need to know if the project is a Gradle project, there is no
-     * need to go and fetch all the dependencies.
+     * evaluation of a project in order to provide optimal responsiveness.
+     * E.g. If we just need to know if the project is a Gradle project, there
+     * is no need to go and fetch all the dependencies.
      * <p>
      * <img src="doc-files/gradle-quality.png" alt="Quality States"/>
      * </p>
      * <p>
-     * Gradle project is associated with the quality of the information
-     * available at the time. The quality of data can be improved, by reloading
-     * the project.
+     * Gradle project is associated with the quality of the
+     * information available at the time. The quality of data can be improved,
+     * by reloading the project.
      * </p>
-     *
      * @since 1.0
      */
     public static enum Quality {
@@ -78,28 +77,21 @@ public final class NbGradleProject {
          * patterns.
          */
         FALLBACK,
-        /**
-         * The data of this project is unreliable. This usually means that the
+
+        /** The data of this project is unreliable. This usually means that the
          * project was once in a better quality, but some recent change made the
          * the project un-loadable. E.g. syntax error in the recently edited
-         * {@code build.gradle} file. The IDE cannot reload it but tries to work
-         * with the previously retrieved information.
-         */
+         * {@code build.gradle} file. The IDE cannot reload it but tries to work with
+         * the previously retrieved information. */
         EVALUATED,
-        /**
-         * The data of this project is reliable, dependency information can be
-         * partial though.
-         */
+
+        /** The data of this project is reliable, dependency information can be partial though. */
         SIMPLE,
-        /**
-         * The data of this project is reliable, full dependency information is
-         * available offline.
-         */
+
+        /** The data of this project is reliable, full dependency information is available offline. */
         FULL,
-        /**
-         * The data of this project is reliable. with full dependency
-         * information.
-         */
+
+        /** The data of this project is reliable. with full dependency information. */
         FULL_ONLINE;
 
         public boolean betterThan(Quality q) {
@@ -122,14 +114,10 @@ public final class NbGradleProject {
 
     public static final String GRADLE_PROJECT_TYPE = "org-netbeans-modules-gradle";
     public static final String GRADLE_PLUGIN_TYPE = GRADLE_PROJECT_TYPE + "/Plugins";
-    /**
-     * This property is fired to change on every project reload.
-     */
+    /** This property is fired to change on every project reload. */
     public static final String PROP_PROJECT_INFO = "ProjectInfo";
-    /**
-     * This property is fired when a project watched resource is changed. E.g. a
-     * previously non existent source root appears.
-     */
+    /** This property is fired when a project watched resource is changed.
+     * E.g. a previously non existent source root appears. */
     public static final String PROP_RESOURCES = "resources";
 
     @StaticResource
@@ -190,10 +178,6 @@ public final class NbGradleProject {
         support = new PropertyChangeSupport(project);
     }
 
-    public GradleProject getGradleProject() {
-        return project.getGradleProject();
-    }
-
     public <T> T projectLookup(Class<T> clazz) {
         return project.getGradleProject().getLookup().lookup(clazz);
     }
@@ -209,7 +193,6 @@ public final class NbGradleProject {
 
     /**
      * The requested information on this project. Mostly FALLBACK or FULL.
-     *
      * @return the information Quality requested.
      */
     public Quality getAimedQuality() {
@@ -217,9 +200,7 @@ public final class NbGradleProject {
     }
 
     /**
-     * The project is unloadable if it's actual quality is worse than
-     * {@link Quality#SIMPLE}.
-     *
+     * The project is unloadable if it's actual quality is worse than {@link Quality#SIMPLE}.
      * @return true if the project is unloadable.
      */
     public boolean isUnloadable() {
@@ -261,9 +242,7 @@ public final class NbGradleProject {
 
     private void attachResourceWatchers() {
         //Never listen on resource changes when only FALLBACK quality is needed
-        if (project.getAimedQuality() == Quality.FALLBACK) {
-            return;
-        }
+        if (project.getAimedQuality() == Quality.FALLBACK) return;
 
         Collection<? extends WatchedResourceProvider> all
                 = project.getLookup().lookupAll(WatchedResourceProvider.class);
@@ -290,12 +269,12 @@ public final class NbGradleProject {
     /**
      * Retrieves the watcher for the given project. Usually the project watcher
      * can be retrieved from the project Lookup. This implementation does not
-     * use the project Lookup, so it can be used inside of the constructors of
-     * ProjectServiceProvider implementations.
+     * use the project Lookup, so it can be used inside of the constructors
+     * of ProjectServiceProvider implementations.
      *
      * @param project the project to query
      * @return the watcher of the project or {@code null} if the given project
-     * is not a Gradle project.
+     *         is not a Gradle project.
      */
     public static NbGradleProject get(Project project) {
         return project instanceof NbGradleProjectImpl ? ((NbGradleProjectImpl) project).getProjectWatcher() : null;

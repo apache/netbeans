@@ -98,3 +98,30 @@ jobs:
 
       - name: Test Netbeans Build System
         run: ant -Dcluster.config=basic localtest
+        
+  macos:
+    name: MacOS build
+    runs-on: macos-10.15
+    steps:
+      - uses: actions/checkout@v2
+        
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.hgexternalcache
+            ~/Library/Caches/Homebrew
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - run: brew install ant
+
+      - name: Clean
+        run: ant clean
+
+      - name: Build
+        run: ant build
+
+      - name: Test
+        run: |
+          ant -f platform/masterfs.macosx test
+          ant -f platform/core.network test

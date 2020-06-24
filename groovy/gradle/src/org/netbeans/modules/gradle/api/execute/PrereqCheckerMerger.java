@@ -20,9 +20,7 @@ package org.netbeans.modules.gradle.api.execute;
 
 import java.util.Collection;
 
-import org.netbeans.modules.gradle.api.execute.RunConfig;
 import org.netbeans.modules.gradle.cos.CosChecker;
-import org.netbeans.modules.gradle.execute.PrerequisitesChecker;
 import org.netbeans.modules.gradle.execute.PrerequisitesChecker;
 import org.netbeans.spi.project.LookupMerger;
 import org.openide.util.Lookup;

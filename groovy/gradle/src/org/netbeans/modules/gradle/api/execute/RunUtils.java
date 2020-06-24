@@ -57,7 +57,6 @@ import org.netbeans.api.java.platform.Specification;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gradle.GradleDistributionManager;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
-import org.netbeans.modules.gradle.execute.PrerequisitesChecker;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
@@ -119,14 +118,7 @@ public final class RunUtils {
         GradleExecutor exec = new GradleDaemonExecutor(config);
         ExecutorTask task = executeGradleImpl(config.getTaskDisplayName(), exec, initialOutput);
         GRADLE_TASKS.put(config, exec);
-        
-        for (PrerequisitesChecker elem : config.getProject().getLookup().lookupAll(PrerequisitesChecker.class)) {
-            if (!elem.checkRunConfig(config)) {
-                return null;
-            }
 
-        }
-        
         return task;
     }
 

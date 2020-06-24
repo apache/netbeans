@@ -179,6 +179,10 @@ public final class NbGradleProject {
         support = new PropertyChangeSupport(project);
     }
     
+     public GradleProject getGradleProject() {
+        return project.getGradleProject();
+    }
+    
     
     public GradleProject getGradleProject() {
         return project.getGradleProject();

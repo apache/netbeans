@@ -221,6 +221,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
                 }
             } finally {
 
+
             if (pconn != null) {
                 pconn.close();
             }

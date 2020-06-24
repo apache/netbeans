@@ -32,6 +32,7 @@ import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation2;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.lookup.ServiceProviders;
@@ -96,6 +97,7 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
     public static class Res implements Result {
 
         private final FileObject[] ret;
+        private final ChangeSupport cs = new ChangeSupport(this);
 
         public Res(FileObject fo) {
             this.ret = new FileObject[]{fo};
@@ -113,10 +115,14 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
 
         @Override
         public void addChangeListener(ChangeListener l) {
+            assert l != null : "Listener cannot be null"; // NOI18N
+            cs.addChangeListener(l);
         }
 
         @Override
         public void removeChangeListener(ChangeListener l) {
+            assert l != null : "Listener cannot be null"; // NOI18N
+            cs.removeChangeListener(l);
         }
 
     }

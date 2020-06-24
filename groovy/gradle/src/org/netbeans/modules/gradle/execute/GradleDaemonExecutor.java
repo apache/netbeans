@@ -51,10 +51,12 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.api.execute.ExecutionResultChecker;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
@@ -115,6 +117,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         final InputOutput ioput = getInputOutput();
         actionStatesAtStart();
         handle.start();
+        int executionresult = -10;
         try {
 
             BuildExecutionSupport.registerRunningItem(item);
@@ -208,6 +211,16 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             if (!handled) throw ex;
         } finally {
             BuildExecutionSupport.registerFinishedItem(item);
+            try {
+
+                if (config.getProject() != null) {
+                    Lookup.Result<ExecutionResultChecker> result = config.getProject().getLookup().lookupResult(ExecutionResultChecker.class);
+                    for (ExecutionResultChecker elem : result.allInstances()) {
+                        elem.executionResult(config, executionresult);
+                    }
+                }
+            } finally {
+
             if (pconn != null) {
                 pconn.close();
             }
@@ -217,6 +230,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             markFreeTab();
             actionStatesAtFinish();
         }
+      }
     }
 
     private String getProjectName() {

@@ -34,6 +34,7 @@ import javax.swing.ImageIcon;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.GradleProject;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
@@ -177,6 +178,12 @@ public final class NbGradleProject {
         this.project = project;
         support = new PropertyChangeSupport(project);
     }
+    
+    
+    public GradleProject getGradleProject() {
+        return project.getGradleProject();
+    }
+    
 
     public <T> T projectLookup(Class<T> clazz) {
         return project.getGradleProject().getLookup().lookup(clazz);

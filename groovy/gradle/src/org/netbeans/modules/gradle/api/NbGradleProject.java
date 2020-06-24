@@ -184,11 +184,6 @@ public final class NbGradleProject {
     }
     
     
-    public GradleProject getGradleProject() {
-        return project.getGradleProject();
-    }
-    
-
     public <T> T projectLookup(Class<T> clazz) {
         return project.getGradleProject().getLookup().lookup(clazz);
     }

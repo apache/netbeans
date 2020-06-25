@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="extra/libs.javafx.win">
-    <description>Builds, tests, and runs the project org.netbeans.libs.javafx.win</description>
+<project basedir="." default="build" name="nb/libs.javafx.macosx">
+    <description>Builds, tests, and runs the project org.netbeans.libs.javafx.macosx</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

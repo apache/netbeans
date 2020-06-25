@@ -687,7 +687,7 @@ matrix:
             - ant $OPTS -f php/php.refactoring test
             #- ant $OPTS -f php/php.smarty test
             - ant $OPTS -f php/php.symfony test
-            #- ant $OPTS -f php/php.symfony2 test
+            - ant $OPTS -f php/php.symfony2 test
             - ant $OPTS -f php/php.twig test
             - ant $OPTS -f php/php.zend test
             - ant $OPTS -f php/php.zend2 test

@@ -142,7 +142,7 @@ public class WebServicePersistenceManager implements ExceptionListener {
                             WsdlModel wsdlModel = WebServiceManager.getInstance().getWsdlModel(wsData);
                             wsData.setWsdlService(wsdlModel.getServiceByName(wsData.getName()));
                         } catch (IOException ex) {
-                            Logger.global.log(Level.INFO, ex.getLocalizedMessage(), ex);
+                            Logger.getGlobal().log(Level.INFO, ex.getLocalizedMessage(), ex);
                         }
                     } else {
                         wsData.reset();

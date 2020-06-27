@@ -78,10 +78,10 @@
         <tstamp>
             <format property="module.build.started.time" pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ"/>
         </tstamp>
-        <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-7.2.jar">
-            <available file="${nbplatform.active.dir}/platform/core/asm-7.2.jar"/>
+        <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-8.0.1.jar">
+            <available file="${nbplatform.active.dir}/platform/core/asm-8.0.1.jar"/>
         </condition>
-        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-7.2.jar"/>
+        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-8.0.1.jar"/>
     </target>
 
     <target name="-release.dir">
@@ -621,8 +621,8 @@
             <depend srcdir="${test.@{test.type}.src.dir}" destdir="${build.test.@{test.type}.classes.dir}" cache="${build.test.@{test.type}.dir}/depcache">
                 <classpath refid="test.@{test.type}.cp"/>
             </depend>
-            <property name="test.excludes" value=""/> <!-- # 113770 -->
-            <nb-javac srcdir="${test.@{test.type}.src.dir}" destdir="${build.test.@{test.type}.classes.dir}" excludes="${test.excludes}"
+            <property name="test.javac.excludes" value=""/> <!-- # 113770 -->
+            <nb-javac srcdir="${test.@{test.type}.src.dir}" destdir="${build.test.@{test.type}.classes.dir}" excludes="${test.javac.excludes}"
                       debug="true" deprecation="${build.compiler.deprecation}" encoding="UTF-8"
                       source="${javac.source}" target="${javac.target}" optimize="${build.compiler.optimize}" includeantruntime="false">
                 <classpath refid="test.@{test.type}.cp"/>

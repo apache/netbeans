@@ -709,9 +709,14 @@ public class JavacParser extends Parser {
         } catch (Abort abort) {
             parserError = currentPhase;
         } catch (RuntimeException | Error ex) {
-            parserError = currentPhase;
-            dumpSource(currentInfo, ex);
-            throw ex;
+            if (cancellable && parserCanceled.get()) {
+                currentPhase = Phase.MODIFIED;
+                invalidate(false);
+            } else {
+                parserError = currentPhase;
+                dumpSource(currentInfo, ex);
+                throw ex;
+            }
         } finally {
             currentInfo.setPhase(currentPhase);
             currentInfo.parserCrashed = parserError;

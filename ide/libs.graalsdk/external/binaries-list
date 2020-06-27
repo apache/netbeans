@@ -15,3 +15,4 @@
 # specific language governing permissions and limitations
 # under the License.
 3821A19AF32F12D794E77762BE0F18D9BEC9A9C3 org.graalvm.sdk:graal-sdk:19.3.0
+B447F403B5F2766566EF2BC2572D23166560638C org.graalvm.sdk:launcher-common:19.3.0

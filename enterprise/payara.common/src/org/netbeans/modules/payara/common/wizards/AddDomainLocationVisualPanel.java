@@ -163,7 +163,7 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
         initPortsFields();
         // make sure the target field is ok...
         if (ServerDetails.getVersionFromInstallDirectory(new File(gfRoot)) < 
-                ServerDetails.PAYARA_SERVER_4_1_144.getVersion()) {
+                ServerDetails.PAYARA_SERVER_4_1_144.getVersionInt()) {
             targetValueField.setText(""); // NOI18N
             targetValueField.setEnabled(false);
         } else {

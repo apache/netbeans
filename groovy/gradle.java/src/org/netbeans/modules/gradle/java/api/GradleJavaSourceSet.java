@@ -233,6 +233,13 @@ public final class GradleJavaSourceSet implements Serializable {
         return runtimeClassPath != null ? runtimeClassPath : getCompileClassPath();
     }
 
+    /**
+     * Returns the {@link SourceType} of the given file or {@code null} if that
+     * file cannot be associated with one.
+     *
+     * @param f the file to check.
+     * @return the matching {@link SourceType} or {@code null}.
+     */
     public SourceType getSourceType(File f) {
         for (SourceType type : sources.keySet()) {
             Set<File> dirs = sources.get(type);

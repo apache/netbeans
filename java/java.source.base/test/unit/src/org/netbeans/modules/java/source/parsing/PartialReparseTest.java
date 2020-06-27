@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.source.parsing;
 
 import com.sun.source.tree.LineMap;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
@@ -32,9 +33,11 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
 import javax.swing.JEditorPane;
 import javax.swing.text.Document;
 import javax.tools.Diagnostic;
@@ -208,6 +211,31 @@ public class PartialReparseTest extends NbTestCase {
                   "final int j = 5;\n");
     }
 
+    public void testAnonymousName() throws Exception {
+        doRunTest("package test;\n" +
+                  "public class Test {\n" +
+                  "    private Object o = new Object() {};\n" +
+                  "    private void test() {\n" +
+                  "        new Object() {\n" +
+                  "        };" +
+                  "        final int i = 5;\n" +
+                  "        ^^\n" +
+                  "    }" +
+                  "}",
+                  "final int j = 5;\n",
+                  info -> {
+                      new TreePathScanner<Void, Void>() {
+                          public Void visitNewClass(NewClassTree tree, Void p) {
+                              if (getCurrentPath().getParentPath().getLeaf().getKind() == Kind.METHOD) {
+                                  TypeElement el = (TypeElement) info.getTrees().getElement(new TreePath(getCurrentPath(), tree.getClassBody()));
+                                  assertEquals("test.Test$2", info.getElements().getBinaryName(el).toString());
+                              }
+                              return super.visitNewClass(tree, p);
+                          }
+                      }.scan(info.getCompilationUnit(), null);
+                  });
+    }
+
     public void testAnonymousFullReparse1() throws Exception {
         doVerifyFullReparse("package test;\n" +
                             "public class Test {\n" +
@@ -302,6 +330,10 @@ public class PartialReparseTest extends NbTestCase {
     }
 
     private void doRunTest(String code, String inject) throws Exception {
+        doRunTest(code, inject, info -> {});
+    }
+
+    private void doRunTest(String code, String inject, Consumer<CompilationInfo> callback) throws Exception {
         FileObject srcDir = FileUtil.createMemoryFileSystem().getRoot();
         FileObject src = srcDir.createData("Test.java");
         try (Writer out = new OutputStreamWriter(src.getOutputStream())) {
@@ -313,7 +345,8 @@ public class PartialReparseTest extends NbTestCase {
         Object[] topLevel = new Object[1];
         source.runUserActionTask(cc -> {
             cc.toPhase(Phase.RESOLVED);
-             topLevel[0] = cc.getCompilationUnit();
+            topLevel[0] = cc.getCompilationUnit();
+            callback.accept(cc);
         }, true);
         int startReplace = code.indexOf('^');
         int endReplace = code.indexOf('^', startReplace + 1) + 1;
@@ -328,6 +361,7 @@ public class PartialReparseTest extends NbTestCase {
             actualTree.set(dumpTree(cc));
             actualDiagnostics.set(dumpDiagnostics(cc));
             actualLineMap.set(dumpLineMap(cc));
+            callback.accept(cc);
         }, true);
         ec.saveDocument();
         ec.close();
@@ -340,6 +374,7 @@ public class PartialReparseTest extends NbTestCase {
             expectedTree.set(dumpTree(cc));
             expectedDiagnostics.set(dumpDiagnostics(cc));
             expectedLineMap.set(dumpLineMap(cc));
+            callback.accept(cc);
         }, true);
         assertEquals(expectedTree.get(), actualTree.get());
         assertEquals(expectedDiagnostics.get(), actualDiagnostics.get());

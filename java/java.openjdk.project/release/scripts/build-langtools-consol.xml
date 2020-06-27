@@ -18,7 +18,7 @@
  - under the License.
  -->
 <!--
-SUPPORTED_ACTIONS: build,clean,rebuild,run.single,debug.single,compile.single,run,select.tool,debug
+SUPPORTED_ACTIONS: build,build-fast,clean,rebuild,run.single,debug.single,compile.single,run,select.tool,debug
 -->
 <project name="jdk-project-build-langtools">
     <condition property="langtools.jdk.home" value="${nb.jdk.project.target.java.home}">
@@ -27,5 +27,7 @@ SUPPORTED_ACTIONS: build,clean,rebuild,run.single,debug.single,compile.single,ru
             <available file="javac.exe" filepath="${nb.jdk.project.target.java.home}/bin" />
         </or>
     </condition>
-    <import file="${basedir}/make/langtools/netbeans/langtools/build.xml"/>
+    <property name="langtools.build.location" value="make/langtools/netbeans/langtools/build.xml" />
+    <import file="${basedir}/${langtools.build.location}"/>
+    <target name="build-fast" depends="build" />
 </project>

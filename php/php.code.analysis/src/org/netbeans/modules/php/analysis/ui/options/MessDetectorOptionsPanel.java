@@ -46,6 +46,8 @@ import javax.swing.event.ListSelectionListener;
 import org.netbeans.modules.php.analysis.commands.MessDetector;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
+import org.netbeans.modules.php.analysis.options.ValidatorMessDetectorParameter;
+import org.netbeans.modules.php.analysis.ui.MessDetectorRuleSetsListCellRenderer;
 import org.netbeans.modules.php.analysis.ui.MessDetectorRuleSetsListModel;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.UiUtils;
@@ -61,6 +63,7 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
 
     private static final long serialVersionUID = -2710584730175872452L;
     private static final String MESS_DETECTOR_LAST_FOLDER_SUFFIX = ".messDetector"; // NOI18N
+    private static final String MESS_DETECTOR_RULE_SET_FILE_LAST_FOLDER_SUFFIX = ".messDetector.ruleSetFile"; // NOI18N
 
     private final MessDetectorRuleSetsListModel ruleSetsListModel = new MessDetectorRuleSetsListModel();
     private final ChangeSupport changeSupport = new ChangeSupport(this);
@@ -87,9 +90,11 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
         // listeners
         messDetectorTextField.getDocument().addDocumentListener(defaultDocumentListener);
         messDetectorRuleSetsList.addListSelectionListener(new DefaultListSelectionListener());
+        messDetectorRuleSetFileTextField.getDocument().addDocumentListener(defaultDocumentListener);
 
         // rulesets
         messDetectorRuleSetsList.setModel(ruleSetsListModel);
+        messDetectorRuleSetsList.setCellRenderer(new MessDetectorRuleSetsListCellRenderer(messDetectorRuleSetsList.getCellRenderer()));
     }
 
     public String getMessDetectorPath() {
@@ -106,6 +111,14 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
 
     public void setMessDetectorRuleSets(List<String> ruleSets) {
         selectRuleSets(ruleSets);
+    }
+
+    public String getMessDetectorRuleSetFilePath() {
+        return messDetectorRuleSetFileTextField.getText().trim();
+    }
+
+    private void setMessDetectorRuleSetFilePath(String path) {
+        messDetectorRuleSetFileTextField.setText(path);
     }
 
     public void addChangeListener(ChangeListener listener) {
@@ -144,6 +157,7 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
         AnalysisOptions analysisOptions = AnalysisOptions.getInstance();
         setMessDetectorPath(analysisOptions.getMessDetectorPath());
         setMessDetectorRuleSets(analysisOptions.getMessDetectorRuleSets());
+        setMessDetectorRuleSetFilePath(analysisOptions.getMessDetectorRuleSetFilePath());
     }
 
     @Override
@@ -151,12 +165,18 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
         AnalysisOptions analysisOptions = AnalysisOptions.getInstance();
         analysisOptions.setMessDetectorPath(getMessDetectorPath());
         analysisOptions.setMessDetectorRuleSets(getMessDetectorRuleSets());
+        analysisOptions.setMessDetectorRuleSetFilePath(getMessDetectorRuleSetFilePath());
     }
     
     @Override
     public boolean isChanged() {
         String saved = AnalysisOptions.getInstance().getMessDetectorPath();
-        String current = getMessDetectorPath().trim();
+        String current = getMessDetectorRuleSetFilePath();
+        if(saved == null ? !current.isEmpty() : !saved.equals(current)) {
+            return true;
+        }
+        saved = AnalysisOptions.getInstance().getMessDetectorRuleSetFilePath();
+        current = getMessDetectorRuleSetFilePath().trim();
         if(saved == null ? !current.isEmpty() : !saved.equals(current)) {
             return true;
         }
@@ -166,7 +186,7 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
     @Override
     public ValidationResult getValidationResult() {
         return new AnalysisOptionsValidator()
-                .validateMessDetector(getMessDetectorPath(), getMessDetectorRuleSets())
+                .validateMessDetector(ValidatorMessDetectorParameter.create(this))
                 .getResult();
     }
 
@@ -186,10 +206,13 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
         messDetectorHintLabel = new JLabel();
         messDetectorRuleSetsLabel = new JLabel();
         messDetectorRuleSetsScrollPane = new JScrollPane();
-        messDetectorRuleSetsList = new JList<String>();
+        messDetectorRuleSetsList = new JList<>();
         noteLabel = new JLabel();
         minVersionInfoLabel = new JLabel();
         messDetectorLearnMoreLabel = new JLabel();
+        messDetectorRuleSetFileTextField = new JTextField();
+        messDetectorRuleSetFileLabel = new JLabel();
+        messDetectorRuleSetFileBrowseButton = new JButton();
 
         messDetectorLabel.setLabelFor(messDetectorTextField);
         Mnemonics.setLocalizedText(messDetectorLabel, NbBundle.getMessage(MessDetectorOptionsPanel.class, "MessDetectorOptionsPanel.messDetectorLabel.text")); // NOI18N
@@ -228,44 +251,58 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
             }
         });
 
+        messDetectorRuleSetFileLabel.setLabelFor(messDetectorRuleSetFileTextField);
+        Mnemonics.setLocalizedText(messDetectorRuleSetFileLabel, NbBundle.getMessage(MessDetectorOptionsPanel.class, "MessDetectorOptionsPanel.messDetectorRuleSetFileLabel.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(messDetectorRuleSetFileBrowseButton, NbBundle.getMessage(MessDetectorOptionsPanel.class, "MessDetectorOptionsPanel.messDetectorRuleSetFileBrowseButton.text")); // NOI18N
+        messDetectorRuleSetFileBrowseButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                messDetectorRuleSetFileBrowseButtonActionPerformed(evt);
+            }
+        });
+
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 496, Short.MAX_VALUE))
+        layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
                     .addComponent(messDetectorLabel)
-                    .addComponent(messDetectorRuleSetsLabel))
-                .addGap(13, 13, 13)
+                    .addComponent(messDetectorRuleSetsLabel)
+                    .addComponent(messDetectorRuleSetFileLabel))
+                .addPreferredGap(ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                    .addGroup(Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(Alignment.TRAILING)
-                            .addComponent(messDetectorRuleSetsScrollPane, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(messDetectorTextField))
-                        .addPreferredGap(ComponentPlacement.RELATED)
-                        .addComponent(messDetectorBrowseButton)
-                        .addPreferredGap(ComponentPlacement.RELATED)
-                        .addComponent(messDetectorSearchButton))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(messDetectorHintLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(Alignment.TRAILING)
+                            .addComponent(messDetectorRuleSetFileTextField)
+                            .addComponent(messDetectorRuleSetsScrollPane, Alignment.LEADING)
+                            .addComponent(messDetectorTextField))
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
+                            .addGroup(Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(messDetectorBrowseButton)
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addComponent(messDetectorSearchButton))
+                            .addGroup(Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(messDetectorRuleSetFileBrowseButton)
+                                .addGap(83, 83, 83))))))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
                     .addComponent(minVersionInfoLabel)
                     .addComponent(messDetectorLearnMoreLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         layout.linkSize(SwingConstants.HORIZONTAL, new Component[] {messDetectorBrowseButton, messDetectorSearchButton});
 
-        layout.setVerticalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(messDetectorTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(messDetectorSearchButton)
@@ -275,17 +312,23 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
                 .addComponent(messDetectorHintLabel)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
+                    .addComponent(messDetectorRuleSetsLabel)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(messDetectorRuleSetsScrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addComponent(messDetectorRuleSetsLabel))
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                            .addComponent(messDetectorRuleSetFileTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(messDetectorRuleSetFileBrowseButton)
+                            .addComponent(messDetectorRuleSetFileLabel))))
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(minVersionInfoLabel)
                 .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(messDetectorLearnMoreLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(messDetectorLearnMoreLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
+
+        messDetectorRuleSetFileLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(MessDetectorOptionsPanel.class, "MessDetectorOptionsPanel.messDetectorRuleSetFileLabel.AccessibleContext.accessibleName")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
 
     private void messDetectorLearnMoreLabelMouseEntered(MouseEvent evt) {//GEN-FIRST:event_messDetectorLearnMoreLabelMouseEntered
@@ -351,12 +394,25 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
         }
     }//GEN-LAST:event_messDetectorSearchButtonActionPerformed
 
+    @NbBundle.Messages("MessDetectorOptionsPanel.configuration.browse.title=Select Mess Detector Rule Set File")
+    private void messDetectorRuleSetFileBrowseButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_messDetectorRuleSetFileBrowseButtonActionPerformed
+         File file = new FileChooserBuilder(MessDetectorOptionsPanel.class.getName() + MESS_DETECTOR_RULE_SET_FILE_LAST_FOLDER_SUFFIX)
+                .setFilesOnly(true)
+                .setTitle(Bundle.MessDetectorOptionsPanel_configuration_browse_title())
+                .showOpenDialog();
+        if (file != null) {
+            messDetectorRuleSetFileTextField.setText(file.getAbsolutePath());
+        }
+    }//GEN-LAST:event_messDetectorRuleSetFileBrowseButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton messDetectorBrowseButton;
     private JLabel messDetectorHintLabel;
     private JLabel messDetectorLabel;
     private JLabel messDetectorLearnMoreLabel;
+    private JButton messDetectorRuleSetFileBrowseButton;
+    private JLabel messDetectorRuleSetFileLabel;
+    private JTextField messDetectorRuleSetFileTextField;
     private JLabel messDetectorRuleSetsLabel;
     private JList<String> messDetectorRuleSetsList;
     private JScrollPane messDetectorRuleSetsScrollPane;

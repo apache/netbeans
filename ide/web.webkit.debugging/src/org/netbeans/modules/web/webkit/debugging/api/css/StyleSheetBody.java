@@ -69,7 +69,7 @@ public class StyleSheetBody {
         this.styleSheetHeader = header;
         this.styleSheetId = header.getStyleSheetId();
         this.text = text;
-        this.rules = Collections.EMPTY_LIST;
+        this.rules = Collections.emptyList();
     }
 
     /**

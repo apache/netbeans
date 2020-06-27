@@ -133,7 +133,7 @@ public final class SelectFilePanel extends JPanel {
 
         selectFileLabel = new JLabel();
         selectFileScrollPane = new JScrollPane();
-        selectFileList = new JList<FileObject>();
+        selectFileList = new JList<>();
 
         selectFileLabel.setLabelFor(selectFileList);
         Mnemonics.setLocalizedText(selectFileLabel, NbBundle.getMessage(SelectFilePanel.class, "SelectFilePanel.selectFileLabel.text")); // NOI18N
@@ -143,8 +143,7 @@ public final class SelectFilePanel extends JPanel {
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
@@ -152,13 +151,12 @@ public final class SelectFilePanel extends JPanel {
                     .addComponent(selectFileLabel))
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(selectFileLabel)
                 .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(selectFileScrollPane, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE))
+                .addComponent(selectFileScrollPane, GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

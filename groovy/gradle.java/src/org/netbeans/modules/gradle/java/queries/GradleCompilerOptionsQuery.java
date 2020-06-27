@@ -69,7 +69,7 @@ public final class GradleCompilerOptionsQuery implements CompilerOptionsQueryImp
         ResultImpl ret = null;
         if (sourceSet != null) {
             GradleJavaSourceSet.SourceType sourceType = sourceSet.getSourceType(f);
-            if (sourceType != GradleJavaSourceSet.SourceType.RESOURCES) {
+            if ((sourceType != null) && (sourceType != GradleJavaSourceSet.SourceType.RESOURCES)) {
                 String key = sourceSet.getName() + "." + sourceType.name();
                 synchronized(this) {
                     ret = cache.get(key);

@@ -1976,6 +1976,95 @@ public class ReindenterTest extends NbTestCase {
         performSpanIndentationTest("package t;\npublic class T {\n|private final String s = \"\"\"\n1\n  2\n 3\n\"\"\";|\n}\n",
                 "package t;\npublic class T {\n    private final String s = \"\"\"\n                             1\n                               2\n                              3\n                             \"\"\";\n}\n");
     }
+    
+    public void testLineIndentationBeforeRecord() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test:
+            return;
+        }
+        performLineIndentationTest("package t;\n| public record T() {\n}\n",
+                "package t;\npublic record T() {\n}\n");
+    }
+
+    public void testNewLineIndentationBeforeRecodBody() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test:
+            return;
+        }
+        performNewLineIndentationTest("package t;\npublic record T()|{\n}\n",
+                "package t;\npublic record T()\n{\n}\n");
+    }
+
+    public void testLineIndentationBeforeHalfIndentedRecordBody() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test:
+            return;
+        }
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        preferences.put("classDeclBracePlacement", CodeStyle.BracePlacement.NEW_LINE_HALF_INDENTED.name());
+        try {
+            performLineIndentationTest("package t;\npublic record T()\n|{\n}\n",
+                    "package t;\npublic record T()\n  {\n}\n");
+        } finally {
+            preferences.remove("classDeclBracePlacement");
+        }
+    }
+
+    public void testNewLineIndentationInsideRecord() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test:
+            return;
+        }
+        performNewLineIndentationTest("package t;\npublic record T() {|\n}\n",
+                "package t;\npublic record T() {\n    \n}\n");
+    }
+
+    public void testNewLineIndentationBeforeEmptyRecordEnd() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test:
+            return;
+        }
+        performNewLineIndentationTest("package t;\npublic record T() {|}\n",
+                "package t;\npublic record T() {\n}\n");
+    }
+
+    public void testLineIndentationBeforeEmptyRecordEnd() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test:
+            return;
+        }
+        performLineIndentationTest("package t;\npublic record T() {\n|}\n",
+                "package t;\npublic record T() {\n}\n");
+    }
+
+    public void testLineIndentationBeforeEmptyHalfIndentedRecordEnd() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test:
+            return;
+        }
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        preferences.put("classDeclBracePlacement", CodeStyle.BracePlacement.NEW_LINE_HALF_INDENTED.name());
+        try {
+            performLineIndentationTest("package t;\npublic record T()\n  {\n|    }\n",
+                    "package t;\npublic record T()\n  {\n  }\n");
+        } finally {
+            preferences.remove("classDeclBracePlacement");
+        }
+    }
 
     private void performNewLineIndentationTest(String code, String golden) throws Exception {
         int pos = code.indexOf('|');

@@ -685,7 +685,7 @@ matrix:
             - ant $OPTS -f php/php.phpunit test
             - ant $OPTS -f php/php.project test
             - ant $OPTS -f php/php.refactoring test
-            #- ant $OPTS -f php/php.smarty test
+            - ant $OPTS -f php/php.smarty test
             - ant $OPTS -f php/php.symfony test
             - ant $OPTS -f php/php.symfony2 test
             - ant $OPTS -f php/php.twig test

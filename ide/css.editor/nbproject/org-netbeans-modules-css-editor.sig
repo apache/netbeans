@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.75
+#Version 1.76
 
 CLSS public abstract interface java.io.Serializable
 
@@ -286,7 +286,7 @@ meth public void addChangeListener(javax.swing.event.ChangeListener)
 meth public void notifyChange()
 meth public void removeChangeListener(javax.swing.event.ChangeListener)
 supr java.lang.Object
-hfds INDEXES,LOGGER,REGEXP_CHARS_TO_ENCODE,SASS_EXT,SCSS_EXT,allDepsCache,allDepsCache_hashCode,changeSupport,querySupport,sourceRoots
+hfds INDEXES,LOGGER,REGEXP_CHARS_TO_ENCODE,SASS_EXT,SCSS_EXT,VIRTUAL_ELEMENT_MARKER_STR,allDepsCache,allDepsCache_hashCode,changeSupport,querySupport,sourceRoots
 
 CLSS public static org.netbeans.modules.css.indexing.api.CssIndex$AllDependenciesMaps
  outer org.netbeans.modules.css.indexing.api.CssIndex

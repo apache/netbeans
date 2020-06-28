@@ -23,7 +23,7 @@
 <coverage generated="1404809792" clover="53bbb240a1c72">
   <project timestamp="1404809792" name="atoum code coverage">
     <package name="atoumCodeCoverage">
-      <file name="Calculator.php" path="%WORKDIR%/testdata/Calculator.php">
+      <file name="Calculator.php" path="%WORKDIR%%SEP%testdata%SEP%Calculator.php">
         <line num="50" type="stmt" complexity="0" count="1" falsecount="0" truecount="0" signature="" testduration="0" testsuccess="0"/>
         <line num="51" type="stmt" complexity="0" count="0" falsecount="0" truecount="0" signature="" testduration="0" testsuccess="0"/>
         <line num="54" type="stmt" complexity="0" count="1" falsecount="0" truecount="0" signature="" testduration="0" testsuccess="0"/>
@@ -40,7 +40,7 @@
         </class>
         <metrics complexity="0" elements="6" coveredelements="6" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" methods="4" coveredmethods="4" testduration="0" testfailures="0" testpasses="0" testruns="0" classes="1" loc="6" ncloc="6"/>
       </file>
-      <file name="Calculator2.php" path="%WORKDIR%/testdata/Calculator2.php">
+      <file name="Calculator2.php" path="%WORKDIR%%SEP%testdata%SEP%Calculator2.php">
         <line num="50" type="stmt" complexity="0" count="0" falsecount="0" truecount="0" signature="" testduration="0" testsuccess="0"/>
         <line num="51" type="stmt" complexity="0" count="0" falsecount="0" truecount="0" signature="" testduration="0" testsuccess="0"/>
         <line num="54" type="stmt" complexity="0" count="1" falsecount="0" truecount="0" signature="" testduration="0" testsuccess="0"/>

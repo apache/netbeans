@@ -42,7 +42,7 @@
       <subant  target="nbm" inheritall="false">
           <property name="build.dir" location="build/3rdparty-nbms"/>
           <property name="nbm_alias" value="netbeans-bundled"/>
-          <fileset dir="${nb_all}/extra" includes="libs.javafx.*/build.xml"/>
+          <fileset dir="${nb_all}/nb" includes="libs.javafx.*/build.xml"/>
       </subant>
       <subant inheritall="false">
           <target name="clean" />

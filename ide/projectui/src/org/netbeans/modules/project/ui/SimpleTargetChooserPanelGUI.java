@@ -493,10 +493,10 @@ public class SimpleTargetChooserPanelGUI extends javax.swing.JPanel implements A
                 //non project space
                 String previousTargetFolder = getTargetFolder(); //can be relative or absolute..
                 SourceGroup group = (SourceGroup)locationComboBox.getSelectedItem();
-                if (group == null) { // #161478
-                    return;
+                FileObject oldFo = null;
+                if (group != null) {
+                    oldFo = previousTargetFolder != null ? group.getRootFolder().getFileObject(previousTargetFolder) : group.getRootFolder();
                 }
-                FileObject oldFo = previousTargetFolder != null ? group.getRootFolder().getFileObject(previousTargetFolder) : group.getRootFolder();
                 if (oldFo == null && previousTargetFolder != null) {
                     oldFo = FileUtil.toFileObject(FileUtil.normalizeFile(new File(previousTargetFolder)));
                 }
@@ -506,13 +506,13 @@ public class SimpleTargetChooserPanelGUI extends javax.swing.JPanel implements A
                     new FileChooserBuilder(SimpleTargetChooserPanel.class)
                         .setDirectoriesOnly(true)
                         .setDefaultWorkingDirectory(currFile)
-                        .forceUseOfDefaultWorkingDirectory(true)
+                        .forceUseOfDefaultWorkingDirectory(group != null) //if no source group, allow other directories
                         .showSaveDialog();
 
                 FileObject fo = targetFolder != null ? FileUtil.toFileObject(FileUtil.normalizeFile(targetFolder)) : null;
 
                 if ( fo != null && fo.isFolder() ) {
-                    String path =  FileUtil.getRelativePath(group.getRootFolder(), fo);
+                    String path =  group == null ? null : FileUtil.getRelativePath(group.getRootFolder(), fo);
                     if (path == null) {
                          path = fo.getPath();
                     }

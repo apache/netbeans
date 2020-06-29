@@ -57,7 +57,7 @@ jobs:
           ant -f php/php.api.testing test
           ant -f php/php.apigen test
           ant -f php/php.atoum test
-          # ant -f php/php.code.analysis test
+          ant -f php/php.code.analysis test
           ant -f php/php.codeception test
           ant -f php/php.composer test
           ant -f php/php.dbgp test

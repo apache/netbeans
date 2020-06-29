@@ -19,53 +19,37 @@
 package org.netbeans.modules.php.dbgp.models.nodes;
 
 import java.util.Set;
+import org.netbeans.modules.php.dbgp.UnsufficientValueException;
+
 import org.netbeans.modules.php.dbgp.models.VariablesModelFilter.FilterType;
 import org.netbeans.modules.php.dbgp.packets.Property;
 import org.openide.util.NbBundle;
 
-/**
- * @author ads
- *
- */
-class ScalarTypeVariableNode extends org.netbeans.modules.php.dbgp.models.VariablesModel.AbstractVariableNode {
-    private static final String TYPE_FLOAT = "TYPE_Float"; // NOI18N
-    private static final String TYPE_INT = "TYPE_Int"; // NOI18N
-    private static final String TYPE_STRING = "TYPE_String"; // NOI18N
-    private static final String TYPE_NULL = "TYPE_Null"; // NOI18N
-    public static final String INTEGER = "integer"; // NOI18N
-    public static final String INT = "int"; // NOI18N
-    public static final String FLOAT = "float"; // NOI18N
-    public static final String STRING = "string"; // NOI18N
+class BooleanVariableNode extends org.netbeans.modules.php.dbgp.models.VariablesModel.AbstractVariableNode {
 
-    ScalarTypeVariableNode(Property property, AbstractModelNode parent) {
+    private static final String TYPE_BOOLEAN = "TYPE_Boolean"; // NOI18N
+    private static final String VALUE_TRUE = "1"; // NOI18N
+    private static final String DISPLAY_VALUE_TRUE = "true"; // NOI18N
+    private static final String DISPLAY_VALUE_FALSE = "false"; // NOI18N
+
+    BooleanVariableNode(Property property, AbstractModelNode parent) {
         super(property, parent);
     }
 
     @Override
     public String getType() {
-        String type = super.getType();
-        String bundleKey;
-        switch (type) {
-            case INTEGER:
-            case INT:
-                bundleKey = TYPE_INT;
-                break;
-            case FLOAT:
-                bundleKey = TYPE_FLOAT;
-                break;
-            case STRING:
-                bundleKey = TYPE_STRING;
-                break;
-            default:
-                bundleKey = TYPE_NULL;
-                break;
-        }
-        return NbBundle.getMessage(ScalarTypeVariableNode.class, bundleKey);
+        return NbBundle.getMessage(BooleanVariableNode.class, TYPE_BOOLEAN);
     }
 
     @Override
     protected boolean isTypeApplied(Set<FilterType> filters) {
         return filters.contains(FilterType.SCALARS);
+    }
+
+    @Override
+    public String getValue() throws UnsufficientValueException {
+        String value = super.getValue();
+        return value.equals(VALUE_TRUE) ? DISPLAY_VALUE_TRUE : DISPLAY_VALUE_FALSE;
     }
 
 }

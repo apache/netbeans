@@ -120,7 +120,9 @@ public abstract class JavaCompletionItem implements CompletionItem {
             case ANNOTATION_TYPE:
                 return new AnnotationTypeItem(info, elem, type, 0, substitutionOffset, referencesCount, isDeprecated, insideNew, addSimpleName, smartType, autoImportEnclosingType, whiteList);
             default:
-                throw new IllegalArgumentException("kind=" + elem.getKind());
+                if(elem.getKind().name().equals(TreeShims.RECORD))
+                    return new RecordItem(info, elem, type, 0, substitutionOffset, referencesCount, isDeprecated, insideNew, addSimpleName, smartType, autoImportEnclosingType, whiteList);
+                else throw new IllegalArgumentException("kind=" + elem.getKind());
         }
     }
 
@@ -1313,7 +1315,25 @@ public abstract class JavaCompletionItem implements CompletionItem {
             return icon;
         }
     }
+    
+    static class RecordItem extends ClassItem {
 
+        private static final String RECORD = "org/netbeans/modules/editor/resources/completion/record.png"; // NOI18N
+        private static ImageIcon icon;
+
+        private RecordItem(CompilationInfo info, TypeElement elem, DeclaredType type, int dim, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addSimpleName, boolean smartType, boolean autoImport, WhiteListQuery.WhiteList whiteList) {
+            super(info, elem, type, dim, substitutionOffset, referencesCount, isDeprecated, insideNew, false, addSimpleName, smartType, autoImport, whiteList);
+        }
+
+        @Override
+        protected ImageIcon getBaseIcon() {
+            if (icon == null) {
+                icon = ImageUtilities.loadImageIcon(RECORD, false);
+            }
+            return icon;
+        }
+    }
+    
     static class AnnotationTypeItem extends ClassItem {
 
         private static final String ANNOTATION = "org/netbeans/modules/editor/resources/completion/annotation_type.png"; // NOI18N

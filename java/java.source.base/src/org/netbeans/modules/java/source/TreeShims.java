@@ -228,4 +228,13 @@ public class TreeShims {
     public static boolean isRecordComponent(ElementKind kind) {
         return "RECORD_COMPONENT".equals(kind.name());
     }
+
+    public static ElementKind getRecordKind() {
+        try {
+            return ElementKind.valueOf(RECORD); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
+    }
+
 }

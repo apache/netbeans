@@ -48,7 +48,36 @@ public class JavaCompletionTask114FeaturesTest extends CompletionTestBase {
     public void testBindingUse() throws Exception {
         performTest("GenericMethodInvocation", 1231, "boolean b = argO instanceof String str && st", "BindingUse.pass", SOURCE_LEVEL);
     }
+    
 
+    public void testBeforeLeftRecordBraces() throws Exception {
+        performTest("Records", 895, null, "implementsKeyword.pass", SOURCE_LEVEL);
+    }
+        
+        public void testBeforeRecParamsLeftParen() throws Exception {
+        performTest("Records", 891, null, "empty.pass", SOURCE_LEVEL);
+    }
+
+    public void testInsideRecParams() throws Exception {
+        performTest("Records", 892, null, "typesRecordLocalMembersAndVars.pass", SOURCE_LEVEL);
+    }
+    
+    public void testAfterTypeParamInRecParam() throws Exception {
+        performTest("Records", 889, null, "extendsKeyword.pass", SOURCE_LEVEL);
+    }
+    
+    public void testInsideRecAfterStaticKeyWord() throws Exception {
+        performTest("Records", 917, null, "typesRecordStaticMembersAndVars.pass", SOURCE_LEVEL);
+    }
+    
+    public void testAnnotationInRecordParam() throws Exception {
+        performTest("Records", 999, null, "override.pass", SOURCE_LEVEL);
+    } 
+    
+    public void testRecordKeywordInsideClass() throws Exception {
+        performTest("Records", 1014, "rec", "record.pass", SOURCE_LEVEL);
+    } 
+    
     public void noop() {
     }
 

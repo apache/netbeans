@@ -423,7 +423,7 @@ public abstract class CslTestBase extends NbTestCase {
                     }
 
                     InputStream is = fo.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 
                     while (true) {
                         String line = reader.readLine();

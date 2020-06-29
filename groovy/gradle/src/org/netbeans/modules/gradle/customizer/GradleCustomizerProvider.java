@@ -36,6 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JComponent;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.spi.customizer.support.FilterPanelProvider;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
@@ -75,25 +76,18 @@ public class GradleCustomizerProvider implements CustomizerProvider2 {
             }
         }
 //        try {
-        Mutex.EVENT.readAccess(new Runnable() {
-
-            @Override
-            public void run() {
-                assert EventQueue.isDispatchThread();
-                Lookup context = Lookups.singleton(project);
-                Dialog dialog = ProjectCustomizer.createCustomizerDialog("Projects/" + NbGradleProject.GRADLE_PROJECT_TYPE + "/Customizer", //NOI18N
-                        context,
-                        preselectedCategory,
-                        new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent ae) {
-                                //noop
-                            }
-                        }, null, HELP_CTX);
-                dialog.setTitle(TIT_Project_Properties(ProjectUtils.getInformation(project).getDisplayName()));
-                dialog.setModal(true);
-                dialog.setVisible(true);
-            }
+        Mutex.EVENT.readAccess(() -> {
+            assert EventQueue.isDispatchThread();
+            Lookup context = Lookups.singleton(project);
+            Dialog dialog = ProjectCustomizer.createCustomizerDialog("Projects/" + NbGradleProject.GRADLE_PROJECT_TYPE + "/Customizer", //NOI18N
+                    context,
+                    preselectedCategory,
+                    (ActionEvent ae) -> {/*noop*/},
+                    null,
+                    HELP_CTX);
+            dialog.setTitle(TIT_Project_Properties(ProjectUtils.getInformation(project).getDisplayName()));
+            dialog.setModal(true);
+            dialog.setVisible(true);
         });
 //        } catch (Exception ex) {
 //            Logger.getLogger(GradleCustomizerProvider.class.getName()).log(Level.SEVERE, "Cannot show project customizer", ex);
@@ -126,6 +120,31 @@ public class GradleCustomizerProvider implements CustomizerProvider2 {
         };
     }
 
+    @NbBundle.Messages("category.Execution=Gradle Execution")
+    @ProjectCustomizer.CompositeCategoryProvider.Registration(
+            projectType = NbGradleProject.GRADLE_PROJECT_TYPE,
+            category = "build/execute",
+            categoryLabel ="#category.Execution",
+            position = 305)
+    public static ProjectCustomizer.CompositeCategoryProvider buildCompileCustomizerProvider() {
+        ProjectCustomizer.CompositeCategoryProvider provider =  new ProjectCustomizer.CompositeCategoryProvider() {
+            @Override
+            public ProjectCustomizer.Category createCategory(Lookup context) {
+                return null;
+            }
+
+            @Override
+            public JComponent createComponent(ProjectCustomizer.Category category, Lookup context) {
+                Project project = context.lookup(Project.class);
+
+                GradleExecutionPanel customizer = new GradleExecutionPanel(project);
+                category.setStoreListener((ActionEvent e) -> customizer.save());
+                return customizer;
+            }
+        };
+        return new FilterPanelProvider(provider, FilterPanelProvider.ROOT_PROJECT);
+    }
+
     @NbBundle.Messages("category.BuildActions=Build Actions")
     @ProjectCustomizer.CompositeCategoryProvider.Registration(
             projectType=NbGradleProject.GRADLE_PROJECT_TYPE,
@@ -143,9 +162,10 @@ public class GradleCustomizerProvider implements CustomizerProvider2 {
             public JComponent createComponent(ProjectCustomizer.Category category, Lookup context) {
                 Project project = context.lookup(Project.class);
                 BuildActionsCustomizer customizer = new BuildActionsCustomizer(project);
-                category.setStoreListener(customizer.getSaveListener());
+                category.setStoreListener((ActionEvent e) -> customizer.save());
                 return customizer;
             }
         };
     }
+
 }

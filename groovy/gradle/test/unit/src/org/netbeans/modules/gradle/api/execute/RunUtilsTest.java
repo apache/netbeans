@@ -25,6 +25,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gradle.AbstractGradleProjectTestCase;
+import org.netbeans.modules.gradle.ProjectTrust;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -43,7 +44,9 @@ public class RunUtilsTest extends AbstractGradleProjectTestCase {
         FileObject b = createGradleProject("projectB",
                 "apply plugin: 'java'\n", "");
         Project prjA = ProjectManager.getDefault().findProject(a);
+        ProjectTrust.getDefault().trustProject(prjA);
         Project prjB = ProjectManager.getDefault().findProject(b);
+        ProjectTrust.getDefault().trustProject(prjB);
         OpenProjects.getDefault().open(new Project[] {prjA, prjB}, false);
         GradleCommandLine cmd = RunUtils.getIncludedOpenProjects(prjB);
         Collection<String> params = cmd.getParameters(GradleCommandLine.Parameter.INCLUDE_BUILD);
@@ -58,7 +61,9 @@ public class RunUtilsTest extends AbstractGradleProjectTestCase {
         FileObject b = createGradleProject("projectB",
                 "apply plugin: 'java'\n", "includeBuild '../projectA'\n");
         Project prjA = ProjectManager.getDefault().findProject(a);
+        ProjectTrust.getDefault().trustProject(prjA);
         Project prjB = ProjectManager.getDefault().findProject(b);
+        ProjectTrust.getDefault().trustProject(prjB);
         OpenProjects.getDefault().open(new Project[] {prjA, prjB}, false);
         GradleCommandLine cmd = RunUtils.getIncludedOpenProjects(prjB);
         Collection<String> params = cmd.getParameters(GradleCommandLine.Parameter.INCLUDE_BUILD);

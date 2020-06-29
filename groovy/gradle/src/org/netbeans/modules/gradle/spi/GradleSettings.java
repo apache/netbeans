@@ -68,6 +68,29 @@ public final class GradleSettings {
         }
     }
 
+    /**
+     * Rule, that determines when to allow automatic Gradle execution.
+     * @since 2.2
+     */
+    @Messages({
+        "GE_TRUSTED_PROJECTS=Trusted Projects Only",
+        "GE_ALWAYS=Always"
+    })
+    public enum GradleExecutionRule {
+        TRUSTED_PROJECTS,
+        ALWAYS;
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case TRUSTED_PROJECTS: return Bundle.GE_TRUSTED_PROJECTS();
+                case ALWAYS: return Bundle.GE_ALWAYS();
+            }
+            return name();
+        }
+
+    }
+
     public static final String PROP_GRADLE_DISTRIBUTION = "gradleHome";
 
     public static final String PROP_PREFER_WRAPPER = "preferWrapper";
@@ -102,10 +125,24 @@ public final class GradleSettings {
     public static final String PROP_DOWNLOAD_SOURCES = "downloadSources";
     public static final String PROP_DOWNLOAD_JAVADOC = "downloadJavaDoc";
 
-    private static final GradleSettings INSTANCE = new GradleSettings();
+    public static final String PROP_GRADLE_EXEC_RULE = "gradleExecutionRule";
+
+    private static final GradleSettings INSTANCE = new GradleSettings(NbPreferences.forModule(GradleSettings.class));
+
+    private final Preferences preferences;
+
+    @Deprecated
+    public GradleSettings() {
+        this(NbPreferences.forModule(GradleSettings.class));
+    }
+
+    GradleSettings(Preferences preferences) {
+        this.preferences = preferences;
+    }
+
 
     public Preferences getPreferences() {
-        return NbPreferences.forModule(GradleSettings.class);
+        return preferences;
     }
 
     public static GradleSettings getDefault() {
@@ -320,5 +357,20 @@ public final class GradleSettings {
     public DownloadMiscRule getDownloadJavadoc() {
         String ruleName = getPreferences().get(PROP_DOWNLOAD_JAVADOC, DownloadMiscRule.NEVER.name());
         return DownloadMiscRule.valueOf(ruleName);
+    }
+
+    /**
+     * @since 2.2
+     */
+    public void setGradleExecutionRule(GradleExecutionRule rule) {
+        getPreferences().put(PROP_GRADLE_EXEC_RULE, rule.name());
+    }
+
+    /**
+     * @since 2.2
+     */
+    public GradleExecutionRule getGradleExecutionRule() {
+        String ruleName = getPreferences().get(PROP_GRADLE_EXEC_RULE, GradleExecutionRule.TRUSTED_PROJECTS.name());
+        return GradleExecutionRule.valueOf(ruleName);
     }
 }

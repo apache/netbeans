@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.gradle;
 
 import org.netbeans.modules.gradle.spi.GradleFiles;
@@ -99,26 +98,31 @@ public final class GradleProjectCache {
     // Increase this number if new info is gathered from the projects.
     private static final int COMPATIBLE_CACHE_VERSION = 12;
 
+    private GradleProjectCache() {
+    }
+
     /**
-     * Loads a physical GradleProject either from Gradle or Cache. As project retrieval can be time consuming using
-     * Gradle sometimes it's just enough to shoot for FALLBACK information. Aiming for FALLBACK quality either retrieves
-     * the GradleProject form cache if it's valid or returns the fallback Project implementation.
+     * Loads a physical GradleProject either from Gradle or Cache. As project
+     * retrieval can be time consuming using Gradle sometimes it's just enough
+     * to shoot for FALLBACK information. Aiming for FALLBACK quality either
+     * retrieves the GradleProject form cache if it's valid or returns the
+     * fallback Project implementation.
      *
      * @param files The project to load.
      * @param requestedQuality The project information quality to aim for.
      * @return The retrievable GradleProject
      */
-    public static GradleProject loadProject(final NbGradleProjectImpl project, Quality aim, boolean ignoreCache, String... args) {
+    public static GradleProject loadProject(final NbGradleProjectImpl project, Quality aim, boolean ignoreCache, boolean interactive, String... args) {
         final GradleFiles files = project.getGradleFiles();
 
         if (aim == FALLBACK) {
             return fallbackProject(files);
         }
-        GradleProject prev = project.project;
+        GradleProject prev = project.project != null ? project.project : fallbackProject(files);
 
         // Try to turn to the cache
         if (!(ignoreCache || GradleSettings.getDefault().isCacheDisabled())
-                && (prev.getQuality() == FALLBACK))  {
+                && (prev.getQuality() == FALLBACK)) {
             ProjectCacheEntry cacheEntry = loadCachedProject(files);
             if (cacheEntry != null) {
                 if (cacheEntry.isCompatible()) {
@@ -130,18 +134,18 @@ public final class GradleProjectCache {
                 }
             }
         }
-        if (prev == null) {
-            // Could this happen?
-            prev = fallbackProject(project.getGradleFiles());
-        }
 
         final ReloadContext ctx = new ReloadContext(project, prev, aim);
         ctx.args = args;
 
         GradleProject ret;
         try {
-            ret = GRADLE_LOADER_RP.submit(new ProjectLoaderTask(ctx)).get();
-            updateSubDirectoryCache(ret);
+            if (RunUtils.isProjectTrusted(project, interactive)) {
+                ret = GRADLE_LOADER_RP.submit(new ProjectLoaderTask(ctx)).get();
+                updateSubDirectoryCache(ret);
+            } else {
+                ret = prev.invalidate();
+            }
         } catch (InterruptedException | ExecutionException ex) {
             ret = fallbackProject(files);
         }
@@ -181,7 +185,6 @@ public final class GradleProjectCache {
         cmd.setStackTrace(GradleCommandLine.StackTrace.SHORT);
         cmd.addSystemProperty(GradleDaemon.PROP_TOOLING_JAR, TOOLING_JAR);
         cmd.addProjectProperty("nbSerializeCheck", "true");
-
 
         GoOnline goOnline;
         if (GradleSettings.getDefault().isOffline()) {
@@ -476,9 +479,6 @@ public final class GradleProjectCache {
         return createFallbackProject(FALLBACK, files, Collections.<String>emptyList());
     }
 
-    private static GradleProject evaluatedProject(GradleFiles files, Collection<String> probs) {
-        return createFallbackProject(EVALUATED, files, probs);
-    }
 
     private static GradleProject createFallbackProject(Quality quality, GradleFiles files, Collection<String> probs) {
         Collection<? extends ProjectInfoExtractor> extractors = Lookup.getDefault().lookupAll(ProjectInfoExtractor.class);
@@ -513,6 +513,7 @@ public final class GradleProjectCache {
     }
 
     static final class ReloadContext {
+
         final NbGradleProjectImpl project;
         final GradleProject previous;
         final Quality aim;

@@ -60,9 +60,6 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
     final DefaultListModel<CustomActionMapping> customActionsModel = new DefaultListModel<>();
     final DefaultComboBoxModel<String> availableActionsModel = new DefaultComboBoxModel<>();
     final CustomActionRegistrationSupport actionRegistry;
-    final ActionListener saveListener = (ActionEvent e) -> {
-        save();
-    };
 
     final DocumentListener applyListener = new DocumentListener() {
         @Override
@@ -402,16 +399,12 @@ public class BuildActionsCustomizer extends javax.swing.JPanel {
         cbAdd.setSelectedIndex(0);
     }//GEN-LAST:event_cbAddActionPerformed
 
-    public ActionListener getSaveListener() {
-        return saveListener;
-    }
-
     private CustomActionMapping getSelectedMapping() {
         int index = lsActions.getSelectedIndex();
         return index >= 0 ? customActionsModel.elementAt(index) : null;
     }
 
-    private void save() {
+    void save() {
         actionRegistry.save();
     }
 

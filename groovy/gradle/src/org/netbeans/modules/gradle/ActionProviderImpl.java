@@ -232,7 +232,12 @@ public class ActionProviderImpl implements ActionProvider {
             }
         }
 
+
         boolean reloadOnly = !showUI && (args.length == 0);
+        if (!reloadOnly) {
+            //Trust project only if it does execute a real action
+            ProjectTrust.getDefault().trustProject(project);
+        }
         final boolean needReload;
         final Quality maxQualily = (cfg.getCommandLine().hasFlag(GradleCommandLine.Flag.OFFLINE))
                 && (mapping.getReloadRule() != ActionMapping.ReloadRule.ALWAYS_ONLINE)

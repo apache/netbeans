@@ -73,6 +73,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbDownloadLibs.setModel(new DefaultComboBoxModel<>(GradleSettings.DownloadLibsRule.values()));
         cbDownloadSources.setModel(new DefaultComboBoxModel<>(GradleSettings.DownloadMiscRule.values()));
         cbDownloadJavadoc.setModel(new DefaultComboBoxModel<>(GradleSettings.DownloadMiscRule.values()));
+        cbAllowExecution.setModel(new DefaultComboBoxModel<>(GradleSettings.GradleExecutionRule.values()));
     }
 
     /**
@@ -112,6 +113,8 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbSkipCheck = new javax.swing.JCheckBox();
         cbNoRebuild = new javax.swing.JCheckBox();
         cbConfigureOnDemand = new javax.swing.JCheckBox();
+        lbAllowExecution = new javax.swing.JLabel();
+        cbAllowExecution = new javax.swing.JComboBox<>();
         cbPreferMaven = new javax.swing.JCheckBox();
         pnlAppearance = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -379,6 +382,9 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addGap(72, 72, 72))
         );
 
+        lbAllowExecution.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        org.openide.awt.Mnemonics.setLocalizedText(lbAllowExecution, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lbAllowExecution.text")); // NOI18N
+
         org.openide.awt.Mnemonics.setLocalizedText(cbPreferMaven, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbPreferMaven.text")); // NOI18N
 
         javax.swing.GroupLayout pnlExecutionLayout = new javax.swing.GroupLayout(pnlExecution);
@@ -392,7 +398,11 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addGroup(pnlExecutionLayout.createSequentialGroup()
                         .addComponent(cbPreferMaven)
                         .addGap(0, 346, Short.MAX_VALUE))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlExecutionLayout.createSequentialGroup()
+                        .addComponent(lbAllowExecution, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbAllowExecution, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         pnlExecutionLayout.setVerticalGroup(
@@ -401,7 +411,11 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbAllowExecution, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbAllowExecution))
+                .addGap(11, 11, 11)
                 .addComponent(cbPreferMaven)
                 .addContainerGap())
         );
@@ -712,6 +726,8 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbDownloadSources.setSelectedItem(settings.getDownloadSources());
         cbDownloadJavadoc.setSelectedItem(settings.getDownloadJavadoc());
 
+        cbAllowExecution.setSelectedItem(settings.getGradleExecutionRule());
+
         new SwingWorker<List<NbGradleVersion>, Void>() {
 
             @Override
@@ -773,6 +789,8 @@ public class SettingsPanel extends javax.swing.JPanel {
         settings.setDownloadSources((GradleSettings.DownloadMiscRule) cbDownloadSources.getSelectedItem());
         settings.setDownloadJavadoc((GradleSettings.DownloadMiscRule) cbDownloadJavadoc.getSelectedItem());
 
+        settings.setGradleExecutionRule((GradleSettings.GradleExecutionRule) cbAllowExecution.getSelectedItem());
+
         if (settings.isPreferMaven() != cbPreferMaven.isSelected()) {
             settings.setPreferMaven(cbPreferMaven.isSelected());
             NotificationDisplayer.getDefault().notify(Bundle.TIT_RestartIDE(),
@@ -817,6 +835,8 @@ public class SettingsPanel extends javax.swing.JPanel {
         isChanged |= settings.getDownloadLibs() != cbDownloadLibs.getSelectedItem();
         isChanged |= settings.getDownloadSources() != cbDownloadSources.getSelectedItem();
         isChanged |= settings.getDownloadJavadoc() != cbDownloadJavadoc.getSelectedItem();
+
+        isChanged |= settings.getGradleExecutionRule() != cbAllowExecution.getSelectedItem();
 
         return isChanged;
     }
@@ -871,6 +891,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JButton btDefaultHome;
     private javax.swing.JButton btGradleUserHome;
     private javax.swing.JButton btUseCustomGradle;
+    private javax.swing.JComboBox<GradleSettings.GradleExecutionRule> cbAllowExecution;
     private javax.swing.JCheckBox cbAlwaysShowOutput;
     private javax.swing.JCheckBox cbConfigureOnDemand;
     private javax.swing.JCheckBox cbDisplayDescription;
@@ -898,6 +919,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JLabel lbAllowExecution;
     private javax.swing.JLabel lbDownloadJavadoc;
     private javax.swing.JLabel lbDownloadLibs;
     private javax.swing.JLabel lbDownloadSources;

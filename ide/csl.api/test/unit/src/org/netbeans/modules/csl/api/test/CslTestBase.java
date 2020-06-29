@@ -38,7 +38,9 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -541,12 +543,9 @@ public abstract class CslTestBase extends NbTestCase {
     }
 
     public static String readFile(File f) throws IOException {
-        FileReader r = new FileReader(f);
-        int fileLen = (int)f.length();
-        CharBuffer cb = CharBuffer.allocate(fileLen);
-        r.read(cb);
-        cb.rewind();
-        return cb.toString();
+        Charset charset = StandardCharsets.UTF_8;
+        String content = new String(Files.readAllBytes(f.toPath()), charset);
+        return content;
     }
 
     protected File getDataSourceDir() {

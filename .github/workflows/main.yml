@@ -68,7 +68,7 @@ jobs:
           ant -f php/php.phpunit test
           ant -f php/php.project test
           ant -f php/php.refactoring test
-          # ant -f php/php.smarty test
+          ant -f php/php.smarty test
           ant -f php/php.symfony test
           ant -f php/php.symfony2 test
           ant -f php/php.twig test

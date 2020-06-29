@@ -56,12 +56,17 @@ import org.netbeans.api.java.platform.Specification;
 
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gradle.GradleDistributionManager;
+import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
+import org.netbeans.modules.gradle.execute.TrustProjectPanel;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.spi.project.SingleMethod;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
+import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
 
 /**
@@ -130,6 +135,7 @@ public final class RunUtils {
      * @param project The Gradle project
      * @param action The name of the IDE action that's going to be executed
      * @param displayName The display name of the output tab
+     * @param flags Execution flags.
      * @param args Gradle command line arguments
      * @return the Gradle execution configuration.
      * @since 1.5
@@ -230,6 +236,34 @@ public final class RunUtils {
         return isOptionEnabled(project, PROP_INCLUDE_OPEN_PROJECTS, false);
     }
 
+    /**
+     * Check if the given project is trusted for execution. If the project is not
+     * trusted invoking this method can ask for temporal trust for one execution
+     * only by displaying a dialog.
+     *
+     * @param project the project to be checked
+     * @param interactive ask for permission from UI.
+     * @return if the execution is trusted.
+     */
+    @Messages({
+        "ProjectTrustDlg.TITLE=Not a Trusted Project"
+    })
+    public static boolean isProjectTrusted(Project project, boolean interactive) {
+        boolean ret = GradleSettings.getDefault().getGradleExecutionRule() == GradleSettings.GradleExecutionRule.ALWAYS
+                || ProjectTrust.getDefault().isTrusted(project);
+        if (ret == false && interactive) {
+            TrustProjectPanel trust = new TrustProjectPanel(project);
+            DialogDescriptor dsc = new DialogDescriptor(trust, Bundle.ProjectTrustDlg_TITLE(), true, null);
+            if (DialogDisplayer.getDefault().notify(dsc) == DialogDescriptor.OK_OPTION) {
+                if (trust.getTrustInFuture()) {
+                    ProjectTrust.getDefault().trustProject(project);
+                }
+                ret = true;
+            }
+        }
+        return ret;
+    }
+    
     public static GradleCommandLine getDefaultCommandLine(Project project) {
         String args = NbGradleProject.getPreferences(project, true).get(PROP_DEFAULT_CLI, null);
         return args != null ? new GradleCommandLine(args) : null;

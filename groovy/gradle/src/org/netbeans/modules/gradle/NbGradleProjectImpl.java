@@ -53,6 +53,7 @@ import static java.util.logging.Level.*;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.SuppressWarnings;
+import org.netbeans.api.project.ui.ProjectProblems;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.spi.project.CacheDirectoryProvider;
 import org.netbeans.spi.project.support.LookupProviderSupport;
@@ -84,8 +85,7 @@ public final class NbGradleProjectImpl implements Project {
     private final Lookup completeLookup;
     private Updater openedProjectUpdater;
     private Quality aimedQuality = FALLBACK;
-    private final @NonNull
-    NbGradleProject watcher;
+    private final @NonNull NbGradleProject watcher;
     @SuppressWarnings("MS_SHOULD_BE_FINAL")
     public static WatcherAccessor ACCESSOR = null;
 
@@ -97,7 +97,7 @@ public final class NbGradleProjectImpl implements Project {
         Class<?> c = NbGradleProject.class;
         try {
             Class.forName(c.getName(), true, c.getClassLoader());
-        } catch (Exception ex) {
+        } catch (ClassNotFoundException ex) {
             LOG.log(SEVERE, "very wrong, very wrong, yes indeed", ex);
         }
     }
@@ -249,18 +249,14 @@ public final class NbGradleProjectImpl implements Project {
     }
 
     private GradleProject loadProject(boolean ignoreCache, Quality aim, String... args) {
-        GradleProject prj = GradleProjectCache.loadProject(this, aim, ignoreCache, args);
+        GradleProject prj = GradleProjectCache.loadProject(this, aim, ignoreCache, false, args);
         return prj;
     }
 
     void reloadProject(final boolean ignoreCache, final Quality aim, final String... args) {
-        RELOAD_RP.post(new Runnable() {
-
-            @Override
-            public void run() {
-                project = loadProject(ignoreCache, aim, args);
-                ACCESSOR.doFireReload(watcher);
-            }
+        RELOAD_RP.post(() -> {
+            project = loadProject(ignoreCache, aim, args);
+            ACCESSOR.doFireReload(watcher);
         });
     }
 
@@ -293,11 +289,11 @@ public final class NbGradleProjectImpl implements Project {
 
         @Override
         protected void projectOpened() {
-            Runnable open = new Runnable() {
-                @Override
-                public void run() {
-                    setAimedQuality(FULL);
-                    attachAllUpdater();
+            Runnable open = () -> {
+                setAimedQuality(FULL);
+                attachAllUpdater();
+                if (ProjectProblems.isBroken(NbGradleProjectImpl.this)) {
+                    ProjectProblems.showAlert(NbGradleProjectImpl.this);
                 }
             };
             if (GradleSettings.getDefault().isOpenLazy()) {

@@ -57,6 +57,9 @@
     <fontcolor name="mod-class-declaration" default="identifier">
             <font style="bold" />
     </fontcolor>
+    <fontcolor name="mod-record-declaration" default="identifier">
+            <font style="bold" />
+    </fontcolor>
     <fontcolor name="mod-interface-declaration" default="identifier">
             <font style="bold" />
     </fontcolor>

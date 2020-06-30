@@ -47,7 +47,6 @@ OutOfMemoryError
 Package
 Process
 ProcessBuilder
-Record
 ReflectiveOperationException
 Runtime
 RuntimeException

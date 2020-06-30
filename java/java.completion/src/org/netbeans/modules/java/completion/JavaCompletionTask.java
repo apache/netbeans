@@ -735,7 +735,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
             addPackages(env, null, false);
         }
         if (options.contains(Options.ALL_COMPLETION)) {
-            addTypes(env, EnumSet.of(CLASS, INTERFACE, ENUM, ANNOTATION_TYPE, TYPE_PARAMETER), null);
+            EnumSet<ElementKind> classKinds = EnumSet.of(CLASS, INTERFACE, ENUM, ANNOTATION_TYPE);
+            if (isRecordSupported(env, null)) {
+                classKinds.add(TreeShims.getRecordKind());
+            }
+            addTypes(env, classKinds, null);
         } else {
             hasAdditionalClasses = true;
         }

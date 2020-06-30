@@ -49,8 +49,8 @@ import org.openide.util.NbBundle.Messages;
  * @author lahvac
  */
 @TemplateRegistration(
-    folder="Project/CPPLite",
-    position=1000,
+    folder="Project/Native",
+    position=1000000,
     displayName="#template_cpplite",
     iconBase="org/netbeans/modules/cpplite/project/resources/project.gif",
     description="CPPLiteProjectDescription.html"

@@ -35,6 +35,7 @@ import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.editor.mimelookup.MimeRegistrations;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.cpplite.editor.Utils;
+import org.netbeans.modules.cpplite.editor.file.MIMETypes;
 import org.netbeans.modules.lsp.client.options.ServerRestarter;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
 import org.openide.util.Exceptions;
@@ -49,13 +50,13 @@ import org.openide.filesystems.FileUtil;
  */
 @MimeRegistrations({
     @MimeRegistration(service=LanguageServerProvider.class,
-                      mimeType="text/x-c"),
+                      mimeType=MIMETypes.C),
     @MimeRegistration(service=LanguageServerProvider.class,
-                      mimeType="text/x-c++"),
+                      mimeType=MIMETypes.CPP),
     @MimeRegistration(service=LanguageServerProvider.class,
-                      mimeType="text/x-h"),
+                      mimeType=MIMETypes.H),
     @MimeRegistration(service=LanguageServerProvider.class,
-                      mimeType="text/x-h++")
+                      mimeType=MIMETypes.HPP)
 })
 public class LanguageServerImpl implements LanguageServerProvider {
 

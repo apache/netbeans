@@ -35,6 +35,7 @@ import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.cpplite.editor.file.MIMETypes;
 import org.netbeans.modules.cpplite.editor.lsp.LanguageServerImpl;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.spi.editor.hints.ChangeInfo;
@@ -54,7 +55,7 @@ import org.openide.modules.OnStart;
 @OnStart
 public class UnconfiguredHint implements Runnable {
 
-    private static final Set<String> C_MIME_TYPES = new HashSet<>(Arrays.asList("text/x-c", "text/x-c++", "text/x-h", "text/x-h++"));
+    private static final Set<String> C_MIME_TYPES = new HashSet<>(Arrays.asList(MIMETypes.C, MIMETypes.CPP, MIMETypes.H, MIMETypes.HPP));
 
     private JTextComponent selectedComponent;
 

@@ -36,73 +36,73 @@ import org.openide.util.NbBundle.Messages;
 })
 @MIMEResolver.ExtensionRegistration(
         displayName = "#LBL_H_LOADER",
-        mimeType = "text/x-h",
+        mimeType = MIMETypes.H,
         extension = {"h"}
 )
 @DataObject.Registration(
-        mimeType = "text/x-h",
+        mimeType = MIMETypes.H,
         iconBase = "org/netbeans/modules/cpplite/editor/file/resources/HDataIcon.gif",
         displayName = "#LBL_H_LOADER",
         position = 300
 )
 @ActionReferences({
     @ActionReference(
-            path = "Loaders/text/x-h/Actions",
+            path = "Loaders/" + MIMETypes.H + "/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
             position = 100,
             separatorAfter = 200
     ),
     @ActionReference(
-            path = "Loaders/text/x-h/Actions",
+            path = "Loaders/" + MIMETypes.H + "/Actions",
             id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
             position = 300
     ),
     @ActionReference(
-            path = "Loaders/text/x-h/Actions",
+            path = "Loaders/" + MIMETypes.H + "/Actions",
             id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
             position = 400,
             separatorAfter = 500
     ),
     @ActionReference(
-            path = "Loaders/text/x-h/Actions",
+            path = "Loaders/" + MIMETypes.H + "/Actions",
             id = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
             position = 600
     ),
     @ActionReference(
-            path = "Loaders/text/x-h/Actions",
+            path = "Loaders/" + MIMETypes.H + "/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.RenameAction"),
             position = 700,
             separatorAfter = 800
     ),
     @ActionReference(
-            path = "Loaders/text/x-h/Actions",
+            path = "Loaders/" + MIMETypes.H + "/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"),
             position = 900,
             separatorAfter = 1000
     ),
     @ActionReference(
-            path = "Loaders/text/x-h/Actions",
+            path = "Loaders/" + MIMETypes.H + "/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"),
             position = 1100,
             separatorAfter = 1200
     ),
     @ActionReference(
-            path = "Loaders/text/x-h/Actions",
+            path = "Loaders/" + MIMETypes.H + "/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.ToolsAction"),
             position = 1300
     ),
     @ActionReference(
-            path = "Loaders/text/x-h/Actions",
+            path = "Loaders/" + MIMETypes.H + "/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
             position = 1400
     )
 })
-@GrammarRegistration(grammar="resources/c.tmLanguage.json", mimeType="text/x-h")
+@GrammarRegistration(grammar="resources/c.tmLanguage.json", mimeType=MIMETypes.H)
 public class HDataObject extends MultiDataObject {
 
     public HDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
-        registerEditor("text/x-h", false);
+        registerEditor(MIMETypes.H, false);
     }
 
     @Override

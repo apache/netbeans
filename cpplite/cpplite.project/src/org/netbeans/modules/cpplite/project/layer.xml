@@ -3,7 +3,7 @@
 <filesystem>
     <folder name="Templates">
         <folder name="Project">
-            <folder name="CPPLite">
+            <folder name="Native">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.cpplite.project.Bundle#CPPLite_NewProject" />
             </folder>
         </folder>

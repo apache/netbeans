@@ -26,14 +26,14 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.TopLevelRegistration(
+@OptionsPanelController.SubRegistration(
         id = "cpplite",
-        categoryName = "#OptionsCategory_Name_CPPLite",
-        iconBase = "org/netbeans/modules/cpplite/editor/lsp/options/cnd_32.png",
+        displayName = "#OptionsCategory_DisplayName",
         keywords = "#OptionsCategory_Keywords_CPPLite",
-        keywordsCategory = "CPPLite"
+        keywordsCategory = "CPPLite",
+        location = "CPlusPlus"
 )
-@org.openide.util.NbBundle.Messages({"OptionsCategory_Name_CPPLite=C/C++", "OptionsCategory_Keywords_CPPLite=C C++"})
+@org.openide.util.NbBundle.Messages({"OptionsCategory_DisplayName=ccls configuration", "OptionsCategory_Keywords_CPPLite=C C++ ccls"})
 public final class CPPLiteOptionsPanelController extends OptionsPanelController {
 
     private CPPLitePanel panel;

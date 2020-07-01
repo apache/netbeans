@@ -74,8 +74,8 @@ public final class ConfigureProxy extends Task {
                 getProject().setUserProperty(hostProperty, "");
                 getProject().setUserProperty(portProperty, "80");
             }
-        } catch (IOException exception) {
-            throw new BuildException(exception);
+        } catch (IOException ex) {
+            throw new BuildException(ex);
         }
     }
 

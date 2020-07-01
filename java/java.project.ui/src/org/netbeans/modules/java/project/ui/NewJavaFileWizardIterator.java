@@ -77,7 +77,8 @@ import org.openide.util.NbBundle;
     @TemplateRegistration(folder = NewJavaFileWizardIterator.FOLDER, position = 800, content = "resources/Applet.java.template", scriptEngine = "freemarker", displayName = "#Applet.java", iconBase = JavaTemplates.JAVA_ICON, description = "resources/Applet.html", category = "java-classes"),
     @TemplateRegistration(folder = NewJavaFileWizardIterator.FOLDER, position = 900, content = "resources/Main.java.template", scriptEngine = "freemarker", displayName = "#Main.java", iconBase = "org/netbeans/modules/java/project/ui/resources/main-class.png", description = "resources/Main.html", category = "java-main-class"),
     @TemplateRegistration(folder = NewJavaFileWizardIterator.FOLDER, position = 950, content = "resources/Singleton.java.template", scriptEngine = "freemarker", displayName = "#Singleton.java", iconBase = JavaTemplates.JAVA_ICON, description = "resources/Singleton.html", category = "java-classes"),
-    @TemplateRegistration(folder = NewJavaFileWizardIterator.FOLDER, position = 1000, content = "resources/Empty.java.template", scriptEngine = "freemarker", displayName = "#Empty.java", iconBase = JavaTemplates.JAVA_ICON, description = "resources/Empty.html", category = {"java-classes", "java-classes-basic"})
+    @TemplateRegistration(folder = NewJavaFileWizardIterator.FOLDER, position = 1000, content = "resources/Empty.java.template", scriptEngine = "freemarker", displayName = "#Empty.java", iconBase = JavaTemplates.JAVA_ICON, description = "resources/Empty.html", category = {"java-classes", "java-classes-basic"}),
+    @TemplateRegistration(folder = NewJavaFileWizardIterator.FOLDER, position = 1150, content = "resources/Record.java.template", scriptEngine = "freemarker", displayName = "#Record.java", iconBase = JavaTemplates.JAVA_ICON, description = "resources/Record.html", category = {"java-classes", NewJavaFileWizardIterator.JDK_14}),
 })
 @Messages({
     "Class.java=Java Class",
@@ -89,7 +90,8 @@ import org.openide.util.NbBundle;
     "Applet.java=Applet",
     "Main.java=Java Main Class",
     "Singleton.java=Java Singleton Class",
-    "Empty.java=Empty Java File"
+    "Empty.java=Empty Java File",
+    "Record.java=Java Record"
 })
 public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousInstantiatingIterator<WizardDescriptor> {
 
@@ -99,6 +101,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
 
     static final String JDK_5 = "jdk5";
     static final String JDK_9 = "jdk9";
+    static final String JDK_14 = "jdk14";
     
     private static final long serialVersionUID = 1L;
 

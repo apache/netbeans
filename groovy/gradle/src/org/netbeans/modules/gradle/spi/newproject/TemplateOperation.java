@@ -52,6 +52,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.openide.loaders.DataFolder;
@@ -257,10 +258,12 @@ public final class TemplateOperation implements Runnable {
                     }
                     project = ProjectManager.getDefault().findProject(projectDir);
                     if (project != null) {
+                        //Let's trust the generate project
+                        ProjectTrust.getDefault().trustProject(project);
                         NbGradleProjectImpl nbProject = project.getLookup().lookup(NbGradleProjectImpl.class);
                         if (nbProject != null) {
                             //Just load the project into the cache.
-                            GradleProjectCache.loadProject(nbProject, Quality.FULL_ONLINE, true);
+                            GradleProjectCache.loadProject(nbProject, Quality.FULL_ONLINE, true, false);
                         }
                         return Collections.singleton(projectDir);
                     }

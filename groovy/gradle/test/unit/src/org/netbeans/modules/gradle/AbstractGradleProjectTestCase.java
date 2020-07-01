@@ -65,6 +65,7 @@ public class AbstractGradleProjectTestCase extends NbTestCase {
     protected Project openProject(FileObject projectDir) throws IOException {
         Project prj = ProjectManager.getDefault().findProject(projectDir);
         assertNotNull(prj);
+        ProjectTrust.getDefault().trustProject(prj);
         ProjectOpenedTrampoline.DEFAULT.projectOpened(prj.getLookup().lookup(ProjectOpenedHook.class));
         return prj;
     }
@@ -73,7 +74,7 @@ public class AbstractGradleProjectTestCase extends NbTestCase {
         FileObject ret = FileUtil.toFileObject(getWorkDir());
         if (path != null) {
             for (String p : path.split("/")) {
-                ret = ret.createFolder(p);
+                ret = ret.getFileObject(p) != null ? ret.getFileObject(p): ret.createFolder(p);
             }
         }
         TestFileUtils.writeFile(ret, "build.gradle", buildScript);

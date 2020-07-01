@@ -83,6 +83,45 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="gradle-project-trust">
+            <api name="general"/>
+            <summary>Introduce Trust relationship with Gradle Projects to prevent unintentional Gradle invocation.</summary>
+            <version major="2" minor="2"/>
+            <date year="2020" month="6" day="24"/>
+            <author login="lkishalmi"/>
+            <compatibility binary="compatible" source="compatible"/>
+            <description>
+                <p>
+                    Gradle projects are maintaining a trust attribute from now.
+                    This trust is based on the NetBeans user directory and the
+                    a secret placed in the Gradle Root project directory.
+                </p>
+                <p>
+                    Trusting any project of a multi-project Gradle build means
+                    trust all project in that multi-project project, as the
+                    trust is placed on the root project.
+                </p>
+                <p>
+                    This change is backported to version 2.0.1 as well.
+                </p>
+                <p>
+                    Added <code>RunUtils.isProjectTrusted(Project,boolean)</code>
+                    where plugin can check if a project is trusted or request
+                    one time trust with interactive mode.
+                </p>
+                <p>
+                    There is no API/SPI to mark a project trusted/untrusted.
+                    Projects are not trusted by default, but become trusted once
+                    a priming build is requested or a Gradle task is invoked as
+                    a result of an user action.
+                </p>
+                <p>
+                    Added <code>org.netbeans.modules.gradle.spi.GradleSettings.GradleExecutionRule</code>
+                    with setter ad getter in <code>org.netbeans.modules.gradle.spi.GradleSettings</code>
+                    as a global option to how to treat automatic Gradle Execution globally.
+                </p>
+            </description>
+        </change>
         <change id="gradle-tooling-api-split">
             <api name="general"/>
             <summary>Move Gradle Tooling API to a separate module.</summary>

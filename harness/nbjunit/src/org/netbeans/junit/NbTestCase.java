@@ -34,7 +34,6 @@ import java.io.PrintStream;
 import java.lang.management.LockInfo;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MonitorInfo;
-import java.lang.management.PlatformLoggingMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
@@ -62,6 +61,7 @@ import java.util.regex.Pattern;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
+import org.junit.Ignore;
 import org.netbeans.insane.live.LiveReferences;
 import org.netbeans.insane.live.Path;
 import org.netbeans.insane.scanner.CountingVisitor;
@@ -129,6 +129,22 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * @return true if the test can run
      */
     public @Override boolean canRun() {
+        if (getClass().isAnnotationPresent(Ignore.class)) {
+            String message = getClass().getAnnotation(Ignore.class).value();
+            System.err.println("Skipping " + getClass().getName() + (message.isEmpty() ? "" : ": " + message));
+            return false;
+        }
+        
+        try {
+            if (getClass().getMethod(getName()).isAnnotationPresent(Ignore.class)) {
+                String message = getClass().getMethod(getName()).getAnnotation(Ignore.class).value();
+                System.err.println("Skipping " + getClass().getName() + "." + getName() + (message.isEmpty() ? "" : ": " + message));
+                return false;
+            }
+        } catch (NoSuchMethodException x) {
+            // Specially named methods; let it pass.
+        }
+        
         if (NbTestSuite.ignoreRandomFailures()) {
             if (getClass().isAnnotationPresent(RandomlyFails.class)) {
                 System.err.println("Skipping " + getClass().getName());

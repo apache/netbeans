@@ -621,7 +621,7 @@ final class DataModel extends BasicWizardIterator.BasicDataModel {
         this.edContextSeparatorBefore = separator;
     }
 
-    static class ActionReferenceModel implements Serializable {
+    public static class ActionReferenceModel implements Serializable {
         String parentPath;
         String name;
         int beforeSep;
@@ -630,7 +630,7 @@ final class DataModel extends BasicWizardIterator.BasicDataModel {
 
         public ActionReferenceModel(String parentPath, String name, int beforeSep, int afterSep, int position) {
             this.parentPath = parentPath;
-            this.name = name;
+            this.name = name != null ? name : "";
             this.beforeSep = beforeSep;
             this.afterSep = afterSep;
             this.position = position;
@@ -645,7 +645,7 @@ final class DataModel extends BasicWizardIterator.BasicDataModel {
         }
 
         public String name() {
-            return name == null ? "" : name;
+            return name;
         }
 
         public int separatorBefore() {
@@ -658,7 +658,7 @@ final class DataModel extends BasicWizardIterator.BasicDataModel {
 
         @Override
         public String toString() {
-            return "ActionReferenceModel{" + "parentPath=" + parentPath + ", name=" + name + ", beforeSep=" + beforeSep + ", afterSep=" + afterSep + ", position=" + position + '}';
+            return "ActionReferenceModel{" + "path=" + parentPath + ", name=" + name + ", beforeSep=" + beforeSep + ", afterSep=" + afterSep + ", position=" + position + '}';
         }
 
 

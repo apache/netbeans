@@ -741,13 +741,13 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                     " Setting recycle bin tables to an empty list.", 
                     exc); // NOI18N
 
-            result = Collections.EMPTY_LIST;
+            result = Collections.emptyList();
         } catch (AbstractMethodError ame) {
             LOGGER.log(Level.WARNING, "Some older versions of the Oracle " +
                     " driver do not support getDatabaseMajorVersion().  " +
                     " Setting recycle bin tables to an empty list.", 
                     ame); // NOI18N
-            result = Collections.EMPTY_LIST;
+            result = Collections.emptyList();
         }
         return result;
     }

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.4
+#Version 1.6.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -29,5 +29,5 @@ meth public static org.netbeans.modules.lsp.client.spi.LanguageServerProvider$La
  anno 2 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NullAllowed()
 supr java.lang.Object
-hfds in,out,process
+hfds bindings,in,out,process
 

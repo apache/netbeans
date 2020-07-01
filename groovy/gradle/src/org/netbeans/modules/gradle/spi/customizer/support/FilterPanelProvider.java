@@ -34,6 +34,8 @@ import org.openide.util.Lookup;
  */
 public final class FilterPanelProvider implements ProjectCustomizer.CompositeCategoryProvider {
 
+    public static final String ROOT_PROJECT = "ROOT-PROJECT";
+
     final ProjectCustomizer.CompositeCategoryProvider original;
     final String plugin;
 
@@ -47,10 +49,7 @@ public final class FilterPanelProvider implements ProjectCustomizer.CompositeCat
         Project project = context.lookup(Project.class);
         assert project != null;
         GradleBaseProject gbp = GradleBaseProject.get(project);
-        if (!gbp.getPlugins().contains(plugin)) {
-            return null;
-        }
-        return original.createCategory(context);
+        return gbp.getPlugins().contains(plugin) || ROOT_PROJECT.equals(plugin) ? original.createCategory(context) : null;
     }
 
     @Override

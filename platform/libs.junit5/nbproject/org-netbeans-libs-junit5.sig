@@ -1,16 +1,10 @@
 #Signature file v4.1
-#Version 1.4
+#Version 1.5
 
 CLSS public abstract interface java.io.Serializable
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
-
-CLSS public abstract interface !annotation java.lang.Deprecated
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
-intf java.lang.annotation.Annotation
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
@@ -524,7 +518,7 @@ meth public static void assertTrue(java.util.function.BooleanSupplier,java.util.
 supr java.lang.Object
 
 CLSS public final org.junit.jupiter.api.AssertionsKt
- anno 0 kotlin.Metadata(null bv=[1, 0, 3], null d1=["\u0000R\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u0011\n\u0002\u0018\u0002\n\u0002\u0008\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\u001e\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0008\u0009\n\u0002\u0010\u0003\n\u0002\u0008\u0005\n\u0002\u0018\u0002\n\u0002\u0008\u0005\n\u0002\u0010\u0001\n\u0002\u0008\u0002\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0002\u0008\u0004\u001a+\u0010\u0000\u001a\u00020\u00012\u001e\u0010\u0002\u001a\u0010\u0012\u000c\u0008\u0001\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0003\u0022\u0008\u0012\u0004\u0012\u00020\u00010\u0004\u00a2\u0006\u0002\u0010\u0005\u001a5\u0010\u0000\u001a\u00020\u00012\u0008\u0010\u0006\u001a\u0004\u0018\u00010\u00072\u001e\u0010\u0002\u001a\u0010\u0012\u000c\u0008\u0001\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0003\u0022\u0008\u0012\u0004\u0012\u00020\u00010\u0004\u00a2\u0006\u0002\u0010\u0008\u001a(\u0010\u0000\u001a\u00020\u00012\u0008\u0010\u0006\u001a\u0004\u0018\u00010\u00072\u0016\u0010\u0002\u001a\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0009j\u0002`\n\u001a(\u0010\u0000\u001a\u00020\u00012\u0008\u0010\u0006\u001a\u0004\u0018\u00010\u00072\u0016\u0010\u0002\u001a\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u000bj\u0002`\u000c\u001a\u001e\u0010\u0000\u001a\u00020\u00012\u0016\u0010\u0002\u001a\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0009j\u0002`\n\u001a\u001e\u0010\u0000\u001a\u00020\u00012\u0016\u0010\u0002\u001a\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u000bj\u0002`\u000c\u001a!\u0010\r\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u0010\u001a/\u0010\r\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u000c\u0010\u0011\u001a\u0008\u0012\u0004\u0012\u00020\u00070\u00042\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u0012\u001a)\u0010\r\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u0011\u001a\u00020\u00072\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u0013\u001a:\u0010\u0014\u001a\u0002H\u0015\u0022\n\u0008\u0000\u0010\u0015\u0018\u0001*\u00020\u00162\u000e\u0008\u0008\u0010\u0011\u001a\u0008\u0012\u0004\u0012\u00020\u00070\u00042\u000e\u0008\u0008\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u00020\u00010\u0004H\u0086\u0008\u00a2\u0006\u0002\u0010\u0017\u001a*\u0010\u0014\u001a\u0002H\u0015\u0022\n\u0008\u0000\u0010\u0015\u0018\u0001*\u00020\u00162\u000e\u0008\u0008\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u00020\u00010\u0004H\u0086\u0008\u00a2\u0006\u0002\u0010\u0018\u001a2\u0010\u0014\u001a\u0002H\u0015\u0022\n\u0008\u0000\u0010\u0015\u0018\u0001*\u00020\u00162\u0006\u0010\u0011\u001a\u00020\u00072\u000e\u0008\u0008\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u00020\u00010\u0004H\u0086\u0008\u00a2\u0006\u0002\u0010\u0019\u001a)\u0010\u001a\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001d\u001a7\u0010\u001a\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u000c\u0010\u0011\u001a\u0008\u0012\u0004\u0012\u00020\u00070\u00042\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001e\u001a1\u0010\u001a\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u0006\u0010\u0011\u001a\u00020\u00072\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001f\u001a)\u0010 \u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001d\u001a7\u0010 \u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u000c\u0010\u0011\u001a\u0008\u0012\u0004\u0012\u00020\u00070\u00042\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001e\u001a1\u0010 \u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u0006\u0010\u0011\u001a\u00020\u00072\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001f\u001a\u0016\u0010!\u001a\u00020\u00222\u000e\u0010\u0011\u001a\n\u0012\u0004\u0012\u00020\u0007\u0018\u00010\u0004\u001a\u001c\u0010!\u001a\u00020\u00222\u0008\u0010\u0011\u001a\u0004\u0018\u00010\u00072\n\u0008\u0002\u0010#\u001a\u0004\u0018\u00010\u0016\u001a\u0010\u0010!\u001a\u00020\u00222\u0008\u0010#\u001a\u0004\u0018\u00010\u0016\u001a\u0022\u0010$\u001a\u0008\u0012\u0004\u0012\u00020&0%*\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0009j\u0002`\nH\u0002\u001a@\u0010$\u001a&\u0012\u000c\u0012\n '*\u0004\u0018\u00010&0& '*\u0012\u0012\u000c\u0012\n '*\u0004\u0018\u00010&0&\u0018\u00010\u000b0\u000b*\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u000bj\u0002`\u000cH\u0002*$\u0008\u0002\u0010(\u0022\u000e\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u00092\u000e\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0009*$\u0008\u0002\u0010)\u0022\u000e\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u000b2\u000e\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u000b\u00a8\u0006*"], null d2=["assertAll", "", "executables", "", "Lkotlin/Function0;", "([Lkotlin/jvm/functions/Function0;)V", "heading", "", "(Ljava/lang/String;[Lkotlin/jvm/functions/Function0;)V", "", "Lorg/junit/jupiter/api/ExecutableCollection;", "Ljava/util/stream/Stream;", "Lorg/junit/jupiter/api/ExecutableStream;", "assertDoesNotThrow", "R", "executable", "(Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "message", "(Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "(Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "assertThrows", "T", "", "(Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)Ljava/lang/Throwable;", "(Lkotlin/jvm/functions/Function0;)Ljava/lang/Throwable;", "(Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ljava/lang/Throwable;", "assertTimeout", "timeout", "Ljava/time/Duration;", "(Ljava/time/Duration;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "(Ljava/time/Duration;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "(Ljava/time/Duration;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "assertTimeoutPreemptively", "fail", "", "throwable", "convert", "", "Lorg/junit/jupiter/api/function/Executable;", "kotlin.jvm.PlatformType", "ExecutableCollection", "ExecutableStream", "junit-jupiter-api"], null k=2, null mv=[1, 1, 15])
+ anno 0 kotlin.Metadata(null bv=[1, 0, 3], null d1=["\u0000R\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u0011\n\u0002\u0018\u0002\n\u0002\u0008\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\u001e\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0008\u0009\n\u0002\u0010\u0003\n\u0002\u0008\u0005\n\u0002\u0018\u0002\n\u0002\u0008\u0005\n\u0002\u0010\u0001\n\u0002\u0008\u0002\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0002\u0008\u0004\u001a+\u0010\u0000\u001a\u00020\u00012\u001e\u0010\u0002\u001a\u0010\u0012\u000c\u0008\u0001\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0003\u0022\u0008\u0012\u0004\u0012\u00020\u00010\u0004\u00a2\u0006\u0002\u0010\u0005\u001a5\u0010\u0000\u001a\u00020\u00012\u0008\u0010\u0006\u001a\u0004\u0018\u00010\u00072\u001e\u0010\u0002\u001a\u0010\u0012\u000c\u0008\u0001\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0003\u0022\u0008\u0012\u0004\u0012\u00020\u00010\u0004\u00a2\u0006\u0002\u0010\u0008\u001a(\u0010\u0000\u001a\u00020\u00012\u0008\u0010\u0006\u001a\u0004\u0018\u00010\u00072\u0016\u0010\u0002\u001a\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0009j\u0002`\n\u001a(\u0010\u0000\u001a\u00020\u00012\u0008\u0010\u0006\u001a\u0004\u0018\u00010\u00072\u0016\u0010\u0002\u001a\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u000bj\u0002`\u000c\u001a\u001e\u0010\u0000\u001a\u00020\u00012\u0016\u0010\u0002\u001a\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0009j\u0002`\n\u001a\u001e\u0010\u0000\u001a\u00020\u00012\u0016\u0010\u0002\u001a\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u000bj\u0002`\u000c\u001a!\u0010\r\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u0010\u001a/\u0010\r\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u000c\u0010\u0011\u001a\u0008\u0012\u0004\u0012\u00020\u00070\u00042\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u0012\u001a)\u0010\r\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u0011\u001a\u00020\u00072\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u0013\u001a:\u0010\u0014\u001a\u0002H\u0015\u0022\n\u0008\u0000\u0010\u0015\u0018\u0001*\u00020\u00162\u000e\u0008\u0008\u0010\u0011\u001a\u0008\u0012\u0004\u0012\u00020\u00070\u00042\u000e\u0008\u0008\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u00020\u00010\u0004H\u0086\u0008\u00a2\u0006\u0002\u0010\u0017\u001a*\u0010\u0014\u001a\u0002H\u0015\u0022\n\u0008\u0000\u0010\u0015\u0018\u0001*\u00020\u00162\u000e\u0008\u0008\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u00020\u00010\u0004H\u0086\u0008\u00a2\u0006\u0002\u0010\u0018\u001a2\u0010\u0014\u001a\u0002H\u0015\u0022\n\u0008\u0000\u0010\u0015\u0018\u0001*\u00020\u00162\u0006\u0010\u0011\u001a\u00020\u00072\u000e\u0008\u0008\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u00020\u00010\u0004H\u0086\u0008\u00a2\u0006\u0002\u0010\u0019\u001a)\u0010\u001a\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001d\u001a7\u0010\u001a\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u000c\u0010\u0011\u001a\u0008\u0012\u0004\u0012\u00020\u00070\u00042\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001e\u001a1\u0010\u001a\u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u0006\u0010\u0011\u001a\u00020\u00072\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001f\u001a)\u0010 \u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001d\u001a7\u0010 \u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u000c\u0010\u0011\u001a\u0008\u0012\u0004\u0012\u00020\u00070\u00042\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001e\u001a1\u0010 \u001a\u0002H\u000e\u0022\u0004\u0008\u0000\u0010\u000e2\u0006\u0010\u001b\u001a\u00020\u001c2\u0006\u0010\u0011\u001a\u00020\u00072\u000c\u0010\u000f\u001a\u0008\u0012\u0004\u0012\u0002H\u000e0\u0004H\u0007\u00a2\u0006\u0002\u0010\u001f\u001a\u0016\u0010!\u001a\u00020\u00222\u000e\u0010\u0011\u001a\n\u0012\u0004\u0012\u00020\u0007\u0018\u00010\u0004\u001a\u001c\u0010!\u001a\u00020\u00222\u0008\u0010\u0011\u001a\u0004\u0018\u00010\u00072\n\u0008\u0002\u0010#\u001a\u0004\u0018\u00010\u0016\u001a\u0010\u0010!\u001a\u00020\u00222\u0008\u0010#\u001a\u0004\u0018\u00010\u0016\u001a\u0022\u0010$\u001a\u0008\u0012\u0004\u0012\u00020&0%*\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0009j\u0002`\nH\u0002\u001a@\u0010$\u001a&\u0012\u000c\u0012\n '*\u0004\u0018\u00010&0& '*\u0012\u0012\u000c\u0012\n '*\u0004\u0018\u00010&0&\u0018\u00010\u000b0\u000b*\u0012\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u000bj\u0002`\u000cH\u0002*$\u0008\u0002\u0010(\u0022\u000e\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u00092\u000e\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u0009*$\u0008\u0002\u0010)\u0022\u000e\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u000b2\u000e\u0012\n\u0012\u0008\u0012\u0004\u0012\u00020\u00010\u00040\u000b\u00a8\u0006*"], null d2=["assertAll", "", "executables", "", "Lkotlin/Function0;", "([Lkotlin/jvm/functions/Function0;)V", "heading", "", "(Ljava/lang/String;[Lkotlin/jvm/functions/Function0;)V", "", "Lorg/junit/jupiter/api/ExecutableCollection;", "Ljava/util/stream/Stream;", "Lorg/junit/jupiter/api/ExecutableStream;", "assertDoesNotThrow", "R", "executable", "(Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "message", "(Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "(Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "assertThrows", "T", "", "(Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)Ljava/lang/Throwable;", "(Lkotlin/jvm/functions/Function0;)Ljava/lang/Throwable;", "(Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ljava/lang/Throwable;", "assertTimeout", "timeout", "Ljava/time/Duration;", "(Ljava/time/Duration;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "(Ljava/time/Duration;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "(Ljava/time/Duration;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;", "assertTimeoutPreemptively", "fail", "", "throwable", "convert", "", "Lorg/junit/jupiter/api/function/Executable;", "kotlin.jvm.PlatformType", "ExecutableCollection", "ExecutableStream", "junit-jupiter-api"], null k=2, null mv=[1, 1, 16])
  anno 0 org.apiguardian.api.API(null since="5.1", null status=EXPERIMENTAL)
 meth public !varargs final static void assertAll(java.lang.String,kotlin.jvm.functions.Function0<kotlin.Unit>[])
  anno 1 org.jetbrains.annotations.Nullable()
@@ -593,16 +587,16 @@ meth public final static void assertAll(java.util.stream.Stream<kotlin.jvm.funct
 supr java.lang.Object
 
 CLSS public final static org.junit.jupiter.api.AssertionsKt$assertThrows$1
- anno 0 kotlin.Metadata(null bv=[1, 0, 3], null d1=["\u0000\u000e\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\u0003\n\u0000\u0010\u0000\u001a\u00020\u0001\u0022\n\u0008\u0000\u0010\u0002\u0018\u0001*\u00020\u0003H\n\u00a2\u0006\u0002\u0008\u0004"], null d2=["<anonymous>", "", "T", "", "invoke"], null k=3, null mv=[1, 1, 15])
+ anno 0 kotlin.Metadata(null bv=[1, 0, 3], null d1=["\u0000\u000e\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\u0003\n\u0000\u0010\u0000\u001a\u00020\u0001\u0022\n\u0008\u0000\u0010\u0002\u0018\u0001*\u00020\u0003H\n\u00a2\u0006\u0002\u0008\u0004"], null d2=["<anonymous>", "", "T", "", "invoke"], null k=3, null mv=[1, 1, 16])
 
 CLSS public final org.junit.jupiter.api.AssertionsKt$sam$i$java_util_function_Supplier$0
- anno 0 kotlin.Metadata(null bv=[1, 0, 3], null k=3, null mv=[1, 1, 15])
+ anno 0 kotlin.Metadata(null bv=[1, 0, 3], null k=3, null mv=[1, 1, 16])
 cons public init(kotlin.jvm.functions.Function0)
 intf java.util.function.Supplier
 supr java.lang.Object
 
 CLSS public final org.junit.jupiter.api.AssertionsKt$sam$i$org_junit_jupiter_api_function_Executable$0
- anno 0 kotlin.Metadata(null bv=[1, 0, 3], null k=3, null mv=[1, 1, 15])
+ anno 0 kotlin.Metadata(null bv=[1, 0, 3], null k=3, null mv=[1, 1, 16])
 cons public init(kotlin.jvm.functions.Function0)
 intf org.junit.jupiter.api.function.Executable
 supr java.lang.Object
@@ -774,6 +768,8 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.Order
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[FIELD, METHOD])
  anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
+fld public final static int DEFAULT = 1073741823
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 intf java.lang.annotation.Annotation
 meth public abstract int value()
 
@@ -892,19 +888,19 @@ intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.util.concurrent.TimeUnit unit()
 meth public abstract long value()
 
-CLSS public abstract interface !annotation org.junit.jupiter.api.condition.DisabledIf
- anno 0 java.lang.Deprecated()
+CLSS public abstract interface !annotation org.junit.jupiter.api.condition.DisabledForJreRange
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.5", null status=DEPRECATED)
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=STABLE)
+ anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.DisabledForJreRangeCondition])
 intf java.lang.annotation.Annotation
-meth public abstract !hasdefault java.lang.String engine()
-meth public abstract !hasdefault java.lang.String reason()
-meth public abstract java.lang.String[] value()
+meth public abstract !hasdefault org.junit.jupiter.api.condition.JRE max()
+meth public abstract !hasdefault org.junit.jupiter.api.condition.JRE min()
 
 CLSS public abstract interface !annotation org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable
  anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.api.condition.DisabledIfEnvironmentVariables)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
  anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
@@ -913,8 +909,25 @@ intf java.lang.annotation.Annotation
 meth public abstract java.lang.String matches()
 meth public abstract java.lang.String named()
 
+CLSS public abstract interface !annotation org.junit.jupiter.api.condition.DisabledIfEnvironmentVariables
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=STABLE)
+intf java.lang.annotation.Annotation
+meth public abstract org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable[] value()
+
+CLSS public abstract interface !annotation org.junit.jupiter.api.condition.DisabledIfSystemProperties
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=STABLE)
+intf java.lang.annotation.Annotation
+meth public abstract org.junit.jupiter.api.condition.DisabledIfSystemProperty[] value()
+
 CLSS public abstract interface !annotation org.junit.jupiter.api.condition.DisabledIfSystemProperty
  anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.api.condition.DisabledIfSystemProperties)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
  anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
@@ -941,19 +954,19 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.condition.Disab
 intf java.lang.annotation.Annotation
 meth public abstract org.junit.jupiter.api.condition.OS[] value()
 
-CLSS public abstract interface !annotation org.junit.jupiter.api.condition.EnabledIf
- anno 0 java.lang.Deprecated()
+CLSS public abstract interface !annotation org.junit.jupiter.api.condition.EnabledForJreRange
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
- anno 0 org.apiguardian.api.API(null since="5.5", null status=DEPRECATED)
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=STABLE)
+ anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.api.condition.EnabledForJreRangeCondition])
 intf java.lang.annotation.Annotation
-meth public abstract !hasdefault java.lang.String engine()
-meth public abstract !hasdefault java.lang.String reason()
-meth public abstract java.lang.String[] value()
+meth public abstract !hasdefault org.junit.jupiter.api.condition.JRE max()
+meth public abstract !hasdefault org.junit.jupiter.api.condition.JRE min()
 
 CLSS public abstract interface !annotation org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable
  anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.api.condition.EnabledIfEnvironmentVariables)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
  anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
@@ -962,8 +975,25 @@ intf java.lang.annotation.Annotation
 meth public abstract java.lang.String matches()
 meth public abstract java.lang.String named()
 
+CLSS public abstract interface !annotation org.junit.jupiter.api.condition.EnabledIfEnvironmentVariables
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=STABLE)
+intf java.lang.annotation.Annotation
+meth public abstract org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable[] value()
+
+CLSS public abstract interface !annotation org.junit.jupiter.api.condition.EnabledIfSystemProperties
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=STABLE)
+intf java.lang.annotation.Annotation
+meth public abstract org.junit.jupiter.api.condition.EnabledIfSystemProperty[] value()
+
 CLSS public abstract interface !annotation org.junit.jupiter.api.condition.EnabledIfSystemProperty
  anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class org.junit.jupiter.api.condition.EnabledIfSystemProperties)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
  anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
@@ -1000,6 +1030,8 @@ fld public final static org.junit.jupiter.api.condition.JRE JAVA_13
  anno 0 org.apiguardian.api.API(null since="5.4", null status=STABLE)
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_14
  anno 0 org.apiguardian.api.API(null since="5.5", null status=STABLE)
+fld public final static org.junit.jupiter.api.condition.JRE JAVA_15
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=STABLE)
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_8
 fld public final static org.junit.jupiter.api.condition.JRE JAVA_9
 fld public final static org.junit.jupiter.api.condition.JRE OTHER
@@ -1184,6 +1216,8 @@ CLSS public abstract interface static org.junit.jupiter.api.extension.Invocation
  outer org.junit.jupiter.api.extension.InvocationInterceptor
  anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 meth public abstract {org.junit.jupiter.api.extension.InvocationInterceptor$Invocation%0} proceed() throws java.lang.Throwable
+meth public void skip()
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 
 CLSS public abstract interface org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
  anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
@@ -1227,10 +1261,6 @@ CLSS public abstract interface !annotation org.junit.jupiter.api.extension.Regis
  anno 0 org.apiguardian.api.API(null since="5.1", null status=STABLE)
 intf java.lang.annotation.Annotation
 
-CLSS public org.junit.jupiter.api.extension.ScriptEvaluationException
- anno 0 org.apiguardian.api.API(null since="5.1", null status=EXPERIMENTAL)
-hfds serialVersionUID
-
 CLSS public abstract interface org.junit.jupiter.api.extension.TestExecutionExceptionHandler
  anno 0 java.lang.FunctionalInterface()
  anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
@@ -1253,6 +1283,12 @@ CLSS public abstract interface org.junit.jupiter.api.extension.TestInstancePostP
  anno 0 org.apiguardian.api.API(null since="5.0", null status=STABLE)
 intf org.junit.jupiter.api.extension.Extension
 meth public abstract void postProcessTestInstance(java.lang.Object,org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
+
+CLSS public abstract interface org.junit.jupiter.api.extension.TestInstancePreDestroyCallback
+ anno 0 java.lang.FunctionalInterface()
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
+intf org.junit.jupiter.api.extension.Extension
+meth public abstract void preDestroyTestInstance(org.junit.jupiter.api.extension.ExtensionContext) throws java.lang.Exception
 
 CLSS public abstract interface org.junit.jupiter.api.extension.TestInstances
  anno 0 org.apiguardian.api.API(null since="5.4", null status=EXPERIMENTAL)
@@ -1340,6 +1376,8 @@ fld public final static java.lang.String PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME 
  anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 fld public final static java.lang.String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = "junit.jupiter.execution.parallel.enabled"
  anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
+fld public final static java.lang.String TIMEOUT_MODE_PROPERTY_NAME = "junit.jupiter.execution.timeout.mode"
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 supr java.lang.Object
 hfds PARALLEL_CONFIG_PREFIX
 
@@ -1363,26 +1401,6 @@ meth public void allowAll()
 supr java.lang.Object
 hfds allowed,mode
 hcls Mode
-
-CLSS public org.junit.jupiter.engine.descriptor.DynamicExtensionContext
-meth protected org.junit.jupiter.engine.descriptor.DynamicNodeTestDescriptor getTestDescriptor()
-meth public java.lang.String getDisplayName()
-meth public java.lang.String getUniqueId()
-meth public java.util.Optional<java.lang.Class<?>> getTestClass()
-meth public java.util.Optional<java.lang.Object> getTestInstance()
-meth public java.util.Optional<java.lang.String> getConfigurationParameter(java.lang.String)
-meth public java.util.Optional<java.lang.Throwable> getExecutionException()
-meth public java.util.Optional<java.lang.reflect.AnnotatedElement> getElement()
-meth public java.util.Optional<java.lang.reflect.Method> getTestMethod()
-meth public java.util.Optional<org.junit.jupiter.api.TestInstance$Lifecycle> getTestInstanceLifecycle()
-meth public java.util.Optional<org.junit.jupiter.api.extension.ExtensionContext> getParent()
-meth public java.util.Optional<org.junit.jupiter.api.extension.TestInstances> getTestInstances()
-meth public java.util.Set<java.lang.String> getTags()
-meth public org.junit.jupiter.api.extension.ExtensionContext getRoot()
-meth public org.junit.jupiter.api.extension.ExtensionContext$Store getStore(org.junit.jupiter.api.extension.ExtensionContext$Namespace)
-meth public void close()
-meth public void publishReportEntry(java.util.Map<java.lang.String,java.lang.String>)
-supr org.junit.jupiter.engine.descriptor.AbstractExtensionContext<org.junit.jupiter.engine.descriptor.DynamicNodeTestDescriptor>
 
 CLSS public abstract interface org.junit.jupiter.engine.descriptor.Filterable
  anno 0 org.apiguardian.api.API(null since="5.1", null status=INTERNAL)
@@ -1566,66 +1584,6 @@ meth public void registerExtension(org.junit.jupiter.api.extension.Extension,jav
 supr java.lang.Object
 hfds DEFAULT_EXTENSIONS,logger,parent,registeredExtensionTypes,registeredExtensions
 
-CLSS public final org.junit.jupiter.engine.script.Script
- anno 0 java.lang.Deprecated()
- anno 0 org.apiguardian.api.API(null since="5.1", null status=INTERNAL)
-cons public init(java.lang.Class<? extends java.lang.annotation.Annotation>,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
-cons public init(java.lang.annotation.Annotation,java.lang.String,java.lang.String,java.lang.String)
-fld public final static java.lang.String BIND_JUNIT_CONFIGURATION_PARAMETER = "junitConfigurationParameter"
-fld public final static java.lang.String BIND_JUNIT_DISPLAY_NAME = "junitDisplayName"
-fld public final static java.lang.String BIND_JUNIT_TAGS = "junitTags"
-fld public final static java.lang.String BIND_JUNIT_UNIQUE_ID = "junitUniqueId"
-fld public final static java.lang.String DEFAULT_SCRIPT_ENGINE_NAME = "Nashorn"
-fld public final static java.lang.String DEFAULT_SCRIPT_REASON_PATTERN = "Script `{source}` evaluated to: {result}"
-meth public boolean equals(java.lang.Object)
-meth public int hashCode()
-meth public java.lang.Class<? extends java.lang.annotation.Annotation> getAnnotationType()
-meth public java.lang.String getAnnotationAsString()
-meth public java.lang.String getEngine()
-meth public java.lang.String getReason()
-meth public java.lang.String getSource()
-meth public java.lang.String toReasonString(java.lang.String)
-supr java.lang.Object
-hfds BIND_SYSTEM_ENVIRONMENT,BIND_SYSTEM_PROPERTY,REASON_ANNOTATION_PLACEHOLDER,REASON_RESULT_PLACEHOLDER,REASON_SOURCE_PLACEHOLDER,annotationAsString,annotationType,engine,hashCode,reason,source
-
-CLSS public abstract interface org.junit.jupiter.engine.script.ScriptAccessor
- anno 0 java.lang.Deprecated()
- anno 0 org.apiguardian.api.API(null since="5.1", null status=INTERNAL)
-innr public static ConfigurationParameterAccessor
-innr public static EnvironmentVariableAccessor
-innr public static SystemPropertyAccessor
-meth public abstract java.lang.String get(java.lang.String)
-
-CLSS public static org.junit.jupiter.engine.script.ScriptAccessor$ConfigurationParameterAccessor
- outer org.junit.jupiter.engine.script.ScriptAccessor
-cons public init(org.junit.jupiter.api.extension.ExtensionContext)
-intf org.junit.jupiter.engine.script.ScriptAccessor
-meth public java.lang.String get(java.lang.String)
-supr java.lang.Object
-hfds context
-
-CLSS public static org.junit.jupiter.engine.script.ScriptAccessor$EnvironmentVariableAccessor
- outer org.junit.jupiter.engine.script.ScriptAccessor
-cons public init()
-intf org.junit.jupiter.engine.script.ScriptAccessor
-meth public java.lang.String get(java.lang.String)
-supr java.lang.Object
-
-CLSS public static org.junit.jupiter.engine.script.ScriptAccessor$SystemPropertyAccessor
- outer org.junit.jupiter.engine.script.ScriptAccessor
-cons public init()
-intf org.junit.jupiter.engine.script.ScriptAccessor
-meth public java.lang.String get(java.lang.String)
-supr java.lang.Object
-
-CLSS public org.junit.jupiter.engine.script.ScriptExecutionManager
- anno 0 java.lang.Deprecated()
- anno 0 org.apiguardian.api.API(null since="5.1", null status=INTERNAL)
-cons public init()
-meth public java.lang.Object evaluate(org.junit.jupiter.engine.script.Script,javax.script.Bindings) throws javax.script.ScriptException
-supr java.lang.Object
-hfds compiledScripts,environmentVariableAccessor,forceScriptEvaluation,scriptEngineManager,scriptEngines,systemPropertyAccessor
-
 CLSS public abstract interface !annotation org.junit.jupiter.params.ParameterizedTest
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -1635,7 +1593,9 @@ CLSS public abstract interface !annotation org.junit.jupiter.params.Parameterize
  anno 0 org.junit.jupiter.api.extension.ExtendWith(java.lang.Class<? extends org.junit.jupiter.api.extension.Extension>[] value=[class org.junit.jupiter.params.ParameterizedTestExtension])
 fld public final static java.lang.String ARGUMENTS_PLACEHOLDER = "{arguments}"
  anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
-fld public final static java.lang.String DEFAULT_DISPLAY_NAME = "[{index}] {arguments}"
+fld public final static java.lang.String ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentsWithNames}"
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
+fld public final static java.lang.String DEFAULT_DISPLAY_NAME = "[{index}] {argumentsWithNames}"
  anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
 fld public final static java.lang.String DISPLAY_NAME_PLACEHOLDER = "{displayName}"
  anno 0 org.apiguardian.api.API(null since="5.3", null status=EXPERIMENTAL)
@@ -1723,10 +1683,14 @@ intf java.lang.annotation.Annotation
 meth public abstract !hasdefault char delimiter()
 meth public abstract !hasdefault int numLinesToSkip()
  anno 0 org.apiguardian.api.API(null since="5.1", null status=EXPERIMENTAL)
+meth public abstract !hasdefault java.lang.String delimiterString()
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 meth public abstract !hasdefault java.lang.String emptyValue()
  anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
 meth public abstract !hasdefault java.lang.String encoding()
 meth public abstract !hasdefault java.lang.String lineSeparator()
+meth public abstract !hasdefault java.lang.String[] nullValues()
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 meth public abstract java.lang.String[] resources()
 
 CLSS public org.junit.jupiter.params.provider.CsvParsingException
@@ -1741,8 +1705,12 @@ CLSS public abstract interface !annotation org.junit.jupiter.params.provider.Csv
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.CsvArgumentsProvider)
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault char delimiter()
+meth public abstract !hasdefault java.lang.String delimiterString()
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 meth public abstract !hasdefault java.lang.String emptyValue()
  anno 0 org.apiguardian.api.API(null since="5.5", null status=EXPERIMENTAL)
+meth public abstract !hasdefault java.lang.String[] nullValues()
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
 meth public abstract java.lang.String[] value()
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.EmptySource
@@ -1761,9 +1729,9 @@ CLSS public abstract interface !annotation org.junit.jupiter.params.provider.Enu
  anno 0 org.junit.jupiter.params.provider.ArgumentsSource(java.lang.Class<? extends org.junit.jupiter.params.provider.ArgumentsProvider> value=class org.junit.jupiter.params.provider.EnumArgumentsProvider)
 innr public final static !enum Mode
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.Class<? extends java.lang.Enum<?>> value()
 meth public abstract !hasdefault java.lang.String[] names()
 meth public abstract !hasdefault org.junit.jupiter.params.provider.EnumSource$Mode mode()
-meth public abstract java.lang.Class<? extends java.lang.Enum<?>> value()
 
 CLSS public final static !enum org.junit.jupiter.params.provider.EnumSource$Mode
  outer org.junit.jupiter.params.provider.EnumSource
@@ -1775,6 +1743,7 @@ meth public static org.junit.jupiter.params.provider.EnumSource$Mode valueOf(jav
 meth public static org.junit.jupiter.params.provider.EnumSource$Mode[] values()
 supr java.lang.Enum<org.junit.jupiter.params.provider.EnumSource$Mode>
 hfds selector,validator
+hcls Validator
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.MethodSource
  anno 0 java.lang.annotation.Documented()
@@ -1793,6 +1762,12 @@ CLSS public abstract interface !annotation org.junit.jupiter.params.provider.Nul
  anno 0 org.junit.jupiter.params.provider.EmptySource()
  anno 0 org.junit.jupiter.params.provider.NullSource()
 intf java.lang.annotation.Annotation
+
+CLSS public final !enum org.junit.jupiter.params.provider.NullEnum
+ anno 0 org.apiguardian.api.API(null since="5.6", null status=EXPERIMENTAL)
+meth public static org.junit.jupiter.params.provider.NullEnum valueOf(java.lang.String)
+meth public static org.junit.jupiter.params.provider.NullEnum[] values()
+supr java.lang.Enum<org.junit.jupiter.params.provider.NullEnum>
 
 CLSS public abstract interface !annotation org.junit.jupiter.params.provider.NullSource
  anno 0 java.lang.annotation.Documented()

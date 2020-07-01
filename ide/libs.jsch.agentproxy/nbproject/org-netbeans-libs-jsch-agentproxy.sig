@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.21
+#Version 0.22
 
 CLSS public com.jcraft.jsch.agentproxy.AgentProxy
 cons public init(com.jcraft.jsch.agentproxy.Connector)

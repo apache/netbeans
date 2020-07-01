@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.44.0
+#Version 2.46.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -539,6 +539,7 @@ meth public boolean indentTopLevelClassMembers()
 meth public boolean keepGettersAndSettersTogether()
 meth public boolean makeLocalVarsFinal()
 meth public boolean makeParametersFinal()
+meth public boolean parensAroundSingularLambdaParam()
 meth public boolean placeCatchOnNewLine()
 meth public boolean placeElseOnNewLine()
 meth public boolean placeFinallyOnNewLine()
@@ -833,6 +834,7 @@ meth public static org.netbeans.api.java.source.CompilationController get(org.ne
  anno 0 org.netbeans.api.annotations.common.NullUnknown()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr org.netbeans.api.java.source.CompilationInfo
+hfds forcedSources
 
 CLSS public org.netbeans.api.java.source.CompilationInfo
 innr public final static !enum CacheClearPolicy
@@ -1260,6 +1262,7 @@ meth public static javax.lang.model.type.WildcardType resolveCapturedType(javax.
 meth public static org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId> getJavaTokenSequence(org.netbeans.api.lexer.TokenHierarchy,int)
 meth public static org.openide.filesystems.FileObject getFile(javax.lang.model.element.Element,org.netbeans.api.java.source.ClasspathInfo)
 meth public static org.openide.filesystems.FileObject getFile(org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,org.netbeans.api.java.source.ClasspathInfo)
+meth public static void forceSource(org.netbeans.api.java.source.CompilationController,org.openide.filesystems.FileObject)
 meth public static void waitScanFinished() throws java.lang.InterruptedException
 supr java.lang.Object
 hfds LOG
@@ -1634,7 +1637,7 @@ meth public javax.lang.model.type.TypeMirror reattributeTree(com.sun.source.tree
 meth public org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId> tokensFor(com.sun.source.tree.Tree)
 meth public org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId> tokensFor(com.sun.source.tree.Tree,com.sun.source.util.SourcePositions)
 supr java.lang.Object
-hfds ESCAPE_ENCODE,ESCAPE_UNENCODE,EXOTIC_ESCAPE,IGNORE_TOKENS,handler,info
+hfds ESCAPE_ENCODE,ESCAPE_UNENCODE,EXOTIC_ESCAPE,IGNORE_TOKENS,VARIABLE_CAN_OWN_VARIABLES,handler,info
 hcls DummyJFO,NBScope,NoImports,ParserSourcePositions,UncaughtExceptionsVisitor,UnrelatedTypeMirrorSet
 
 CLSS public final org.netbeans.api.java.source.TypeMirrorHandle<%0 extends javax.lang.model.type.TypeMirror>

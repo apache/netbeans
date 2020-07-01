@@ -19,7 +19,11 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="java/maven.htmlui">
-    <description>Builds, tests, and runs the project org.netbeans.modules.maven.htmlui</description>
-    <import file="../../nbbuild/templates/projectized.xml"/>
-</project>
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/editor/autosave/auto_save.png</file>
+        <file>src/org/netbeans/modules/editor/autosave/auto_save24.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

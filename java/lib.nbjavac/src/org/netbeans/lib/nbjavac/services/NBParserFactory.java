@@ -291,7 +291,7 @@ public class NBParserFactory extends ParserFactory {
 
         @Override
         public void visitClassDef(JCClassDecl tree) {
-            if (tree.name == names.empty) {
+            if (tree.name == names.empty && tree instanceof IndexedClassDecl) {
                 ((IndexedClassDecl) tree).index = this.anonScopes.peek().assignNumber();
             }
             newAnonScope(tree.name);
@@ -300,7 +300,7 @@ public class NBParserFactory extends ParserFactory {
             } finally {
                 this.anonScopes.pop();
             }
-            if (!this.anonScopes.isEmpty() && this.anonScopes.peek().localClass && tree.name != names.empty) {
+            if (!this.anonScopes.isEmpty() && this.anonScopes.peek().localClass && tree.name != names.empty && tree instanceof IndexedClassDecl) {
                 ((IndexedClassDecl) tree).index = this.anonScopes.peek().assignLocalNumber(tree.name);
             }
         }

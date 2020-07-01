@@ -49,6 +49,7 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
+import static org.junit.Assert.assertNotEquals;
 import org.netbeans.junit.RandomlyFails;
 import org.openide.modules.Dependency;
 import org.openide.modules.ModuleInfo;
@@ -256,6 +257,13 @@ public class ModuleManagerTest extends SetupHid {
                 fail("Should not permit you to simulate enablement of an eager module");
             } catch (IllegalArgumentException iae) {
                 // Good. m2 should not have been passed to it.
+            }
+            try {
+                mgr.enable(new HashSet<>(Arrays.asList(m1, m2)));
+                fail("Should not permit you enablem of an eager module");
+            } catch (IllegalModuleException iae) {
+                // Good. m2 should not have been passed to it.
+                assertNotEquals(iae.getMessage(), iae.getLocalizedMessage());
             }
             assertEquals(Collections.EMPTY_SET, m1.getProblems());
             assertEquals(Collections.EMPTY_SET, m2.getProblems());

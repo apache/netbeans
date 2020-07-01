@@ -29,6 +29,8 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
 import javax.lang.model.element.Name;
@@ -65,6 +67,7 @@ import org.netbeans.modules.parsing.impl.Utilities;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.openide.util.Exceptions;
 import org.openide.util.Pair;
 
 /**
@@ -954,6 +957,11 @@ public class Reformatter implements ReformatTask {
                         wrapToken(cs.wrapExtendsImplementsKeyword(), 1, id == INTERFACE ? EXTENDS : IMPLEMENTS);
                         wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, impls);
                     }
+                    List<? extends Tree> perms=TreeShims.getPermits(node);
+                    if (perms != null && !perms.isEmpty()) {
+                        wrapToken(cs.wrapExtendsImplementsKeyword(), 1, PERMITS);
+                        wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, perms);
+                    }
                 } finally {
                     continuationIndent = old;
                 }
@@ -1585,7 +1593,7 @@ public class Reformatter implements ReformatTask {
                 int lblti = lastBlankLinesTokenIndex;
                 Diff lbld = lastBlankLinesDiff;
                 id = accept(PRIVATE, PROTECTED, PUBLIC, STATIC, DEFAULT, TRANSIENT, FINAL,
-                        ABSTRACT, NATIVE, VOLATILE, SYNCHRONIZED, STRICTFP, AT);
+                        ABSTRACT, NATIVE, VOLATILE, SYNCHRONIZED, STRICTFP, AT, SEALED, NONSEALED);
                 if (id == null)
                     break;
                 if (id == AT) {
@@ -3522,6 +3530,10 @@ public class Reformatter implements ReformatTask {
                     for (JavaTokenId tokenId : tokenIds) {
                         if (tokenId.fixedText() != null && tokenId.fixedText().contentEquals(tokens.token().text())) {
                             contains = true;
+                            break;
+                        }
+                        if(tokens.token().text().toString().equals("non") && tokens.moveNext() && tokens.token().text().toString().equals("-") && tokens.moveNext() && tokens.token().text().toString().equals("sealed")){
+                            contains=true;
                             break;
                         }
                     }

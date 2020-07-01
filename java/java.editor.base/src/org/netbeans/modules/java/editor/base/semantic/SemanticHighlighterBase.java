@@ -512,7 +512,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             }
             
             boolean accessModifier = false;
-            
+
             if (decl.getModifiers().contains(Modifier.PUBLIC)) {
                 c.add(ColoringAttributes.PUBLIC);
                 accessModifier = true;
@@ -1113,7 +1113,18 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             }
             scan(tree.getExtendsClause(), null);
             scan(tree.getImplementsClause(), null);
-
+            try{
+            while(!tl.currentToken().text().toString().equals("{")) {
+                if(tl.currentToken().text().toString().equals("permits")){
+                    Token t=firstIdentifierToken("permits");
+                    contextKeywords.add(t);
+                    break;
+                }
+                tl.moveNext();
+            }
+            }catch(NullPointerException ex){
+                //Do nothing
+            }
             ExecutableElement prevRecursionDetector = recursionDetector;
 
             recursionDetector = null;
@@ -1195,6 +1206,21 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 handlePossibleIdentifier(tp, true, info.getTrees().getElement(tp));
                 tl.moveToOffset(sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), TreeShims.getBindingPatternType(tree)));
                 firstIdentifier(tp, TreeShims.getBinding(tree).toString());
+            }else if (tree != null && tree.getKind().equals(Kind.MODIFIERS)) {
+               tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
+               Token t=null;
+                if (tree.toString().contains("non-sealed")) {
+                   Token firstIdentifier = tl.firstIdentifier(getCurrentPath(), "non");
+                   if(firstIdentifier != null)contextKeywords.add(firstIdentifier);
+                   tl.moveNext();
+                   tl.moveNext();
+                   if(tl.currentToken().text().toString().equals("sealed"))contextKeywords.add(tl.currentToken());
+                }else if (tree.toString().contains("sealed")) {
+                    t = firstIdentifierToken("sealed"); //NOI18N
+                    if (t != null) {
+                        contextKeywords.add(t);
+                    }
+                }
             }
             return super.scan(tree, p);
         }

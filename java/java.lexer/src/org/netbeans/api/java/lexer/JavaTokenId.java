@@ -133,6 +133,9 @@ public enum JavaTokenId implements TokenId {
     TRUE("true", "literal"),
     FALSE("false", "literal"),
     NULL("null", "literal"),
+    PERMITS("permits", "keyword"),
+    SEALED("sealed", "keyword"),
+    NONSEALED("non-sealed", "keyword"),
     
     LPAREN("(", "separator"),
     RPAREN(")", "separator"),

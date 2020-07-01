@@ -507,7 +507,7 @@ public class DetectorTest extends TestBase {
     public void testIncDecReading230408() throws Exception {
         performTest("IncDecReading230408");
     }
-
+    
     public void testRecord1() throws Exception {
         try {
             SourceVersion.valueOf("RELEASE_14"); //NOI18N

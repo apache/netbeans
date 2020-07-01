@@ -26,8 +26,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -84,7 +82,7 @@ public final class ConfigureProxy extends Task {
     static URLConnection openConnection(Task task, final URL url, URI[] connectedVia) throws IOException {
         final URLConnection[] conn = { null };
         final List<Exception> errs = new CopyOnWriteArrayList<>();
-        final StringBuilder msgs = new StringBuilder();
+        final StringBuffer msgs = new StringBuffer();
         final CountDownLatch connected = new CountDownLatch(1);
         ExecutorService connectors = Executors.newFixedThreadPool(3);
         connectors.submit(() -> {
@@ -125,7 +123,7 @@ public final class ConfigureProxy extends Task {
         final URLConnection[] conn, URI[] connectedVia,
         final CountDownLatch connected, 
         final List<Exception> errs,
-        StringBuilder msgs
+        StringBuffer msgs
     ) {
         String httpProxy = System.getenv(propertyName);
         msgs.append("\n[" + propertyName + "] set to " + httpProxy);

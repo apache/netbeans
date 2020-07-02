@@ -37,23 +37,24 @@ public class SymfonyCommandsXmlParserTest extends NbTestCase {
     }
 
     public void testParseCommands() throws Exception {
+        // File symfony-commands was created by running command "symfony list --xml"
         Reader reader = new BufferedReader(new FileReader(new File(getDataDir(), "symfony-commands.xml")));
 
         List<SymfonyCommandVO> commands = new ArrayList<>();
         SymfonyCommandsXmlParser.parse(reader, commands);
 
         assertFalse(commands.isEmpty());
-        assertSame(62, commands.size());
+        assertSame(32, commands.size());
 
         SymfonyCommandVO command = commands.get(0);
         assertEquals("help", command.getCommand());
         assertEquals("Displays help for a task", command.getDescription());
 
         command = commands.get(10);
-        assertEquals("doctrine:build-all-reload-test-all", command.getCommand());
-        assertEquals("Generates Doctrine model, SQL, initializes database, load data and run all tests", command.getDescription());
+        assertEquals("i18n:find", command.getCommand());
+        assertEquals("Finds non \"i18n ready\" strings in an application", command.getDescription());
 
-        command = commands.get(61);
+        command = commands.get(31);
         assertEquals("test:unit", command.getCommand());
         assertEquals("Launches unit tests", command.getDescription());
     }

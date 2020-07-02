@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.regex.Matcher;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.php.spi.testing.coverage.Coverage;
 import org.netbeans.modules.php.spi.testing.coverage.FileMetrics;
@@ -101,7 +102,10 @@ public class CloverLogParserTest extends NbTestCase {
         Path path = file.toPath();
         Charset charset = StandardCharsets.UTF_8;
         String content = new String(Files.readAllBytes(path), charset);
-        content = content.replaceAll("%WORKDIR%", getDataDir().getAbsolutePath());
+        String workdirReplacement = Matcher.quoteReplacement(getDataDir().getAbsolutePath());
+        content = content.replaceAll("%WORKDIR%", workdirReplacement);
+        String separatorReplacement = Matcher.quoteReplacement(File.separator);
+        content = content.replaceAll("%SEP%", separatorReplacement);
         Files.write(path, content.getBytes(charset));
     }
 

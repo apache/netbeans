@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.php.editor.verification;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -465,11 +466,11 @@ public class IntroduceSuggestion extends SuggestionRule {
             int length = fileName.length();
             if (length > 30) {
                 fileName = fileName.substring(length - 30);
-                final int indexOf = fileName.indexOf("/");
+                final int indexOf = fileName.indexOf(File.separator);
                 if (indexOf != -1) { //NOI18N
                     fileName = fileName.substring(indexOf);
                 }
-                fileName = String.format("...%s/%s.php", fileName, className); //NOI18N
+                fileName = String.format("...%s%s%s.php", fileName, File.separator, className); //NOI18N
             }
             return Bundle.IntroduceHintClassDesc(classNameWithNsPart, fileName);
         }

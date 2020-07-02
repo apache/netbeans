@@ -679,6 +679,7 @@ matrix:
             - ant $OPTS -f php/php.composer test
             #- ant $OPTS -f php/php.dbgp test
             - ant $OPTS -f php/php.doctrine2 test
+            # PHP Editor tests can't be run on Travis because they run 90 minutes.
             #- ant $OPTS -f php/php.editor test
             - ant $OPTS -f php/php.latte test
             - ant $OPTS -f php/php.nette.tester test

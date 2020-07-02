@@ -62,7 +62,7 @@ jobs:
           ant -f php/php.composer test
           ant -f php/php.dbgp test
           ant -f php/php.doctrine2 test
-          # ant -f php/php.editor test
+          ant -f php/php.editor test
           ant -f php/php.latte test
           ant -f php/php.nette.tester test
           ant -f php/php.phpunit test

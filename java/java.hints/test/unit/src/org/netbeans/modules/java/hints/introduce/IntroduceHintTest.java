@@ -100,6 +100,8 @@ public class IntroduceHintTest extends NbTestCase {
         super.tearDown();
         LifecycleManager.getDefault().saveAll();
         codeStylePrefs = null;
+        info = null;
+        doc = null;
     }
 
     public void testCorrectSelection1() throws Exception {

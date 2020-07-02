@@ -192,9 +192,7 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
         if (ret == null) {
             String msgKey = group + ".GENERATED"; //NOI18N
             String groupKey = sourceGroupName(msgKey, dir);
-            String sgDisplayName = !"gatling".equals(group) //NOI18N
-                    ? sourceGroupDisplayName(unique, group, dir, lang)
-                    : gatlingSourceGroupDisplayName(unique, dir, lang);
+            String sgDisplayName = sourceGroupDisplayName(unique, group, dir, SourceType.JAVA);
             ret = new GradleSourceGroup(FileUtil.toFileObject(dir), groupKey, sgDisplayName);
             cache.put(Pair.of("GENERATED", dir), ret);
         }

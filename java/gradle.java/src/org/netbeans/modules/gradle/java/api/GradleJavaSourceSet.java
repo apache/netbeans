@@ -47,7 +47,7 @@ public final class GradleJavaSourceSet implements Serializable {
     public static enum SourceType {
 
         JAVA, GROOVY, SCALA, RESOURCES;
-ZZ
+
         @Override
         public String toString() {
             switch (this) {

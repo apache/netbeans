@@ -34,6 +34,7 @@ public class GradleTestcase  extends JUnitTestcase {
     public GradleTestcase(JvmTestOperationDescriptor op, TestSession session) {
         super(op.getMethodName(), "TEST/JUNIT", session);  //NOI18N
         this.operation = op;
+        setClassName(op.getClassName());
     }
 
     public JvmTestOperationDescriptor getOperation() {

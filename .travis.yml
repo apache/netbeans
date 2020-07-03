@@ -741,44 +741,6 @@ matrix:
             #- ant $TEST_OPTS -f groovy/groovy.kit test
             - ant $TEST_OPTS -f groovy/groovy.support test
 
-        - name: Test php modules
-          jdk: openjdk8
-          env:
-            - OPTS="-quiet -Dcluster.config=php -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-          before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
-          script:
-            - ant $OPTS -f php/hudson.php test
-            - ant $OPTS -f php/languages.neon test
-            - ant $OPTS -f php/php.api.annotation test
-            - ant $OPTS -f php/php.api.documentation test
-            - ant $OPTS -f php/php.api.executable test
-            - ant $OPTS -f php/php.api.framework test
-            - ant $OPTS -f php/php.api.phpmodule test
-            - ant $OPTS -f php/php.api.testing test
-            - ant $OPTS -f php/php.apigen test
-            - ant $OPTS -f php/php.atoum test
-            - ant $OPTS -f php/php.code.analysis test
-            - ant $OPTS -f php/php.codeception test
-            - ant $OPTS -f php/php.composer test
-            #- ant $OPTS -f php/php.dbgp test
-            - ant $OPTS -f php/php.doctrine2 test
-            # PHP Editor tests can't be run on Travis because they run 90 minutes.
-            #- ant $OPTS -f php/php.editor test
-            - ant $OPTS -f php/php.latte test
-            - ant $OPTS -f php/php.nette.tester test
-            - ant $OPTS -f php/php.phpunit test
-            - ant $OPTS -f php/php.project test
-            - ant $OPTS -f php/php.refactoring test
-            - ant $OPTS -f php/php.smarty test
-            - ant $OPTS -f php/php.symfony test
-            - ant $OPTS -f php/php.symfony2 test
-            - ant $OPTS -f php/php.twig test
-            - ant $OPTS -f php/php.zend test
-            - ant $OPTS -f php/php.zend2 test
-            - ant $OPTS -f php/spellchecker.bindings.php test
-
         - name: Build the Visual Studio Code extension for Java
           jdk: openjdk8
           before_install:

@@ -185,7 +185,8 @@ public class MessDetectorAnalyzerImpl implements Analyzer {
     private MessDetectorParams getValidMessDetectorParams() {
         MessDetectorParams messDetectorParams = new MessDetectorParams()
                 .setRuleSets(getValidMessDetectorRuleSets())
-                .setRuleSetFile(getValidRuleSetFile());
+                .setRuleSetFile(getValidRuleSetFile())
+                .setOptions(getValidOptions());
         ValidationResult result = new AnalysisOptionsValidator()
                 .validateMessDetector(messDetectorParams)
                 .getResult();
@@ -221,6 +222,19 @@ public class MessDetectorAnalyzerImpl implements Analyzer {
             return null;
         }
         return FileUtil.toFileObject(new File(ruleSetFile));
+    }
+
+    @CheckForNull
+    private String getValidOptions() {
+        String options = null;
+        Preferences settings = context.getSettings();
+        if (settings != null) {
+            options = settings.get(MessDetectorCustomizerPanel.OPTIONS, null);
+        }
+        if (options == null) {
+            options = AnalysisOptions.getInstance().getMessDetectorOptions();
+        }
+        return options;
     }
 
     //~ Inner classes

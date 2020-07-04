@@ -44,6 +44,7 @@ public final class AnalysisOptions {
     private static final String MESS_DETECTOR_PATH = "messDetector.path"; // NOI18N
     private static final String MESS_DETECTOR_RULE_SETS = "messDetector.ruleSets"; // NOI18N
     private static final String MESS_DETECTOR_RULE_SET_FILE = "messDetector.ruleSetFile"; // NOI18N
+    private static final String MESS_DETECTOR_OPTIONS = "messDetector.options"; // NOI18N
     // coding standards fixer
     private static final String CODING_STANDARDS_FIXER_VERSION = "codingStandardsFixer.version"; // NOI18N
     private static final String CODING_STANDARDS_FIXER_PATH = "codingStandardsFixer.path"; // NOI18N
@@ -140,6 +141,15 @@ public final class AnalysisOptions {
 
     public void setMessDetectorRuleSetFilePath(String ruleSetFilePath) {
         getPreferences().put(MESS_DETECTOR_RULE_SET_FILE, ruleSetFilePath);
+    }
+
+    @CheckForNull
+    public String getMessDetectorOptions() {
+        return getPreferences().get(MESS_DETECTOR_OPTIONS, null);
+    }
+
+    public void setMessDetectorOptions(String options) {
+        getPreferences().put(MESS_DETECTOR_OPTIONS, options);
     }
 
     // coding standards fixer

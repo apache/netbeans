@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="build" name="extide/gradle">
+<project basedir="." default="build" name="java/gradle">
     <description>Builds, tests, and runs the project org.netbeans.modules.gradle</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 

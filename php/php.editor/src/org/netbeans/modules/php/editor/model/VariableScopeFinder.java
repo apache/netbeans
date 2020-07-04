@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.model.impl.LazyBuild;
 import org.openide.filesystems.FileObject;
@@ -71,7 +72,11 @@ public final class VariableScopeFinder {
             }
         }
         VariableScopeWrapper subResult = subElements.isEmpty() ? VariableScopeWrapper.NONE : findWrapper(subElements, offset, scopeRangeAcceptor);
-        return subResult == VariableScopeWrapper.NONE ? retval : subResult;
+        if (subResult == VariableScopeWrapper.NONE) {
+            return retval;
+        }
+        // NETBEANS-4503
+        return subResult.containsRange(retval) ? retval : subResult;
     }
 
     public VariableScope findNearestVarScope(Scope scope, int offset, VariableScope atOffset) {
@@ -205,6 +210,11 @@ public final class VariableScopeFinder {
             public OffsetRange getBlockRange() {
                 return null;
             }
+
+            @Override
+            public boolean containsRange(VariableScopeWrapper variableScopeWrapper) {
+                return false;
+            }
         };
 
         VariableScope getVariableScope();
@@ -212,6 +222,7 @@ public final class VariableScopeFinder {
         List<? extends ModelElement> getElements();
         OffsetRange getNameRange();
         OffsetRange getBlockRange();
+        boolean containsRange(VariableScopeWrapper variableScopeWrapper);
     }
 
     private static final class VariableScopeWrapperImpl implements VariableScopeWrapper {
@@ -247,6 +258,35 @@ public final class VariableScopeFinder {
         @Override
         public OffsetRange getBlockRange() {
             return getVariableScope().getBlockRange();
+        }
+
+        @Override
+        public boolean containsRange(VariableScopeWrapper variableScopeWrapper) {
+            OffsetRange baseRange = expandRange(getNameRange(), getBlockRange());
+            OffsetRange targetRange = expandRange(variableScopeWrapper.getNameRange(), variableScopeWrapper.getBlockRange());
+            return containsRange(baseRange, targetRange);
+        }
+
+        private static boolean containsRange(OffsetRange baseRange, OffsetRange targetRange) {
+            if (baseRange == null || targetRange == null) {
+                return false;
+            }
+            return baseRange.containsInclusive(targetRange.getStart())
+                    && baseRange.containsInclusive(targetRange.getEnd());
+        }
+
+        @CheckForNull
+        private static OffsetRange expandRange(OffsetRange range1, OffsetRange range2) {
+            if (range1 == null && range2 == null) {
+                return null;
+            }
+            if (range1 == null) {
+                return range2;
+            }
+            if (range2 == null) {
+                return range1;
+            }
+            return new OffsetRange(Math.min(range1.getStart(), range2.getStart()), Math.max(range1.getEnd(), range2.getEnd()));
         }
 
     }

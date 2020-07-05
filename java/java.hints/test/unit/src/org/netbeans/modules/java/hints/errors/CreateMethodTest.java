@@ -109,6 +109,7 @@ public class CreateMethodTest extends ErrorHintsTestBase {
     }
     
     public void testCreateMethod74129() throws Exception {
+        doRunIndexing = true;
         performFixTest("test/Test.java",
                        "package test; public class Test {public void test() {TopLevel.f|ff();}} class TopLevel {}",
                        "CreateMethodFix:fff()void:test.TopLevel",

@@ -199,6 +199,10 @@ public class TreeShims {
     public static boolean isRecord(Element el) {
         return el != null && "RECORD".equals(el.getKind().name());
     }
+    
+    public static<N extends Tree> boolean isRecord(final N node) {
+        return node != null && TreeShims.RECORD.equals(node.getKind().name());
+    }
 
     public static boolean isRecordComponent(Element el) {
         return el != null && "RECORD_COMPONENT".equals(el.getKind().name());

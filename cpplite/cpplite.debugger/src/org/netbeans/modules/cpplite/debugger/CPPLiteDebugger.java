@@ -36,6 +36,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerEngine;
@@ -65,6 +66,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.text.Line;
 import org.openide.util.Exceptions;
+import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -138,13 +140,12 @@ public class CPPLiteDebugger extends ActionsProviderSupport {
                                     finish();
                                     break;
                                 default:
-                                    setSuspended(true);
                                     Frame frame = new Frame((MITList) record.results().valueOf("frame")); //XXX: frame may be missing
                                     Line currentLine = frame.location();
                                     Utils.markCurrent(new Line[] {currentLine});
                                     Utils.showLine(new Line[] {currentLine});
+                                    setSuspended(true);
                                     suspended();
-                                    //TODO: stack, current line, etc....
                                     break;
                             }
                             break;
@@ -333,11 +334,11 @@ public class CPPLiteDebugger extends ActionsProviderSupport {
         }
     }
     
-    void addStateListener(StateListener sl) {
+    public void addStateListener(StateListener sl) {
         stateListeners.add(sl);
     }
     
-    void removeStateListener(StateListener sl) {
+    public void removeStateListener(StateListener sl) {
         stateListeners.remove(sl);
     }
     
@@ -503,7 +504,7 @@ public class CPPLiteDebugger extends ActionsProviderSupport {
         }
     }
     
-    interface StateListener {
+    public interface StateListener {
         
         void suspended(boolean suspended);
         
@@ -569,7 +570,7 @@ public class CPPLiteDebugger extends ActionsProviderSupport {
         }
     }
 
-    public static Process startDebugging (CPPLiteDebuggerConfig configuration) throws IOException {
+    public static @NonNull Pair<CPPLiteDebugger, Process> startDebugging (CPPLiteDebuggerConfig configuration) throws IOException {
         DebuggerInfo di = DebuggerInfo.create (
             "CPPLiteDebuggerInfo",
             new Object[] {
@@ -626,7 +627,7 @@ public class CPPLiteDebugger extends ActionsProviderSupport {
         });
         debugger.setDebuggee(debuggee);
 
-        return new Process() {
+        return Pair.of(debugger, new Process() {
             @Override
             public OutputStream getOutputStream() {
                 return pty.getOutputStream();
@@ -656,6 +657,6 @@ public class CPPLiteDebugger extends ActionsProviderSupport {
             public void destroy() {
                 debuggee.destroy();
             }
-        };
+        });
     }
 }

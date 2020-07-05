@@ -24,7 +24,7 @@
 
     <folder name="Editors">
         <folder name="text">
-            <folder name="x-c">
+            <folder name="X-c">
                 <folder name="GlyphGutterActions">
                     <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
                         <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
@@ -47,7 +47,7 @@
                     </file>
                 </folder>
             </folder>
-            <folder name="x-c++">
+            <folder name="X-c++">
                 <folder name="GlyphGutterActions">
                     <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
                         <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
@@ -70,7 +70,7 @@
                     </file>
                 </folder>
             </folder>
-            <folder name="x-h">
+            <folder name="X-h">
                 <folder name="GlyphGutterActions">
                     <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
                         <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
@@ -93,7 +93,7 @@
                     </file>
                 </folder>
             </folder>
-            <folder name="x-h++">
+            <folder name="X-h++">
                 <folder name="GlyphGutterActions">
                     <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
                         <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>

@@ -17,6 +17,6 @@ import org.netbeans.modules.cpplite.debugger.CPPLiteDebuggerConfig;
 public class Debugger {
     
     public static Process startInDebugger(List<String> command) throws IOException {
-        return CPPLiteDebugger.startDebugging(new CPPLiteDebuggerConfig(command));
+        return CPPLiteDebugger.startDebugging(new CPPLiteDebuggerConfig(command)).second();
     }
 }

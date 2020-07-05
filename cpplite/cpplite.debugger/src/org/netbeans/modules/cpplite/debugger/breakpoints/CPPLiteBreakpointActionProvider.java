@@ -40,11 +40,11 @@ import org.openide.util.WeakListeners;
  *
  * @author  Honza
  */
-@Registration(actions={"toggleBreakpoint"}, activateForMIMETypes={"text/x-c", "text/x-c++", "text/x-h", "text/x-h++"})
+@Registration(actions={"toggleBreakpoint"}, activateForMIMETypes={"text/X-c", "text/X-c++", "text/X-h", "text/X-h++"})
 public class CPPLiteBreakpointActionProvider extends ActionsProviderSupport
                                          implements PropertyChangeListener {
     
-    private static final String[] C_MIME_TYPES = new String[] {"text/x-c", "text/x-c++", "text/x-h", "text/x-h++"}; // NOI18N
+    private static final String[] C_MIME_TYPES = new String[] {"text/X-c", "text/X-c++", "text/X-h", "text/X-h++"}; // NOI18N
     private static final Set<String> C_MIME_TYPES_SET = new HashSet<>(Arrays.asList(C_MIME_TYPES));
     
     private static final Set actions = Collections.singleton (

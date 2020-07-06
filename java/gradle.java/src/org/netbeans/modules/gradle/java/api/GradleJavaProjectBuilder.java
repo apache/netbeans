@@ -82,7 +82,6 @@ final class GradleJavaProjectBuilder implements ProjectInfoExtractor.Result {
                 sourceSet.annotationProcessorConfigurationName = (String) info.get("sourceset_" + name + "_configuration_annotation");
                 sourceSet.outputClassDirs = (Set<File>) info.get("sourceset_" + name + "_output_classes");
                 sourceSet.outputResources = (File) info.get("sourceset_" + name + "_output_resources");
-                sourceSet.generatedSourcesDirs = (Set<File>) info.get("sourceset_" + name + "_output_generated");
 
                 Map<SourceType, String> sourceComp = new EnumMap<>(SourceType.class);
                 Map<SourceType, String> targetComp = new EnumMap<>(SourceType.class);

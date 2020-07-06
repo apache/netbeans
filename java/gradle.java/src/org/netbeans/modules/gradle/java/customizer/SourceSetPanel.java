@@ -112,6 +112,12 @@ public class SourceSetPanel extends javax.swing.JPanel {
         lsRuntime.setModel(runtimeModel);
         lsRuntime.setCellRenderer(new MyListCellRenderer());
 
+        DefaultListModel<File> apModel = new DefaultListModel<>();
+        for (File file : sourceSet.getAnnotationProcessorPath()) {
+            apModel.addElement(file);
+        }
+        lsAnnotationProcessors.setModel(apModel);
+        lsAnnotationProcessors.setCellRenderer(new MyListCellRenderer());
     }
 
     /**
@@ -133,6 +139,8 @@ public class SourceSetPanel extends javax.swing.JPanel {
         lsCompile = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
         lsRuntime = new javax.swing.JList<>();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        lsAnnotationProcessors = new javax.swing.JList<>();
         tfSourceLevel = new javax.swing.JTextField();
         tfOutputResources = new javax.swing.JTextField();
         tfOutputClasses = new javax.swing.JTextField();
@@ -159,6 +167,10 @@ public class SourceSetPanel extends javax.swing.JPanel {
         jScrollPane3.setViewportView(lsRuntime);
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SourceSetPanel.class, "SourceSetPanel.jScrollPane3.TabConstraints.tabTitle"), jScrollPane3); // NOI18N
+
+        jScrollPane4.setViewportView(lsAnnotationProcessors);
+
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SourceSetPanel.class, "SourceSetPanel.jScrollPane4.TabConstraints.tabTitle"), jScrollPane4); // NOI18N
 
         tfSourceLevel.setEditable(false);
         tfSourceLevel.setText(org.openide.util.NbBundle.getMessage(SourceSetPanel.class, "SourceSetPanel.tfSourceLevel.text")); // NOI18N
@@ -265,7 +277,9 @@ public class SourceSetPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JList<File> lsAnnotationProcessors;
     private javax.swing.JList<File> lsCompile;
     private javax.swing.JList<File> lsRuntime;
     private javax.swing.JTextField tfOutputClasses;

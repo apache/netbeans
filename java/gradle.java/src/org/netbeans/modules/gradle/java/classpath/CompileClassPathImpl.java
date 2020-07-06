@@ -39,8 +39,8 @@ public final class CompileClassPathImpl extends AbstractSourceSetClassPathImpl {
     protected List<URL> createPath() {
         List<URL> ret = new ArrayList<>();
         GradleJavaSourceSet ss = getSourceSet();
-        if ((ss != null) && (ss.getCompileClassPath() != null)) {
-            addAllFile(ret, getSourceSet().getCompileClassPath());
+        if (ss != null)  {
+            addAllFile(ret, ss.getCompileClassPath());
         }
         return ret;
     }

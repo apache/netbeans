@@ -16,10 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.lsp.client.options;
+package org.netbeans.modules.lsp.client.spi;
 
+/**
+ * Allows to stop a running LSP server.
+ * Passed in the Lookup to {@link LanguageServerProvider#startServer(org.openide.util.Lookup) },
+ * when since is called, the existing server (if any) will be stoped, and {@code startServer}
+ * will be called again.
+ *
+ * @since 1.8
+ */
 public interface ServerRestarter {
 
+    /**
+     * Stop the running LSP server.
+     */
     public void restart();
 
 }

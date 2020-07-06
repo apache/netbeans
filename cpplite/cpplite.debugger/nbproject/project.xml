@@ -28,7 +28,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <implementation-version/>
+                        <specification-version>1.48</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -165,9 +165,10 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages>
+            <friend-packages>
+                <friend>org.netbeans.modules.cpplite.project</friend>
                 <package>org.netbeans.modules.cpplite.debugger.api</package>
-            </public-packages>
+            </friend-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/cpplite-mi-1.0-SNAPSHOT.jar</runtime-relative-path>
                 <binary-origin>external/cpplite-mi-1.0-SNAPSHOT.jar</binary-origin>

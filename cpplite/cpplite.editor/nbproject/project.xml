@@ -46,7 +46,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>0</release-version>
-                        <implementation-version/>
+                        <!--<implementation-version/>-->
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -174,9 +174,10 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages>
+            <friend-packages>
+                <friend>org.netbeans.modules.cpplite.project</friend>
                 <package>org.netbeans.modules.cpplite.editor.spi</package>
-            </public-packages>
+            </friend-packages>
         </data>
     </configuration>
 </project>

@@ -18,13 +18,11 @@
  */
 package org.netbeans.modules.cpplite.project.ui.wizard;
 
-import java.awt.Component;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.filechooser.FileFilter;
 import org.netbeans.modules.cpplite.project.ui.wizard.CPPLiteProjectWizardIterator.CPPLiteProjectSettings;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
@@ -67,7 +65,7 @@ public class CPPLiteProjectPathPanel extends javax.swing.JPanel {
 
     private void pathUpdated() {
         String text = path.getText();
-        FileObject projectDirectory = FileUtil.toFileObject(new File(text));
+        FileObject projectDirectory = FileUtil.toFileObject(FileUtil.normalizeFile(new File(text)));
         
         valid = projectDirectory != null && projectDirectory.isFolder() && !text.isEmpty();
         cs.fireChange();

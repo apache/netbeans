@@ -36,7 +36,7 @@ import org.netbeans.api.editor.mimelookup.MimeRegistrations;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.cpplite.editor.Utils;
 import org.netbeans.modules.cpplite.editor.file.MIMETypes;
-import org.netbeans.modules.lsp.client.options.ServerRestarter;
+import org.netbeans.modules.lsp.client.spi.ServerRestarter;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;

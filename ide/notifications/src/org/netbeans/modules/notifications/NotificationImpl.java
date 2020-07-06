@@ -115,6 +115,7 @@ public class NotificationImpl extends Notification implements Comparable<Notific
         return title;
     }
 
+    @Override
     public Priority getPriority() {
         return priority;
     }

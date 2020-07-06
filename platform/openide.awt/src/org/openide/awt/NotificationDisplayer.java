@@ -340,21 +340,30 @@ public abstract class NotificationDisplayer {
                     break;
             }
             Message msg = StatusDisplayer.getDefault().setStatusText( text, importance );
-            return new NotificationImpl(msg);
+            return new NotificationImpl(msg, priority);
         }
     }
 
     private static class NotificationImpl extends Notification {
 
         private final Message msg;
+        
+        private final Priority priority;
 
-        public NotificationImpl( Message msg ) {
+        public NotificationImpl(Message msg, Priority priority) {
             this.msg = msg;
+            this.priority = priority;
+        }
+        
+        @Override
+        public Priority getPriority() {
+            return priority;
         }
 
         @Override
         public void clear() {
             msg.clear(0);
         }
+
     }
 }

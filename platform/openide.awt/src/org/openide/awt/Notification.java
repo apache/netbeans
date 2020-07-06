@@ -30,6 +30,12 @@ package org.openide.awt;
 public abstract class Notification {
     
     /**
+     * Get notification priority.
+     * @return NotificationDisplayer.Priority
+     */
+    public abstract NotificationDisplayer.Priority getPriority();
+    
+    /**
      * Remove this notification from the list of active notifications.
      */
     public abstract void clear();

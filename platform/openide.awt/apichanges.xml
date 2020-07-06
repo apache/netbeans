@@ -26,6 +26,18 @@
 <apidef name="awt">AWT API</apidef>
 </apidefs>
 <changes>
+    <change id="getPriority">
+        <api name="awt"/>
+        <summary>Added Notification getPriority abstract method.</summary>
+        <version major="7" minor="78"/>
+        <date day="6" month="7" year="2020"/>
+        <author login="hectorespert"/>
+        <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+        <description>
+        Added method to return the NotificationDisplayer priority of a notification.
+        </description>
+        <class package="org.openide.awt" name="Notification"/>
+    </change>
     <change id="getArrowIcon">
         <api name="awt"/>
         <summary>Added DropDownButtonFactory.getArrowIcon method.</summary>

@@ -61,6 +61,11 @@ class NotificationImpl extends Notification implements Comparable<NotificationIm
         this.icon = icon;
         this.priority = priority;
     }
+    
+    @Override
+    public Priority getPriority() {
+        return priority;
+    }
 
     @Override
     public void clear() {
@@ -179,4 +184,5 @@ class NotificationImpl extends Notification implements Comparable<NotificationIm
         }
         return btn;
     }
+
 }

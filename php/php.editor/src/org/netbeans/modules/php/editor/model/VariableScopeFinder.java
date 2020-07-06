@@ -23,6 +23,10 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import org.netbeans.api.annotations.common.CheckForNull;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.model.impl.LazyBuild;
 import org.openide.filesystems.FileObject;
@@ -32,6 +36,8 @@ import org.openide.filesystems.FileObject;
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
 public final class VariableScopeFinder {
+
+    private static final Logger LOGGER = Logger.getLogger(VariableScopeFinder.class.getName());
 
     public static VariableScopeFinder create() {
         return new VariableScopeFinder();
@@ -46,10 +52,23 @@ public final class VariableScopeFinder {
     }
 
     public VariableScope find(final List<? extends ModelElement> elements, final int offset, final ScopeRangeAcceptor scopeRangeAcceptor) {
-        return findWrapper(elements, offset, scopeRangeAcceptor).getVariableScope();
+        AtomicBoolean isLazilyScanned = new AtomicBoolean(false);
+        VariableScope variableScope = findWrapper(elements, offset, scopeRangeAcceptor, isLazilyScanned).getVariableScope();
+        if (isLazilyScanned.get()) {
+            // some scopes may be added new elements when LazyBuild elements are scanned.
+            // so, find again.
+            // e.g. Source instances are cached as weak references.
+            // so, ParserResult may not be the same instance even if the FileObject is the same.
+            // it means that new Model and new ModelVisitor are created again. in such case, LazyBuild elements may not be scanned yet.
+            LOGGER.log(Level.FINE, "(LazyBuild)Scope is scanned."); // NOI18N
+            if (isLazilyScanned.compareAndSet(true, false)) {
+                variableScope = findWrapper(elements, offset, scopeRangeAcceptor, isLazilyScanned).getVariableScope();
+            }
+        }
+        return variableScope;
     }
 
-    private VariableScopeWrapper findWrapper(final List<? extends ModelElement> elements, final int offset, final ScopeRangeAcceptor scopeRangeAcceptor) {
+    private VariableScopeWrapper findWrapper(final List<? extends ModelElement> elements, final int offset, final ScopeRangeAcceptor scopeRangeAcceptor, @NullAllowed final AtomicBoolean isLazilyScanned) {
         assert elements != null;
         assert scopeRangeAcceptor != null;
         VariableScopeWrapper retval = VariableScopeWrapper.NONE;
@@ -64,6 +83,9 @@ public final class VariableScopeFinder {
                         LazyBuild scope = (LazyBuild) modelElement;
                         if (!scope.isScanned()) {
                             scope.scan();
+                            if (isLazilyScanned != null) {
+                                isLazilyScanned.set(true);
+                            }
                         }
                     }
                     retval = varScopeWrapper;
@@ -71,7 +93,7 @@ public final class VariableScopeFinder {
                 }
             }
         }
-        VariableScopeWrapper subResult = subElements.isEmpty() ? VariableScopeWrapper.NONE : findWrapper(subElements, offset, scopeRangeAcceptor);
+        VariableScopeWrapper subResult = subElements.isEmpty() ? VariableScopeWrapper.NONE : findWrapper(subElements, offset, scopeRangeAcceptor, isLazilyScanned);
         if (subResult == VariableScopeWrapper.NONE) {
             return retval;
         }

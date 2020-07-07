@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import org.junit.Ignore;
 
 import org.netbeans.api.debugger.providers.TestActionProvider;
 import org.netbeans.api.debugger.providers.TestAttachType;
@@ -186,6 +187,7 @@ public class ProvidersAnnotationTest  extends DebuggerApiTestBase {
         }
     }
 
+    @Ignore("Fixme")
     public void testMultiModelRegistrations() throws Exception {
         Lookup.MetaInf l = new Lookup.MetaInf("unittest");
         Object instance;

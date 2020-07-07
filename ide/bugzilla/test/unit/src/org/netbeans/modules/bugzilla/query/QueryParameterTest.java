@@ -30,6 +30,7 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JTextField;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.bugzilla.query.QueryParameter.AllWordsTextFieldParameter;
 import org.netbeans.modules.bugzilla.query.QueryParameter.CheckBoxParameter;
 import org.netbeans.modules.bugzilla.query.QueryParameter.ComboParameter;
@@ -42,6 +43,7 @@ import org.netbeans.modules.bugzilla.query.QueryParameter.TextFieldParameter;
  *
  * @author tomas
  */
+@RandomlyFails
 public class QueryParameterTest extends NbTestCase implements TestConstants {
 
     private final static String PARAMETER = "parameter";

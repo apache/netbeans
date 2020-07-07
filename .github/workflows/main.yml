@@ -100,6 +100,320 @@ jobs:
 
       - name: Test Netbeans Build System
         run: ant -Dcluster.config=basic localtest
+        
+  linux-ide:
+    name: Linux build of IDE cluster
+    runs-on: ubuntu-18.04
+    env:
+      DISPLAY: ":99.0"
+      OPTS: -Dcluster.config=basic -Dtest-unit-sys-prop.ignore.random.failures=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Launch Xvfb
+        run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Clean
+        run: ant $OPTS clean
+        
+      - name: Build
+        run: ant $OPTS build
+        
+      - run: ant $OPTS -f ide/api.java.classpath test -Dtest.config=stableBTD
+        
+      - run: ant $OPTS -f ide/api.xml test
+        
+      - run: ant $OPTS -f ide/api.xml.ui test
+        
+      - uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: ant $OPTS -f ide/bugtracking test
+          
+      - uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: ant $OPTS -f ide/bugtracking.bridge test
+        
+      - run: ant $OPTS -f ide/bugtracking.commons test
+        
+      - run: ant $OPTS -f ide/bugzilla test -Dtest.config=stableBTD
+        
+      - run: ant $OPTS -f ide/code.analysis test
+        
+      - run: ant $OPTS -f ide/core.ide test
+        
+      - run: ant $OPTS -f ide/csl.api test
+        
+      - run: ant $OPTS -f ide/csl.types test
+      
+      - run: ant $OPTS -f ide/css.editor test
+      
+      - run: ant $OPTS -f ide/css.lib test
+      
+      - run: ant $OPTS -f ide/css.model test
+      
+      - run: ant $OPTS -f ide/css.prep test-unit
+      
+      - run: ant $OPTS -f ide/css.visual test-unit
+      
+      - uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: ant $OPTS -f ide/db test
+          
+      - run: ant $OPTS -f ide/db.core test
+      
+      - run: ant $OPTS -f ide/db.dataview test
+      
+      - run: ant $OPTS -f ide/db.sql.editor test
+      
+      - run: ant $OPTS -f ide/dbapi test
+      
+      - run: ant $OPTS -f ide/derby test-unit
+      
+      - run: ant $OPTS -f ide/diff test
+      
+      - run: ant $OPTS -f ide/dlight.nativeexecution test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/docker.api test
+            
+      - run: ant $OPTS -f ide/docker.ui test
+      
+      - run: ant $OPTS -f ide/editor test-unit -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/editor.bookmarks test
+      
+      - run: ant $OPTS -f ide/editor.bracesmatching test
+      
+      - run: ant $OPTS -f ide/editor.codetemplates test
+      
+      - run: ant $OPTS -f ide/editor.document test
+      
+      - run: ant $OPTS -f ide/editor.errorstripe test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/editor.fold test
+      
+      - run: ant $OPTS -f ide/editor.fold.nbui test
+      
+      - run: ant $OPTS -f ide/editor.guards test
+      
+      - run: ant $OPTS -f ide/editor.indent test
+      
+      - run: ant $OPTS -f ide/editor.indent.project test
+      
+      - run: ant $OPTS -f ide/editor.lib test
+      
+      - run: ant $OPTS -f ide/editor.lib2 test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/editor.macros test
+      
+      - run: ant $OPTS -f ide/editor.search test
+            
+      - run: ant $OPTS -f ide/editor.settings test
+
+      - run: ant $OPTS -f ide/editor.settings.lib test
+      
+      - run: ant $OPTS -f ide/editor.settings.storage test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/editor.structure test
+      
+      - run: ant $OPTS -f ide/editor.tools.storage test
+            
+      - run: ant $OPTS -f ide/editor.util test
+      
+      - run: ant $OPTS -f ide/extbrowser test
+      
+      - run: ant $OPTS -f ide/extexecution test
+      
+      - run: ant $OPTS -f ide/extexecution.base test
+      
+      - run: ant $OPTS -f ide/git test-unit -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/gsf.testrunner.ui test
+      
+      - name: ant $OPTS -f ide/html test
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: ant $OPTS -f ide/html test
+          
+      - run: ant $OPTS -f ide/html.custom test
+      
+      - run: ant $OPTS -f ide/html.editor test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/html.lexer test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/html.parser test
+      
+      - run: ant $OPTS -f ide/html.validation test
+      
+      - run: ant $OPTS -f ide/hudson test
+      
+      - run: ant $OPTS -f ide/hudson.git test
+     
+      - run: ant $OPTS -f ide/hudson.mercurial test
+      
+      - run: ant $OPTS -f ide/hudson.subversion test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/hudson.tasklist test
+      
+      - run: ant $OPTS -f ide/hudson.ui test
+      
+      - run: ant $OPTS -f ide/javascript2.debug test
+      
+      - run: ant $OPTS -f ide/jumpto test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/languages test-unit
+      
+      - run: ant $OPTS -f ide/languages.yaml test
+      
+      - run: ant $OPTS -f ide/lexer test
+      
+      - run: ant $OPTS -f ide/lib.terminalemulator test
+      
+      - run: ant $OPTS -f ide/libs.freemarker test
+      
+      - run: ant $OPTS -f ide/libs.git test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/libs.graalsdk test
+      
+      - run: ant $OPTS -f ide/libs.svnClientAdapter.javahl test
+      
+      - run: ant $OPTS -f ide/localhistory test
+      
+      - run: ant $OPTS -f ide/lsp.client test
+      
+      - run: ant $OPTS -f ide/mercurial test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/notifications test
+      
+      - run: ant $OPTS -f ide/o.openidex.util test
+      
+      - run: ant $OPTS -f ide/options.editor test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/parsing.api test
+      
+      - run: ant $OPTS -f ide/parsing.indexing test
+      
+      - run: ant $OPTS -f ide/parsing.lucene test
+      
+      - run: ant $OPTS -f ide/parsing.nb test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/project.ant test
+      
+      - run: ant $OPTS -f ide/project.ant.compat8 test
+      
+      - run: ant $OPTS -f ide/project.ant.ui test
+      
+      - run: ant $OPTS -f ide/project.libraries test
+      
+      - run: ant $OPTS -f ide/project.libraries.ui test
+      
+      - run: ant $OPTS -f ide/projectapi test
+            
+      - run: ant $OPTS -f ide/projectapi.nb test
+      
+      - run: ant $OPTS -f ide/projectui test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/projectuiapi test
+      
+      - run: ant $OPTS -f ide/projectuiapi.base test
+      
+      - run: ant $OPTS -f ide/properties test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/refactoring.api test
+      
+      - run: ant $OPTS -f ide/schema2beans test
+      
+      - run: ant $OPTS -f ide/server test
+      
+      - run: ant $OPTS -f ide/spellchecker test
+      
+      - run: ant $OPTS -f ide/spi.debugger.ui test
+      
+      - run: ant $OPTS -f ide/spi.editor.hints test
+      
+      - run: ant $OPTS -f ide/spi.navigator test
+      
+      - run: ant $OPTS -f ide/spi.palette test
+      
+      - run: ant $OPTS -f ide/spi.tasklist test
+      
+      - run: ant $OPTS -f ide/spi.viewmodel test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/subversion test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/tasklist.ui test
+      
+      - run: ant $OPTS -f ide/team.commons test
+      
+      - run: ant $OPTS -f ide/terminal.nb test
+      
+      - run: ant $OPTS -f ide/textmate.lexer test
+      
+      - run: ant $OPTS -f ide/utilities test
+      
+      - run: ant $OPTS -f ide/utilities.project test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/versioning.masterfs test
+      
+      - run: ant $OPTS -f ide/versioning.ui test
+      
+      - run: ant $OPTS -f ide/versioning.util test
+      
+      - run: ant $OPTS -f ide/web.common test
+      
+      - run: ant $OPTS -f ide/web.common.ui test
+      
+      - run: ant $OPTS -f ide/web.webkit.debugging test
+      
+      - run: ant $OPTS -f ide/xml test
+      
+      - run: ant $OPTS -f ide/xml.axi test
+      
+      - run: ant $OPTS -f ide/xml.catalog test-unit
+      
+      - run: ant $OPTS -f ide/xml.core test
+      
+      - run: ant $OPTS -f ide/xml.lexer test
+      
+      - run: ant $OPTS -f ide/xml.multiview test
+      
+      - run: ant $OPTS -f ide/xml.retriever test
+      
+      - run: ant $OPTS -f ide/xml.schema.completion test -Dtest.config=stableBTD
+      
+      - run: ant $OPTS -f ide/xml.schema.model test
+      
+      - run: ant $OPTS -f ide/xml.text test
+      
+      - run: ant $OPTS -f ide/xml.text.obsolete90 test
+      
+      - name: ant $OPTS -f ide/xml.wsdl.model test
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: ant $OPTS -f ide/xml.wsdl.model test
+            
+      - run: ant $OPTS -f ide/xml.xam test
+      
+      - run: ant $OPTS -f ide/xml.xdm test
+      
+      - run: ant $OPTS -f ide/xsl test
 
   linux-php:
     name: Linux build of PHP cluster

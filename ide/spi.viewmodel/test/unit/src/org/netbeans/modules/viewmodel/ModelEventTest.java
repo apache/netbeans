@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.SwingUtilities;
+import org.junit.Ignore;
 
 import org.netbeans.junit.NbTestCase;
 
@@ -88,6 +89,7 @@ public class ModelEventTest  extends NbTestCase implements NodeListener {
          */
     }
     
+    @Ignore("Fixme")
     public void testDisplayName() {
         ModelEvent e = new ModelEvent.NodeChanged(this, "Root", ModelEvent.NodeChanged.DISPLAY_NAME_MASK);
         cm.fire(e);
@@ -104,6 +106,7 @@ public class ModelEventTest  extends NbTestCase implements NodeListener {
         //assertNotNull("Was not fired", this.event);
     }
 
+    @Ignore("Fixme")
     public void testIcon() {
         ModelEvent e = new ModelEvent.NodeChanged(this, "Root", ModelEvent.NodeChanged.ICON_MASK);
         cm.fire(e);

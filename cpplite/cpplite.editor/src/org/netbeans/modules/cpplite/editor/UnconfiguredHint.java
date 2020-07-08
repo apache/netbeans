@@ -108,7 +108,7 @@ public class UnconfiguredHint implements Runnable {
 
         @Override
         public ChangeInfo implement() throws Exception {
-            OptionsDisplayer.getDefault().open("cpplite");
+            OptionsDisplayer.getDefault().open("CPlusPlus/cpplite");
             return null;
         }
     

@@ -28,6 +28,8 @@ import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -44,7 +46,7 @@ public class LogicalViewProviderImpl implements LogicalViewProvider {
     @Override
     public Node createLogicalView() {
         try {
-            return new RootNode(DataObject.find(prj.getProjectDirectory()).getNodeDelegate());
+            return new RootNode(DataObject.find(prj.getProjectDirectory()).getNodeDelegate(), prj);
         } catch (DataObjectNotFoundException ex) {
             return Node.EMPTY;
         }
@@ -57,8 +59,8 @@ public class LogicalViewProviderImpl implements LogicalViewProvider {
 
     private static class RootNode extends FilterNode {
 
-        public RootNode(Node delegate) {
-            super(delegate);
+        public RootNode(Node delegate, CPPLiteProject prj) {
+            super(delegate, null, new ProxyLookup(delegate.getLookup(), Lookups.fixed(prj)));
         }
 
         @Override

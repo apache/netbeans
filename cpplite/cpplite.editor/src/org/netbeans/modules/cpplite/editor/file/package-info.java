@@ -17,12 +17,39 @@
  * under the License.
  */
 @TemplateRegistrations({
-    @TemplateRegistration(folder = "Other", content = "CTemplate.c"),
-    @TemplateRegistration(folder = "Other", content = "CPPTemplate.cpp"),
-    @TemplateRegistration(folder = "Other", content = "HTemplate.h"),
-    @TemplateRegistration(folder = "Other", content = "HPPTemplate.hpp")
+    @TemplateRegistration(folder = "cpplite",
+                          content = "CTemplate.c",
+                          scriptEngine = "freemarker",
+                          category = "cpplite",
+                          displayName = "#CTemplate",
+                          iconBase = "org/netbeans/modules/cpplite/editor/file/resources/CSrcIcon.gif"),
+    @TemplateRegistration(folder = "cpplite",
+                          content = "CPPTemplate.cpp",
+                          scriptEngine="freemarker",
+                          category = "cpplite",
+                          displayName = "#CPPTemplate",
+                          iconBase = "org/netbeans/modules/cpplite/editor/file/resources/CCSrcIcon.gif"),
+    @TemplateRegistration(folder = "cpplite",
+                          content = "HTemplate.h",
+                          scriptEngine="freemarker",
+                          category = "cpplite",
+                          displayName = "#HTemplate",
+                          iconBase = "org/netbeans/modules/cpplite/editor/file/resources/HDataIcon.gif"),
+    @TemplateRegistration(folder = "cpplite",
+                          content = "HPPTemplate.hpp",
+                          scriptEngine="freemarker",
+                          category = "cpplite",
+                          displayName = "#HPPTemplate",
+                          iconBase = "org/netbeans/modules/cpplite/editor/file/resources/HDataIcon.gif")
+})
+@Messages({
+    "CTemplate=C file",
+    "CPPTemplate=C++ file",
+    "HTemplate=Header file",
+    "HPPTemplate=Header for C++ file",
 })
 package org.netbeans.modules.cpplite.editor.file;
 
 import org.netbeans.api.templates.TemplateRegistration;
 import org.netbeans.api.templates.TemplateRegistrations;
+import org.openide.util.NbBundle.Messages;

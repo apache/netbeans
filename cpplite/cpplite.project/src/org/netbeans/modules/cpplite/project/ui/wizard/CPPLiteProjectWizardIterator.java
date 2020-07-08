@@ -77,7 +77,7 @@ public class CPPLiteProjectWizardIterator implements WizardDescriptor.Instantiat
         FileObject projectDirectory = FileUtil.toFileObject(new File(settings.projectPath));
         Preferences prefs = CPPLiteProject.getRootPreferences(projectDirectory);
         prefs.putBoolean(CPPLiteProject.KEY_IS_PROJECT, true);
-        settings.buildConfig.save(getBuildPreferences(projectDirectory));
+        settings.getBuildConfig().save(getBuildPreferences(projectDirectory));
         return Collections.singleton(projectDirectory);
     }
 

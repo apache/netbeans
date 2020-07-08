@@ -19,23 +19,18 @@
 package org.netbeans.modules.cpplite.project;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.cpplite.project.ui.customizer.CustomizerProviderImpl;
-import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectFactory2;
 import org.netbeans.spi.project.ProjectState;
+import org.netbeans.spi.project.ui.PrivilegedTemplates;
+import org.netbeans.spi.project.ui.RecommendedTemplates;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
@@ -95,6 +90,8 @@ public class CPPLiteProject implements Project {
                                     new ActionProviderImpl(this),
                                     new CustomizerProviderImpl(this),
                                     new CPPLiteCProjectConfigurationProvider(getRootPreferences(projectDirectory)),
+                                    new RecommendedTemplatesImpl(),
+                                    new PrivilegedTemplatesImpl(),
                                     this);
         buildConfigurations.set(BuildConfiguration.read(getBuildPreferences(projectDirectory)));
     }
@@ -162,5 +159,32 @@ public class CPPLiteProject implements Project {
         public void saveProject(Project project) throws IOException, ClassCastException {
         }
         
+    }
+
+    private static class RecommendedTemplatesImpl implements RecommendedTemplates {
+
+        private static final String[] TEMPLATES = new String[] {
+            "cpplite"
+        };
+
+        @Override
+        public String[] getRecommendedTypes() {
+            return TEMPLATES;
+        }
+    }
+
+    private static class PrivilegedTemplatesImpl implements PrivilegedTemplates {
+
+        private static final String[] TEMPLATES = new String[] {
+            "Templates/cpplite/CTemplate.c",
+            "Templates/cpplite/CPPTemplate.cpp",
+            "Templates/cpplite/HTemplate.h",
+            "Templates/cpplite/HPPTemplate.hpp",
+        };
+
+        @Override
+        public String[] getPrivilegedTemplates() {
+            return TEMPLATES;
+        }
     }
 }

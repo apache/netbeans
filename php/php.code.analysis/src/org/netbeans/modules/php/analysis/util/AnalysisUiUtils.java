@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.modules.php.analysis.commands.CodingStandardsFixer;
 import org.netbeans.modules.php.analysis.commands.PHPStan;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.UiUtils;
@@ -32,10 +33,17 @@ import org.openide.util.NbBundle;
 
 public final class AnalysisUiUtils {
 
+    private static final String CODING_STANDARDS_FIXER_LAST_FOLDER_SUFFIX = ".codingStandarsFixer"; // NOI18N
     private static final String PHPSTAN_LAST_FOLDER_SUFFIX = ".phpstan"; // NOI18N
     private static final String PHPSTAN_CONFIGURATION_LAST_FOLDER_SUFFIX = ".phpstan.config"; // NOI18N
 
     private AnalysisUiUtils() {
+    }
+
+    @CheckForNull
+    @NbBundle.Messages("AnalysisUiUtils.browse.coding.standards.fixer.title=Select Coding Standards Fixer")
+    public static File browseCodingStandardsFixer() {
+        return browse(CODING_STANDARDS_FIXER_LAST_FOLDER_SUFFIX, Bundle.AnalysisUiUtils_browse_coding_standards_fixer_title());
     }
 
     @CheckForNull
@@ -57,6 +65,23 @@ public final class AnalysisUiUtils {
                 .setTitle(title)
                 .showOpenDialog();
         return file;
+    }
+
+    @CheckForNull
+    @NbBundle.Messages({
+        "AnalysisUiUtils.search.coding.standards.fixer.title=Coding Standards Fixer scripts",
+        "AnalysisUiUtils.search.coding.standards.fixer.scripts=C&oding Standards Fixer scripts:",
+        "AnalysisUiUtils.search.coding.standards.fixer.pleaseWaitPart=Coding Standards Fixer scripts",
+        "AnalysisUiUtils.search.coding.standards.fixer.notFound=No Coding Standards Fixer scripts found."
+    })
+    public static String searchCodingStandardsFixer() {
+        SearchParameter param = new SearchParameter()
+                .setFilenames(Arrays.asList(CodingStandardsFixer.NAME, CodingStandardsFixer.LONG_NAME))
+                .setWindowTitle(Bundle.AnalysisUiUtils_search_coding_standards_fixer_title())
+                .setListTitle(Bundle.AnalysisUiUtils_search_coding_standards_fixer_scripts())
+                .setPleaseWaitPart(Bundle.AnalysisUiUtils_search_coding_standards_fixer_pleaseWaitPart())
+                .setNoItemsFound(Bundle.AnalysisUiUtils_search_coding_standards_fixer_notFound());
+        return search(param);
     }
 
     @CheckForNull

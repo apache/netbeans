@@ -57,8 +57,8 @@ public final class AnalysisOptionsValidator {
         return this;
     }
 
-    public AnalysisOptionsValidator validateCodingStandardsFixer(String codingStandardsFixerPath) {
-        validateCodingStandardsFixerPath(codingStandardsFixerPath);
+    public AnalysisOptionsValidator validateCodingStandardsFixer(ValidatorCodingStandardsFixerParameter param) {
+        validateCodingStandardsFixerPath(param.getCodingStandardsFixerPath());
         return this;
     }
 

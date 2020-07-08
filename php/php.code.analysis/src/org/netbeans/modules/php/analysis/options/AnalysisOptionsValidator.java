@@ -116,11 +116,9 @@ public final class AnalysisOptionsValidator {
     }
 
     private AnalysisOptionsValidator validatePHPStanPath(String phpStanPath) {
-        if (phpStanPath != null) {
-            String warning = PHPStan.validate(phpStanPath);
-            if (warning != null) {
-                result.addWarning(new ValidationResult.Message("phpStan.path", warning)); // NOI18N
-            }
+        String warning = PHPStan.validate(phpStanPath);
+        if (warning != null) {
+            result.addWarning(new ValidationResult.Message("phpStan.path", warning)); // NOI18N
         }
         return this;
     }

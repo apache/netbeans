@@ -22,7 +22,6 @@ import java.awt.Cursor;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -31,20 +30,16 @@ import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
 import org.netbeans.modules.php.analysis.ui.PHPStanLevelListCellRenderer;
 import org.netbeans.modules.php.analysis.options.ValidatorPHPStanParameter;
-import org.netbeans.modules.php.api.util.FileUtils;
-import org.netbeans.modules.php.api.util.UiUtils;
+import org.netbeans.modules.php.analysis.util.AnalysisUiUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.openide.awt.HtmlBrowser;
-import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
 
-    private static final String PHPSTAN_LAST_FOLDER_SUFFIX = ".phpstan"; // NOI18N
-    private static final String PHPSTAN_CONFIGURATION_LAST_FOLDER_SUFFIX = ".phpstan.config"; // NOI18N
-    private static final long serialVersionUID = -968090640401936313L;
+    private static final long serialVersionUID = 1199550925948622972L;
 
     private final ChangeSupport changeSupport = new ChangeSupport(this);
 
@@ -233,51 +228,15 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    @NbBundle.Messages("PHPStanOptionsPanel.browse.title=Select PHPStan")
     private void phpStanBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phpStanBrowseButtonActionPerformed
-        File file = new FileChooserBuilder(PHPStanOptionsPanel.class.getName() + PHPSTAN_LAST_FOLDER_SUFFIX)
-                .setFilesOnly(true)
-                .setTitle(Bundle.PHPStanOptionsPanel_browse_title())
-                .showOpenDialog();
+        File file = AnalysisUiUtils.browsePHPStan();
         if (file != null) {
             phpStanTextField.setText(file.getAbsolutePath());
         }
     }//GEN-LAST:event_phpStanBrowseButtonActionPerformed
 
-    @NbBundle.Messages({
-        "PHPStanOptionsPanel.search.title=PHPStan scripts",
-        "PHPStanOptionsPanel.search.scripts=PHPStan scripts:",
-        "PHPStanOptionsPanel.search.pleaseWaitPart=PHPStan scripts",
-        "PHPStanOptionsPanel.search.notFound=No PHPStan scripts found."
-    })
     private void phpStanSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phpStanSearchButtonActionPerformed
-        String phpStan = UiUtils.SearchWindow.search(new UiUtils.SearchWindow.SearchWindowSupport() {
-
-            @Override
-            public List<String> detect() {
-                return FileUtils.findFileOnUsersPath(PHPStan.NAME, PHPStan.LONG_NAME);
-            }
-
-            @Override
-            public String getWindowTitle() {
-                return Bundle.PHPStanOptionsPanel_search_title();
-            }
-
-            @Override
-            public String getListTitle() {
-                return Bundle.PHPStanOptionsPanel_search_scripts();
-            }
-
-            @Override
-            public String getPleaseWaitPart() {
-                return Bundle.PHPStanOptionsPanel_search_pleaseWaitPart();
-            }
-
-            @Override
-            public String getNoItemsFound() {
-                return Bundle.PHPStanOptionsPanel_search_notFound();
-            }
-        });
+        String phpStan = AnalysisUiUtils.searchPHPStan();
         if (phpStan != null) {
             phpStanTextField.setText(phpStan);
         }
@@ -296,12 +255,8 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
         }
     }//GEN-LAST:event_phpStanLearnMoreLabelMousePressed
 
-    @NbBundle.Messages("PHPStanOptionsPanel.configuration.browse.title=Select PHPStan Configuration File")
     private void phpStanConfiturationBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phpStanConfiturationBrowseButtonActionPerformed
-        File file = new FileChooserBuilder(PHPStanOptionsPanel.class.getName() + PHPSTAN_CONFIGURATION_LAST_FOLDER_SUFFIX)
-                .setFilesOnly(true)
-                .setTitle(Bundle.PHPStanOptionsPanel_configuration_browse_title())
-                .showOpenDialog();
+        File file = AnalysisUiUtils.browsePHPStanConfiguration();
         if (file != null) {
             phpStanConfigurationTextField.setText(file.getAbsolutePath());
         }

@@ -83,7 +83,10 @@ public final class PHPStan {
     }
 
     public static PHPStan getDefault() throws InvalidPhpExecutableException {
-        String phpStanPath = AnalysisOptions.getInstance().getPHPStanPath();
+        return getCustom(AnalysisOptions.getInstance().getPHPStanPath());
+    }
+
+    public static PHPStan getCustom(String phpStanPath) throws InvalidPhpExecutableException {
         String error = validate(phpStanPath);
         if (error != null) {
             throw new InvalidPhpExecutableException(error);

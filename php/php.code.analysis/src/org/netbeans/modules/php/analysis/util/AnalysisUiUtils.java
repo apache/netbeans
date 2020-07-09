@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.modules.php.analysis.commands.CodeSniffer;
 import org.netbeans.modules.php.analysis.commands.CodingStandardsFixer;
 import org.netbeans.modules.php.analysis.commands.PHPStan;
 import org.netbeans.modules.php.api.util.FileUtils;
@@ -33,11 +34,18 @@ import org.openide.util.NbBundle;
 
 public final class AnalysisUiUtils {
 
+    private static final String CODE_SNIFFER_LAST_FOLDER_SUFFIX = ".codeSniffer"; // NOI18N
     private static final String CODING_STANDARDS_FIXER_LAST_FOLDER_SUFFIX = ".codingStandarsFixer"; // NOI18N
     private static final String PHPSTAN_LAST_FOLDER_SUFFIX = ".phpstan"; // NOI18N
     private static final String PHPSTAN_CONFIGURATION_LAST_FOLDER_SUFFIX = ".phpstan.config"; // NOI18N
 
     private AnalysisUiUtils() {
+    }
+
+    @CheckForNull
+    @NbBundle.Messages("AnalysisUiUtils.browse.code.sniffer.title=Select Code Sniffer")
+    public static File browseCodeSniffer() {
+        return browse(CODE_SNIFFER_LAST_FOLDER_SUFFIX, Bundle.AnalysisUiUtils_browse_code_sniffer_title());
     }
 
     @CheckForNull
@@ -65,6 +73,23 @@ public final class AnalysisUiUtils {
                 .setTitle(title)
                 .showOpenDialog();
         return file;
+    }
+
+    @CheckForNull
+    @NbBundle.Messages({
+        "AnalysisUiUtils.search.code.sniffer.title=Code Sniffer scripts",
+        "AnalysisUiUtils.search.code.sniffer.scripts=Co&de Sniffer scripts:",
+        "AnalysisUiUtils.search.code.sniffer.pleaseWaitPart=Code Sniffer scripts",
+        "AnalysisUiUtils.search.code.sniffer.notFound=No Code Sniffer scripts found."
+    })
+    public static String searchCodeSniffer() {
+        SearchParameter param = new SearchParameter()
+                .setFilenames(Arrays.asList(CodeSniffer.NAME, CodeSniffer.LONG_NAME))
+                .setWindowTitle(Bundle.AnalysisUiUtils_search_code_sniffer_title())
+                .setListTitle(Bundle.AnalysisUiUtils_search_code_sniffer_scripts())
+                .setPleaseWaitPart(Bundle.AnalysisUiUtils_search_code_sniffer_pleaseWaitPart())
+                .setNoItemsFound(Bundle.AnalysisUiUtils_search_code_sniffer_notFound());
+        return search(param);
     }
 
     @CheckForNull

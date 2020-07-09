@@ -38,9 +38,9 @@ public final class AnalysisOptionsValidator {
     private static final Pattern PHPSTAN_MEMORY_LIMIT_PATTERN = Pattern.compile("^\\-?\\d+[kmg]?$", Pattern.CASE_INSENSITIVE); // NOI18N
     private final ValidationResult result = new ValidationResult();
 
-    public AnalysisOptionsValidator validateCodeSniffer(String codeSnifferPath, String codeSnifferStandard) {
-        validateCodeSnifferPath(codeSnifferPath);
-        validateCodeSnifferStandard(codeSnifferStandard);
+    public AnalysisOptionsValidator validateCodeSniffer(ValidatorCodeSnifferParameter param) {
+        validateCodeSnifferPath(param.getCodeSnifferPath());
+        validateCodeSnifferStandard(param.getCodeSnifferStandard());
         return this;
     }
 

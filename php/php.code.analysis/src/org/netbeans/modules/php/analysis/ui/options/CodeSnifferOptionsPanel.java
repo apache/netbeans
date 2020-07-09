@@ -30,7 +30,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -45,13 +44,12 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.php.analysis.commands.CodeSniffer;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
+import org.netbeans.modules.php.analysis.options.ValidatorCodeSnifferParameter;
 import org.netbeans.modules.php.analysis.ui.CodeSnifferStandardsComboBoxModel;
-import org.netbeans.modules.php.api.util.FileUtils;
-import org.netbeans.modules.php.api.util.UiUtils;
+import org.netbeans.modules.php.analysis.util.AnalysisUiUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.openide.awt.HtmlBrowser;
 import org.openide.awt.Mnemonics;
-import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -59,7 +57,6 @@ import org.openide.util.NbBundle;
 public class CodeSnifferOptionsPanel extends AnalysisCategoryPanel {
 
     private static final long serialVersionUID = 1342405149329523117L;
-    private static final String CODE_SNIFFER_LAST_FOLDER_SUFFIX = ".codeSniffer"; // NOI18N
 
     final CodeSnifferStandardsComboBoxModel codeSnifferStandardsModel = new CodeSnifferStandardsComboBoxModel();
 
@@ -131,10 +128,12 @@ public class CodeSnifferOptionsPanel extends AnalysisCategoryPanel {
         codeSnifferStandardsModel.setSelectedItem(standard);
     }
 
+    @Override
     public void addChangeListener(ChangeListener listener) {
         changeSupport.addChangeListener(listener);
     }
 
+    @Override
     public void removeChangeListener(ChangeListener listener) {
         changeSupport.removeChangeListener(listener);
     }
@@ -184,7 +183,7 @@ public class CodeSnifferOptionsPanel extends AnalysisCategoryPanel {
     @Override
     public ValidationResult getValidationResult() {
         return new AnalysisOptionsValidator()
-                .validateCodeSniffer(getCodeSnifferPath(), getCodeSnifferStandard())
+                .validateCodeSniffer(ValidatorCodeSnifferParameter.create(this))
                 .getResult();
     }
 
@@ -306,10 +305,7 @@ public class CodeSnifferOptionsPanel extends AnalysisCategoryPanel {
 
     @NbBundle.Messages("CodeSnifferOptionsPanel.browse.title=Select Code Sniffer")
     private void codeSnifferBrowseButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_codeSnifferBrowseButtonActionPerformed
-        File file = new FileChooserBuilder(CodeSnifferOptionsPanel.class.getName() + CODE_SNIFFER_LAST_FOLDER_SUFFIX)
-                .setFilesOnly(true)
-                .setTitle(Bundle.CodeSnifferOptionsPanel_browse_title())
-                .showOpenDialog();
+        File file = AnalysisUiUtils.browseCodeSniffer();
         if (file != null) {
             codeSnifferTextField.setText(file.getAbsolutePath());
         }
@@ -322,33 +318,7 @@ public class CodeSnifferOptionsPanel extends AnalysisCategoryPanel {
         "CodeSnifferOptionsPanel.search.notFound=No Code Sniffer scripts found."
     })
     private void codeSnifferSearchButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_codeSnifferSearchButtonActionPerformed
-        String codeSniffer = UiUtils.SearchWindow.search(new UiUtils.SearchWindow.SearchWindowSupport() {
-
-            @Override
-            public List<String> detect() {
-                return FileUtils.findFileOnUsersPath(CodeSniffer.NAME, CodeSniffer.LONG_NAME);
-            }
-
-            @Override
-            public String getWindowTitle() {
-                return Bundle.CodeSnifferOptionsPanel_search_title();
-            }
-
-            @Override
-            public String getListTitle() {
-                return Bundle.CodeSnifferOptionsPanel_search_scripts();
-            }
-
-            @Override
-            public String getPleaseWaitPart() {
-                return Bundle.CodeSnifferOptionsPanel_search_pleaseWaitPart();
-            }
-
-            @Override
-            public String getNoItemsFound() {
-                return Bundle.CodeSnifferOptionsPanel_search_notFound();
-            }
-        });
+        String codeSniffer = AnalysisUiUtils.searchCodeSniffer();
         if (codeSniffer != null) {
             codeSnifferTextField.setText(codeSniffer);
         }

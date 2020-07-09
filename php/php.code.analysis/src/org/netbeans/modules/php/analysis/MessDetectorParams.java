@@ -27,6 +27,7 @@ public final class MessDetectorParams {
 
     private List<String> ruleSets;
     private FileObject ruleSetFile;
+    private String options;
 
     public List<String> getRuleSets() {
         return Collections.unmodifiableList(ruleSets);
@@ -43,6 +44,15 @@ public final class MessDetectorParams {
 
     MessDetectorParams setRuleSetFile(FileObject ruleSetFile) {
         this.ruleSetFile = ruleSetFile;
+        return this;
+    }
+
+    public String getOptions() {
+        return options;
+    }
+
+    MessDetectorParams setOptions(String options) {
+        this.options = options;
         return this;
     }
 }

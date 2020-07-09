@@ -171,6 +171,10 @@ public final class MessDetector {
         params.add(StringUtils.implode(FileUtil.getMIMETypeExtensions(FileUtils.PHP_MIME_TYPE), ",")); // NOI18N
         // exclude
         addIgnoredFiles(params, files);
+        String options = parameters.getOptions();
+        if (StringUtils.hasText(options)) {
+            params.addAll(StringUtils.explode(options, " ")); // NOI18N
+        }
         return params;
     }
 

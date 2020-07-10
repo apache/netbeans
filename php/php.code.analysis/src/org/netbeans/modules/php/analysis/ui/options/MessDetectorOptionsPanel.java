@@ -49,21 +49,17 @@ import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
 import org.netbeans.modules.php.analysis.options.ValidatorMessDetectorParameter;
 import org.netbeans.modules.php.analysis.ui.MessDetectorRuleSetsListCellRenderer;
 import org.netbeans.modules.php.analysis.ui.MessDetectorRuleSetsListModel;
-import org.netbeans.modules.php.api.util.FileUtils;
-import org.netbeans.modules.php.api.util.UiUtils;
+import org.netbeans.modules.php.analysis.util.AnalysisUiUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.openide.awt.HtmlBrowser;
 import org.openide.awt.Mnemonics;
-import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
 
-    private static final long serialVersionUID = -2710584730175872452L;
-    private static final String MESS_DETECTOR_LAST_FOLDER_SUFFIX = ".messDetector"; // NOI18N
-    private static final String MESS_DETECTOR_RULE_SET_FILE_LAST_FOLDER_SUFFIX = ".messDetector.ruleSetFile"; // NOI18N
+    private static final long serialVersionUID = -8206936666925671148L;
 
     private final MessDetectorRuleSetsListModel ruleSetsListModel = new MessDetectorRuleSetsListModel();
     private final ChangeSupport changeSupport = new ChangeSupport(this);
@@ -130,10 +126,12 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
         messDetectorOptionsTextField.setText(options);
     }
 
+    @Override
     public void addChangeListener(ChangeListener listener) {
         changeSupport.addChangeListener(listener);
     }
 
+    @Override
     public void removeChangeListener(ChangeListener listener) {
         changeSupport.removeChangeListener(listener);
     }
@@ -146,7 +144,7 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
         messDetectorRuleSetsList.clearSelection();
         for (String ruleSet : ruleSets) {
             int indexOf = MessDetectorRuleSetsListModel.getAllRuleSets().indexOf(ruleSet);
-            assert indexOf != -1 : "Rule set not found: " + ruleSet;
+            assert indexOf != -1 : "Rule set not found: " + ruleSet; // NOI18N
             messDetectorRuleSetsList.addSelectionInterval(indexOf, indexOf);
         }
     }
@@ -178,7 +176,7 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
         analysisOptions.setMessDetectorRuleSetFilePath(getMessDetectorRuleSetFilePath());
         analysisOptions.setMessDetectorOptions(getMessDetectorOptions());
     }
-    
+
     @Override
     public boolean isChanged() {
         String saved = AnalysisOptions.getInstance().getMessDetectorPath();
@@ -371,62 +369,22 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
         }
     }//GEN-LAST:event_messDetectorLearnMoreLabelMousePressed
 
-    @NbBundle.Messages("MessDetectorOptionsPanel.browse.title=Select Mess Detector")
     private void messDetectorBrowseButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_messDetectorBrowseButtonActionPerformed
-        File file = new FileChooserBuilder(MessDetectorOptionsPanel.class.getName() + MESS_DETECTOR_LAST_FOLDER_SUFFIX)
-                .setFilesOnly(true)
-                .setTitle(Bundle.MessDetectorOptionsPanel_browse_title())
-                .showOpenDialog();
+        File file = AnalysisUiUtils.browseMessDetector();
         if (file != null) {
             messDetectorTextField.setText(file.getAbsolutePath());
         }
     }//GEN-LAST:event_messDetectorBrowseButtonActionPerformed
 
-    @NbBundle.Messages({
-        "MessDetectorOptionsPanel.search.title=Mess Detector scripts",
-        "MessDetectorOptionsPanel.search.scripts=M&ess Detector scripts:",
-        "MessDetectorOptionsPanel.search.pleaseWaitPart=Mess Detector scripts",
-        "MessDetectorOptionsPanel.search.notFound=No Mess Detector scripts found."
-    })
     private void messDetectorSearchButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_messDetectorSearchButtonActionPerformed
-        String messDetector = UiUtils.SearchWindow.search(new UiUtils.SearchWindow.SearchWindowSupport() {
-
-            @Override
-            public List<String> detect() {
-                return FileUtils.findFileOnUsersPath(MessDetector.NAME, MessDetector.LONG_NAME);
-            }
-
-            @Override
-            public String getWindowTitle() {
-                return Bundle.MessDetectorOptionsPanel_search_title();
-            }
-
-            @Override
-            public String getListTitle() {
-                return Bundle.MessDetectorOptionsPanel_search_scripts();
-            }
-
-            @Override
-            public String getPleaseWaitPart() {
-                return Bundle.MessDetectorOptionsPanel_search_pleaseWaitPart();
-            }
-
-            @Override
-            public String getNoItemsFound() {
-                return Bundle.MessDetectorOptionsPanel_search_notFound();
-            }
-        });
+        String messDetector = AnalysisUiUtils.searchMessDetector();
         if (messDetector != null) {
             messDetectorTextField.setText(messDetector);
         }
     }//GEN-LAST:event_messDetectorSearchButtonActionPerformed
 
-    @NbBundle.Messages("MessDetectorOptionsPanel.configuration.browse.title=Select Mess Detector Rule Set File")
     private void messDetectorRuleSetFileBrowseButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_messDetectorRuleSetFileBrowseButtonActionPerformed
-         File file = new FileChooserBuilder(MessDetectorOptionsPanel.class.getName() + MESS_DETECTOR_RULE_SET_FILE_LAST_FOLDER_SUFFIX)
-                .setFilesOnly(true)
-                .setTitle(Bundle.MessDetectorOptionsPanel_configuration_browse_title())
-                .showOpenDialog();
+         File file = AnalysisUiUtils.browseMessDetectorRuleSet();
         if (file != null) {
             messDetectorRuleSetFileTextField.setText(file.getAbsolutePath());
         }

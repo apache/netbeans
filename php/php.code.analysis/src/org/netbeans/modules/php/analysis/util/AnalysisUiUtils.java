@@ -26,6 +26,7 @@ import java.util.List;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.php.analysis.commands.CodeSniffer;
 import org.netbeans.modules.php.analysis.commands.CodingStandardsFixer;
+import org.netbeans.modules.php.analysis.commands.MessDetector;
 import org.netbeans.modules.php.analysis.commands.PHPStan;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.UiUtils;
@@ -36,6 +37,8 @@ public final class AnalysisUiUtils {
 
     private static final String CODE_SNIFFER_LAST_FOLDER_SUFFIX = ".codeSniffer"; // NOI18N
     private static final String CODING_STANDARDS_FIXER_LAST_FOLDER_SUFFIX = ".codingStandarsFixer"; // NOI18N
+    private static final String MESS_DETECTOR_LAST_FOLDER_SUFFIX = ".messDetector"; // NOI18N
+    private static final String MESS_DETECTOR_RULE_SET_FILE_LAST_FOLDER_SUFFIX = ".messDetector.ruleSetFile"; // NOI18N
     private static final String PHPSTAN_LAST_FOLDER_SUFFIX = ".phpstan"; // NOI18N
     private static final String PHPSTAN_CONFIGURATION_LAST_FOLDER_SUFFIX = ".phpstan.config"; // NOI18N
 
@@ -52,6 +55,18 @@ public final class AnalysisUiUtils {
     @NbBundle.Messages("AnalysisUiUtils.browse.coding.standards.fixer.title=Select Coding Standards Fixer")
     public static File browseCodingStandardsFixer() {
         return browse(CODING_STANDARDS_FIXER_LAST_FOLDER_SUFFIX, Bundle.AnalysisUiUtils_browse_coding_standards_fixer_title());
+    }
+
+    @CheckForNull
+    @NbBundle.Messages("AnalysisUiUtils.browse.mess.detector.title=Select Mess Detector")
+    public static File browseMessDetector() {
+        return browse(MESS_DETECTOR_LAST_FOLDER_SUFFIX, Bundle.AnalysisUiUtils_browse_mess_detector_title());
+    }
+
+    @CheckForNull
+    @NbBundle.Messages("AnalysisUiUtils.browse.mess.detector.rule.set.title=Select Mess Detector Rule Set")
+    public static File browseMessDetectorRuleSet() {
+        return browse(MESS_DETECTOR_RULE_SET_FILE_LAST_FOLDER_SUFFIX, Bundle.AnalysisUiUtils_browse_mess_detector_rule_set_title());
     }
 
     @CheckForNull
@@ -106,6 +121,23 @@ public final class AnalysisUiUtils {
                 .setListTitle(Bundle.AnalysisUiUtils_search_coding_standards_fixer_scripts())
                 .setPleaseWaitPart(Bundle.AnalysisUiUtils_search_coding_standards_fixer_pleaseWaitPart())
                 .setNoItemsFound(Bundle.AnalysisUiUtils_search_coding_standards_fixer_notFound());
+        return search(param);
+    }
+
+    @CheckForNull
+    @NbBundle.Messages({
+        "AnalysisUiUtils.search.mess.detector.title=Mess Detector scripts",
+        "AnalysisUiUtils.search.mess.detector.fixer.scripts=M&ess Detector scripts:",
+        "AnalysisUiUtils.search.mess.detector.fixer.pleaseWaitPart=Mess Detector scripts",
+        "AnalysisUiUtils.search.mess.detector.fixer.notFound=No Mess Detector scripts found."
+    })
+    public static String searchMessDetector() {
+        SearchParameter param = new SearchParameter()
+                .setFilenames(Arrays.asList(MessDetector.NAME, MessDetector.LONG_NAME))
+                .setWindowTitle(Bundle.AnalysisUiUtils_search_mess_detector_title())
+                .setListTitle(Bundle.AnalysisUiUtils_search_mess_detector_fixer_scripts())
+                .setPleaseWaitPart(Bundle.AnalysisUiUtils_search_mess_detector_fixer_pleaseWaitPart())
+                .setNoItemsFound(Bundle.AnalysisUiUtils_search_mess_detector_fixer_notFound());
         return search(param);
     }
 

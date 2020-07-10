@@ -90,11 +90,9 @@ public final class AnalysisOptionsValidator {
     }
 
     private AnalysisOptionsValidator validateMessDetectorPath(String messDetectorPath) {
-        if (messDetectorPath != null) {
-            String warning = MessDetector.validate(messDetectorPath);
-            if (warning != null) {
-                result.addWarning(new ValidationResult.Message("messDetector.path", warning)); // NOI18N
-            }
+        String warning = MessDetector.validate(messDetectorPath);
+        if (warning != null) {
+            result.addWarning(new ValidationResult.Message("messDetector.path", warning)); // NOI18N
         }
         return this;
     }

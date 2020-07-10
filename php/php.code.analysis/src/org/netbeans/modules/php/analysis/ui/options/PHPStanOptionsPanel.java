@@ -34,11 +34,11 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.modules.php.analysis.commands.PHPStan;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
+import org.netbeans.modules.php.analysis.ui.AnalysisDefaultDocumentListener;
 import org.netbeans.modules.php.analysis.ui.PHPStanLevelListCellRenderer;
 import org.netbeans.modules.php.analysis.options.ValidatorPHPStanParameter;
 import org.netbeans.modules.php.analysis.util.AnalysisUiUtils;
@@ -80,7 +80,7 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
         phpStanLevelComboBox.addItem(PHPStan.MAX_LEVEL);
         phpStanLevelComboBox.setRenderer(new PHPStanLevelListCellRenderer(phpStanLevelComboBox.getRenderer()));
         // add listener
-        DefaultDocumentListener defaultDocumentListener = new DefaultDocumentListener();
+        DocumentListener defaultDocumentListener = new AnalysisDefaultDocumentListener(() -> fireChange());
         phpStanTextField.getDocument().addDocumentListener(defaultDocumentListener);
         phpStanConfigurationTextField.getDocument().addDocumentListener(defaultDocumentListener);
         phpStanMemoryLimitTextField.getDocument().addDocumentListener(defaultDocumentListener);
@@ -384,29 +384,5 @@ public class PHPStanOptionsPanel extends AnalysisCategoryPanel {
 
     private void setPHPStanMemoryLimit(String memoryLimit) {
         phpStanMemoryLimitTextField.setText(memoryLimit);
-    }
-
-    //~ Inner classes
-    private final class DefaultDocumentListener implements DocumentListener {
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            processUpdate();
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            processUpdate();
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            processUpdate();
-        }
-
-        private void processUpdate() {
-            fireChange();
-        }
-
     }
 }

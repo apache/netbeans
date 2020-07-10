@@ -37,13 +37,13 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.php.analysis.commands.CodingStandardsFixer;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
 import org.netbeans.modules.php.analysis.options.ValidatorCodingStandardsFixerParameter;
+import org.netbeans.modules.php.analysis.ui.AnalysisDefaultDocumentListener;
 import org.netbeans.modules.php.analysis.util.AnalysisUiUtils;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
@@ -65,7 +65,7 @@ public class CodingStandardsFixerOptionsPanel extends AnalysisCategoryPanel {
     }
 
     private void init() {
-        DocumentListener defaultDocumentListener = new DefaultDocumentListener();
+        DocumentListener defaultDocumentListener = new AnalysisDefaultDocumentListener(() -> fireChange());
         initCodingStandardsFixer(defaultDocumentListener);
         codingStandardsFixerVersionComboBox.setModel(new DefaultComboBoxModel<>(CodingStandardsFixer.VERSIONS.toArray(new String[0])));
         codingStandardsFixerLevelComboBox.setModel(new DefaultComboBoxModel<>(CodingStandardsFixer.ALL_LEVEL.toArray(new String[0])));
@@ -420,29 +420,4 @@ public class CodingStandardsFixerOptionsPanel extends AnalysisCategoryPanel {
     private JLabel codingStandardsFixerVersionLabel;
     private JLabel noteLabel;
     // End of variables declaration//GEN-END:variables
-
-    //~ Inner classes
-    private final class DefaultDocumentListener implements DocumentListener {
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            processUpdate();
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            processUpdate();
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            processUpdate();
-        }
-
-        private void processUpdate() {
-            fireChange();
-        }
-
-    }
-
 }

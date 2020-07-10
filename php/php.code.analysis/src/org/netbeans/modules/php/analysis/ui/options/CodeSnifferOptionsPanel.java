@@ -45,6 +45,7 @@ import org.netbeans.modules.php.analysis.commands.CodeSniffer;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
 import org.netbeans.modules.php.analysis.options.ValidatorCodeSnifferParameter;
+import org.netbeans.modules.php.analysis.ui.AnalysisDefaultDocumentListener;
 import org.netbeans.modules.php.analysis.ui.CodeSnifferStandardsComboBoxModel;
 import org.netbeans.modules.php.analysis.util.AnalysisUiUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
@@ -74,7 +75,7 @@ public class CodeSnifferOptionsPanel extends AnalysisCategoryPanel {
     }
 
     private void init() {
-        DocumentListener defaultDocumentListener = new DefaultDocumentListener();
+        DocumentListener defaultDocumentListener = new AnalysisDefaultDocumentListener(() -> fireChange());
         initCodeSniffer(defaultDocumentListener);
     }
 
@@ -352,30 +353,6 @@ public class CodeSnifferOptionsPanel extends AnalysisCategoryPanel {
     // End of variables declaration//GEN-END:variables
 
     //~ Inner classes
-
-    private final class DefaultDocumentListener implements DocumentListener {
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            processUpdate();
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            processUpdate();
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            processUpdate();
-        }
-
-        private void processUpdate() {
-            fireChange();
-        }
-
-    }
-
     private final class CodeSnifferPathDocumentListener implements DocumentListener {
 
         @Override

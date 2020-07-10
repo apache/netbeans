@@ -39,7 +39,6 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -47,6 +46,7 @@ import org.netbeans.modules.php.analysis.commands.MessDetector;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
 import org.netbeans.modules.php.analysis.options.ValidatorMessDetectorParameter;
+import org.netbeans.modules.php.analysis.ui.AnalysisDefaultDocumentListener;
 import org.netbeans.modules.php.analysis.ui.MessDetectorRuleSetsListCellRenderer;
 import org.netbeans.modules.php.analysis.ui.MessDetectorRuleSetsListModel;
 import org.netbeans.modules.php.analysis.util.AnalysisUiUtils;
@@ -71,7 +71,7 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
     }
 
     private void init() {
-        DocumentListener defaultDocumentListener = new DefaultDocumentListener();
+        DocumentListener defaultDocumentListener = new AnalysisDefaultDocumentListener(() -> fireChange());
         initMessDetector(defaultDocumentListener);
     }
 
@@ -410,29 +410,6 @@ public class MessDetectorOptionsPanel extends AnalysisCategoryPanel {
     // End of variables declaration//GEN-END:variables
 
     //~ Inner classes
-
-    private final class DefaultDocumentListener implements DocumentListener {
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            processUpdate();
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            processUpdate();
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            processUpdate();
-        }
-
-        private void processUpdate() {
-            fireChange();
-        }
-
-    }
 
     private final class DefaultListSelectionListener implements ListSelectionListener {
 

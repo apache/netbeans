@@ -69,6 +69,7 @@ public class ProfilerLauncher {
     
     final private static String AGENT_ARGS = "agent.jvmargs"; // NOI18N
     final private static String LINUX_THREAD_TIMER_KEY = "-XX:+UseLinuxPosixThreadCPUClocks"; // NOI18N
+    final private static String ARGS_PREFIX = "profiler.netbeansBindings.jvmarg"; // NOI18N
     
     public static final class Command {
         private final String command;
@@ -541,6 +542,7 @@ public class ProfilerLauncher {
         }
         assert agentArgs != null;
         props.put(AGENT_ARGS, agentArgs);
+        props.put(ARGS_PREFIX + ".agent", agentArgs); // NOI18N
 
         if (Platform.isLinux() && javaVersion.equals(CommonConstants.JDK_16_STRING)) {
             activateLinuxPosixThreadTime(pSettings, props);
@@ -608,8 +610,12 @@ public class ProfilerLauncher {
                     heapDumpPath = "\"" + heapDumpPath + "\"";//NOI18N
                 }
 
-                oomArgsBuffer.append(" -XX:+HeapDumpOnOutOfMemoryError"); // NOI18N
-                oomArgsBuffer.append(" -XX:HeapDumpPath=").append(heapDumpPath).append(" "); // NOI18N
+                final String oom = "-XX:+HeapDumpOnOutOfMemoryError";
+                final String path = "-XX:HeapDumpPath=" + heapDumpPath;
+                oomArgsBuffer.append(" ").append(oom); // NOI18N
+                oomArgsBuffer.append(" ").append(path).append(" "); // NOI18N
+                props.put(ARGS_PREFIX + ".outOfMemory", oom); // NOI18N
+                props.put(ARGS_PREFIX + ".heapDumpPath", path); // NOI18N
 
                 ProfilerLogger.log("Profiler.OutOfMemoryDetection: Enabled"); // NOI18N
             }

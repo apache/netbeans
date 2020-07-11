@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -242,9 +243,10 @@ final class DocRenderer {
         private final PhpElement indexedElement;
         private final List<String> links = new ArrayList<>();
         private final ASTNode node;
+        @NullAllowed
         private PHPDocBlock phpDocBlock;
 
-        public PHPDocExtractor(CCDocHtmlFormatter header, PhpElement indexedElement, ASTNode node, PHPDocBlock phpDocBlock) {
+        public PHPDocExtractor(CCDocHtmlFormatter header, PhpElement indexedElement, ASTNode node, @NullAllowed PHPDocBlock phpDocBlock) {
             this.header = header;
             this.indexedElement = indexedElement;
             this.node = node;
@@ -380,9 +382,6 @@ final class DocRenderer {
         }
 
         private void extractPHPDocBlock() {
-            if (phpDocBlock == null) {
-                return;
-            }
             List<PHPDocVarTypeTag> params = new ArrayList<>();
             List<PHPDocTypeTag> returns = new ArrayList<>();
             StringBuilder others = new StringBuilder();
@@ -391,10 +390,11 @@ final class DocRenderer {
             List<PhpElement> inheritedElements = getInheritedElements();
             List<PHPDocBlock> inheritedComments = getInheritedComments(inheritedElements);
 
-            String description = phpDocBlock.getDescription();
+            String description = phpDocBlock == null ? null : phpDocBlock.getDescription();
             description = composeDescription(description, inheritedComments);
 
-            for (PHPDocTag tag : phpDocBlock.getTags()) {
+            List<PHPDocTag> tags = phpDocBlock == null ? Collections.emptyList() : phpDocBlock.getTags();
+            for (PHPDocTag tag : tags) {
                 AnnotationParsedLine kind = tag.getKind();
                 if (kind.equals(PHPDocTag.Type.PARAM)) {
                     PHPDocVarTypeTag paramTag = (PHPDocVarTypeTag) tag;
@@ -574,7 +574,11 @@ final class DocRenderer {
             return ret;
         }
 
-        private String replaceInheritdocForDescription(String description, String parentDescription) {
+        @CheckForNull
+        private String replaceInheritdocForDescription(@NullAllowed String description, @NullAllowed String parentDescription) {
+            if (description == null) {
+                return parentDescription;
+            }
             if (description != null && hasInlineInheritdoc(description)) {
                 if (parentDescription != null && !parentDescription.trim().isEmpty()) {
                     if (INLINE_INHERITDOC_PATTERN.matcher(description.trim()).matches()) {
@@ -717,7 +721,7 @@ final class DocRenderer {
 
         private boolean needInheritedElements() {
             if (phpDocBlock == null) {
-                return false;
+                return true;
             }
             String description = phpDocBlock.getDescription();
             if (hasInlineInheritdoc(description)) {
@@ -752,7 +756,7 @@ final class DocRenderer {
             for (PhpElement element : elements) {
                 PHPDocBlock docBlock = getPhpDocBlock(element);
                 if (docBlock != null) {
-                    if (isOnlyInheritdoc(phpDocBlock)) {
+                    if (phpDocBlock == null || isOnlyInheritdoc(phpDocBlock)) {
                         phpDocBlock = docBlock;
                     } else {
                         inheritedComments.add(docBlock);
@@ -767,7 +771,11 @@ final class DocRenderer {
                     && phpDocBlock.getTags().isEmpty();
         }
 
-        static String replaceInlineInheritdoc(String description, String inheritdoc) {
+        @CheckForNull
+        static String replaceInlineInheritdoc(@NullAllowed String description, @NullAllowed String inheritdoc) {
+             if (description == null && inheritdoc != null) {
+                return inheritdoc;
+            }
             if (description == null || inheritdoc == null) {
                 return description;
             }

@@ -3691,7 +3691,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     et = (ExecutableType) asMemberOf(e, actualType, types);
                     if (addCast && itemFactory instanceof TypeCastableItemFactory
                             && !types.isSubtype(type, e.getEnclosingElement().asType())
-                            && type.getKind() == TypeKind.DECLARED && !eu.alreadyDefinedIn(e.getSimpleName(), et, (TypeElement)((DeclaredType)type).asElement())) {
+                            && type.getKind() == TypeKind.DECLARED && !hasBaseMethod(elements, (DeclaredType) type, (ExecutableElement) e)) {
                         results.add(((TypeCastableItemFactory<T>)itemFactory).createTypeCastableExecutableItem(env.getController(), (ExecutableElement) e, et, actualType, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, actualType), smartTypes), env.assignToVarPos(), false));
                     } else {
                         results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, actualType), smartTypes), env.assignToVarPos(), false));
@@ -3720,6 +3720,17 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (!isStatic && nestedClassSeen[0]) {
             addKeyword(env, NEW_KEYWORD, SPACE, false);
         }
+    }
+
+    private boolean hasBaseMethod(Elements elements, DeclaredType type, ExecutableElement invoked) {
+        TypeElement clazz = (TypeElement) type.asElement();
+        for (ExecutableElement existing : ElementFilter.methodsIn(elements.getAllMembers(clazz))) {
+            if (existing.getSimpleName().equals(invoked.getSimpleName()) &&
+                elements.overrides(invoked, existing, clazz)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void addThisOrSuperConstructor(final Env env, final TypeMirror type, final Element elem, final String name, final ExecutableElement toExclude) throws IOException {

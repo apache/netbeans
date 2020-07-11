@@ -46,6 +46,7 @@ import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.java.JavaDataLoader;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.usages.IndexUtil;
+import org.netbeans.modules.java.ui.FmtOptions;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.cookies.EditorCookie;
@@ -4830,7 +4831,18 @@ public class FormatingTest extends NbTestCase {
                 + "        java.util.Arrays.asList(args).map((val) -> val.length());\n"
                 + "    }\n"
                 + "}\n";
+        // Testing with wrapping lambda arrow deactivated
         reformat(doc, content, golden);
+
+        final String wrapAfterLambdaArrow = FmtOptions.wrapAfterLambdaArrow;
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        preferences.putBoolean(wrapAfterLambdaArrow, true);
+
+        // Testing with wrapping lambda arrow activated
+        reformat(doc, content, golden);
+
+        // Returning the setting to the default value
+        preferences.putBoolean(wrapAfterLambdaArrow, FmtOptions.getDefaultAsBoolean(wrapAfterLambdaArrow));
     }
 
     public void testForNoCondition() throws Exception {
@@ -5112,6 +5124,108 @@ public class FormatingTest extends NbTestCase {
         reformat(doc, content, golden);
     }
 
+    public void testRecord1() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "public record g3<T extends Object>() implements Cloneable{\n"
+                + "public g3 {\n"
+                + "System.out.println(\"hello\");\n"
+                + "}}}";
+
+        String golden
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public record g3<T extends Object>() implements Cloneable {\n\n"
+                + "        public g3 {\n"
+                + "            System.out.println(\"hello\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+    }
+
+    public void testRecord2() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n"
+                + "public record g3<T extends Object>() {static int r =10;\n"
+                + "public g3 {\n"
+                + "System.out.println(\"hello\");\n"
+                + "}"
+                + "static{}"
+                + "}}";
+
+        String golden
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public record g3<T extends Object>() {\n\n"
+                + "        static int r = 10;\n\n"
+                + "        public g3 {\n"
+                + "            System.out.println(\"hello\");\n"
+                + "        }\n\n"
+                + "        static {\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        reformat(doc, content, golden);
+    }
+
+    public void testRecord3() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "public record g3(){}}";
+
+        String golden
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public record g3() {\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+    }
+   
     private void reformat(Document doc, String content, String golden) throws Exception {
         reformat(doc, content, golden, 0, content.length());
     }

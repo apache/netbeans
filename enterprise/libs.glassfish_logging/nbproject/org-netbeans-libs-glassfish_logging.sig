@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.32.0
+#Version 1.33.0
 
 CLSS public abstract interface com.sun.org.apache.commons.logging.Log
 meth public abstract boolean isDebugEnabled()

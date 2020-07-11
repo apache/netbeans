@@ -301,7 +301,6 @@ public class ConvertTextBlockToStringTest {
                         + "}");
     }
 
-   
     @Test
     public void escapeCharTextBlock() throws Exception {
         try {
@@ -364,6 +363,68 @@ public class ConvertTextBlockToStringTest {
                         + "public class Test {\n"
                         + "    public static void main(String[] args) {\n"
                         + "        String a =\"abc\\n\" + \"\\\"def\\n\" + \"ghi\\n\" + \"'lmn'\\n\" + \"opq\\n\";\n"
+                        + "    }\n"
+                        + "}");
+    }
+
+    @Test
+    public void textBlockAsParameter1() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return;
+        }
+        HintTest.create()
+                .input("package test;\n"
+                        + "\n"
+                        + "class myClass{\n"
+                        + "    public static void main(String[] args) {\n"
+                        + "        System.out.println(\"\"\"\n"
+                        + "                           abc\"\"\");\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertTextBlockToString.class)
+                .findWarning("4:27-4:30:verifier:" + Bundle.ERR_ConvertTextBlockToString())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;\n"
+                        + "\n"
+                        + "class myClass{\n"
+                        + "    public static void main(String[] args) {\n"
+                        + "        System.out.println(\"abc\");\n"
+                        + "    }\n"
+                        + "}");
+    }
+
+    @Test
+    public void textBlockAsParameter2() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return;
+        }
+        HintTest.create()
+                .input("class myClass{\n"
+                        + "    public static void main(String[] args) {\n"
+                        + "        System.out.println(\"\"\"\n"
+                        + "                           abc\n"
+                        + "                           def\n"
+                        + "                           ghi\"\"\");\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
+                .run(ConvertTextBlockToString.class)
+                .findWarning("2:27-2:30:verifier:" + Bundle.ERR_ConvertTextBlockToString())
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("class myClass{\n"
+                        + "    public static void main(String[] args) {\n"
+                        + "        System.out.println(\"abc\\n\" + \"def\\n\" + \"ghi\");\n"
                         + "    }\n"
                         + "}");
     }

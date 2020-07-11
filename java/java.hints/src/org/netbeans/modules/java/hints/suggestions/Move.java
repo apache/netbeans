@@ -110,7 +110,7 @@ public class Move {
             List<? extends Tree> members = parent.getMembers();
             for (Tree tree : members) {
                 if(tree.getKind() == Tree.Kind.METHOD &&
-                        ((MethodTree)tree).getReturnType() == null) {
+                        ((MethodTree)tree).getName().contentEquals("<init>")) {
                     MethodTree method = (MethodTree)tree;
                     boolean synthetic = wc.getTreeUtilities().isSynthetic(new TreePath(parentPath, tree));
                     boolean isStatic = var.getModifiers().getFlags().contains(Modifier.STATIC);

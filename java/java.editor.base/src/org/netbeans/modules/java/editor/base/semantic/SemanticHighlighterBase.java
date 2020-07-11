@@ -1230,15 +1230,17 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                         long end = start + 1;
                         ExecutableElement invokedMethod = (ExecutableElement) invoked;
                         pos = Math.min(pos, invokedMethod.getParameters().size() - 1);
-                        boolean shouldBeAdded = true;
-                        if (tree.getKind() == Kind.IDENTIFIER &&
-                                invokedMethod.getParameters().get(pos).getSimpleName().equals(
-                                        IdentifierTree.class.cast(tree).getName())) {
-                            shouldBeAdded = false;
-                        }
-                        if (shouldBeAdded) {
-                            preText.put(new int[] {(int) start, (int) end},
-                                        invokedMethod.getParameters().get(pos).getSimpleName() + ":");
+                        if (pos != (-1)) {
+                            boolean shouldBeAdded = true;
+                            if (tree.getKind() == Kind.IDENTIFIER &&
+                                    invokedMethod.getParameters().get(pos).getSimpleName().equals(
+                                            IdentifierTree.class.cast(tree).getName())) {
+                                shouldBeAdded = false;
+                            }
+                            if (shouldBeAdded) {
+                                preText.put(new int[] {(int) start, (int) end},
+                                            invokedMethod.getParameters().get(pos).getSimpleName() + ":");
+                            }
                         }
                     }
                 }

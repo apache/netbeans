@@ -21,13 +21,14 @@ package org.netbeans.modules.notifications;
 
 import java.awt.Component;
 import org.openide.awt.StatusLineElementProvider;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Status line element showing icon for Notifications.
  *
  * @author S. Aubrecht
  */
-@org.openide.util.lookup.ServiceProvider(service=org.openide.awt.StatusLineElementProvider.class, position=600)
+@ServiceProvider(service=StatusLineElementProvider.class, position=600)
 public final class StatusLineElement implements StatusLineElementProvider {
 
     @Override

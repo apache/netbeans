@@ -118,8 +118,10 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         "ERR_Project_Folder_cannot_be_created=Project Folder cannot be created.",
         "ERR_Project_Folder_is_not_valid_path=Project Folder is not a valid path.",
         "ERR_Project_Folder_is_UNC=Project Folder cannot be located on UNC path.",
+        "ERR_Package_ends_in_dot=Package name can not end in '.'.",
         "# {0} - version", "ERR_old_maven=Maven {0} is too old, version 2.0.7 or newer is needed.",
-        "ERR_Project_Folder_exists=Project Folder already exists and is not empty."
+        "ERR_Project_Folder_exists=Project Folder already exists and is not empty.",
+        "ERR_Project_Folder_not_directory=Project Folder is not a directory."
     })
     BasicPanelVisual(BasicWizardPanel panel, Archetype arch) {
         this.panel = panel;
@@ -158,7 +160,17 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
                 vg.add(txtGroupId, MavenValidators.createGroupIdValidators());
                 vg.add(txtArtifactId, MavenValidators.createArtifactIdValidators());
                 vg.add(txtVersion, MavenValidators.createVersionValidators());
-                vg.add(txtPackage, StringValidators.JAVA_PACKAGE_NAME);
+                vg.add(txtPackage, ValidatorUtils.merge(
+                        StringValidators.JAVA_PACKAGE_NAME,
+                        new AbstractValidator<String>(String.class) {
+                        @Override
+                        public void validate(Problems problems, String compName, String model)
+                        {
+                            // MAY_NOT_END_WITH_PERIOD validator broken in NB's
+                            // version (empty string); so copy current version' code.
+                            if(model != null && !model.isEmpty() && model.charAt(model.length() - 1) == '.')
+                                problems.add(ERR_Package_ends_in_dot());
+                        }}));
                 vg.add(projectNameTextField, ValidatorUtils.merge(
                         MavenValidators.createArtifactIdValidators(),
                         StringValidators.REQUIRE_VALID_FILENAME
@@ -198,6 +210,10 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
                             return;
                         }
                         File destFolder = FileUtil.normalizeFile(new File(new File(projectLocationTextField.getText().trim()), projectNameTextField.getText().trim()).getAbsoluteFile());
+                        if(destFolder.exists() && !destFolder.isDirectory()) {
+                            problems.add(ERR_Project_Folder_not_directory());
+                            return;
+                        }
                         File[] kids = destFolder.listFiles();
                         if (destFolder.exists() && kids != null && kids.length > 0) {
                             // Folder exists and is not empty
@@ -551,6 +567,7 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         });
     }
     
+    private static final String SETTINGS_HAVE_READ = "BasicPanelVisual-read-properties-before"; //NOI18N
     @Messages({
         "# {0} - project count", "TXT_MavenProjectName=mavenproject{0}",
         "TXT_Checking1=Checking additional creation properties..."
@@ -562,13 +579,27 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
                 handle = null;
             }
         }        
-        // PROJECT_PARENT_FOLDER confusing, better name is PROJECT_BASE_FOLDER
+        // PROJECT_PARENT_FOLDER usage is confusing. Sometimes it's the
+        // parent directory, sometimes it's the project directory.
+        // Maybe introduce PROJECT_BASE_FOLDER, to clarify and differentiate.
+        // But for local fix [NETBEANS-4206] keep track of whether
+        // these properties have been read before.
+        boolean haveRead =  Boolean.parseBoolean((String)settings.getProperty(SETTINGS_HAVE_READ)); //NOI18N
         File projectFolder = (File) settings.getProperty(CommonProjectActions.PROJECT_PARENT_FOLDER); //NOI18N
         File projectLocation;
-        if (projectFolder == null || projectFolder.getParentFile() == null || !projectFolder.getParentFile().isDirectory()) {
-            projectLocation = ProjectChooser.getProjectsFolder();
+        if(!haveRead && projectFolder != null) {
+            // First time in here, dialog was started with project folder;
+            // example is creating a project from pom parent
+            projectLocation = projectFolder;
         } else {
-            projectLocation = projectFolder.getParentFile();
+            if (projectFolder == null || projectFolder.getParentFile() == null || !projectFolder.getParentFile().isDirectory()) {
+                projectLocation = ProjectChooser.getProjectsFolder();
+            } else {
+                projectLocation = projectFolder.getParentFile();
+            }
+        }
+        if(!haveRead) {
+            settings.putProperty(SETTINGS_HAVE_READ, "true"); //NOI18N
         }
         this.projectLocationTextField.setText(projectLocation.getAbsolutePath());
         

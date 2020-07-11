@@ -62,7 +62,7 @@ public class WsdlSaasNodeChildren extends SaasNodeChildren<Object> {
         } else if (state == Saas.State.INITIALIZING) {
             setKeys(WAIT_HOLDER);
         } else {
-            setKeys(Collections.EMPTY_LIST);
+            setKeys(Collections.emptyList());
         }
     }
 

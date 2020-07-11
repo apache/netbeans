@@ -960,7 +960,7 @@ public class Flow {
         }
         
         private boolean isConstructor(TreePath what) {
-            return what.getLeaf().getKind() == Kind.METHOD && ((MethodTree) what.getLeaf()).getReturnType() == null; //TODO: not really a proper way to detect constructors
+            return what.getLeaf().getKind() == Kind.METHOD && ((MethodTree) what.getLeaf()).getName().contentEquals("<init>"); //TODO: not really a proper way to detect constructors
         }
 
         @Override

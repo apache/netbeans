@@ -26,7 +26,8 @@ import com.oracle.truffle.api.debug.DebugValue;
 import com.oracle.truffle.api.debug.Debugger;
 import com.oracle.truffle.api.debug.DebuggerSession;
 import com.oracle.truffle.api.debug.SuspendedEvent;
-//import com.oracle.truffle.api.vm.PolyglotEngine;
+import com.oracle.truffle.api.nodes.LanguageInfo;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -111,7 +112,7 @@ public class JPDATruffleAccessor extends Object {
         }
     }
     
-    static JPDATruffleDebugManager setUpDebugManagerFor(/*Engine*/Object engineObj, boolean doStepInto) {
+    static JPDATruffleDebugManager setUpDebugManagerFor(/*Engine*/Object engineObj, boolean includeInternal, boolean doStepInto) {
         trace("setUpDebugManagerFor("+engineObj+", "+doStepInto+")");
         Engine engine = (Engine) engineObj;
         Debugger debugger;
@@ -126,13 +127,24 @@ public class JPDATruffleAccessor extends Object {
                 return null;
             }
         }
-        JPDATruffleDebugManager tdm = new JPDATruffleDebugManager(debugger, doStepInto);
+        JPDATruffleDebugManager tdm = new JPDATruffleDebugManager(debugger, includeInternal, doStepInto);
         synchronized (debugManagers) {
             debugManagers.put(debugger, tdm);
         }
         return tdm;
     }
     
+    static void setIncludeInternal(boolean includeInternal) {
+        synchronized (debugManagers) {
+            for (JPDATruffleDebugManager tdm : debugManagers.values()) {
+                DebuggerSession debuggerSession = tdm.getDebuggerSession();
+                if (debuggerSession != null) {
+                    debuggerSession.setSteppingFilter(JPDATruffleDebugManager.createSteppingFilter(includeInternal));
+                }
+            }
+        }
+    }
+
     static int executionHalted(JPDATruffleDebugManager tdm,
                                SourcePosition position,
                                boolean haltedBefore,
@@ -200,6 +212,10 @@ public class JPDATruffleAccessor extends Object {
             }
             frameInfos.append(sfName);
             frameInfos.append('\n');
+            LanguageInfo sfLang = sf.getLanguage();
+            String sfLangId = (sfLang != null) ? sfLang.getId() + " " + sfLang.getName() : "";
+            frameInfos.append(sfLangId);
+            frameInfos.append('\n');
             frameInfos.append(DebuggerVisualizer.getSourceLocation(sf.getSourceSection()));
             frameInfos.append('\n');
             /*if (fi.getCallNode() == null) {
@@ -210,7 +226,7 @@ public class JPDATruffleAccessor extends Object {
                 System.err.println("frameInfos = "+frameInfos);
                 *//*
             }*/
-            SourcePosition position = JPDATruffleDebugManager.getPosition(sf.getSourceSection());
+            SourcePosition position = new SourcePosition(sf.getSourceSection());
             frameInfos.append(createPositionIdentificationString(position));
             if (includeInternal) {
                 frameInfos.append('\n');
@@ -220,12 +236,6 @@ public class JPDATruffleAccessor extends Object {
             frameInfos.append("\n\n");
             
             codes[j] = position.code;
-            /*
-             TODO Find "this"
-            Frame f = fi.getFrame(FrameInstance.FrameAccess.READ_ONLY, false);
-            if (f instanceof VirtualFrame) {
-                thiss[i] = JSFrameUtil.getThisObj((VirtualFrame) f);
-            }*/
             j++;
         }
         if (j < n) {
@@ -246,7 +256,7 @@ public class JPDATruffleAccessor extends Object {
         str.append('\n');
         str.append(position.uri.toString());
         str.append('\n');
-        str.append(position.line);
+        str.append(position.sourceSection);
         return str.toString();
     }
 
@@ -293,7 +303,8 @@ public class JPDATruffleAccessor extends Object {
                 }
                 Iterable<DebugValue> varsIt = scope.getDeclaredValues();
                 Iterator<DebugValue> vars = varsIt.iterator();
-                if ((args == null || !args.hasNext()) && !vars.hasNext()) {
+                DebugValue receiver = scope.isFunctionScope() ? scope.getReceiver() : null;
+                if ((args == null || !args.hasNext()) && !vars.hasNext() && receiver == null) {
                     // An empty scope, skip it
                     scope = scope.getParent();
                     continue;
@@ -313,6 +324,9 @@ public class JPDATruffleAccessor extends Object {
                 List<DebugValue> variables = new ArrayList<>();
                 while (vars.hasNext()) {
                     variables.add(vars.next());
+                }
+                if (receiver != null) {
+                    variables.add(receiver);
                 }
                 elements.add(variables.size());
                 if (arguments != null) {
@@ -377,6 +391,12 @@ public class JPDATruffleAccessor extends Object {
             while (vars.hasNext()) {
                 variables.add(vars.next());
             }
+            if (scope.isFunctionScope()) {
+                DebugValue receiver = scope.getReceiver();
+                if (receiver != null) {
+                    variables.add(receiver);
+                }
+            }
             elements.add(variables.size());
             if (arguments != null) {
                 for (DebugValue v : arguments) {
@@ -394,11 +414,12 @@ public class JPDATruffleAccessor extends Object {
         return elements.toArray();
     }
 
-    // Store 11 elements: <name>, <type>, <readable>, <writable>, <internal>, <String value>,
+    // Store 12 elements: <name>, <language>, <type>, <readable>, <writable>, <internal>, <String value>,
     //                    <var source>, <VS code>, <type source>, <TS code>, <DebugValue>
     static void addValueElement(DebugValue value, List<Object> elements) {
         GuestObject tobj = new GuestObject(value);
         elements.add(tobj.name);
+        elements.add(tobj.language);
         elements.add(tobj.type);
         elements.add(tobj.readable);
         elements.add(tobj.writable);

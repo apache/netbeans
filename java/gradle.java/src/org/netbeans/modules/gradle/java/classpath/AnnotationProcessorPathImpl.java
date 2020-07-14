@@ -16,23 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.gradle.java.classpath;
 
-import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
+import static org.netbeans.modules.gradle.java.classpath.AbstractGradleClassPathImpl.addAllFile;
 
 /**
  *
- * @author Laszlo Kishalmi
+ * @author lkishalmi
  */
-public final class RuntimeClassPathImpl extends AbstractSourceSetClassPathImpl {
+public final class AnnotationProcessorPathImpl extends AbstractSourceSetClassPathImpl {
 
-    public RuntimeClassPathImpl(Project proj, String sources) {
-        super(proj, sources);
+    public AnnotationProcessorPathImpl(Project proj, String sourceSetName) {
+        super(proj, sourceSetName);
     }
 
     @Override
@@ -40,9 +40,9 @@ public final class RuntimeClassPathImpl extends AbstractSourceSetClassPathImpl {
         List<URL> ret = new ArrayList<>();
         GradleJavaSourceSet ss = getSourceSet();
         if (ss != null) {
-            addAllFile(ret, ss.getRuntimeClassPath());
+            addAllFile(ret, ss.getAnnotationProcessorPath());
         }
-        return ret;        
+        return ret;
     }
-    
+
 }

@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle.java.nodes;
 
+import java.util.ArrayList;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.nodes.AbstractGradleNodeList;
 import java.util.Arrays;
@@ -72,7 +73,10 @@ public final class SourcesNodeFactory implements NodeFactory {
             return Arrays.asList(javagroup);
         }
         
-        @NbBundle.Messages({"# {0} - label of source group", "# {1} - project name", "ERR_WrongSG={0} is owned by project {1}, cannot be used here, see issue #138310 for details."})
+        @NbBundle.Messages({
+            "# {0} - label of source group",
+            "# {1} - project name",
+            "ERR_WrongSG={0} is owned by project {1}, cannot be used here, see issue #138310 for details."})
         @Override
         public Node node(SourceGroup group) {
             Project owner = FileOwnerQuery.getOwner(group.getRootFolder());
@@ -118,12 +122,7 @@ public final class SourcesNodeFactory implements NodeFactory {
         @Override
         public void stateChanged(ChangeEvent arg0) {
             //#167372 break the stack trace chain to prevent deadlocks.
-            RP.post(new Runnable() {
-                @Override
-                public void run() {
-                    fireChange();
-                }
-            });
+            RP.post(this::fireChange);
         }
     }
     

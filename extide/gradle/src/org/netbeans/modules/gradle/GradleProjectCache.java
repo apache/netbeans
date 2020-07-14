@@ -96,7 +96,7 @@ public final class GradleProjectCache {
     private static final Map<File, Set<File>> SUB_PROJECT_DIR_CACHE = new ConcurrentHashMap<>();
 
     // Increase this number if new info is gathered from the projects.
-    private static final int COMPATIBLE_CACHE_VERSION = 12;
+    private static final int COMPATIBLE_CACHE_VERSION = 13;
 
     private GradleProjectCache() {
     }
@@ -228,7 +228,7 @@ public final class GradleProjectCache {
             } else {
                 String problem = info.getGradleException();
                 String[] lines = problem.split("\n");
-                LOG.log(INFO, "Failed to retrieve project information for: {0} {1}", new Object[] {base.getProjectDir(), lines});
+                LOG.log(INFO, "Failed to retrieve project information for: {0}\nReason: {1}", new Object[] {base.getProjectDir(), problem}); //NOI18N
                 openNotification(base.getProjectDir(), Bundle.TIT_LOAD_FAILED(base.getProjectDir().getName()), lines[0], problem);
                 return ctx.previous.invalidate(problem);
             }

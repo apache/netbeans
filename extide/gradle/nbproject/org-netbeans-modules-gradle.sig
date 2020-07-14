@@ -480,8 +480,8 @@ meth public static org.netbeans.modules.gradle.spi.actions.ReplaceTokenProvider 
 meth public static org.openide.execution.ExecutorTask executeGradle(org.netbeans.modules.gradle.api.execute.RunConfig,java.lang.String)
 meth public static org.openide.filesystems.FileObject extractFileObjectfromLookup(org.openide.util.Lookup)
 meth public static org.openide.filesystems.FileObject[] extractFileObjectsfromLookup(org.openide.util.Lookup)
-meth public static org.openide.util.Pair<java.lang.String,org.netbeans.api.java.platform.JavaPlatform> getActivePlatform(java.lang.String)
-meth public static org.openide.util.Pair<java.lang.String,org.netbeans.api.java.platform.JavaPlatform> getActivePlatform(org.netbeans.api.project.Project)
+meth public static org.openide.util.Pair getActivePlatform(java.lang.String)
+meth public static org.openide.util.Pair getActivePlatform(org.netbeans.api.project.Project)
 supr java.lang.Object
 hfds GRADLE_TASKS,LOG
 

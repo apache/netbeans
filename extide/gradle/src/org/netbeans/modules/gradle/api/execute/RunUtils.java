@@ -49,10 +49,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.prefs.Preferences;
-import org.netbeans.api.java.platform.JavaPlatform;
-import org.netbeans.api.java.platform.JavaPlatformManager;
-import org.netbeans.api.java.platform.Specification;
 
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gradle.GradleDistributionManager;
@@ -216,6 +212,16 @@ public final class RunUtils {
         return task;
     }
 
+    /**
+     * Compile on Save is a yet to be implemented feature. It's implemetation
+     * details and necessity is still a question. Most probably this method is
+     * in a wrong place here., kepping it around for binary compatibility only.
+     *
+     * @param project
+     * @return
+     * @deprecated In order to discourage the usage of this call.
+     */
+    @Deprecated
     public static boolean isCompileOnSaveEnabled(Project project) {
         return isOptionEnabled(project, PROP_COMPILE_ON_SAVE, false);
     }
@@ -305,13 +311,12 @@ public final class RunUtils {
         return ret;
     }
 
-
     private static boolean isOptionEnabled(Project project, String option, boolean defaultValue) {
         GradleBaseProject gbp = GradleBaseProject.get(project);
         if (gbp != null) {
             String value = gbp.getNetBeansProperty(option);
             if (value != null) {
-                return Boolean.getBoolean(value);
+                return Boolean.valueOf(value);
             } else {
                 return NbGradleProject.getPreferences(project, false).getBoolean(option, defaultValue);
             }
@@ -347,39 +352,43 @@ public final class RunUtils {
         };
     }
 
- /**
-     * Returns the active platform used by the project or null if the active
-     * project platform is broken.
+    /**
+     * Returns the active platform id, platform pair used by the project.
+     * The platform can be {@code null} if the active project platform is broken.
+     *
+     * As this module is no longer dependent on the java platform module,
+     * this method always returns {@code null} as a platform since 2.3
+     *
      * @param activePlatformId the name of platform used by Ant script or null
      * for default platform.
-     * @return active {@link JavaPlatform} or null if the project's platform
-     * is broken
+     * @return Pair of {@literal <acivePlatformId, null>}
+     *
+     * @deprecated This method has been deprecated without having a
+     * replacement in this module. The current implementation serves
+     * binary compatibility purposes only.
      */
-    public static Pair<String, JavaPlatform> getActivePlatform(final String activePlatformId) {
-        final JavaPlatformManager pm = JavaPlatformManager.getDefault();
-        if (activePlatformId == null) {
-            JavaPlatform p = pm.getDefaultPlatform();
-            return Pair.of(p.getProperties().get("platform.ant.name"), p);
-        } else {
-            JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification("j2se", null)); //NOI18N
-            for (JavaPlatform installedPlatform : installedPlatforms) {
-                String antName = installedPlatform.getProperties().get("platform.ant.name"); //NOI18N
-                if (antName != null && antName.equals(activePlatformId)) {
-                    return Pair.of(activePlatformId, installedPlatform);
-                }
-            }
-            return Pair.of(activePlatformId, null);
-        }
+    @Deprecated
+    public static Pair getActivePlatform(final String activePlatformId) {
+        return Pair.of(activePlatformId, null);
     }
 
-    public static Pair<String, JavaPlatform> getActivePlatform(Project project) {
-        Preferences prefs = NbGradleProject.getPreferences(project, false);
-        String platformId = prefs.get(PROP_JDK_PLATFORM, null);
-        if (platformId == null) {
-            GradleBaseProject gbp = GradleBaseProject.get(project);
-            platformId = gbp != null ? gbp.getNetBeansProperty(PROP_JDK_PLATFORM) : null;
-        }
-        return getActivePlatform(platformId);
+    /**
+     * Returns the active platform id, platform pair used by the project.
+     * The platform can be null if the active project platform is broken.
+     *
+     * As this module is no longer dependent on the java platform module,
+     * this method always returns {@code null} as a platform since 2.3
+     *
+     * @param project the project to check.
+     * @return Pair of {@literal <"deprecated", null>}
+     *
+     * @deprecated This method has been deprecated without having a
+     * replacement in this module. The current implementation serves
+     * binary compatibility purposes only.
+     */
+    @Deprecated
+    public static Pair getActivePlatform(Project project) {
+        return getActivePlatform("deprecated"); //NOI18N
     }
 
     static GradleCommandLine getIncludedOpenProjects(Project project) {

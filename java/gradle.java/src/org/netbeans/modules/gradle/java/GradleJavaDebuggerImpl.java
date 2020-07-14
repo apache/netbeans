@@ -31,8 +31,8 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.api.NbGradleProject;
-import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.java.api.ProjectSourcesClassPathProvider;
+import org.netbeans.modules.gradle.java.execute.JavaRunUtils;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation2;
 import org.netbeans.spi.project.ProjectServiceProvider;
@@ -69,42 +69,39 @@ public final class GradleJavaDebuggerImpl implements GradleJavaDebugger {
         properties.put("name", name); //NOI18N
         properties.put("jdksources", jdkSourcePath); //NOI18N
         properties.put("baseDir", FileUtil.toFile(project.getProjectDirectory())); // NOI18N
-        if (RunUtils.isCompileOnSaveEnabled(project)) {
+        if (JavaRunUtils.isCompileOnSaveEnabled(project)) {
             properties.put ("listeningCP", "sourcepath"); // NOI18N
         }
 
         synchronized(lock) {
-            RP.post(new Runnable() {
-                @Override
-                public void run() {
-                    synchronized(lock) {
-                        try {
-                            // VirtualMachineManagerImpl can be initialized
-                            // here, so needs to be inside RP thread.
-                            if (transport.equals("dt_socket")) {//NOI18N
-                                try {
-                                    JPDADebugger.attach(
-                                            host,
-                                            Integer.parseInt(address),
-                                            new Object[] {properties}
-                                    );
-                                } catch (NumberFormatException e) {
-                                    throw new Exception(
-                                            "address attribute must specify port " + //NOI18N
-                                            "number for dt_socket connection"); //NOI18N
-                                }
+            RP.post(() -> {
+                synchronized(lock) {
+                    try {
+                        // VirtualMachineManagerImpl can be initialized
+                        // here, so needs to be inside RP thread.
+                        if (transport.equals("dt_socket")) {//NOI18N
+                            try {
+                                JPDADebugger.attach(
+                                        host,
+                                        Integer.parseInt(address),
+                                        new Object[] {properties}
+                                );
+                            } catch (NumberFormatException e) {
+                                throw new Exception(
+                                        "address attribute must specify port " + //NOI18N
+                                                "number for dt_socket connection"); //NOI18N
                             }
-                            else {
-                                    JPDADebugger.attach(
-                                            address,
-                                            new Object[] {properties}
-                                    );
-                            }
-                        } catch (Throwable e) {
-                            lock[0] = e;
-                        } finally {
-                            lock.notify();
                         }
+                        else {
+                            JPDADebugger.attach(
+                                    address,
+                                    new Object[] {properties}
+                            );
+                        }
+                    } catch (Throwable e) {
+                        lock[0] = e;
+                    } finally {
+                        lock.notify();
                     }
                 }
             });
@@ -121,7 +118,7 @@ public final class GradleJavaDebuggerImpl implements GradleJavaDebugger {
     }
 
     private ClassPath getJdkSources() {
-        JavaPlatform jdk = RunUtils.getActivePlatform(project).second();
+        JavaPlatform jdk = JavaRunUtils.getActivePlatform(project).second();
         if (jdk != null) {
             return jdk.getSourceFolders();
         }

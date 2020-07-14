@@ -172,15 +172,17 @@ public final class CodingStandardsFixer {
     public List<Result> analyze(CodingStandardsFixerParams params, FileObject file) {
         assert file.isValid() : "Invalid file given: " + file;
         try {
-            
-            Integer result = getExecutable(Bundle.CodingStandardsFixer_analyze(analyzeGroupCounter++), findWorkDir(file))
+            File workDir = findWorkDir(file);
+            Integer result = getExecutable(Bundle.CodingStandardsFixer_analyze(analyzeGroupCounter++), workDir)
                     .additionalParameters(getParameters(params, file))
                     .runAndWait(getDescriptor(), "Running coding standards fixer..."); // NOI18N
             if (result == null) {
                 return null;
             }
-
-            return CodingStandardsFixerReportParser.parse(XML_LOG, file);
+            // if the project for the file is not found(i.e. if the workDir is not found),
+            // the results are not shown in the inspector window
+            FileObject root = workDir != null ? FileUtil.toFileObject(workDir) : file;
+            return CodingStandardsFixerReportParser.parse(XML_LOG, root);
         } catch (CancellationException ex) {
             // cancelled
             return Collections.emptyList();

@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Class-Path: ext/stuff.jar
+OpenIDE-Module: org.netbeans.modules.classfile

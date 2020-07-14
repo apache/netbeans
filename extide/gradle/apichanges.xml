@@ -83,6 +83,34 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="gradle-java-independence">
+            <api name="general"/>
+            <summary>Remove Java Platform dependency.</summary>
+            <version major="2" minor="3"/>
+            <date year="2020" month="7" day="15"/>
+            <author login="lkishalmi"/>
+            <compatibility binary="compatible" source="compatible"/>
+            <description>
+                <p>
+                    Due to recent movement and the plan to support Gradle native
+                    projects as well in the future the dependency on
+                    Java Platform module has been removed.
+                </p>
+                <p>
+                    The removal affects <code>org.netbeans.modules.gradle.api.execute.RunUtils</code>
+                    <code>getActivePlatform</code> methods. The method returns a
+                    Pair with <code>null</code> as <code>second</code> which
+                    indicates a broken Platform. This is for keeping the binary compatibility only.
+                    These methods shall be not used at all. There is no
+                    replacement planned for these API functions.
+                </p>
+                <p>
+                    Added <code>org.netbeans.modules.gradle.spi.exectute.GradleJavaPlatformProvider</code>
+                    which can be put into the project lookup, to be able to specify the JDK
+                    to be used for Gradle build execution.
+                </p>
+            </description>
+        </change>
         <change id="gradle-project-trust">
             <api name="general"/>
             <summary>Introduce Trust relationship with Gradle Projects to prevent unintentional Gradle invocation.</summary>

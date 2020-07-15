@@ -225,8 +225,9 @@ public final class VariousUtils {
             QualifiedName name = QualifiedName.create(returnType);
             assert name != null : returnType;
             String typeName = name.toString();
-            if (Type.ARRAY.equals(typeName)) {
+            if (Type.ARRAY.equals(typeName) || Type.SELF.equals(typeName)) {
                 // For "array" type PHPDoc can contain more specific definition, i.e. MyClass[]
+                // For "self" type PHPDoc can contain more specific definition, i.e. static or $this
                 String typeFromPHPDoc = getReturnTypeFromPHPDoc(root, functionDeclaration);
                 if (typeFromPHPDoc != null) {
                     return typeFromPHPDoc;

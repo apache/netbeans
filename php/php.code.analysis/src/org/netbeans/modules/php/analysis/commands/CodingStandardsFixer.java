@@ -86,6 +86,10 @@ public final class CodingStandardsFixer {
             ANSI_PARAM,
             NO_INTERACTION_PARAM);
 
+    // configuration files
+    public static final String CONFIG_FILE_NAME = ".php_cs"; // NOI18N
+    public static final String DIST_CONFIG_FILE_NAME = ".php_cs.dist"; // NOI18N
+
     @org.netbeans.api.annotations.common.SuppressWarnings(value = "MS_MUTABLE_COLLECTION", justification = "It is immutable") // NOI18N
     public static final List<String> VERSIONS = Arrays.asList(
             "1", // NOI18N

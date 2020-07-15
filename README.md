@@ -143,3 +143,4 @@ Many thanks to Emilian Bold who converted the ancient history to his
 [Git repository](https://github.com/emilianbold/netbeans-releases)
 and made the magic possible!
 trigger delta
+trigger delta

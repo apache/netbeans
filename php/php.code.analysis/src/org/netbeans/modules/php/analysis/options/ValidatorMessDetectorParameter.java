@@ -20,13 +20,17 @@ package org.netbeans.modules.php.analysis.options;
 
 import java.util.Collections;
 import java.util.List;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.php.analysis.ui.analyzer.MessDetectorCustomizerPanel;
 import org.netbeans.modules.php.analysis.ui.options.MessDetectorOptionsPanel;
 
 public final class ValidatorMessDetectorParameter {
 
+    @NullAllowed
     private final String messDetectorPath;
     private final List<String> ruleSets;
+    @NullAllowed
     private final String ruleSetFilePath;
 
     public static ValidatorMessDetectorParameter create(MessDetectorOptionsPanel panel) {
@@ -39,7 +43,7 @@ public final class ValidatorMessDetectorParameter {
 
     private ValidatorMessDetectorParameter() {
         messDetectorPath = null;
-        ruleSets = null;
+        ruleSets = Collections.emptyList();
         ruleSetFilePath = null;
     }
 
@@ -50,11 +54,12 @@ public final class ValidatorMessDetectorParameter {
     }
 
     private ValidatorMessDetectorParameter(MessDetectorCustomizerPanel panel) {
-        messDetectorPath = null;
+        messDetectorPath = panel.getValidMessDetectorPath();
         ruleSets = panel.getSelectedRuleSets();
         ruleSetFilePath = panel.getRuleSetFile();
     }
 
+    @CheckForNull
     public String getMessDetectorPath() {
         return messDetectorPath;
     }
@@ -63,6 +68,7 @@ public final class ValidatorMessDetectorParameter {
         return Collections.unmodifiableList(ruleSets);
     }
 
+    @CheckForNull
     public String getRuleSetFilePath() {
         return ruleSetFilePath;
     }

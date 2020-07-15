@@ -38,9 +38,9 @@ public final class AnalysisOptionsValidator {
     private static final Pattern PHPSTAN_MEMORY_LIMIT_PATTERN = Pattern.compile("^\\-?\\d+[kmg]?$", Pattern.CASE_INSENSITIVE); // NOI18N
     private final ValidationResult result = new ValidationResult();
 
-    public AnalysisOptionsValidator validateCodeSniffer(String codeSnifferPath, String codeSnifferStandard) {
-        validateCodeSnifferPath(codeSnifferPath);
-        validateCodeSnifferStandard(codeSnifferStandard);
+    public AnalysisOptionsValidator validateCodeSniffer(ValidatorCodeSnifferParameter param) {
+        validateCodeSnifferPath(param.getCodeSnifferPath());
+        validateCodeSnifferStandard(param.getCodeSnifferStandard());
         return this;
     }
 
@@ -57,8 +57,8 @@ public final class AnalysisOptionsValidator {
         return this;
     }
 
-    public AnalysisOptionsValidator validateCodingStandardsFixer(String codingStandardsFixerPath) {
-        validateCodingStandardsFixerPath(codingStandardsFixerPath);
+    public AnalysisOptionsValidator validateCodingStandardsFixer(ValidatorCodingStandardsFixerParameter param) {
+        validateCodingStandardsFixerPath(param.getCodingStandardsFixerPath());
         return this;
     }
 
@@ -90,11 +90,9 @@ public final class AnalysisOptionsValidator {
     }
 
     private AnalysisOptionsValidator validateMessDetectorPath(String messDetectorPath) {
-        if (messDetectorPath != null) {
-            String warning = MessDetector.validate(messDetectorPath);
-            if (warning != null) {
-                result.addWarning(new ValidationResult.Message("messDetector.path", warning)); // NOI18N
-            }
+        String warning = MessDetector.validate(messDetectorPath);
+        if (warning != null) {
+            result.addWarning(new ValidationResult.Message("messDetector.path", warning)); // NOI18N
         }
         return this;
     }
@@ -116,11 +114,9 @@ public final class AnalysisOptionsValidator {
     }
 
     private AnalysisOptionsValidator validatePHPStanPath(String phpStanPath) {
-        if (phpStanPath != null) {
-            String warning = PHPStan.validate(phpStanPath);
-            if (warning != null) {
-                result.addWarning(new ValidationResult.Message("phpStan.path", warning)); // NOI18N
-            }
+        String warning = PHPStan.validate(phpStanPath);
+        if (warning != null) {
+            result.addWarning(new ValidationResult.Message("phpStan.path", warning)); // NOI18N
         }
         return this;
     }

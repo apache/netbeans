@@ -82,12 +82,21 @@ public final class MessDetector {
     }
 
     /**
-     * Get the default, <b>valid only</b> Code Sniffer.
-     * @return the default, <b>valid only</b> Code Sniffer.
-     * @throws InvalidPhpExecutableException if Code Sniffer is not valid.
+     * Get the default, <b>valid only</b> Mess Detector.
+     * @return the default, <b>valid only</b> Mess Detector.
+     * @throws InvalidPhpExecutableException if Mess Detector is not valid.
      */
     public static MessDetector getDefault() throws InvalidPhpExecutableException {
-        String messDetectorPath = AnalysisOptions.getInstance().getMessDetectorPath();
+        return getCustom(AnalysisOptions.getInstance().getMessDetectorPath());
+    }
+
+    /**
+     * Get the custom, <b>valid only</b> Mess Detector.
+     * @param path custom path
+     * @return the custom, <b>valid only</b> Mess Detector.
+     * @throws InvalidPhpExecutableException if Mess Detector is not valid.
+     */
+    public static MessDetector getCustom(String messDetectorPath) throws InvalidPhpExecutableException {
         String error = validate(messDetectorPath);
         if (error != null) {
             throw new InvalidPhpExecutableException(error);

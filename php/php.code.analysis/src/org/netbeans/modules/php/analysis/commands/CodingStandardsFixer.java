@@ -117,7 +117,10 @@ public final class CodingStandardsFixer {
     }
 
     public static CodingStandardsFixer getDefault() throws InvalidPhpExecutableException {
-        String codingStandardsFixerPath = AnalysisOptions.getInstance().getCodingStandardsFixerPath();
+        return getCustom(AnalysisOptions.getInstance().getCodingStandardsFixerPath());
+    }
+
+    public static CodingStandardsFixer getCustom(String codingStandardsFixerPath) throws InvalidPhpExecutableException {
         String error = validate(codingStandardsFixerPath);
         if (error != null) {
             throw new InvalidPhpExecutableException(error);

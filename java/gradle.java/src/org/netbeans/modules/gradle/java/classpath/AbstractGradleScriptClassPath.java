@@ -17,12 +17,9 @@
  * under the License.
  */
 
-package org.netbeans.modules.gradle.classpath;
+package org.netbeans.modules.gradle.java.classpath;
 
-import org.netbeans.modules.gradle.GradleDistributionManager;
-import org.netbeans.modules.gradle.GradleDistributionManager.NbGradleVersion;
 import org.netbeans.modules.gradle.spi.GradleSettings;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
@@ -45,9 +42,7 @@ abstract class AbstractGradleScriptClassPath implements ClassPathImplementation 
 
     private final PropertyChangeSupport cs = new PropertyChangeSupport(this);
     private final PreferenceChangeListener prefListener;
-    private final PropertyChangeListener propListener;
     private final Preferences prefs = GradleSettings.getDefault().getPreferences();
-    private NbGradleVersion watchedVersion;
     private List<PathResourceImplementation> resources;
 
     File distDir;
@@ -55,47 +50,13 @@ abstract class AbstractGradleScriptClassPath implements ClassPathImplementation 
     public AbstractGradleScriptClassPath() {
         distDir = RunUtils.evaluateGradleDistribution(null, false);
 
-        prefListener = new PreferenceChangeListener() {
-
-            @Override
-            @SuppressWarnings("fallthrough")
-            public void preferenceChange(PreferenceChangeEvent evt) {
-                GradleSettings settings = GradleSettings.getDefault();
-                switch (evt.getKey()) {
-                    case GradleSettings.PROP_GRADLE_VERSION: {
-                        synchronized(AbstractGradleScriptClassPath.this) {
-                            if (watchedVersion != null) {
-                                watchedVersion.removePropertyChangeListener(propListener);
-                                watchedVersion = null;
-                            }
-                            GradleDistributionManager gdm = GradleDistributionManager.get(settings.getGradleUserHome());
-                            NbGradleVersion version = gdm.createVersion(settings.getGradleVersion());
-                            if (!version.isAvailable()) {
-                                watchedVersion = version;
-                                watchedVersion.addPropertyChangeListener(propListener);
-                            }
-                        }
-                    }
-                    case GradleSettings.PROP_GRADLE_DISTRIBUTION:
-                    case GradleSettings.PROP_USE_CUSTOM_GRADLE: {
-                    }
+        prefListener = (PreferenceChangeEvent evt) -> {
+            switch (evt.getKey()) {
+                case GradleSettings.PROP_GRADLE_VERSION:
+                case GradleSettings.PROP_GRADLE_DISTRIBUTION:
+                case GradleSettings.PROP_USE_CUSTOM_GRADLE: {
+                    changeDistDir();
                 }
-            }
-        };
-
-        propListener = new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                resources = null;
-                cs.firePropertyChange(ClassPathImplementation.PROP_RESOURCES, null, null);
-                synchronized(AbstractGradleScriptClassPath.this) {
-                    if (watchedVersion != null) {
-                        watchedVersion.removePropertyChangeListener(propListener);
-                        watchedVersion = null;
-                    }
-                }
-
             }
         };
     }

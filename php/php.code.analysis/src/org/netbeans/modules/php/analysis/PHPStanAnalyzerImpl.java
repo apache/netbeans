@@ -163,7 +163,15 @@ public class PHPStanAnalyzerImpl implements Analyzer {
 
     @CheckForNull
     private PHPStan getValidPHPStan() {
+        String customizerPHPStanPath = null;
+        Preferences settings = context.getSettings();
+        if (settings != null) {
+            customizerPHPStanPath = settings.get(PHPStanCustomizerPanel.PATH, null);
+        }
         try {
+            if (StringUtils.hasText(customizerPHPStanPath)) {
+                return PHPStan.getCustom(customizerPHPStanPath);
+            }
             return PHPStan.getDefault();
         } catch (InvalidPhpExecutableException ex) {
             LOGGER.log(Level.INFO, null, ex);

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.gradle;
 
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
@@ -35,7 +34,6 @@ import org.netbeans.spi.project.ui.ProjectProblemResolver;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.*;
-import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
@@ -50,11 +48,17 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
 
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private final Project project;
-    private PropertyChangeListener listener;
-    private final ProjectProblemResolver resolver = new GradleProjectProblemResolver();;
+    private final PropertyChangeListener listener;
+    private final ProjectProblemResolver resolver = new GradleProjectProblemResolver();
 
     public GradleProjectProblemProvider(Project project) {
         this.project = project;
+        listener = (PropertyChangeEvent evt) -> {
+            if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
+                support.firePropertyChange(PROP_PROBLEMS, null, null);
+            }
+        };
+        NbGradleProject.addPropertyChangeListener(project, listener);
     }
 
     @Override
@@ -69,26 +73,15 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
 
     @Override
     @NbBundle.Messages({
-        "LBL_BrokenPlatform=Broken Platform.",
         "LBL_PrimingRequired=Priming Build Required.",
         "TXT_PrimingRequired=In order to be able to read this project, "
-                + "NetBeans needs to execute its Gradle scripts as priming build."
-                + "\n\n"
-                + "Executing Gradle scripts allows arbitrary code execution, "
-                + "as current user, on this system."
+        + "NetBeans needs to execute its Gradle scripts as priming build."
+        + "\n\n"
+        + "Executing Gradle scripts allows arbitrary code execution, "
+        + "as current user, on this system."
     })
     public Collection<? extends ProjectProblem> getProblems() {
         List<ProjectProblem> ret = new ArrayList<>();
-        synchronized (this) {
-            if (listener == null) {
-                 listener = (PropertyChangeEvent evt) -> {
-                     if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
-                         support.firePropertyChange(PROP_PROBLEMS, null, null);
-                     }
-                 };
-                NbGradleProject.addPropertyChangeListener(project, listener);
-            }
-        }
         GradleProject gp = project.getLookup().lookup(NbGradleProjectImpl.class).getGradleProject();
         if (gp.getQuality().notBetterThan(EVALUATED)) {
             ret.add(ProjectProblem.createError(Bundle.LBL_PrimingRequired(), Bundle.TXT_PrimingRequired(), resolver));
@@ -97,14 +90,10 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
             String[] lines = problem.split("\\n"); //NOI18N
             ret.add(ProjectProblem.createWarning(lines[0], problem.replaceAll("\\n", "<br/>"), resolver)); //NOI18N
         }
-        if (RunUtils.getActivePlatform(project) == null) {
-            ret.add(ProjectProblem.createWarning(Bundle.LBL_BrokenPlatform(), Bundle.LBL_BrokenPlatform()));
-        }
         return ret;
     }
 
     private class GradleProjectProblemResolver implements ProjectProblemResolver, Callable<Result> {
-
 
         @Override
         public Future<Result> resolve() {
@@ -117,8 +106,8 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
             GradleProject gradleProject = GradleProjectCache.loadProject(impl, FULL_ONLINE, true, true);
             impl.fireProjectReload(false);
             Quality q = gradleProject.getQuality();
-            Status st = q.worseThan(SIMPLE) ? Status.UNRESOLVED :
-                    q.worseThan(FULL) ? Status.RESOLVED_WITH_WARNING : Status.RESOLVED;
+            Status st = q.worseThan(SIMPLE) ? Status.UNRESOLVED
+                    : q.worseThan(FULL) ? Status.RESOLVED_WITH_WARNING : Status.RESOLVED;
             return Result.create(st);
         }
 

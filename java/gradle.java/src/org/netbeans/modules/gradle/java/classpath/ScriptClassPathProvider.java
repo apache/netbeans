@@ -16,8 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-package org.netbeans.modules.gradle.classpath;
+package org.netbeans.modules.gradle.java.classpath;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,8 +39,6 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = ClassPathProvider.class)
 public class ScriptClassPathProvider implements ClassPathProvider {
-
-    private static final String GRADLE_EXT = "gradle";
 
     final ClassPath BOOT_CP;
     final ClassPath GRADLE_CP;
@@ -69,19 +66,19 @@ public class ScriptClassPathProvider implements ClassPathProvider {
 
         if (isGradle) {
             switch (type) {
-                case ClassPath.BOOT:    return BOOT_CP;
-                case ClassPath.SOURCE:  return SOURCE_CP;
-                case ClassPath.COMPILE: return GRADLE_CP;
-                case ClassPath.EXECUTE: return GRADLE_CP;
-                }
-                }
+                case ClassPath.BOOT:
+                    return BOOT_CP;
+                case ClassPath.SOURCE:
+                    return SOURCE_CP;
+                case ClassPath.COMPILE:
+                    return GRADLE_CP;
+                case ClassPath.EXECUTE:
+                    return GRADLE_CP;
+            }
+        }
         return null;
     }
 
-    /**
-     *
-     * @author Laszlo Kishalmi
-     */
     public static class GradleScriptSourcePath extends AbstractGradleScriptClassPath {
 
         @Override
@@ -113,7 +110,7 @@ public class ScriptClassPathProvider implements ClassPathProvider {
         }
 
         private void addJars(List<FileObject> ret, FileObject dir) {
-            if ((dir !=null) && dir.isFolder()) {
+            if ((dir != null) && dir.isFolder()) {
                 for (FileObject child : dir.getChildren()) {
                     if (FileUtil.isArchiveFile(child)) {
                         ret.add(FileUtil.getArchiveRoot(child));
@@ -121,5 +118,5 @@ public class ScriptClassPathProvider implements ClassPathProvider {
                 }
             }
         }
-                    }
-                }
+    }
+}

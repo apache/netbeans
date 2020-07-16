@@ -32,6 +32,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.java.execute.JavaRunUtils;
 import org.openide.util.WeakListeners;
 
 /**
@@ -54,12 +55,9 @@ public final class BootClassPathImpl extends AbstractGradleClassPathImpl impleme
         this.modulesOnly = modulesOnly;
         platformManager = JavaPlatformManager.getDefault();
         platformManager.addPropertyChangeListener(WeakListeners.propertyChange(this, platformManager));
-        NbGradleProject.getPreferences(project, false).addPreferenceChangeListener(new PreferenceChangeListener() {
-            @Override
-            public void preferenceChange(PreferenceChangeEvent evt) {
-                if (RunUtils.PROP_JDK_PLATFORM.equals(evt.getKey())) {
-                    clearResourceCache();
-                }
+        NbGradleProject.getPreferences(project, false).addPreferenceChangeListener((PreferenceChangeEvent evt) -> {
+            if (RunUtils.PROP_JDK_PLATFORM.equals(evt.getKey())) {
+                clearResourceCache();
             }
         });
     }
@@ -71,7 +69,7 @@ public final class BootClassPathImpl extends AbstractGradleClassPathImpl impleme
 
     @Override
     protected List<URL> createPath() {
-        JavaPlatform platform = RunUtils.getActivePlatform(project).second();
+        JavaPlatform platform = JavaRunUtils.getActivePlatform(project).second();
         List<URL> ret = new LinkedList<>();
         if (platform != null) {
             for (ClassPath.Entry entry : platform.getBootstrapLibraries().entries()) {

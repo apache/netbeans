@@ -69,7 +69,8 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
             MODULE_COMPILE_PATH,
             MODULE_CLASS_PATH,
             MODULE_EXECUTE_PATH,
-            MODULE_EXECUTE_CLASS_PATH
+            MODULE_EXECUTE_CLASS_PATH,
+            MODULE_PROCESSOR_PATH
     ));
 
 
@@ -168,9 +169,11 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
 
         ClassPath compileTime;
         ClassPath runTime;
+        ClassPath annotationProcessor;
 
         ClassPath moduleBoot;
         ClassPath moduleCompile;
+        ClassPath moduleAnnotationProcessor;
         ClassPath moduleLegacy;
         ClassPath moduleExecute;
         ClassPath moduleLegacyRuntime;
@@ -195,7 +198,8 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
                 case MODULE_EXECUTE_PATH: return getModuleExecutePath();
                 case MODULE_EXECUTE_CLASS_PATH: return getModuleLegacyRuntimeClassPath();
 
-                case PROCESSOR_PATH: return getCompileTimeClasspath();
+                case PROCESSOR_PATH: return getJava8AnnotationProcessorPath();
+                case MODULE_PROCESSOR_PATH: return getModuleAnnotationProcessorPath();
 
                 default: return null;
             }
@@ -278,6 +282,13 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
             return compile;
         }
 
+        private synchronized ClassPath getJava8AnnotationProcessorPath() {
+            if (annotationProcessor == null) {
+                annotationProcessor = ClassPathFactory.createClassPath(new AnnotationProcessorPathImpl(project, group));
+            }
+            return annotationProcessor;
+        }
+
         private synchronized ClassPath getPlatformModulesPath() {
             if (platformModules == null) {
                 platformModules = ClassPathFactory.createClassPath(new BootClassPathImpl(project, true));
@@ -305,6 +316,14 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
                 moduleCompile = createMultiplexClassPath(getJava8CompileClassPath(), ClassPath.EMPTY);
             }
             return moduleCompile;
+        }
+
+        private synchronized ClassPath getModuleAnnotationProcessorPath() {
+            if (moduleAnnotationProcessor == null) {
+                //TODO: This one is pretty identical to the Java8 annotation processor path, maybe it should be removed?
+                moduleAnnotationProcessor = createMultiplexClassPath(getJava8AnnotationProcessorPath(), getJava8AnnotationProcessorPath());
+            }
+            return moduleAnnotationProcessor;
         }
 
         private ClassPath createMultiplexClassPath(ClassPath modulePath, ClassPath classPath) {

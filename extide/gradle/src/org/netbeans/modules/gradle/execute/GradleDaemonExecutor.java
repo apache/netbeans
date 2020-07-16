@@ -28,6 +28,7 @@ import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.spi.GradleProgressListenerProvider;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,18 +47,17 @@ import org.gradle.tooling.GradleConnectionException;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProgressEvent;
 import org.gradle.tooling.ProjectConnection;
-import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.spi.GradleFiles;
+import org.netbeans.modules.gradle.spi.execute.GradleJavaPlatformProvider;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.Pair;
 import org.openide.util.io.ReaderInputStream;
 import org.openide.windows.IOColorPrint;
 import org.openide.windows.IOColors;
@@ -147,15 +147,14 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             cmd.configure(buildLauncher, gbp != null ? gbp.getRootDir() : null);
 
             printCommandLine();
-
-            Pair<String, JavaPlatform> activePlatform = RunUtils.getActivePlatform(config.getProject());
-            if (activePlatform.second() == null || !activePlatform.second().isValid()) {
-                io.getErr().println(Bundle.NO_PLATFORM(activePlatform.first()));
-                return;
-            }
-            if (!activePlatform.second().getInstallFolders().isEmpty()) {
-                File javaHome = FileUtil.toFile(activePlatform.second().getInstallFolders().iterator().next());
-                buildLauncher.setJavaHome(javaHome);
+            GradleJavaPlatformProvider platformProvider = config.getProject().getLookup().lookup(GradleJavaPlatformProvider.class);
+            if (platformProvider != null) {
+                try {
+                    buildLauncher.setJavaHome(platformProvider.getJavaHome());
+                } catch (FileNotFoundException ex) {
+                    io.getErr().println(Bundle.NO_PLATFORM(ex.getMessage()));
+                    return;
+                }
             }
 
             outStream = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, config, false));
@@ -231,10 +230,12 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         if (userHome != null) {
             commandLine.append("GRADLE_USER_HOME=\"").append(userHome).append("\"\n"); //NOI18N
         }
-        JavaPlatform activePlatform = RunUtils.getActivePlatform(config.getProject()).second();
-        if ((activePlatform != null) && activePlatform.isValid() && !activePlatform.getInstallFolders().isEmpty()) {
-            File javaHome = FileUtil.toFile(activePlatform.getInstallFolders().iterator().next());
-            commandLine.append("JAVA_HOME=\"").append(javaHome.getAbsolutePath()).append("\"\n"); //NOI18N
+        GradleJavaPlatformProvider platformProvider = config.getProject().getLookup().lookup(GradleJavaPlatformProvider.class);
+        if (platformProvider != null) {
+            try {
+                File javaHome = platformProvider.getJavaHome();
+                commandLine.append("JAVA_HOME=\"").append(javaHome.getAbsolutePath()).append("\"\n"); //NOI18N
+            } catch (FileNotFoundException ex) {}
         }
         File dir = FileUtil.toFile(config.getProject().getProjectDirectory());
         if (dir != null) {

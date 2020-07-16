@@ -55,7 +55,7 @@ public final class WinXPEditorTabDisplayerUI extends BasicScrollingTabDisplayerU
     @Override
     public Dimension getPreferredSize(JComponent c) {
         int prefHeight = 24;
-        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics();
+        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics(c);
         if (g != null) {
             FontMetrics fm = g.getFontMetrics(displayer.getFont());
             Insets ins = getTabAreaInsets();

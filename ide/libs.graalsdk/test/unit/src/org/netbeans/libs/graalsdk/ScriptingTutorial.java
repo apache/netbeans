@@ -628,7 +628,7 @@ public class ScriptingTutorial extends NbTestCase {
         }
         
         // the last exception is a runtime exception originating from java.
-        // it will be reported 'as is'
+        // it will be reported 'as is' or wrapped, depending on the engine
         try {
             Object jsFunction = engine.eval(
                   "(function(cb, l) {"
@@ -638,6 +638,9 @@ public class ScriptingTutorial extends NbTestCase {
             ((Invocable) engine).invokeMethod(jsFunction, "call", null, cb, new LinkedList());
         } catch (NoSuchElementException ex) {
             // this is a checked java exception; it's thrown unchanged.
+        } catch (RuntimeException ex) {
+            // ... or wrapped in a Runtime:
+            assertTrue(ex.getCause() instanceof NoSuchElementException);
         } catch (Exception ex) {
             fail("NoSuchElement expected");
         }

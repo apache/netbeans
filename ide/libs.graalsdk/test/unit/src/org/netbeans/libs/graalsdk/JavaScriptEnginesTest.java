@@ -179,6 +179,7 @@ public class JavaScriptEnginesTest {
         Point point = inv().getInterface(rawPoint, Point.class);
         if (point == null) {
             assumeNotNashorn();
+            assumeNotGraalJsFromJDK();
         }
         assertNotNull("Converted to typed interface", point);
 
@@ -287,10 +288,11 @@ public class JavaScriptEnginesTest {
 
         Sum sum = new Sum();
         Object raw = ((Invocable) engine).invokeMethod(fn, "call", null, sum);
-
+        
         ArrayLike res = ((Invocable) engine).getInterface(raw, ArrayLike.class);
         if (res == null) {
             assumeNotNashorn();
+            assumeNotGraalJsFromJDK();
         }
         assertNotNull("Result looks like array", res);
 
@@ -305,6 +307,10 @@ public class JavaScriptEnginesTest {
 
     private void assumeNotNashorn() {
         Assume.assumeFalse(engine.getFactory().getNames().contains("Nashorn"));
+    }
+
+    private void assumeNotGraalJsFromJDK() {
+        Assume.assumeFalse(engine.getFactory().getNames().contains("Graal.js"));
     }
 
     @Test
@@ -410,7 +416,7 @@ public class JavaScriptEnginesTest {
      * @throws Exception 
      */
     @Test
-    public void hostExceptionReportedAsRuntime() throws Exception {
+    public void hostRuntimeExceptionsAccessible() throws Exception {
         // Note: this seems to be broken on GraalVM's JDK js - runtime exceptions are wrapped into
         // polyglot wrapper and cannot be determined through the chain of getCauses().
         assumeFalse(engine.getFactory().getEngineName().toLowerCase().contains("graal.js"));

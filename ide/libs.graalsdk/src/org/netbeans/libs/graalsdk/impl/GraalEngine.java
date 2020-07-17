@@ -67,14 +67,8 @@ final class GraalEngine implements ScriptEngine, Invocable {
             return r.run();
         } catch (PolyglotException e) {
             if (e.isHostException()) {
-                try {
-                    throw e.asHostException();
-                } catch (RuntimeException | Error err) {
-                    throw err;
-                } catch (Throwable hostEx) {
-                    e.initCause(hostEx);
-                    throw e;
-                }
+                e.initCause(e.asHostException());
+                throw e;
             }
             // avoid exposing polyglot stack frames - might be confusing.
             throw new ScriptException(e);

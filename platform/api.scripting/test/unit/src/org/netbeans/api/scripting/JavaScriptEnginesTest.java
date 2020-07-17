@@ -125,7 +125,7 @@ public class JavaScriptEnginesTest {
         try {
             assertEquals("seventy seven", 77, global.mul(11, 7));
         } catch (Exception ex) {
-            assertTrue("GraalVM:js exposes only exported symbols", engineName.equals("GraalVM:js"));
+            assertTrue("GraalVM:js exposes only exported symbols: " + engine.getFactory().getNames(), engine.getFactory().getNames().contains("GraalVM:js"));
         }
         assertEquals("mulExported is accessible in all engines", 77, global.mulExported(11, 7));
     }
@@ -149,7 +149,8 @@ public class JavaScriptEnginesTest {
 
         Point point = inv().getInterface(rawPoint, Point.class);
         if (point == null) {
-            Assume.assumeFalse(engineName.contains("Nashorn"));
+            assumeNotNashorn();
+            assumeNotGraalJsFromJDK();
         }
         assertNotNull("Converted to typed interface", point);
 
@@ -227,7 +228,8 @@ public class JavaScriptEnginesTest {
 
         ArrayLike res = ((Invocable) engine).getInterface(raw, ArrayLike.class);
         if (res == null) {
-            Assume.assumeFalse(engineName.contains("Nashorn"));
+            assumeNotNashorn();
+            assumeNotGraalJsFromJDK();
         }
         assertNotNull("Result looks like array", res);
 
@@ -238,6 +240,14 @@ public class JavaScriptEnginesTest {
         assertEquals("a", list.get(2));
         assertEquals(Math.PI, list.get(3));
         assertEquals(sum, list.get(4));
+    }
+
+    private void assumeNotNashorn() {
+        Assume.assumeFalse(engine.getFactory().getNames().contains("Nashorn"));
+    }
+
+    private void assumeNotGraalJsFromJDK() {
+        Assume.assumeFalse(engine.getFactory().getNames().contains("Graal.js"));
     }
 
     @Test

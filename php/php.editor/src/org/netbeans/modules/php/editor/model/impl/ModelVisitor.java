@@ -1117,7 +1117,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         Variable variable = node.getVariable();
         Scope scope = modelBuilder.getCurrentScope();
         List<Expression> classNames = node.getClassNames();
-        if (scope instanceof VariableNameFactory) {
+        if (variable != null && scope instanceof VariableNameFactory) {
             // add variable assignments
             VariableNameImpl varNameImpl = createVariable((VariableNameFactory) scope, variable);
             if (varNameImpl != null) {

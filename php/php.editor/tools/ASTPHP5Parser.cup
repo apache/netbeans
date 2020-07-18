@@ -514,6 +514,7 @@ non terminal VariableBase static_member;
 non terminal List isset_variables;
 non terminal Expression isset_variable;
 non terminal Variable tracked_variable;
+non terminal Variable optional_tracked_variable;
 non terminal Integer static_modifier;
 non terminal Integer ppp_modifiers;
 non terminal Integer af_modifiers;
@@ -1481,7 +1482,7 @@ T_CURLY_OPEN:token inner_statement_list:statementList T_CURLY_CLOSE:end
     RESULT = tryStatement;
 :}
 
-| T_TRY:start T_CURLY_OPEN:tryBlockStart inner_statement_list:tryList T_CURLY_CLOSE:tryBlockEnd T_CATCH:catch_word T_OPEN_PARENTHESE catch_class_names:classNames tracked_variable:var T_CLOSE_PARENTHESE
+| T_TRY:start T_CURLY_OPEN:tryBlockStart inner_statement_list:tryList T_CURLY_CLOSE:tryBlockEnd T_CATCH:catch_word T_OPEN_PARENTHESE catch_class_names:classNames optional_tracked_variable:var T_CLOSE_PARENTHESE
 T_CURLY_OPEN:catchBlockStart inner_statement_list:catchList T_CURLY_CLOSE:catchBlockEnd additional_catches:catchesList additional_finally:finallyBlock
 {:
     Block tryBlock = new Block(tryBlockStartleft, tryBlockEndright, tryList);
@@ -1543,11 +1544,10 @@ additional_catch:catch_statement
 ;
 
 additional_catch ::=
-T_CATCH:catch_word T_OPEN_PARENTHESE catch_class_names:classNames T_VARIABLE:var T_CLOSE_PARENTHESE
+T_CATCH:catch_word T_OPEN_PARENTHESE catch_class_names:classNames optional_tracked_variable:variable T_CLOSE_PARENTHESE
  T_CURLY_OPEN:catchBlockStart inner_statement_list:catchList T_CURLY_CLOSE:catchBlockEnd
 {:
     Block catchBlock = new Block(catchBlockStartleft, catchBlockEndright, catchList);
-    Variable variable = new Variable(varleft, varright, var);
     CatchClause catchClause = new CatchClause(catch_wordleft, catchBlockEndright, classNames, variable, catchBlock);
     RESULT = catchClause;
 :}
@@ -5029,6 +5029,18 @@ tracked_variable ::=
 T_VARIABLE:varName
 {:
     RESULT = new Variable(varNameleft, varNameright, varName);
+:}
+;
+
+optional_tracked_variable ::=
+/* empty */
+{:
+    RESULT = null;
+:}
+
+| tracked_variable:var
+{:
+    RESULT = var;
 :}
 ;
 

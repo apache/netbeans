@@ -28,6 +28,13 @@ public class EncodedActionTable8 {
     }
     protected EncodedActionTable8() {
         sb = new StringBuilder();
+        sb.append("\ufe5f");
+        sb.append("\174");
+        sb.append("\ufe5f");
+        sb.append("\177");
+        sb.append("\ufe5f");
+        sb.append("\213");
+        sb.append("\ufe5f");
         sb.append("\227");
         sb.append("\ufe5f");
         sb.append("\230");
@@ -4521,12 +4528,5 @@ public class EncodedActionTable8 {
         sb.append("\124");
         sb.append("\uff23");
         sb.append("\131");
-        sb.append("\uff23");
-        sb.append("\147");
-        sb.append("\uff23");
-        sb.append("\170");
-        sb.append("\uff23");
-        sb.append("\171");
-        sb.append("\uff23");
     }
 }

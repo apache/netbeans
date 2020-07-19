@@ -21,6 +21,7 @@ package org.netbeans.modules.palette;
 import java.beans.PropertyChangeEvent;
 import org.netbeans.modules.palette.Utils.SortCategoriesAction;
 import java.util.Arrays;
+import org.netbeans.junit.RandomlyFails;
 import org.netbeans.spi.palette.AbstractPaletteTestHid;
 import org.netbeans.spi.palette.DummyActions;
 import org.netbeans.spi.palette.PaletteController;
@@ -37,6 +38,7 @@ import org.openide.nodes.NodeReorderEvent;
  *
  * @author Jiri Skrivanek
  */
+@RandomlyFails
 public class UtilsTest extends AbstractPaletteTestHid {
 
     public UtilsTest(String testName) {

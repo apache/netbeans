@@ -27,6 +27,7 @@ import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
+import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.parsing.spi.EmbeddingProvider;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.SchedulerTask;
@@ -36,6 +37,7 @@ import org.netbeans.modules.parsing.spi.TaskFactory;
  *
  * @author vita
  */
+@RandomlyFails
 public class EmbeddingTest extends ParsingTestBase {
 
     public EmbeddingTest(String name) {

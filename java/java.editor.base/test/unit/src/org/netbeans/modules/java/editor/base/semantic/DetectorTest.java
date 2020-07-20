@@ -515,7 +515,7 @@ public class DetectorTest extends TestBase {
             //OK, no RELEASE_14, skip tests
             return ;
         }
-        setSourceLevel("14");
+        enablePreview();
         performTest("Record",
                     "public record Test(String s) {}\n" +
                     "class T {\n" +
@@ -542,8 +542,8 @@ public class DetectorTest extends TestBase {
         } catch (IllegalArgumentException ex) {
             //OK, no RELEASE_14, skip tests
             return;
-        }        
-        setSourceLevel("14");
+        }
+        enablePreview();
         performTest("Records",
                     "public class Records {\n" +
                     "    public interface Super {}\n" +

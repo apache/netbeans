@@ -197,6 +197,19 @@
                 <file name="css" url="CssExample"/>
             </folder>
         </folder>
+        <folder name="Editor">
+            <folder name="Formatting">
+                <folder name="text">
+                    <folder name="css">
+                        <file name="TabsAndIndents.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.options.editor.spi.CustomizerFactories.createDefaultTabsAndIndentsCustomizerFactory"/>
+                            <attr name="position" intvalue="100"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
     </folder>
 
     <folder name="OptionsExport">

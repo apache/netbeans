@@ -16,10 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.lsp.client.options;
+package org.netbeans.modules.cpplite.editor;
 
-public interface ServerRestarter {
+import java.util.prefs.Preferences;
+import org.openide.util.NbPreferences;
 
-    public void restart();
+/**
+ *
+ * @author lahvac
+ */
+public class Utils {
+    public static final String KEY_CCLS_PATH = "ccls";
 
+    public static Preferences settings() {
+        return NbPreferences.forModule(Utils.class);
+    }
 }

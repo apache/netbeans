@@ -219,9 +219,12 @@ public class FormatToken {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(id.name());
-        sb.append(" offset: ").append(offset);
+        if (this instanceof IndentToken) {
+            sb.append("(").append(((IndentToken) this).getDelta()).append(")"); // NOI18N
+        }
+        sb.append(" offset: ").append(offset); // NOI18N
         if (oldText != null) {
-            sb.append(" lexerToken <").append(oldText.length()).append(">: ").append("'").append(oldText).append("'");
+            sb.append(" lexerToken <").append(oldText.length()).append(">: ").append("'").append(oldText).append("'"); // NOI18N
         }
         return sb.toString();
     }

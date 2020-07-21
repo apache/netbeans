@@ -19,16 +19,28 @@
 package org.netbeans.modules.php.editor.verification;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.lexer.Token;
+import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lexer.TokenUtilities;
+import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.Error;
+import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.lexer.LexUtilities;
+import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
+import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
+import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -71,12 +83,14 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
 
         private final List<VerificationError> errors = new ArrayList<>();
         private final FileObject fileObject;
+        private final List<FormalParameter> lastParams = new ArrayList<>();
 
         public CheckVisitor(FileObject fileObject) {
             this.fileObject = fileObject;
         }
 
         public Collection<VerificationError> getErrors() {
+            checkTrailingCommasInParameterList();
             return Collections.unmodifiableCollection(errors);
         }
 
@@ -89,10 +103,88 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
+        @Override
+        public void visit(FunctionDeclaration node) {
+            addLastParam(node.getFormalParameters());
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(LambdaFunctionDeclaration node) {
+            addLastParam(node.getFormalParameters());
+            super.visit(node);
+        }
+
+        private void addLastParam(List<FormalParameter> parameters) {
+            if (!parameters.isEmpty()) {
+                lastParams.add(parameters.get(parameters.size() - 1));
+            }
+        }
+
         private void checkNonCapturingCatches(CatchClause node) {
             if (node.getVariable() == null) {
                 createError(node);
             }
+        }
+
+        private void checkTrailingCommasInParameterList() {
+            if (!lastParams.isEmpty()) {
+                BaseDocument document = GsfUtilities.getDocument(fileObject, true);
+                if (document == null) {
+                    return;
+                }
+                document.readLock();
+                try {
+                    TokenSequence<PHPTokenId> ts = LexUtilities.getPHPTokenSequence(document, 0);
+                    if (ts == null) {
+                        return;
+                    }
+                    checkTrailingCommasInParameterList(ts);
+                } finally {
+                    document.readUnlock();
+                    lastParams.clear();
+                }
+            }
+        }
+
+        private void checkTrailingCommasInParameterList(TokenSequence<PHPTokenId> ts) {
+            lastParams.forEach((param) -> {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+
+                // find a comma ","
+                Token<? extends PHPTokenId> token = findNextToken(ts, param);
+                if (token != null
+                        && token.id() == PHPTokenId.PHP_TOKEN
+                        && TokenUtilities.textEquals(token.text(), ",")) { // NOI18N
+                    createError(param);
+                }
+            });
+        }
+
+        @CheckForNull
+        private Token<? extends PHPTokenId> findNextToken(TokenSequence<PHPTokenId> ts, FormalParameter parameter) {
+            ts.move(parameter.getEndOffset());
+            if (!ts.moveNext()) {
+                return null;
+            }
+            if (TokenUtilities.textEquals(ts.token().text(), ")")) { // NOI18N
+                return null;
+            }
+            // function name($a, $b ,){}
+            // function name($a, $b/* comment */,){}
+            // function name($a, $b/** comment */,){}
+            List<PHPTokenId> ignores = Arrays.asList(
+                    PHPTokenId.WHITESPACE,
+                    PHPTokenId.PHP_COMMENT_START,
+                    PHPTokenId.PHP_COMMENT,
+                    PHPTokenId.PHP_COMMENT_END,
+                    PHPTokenId.PHPDOC_COMMENT_START,
+                    PHPTokenId.PHPDOC_COMMENT,
+                    PHPTokenId.PHPDOC_COMMENT_END
+            );
+            return LexUtilities.findNext(ts, ignores);
         }
 
         private void createError(ASTNode node) {

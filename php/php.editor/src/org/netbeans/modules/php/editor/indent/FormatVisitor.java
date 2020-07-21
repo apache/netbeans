@@ -75,7 +75,6 @@ import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
-import org.netbeans.modules.php.editor.parser.astnodes.ParenthesisExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
@@ -977,9 +976,12 @@ public class FormatVisitor extends DefaultVisitor {
                     // anonymous classes
                     Assignment assignment = (Assignment) expression;
                     Expression right = assignment.getRightHandSide();
-                    if (isAnonymousClass(right)) {
+                    if (isAnonymousClass(right) || right instanceof LambdaFunctionDeclaration) {
                         addIndent = false;
                     }
+                } else if (expression instanceof LambdaFunctionDeclaration
+                        || expression instanceof ArrowFunctionDeclaration) {
+                    addIndent = false;
                 }
                 if (addIndent) {
                     formatTokens.add(new FormatToken.IndentToken(ts.offset() + ts.token().length(), options.continualIndentSize));
@@ -1143,15 +1145,7 @@ public class FormatVisitor extends DefaultVisitor {
         // #270903 add indent
         formatTokens.add(new FormatToken.IndentToken(node.getFunctionName().getEndOffset(), options.continualIndentSize));
 
-        List<FormalParameter> parameters = node.getFormalParameters();
-        if (parameters != null && parameters.size() > 0) {
-            while (ts.moveNext() && ts.offset() < parameters.get(0).getStartOffset()
-                    && lastIndex < ts.index()) {
-                addFormatToken(formatTokens);
-            }
-            ts.movePrevious();
-            addListOfNodes(parameters, FormatToken.Kind.WHITESPACE_IN_PARAMETER_LIST);
-        }
+        addParameters(node.getFormalParameters());
 
         // #270903 add indent
         int indentEndOffset;
@@ -1172,41 +1166,62 @@ public class FormatVisitor extends DefaultVisitor {
 
     @Override
     public void visit(LambdaFunctionDeclaration node) {
-        scan(node.getFormalParameters());
-        addReturnType(node.getReturnType());
-        scan(node.getLexicalVariables());
+        if (path.get(1) instanceof FunctionInvocation) {
+            // #233353 disable indent for function invocation temporarily
+            formatTokens.add(new FormatToken.IndentToken(node.getStartOffset(), -1 * options.continualIndentSize));
+        }
+
+        List<FormalParameter> parameters = node.getFormalParameters();
         Block body = node.getBody();
+        if (!parameters.isEmpty()) {
+            // enable indent only parameter list
+            addAllUntilOffset(parameters.get(0).getStartOffset());
+            formatTokens.add(new FormatToken.IndentToken(parameters.get(0).getStartOffset(), options.continualIndentSize));
+            addParameters(parameters);
+
+            int indentEndOffset;
+            Expression returnType = node.getReturnType();
+            if (!node.getLexicalVariables().isEmpty()) {
+                indentEndOffset = parameters.get(parameters.size() - 1).getEndOffset();
+            } else if (returnType != null) {
+                indentEndOffset = returnType.getStartOffset();
+            } else if (body != null) {
+                indentEndOffset = body.getStartOffset();
+            } else {
+                indentEndOffset = node.getEndOffset();
+            }
+            formatTokens.add(new FormatToken.IndentToken(indentEndOffset, -1 * options.continualIndentSize));
+        }
+
+        addLexicalVariables(node.getLexicalVariables());
+
+        addReturnType(node.getReturnType());
+
         if (body != null) {
-            // in case of (function(){echo "foo";})() and fn() => function() use ($y) {return $y;}, missing an indent
-            boolean addIndent = isParentParenthesisExpr() || isParentArrowFunctionParenthesisExpr();
-            if (addIndent) {
-                formatTokens.add(new FormatToken.IndentToken(ts.offset() + ts.token().length(), options.continualIndentSize));
-            }
-
             addAllUntilOffset(body.getStartOffset());
-            if (inArrayBalance == 0) {
-                formatTokens.add(new FormatToken.IndentToken(body.getStartOffset(), -1 * options.continualIndentSize));
-            }
             scan(body);
-            if (inArrayBalance == 0) {
-                formatTokens.add(new FormatToken.IndentToken(body.getEndOffset(), options.continualIndentSize));
-            }
+        }
 
-            if (addIndent) {
-                formatTokens.add(new FormatToken.IndentToken(node.getEndOffset(), -1 * options.continualIndentSize));
-            }
+        if (path.get(1) instanceof FunctionInvocation) {
+            // #233353 enable indent for function invocation
+            formatTokens.add(new FormatToken.IndentToken(node.getEndOffset(), options.continualIndentSize));
         }
     }
 
-    private boolean isParentParenthesisExpr() {
-        return path.size() > 1
-                && (path.get(1) instanceof ParenthesisExpression);
+    private void addParameters(List<FormalParameter> parameters) {
+        if (!parameters.isEmpty()) {
+            addAllUntilOffset(parameters.get(0).getStartOffset());
+            addListOfNodes(parameters, FormatToken.Kind.WHITESPACE_IN_PARAMETER_LIST);
+        }
     }
 
-    private boolean isParentArrowFunctionParenthesisExpr() {
-        return path.size() > 2
-                && (path.get(1) instanceof ArrowFunctionDeclaration)
-                && (path.get(2) instanceof ParenthesisExpression);
+    private void addLexicalVariables(List<Expression> lexicalVariables) {
+        if (!lexicalVariables.isEmpty()) {
+            addAllUntilOffset(lexicalVariables.get(0).getStartOffset());
+            formatTokens.add(new FormatToken.IndentToken(lexicalVariables.get(0).getStartOffset(), options.continualIndentSize));
+            addListOfNodes(lexicalVariables, FormatToken.Kind.WHITESPACE_IN_PARAMETER_LIST);
+            formatTokens.add(new FormatToken.IndentToken(lexicalVariables.get(lexicalVariables.size() - 1).getEndOffset(), -1 * options.continualIndentSize));
+        }
     }
 
     private void addReturnType(@NullAllowed Expression returnType) {
@@ -1540,7 +1555,8 @@ public class FormatVisitor extends DefaultVisitor {
             addFormatToken(formatTokens);
         }
 
-        boolean addIndent = !isAnonymousClass(node.getExpression());
+        boolean addIndent = !isAnonymousClass(node.getExpression())
+                && !(path.size() > 2 && path.get(2) instanceof LambdaFunctionDeclaration); // #259111
 
         if (ts.token().id() == PHPTokenId.PHP_RETURN) {
             addFormatToken(formatTokens);

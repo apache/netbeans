@@ -1,0 +1,634 @@
+<testresult testFile='allowTrailingCommaInParameterList_01.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='815' end='823'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='824' end='828'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='828' end='829'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='834' end='841'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='841' end='842'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='847' end='854'>
+            <text>$param2</text>
+        </token>
+        <token id='T_COMMA' start='854' end='855'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='860' end='867'>
+            <text>$param3</text>
+        </token>
+        <token id='T_COMMA' start='867' end='868'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='873' end='880'>
+            <text>$param4</text>
+        </token>
+        <token id='T_COMMA' start='880' end='881'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='882' end='883'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='884' end='885'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='890' end='894'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='895' end='929'>
+            <text>"Trailing Comma in Parameter List"</text>
+        </token>
+        <token id='T_NEKUDA' start='930' end='931'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='932' end='939'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='939' end='940'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='941' end='942'>
+            <text>}</text>
+        </token>
+        <token id='T_FUNCTION' start='944' end='952'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='953' end='958'>
+            <text>test2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='958' end='959'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='964' end='971'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='971' end='972'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='977' end='984'>
+            <text>$param2</text>
+        </token>
+        <token id='T_COMMA' start='984' end='985'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='986' end='987'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='987' end='988'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='989' end='993'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='994' end='995'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='1000' end='1004'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1005' end='1039'>
+            <text>"Trailing Comma in Parameter List"</text>
+        </token>
+        <token id='T_NEKUDA' start='1040' end='1041'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1042' end='1049'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1049' end='1050'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1051' end='1052'>
+            <text>}</text>
+        </token>
+        <token id='T_FUNCTION' start='1054' end='1062'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1063' end='1068'>
+            <text>test3</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1068' end='1069'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1069' end='1076'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='1076' end='1077'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1078' end='1085'>
+            <text>$param2</text>
+        </token>
+        <token id='T_COMMA' start='1085' end='1086'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1087' end='1094'>
+            <text>$param3</text>
+        </token>
+        <token id='T_COMMA' start='1094' end='1095'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1096' end='1103'>
+            <text>$param4</text>
+        </token>
+        <token id='T_COMMA' start='1103' end='1104'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1104' end='1105'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1105' end='1106'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1107' end='1110'>
+            <text>int</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1111' end='1112'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='1117' end='1121'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1122' end='1156'>
+            <text>"Trailing Comma in Parameter List"</text>
+        </token>
+        <token id='T_NEKUDA' start='1157' end='1158'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1159' end='1166'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1166' end='1167'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1168' end='1169'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='1171' end='1176'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='1177' end='1181'>
+            <text>Test</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1182' end='1183'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='1188' end='1194'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1195' end='1203'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1204' end='1208'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1208' end='1209'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1218' end='1221'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1222' end='1229'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='1229' end='1230'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1239' end='1246'>
+            <text>$param2</text>
+        </token>
+        <token id='T_COMMA' start='1246' end='1247'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1256' end='1263'>
+            <text>$param3</text>
+        </token>
+        <token id='T_COMMA' start='1263' end='1264'>
+            <text>,</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='1273' end='1274'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='1274' end='1280'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1281' end='1288'>
+            <text>$param4</text>
+        </token>
+        <token id='T_COMMA' start='1288' end='1289'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1294' end='1295'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1296' end='1297'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='1306' end='1310'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1311' end='1345'>
+            <text>"Trailing Comma in Parameter List"</text>
+        </token>
+        <token id='T_NEKUDA' start='1346' end='1347'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1348' end='1355'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1355' end='1356'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1361' end='1362'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1363' end='1364'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='1366' end='1376'>
+            <text>$anonymous</text>
+        </token>
+        <token id='T_EQUAL' start='1377' end='1378'>
+            <text>=</text>
+        </token>
+        <token id='T_FUNCTION' start='1379' end='1387'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1387' end='1388'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1393' end='1400'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='1400' end='1401'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1406' end='1413'>
+            <text>$param2</text>
+        </token>
+        <token id='T_COMMA' start='1413' end='1414'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1419' end='1426'>
+            <text>$param3</text>
+        </token>
+        <token id='T_COMMA' start='1426' end='1427'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1432' end='1439'>
+            <text>$param4</text>
+        </token>
+        <token id='T_COMMA' start='1439' end='1440'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1441' end='1442'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1443' end='1444'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='1449' end='1453'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1454' end='1488'>
+            <text>"Trailing Comma in Parameter List"</text>
+        </token>
+        <token id='T_NEKUDA' start='1489' end='1490'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='1491' end='1498'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='1498' end='1499'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1500' end='1501'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1501' end='1502'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1503' end='1503'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1503'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='815' end='942' isReference='false'>
+                <Identifier start='824' end='828' name='test'/>
+                <FormalParameters>
+                    <FormalParameter start='834' end='841' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='834' end='841' isDollared='true'>
+                                <Identifier start='835' end='841' name='param1'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='847' end='854' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='847' end='854' isDollared='true'>
+                                <Identifier start='848' end='854' name='param2'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='860' end='867' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='860' end='867' isDollared='true'>
+                                <Identifier start='861' end='867' name='param3'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='873' end='880' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='873' end='880' isDollared='true'>
+                                <Identifier start='874' end='880' name='param4'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <Block start='884' end='942' isCurly='true'>
+                    <EchoStatement start='890' end='940'>
+                        <InfixExpression start='895' end='939' operator='CONCAT'>
+                            <Scalar start='895' end='929' type='STRING' value='"Trailing Comma in Parameter List"'/>
+                            <NamespaceName start='932' end='939' isCurrent='false' isGlobal='false'>
+                                <Identifier start='932' end='939' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                </Block>
+            </FunctionDeclaration>
+            <FunctionDeclaration start='944' end='1052' isReference='false'>
+                <Identifier start='953' end='958' name='test2'/>
+                <FormalParameters>
+                    <FormalParameter start='964' end='971' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='964' end='971' isDollared='true'>
+                                <Identifier start='965' end='971' name='param1'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='977' end='984' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='977' end='984' isDollared='true'>
+                                <Identifier start='978' end='984' name='param2'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <NamespaceName start='989' end='993' isCurrent='false' isGlobal='false'>
+                    <Identifier start='989' end='993' name='void'/>
+                </NamespaceName>
+                <Block start='994' end='1052' isCurly='true'>
+                    <EchoStatement start='1000' end='1050'>
+                        <InfixExpression start='1005' end='1049' operator='CONCAT'>
+                            <Scalar start='1005' end='1039' type='STRING' value='"Trailing Comma in Parameter List"'/>
+                            <NamespaceName start='1042' end='1049' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1042' end='1049' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                </Block>
+            </FunctionDeclaration>
+            <FunctionDeclaration start='1054' end='1169' isReference='false'>
+                <Identifier start='1063' end='1068' name='test3'/>
+                <FormalParameters>
+                    <FormalParameter start='1069' end='1076' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='1069' end='1076' isDollared='true'>
+                                <Identifier start='1070' end='1076' name='param1'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='1078' end='1085' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='1078' end='1085' isDollared='true'>
+                                <Identifier start='1079' end='1085' name='param2'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='1087' end='1094' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='1087' end='1094' isDollared='true'>
+                                <Identifier start='1088' end='1094' name='param3'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='1096' end='1103' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='1096' end='1103' isDollared='true'>
+                                <Identifier start='1097' end='1103' name='param4'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <NamespaceName start='1107' end='1110' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1107' end='1110' name='int'/>
+                </NamespaceName>
+                <Block start='1111' end='1169' isCurly='true'>
+                    <EchoStatement start='1117' end='1167'>
+                        <InfixExpression start='1122' end='1166' operator='CONCAT'>
+                            <Scalar start='1122' end='1156' type='STRING' value='"Trailing Comma in Parameter List"'/>
+                            <NamespaceName start='1159' end='1166' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1159' end='1166' name='PHP_EOL'/>
+                            </NamespaceName>
+                        </InfixExpression>
+                    </EchoStatement>
+                </Block>
+            </FunctionDeclaration>
+            <ClassDeclaration start='1171' end='1364' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='1177' end='1181' name='Test'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='1182' end='1364' isCurly='true'>
+                    <MethodDeclaration start='1188' end='1362' modifiers='public'>
+                        <FunctionDeclaration start='1195' end='1362' isReference='false'>
+                            <Identifier start='1204' end='1208' name='test'/>
+                            <FormalParameters>
+                                <FormalParameter start='1218' end='1229' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1218' end='1221' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1218' end='1221' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1222' end='1229' isDollared='true'>
+                                            <Identifier start='1223' end='1229' name='param1'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1239' end='1246' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1239' end='1246' isDollared='true'>
+                                            <Identifier start='1240' end='1246' name='param2'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1256' end='1263' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1256' end='1263' isDollared='true'>
+                                            <Identifier start='1257' end='1263' name='param3'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1273' end='1288' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NullableType start='1273' end='1280'>
+                                            <NamespaceName start='1274' end='1280' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1274' end='1280' name='string'/>
+                                            </NamespaceName>
+                                        </NullableType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1281' end='1288' isDollared='true'>
+                                            <Identifier start='1282' end='1288' name='param4'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='1296' end='1362' isCurly='true'>
+                                <EchoStatement start='1306' end='1356'>
+                                    <InfixExpression start='1311' end='1355' operator='CONCAT'>
+                                        <Scalar start='1311' end='1345' type='STRING' value='"Trailing Comma in Parameter List"'/>
+                                        <NamespaceName start='1348' end='1355' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1348' end='1355' name='PHP_EOL'/>
+                                        </NamespaceName>
+                                    </InfixExpression>
+                                </EchoStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='1366' end='1502'>
+                <Assignment start='1366' end='1501' operator='EQUAL'>
+                    <Variable start='1366' end='1376' isDollared='true'>
+                        <Identifier start='1367' end='1376' name='anonymous'/>
+                    </Variable>
+                    <LambdaFunctionDeclaration start='1379' end='1501' isReference='false'>
+                        <FormalParameter start='1393' end='1400' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='1393' end='1400' isDollared='true'>
+                                    <Identifier start='1394' end='1400' name='param1'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <FormalParameter start='1406' end='1413' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='1406' end='1413' isDollared='true'>
+                                    <Identifier start='1407' end='1413' name='param2'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <FormalParameter start='1419' end='1426' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='1419' end='1426' isDollared='true'>
+                                    <Identifier start='1420' end='1426' name='param3'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <FormalParameter start='1432' end='1439' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='1432' end='1439' isDollared='true'>
+                                    <Identifier start='1433' end='1439' name='param4'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <Block start='1443' end='1501' isCurly='true'>
+                            <EchoStatement start='1449' end='1499'>
+                                <InfixExpression start='1454' end='1498' operator='CONCAT'>
+                                    <Scalar start='1454' end='1488' type='STRING' value='"Trailing Comma in Parameter List"'/>
+                                    <NamespaceName start='1491' end='1498' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1491' end='1498' name='PHP_EOL'/>
+                                    </NamespaceName>
+                                </InfixExpression>
+                            </EchoStatement>
+                        </Block>
+                    </LambdaFunctionDeclaration>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

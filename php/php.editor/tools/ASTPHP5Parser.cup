@@ -2134,7 +2134,7 @@ new_else_single ::=
 ;
 
 parameter_list ::=
-non_empty_parameter_list:list
+non_empty_parameter_list:list possible_comma
 {:
     RESULT = list;
 :}

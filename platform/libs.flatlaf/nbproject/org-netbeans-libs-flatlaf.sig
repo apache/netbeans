@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.0
+#Version 1.1
 
 CLSS public abstract interface com.formdev.flatlaf.FlatClientProperties
 fld public final static java.lang.String BUTTON_TYPE = "JButton.buttonType"
@@ -48,6 +48,7 @@ CLSS public abstract com.formdev.flatlaf.FlatDefaultsAddon
 cons public init()
 meth public int getPriority()
 meth public java.io.InputStream getDefaults(java.lang.Class<?>)
+meth public void afterDefaultsLoading(javax.swing.LookAndFeel,javax.swing.UIDefaults)
 supr java.lang.Object
 
 CLSS public com.formdev.flatlaf.FlatIntelliJLaf
@@ -59,6 +60,8 @@ supr com.formdev.flatlaf.FlatLightLaf
 
 CLSS public abstract com.formdev.flatlaf.FlatLaf
 cons public init()
+meth protected java.util.List<java.lang.Class<?>> getLafClassesForDefaultsLoading()
+meth protected java.util.Properties getAdditionalDefaults()
 meth public abstract boolean isDark()
 meth public boolean isNativeLookAndFeel()
 meth public boolean isSupportedLookAndFeel()
@@ -68,11 +71,12 @@ meth public static boolean install(javax.swing.LookAndFeel)
 meth public static boolean isShowMnemonics()
 meth public static void initIconColors(javax.swing.UIDefaults,boolean)
 meth public static void updateUI()
+meth public static void updateUILater()
 meth public void initialize()
 meth public void uninitialize()
 supr javax.swing.plaf.basic.BasicLookAndFeel
-hfds LOG,base,desktopPropertyListener,desktopPropertyName,lastShowMnemonicWindow,mnemonicListener,postInitialization,showMnemonics
-hcls LazyModifyInputMap
+hfds DESKTOPFONTHINTS,LOG,aquaLoaded,desktopPropertyListener,desktopPropertyName,lastShowMnemonicWindow,mnemonicListener,postInitialization,showMnemonics,updateUIPending
+hcls ActiveFont
 
 CLSS public com.formdev.flatlaf.FlatLightLaf
 cons public init()
@@ -97,11 +101,11 @@ hfds checkboxDuplicateColors,checkboxKeyMapping,colors,icons,namedColors,noWildc
 CLSS public static com.formdev.flatlaf.IntelliJTheme$ThemeLaf
  outer com.formdev.flatlaf.IntelliJTheme
 cons public init(com.formdev.flatlaf.IntelliJTheme)
+meth protected java.util.ArrayList<java.lang.Class<?>> getLafClassesForDefaultsLoading()
 meth public boolean isDark()
 meth public com.formdev.flatlaf.IntelliJTheme getTheme()
 meth public java.lang.String getDescription()
 meth public java.lang.String getName()
-meth public javax.swing.UIDefaults getDefaults()
 supr com.formdev.flatlaf.FlatLaf
 hfds theme
 
@@ -169,7 +173,6 @@ CLSS public com.formdev.flatlaf.util.HiDPIUtils
 cons public init()
 innr public abstract interface static Painter
 meth public static void paintAtScale1x(java.awt.Graphics2D,int,int,int,int,com.formdev.flatlaf.util.HiDPIUtils$Painter)
-meth public static void paintAtScale1x(java.awt.Graphics2D,int,int,int,int,double,com.formdev.flatlaf.util.HiDPIUtils$Painter)
 meth public static void paintAtScale1x(java.awt.Graphics2D,javax.swing.JComponent,com.formdev.flatlaf.util.HiDPIUtils$Painter)
 supr java.lang.Object
 
@@ -215,10 +218,11 @@ meth public static int unscale(int)
 meth public static java.awt.Dimension scale(java.awt.Dimension)
 meth public static java.awt.Insets scale(java.awt.Insets)
 meth public static javax.swing.plaf.FontUIResource applyCustomScaleFactor(javax.swing.plaf.FontUIResource)
-meth public static javax.swing.plaf.FontUIResource scaleFont(javax.swing.plaf.FontUIResource,float)
+meth public static void addPropertyChangeListener(java.beans.PropertyChangeListener)
+meth public static void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public static void scaleGraphics(java.awt.Graphics2D)
 supr java.lang.Object
-hfds DEBUG,initialized,jreHiDPI,scaleFactor
+hfds DEBUG,changeSupport,initialized,jreHiDPI,scaleFactor
 
 CLSS public java.awt.Color
 cons public init(float,float,float)

@@ -359,7 +359,7 @@ public class ClassPathProviderImplTest extends TestBase {
         assertNotNull("have .../dummy-project/src", src);
         ClassPath cp = ClassPath.getClassPath(src, ClassPath.COMPILE);
         assertNotNull("have a COMPILE classpath", cp);
-        Set<String> expectedRoots = new TreeSet<String>();
+        Set<String> expectedRoots = new TreeSet<>();
         expectedRoots.add(urlForJar(resolveEEPPath("/suite3/nbplatform/random/modules/random.jar")));
         expectedRoots.add(urlForJar(resolveEEPPath("/suite3/nbplatform/random/modules/ext/stuff.jar")));
         assertEquals("right COMPILE classpath", expectedRoots, urlsOfCp(cp));
@@ -649,8 +649,8 @@ public class ClassPathProviderImplTest extends TestBase {
 
     // XXX fails without NB sources
     public void testRecursiveScanOptimization() throws Exception {
-        FileObject src = nbRoot().getFileObject("apisupport.project/test/unit/src");
-        assertNotNull("apisupport.project/test/unit/src", src);
+        FileObject src = nbRoot().getFileObject("apisupport/apisupport.project/test/unit/src");
+        assertNotNull("apisupport/apisupport.project/test/unit/src", src);
         Logger logger = Logger.getLogger("org.netbeans.modules.apisupport.project.Evaluator");
         MyHandler h = new MyHandler();
         logger.addHandler(h);

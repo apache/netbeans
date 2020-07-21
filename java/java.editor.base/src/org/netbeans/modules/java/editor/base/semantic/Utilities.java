@@ -56,6 +56,7 @@ import javax.lang.model.element.Name;
 import javax.tools.Diagnostic;
 
 import com.sun.source.tree.ModifiersTree;
+import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.lexer.Token;
@@ -722,5 +723,21 @@ public class Utilities {
         return LOCAL_ELEMENT_KINDS.contains(el.getKind()) || el.getModifiers().contains(Modifier.PRIVATE);
     }
 
+    public static Element toRecordComponent(Element el) {
+        if (el == null ||el.getKind() != ElementKind.FIELD) {
+            return el;
+        }
+        TypeElement owner = (TypeElement) el.getEnclosingElement();
+        if (!"RECORD".equals(owner.getKind().name())) {
+            return el;
+        }
+        for (Element encl : owner.getEnclosedElements()) {
+            if (TreeShims.isRecordComponent(encl.getKind()) &&
+                encl.getSimpleName().equals(el.getSimpleName())) {
+                return encl;
+            }
+        }
+        return el;
+    }
 
 }

@@ -72,7 +72,7 @@ public class ProjectXMLManagerTest extends TestBase {
     private final static Set<String> ASSUMED_CNBS;
     
     static {
-        Set<String> assumedCNBs = new HashSet<String>(2, 1.0f);
+        Set<String> assumedCNBs = new HashSet<>(2, 1.0f);
         assumedCNBs.add(ANT_PROJECT_SUPPORT);
         assumedCNBs.add(DIALOGS);
         ASSUMED_CNBS = Collections.unmodifiableSet(assumedCNBs);
@@ -90,7 +90,7 @@ public class ProjectXMLManagerTest extends TestBase {
     
     private ProjectXMLManager createXercesPXM() throws IOException {
         NbModuleProject xercesPrj = (NbModuleProject) ProjectManager.getDefault().
-                findProject(nbRoot().getFileObject("libs.xerces"));
+                findProject(nbRoot().getFileObject("ide/libs.xerces"));
         return new ProjectXMLManager(xercesPrj);
     }
 

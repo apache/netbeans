@@ -22,10 +22,17 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.util.ElementFilter;
+import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
+import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
@@ -196,18 +203,18 @@ public class ConvertAnonymousToInnerTest extends NbTestCase {
                 "        new java.util.ArrayList(3) {};\n" +
                 "    }\n" +
                 "}\n",
-                "package hierbas.del.litoral;\n\n" +
-                "import java.util.ArrayList;\n" +
-                "public class Test {\n" +
-                "    public void taragui() {\n" +
-                "        new ArrayListImpl(3);\n" +
-                "    }\n" +
-                "    private static class ArrayListImpl extends ArrayList {\n" +
-                "        public ArrayListImpl(int i) {\n" +
-                "            super(i);\n" +
-                "        }\n" +
-                "    }\n" +
-                "}\n");
+                info -> ("package hierbas.del.litoral;\n\n" +
+                         "import java.util.ArrayList;\n" +
+                         "public class Test {\n" +
+                         "    public void taragui() {\n" +
+                         "        new ArrayListImpl(3);\n" +
+                         "    }\n" +
+                         "    private static class ArrayListImpl extends ArrayList {\n" +
+                         "        public ArrayListImpl(int ${param}) {\n" +
+                         "            super(${param});\n" +
+                         "        }\n" +
+                         "    }\n" +
+                         "}\n").replace("${param}", getParameterName(info, "int")));
     }
 
     public void testConstructorWithParameters2() throws Exception {
@@ -219,19 +226,19 @@ public class ConvertAnonymousToInnerTest extends NbTestCase {
                 "        new java.util.ArrayList(i) {};\n" +
                 "    }\n" +
                 "}\n",
-                "package hierbas.del.litoral;\n\n" +
-                "import java.util.ArrayList;\n" +
-                "public class Test {\n" +
-                "    public void taragui() {\n" +
-                "        int i = 3;\n" +
-                "        new ArrayListImpl(i);\n" +
-                "    }\n" +
-                "    private static class ArrayListImpl extends ArrayList {\n" +
-                "        public ArrayListImpl(int i) {\n" +
-                "            super(i);\n" +
-                "        }\n" +
-                "    }\n" +
-                "}\n");
+                info -> ("package hierbas.del.litoral;\n\n" +
+                         "import java.util.ArrayList;\n" +
+                         "public class Test {\n" +
+                         "    public void taragui() {\n" +
+                         "        int i = 3;\n" +
+                         "        new ArrayListImpl(i);\n" +
+                         "    }\n" +
+                         "    private static class ArrayListImpl extends ArrayList {\n" +
+                         "        public ArrayListImpl(int ${param}) {\n" +
+                         "            super(${param});\n" +
+                         "        }\n" +
+                         "    }\n" +
+                         "}\n").replace("${param}", getParameterName(info, "int")));
     }
 
     public void testConstructorWithParameters3() throws Exception {
@@ -243,19 +250,19 @@ public class ConvertAnonymousToInnerTest extends NbTestCase {
                 "        new java.util.ArrayList(i) {};\n" +
                 "    }\n" +
                 "}\n",
-                "package hierbas.del.litoral;\n\n" +
-                "import java.util.ArrayList;\n" +
-                "public class Test {\n" +
-                "    int i = 3;\n" +
-                "    public void taragui() {\n" +
-                "        new ArrayListImpl(i);\n" +
-                "    }\n" +
-                "    private static class ArrayListImpl extends ArrayList {\n" +
-                "        public ArrayListImpl(int i) {\n" +
-                "            super(i);\n" +
-                "        }\n" +
-                "    }\n" +
-                "}\n");
+                info -> ("package hierbas.del.litoral;\n\n" +
+                         "import java.util.ArrayList;\n" +
+                         "public class Test {\n" +
+                         "    int i = 3;\n" +
+                         "    public void taragui() {\n" +
+                         "        new ArrayListImpl(i);\n" +
+                         "    }\n" +
+                         "    private static class ArrayListImpl extends ArrayList {\n" +
+                         "        public ArrayListImpl(int ${param}) {\n" +
+                         "            super(${param});\n" +
+                         "        }\n" +
+                         "    }\n" +
+                         "}\n").replace("${param}", getParameterName(info, "int")));
     }
 
     public void testConstructorWithParameters4() throws Exception {
@@ -267,20 +274,30 @@ public class ConvertAnonymousToInnerTest extends NbTestCase {
                 "        new java.util.ArrayList<CharSequence>(l) {};\n" +
                 "    }\n" +
                 "}\n",
-                "package hierbas.del.litoral;\n\n" +
-                "import java.util.ArrayList;\n" +
-                "import java.util.Collection;\n" +
-                "public class Test {\n" +
-                "    java.util.List<? extends CharSequence> l;\n" +
-                "    public void taragui() {\n" +
-                "        new ArrayListImpl(l);\n" +
-                "    }\n" +
-                "    private static class ArrayListImpl extends ArrayList<CharSequence> {\n" +
-                "        public ArrayListImpl(Collection<? extends CharSequence> clctn) {\n" +
-                "            super(clctn);\n" +
-                "        }\n" +
-                "    }\n" +
-                "}\n");
+                info -> ("package hierbas.del.litoral;\n\n" +
+                         "import java.util.ArrayList;\n" +
+                         "import java.util.Collection;\n" +
+                         "public class Test {\n" +
+                         "    java.util.List<? extends CharSequence> l;\n" +
+                         "    public void taragui() {\n" +
+                         "        new ArrayListImpl(l);\n" +
+                         "    }\n" +
+                         "    private static class ArrayListImpl extends ArrayList<CharSequence> {\n" +
+                         "        public ArrayListImpl(Collection<? extends CharSequence> ${param}) {\n" +
+                         "            super(${param});\n" +
+                         "        }\n" +
+                         "    }\n" +
+                         "}\n").replace("${param}", getParameterName(info, "java.util.Collection<? extends E>")));
+    }
+
+    private String getParameterName(CompilationInfo info, String expectedType) {
+        TypeElement arrayList = info.getElements().getTypeElement("java.util.ArrayList");
+        for (ExecutableElement el : ElementFilter.constructorsIn(arrayList.getEnclosedElements())) {
+            if (el.getParameters().size() == 1 && expectedType.equals(el.getParameters().get(0).asType().toString())) {
+                return el.getParameters().get(0).getSimpleName().toString();
+            }
+        }
+        throw new IllegalStateException("Didn't find the expected constructor");
     }
 
     public void testInnerClass1() throws Exception {
@@ -595,6 +612,10 @@ public class ConvertAnonymousToInnerTest extends NbTestCase {
     }
 
     private void performTest(String test, String golden) throws Exception {
+        performTest(test, info -> golden);
+    }
+
+    private void performTest(String test, Function<CompilationInfo, String> goldenGenerator) throws Exception {
         clearWorkDir();
 
         FileUtil.refreshFor(getWorkDir());
@@ -611,10 +632,12 @@ public class ConvertAnonymousToInnerTest extends NbTestCase {
         TestUtilities.copyStringToFile(testFile, test);
         
         JavaSource testSource = JavaSource.forFileObject(testFile);
+        String[] golden = new String[1];
         Task task = new Task<WorkingCopy>() {
             public void run(WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 
+                golden[0] = goldenGenerator.apply(workingCopy);
                 TreePath nct = new FindNewClassTree().scan(workingCopy.getCompilationUnit(), null);
                 
                 ConvertAnonymousToInner.convertAnonymousToInner(workingCopy, nct);
@@ -624,7 +647,7 @@ public class ConvertAnonymousToInnerTest extends NbTestCase {
         testSource.runModificationTask(task).commit();
         String res = TestUtilities.copyFileToString(FileUtil.toFile(testFile));
 //        System.err.println(res);
-        assertEquals(removeWhitespaces(golden), removeWhitespaces(res));
+        assertEquals(removeWhitespaces(golden[0]), removeWhitespaces(res));
     }
     
     private static String removeWhitespaces(String text) {

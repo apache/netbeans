@@ -37,6 +37,7 @@ public class AccessErrorTest extends ErrorHintsTestBase  {
     }
     
     public void testSimple() throws Exception {
+        doRunIndexing = true;
         performFixTest("test/Test.java",
                        "package test;\n" +
                        "public class Test {\n" +

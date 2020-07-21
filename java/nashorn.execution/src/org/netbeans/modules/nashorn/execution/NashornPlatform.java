@@ -41,16 +41,16 @@ import org.openide.util.WeakListeners;
  * @author Martin
  */
 public class NashornPlatform {
-    
+
     private static final String NASHORN_PLATFORM_VERSION = "1.8";   // NOI18N
     private static final SpecificationVersion SMALLEST_VERSION = new SpecificationVersion(NASHORN_PLATFORM_VERSION);
-    
+
     private static NashornPlatform INSTANCE;
-    
+
     private volatile JavaPlatform nashornPlatform;
     private final PlatformManagerListener platformListener;
     private final Set<ChangeListener> listeners = new HashSet<>();
-    
+
     private NashornPlatform() {
         JavaPlatformManager jpm = JavaPlatformManager.getDefault();
         platformListener = new PlatformManagerListener();
@@ -59,33 +59,63 @@ public class NashornPlatform {
                 WeakListeners.create(PreferenceChangeListener.class, platformListener, Settings.getPreferences()));
         nashornPlatform = getNashornPlatform(jpm);
     }
-    
+
     public static synchronized NashornPlatform getDefault() {
         if (INSTANCE == null) {
             INSTANCE = new NashornPlatform();
         }
         return INSTANCE;
     }
-    
+
     /**
      * @return The platform or <code>null</code>.
      */
     public JavaPlatform getPlatform() {
         return nashornPlatform;
     }
-    
+
+    private static SpecificationVersion getPlatformVersion(JavaPlatform p) {
+        if (p == null) {
+            return new SpecificationVersion("1.8"); // NOI18N
+        }
+        return p.getSpecification().getVersion();
+    }
+
+    public static boolean isNashornSupported(JavaPlatform p) {
+        SpecificationVersion version = getPlatformVersion(p);
+        if (version.equals(SMALLEST_VERSION)) {
+            return true;
+        }
+        if (version.compareTo(new SpecificationVersion("15")) < 0) { // NOI18N
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isGraalJsSupported(JavaPlatform p) {
+        SpecificationVersion version = getPlatformVersion(p);
+        if (version.compareTo(SMALLEST_VERSION) < 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isGraalJSPreferred(JavaPlatform p) {
+        return p != null && p.findTool("node") != null; // NOI18N
+    }
+
     public void addChangeListener(ChangeListener chl) {
         synchronized (listeners) {
             listeners.add(chl);
         }
     }
-    
+
     public void removeChangeListener(ChangeListener chl) {
         synchronized (listeners) {
             listeners.remove(chl);
         }
     }
-    
+
     private void fireChangeEvent() {
         ChangeEvent che = new ChangeEvent(this);
         List<ChangeListener> listeners_;
@@ -96,7 +126,7 @@ public class NashornPlatform {
             chl.stateChanged(che);
         }
     }
-    
+
     private static JavaPlatform getNashornPlatform(JavaPlatformManager platformManager) {
         String nashornPlatformDisplayName = Settings.getPreferences().get(Settings.PREF_NASHORN_PLATFORM_DISPLAY_NAME, null);
         SpecificationVersion smallestVersion = new SpecificationVersion(NASHORN_PLATFORM_VERSION);
@@ -137,12 +167,12 @@ public class NashornPlatform {
         }
         return null;
     }
-    
+
     public void setPlatform(JavaPlatform selectedPlatform) {
         if (selectedPlatform == null) {
             Settings.getPreferences().remove(Settings.PREF_NASHORN_PLATFORM_DISPLAY_NAME);
         } else {
-            if (!isNashornPlatform(selectedPlatform)) {
+            if (!isJsJvmPlatform(selectedPlatform)) {
                 throw new IllegalArgumentException(selectedPlatform.getDisplayName());
             }
             Settings.getPreferences().put(Settings.PREF_NASHORN_PLATFORM_DISPLAY_NAME,
@@ -151,15 +181,15 @@ public class NashornPlatform {
         nashornPlatform = selectedPlatform;
     }
 
-    public static boolean isNashornPlatform(JavaPlatform platform) {
+    public static boolean isJsJvmPlatform(JavaPlatform platform) {
         return platform.getSpecification().getVersion().compareTo(SMALLEST_VERSION) >= 0;
     }
-    
+
     public static PlatformFilter getFilter() {
         return new PlatformFilter() {
             @Override
             public boolean accept(JavaPlatform platform) {
-                return isNashornPlatform(platform);
+                return isJsJvmPlatform(platform);
             }
         };
     }
@@ -180,7 +210,7 @@ public class NashornPlatform {
                 fireChangeEvent();
             }
         }
-        
+
     }
 
 }

@@ -77,6 +77,8 @@ while [ $# -gt 0 ] ; do
     shift
 done
 
+cachedir="${default_cachedir}"
+
 if [ -f "${userdir}/etc/$APPNAME".conf ] ; then
     . "${userdir}/etc/$APPNAME".conf
 fi
@@ -125,6 +127,7 @@ case "`uname`" in
             '"-J-Xdock:icon=$progdir/../../$APPNAME.icns"' \
             --clusters '"$clusters"' \
             --userdir '"${userdir}"' \
+            --cachedir '"${cachedir}"' \
             ${default_options} \
             "$args"
         ;;
@@ -139,6 +142,7 @@ case "`uname`" in
             --jdkhome '"$jdkhome"' \
             --clusters '"$clusters"' \
             --userdir '"${userdir}"' \
+            --cachedir '"${cachedir}"' \
             ${default_options} \
             "$args"
        exit 1

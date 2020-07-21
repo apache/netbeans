@@ -122,8 +122,7 @@ public class ProjectRunnerImpl implements JavaRunnerImplementation {
     private static final RequestProcessor RP = new RequestProcessor(ProjectRunnerImpl.class);
     
     public boolean isSupported(String command, Map<String, ?> properties) {
-        return BuildArtifactMapper.isCompileOnSaveSupported() &&
-               locateScript(command) != null;
+        return locateScript(command) != null;
     }
 
     @Override

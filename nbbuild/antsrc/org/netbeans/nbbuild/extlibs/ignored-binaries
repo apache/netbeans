@@ -57,10 +57,10 @@ mobility.databindingme/lib/*
 lib.terminalemulator/examples/lib.richexecution/process_start-*.zip
 
 # Gradle Wrapper, used by the Gradle tooling build, but not distributed
-groovy/gradle/netbeans-gradle-tooling/gradle/wrapper/gradle-wrapper.jar
+extide/gradle/netbeans-gradle-tooling/gradle/wrapper/gradle-wrapper.jar
 
 # Gradle NetBeans Tooling, built by Gradle, so it is not recognized
-groovy/gradle/release/modules/gradle/netbeans-gradle-tooling.jar
+extide/gradle/release/modules/gradle/netbeans-gradle-tooling.jar
 
 # ide.launcher is a special semi-module, does not have nbproject/project.xml, so is not recognized:
 nb/ide.launcher/external/launchers-10.0.zip

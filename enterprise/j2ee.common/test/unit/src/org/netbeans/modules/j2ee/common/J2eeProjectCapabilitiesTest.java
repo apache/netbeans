@@ -114,6 +114,14 @@ public class J2eeProjectCapabilitiesTest extends NbTestCase {
         assertTrue(cap.isEjb32Supported());
         assertTrue(cap.isEjb32LiteSupported());
 
+        p = createProject(Profile.JAKARTA_EE_8_FULL, Type.WAR);
+        cap = J2eeProjectCapabilities.forProject(p);
+        assertFalse(cap.isEjb30Supported());
+        assertTrue(cap.isEjb31Supported());
+        assertTrue(cap.isEjb31LiteSupported());
+        assertTrue(cap.isEjb32Supported());
+        assertTrue(cap.isEjb32LiteSupported());
+
         p = createProject(Profile.JAVA_EE_7_FULL, Type.EJB);
         cap = J2eeProjectCapabilities.forProject(p);
         assertTrue(cap.isEjb30Supported());
@@ -139,6 +147,14 @@ public class J2eeProjectCapabilitiesTest extends NbTestCase {
         assertTrue(cap.isEjb32LiteSupported());
 
         p = createProject(Profile.JAVA_EE_8_WEB, Type.WAR);
+        cap = J2eeProjectCapabilities.forProject(p);
+        assertFalse(cap.isEjb30Supported());
+        assertFalse(cap.isEjb31Supported());
+        assertTrue(cap.isEjb31LiteSupported());
+        assertFalse(cap.isEjb32Supported());
+        assertTrue(cap.isEjb32LiteSupported());
+
+        p = createProject(Profile.JAKARTA_EE_8_WEB, Type.WAR);
         cap = J2eeProjectCapabilities.forProject(p);
         assertFalse(cap.isEjb30Supported());
         assertFalse(cap.isEjb31Supported());
@@ -176,7 +192,7 @@ public class J2eeProjectCapabilitiesTest extends NbTestCase {
         public Lookup getLookup() {
             return l;
         }
-    
+
     }
 
     private static class FakeEjbJarsInProject implements EjbJarsInProject {
@@ -220,7 +236,7 @@ public class J2eeProjectCapabilitiesTest extends NbTestCase {
         public MetadataModel<EjbJarMetadata> getMetadataModel() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
-    
+
     }
 
     private static class FakeJ2eeModuleProvider extends J2eeModuleProvider {
@@ -311,5 +327,5 @@ public class J2eeProjectCapabilitiesTest extends NbTestCase {
         }
 
     }
- 
+
 }

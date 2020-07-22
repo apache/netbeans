@@ -144,6 +144,9 @@ public class WebModuleImpl extends BaseEEModuleImpl implements WebModuleImplemen
             if (Profile.JAVA_EE_8_FULL.equals(pomProfile)) {
                 return Profile.JAVA_EE_8_WEB;
             }
+            if (Profile.JAKARTA_EE_8_FULL.equals(pomProfile)) {
+                return Profile.JAKARTA_EE_8_WEB;
+            }
             return pomProfile;
         }
 
@@ -212,6 +215,8 @@ public class WebModuleImpl extends BaseEEModuleImpl implements WebModuleImplemen
         List<DependencyDesc> javaEE7Full = new ArrayList<>();
         List<DependencyDesc> javaEE8Web = new ArrayList<>();
         List<DependencyDesc> javaEE8Full = new ArrayList<>();
+        List<DependencyDesc> jakartaEE8Web = new ArrayList<>();
+        List<DependencyDesc> jakartaEE8Full = new ArrayList<>();
 
         // Java EE specification
         javaEE5.add(new DependencyDesc("javaee", "javaee-api", "5.0"));
@@ -222,6 +227,8 @@ public class WebModuleImpl extends BaseEEModuleImpl implements WebModuleImplemen
         javaEE7Web.add(new DependencyDesc("javax", "javaee-web-api", "7.0"));
         javaEE8Full.add(new DependencyDesc("javax", "javaee-api", "8.0"));
         javaEE8Web.add(new DependencyDesc("javax", "javaee-web-api", "8.0"));
+        jakartaEE8Web.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-api","8.0.0"));
+        jakartaEE8Full.add(new DependencyDesc("jakarta.platform","jakarta.jakartaee-web-api","8.0.0"));
 
         // GlassFish implementations
         javaEE5.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "2"));
@@ -232,7 +239,9 @@ public class WebModuleImpl extends BaseEEModuleImpl implements WebModuleImplemen
         javaEE7Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "4"));
         javaEE8Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "5.1.0"));
         javaEE8Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "5.1.0"));
-
+        jakartaEE8Full.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-all", "5.1.0"));
+        jakartaEE8Web.add(new DependencyDesc("org.glassfish.main.extras", "glassfish-embedded-web", "5.1.0"));
+        
         // WebLogic implementations
         javaEE5.add(new DependencyDesc("weblogic", "weblogic", "10"));
         javaEE6Full.add(new DependencyDesc("weblogic", "weblogic", "12"));
@@ -251,6 +260,8 @@ public class WebModuleImpl extends BaseEEModuleImpl implements WebModuleImplemen
         javaEEMap.put(Profile.JAVA_EE_7_FULL, javaEE7Full);
         javaEEMap.put(Profile.JAVA_EE_8_WEB, javaEE8Web);
         javaEEMap.put(Profile.JAVA_EE_8_FULL, javaEE8Full);
+        javaEEMap.put(Profile.JAKARTA_EE_8_WEB, jakartaEE8Web);
+        javaEEMap.put(Profile.JAKARTA_EE_8_FULL, jakartaEE8Full);
     }
 
     private static class DependencyDesc {

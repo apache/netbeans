@@ -90,6 +90,7 @@ public class WebProjectValidation extends J2eeTestCase {
     public static final String JAVA_EE_6 = "Java EE 6";
     public static final String JAVA_EE_7 = "Java EE 7";
     public static final String JAVA_EE_8 = "Java EE 8";
+    public static final String JAKARTA_EE_8 = "Jakarta EE 8";
     // location of sample project
     protected static String PROJECT_LOCATION;
     // name of sample project
@@ -797,7 +798,7 @@ public class WebProjectValidation extends J2eeTestCase {
     public void assertContains(String text, String value) {
         assertTrue("Assertation failed, cannot find:\n" + value + "\nin the following text:\n" + text, text.contains(value));
     }
-    
+
     /**
      * Opens URL connection and waits for given text. It throws
      * TimeoutExpiredException if timeout expires.

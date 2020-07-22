@@ -52,34 +52,36 @@ public class Hk2JaxWsStack implements WSStackImplementation<JaxWs> {
                           "javax.ejb.jar", //NOI18N
                           "javax.activation.jar"}; //NOI18N
     private static final String GFV3_MODULES_DIR_NAME = "modules"; // NOI18N
-    
+
     private String gfRootStr;
     private JaxWs jaxWs;
     private Hk2JavaEEPlatformImpl platform;
-    
+
     public Hk2JaxWsStack(String gfRootStr, Hk2JavaEEPlatformImpl platform ) {
         this.gfRootStr = gfRootStr;
         jaxWs = new JaxWs(getUriDescriptor());
         this.platform = platform;
     }
 
-    
+
     @Override
     public JaxWs get() {
         return jaxWs;
     }
-    
+
     @Override
     public WSStackVersion getVersion() {
         Set<Profile> supportedProfiles = platform.getSupportedProfiles();
-        if (supportedProfiles.contains(Profile.JAVA_EE_8_FULL) ||
+        if (supportedProfiles.contains(Profile.JAKARTA_EE_8_FULL) ||
+                supportedProfiles.contains(Profile.JAKARTA_EE_8_WEB) ||
+                supportedProfiles.contains(Profile.JAVA_EE_8_FULL) ||
                 supportedProfiles.contains(Profile.JAVA_EE_8_WEB) ||
                 supportedProfiles.contains(Profile.JAVA_EE_7_FULL) ||
                 supportedProfiles.contains(Profile.JAVA_EE_7_WEB)  ||
                 supportedProfiles.contains(Profile.JAVA_EE_6_FULL) ||
                 supportedProfiles.contains(Profile.JAVA_EE_6_WEB))
         {
-            // gfv3ee6 GF id 
+            // gfv3ee6 GF id
             if (isMetroInstalled()) {
                 return WSStackVersion.valueOf(2, 2, 0, 0);
             }
@@ -104,7 +106,7 @@ public class Hk2JaxWsStack implements WSStackImplementation<JaxWs> {
             return null;
         }
     }
-    
+
     @Override
     public boolean isFeatureSupported(Feature feature) {
         if (feature == JaxWs.Feature.WSIT && isMetroInstalled()) {
@@ -114,15 +116,15 @@ public class Hk2JaxWsStack implements WSStackImplementation<JaxWs> {
             return true;
         }
         if (feature == JaxWs.Feature.TESTER_PAGE) return true;
-        return false;   
+        return false;
     }
-    
+
     private JaxWs.UriDescriptor getUriDescriptor() {
         return new JaxWs.UriDescriptor() {
 
             @Override
-            public String getServiceUri(String applicationRoot, String serviceName, 
-                    String portName, boolean isEjb) 
+            public String getServiceUri(String applicationRoot, String serviceName,
+                    String portName, boolean isEjb)
             {
                 if (isEjb) {
                     return serviceName+"/"+portName; //NOI18N
@@ -140,25 +142,25 @@ public class Hk2JaxWsStack implements WSStackImplementation<JaxWs> {
             }
 
             @Override
-            public String getDescriptorUri(String applicationRoot, 
-                    String serviceName, String portName, boolean isEjb) 
+            public String getDescriptorUri(String applicationRoot,
+                    String serviceName, String portName, boolean isEjb)
             {
-                return getServiceUri(applicationRoot, serviceName, portName, 
+                return getServiceUri(applicationRoot, serviceName, portName,
                         isEjb)+"?wsdl"; //NOI18N
             }
 
             @Override
-            public String getTesterPageUri(String host, String port, 
-                    String applicationRoot, String serviceName, String portName, 
-                        boolean isEjb) 
+            public String getTesterPageUri(String host, String port,
+                    String applicationRoot, String serviceName, String portName,
+                        boolean isEjb)
             {
-                return "http://"+host+":"+port+"/"+getServiceUri(applicationRoot, 
+                return "http://"+host+":"+port+"/"+getServiceUri(applicationRoot,
                         serviceName, portName, isEjb)+"?Tester"; //NOI18N
             }
-            
+
         };
     }
-    
+
     protected class JaxWsTool implements WSToolImplementation {
         JaxWs.Tool tool;
         JaxWsTool(JaxWs.Tool tool) {
@@ -187,9 +189,9 @@ public class Hk2JaxWsStack implements WSStackImplementation<JaxWs> {
             }
             return cPath.toArray(new URL[cPath.size()]);
         }
-      
+
     }
-    
+
     protected boolean isMetroInstalled() {
         File f = getWsJarName(gfRootStr, METRO_LIBRARIES[0]);
         return f!=null && f.exists();
@@ -210,10 +212,10 @@ public class Hk2JaxWsStack implements WSStackImplementation<JaxWs> {
 
     }
 
-    public static File getWsJarName(String glassfishInstallRoot, 
-            String jarNamePattern) 
+    public static File getWsJarName(String glassfishInstallRoot,
+            String jarNamePattern)
     {
-        File modulesDir = new File(glassfishInstallRoot + File.separatorChar + 
+        File modulesDir = new File(glassfishInstallRoot + File.separatorChar +
                 GFV3_MODULES_DIR_NAME);
         int subindex = jarNamePattern.lastIndexOf("/");
         if(subindex != -1) {

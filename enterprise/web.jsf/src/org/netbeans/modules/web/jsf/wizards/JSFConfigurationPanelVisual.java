@@ -151,7 +151,7 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
     /** Cached all JSF libraries */
     private static volatile boolean jsfLibrariesCacheDirty = true;
     private static final List<Library> JSF_LIBRARIES_CACHE = new CopyOnWriteArrayList<>();
-    
+
     /** Map used for faster seek of JSF registered libraries. */
     private static final Map<Boolean, String> JSF_SEEKING_MAP = new LinkedHashMap<>(2);
 

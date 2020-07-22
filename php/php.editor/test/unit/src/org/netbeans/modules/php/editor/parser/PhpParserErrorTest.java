@@ -1053,4 +1053,9 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php74/arrowFunctionsParseError_04.php");
     }
 
+    // PHP 8.0
+    public void testNonCapturingCatches_01() throws Exception {
+        checkErrors("testfiles/parser/php80/nonCapturingCatches_01.php");
+    }
+
 }

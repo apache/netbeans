@@ -1321,6 +1321,12 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spaces/spaceAroundMultiCatch10.php", options);
     }
 
+    // PHP 8.0
+    public void testSpacesAroundNonCapturingCatches01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/spaces/spaceAroundNonCapturingCatches01.php", options);
+    }
+
     public void testSpacesAroundDeclareEqual01a() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.SPACE_AROUND_DECLARE_EQUAL, true);

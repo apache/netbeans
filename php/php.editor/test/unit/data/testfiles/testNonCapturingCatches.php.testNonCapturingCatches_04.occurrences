@@ -1,0 +1,2 @@
+class |>MARK_OCCURRENCES:Except^ionB<| extends Exception // test4
+} catch (ExceptionA | |>MARK_OCCURRENCES:ExceptionB<|) { // test3 test5

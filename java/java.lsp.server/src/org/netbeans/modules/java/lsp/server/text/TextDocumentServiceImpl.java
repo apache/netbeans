@@ -36,8 +36,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -202,8 +204,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             return CompletableFuture.completedFuture(Either.<List<CompletionItem>, CompletionList>forRight(new CompletionList(result)));
         } catch (IOException | ParseException ex) {
             throw new IllegalStateException(ex);
+            }
         }
-    }
 
     public static final class CompletionData {
         public String uri;
@@ -501,7 +503,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     public CompletableFuture<List<? extends Location>> definition(TextDocumentPositionParams params) {
         JavaSource js = getSource(params.getTextDocument().getUri());
         GoToTarget[] target = new GoToTarget[1];
-        LineMap[] lm = new LineMap[1];
+        LineMap[] thisFileLineMap = new LineMap[1];
         try {
             js.runUserActionTask(cc -> {
                 cc.toPhase(JavaSource.Phase.RESOLVED);
@@ -512,7 +514,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     return ;
                 }
                 target[0] = GoToSupport.computeGoToTarget(cc, context, offset);
-                lm[0] = cc.getCompilationUnit().getLineMap();
+                thisFileLineMap[0] = cc.getCompilationUnit().getLineMap();
             }, true);
         } catch (IOException ex) {
             //TODO: include stack trace:
@@ -524,18 +526,21 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         if (target[0] != null && target[0].success) {
             if (target[0].offsetToOpen < 0) {
                 Object[] openInfo = ElementOpenAccessor.getInstance().getOpenInfo(target[0].cpInfo, target[0].elementToOpen, new AtomicBoolean());
-                if (openInfo != null) {
+                if (openInfo != null && (int) openInfo[1] != (-1) && (int) openInfo[2] != (-1) && openInfo[3] != null) {
                     FileObject file = (FileObject) openInfo[0];
                     int start = (int) openInfo[1];
                     int end = (int) openInfo[2];
+                    LineMap lm = (LineMap) openInfo[3];
                     result.add(new Location(toUri(file),
-                                            new Range(createPosition(lm[0], start),
-                                                      createPosition(lm[0], end))));
+                                            new Range(createPosition(lm, start),
+                                                      createPosition(lm, end))));
                 }
             } else {
-                Position pos = createPosition(js.getFileObjects().iterator().next(), target[0].offsetToOpen);
+                int start = target[0].offsetToOpen;
+                int end = target[0].endPos;
                 result.add(new Location(params.getTextDocument().getUri(),
-                                        new Range(pos, pos)));
+                                        new Range(createPosition(thisFileLineMap[0], start),
+                                                  createPosition(thisFileLineMap[0], end))));
             }
         }
         return CompletableFuture.completedFuture(result);
@@ -944,7 +949,15 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private static String toUri(FileObject file) {
         if (FileUtil.isArchiveArtifact(file)) {
             //VS code cannot open jar:file: URLs, workaround:
-            File cacheDir = Places.getCacheSubfile("java-server");
+            //another workaround, should be:
+            //File cacheDir = Places.getCacheSubfile("java-server");
+            //but that locks up VS Code, using a temp directory:
+            File cacheDir;
+            try {
+                cacheDir = Files.createTempDirectory("nb-java-lsp-server").toFile();
+            } catch (IOException ex) {
+                throw new UncheckedIOException(ex);
+            }
             File segments = new File(cacheDir, "segments");
             Properties props = new Properties();
 

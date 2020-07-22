@@ -74,12 +74,15 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.sendopts.CommandLine;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.parsing.ParameterNameProviderImpl;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
+import org.netbeans.spi.java.classpath.ClassPathProvider;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.ModuleInfo;
@@ -87,6 +90,7 @@ import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -452,10 +456,18 @@ public class ServerTest extends NbTestCase {
                       "    public void method(int ppp) {\n" +
                       "        System.err.println(field);\n" +
                       "        System.err.println(ppp);\n" +
+                      "        new Other().test();\n" +
                       "    }\n" +
                       "}\n";
         try (Writer w = new FileWriter(src)) {
             w.write(code);
+        }
+        File otherSrc = new File(getWorkDir(), "Other.java");
+        try (Writer w = new FileWriter(otherSrc)) {
+            w.write("/**Some source*/\n" +
+                    "public class Other {\n" +
+                    "    public void test() { }\n" +
+                    "}");
         }
         FileUtil.refreshFor(getWorkDir());
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
@@ -493,13 +505,24 @@ public class ServerTest extends NbTestCase {
         assertEquals(src.toURI().toString(), definition.get(0).getUri());
         assertEquals(1, definition.get(0).getRange().getStart().getLine());
         assertEquals(4, definition.get(0).getRange().getStart().getCharacter());
+        assertEquals(1, definition.get(0).getRange().getEnd().getLine());
+        assertEquals(22, definition.get(0).getRange().getEnd().getCharacter());
         pos = new Position(4, 30);
         definition = server.getTextDocumentService().definition(new TextDocumentPositionParams(new TextDocumentIdentifier(src.toURI().toString()), pos)).get();
         assertEquals(1, definition.size());
         assertEquals(src.toURI().toString(), definition.get(0).getUri());
         assertEquals(2, definition.get(0).getRange().getStart().getLine());
         assertEquals(23, definition.get(0).getRange().getStart().getCharacter());
-        //XXX: test jump to another file!
+        assertEquals(2, definition.get(0).getRange().getEnd().getLine());
+        assertEquals(30, definition.get(0).getRange().getEnd().getCharacter());
+        pos = new Position(5, 22);
+        definition = server.getTextDocumentService().definition(new TextDocumentPositionParams(new TextDocumentIdentifier(src.toURI().toString()), pos)).get();
+        assertEquals(1, definition.size());
+        assertEquals(otherSrc.toURI().toString(), definition.get(0).getUri());
+        assertEquals(2, definition.get(0).getRange().getStart().getLine());
+        assertEquals(4, definition.get(0).getRange().getStart().getCharacter());
+        assertEquals(2, definition.get(0).getRange().getEnd().getLine());
+        assertEquals(26, definition.get(0).getRange().getEnd().getCharacter());
     }
 
     public void testOpenProjectOpenJDK() throws Exception {
@@ -633,5 +656,23 @@ public class ServerTest extends NbTestCase {
         }
         assertEquals(new HashSet<>(Arrays.asList(expected)),
                      stringHighlights);
+    }
+
+    //make sure files can access other files in the same directory:
+    @ServiceProvider(service=ClassPathProvider.class, position=100)
+    public static final class ClassPathProviderImpl implements ClassPathProvider {
+
+        @Override
+        public ClassPath findClassPath(FileObject file, String type) {
+            if (ClassPath.SOURCE.equals(type) && file.isData()) {
+                return ClassPathSupport.createClassPath(file.getParent());
+            }
+            return null;
+        }
+
+    }
+
+    static {
+        System.setProperty("SourcePath.no.source.filter", "true");
     }
 }

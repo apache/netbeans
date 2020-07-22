@@ -1126,6 +1126,11 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php74/arrowFunctionsParseError_04");
     }
 
+    // PHP 8.0
+    public void testNonCapturingCatches_01() throws Exception {
+        performTest("parser/php80/nonCapturingCatches_01");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

@@ -28,6 +28,7 @@
     </description>
 
     <target name="-jdk-pre-preinit">
+        <property name="backporting.javac" location="${ant.file.jdk}/../external/compiler-14.0.2.jar"/>
         <condition property="nbjdk.active-or-nbjdk.home">
             <or>
                 <and>

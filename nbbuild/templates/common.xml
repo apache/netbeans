@@ -65,7 +65,8 @@
         <condition property="javahelp.class.path.extension" value="docs/${javahelp.jar.basename}">
             <isset property="has.javahelp"/>
         </condition>
-        <property name="javac.source" value="1.7"/>
+        <property name="javac.source.default" value="1.7"/>
+        <property name="javac.source" value="${javac.source.default}"/>
         <property name="javac.target" value="${javac.source}"/>
         <property name="javac.compilerargs" value=""/>
         <property name="module.auto.deps.xml" location="module-auto-deps.xml"/>
@@ -119,7 +120,7 @@
             <attribute name="javacval"/>
             <sequential>
                <presetdef name="custom-javac">
-                    <custom-javac executable="@{javacval}"/>
+                    <custom-javac executable="@{javacval}" backportingCompiler="${backporting.javac}"/>
                 </presetdef>
             </sequential>
         </macrodef>
@@ -128,7 +129,7 @@
 
     <target name="-javac-init-bootclasspath-prepend" depends="build-init" if="bootclasspath.prepend">
         <presetdef name="nb-javac">
-            <custom-javac>
+            <custom-javac executable="${nbjdk.javac}" backportingCompiler="${backporting.javac}">
                 <bootclasspath>
                     <path path="${nbjdk.bootclasspath}"/>
                 </bootclasspath>
@@ -139,7 +140,7 @@
 
     <target name="-javac-init-no-bootclasspath-prepend" depends="build-init" unless="bootclasspath.prepend">
         <presetdef name="nb-javac">
-            <custom-javac>
+            <custom-javac executable="${nbjdk.javac}" backportingCompiler="${backporting.javac}">
                 <bootclasspath>
                     <path path="${nbjdk.bootclasspath}"/>
                 </bootclasspath>

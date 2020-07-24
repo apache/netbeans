@@ -20,6 +20,13 @@
 package org.netbeans.nbbuild;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.lang.reflect.Method;
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +36,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Delete;
 import org.apache.tools.ant.taskdefs.Javac;
+import org.apache.tools.ant.taskdefs.compilers.Javac13;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
@@ -39,6 +48,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * and a separate task for {@link #cleanUpStaleClasses}.
  */
 public class CustomJavac extends Javac {
+    private File backportingCompiler;
 
     public CustomJavac() {}
 
@@ -64,17 +74,12 @@ public class CustomJavac extends Javac {
         maybeFork = forkExec;
     }
 
+    public void setBackportingCompiler(File path) {
+        this.backportingCompiler = path;
+    }
+
     @Override
     public void execute() throws BuildException {
-        String src = getSource();
-        if (src.matches("\\d+")) {
-            src = "1." + src;
-        }
-        if (!JavaEnvUtils.isAtLeastJavaVersion(src)) {
-            log("Cannot handle -source " + src + " from this VM; forking " + maybeFork, Project.MSG_WARN);
-            super.setFork(true);
-            super.setExecutable(maybeFork);
-        }
         generatedClassesDir = new File(getDestdir().getParentFile(), getDestdir().getName() + "-generated");
         if (!usingExplicitIncludes) {
             cleanUpStaleClasses();
@@ -98,6 +103,40 @@ public class CustomJavac extends Javac {
             }
         } else {
             log("Warning: could not create " + generatedClassesDir, Project.MSG_WARN);
+        }
+
+        int src = intVersion(getSource());
+        int trgt = intVersion(getTarget());
+
+        if (src > trgt && this.backportingCompiler != null && this.backportingCompiler.isFile()) {
+            try {
+                Class<?> mainClazz = findMainCompilerClass(this.backportingCompiler);
+                super.add(new Javac13() {
+                    @Override
+                    public boolean execute() throws BuildException {
+                        attributes.log("Using modern compiler", Project.MSG_VERBOSE);
+                        Commandline cmd = setupModernJavacCommand();
+
+                        // Use reflection to be able to build on all JDKs >= 1.1:
+                        try {
+                            Object compiler = mainClazz.newInstance();
+                            Method compile = mainClazz.getMethod("compile", String[].class, PrintWriter.class);
+                            int result = (Integer) compile.invoke(compiler,
+                                    (Object) cmd.getArguments(), new PrintWriter(System.out));
+                            return result == 0;
+                        } catch (Exception ex) {
+                            if (ex instanceof BuildException) {
+                                throw (BuildException) ex;
+                            }
+                            throw new BuildException("Error starting modern compiler",
+                                    ex, location);
+                        }
+                    }
+
+                });
+            } catch (ClassNotFoundException |MalformedURLException ex) {
+                throw new BuildException(ex);
+            }
         }
         super.compile();
     }
@@ -221,6 +260,23 @@ public class CustomJavac extends Javac {
             }
         }
         return false;
+    }
+
+    private static int intVersion(String version) {
+        if (version.startsWith("1.")) {
+            version = version.substring(2);
+        }
+        return Integer.parseInt(version);
+    }
+
+    private static Reference<Class<?>> mainCompilerClass;
+    private static synchronized Class<?> findMainCompilerClass(File jar) throws MalformedURLException, ClassNotFoundException {
+        Class<?> c = mainCompilerClass == null ? null : mainCompilerClass.get();
+
+        URLClassLoader loader = new URLClassLoader(new URL[] { jar.toURI().toURL() }, CustomJavac.class.getClassLoader());
+        c = Class.forName("org.frgaal.Main", true, loader);
+        mainCompilerClass = new SoftReference<>(c);
+        return c;
     }
 
 }

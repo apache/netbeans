@@ -23,7 +23,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -31,14 +34,23 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 class EscapeProcessingOutputStream extends OutputStream {
 
+    private static final RequestProcessor RP = new RequestProcessor(EscapeProcessingOutputStream.class);
+
     boolean esc;
     boolean csi;
     final AtomicBoolean closed = new AtomicBoolean();
     final ByteBuffer buffer = new ByteBuffer();
     final EscapeProcessor processor;
+    private ScheduledFuture<?> autoFlush;
+    private final long autoFlushTimeout;
 
     public EscapeProcessingOutputStream(EscapeProcessor processor) {
+        this(processor, 200);
+    }
+
+    public EscapeProcessingOutputStream(EscapeProcessor processor, long autoFlushTimeout) {
         this.processor = processor;
+        this.autoFlushTimeout = autoFlushTimeout;
     }
 
     @Override
@@ -47,25 +59,31 @@ class EscapeProcessingOutputStream extends OutputStream {
         if (closed.get()) return;
         if (b == 0x1B) {
             esc = true;                   //Entering EscapeProcessingMode
-            processBulk();                //Process the Buffer collected so far
+            processBulk(false);           //Process the Buffer collected so far
         } else if ((b == 0x5B) && esc) {
             csi = true;                   //Entering CSI mode we are going to
             esc = false;                  //read ANSI CSI commands from now on
         } else {
             esc = false;
-            if (csi) {
-                if ((b >= 0x40) && (b <= 0x7E)) { //Got a command byte
-                    processCommand((char) b);     //process that.
-                    csi = false;
+            synchronized(buffer) {
+                if (csi) {
+                    if ((b >= 0x40) && (b <= 0x7E)) { //Got a command byte
+                        processCommand((char) b);     //process that.
+                        csi = false;
+                    } else {
+                        buffer.put(b);
+                    }
                 } else {
-                    buffer.put(b);
-                }
-            } else {
-                if (b == '\n') {
-                    buffer.put(b);
-                    processBulk();
-                } else if ((b >= 0x20) || (b == 0x09) || (b < 0)) {
-                    buffer.put(b);
+                    if (b == '\n') {
+                        buffer.put(b);
+                        processBulk(false);
+                    } else if ((b >= 0x20) || (b == 0x09) || (b < 0)) {
+                        buffer.put(b);
+                        if (autoFlush != null) {
+                            autoFlush.cancel(false);
+                        }
+                        autoFlush = RP.schedule(() -> processBulk(true), autoFlushTimeout, TimeUnit.MILLISECONDS);
+                    }
                 }
             }
         }
@@ -81,7 +99,7 @@ class EscapeProcessingOutputStream extends OutputStream {
     @Override
     public void flush() throws IOException {
         if (!csi) {
-            processBulk();
+            processBulk(false);
         }
     }
 
@@ -101,10 +119,12 @@ class EscapeProcessingOutputStream extends OutputStream {
         processor.processCommand(sequence, command, args);
     }
 
-    private void processBulk() {
-        String out = buffer.read();
-        if (out.length() > 0) {
-            processor.processText(out);
+    private void processBulk(boolean forced) {
+        synchronized (buffer) {
+            String out = buffer.read();
+            if (out.length() > 0 || forced) {
+                processor.processText(out, forced);
+            }
         }
     }
 

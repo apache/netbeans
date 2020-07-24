@@ -79,7 +79,7 @@ public class GradlePlainEscapeProcessor implements EscapeProcessor {
     }
 
     @Override
-    public void processText(String text) {
+    public void processText(String text, boolean forceOutput) {
         line.append(text);
         boolean eol = text.endsWith("\n");
         if (eol) {
@@ -97,6 +97,9 @@ public class GradlePlainEscapeProcessor implements EscapeProcessor {
                 output.print(out, null, outType);
             }
             output.print("\n");
+            line.setLength(0);
+        } else if (forceOutput && line.length() > 0) {
+            output.print(line.toString());
             line.setLength(0);
         }
     }

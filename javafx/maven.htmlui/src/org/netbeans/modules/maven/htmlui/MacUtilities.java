@@ -52,12 +52,12 @@ final class MacUtilities {
     })
     static void listDevices(List<Device> collectTo) {
         collectTo.clear();
-        Device loading = new Device().assignId(ID_UNKNOWN).
+        var loading = new Device().assignId(ID_UNKNOWN).
                 assignName(Bundle.MSG_Loading()).
                 assignInfo(Bundle.MSG_Loading());
         collectTo.add(loading);
 
-        ProcessBuilder pb = ProcessBuilder.getLocal();
+        var pb = ProcessBuilder.getLocal();
         pb.setExecutable("instruments");
         pb.setArguments(Arrays.asList("-s", "devices"));
         pb.setRedirectErrorStream(true);
@@ -75,7 +75,7 @@ final class MacUtilities {
         }
 
         
-        final InputStream is = p.getInputStream();
+        var is = p.getInputStream();
         parseDevices(collectTo, is);
         p.destroy();
         collectTo.remove(loading);

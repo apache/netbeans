@@ -100,6 +100,35 @@ jobs:
 
       - name: Test Netbeans Build System
         run: ant -Dcluster.config=basic localtest
+        
+  linux-extide:
+    name: Linux build of extide cluster
+    runs-on: ubuntu-18.04
+    env:
+      DISPLAY: ":99.0"
+      OPTS: -Dcluster.config=basic -Dtest-unit-sys-prop.ignore.random.failures=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Launch Xvfb
+        run: Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Clean
+        run: ant $OPTS clean
+        
+      - name: Build
+        run: ant $OPTS build
+        
+      - name: Test
+        run: ant $OPTS -f extide/o.apache.tools.ant.module test
 
   linux-php:
     name: Linux build of PHP cluster

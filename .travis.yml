@@ -325,16 +325,6 @@ matrix:
             #- ant $OPTS -f nb/updatecenters test
             - ant $OPTS -f nb/welcome test
             
-        - name: Test extide modules
-          jdk: openjdk8
-          env:
-            - OPTS="-quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
-          before_script:
-            - ant $OPTS clean
-            - ant $OPTS build
-          script:
-            - ant $OPTS -f extide/o.apache.tools.ant.module test
-            
         - name: Test Java modules with nb-javac on Java 8
           jdk: openjdk8
           env:

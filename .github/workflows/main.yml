@@ -127,10 +127,11 @@ jobs:
       - name: Build
         run: ant $OPTS build
         
-      - name: Test
-        run: |
-          ant $OPTS -f extide/o.apache.tools.ant.module test
-          ant $OPTS -f extide/gradle test
+      - name: Test extide/o.apache.tools.ant.module
+        run: ant $OPTS -f extide/o.apache.tools.ant.module test
+      
+      - name: Test extide/gradle
+        run: ant $OPTS -f extide/gradle test
 
   linux-php:
     name: Linux build of PHP cluster

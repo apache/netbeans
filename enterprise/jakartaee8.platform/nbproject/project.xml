@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -20,22 +19,14 @@
     under the License.
 
 -->
-<library version="3.0" xmlns="http://www.netbeans.org/ns/library-declaration/3">
-    <name>jakartaee-api-8.0</name>
-    <type>j2se</type>
-    <localizing-bundle>org/netbeans/modules/jakartaee8/api/Bundle</localizing-bundle>
-    <volume>
-        <type>classpath</type>
-	<resource>jar:nbinst://org.netbeans.modules.jakartaee8.api/modules/ext/jakarta.jakartaee-api-8.0.0.jar!/</resource>
-    </volume>
-    <volume>
-        <type>javadoc</type>
-        <resource>jar:nbinst://org.netbeans.modules.jakartaee8.platform/docs/jakartaee8-doc-api.jar!/</resource>
-    </volume>
-    <properties>
-        <property>
-            <name>maven-dependencies</name>
-            <value>jakarta.platform:jakarta.jakartaee-api:8.0.0:jar</value>
-        </property>
-    </properties>
-</library>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
+            <code-name-base>org.netbeans.modules.jakartaee8.platform</code-name-base>
+            <module-dependencies>
+                </module-dependencies>
+           <public-packages/>
+        </data>
+    </configuration>
+</project>

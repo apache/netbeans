@@ -32,8 +32,10 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.event.ChangeListener;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.queries.FileBuiltQuery;
+import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType.JAVA;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.netbeans.spi.queries.FileBuiltQueryImplementation;
@@ -119,8 +121,13 @@ public class FileBuiltQueryImpl extends ProjectOpenedHook implements FileBuiltQu
             if (sourceSet != null) {
                 String relFile = sourceSet.relativePath(f);
                 String relClass = relFile.substring(0, relFile.lastIndexOf('.')) + ".class"; //NOI18N
+                String moduleRoot = null;
+                File moduleInfo = sourceSet.findResource("module-info.java", false, JAVA); //NOI18N
+                if (moduleInfo != null && sourceSet.getCompilerArgs(JAVA).contains("--module-source-path")) {
+                    moduleRoot = SourceUtils.parseModuleName(FileUtil.toFileObject(moduleInfo));
+                }
                 try {
-                    ret = new StatusImpl(file, sourceSet.getOutputClassDirs(), relClass);
+                    ret = new StatusImpl(file, sourceSet.getOutputClassDirs(), relClass, moduleRoot);
                 } catch (DataObjectNotFoundException ex) {}
             }
 
@@ -147,6 +154,7 @@ public class FileBuiltQueryImpl extends ProjectOpenedHook implements FileBuiltQu
         private final DataObject source;
         private final Set<File> roots;
         private final String relClass;
+        private final String moduleName;
         private final PropertyChangeListener pcl  = new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
@@ -180,13 +188,15 @@ public class FileBuiltQueryImpl extends ProjectOpenedHook implements FileBuiltQu
         };
         boolean status;
 
-        public StatusImpl(FileObject source, Set<File> roots, String relClass) throws DataObjectNotFoundException {
+        public StatusImpl(FileObject source, Set<File> roots, String relClass, String moduleName) throws DataObjectNotFoundException {
             this.roots = roots;
             this.relClass = relClass;
             this.source = DataObject.find(source);
+            this.moduleName = moduleName;
             this.source.addPropertyChangeListener(WeakListeners.propertyChange(pcl, this.source));
             for (File root : roots) {
-                FileUtil.addFileChangeListener(listener, FileUtil.normalizeFile(new File(root, relClass)));
+                File moduleRoot = moduleName == null ? root : new File(root, moduleName);
+                FileUtil.addFileChangeListener(listener, FileUtil.normalizeFile(new File(moduleRoot, relClass)));
             }
             checkBuilt();
         }
@@ -211,7 +221,8 @@ public class FileBuiltQueryImpl extends ProjectOpenedHook implements FileBuiltQu
             boolean built = false;
             if (fo != null) {
                 for (File root : roots) {
-                    File target = FileUtil.normalizeFile(new File(root, relClass));
+                    File moduleRoot = moduleName == null ? root : new File(root, moduleName);
+                    File target = FileUtil.normalizeFile(new File(moduleRoot, relClass));
                     if (target.exists()) {
                         long sourceTime = fo.lastModified().getTime();
                         long targetTime = target.lastModified();

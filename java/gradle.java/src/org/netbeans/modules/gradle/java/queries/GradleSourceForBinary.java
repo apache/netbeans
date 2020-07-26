@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.gradle.java.queries;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType;
 import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType.*;
@@ -38,12 +40,15 @@ import java.util.Set;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.Project;
+import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.*;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation2;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Utilities;
+import org.openide.util.WeakListeners;
 
 /**
  *
@@ -65,15 +70,17 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
         if (ret == null) {
             try {
                 NbGradleProject watcher = NbGradleProject.get(project);
-                if (watcher.getQuality().atLeast(NbGradleProject.Quality.FULL)) {
+                if (watcher.getQuality().atLeast(FALLBACK)) {
                     GradleJavaProject prj = GradleJavaProject.get(project);
                     switch (binaryRoot.getProtocol()) {
                         case "file": {  //NOI18N
                             File root = FileUtil.normalizeFile(Utilities.toFile(binaryRoot.toURI()));
                             for (GradleJavaSourceSet ss : prj.getSourceSets().values()) {
+                                File outputDir = ss.getCompilerArgs(JAVA).contains("--module-source-path") ? //NOI18N
+                                        root.getParentFile() : root;
                                 for (File dir : ss.getOutputClassDirs()) {
-                                    if (root.equals(dir)) {
-                                        ret = new Res(project, ss.getName(), EnumSet.of(JAVA, GROOVY, SCALA));
+                                    if (outputDir.equals(dir)) {
+                                        ret = new Res(project, ss.getName(), EnumSet.of(JAVA, GROOVY, SCALA, GENERATED));
                                         break;
                                     }
                                 }
@@ -118,11 +125,19 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
         private final Project project;
         private final String sourceSet;
         private final Set<SourceType> sourceTypes;
+        private final PropertyChangeListener listener;
+        private final ChangeSupport support = new ChangeSupport(this);
 
         public Res(Project project, String sourceSet, Set<SourceType> sourceTypes) {
             this.project = project;
             this.sourceSet = sourceSet;
             this.sourceTypes = sourceTypes;
+            listener = (PropertyChangeEvent evt) -> {
+                if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
+                    support.fireChange();
+                }
+            };
+            NbGradleProject.get(project).addPropertyChangeListener(WeakListeners.propertyChange(listener, project));
         }
 
         @Override
@@ -152,10 +167,16 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
 
         @Override
         public void addChangeListener(ChangeListener l) {
+            synchronized (support) {
+                support.addChangeListener(l);
+            }
         }
 
         @Override
         public void removeChangeListener(ChangeListener l) {
+            synchronized (support) {
+                support.removeChangeListener(l);
+            }
         }
 
     }

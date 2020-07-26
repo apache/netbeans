@@ -25,6 +25,7 @@ import java.util.prefs.Preferences;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.errors.ErrorFixesFakeHint.FixKind;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
+import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.spi.editor.hints.Fix;
 
 /**
@@ -473,7 +474,7 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
         List<Fix> result=  new LinkedList<Fix>();
 
         for (Fix f : fixes) {
-            if (f instanceof AddParameterOrLocalFix) {
+            if (f instanceof JavaFixImpl && ((JavaFixImpl) f).jf instanceof AddParameterOrLocalFix) {
                 result.add(f);
             }
         }
@@ -483,6 +484,6 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
 
     @Override
     protected String toDebugString(CompilationInfo info, Fix f) {
-        return ((AddParameterOrLocalFix) f).toDebugString(info);
+        return ((AddParameterOrLocalFix) ((JavaFixImpl) f).jf).toDebugString(info);
     }
 }

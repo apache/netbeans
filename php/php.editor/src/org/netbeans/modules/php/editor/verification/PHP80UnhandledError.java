@@ -42,8 +42,11 @@ import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.ExpressionStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ThrowExpression;
+import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
+import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -140,6 +143,15 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
+        @Override
+        public void visit(StaticConstantAccess node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkClassNameLiteralOnObject(node);
+            super.visit(node);
+        }
+
         private void addLastParam(List<FormalParameter> parameters) {
             if (!parameters.isEmpty()) {
                 lastParams.add(parameters.get(parameters.size() - 1));
@@ -215,6 +227,18 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
         private void checkThrowExpression(Expression expression) {
             if (!isSameAsThrowStatement) {
                 createError(expression);
+            }
+        }
+
+        private void checkClassNameLiteralOnObject(StaticConstantAccess node) {
+            if ("class".equals(node.getConstantName().getName())) { // NOI18N
+                Expression dispatcher = node.getDispatcher();
+                if (!(dispatcher instanceof NamespaceName)
+                        && !(dispatcher instanceof Identifier)) {
+                    // other than namespacename(e.g. \Foo\Bar::class) and identifier(e.g. Foo::class)
+                    // i.e. in case of dinamic class name (e.g. $object::class, create()::class)
+                    createError(node);
+                }
             }
         }
 

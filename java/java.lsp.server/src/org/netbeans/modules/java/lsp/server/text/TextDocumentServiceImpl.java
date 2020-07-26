@@ -42,7 +42,9 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -99,6 +101,7 @@ import org.eclipse.lsp4j.DocumentRangeFormattingParams;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.Hover;
+import org.eclipse.lsp4j.InsertTextFormat;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.MarkupContent;
 import org.eclipse.lsp4j.MessageParams;
@@ -125,10 +128,15 @@ import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy;
 import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.api.java.source.Task;
+import org.netbeans.api.java.source.TreePathHandle;
+import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.java.source.ui.ElementJavadoc;
 import org.netbeans.api.java.source.ui.ElementOpen;
@@ -143,6 +151,7 @@ import org.netbeans.modules.java.completion.JavaCompletionTask.Options;
 import org.netbeans.modules.java.completion.JavaDocumentationTask;
 import org.netbeans.modules.java.editor.base.semantic.MarkOccurrencesHighlighterBase;
 import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
+import org.netbeans.modules.java.hints.errors.ImportClass;
 import org.netbeans.modules.java.hints.infrastructure.CreatorBasedLazyFixList;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
 import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
@@ -156,6 +165,7 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
+import org.netbeans.spi.editor.hints.EnhancedFix;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.LazyFixList;
@@ -192,7 +202,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             int caret = getOffset(doc, params.getPosition());
-            JavaCompletionTask<CompletionItem> task = JavaCompletionTask.create(caret, new ItemFactoryImpl(uri), EnumSet.noneOf(Options.class), () -> false);
+            JavaCompletionTask<CompletionItem> task = JavaCompletionTask.create(caret, new ItemFactoryImpl(client, uri), EnumSet.noneOf(Options.class), () -> false);
             ParserManager.parse(Collections.singletonList(Source.create(doc)), task);
             List<CompletionItem> result = task.getResults();
             for (Iterator<CompletionItem> it = result.iterator(); it.hasNext();) {
@@ -235,9 +245,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private static class ItemFactoryImpl implements JavaCompletionTask.ItemFactory<CompletionItem> {
 
+        private final LanguageClient client;
         private final String uri;
 
-        public ItemFactoryImpl(String uri) {
+        public ItemFactoryImpl(LanguageClient client, String uri) {
+            this.client = client;
             this.uri = uri;
         }
 
@@ -257,7 +269,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         @Override
         public CompletionItem createPackageItem(String pkgFQN, int substitutionOffset, boolean inPackageStatement) {
-            return null; //TODO: fill
+            CompletionItem item = new CompletionItem(pkgFQN.substring(pkgFQN.lastIndexOf('.') + 1));
+            item.setKind(CompletionItemKind.Folder);
+            return item;
         }
 
         @Override
@@ -324,7 +338,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             label.append(Utilities.getTypeName(info, retType, false).toString());
             CompletionItem item = new CompletionItem(label.toString());
             item.setKind(elementKind2CompletionItemKind(elem.getKind()));
-            item.setInsertText(elem.getSimpleName().toString());
+            StringBuilder insertText = new StringBuilder();
+            insertText.append(elem.getSimpleName());
+            insertText.append("(");
+            if (elem.getParameters().isEmpty()) {
+                insertText.append(")");
+            }
+            item.setInsertText(insertText.toString());
+            item.setInsertTextFormat(InsertTextFormat.PlainText);
             setCompletionData(item, elem);
             return item;
         }
@@ -375,9 +396,36 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             return null; //TODO: fill
         }
 
+        private static final Object KEY_IMPORT_TEXT_EDITS = new Object();
+
         @Override
         public CompletionItem createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon) {
-            return null; //TODO: fill
+            //TODO: prefer static imports (but would be much slower?)
+            //TODO: should be resolveImport instead of addImports:
+            Map<Element, List<TextEdit>> imports = (Map<Element, List<TextEdit>>) info.getCachedValue(KEY_IMPORT_TEXT_EDITS);
+            if (imports == null) {
+                info.putCachedValue(KEY_IMPORT_TEXT_EDITS, imports = new HashMap<>(), CacheClearPolicy.ON_TASK_END);
+            }
+            List<TextEdit> currentClassImport = imports.computeIfAbsent(type.asElement(), toImport -> {
+                try {
+                    return modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), wc -> {
+                        wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                        wc.rewrite(info.getCompilationUnit(), GeneratorUtilities.get(wc).addImports(wc.getCompilationUnit(), new HashSet<>(Arrays.asList(toImport))));
+                    });
+                } catch (IOException ex) {
+                    //TODO: include stack trace:
+                    client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                    return Collections.emptyList();
+                }
+            });
+            String label = type.asElement().getSimpleName() + "." + memberElem.getSimpleName();
+            CompletionItem item = new CompletionItem(label);
+            item.setKind(elementKind2CompletionItemKind(memberElem.getKind()));
+            item.setInsertText(label);
+            item.setInsertTextFormat(InsertTextFormat.PlainText);
+            item.setAdditionalTextEdits(currentClassImport);
+            setCompletionData(item, memberElem);
+            return item;
         }
 
         @Override
@@ -689,6 +737,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 continue;
             }
 
+            TreePathHandle[] topLevelHandle = new TreePathHandle[1];
             LazyFixList lfl = err.getFixes();
 
             if (lfl instanceof CreatorBasedLazyFixList) {
@@ -696,36 +745,51 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     js.runUserActionTask(cc -> {
                         cc.toPhase(JavaSource.Phase.RESOLVED);
                         ((CreatorBasedLazyFixList) lfl).compute(cc, new AtomicBoolean());
+                        topLevelHandle[0] = TreePathHandle.create(new TreePath(cc.getCompilationUnit()), cc);
                     }, true);
                 } catch (IOException ex) {
                     //TODO: include stack trace:
                     client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
                 }
             }
-            List<Fix> fixes = lfl.getFixes();
+            List<Fix> fixes = sortFixes(lfl.getFixes());
 
             //TODO: ordering
 
             for (Fix f : fixes) {
+                if (f instanceof ImportClass.FixImport) {
+                    //TODO: FixImport is not a JavaFix, create one. Is there a better solution?
+                    String text = f.getText();
+                    CharSequence sortText = ((ImportClass.FixImport) f).getSortText();
+                    ElementHandle<Element> toImport = ((ImportClass.FixImport) f).getToImport();
+                    f = new JavaFix(topLevelHandle[0], sortText != null ? sortText.toString() : null) {
+                        @Override
+                        protected String getText() {
+                            return text;
+                        }
+                        @Override
+                        protected void performRewrite(JavaFix.TransformationContext ctx) throws Exception {
+                            Element resolved = toImport.resolve(ctx.getWorkingCopy());
+                            if (resolved == null) {
+                                return ;
+                            }
+                            WorkingCopy copy = ctx.getWorkingCopy();
+                            CompilationUnitTree cut = GeneratorUtilities.get(copy).addImports(
+                                copy.getCompilationUnit(),
+                                Collections.singleton(resolved)
+                            );
+                            copy.rewrite(copy.getCompilationUnit(), cut);
+                        }
+                    }.toEditorFix();
+                }
                 if (f instanceof JavaFixImpl) {
                     try {
-                        LineMap[] lm = new LineMap[1];
-                        ModificationResult changes = js.runModificationTask(wc -> {
+                        JavaFix jf = ((JavaFixImpl) f).jf;
+                        List<TextEdit> edits = modify2TextEdits(js, wc -> {
                             wc.toPhase(JavaSource.Phase.RESOLVED);
                             Map<FileObject, byte[]> resourceContentChanges = new HashMap<FileObject, byte[]>();
-                            JavaFix jf = ((JavaFixImpl) f).jf;
                             JavaFixImpl.Accessor.INSTANCE.process(jf, wc, true, resourceContentChanges, /*Ignored in editor:*/new ArrayList<>());
-                            lm[0] = wc.getCompilationUnit().getLineMap();
                         });
-                        //TODO: full, correct and safe edit production:
-                        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(changes.getModifiedFileObjects().iterator().next());
-                        List<TextEdit> edits = new ArrayList<>();
-                        for (ModificationResult.Difference diff : diffs) {
-                            String newText = diff.getNewText();
-                            edits.add(new TextEdit(new Range(createPosition(lm[0], diff.getStartPosition().getOffset()),
-                                                             createPosition(lm[0], diff.getEndPosition().getOffset())),
-                                                   newText != null ? newText : ""));
-                        }
                         TextDocumentEdit te = new TextDocumentEdit(new VersionedTextDocumentIdentifier(params.getTextDocument().getUri(),
                                                                                                        -1),
                                                                    edits);
@@ -744,6 +808,43 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         return CompletableFuture.completedFuture(result);
     }
+
+    //TODO: copied from spi.editor.hints/.../FixData:
+    private List<Fix> sortFixes(Collection<Fix> fixes) {
+        List<Fix> result = new ArrayList<Fix>(fixes);
+
+        Collections.sort(result, new FixComparator());
+
+        return result;
+    }
+
+    private static final String DEFAULT_SORT_TEXT = "\uFFFF";
+
+    private static CharSequence getSortText(Fix f) {
+        if (f instanceof EnhancedFix) {
+            return ((EnhancedFix) f).getSortText();
+        } else {
+            return DEFAULT_SORT_TEXT;
+        }
+    }
+    private static final class FixComparator implements Comparator<Fix> {
+        public int compare(Fix o1, Fix o2) {
+            return compareText(getSortText(o1), getSortText(o2));
+        }
+    }
+
+    private static int compareText(CharSequence text1, CharSequence text2) {
+        int len = Math.min(text1.length(), text2.length());
+        for (int i = 0; i < len; i++) {
+            char ch1 = text1.charAt(i);
+            char ch2 = text2.charAt(i);
+            if (ch1 != ch2) {
+                return ch1 - ch2;
+            }
+        }
+        return text1.length() - text2.length();
+    }
+    //end copied
 
     @Override
     public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams arg0) {
@@ -1028,4 +1129,26 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return URLMapper.findFileObject(URI.create(uri).toURL());
     }
 
+    private static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {
+        FileObject[] file = new FileObject[1];
+        LineMap[] lm = new LineMap[1];
+        ModificationResult changes = js.runModificationTask(wc -> {
+            task.run(wc);
+            file[0] = wc.getFileObject();
+            lm[0] = wc.getCompilationUnit().getLineMap();
+        });
+        //TODO: full, correct and safe edit production:
+        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(file[0]);
+        if (diffs == null) {
+            return Collections.emptyList();
+        }
+        List<TextEdit> edits = new ArrayList<>();
+        for (ModificationResult.Difference diff : diffs) {
+            String newText = diff.getNewText();
+            edits.add(new TextEdit(new Range(createPosition(lm[0], diff.getStartPosition().getOffset()),
+                                             createPosition(lm[0], diff.getEndPosition().getOffset())),
+                                   newText != null ? newText : ""));
+        }
+        return edits;
+    }
 }

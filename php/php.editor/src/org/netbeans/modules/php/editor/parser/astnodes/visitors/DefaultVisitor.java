@@ -104,7 +104,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.SwitchCase;
 import org.netbeans.modules.php.editor.parser.astnodes.SwitchStatement;
-import org.netbeans.modules.php.editor.parser.astnodes.ThrowStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.ThrowExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitConflictResolutionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration;
@@ -503,7 +503,7 @@ public class DefaultVisitor implements Visitor {
     }
 
     @Override
-    public void visit(ThrowStatement node) {
+    public void visit(ThrowExpression node) {
         scan(node.getExpression());
     }
 

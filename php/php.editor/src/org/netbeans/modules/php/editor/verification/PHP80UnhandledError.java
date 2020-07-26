@@ -38,9 +38,12 @@ import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
+import org.netbeans.modules.php.editor.parser.astnodes.Expression;
+import org.netbeans.modules.php.editor.parser.astnodes.ExpressionStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.ThrowExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -84,6 +87,7 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
         private final List<VerificationError> errors = new ArrayList<>();
         private final FileObject fileObject;
         private final List<FormalParameter> lastParams = new ArrayList<>();
+        private boolean isSameAsThrowStatement = false;
 
         public CheckVisitor(FileObject fileObject) {
             this.fileObject = fileObject;
@@ -112,6 +116,27 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
         @Override
         public void visit(LambdaFunctionDeclaration node) {
             addLastParam(node.getFormalParameters());
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(ExpressionStatement node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            if (node.getExpression() instanceof ThrowExpression) {
+                isSameAsThrowStatement = true;
+            }
+            super.visit(node);
+            isSameAsThrowStatement = false;
+        }
+
+        @Override
+        public void visit(ThrowExpression node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkThrowExpression(node);
             super.visit(node);
         }
 
@@ -185,6 +210,12 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
                     PHPTokenId.PHPDOC_COMMENT_END
             );
             return LexUtilities.findNext(ts, ignores);
+        }
+
+        private void checkThrowExpression(Expression expression) {
+            if (!isSameAsThrowStatement) {
+                createError(expression);
+            }
         }
 
         private void createError(ASTNode node) {

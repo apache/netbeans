@@ -26,9 +26,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
@@ -97,6 +99,8 @@ import org.openide.util.NbBundle;
 public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousInstantiatingIterator<WizardDescriptor> {
 
     private static final String SOURCE_TYPE_GROOVY = "groovy"; // NOI18N
+    private static final String SUPERCLASS = "superclass"; // NOI18N
+    private static final String INTERFACES = "interfaces"; // NOI18N
 
     static final String FOLDER = "Classes";
 
@@ -159,7 +163,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
         else {
             final List<WizardDescriptor.Panel<?>> panels = new ArrayList<>();
             if (this.type == Type.FILE) {
-                panels.add(JavaTemplates.createPackageChooser( project, groups ));
+                panels.add(JavaTemplates.createPackageChooser(project, groups, new ExtensionAndImplementationWizardPanel()));
             } else if (type == Type.PKG_INFO) {
                 panels.add(new JavaTargetChooserPanel(project, groups, null, Type.PKG_INFO, true));
             } else if (type == Type.MODULE_INFO) {
@@ -322,7 +326,12 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
             createdFile = dobj.getPrimaryFile();
         } else {
             DataObject dTemplate = DataObject.find( template );                
-            DataObject dobj = dTemplate.createFromTemplate( df, targetName );
+            String superclass = (String) wiz.getProperty(SUPERCLASS);
+            String interfaces = (String) wiz.getProperty(INTERFACES);
+            Map<String, String> parameters = new HashMap<>();
+            parameters.put(SUPERCLASS, superclass);
+            parameters.put(INTERFACES, interfaces);
+            DataObject dobj = dTemplate.createFromTemplate(df, targetName, parameters);
             createdFile = dobj.getPrimaryFile();
         }
         final Set<FileObject> res = new HashSet<>();

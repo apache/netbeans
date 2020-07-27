@@ -20,7 +20,7 @@ package test;
 
 public class Test {
 
- public record Records <X extends Number, Y > ( )  {
+ public record Records <R extends Number, R1 > ( )  {
 
     public static 
 }

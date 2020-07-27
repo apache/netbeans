@@ -79,6 +79,7 @@ Process
 ProcessBuilder
 ProcessHandle
 Readable
+Record
 ReflectiveOperationException
 Runnable
 Runtime

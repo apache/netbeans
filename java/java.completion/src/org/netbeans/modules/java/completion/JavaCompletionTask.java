@@ -203,7 +203,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
     private static final String JAVA_LANG_CLASS = "java.lang.Class"; //NOI18N
     private static final String JAVA_LANG_OBJECT = "java.lang.Object"; //NOI18N
     private static final String JAVA_LANG_ITERABLE = "java.lang.Iterable"; //NOI18N
-    private static final String JAVA_LANG_RECORD = "java.lang.Record"; //NOI18N
 
     private static final String[] PRIM_KEYWORDS = new String[]{
         BOOLEAN_KEYWORD, BYTE_KEYWORD, CHAR_KEYWORD, DOUBLE_KEYWORD,
@@ -736,7 +735,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         if (options.contains(Options.ALL_COMPLETION)) {
             EnumSet<ElementKind> classKinds = EnumSet.of(CLASS, INTERFACE, ENUM, ANNOTATION_TYPE);
-            if (isRecordSupported(env, null)) {
+            if (isRecordSupported(env)) {
                 classKinds.add(TreeShims.getRecordKind());
             }
             addTypes(env, classKinds, null);
@@ -2073,7 +2072,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     }
                     if (encl == null) {
                         EnumSet<ElementKind> classKinds = EnumSet.of(CLASS, INTERFACE, ENUM, ANNOTATION_TYPE);
-                        if (isRecordSupported(env, null)) {
+                        if (isRecordSupported(env)) {
                             classKinds.add(TreeShims.getRecordKind());
                         }
                         addTypes(env, classKinds, base);
@@ -3030,15 +3029,14 @@ public final class JavaCompletionTask<T> extends BaseTask {
     
     private void addClassTypes(final Env env, DeclaredType baseType) throws IOException{
         EnumSet<ElementKind> classKinds = EnumSet.of(CLASS, INTERFACE, ENUM, ANNOTATION_TYPE, TYPE_PARAMETER);
-        if (isRecordSupported(env, null)) {
+        if (isRecordSupported(env)) {
             classKinds.add(TreeShims.getRecordKind());
         }
-        addTypes(env, classKinds, null);
+        addTypes(env, classKinds, baseType);
     }
 
-    private boolean isRecordSupported(final Env env, String prefix) {
-        return (SOURCE_VERSION_RELEASE_14 != null && env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_14) >= 0
-                && Utilities.startsWith(RECORD_KEYWORD, prefix));
+    private boolean isRecordSupported(final Env env) {
+        return (SOURCE_VERSION_RELEASE_14 != null && env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_14) >= 0);
     }
 
     private void insideRecord(Env env) throws IOException {
@@ -3996,7 +3994,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
     }
 
     private void addPackageContent(final Env env, PackageElement pe, EnumSet<ElementKind> kinds, DeclaredType baseType, boolean insideNew, boolean srcOnly) throws IOException {
-        if (isRecordSupported(env, null)) {
+        if (isRecordSupported(env)) {
             kinds.add(TreeShims.getRecordKind());
         }
         Set<? extends TypeMirror> smartTypes = options.contains(Options.ALL_COMPLETION) ? null : getSmartTypes(env);
@@ -4136,8 +4134,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
         };
         for (TypeElement e : controller.getElementUtilities().getGlobalTypes(acceptor)) {
-            if (e.getQualifiedName().toString().equals(JAVA_LANG_RECORD) && env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_14) < 0) 
-                continue;
             results.add(itemFactory.createTypeItem(env.getController(), e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), false, false, false));
         }
     }
@@ -4514,7 +4510,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             kws.add(ENUM_KEYWORD);
             kws.add(FINAL_KEYWORD);
             kws.add(INTERFACE_KEYWORD);
-            if (isRecordSupported(env, prefix)) {
+            if (isRecordSupported(env)) {
                 kws.add(RECORD_KEYWORD);
             }
         }
@@ -4585,7 +4581,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 && env.getController().getTreeUtilities().getPathElementOfKind(Tree.Kind.INTERFACE, env.getPath()) != null) {
             results.add(itemFactory.createKeywordItem(DEFAULT_KEYWORD, SPACE, anchorOffset, false));
         }
-        if (isRecordSupported(env, prefix)) {
+        if (isRecordSupported(env)) {
             results.add(itemFactory.createKeywordItem(RECORD_KEYWORD, SPACE, anchorOffset, false));
         }
         addPrimitiveTypeKeywords(env);
@@ -4603,7 +4599,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 results.add(itemFactory.createKeywordItem(kw, SPACE, anchorOffset, false));
             }
         }
-        if (isRecordSupported(env, prefix)) {
+        if (isRecordSupported(env)) {
             results.add(itemFactory.createKeywordItem(RECORD_KEYWORD, SPACE, anchorOffset, false));
         }
         if (Utilities.startsWith(RETURN_KEYWORD, prefix)) {
@@ -4790,7 +4786,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         kws.add(CLASS_KEYWORD);
         kws.add(INTERFACE_KEYWORD);
         kws.add(ENUM_KEYWORD);
-        if (isRecordSupported(env, prefix)) {
+        if (isRecordSupported(env)) {
             kws.add(RECORD_KEYWORD);
         }
         for (String kw : kws) {
@@ -4847,7 +4843,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             kws.add(CLASS_KEYWORD);
             kws.add(INTERFACE_KEYWORD);
             kws.add(ENUM_KEYWORD);
-            if (isRecordSupported(env, prefix)) {
+            if (isRecordSupported(env)) {
                 kws.add(RECORD_KEYWORD);
             }
         }

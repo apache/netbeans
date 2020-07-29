@@ -1056,6 +1056,55 @@ public class PHPNewLineIndenterTest extends PHPTestBase {
         testIndentInFile("testfiles/indent/issue268621_06.php");
     }
 
+    // PHP 8.0
+    public void testMatchExpression_01() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_01.php");
+    }
+
+    public void testMatchExpression_02() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_02.php");
+    }
+
+    public void testMatchExpression_03() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_03.php");
+    }
+
+    public void testMatchExpression_04() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_04.php");
+    }
+
+    public void testMatchExpression_05() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_05.php");
+    }
+
+    public void testMatchExpression_06() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_06.php");
+    }
+
+    public void testMatchExpression_07() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_07.php");
+    }
+
+    public void testMatchExpression_08() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_08.php");
+    }
+
+    public void testMatchExpression_09() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_09.php");
+    }
+
+    public void testMatchExpression_10() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_10.php");
+    }
+
+    public void testMatchExpression_11() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_11.php");
+    }
+
+    public void testMatchExpression_12() throws Exception {
+        testIndentInFile("testfiles/indent/php80/matchExpression_12.php");
+    }
+
     @Override
     protected boolean runInEQ() {
         return true;

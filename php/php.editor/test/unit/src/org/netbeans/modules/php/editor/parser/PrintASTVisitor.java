@@ -503,6 +503,22 @@ public class PrintASTVisitor implements Visitor {
     }
 
     @Override
+    public void visit(MatchArm matchArm) {
+        XMLPrintNode printNode = new XMLPrintNode(matchArm, "MatchArm", new String[]{"isDefault", matchArm.isDefault() ? "true" : "false"});
+        printNode.addChildrenGroup("Conditions", matchArm.getConditions());
+        printNode.addChild(matchArm.getExpression());
+        printNode.print(this);
+    }
+
+    @Override
+    public void visit(MatchExpression match) {
+        XMLPrintNode printNode = new XMLPrintNode(match, "MatchExpression");
+        printNode.addChild(match.getExpression());
+        printNode.addChildrenGroup("MatchArms", match.getMatchArms());
+        printNode.print(this);
+    }
+
+    @Override
     public void visit(NamespaceName namespaceName) {
         XMLPrintNode printNode = new XMLPrintNode(namespaceName, "NamespaceName",
                 new String[] {"isCurrent", namespaceName.isCurrent() ? "true" : "false",

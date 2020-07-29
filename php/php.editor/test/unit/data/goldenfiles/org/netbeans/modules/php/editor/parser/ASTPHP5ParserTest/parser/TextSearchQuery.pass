@@ -1086,7 +1086,7 @@
         <token id='T_FUNCTION' start='4873' end='4881'>
             <text>function</text>
         </token>
-        <token id='T_STRING' start='4882' end='4887'>
+        <token id='T_MATCH' start='4882' end='4887'>
             <text>match</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='4887' end='4888'>
@@ -3117,7 +3117,7 @@
         <token id='T_FUNCTION' start='10739' end='10747'>
             <text>function</text>
         </token>
-        <token id='T_STRING' start='10748' end='10753'>
+        <token id='T_MATCH' start='10748' end='10753'>
             <text>match</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='10753' end='10754'>
@@ -5301,7 +5301,7 @@
         <token id='T_FUNCTION' start='19517' end='19525'>
             <text>function</text>
         </token>
-        <token id='T_STRING' start='19526' end='19531'>
+        <token id='T_MATCH' start='19526' end='19531'>
             <text>match</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='19531' end='19532'>

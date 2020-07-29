@@ -44,6 +44,8 @@ import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.MatchArm;
+import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ThrowExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
@@ -152,6 +154,24 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
+        @Override
+        public void visit(MatchArm node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkMatchExpression(node);
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(MatchExpression node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkMatchExpression(node);
+            super.visit(node);
+        }
+
         private void addLastParam(List<FormalParameter> parameters) {
             if (!parameters.isEmpty()) {
                 lastParams.add(parameters.get(parameters.size() - 1));
@@ -240,6 +260,14 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
                     createError(node);
                 }
             }
+        }
+
+        private void checkMatchExpression(MatchExpression node) {
+            createError(node);
+        }
+
+        private void checkMatchExpression(MatchArm node) {
+            createError(node);
         }
 
         private void createError(ASTNode node) {

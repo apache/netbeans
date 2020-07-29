@@ -379,6 +379,26 @@ public class PHPBracesMatcherTest extends PHPTestBase {
         );
     }
 
+    // PHP 8.0
+    public void testMatchExpression_01() throws Exception {
+        matchesBackward(""
+                + "$x = 2;\n"
+                + "$result = match ($x) ~{\n"
+                + "    1 => '1',\n"
+                + "    2 => '2',\n"
+                + "    default => 10,\n"
+                + "@}^;\n"
+        );
+        matchesForward(""
+                + "$x = 2;\n"
+                + "$result = match ($x) @^{\n"
+                + "    1 => '1',\n"
+                + "    2 => '2',\n"
+                + "    default => 10,\n"
+                + "~};\n"
+        );
+    }
+
     public void testFindContext_01() throws Exception {
         checkBraceContext("braceContextTest.php", "^} elseif ($i == 1) { // if", true);
     }
@@ -493,6 +513,27 @@ public class PHPBracesMatcherTest extends PHPTestBase {
 
     public void testFindContext_29() throws Exception {
         checkBraceContext("braceContextUseTraitTest.php", "^} // use", true);
+    }
+
+    // PHP 8.0
+    public void testFindContextForMatchExpression_01() throws Exception {
+        checkBraceContext("php80/matchExpression_01.php", "^}; // match", true);
+    }
+
+    public void testFindContextForMatchExpression_02a() throws Exception {
+        checkBraceContext("php80/matchExpression_02.php", "^}; // match1", true);
+    }
+
+    public void testFindContextForMatchExpression_02b() throws Exception {
+        checkBraceContext("php80/matchExpression_02.php", "    ^}, // match2", true);
+    }
+
+    public void testFindContextForMatchExpression_03() throws Exception {
+        checkBraceContext("php80/matchExpression_03.php", "^}; // match", true);
+    }
+
+    public void testFindContextForMatchExpression_04() throws Exception {
+        checkBraceContext("php80/matchExpression_04.php", "        ^}; // match", true);
     }
 
     private void matchesBackward(String original) throws BadLocationException {

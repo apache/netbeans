@@ -155,14 +155,7 @@ public abstract class PositionEstimator {
             super(IMPLEMENTS, oldL, newL, diffContext);
         }
     }
-    static class PermitsEstimator extends BaseEstimator {
-        PermitsEstimator(List<? extends Tree> oldL, 
-                            List<? extends Tree> newL,
-                            DiffContext diffContext)
-        {
-            super(PERMITS, oldL, newL, diffContext);
-        }
-    }
+    
     static class ExtendsEstimator extends BaseEstimator {
         ExtendsEstimator(List<? extends Tree> oldL, 
                          List<? extends Tree> newL,

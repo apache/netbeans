@@ -68,8 +68,6 @@ import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Context;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -84,7 +82,6 @@ import javax.tools.JavaFileObject;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.java.source.TreeShims;
 import static org.netbeans.modules.java.source.save.PositionEstimator.*;
-import org.openide.util.Exceptions;
 
 /**
  * Factory for creating new com.sun.source.tree instances.
@@ -297,28 +294,6 @@ public class TreeFactory {
                              defs.toList());
         
     }
-    public ClassTree Class(ModifiersTree modifiers, 
-                     CharSequence simpleName,
-                     List<? extends TypeParameterTree> typeParameters,
-                     Tree extendsClause,
-                     List<? extends Tree> implementsClauses,
-                     List<? extends Tree> permitsClause,
-                     List<? extends Tree> memberDecls) 
-    {
-        ListBuffer<JCTypeParameter> typarams = new ListBuffer<JCTypeParameter>();
-        for (TypeParameterTree t : typeParameters)
-            typarams.append((JCTypeParameter)t);
-        ListBuffer<JCExpression> impls = new ListBuffer<JCExpression>();
-        for (Tree t : implementsClauses)
-            impls.append((JCExpression)t);
-        ListBuffer<JCExpression> permits = new ListBuffer<JCExpression>();
-        for (Tree t : permitsClause)
-            permits.append((JCExpression)t);
-        ListBuffer<JCTree> defs = new ListBuffer<JCTree>();
-        for (Tree t : memberDecls)
-            defs.append((JCTree)t);
-        return TreeShims.getClassTree(make,names,modifiers,simpleName,typarams,extendsClause,impls,permits,defs);
-    }
     
     public ClassTree Interface(ModifiersTree modifiers, 
                      CharSequence simpleName,
@@ -329,16 +304,7 @@ public class TreeFactory {
         long flags = getBitFlags(modifiers.getFlags()) | Flags.INTERFACE;
         return Class(flags, (com.sun.tools.javac.util.List<JCAnnotation>) modifiers.getAnnotations(), simpleName, typeParameters, null, extendsClauses, memberDecls);
     }
-public ClassTree Interface(ModifiersTree modifiers, 
-                     CharSequence simpleName,
-                     List<? extends TypeParameterTree> typeParameters,
-                     List<? extends Tree> extendsClauses,
-                     List<? extends Tree> permitsClause,
-                     List<? extends Tree> memberDecls) 
-    {
-        long flags = modifiersToFlags(modifiers.getFlags()) | Flags.INTERFACE;
-        return Class(flags, (com.sun.tools.javac.util.List<JCAnnotation>) modifiers.getAnnotations(), simpleName, typeParameters, null, extendsClauses, permitsClause, memberDecls);
-    }
+
     public ClassTree AnnotationType(ModifiersTree modifiers, 
              CharSequence simpleName,
              List<? extends Tree> memberDecls) {
@@ -657,7 +623,7 @@ public ClassTree Interface(ModifiersTree modifiers,
     
     public static long modifiersToFlags(Set<Modifier> flagset) {
         long flags = 0L;
-        for (Modifier mod : flagset){
+        for (Modifier mod : flagset)
             switch (mod) {
                 case PUBLIC: flags |= Flags.PUBLIC; break;
                 case PROTECTED: flags |= Flags.PROTECTED; break;
@@ -672,13 +638,8 @@ public ClassTree Interface(ModifiersTree modifiers,
                 case STRICTFP: flags |= Flags.STRICTFP; break;
                 case DEFAULT: flags |= Flags.DEFAULT; break;
                 default:
-                    if (mod.toString().equals("sealed")) {//NOI18N
-                        flags |= TreeShims.getSealedFlag();
-                    } else {
-                        throw new AssertionError("Unknown Modifier: " + mod);//NOI18N
-                    }
+                    throw new AssertionError("Unknown Modifier: " + mod); //NOI18N
             }
-        }
         return flags;
     }
     
@@ -1779,33 +1740,6 @@ public ClassTree Interface(ModifiersTree modifiers,
                              impls.toList(),
                              defs.toList());
         
-    }
-    
-    private ClassTree Class(long modifiers,
-            com.sun.tools.javac.util.List<JCAnnotation> annotations,
-            CharSequence simpleName,
-            List<? extends TypeParameterTree> typeParameters,
-            Tree extendsClause,
-            List<? extends Tree> implementsClauses,
-            List<? extends Tree> permitsClause,
-            List<? extends Tree> memberDecls) {
-        ListBuffer<JCTypeParameter> typarams = new ListBuffer<JCTypeParameter>();
-        for (TypeParameterTree t : typeParameters) {
-            typarams.append((JCTypeParameter) t);
-        }
-        ListBuffer<JCExpression> impls = new ListBuffer<JCExpression>();
-        for (Tree t : implementsClauses) {
-            impls.append((JCExpression) t);
-        }
-        ListBuffer<JCExpression> permits = new ListBuffer<JCExpression>();
-        for (Tree t : permitsClause) {
-            permits.append((JCExpression) t);
-        }
-        ListBuffer<JCTree> defs = new ListBuffer<JCTree>();
-        for (Tree t : memberDecls) {
-            defs.append((JCTree) t);
-        }
-       return TreeShims.getClassTree(make, names, modifiers, annotations, simpleName, typarams, extendsClause, impls, permits, defs);
     }
     
     private long getBitFlags(Set<Modifier> modifiers) {

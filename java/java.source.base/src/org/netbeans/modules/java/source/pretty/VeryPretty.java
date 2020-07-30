@@ -2817,7 +2817,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     public void printFlags(long flags, boolean addSpace) {
 	print(flagNames(flags & ~INTERFACE & ~ANNOTATION & ~ENUM));
-        if ((flags & Flags.StandardFlags) != 0 || ((TreeShims.getSealedFlag() != 0) && ((flags & TreeShims.getSealedFlag()) != 0))) {
+        if ((flags & StandardFlags) != 0) {
             if (cs.placeNewLineAfterModifiers())
                 toColExactly(out.leftMargin);
             else if (addSpace)
@@ -2841,8 +2841,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
      * @return flag names, space-separated.
      */
     public static String flagNames(long flags) {
-        long flagExtendedStandardFlags=TreeShims.getFlagExtendedStandardFlags();
-        flags &= flagExtendedStandardFlags;
+        flags = flags & Flags.ExtendedStandardFlags;
         StringBuilder buf = new StringBuilder();
         String sep = ""; // NOI18N
         for (Flag flag : Flags.asFlagSet(flags)) {

@@ -811,8 +811,8 @@ public final class ImageUtilities {
         ensureLoaded(image1);
         ensureLoaded(image2);
 
-        int w = Math.max(image1.getWidth(null), x + image2.getWidth(null));
-        int h = Math.max(image1.getHeight(null), y + image2.getHeight(null));
+        int w = Math.max(1, Math.max(image1.getWidth(null), x + image2.getWidth(null)));
+        int h = Math.max(1, Math.max(image1.getHeight(null), y + image2.getHeight(null)));
         boolean bitmask = (image1 instanceof Transparency) && ((Transparency)image1).getTransparency() != Transparency.TRANSLUCENT
                 && (image2 instanceof Transparency) && ((Transparency)image2).getTransparency() != Transparency.TRANSLUCENT;
 
@@ -1064,8 +1064,8 @@ public final class ImageUtilities {
             ImageUtilities.ensureLoaded(image);
             boolean bitmask = (image instanceof Transparency) && ((Transparency) image).getTransparency() != Transparency.TRANSLUCENT;
             ColorModel model = colorModel(bitmask ? Transparency.BITMASK : Transparency.TRANSLUCENT);
-            int w = image.getWidth(null);
-            int h = image.getHeight(null);
+            int w = Math.max(1, image.getWidth(null));
+            int h = Math.max(1, image.getHeight(null));
             if (url == null) {
                 Object value = image.getProperty("url", null);
                 url = (value instanceof URL) ? (URL) value : null;

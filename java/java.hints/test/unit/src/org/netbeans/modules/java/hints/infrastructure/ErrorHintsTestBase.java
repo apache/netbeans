@@ -20,6 +20,7 @@ package org.netbeans.modules.java.hints.infrastructure;
 
 import com.sun.source.util.TreePath;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
@@ -120,7 +121,9 @@ public abstract class ErrorHintsTestBase extends NbTestCase {
 
             IndexUtil.setCacheFolder(cache);
 
-            TestUtilities.analyzeBinaries(SourceUtilsTestUtil.getBootClassPath());
+            if (doRunIndexing) {
+                TestUtilities.analyzeBinaries(SourceUtilsTestUtil.getBootClassPath());
+            }
         }
         
         Main.initializeURLFactory();
@@ -168,9 +171,11 @@ public abstract class ErrorHintsTestBase extends NbTestCase {
         doc.putProperty(Language.class, JavaTokenId.language());
         doc.putProperty("mimeType", "text/x-java");
 
-        //XXX: takes a long time
-        //re-index, in order to find classes-living-elsewhere
-        IndexingManager.getDefault().refreshIndexAndWait(sourceRoot.getURL(), null);
+        if (doRunIndexing) {
+            //XXX: takes a long time
+            //re-index, in order to find classes-living-elsewhere
+            IndexingManager.getDefault().refreshIndexAndWait(sourceRoot.getURL(), null);
+        }
 
         JavaSource js = JavaSource.forFileObject(data);
         
@@ -184,6 +189,7 @@ public abstract class ErrorHintsTestBase extends NbTestCase {
     private FileObject sourceRoot;
     protected String sourceLevel = "1.5";
     protected CompilationInfo info;
+    protected boolean doRunIndexing;
     private Document doc;
     
     protected List<Fix> computeFixes(CompilationInfo info, int pos, TreePath path) throws Exception {

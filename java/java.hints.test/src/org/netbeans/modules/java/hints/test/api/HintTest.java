@@ -117,6 +117,7 @@ import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
+import org.netbeans.spi.lexer.MutableTextInput;
 import org.openide.LifecycleManager;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -166,8 +167,10 @@ import org.openide.util.lookup.Lookups;
 public class HintTest {
 
     private static final Logger INDEXING_LOGGER = /* RepositoryUpdater.UI_LOGGER */ Logger.getLogger("org.netbeans.ui.indexing");
+    private static final Logger LEXER_LOG_LOCK = Logger.getLogger(MutableTextInput.class.getName());
     static {
         INDEXING_LOGGER.setLevel(Level.WARNING);
+        LEXER_LOG_LOCK.setLevel(Level.OFF);
     }
 
     private final File workDir;

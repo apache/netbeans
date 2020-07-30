@@ -56,6 +56,7 @@
                 <!-- More appropriate place would be GF module, but that would need another action-->
                 <attr name="config-GlassFishEE6/Instances/" boolvalue="true"/>
                 <attr name="config-GlassFishEE8/Instances/" boolvalue="true"/>
+                <attr name="config-GlassFishJakartaEE8/Instances/" boolvalue="true"/>
                 <attr name="config-GlassFishEE6WC/Instances/" boolvalue="true"/>
             </file>
         </folder>
@@ -131,7 +132,7 @@
     <folder name="OptionsExport">
         <folder name="Advanced">
             <file name="J2EE">
-                <attr name="include" stringvalue="config/(J2EE|GlassFish|GlassFishEE6|GlassFishEE6WC|GlassFishEE8)/.*"/>
+                <attr name="include" stringvalue="config/(J2EE|GlassFish|GlassFishEE6|GlassFishEE6WC|GlassFishEE8|GlassFishJakartaEE8)/.*"/>
                 <attr name="displayName" bundlevalue="org.netbeans.modules.j2ee.deployment.impl.Bundle#J2EE.Options.Export.displayName"/>
             </file>
         </folder>

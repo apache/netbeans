@@ -18,21 +18,27 @@
  */
 package org.netbeans.libs.graalsdk;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.NoSuchElementException;
+import javax.script.Bindings;
 import javax.script.Invocable;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import org.junit.Assume;
+import static org.junit.Assume.assumeFalse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -173,6 +179,7 @@ public class JavaScriptEnginesTest {
         Point point = inv().getInterface(rawPoint, Point.class);
         if (point == null) {
             assumeNotNashorn();
+            assumeNotGraalJsFromJDK();
         }
         assertNotNull("Converted to typed interface", point);
 
@@ -281,10 +288,11 @@ public class JavaScriptEnginesTest {
 
         Sum sum = new Sum();
         Object raw = ((Invocable) engine).invokeMethod(fn, "call", null, sum);
-
+        
         ArrayLike res = ((Invocable) engine).getInterface(raw, ArrayLike.class);
         if (res == null) {
             assumeNotNashorn();
+            assumeNotGraalJsFromJDK();
         }
         assertNotNull("Result looks like array", res);
 
@@ -299,6 +307,10 @@ public class JavaScriptEnginesTest {
 
     private void assumeNotNashorn() {
         Assume.assumeFalse(engine.getFactory().getNames().contains("Nashorn"));
+    }
+
+    private void assumeNotGraalJsFromJDK() {
+        Assume.assumeFalse(engine.getFactory().getNames().contains("Graal.js"));
     }
 
     @Test
@@ -348,5 +360,100 @@ public class JavaScriptEnginesTest {
     @Test(expected = ScriptException.class)
     public void error() throws Exception {
         engine.eval("throw 'Hi'");
+    }
+
+    /**
+     * Checks that exception originating in the script/lang code will be reported
+     * as ScriptException.
+     * @throws Exception 
+     */
+    @Test
+    public void guestExceptionReportedAsRuntime() throws Exception {
+        try {
+            engine.eval("var a = null; a.fn();");
+            fail("Exception expected");
+        } catch (ScriptException ex) {
+            Throwable c = ex.getCause();
+            Assert.assertThat(c, CoreMatchers.is(CoreMatchers.instanceOf(RuntimeException.class)));
+        }
+    }
+
+    public class Callback {
+        public void fn() throws Exception {
+            throw new NoSuchElementException();
+        }
+        
+        public void fn2() throws IOException {
+            throw new IOException();
+        }
+    }
+    
+    /**
+     * Checks that exception thrown in the callback Java code is reported 'as is'.
+     * @throws Exception 
+     */
+    @Test
+    public void hostCheckedExceptionAccessible() throws Exception {
+        // Note: this seems to be broken on GraalVM's JDK js - runtime exceptions are wrapped into
+        // polyglot wrapper and cannot be determined through the chain of getCauses().
+        assumeFalse(engine.getFactory().getEngineName().toLowerCase().contains("graal.js"));
+        
+        try {
+            engine.eval("var x; function setGlobalX(p) { x = p }");
+            ((Invocable)engine).invokeFunction("setGlobalX", new Callback());
+            engine.eval("x.fn2();");
+            fail("Exception expected");
+        } catch (RuntimeException ex) {
+            Throwable c = ex.getCause();
+            Assert.assertThat(c, CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));
+        } catch (Exception ex) {
+            fail("Runtime subclass is expected");
+        }
+    }
+
+    /**
+     * Checks that exception thrown in the callback Java code is reported 'as is'.
+     * @throws Exception 
+     */
+    @Test
+    public void hostRuntimeExceptionsAccessible() throws Exception {
+        // Note: this seems to be broken on GraalVM's JDK js - runtime exceptions are wrapped into
+        // polyglot wrapper and cannot be determined through the chain of getCauses().
+        assumeFalse(engine.getFactory().getEngineName().toLowerCase().contains("graal.js"));
+        
+        try {
+            engine.eval("var x; function setGlobalX(p) { x = p }");
+            ((Invocable)engine).invokeFunction("setGlobalX", new Callback());
+            engine.eval("x.fn();");
+            fail("Exception expected");
+        } catch (ScriptException ex) {
+            Throwable c = ex.getCause();
+            Assert.assertThat(c, CoreMatchers.is(CoreMatchers.instanceOf(NoSuchElementException.class)));
+        } catch (NoSuchElementException ex) {
+            // this is OK
+        } catch (Exception ex) {
+            
+        }
+    }
+    
+    /** 
+     * Checks that values assigned by various mehtods are visible:
+     * @throws Exception 
+     */
+    @Test
+    public void testEngineGlobalVariablesVisible() throws Exception {
+        Bindings b = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+        b.put("a", 1111);
+        Object o = engine.eval("var b = 3333; a");
+        assertEquals(1111, o);
+        assertEquals(3333, b.get("b"));
+        
+        engine.getContext().setAttribute("a", 2222, ScriptContext.ENGINE_SCOPE);
+        o = engine.eval("var b = 4444; a");
+        assertEquals(2222, o);
+        assertEquals(4444, engine.getContext().getAttribute("b"));
+        assertEquals(4444, engine.getContext().getAttribute("b", ScriptContext.ENGINE_SCOPE));
+        assertNull(engine.getContext().getAttribute("b", ScriptContext.GLOBAL_SCOPE));
+        
     }
 }

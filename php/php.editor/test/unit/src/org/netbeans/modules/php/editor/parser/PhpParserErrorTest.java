@@ -18,7 +18,12 @@
  */
 package org.netbeans.modules.php.editor.parser;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.netbeans.modules.php.editor.PHPTestBase;
+import org.netbeans.spi.queries.FileEncodingQueryImplementation;
+import org.openide.filesystems.FileObject;
+import org.openide.util.test.MockLookup;
 
 /**
  *
@@ -33,6 +38,13 @@ public class PhpParserErrorTest extends PHPTestBase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
+        MockLookup.setInstances(new FileEncodingQueryImplementation() {
+            @Override
+            public Charset getEncoding(FileObject file) {
+                return StandardCharsets.UTF_8;
+            }
+        });
     }
 
     @Override

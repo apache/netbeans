@@ -31,9 +31,11 @@ import org.graalvm.polyglot.Value;
 final class GraalEngine implements ScriptEngine, Invocable {
 
     private final GraalEngineFactory factory;
+    private final ScriptContext langContext;
 
     GraalEngine(GraalEngineFactory f) {
         this.factory = f;
+        this.langContext = new LangContext(factory.id, f.ctx);
     }
 
     private String id() {
@@ -41,8 +43,8 @@ final class GraalEngine implements ScriptEngine, Invocable {
     }
 
     @Override
-    public GraalContext getContext() {
-        return factory.ctx;
+    public ScriptContext getContext() {
+        return langContext;
     }
 
     @Override
@@ -55,20 +57,32 @@ final class GraalEngine implements ScriptEngine, Invocable {
         Value result = evalImpl(arg1, src);
         return unbox(result);
     }
-
-    private Value evalImpl(ScriptContext arg1, String src) throws ScriptException {
-
+    
+    private static interface ScriptAction {
+        public Value run();
+    }
+    
+    private Value handleException(ScriptAction r) throws ScriptException {
         try {
-            return ((GraalContext) arg1).ctx().eval(id(), src);
+            return r.run();
         } catch (PolyglotException e) {
+            if (e.isHostException()) {
+                e.initCause(e.asHostException());
+                throw e;
+            }
+            // avoid exposing polyglot stack frames - might be confusing.
             throw new ScriptException(e);
         }
     }
 
+    private Value evalImpl(ScriptContext arg1, String src) throws ScriptException {
+        return handleException(() -> ((GraalContext) arg1).ctx().eval(id(), src));
+    }
+    
     @Override
     public Object eval(Reader arg0, ScriptContext arg1) throws ScriptException {
         Source src = Source.newBuilder(id(), arg0, null).buildLiteral();
-        Value result = ((GraalContext)arg1).ctx().eval(src);
+        Value result = handleException(() -> ((GraalContext)arg1).ctx().eval(src));
         return unbox(result);
     }
 
@@ -94,11 +108,12 @@ final class GraalEngine implements ScriptEngine, Invocable {
 
     @Override
     public void put(String arg0, Object arg1) {
+        getBindings(ScriptContext.ENGINE_SCOPE).put(arg0, arg1);
     }
 
     @Override
     public Object get(String arg0) {
-        return null;
+        return getBindings(ScriptContext.ENGINE_SCOPE).get(arg0);
     }
 
     @Override
@@ -108,6 +123,14 @@ final class GraalEngine implements ScriptEngine, Invocable {
 
     @Override
     public void setBindings(Bindings arg0, int arg1) {
+        // allow setting the same bindins as already active in the factory;
+        // this is done by ScriptEngineManager before it returns the engine.
+        if (arg1 == ScriptContext.GLOBAL_SCOPE) {
+            if (factory.ctx.getGlobals() == arg0) {
+                return;
+            }
+        }
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -122,34 +145,41 @@ final class GraalEngine implements ScriptEngine, Invocable {
 
     @Override
     public Object invokeMethod(Object thiz, String name, Object... args) throws ScriptException, NoSuchMethodException {
-        if (!(thiz instanceof Value)) {
-            throw new IllegalArgumentException();
+        final Value thisValue = factory.ctx.ctx().asValue(thiz);
+        if (!thisValue.canInvokeMember(name)) {
+            if (!thisValue.hasMember(name)) {
+                throw new NoSuchMethodException(name);
+            } else {
+                throw new NoSuchMethodException(name + " is not a function");
+            }
         }
-        final Value thisValue = (Value) thiz;
-        Value fn = thisValue.getMember(name);
-        if (!fn.canExecute()) {
-            throw new NoSuchMethodException(name);
-        }
-        Value result = fn.execute(args);
-        return unbox(result);
+        return unbox(handleException(() -> thisValue.invokeMember(name, args)));
+    }
+    
+    private GraalContext graalContext() {
+        return factory.ctx;
     }
 
     @Override
     public Object invokeFunction(String name, Object... args) throws ScriptException, NoSuchMethodException {
-        final Value fn = evalImpl(getContext(), name);
-        final Value result = fn.execute(args);
-        return unbox(result);
+        final Value fn = evalImpl(graalContext(), name);
+        return unbox(handleException(() -> fn.execute(args)));
     }
 
     @Override
     public <T> T getInterface(Class<T> clasz) {
-        return getInterface(getContext().ctx().getPolyglotBindings(), clasz);
+        return getInterface(graalContext().ctx().getPolyglotBindings(), clasz);
     }
 
     @Override
     public <T> T getInterface(Object thiz, Class<T> clasz) {
         if (thiz instanceof Value) {
             return ((Value) thiz).as(clasz);
+        }
+        Value v = factory.ctx.ctx().asValue(thiz);
+        T ret = v.as(clasz);
+        if (ret != null) {
+            return ret;
         }
         if (clasz.isInstance(thiz)) {
             return clasz.cast(thiz);
@@ -161,12 +191,6 @@ final class GraalEngine implements ScriptEngine, Invocable {
         if (result.isNull()) {
             return null;
         }
-        if (result.isNumber()) {
-            return result.as(Number.class);
-        }
-        if (result.isString()) {
-            return result.as(String.class);
-        }
-        return result;
+        return result.as(Object.class);
     }
 }

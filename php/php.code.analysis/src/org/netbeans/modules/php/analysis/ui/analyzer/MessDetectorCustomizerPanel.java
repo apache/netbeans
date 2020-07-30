@@ -18,10 +18,14 @@
  */
 package org.netbeans.modules.php.analysis.ui.analyzer;
 
+import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -32,7 +36,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
-import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -41,22 +44,27 @@ import org.netbeans.modules.analysis.spi.Analyzer;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.options.AnalysisOptionsValidator;
 import org.netbeans.modules.php.analysis.options.ValidatorMessDetectorParameter;
+import org.netbeans.modules.php.analysis.ui.AnalysisDefaultDocumentListener;
 import org.netbeans.modules.php.analysis.ui.MessDetectorRuleSetsListCellRenderer;
 import org.netbeans.modules.php.analysis.ui.MessDetectorRuleSetsListModel;
+import org.netbeans.modules.php.analysis.util.AnalysisUiUtils;
 import org.netbeans.modules.php.analysis.util.AnalysisUtils;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.openide.awt.Mnemonics;
-import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 public class MessDetectorCustomizerPanel extends JPanel {
 
-    private static final long serialVersionUID = -4687321324676897L;
+    private static final long serialVersionUID = -1536063097951347093L;
 
     public static final String ENABLED = "messDetector.enabled"; // NOI18N
+    public static final String PATH = "messDetector.path"; // NOI18N
     public static final String RULE_SETS = "messDetector.ruleSets"; // NOI18N
     public static final String RULE_SET_FILE = "messDetector.ruleSetFile"; // NOI18N
-    private static final String RULE_SET_FILE_LAST_FOLDER_SUFFIX = ".messDetector.ruleSetFile"; // NOI18N
+    public static final String OPTIONS = "messDetector.options"; // NOI18N
+    private static final RequestProcessor RP = new RequestProcessor(MessDetectorCustomizerPanel.class);
 
     private final MessDetectorRuleSetsListModel ruleSetsListModel = new MessDetectorRuleSetsListModel();
     final Analyzer.CustomizerContext<Void, MessDetectorCustomizerPanel> context;
@@ -86,28 +94,53 @@ public class MessDetectorCustomizerPanel extends JPanel {
     }
 
     private void init() {
+        DocumentListener defaultDocumentListener = new AnalysisDefaultDocumentListener(() -> validateAndSetData());
+        initEnabledCheckBox();
+        initMessDetectorTextField(defaultDocumentListener);
+        initRuleSetsList();
+        initRuleSetFileTextField(defaultDocumentListener);
+        initOptionsTextField(defaultDocumentListener);
+        // avoid NPE: don't set errors during initializing
+        RP.schedule(() -> {
+            EventQueue.invokeLater(() -> {
+                context.setError(null);
+                if (enabledCheckBox.isSelected()) {
+                    validateData();
+                }
+            });
+        }, 1000, TimeUnit.MILLISECONDS);
+    }
+
+    private void initEnabledCheckBox() {
         enabledCheckBox.addItemListener((e) -> {
             setMessDetectorEnabled();
-            setRuleSetsComponentsEnabled(enabledCheckBox.isSelected());
+            setAllComponentsEnabled(enabledCheckBox.isSelected());
         });
         boolean isEnabled = settings.getBoolean(ENABLED, false);
         enabledCheckBox.setSelected(isEnabled);
-        setRuleSetsComponentsEnabled(isEnabled);
+        setAllComponentsEnabled(isEnabled);
+        enabledCheckBox.addItemListener(e -> {
+            if (!enabledCheckBox.isSelected()) {
+                context.setError(null);
+            } else {
+                validateData();
+            }
+        });
+    }
 
+    private void initMessDetectorTextField(DocumentListener documentListener) {
+        messDetectorTextField.setText(settings.get(PATH, AnalysisOptions.getInstance().getMessDetectorPath()));
+        messDetectorTextField.getDocument().addDocumentListener(documentListener);
+    }
+
+    private void initRuleSetsList() {
         ruleSetsList.setModel(ruleSetsListModel);
         ruleSetsList.setCellRenderer(new MessDetectorRuleSetsListCellRenderer(ruleSetsList.getCellRenderer()));
-
-        // rule sets
         List<String> ruleSets = getRuleSets(settings);
         if (ruleSets == null) {
             ruleSets = AnalysisOptions.getInstance().getMessDetectorRuleSets();
         }
         selectRuleSets(ruleSets);
-
-        String ruleSetFile = settings.get(RULE_SET_FILE, AnalysisOptions.getInstance().getMessDetectorRuleSetFilePath());
-        ruleSetFileTextField.setText(ruleSetFile);
-
-        // listeners
         ruleSetsList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -117,23 +150,36 @@ public class MessDetectorCustomizerPanel extends JPanel {
                 validateAndSetData();
             }
         });
+    }
 
-        ruleSetFileTextField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                validateAndSetData();
-            }
+    private void initRuleSetFileTextField(DocumentListener documentListener) {
+        String ruleSetFile = settings.get(RULE_SET_FILE, AnalysisOptions.getInstance().getMessDetectorRuleSetFilePath());
+        ruleSetFileTextField.setText(ruleSetFile);
+        ruleSetFileTextField.getDocument().addDocumentListener(documentListener);
+    }
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                validateAndSetData();
-            }
+    private void initOptionsTextField(DocumentListener documentListener) {
+        String options = settings.get(OPTIONS, AnalysisOptions.getInstance().getMessDetectorOptions());
+        optionsTextField.setText(options);
+        optionsTextField.getDocument().addDocumentListener(documentListener);
+    }
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                validateAndSetData();
-            }
-        });
+    public String getMessDetectorPath() {
+        return messDetectorTextField.getText().trim();
+    }
+
+    /**
+     * Get the valid Mess Detector path.
+     *
+     * @return the path for Options if the path for this panel is empty.
+     * Otherwise, the path for this panel. Can be {@code null}.
+     */
+    @CheckForNull
+    public String getValidMessDetectorPath() {
+        if (StringUtils.hasText(getMessDetectorPath())) {
+            return getMessDetectorPath();
+        }
+        return AnalysisOptions.getInstance().getMessDetectorPath();
     }
 
     public List<String> getSelectedRuleSets() {
@@ -144,11 +190,15 @@ public class MessDetectorCustomizerPanel extends JPanel {
         return ruleSetFileTextField.getText().trim();
     }
 
+    public String getOptions() {
+        return optionsTextField.getText().trim();
+    }
+
     void selectRuleSets(List<String> ruleSets) {
         ruleSetsList.clearSelection();
         for (String ruleSet : ruleSets) {
             int indexOf = MessDetectorRuleSetsListModel.getAllRuleSets().indexOf(ruleSet);
-            assert indexOf != -1 : "Rule set not found: " + ruleSet;
+            assert indexOf != -1 : "Rule set not found: " + ruleSet; // NOI18N
             ruleSetsList.addSelectionInterval(indexOf, indexOf);
         }
     }
@@ -176,21 +226,37 @@ public class MessDetectorCustomizerPanel extends JPanel {
     }
 
     private void setData() {
+        settings.put(PATH, getMessDetectorPath());
         settings.put(RULE_SETS, AnalysisUtils.serialize(getSelectedRuleSets()));
         settings.put(RULE_SET_FILE, getRuleSetFile());
+        settings.put(OPTIONS, getOptions());
     }
 
     private void setMessDetectorEnabled() {
         settings.putBoolean(ENABLED, enabledCheckBox.isSelected());
     }
 
-    private void setRuleSetsComponentsEnabled(boolean isEnabled) {
-        ruleSetsLabel.setEnabled(isEnabled);
-        ruleSetsList.setEnabled(isEnabled);
-        ruleSetsScrollPane.setEnabled(isEnabled);
-        ruleSetFileLabel.setEnabled(isEnabled);
-        ruleSetFileTextField.setEnabled(isEnabled);
-        ruleSetFileBrowseButton.setEnabled(isEnabled);
+    private void setAllComponentsEnabled(boolean isEnabled) {
+        for (Component component : getAllComponentsForEnabling()) {
+            component.setEnabled(isEnabled);
+        }
+    }
+
+    private List<Component> getAllComponentsForEnabling() {
+        return Arrays.asList(
+                messDetectorLabel,
+                messDetectorTextField,
+                browseButton,
+                searchButton,
+                ruleSetsLabel,
+                ruleSetsList,
+                ruleSetsScrollPane,
+                ruleSetFileLabel,
+                ruleSetFileTextField,
+                ruleSetFileBrowseButton,
+                optionsLabel,
+                optionsTextField
+        );
     }
 
     /**
@@ -208,6 +274,12 @@ public class MessDetectorCustomizerPanel extends JPanel {
         ruleSetFileTextField = new JTextField();
         ruleSetFileLabel = new JLabel();
         ruleSetFileBrowseButton = new JButton();
+        optionsTextField = new JTextField();
+        optionsLabel = new JLabel();
+        messDetectorLabel = new JLabel();
+        messDetectorTextField = new JTextField();
+        browseButton = new JButton();
+        searchButton = new JButton();
 
         ruleSetsLabel.setLabelFor(ruleSetsList);
         Mnemonics.setLocalizedText(ruleSetsLabel, NbBundle.getMessage(MessDetectorCustomizerPanel.class, "MessDetectorCustomizerPanel.ruleSetsLabel.text")); // NOI18N
@@ -226,6 +298,26 @@ public class MessDetectorCustomizerPanel extends JPanel {
             }
         });
 
+        Mnemonics.setLocalizedText(optionsLabel, NbBundle.getMessage(MessDetectorCustomizerPanel.class, "MessDetectorCustomizerPanel.optionsLabel.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(messDetectorLabel, NbBundle.getMessage(MessDetectorCustomizerPanel.class, "MessDetectorCustomizerPanel.messDetectorLabel.text")); // NOI18N
+
+        messDetectorTextField.setText(NbBundle.getMessage(MessDetectorCustomizerPanel.class, "MessDetectorCustomizerPanel.messDetectorTextField.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(browseButton, NbBundle.getMessage(MessDetectorCustomizerPanel.class, "MessDetectorCustomizerPanel.browseButton.text")); // NOI18N
+        browseButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                browseButtonActionPerformed(evt);
+            }
+        });
+
+        Mnemonics.setLocalizedText(searchButton, NbBundle.getMessage(MessDetectorCustomizerPanel.class, "MessDetectorCustomizerPanel.searchButton.text")); // NOI18N
+        searchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                searchButtonActionPerformed(evt);
+            }
+        });
+
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -234,19 +326,37 @@ public class MessDetectorCustomizerPanel extends JPanel {
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(messDetectorLabel)
                     .addComponent(ruleSetsLabel)
-                    .addComponent(ruleSetFileLabel))
+                    .addComponent(ruleSetFileLabel)
+                    .addComponent(optionsLabel))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(ruleSetFileTextField)
-                    .addComponent(ruleSetsScrollPane, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(ruleSetFileTextField)
+                            .addComponent(optionsTextField))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ruleSetFileBrowseButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(ruleSetsScrollPane)
+                            .addComponent(messDetectorTextField))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(browseButton)))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ruleSetFileBrowseButton))
+                .addComponent(searchButton))
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(enabledCheckBox)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(messDetectorLabel)
+                    .addComponent(messDetectorTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(browseButton)
+                    .addComponent(searchButton))
+                .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(ruleSetsLabel)
                     .addComponent(ruleSetsScrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -254,28 +364,48 @@ public class MessDetectorCustomizerPanel extends JPanel {
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(ruleSetFileTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(ruleSetFileLabel)
-                    .addComponent(ruleSetFileBrowseButton)))
+                    .addComponent(ruleSetFileBrowseButton))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(optionsTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(optionsLabel)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    @NbBundle.Messages("MessDetectorCustomizerPanel.ruleSetFile.browse.title=Select Mess Detector Rule Set File")
     private void ruleSetFileBrowseButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_ruleSetFileBrowseButtonActionPerformed
-         File file = new FileChooserBuilder(MessDetectorCustomizerPanel.class.getName() + RULE_SET_FILE_LAST_FOLDER_SUFFIX)
-                .setFilesOnly(true)
-                .setTitle(Bundle.MessDetectorCustomizerPanel_ruleSetFile_browse_title())
-                .showOpenDialog();
+         File file = AnalysisUiUtils.browseMessDetectorRuleSet();
         if (file != null) {
             ruleSetFileTextField.setText(file.getAbsolutePath());
         }
     }//GEN-LAST:event_ruleSetFileBrowseButtonActionPerformed
 
+    private void browseButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
+        File file = AnalysisUiUtils.browseMessDetector();
+        if (file != null) {
+            messDetectorTextField.setText(file.getAbsolutePath());
+        }
+    }//GEN-LAST:event_browseButtonActionPerformed
+
+    private void searchButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+        String messDetector = AnalysisUiUtils.searchMessDetector();
+        if (messDetector != null) {
+            messDetectorTextField.setText(messDetector);
+        }
+    }//GEN-LAST:event_searchButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JButton browseButton;
     private JCheckBox enabledCheckBox;
+    private JLabel messDetectorLabel;
+    private JTextField messDetectorTextField;
+    private JLabel optionsLabel;
+    private JTextField optionsTextField;
     private JButton ruleSetFileBrowseButton;
     private JLabel ruleSetFileLabel;
     private JTextField ruleSetFileTextField;
     private JLabel ruleSetsLabel;
     private JList<String> ruleSetsList;
     private JScrollPane ruleSetsScrollPane;
+    private JButton searchButton;
     // End of variables declaration//GEN-END:variables
 }

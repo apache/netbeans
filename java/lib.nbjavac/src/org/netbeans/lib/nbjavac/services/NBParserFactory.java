@@ -21,17 +21,17 @@ package org.netbeans.lib.nbjavac.services;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.Lexer;
 import com.sun.tools.javac.parser.ParserFactory;
-import com.sun.tools.javac.parser.Scanner;
 import com.sun.tools.javac.parser.ScannerFactory;
 import com.sun.tools.javac.parser.Tokens.Comment;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
+import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.tree.TreeScanner;
@@ -141,6 +141,22 @@ public class NBParserFactory extends ParserFactory {
         @Override
         public int getEndPos(JCTree jctree) {
             return TreeInfo.getEndPos(jctree, endPosTable);
+        }
+
+        @Override
+        public JCStatement parseSimpleStatement() {
+            JCStatement result = super.parseSimpleStatement();
+            //workaround: if the code looks like:
+            //for (name : <collection>) {...}
+            //the "name" will be made a type of a variable with name "<error>", with
+            //no end position. Inject the end position for the variable:
+            if (result instanceof JCEnhancedForLoop) {
+                JCEnhancedForLoop tree = (JCEnhancedForLoop) result;
+                if (getEndPos(tree.var) == Position.NOPOS) {
+                    endPosTable.storeEnd(tree.var, getEndPos(tree.var.vartype));
+                }
+            }
+            return result;
         }
 
         public final class EndPosTableImpl extends AbstractEndPosTable {

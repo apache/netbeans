@@ -40,5 +40,18 @@
     </target>
 
     <target name="netbeans-extra" depends="nblib"/>
+    
+    <!-- Generate suite 3 platform -->
+    <target name="test-preinit">
+        <zip file="${basedir}/build/test/unit/data/example-external-projects/suite3/nbplatform/platform5/core/core.jar">
+            <fileset dir="${basedir}/test/unit/data/example-external-projects/suite3/nbplatform/platform5/core/core" includes="**" />
+        </zip>
+        <zip file="${basedir}/build/test/unit/data/example-external-projects/suite3/nbplatform/random/modules/random.jar">
+            <fileset dir="${basedir}/test/unit/data/example-external-projects/suite3/nbplatform/random/modules/random" includes="**" />
+        </zip>
+        <zip file="${basedir}/build/test/unit/data/example-external-projects/suite3/nbplatform/random/modules/ext/stuff.jar">
+            <fileset dir="${basedir}/test/unit/data/example-external-projects/suite3/nbplatform/random/modules/ext/stuff" includes="**" />
+        </zip>
+    </target>
 
 </project>

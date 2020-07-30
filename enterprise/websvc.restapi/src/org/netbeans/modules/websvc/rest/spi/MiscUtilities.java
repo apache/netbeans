@@ -86,7 +86,7 @@ import org.openide.util.NbBundle;
  * moved to right places.
  */
 public class MiscUtilities {
-    
+
     public static FileObject findSourceRoot(Project project) {
         SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
         if (sourceGroups != null && sourceGroups.length > 0) {
@@ -333,7 +333,7 @@ public class MiscUtilities {
     }
 
     /** Add servlet(3.0) element to web.xml, representing JAX-RS Application with CORS filter
-     * 
+     *
      * @param restSupport RestSupport instance
      * @param applicationClassName application class name
      * @param corsFilterName corse filter name
@@ -347,7 +347,7 @@ public class MiscUtilities {
             if (ddFO == null || webApp == null) {
                 return;
             }
-            
+
             boolean changed = false;
             Servlet applicationConfigServlet = getRestServletAdaptorByName(webApp,
                     applicationClassName);
@@ -359,7 +359,7 @@ public class MiscUtilities {
                     webApp.addServlet(applicationConfigServlet);
                     changed = true;
                 } catch (ClassNotFoundException ex) {}
-                
+
             }
             if (applicationConfigServlet != null) {
                 InitParam initParam = (InitParam) applicationConfigServlet.findBeanByName(
@@ -432,11 +432,11 @@ public class MiscUtilities {
 
         return null;
     }
-    
+
     /** Creates body for javax.ws.rs.core.Application subclass getClasses method
-     * 
+     *
      * @param restSupport
-     * @return 
+     * @return
      */
     public static String createBodyForGetClassesMethod(RestSupport restSupport) {
         StringBuilder builder = new StringBuilder();
@@ -455,14 +455,14 @@ public class MiscUtilities {
     }
 
     /** creates addResourceClasses method
-     * 
+     *
      * @param maker tree maker
      * @param classTree class tree
      * @param controller compilation controller
      * @param methodBody method body
      * @param addComment add comment or not
      * @return modified class tree
-     * @throws IOException 
+     * @throws IOException
      */
     public static ClassTree createAddResourceClasses(TreeMaker maker,
             ClassTree classTree, CompilationController controller,
@@ -497,7 +497,7 @@ public class MiscUtilities {
         }
         return maker.addClassMember(classTree, methodTree);
     }
-    
+
     /**
      * Is source level of a given project 1.7 or higher?
      *
@@ -513,9 +513,9 @@ public class MiscUtilities {
             return false;
         }
     }
-    
+
     /** Check if project is of Java EE 6 project type or higher
-     * 
+     *
      * @param project project instance
      * @return true or false
      */
@@ -523,12 +523,14 @@ public class MiscUtilities {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
             Profile profile = webModule.getJ2eeProfile();
-            if (Profile.JAVA_EE_6_WEB == profile || 
+            if (Profile.JAVA_EE_6_WEB == profile ||
                     Profile.JAVA_EE_6_FULL == profile ||
                         Profile.JAVA_EE_7_WEB == profile ||
                                 Profile.JAVA_EE_7_FULL == profile ||
                                     Profile.JAVA_EE_8_WEB == profile ||
-                                            Profile.JAVA_EE_8_FULL == profile )
+                                            Profile.JAVA_EE_8_FULL == profile ||
+                                                Profile.JAKARTA_EE_8_WEB == profile ||
+                                                    Profile.JAKARTA_EE_8_FULL == profile )
             {
                 return true;
             }

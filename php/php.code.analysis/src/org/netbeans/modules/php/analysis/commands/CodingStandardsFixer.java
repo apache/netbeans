@@ -29,7 +29,10 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.php.analysis.CodingStandardsFixerParams;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.parsers.CodingStandardsFixerReportParser;
@@ -83,6 +86,10 @@ public final class CodingStandardsFixer {
             ANSI_PARAM,
             NO_INTERACTION_PARAM);
 
+    // configuration files
+    public static final String CONFIG_FILE_NAME = ".php_cs"; // NOI18N
+    public static final String DIST_CONFIG_FILE_NAME = ".php_cs.dist"; // NOI18N
+
     @org.netbeans.api.annotations.common.SuppressWarnings(value = "MS_MUTABLE_COLLECTION", justification = "It is immutable") // NOI18N
     public static final List<String> VERSIONS = Arrays.asList(
             "1", // NOI18N
@@ -114,7 +121,10 @@ public final class CodingStandardsFixer {
     }
 
     public static CodingStandardsFixer getDefault() throws InvalidPhpExecutableException {
-        String codingStandardsFixerPath = AnalysisOptions.getInstance().getCodingStandardsFixerPath();
+        return getCustom(AnalysisOptions.getInstance().getCodingStandardsFixerPath());
+    }
+
+    public static CodingStandardsFixer getCustom(String codingStandardsFixerPath) throws InvalidPhpExecutableException {
         String error = validate(codingStandardsFixerPath);
         if (error != null) {
             throw new InvalidPhpExecutableException(error);
@@ -169,14 +179,17 @@ public final class CodingStandardsFixer {
     public List<Result> analyze(CodingStandardsFixerParams params, FileObject file) {
         assert file.isValid() : "Invalid file given: " + file;
         try {
-            Integer result = getExecutable(Bundle.CodingStandardsFixer_analyze(analyzeGroupCounter++))
+            File workDir = findWorkDir(file);
+            Integer result = getExecutable(Bundle.CodingStandardsFixer_analyze(analyzeGroupCounter++), workDir)
                     .additionalParameters(getParameters(params, file))
                     .runAndWait(getDescriptor(), "Running coding standards fixer..."); // NOI18N
             if (result == null) {
                 return null;
             }
-
-            return CodingStandardsFixerReportParser.parse(XML_LOG, file);
+            // if the project for the file is not found(i.e. if the workDir is not found),
+            // the results are not shown in the inspector window
+            FileObject root = workDir != null ? FileUtil.toFileObject(workDir) : file;
+            return CodingStandardsFixerReportParser.parse(XML_LOG, root);
         } catch (CancellationException ex) {
             // cancelled
             return Collections.emptyList();
@@ -187,18 +200,48 @@ public final class CodingStandardsFixer {
         return null;
     }
 
+    /**
+     * Finds project directory for the given file since it can contain
+     * {@code .php_cs}, {@code .php_cs.dist}.
+     *
+     * @param file file to find project directory for
+     * @return project directory or {@code null}
+     */
+    @CheckForNull
+    private File findWorkDir(FileObject file) {
+        assert file != null;
+        Project project = FileOwnerQuery.getOwner(file);
+        File workDir = null;
+        if (project != null) {
+            workDir = FileUtil.toFile(project.getProjectDirectory());
+            if (LOGGER.isLoggable(Level.FINE)) {
+                if (workDir != null) {
+                    LOGGER.log(Level.FINE, "Project directory for {0} is found in {1}", new Object[]{FileUtil.toFile(file), workDir}); // NOI18N
+                } else {
+                    // the file/directory may not be in a PHP project
+                    LOGGER.log(Level.FINE, "Project directory for {0} is not found", FileUtil.toFile(file)); // NOI18N
+                }
+            }
+        }
+        return workDir;
+    }
+
     private PhpExecutable getExecutable(PhpModule phpModule, String title) {
         return new PhpExecutable(codingStandardsFixerPath)
                 .optionsSubcategory(AnalysisOptionsPanelController.OPTIONS_SUB_PATH)
                 .displayName(title);
     }
 
-    private PhpExecutable getExecutable(String title) {
-        return new PhpExecutable(codingStandardsFixerPath)
+    private PhpExecutable getExecutable(String title, @NullAllowed File workDir) {
+        PhpExecutable executable = new PhpExecutable(codingStandardsFixerPath)
                 .optionsSubcategory(AnalysisOptionsPanelController.OPTIONS_SUB_PATH)
                 .fileOutput(XML_LOG, "UTF-8", false) // NOI18N
                 .redirectErrorStream(false)
                 .displayName(title);
+        if (workDir != null) {
+            executable.workDir(workDir);
+        }
+        return executable;
     }
 
     private ExecutionDescriptor getDescriptor(PhpModule phpModule) {

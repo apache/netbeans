@@ -246,6 +246,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
     static {
         SourceVersion r10, r11, r13, r14, r15;
 
+
         try {
             r10 = SourceVersion.valueOf("RELEASE_10");
         } catch (IllegalArgumentException ex) {
@@ -266,20 +267,21 @@ public final class JavaCompletionTask<T> extends BaseTask {
         } catch (IllegalArgumentException ex) {
             r14 = null;
         }
-         
+
         try {
             r15 = SourceVersion.valueOf("RELEASE_15");
         } catch (IllegalArgumentException ex) {
             r15 = null;
         }
 
+
         SOURCE_VERSION_RELEASE_10 = r10;
         SOURCE_VERSION_RELEASE_11 = r11;
         SOURCE_VERSION_RELEASE_13 = r13;
         SOURCE_VERSION_RELEASE_14 = r14;
-
         SOURCE_VERSION_RELEASE_15 = r15;
    }
+
 
     private final ItemFactory<T> itemFactory;
     private final Set<Options> options;

@@ -1427,7 +1427,7 @@ public class Utilities {
             }
             return super.classOrInterfaceBodyDeclaration(className, isInterface);
         }
-        
+
         @Override
         protected JCExpression checkExprStat(JCExpression t) {
             if (t.getTag() == JCTree.Tag.IDENT) {

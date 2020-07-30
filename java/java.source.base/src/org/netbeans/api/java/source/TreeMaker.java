@@ -299,6 +299,34 @@ public final class TreeMaker {
               List<? extends Tree> memberDecls) {
         return delegate.Class(modifiers, simpleName, typeParameters, extendsClause, implementsClauses, memberDecls);
     }
+    
+    /** 
+     * Creates a new ClassTree.With additional permits clause
+     *
+     * @param modifiers the modifiers declaration
+     * @param simpleName        the name of the class without its package, such
+     *                          as "String" for the class "java.lang.String".
+     * @param typeParameters    the list of type parameters, or an empty list.
+     * @param extendsClause     the name of the class this class extends, or null.
+     * @param implementsClauses the list of the interfaces this class
+     *                          implements, or an empty list.
+     * @param permsClauses      the list of the classes this class allows
+     *                          as sub class, or an empty list.
+     * @param memberDecls       the list of fields defined by this class, or an
+     *                          empty list.
+     * @return 
+     * @see com.sun.source.tree.ClassTree
+     */
+    public ClassTree ClassWithPerms(ModifiersTree modifiers, 
+              CharSequence simpleName,
+              List<? extends TypeParameterTree> typeParameters,
+              Tree extendsClause,
+              List<? extends Tree> implementsClauses,
+              List<? extends Tree> permsClauses,
+              List<? extends Tree> memberDecls) {
+        return delegate.Class(modifiers, simpleName, typeParameters, extendsClause, implementsClauses,permsClauses, memberDecls);
+    }
+    
     /**
      * Creates a new ClassTree representing interface.
      * 
@@ -318,6 +346,29 @@ public final class TreeMaker {
              List<? extends Tree> extendsClauses,
              List<? extends Tree> memberDecls) {
         return delegate.Interface(modifiers, simpleName, typeParameters, extendsClauses, memberDecls);
+    }
+    /**
+     * Creates a new ClassTree representing interface.
+     * 
+     * @param modifiers the modifiers declaration
+     * @param simpleName        the name of the class without its package, such
+     *                          as "String" for the class "java.lang.String".
+     * @param typeParameters    the list of type parameters, or an empty list.
+     * @param extendsClauses    the list of the interfaces this class
+     *                          extends, or an empty list.
+     * @param permsClauses      the list of the classes this class allows
+     * @param memberDecls       the list of fields defined by this class, or an
+     *                          empty list.
+     * @return 
+     * @see com.sun.source.tree.ClassTree
+     */
+    public ClassTree InterfaceWithPerms(ModifiersTree modifiers, 
+              CharSequence simpleName,
+              List<? extends TypeParameterTree> typeParameters,
+              List<? extends Tree> extendsClauses,
+              List<? extends Tree> permsClauses,
+              List<? extends Tree> memberDecls) {
+                   return delegate.Interface(modifiers, simpleName, typeParameters, extendsClauses, permsClauses, memberDecls);
     }
     
     /**

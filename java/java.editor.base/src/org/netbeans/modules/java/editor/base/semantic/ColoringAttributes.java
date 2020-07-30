@@ -30,7 +30,9 @@ import java.util.Set;
 public enum ColoringAttributes {
 
     UNUSED,
-
+    SEALED,
+    NON_SEALED,
+    PERMITS,
     ABSTRACT,
 
     FIELD,

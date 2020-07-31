@@ -66,6 +66,7 @@ import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.api.lexer.PartType;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.java.editor.base.imports.UnusedImports;
 import org.netbeans.modules.java.editor.base.semantic.ColoringAttributes.Coloring;
 import org.netbeans.modules.java.editor.base.semantic.UnusedDetector.UnusedDescription;
@@ -872,8 +873,8 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             scan(tree.getExtendsClause(), null);
             scan(tree.getImplementsClause(), null);
             try{
-            while(!tl.currentToken().text().toString().equals("{")) {
-                if(tl.currentToken().text().toString().equals("permits")){
+            while(!TokenUtilities.textEquals(tl.currentToken().text(), "{")) {
+                if(TokenUtilities.textEquals(tl.currentToken().text(), "permits")){
                     Token t=firstIdentifierToken("permits");
                     contextKeywords.add(t);
                     break;
@@ -972,7 +973,8 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                    if(firstIdentifier != null)contextKeywords.add(firstIdentifier);
                    tl.moveNext();
                    tl.moveNext();
-                   if(tl.currentToken().text().toString().equals("sealed"))contextKeywords.add(tl.currentToken());
+                   if(TokenUtilities.textEquals(tl.currentToken().text(), "sealed"))
+                       contextKeywords.add(tl.currentToken());
                 }else if (tree.toString().contains("sealed")) {
                     t = firstIdentifierToken("sealed"); //NOI18N
                     if (t != null) {

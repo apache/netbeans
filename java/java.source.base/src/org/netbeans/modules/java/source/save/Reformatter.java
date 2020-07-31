@@ -48,6 +48,7 @@ import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.ReformatTask;
@@ -954,6 +955,11 @@ public class Reformatter implements ReformatTask {
                         wrapToken(cs.wrapExtendsImplementsKeyword(), 1, id == INTERFACE ? EXTENDS : IMPLEMENTS);
                         wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, impls);
                     }
+                    List<? extends Tree> perms=TreeShims.getPermits(node);
+                    if (perms != null && !perms.isEmpty()) {
+                        wrapToken(cs.wrapExtendsImplementsKeyword(), 1, PERMITS);
+                        wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, perms);
+                    }
                 } finally {
                     continuationIndent = old;
                 }
@@ -1585,7 +1591,7 @@ public class Reformatter implements ReformatTask {
                 int lblti = lastBlankLinesTokenIndex;
                 Diff lbld = lastBlankLinesDiff;
                 id = accept(PRIVATE, PROTECTED, PUBLIC, STATIC, DEFAULT, TRANSIENT, FINAL,
-                        ABSTRACT, NATIVE, VOLATILE, SYNCHRONIZED, STRICTFP, AT);
+                        ABSTRACT, NATIVE, VOLATILE, SYNCHRONIZED, STRICTFP, AT, SEALED, NONSEALED);
                 if (id == null)
                     break;
                 if (id == AT) {
@@ -3522,6 +3528,10 @@ public class Reformatter implements ReformatTask {
                     for (JavaTokenId tokenId : tokenIds) {
                         if (tokenId.fixedText() != null && tokenId.fixedText().contentEquals(tokens.token().text())) {
                             contains = true;
+                            break;
+                        }
+                        if(TokenUtilities.textEquals(tokens.token().text(),"non") && tokens.moveNext() && TokenUtilities.textEquals(tokens.token().text(), "-") && tokens.moveNext() && TokenUtilities.textEquals(tokens.token().text(), "sealed")){
+                            contains=true;
                             break;
                         }
                     }

@@ -16,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-public class VerifyJDK11 {
+public class VerifyJDK14 {
     public static void main(String[] args) {
-        if (Runtime.version().compareTo(Runtime.Version.parse("11-build")) < 0)
-            throw new IllegalStateException("Not JDK 11+.");
+        if (Runtime.version().compareTo(Runtime.Version.parse("14-build")) < 0)
+            throw new IllegalStateException("Not JDK 14+.");
     }
 }

@@ -1552,6 +1552,49 @@ public class FlowTest extends NbTestCase {
                 "di");
     }
     
+    public void testRuleCases() throws Exception {
+        sourceLevel = "14";
+        performTest("package test;\n" +
+                    "public class Test {\n" +
+                    "    public void test(int i) {\n" +
+                    "        int val;\n" +
+                    "        switch (i) {\n" +
+                    "            case 0 -> val = 0;\n" +
+                    "            case 1 -> val = 1;\n" +
+                    "            case 2 -> { val = 2; }\n" +
+                    "            case 3 -> { val = 3; }\n" +
+                    "            default -> { val = -1; }\n" +
+                    "        }\n" +
+                    "        System.err.println(val`);\n" +
+                    "    }\n" +
+                    "}",
+                    "0",
+                    "1",
+                    "2",
+                    "3",
+                    "-1");
+    }
+
+    public void testSwitchExpression1() throws Exception {
+        sourceLevel = "14";
+        performTest("package test;\n" +
+                    "public class Test {\n" +
+                    "    static void t(int p) {\n" +
+                    "        int ii;\n" +
+                    "        int x = switch (p) {\n" +
+                    "            case 0: ii = 1; yield 0;\n" +
+                    "            case 1: ii = 2;\n" +
+                    "            case 2: ii = 3; yield 0;\n" +
+                    "            default: ii = 4; yield 0;\n" +
+                    "        };\n" +
+                    "        System.err.println(i`i);\n" +
+                    "    }\n" +
+                    "}\n",
+                    "1",
+                    "3",
+                    "4");
+    }
+
     private void performFinalCandidatesTest(String code, boolean allowErrors, String... finalCandidates) throws Exception {
         prepareTest(code, allowErrors);
 

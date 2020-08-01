@@ -955,7 +955,7 @@ public class Reformatter implements ReformatTask {
                         wrapToken(cs.wrapExtendsImplementsKeyword(), 1, id == INTERFACE ? EXTENDS : IMPLEMENTS);
                         wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, impls);
                     }
-                    List<? extends Tree> perms=TreeShims.getPermits(node);
+                    List<? extends Tree> perms = TreeShims.getPermits(node);
                     if (perms != null && !perms.isEmpty()) {
                         wrapToken(cs.wrapExtendsImplementsKeyword(), 1, PERMITS);
                         wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, perms);
@@ -3530,8 +3530,8 @@ public class Reformatter implements ReformatTask {
                             contains = true;
                             break;
                         }
-                        if(TokenUtilities.textEquals(tokens.token().text(),"non") && tokens.moveNext() && TokenUtilities.textEquals(tokens.token().text(), "-") && tokens.moveNext() && TokenUtilities.textEquals(tokens.token().text(), "sealed")){
-                            contains=true;
+                        if (TokenUtilities.textEquals(tokens.token().text(), "non") && tokens.moveNext() && TokenUtilities.textEquals(tokens.token().text(), "-") && tokens.moveNext() && TokenUtilities.textEquals(tokens.token().text(), "sealed")) {// NOI18N
+                            contains = true;
                             break;
                         }
                     }

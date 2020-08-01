@@ -86,8 +86,6 @@ extide/gradle/external/gradle-7.4-bin.zip platform/libs.junit4/external/junit-4.
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.testng/external/jcommander-1.78.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/o.apache.commons.io/external/commons-io-2.6.jar
 extide/gradle/external/gradle-7.4-bin.zip enterprise/cloud.oracle/external/jsr305-3.0.2.jar
-extide/gradle/external/gradle-7.4-bin.zip ide/bcpkix/external/bcpkix-jdk15on-1.68.jar
-extide/gradle/external/gradle-7.4-bin.zip ide/bcprov/external/bcprov-jdk15on-1.68.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/o.apache.commons.codec/external/commons-codec-1.15.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-9.2.jar
 extide/gradle/external/gradle-7.4-bin.zip platform/libs.asm/external/asm-commons-9.2.jar

@@ -1,6 +1,7 @@
 Name: Apache Commons Collections
 Version: 4.4
 License: Apache-2.0
+Type: compile-time
 Description: The Apache Commons Collections package contains types that extend and augment the Java Collections Framework.
 Origin: Apache Software Foundation
 URL: https://commons.apache.org/proper/commons-collections/

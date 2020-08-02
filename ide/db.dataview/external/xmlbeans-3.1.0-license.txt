@@ -1,6 +1,7 @@
 Name: XmlBeans
 Version: 3.1.0
 License: Apache-2.0
+Type: compile-time
 Description: XMLBeans is a technology for accessing XML by binding it to Java types.
 Origin: Apache Software Foundation
 URL: https://xmlbeans.apache.org/

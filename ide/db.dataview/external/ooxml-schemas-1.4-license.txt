@@ -1,6 +1,7 @@
 Name: OOXML Schemas
 Version: 1.4
 License: Apache-2.0
+Type: compile-time
 Description: XmlBeans generated from the Ecma supplied xsds: http://www.ecma-international.org/publications/files/ECMA-ST/Office%20Open%20XML%20Part%204%20(DOCX).zip
 Origin: Apache Software Foundation
 URL: https://poi.apache.org/index.html

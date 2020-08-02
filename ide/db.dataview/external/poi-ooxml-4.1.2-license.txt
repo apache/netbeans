@@ -1,6 +1,7 @@
 Name: Apache POI
 Version: 4.1.2
 License: Apache-2.0
+Type: compile-time
 Description: The Java API for Microsoft Documents.
 Origin: Apache Software Foundation
 URL: https://poi.apache.org/index.html

@@ -39,6 +39,7 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.lexer.Language;
+import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.introduce.Flow.FlowResult;
 import org.netbeans.modules.java.hints.spiimpl.TestUtilities;
@@ -62,6 +63,7 @@ public class FlowTest extends NbTestCase {
 
     @Override
     protected void setUp() throws Exception {
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         SourceUtilsTestUtil
                 .prepareTest(new String[0], new Object[0]);
         super
@@ -1608,5 +1610,9 @@ public class FlowTest extends NbTestCase {
         Collections.sort(computedCandidates);
         
         assertEquals(Arrays.asList(finalCandidates), computedCandidates);
+    }
+
+    static {
+        Main.initializeURLFactory();
     }
 }

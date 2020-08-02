@@ -455,7 +455,7 @@ public class Flow {
             TreePath oldPath = currentPath;
             try {
                 currentPath = path;
-                return super.scan(path, p);
+                return super.scan(path.getLeaf(), p);
             } finally {
                 currentPath = oldPath;
             }

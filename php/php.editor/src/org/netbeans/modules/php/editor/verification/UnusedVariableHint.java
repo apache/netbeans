@@ -77,6 +77,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Include;
 import org.netbeans.modules.php.editor.parser.astnodes.InstanceOfExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
@@ -621,6 +622,17 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
             scan(node.getExpression());
             forceVariableAsUsed = false;
             scan(node.getBody());
+        }
+
+        @Override
+        public void visit(MatchExpression node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            forceVariableAsUsed = true;
+            scan(node.getExpression());
+            forceVariableAsUsed = false;
+            scan(node.getMatchArms());
         }
 
         @Override

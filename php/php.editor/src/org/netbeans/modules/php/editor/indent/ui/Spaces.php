@@ -52,6 +52,19 @@ switch ($i) {
         break;
 }
 }
+
+public function matchExample() {
+$result = match ($i) {
+    1,2,3 => "1, 2, or 3",
+    4,5, => "4 or 5",
+    default => $this->getDefaultValue(),
+};
+}
+
+public function getDefaultValue(): int {
+    return 10;
+}
+
 public function tryExample() {
     try {
     echo inverse(5) . "\n";

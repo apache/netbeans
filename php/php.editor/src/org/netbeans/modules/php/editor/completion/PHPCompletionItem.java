@@ -1185,12 +1185,13 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
     static class KeywordItem extends PHPCompletionItem {
 
-        String keyword = null;
+        final String keyword;
         private static final List<String> CLS_KEYWORDS =
                 Arrays.asList(PHPCodeCompletion.PHP_CLASS_KEYWORDS);
 
         KeywordItem(String keyword, CompletionRequest request) {
             super(null, request);
+            assert keyword != null;
             this.keyword = keyword;
         }
 

@@ -93,6 +93,11 @@ public class UnusedVariableHintTest extends PHPHintsTestBase {
         checkHints(new UnusedVariableHintStub(false), "testUnusedVariableHintArrowFunctionsNested.php");
     }
 
+    // PHP 8.0
+    public void testMatchExpression_01() throws Exception {
+        checkHints(new UnusedVariableHintStub(false), "testMatchExpression_01.php");
+    }
+
     private class UnusedVariableHintStub extends UnusedVariableHint {
         private final boolean unusedFormalParameters;
         private final boolean inheritedMethodParameters;

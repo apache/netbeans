@@ -207,7 +207,8 @@ final class CompletionContextFinder {
 
     public static enum CompletionContext {
 
-        EXPRESSION, GLOBAL_CONST_EXPRESSION, CLASS_CONST_EXPRESSION, HTML, CLASS_NAME, INTERFACE_NAME, TYPE_NAME, RETURN_TYPE_NAME, FIELD_TYPE_NAME, STRING,
+        EXPRESSION, GLOBAL_CONST_EXPRESSION, CLASS_CONST_EXPRESSION, MATCH_EXPRESSION,
+        HTML, CLASS_NAME, INTERFACE_NAME, TYPE_NAME, RETURN_TYPE_NAME, FIELD_TYPE_NAME, STRING,
         CLASS_MEMBER, STATIC_CLASS_MEMBER, PHPDOC, INHERITANCE, EXTENDS, IMPLEMENTS, METHOD_NAME,
         CLASS_CONTEXT_KEYWORDS, SERVER_ENTRY_CONSTANTS, NONE, NEW_CLASS, GLOBAL, NAMESPACE_KEYWORD,
         GROUP_USE_KEYWORD, GROUP_USE_CONST_KEYWORD, GROUP_USE_FUNCTION_KEYWORD,
@@ -374,6 +375,9 @@ final class CompletionContextFinder {
         }
         if (acceptTokenChains(tokenSequence, CONST_TOKENCHAINS, moveNextSucces)) {
             return CompletionContext.GLOBAL_CONST_EXPRESSION;
+        }
+        if (isInMatchExpression(caretOffset, tokenSequence)) {
+            return CompletionContext.MATCH_EXPRESSION;
         }
         return CompletionContext.EXPRESSION;
     }
@@ -1213,6 +1217,28 @@ final class CompletionContextFinder {
             tokenSequence.moveNext();
         }
         return false;
+    }
+
+    private static boolean isInMatchExpression(final int caretOffset, final TokenSequence ts) {
+        int originalOffset = ts.offset();
+        boolean result = false;
+        ts.move(caretOffset);
+        if (ts.moveNext() && ts.movePrevious()) {
+            while (ts.movePrevious()) {
+                TokenId tokenId = ts.token().id();
+                if (tokenId == PHPTokenId.PHP_SEMICOLON) {
+                    break;
+                }
+                if (tokenId == PHPTokenId.PHP_MATCH) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+
+        ts.move(originalOffset);
+        ts.moveNext();
+        return result;
     }
 
     static CompletionContext getCompletionContextInComment(TokenSequence<PHPTokenId> tokenSeq, final int caretOffset, ParserResult info) {

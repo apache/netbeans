@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.hints;
 
 import com.sun.source.util.TreePath;
+import java.io.File;
 import java.util.List;
 import java.util.Locale;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -77,9 +78,8 @@ public class HideFieldByVarTest extends TreeRuleTestBase {
             "}";
         
         for (int i = 0; i < text.length(); i++) {
-            clearWorkDir();
+            workDirIndex = i;
             performAnalysisTest("test/Test.java", "// index: " + i + "\n" + text, i);
-            SourceUtils.waitScanFinished();
         }
     }
     public void testLocaVarAgainsInhVar() throws Exception {
@@ -116,5 +116,16 @@ public class HideFieldByVarTest extends TreeRuleTestBase {
     }
     
     private String sourceLevel = "1.5";
+
+    private int workDirIndex = -1;
+
+    @Override
+    public String getWorkDirPath() {
+        String basePath = super.getWorkDirPath();
+        if (workDirIndex != (-1)) {
+            basePath += File.separator + workDirIndex;
+        }
+        return basePath;
+    }
     
 }

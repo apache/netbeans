@@ -98,9 +98,14 @@ public class GrammarResolver {
     private final GroupGrammarElement grammar;
     
     private final Map<Feature, Object> FEATURES = new EnumMap<>(Feature.class);
-    
+
+    private ValueGrammarElement inheritValue;
+    private ValueGrammarElement initialValue;
+
     public GrammarResolver(GroupGrammarElement grammar) {
         this.grammar = grammar;
+        this.inheritValue = new FixedTextGrammarElement(this.grammar, "inherit", "inherit");
+        this.initialValue = new FixedTextGrammarElement(this.grammar, "initial", "initial");
     }
     
     //the grammar resolve has its internal state so this method needs to be synchronized
@@ -276,6 +281,18 @@ public class GrammarResolver {
                 GroupGrammarElement group = (GroupGrammarElement) e;
                 fireEntering(group);
                 resolves = processGroup(group);
+                if (group == this.grammar && tokenizer.tokenIndex() == -1) {
+                    if(!resolves) {
+                        resolves = processValue(inheritValue);
+                    }
+                    if(!resolves) {
+                        valueNotAccepted(inheritValue);
+                        resolves = processValue(initialValue);
+                    }
+                    if(! resolves) {
+                        valueNotAccepted(initialValue);
+                    }
+                }
                 fireExited(group, resolves);
         } else if(e instanceof ValueGrammarElement) {
                 ValueGrammarElement value = (ValueGrammarElement) e;

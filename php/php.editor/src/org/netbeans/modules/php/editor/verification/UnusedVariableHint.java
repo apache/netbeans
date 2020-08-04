@@ -97,7 +97,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.SwitchStatement;
-import org.netbeans.modules.php.editor.parser.astnodes.ThrowStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.ThrowExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
@@ -624,7 +624,7 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
         }
 
         @Override
-        public void visit(ThrowStatement node) {
+        public void visit(ThrowExpression node) {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }

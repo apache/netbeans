@@ -1062,4 +1062,8 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php80/allowTrailingCommaInParameterList_01.php");
     }
 
+    public void testThrowExpression_01() throws Exception {
+        checkErrors("testfiles/parser/php80/throwExpression_01.php");
+    }
+
 }

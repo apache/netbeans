@@ -538,6 +538,7 @@ non terminal VariableBase base_variable_with_function_calls;
 
 non terminal List class_name_list;
 
+precedence nonassoc T_THROW;
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
 precedence left T_COMMA;
 precedence left T_LOGICAL_OR;
@@ -1492,11 +1493,6 @@ T_CURLY_OPEN:catchBlockStart inner_statement_list:catchList T_CURLY_CLOSE:catchB
     int end = finallyBlock == null ? catchesListright : finallyBlockright;
     TryStatement tryStatement = new TryStatement(startleft, end, tryBlock, catchesList, finallyBlock);
     RESULT = tryStatement;
-:}
-
-| T_THROW:token expr:expr T_SEMICOLON:end
-{:
-    RESULT = new ThrowStatement(tokenleft, endright, expr);
 :}
 
 | T_GOTO:s T_STRING:label T_SEMICOLON:e
@@ -3368,6 +3364,12 @@ T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
 | expression_array_access:eaa
 {:
     RESULT = eaa;
+:}
+
+| T_THROW:token expr:expr
+{:
+    // PHP 8.0: https://wiki.php.net/rfc/throw_expression
+    RESULT = new ThrowExpression(tokenleft, exprright, expr);
 :}
 ;
 

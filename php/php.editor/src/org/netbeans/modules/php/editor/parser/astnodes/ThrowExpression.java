@@ -19,17 +19,20 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
- * Represent a break statement
+ * Represent a throw expression.
  *
+ * e.g.
  * <pre>
- * e.g.&lt;pre&gt; throw $exceptionClass;
- *
+ * throw $exceptionClass;
+ * $callable = fn() => throw new Exception(); // PHP 8.0
+ * </pre>
+ * @see https://wiki.php.net/rfc/throw_expression
  */
-public class ThrowStatement extends Statement {
+public class ThrowExpression extends Expression {
 
     private Expression expression;
 
-    public ThrowStatement(int start, int end, Expression expr) {
+    public ThrowExpression(int start, int end, Expression expr) {
         super(start, end);
 
         if (expr == null) {

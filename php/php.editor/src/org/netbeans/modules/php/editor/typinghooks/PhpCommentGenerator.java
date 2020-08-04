@@ -73,7 +73,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Reference;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticStatement;
-import org.netbeans.modules.php.editor.parser.astnodes.ThrowStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.ThrowExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 import org.netbeans.modules.php.editor.parser.astnodes.Variadic;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
@@ -351,18 +351,18 @@ public final class PhpCommentGenerator {
         }
 
         @Override
-        public void visit(ThrowStatement node) {
-            String type = getTypeFromThrowStatement(node);
+        public void visit(ThrowExpression node) {
+            String type = getTypeFromThrowExpression(node);
             if (!usedThrows.contains(type)) {
                 usedThrows.add(type);
-                throwsExceptions.add(new Pair<String, String>(null, resolveProperType(type)));
+                throwsExceptions.add(new Pair<>(null, resolveProperType(type)));
             }
             super.visit(node);
         }
 
-        private String getTypeFromThrowStatement(ThrowStatement throwStatement) {
+        private String getTypeFromThrowExpression(ThrowExpression throwExpression) {
             String type = null;
-            Expression expression = throwStatement.getExpression();
+            Expression expression = throwExpression.getExpression();
             if (expression instanceof ClassInstanceCreation) {
                 ClassInstanceCreation classInstanceCreation = (ClassInstanceCreation) expression;
                 Expression name = classInstanceCreation.getClassName().getName();

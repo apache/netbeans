@@ -828,4 +828,10 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/netbeans1047.php", options);
     }
+
+    // PHP 8.0
+    public void testThrowExpression_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/throwExpression01.php", options);
+    }
 }

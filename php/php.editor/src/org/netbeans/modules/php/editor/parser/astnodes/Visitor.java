@@ -247,7 +247,7 @@ public interface Visitor {
     public void visit(SwitchStatement switchStatement);
 
     //public void endVisit(SwitchStatement switchStatement);
-    public void visit(ThrowStatement throwStatement);
+    public void visit(ThrowExpression throwStatement);
 
     public void visit(TraitDeclaration traitDeclaration);
 

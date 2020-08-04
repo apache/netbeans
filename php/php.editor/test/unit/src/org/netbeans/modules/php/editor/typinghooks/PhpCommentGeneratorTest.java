@@ -498,6 +498,31 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
         );
     }
 
+    public void testThrowExpression() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "/**^\n"
+                + "function test(?string $string): void {\n"
+                + "    throw new Exception();\n"
+                + "}",
+
+                // expected
+                ""
+                + "<?php\n"
+                + "/**\n"
+                + " * \n"
+                + " * @param string|null $string\n"
+                + " * @return void\n"
+                + " * @throws Exception^\n"
+                + " */\n"
+                + "function test(?string $string): void {\n"
+                + "    throw new Exception();\n"
+                + "}"
+        );
+    }
+
     @Override
     public void insertNewline(String source, String reformatted, IndentPrefs preferences) throws Exception {
         int sourcePos = source.indexOf('^');

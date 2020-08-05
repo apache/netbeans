@@ -1225,7 +1225,7 @@ public class Flow {
         private void breakTo(Tree target) {
             resumeAfter(target, variable2State);
 
-            variable2State = new HashMap< Element, State>();
+            variable2State = new HashMap<>();
         }
 
         public Boolean visitSwitch(SwitchTree node, ConstructorData p) {

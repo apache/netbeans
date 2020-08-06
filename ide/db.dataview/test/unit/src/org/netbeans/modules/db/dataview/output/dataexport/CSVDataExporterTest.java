@@ -25,7 +25,7 @@ package org.netbeans.modules.db.dataview.output.dataexport;
 public class CSVDataExporterTest extends FileAssertionDataExporterTestBase {
 
     public CSVDataExporterTest(String name) {
-        super(name, CSVDataExporter.INSTANCE, "csv");
+        super(name, new CSVDataExporter(), "csv");
     }
 
 }

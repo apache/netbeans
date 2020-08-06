@@ -31,9 +31,13 @@ import org.openide.util.Exceptions;
  *
  * @author Periklis Ntanasis <pntanasis@gmail.com>
  */
-public interface CSVCommonsDataExporter {
+abstract class CSVCommonsDataExporter extends DataExporter {
 
-    default void exportData(String[] headers, Object[][] contents, File file, CSVFormat format) {
+    public CSVCommonsDataExporter(String[] suffixes, String suffixDescription) {
+        super(suffixes, suffixDescription);
+    }
+
+    protected void exportData(String[] headers, Object[][] contents, File file, CSVFormat format) {
         int rows = contents.length;
 
         try ( CSVPrinter printer = new CSVPrinter(

@@ -32,7 +32,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class XLSXDataExporterTest extends AbstractDataExporterTestBase {
 
     public XLSXDataExporterTest(String name) {
-        super(name, XLSXDataExporter.INSTANCE, "xlsx");
+        super(name, new XLSXDataExporter(), "xlsx");
     }
 
     /**

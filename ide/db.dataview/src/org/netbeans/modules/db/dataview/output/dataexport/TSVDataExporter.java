@@ -19,10 +19,6 @@
 package org.netbeans.modules.db.dataview.output.dataexport;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.commons.csv.CSVFormat;
 import org.openide.util.NbBundle;
 
@@ -33,36 +29,15 @@ import org.openide.util.NbBundle;
  * @author Periklis Ntanasis <pntanasis@gmail.com>
  */
 @NbBundle.Messages("TSV_DESCRIPTION=.tsv - Tab Separated Values")
-public enum TSVDataExporter implements DataExporter, CSVCommonsDataExporter {
-    INSTANCE;
+public class TSVDataExporter extends CSVCommonsDataExporter {
 
-    private final Set<String> SUFFIXES = new HashSet<>();
-    private final String SUFFIX_DESCRIPTION = Bundle.TSV_DESCRIPTION();
-    private final FileFilter FILE_FILTER;
-
-    private TSVDataExporter() {
-        SUFFIXES.add("tsv");
-        FILE_FILTER = new FileNameExtensionFilter(SUFFIX_DESCRIPTION, SUFFIXES.toArray(new String[SUFFIXES.size()]));
-    }
-
-    @Override
-    public FileFilter getFileFilter() {
-        return FILE_FILTER;
+    public TSVDataExporter() {
+        super(new String[]{"tsv"}, Bundle.TSV_DESCRIPTION());
     }
 
     @Override
     public void exportData(String[] headers, Object[][] contents, File file) {
         exportData(headers, contents, file, CSVFormat.TDF);
-    }
-
-    @Override
-    public boolean handlesFileFormat(File file) {
-        return SUFFIXES.contains(DataExportUtils.getExtension(file.getName()));
-    }
-
-    @Override
-    public String getDefaultFileExtension() {
-        return SUFFIXES.iterator().next();
     }
 
 }

@@ -25,10 +25,6 @@ import java.io.OutputStream;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.dhatim.fastexcel.Workbook;
 import org.dhatim.fastexcel.Worksheet;
 import org.openide.util.Exceptions;
@@ -40,34 +36,18 @@ import org.openide.util.NbBundle;
  * @author Periklis Ntanasis <pntanasis@gmail.com>
  */
 @NbBundle.Messages("XLSX_DESCRIPTION=.xlsx - Excel Workbook")
-public enum XLSXDataExporter implements DataExporter {
-    INSTANCE;
-    
+public class XLSXDataExporter extends DataExporter {
+
     private final String DATE_FORMAT = "yyyy-mm-dd";
     private final String TIME_FORMAT = "hh:mm:ss";
     private final String TIMESTAMP_FORMAT = "yyyy-mm-dd hh:mm:ss.000";
-    
+
     private final String APP_VERSION = "Apache NetBeans IDE " + System.getProperty("netbeans.buildnumber");
-    
-    private final Set<String> SUFFIXES = new HashSet<>();
-    private final String SUFFIX_DESCRIPTION = Bundle.XLSX_DESCRIPTION();
-    private final FileFilter FILE_FILTER;
-    
-    private XLSXDataExporter() {
-        SUFFIXES.add("xlsx");
-        FILE_FILTER = new FileNameExtensionFilter(SUFFIX_DESCRIPTION, SUFFIXES.toArray(new String[SUFFIXES.size()]));
+
+    public XLSXDataExporter() {
+        super(new String[]{"xlsx"}, Bundle.XLSX_DESCRIPTION());
     }
-    
-    @Override
-    public boolean handlesFileFormat(File file) {
-        return SUFFIXES.contains(DataExportUtils.getExtension(file.getName()));
-    }
-    
-    @Override
-    public FileFilter getFileFilter() {
-        return FILE_FILTER;
-    }
-    
+
     @Override
     public void exportData(String[] headers, Object[][] contents, File file) {
         int columns = headers.length;
@@ -105,10 +85,5 @@ public enum XLSXDataExporter implements DataExporter {
             Exceptions.printStackTrace(ex);
         }
     }
-    
-    @Override
-    public String getDefaultFileExtension() {
-        return SUFFIXES.iterator().next();
-    }
-    
+
 }

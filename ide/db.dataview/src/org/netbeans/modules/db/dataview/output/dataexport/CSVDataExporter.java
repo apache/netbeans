@@ -19,10 +19,6 @@
 package org.netbeans.modules.db.dataview.output.dataexport;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.commons.csv.CSVFormat;
 import org.openide.util.NbBundle;
 
@@ -34,36 +30,15 @@ import org.openide.util.NbBundle;
  * @author Periklis Ntanasis <pntanasis@gmail.com>
  */
 @NbBundle.Messages("CSV_DESCRIPTION=.csv - Comma Separated Values")
-public enum CSVDataExporter implements DataExporter, CSVCommonsDataExporter {
-    INSTANCE;
+public class CSVDataExporter extends CSVCommonsDataExporter {
 
-    private final Set<String> SUFFIXES = new HashSet<>();
-    private final String SUFFIX_DESCRIPTION = Bundle.CSV_DESCRIPTION();
-    private final FileFilter FILE_FILTER;
-
-    private CSVDataExporter() {
-        SUFFIXES.add("csv");
-        FILE_FILTER = new FileNameExtensionFilter(SUFFIX_DESCRIPTION, SUFFIXES.toArray(new String[SUFFIXES.size()]));
-    }
-
-    @Override
-    public FileFilter getFileFilter() {
-        return FILE_FILTER;
+    public CSVDataExporter() {
+        super(new String[]{"csv"}, Bundle.CSV_DESCRIPTION());
     }
 
     @Override
     public void exportData(String[] headers, Object[][] contents, File file) {
         exportData(headers, contents, file, CSVFormat.DEFAULT);
-    }
-
-    @Override
-    public boolean handlesFileFormat(File file) {
-        return SUFFIXES.contains(DataExportUtils.getExtension(file.getName()));
-    }
-
-    @Override
-    public String getDefaultFileExtension() {
-        return SUFFIXES.iterator().next();
     }
 
 }

@@ -31,19 +31,6 @@ import org.openide.util.Exceptions;
 public class DataExportUtils {
 
     /**
-     * Returns the filename file type extension in lower case. The extension is
-     * the part after the last dot character (.). Example: for filename
-     * "foo.java" it will return "java".
-     *
-     * @param filename
-     * @return The filename extension (part after the last .) in lower case.
-     */
-    public static String getExtension(String filename) {
-        String[] tokens = filename.split("\\.");
-        return tokens[tokens.length - 1].toLowerCase();
-    }
-
-    /**
      * Returns the column names of a JTable as an array of strings.
      *
      * @param table A JTable.

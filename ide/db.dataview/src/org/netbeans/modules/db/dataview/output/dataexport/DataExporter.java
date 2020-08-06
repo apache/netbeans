@@ -19,7 +19,11 @@
 package org.netbeans.modules.db.dataview.output.dataexport;
 
 import java.io.File;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * A DataExporter is used to export the contents of the JTable containing the
@@ -31,7 +35,17 @@ import javax.swing.filechooser.FileFilter;
  * @see
  * org.netbeans.modules.db.dataview.output.dataexport.DataViewTableDataExportFileChooser#EXPORTERS
  */
-public interface DataExporter {
+abstract class DataExporter {
+
+    protected final Set<String> SUFFIXES;
+    protected final String SUFFIX_DESCRIPTION;
+    protected final FileFilter FILE_FILTER;
+
+    public DataExporter(String[] suffixes, String suffixDescription) {
+        SUFFIXES = Stream.of(suffixes).collect(Collectors.toSet());
+        SUFFIX_DESCRIPTION = suffixDescription;
+        FILE_FILTER = new FileNameExtensionFilter(SUFFIX_DESCRIPTION, SUFFIXES.toArray(new String[SUFFIXES.size()]));
+    }
 
     /**
      * Returns true if the given file's filename extension is handled by this
@@ -41,16 +55,20 @@ public interface DataExporter {
      * @return True if the file's filename extension is handled by this
      * exporter. Otherwise false.
      */
-    public boolean handlesFileFormat(File file);
+    public boolean handlesFileFormat(File file) {
+        return SUFFIXES.stream().anyMatch(suffix -> file.getName().toLowerCase().matches("^.*\\." + suffix + "$"));
+    }
 
     /**
      * Returns the FileFilter matching the file types this exporter handles.
      *
      * @return FileFilter
      */
-    public FileFilter getFileFilter();
+    public FileFilter getFileFilter() {
+        return FILE_FILTER;
+    }
 
-    public void exportData(String[] headers, Object[][] contents, File file);
+    public abstract void exportData(String[] headers, Object[][] contents, File file);
 
     /**
      * Returns the file extension which is appended to the files created by this
@@ -58,6 +76,8 @@ public interface DataExporter {
      *
      * @return File extension as String. Example "csv".
      */
-    public String getDefaultFileExtension();
+    public String getDefaultFileExtension() {
+        return SUFFIXES.iterator().next();
+    }
 
 }

@@ -25,7 +25,7 @@ package org.netbeans.modules.db.dataview.output.dataexport;
 public class TSVDataExporterTest extends FileAssertionDataExporterTestBase {
 
     public TSVDataExporterTest(String name) {
-        super(name, TSVDataExporter.INSTANCE, "tsv");
+        super(name, new TSVDataExporter(), "tsv");
     }
 
 }

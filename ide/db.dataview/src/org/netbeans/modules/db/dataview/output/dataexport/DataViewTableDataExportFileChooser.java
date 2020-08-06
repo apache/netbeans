@@ -41,9 +41,9 @@ import org.openide.util.NbBundle;
 public class DataViewTableDataExportFileChooser {
 
     private static final List<DataExporter> EXPORTERS = Arrays.asList(
-            CSVDataExporter.INSTANCE,
-            TSVDataExporter.INSTANCE,
-            XLSXDataExporter.INSTANCE
+            new CSVDataExporter(),
+            new TSVDataExporter(),
+            new XLSXDataExporter()
     );
 
     public static void extractAsFile(final JTable table) {

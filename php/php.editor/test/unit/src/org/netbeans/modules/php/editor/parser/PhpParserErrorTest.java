@@ -1066,4 +1066,8 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php80/throwExpression_01.php");
     }
 
+    public void testClassNameLiteralOnObjects_01() throws Exception {
+        checkErrors("testfiles/parser/php80/classNameLiteralOnObjects_01.php");
+    }
+
 }

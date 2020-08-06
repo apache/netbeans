@@ -5,3 +5,4 @@ METHOD     staticReturnSelf()              [STATIC]   A
 METHOD     staticReturnStatic()            [STATIC]   A
 METHOD     staticTestA()                   [STATIC]   A
 METHOD     staticTestB()                   [STATIC]   B
+CONSTANT   class \B                        [PUBLIC]   Magic Constant

@@ -1291,18 +1291,16 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         }
                     }
                     if (staticContext) {
-                        boolean isDynamicAccess = isDynamicAccess(varName);
                         Set<TypeConstantElement> magicConstants = constantsFilter.filter(request.index.getAccessibleMagicConstants(typeScope));
                         for (TypeConstantElement magicConstant : magicConstants) {
                             if (CancelSupport.getDefault().isCancelled()) {
                                 return;
                             }
                             if (magicConstant != null) {
-                                // dynamic class names are not allowed in complie-time
-                                // e.g. $instance::class, create()::class
-                                if ("class".equals(magicConstant.getName()) && isDynamicAccess) { // NOI18N
-                                    continue;
-                                }
+                                // NETBEANS-4443
+                                // PHP 8.0 allows ::class on objects (e.g. $instance::class, create()::class)
+                                // so don't restrict dynamic access any more
+                                // https://wiki.php.net/rfc/class_name_literal_on_object
                                 completionResult.add(PHPCompletionItem.TypeConstantItem.getItem(magicConstant, request));
                             }
                         }
@@ -1310,16 +1308,6 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 }
             }
         }
-    }
-
-    private static boolean isDynamicAccess(CharSequence varName) {
-        if (varName != null) {
-            return varName.charAt(0) == '$'
-                    || varName.charAt(0) == ']' // array
-                    || varName.charAt(0) == '}'
-                    || varName.charAt(0) == ')';
-        }
-        return false;
     }
 
     private void autoCompleteClassConstants(final PHPCompletionResult completionResult, final PHPCompletionItem.CompletionRequest request) {

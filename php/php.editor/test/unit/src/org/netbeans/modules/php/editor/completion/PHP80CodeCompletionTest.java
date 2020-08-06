@@ -80,4 +80,33 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath("nonCapturingCatches"), "} catch (^) { // test4", false);
     }
 
+    // Allow ::class on Objects
+    public void testClassNameLiteralOnObjects_01() throws Exception {
+        checkCompletion(getTestPath("classNameLiteralOnObjects"), "var_dump($test::^class);", false);
+    }
+
+    public void testClassNameLiteralOnObjects_02() throws Exception {
+        checkCompletion(getTestPath("classNameLiteralOnObjects"), "var_dump($reference::cl^ass);", false);
+    }
+
+    public void testClassNameLiteralOnObjects_03() throws Exception {
+        checkCompletion(getTestPath("classNameLiteralOnObjects"), "var_dump((new Test)::^class);", false);
+    }
+
+    public void testClassNameLiteralOnObjects_04() throws Exception {
+        checkCompletion(getTestPath("classNameLiteralOnObjects"), "var_dump(test()::^class);", false);
+    }
+
+    public void testClassNameLiteralOnObjects_05() throws Exception {
+        checkCompletion(getTestPath("classNameLiteralOnObjects"), "var_dump($test->newInstance()::c^lass)", false);
+    }
+
+    public void testClassNameLiteralOnObjects_06() throws Exception {
+        checkCompletion(getTestPath("classNameLiteralOnObjects"), "var_dump($this::^class);", false);
+    }
+
+    public void testClassNameLiteralOnObjects_07() throws Exception {
+        // No completion items
+        checkCompletion(getTestPath("classNameLiteralOnObjects"), "var_dump($test->noReturnTypes()::^class)", false);
+    }
 }

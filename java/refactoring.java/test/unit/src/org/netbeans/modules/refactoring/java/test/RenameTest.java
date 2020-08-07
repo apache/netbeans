@@ -1427,6 +1427,61 @@ public class RenameTest extends RefactoringTestBase {
                 + "    }\n"
                 + "}"));
     }
+    
+    public void testJavadocRecord() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("p2/C.java", "package p2;\n"
+                + "public record C() {\n"
+                + "}"),
+                new File("p2/A.java", "package p2;\n"
+                + "/**\n"
+                + " * @see C\n"
+                + " */\n"
+                + "public class A {\n"
+                + "    private C b;\n"
+                + "}"));
+        performRename(src.getFileObject("p2/C.java"), -1, -1, "B", null, false);
+        verifyContent(src,
+                new File("p2/C.java", "package p2;\n"
+                + "public record B() {\n"
+                + "}"),
+                new File("p2/A.java", "package p2;\n"
+                + "/**\n"
+                + " * @see B\n"
+                + " */\n"
+                + "public class A {\n"
+                + "    private B b;\n"
+                + "}"));
+    }
+    
+    public void testRenameRecordPropa() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("t/A.java", "package t;\n"
+                + "public record A() {\n"
+                + "    private static int property;\n"
+                + "    public static int getProperty() {\n"
+                + "        return property;\n"
+                + "    }\n"
+                + "    public int foo() {\n"
+                + "        return property;\n"
+                + "    }\n"
+                + "}"));
+        JavaRenameProperties props = new JavaRenameProperties();
+        props.setIsRenameGettersSetters(true);
+        performRename(src.getFileObject("t/A.java"), 1, -1, "renamed", props, true);
+        verifyContent(src,
+                new File("t/A.java", "package t;\n"
+                + "public record A() {\n"
+                + "    private static int renamed;\n"
+                + "    public static int getRenamed() {\n"
+                + "        return renamed;\n"
+                + "    }\n"
+                + "    public int foo() {\n"
+                + "        return renamed;\n"
+                + "    }\n"
+                + "}"));
+
+    }
 
     private void performRename(FileObject source, final int position, final int position2, final String newname, final JavaRenameProperties props, final boolean searchInComments, Problem... expectedProblems) throws Exception {
         final RenameRefactoring[] r = new RenameRefactoring[1];

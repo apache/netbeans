@@ -322,7 +322,7 @@ public final class TreePathHandle {
             case ENUM_CONSTANT:
                 return true;
             default:
-                return false;
+                return (el.getKind().name().equals("RECORD"));
         }
     }
 

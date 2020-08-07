@@ -124,7 +124,14 @@ public final class TreeUtilities {
      * @since 0.67
      */
     public static final Set<Kind> CLASS_TREE_KINDS = EnumSet.of(Kind.ANNOTATION_TYPE, Kind.CLASS, Kind.ENUM, Kind.INTERFACE);
-    
+    static {
+        Kind recKind = null;
+        try {
+            recKind = Kind.valueOf("RECORD"); //NOI18N
+            CLASS_TREE_KINDS.add(recKind);
+        } catch (IllegalArgumentException ex) {
+        }
+    }
     private final CompilationInfo info;
     private final CommentHandlerService handler;
     

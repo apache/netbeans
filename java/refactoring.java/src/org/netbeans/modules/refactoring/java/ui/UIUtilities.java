@@ -41,6 +41,7 @@ import org.netbeans.api.java.source.ui.ScanDialog;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.refactoring.java.api.MemberInfo;
 import org.netbeans.swing.plaf.LFCustoms;
@@ -64,7 +65,14 @@ public final class UIUtilities {
      * @see org.netbeans.api.java.source.ElementHandle
      */
     public static EnumSet allowedElementKinds = EnumSet.of(ElementKind.PACKAGE, ElementKind.CLASS, ElementKind.INTERFACE, ElementKind.ENUM, ElementKind.ANNOTATION_TYPE, ElementKind.METHOD, ElementKind.CONSTRUCTOR, ElementKind.INSTANCE_INIT, ElementKind.STATIC_INIT, ElementKind.FIELD, ElementKind.ENUM_CONSTANT, ElementKind.TYPE_PARAMETER);
-
+    static {
+        ElementKind recKind = null;
+        try {
+            recKind = ElementKind.valueOf(TreeShims.RECORD); //NOI18N
+            allowedElementKinds.add(recKind);
+        } catch (IllegalArgumentException ex) {
+        }
+    }
     // not to be instantiated
     private UIUtilities() {
     }

@@ -72,25 +72,18 @@ import javax.tools.SimpleJavaFileObject;
 
 import com.sun.source.util.DocTrees;
 import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.code.Kinds;
 import com.sun.tools.javac.comp.ArgumentAttr;
 import com.sun.tools.javac.comp.Attr;
-import com.sun.tools.javac.comp.Check.CheckContext;
-import com.sun.tools.javac.comp.DeferredAttr;
-import com.sun.tools.javac.comp.InferenceContext;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.Parser;
 import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.parser.ScannerFactory;
-import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
-import com.sun.tools.javac.util.Warner;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -106,8 +99,6 @@ import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
 import org.netbeans.modules.java.source.TreeUtilitiesAccessor;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.builder.CommentSetImpl;
-import org.netbeans.modules.java.source.matching.CopyFinder;
-import org.netbeans.modules.java.source.matching.CopyFinder.HackScope;
 import org.netbeans.modules.java.source.pretty.ImportAnalysis2;
 import org.netbeans.modules.java.source.transform.ImmutableDocTreeTranslator;
 import org.netbeans.modules.java.source.transform.ImmutableTreeTranslator;
@@ -124,7 +115,14 @@ public final class TreeUtilities {
      * @since 0.67
      */
     public static final Set<Kind> CLASS_TREE_KINDS = EnumSet.of(Kind.ANNOTATION_TYPE, Kind.CLASS, Kind.ENUM, Kind.INTERFACE);
-    
+    static {
+        Kind recKind = null;
+        try {
+            recKind = Kind.valueOf("RECORD"); //NOI18N
+            CLASS_TREE_KINDS.add(recKind);
+        } catch (IllegalArgumentException ex) {
+        }
+    }
     private final CompilationInfo info;
     private final CommentHandlerService handler;
     
@@ -818,10 +816,6 @@ public final class TreeUtilities {
             scope = ((NBScope) scope).delegate;
         }
         
-        if (scope instanceof HackScope) {
-            return ((HackScope) scope).getEnv();
-        }
-
         return ((JavacScope) scope).getEnv();
     }
     

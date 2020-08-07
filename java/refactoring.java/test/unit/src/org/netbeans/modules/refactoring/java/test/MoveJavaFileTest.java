@@ -270,6 +270,18 @@ public class MoveJavaFileTest extends RefactoringTestBase {
                 new File("movepkgdst/MoveClass.java", "package movepkgdst; public class MoveClass { public MoveClass() { } }"),
                 new File("movepkg/MoveClassDep.java", "package movepkg; import movepkgdst.MoveClass; public class MoveClassDep { public MoveClassDep() { MoveClass reference; movepkgdst.MoveClass reference2; } }"));
     }
+    
+        public void testMoveRecord() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("movepkgdst/package-info.java", "package movepkgdst;"),
+                new File("movepkg/MoveRecord.java", "package movepkg; public record MoveRecord() { }"),
+                new File("movepkg/MoveClassDep.java", "package movepkg; public class MoveClassDep { public MoveClassDep() { MoveRecord reference; movepkg.MoveRecord reference2; } }"));
+        performMoveClass(Lookups.singleton(src.getFileObject("movepkg/MoveRecord.java")), new URL(src.getURL(), "movepkgdst/"));
+        verifyContent(src,
+                new File("movepkgdst/package-info.java", "package movepkgdst;"),
+                new File("movepkgdst/MoveRecord.java", "package movepkgdst; public record MoveRecord() { }"),
+                new File("movepkg/MoveClassDep.java", "package movepkg; import movepkgdst.MoveRecord; public class MoveClassDep { public MoveClassDep() { MoveRecord reference; movepkgdst.MoveRecord reference2; } }"));
+    }
 
     public void testMoveClassUndoRedo() throws Exception {
         writeFilesAndWaitForScan(src,
@@ -293,6 +305,30 @@ public class MoveJavaFileTest extends RefactoringTestBase {
                 new File("movepkgdst/package-info.java", "package movepkgdst;"),
                 new File("movepkgdst/MoveClass.java", "package movepkgdst; public class MoveClass { public MoveClass() { } }"),
                 new File("movepkg/MoveClassDep.java", "package movepkg; import movepkgdst.MoveClass; public class MoveClassDep { public MoveClassDep() { MoveClass reference; movepkgdst.MoveClass reference2; } }"));
+    }
+    
+    public void testMoveRecordUndoRedo() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("movepkgdst/package-info.java", "package movepkgdst;"),
+                new File("movepkg/MoveRecord.java", "package movepkg; public record MoveRecord() { }"),
+                new File("movepkg/MoveClassDep.java", "package movepkg; public class MoveClassDep { public MoveClassDep() { MoveRecord reference; movepkg.MoveRecord reference2; } }"));
+        performMoveClass(Lookups.singleton(src.getFileObject("movepkg/MoveRecord.java")), new URL(src.getURL(), "movepkgdst/"));
+        verifyContent(src,
+                new File("movepkgdst/package-info.java", "package movepkgdst;"),
+                new File("movepkgdst/MoveRecord.java", "package movepkgdst; public record MoveRecord() { }"),
+                new File("movepkg/MoveClassDep.java", "package movepkg; import movepkgdst.MoveRecord; public class MoveClassDep { public MoveClassDep() { MoveRecord reference; movepkgdst.MoveRecord reference2; } }"));
+        UndoManager undoManager = UndoManager.getDefault();
+        undoManager.setAutoConfirm(true);
+        undoManager.undo(null);
+        verifyContent(src,
+                new File("movepkgdst/package-info.java", "package movepkgdst;"),
+                new File("movepkg/MoveRecord.java", "package movepkg; public record MoveRecord() { }"),
+                new File("movepkg/MoveClassDep.java", "package movepkg; public class MoveClassDep { public MoveClassDep() { MoveRecord reference; movepkg.MoveRecord reference2; } }"));
+        undoManager.redo(null);
+        verifyContent(src,
+                new File("movepkgdst/package-info.java", "package movepkgdst;"),
+                new File("movepkgdst/MoveRecord.java", "package movepkgdst; public record MoveRecord() { }"),
+                new File("movepkg/MoveClassDep.java", "package movepkg; import movepkgdst.MoveRecord; public class MoveClassDep { public MoveClassDep() { MoveRecord reference; movepkgdst.MoveRecord reference2; } }"));
     }
     
     public void testMoveMultiple() throws Exception {

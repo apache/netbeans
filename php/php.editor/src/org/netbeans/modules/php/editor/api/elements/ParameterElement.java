@@ -32,6 +32,7 @@ public interface ParameterElement {
     String asString(OutputType outputType, TypeNameResolver typeNameResolver);
     boolean isReference();
     boolean isVariadic();
+    boolean isUnionType();
     Set<TypeResolver> getTypes();
     @CheckForNull
     String getDefaultValue();

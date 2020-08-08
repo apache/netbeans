@@ -66,6 +66,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 import org.openide.filesystems.FileObject;
 
@@ -76,39 +77,42 @@ import org.openide.filesystems.FileObject;
 class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableNameFactory {
 
     private static final Logger LOGGER = Logger.getLogger(FunctionScopeImpl.class.getName());
-    private static final String TYPE_SEPARATOR = "|"; //NOI18N
     private static final String TYPE_SEPARATOR_REGEXP = "\\|"; //NOI18N
     private List<? extends ParameterElement> paremeters;
     private final boolean declaredReturnType;
     //@GuardedBy("this")
     private String returnType;
+    private final boolean isReturnUnionType;
 
     //new contructors
     FunctionScopeImpl(Scope inScope, FunctionDeclarationInfo info, String returnType, boolean isDeprecated) {
         super(inScope, info, PhpModifiers.fromBitMask(PhpModifiers.PUBLIC), info.getOriginalNode().getBody(), isDeprecated);
         this.paremeters = info.getParameters();
         this.returnType = returnType;
-        declaredReturnType = info.getReturnType() != null;
+        declaredReturnType = !info.getReturnTypes().isEmpty();
+        isReturnUnionType = info.getOriginalNode().getReturnType() instanceof UnionType;
     }
 
     FunctionScopeImpl(Scope inScope, LambdaFunctionDeclarationInfo info) {
         super(inScope, info, PhpModifiers.fromBitMask(PhpModifiers.PUBLIC), info.getOriginalNode().getBody(), inScope.isDeprecated());
         this.paremeters = info.getParameters();
-        QualifiedName retType = info.getReturnType();
-        if (retType != null) {
-            this.returnType = retType.getName();
+        List<QualifiedName> retTypes = info.getReturnTypes();
+        if (!retTypes.isEmpty()) {
+            this.returnType = asUnionType(retTypes);
         }
-        declaredReturnType = retType != null;
+        declaredReturnType = !retTypes.isEmpty();
+        isReturnUnionType = info.getOriginalNode().getReturnType() instanceof UnionType;
     }
 
     FunctionScopeImpl(Scope inScope, ArrowFunctionDeclarationInfo info, Block block) {
         super(inScope, info, PhpModifiers.fromBitMask(PhpModifiers.PUBLIC), block, inScope.isDeprecated());
         this.paremeters = info.getParameters();
-        QualifiedName retType = info.getReturnType();
-        if (retType != null) {
-            this.returnType = retType.getName();
+        List<QualifiedName> retTypes = info.getReturnTypes();
+        if (!retTypes.isEmpty()) {
+            this.returnType = asUnionType(retTypes);
         }
-        declaredReturnType = retType != null;
+        declaredReturnType = !retTypes.isEmpty();
+        isReturnUnionType = info.getOriginalNode().getReturnType() instanceof UnionType;
     }
 
     protected FunctionScopeImpl(Scope inScope, MethodDeclarationInfo info, String returnType, boolean isDeprecated) {
@@ -116,6 +120,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         this.paremeters = info.getParameters();
         this.returnType = returnType;
         declaredReturnType = info.getOriginalNode().getFunction().getReturnType() != null;
+        isReturnUnionType = info.getOriginalNode().getFunction().getReturnType() instanceof UnionType;
     }
 
     protected FunctionScopeImpl(Scope inScope, MagicMethodDeclarationInfo info, String returnType, boolean isDeprecated) {
@@ -123,6 +128,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         this.paremeters = info.getParameters();
         this.returnType = returnType;
         declaredReturnType = false;
+        isReturnUnionType = false;
     }
 
     FunctionScopeImpl(Scope inScope, BaseFunctionElement indexedFunction) {
@@ -135,6 +141,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         this.returnType =  element.asString(PrintAs.ReturnSemiTypes);
         // XXX ???
         declaredReturnType = false;
+        isReturnUnionType = element.isReturnUnionType();
     }
 
     public static FunctionScopeImpl createElement(Scope scope, LambdaFunctionDeclaration node) {
@@ -205,7 +212,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
                 Set<String> distinctTypes = new HashSet<>();
                 distinctTypes.addAll(Arrays.asList(returnType.split(TYPE_SEPARATOR_REGEXP)));
                 distinctTypes.add(type);
-                returnType = StringUtils.implode(distinctTypes, TYPE_SEPARATOR);
+                returnType = Type.asUnionType(distinctTypes);
             }
         }
     }
@@ -243,6 +250,11 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
             updateReturnTypes(types, result);
         }
         return result;
+    }
+
+    @Override
+    public boolean isReturnUnionType() {
+        return isReturnUnionType;
     }
 
     private static Set<String> recursionDetection = new HashSet<>(); //#168868
@@ -325,6 +337,12 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         return result;
     }
 
+    private String asUnionType(List<QualifiedName> qualifiedNames) {
+        List<String> types = new ArrayList<>();
+        qualifiedNames.forEach(type -> types.add(type.toString()));
+        return Type.asUnionType(types);
+    }
+
     @org.netbeans.api.annotations.common.SuppressWarnings("SE_COMPARATOR_SHOULD_BE_SERIALIZABLE")
     private static final class ModelElementsPositionComparator implements Comparator<ModelElement> {
 
@@ -368,7 +386,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         StringBuilder sb = new StringBuilder();
         for (TypeScope typeScope : resolvedReturnTypes) {
             if (sb.length() != 0) {
-                sb.append(TYPE_SEPARATOR);
+                sb.append(Type.SEPARATOR);
             }
             sb.append(typeScope.getNamespaceName().append(typeScope.getName()).toString());
         }
@@ -419,7 +437,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
                 first = false;
                 sb.append(' '); // NOI18N
             } else {
-                sb.append(TYPE_SEPARATOR);
+                sb.append(Type.SEPARATOR);
             }
             sb.append(typeScope.getName());
         }
@@ -475,6 +493,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         sb.append(qualifiedName.toString()).append(Signature.ITEM_DELIMITER);
         sb.append(isDeprecated() ? 1 : 0).append(Signature.ITEM_DELIMITER);
         sb.append(getFilenameUrl()).append(Signature.ITEM_DELIMITER);
+        sb.append(isReturnUnionType() ? 1 : 0).append(Signature.ITEM_DELIMITER);
         return sb.toString();
     }
 

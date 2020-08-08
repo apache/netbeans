@@ -151,14 +151,13 @@ public final class PhpCommentGenerator {
         if (StringUtils.isEmpty(returnTypes)) {
             return ""; //NOI18N
         }
-        final String typeSeparator = "|"; //NOI18N
         StringBuilder sb = new StringBuilder(returnTypes.length());
         boolean first = true;
-        for (String typeName : returnTypes.split("\\" + typeSeparator)) { //NOI18N
+        for (String typeName : returnTypes.split("\\" + Type.SEPARATOR)) { //NOI18N
             if (first) {
                 first = false;
             } else {
-                sb.append(typeSeparator);
+                sb.append(Type.SEPARATOR);
             }
             if (typeName.equals("\\this")) { //NOI18N
                 sb.append("$this"); //NOI18N

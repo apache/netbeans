@@ -20,7 +20,7 @@ package org.netbeans.modules.php.editor.elements;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -45,6 +45,7 @@ public final class ParameterElementImpl implements ParameterElement {
     private final boolean isMandatory;
     private final boolean isReference;
     private final boolean isVariadic;
+    private final boolean isUnionType;
 
     public ParameterElementImpl(
             final String name,
@@ -54,7 +55,8 @@ public final class ParameterElementImpl implements ParameterElement {
             final boolean isMandatory,
             final boolean isRawType,
             final boolean isReference,
-            final boolean isVariadic) {
+            final boolean isVariadic,
+            final boolean isUnionType) {
         this.name = name;
         this.isMandatory = isMandatory;
         this.defaultValue = (!isMandatory && defaultValue != null) ? decode(defaultValue) : ""; //NOI18N
@@ -63,6 +65,7 @@ public final class ParameterElementImpl implements ParameterElement {
         this.isRawType = isRawType;
         this.isReference = isReference;
         this.isVariadic = isVariadic;
+        this.isUnionType = isUnionType;
     }
 
     static List<ParameterElement> parseParameters(final String signature) {
@@ -97,9 +100,10 @@ public final class ParameterElementImpl implements ParameterElement {
             boolean isMandatory = Integer.parseInt(parts[4]) > 0;
             boolean isReference = Integer.parseInt(parts[5]) > 0;
             boolean isVariadic = Integer.parseInt(parts[6]) > 0;
+            boolean isUnionType = Integer.parseInt(parts[7]) > 0;
             String defValue = parts.length > 3 ? parts[3] : null;
             retval = new ParameterElementImpl(
-                    paramName, defValue, -1, types, isMandatory, isRawType, isReference, isVariadic);
+                    paramName, defValue, -1, types, isMandatory, isRawType, isReference, isVariadic, isUnionType);
         }
         return retval;
     }
@@ -119,20 +123,22 @@ public final class ParameterElementImpl implements ParameterElement {
         }
         String typeSignatures = typeBuilder.toString().trim();
         sb.append(typeSignatures);
-        sb.append(Separator.COLON); //NOI18N
+        sb.append(Separator.COLON);
         sb.append(isRawType ? 1 : 0);
-        sb.append(Separator.COLON); //NOI18N
+        sb.append(Separator.COLON);
         if (!isMandatory()) {
             final String defVal = getDefaultValue();
             assert defVal != null;
             sb.append(encode(defVal));
         }
-        sb.append(Separator.COLON); //NOI18N
+        sb.append(Separator.COLON);
         sb.append(isMandatory ? 1 : 0);
-        sb.append(Separator.COLON); //NOI18N
+        sb.append(Separator.COLON);
         sb.append(isReference ? 1 : 0);
-        sb.append(Separator.COLON); //NOI18N
+        sb.append(Separator.COLON);
         sb.append(isVariadic ? 1 : 0);
+        sb.append(Separator.COLON);
+        sb.append(isUnionType ? 1 : 0);
         checkSignature(sb);
         return sb.toString();
     }
@@ -149,7 +155,9 @@ public final class ParameterElementImpl implements ParameterElement {
 
     @Override
     public Set<TypeResolver> getTypes() {
-        return new HashSet<>(types);
+        // use LinkedHashSet to keep the type order
+        // avoid being changed type order(e.g. int|float|Foo|Bar) when an override method is generated
+        return new LinkedHashSet<>(types);
     }
 
     @Override
@@ -257,6 +265,7 @@ public final class ParameterElementImpl implements ParameterElement {
                 assert isMandatory() == parsedParameter.isMandatory() : signature;
                 assert isReference() == parsedParameter.isReference() : signature;
                 assert isVariadic() == parsedParameter.isVariadic() : signature;
+                assert isUnionType() == parsedParameter.isUnionType() : signature;
             } catch (NumberFormatException originalException) {
                 final String message = String.format("%s [for signature: %s]", originalException.getMessage(), signature); //NOI18N
                 final NumberFormatException formatException = new NumberFormatException(message);
@@ -283,7 +292,17 @@ public final class ParameterElementImpl implements ParameterElement {
         Set<TypeResolver> typesResolvers = getTypes();
         boolean forDeclaration = outputType.equals(OutputType.SHORTEN_DECLARATION) || outputType.equals(OutputType.COMPLETE_DECLARATION);
         if (forDeclaration && hasDeclaredType()) {
-            if (typesResolvers.size() > 1) {
+            if (isUnionType) {
+                for (TypeResolver typeResolver : typesResolvers) {
+                    if (typeResolver.isResolved()) {
+                        if (sb.length() > 0) {
+                            sb.append(Type.SEPARATOR);
+                        }
+                        sb.append(typeNameResolver.resolve(typeResolver.getTypeName(false)));
+                    }
+                }
+                sb.append(' ');
+            } else if (typesResolvers.size() > 1 && !isUnionType) {
                 sb.append(Type.MIXED).append(' ');
             } else {
                 for (TypeResolver typeResolver : typesResolvers) {
@@ -329,4 +348,10 @@ public final class ParameterElementImpl implements ParameterElement {
     public boolean isVariadic() {
         return isVariadic;
     }
+
+    @Override
+    public boolean isUnionType() {
+        return isUnionType;
+    }
+
 }

@@ -19,7 +19,9 @@
 package org.netbeans.modules.php.editor.model.impl;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import org.netbeans.modules.php.api.util.StringUtils;
 
 /**
  *
@@ -30,12 +32,15 @@ public final class Type {
     private Type() {
     }
 
+    public static final String SEPARATOR = "|"; // NOI18N
     public static final String STRING = "string"; //NOI18N
     public static final String REAL = "real"; //NOI18N
     public static final String INT = "int"; //NOI18N
     public static final String INTEGER = "integer"; //NOI18N
     public static final String BOOL = "bool"; //NOI18N
     public static final String BOOLEAN = "boolean"; //NOI18N
+    public static final String TRUE = "true"; //NOI18N
+    public static final String FALSE = "false"; //NOI18N
     public static final String ARRAY = "array"; //NOI18N
     public static final String NULL = "null"; //NOI18N
     public static final String FLOAT = "float"; //NOI18N
@@ -55,7 +60,7 @@ public final class Type {
     private static final List<String> TYPES_FOR_RETURN_TYPE = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, VOID, OBJECT);
     private static final List<String> TYPES_FOR_FIELD_TYPE = Arrays.asList(ARRAY, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, SELF, PARENT); // PHP 7.4 Typed Properties 2.0
     private static final List<String> TYPES_FOR_PHP_DOC = Arrays.asList(STRING, INTEGER, INT, BOOLEAN, BOOL, FLOAT, DOUBLE, OBJECT, MIXED, ARRAY,
-            RESOURCE, VOID, NULL, CALLBACK, CALLABLE, ITERABLE, "false", "true", "self"); // NOI18N
+            RESOURCE, VOID, NULL, CALLBACK, CALLABLE, ITERABLE, FALSE, TRUE, SELF);
 
 
     public static boolean isPrimitive(String typeName) {
@@ -124,4 +129,13 @@ public final class Type {
         return TYPES_FOR_PHP_DOC;
     }
 
+    /**
+     * Create types separated by "|". e.g. int|folat|NamespaceName
+     *
+     * @param types types
+     * @return types separated by "|"
+     */
+    public static String asUnionType(Collection<String> types) {
+        return StringUtils.implode(types, SEPARATOR);
+    }
 }

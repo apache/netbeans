@@ -185,4 +185,61 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
     public void testMatchExpressionInClassSimple03() throws Exception {
         checkCompletion(getTestPath("matchExpressionInClassSimple03"), "            $this->suspend => ^", false);
     }
+
+    public void testUnionTypesImplementMethod01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesImplementMethod01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesImplementMethod02() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesImplementMethod02"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesImplementMethod03() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesImplementMethod03"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesImplementMethod04() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesImplementMethod04"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesOverrideMethod01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesOverrideMethod01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesOverrideMethod02() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesOverrideMethod02"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesOverrideMethod03() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesOverrideMethod03"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesOverrideMethodSpecialTypes01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesOverrideMethodSpecialTypes01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesOverrideMethodSpecialTypes02() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesOverrideMethodSpecialTypes02"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesOverrideMethodSpecialTypes03() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesOverrideMethodSpecialTypes03"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesOverrideMethodSpecialTypes04() throws Exception {
+        // default namespace
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesOverrideMethodSpecialTypes04"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
 }

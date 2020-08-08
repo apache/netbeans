@@ -36,6 +36,7 @@ import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.php.editor.NavUtils;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.api.Utils;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
@@ -987,7 +988,7 @@ final class CompletionContextFinder {
 
     private static boolean isVerticalBar(Token<PHPTokenId> token) {
         return token.id() == PHPTokenId.PHP_OPERATOR
-                && TokenUtilities.textEquals(token.text(), "|"); // NOI18N
+                && TokenUtilities.textEquals(token.text(), Type.SEPARATOR);
     }
 
     private static boolean isNullableTypesPrefix(Token<PHPTokenId> token) {

@@ -92,6 +92,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticDispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 import org.netbeans.modules.php.editor.parser.astnodes.VariableBase;
 import org.netbeans.modules.php.project.api.PhpSourcePath;
@@ -222,9 +223,14 @@ public final class VariousUtils {
     public static String getReturnType(Program root, FunctionDeclaration functionDeclaration) {
         Expression returnType = functionDeclaration.getReturnType();
         if (returnType != null) {
-            QualifiedName name = QualifiedName.create(returnType);
-            assert name != null : returnType;
-            String typeName = name.toString();
+            String typeName;
+            if (returnType instanceof UnionType) {
+                typeName = getUnionType((UnionType) returnType);
+            } else {
+                QualifiedName name = QualifiedName.create(returnType);
+                assert name != null : returnType;
+                typeName = name.toString();
+            }
             if (Type.ARRAY.equals(typeName) || Type.SELF.equals(typeName)) {
                 // For "array" type PHPDoc can contain more specific definition, i.e. MyClass[]
                 // For "self" type PHPDoc can contain more specific definition, i.e. static or $this
@@ -239,6 +245,36 @@ public final class VariousUtils {
             return typeName;
         }
         return getReturnTypeFromPHPDoc(root, functionDeclaration);
+    }
+
+    /**
+     * Get the types separated by "|".
+     *
+     * @param unionType
+     * @return types separated by "|"
+     */
+    public static String getUnionType(UnionType unionType) {
+        StringBuilder sb = new StringBuilder();
+        for (Expression type : unionType.getTypes()) {
+            QualifiedName name = QualifiedName.create(type);
+            if (sb.length() > 0) {
+                sb.append(Type.SEPARATOR);
+            }
+            assert name != null : type;
+            sb.append(name.toString());
+        }
+        return sb.toString();
+    }
+
+    public static List<Pair<QualifiedName, Boolean/* isNullableType */>> getParamTypesFromUnionTypes(UnionType unionType) {
+        List<Pair<QualifiedName, Boolean>> types = new ArrayList<>();
+        for (Expression type : unionType.getTypes()) {
+            QualifiedName name = QualifiedName.create(type);
+            if (name != null) {
+                types.add(Pair.of(name, false));
+            }
+        }
+        return types;
     }
 
     public static String getReturnTypeFromPHPDoc(Program root, FunctionDeclaration functionDeclaration) {
@@ -1760,7 +1796,6 @@ public final class VariousUtils {
      */
     public static String qualifyTypeNames(String typeNames, int offset, Scope inScope) {
         StringBuilder retval = new StringBuilder();
-        final String typeSeparator = "|"; //NOI18N
         if (typeNames != null) {
             if (!typeNames.matches(SPACES_AND_TYPE_DELIMITERS)) { //NOI18N
                 for (String typeName : TYPE_SEPARATOR_PATTERN.split(typeNames)) {
@@ -1777,19 +1812,19 @@ public final class VariousUtils {
                     }
                     if ("$this".equals(typeName)) { //NOI18N
                         // #239987
-                        retval.append("\\this").append(typeSeparator); //NOI18N
+                        retval.append("\\this").append(Type.SEPARATOR); //NOI18N
                     } else if (!typeRawPart.startsWith(NamespaceDeclarationInfo.NAMESPACE_SEPARATOR) && !Type.isPrimitive(typeRawPart)) {
                         QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(QualifiedName.create(typeRawPart), offset, inScope);
                         retval.append(fullyQualifiedName.toString().startsWith(NamespaceDeclarationInfo.NAMESPACE_SEPARATOR)
                                 ? "" //NOI18N
                                 : NamespaceDeclarationInfo.NAMESPACE_SEPARATOR);
-                        retval.append(fullyQualifiedName.toString()).append(typeArrayPart).append(typeSeparator);
+                        retval.append(fullyQualifiedName.toString()).append(typeArrayPart).append(Type.SEPARATOR);
                     } else {
-                        retval.append(typeRawPart).append(typeArrayPart).append(typeSeparator);
+                        retval.append(typeRawPart).append(typeArrayPart).append(Type.SEPARATOR);
                     }
                 }
-                assert retval.length() - typeSeparator.length() >= 0 : "retval:" + retval + "# typeNames:" + typeNames; //NOI18N
-                retval = new StringBuilder(retval.toString().substring(0, retval.length() - typeSeparator.length()));
+                assert retval.length() - Type.SEPARATOR.length() >= 0 : "retval:" + retval + "# typeNames:" + typeNames; //NOI18N
+                retval = new StringBuilder(retval.toString().substring(0, retval.length() - Type.SEPARATOR.length()));
             }
         }
         return retval.toString();

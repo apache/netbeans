@@ -411,8 +411,8 @@ public final class CompilationInfoImpl {
                              .forEach(jfos::add);
             }
             diagnosticListener = new DiagnosticListenerImpl(this.root, this.jfo, this.cpInfo);
-<           Iterable<? extends JavaFileObject> jfos = this.jfo != null ? Arrays.asList(this.jfo) : Collections.emptyList();
-=
+            Iterable<? extends JavaFileObject> jfos = this.jfo != null ? Arrays.asList(this.jfo) : Collections.emptyList();
+
             javacTask = JavacParser.createJavacTask(this.file, jfos, this.root, this.cpInfo,
                     this.parser, diagnosticListener, isDetached);
         }

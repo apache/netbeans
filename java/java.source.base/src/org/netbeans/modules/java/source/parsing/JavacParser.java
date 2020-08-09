@@ -787,8 +787,6 @@ public class JavacParser extends Parser {
     static JavacTaskImpl createJavacTask(
             final FileObject file,
             final Iterable<? extends JavaFileObject> jfos,
-            final List<JavaFileObject> jfos,
-
             final FileObject root,
             final ClasspathInfo cpInfo,
             final JavacParser parser,

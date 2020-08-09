@@ -204,9 +204,9 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
             }
         }
 
-        Iterator it = now.iterator();
+        Iterator<FileObject> it = now.iterator();
         while (it.hasNext()) {
-            FileObject fo = (FileObject) it.next();
+            FileObject fo = it.next();
             fo.removeFileChangeListener(weakL);
         }
 

@@ -33,6 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.WeakHashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -61,7 +62,7 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.lsp.client.bindings.LanguageClientImpl;
 import org.netbeans.modules.lsp.client.options.MimeTypeInfo;
-import org.netbeans.modules.lsp.client.options.ServerRestarter;
+import org.netbeans.modules.lsp.client.spi.ServerRestarter;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider.LanguageServerDescription;
 import org.openide.filesystems.FileObject;
@@ -119,7 +120,7 @@ public class LSPBindings {
                                                    if (p != null) {
                                                        LSPBindings b = project2MimeType2Server.getOrDefault(p, Collections.emptyMap()).remove(mimeType);
 
-                                                       if (b != null) {
+                                                       if (b != null && b.process != null) {
                                                            b.process.destroy();
                                                        }
                                                    }
@@ -130,6 +131,10 @@ public class LSPBindings {
                                                LanguageServerDescription desc = provider.startServer(Lookups.fixed(prj, mimeTypeInfo, restarter));
 
                                                if (desc != null) {
+                                                   LSPBindings b = LanguageServerProviderAccessor.getINSTANCE().getBindings(desc);
+                                                   if (b != null) {
+                                                       return b;
+                                                   }
                                                    try {
                                                        LanguageClientImpl lci = new LanguageClientImpl();
                                                        InputStream in = LanguageServerProviderAccessor.getINSTANCE().getInputStream(desc);
@@ -139,8 +144,9 @@ public class LSPBindings {
                                                        launcher.startListening();
                                                        LanguageServer server = launcher.getRemoteProxy();
                                                        InitializeResult result = initServer(p, server, prj.getProjectDirectory()); //XXX: what if a different root is expected????
-                                                       LSPBindings b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
+                                                       b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
                                                        lci.setBindings(b);
+                                                       LanguageServerProviderAccessor.getINSTANCE().setBindings(desc, b);
                                                        return b;
                                                    } catch (InterruptedException | ExecutionException ex) {
                                                        LOG.log(Level.WARNING, null, ex);
@@ -203,9 +209,10 @@ public class LSPBindings {
        wcc.getWorkspaceEdit().setDocumentChanges(true);
        wcc.getWorkspaceEdit().setResourceOperations(Arrays.asList(ResourceOperationKind.Create, ResourceOperationKind.Delete, ResourceOperationKind.Rename));
        initParams.setCapabilities(new ClientCapabilities(wcc, tdcc, null));
+       CompletableFuture<InitializeResult> initResult = server.initialize(initParams);
        while (true) {
            try {
-               return server.initialize(initParams).get(100, TimeUnit.MILLISECONDS);
+               return initResult.get(100, TimeUnit.MILLISECONDS);
            } catch (TimeoutException ex) {
                if (p != null && !p.isAlive()) {
                    InitializeResult emptyResult = new InitializeResult();

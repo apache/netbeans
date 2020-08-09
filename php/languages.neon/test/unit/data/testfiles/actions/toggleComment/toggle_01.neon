@@ -1,0 +1,10 @@
+#
+# File ^for toggle comment tests.
+#
+parameters:
+	title: Blog
+	# theme: lightning
+
+services:
+	articleManager:
+		class: ArticleManager

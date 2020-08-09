@@ -41,8 +41,6 @@
       />
       <subant  target="nbm" inheritall="false">
           <property name="build.dir" location="build/3rdparty-nbms"/>
-          <property name="keystore" location="${netbeans.bundled.ks}"/>
-          <property name="storepass" value="${netbeans.bundled.ks}"/>
           <property name="nbm_alias" value="netbeans-bundled"/>
           <fileset dir="${nb_all}/extra" includes="libs.javafx.*/build.xml"/>
       </subant>
@@ -56,8 +54,6 @@
       </subant>
       <subant target="nbm" inheritall="false">
           <property name="build.dir" location="build/3rdparty-nbms"/>
-          <property name="keystore" location="${netbeans.bundled.ks}"/>
-          <property name="storepass" value="${netbeans.bundled.ks}"/>
           <property name="nbm_alias" value="netbeans-bundled"/>
           <property name="nb_all" location="${nb_all}"/>
           <property name="nbplatform.default.netbeans.dest.dir" location="${netbeans.dest.dir}"/>

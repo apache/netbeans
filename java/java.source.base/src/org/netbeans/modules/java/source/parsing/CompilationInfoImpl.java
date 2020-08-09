@@ -352,6 +352,24 @@ public final class CompilationInfoImpl {
      * @throws IOException when the file cannot be red
      */    
     public JavaSource.Phase toPhase(JavaSource.Phase phase ) throws IOException {
+        return toPhase(phase, Collections.emptyList());
+    }
+
+    /**
+     * Moves the state to required phase. If given state was already reached 
+     * the state is not changed. The method will throw exception if a state is 
+     * illegal required. Acceptable parameters for thid method are <BR>
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.PARSED}
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.ELEMENTS_RESOLVED}
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.RESOLVED}
+     * <LI>{@link org.netbeans.api.java.source.JavaSource.Phase.UP_TO_DATE}   
+     * @param phase The required phase
+     * @return the reached state
+     * @throws IllegalArgumentException in case that given state can not be 
+     *         reached using this method
+     * @throws IOException when the file cannot be red
+     */    
+    public JavaSource.Phase toPhase(JavaSource.Phase phase, List<FileObject> forcedSources ) throws IOException {
         if (phase == JavaSource.Phase.MODIFIED) {
             throw new IllegalArgumentException( "Invalid phase: " + phase );    //NOI18N
         }
@@ -364,7 +382,7 @@ public final class CompilationInfoImpl {
             }
             return phase;
         } else {
-            JavaSource.Phase currentPhase = parser.moveToPhase(phase, this, false);
+            JavaSource.Phase currentPhase = parser.moveToPhase(phase, this, forcedSources, false);
             return currentPhase.compareTo (phase) < 0 ? currentPhase : phase;
         }
     }
@@ -375,13 +393,34 @@ public final class CompilationInfoImpl {
      * @return JavacTaskImpl
      */
     public synchronized JavacTaskImpl getJavacTask() {
+        return getJavacTask(Collections.emptyList());
+    }
+
+    /**
+     * Returns {@link JavacTaskImpl}, when it doesn't exist
+     * it's created.
+     * @return JavacTaskImpl
+     */
+    public synchronized JavacTaskImpl getJavacTask(List<FileObject> forcedSources) {
         if (javacTask == null) {
+            List<JavaFileObject> jfos = new ArrayList<>();
+            if (jfo != null) {
+                jfos.add(jfo);
+                forcedSources.stream()
+                             .map(fo -> FileObjects.sourceFileObject(fo, root)) //TODO: filter?
+                             .forEach(jfos::add);
+            }
             diagnosticListener = new DiagnosticListenerImpl(this.root, this.jfo, this.cpInfo);
-            Iterable<? extends JavaFileObject> jfos = this.jfo != null ? Arrays.asList(this.jfo) : Collections.emptyList();
+<           Iterable<? extends JavaFileObject> jfos = this.jfo != null ? Arrays.asList(this.jfo) : Collections.emptyList();
+=
             javacTask = JavacParser.createJavacTask(this.file, jfos, this.root, this.cpInfo,
                     this.parser, diagnosticListener, isDetached);
         }
 	return javacTask;
+    }
+
+    List<FileObject> getForcedSources() {
+        return Collections.emptyList();
     }
 
     public Object getCachedValue(Object key) {
@@ -457,7 +496,15 @@ public final class CompilationInfoImpl {
     private boolean hasSource () {
         return this.jfo != null && !isClassFile;
     }
-    
+
+    List<JavaFileObject> parsedFiles;
+    void setParsedFiles(List<JavaFileObject> parsedFiles) {
+        this.parsedFiles = parsedFiles;
+    }
+
+    List<JavaFileObject> getParsedFiles() {
+        return parsedFiles;
+    }
     
     // Innerclasses ------------------------------------------------------------
     @Trusted

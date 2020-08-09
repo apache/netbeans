@@ -133,10 +133,10 @@ final class NodeLookup extends AbstractLookup {
                 all = CookieSet.exitAllClassesMode(prev);
             }
 
-            Iterator it = all.iterator();
+            Iterator<Class> it = all.iterator();
 
             while (it.hasNext()) {
-                Class c = (Class) it.next();
+                Class c = it.next();
                 updateLookupAsCookiesAreChanged(c);
             }
 

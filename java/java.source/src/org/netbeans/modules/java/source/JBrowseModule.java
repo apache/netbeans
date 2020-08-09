@@ -21,17 +21,15 @@ package org.netbeans.modules.java.source;
 
 import java.awt.Dialog;
 import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.prefs.Preferences;
+import javax.lang.model.SourceVersion;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.modules.autoupdate.ui.api.PluginManager;
 import org.netbeans.modules.java.source.usages.ClassIndexManager;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.awt.NotificationDisplayer.Priority;
-import org.openide.awt.StatusDisplayer;
 import org.openide.modules.ModuleInstall;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
@@ -45,6 +43,9 @@ import org.openide.windows.WindowManager;
  * @author Tomas Zezula
  */
 public class JBrowseModule extends ModuleInstall {
+
+    @StaticResource
+    private static final String WARNING_ICON = "org/netbeans/modules/java/source/resources/icons/warning.png"; //NOI18N
 
     private static volatile boolean closed;
         
@@ -91,8 +92,8 @@ public class JBrowseModule extends ModuleInstall {
                     prefs.putBoolean(KEY_WARNING_SHOWN, true);
                 }
 
-                if (!NoJavacHelper.hasNbJavac()) {
-                    NotificationDisplayer.getDefault().notify("Install nb-javac Library", ImageUtilities.loadImageIcon("/org/netbeans/modules/java/source/resources/icons/warning.png", false), Bundle.DESC_InstallNbJavac(), evt -> {
+                if (!NoJavacHelper.hasNbJavac() && !hasJDK14OrAboveJavac()) {
+                    NotificationDisplayer.getDefault().notify("Install nb-javac Library", ImageUtilities.loadImageIcon(WARNING_ICON, false), Bundle.DESC_InstallNbJavac(), evt -> {
                         PluginManager.installSingle("org.netbeans.modules.nbjavac", Bundle.DN_nbjavac());
                     }, prefs.getBoolean(KEY_WARNING_SHOWN, false) ? Priority.SILENT : Priority.HIGH);
                     prefs.putBoolean(KEY_WARNING_SHOWN, true);
@@ -100,6 +101,15 @@ public class JBrowseModule extends ModuleInstall {
             });
         });
         super.restored();
+    }
+
+    private boolean hasJDK14OrAboveJavac() {
+        try {
+            SourceVersion.valueOf("RELEASE_14");
+            return true;
+        } catch (IllegalArgumentException ex) {
+            return false;
+        }
     }
 
     @Override

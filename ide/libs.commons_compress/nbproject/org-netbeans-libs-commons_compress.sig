@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.12.0
+#Version 0.14.0
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -111,7 +111,7 @@ meth public int getCount()
 meth public int read() throws java.io.IOException
 meth public long getBytesRead()
 supr java.io.InputStream
-hfds BYTE_MASK,SINGLE,bytesRead
+hfds BYTE_MASK,bytesRead,single
 
 CLSS public abstract org.apache.commons.compress.archivers.ArchiveOutputStream
 cons public init()
@@ -131,6 +131,7 @@ hfds BYTE_MASK,bytesWritten,oneByte
 
 CLSS public org.apache.commons.compress.archivers.ArchiveStreamFactory
 cons public init()
+cons public init(java.lang.String)
 fld public final static java.lang.String AR = "ar"
 fld public final static java.lang.String ARJ = "arj"
 fld public final static java.lang.String CPIO = "cpio"
@@ -139,13 +140,35 @@ fld public final static java.lang.String JAR = "jar"
 fld public final static java.lang.String SEVEN_Z = "7z"
 fld public final static java.lang.String TAR = "tar"
 fld public final static java.lang.String ZIP = "zip"
+intf org.apache.commons.compress.archivers.ArchiveStreamProvider
 meth public java.lang.String getEntryEncoding()
+meth public java.util.Set<java.lang.String> getInputStreamArchiveNames()
+meth public java.util.Set<java.lang.String> getOutputStreamArchiveNames()
+meth public java.util.SortedMap<java.lang.String,org.apache.commons.compress.archivers.ArchiveStreamProvider> getArchiveInputStreamProviders()
+meth public java.util.SortedMap<java.lang.String,org.apache.commons.compress.archivers.ArchiveStreamProvider> getArchiveOutputStreamProviders()
 meth public org.apache.commons.compress.archivers.ArchiveInputStream createArchiveInputStream(java.io.InputStream) throws org.apache.commons.compress.archivers.ArchiveException
 meth public org.apache.commons.compress.archivers.ArchiveInputStream createArchiveInputStream(java.lang.String,java.io.InputStream) throws org.apache.commons.compress.archivers.ArchiveException
+meth public org.apache.commons.compress.archivers.ArchiveInputStream createArchiveInputStream(java.lang.String,java.io.InputStream,java.lang.String) throws org.apache.commons.compress.archivers.ArchiveException
 meth public org.apache.commons.compress.archivers.ArchiveOutputStream createArchiveOutputStream(java.lang.String,java.io.OutputStream) throws org.apache.commons.compress.archivers.ArchiveException
+meth public org.apache.commons.compress.archivers.ArchiveOutputStream createArchiveOutputStream(java.lang.String,java.io.OutputStream,java.lang.String) throws org.apache.commons.compress.archivers.ArchiveException
+meth public static java.lang.String detect(java.io.InputStream) throws org.apache.commons.compress.archivers.ArchiveException
+meth public static java.util.SortedMap<java.lang.String,org.apache.commons.compress.archivers.ArchiveStreamProvider> findAvailableArchiveInputStreamProviders()
+meth public static java.util.SortedMap<java.lang.String,org.apache.commons.compress.archivers.ArchiveStreamProvider> findAvailableArchiveOutputStreamProviders()
 meth public void setEntryEncoding(java.lang.String)
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
-hfds entryEncoding
+hfds DUMP_SIGNATURE_SIZE,SIGNATURE_SIZE,SINGLETON,TAR_HEADER_SIZE,archiveInputStreamProviders,archiveOutputStreamProviders,encoding,entryEncoding
+
+CLSS public abstract interface org.apache.commons.compress.archivers.ArchiveStreamProvider
+meth public abstract java.util.Set<java.lang.String> getInputStreamArchiveNames()
+meth public abstract java.util.Set<java.lang.String> getOutputStreamArchiveNames()
+meth public abstract org.apache.commons.compress.archivers.ArchiveInputStream createArchiveInputStream(java.lang.String,java.io.InputStream,java.lang.String) throws org.apache.commons.compress.archivers.ArchiveException
+meth public abstract org.apache.commons.compress.archivers.ArchiveOutputStream createArchiveOutputStream(java.lang.String,java.io.OutputStream,java.lang.String) throws org.apache.commons.compress.archivers.ArchiveException
+
+CLSS public abstract interface org.apache.commons.compress.archivers.EntryStreamOffsets
+fld public final static long OFFSET_UNKNOWN = -1
+meth public abstract boolean isStreamContiguous()
+meth public abstract long getDataOffset()
 
 CLSS public final org.apache.commons.compress.archivers.Lister
 cons public init()
@@ -162,6 +185,7 @@ hfds format,serialVersionUID
 CLSS public org.apache.commons.compress.archivers.tar.TarArchiveEntry
 cons public init(byte[])
 cons public init(byte[],org.apache.commons.compress.archivers.zip.ZipEncoding) throws java.io.IOException
+cons public init(byte[],org.apache.commons.compress.archivers.zip.ZipEncoding,boolean) throws java.io.IOException
 cons public init(java.io.File)
 cons public init(java.io.File,java.lang.String)
 cons public init(java.lang.String)
@@ -172,6 +196,7 @@ fld public final static int DEFAULT_DIR_MODE = 16877
 fld public final static int DEFAULT_FILE_MODE = 33188
 fld public final static int MAX_NAMELEN = 31
 fld public final static int MILLIS_PER_SECOND = 1000
+fld public final static long UNKNOWN = -1
 intf org.apache.commons.compress.archivers.ArchiveEntry
 intf org.apache.commons.compress.archivers.tar.TarConstants
 meth public boolean equals(java.lang.Object)
@@ -189,29 +214,42 @@ meth public boolean isGNULongNameEntry()
 meth public boolean isGNUSparse()
 meth public boolean isGlobalPaxHeader()
 meth public boolean isLink()
+meth public boolean isOldGNUSparse()
+meth public boolean isPaxGNUSparse()
 meth public boolean isPaxHeader()
+meth public boolean isSparse()
+meth public boolean isStarSparse()
 meth public boolean isSymbolicLink()
 meth public int getDevMajor()
 meth public int getDevMinor()
 meth public int getGroupId()
+ anno 0 java.lang.Deprecated()
 meth public int getMode()
 meth public int getUserId()
+ anno 0 java.lang.Deprecated()
 meth public int hashCode()
 meth public java.io.File getFile()
+meth public java.lang.String getExtraPaxHeader(java.lang.String)
 meth public java.lang.String getGroupName()
 meth public java.lang.String getLinkName()
 meth public java.lang.String getName()
 meth public java.lang.String getUserName()
 meth public java.util.Date getLastModifiedDate()
 meth public java.util.Date getModTime()
+meth public java.util.Map<java.lang.String,java.lang.String> getExtraPaxHeaders()
+meth public long getLongGroupId()
+meth public long getLongUserId()
 meth public long getRealSize()
 meth public long getSize()
 meth public org.apache.commons.compress.archivers.tar.TarArchiveEntry[] getDirectoryEntries()
+meth public void addPaxHeader(java.lang.String,java.lang.String)
+meth public void clearExtraPaxHeaders()
 meth public void parseTarHeader(byte[])
 meth public void parseTarHeader(byte[],org.apache.commons.compress.archivers.zip.ZipEncoding) throws java.io.IOException
 meth public void setDevMajor(int)
 meth public void setDevMinor(int)
 meth public void setGroupId(int)
+meth public void setGroupId(long)
 meth public void setGroupName(java.lang.String)
 meth public void setIds(int,int)
 meth public void setLinkName(java.lang.String)
@@ -222,17 +260,20 @@ meth public void setName(java.lang.String)
 meth public void setNames(java.lang.String,java.lang.String)
 meth public void setSize(long)
 meth public void setUserId(int)
+meth public void setUserId(long)
 meth public void setUserName(java.lang.String)
 meth public void writeEntryHeader(byte[])
 meth public void writeEntryHeader(byte[],org.apache.commons.compress.archivers.zip.ZipEncoding,boolean) throws java.io.IOException
 supr java.lang.Object
-hfds checkSumOK,devMajor,devMinor,file,groupId,groupName,isExtended,linkFlag,linkName,magic,modTime,mode,name,realSize,size,userId,userName,version
+hfds EMPTY_TAR_ARCHIVE_ENTRIES,checkSumOK,devMajor,devMinor,extraPaxHeaders,file,groupId,groupName,isExtended,linkFlag,linkName,magic,modTime,mode,name,paxGNUSparse,preserveAbsolutePath,realSize,size,starSparse,userId,userName,version
 
 CLSS public org.apache.commons.compress.archivers.tar.TarArchiveInputStream
 cons public init(java.io.InputStream)
+cons public init(java.io.InputStream,boolean)
 cons public init(java.io.InputStream,int)
 cons public init(java.io.InputStream,int,int)
 cons public init(java.io.InputStream,int,int,java.lang.String)
+cons public init(java.io.InputStream,int,int,java.lang.String,boolean)
 cons public init(java.io.InputStream,int,java.lang.String)
 cons public init(java.io.InputStream,java.lang.String)
 meth protected boolean isEOFRecord(byte[])
@@ -242,6 +283,7 @@ meth protected final boolean isAtEOF()
 meth protected final void setAtEOF(boolean)
 meth protected final void setCurrentEntry(org.apache.commons.compress.archivers.tar.TarArchiveEntry)
 meth public boolean canReadEntryData(org.apache.commons.compress.archivers.ArchiveEntry)
+meth public boolean markSupported()
 meth public int available() throws java.io.IOException
 meth public int getRecordSize()
 meth public int read(byte[],int,int) throws java.io.IOException
@@ -251,15 +293,18 @@ meth public org.apache.commons.compress.archivers.tar.TarArchiveEntry getCurrent
 meth public org.apache.commons.compress.archivers.tar.TarArchiveEntry getNextTarEntry() throws java.io.IOException
 meth public static boolean matches(byte[],int)
 meth public void close() throws java.io.IOException
+meth public void mark(int)
 meth public void reset()
 supr org.apache.commons.compress.archivers.ArchiveInputStream
-hfds SMALL_BUF,SMALL_BUFFER_SIZE,blockSize,currEntry,encoding,entryOffset,entrySize,hasHitEOF,is,recordSize
+hfds SMALL_BUFFER_SIZE,blockSize,currEntry,encoding,entryOffset,entrySize,globalPaxHeaders,hasHitEOF,is,lenient,recordSize,smallBuf,zipEncoding
 
 CLSS public org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
 cons public init(java.io.OutputStream)
 cons public init(java.io.OutputStream,int)
 cons public init(java.io.OutputStream,int,int)
+ anno 0 java.lang.Deprecated()
 cons public init(java.io.OutputStream,int,int,java.lang.String)
+ anno 0 java.lang.Deprecated()
 cons public init(java.io.OutputStream,int,java.lang.String)
 cons public init(java.io.OutputStream,java.lang.String)
 fld public final static int BIGNUMBER_ERROR = 0
@@ -272,6 +317,7 @@ fld public final static int LONGFILE_TRUNCATE = 1
 meth public int getCount()
  anno 0 java.lang.Deprecated()
 meth public int getRecordSize()
+ anno 0 java.lang.Deprecated()
 meth public long getBytesWritten()
 meth public org.apache.commons.compress.archivers.ArchiveEntry createArchiveEntry(java.io.File,java.lang.String) throws java.io.IOException
 meth public void close() throws java.io.IOException
@@ -284,7 +330,7 @@ meth public void setBigNumberMode(int)
 meth public void setLongFileMode(int)
 meth public void write(byte[],int,int) throws java.io.IOException
 supr org.apache.commons.compress.archivers.ArchiveOutputStream
-hfds ASCII,addPaxHeadersForNonAsciiNames,assemBuf,assemLen,bigNumberMode,closed,currBytes,currName,currSize,encoding,finished,haveUnclosedEntry,longFileMode,out,recordBuf,recordSize,recordsPerBlock,recordsWritten
+hfds ASCII,BLOCK_SIZE_UNSPECIFIED,RECORD_SIZE,addPaxHeadersForNonAsciiNames,bigNumberMode,closed,countingOut,currBytes,currName,currSize,encoding,finished,haveUnclosedEntry,longFileMode,out,recordBuf,recordsPerBlock,recordsWritten,zipEncoding
 
 CLSS public org.apache.commons.compress.archivers.tar.TarArchiveSparseEntry
 cons public init(byte[]) throws java.io.IOException
@@ -310,14 +356,17 @@ fld public final static byte LF_PAX_EXTENDED_HEADER_UC = 88
 fld public final static byte LF_PAX_GLOBAL_EXTENDED_HEADER = 103
 fld public final static byte LF_SYMLINK = 50
 fld public final static int ATIMELEN_GNU = 12
+fld public final static int ATIMELEN_XSTAR = 12
 fld public final static int CHKSUMLEN = 8
 fld public final static int CHKSUM_OFFSET = 148
 fld public final static int CTIMELEN_GNU = 12
+fld public final static int CTIMELEN_XSTAR = 12
 fld public final static int DEFAULT_BLKSIZE = 10240
 fld public final static int DEFAULT_RCDSIZE = 512
 fld public final static int DEVLEN = 8
 fld public final static int FORMAT_OLDGNU = 2
 fld public final static int FORMAT_POSIX = 3
+fld public final static int FORMAT_XSTAR = 4
 fld public final static int GIDLEN = 8
 fld public final static int GNAMELEN = 32
 fld public final static int ISEXTENDEDLEN_GNU = 1
@@ -331,6 +380,7 @@ fld public final static int NAMELEN = 100
 fld public final static int OFFSETLEN_GNU = 12
 fld public final static int PAD2LEN_GNU = 1
 fld public final static int PREFIXLEN = 155
+fld public final static int PREFIXLEN_XSTAR = 131
 fld public final static int REALSIZELEN_GNU = 12
 fld public final static int SIZELEN = 12
 fld public final static int SPARSELEN_GNU = 96
@@ -339,10 +389,13 @@ fld public final static int UIDLEN = 8
 fld public final static int UNAMELEN = 32
 fld public final static int VERSIONLEN = 2
 fld public final static int VERSION_OFFSET = 263
+fld public final static int XSTAR_MAGIC_LEN = 4
+fld public final static int XSTAR_MAGIC_OFFSET = 508
 fld public final static java.lang.String GNU_LONGLINK = "././@LongLink"
 fld public final static java.lang.String MAGIC_ANT = "ustar\u0000"
 fld public final static java.lang.String MAGIC_GNU = "ustar "
 fld public final static java.lang.String MAGIC_POSIX = "ustar\u0000"
+fld public final static java.lang.String MAGIC_XSTAR = "tar\u0000"
 fld public final static java.lang.String VERSION_ANT = "\u0000\u0000"
 fld public final static java.lang.String VERSION_GNU_SPACE = " \u0000"
 fld public final static java.lang.String VERSION_GNU_ZERO = "0\u0000"

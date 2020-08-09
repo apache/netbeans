@@ -41,16 +41,13 @@
 <!--            <file name="org-netbeans-modules-editor-java-JavaFastOpenAction.shadow">            
                 <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-editor-java-JavaFastOpenAction.instance"/>            
             </file> -->
-
-                       
-
         </folder>
         <folder name="Source">
             <file name="org-netbeans-modules-editor-java-JavaKit$JavaFixImports$GlobalAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Source/org-netbeans-modules-editor-java-JavaKit$JavaFixImports$GlobalAction.instance"/>
                 <attr name="position" intvalue="2400"/>
             </file>
-            </folder>
+        </folder>
     </folder>
                 
     <folder name="Shortcuts">
@@ -60,6 +57,18 @@
     </folder>
 
     <folder name="Editors">
+
+        <folder name="FontsColors">
+            <folder name="NetBeans">
+                <folder name="Defaults">
+                    <file name="org-netbeans-modules-editor-java-highlighting-colorings.xml" url="fontsColors-highlighting.xml">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.editor.resources.Bundle"/>
+                        <attr name="nbeditor-settings-ColoringType" stringvalue="highlight"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+
         <folder name="text">
             <folder name="x-jsp">
                 <file name="org-netbeans-modules-java-editor-semantic-HighlightsLayerFactoryImpl.instance" />

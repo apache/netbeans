@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.14.0
+#Version 1.16.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -140,15 +140,25 @@ hfds INIT,SUPER_KEYWORD,THIS_KEYWORD,anchorOffset,toolTipData,toolTipIndex,toolT
 
 CLSS public org.netbeans.modules.java.completion.TreeShims
 cons public init()
+fld public final static java.lang.String BINDING_PATTERN = "BINDING_PATTERN"
+fld public final static java.lang.String BINDING_VARIABLE = "BINDING_VARIABLE"
+fld public final static java.lang.String RECORD = "RECORD"
 fld public final static java.lang.String SWITCH_EXPRESSION = "SWITCH_EXPRESSION"
 fld public final static java.lang.String YIELD = "YIELD"
+meth public static boolean isRecord(javax.lang.model.element.Element)
+meth public static boolean isRecordComponent(javax.lang.model.element.Element)
+meth public static boolean isRecordComponent(javax.lang.model.element.ElementKind)
 meth public static com.sun.source.tree.ExpressionTree getValue(com.sun.source.tree.BreakTree)
 meth public static com.sun.source.tree.ExpressionTree getYieldValue(com.sun.source.tree.Tree)
 meth public static com.sun.source.tree.Tree SwitchExpression(com.sun.tools.javac.tree.TreeMaker,com.sun.source.tree.ExpressionTree,java.util.List<? extends com.sun.source.tree.CaseTree>)
+meth public static com.sun.source.tree.Tree getBindingPatternType(com.sun.source.tree.Tree)
 meth public static com.sun.source.tree.Tree getBody(com.sun.source.tree.CaseTree)
+meth public static com.sun.source.tree.Tree getPattern(com.sun.source.tree.InstanceOfTree)
 meth public static java.util.List<? extends com.sun.source.tree.CaseTree> getCases(com.sun.source.tree.Tree)
 meth public static java.util.List<? extends com.sun.source.tree.ExpressionTree> getExpressions(com.sun.source.tree.CaseTree)
 meth public static java.util.List<? extends com.sun.source.tree.ExpressionTree> getExpressions(com.sun.source.tree.Tree)
+meth public static javax.lang.model.element.Element toRecordComponent(javax.lang.model.element.Element)
+meth public static javax.lang.model.element.Name getBinding(com.sun.source.tree.Tree)
 supr java.lang.Object
 
 CLSS public final org.netbeans.modules.java.completion.Utilities

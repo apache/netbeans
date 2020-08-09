@@ -3,7 +3,7 @@
 	"description": "An Apache NetBeans Java plugin for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/apache/netbeans"
@@ -28,13 +28,13 @@
 		"update-vscode": "vscode-install"
 	},
 	"devDependencies": {
-		"@types/mocha": "^5.2.0",
-		"@types/node": "^13.1.7",
+		"@types/mocha": "5.2.7",
+		"@types/node": "13.1.7",
 		"typescript": "3.7.4",
-		"vscode": "^1.1.21"
+		"vscode": "1.1.36"
 	},
 	"dependencies": {
-		"vscode-languageclient": "^4.1.4"
+		"vscode-languageclient": "4.4.2"
 	},
         "contributes": {
             "configuration": {

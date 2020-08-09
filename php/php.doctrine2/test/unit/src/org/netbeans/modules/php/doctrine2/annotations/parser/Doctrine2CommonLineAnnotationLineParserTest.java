@@ -160,4 +160,18 @@ public class Doctrine2CommonLineAnnotationLineParserTest extends NbTestCase {
         assertEquals("Index", type2);
     }
 
+    public void testWithTypedParam_04() throws Exception {
+        AnnotationParsedLine parsedLine = parser.parse("    targetEntity=MyProject\\UserRepository::class, indexes={ @Index(keys={\"username\"=\"desc\"}, options={\"unique\"=true}) }, ");
+        assertNotNull(parsedLine);
+        assertEquals("", parsedLine.getName());
+        assertEquals("targetEntity=MyProject\\UserRepository::class, indexes={ @Index(keys={\"username\"=\"desc\"}, options={\"unique\"=true}) },", parsedLine.getDescription());
+        assertFalse(parsedLine.startsWithAnnotation());
+        Map<OffsetRange, String> types = parsedLine.getTypes();
+        assertEquals(2, types.size());
+        String type1 = types.get(new OffsetRange(17, 41));
+        assertEquals("MyProject\\UserRepository", type1);
+        String type2 = types.get(new OffsetRange(61, 66));
+        assertEquals("Index", type2);
+    }
+
 }

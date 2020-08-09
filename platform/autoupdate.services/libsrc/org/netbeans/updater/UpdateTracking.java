@@ -854,10 +854,10 @@ public final class UpdateTracking {
             config.getParentFile().mkdirs();
             Boolean isAutoload = null;
             Boolean isEager = null;
-            java.util.Iterator it = newVersion.getFiles().iterator();
+            Iterator<ModuleFile> it = newVersion.getFiles().iterator();
             boolean needToWrite = false;
             while (it.hasNext()) {
-                ModuleFile f = (ModuleFile) it.next ();
+                ModuleFile f = it.next();
                 String n = f.getName();
                 String parentDir;
                 {

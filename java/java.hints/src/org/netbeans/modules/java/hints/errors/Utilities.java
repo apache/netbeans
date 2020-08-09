@@ -159,6 +159,7 @@ import org.openide.util.Pair;
 public class Utilities {
     public  static final String JAVA_MIME_TYPE = "text/x-java";
     private static final String DEFAULT_NAME = "name";
+    private static final String UNDERSCORE = "_";
     enum SWITCH_TYPE { TRADITIONAL_SWITCH, RULE_SWITCH, SWITCH_EXPRESSION }
 
     public Utilities() {
@@ -1643,7 +1644,7 @@ public class Utilities {
         if (outterMostSource != null) {
             sourcePackage = outterMostSource.getEnclosingElement();
         } else if (info.getCompilationUnit().getPackageName() != null) {
-            sourcePackage = info.getTrees().getElement(new TreePath(new TreePath(info.getCompilationUnit()), info.getCompilationUnit().getPackageName()));
+            sourcePackage = info.getTrees().getElement(new TreePath(new TreePath(info.getCompilationUnit()), info.getCompilationUnit().getPackage()));
         } else {
             sourcePackage = info.getElements().getPackageElement("");
         }
@@ -3330,5 +3331,12 @@ public class Utilities {
         }
         JCTree.JCAssign assignTree = (JCTree.JCAssign) jceTree.expr;
         return ((JCTree.JCIdent) assignTree.lhs).name;
+    }
+
+    public static boolean isJDKVersionLower(int previewUntilJDK){
+        if(Integer.valueOf(SourceVersion.latest().name().split(UNDERSCORE)[1]).compareTo(previewUntilJDK)<=0)
+            return true;
+
+        return false;
     }
 }

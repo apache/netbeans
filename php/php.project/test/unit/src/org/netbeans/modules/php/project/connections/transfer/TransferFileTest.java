@@ -21,6 +21,7 @@ package org.netbeans.modules.php.project.connections.transfer;
 import java.io.File;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.php.project.connections.RemoteClientImplementation;
+import org.openide.filesystems.FileUtil;
 
 /**
  * @author Tomas Mysik
@@ -32,27 +33,27 @@ public class TransferFileTest extends NbTestCase {
     }
 
     public void testLocalTransferFilePaths() {
-        RemoteClientImplementation remoteClient = new RemoteClient("/a", "/pub/project");
+        RemoteClientImplementation remoteClient = new RemoteClient(FileUtil.normalizePath("/a"), "/pub/project");
         TransferFile parent1 = TransferFile.fromDirectory(remoteClient, null, new File("/a/b"));
         TransferFile file1 = TransferFile.fromFile(remoteClient, parent1, new File("/a/b/c"));
         assertEquals("c", file1.getName());
         assertEquals("b/c", file1.getRemotePath());
         assertEquals("b", file1.getParent().getRemotePath());
-        assertEquals("/tmp/b/c", file1.resolveLocalFile(new File("/tmp")).getAbsolutePath());
-        assertEquals("/a/b/c", file1.getLocalAbsolutePath());
+        assertEquals(new File("/tmp/b/c").getAbsolutePath(), file1.resolveLocalFile(new File("/tmp")).getAbsolutePath());
+        assertEquals(FileUtil.normalizePath("/a/b/c"), file1.getLocalAbsolutePath());
         assertEquals("/pub/project/b/c", file1.getRemoteAbsolutePath());
 
-        TransferFile file2 = TransferFile.fromFile(new RemoteClient("/a/b", "/"), null, new File("/a/b/c"));
+        TransferFile file2 = TransferFile.fromFile(new RemoteClient(FileUtil.normalizePath("/a/b"), "/"), null, new File("/a/b/c"));
         assertFalse(file1.equals(file2));
 
-        TransferFile file3 = TransferFile.fromFile(new RemoteClient("/0/1/2", "/"), null, new File("/0/1/2/b/c"));
+        TransferFile file3 = TransferFile.fromFile(new RemoteClient(FileUtil.normalizePath("/0/1/2"), "/"), null, new File("/0/1/2/b/c"));
         assertTrue(file1.equals(file3));
 
-        TransferFile file4 = TransferFile.fromFile(new RemoteClient("/a", "/"), null, new File("/a/b"));
+        TransferFile file4 = TransferFile.fromFile(new RemoteClient(FileUtil.normalizePath("/a"), "/"), null, new File("/a/b"));
         assertEquals("b", file4.getName());
         assertEquals("b", file4.getRemotePath());
 
-        TransferFile file5 = TransferFile.fromFile(new RemoteClient("/a", "/"), null, new File("/a"));
+        TransferFile file5 = TransferFile.fromFile(new RemoteClient(FileUtil.normalizePath("/a"), "/"), null, new File("/a"));
         assertEquals("a", file5.getName());
         assertTrue(file5.isProjectRoot());
         assertSame(TransferFile.REMOTE_PROJECT_ROOT, file5.getRemotePath());
@@ -73,13 +74,13 @@ public class TransferFileTest extends NbTestCase {
         assertEquals("readme.txt", file.getName());
         assertEquals("tests/info/readme.txt", file.getRemotePath());
         assertEquals("tests/info", file.getParent().getRemotePath());
-        assertEquals("/tmp/tests/info/readme.txt", file.resolveLocalFile(new File("/tmp")).getAbsolutePath());
-        assertEquals("/tmp2/tests/info/readme.txt", file.getLocalAbsolutePath());
+        assertEquals(new File("/tmp/tests/info/readme.txt").getAbsolutePath(), file.resolveLocalFile(new File("/tmp")).getAbsolutePath());
+        assertEquals(new File("/tmp2/tests/info/readme.txt").getAbsolutePath(), file.getLocalAbsolutePath());
         assertEquals("/pub/myproject/tests/info/readme.txt", file.getRemoteAbsolutePath());
     }
 
     public void testTransferFileRelations() {
-        RemoteClientImplementation remoteClient = new RemoteClient("/a", "/");
+        RemoteClientImplementation remoteClient = new RemoteClient(FileUtil.normalizePath("/a"), "/");
         TransferFile projectRoot = TransferFile.fromDirectory(remoteClient, null, new File("/a"));
         assertTrue(projectRoot.isRoot());
         assertTrue(projectRoot.isProjectRoot());
@@ -100,7 +101,7 @@ public class TransferFileTest extends NbTestCase {
     }
 
     public void testParentRemotePath() {
-        RemoteClientImplementation remoteClient = new RemoteClient("/a", "/");
+        RemoteClientImplementation remoteClient = new RemoteClient(FileUtil.normalizePath("/a"), "/");
         TransferFile projectRoot = TransferFile.fromDirectory(remoteClient, null, new File("/a"));
         TransferFile childWithParent = TransferFile.fromDirectory(remoteClient, projectRoot, new File("/a/b"));
         TransferFile childWithoutParent = TransferFile.fromFile(remoteClient, null, new File("/a/b"));

@@ -41,7 +41,7 @@ import org.openide.filesystems.FileSystem;
  */
 public class ProvidedExtensionsProxy extends ProvidedExtensions {
     private Collection<BaseAnnotationProvider> annotationProviders;
-    private static ThreadLocal  reentrantCheck = new ThreadLocal();
+    private static ThreadLocal<Boolean>  reentrantCheck = new ThreadLocal<>();
     
     /** Creates a new instance of ProvidedExtensionsProxy */
     public ProvidedExtensionsProxy(Collection/*AnnotationProvider*/ annotationProviders) {

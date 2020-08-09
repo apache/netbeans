@@ -55,7 +55,7 @@ public class KnockoutIndexer extends EmbeddingIndexer {
 
     private static final Logger LOG = Logger.getLogger(KnockoutIndexer.class.getName());
 
-    private static final ThreadLocal<Map<URI, Collection<KnockoutCustomElement>>> CUSTOM_ELEMENTS = new ThreadLocal();
+    private static final ThreadLocal<Map<URI, Collection<KnockoutCustomElement>>> CUSTOM_ELEMENTS = new ThreadLocal<>();
 
     @Override
     protected void index(Indexable indexable, Parser.Result parserResult, Context context) {

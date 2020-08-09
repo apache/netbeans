@@ -633,7 +633,7 @@ public class InlineTest extends RefactoringTestBase {
                 + "public class B {\n"
                 + "    public void testMethodB() {\n"
                 + "        if(true) {\n"
-                + "            t.A.A();\n"
+                + "            A.A();\n"
                 + "        }\n"
                 + "    }\n"
                 + "}"));

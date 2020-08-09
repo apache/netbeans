@@ -35,8 +35,8 @@ public class FileObjectPropertyEditor extends PropertyEditorSupport {
             List fileobjs = (List) this.getValue();
             StringBuffer result = new StringBuffer ();
             boolean first = true;
-            for (Iterator it = fileobjs.iterator(); it.hasNext();) {
-                FileObject fo = (FileObject) it.next ();
+            for (Iterator<FileObject> it = fileobjs.iterator(); it.hasNext();) {
+                FileObject fo = it.next();
                 File f = FileUtil.toFile(fo);
                 if (f != null) {
                     if (!first) {

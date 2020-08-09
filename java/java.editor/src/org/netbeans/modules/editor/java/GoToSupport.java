@@ -201,7 +201,7 @@ public class GoToSupport {
                     Context resolved = resolveContext(controller, doc, offset, goToSource, false);
 
                     if (resolved == null) {
-                        target[0] = new GoToTarget(-1, null, null, null, false);
+                        target[0] = new GoToTarget(-1, -1, null, null, null, false);
                         return;
                     }
                     
@@ -210,7 +210,7 @@ public class GoToSupport {
                         if (url != null) {
                             HtmlBrowser.URLDisplayer.getDefault().showURL(url);
                         } else {
-                            target[0] = new GoToTarget(-1, null, null, null, false);
+                            target[0] = new GoToTarget(-1, -1, null, null, null, false);
                         }
                     } else {
                         target[0] = computeGoToTarget(controller, resolved, offset);
@@ -255,20 +255,23 @@ public class GoToSupport {
             if (startPos != (-1)) {
                 //check if the caret is inside the declaration itself, as jump in this case is not very usefull:
                 if (isCaretInsideDeclarationName(controller, tree, elpath, offset)) {
-                    return new GoToTarget(-1, null, null, null, false);
+                    return new GoToTarget(-1, -1, null, null, null, false);
                 } else {
+                    long endPos = controller.getTrees().getSourcePositions().getEndPosition(controller.getCompilationUnit(), tree);
                     //#71272: it is necessary to translate the offset:
                     return new GoToTarget(controller.getSnapshot().getOriginalOffset((int) startPos),
+                                          controller.getSnapshot().getOriginalOffset((int) endPos),
                                           null,
                                           null,
                                           controller.getElementUtilities().getElementName(resolved.resolved, false).toString(),
                                           true);
                 }
             } else {
-                return new GoToTarget(-1, null, null, null, false);
+                return new GoToTarget(-1, -1, null, null, null, false);
             }
         } else {
             return new GoToTarget(-1,
+                                  -1,
                                   controller.getClasspathInfo(),
                                   ElementHandle.create(resolved.resolved),
                                   controller.getElementUtilities().getElementName(resolved.resolved, false).toString(),
@@ -278,13 +281,15 @@ public class GoToSupport {
 
     public static final class GoToTarget {
         public final int offsetToOpen;
+        public final int endPos;
         public final ClasspathInfo cpInfo;
         public final ElementHandle elementToOpen;
         public final String displayNameForError;
         public final boolean success;
 
-        public GoToTarget(int offsetToOpen, ClasspathInfo cpInfo, ElementHandle elementToOpen, String displayNameForError, boolean success) {
+        public GoToTarget(int offsetToOpen, int endPos, ClasspathInfo cpInfo, ElementHandle elementToOpen, String displayNameForError, boolean success) {
             this.offsetToOpen = offsetToOpen;
+            this.endPos = endPos;
             this.cpInfo = cpInfo;
             this.elementToOpen = elementToOpen;
             this.displayNameForError = displayNameForError;

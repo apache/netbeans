@@ -385,6 +385,20 @@ Found GraalVM:python
  * global scope, so the Java object holds the only reference to it.</li>
  * </ul>
  *
+ * <h2>Exception handling</h2>
+ * Exceptions are thrown in different way, depending on whether <b>the script</b>
+ * (guest language) raised the error, or the error came from the host language, e.g.
+ * a java object called from the script. 
+ * <ul>
+ * <li>Exceptions from the script code are always
+ * reported as {@link ScriptException} that provides the appropriate details.
+ * <li>Checked exceptions from host (java) code, unhandled by the script are raised as
+ * some {@link RuntimeException} subclasses; the {@link Throwable#getCause} then indicates
+ * the original cause for the exception.
+ * <li>Unchecked exceptions are directly propagated.
+ * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#handleScriptExceptions}
+ * </ul>
+ * 
  * </div>
  * <script src="doc-files/tutorial.js"></script>
  */

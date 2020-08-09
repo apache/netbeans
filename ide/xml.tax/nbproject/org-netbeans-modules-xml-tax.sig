@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.50.0
+#Version 1.52.0
 
 CLSS public abstract interface java.beans.BeanInfo
 fld public final static int ICON_COLOR_16x16 = 1
@@ -140,7 +140,7 @@ meth public void setClassAssertionStatus(java.lang.String,boolean)
 meth public void setDefaultAssertionStatus(boolean)
 meth public void setPackageAssertionStatus(java.lang.String,boolean)
 supr java.lang.Object
-hfds assertionLock,classAssertionStatus,classes,defaultAssertionStatus,defaultDomain,domains,loadedLibraryNames,nativeLibraries,nativeLibraryContext,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,sclSet,sys_paths,systemNativeLibraries,usr_paths
+hfds assertionLock,classAssertionStatus,classes,defaultAssertionStatus,defaultDomain,loadedLibraryNames,nativeLibraries,nativeLibraryContext,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,sclSet,sys_paths,systemNativeLibraries,usr_paths
 hcls NativeLibrary,ParallelLoaders
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>

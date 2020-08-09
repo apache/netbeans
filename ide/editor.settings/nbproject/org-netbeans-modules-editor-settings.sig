@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.63
+#Version 1.65
 
 CLSS public java.lang.Object
 cons public init()
@@ -82,6 +82,7 @@ supr java.lang.Object
 CLSS public abstract org.netbeans.api.editor.settings.FontColorSettings
 cons public init()
 fld public final static java.lang.String PROP_FONT_COLORS = "fontColors"
+ anno 0 java.lang.Deprecated()
 meth public abstract javax.swing.text.AttributeSet getFontColors(java.lang.String)
 meth public abstract javax.swing.text.AttributeSet getTokenFontColors(java.lang.String)
 supr java.lang.Object

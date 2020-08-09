@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.50
+#Version 1.52
 
 CLSS public java.beans.FeatureDescriptor
 cons public init()
@@ -50,8 +50,8 @@ fld public final static int ERROR_LEVEL = 2
 fld public final static int FATAL_ERROR_LEVEL = 3
 fld public final static int INFORMATIONAL_LEVEL = 0
 fld public final static int WARNING_LEVEL = 1
+meth public <%0 extends java.lang.Object> {%%0} getDetail(java.lang.Class<{%%0}>)
 meth public final int getLevel()
-meth public java.lang.Object getDetail(java.lang.Class)
 meth public java.lang.String getMessage()
 meth public org.openide.util.Lookup getDetails()
 supr java.lang.Object

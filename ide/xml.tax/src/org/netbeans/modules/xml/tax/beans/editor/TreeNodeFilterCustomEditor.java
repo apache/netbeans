@@ -556,9 +556,9 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     /**
      */
     private static void fillPublicNodeTypesInheritanceTree (Set layer, String prefix) {
-        Iterator it = layer.iterator();
+        Iterator<Item> it = layer.iterator();
         while ( it.hasNext() ) {
-            Item item = (Item) it.next();
+            Item item = it.next();
             String itemPrefix = ""; // NOI18N
             if ( prefix.length() != 0 ) {
                 if ( it.hasNext() ) {

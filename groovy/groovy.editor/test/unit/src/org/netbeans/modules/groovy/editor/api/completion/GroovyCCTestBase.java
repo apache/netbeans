@@ -99,6 +99,7 @@ public abstract class GroovyCCTestBase extends GroovyTestBase {
     }    
     
     private String removeSpuriousCompletionItemsFromDescription(String description) {
-        return description.replaceAll("PACKAGE\\s+apple\\s+null\n", "");
+        return description.replaceAll("PACKAGE\\s+apple\\s+null\n", "")
+                .replaceAll("PACKAGE\\s+oracle\\s+null\n", "");
     }
 }

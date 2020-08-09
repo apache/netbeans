@@ -1,0 +1,35 @@
+Code completion result for source line:
+display: |/* test */
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+GLOBAL     block                                      <font color=999999>display</font>
+GLOBAL     contents                                   <font color=999999>display</font>
+GLOBAL     flex                                       <font color=999999>display</font>
+GLOBAL     flow                                       <font color=999999>display</font>
+GLOBAL     flow-root                                  <font color=999999>display</font>
+GLOBAL     grid                                       <font color=999999>display</font>
+GLOBAL     inherit                                    <font color=999999>display</font>
+GLOBAL     initial                                    <font color=999999>display</font>
+GLOBAL     inline                                     <font color=999999>display</font>
+GLOBAL     inline-block                               <font color=999999>display</font>
+GLOBAL     inline-flex                                <font color=999999>display</font>
+GLOBAL     inline-grid                                <font color=999999>display</font>
+GLOBAL     inline-table                               <font color=999999>display</font>
+GLOBAL     list-item                                  <font color=999999>display</font>
+GLOBAL     none                                       <font color=999999>display</font>
+GLOBAL     ruby                                       <font color=999999>display</font>
+GLOBAL     ruby-base                                  <font color=999999>display</font>
+GLOBAL     ruby-base-container                        <font color=999999>display</font>
+GLOBAL     ruby-text                                  <font color=999999>display</font>
+GLOBAL     ruby-text-container                        <font color=999999>display</font>
+GLOBAL     run-in                                     <font color=999999>display</font>
+GLOBAL     table                                      <font color=999999>display</font>
+GLOBAL     table-caption                              <font color=999999>display</font>
+GLOBAL     table-cell                                 <font color=999999>display</font>
+GLOBAL     table-column                               <font color=999999>display</font>
+GLOBAL     table-column-group                         <font color=999999>display</font>
+GLOBAL     table-footer-group                         <font color=999999>display</font>
+GLOBAL     table-header-group                         <font color=999999>display</font>
+GLOBAL     table-row                                  <font color=999999>display</font>
+GLOBAL     table-row-group                            <font color=999999>display</font>
+GLOBAL     var                                        <font color=999999>display</font>

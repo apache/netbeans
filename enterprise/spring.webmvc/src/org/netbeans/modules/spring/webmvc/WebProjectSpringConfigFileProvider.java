@@ -48,12 +48,13 @@ public class WebProjectSpringConfigFileProvider implements SpringConfigFileProvi
         this.project = project;
     }
 
+    @Override
     public Set<File> getConfigFiles() {
         FileObject webInf = getWebInf();
         if (webInf == null) {
             return Collections.emptySet();
         }
-        Set<File> result = new HashSet<File>();
+        Set<File> result = new HashSet<>();
         addFilesInWebInf(webInf, result);
         return Collections.unmodifiableSet(result);
     }
@@ -74,6 +75,7 @@ public class WebProjectSpringConfigFileProvider implements SpringConfigFileProvi
         }
     }
 
+    @Override
     public FileObject getLocation() {
         return getWebInf();
     }

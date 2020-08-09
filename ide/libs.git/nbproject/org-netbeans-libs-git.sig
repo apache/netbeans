@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.39
+#Version 1.41
 
 CLSS public abstract interface java.io.Serializable
 
@@ -401,6 +401,7 @@ fld public final static org.netbeans.libs.git.GitRefUpdateResult NO_CHANGE
 fld public final static org.netbeans.libs.git.GitRefUpdateResult OK
 fld public final static org.netbeans.libs.git.GitRefUpdateResult REJECTED
 fld public final static org.netbeans.libs.git.GitRefUpdateResult REJECTED_CURRENT_BRANCH
+fld public final static org.netbeans.libs.git.GitRefUpdateResult REJECTED_MISSING_OBJECT
 fld public final static org.netbeans.libs.git.GitRefUpdateResult REJECTED_NODELETE
 fld public final static org.netbeans.libs.git.GitRefUpdateResult REJECTED_NONFASTFORWARD
 fld public final static org.netbeans.libs.git.GitRefUpdateResult REJECTED_OTHER_REASON

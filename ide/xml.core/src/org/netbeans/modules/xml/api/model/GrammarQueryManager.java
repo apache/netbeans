@@ -145,7 +145,7 @@ public abstract class GrammarQueryManager {
         }
         
         public Enumeration enabled(GrammarEnvironment ctx) {
-            Iterator it = getRegistrations();
+            Iterator<GrammarQueryManager> it = getRegistrations();
             transaction.set(null);
             ArrayList list = new ArrayList(5);
             {
@@ -156,7 +156,7 @@ public abstract class GrammarQueryManager {
             }
             Object[] array = list.toArray();
             while (it.hasNext()) {
-                GrammarQueryManager next = (GrammarQueryManager) it.next();
+                GrammarQueryManager next = it.next();
                 GrammarEnvironment env = new GrammarEnvironment(
                     org.openide.util.Enumerations.array (array), 
                     ctx.getInputSource(),

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.117.0
+#Version 1.119.0
 
 CLSS public java.io.IOException
 cons public init()
@@ -771,6 +771,7 @@ meth public boolean manifestChanged()
 meth public boolean serverDescriptorChanged()
 meth public boolean serverResourcesChanged()
 meth public java.io.File[] getChangedFiles()
+meth public java.io.File[] getRemovedFiles()
 meth public java.lang.String toString()
 meth public java.lang.String[] getChangedEjbs()
 supr java.lang.Object
@@ -821,6 +822,7 @@ meth public abstract boolean descriptorChanged()
 meth public abstract boolean manifestChanged()
 meth public abstract boolean serverDescriptorChanged()
 meth public abstract java.io.File[] getChangedFiles()
+meth public abstract java.io.File[] getRemovedFiles()
 
 CLSS public org.netbeans.modules.j2ee.deployment.plugins.api.ServerDebugInfo
 cons public init(java.lang.String,int)

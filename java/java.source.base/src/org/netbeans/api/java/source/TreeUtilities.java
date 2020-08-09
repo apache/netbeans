@@ -72,18 +72,25 @@ import javax.tools.SimpleJavaFileObject;
 
 import com.sun.source.util.DocTrees;
 import com.sun.tools.javac.api.JavacTaskImpl;
+import com.sun.tools.javac.code.Kinds;
 import com.sun.tools.javac.comp.ArgumentAttr;
 import com.sun.tools.javac.comp.Attr;
+import com.sun.tools.javac.comp.Check.CheckContext;
+import com.sun.tools.javac.comp.DeferredAttr;
+import com.sun.tools.javac.comp.InferenceContext;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.Parser;
 import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.parser.ScannerFactory;
+import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
+import com.sun.tools.javac.util.Warner;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -99,6 +106,8 @@ import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
 import org.netbeans.modules.java.source.TreeUtilitiesAccessor;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.builder.CommentSetImpl;
+import org.netbeans.modules.java.source.matching.CopyFinder;
+import org.netbeans.modules.java.source.matching.CopyFinder.HackScope;
 import org.netbeans.modules.java.source.pretty.ImportAnalysis2;
 import org.netbeans.modules.java.source.transform.ImmutableDocTreeTranslator;
 import org.netbeans.modules.java.source.transform.ImmutableTreeTranslator;
@@ -809,6 +818,10 @@ public final class TreeUtilities {
             scope = ((NBScope) scope).delegate;
         }
         
+        if (scope instanceof HackScope) {
+            return ((HackScope) scope).getEnv();
+        }
+
         return ((JavacScope) scope).getEnv();
     }
     
@@ -886,7 +899,7 @@ public final class TreeUtilities {
             Env<AttrContext> env = getEnv(scope);
             if (tree instanceof JCExpression)
                 return attr.attribExpr((JCTree) tree,env, Type.noType);
-            if (env.tree != null && env.tree.getKind() == Kind.VARIABLE) {
+            if (env.tree != null && env.tree.getKind() == Kind.VARIABLE && !VARIABLE_CAN_OWN_VARIABLES) {
                 env = env.next;
             }
             return attr.attribStat((JCTree) tree,env);
@@ -897,6 +910,18 @@ public final class TreeUtilities {
             resolve.restoreAccessbilityChecks();
 //            enter.shadowTypeEnvs(false);
         }
+    }
+
+    private static boolean VARIABLE_CAN_OWN_VARIABLES;
+    static {
+        boolean result;
+        try {
+            SourceVersion.valueOf("RELEASE_12");
+            result = true;
+        } catch (IllegalArgumentException ex) {
+            result = false;
+        }
+        VARIABLE_CAN_OWN_VARIABLES = result;
     }
 
     private static Scope attributeTreeTo(JavacTaskImpl jti, Tree tree, Scope scope, Tree to, final List<Diagnostic<? extends JavaFileObject>> errors) {

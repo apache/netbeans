@@ -30,9 +30,9 @@ import org.netbeans.api.debugger.jpda.InvalidExpressionException;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
+import org.netbeans.modules.debugger.jpda.truffle.LanguageName;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
-import org.netbeans.modules.debugger.jpda.truffle.actions.StepActionProvider;
 import org.netbeans.modules.debugger.jpda.truffle.source.Source;
 import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleScope;
@@ -51,13 +51,14 @@ public final class TruffleStackFrame {
     private final int depth;
     private final ObjectVariable frameInstance;
     private final String methodName;
+    private final LanguageName language;
     private final String sourceLocation;
     
     private final int    sourceId;
     private final String sourceName;
     private final String sourcePath;
     private final URI    sourceURI;
-    private final int    sourceLine;
+    private final String sourceSection;
     private final StringReference codeRef;
     private TruffleScope[] scopes;
     private final ObjectVariable thisObject;
@@ -89,6 +90,9 @@ public final class TruffleStackFrame {
             methodName = frameDefinition.substring(i1, i2);
             i1 = i2 + 1;
             i2 = frameDefinition.indexOf('\n', i1);
+            language = LanguageName.parse(frameDefinition.substring(i1, i2));
+            i1 = i2 + 1;
+            i2 = frameDefinition.indexOf('\n', i1);
             sourceLocation = frameDefinition.substring(i1, i2);
             i1 = i2 + 1;
             i2 = frameDefinition.indexOf('\n', i1);
@@ -109,11 +113,11 @@ public final class TruffleStackFrame {
             i1 = i2 + 1;
             if (includeInternal) {
                 i2 = frameDefinition.indexOf('\n', i1);
-                sourceLine = Integer.parseInt(frameDefinition.substring(i1, i2));
+                sourceSection = frameDefinition.substring(i1, i2);
                 i1 = i2 + 1;
                 internalFrame = Boolean.valueOf(frameDefinition.substring(i1));
             } else {
-                sourceLine = Integer.parseInt(frameDefinition.substring(i1));
+                sourceSection = frameDefinition.substring(i1);
             }
         } catch (IndexOutOfBoundsException ioob) {
             throw new IllegalStateException("frameDefinition='"+frameDefinition+"'", ioob);
@@ -140,6 +144,10 @@ public final class TruffleStackFrame {
         return methodName;
     }
 
+    public LanguageName getLanguage() {
+        return language;
+    }
+
     public String getSourceLocation() {
         return sourceLocation;
     }
@@ -157,7 +165,7 @@ public final class TruffleStackFrame {
         if (src == null) {
             src = Source.getSource(debugger, sourceId, sourceName, sourcePath, sourceURI, codeRef);
         }
-        SourcePosition sp = new SourcePosition(debugger, sourceId, src, sourceLine);
+        SourcePosition sp = new SourcePosition(debugger, sourceId, src, sourceSection);
         return sp;
     }
     

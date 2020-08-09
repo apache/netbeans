@@ -74,6 +74,7 @@ public class JadeCodeCompletion implements CodeCompletionHandler2 {
     protected final static String CSS_CLASS_PREFIX = ".";
     
     @Override
+    @SuppressWarnings("fallthrough")
     public CodeCompletionResult complete(CodeCompletionContext context) {
         ParserResult info = context.getParserResult();
         int carretOffset = context.getParserResult().getSnapshot().getEmbeddedOffset(context.getCaretOffset());

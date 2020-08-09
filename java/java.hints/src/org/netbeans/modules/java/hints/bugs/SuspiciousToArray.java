@@ -19,9 +19,11 @@
 package org.netbeans.modules.java.hints.bugs;
 
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,18 +85,10 @@ public class SuspiciousToArray {
         TreePath expr = ctx.getPath();
         TreePath colPath = ctx.getVariables().get("$c");
         CompilationInfo ci = ctx.getInfo();
+        boolean colPathSynthetic = TreePath.getPath(colPath.getParentPath(), colPath.getLeaf()) == null;
         
-        TypeMirror colType;
-        
-        if (colPath != null) {
-            colType = ci.getTrees().getTypeMirror(colPath);
-        } else {
-            TreePath clazz = TreeUtils.findClass(expr);
-            if (clazz == null) {
-                return null;
-            }
-            colType = ci.getTrees().getTypeMirror(clazz);
-        }
+        TypeMirror colType = ci.getTrees().getTypeMirror(colPath);
+
         if (!Utilities.isValidType(colType) || colType.getKind() != TypeKind.DECLARED) {
             return null;
         }
@@ -108,7 +102,7 @@ public class SuspiciousToArray {
         TypeMirror compType = ((ArrayType)arrType).getComponentType();
                 
         StringBuilder sb = new StringBuilder();
-        if (colPath != null) {
+        if (!colPathSynthetic) {
             int posStart = (int)ci.getTrees().getSourcePositions().getStartPosition(ci.getCompilationUnit(), colPath.getLeaf());
             int posEnd = (int)ci.getTrees().getSourcePositions().getEndPosition(ci.getCompilationUnit(), colPath.getLeaf());
             sb.append(ci.getSnapshot().getText().subSequence(posStart, posEnd)).append(".");
@@ -165,7 +159,7 @@ public class SuspiciousToArray {
         // if the array expression at arrPath is not a 'new xx[]', we should replace the entire expression.
         if (arrPath.getLeaf().getKind() == Tree.Kind.NEW_ARRAY) {
             fix = new ChangeArrayTypeFix(
-                    TreePathHandle.create(arrPath, ci), colPath == null ? null :TreePathHandle.create(colPath, ci),
+                    TreePathHandle.create(arrPath, ci), colPathSynthetic ? null :TreePathHandle.create(colPath, ci),
                     TypeMirrorHandle.create(resType), 
                     ci.getTypeUtilities().getTypeName(resType).toString()
                 ).toEditorFix();
@@ -173,11 +167,9 @@ public class SuspiciousToArray {
             // and if the $c is not a simple identifier / MemberSelect composed of only identifiers, 
             SideEffectVisitor sev = new SideEffectVisitor(ctx);
             try {
-                if (colPath != null) {
-                    sev.scan(colPath, ci);
-                }
+                sev.scan(colPath, ci);
                 fix = new ChangeArrayTypeFix(
-                        TreePathHandle.create(arrPath, ci), colPath == null ? null : TreePathHandle.create(colPath, ci),
+                        TreePathHandle.create(arrPath, ci), colPathSynthetic ? null : TreePathHandle.create(colPath, ci),
                         TypeMirrorHandle.create(resType), 
                         ci.getTypeUtilities().getTypeName(resType).toString()
                     ).toEditorFix();

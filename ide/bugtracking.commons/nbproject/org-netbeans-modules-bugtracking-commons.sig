@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.14
+#Version 1.16
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,8 +159,6 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
-meth public java.awt.peer.ComponentPeer getPeer()
- anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -785,7 +783,7 @@ meth public abstract {org.netbeans.modules.bugtracking.issuetable.IssueNode$Issu
 meth public int compareTo(org.netbeans.modules.bugtracking.issuetable.IssueNode$IssueProperty<{org.netbeans.modules.bugtracking.issuetable.IssueNode$IssueProperty%0}>)
 meth public java.lang.String toString()
 meth public {org.netbeans.modules.bugtracking.issuetable.IssueNode%0} getIssueData()
-supr org.openide.nodes.PropertySupport$ReadOnly
+supr org.openide.nodes.PropertySupport$ReadOnly<{org.netbeans.modules.bugtracking.issuetable.IssueNode$IssueProperty%0}>
 
 CLSS public org.netbeans.modules.bugtracking.issuetable.IssueNode$RecentChangesProperty
  outer org.netbeans.modules.bugtracking.issuetable.IssueNode
@@ -797,14 +795,14 @@ supr org.netbeans.modules.bugtracking.issuetable.IssueNode$IssueProperty<java.la
 CLSS public org.netbeans.modules.bugtracking.issuetable.IssueNode$SeenProperty
  outer org.netbeans.modules.bugtracking.issuetable.IssueNode
 cons public init(org.netbeans.modules.bugtracking.issuetable.IssueNode)
-meth public int compareTo(org.netbeans.modules.bugtracking.issuetable.IssueNode$IssueProperty)
+meth public int compareTo(org.netbeans.modules.bugtracking.issuetable.IssueNode$IssueProperty<java.lang.Boolean>)
 meth public java.lang.Boolean getValue()
 supr org.netbeans.modules.bugtracking.issuetable.IssueNode$IssueProperty<java.lang.Boolean>
 
 CLSS public org.netbeans.modules.bugtracking.issuetable.IssueNode$SummaryProperty
  outer org.netbeans.modules.bugtracking.issuetable.IssueNode
 cons public init(org.netbeans.modules.bugtracking.issuetable.IssueNode)
-meth public int compareTo(org.netbeans.modules.bugtracking.issuetable.IssueNode$IssueProperty)
+meth public int compareTo(org.netbeans.modules.bugtracking.issuetable.IssueNode$IssueProperty<java.lang.String>)
 meth public java.lang.String getValue()
 supr org.netbeans.modules.bugtracking.issuetable.IssueNode$IssueProperty<java.lang.String>
 
@@ -860,8 +858,8 @@ fld public final static java.lang.String PROPERTY_HIGHLIGHT_PATTERN = "highlight
 innr public static TableCellStyle
 meth protected void paintComponent(java.awt.Graphics)
 meth public java.awt.Component getTableCellRendererComponent(javax.swing.JTable,java.lang.Object,boolean,boolean,int,int)
-meth public static org.netbeans.modules.bugtracking.issuetable.QueryTableCellRenderer$TableCellStyle getCellStyle(javax.swing.JTable,org.netbeans.modules.bugtracking.issuetable.IssueTable,org.netbeans.modules.bugtracking.issuetable.IssueNode$IssueProperty,boolean,int)
-meth public static org.netbeans.modules.bugtracking.issuetable.QueryTableCellRenderer$TableCellStyle getDefaultCellStyle(javax.swing.JTable,org.netbeans.modules.bugtracking.issuetable.IssueTable,org.netbeans.modules.bugtracking.issuetable.IssueNode$IssueProperty,boolean,int)
+meth public static org.netbeans.modules.bugtracking.issuetable.QueryTableCellRenderer$TableCellStyle getCellStyle(javax.swing.JTable,org.netbeans.modules.bugtracking.issuetable.IssueTable,org.netbeans.modules.bugtracking.issuetable.IssueNode$IssueProperty<?>,boolean,int)
+meth public static org.netbeans.modules.bugtracking.issuetable.QueryTableCellRenderer$TableCellStyle getDefaultCellStyle(javax.swing.JTable,org.netbeans.modules.bugtracking.issuetable.IssueTable,org.netbeans.modules.bugtracking.issuetable.IssueNode$IssueProperty<?>,boolean,int)
 meth public static void processText(javax.swing.JLabel)
 meth public static void setRowColors(org.netbeans.modules.bugtracking.issuetable.QueryTableCellRenderer$TableCellStyle,javax.swing.JComponent)
 meth public void setStyleProperties(javax.swing.JLabel,org.netbeans.modules.bugtracking.issuetable.QueryTableCellRenderer$TableCellStyle)

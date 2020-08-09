@@ -28,7 +28,7 @@ import java.util.Stack;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.cli.MavenCli;
+import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -291,13 +291,13 @@ public final class FileUtilities {
      * @return either the settings.xml file or <code>null</code> if not available
      */
     public static File getUserSettingsFile(boolean forceCreate) {
-        if(!MavenCli.DEFAULT_USER_SETTINGS_FILE.exists()) {
+        if(!SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE.exists()) {
             if(!forceCreate) {
                 return null;
             }
             
             try {
-                File fil = MavenCli.DEFAULT_USER_SETTINGS_FILE.getParentFile();
+                File fil = SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE.getParentFile();
 
                 DataFolder folder = DataFolder.findFolder(FileUtil.createFolder(fil));
                 // path to template...
@@ -310,7 +310,7 @@ public final class FileUtilities {
                 ex.printStackTrace();
             }
         }
-        return MavenCli.DEFAULT_USER_SETTINGS_FILE;
+        return SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE;
     }
     
     private static void getSourcePackageNames (Project prj, SortedSet<String> result, boolean onlyRoots) {

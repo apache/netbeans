@@ -52,7 +52,7 @@ public class MatchedStyles {
             }
             Collections.reverse(matchedRules);
         } else {
-            matchedRules = Collections.EMPTY_LIST;
+            matchedRules = Collections.emptyList();
         }
         /* TODO: After it's needed, follow the most recent spec.
         if (styles.containsKey("pseudoElements")) { // NOI18N

@@ -138,9 +138,9 @@ public abstract class SAXGeneratorAbstractPanel extends JPanel implements Custom
             this.valid = valid;
 
             synchronized (listeners) {
-                Iterator it = listeners.iterator();
+                Iterator<ChangeListener> it = listeners.iterator();
                 while (it.hasNext()) {
-                    ChangeListener next = (ChangeListener) it.next();
+                    ChangeListener next = it.next();
                     next.stateChanged(EVENT);
                 }
             }

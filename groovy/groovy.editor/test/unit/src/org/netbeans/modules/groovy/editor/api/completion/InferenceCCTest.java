@@ -65,6 +65,6 @@ public class InferenceCCTest extends GroovyTestBase {
     }
 
     public void testInference2() throws Exception {
-        checkCompletion(TEST_BASE + "Inference1.groovy", "        set.t^", true);
+        checkCompletion(TEST_BASE + "Inference1.groovy", "        text.t^", true);
     }
 }

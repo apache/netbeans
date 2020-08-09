@@ -75,6 +75,10 @@
                 <binary-origin>external/js-19.3.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
+                <runtime-relative-path>ext/js-launcher-19.3.0.jar</runtime-relative-path>
+                <binary-origin>external/js-launcher-19.3.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
                 <runtime-relative-path>ext/regex-19.3.0.jar</runtime-relative-path>
                 <binary-origin>external/regex-19.3.0.jar</binary-origin>
             </class-path-extension>

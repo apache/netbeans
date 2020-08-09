@@ -27,9 +27,9 @@ export function activate(context: ExtensionContext) {
 
     try {
         let targetJava = specifiedJDK != null ? specifiedJDK + '/bin/java' : 'java';
-        execSync(targetJava + ' ' + context.extensionPath + '/src/VerifyJDK11.java');
+        execSync(targetJava + ' ' + context.extensionPath + '/src/VerifyJDK14.java');
     } catch (e) {
-        window.showErrorMessage('The Java language server needs a JDK 11 to run, but none found. Please configure it under File/Preferences/Settings/Extensions/Java and restart VS Code.');
+        window.showErrorMessage('The Java language server needs a JDK 14 to run, but none found. Please configure it under File/Preferences/Settings/Extensions/Java and restart VS Code.');
         return ;
     }
     let serverPath = path.resolve(context.extensionPath, "nb-java-lsp-server", "bin", "nb-java-lsp-server");

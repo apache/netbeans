@@ -45,7 +45,7 @@ import org.openide.util.lookup.Lookups;
  * GlassFish server instances provider.
  * <p/>
  * Handles all registered GlassFish server instances. Implemented as singleton
- * because NetBeans GUI components require singleton implementing                                                         
+ * because NetBeans GUI components require singleton implementing
  * {@link ServerInstanceProvider} interface.
  * <p/>
  * @author Peter Williams, Vince Kraemer, Tomas Kraus
@@ -64,10 +64,12 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
 
     public static final String EE6_DEPLOYER_FRAGMENT = "deployer:gfv3ee6"; // NOI18N
     public static final String EE8_DEPLOYER_FRAGMENT = "deployer:gfv5ee8"; // NOI18N
+    public static final String JAKARTAEE8_DEPLOYER_FRAGMENT = "deployer:gfv510ee8";
     public static final String EE6WC_DEPLOYER_FRAGMENT = "deployer:gfv3ee6wc"; // NOI18N
     public static final String PRELUDE_DEPLOYER_FRAGMENT = "deployer:gfv3"; // NOI18N
     static private String EE6_INSTANCES_PATH = "/GlassFishEE6/Instances"; // NOI18N
     static private String EE8_INSTANCES_PATH = "/GlassFishEE8/Instances"; // NOI18N
+    static private String JAKARTAEE8_INSTANCES_PATH = "/GlassFishJakartaEE8/Instances"; // NOI18N
     static private String EE6WC_INSTANCES_PATH = "/GlassFishEE6WC/Instances"; // NOI18N
 
     static public String PRELUDE_DEFAULT_NAME = "GlassFish_v3_Prelude"; //NOI18N
@@ -89,10 +91,10 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
                 if (glassFishProvider == null) {
                     runInit = true;
                     glassFishProvider = new GlassfishInstanceProvider(
-                            new String[]{EE6_DEPLOYER_FRAGMENT, EE6WC_DEPLOYER_FRAGMENT, EE8_DEPLOYER_FRAGMENT},
-                            new String[]{EE6_INSTANCES_PATH, EE6WC_INSTANCES_PATH, EE8_INSTANCES_PATH},
+                            new String[]{EE6_DEPLOYER_FRAGMENT, EE6WC_DEPLOYER_FRAGMENT, EE8_DEPLOYER_FRAGMENT, JAKARTAEE8_DEPLOYER_FRAGMENT},
+                            new String[]{EE6_INSTANCES_PATH, EE6WC_INSTANCES_PATH, EE8_INSTANCES_PATH, JAKARTAEE8_INSTANCES_PATH},
                             null,
-                            true, 
+                            true,
                             new String[]{"--nopassword"}, // NOI18N
                             new CommandFactory()  {
 
@@ -107,14 +109,14 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
                 }
             }
             if (runInit) {
-                glassFishProvider.init();                
+                glassFishProvider.init();
             }
             return glassFishProvider;
         }
     }
 
     public static final Set<String> activeRegistrationSet = Collections.synchronizedSet(new HashSet<String>());
-    
+
     private final Map<String, GlassfishInstance> instanceMap =
             Collections.synchronizedMap(new HashMap<String, GlassfishInstance>());
     private static final Set<String> activeDisplayNames = Collections.synchronizedSet(new HashSet<String>());
@@ -127,15 +129,15 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
     final private List<String> noPasswordOptions;
     final private CommandFactory cf;
     final private Lookup.Result<RegisteredDDCatalog> lookupResult = Lookups.forPath(Util.GF_LOOKUP_PATH).lookupResult(RegisteredDDCatalog.class);
-    
+
     @SuppressWarnings("LeakingThisInConstructor")
     private GlassfishInstanceProvider(
-            String[] uriFragments, 
+            String[] uriFragments,
             String[] instancesDirNames,
-            String displayName, 
+            String displayName,
             boolean needsJdk6,
-            String[] noPasswordOptionsArray, 
-            CommandFactory cf 
+            String[] noPasswordOptionsArray,
+            CommandFactory cf
             ) {
         this.instancesDirNames = instancesDirNames;
         this.displayName = displayName;
@@ -147,8 +149,8 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
         }
         this.cf = cf;
         lookupResult.allInstances();
-        
-        lookupResult.addLookupListener(this); 
+
+        lookupResult.addLookupListener(this);
     }
 
     @Override
@@ -193,7 +195,7 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
     public static ServerInstance getInstanceByUri(String uri) {
         return getProvider().getInstance(uri);
     }
-        
+
     /**
      * Get {@link GlassfishInstance} matching provided internal
      * server URI.
@@ -289,7 +291,7 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
         }
         return result;
     }
-    
+
     public Lookup getLookupFor(ServerInstance instance) {
         synchronized (instanceMap) {
             for (GlassfishInstance gfInstance : instanceMap.values()) {
@@ -300,7 +302,7 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
             return null;
         }
     }
-    
+
     public ServerInstanceImplementation getInternalInstance(String uri) {
         return instanceMap.get(uri);
     }
@@ -313,7 +315,7 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
         }
         return result;
     }
-    
+
     public <T> List<T> getInstancesByCapability(Class<T> serverFacadeClass) {
         List<T> result = new ArrayList<>();
         synchronized (instanceMap) {
@@ -348,7 +350,7 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
         }
         return result;
     }
-    
+
     @Override
     public void addChangeListener(ChangeListener listener) {
         support.addChangeListener(listener);
@@ -363,7 +365,7 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
     public boolean hasServer(String uri) {
         return getInstance(uri) != null;
     }
-    
+
     public ServerInstance getInstance(String uri) {
         ServerInstance rv = null;
         GlassfishInstance instance = instanceMap.get(uri);
@@ -412,7 +414,7 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
             GlassfishInstance.updateModuleSupport(gi);
         }
     }
-    
+
     // ------------------------------------------------------------------------
     // Persistence for server instances.
     // ------------------------------------------------------------------------
@@ -499,7 +501,7 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
         return null;
     }
 
-    String[] getNoPasswordCreatDomainCommand(String startScript, String jarLocation, 
+    String[] getNoPasswordCreatDomainCommand(String startScript, String jarLocation,
             String domainDir, String portBase, String uname, String domain) {
             List<String> retVal = new ArrayList<>();
         retVal.addAll(Arrays.asList(new String[] {startScript,

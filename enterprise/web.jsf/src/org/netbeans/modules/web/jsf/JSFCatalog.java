@@ -41,6 +41,11 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
 
     private static final String URL_JSF_1_0 ="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_1_0.dtd"; // NOI18N
     private static final String URL_JSF_1_1 ="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_1_1.dtd"; // NOI18N
+    private static final String URL_JSF_1_2="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_1_2.xsd"; // NOI18N
+    private static final String URL_JSF_2_0="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_0.xsd"; // NOI18N
+    private static final String URL_JSF_2_1="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_1.xsd"; // NOI18N
+    private static final String URL_JSF_2_2="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_2.xsd"; // NOI18N
+    private static final String URL_JSF_2_3="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_3.xsd"; // NOI18N
 
     public static final String JAVAEE_NS = "http://java.sun.com/xml/ns/javaee";  // NOI18N
     private static final String JSF_1_2_XSD="web-facesconfig_1_2.xsd"; // NOI18N
@@ -58,11 +63,7 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
     public static final String JSF_ID_2_1="SCHEMA:"+JSF_2_1; // NOI18N
     public static final String JSF_ID_2_2="SCHEMA:"+JSF_2_2; // NOI18N
     public static final String JSF_ID_2_3="SCHEMA:"+JSF_2_3; // NOI18N
-    private static final String URL_JSF_1_2="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_1_2.xsd"; // NOI18N
-    private static final String URL_JSF_2_0="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_0.xsd"; // NOI18N
-    private static final String URL_JSF_2_1="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_1.xsd"; // NOI18N
-    private static final String URL_JSF_2_2="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_2.xsd"; // NOI18N
-    private static final String URL_JSF_2_3="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_3.xsd"; // NOI18N
+
 
     // faces-config resources
     public static final String RES_FACES_CONFIG_DEFAULT = "faces-config.xml";
@@ -137,6 +138,10 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
             return RESOURCE_URL_FACELETS_TAGLIB_DTD_10;
         else if(ID_FACELETS_TAGLIB_SCHEMA_20.equals(publicId))
             return RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_20;
+        else if(ID_FACELETS_TAGLIB_SCHEMA_22.equals(publicId))
+            return RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_22;
+        else if(ID_FACELETS_TAGLIB_SCHEMA_23.equals(publicId))
+            return RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_23;
         else return null;
     }
 
@@ -218,6 +223,8 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
             return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_20);
         } else if (URL_FACELETS_TAGLIB_SCHEMA_22.equals(systemId)) {
             return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_22);
+        } else if (URL_FACELETS_TAGLIB_SCHEMA_23.equals(systemId)) {
+            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_23);
         } else if (systemId!=null && systemId.endsWith(JSF_1_2_XSD)) {
             return new org.xml.sax.InputSource(URL_JSF_1_2);
         } else if (systemId!=null && systemId.endsWith(JSF_2_0_XSD)) {

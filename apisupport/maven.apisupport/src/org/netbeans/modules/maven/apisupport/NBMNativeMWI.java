@@ -247,7 +247,7 @@ final class NBMNativeMWI {
                 //nbm-maven-plugin
                 boolean addPlugin = true;
                 String managedPVersion = null;
-                String pVersion = MavenNbModuleImpl.LATEST_NBM_PLUGIN_VERSION;
+                String pVersion = MavenNbModuleImpl.getLatestNbmPluginVersion();
 //                boolean useOsgiDepsSet = false;
                 if (parent != null) {
                     //TODO do we want to support the case when the plugin is defined in parent pom with inherited=true?

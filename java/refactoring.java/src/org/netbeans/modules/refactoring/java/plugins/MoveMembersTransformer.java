@@ -43,6 +43,7 @@ import org.netbeans.modules.refactoring.java.api.JavaMoveMembersProperties;
 import org.netbeans.modules.refactoring.java.api.JavaMoveMembersProperties.Visibility;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.netbeans.modules.refactoring.java.spi.RefactoringVisitor;
+import org.netbeans.modules.refactoring.java.spi.ToPhaseException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
@@ -80,6 +81,14 @@ public class MoveMembersTransformer extends RefactoringVisitor {
         delegate = properties.isDelegate();
         deprecate = properties.isAddDeprecated();
         updateJavadoc = properties.isUpdateJavaDoc();
+    }
+
+    @Override
+    public void setWorkingCopy(WorkingCopy workingCopy) throws ToPhaseException {
+        for (TreePathHandle element : allElements) {
+            SourceUtils.forceSource(workingCopy, element.getFileObject());
+        }
+        super.setWorkingCopy(workingCopy);
     }
 
     public Problem getProblem() {
@@ -451,6 +460,9 @@ public class MoveMembersTransformer extends RefactoringVisitor {
                     return (r1 == Boolean.TRUE || r2 == Boolean.TRUE);
                 }
             };
+            if (workingCopy.getTrees().getTree(el) == null) {
+                System.err.println("!!!");
+            }
             Boolean needsArgument = needsArgumentScanner.scan(workingCopy.getTrees().getTree(el).getBody(), sourceType);
             if (needsArgument == Boolean.TRUE) {
                 ExpressionTree newArgument;

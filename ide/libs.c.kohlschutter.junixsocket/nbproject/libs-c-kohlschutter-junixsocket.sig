@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.21
+#Version 2.23
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -212,6 +212,7 @@ supr java.net.InetSocketAddress
 hfds bytes,serialVersionUID
 
 CLSS public final !enum org.newsclub.net.unix.AFUNIXSocketCapability
+fld public final static org.newsclub.net.unix.AFUNIXSocketCapability CAPABILITY_ABSTRACT_NAMESPACE
 fld public final static org.newsclub.net.unix.AFUNIXSocketCapability CAPABILITY_ANCILLARY_MESSAGES
 fld public final static org.newsclub.net.unix.AFUNIXSocketCapability CAPABILITY_FILE_DESCRIPTORS
 fld public final static org.newsclub.net.unix.AFUNIXSocketCapability CAPABILITY_PEER_CREDENTIALS

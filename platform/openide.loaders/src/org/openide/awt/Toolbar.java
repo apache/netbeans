@@ -24,7 +24,6 @@ import java.awt.Component;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.io.IOException;
 import java.util.EventListener;
 import java.util.EventObject;
@@ -78,6 +77,9 @@ public class Toolbar extends ToolbarWithOverflow /*implemented by patchsuperclas
     //needed to turn off the painting of toolbar button borders on ocean
     private static final boolean isMetalLaF =
             MetalLookAndFeel.class.isAssignableFrom(UIManager.getLookAndFeel().getClass());
+
+    private static final boolean isFlatLaF =
+            UIManager.getLookAndFeel().getID().startsWith("FlatLaf");
     
     static final long serialVersionUID = 5011742660516204764L;
     static {
@@ -182,7 +184,7 @@ public class Toolbar extends ToolbarWithOverflow /*implemented by patchsuperclas
             }
             //This is active for GTK L&F. It should be fixed in JDK
             //but it is not fixed in JDK 6.0.
-            if (!isMetalLaF) {
+            if (!isMetalLaF && !isFlatLaF) {
                 ((AbstractButton) c).setMargin( emptyInsets );
             }
             if( null != label && c != label ) {

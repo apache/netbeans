@@ -458,7 +458,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.61</specification-version>
+                        <specification-version>7.76</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -616,6 +616,7 @@
                 <friend>org.netbeans.modules.selenium2.maven</friend>
                 <friend>org.netbeans.modules.ko4j.debugging</friend>
                 <friend>org.netbeans.modules.testng.maven</friend>
+                <friend>org.netbeans.modules.javafx2.kit</friend>
                 <!-- radim kubacki -->
                 <friend>org.netbeans.modules.android.maven</friend>
                 <!-- dcaoyuan@gmail.com -->

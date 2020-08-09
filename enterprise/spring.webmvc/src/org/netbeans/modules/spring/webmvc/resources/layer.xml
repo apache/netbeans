@@ -69,19 +69,19 @@
     </folder>
     <folder name="SpringFramework">
         <folder name="Templates">
-            <file name="applicationContext-3.1.xml" url="templates/applicationContext31.template">
+            <file name="applicationContext-3.xml" url="templates/applicationContext3.template">
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                 <attr name="template" boolvalue="true"/>
             </file>
-            <file name="dispatcher-servlet-3.1.xml" url="templates/dispatcher-servlet31.template">
+            <file name="dispatcher-servlet-3.xml" url="templates/dispatcher-servlet3.template">
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                 <attr name="template" boolvalue="true"/>
             </file>
-            <file name="applicationContext-4.0.xml" url="templates/applicationContext40.template">
+            <file name="applicationContext-4.xml" url="templates/applicationContext4.template">
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                 <attr name="template" boolvalue="true"/>
             </file>
-            <file name="dispatcher-servlet-4.0.xml" url="templates/dispatcher-servlet40.template">
+            <file name="dispatcher-servlet-4.xml" url="templates/dispatcher-servlet4.template">
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                 <attr name="template" boolvalue="true"/>
             </file>

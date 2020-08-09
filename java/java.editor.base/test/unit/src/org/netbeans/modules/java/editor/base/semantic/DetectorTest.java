@@ -515,7 +515,7 @@ public class DetectorTest extends TestBase {
             //OK, no RELEASE_14, skip tests
             return ;
         }
-        setSourceLevel("14");
+        enablePreview();
         performTest("Record",
                     "public record Test(String s) {}\n" +
                     "class T {\n" +
@@ -542,8 +542,8 @@ public class DetectorTest extends TestBase {
         } catch (IllegalArgumentException ex) {
             //OK, no RELEASE_14, skip tests
             return;
-        }        
-        setSourceLevel("14");
+        }
+        enablePreview();
         performTest("Records",
                     "public class Records {\n" +
                     "    public interface Super {}\n" +
@@ -644,6 +644,24 @@ public class DetectorTest extends TestBase {
                     "[LOCAL_VARIABLE, DECLARATION], 2:35-2:38",
                     "[LOCAL_VARIABLE], 2:42-2:45",
                     "[PUBLIC, METHOD], 2:46-2:53");
+    }
+
+    public void testInvalidParameterList() throws Exception {
+        setShowPrependedText(true);
+        performTest("Test.java",
+                    "public class BugSemanticHighlighterBase {\n" +
+                    "    private Object testMethod(final String arg1 final String arg2) {\n" +
+                    "        return new String(\"\");\n" +
+                    "    }\n" +
+                    "}\n",
+                    "[PUBLIC, CLASS, DECLARATION], 0:13-0:39",
+                    "[PUBLIC, CLASS], 1:12-1:18",
+                    "[PRIVATE, METHOD, UNUSED, DECLARATION], 1:19-1:29",
+                    "[PUBLIC, CLASS], 1:36-1:42",
+                    "[PARAMETER, UNUSED, DECLARATION], 1:43-1:47",
+                    "[PUBLIC, CLASS], 1:54-1:60",
+                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:61-1:65",
+                    "[PACKAGE_PRIVATE, CONSTRUCTOR], 2:19-2:25");
     }
 
     private void performTest(String fileName) throws Exception {

@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import javax.xml.namespace.QName;
-import org.apache.maven.cli.MavenCli;
+import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.execute.PrerequisitesChecker;
@@ -63,7 +63,7 @@ public class RunIDEInstallationChecker implements PrerequisitesChecker {
                 NbMavenProject nbmp = project.getLookup().lookup(NbMavenProject.class);
                 if (nbmp != null && MavenNbModuleImpl.findIDEInstallation(project) == null) {
                         String netbeansInstallation = new File(System.getProperty("netbeans.home")).getParent();
-                        if (DialogDisplayer.getDefault().notify(new NotifyDescriptor.Confirmation(RunIDEInstallationChecker_message(netbeansInstallation, MavenCli.DEFAULT_USER_SETTINGS_FILE), RunIDEInstallationChecker_title(), NotifyDescriptor.OK_CANCEL_OPTION)) == NotifyDescriptor.OK_OPTION) {
+                        if (DialogDisplayer.getDefault().notify(new NotifyDescriptor.Confirmation(RunIDEInstallationChecker_message(netbeansInstallation, SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE), RunIDEInstallationChecker_title(), NotifyDescriptor.OK_CANCEL_OPTION)) == NotifyDescriptor.OK_OPTION) {
                             try {
                                 defineIDE(netbeansInstallation);
                             } catch (IOException x) {
@@ -88,9 +88,9 @@ public class RunIDEInstallationChecker implements PrerequisitesChecker {
     }
 
     private static void defineIDE(final String netbeansInstallation) throws IOException {
-        FileObject settingsXml = FileUtil.toFileObject(MavenCli.DEFAULT_USER_SETTINGS_FILE);
+        FileObject settingsXml = FileUtil.toFileObject(SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE);
         if (settingsXml == null) {
-            settingsXml = FileUtil.copyFile(FileUtil.getConfigFile("Maven2Templates/settings.xml"), FileUtil.createFolder(MavenCli.DEFAULT_USER_SETTINGS_FILE.getParentFile()), "settings");
+            settingsXml = FileUtil.copyFile(FileUtil.getConfigFile("Maven2Templates/settings.xml"), FileUtil.createFolder(SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE.getParentFile()), "settings");
         }
         Utilities.performSettingsModelOperations(settingsXml, Collections.<ModelOperation<SettingsModel>>singletonList(new ModelOperation<SettingsModel>() {
             public @Override void performOperation(SettingsModel model) {

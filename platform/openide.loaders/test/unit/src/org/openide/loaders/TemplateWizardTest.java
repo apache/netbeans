@@ -42,6 +42,7 @@ import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 /** Checks the testable behaviour of TemplateWizard
  * @author Jaroslav Tulach, Jiri Rechtacek
@@ -247,6 +248,56 @@ public class TemplateWizardTest extends NbTestCase {
         
         // check that the object is really created on config fs
         assertTrue(FileUtil.isParentOf(cf, tf));
+    }
+
+    /**
+     * Test deferred TargetFolder creation
+     */
+    public void testDeferredTargetFolderCreation() throws Exception {
+        final TemplateWizard tw = new TemplateWizard();
+        final String TARGET = "deferredTarget"; // NOI18N
+        tw.setTargetFolderLazy(() -> {
+            FileObject fo = null;
+            try {
+                fo = FileUtil.getConfigRoot().createFolder(TARGET);
+            } catch(IOException ex) {
+                assertTrue("createFolder(TARGET) exception", false);
+            }
+            return DataFolder.findFolder(fo);
+        });
+        assertNull(FileUtil.getConfigRoot().getFileObject(TARGET));
+        // should lazily create target
+        DataFolder targetFolder = tw.getTargetFolder();
+        FileObject foNew = FileUtil.getConfigRoot().getFileObject(TARGET);
+        assertNotNull(foNew);
+        assertFalse(foNew.isVirtual());
+        assertEquals(targetFolder.getName(), TARGET);
+    }
+
+    /**
+     * Test *no* deferred TargetFolder creation
+     */
+    public void testNoDeferredTargetFolderCreation() throws Exception {
+        final TemplateWizard tw = new TemplateWizard();
+        final String TARGET1 = "target1"; // NOI18N
+        final String TARGET2 = "target2"; // NOI18N
+
+        FileObject cf = FileUtil.getConfigRoot().createFolder(TARGET1);
+        DataFolder target = DataFolder.findFolder(cf);
+        tw.setTargetFolder(target);
+        tw.setTargetFolderLazy(() -> {
+            FileObject fo = null;
+            try {
+                fo = FileUtil.getConfigRoot().createFolder(TARGET2);
+            } catch(IOException ex) {
+                assertTrue("createFolder(TARGET2) exception", false);
+            }
+            return DataFolder.findFolder(fo);
+        });
+        DataFolder targetFolder = tw.getTargetFolder();
+
+        // TARGET2 should not be created
+        assertNull(FileUtil.getConfigRoot().getFileObject(TARGET2));
     }
     
     private void doNextOnIterImpl (boolean notify) {

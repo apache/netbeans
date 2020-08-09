@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.13
+#Version 9.15
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -807,7 +807,7 @@ meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> ja
 meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> checkedMapByFilter(java.util.Map,java.lang.Class<{%%0}>,java.lang.Class<{%%1}>,boolean)
 meth public static <%0 extends java.lang.Object> java.lang.Iterable<{%%0}> iterable(java.util.Enumeration<{%%0}>)
 meth public static <%0 extends java.lang.Object> java.lang.Iterable<{%%0}> iterable(java.util.Iterator<{%%0}>)
-meth public static <%0 extends java.lang.Object> java.util.Enumeration<{%%0}> checkedEnumerationByFilter(java.util.Enumeration,java.lang.Class<{%%0}>,boolean)
+meth public static <%0 extends java.lang.Object> java.util.Enumeration<{%%0}> checkedEnumerationByFilter(java.util.Enumeration<?>,java.lang.Class<{%%0}>,boolean)
 meth public static <%0 extends java.lang.Object> java.util.Iterator<{%%0}> checkedIteratorByFilter(java.util.Iterator,java.lang.Class<{%%0}>,boolean)
 meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> checkedListByCopy(java.util.List,java.lang.Class<{%%0}>,boolean)
 meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> checkedSetByCopy(java.util.Set,java.lang.Class<{%%0}>,boolean)

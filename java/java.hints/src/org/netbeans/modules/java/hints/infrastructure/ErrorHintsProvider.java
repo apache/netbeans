@@ -636,6 +636,16 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             }
         }
         
+        if ("compiler.err.illegal.unicode.esc".equals(d.getCode())) {
+            String text = info.getText();
+            endOffset = info.getSnapshot().getOriginalOffset((int) d.getEndPosition());
+            soff = endOffset;
+            while (text.charAt(soff) != '\\') {
+                soff--;
+            }
+            rangePrepared = true;
+        }
+
         // check that the start offset and end offset map into the document
         if (!rangePrepared && (info.getSnapshot().getOriginalOffset(startOffset) == -1 ||
             info.getSnapshot().getOriginalOffset(endOffset) == -1)) {

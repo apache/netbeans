@@ -36,6 +36,10 @@ import java.lang.annotation.Target;
  * <p>Test runs which must be reliable should define the system property.
  * (E.g. for NetBeans modules: <code>ant -Dtest-unit-sys-prop.ignore.random.failures=true test</code>)
  * Developers running tests interactively should not.
+ * 
+ * JUnit {@literal @}Ignore annotation is supported.
+ * {@literal @}Ignore annotation is recommended to mark tests that are broken instead this annotation.
+ * 
  * @since 1.51
  */
 @Retention(RetentionPolicy.RUNTIME)

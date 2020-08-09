@@ -225,21 +225,16 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
         if (!inited) {
             try {
                 ContainerConfiguration config = new DefaultContainerConfiguration();
-	            //#154755 - start
-	            ClassWorld world = new ClassWorld();
-	            ClassRealm embedderRealm = world.newRealm("maven.embedder", MavenEmbedder.class.getClassLoader()); //NOI18N
+                //#154755 - start
                 ClassLoader indexerLoader = NexusRepositoryIndexerImpl.class.getClassLoader();
-	            ClassRealm indexerRealm = world.newRealm("maven.indexer", indexerLoader); //NOI18N
-	            ClassRealm plexusRealm = world.newRealm("plexus.core", indexerLoader); //NOI18N
-	            //need to import META-INF/plexus stuff, otherwise the items in META-INF will not be loaded,
-	            // and the Dependency Injection won't work.
-	            plexusRealm.importFrom(embedderRealm.getId(), "META-INF/plexus"); //NOI18N
-	            plexusRealm.importFrom(embedderRealm.getId(), "META-INF/maven"); //NOI18N
-	            plexusRealm.importFrom(indexerRealm.getId(), "META-INF/plexus"); //NOI18N
-	            plexusRealm.importFrom(indexerRealm.getId(), "META-INF/maven"); //NOI18N
-	            config.setClassWorld(world);
-                    config.setClassPathScanning( PlexusConstants.SCANNING_INDEX );
-	            //#154755 - end
+                ClassWorld classWorld = new ClassWorld();
+                ClassRealm plexusRealm = classWorld.newRealm("plexus.core", EmbedderFactory.class.getClassLoader()); //NOI18N
+                plexusRealm.importFrom(indexerLoader, "META-INF/sisu"); //NOI18N
+                plexusRealm.importFrom(indexerLoader, "org.apache.maven.index"); //NOI18N
+                plexusRealm.importFrom(indexerLoader, "org.netbeans.modules.maven.indexer"); //NOI18N
+                config.setClassWorld(classWorld);
+                config.setClassPathScanning( PlexusConstants.SCANNING_INDEX );
+                //#154755 - end
                 embedder = new DefaultPlexusContainer(config);
 
                 ComponentDescriptor<ArtifactContextProducer> desc = new ComponentDescriptor<ArtifactContextProducer>();

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.129
+#Version 1.131
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,8 +159,6 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
-meth public java.awt.peer.ComponentPeer getPeer()
- anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -806,15 +804,6 @@ meth public static org.netbeans.modules.java.api.common.Roots propertyBased(java
 supr java.lang.Object
 hfds hint,isSourceRoot,support,supportIncludes,type
 hcls MyAccessor,NonSourceRoots,PropSourceRoots
-
-CLSS public final org.netbeans.modules.java.api.common.SingleJavaSourceRunActionProvider
-cons public init()
-intf org.netbeans.spi.project.ActionProvider
-meth public boolean isActionEnabled(java.lang.String,org.openide.util.Lookup)
-meth public java.lang.String[] getSupportedActions()
-meth public void invokeAction(java.lang.String,org.openide.util.Lookup)
-supr java.lang.Object
-hfds FILE_ARGUMENTS,FILE_VM_OPTIONS
 
 CLSS public org.netbeans.modules.java.api.common.SourceRoots
 fld public final static java.lang.String DEFAULT_SOURCE_LABEL

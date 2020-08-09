@@ -61,7 +61,7 @@ public final class Parser {
                     case '%': case '_': case '~': case '=': //NOI18N
                     case '\\':case '&': case '$': case '-': //NOI18N
                     case '#': case ',': case ':': case ';': //NOI18N
-                    case '!': case '(': case ')': //NOI18N
+                    case '!': case '(': case ')': case '@': //NOI18N
                         continue OUTER;
                 }
 
@@ -155,7 +155,7 @@ public final class Parser {
         return result;
     }
     
-    private static final Pattern URL_PATTERN = Pattern.compile("(ht|f)(tp(s?)|ile)://[0-9a-zA-Z/.?%+_~=\\\\&$\\-#,:!/(/)]*"); //NOI18N
+    private static final Pattern URL_PATTERN = Pattern.compile("(ht|f)(tp(s?)|ile)://[0-9a-zA-Z/.?%+_~=\\\\&@$\\-#,:!/(/)]*"); //NOI18N
 
     public static Iterable<int[]> recognizeURLsREBased(CharSequence text) {
         Matcher m = URL_PATTERN.matcher(text);

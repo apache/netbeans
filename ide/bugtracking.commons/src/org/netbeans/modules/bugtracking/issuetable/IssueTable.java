@@ -413,7 +413,7 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
     private Map<Integer, Integer> getColumnSorting() {
         String sortingString = getColumnSorting(repositoryId);
         if(sortingString == null || sortingString.equals("")) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
         Map<Integer, Integer> map = new HashMap<>();
         String[] sortingArray = sortingString.split(CONFIG_DELIMITER);
@@ -697,7 +697,7 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
         String columns = getColumns(repositoryId);
         String[] visibleColumns = columns.split(CONFIG_DELIMITER);                         // NOI18N
         if(visibleColumns.length <= 1) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
         Map<String, Integer> ret = new HashMap<String, Integer>();
         for (int i = 0; i < visibleColumns.length; i=i+2) {

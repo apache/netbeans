@@ -232,12 +232,12 @@ public class AnnotationProcessors {
             }
 
             abstractProcessor = info.getElements().getTypeElement(ABSTRACT_PROCESSOR_TYPE);
-            if (!Utilities.isValidElement(e)) {
+            if (!Utilities.isValidElement(abstractProcessor)) {
                 return false;
             }
             abstractProcessorType = abstractProcessor.asType();
             baseProcessor = info.getElements().getTypeElement(PROCESSOR_TYPE);
-            if (!Utilities.isValidElement(e)) {
+            if (!Utilities.isValidElement(baseProcessor)) {
                 return false;
             }
             baseProcessorType = baseProcessor.asType();

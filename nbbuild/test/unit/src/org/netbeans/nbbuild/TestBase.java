@@ -281,19 +281,10 @@ abstract class TestBase extends NbTestCase {
         public void checkAccept(String host, int port) {
         }
         @Override
-        public void checkMemberAccess(Class<?> clazz, int which) {
-        }
-        @Override
-        public void checkSystemClipboardAccess() {
-        }
-        @Override
         public void checkSetFactory() {
         }
         @Override
         public void checkCreateClassLoader() {
-        }
-        @Override
-        public void checkAwtEventQueueAccess() {
         }
         @Override
         public void checkPrintJobAccess() {

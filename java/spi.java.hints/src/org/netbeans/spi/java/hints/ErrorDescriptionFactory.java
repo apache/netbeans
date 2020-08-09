@@ -168,6 +168,7 @@ public class ErrorDescriptionFactory {
         return null;
     }
 
+    @SuppressWarnings("fallthrough")
     private static int[] computeNameSpan(Tree tree, HintContext context) {
         switch (tree.getKind()) {
             case LABELED_STATEMENT:

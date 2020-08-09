@@ -11,7 +11,6 @@ PACKAGE    groovyjarjarpicocli                        null
 PACKAGE    java                                       null
 PACKAGE    javax                                      null
 PACKAGE    jdk                                        null
-PACKAGE    oracle                                     null
 PACKAGE    org                                        null
 PACKAGE    sun                                        null
 CLASS      AdaptingMetaClass                          null

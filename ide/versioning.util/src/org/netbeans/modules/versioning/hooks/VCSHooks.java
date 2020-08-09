@@ -63,7 +63,7 @@ public class VCSHooks {
             hooksResult = Lookup.getDefault().lookupResult(VCSHookFactory.class);
         }
         if(hooksResult == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         Collection<VCSHookFactory> c = (Collection<VCSHookFactory>) Lookup.getDefault().lookupAll(VCSHookFactory.class);
         return hooksResult.allInstances();

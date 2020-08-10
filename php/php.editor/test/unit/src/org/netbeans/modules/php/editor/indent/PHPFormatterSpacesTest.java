@@ -1462,4 +1462,41 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spaces/netbeans2149_04.php", options);
     }
 
+    // PHP 8.0
+    public void testSpacesBeforeMatchParen_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_MATCH_PAREN, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeMatchParen_01.php", options);
+    }
+
+    public void testSpacesBeforeMatchParen_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_MATCH_PAREN, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeMatchParen_02.php", options);
+    }
+
+    public void testSpacesWithinMatchParen_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_MATCH_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinMatchParen_01.php", options);
+    }
+
+    public void testSpacesWithinMatchParen_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_MATCH_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinMatchParen_02.php", options);
+    }
+
+    public void testSpacesBeforeMatchLeftBrace_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_MATCH_LEFT_BRACE, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeMatchLeftBrace_01.php", options);
+    }
+
+    public void testSpacesBeforeMatchLeftBrace_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_MATCH_LEFT_BRACE, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeMatchLeftBrace_02.php", options);
+    }
+
 }

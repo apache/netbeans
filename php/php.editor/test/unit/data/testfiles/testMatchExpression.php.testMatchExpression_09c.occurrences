@@ -1,0 +1,3 @@
+            default =>  MatchExpression::default() . MatchExpression::match . $this->|>MARK_OCCURRENCES:match<|(),
+    public function |>MARK_OCCURRENCES:match<|(): string {
+echo $instance->|>MARK_OCCURRENCES:mat^ch<|();

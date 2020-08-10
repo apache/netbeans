@@ -59,6 +59,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.FinallyClause;
 import org.netbeans.modules.php.editor.parser.astnodes.ForEachStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.ForStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.IfStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.Statement;
 import org.netbeans.modules.php.editor.parser.astnodes.SwitchCase;
@@ -429,6 +430,13 @@ public final class FoldingScanner {
                 }
                 addFold(offsetRange);
             }
+        }
+
+        @Override
+        public void visit(MatchExpression node) {
+            // NETBEANS-4443 PHP 8.0
+            super.visit(node);
+            addFold(node.getBlockRange());
         }
 
         @Override

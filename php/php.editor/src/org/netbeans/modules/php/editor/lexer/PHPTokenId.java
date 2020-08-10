@@ -117,6 +117,7 @@ public enum PHPTokenId implements TokenId {
     PHP_ENCAPSED_AND_WHITESPACE(null, "string"), //NOI18N
     WHITESPACE(null, "whitespace"), //NOI18N
     PHP_SWITCH("switch", "keyword"), //NOI18N
+    PHP_MATCH("match", "keyword"), //NOI18N
     PHP_CONST(null, "keyword"), //NOI18N
     PHP_PUBLIC(null, "keyword"), //NOI18N
     PHP_RETURN(null, "keyword"), //NOI18N

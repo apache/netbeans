@@ -19,6 +19,7 @@
 package org.netbeans.modules.cpplite.editor.spi;
 
 import java.util.List;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -27,6 +28,8 @@ import java.util.List;
 public interface CProjectConfigurationProvider {
 
     public ProjectConfiguration getProjectConfiguration();
+    public void addChangeListener(ChangeListener listener);
+    public void removeChangeListener(ChangeListener listener);
 
     //TODO: factory, accessor
     //TODO: listen on changes

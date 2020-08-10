@@ -73,6 +73,8 @@ import org.netbeans.modules.php.editor.parser.astnodes.InstanceOfExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ListVariable;
+import org.netbeans.modules.php.editor.parser.astnodes.MatchArm;
+import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
@@ -404,6 +406,18 @@ public class DefaultVisitor implements Visitor {
     @Override
     public void visit(ListVariable node) {
         scan(node.getElements());
+    }
+
+    @Override
+    public void visit(MatchArm node) {
+        scan(node.getConditions());
+        scan(node.getExpression());
+    }
+
+    @Override
+    public void visit(MatchExpression node) {
+        scan(node.getExpression());
+        scan(node.getMatchArms());
     }
 
     @Override

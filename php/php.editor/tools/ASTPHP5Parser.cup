@@ -19,6 +19,7 @@
 package org.netbeans.modules.php.editor.parser;
 
 import java.util.*;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.parser.astnodes.*;
 import org.openide.util.Pair;
 
@@ -259,6 +260,7 @@ terminal String T_CLONE;
 terminal String T_AS;
 terminal String T_SWITCH;
 terminal String T_ENDSWITCH;
+terminal String T_MATCH;
 terminal String T_CASE;
 terminal String T_DEFAULT;
 terminal String T_BREAK;
@@ -421,11 +423,17 @@ non terminal List static_array_pair_list;
 non terminal possible_comma;
 non terminal List non_empty_static_array_pair_list;
 non terminal Expression expr;
+non terminal Expression expr_with_error;
 non terminal Expression expr_with_yields;
 non terminal Expression expr_with_yields_and_error;
 non terminal Expression expr_without_class_instance;
 non terminal Expression yield_expr;
 non terminal Expression yield_from_expr;
+non terminal MatchExpression match;
+non terminal List match_arm_list;
+non terminal List non_empty_match_arm_list;
+non terminal MatchArm match_arm;
+non terminal List match_arm_condition_list;
 non terminal ParenthesisExpression parenthesis_expr;
 non terminal Variable reference_variable;
 non terminal Variable variable_class_name;
@@ -860,6 +868,11 @@ T_INCLUDE:reserved
 :}
 
 | T_LIST:reserved
+{:
+    RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_MATCH:reserved
 {:
     RESULT = new Identifier(reservedleft, reservedright, reserved, true);
 :}
@@ -3371,6 +3384,75 @@ T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
     // PHP 8.0: https://wiki.php.net/rfc/throw_expression
     RESULT = new ThrowExpression(tokenleft, exprright, expr);
 :}
+
+| match:match
+{:
+    // PHP 8.0: https://wiki.php.net/rfc/match_expression_v2
+    RESULT = match;
+:}
+;
+
+match ::=
+T_MATCH:token T_OPEN_PARENTHESE expr:expr T_CLOSE_PARENTHESE T_CURLY_OPEN:curly match_arm_list:list T_CURLY_CLOSE:end
+{:
+    RESULT = new MatchExpression(tokenleft, endright, new OffsetRange(curlyleft, endright), expr, list);
+:}
+;
+
+match_arm_list ::=
+/* empty */
+{:
+    RESULT = new ArrayList<>();
+:}
+
+| non_empty_match_arm_list:list possible_comma
+{:
+    RESULT = list;
+:}
+;
+
+non_empty_match_arm_list ::=
+match_arm:arm
+{:
+    List<MatchArm> list = new ArrayList<>();
+    list.add(arm);
+    RESULT = list;
+:}
+
+| non_empty_match_arm_list:list T_COMMA match_arm:arm
+{:
+    list.add(arm);
+    RESULT = list;
+:}
+;
+
+match_arm ::=
+match_arm_condition_list:conditions possible_comma T_DOUBLE_ARROW expr_with_error:expr
+{:
+    RESULT = new MatchArm(conditionsleft, exprright, conditions, expr, false);
+:}
+
+| T_DEFAULT:token possible_comma T_DOUBLE_ARROW expr_with_error:expr
+{:
+    List<Expression> conditions = new ArrayList<>();
+    conditions.add(new Identifier(tokenleft, tokenright, "default"));
+    RESULT = new MatchArm(tokenleft, exprright, conditions, expr, true);
+:}
+;
+
+match_arm_condition_list ::=
+expr_with_error:expr
+{:
+    List<Expression> list = new ArrayList<>();
+    list.add(expr);
+    RESULT = list;
+:}
+
+| match_arm_condition_list:list T_COMMA expr_with_error:expr
+{:
+    list.add(expr);
+    RESULT = list;
+:}
 ;
 
 lexical_vars ::=
@@ -4283,6 +4365,18 @@ r_variable:var
 
 | expr_without_variable:ewv
 {: RESULT = ewv; :}
+;
+
+expr_with_error ::=
+expr:expr
+{:
+    RESULT = expr;
+:}
+
+| error:expr
+{:
+    RESULT = new ASTErrorExpression(exprleft, exprright);
+:}
 ;
 
 expr_with_yields ::=

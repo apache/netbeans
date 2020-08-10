@@ -312,6 +312,11 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
     }
 
     private static boolean canBeAddedSemicolonAfterCloseBrace(PHPTokenId completeIn, TokenSequence<? extends PHPTokenId> ts) {
+        return canBeAddedSemicolonAfterGroupUseCloseBrace(completeIn, ts)
+                || canBeAddedSemicolonAfterMatchExpressionCloseBrace(ts);
+    }
+
+    private static boolean canBeAddedSemicolonAfterGroupUseCloseBrace(PHPTokenId completeIn, TokenSequence<? extends PHPTokenId> ts) {
         return completeIn == PHPTokenId.PHP_USE
                 && isGroupUseCurlyOpen(ts);
     }
@@ -358,7 +363,9 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
                     PHPTokenId.PHP_IF, PHPTokenId.PHP_ELSE, PHPTokenId.PHP_ELSEIF,
                     PHPTokenId.PHP_FOR, PHPTokenId.PHP_FOREACH, PHPTokenId.PHP_TRY,
                     PHPTokenId.PHP_DO, PHPTokenId.PHP_WHILE, PHPTokenId.PHP_TOKEN,
-                    PHPTokenId.PHP_SWITCH, PHPTokenId.PHP_CASE, PHPTokenId.PHP_OPENTAG, PHPTokenId.PHP_DEFAULT);
+                    PHPTokenId.PHP_SWITCH, PHPTokenId.PHP_CASE, PHPTokenId.PHP_OPENTAG, PHPTokenId.PHP_DEFAULT,
+                    PHPTokenId.PHP_MATCH
+            );
             Token<? extends PHPTokenId> keyToken = LexUtilities.findPreviousToken(ts, lookFor);
             while (keyToken.id() == PHPTokenId.PHP_TOKEN) {
                 if (TokenUtilities.textEquals(keyToken.text(), "?")) { // NOI18N
@@ -835,6 +842,62 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
             ts.move(originalOffset);
             ts.moveNext();
         }
+        return result;
+    }
+
+    private static boolean canBeAddedSemicolonAfterMatchExpressionCloseBrace(TokenSequence<? extends PHPTokenId> ts) {
+        boolean result = false;
+        int originalOffset = ts.offset();
+        int curlyBalance = 0;
+        while (ts.movePrevious()) {
+            PHPTokenId tokenId = ts.token().id();
+            if (tokenId == PHPTokenId.PHP_SEMICOLON) {
+                break;
+            }
+            if (tokenId == PHPTokenId.PHP_MATCH && ts.movePrevious()) {
+                // match (true) { true => function(){^}
+                if (curlyBalance != 1) {
+                    break;
+                }
+                List<PHPTokenId> ignores = Arrays.asList(
+                        PHPTokenId.PHPDOC_COMMENT_START,
+                        PHPTokenId.PHPDOC_COMMENT,
+                        PHPTokenId.PHPDOC_COMMENT_END,
+                        PHPTokenId.PHP_COMMENT_START,
+                        PHPTokenId.PHP_COMMENT,
+                        PHPTokenId.PHP_COMMENT_END,
+                        PHPTokenId.PHP_LINE_COMMENT,
+                        PHPTokenId.WHITESPACE
+                );
+                Token<? extends PHPTokenId> token = LexUtilities.findPrevious(ts, ignores);
+                if (token.id() == PHPTokenId.PHP_RETURN
+                        || token.id() == PHPTokenId.PHP_ECHO) {
+                    // return match() {} or echo match() {}
+                    result = true;
+                } else if (token.id() == PHPTokenId.PHP_OPERATOR
+                        && TokenUtilities.textEquals(token.text(), "=") // NOI18N
+                        && ts.movePrevious()) {
+                    // $variable = match() {}
+                    token = LexUtilities.findPrevious(ts, ignores);
+                    if (token.id() == PHPTokenId.PHP_VARIABLE && ts.movePrevious()) {
+                        token = LexUtilities.findPrevious(ts, ignores);
+                        if (token.id() == PHPTokenId.PHP_SEMICOLON
+                                || token.id() == PHPTokenId.PHP_CURLY_OPEN
+                                || token.id() == PHPTokenId.PHP_CURLY_CLOSE
+                                || token.id() == PHPTokenId.PHP_OPENTAG) {
+                            result = true;
+                        }
+                    }
+                }
+                break;
+            } else if (tokenId == PHPTokenId.PHP_CURLY_OPEN) {
+                curlyBalance++;
+            } else if (tokenId == PHPTokenId.PHP_CURLY_CLOSE) {
+                curlyBalance--;
+            }
+        }
+        ts.move(originalOffset);
+        ts.moveNext();
         return result;
     }
 

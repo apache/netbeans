@@ -1070,4 +1070,50 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php80/classNameLiteralOnObjects_01.php");
     }
 
+    public void testMatchExpression_01() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpression_01.php");
+    }
+
+    public void testMatchExpression_02() throws Exception {
+        // nested match
+        checkErrors("testfiles/parser/php80/matchExpression_02.php");
+    }
+
+    public void testMatchExpression_03() throws Exception {
+        // multiple conditions
+        checkErrors("testfiles/parser/php80/matchExpression_03.php");
+    }
+
+    public void testMatchExpression_04() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpression_04.php");
+    }
+
+    public void testMatchExpression_05() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpression_05.php");
+    }
+
+    public void testMatchExpressionError_01() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_01.php");
+    }
+
+    public void testMatchExpressionError_02() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_02.php");
+    }
+
+    public void testMatchExpressionError_03() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_03.php");
+    }
+
+    public void testMatchExpressionError_04() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_04.php");
+    }
+
+    public void testMatchExpressionError_05() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_05.php");
+    }
+
+    public void testMatchExpressionError_06() throws Exception {
+        checkErrors("testfiles/parser/php80/matchExpressionError_06.php");
+    }
+
 }

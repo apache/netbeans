@@ -71,6 +71,8 @@ import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ListVariable;
+import org.netbeans.modules.php.editor.parser.astnodes.MatchArm;
+import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
@@ -454,7 +456,7 @@ public class FormatVisitor extends DefaultVisitor {
             } else if (parent instanceof DoStatement) {
                 formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_DO_LEFT_BRACE, ts.offset()));
             } else if (parent instanceof SwitchStatement) {
-                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_SWITCH_LEFT_BACE, ts.offset()));
+                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_SWITCH_LEFT_BRACE, ts.offset()));
             } else if (parent instanceof TryStatement) {
                 formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_TRY_LEFT_BRACE, ts.offset()));
             } else if (parent instanceof CatchClause) {
@@ -556,7 +558,7 @@ public class FormatVisitor extends DefaultVisitor {
                         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_WHILE_RIGHT_BRACE, ts.offset()));
                         addFormatToken(formatTokens);
                     } else if (parent instanceof SwitchStatement) {
-                        formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_SWITCH_RIGHT_BACE, ts.offset()));
+                        formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_SWITCH_RIGHT_BRACE, ts.offset()));
                         addFormatToken(formatTokens);
                     } else if (parent instanceof CatchClause || parent instanceof TryStatement || parent instanceof FinallyClause) {
                         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_CATCH_RIGHT_BRACE, ts.offset()));
@@ -976,11 +978,14 @@ public class FormatVisitor extends DefaultVisitor {
                     // anonymous classes
                     Assignment assignment = (Assignment) expression;
                     Expression right = assignment.getRightHandSide();
-                    if (isAnonymousClass(right) || right instanceof LambdaFunctionDeclaration) {
+                    if (isAnonymousClass(right)
+                            || right instanceof LambdaFunctionDeclaration
+                            || right instanceof MatchExpression) {
                         addIndent = false;
                     }
                 } else if (expression instanceof LambdaFunctionDeclaration
-                        || expression instanceof ArrowFunctionDeclaration) {
+                        || expression instanceof ArrowFunctionDeclaration
+                        || expression instanceof MatchExpression) {
                     addIndent = false;
                 }
                 if (addIndent) {
@@ -1166,10 +1171,7 @@ public class FormatVisitor extends DefaultVisitor {
 
     @Override
     public void visit(LambdaFunctionDeclaration node) {
-        if (path.get(1) instanceof FunctionInvocation) {
-            // #233353 disable indent for function invocation temporarily
-            formatTokens.add(new FormatToken.IndentToken(node.getStartOffset(), -1 * options.continualIndentSize));
-        }
+        disableIndentForFunctionInvocation(node.getStartOffset());
 
         List<FormalParameter> parameters = node.getFormalParameters();
         Block body = node.getBody();
@@ -1202,9 +1204,20 @@ public class FormatVisitor extends DefaultVisitor {
             scan(body);
         }
 
+        enableIndentForFunctionInvocation(node.getEndOffset());
+    }
+
+    private void disableIndentForFunctionInvocation(int offset) {
+        if (path.get(1) instanceof FunctionInvocation) {
+            // #233353 disable indent for function invocation temporarily
+            formatTokens.add(new FormatToken.IndentToken(offset, -1 * options.continualIndentSize));
+        }
+    }
+
+    private void enableIndentForFunctionInvocation(int offset) {
         if (path.get(1) instanceof FunctionInvocation) {
             // #233353 enable indent for function invocation
-            formatTokens.add(new FormatToken.IndentToken(node.getEndOffset(), options.continualIndentSize));
+            formatTokens.add(new FormatToken.IndentToken(offset, options.continualIndentSize));
         }
     }
 
@@ -1556,7 +1569,8 @@ public class FormatVisitor extends DefaultVisitor {
         }
 
         boolean addIndent = !isAnonymousClass(node.getExpression())
-                && !(path.size() > 2 && path.get(2) instanceof LambdaFunctionDeclaration); // #259111
+                && !(path.size() > 2 && path.get(2) instanceof LambdaFunctionDeclaration) // #259111
+                && !(node.getExpression() instanceof MatchExpression);
 
         if (ts.token().id() == PHPTokenId.PHP_RETURN) {
             addFormatToken(formatTokens);
@@ -1641,6 +1655,55 @@ public class FormatVisitor extends DefaultVisitor {
             addAllUntilOffset(node.getEndOffset());
         } else {
             scan(node.getBody());
+        }
+    }
+
+    @Override
+    public void visit(MatchExpression node) {
+        disableIndentForFunctionInvocation(node.getStartOffset());
+
+        scan(node.getExpression());
+
+        addWhitespaceBeforeMatchLeftBraceToken(node);
+        List<MatchArm> matchArms = node.getMatchArms();
+        if (!matchArms.isEmpty()) {
+            MatchArm first = matchArms.get(0);
+            addAllUntilOffset(first.getStartOffset());
+            formatTokens.add(new FormatToken.IndentToken(first.getStartOffset(), options.indentSize));
+            scan(node.getMatchArms());
+            MatchArm last = matchArms.get(matchArms.size() - 1);
+            formatTokens.add(new FormatToken.IndentToken(last.getEndOffset(), -1 * options.indentSize));
+        }
+        addWhitespaceBeforeMatchRightBraceToken(node);
+
+        enableIndentForFunctionInvocation(node.getEndOffset());
+    }
+
+    private void addWhitespaceBeforeMatchRightBraceToken(MatchExpression node) {
+        // find }
+        while (moveNext() && ts.offset() < node.getEndOffset()
+                && (ts.offset() + ts.token().length()) <= node.getEndOffset()) {
+            Token<PHPTokenId> token = ts.token();
+            if (token.id() == PHPTokenId.PHP_CURLY_CLOSE) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_MATCH_RIGHT_BRACE, ts.offset()));
+                addFormatToken(formatTokens);
+                break;
+            }
+            addFormatToken(formatTokens);
+        }
+    }
+
+    private void addWhitespaceBeforeMatchLeftBraceToken(MatchExpression node) {
+        // find {
+        while (moveNext() && ts.offset() < node.getEndOffset()
+                && (ts.offset() + ts.token().length()) <= node.getEndOffset()) {
+            Token<PHPTokenId> token = ts.token();
+            if (token.id() == PHPTokenId.PHP_CURLY_OPEN) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_MATCH_LEFT_BRACE, ts.offset()));
+                addFormatToken(formatTokens);
+                break;
+            }
+            addFormatToken(formatTokens);
         }
     }
 
@@ -1997,6 +2060,10 @@ public class FormatVisitor extends DefaultVisitor {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_SWITCH_PAREN, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_SWITCH_PARENS, ts.offset() + ts.token().length()));
+                    } else if (parent instanceof MatchExpression) {
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_MATCH_PAREN, ts.offset()));
+                        tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_MATCH_PARENS, ts.offset() + ts.token().length()));
                     } else if (parent instanceof CatchClause) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_CATCH_PAREN, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
@@ -2030,6 +2097,9 @@ public class FormatVisitor extends DefaultVisitor {
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     } else if (parent instanceof SwitchStatement) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_SWITCH_PARENS, ts.offset()));
+                        tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                    } else if (parent instanceof MatchExpression) {
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_MATCH_PARENS, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     } else if (parent instanceof CatchClause) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_CATCH_PARENS, ts.offset()));

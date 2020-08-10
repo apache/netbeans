@@ -541,6 +541,10 @@ PHP_TYPE_OBJECT=[o][b][j][e][c][t]
     return PHPTokenId.PHP_ENDSWITCH;
 }
 
+<ST_PHP_IN_SCRIPTING>"match" {
+    return PHPTokenId.PHP_MATCH;
+}
+
 <ST_PHP_IN_SCRIPTING>"case" {
     return PHPTokenId.PHP_CASE;
 }

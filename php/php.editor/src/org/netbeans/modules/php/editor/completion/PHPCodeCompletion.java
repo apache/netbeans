@@ -164,6 +164,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         PHP_KEYWORDS.put("throw", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("if", KeywordCompletionType.CURSOR_INSIDE_BRACKETS); //NOI18N
         PHP_KEYWORDS.put("switch", KeywordCompletionType.CURSOR_INSIDE_BRACKETS); //NOI18N
+        PHP_KEYWORDS.put("match", KeywordCompletionType.CURSOR_INSIDE_BRACKETS); //NOI18N
         PHP_KEYWORDS.put("for", KeywordCompletionType.CURSOR_INSIDE_BRACKETS); //NOI18N
         PHP_KEYWORDS.put("array", KeywordCompletionType.CURSOR_INSIDE_BRACKETS); //NOI18N
         PHP_KEYWORDS.put("foreach", KeywordCompletionType.CURSOR_INSIDE_BRACKETS); //NOI18N
@@ -171,6 +172,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         PHP_KEYWORDS.put("catch", KeywordCompletionType.CURSOR_INSIDE_BRACKETS); //NOI18N
         PHP_KEYWORDS.put("try", KeywordCompletionType.ENDS_WITH_CURLY_BRACKETS); //NOI18N
         PHP_KEYWORDS.put("default", KeywordCompletionType.ENDS_WITH_COLON); //NOI18N
+        PHP_KEYWORDS.put("default =>", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N PHP 8.0 match expression
         PHP_KEYWORDS.put("break", KeywordCompletionType.ENDS_WITH_SEMICOLON); //NOI18N
         PHP_KEYWORDS.put("endif", KeywordCompletionType.ENDS_WITH_SEMICOLON); //NOI18N
         PHP_KEYWORDS.put("endfor", KeywordCompletionType.ENDS_WITH_SEMICOLON); //NOI18N
@@ -214,6 +216,21 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             "array", // NOI18N
             "self::", // NOI18N
             "parent::" // NOI18N
+    );
+    private static final List<String> PHP_MATCH_EXPRESSION_KEYWORDS = Arrays.asList(
+            "function", // NOI18N
+            "fn", // NOI18N
+            "new", // NOI18N
+            "static", // NOI18N
+            "instanceof", // NOI18N
+            "clone", // NOI18N
+            "throw", // NOI18N
+            "match", // NOI18N
+            "array", // NOI18N
+            "default =>", // NOI18N
+            "and", // NOI18N
+            "or", // NOI18N
+            "xor" // NOI18N
     );
     private static final Collection<Character> AUTOPOPUP_STOP_CHARS = new TreeSet<>(
             Arrays.asList('=', ';', '+', '-', '*', '/',
@@ -370,10 +387,18 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             case GLOBAL:
                 autoCompleteGlobals(completionResult, request);
                 break;
+            case MATCH_EXPRESSION:
+                autoCompleteNamespaces(completionResult, request);
+                autoCompleteExpression(completionResult, request, PHP_MATCH_EXPRESSION_KEYWORDS);
+                break;
             case EXPRESSION:
                 autoCompleteNamespaces(completionResult, request);
-                autoCompleteExpression(completionResult, request);
+                List<String> defaultKeywords = new ArrayList<>(PHP_KEYWORDS.keySet());
+                defaultKeywords.remove("default =>"); // NOI18N
+                autoCompleteExpression(completionResult, request, defaultKeywords);
                 break;
+
+
             case GLOBAL_CONST_EXPRESSION:
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteTypeNames(completionResult, request, null, true);
@@ -1458,12 +1483,12 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         return null;
     }
 
-    private void autoCompleteExpression(final PHPCompletionResult completionResult, PHPCompletionItem.CompletionRequest request) {
+    private void autoCompleteExpression(final PHPCompletionResult completionResult, PHPCompletionItem.CompletionRequest request, List<String> keywords) {
         if (CancelSupport.getDefault().isCancelled()) {
             return;
         }
         // KEYWORDS
-        for (String keyword : PHP_KEYWORDS.keySet()) {
+        for (String keyword : keywords) {
             if (startsWith(keyword, request.prefix)) {
                 completionResult.add(new PHPCompletionItem.KeywordItem(keyword, request));
             }

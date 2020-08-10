@@ -132,6 +132,10 @@ public interface Visitor {
     //public void endVisit(GlobalStatement globalStatement);
     public void visit(Identifier identifier);
 
+    public void visit(MatchArm matchArm);
+
+    public void visit(MatchExpression matchExpression);
+
     //public void endVisit(Identifier identifier);
     public void visit(NamespaceName namespaceName);
 

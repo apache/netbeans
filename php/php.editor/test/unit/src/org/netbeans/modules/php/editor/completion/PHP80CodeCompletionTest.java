@@ -109,4 +109,80 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
         // No completion items
         checkCompletion(getTestPath("classNameLiteralOnObjects"), "var_dump($test->noReturnTypes()::^class)", false);
     }
+
+    public void testMatchExpressionSimple01() throws Exception {
+        checkCompletion(getTestPath("matchExpressionSimple01"), "$result = match^", false);
+    }
+
+    public void testMatchExpressionSimple02() throws Exception {
+        checkCompletion(getTestPath("matchExpressionSimple02"), "$result = match (^)", false);
+    }
+
+    public void testMatchExpressionSimple03() throws Exception {
+        checkCompletion(getTestPath("matchExpressionSimple03"), "    ^", false);
+    }
+
+    public void testMatchExpressionSimple04() throws Exception {
+        checkCompletion(getTestPath("matchExpressionSimple04"), "    \"match test\", ^", false);
+    }
+
+    public void testMatchExpressionSimple05_01() throws Exception {
+        checkCompletion(getTestPath("matchExpressionSimple05"), "    \"match test\" => ^", false);
+    }
+
+    public void testMatchExpressionSimple05_02() throws Exception {
+        checkCompletion(getTestPath("matchExpressionSimple05"), "    \"match test\" => matchT^est(),", false);
+    }
+
+    public void testMatchExpressionSimple05_03() throws Exception {
+        checkCompletion(getTestPath("matchExpressionSimple05"), "    \"match test\" => matchT^", false);
+    }
+
+    public void testMatchExpressionSimple06() throws Exception {
+        checkCompletion(getTestPath("matchExpressionSimple06"), "    MATCH_^", false);
+    }
+
+    public void testMatchExpressionInClass_01() throws Exception {
+        checkCompletion(getTestPath("matchExpressionInClass"), "        return match (^$state) {", false);
+    }
+
+    public void testMatchExpressionInClass_02() throws Exception {
+        checkCompletion(getTestPath("matchExpressionInClass"), "            ^MatchExpression::START => self::$start,", false);
+    }
+
+    public void testMatchExpressionInClass_03() throws Exception {
+        checkCompletion(getTestPath("matchExpressionInClass"), "            MatchExpression::^START => self::$start,", false);
+    }
+
+    public void testMatchExpressionInClass_04() throws Exception {
+        checkCompletion(getTestPath("matchExpressionInClass"), "            MatchExpression::START => ^self::$start,", false);
+    }
+
+    public void testMatchExpressionInClass_05() throws Exception {
+        checkCompletion(getTestPath("matchExpressionInClass"), "            MatchExpression::START => self::^$start,", false);
+    }
+
+    public void testMatchExpressionInClass_06() throws Exception {
+        checkCompletion(getTestPath("matchExpressionInClass"), "            MatchExpression::SUSP^END => $this->suspend,", false);
+    }
+
+    public void testMatchExpressionInClass_07() throws Exception {
+        checkCompletion(getTestPath("matchExpressionInClass"), "            MatchExpression::SUSPEND => $this->^suspend,", false);
+    }
+
+    public void testMatchExpressionInClass_08() throws Exception {
+        checkCompletion(getTestPath("matchExpressionInClass"), "            MatchExpression::STOP,^ => $this->stopState(),", false);
+    }
+
+    public void testMatchExpressionInClassSimple01() throws Exception {
+        checkCompletion(getTestPath("matchExpressionInClassSimple01"), "        return match (^)", false);
+    }
+
+    public void testMatchExpressionInClassSimple02() throws Exception {
+        checkCompletion(getTestPath("matchExpressionInClassSimple02"), "            ^", false);
+    }
+
+    public void testMatchExpressionInClassSimple03() throws Exception {
+        checkCompletion(getTestPath("matchExpressionInClassSimple03"), "            $this->suspend => ^", false);
+    }
 }

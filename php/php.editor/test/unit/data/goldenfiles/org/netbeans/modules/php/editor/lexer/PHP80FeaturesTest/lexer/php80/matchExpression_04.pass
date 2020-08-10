@@ -1,0 +1,257 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_COMMENT_START /*
+token #3 PHP_COMMENT \n * Licensed to the Apache Software Foundation (ASF) under one\n * or more contributor license agreements.  See the NOTICE file\n * distributed with this work for additional information\n * regarding copyright ownership.  The ASF licenses this file\n * to you under the Apache License, Version 2.0 (the\n * "License"); you may not use this file except in compliance\n * with the License.  You may obtain a copy of the License at\n *\n *   http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing,\n * software distributed under the License is distributed on an\n * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n * KIND, either express or implied.  See the License for the\n * specific language governing permissions and limitations\n * under the License.\n 
+token #4 PHP_COMMENT_END */
+token #5 WHITESPACE \n\n
+token #6 PHP_CLASS class
+token #7 WHITESPACE  
+token #8 PHP_STRING MatchExpression
+token #9 WHITESPACE \n
+token #10 PHP_CURLY_OPEN {
+token #11 WHITESPACE \n    
+token #12 PHP_PUBLIC public
+token #13 WHITESPACE  
+token #14 PHP_CONST const
+token #15 WHITESPACE  
+token #16 PHP_STRING START
+token #17 WHITESPACE  
+token #18 PHP_OPERATOR =
+token #19 WHITESPACE  
+token #20 PHP_CONSTANT_ENCAPSED_STRING "start"
+token #21 PHP_SEMICOLON ;
+token #22 WHITESPACE \n    
+token #23 PHP_PUBLIC public
+token #24 WHITESPACE  
+token #25 PHP_CONST const
+token #26 WHITESPACE  
+token #27 PHP_STRING SUSPEND
+token #28 WHITESPACE  
+token #29 PHP_OPERATOR =
+token #30 WHITESPACE  
+token #31 PHP_CONSTANT_ENCAPSED_STRING "suspend"
+token #32 PHP_SEMICOLON ;
+token #33 WHITESPACE \n    
+token #34 PHP_PUBLIC public
+token #35 WHITESPACE  
+token #36 PHP_CONST const
+token #37 WHITESPACE  
+token #38 PHP_STRING STOP
+token #39 WHITESPACE  
+token #40 PHP_OPERATOR =
+token #41 WHITESPACE  
+token #42 PHP_CONSTANT_ENCAPSED_STRING "stop"
+token #43 PHP_SEMICOLON ;
+token #44 WHITESPACE \n\n    
+token #45 PHP_PRIVATE private
+token #46 WHITESPACE  
+token #47 PHP_STATIC static
+token #48 WHITESPACE  
+token #49 PHP_VARIABLE $start
+token #50 WHITESPACE  
+token #51 PHP_OPERATOR =
+token #52 WHITESPACE  
+token #53 PHP_CONSTANT_ENCAPSED_STRING "start state"
+token #54 PHP_SEMICOLON ;
+token #55 WHITESPACE \n    
+token #56 PHP_PRIVATE private
+token #57 WHITESPACE  
+token #58 PHP_VARIABLE $suspend
+token #59 WHITESPACE  
+token #60 PHP_OPERATOR =
+token #61 WHITESPACE  
+token #62 PHP_CONSTANT_ENCAPSED_STRING "suspend state"
+token #63 PHP_SEMICOLON ;
+token #64 WHITESPACE \n    
+token #65 PHP_PRIVATE private
+token #66 WHITESPACE  
+token #67 PHP_CONST const
+token #68 WHITESPACE  
+token #69 PHP_STRING match
+token #70 WHITESPACE  
+token #71 PHP_OPERATOR =
+token #72 WHITESPACE  
+token #73 PHP_CONSTANT_ENCAPSED_STRING "match"
+token #74 PHP_SEMICOLON ;
+token #75 WHITESPACE  
+token #76 PHP_LINE_COMMENT //
+token #77 PHP_LINE_COMMENT  context sensitive lexer\n
+token #78 WHITESPACE \n    
+token #79 PHP_PUBLIC public
+token #80 WHITESPACE  
+token #81 PHP_FUNCTION function
+token #82 WHITESPACE  
+token #83 PHP_STRING run
+token #84 PHP_TOKEN (
+token #85 PHP_TOKEN )
+token #86 PHP_TOKEN :
+token #87 WHITESPACE  
+token #88 PHP_TYPE_STRING string
+token #89 WHITESPACE  
+token #90 PHP_CURLY_OPEN {
+token #91 WHITESPACE \n        
+token #92 PHP_VARIABLE $state
+token #93 WHITESPACE  
+token #94 PHP_OPERATOR =
+token #95 WHITESPACE  
+token #96 PHP_SELF self
+token #97 PHP_PAAMAYIM_NEKUDOTAYIM ::
+token #98 PHP_STRING STOP
+token #99 PHP_SEMICOLON ;
+token #100 WHITESPACE \n        
+token #101 PHP_RETURN return
+token #102 WHITESPACE  
+token #103 PHP_MATCH match
+token #104 PHP_TOKEN (
+token #105 PHP_VARIABLE $state
+token #106 PHP_TOKEN )
+token #107 WHITESPACE  
+token #108 PHP_CURLY_OPEN {
+token #109 WHITESPACE \n            
+token #110 PHP_STRING MatchExpression
+token #111 PHP_PAAMAYIM_NEKUDOTAYIM ::
+token #112 PHP_STRING START
+token #113 WHITESPACE  
+token #114 PHP_OPERATOR =>
+token #115 WHITESPACE  
+token #116 PHP_SELF self
+token #117 PHP_PAAMAYIM_NEKUDOTAYIM ::
+token #118 PHP_VARIABLE $start
+token #119 PHP_TOKEN ,
+token #120 WHITESPACE \n            
+token #121 PHP_STRING MatchExpression
+token #122 PHP_PAAMAYIM_NEKUDOTAYIM ::
+token #123 PHP_STRING SUSPEND
+token #124 WHITESPACE  
+token #125 PHP_OPERATOR =>
+token #126 WHITESPACE  
+token #127 PHP_VARIABLE $this
+token #128 PHP_OBJECT_OPERATOR ->
+token #129 PHP_STRING suspend
+token #130 PHP_TOKEN ,
+token #131 WHITESPACE \n            
+token #132 PHP_STRING MatchExpression
+token #133 PHP_PAAMAYIM_NEKUDOTAYIM ::
+token #134 PHP_STRING STOP
+token #135 WHITESPACE  
+token #136 PHP_OPERATOR =>
+token #137 WHITESPACE  
+token #138 PHP_VARIABLE $this
+token #139 PHP_OBJECT_OPERATOR ->
+token #140 PHP_STRING stopState
+token #141 PHP_TOKEN (
+token #142 PHP_TOKEN )
+token #143 PHP_TOKEN ,
+token #144 WHITESPACE \n            
+token #145 PHP_DEFAULT default
+token #146 WHITESPACE  
+token #147 PHP_OPERATOR =>
+token #148 WHITESPACE  
+token #149 PHP_STRING MatchExpression
+token #150 PHP_PAAMAYIM_NEKUDOTAYIM ::
+token #151 PHP_STRING default
+token #152 PHP_TOKEN (
+token #153 PHP_TOKEN )
+token #154 PHP_TOKEN ,
+token #155 WHITESPACE \n        
+token #156 PHP_CURLY_CLOSE }
+token #157 PHP_SEMICOLON ;
+token #158 WHITESPACE \n    
+token #159 PHP_CURLY_CLOSE }
+token #160 WHITESPACE \n\n    
+token #161 PHP_PUBLIC public
+token #162 WHITESPACE  
+token #163 PHP_FUNCTION function
+token #164 WHITESPACE  
+token #165 PHP_STRING stopState
+token #166 PHP_TOKEN (
+token #167 PHP_TOKEN )
+token #168 PHP_TOKEN :
+token #169 WHITESPACE  
+token #170 PHP_TYPE_STRING string
+token #171 WHITESPACE  
+token #172 PHP_CURLY_OPEN {
+token #173 WHITESPACE \n        
+token #174 PHP_RETURN return
+token #175 WHITESPACE  
+token #176 PHP_CONSTANT_ENCAPSED_STRING "stop state"
+token #177 PHP_SEMICOLON ;
+token #178 WHITESPACE \n    
+token #179 PHP_CURLY_CLOSE }
+token #180 WHITESPACE \n\n    
+token #181 PHP_PUBLIC public
+token #182 WHITESPACE  
+token #183 PHP_STATIC static
+token #184 WHITESPACE  
+token #185 PHP_FUNCTION function
+token #186 WHITESPACE  
+token #187 PHP_STRING default
+token #188 PHP_TOKEN (
+token #189 PHP_TOKEN )
+token #190 PHP_TOKEN :
+token #191 WHITESPACE  
+token #192 PHP_TYPE_STRING string
+token #193 WHITESPACE  
+token #194 PHP_CURLY_OPEN {
+token #195 WHITESPACE \n        
+token #196 PHP_RETURN return
+token #197 WHITESPACE  
+token #198 PHP_CONSTANT_ENCAPSED_STRING "default"
+token #199 PHP_SEMICOLON ;
+token #200 WHITESPACE \n    
+token #201 PHP_CURLY_CLOSE }
+token #202 WHITESPACE \n\n    
+token #203 PHP_PUBLIC public
+token #204 WHITESPACE  
+token #205 PHP_FUNCTION function
+token #206 WHITESPACE  
+token #207 PHP_STRING match
+token #208 PHP_TOKEN (
+token #209 PHP_TOKEN )
+token #210 PHP_TOKEN :
+token #211 WHITESPACE  
+token #212 PHP_TYPE_VOID void
+token #213 WHITESPACE  
+token #214 PHP_CURLY_OPEN {
+token #215 WHITESPACE \n        
+token #216 PHP_ECHO echo
+token #217 WHITESPACE  
+token #218 PHP_CONSTANT_ENCAPSED_STRING "Context Sensitive Lexer"
+token #219 WHITESPACE  
+token #220 PHP_TOKEN .
+token #221 WHITESPACE  
+token #222 PHP_STRING PHP_EOL
+token #223 PHP_SEMICOLON ;
+token #224 WHITESPACE \n    
+token #225 PHP_CURLY_CLOSE }
+token #226 WHITESPACE \n
+token #227 PHP_CURLY_CLOSE }
+token #228 WHITESPACE \n\n
+token #229 PHP_VARIABLE $instance
+token #230 WHITESPACE  
+token #231 PHP_OPERATOR =
+token #232 WHITESPACE  
+token #233 PHP_NEW new
+token #234 WHITESPACE  
+token #235 PHP_STRING MatchExpression
+token #236 PHP_TOKEN (
+token #237 PHP_TOKEN )
+token #238 PHP_SEMICOLON ;
+token #239 WHITESPACE \n
+token #240 PHP_STRING var_dump
+token #241 PHP_TOKEN (
+token #242 PHP_VARIABLE $instance
+token #243 PHP_OBJECT_OPERATOR ->
+token #244 PHP_STRING run
+token #245 PHP_TOKEN (
+token #246 PHP_TOKEN )
+token #247 PHP_TOKEN )
+token #248 PHP_SEMICOLON ;
+token #249 WHITESPACE \n
+token #250 PHP_VARIABLE $instance
+token #251 PHP_OBJECT_OPERATOR ->
+token #252 PHP_STRING match
+token #253 PHP_TOKEN (
+token #254 PHP_TOKEN )
+token #255 PHP_SEMICOLON ;
+token #256 WHITESPACE \n

@@ -312,6 +312,9 @@ public final class Utils {
             case ASTPHP5Symbols.T_METHOD_C:
                 name = "T_METHOD_C"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_MATCH:
+                name = "T_MATCH"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_MINUS:
                 name = "T_MINUS"; //NOI18N
                 break;

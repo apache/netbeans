@@ -1,0 +1,4 @@
+Code completion result for source line:
+MATCH_|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   MATCH_TEST_CONST "match test c  [PUBLIC]   matchExpressionSimple06.php

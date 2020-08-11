@@ -1,8 +1,8 @@
-Name: Jakarta Mail API 1.6.4
-Version: 1.6.4
+Name: JakartaEE API 8.0.0 Documentation
+Version: 8.0.0
 License: EPL-v20
-Description: Jakarta Mail API 1.6.4
-Origin: Eclipse Foundation (https://mvnrepository.com/artifact/jakarta.mail/jakarta.mail-api/1.6.4)
+Description: JakartaEE API 8.0.0 Documentation
+Origin: Eclipse Foundation (https://mvnrepository.com/artifact/jakarta.platform/jakarta.jakartaee-api/8.0.0)
 
 
 Eclipse Public License - v 2.0

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,14 +19,14 @@
     under the License.
 
 -->
-<!DOCTYPE library PUBLIC "-//NetBeans//DTD Library Declaration 1.0//EN" "http://www.netbeans.org/dtds/library-declaration-1_0.dtd">
-
-<library version="1.0">
-    <name>javac-api</name>
-    <type>j2se</type>
-    <localizing-bundle>org/netbeans/libs/javacapi/Bundle</localizing-bundle>
-    <volume>
-        <type>classpath</type>
-        <resource>jar:nbinst://org.netbeans.libs.javacapi/modules/ext/nb-javac-api.jar!/</resource>
-    </volume>
-</library>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
+            <code-name-base>org.netbeans.modules.jakartaee8.platform</code-name-base>
+            <module-dependencies>
+                </module-dependencies>
+           <public-packages/>
+        </data>
+    </configuration>
+</project>

@@ -1,9 +1,9 @@
-Name: Jakarta Management API 1.1.4
-Version: 1.1.4
+Name: JakartaEE API 8.0.0 Documentation
+Version: 8.0.0
 License: EPL-v20
-Description: Jakarta Management API 1.1.4
-Origin: Eclipse Foundation (https://mvnrepository.com/artifact/jakarta.management.j2ee/jakarta.management.j2ee-api/1.1.4)
-
+Description: JakartaEE API 8.0.0 Documentation
+Origin: Generated from jakarta.jakartaee-api-8.0.0-javadoc.jar
+Type: generated
 
 Eclipse Public License - v 2.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.

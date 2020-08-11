@@ -494,11 +494,11 @@ public final class CreateElement implements ErrorRule<Void> {
 
             int identifierPos = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), errorPath.getLeaf());
             if (ee != null && fixTypes.contains(ElementKind.PARAMETER) && !Utilities.isMethodHeaderInsideGuardedBlock(info, (MethodTree) firstMethod.getLeaf()))
-                result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.PARAMETER, identifierPos));
+                result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.PARAMETER, identifierPos).toEditorFix());
             if ((firstMethod != null || firstInitializer != null) && fixTypes.contains(ElementKind.LOCAL_VARIABLE) && ErrorFixesFakeHint.enabled(ErrorFixesFakeHint.FixKind.CREATE_LOCAL_VARIABLE))
-                result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.LOCAL_VARIABLE, identifierPos));
+                result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.LOCAL_VARIABLE, identifierPos).toEditorFix());
             if (fixTypes.contains(ElementKind.RESOURCE_VARIABLE))
-                result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.RESOURCE_VARIABLE, identifierPos));
+                result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.RESOURCE_VARIABLE, identifierPos).toEditorFix());
         }
 
         return result;

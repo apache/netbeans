@@ -54,11 +54,15 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.lexer.Token;
+import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
+import org.netbeans.modules.textmate.lexer.TextmateTokenId;
 import org.netbeans.spi.editor.completion.CompletionDocumentation;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
@@ -223,8 +227,9 @@ public class CompletionProviderImpl implements CompletionProvider {
                             public void processKeyEvent(KeyEvent ke) {
                                 if (ke.getID() == KeyEvent.KEY_TYPED) {
                                     String commitText = String.valueOf(ke.getKeyChar());
+                                    List<String> commitCharacters = i.getCommitCharacters();
 
-                                    if (i.getCommitCharacters().contains(commitText)) {
+                                    if (commitCharacters != null && commitCharacters.contains(commitText)) {
                                         commit(commitText);
                                         ke.consume();
                                         if (isTriggerCharacter(server, commitText)) {

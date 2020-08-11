@@ -87,12 +87,14 @@ public class UnconfiguredHint implements Runnable {
             return ;
         }
         List<ErrorDescription> errors = new ArrayList<>();
-        String ccls = Utils.settings().get(Utils.KEY_CCLS_PATH, null);
-        if (ccls == null || !new File(ccls).canExecute() || !new File(ccls).isFile()) {
-            errors.add(ErrorDescriptionFactory.createErrorDescription(Severity.WARNING, "ccls not configured!", Collections.singletonList(new ConfigureCCLS()), doc, 0));
+        String ccls = Utils.getCCLSPath();
+        String clangd = Utils.getCLANGDPath();
+        if ((ccls == null || !new File(ccls).canExecute() || !new File(ccls).isFile()) &&
+            (clangd == null || !new File(clangd).canExecute() || !new File(clangd).isFile())) {
+            errors.add(ErrorDescriptionFactory.createErrorDescription(Severity.WARNING, "Neither ccls nor clangd configured!", Collections.singletonList(new ConfigureCCLS()), doc, 0));
         } else {
             Project prj = FileOwnerQuery.getOwner(file);
-            if (LanguageServerImpl.getProjectSettings(prj) == null) {
+            if (prj != null && LanguageServerImpl.getCompileCommandsDir(prj) == null) {
                 errors.add(ErrorDescriptionFactory.createErrorDescription(Severity.WARNING, "compile commands not configured", doc, 0));
             }
         }

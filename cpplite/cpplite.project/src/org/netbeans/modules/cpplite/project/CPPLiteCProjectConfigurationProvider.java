@@ -18,8 +18,12 @@
  */
 package org.netbeans.modules.cpplite.project;
 
+import java.util.prefs.PreferenceChangeEvent;
+import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
+import javax.swing.event.ChangeListener;
 import org.netbeans.modules.cpplite.editor.spi.CProjectConfigurationProvider;
+import org.openide.util.ChangeSupport;
 
 /**
  *
@@ -27,12 +31,33 @@ import org.netbeans.modules.cpplite.editor.spi.CProjectConfigurationProvider;
  */
 public class CPPLiteCProjectConfigurationProvider implements CProjectConfigurationProvider {
 
+    private final ChangeSupport cs = new ChangeSupport(this);
     private final Preferences mainPrefs;
 
     public CPPLiteCProjectConfigurationProvider(Preferences mainPrefs) {
         this.mainPrefs = mainPrefs;
+        this.mainPrefs.addPreferenceChangeListener(new PreferenceChangeListener() {
+            @Override
+            public void preferenceChange(PreferenceChangeEvent evt) {
+                if (evt.getKey() == null ||
+                    CPPLiteProject.KEY_COMPILE_COMMANDS.equals(evt.getKey()) ||
+                    CPPLiteProject.KEY_COMPILE_COMMANDS_EXECUTABLE.equals(evt.getKey())) {
+                    cs.fireChange();
+                }
+            }
+        });
     }
-    
+
+    @Override
+    public void addChangeListener(ChangeListener listener) {
+        cs.addChangeListener(listener);
+    }
+
+    @Override
+    public void removeChangeListener(ChangeListener listener) {
+        cs.removeChangeListener(listener);
+    }
+
     @Override
     public ProjectConfiguration getProjectConfiguration() {
         String path = mainPrefs.get(CPPLiteProject.KEY_COMPILE_COMMANDS, null);

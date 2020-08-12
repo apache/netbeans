@@ -103,6 +103,7 @@ import org.netbeans.lib.nbjavac.services.NBAttr;
 import org.netbeans.lib.nbjavac.services.NBParserFactory;
 import org.netbeans.lib.nbjavac.services.NBResolve;
 import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.TreeUtilitiesAccessor;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.builder.CommentSetImpl;
@@ -127,7 +128,7 @@ public final class TreeUtilities {
     static {
         Kind recKind = null;
         try {
-            recKind = Kind.valueOf("RECORD"); //NOI18N
+            recKind = Kind.valueOf(TreeShims.RECORD);
             CLASS_TREE_KINDS.add(recKind);
         } catch (IllegalArgumentException ex) {
         }

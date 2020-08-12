@@ -57,6 +57,7 @@ public final class UIUtilities {
 
     // XXX: Remove "test_" when #211651 is fixed
     private static final String TEST_JAVA_MIME_TYPE = "test_text/x-java"; // NOI18N
+    private static final String RECORD = "RECORD"; // NOI18N
     /**
      * Element.Kind values allowed to be used when calling ElementHandle.create
      *
@@ -67,7 +68,7 @@ public final class UIUtilities {
     static {
         ElementKind recKind = null;
         try {
-            recKind = ElementKind.valueOf("RECORD"); //NOI18N
+            recKind = ElementKind.valueOf(RECORD);
             allowedElementKinds.add(recKind);
         } catch (IllegalArgumentException ex) {
         }

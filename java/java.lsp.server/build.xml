@@ -41,6 +41,7 @@
         <copy todir="${lsp.build.dir}/etc" file="script/etc/nb-java-lsp-server.conf" />
         <copy todir="${lsp.build.dir}/etc" file="script/etc/nb-java-lsp-server.clusters" />
         <chmod file="${lsp.build.dir}/bin/nb-java-lsp-server" perm="u+x" />
+        <chmod file="${lsp.build.dir}/java/maven/bin/mvn" perm="u+x" />
         <delete file="${lsp.build.dir}/lib/nb-javac-9-api.jar" />
         <delete file="${lsp.build.dir}/lib/nb-javac-9-impl.jar" />
         <delete file="${lsp.build.dir}/lib/org-netbeans-modules-java-source-nbjavac.jar" />

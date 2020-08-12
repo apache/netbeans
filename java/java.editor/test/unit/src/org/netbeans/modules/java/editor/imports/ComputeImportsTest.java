@@ -287,6 +287,25 @@ public class ComputeImportsTest extends NbTestCase {
                "",
                "");
     }
+    
+    public void testRecordImport() throws Exception {
+        doTest("test/Test",
+                "14",
+                Arrays.asList(
+                        new FileData("test/Test.java",
+                                "package test;\n"
+                                + "import mytest.test.MyRecord;\n"
+                                + "public class Test {\n"
+                                + "    MyRecord rec;\n"
+                                + "}\n"),
+                        new FileData("mytest/test/MyRecord.java",
+                                "package mytest.test;\n"
+                                + "public record MyRecord() {\n"
+                                + "}\n")
+                ),
+                "",
+                "");
+    }
 
     private void prepareTest(String capitalizedName, String sourceLevel, Iterable<FileData> files) throws Exception {
         FileObject workFO = FileUtil.toFileObject(getWorkDir());

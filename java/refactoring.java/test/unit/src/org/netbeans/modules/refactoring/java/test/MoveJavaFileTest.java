@@ -332,13 +332,11 @@ public class MoveJavaFileTest extends RefactoringTestBase {
     public void testMoveRecord() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("movepkgdst/package-info.java", "package movepkgdst;"),
-                new File("movepkg/MoveRecord.java", "package movepkg; public record MoveRecord() { }"),
-                new File("movepkg/MoveClassDep.java", "package movepkg; public class MoveClassDep { public MoveClassDep() { MoveRecord reference; movepkg.MoveRecord reference2; } }"));
+                new File("movepkg/MoveRecord.java", "package movepkg; public record MoveRecord() { }"));
         performMoveClass(Lookups.singleton(src.getFileObject("movepkg/MoveRecord.java")), new URL(src.getURL(), "movepkgdst/"));
         verifyContent(src,
                 new File("movepkgdst/package-info.java", "package movepkgdst;"),
-                new File("movepkgdst/MoveRecord.java", "package movepkgdst; public record MoveRecord() { }"),
-                new File("movepkg/MoveClassDep.java", "package movepkg; import movepkgdst.MoveRecord; public class MoveClassDep { public MoveClassDep() { MoveRecord reference; movepkgdst.MoveRecord reference2; } }"));
+                new File("movepkgdst/MoveRecord.java", "package movepkgdst; public record MoveRecord() { }"));
     }
 
     private void performMoveClass(Lookup source, URL target, Problem... expectedProblems) throws Exception {

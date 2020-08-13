@@ -1,6 +1,6 @@
 Name: JENA-IRI
 Description: The Jena IRI Library is an implementation of RFC 3987 (IRI) and RFC 3986 (URI), and a partial implementation of other related standards.
-Version: 0.5
+Version: 0.8
 Origin: SourceForge
 License: BSD-iri
 URL: http://jena.sourceforge.net/iri/index.html

@@ -324,18 +324,18 @@ public class MakeUpdateDesc extends MatchingTask {
                     File desc_ent = new File(ent_name);
                     desc_ent.delete();
                     if (includeMessageDigests != null && (! includeMessageDigests.isEmpty())) {
-                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.8//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_8.dtd\" [");
+                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.8//EN\" \"https://netbeans.apache.org/dtds/autoupdate-catalog-2_8.dtd\" [");
                     } else if (isPreferredUpdateDefined || (contentDescription != null && ! contentDescription.isEmpty())) {
-                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.7//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_7.dtd\" [");
+                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.7//EN\" \"https://netbeans.apache.org/dtds/autoupdate-catalog-2_7.dtd\" [");
                     } else if (useLicenseUrl) {
-                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.6//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_6.dtd\" [");
+                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.6//EN\" \"https://netbeans.apache.org/dtds/autoupdate-catalog-2_6.dtd\" [");
                     } else if (use25DTD) {
-                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.5//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_5.dtd\" [");
+                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.5//EN\" \"https://netbeans.apache.org/dtds/autoupdate-catalog-2_5.dtd\" [");
                     } else if (targetClustersDefined) {
-                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.4//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_4.dtd\" [");
+                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.4//EN\" \"https://netbeans.apache.org/dtds/autoupdate-catalog-2_4.dtd\" [");
                     } else {
                         // #74866: no need for targetcluster, so keep compat w/ 5.0 AU.
-                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.3//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_3.dtd\" [");
+                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.3//EN\" \"https://netbeans.apache.org/dtds/autoupdate-catalog-2_3.dtd\" [");
                     }
                     // Would be better to follow order of groups and includes
                     pw.println ("    <!ENTITY entity SYSTEM \"" + xmlEscape(desc_ent.getName()) + "\">"); //NOI18N
@@ -364,17 +364,17 @@ public class MakeUpdateDesc extends MatchingTask {
                     
                 } else {
                     if (includeMessageDigests != null && (! includeMessageDigests.isEmpty())) {
-                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.8//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_8.dtd\">");
+                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.8//EN\" \"https://netbeans.apache.org/dtds/autoupdate-catalog-2_8.dtd\">");
                     } else if (isPreferredUpdateDefined || (contentDescription != null && ! contentDescription.isEmpty())) {
-                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.7//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_7.dtd\">");
+                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.7//EN\" \"https://netbeans.apache.org/dtds/autoupdate-catalog-2_7.dtd\">");
                     } else if (useLicenseUrl) {
-                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.6//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_6.dtd\">");
+                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.6//EN\" \"https://netbeans.apache.org/dtds/autoupdate-catalog-2_6.dtd\">");
                     } else if (use25DTD) {
-                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.5//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_5.dtd\">");
+                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.5//EN\" \"https://netbeans.apache.org/dtds/autoupdate-catalog-2_5.dtd\">");
                     } else if (targetClustersDefined) {
-                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.4//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_4.dtd\">");
+                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.4//EN\" \"https://netbeans.apache.org/dtds/autoupdate-catalog-2_4.dtd\">");
                     } else {
-                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.3//EN\" \"http://www.netbeans.org/dtds/autoupdate-catalog-2_3.dtd\">");
+                        pw.println("<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Catalog 2.3//EN\" \"https://netbeans.apache.org/dtds/autoupdate-catalog-2_3.dtd\">");
                     }
                     pw.println ("<module_updates timestamp=\"" + date + "\">"); //NOI18N
                     pw.println ();
@@ -708,7 +708,7 @@ public class MakeUpdateDesc extends MatchingTask {
      * Create the equivalent of {@code Info/info.xml} for an OSGi bundle.
      * @param jar a bundle
      * @return a {@code <module ...><manifest .../></module>} valid according to
-     *         <a href="http://www.netbeans.org/dtds/autoupdate-info-2_5.dtd">DTD</a>
+     *         <a href="https://netbeans.apache.org/dtds/autoupdate-info-2_5.dtd">DTD</a>
      */
     private static Element fakeOSGiInfoXml(JarFile jar, File whereFrom) throws IOException {
         return fakeOSGiInfoXml(jar, whereFrom, XMLUtil.createDocument("module"));

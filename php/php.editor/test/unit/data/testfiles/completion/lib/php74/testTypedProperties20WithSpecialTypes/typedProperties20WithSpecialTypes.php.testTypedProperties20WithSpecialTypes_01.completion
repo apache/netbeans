@@ -1,0 +1,11 @@
+Code completion result for source line:
+$param->|testMethod(); // self
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     childMethodParent(?parent $par  [PUBLIC]   \TypedProperties1\TypedPropertiesChild
+METHOD     childMethodSelf(self $param)    [PUBLIC]   \TypedProperties1\TypedPropertiesChild
+METHOD     parentMethod()                  [PUBLIC]   \TypedProperties1\TypedPropertiesParent
+METHOD     testMethod()                    [PUBLIC]   \TypedProperties1\TypedPropertiesChild
+METHOD     traitMethod(self $param)        [PUBLIC]   \TypedProperties1\TypedPropertiesTrait
+VARIABLE   object parentField              [PROTECTE  \TypedProperties1\TypedPropertiesParent
+VARIABLE   parent nullableParent           [PRIVATE]  \TypedProperties1\TypedPropertiesChild
+VARIABLE   self nullableSelf               [PRIVATE]  \TypedProperties1\TypedPropertiesChild

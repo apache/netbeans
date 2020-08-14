@@ -268,12 +268,13 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         if (StringUtils.hasText(types)) {
             final String[] typeNames = types.split(TYPE_SEPARATOR_REGEXP);
             Collection<TypeScope> retval = new HashSet<>();
-            for (String t : typeNames) {
-                String typeName = t;
+            for (int i = 0; i < typeNames.length; i++) {
+                String typeName = typeNames[i];
                 if (CodeUtils.isNullableType(typeName)) {
-                    typeName = t.substring(1);
+                    typeName = typeName.substring(1);
                 }
                 if (isSpecialTypeName(typeName)) {
+                    typeNames[i] = typeName;
                     continue;
                 }
                 if (typeName.trim().length() > 0) {
@@ -304,6 +305,22 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
                 retval.add(((TypeScope) inScope));
             }
 
+            if (canBeParentDependent(inScope, typeNames)) {
+                if (inScope instanceof ClassScope) {
+                    ClassScope classScope = (ClassScope) inScope;
+                    classScope.getSuperClasses().forEach(superClass -> retval.add(superClass));
+                } else if (inScope instanceof TraitScope) {
+                    for (TypeScope callerType : callerTypes) {
+                        if (callerType instanceof ClassScope) {
+                            ClassScope classScope = (ClassScope) callerType;
+                            if (classScope.getTraits().contains((TraitScope) inScope)) {
+                                classScope.getSuperClasses().forEach(superClass -> retval.add(superClass));
+                            }
+                        }
+                    }
+                }
+            }
+
             if (canBeCallerDependent(inScope, typeNames)) {
                 result = new CallerDependentTypesDescriptor(retval);
             } else {
@@ -316,6 +333,13 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
     private static boolean canBeSelfDependent(Scope scope, String[] types) {
         if (scope instanceof ClassScope || scope instanceof InterfaceScope) { // not trait
             return containsSelfDependentType(types);
+        }
+        return false;
+    }
+
+    private static boolean canBeParentDependent(Scope scope, String[] types) {
+        if (scope instanceof ClassScope || scope instanceof TraitScope) {
+            return containsParentDependentType(types);
         }
         return false;
     }
@@ -369,10 +393,15 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         return (Arrays.binarySearch(typeNames, "\\self") >= 0) || (Arrays.binarySearch(typeNames, Type.OBJECT) >= 0); //NOI18N
     }
 
+    private static boolean containsParentDependentType(String[] typeNames) {
+        return (Arrays.binarySearch(typeNames, "\\parent") >= 0); // NOI18N
+    }
+
     private static boolean isSpecialTypeName(String typeName) {
         return typeName.equals("\\this") //NOI18N
                 || typeName.equals("\\static") //NOI18N
                 || typeName.equals("\\self") //NOI18N
+                || typeName.equals("\\parent") //NOI18N
                 || typeName.equals(Type.OBJECT);
     }
 

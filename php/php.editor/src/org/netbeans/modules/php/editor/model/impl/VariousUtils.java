@@ -36,10 +36,12 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lexer.TokenUtilities;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.AliasedName;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
+import org.netbeans.modules.php.editor.api.QualifiedNameKind;
 import org.netbeans.modules.php.editor.elements.TypeNameResolverImpl;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.model.ArrowFunctionScope;
@@ -709,21 +711,35 @@ public final class VariousUtils {
             }
         } else if (semiTypeName != null) {
             String typeName = CodeUtils.removeNullableTypePrefix(semiTypeName);
-            QualifiedName qn = QualifiedName.create(typeName);
-            qn = qn.toNamespaceName().append(translateSpecialClassName(varScope, qn.getName()));
-            if (typeName.startsWith("\\")) { // NOI18N
-                qn = qn.toFullyQualified();
-            } else {
-                NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(varScope);
-                if (namespaceScope != null) {
-                    Collection<QualifiedName> possibleFQN = getPossibleFQN(qn, offset, namespaceScope);
-                    if (!possibleFQN.isEmpty()) {
-                        qn = ModelUtils.getFirst(possibleFQN);
+            List<String> typeNames = StringUtils.explode(typeName, Type.SEPARATOR);
+            final List<QualifiedName> qualifiedNames = new ArrayList<>();
+            for (String name : typeNames) {
+                QualifiedName qn = QualifiedName.create(name);
+                String translatedName = translateSpecialClassName(varScope, qn.getName());
+                QualifiedNameKind kind = QualifiedNameKind.resolveKind(translatedName);
+                // fully qualified name may be returned if qualified name is "parent"
+                if (kind == QualifiedNameKind.UNQUALIFIED) {
+                    qn = qn.toNamespaceName().append(translatedName);
+                } else {
+                    qn = QualifiedName.create(translatedName);
+                }
+                if (name.startsWith("\\")) { // NOI18N
+                    qn = qn.toFullyQualified();
+                } else {
+                    NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(varScope);
+                    if (namespaceScope != null) {
+                        Collection<QualifiedName> possibleFQN = getPossibleFQN(qn, offset, namespaceScope);
+                        if (!possibleFQN.isEmpty()) {
+                            qn = ModelUtils.getFirst(possibleFQN);
+                        }
                     }
                 }
+                qualifiedNames.add(qn);
             }
             final IndexScope indexScope = ModelUtils.getIndexScope(varScope);
-            return indexScope.findTypes(qn);
+            final ArrayList<TypeScope> typeScopes = new ArrayList<>();
+            qualifiedNames.forEach(name -> typeScopes.addAll(indexScope.findTypes(name)));
+            return typeScopes;
         }
 
         return recentTypes;

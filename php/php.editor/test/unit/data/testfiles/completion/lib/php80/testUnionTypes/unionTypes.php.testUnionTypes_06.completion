@@ -1,0 +1,11 @@
+Code completion result for source line:
+self::$publicStaticFieldInterfaceImpl::|CONST_CLASS1;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticMethodClass1()      [STATIC]   \UnionTypes1\Class1
+METHOD     publicStaticMethodClass2()      [STATIC]   \UnionTypes1\Class2
+VARIABLE   mixed $publicStaticFieldClass1  [STATIC]   \UnionTypes1\Class1
+VARIABLE   mixed $publicStaticFieldClass2  [STATIC]   \UnionTypes1\Class2
+CONSTANT   CONST_CLASS1 "constant"         [PUBLIC]   \UnionTypes1\Class1
+CONSTANT   CONST_CLASS2 "constant"         [PUBLIC]   \UnionTypes1\Class2
+CONSTANT   class \UnionTypes1\Class1       [PUBLIC]   Magic Constant
+CONSTANT   class \UnionTypes1\Class2       [PUBLIC]   Magic Constant

@@ -56,9 +56,10 @@ public final class Type {
     public static final String SELF = "self"; //NOI18N
     public static final String PARENT = "parent"; //NOI18N
 
-    private static final List<String> TYPES_FOR_EDITOR = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT);
-    private static final List<String> TYPES_FOR_RETURN_TYPE = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, VOID, OBJECT);
-    private static final List<String> TYPES_FOR_FIELD_TYPE = Arrays.asList(ARRAY, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, SELF, PARENT); // PHP 7.4 Typed Properties 2.0
+    private static final List<String> TYPES_FOR_EDITOR = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, NULL, FALSE);
+    private static final List<String> TYPES_FOR_RETURN_TYPE = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, VOID, OBJECT, NULL, FALSE);
+    private static final List<String> TYPES_FOR_FIELD_TYPE = Arrays.asList(ARRAY, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, SELF, PARENT, NULL, FALSE); // PHP 7.4 Typed Properties 2.0
+    private static final List<String> SPECIAL_TYPES_FOR_TYPE = Arrays.asList(SELF, PARENT);
     private static final List<String> TYPES_FOR_PHP_DOC = Arrays.asList(STRING, INTEGER, INT, BOOLEAN, BOOL, FLOAT, DOUBLE, OBJECT, MIXED, ARRAY,
             RESOURCE, VOID, NULL, CALLBACK, CALLABLE, ITERABLE, FALSE, TRUE, SELF);
 
@@ -105,6 +106,16 @@ public final class Type {
      */
     public static List<String> getTypesForEditor() {
         return TYPES_FOR_EDITOR;
+    }
+
+    /**
+     * Get special types for the inside of the type. They are "self" and
+     * "parent".
+     *
+     * @return special types for the inside of the type
+     */
+    public static List<String> getSpecialTypesForType() {
+        return SPECIAL_TYPES_FOR_TYPE;
     }
 
     /**

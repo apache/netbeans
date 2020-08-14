@@ -69,6 +69,7 @@ import org.netbeans.modules.php.editor.model.nodes.ConstantDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.GroupUseStatementPartInfo;
 import org.netbeans.modules.php.editor.model.nodes.PhpDocTypeTagInfo;
 import org.netbeans.modules.php.editor.model.nodes.SingleUseStatementPartInfo;
+import static org.netbeans.modules.php.editor.model.impl.Type.SEPARATOR;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.api.Utils;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
@@ -1090,16 +1091,24 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 List<? extends ParameterElement> parameters = fncScope.getParameters();
                 for (ParameterElement parameter : parameters) {
                     Set<TypeResolver> types = parameter.getTypes();
+                    StringBuilder sb = new StringBuilder();
                     String typeName = null;
                     for (TypeResolver typeResolver : types) {
+                        if (sb.length() > 0) {
+                            sb.append(SEPARATOR);
+                        }
                         if (typeResolver.isResolved()) {
                             QualifiedName typeQualifiedName = typeResolver.getTypeName(false);
                             if (typeQualifiedName != null) {
-                                typeName = typeResolver.isNullableType()
-                                        ? CodeUtils.NULLABLE_TYPE_PREFIX + typeQualifiedName.toString()
-                                        : typeQualifiedName.toString();
+                                if (typeResolver.isNullableType()) {
+                                    sb.append(CodeUtils.NULLABLE_TYPE_PREFIX);
+                                }
+                                sb.append(typeQualifiedName.toString());
                             }
                         }
+                    }
+                    if (sb.length() > 0) {
+                        typeName = sb.toString();
                     }
                     VariableNameImpl var = createParameter(fncScope, parameter);
                     if (!types.isEmpty() && var != null) {

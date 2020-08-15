@@ -1,7 +1,7 @@
 Name: Apache Ant
 Origin: Apache Software Foundation
-Version: 1.10.4
-Files: ant-misc-1.10.4.zip ant-1.10.4.jar ant-antlr-1.10.4.jar ant-apache-bcel-1.10.4.jar ant-apache-bsf-1.10.4.jar ant-apache-log4j-1.10.4.jar ant-apache-oro-1.10.4.jar ant-apache-regexp-1.10.4.jar ant-apache-resolver-1.10.4.jar ant-apache-xalan2-1.10.4.jar ant-commons-logging-1.10.4.jar ant-commons-net-1.10.4.jar ant-jai-1.10.4.jar ant-javamail-1.10.4.jar ant-jdepend-1.10.4.jar ant-jmf-1.10.4.jar ant-jsch-1.10.4.jar ant-junit-1.10.4.jar ant-junit4-1.10.4.jar ant-launcher-1.10.4.jar ant-netrexx-1.10.4.jar ant-swing-1.10.4.jar ant-testutil-1.10.4.jar ant-xz-1.10.4.jar
+Version: 1.10.8
+Files: ant-misc-1.10.8.zip ant-1.10.8.jar ant-antlr-1.10.8.jar ant-apache-bcel-1.10.8.jar ant-apache-bsf-1.10.8.jar ant-apache-log4j-1.10.8.jar ant-apache-oro-1.10.8.jar ant-apache-regexp-1.10.8.jar ant-apache-resolver-1.10.8.jar ant-apache-xalan2-1.10.8.jar ant-commons-logging-1.10.8.jar ant-commons-net-1.10.8.jar ant-jai-1.10.8.jar ant-javamail-1.10.8.jar ant-jdepend-1.10.8.jar ant-jmf-1.10.8.jar ant-jsch-1.10.8.jar ant-junit-1.10.8.jar ant-junit4-1.10.8.jar ant-launcher-1.10.8.jar ant-netrexx-1.10.8.jar ant-swing-1.10.8.jar ant-testutil-1.10.8.jar ant-xz-1.10.8.jar
 Description: Ant build tool.
 License: Apache-2.0-ant
 URL: https://builds.apache.org/view/All/job/Ant_Nightly/lastBuild/

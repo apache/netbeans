@@ -54,11 +54,11 @@ public class ModelUtilsTest extends NbTestCase {
     }
 
     public void testCheckLibrary() throws MalformedURLException {
-        URL pom = new URL("http://repo1.maven.org/maven2/junit/junit/3.8.2/junit-3.8.2.pom");
+        URL pom = new URL("https://repo1.maven.org/maven2/junit/junit/3.8.2/junit-3.8.2.pom");
         ModelUtils.LibraryDescriptor result = ModelUtils.checkLibrary(pom);
         assertNotNull(result);
         assertEquals("default", result.getRepoType());
-        assertEquals("http://repo1.maven.org/maven2/", result.getRepoRoot());
+        assertEquals("https://repo1.maven.org/maven2/", result.getRepoRoot());
         assertEquals("junit", result.getGroupId());
         assertEquals("junit", result.getArtifactId());
         assertEquals("3.8.2", result.getVersion());
@@ -81,11 +81,11 @@ public class ModelUtilsTest extends NbTestCase {
         assertEquals("1.0-MR1", result.getVersion());
 
 
-        pom = new URL("http://repo1.maven.org/maven2/org/codehaus/mevenide/netbeans-deploy-plugin/1.2.3/netbeans-deploy-plugin-1.2.3.pom");
+        pom = new URL("https://repo1.maven.org/maven2/org/codehaus/mevenide/netbeans-deploy-plugin/1.2.3/netbeans-deploy-plugin-1.2.3.pom");
         result = ModelUtils.checkLibrary(pom);
         assertNotNull(result);
         assertEquals("default", result.getRepoType());
-        assertEquals("http://repo1.maven.org/maven2/", result.getRepoRoot());
+        assertEquals("https://repo1.maven.org/maven2/", result.getRepoRoot());
         assertEquals("org.codehaus.mevenide", result.getGroupId());
         assertEquals("netbeans-deploy-plugin", result.getArtifactId());
         assertEquals("1.2.3", result.getVersion());
@@ -100,11 +100,11 @@ public class ModelUtilsTest extends NbTestCase {
         assertEquals("3.8.2", result.getVersion());
 
 
-        pom = new URL("http://repo1.maven.org/maven2/org/testng/testng/5.8/testng-5.8.pom#jdk15");
+        pom = new URL("https://repo1.maven.org/maven2/org/testng/testng/5.8/testng-5.8.pom#jdk15");
         result = ModelUtils.checkLibrary(pom);
         assertNotNull(result);
         assertEquals("default", result.getRepoType());
-        assertEquals("http://repo1.maven.org/maven2/", result.getRepoRoot());
+        assertEquals("https://repo1.maven.org/maven2/", result.getRepoRoot());
         assertEquals("org.testng", result.getGroupId());
         assertEquals("testng", result.getArtifactId());
         assertEquals("5.8", result.getVersion());
@@ -160,7 +160,7 @@ public class ModelUtilsTest extends NbTestCase {
         final MavenProject mp = ProjectManager.getDefault().findProject(pom.getParent()).getLookup().lookup(NbMavenProject.class).getMavenProject();
         Utilities.performPOMModelOperations(pom, Collections.singletonList(new ModelOperation<POMModel>() {
             @Override public void performOperation(POMModel model) {
-                Repository added = ModelUtils.addModelRepository(mp, model, "http://repo1.maven.org/maven2/");
+                Repository added = ModelUtils.addModelRepository(mp, model, "https://repo1.maven.org/maven2/");
                 assertNull(added);
                 added = ModelUtils.addModelRepository(mp, model, "http://nowhere.net/maven2/");
                 assertNotNull(added);

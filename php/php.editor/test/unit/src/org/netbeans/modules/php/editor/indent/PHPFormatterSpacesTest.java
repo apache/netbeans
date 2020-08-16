@@ -1462,7 +1462,7 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spaces/netbeans2149_04.php", options);
     }
 
-    // PHP 8.0
+    // NETBEANS-4443 PHP 8.0
     public void testSpacesBeforeMatchParen_01() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.SPACE_BEFORE_MATCH_PAREN, true);
@@ -1499,4 +1499,27 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeMatchLeftBrace_02.php", options);
     }
 
+    public void testSpacesAroundUnionTypeSeparator_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNION_TYPE_SEPARATOR, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundUnionTypeSeparator_01a.php", options);
+    }
+
+    public void testSpacesAroundUnionTypeSeparator_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNION_TYPE_SEPARATOR, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundUnionTypeSeparator_01b.php", options);
+    }
+
+    public void testSpacesAroundUnionTypeSeparator_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNION_TYPE_SEPARATOR, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundUnionTypeSeparator_02a.php", options);
+    }
+
+    public void testSpacesAroundUnionTypeSeparator_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNION_TYPE_SEPARATOR, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundUnionTypeSeparator_02b.php", options);
+    }
 }

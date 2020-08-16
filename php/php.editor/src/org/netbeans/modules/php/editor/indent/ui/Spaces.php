@@ -7,6 +7,8 @@ use Some\Classes\{ClassA, ClassB, ClassC as C};
 
 class Example implements Iface1, Iface2, Iface3 {
 
+private ClassA|ClassB|null $unionType;
+
     public function ifExample ($a, $b) {
         if (convert($a) > $b) {
             echo "a is bigger than b";
@@ -91,6 +93,12 @@ public function anonymousClassExample($arg) {
 public function alignParamsExample($arg1,
         $arg2, $arg3,
         $arg4, $arg5) {
+}
+
+public function unionTypesExample(
+        Class1|Class2|null $object
+        ): int|float|null {
+    return null;
 }
 }
 

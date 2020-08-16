@@ -71,7 +71,8 @@ public final class Type {
                 || ARRAY.equals(typeName) || OBJECT.equals(typeName) || MIXED.equals(typeName)
                 || NUMBER.equals(typeName) || CALLBACK.equals(typeName) || RESOURCE.equals(typeName)
                 || DOUBLE.equals(typeName) || STRING.equals(typeName) || NULL.equals(typeName)
-                || VOID.equals(typeName) || CALLABLE.equals(typeName) || ITERABLE.equals(typeName)) {
+                || VOID.equals(typeName) || CALLABLE.equals(typeName) || ITERABLE.equals(typeName)
+                || FALSE.equals(typeName)) {
             retval = true;
         }
         return retval;

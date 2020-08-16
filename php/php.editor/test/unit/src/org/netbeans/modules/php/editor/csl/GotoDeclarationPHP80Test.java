@@ -105,4 +105,72 @@ public class GotoDeclarationPHP80Test extends GotoDeclarationTestBase {
         checkDeclaration(getTestPath(), "    default => MatchExpression::defau^lt(),", "    public static function ^default(): string {");
     }
 
+    public void testUnionTypes_01a() throws Exception {
+        checkDeclaration(getTestPath(), "    private ParentCl^ass|ChildClass $field;", "class ^ParentClass");
+    }
+
+    public void testUnionTypes_01b() throws Exception {
+        checkDeclaration(getTestPath(), "    public function testMethod(ParentC^lass|ChildClass|null $param): ChildClass|\\Union\\Types1\\ParentClass {", "class ^ParentClass");
+    }
+
+    public void testUnionTypes_01c() throws Exception {
+        checkDeclaration(getTestPath(), "    public function testMethod(ParentClass|ChildClass|null $param): ChildClass|\\Union\\Types1\\Par^entClass {", "class ^ParentClass");
+    }
+
+    public void testUnionTypes_01d() throws Exception {
+        checkDeclaration(getTestPath(), "    public static function testStaticMethod(TestClass1|\\Union\\Types2\\TestClass2|null $param1, ChildClass|null $param2): TestClass2|Pare^ntClass|null {", "class ^ParentClass");
+    }
+
+    public void testUnionTypes_02a() throws Exception {
+        checkDeclaration(getTestPath(), "    private ParentClass|ChildCl^ass $field;", "class ^ChildClass");
+    }
+
+    public void testUnionTypes_02b() throws Exception {
+        checkDeclaration(getTestPath(), "    public function testMethod(ParentClass|ChildC^lass|null $param): ChildClass|\\Union\\Types1\\ParentClass {", "class ^ChildClass");
+    }
+
+    public void testUnionTypes_02c() throws Exception {
+        checkDeclaration(getTestPath(), "    public function testMethod(ParentClass|ChildClass|null $param): Chil^dClass|\\Union\\Types1\\ParentClass {", "class ^ChildClass");
+    }
+
+    public void testUnionTypes_02d() throws Exception {
+        checkDeclaration(getTestPath(), "    public static function testStaticMethod(TestClass1|\\Union\\Types2\\TestClass2|null $param1, Child^Class|null $param2): TestClass2|ParentClass|null {", "class ^ChildClass");
+    }
+
+    public void testUnionTypes_03a() throws Exception {
+        checkDeclaration(getTestPath(), "    private static \\Union\\Types2\\Test^Class1|TestClass2 $staticField;", "class ^TestClass1");
+    }
+
+    public void testUnionTypes_03b() throws Exception {
+        checkDeclaration(getTestPath(), "    public static function testStaticMethod(TestC^lass1|\\Union\\Types2\\TestClass2|null $param1, ChildClass|null $param2): TestClass2|ParentClass|null {", "class ^TestClass1");
+    }
+
+    public void testUnionTypes_03c() throws Exception {
+        checkDeclaration(getTestPath(), "    public function traitMethod(Te^stClass1|TestClass2 $param): TestClass1|TestClass2|null {", "class ^TestClass1");
+    }
+
+    public void testUnionTypes_03d() throws Exception {
+        checkDeclaration(getTestPath(), "    public function traitMethod(TestClass1|TestClass2 $param): ^TestClass1|TestClass2|null {", "class ^TestClass1");
+    }
+
+    public void testUnionTypes_04a() throws Exception {
+        checkDeclaration(getTestPath(), "    private static \\Union\\Types2\\TestClass1|Test^Class2 $staticField;", "class ^TestClass2");
+    }
+
+    public void testUnionTypes_04b() throws Exception {
+        checkDeclaration(getTestPath(), "    public static function testStaticMethod(TestClass1|\\Union\\Types2\\TestCl^ass2|null $param1, ChildClass|null $param2): TestClass2|ParentClass|null {", "class ^TestClass2");
+    }
+
+    public void testUnionTypes_04c() throws Exception {
+        checkDeclaration(getTestPath(), "    public static function testStaticMethod(TestClass1|\\Union\\Types2\\TestClass2|null $param1, ChildClass|null $param2): TestClas^s2|ParentClass|null {", "class ^TestClass2");
+    }
+
+    public void testUnionTypes_04d() throws Exception {
+        checkDeclaration(getTestPath(), "    public function traitMethod(TestClass1|TestClas^s2 $param): TestClass1|TestClass2|null {", "class ^TestClass2");
+    }
+
+    public void testUnionTypes_04e() throws Exception {
+        checkDeclaration(getTestPath(), "    public function traitMethod(TestClass1|TestClass2 $param): TestClass1|Tes^tClass2|null {", "class ^TestClass2");
+    }
+
 }

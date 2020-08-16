@@ -326,6 +326,10 @@ public final class CodeStyle {
         return preferences.getBoolean(SPACE_AROUND_DECLARE_EQUAL, getDefaultAsBoolean(SPACE_AROUND_DECLARE_EQUAL));
     }
 
+    public boolean spaceAroundUnionTypeSeparator() {
+        return preferences.getBoolean(SPACE_AROUND_UNION_TYPE_SEPARATOR, getDefaultAsBoolean(SPACE_AROUND_UNION_TYPE_SEPARATOR));
+    }
+
     public boolean spaceBeforeClassDeclLeftBrace() {
         return preferences.getBoolean(SPACE_BEFORE_CLASS_DECL_LEFT_BRACE, getDefaultAsBoolean(SPACE_BEFORE_CLASS_DECL_LEFT_BRACE));
     }

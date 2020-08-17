@@ -37,8 +37,8 @@
         <profile version="1.7" type="full" check="full"/>
         <profile version="1.8" type="web"/>
         <profile version="1.8" type="full" check="full"/>
-        <profile version="1.8.0" type="web"/>
-        <profile version="1.8.0" type="full" check="full"/>
+        <profile version="8.0.0" type="web"/>
+        <profile version="8.0.0" type="full" check="full"/>
         <module type="war"/>
         <module type="car" check="full"/>
         <module type="ear" check="full"/>

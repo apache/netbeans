@@ -7,4 +7,5 @@ OpenIDE-Module-Specification-Version: 1.6
 OpenIDE-Module-Provides: org.netbeans.modules.debugger.jpda.truffle
 OpenIDE-Module-Requires: org.netbeans.api.debugger.jpda.JPDADebuggerEngineImpl,
   org.netbeans.spi.debugger.ui
+OpenIDE-Module-Recommends: cnb.org.netbeans.modules.java.kit
 OpenIDE-Module-Package-Dependencies: com.sun.jdi[VirtualMachineManager]

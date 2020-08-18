@@ -163,6 +163,7 @@ public final class GradleProjectCache {
         NbProjectInfo info = null;
         Quality quality = ctx.aim;
         GradleBaseProject base = ctx.previous.getBaseProject();
+        /*
         GradleConnector gconn = GradleConnector.newConnector();
 
         File gradleInstall = RunUtils.evaluateGradleDistribution(ctx.project, true);
@@ -178,6 +179,9 @@ public final class GradleProjectCache {
         gconn.useGradleUserHomeDir(GradleSettings.getDefault().getGradleUserHome());
 
         ProjectConnection pconn = gconn.forProjectDirectory(base.getProjectDir()).connect();
+        */
+        ProjectConnection pconn = ctx.project.getLookup().lookup(ProjectConnection.class);
+
 
         GradleCommandLine cmd = new GradleCommandLine(ctx.args);
         cmd.setFlag(GradleCommandLine.Flag.CONFIGURE_ON_DEMAND, GradleSettings.getDefault().isConfigureOnDemand());
@@ -246,10 +250,6 @@ public final class GradleProjectCache {
             openNotification(base.getProjectDir(), Bundle.TIT_LOAD_FAILED(base.getProjectDir()), ex.getMessage(), sb.toString());
             return ctx.previous.invalidate(sb.toString());
         } finally {
-            try {
-                pconn.close();
-            } catch (NullPointerException ex) {
-            }
             loadedProjects.incrementAndGet();
         }
         long finish = System.currentTimeMillis();

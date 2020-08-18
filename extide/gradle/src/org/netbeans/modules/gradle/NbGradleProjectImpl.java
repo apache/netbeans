@@ -51,6 +51,7 @@ import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.*;
 import static java.util.logging.Level.*;
 
 import java.util.logging.Logger;
+import org.gradle.tooling.ProjectConnection;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.SuppressWarnings;
 import org.netbeans.api.project.ui.ProjectProblems;
@@ -308,6 +309,7 @@ public final class NbGradleProjectImpl implements Project {
             setAimedQuality(Quality.FALLBACK);
             detachAllUpdater();
             dumpProject();
+            getLookup().lookup(ProjectConnection.class).close();
         }
     }
 

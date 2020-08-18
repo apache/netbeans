@@ -113,7 +113,6 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             }
         }
 
-        ProjectConnection pconn = null;
         final InputOutput ioput = getInputOutput();
         actionStatesAtStart();
         handle.start();
@@ -123,9 +122,9 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             if (GradleSettings.getDefault().isAlwaysShowOutput()) {
                 ioput.select();
             }
-
-            GradleConnector gconn = GradleConnector.newConnector();
             cancelTokenSource = GradleConnector.newCancellationTokenSource();
+            /*
+            GradleConnector gconn = GradleConnector.newConnector();
             File gradleInstall = RunUtils.evaluateGradleDistribution(config.getProject(), false);
             if (gradleInstall != null) {
                 gconn.useInstallation(gradleInstall);
@@ -137,6 +136,8 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
             File projectDir = FileUtil.toFile(config.getProject().getProjectDirectory());
             pconn = gconn.forProjectDirectory(projectDir).connect();
+            */
+            ProjectConnection pconn = config.getProject().getLookup().lookup(ProjectConnection.class);
 
             BuildLauncher buildLauncher = pconn.newBuild();
             GradleCommandLine cmd = config.getCommandLine();
@@ -212,9 +213,6 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             if (!handled) throw ex;
         } finally {
             BuildExecutionSupport.registerFinishedItem(item);
-            if (pconn != null) {
-                pconn.close();
-            }
             closeInOutErr();
             checkForExternalModifications();
             handle.finish();

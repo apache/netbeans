@@ -35,6 +35,8 @@ import java.io.OutputStream;
 import java.io.StreamCorruptedException;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -151,7 +153,10 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             if (platformProvider != null) {
                 try {
                     buildLauncher.setJavaHome(platformProvider.getJavaHome());
-                } catch (FileNotFoundException ex) {
+                    Map<String, String> envs = new HashMap<>(System.getenv());
+                    envs.put("JAVA_HOME", platformProvider.getJavaHome().getCanonicalPath());
+                    buildLauncher.setEnvironmentVariables(envs);
+                } catch (IOException ex) {
                     io.getErr().println(Bundle.NO_PLATFORM(ex.getMessage()));
                     return;
                 }

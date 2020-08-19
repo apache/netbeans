@@ -34,6 +34,8 @@ import java.io.OutputStream;
 import java.io.StreamCorruptedException;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -155,7 +157,14 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             }
             if (!activePlatform.second().getInstallFolders().isEmpty()) {
                 File javaHome = FileUtil.toFile(activePlatform.second().getInstallFolders().iterator().next());
-                buildLauncher.setJavaHome(javaHome);
+                try {
+                    buildLauncher.setJavaHome(javaHome);
+                    Map<String, String> envs = new HashMap<>(System.getenv());
+                    envs.put("JAVA_HOME", javaHome.getCanonicalPath());
+                    buildLauncher.setEnvironmentVariables(envs);
+                } catch (IOException ex) {
+                    LOGGER.log(Level.WARNING, "Could not set JAVA_HOME='" + javaHome + "' for Gradle Execution", ex);
+                }
             }
 
             outStream = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, config, false));

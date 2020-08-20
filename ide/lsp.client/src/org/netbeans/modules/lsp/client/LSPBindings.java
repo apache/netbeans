@@ -25,6 +25,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -72,6 +73,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.OnStop;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
@@ -86,7 +88,7 @@ public class LSPBindings {
     private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
     private static final int DELAY = 500;
 
-    private static final Map<Project, Map<String, LSPBindings>> project2MimeType2Server = new WeakHashMap<>();
+    private static final Map<URI, Map<String, LSPBindings>> project2MimeType2Server = new WeakHashMap<>();
     private static final Map<FileObject, Map<String, LSPBindings>> workspace2Extension2Server = new HashMap<>();
     private final Map<FileObject, Map<BackgroundTask, RequestProcessor.Task>> backgroundTasks = new WeakHashMap<>();
     private final Set<FileObject> openedFiles = new HashSet<>();
@@ -104,9 +106,13 @@ public class LSPBindings {
             }
         }
         Project prj = FileOwnerQuery.getOwner(file);
-
-        if (prj == null)
-            return null;
+        FileObject dir;
+        if (prj == null) {
+            dir = file.getParent();
+        } else {
+            dir = prj.getProjectDirectory();
+        }
+        URI uri = dir.toURI();
 
         String mimeType = FileUtil.getMIMEType(file);
 
@@ -115,7 +121,7 @@ public class LSPBindings {
         }
 
         LSPBindings bindings =
-                project2MimeType2Server.computeIfAbsent(prj, p -> new HashMap<>())
+                project2MimeType2Server.computeIfAbsent(uri, p -> new HashMap<>())
                                        .computeIfAbsent(mimeType, mt -> {
                                            MimeTypeInfo mimeTypeInfo = new MimeTypeInfo(mt);
                                            Reference<Project> prjRef = new WeakReference<>(prj);
@@ -123,7 +129,7 @@ public class LSPBindings {
                                                synchronized (LSPBindings.class) {
                                                    Project p = prjRef.get();
                                                    if (p != null) {
-                                                       LSPBindings b = project2MimeType2Server.getOrDefault(p, Collections.emptyMap()).remove(mimeType);
+                                                       LSPBindings b = project2MimeType2Server.getOrDefault(uri, Collections.emptyMap()).remove(mimeType);
 
                                                        if (b != null) {
                                                            try {
@@ -140,7 +146,8 @@ public class LSPBindings {
                                            };
                                            
                                            for (LanguageServerProvider provider : MimeLookup.getLookup(mimeType).lookupAll(LanguageServerProvider.class)) {
-                                               LanguageServerDescription desc = provider.startServer(Lookups.fixed(prj, mimeTypeInfo, restarter));
+                                               final Lookup lkp = prj != null ? Lookups.fixed(prj, mimeTypeInfo, restarter) : Lookups.fixed(mimeTypeInfo, restarter);
+                                               LanguageServerDescription desc = provider.startServer(lkp);
 
                                                if (desc != null) {
                                                    LSPBindings b = LanguageServerProviderAccessor.getINSTANCE().getBindings(desc);
@@ -155,7 +162,7 @@ public class LSPBindings {
                                                        Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(lci, in, out);
                                                        launcher.startListening();
                                                        LanguageServer server = launcher.getRemoteProxy();
-                                                       InitializeResult result = initServer(p, server, prj.getProjectDirectory()); //XXX: what if a different root is expected????
+                                                       InitializeResult result = initServer(p, server, dir); //XXX: what if a different root is expected????
                                                        b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
                                                        lci.setBindings(b);
                                                        LanguageServerProviderAccessor.getINSTANCE().setBindings(desc, b);

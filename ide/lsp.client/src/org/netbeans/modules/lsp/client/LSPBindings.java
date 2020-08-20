@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.lsp.client;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -144,7 +145,7 @@ public class LSPBindings {
                                                    }
                                                }
                                            };
-                                           
+
                                            for (LanguageServerProvider provider : MimeLookup.getLookup(mimeType).lookupAll(LanguageServerProvider.class)) {
                                                final Lookup lkp = prj != null ? Lookups.fixed(prj, mimeTypeInfo, restarter) : Lookups.fixed(mimeTypeInfo, restarter);
                                                LanguageServerDescription desc = provider.startServer(lkp);
@@ -217,7 +218,10 @@ public class LSPBindings {
     private static InitializeResult initServer(Process p, LanguageServer server, FileObject root) throws InterruptedException, ExecutionException {
        InitializeParams initParams = new InitializeParams();
        initParams.setRootUri(Utils.toURI(root));
-       initParams.setRootPath(FileUtil.toFile(root).getAbsolutePath()); //some servers still expect root path
+       final File rootFile = FileUtil.toFile(root);
+       if (rootFile != null) {
+           initParams.setRootPath(rootFile.getAbsolutePath()); //some servers still expect root path
+       }
        initParams.setProcessId(0);
        TextDocumentClientCapabilities tdcc = new TextDocumentClientCapabilities();
        DocumentSymbolCapabilities dsc = new DocumentSymbolCapabilities();

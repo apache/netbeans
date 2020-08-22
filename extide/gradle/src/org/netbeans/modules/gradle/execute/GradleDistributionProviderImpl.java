@@ -19,15 +19,19 @@
 package org.netbeans.modules.gradle.execute;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.GradleDistributionManager;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
@@ -40,7 +44,9 @@ import static org.netbeans.modules.gradle.spi.GradleSettings.*;
  * @author lkishalmi
  */
 @ProjectServiceProvider(service = GradleDistributionProvider.class, projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
-public class GradleDistributionProviderImpl implements GradleDistributionProvider{
+public class GradleDistributionProviderImpl implements GradleDistributionProvider {
+
+    private final static Logger LOGGER = Logger.getLogger(GradleDistributionProviderImpl.class.getName());
 
     private static final List<String> AFFECTING_PROPS = Arrays.asList(
             PROP_GRADLE_USER_HOME,
@@ -50,88 +56,67 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
             PROP_GRADLE_VERSION
     );
 
+    private final ChangeSupport support = new ChangeSupport(this);
+    private final PreferenceChangeListener listener = (PreferenceChangeEvent evt) -> {
+        if (AFFECTING_PROPS.contains(evt.getKey())) {
+            dist = null;
+            support.fireChange();
+        }
+    };
+
     final Project project;
-    final Result res;
+    private GradleDistribution dist;
 
     public GradleDistributionProviderImpl(Project project) {
         this.project = project;
-        res = new Res();
     }
-    
+
     @Override
-    public Result getGradleDistribution() {
-        return res;
-    }
+    public GradleDistribution getGradleDistribution() {
+        if (dist == null) {
+            GradleSettings settings = GradleSettings.getDefault();
 
-    private class Res implements Result {
+            GradleDistributionManager mgr = GradleDistributionManager.get(settings.getGradleUserHome());
 
-        private GradleDistributionManager.NbGradleVersion dist;
+            GradleBaseProject gbp = GradleBaseProject.get(project);
 
-        private final ChangeSupport support = new ChangeSupport(this);
-        private final PreferenceChangeListener listener = (PreferenceChangeEvent evt) -> {
-            if (AFFECTING_PROPS.contains(evt.getKey())) {
-                dist = null;
-                support.fireChange();
+            if ((gbp != null) && settings.isWrapperPreferred()) {
+                try {
+                    dist = mgr.distributionFromWrapper(gbp.getRootDir());
+                } catch (Exception ex) {
+                    LOGGER.log(Level.WARNING, "Cannot evaulate Gradle Wrapper", ex); //NOI18N
+                }
             }
-        };
 
-        Res() {
-        }
-
-        @Override
-        public File getGradleInstall() {
-            GradleDistributionManager.NbGradleVersion d = getGradleDistribution();
-            return d != null ? d.distributionDir() : null;
-        }
-
-        @Override
-        public File getGradleHome() {
-            return GradleSettings.getDefault().getGradleUserHome();
-        }
-
-        @Override
-        public boolean isCompatibleWithSystemJava() {
-            GradleDistributionManager.NbGradleVersion d = getGradleDistribution();
-            return d != null ? d.isCompatibleWithSystemJava() : true;
-        }
-
-        @Override
-        public void addChangeListener(ChangeListener l) {
-            if (!support.hasListeners()) {
-                GradleSettings.getDefault().getPreferences().addPreferenceChangeListener(listener);
+            if ((dist == null) && settings.useCustomGradle() && !settings.getDistributionHome().isEmpty()) {
+                try {
+                    dist = mgr.distributionFromDir(new File(settings.getDistributionHome()));
+                } catch (IOException ex) {
+                    LOGGER.log(Level.WARNING, "Cannot evaulate Gradle Distribution", ex); //NOI18N
+                }
             }
-            support.addChangeListener(l);
-        }
-
-        @Override
-        public void removeChangeListener(ChangeListener l) {
-            support.removeChangeListener(l);
-            if (!support.hasListeners()) {
-                GradleSettings.getDefault().getPreferences().removePreferenceChangeListener(listener);
-            }
-        }
-
-        private synchronized GradleDistributionManager.NbGradleVersion getGradleDistribution() {
             if (dist == null) {
-                GradleSettings settings = GradleSettings.getDefault();
-
-                GradleDistributionManager mgr = GradleDistributionManager.get(getGradleHome());
-
-                GradleBaseProject gbp = GradleBaseProject.get(project);
-
-                if ((gbp != null) && settings.isWrapperPreferred()) {
-                    dist = mgr.evaluateGradleWrapperDistribution(gbp.getRootDir());
-                }
-
-                if ((dist == null) && settings.useCustomGradle() && !settings.getDistributionHome().isEmpty()) {
-                    //TODO: Add support for file based Gradle Distribution
-                }
-                if (dist == null) {
-                    dist = mgr.createVersion(settings.getGradleVersion());
-                }
-                
+                dist = mgr.distributionFromVersion(settings.getGradleVersion());
             }
-            return dist;
+
+        }
+        return dist;
+    }
+
+    @Override
+    public void addChangeListener(ChangeListener l) {
+        if (!support.hasListeners()) {
+            GradleSettings.getDefault().getPreferences().addPreferenceChangeListener(listener);
+        }
+        support.addChangeListener(l);
+    }
+
+    @Override
+    public void removeChangeListener(ChangeListener l) {
+        support.removeChangeListener(l);
+        if (!support.hasListeners()) {
+            GradleSettings.getDefault().getPreferences().removePreferenceChangeListener(listener);
         }
     }
+
 }

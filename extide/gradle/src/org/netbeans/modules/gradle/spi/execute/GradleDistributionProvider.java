@@ -18,22 +18,40 @@
  */
 package org.netbeans.modules.gradle.spi.execute;
 
-import java.io.File;
 import javax.swing.event.ChangeListener;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 
 /**
+ * Projects can provide the required Gradle Distribution through this interface,
+ * by placing an implementation of it in the project lookup.
  *
+ * @since 2.4
  * @author lkishalmi
  */
 public interface GradleDistributionProvider {
-    Result getGradleDistribution();
 
-    interface Result {
-        File getGradleInstall();
-        File getGradleHome();
-        boolean isCompatibleWithSystemJava();
-        
-        void addChangeListener(ChangeListener l);
-        void removeChangeListener(ChangeListener l);
-    }
+    /**
+     * Shall return the {@link GradleDistribution} used by the project.
+     * It may return <code>null</code> if the project does not have specific
+     * GradleDistribution requirements. Gradle defaults of the actual project
+     * and tooling API would be used in that case (not recommended).
+     *
+     * @return The {@link GradeDistribution} to use for the project.
+     */
+    GradleDistribution getGradleDistribution();
+
+    /**
+     * Add a {@link ChangeListener} to be notified when the required
+     * {@link GradleDistribution} changes for the project;
+     *
+     * @param l the {@link ChanegListener}
+     */
+    void addChangeListener(ChangeListener l);
+
+    /**
+     * Remove a registered {@link ChangeListener}.
+     * @param l the {@link ChanegListener}
+     */
+    void removeChangeListener(ChangeListener l);
+
 }

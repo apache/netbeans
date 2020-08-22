@@ -34,6 +34,8 @@ import org.gradle.tooling.ResultHandler;
 import org.gradle.tooling.TestLauncher;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileUtil;
@@ -114,25 +116,35 @@ public class GradleProjectConnection implements ProjectConnection {
             File projectDir = FileUtil.toFile(project.getProjectDirectory());
             GradleConnector gconn = GradleConnector.newConnector();
             GradleDistributionProvider pvd = project.getLookup().lookup(GradleDistributionProvider.class);
-            GradleDistributionProvider.Result res = pvd != null ? pvd.getGradleDistribution() : null;
-            if (res != null) {
-
-                File gradleHome = res.getGradleHome();
-                gconn = gradleHome != null ? gconn.useGradleUserHomeDir(gradleHome) : gconn;
-                File gradleInstall = res.getGradleInstall();
-                conn = (gradleInstall != null ? gconn.useInstallation(gradleInstall) : gconn).forProjectDirectory(projectDir).connect();
-                if (!res.isCompatibleWithSystemJava()) {
-                    gradleInstall = GradleDistributionManager.get(gradleHome).defaultToolingVersion().distributionDir();
-                    compatConn = gconn.useInstallation(gradleInstall).forProjectDirectory(gradleHome).connect();
-                } else {
-                    compatConn = conn;
+            if (pvd != null) {
+                pvd.addChangeListener(WeakListeners.change(listener, null));
+                GradleDistribution dist = pvd.getGradleDistribution();
+                if (dist != null) {
+                    conn = createConnection(dist, projectDir);
+                    if (dist.isCompatibleWithSystemJava()) {
+                        compatConn = conn;
+                    } else {
+                        GradleDistribution compatDist = GradleDistributionManager.get(dist.getGradleUserHome()).defaultDistribution();
+                        compatConn = createConnection(compatDist, projectDir);
+                    }
                 }
-                res.addChangeListener(WeakListeners.change(listener, res));
-            } else {
+            }
+            if (conn == null) {
                 conn = gconn.forProjectDirectory(projectDir).connect();
                 compatConn = conn;
             }
         }
         return compatible ? compatConn : conn;
+    }
+
+    private static ProjectConnection createConnection(GradleDistribution dist, File projectDir) {
+        GradleConnector gconn = GradleConnector.newConnector();
+        gconn = gconn.useGradleUserHomeDir(dist.getGradleUserHome());
+        if (dist.isAvailable()) {
+            gconn = gconn.useInstallation(dist.getDistributionDir());
+        } else {
+            gconn = gconn.useDistribution(dist.getDistributionURI());
+        }
+        return gconn.forProjectDirectory(projectDir).connect();
     }
 }

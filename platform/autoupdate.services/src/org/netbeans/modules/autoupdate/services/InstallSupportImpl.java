@@ -1121,7 +1121,22 @@ public class InstallSupportImpl {
 
             if(res == null) {
                 try {
-                    Collection<CodeSigner> nbmCerts = Utilities.getNbmCertificates(nbmFile);
+                    List<String> pack200Entries = new ArrayList<>();
+                    Collection<CodeSigner> nbmCerts = Utilities.getNbmCertificates(nbmFile, pack200Entries);
+                    if (!pack200Entries.isEmpty()) {
+                        OperationContainer<InstallSupport> operationContainer = support.getContainer();
+                        OperationContainerImpl ocImpl = Trampoline.API.impl(operationContainer);
+                        File pack200 = ocImpl.getUnpack200();
+                        if (pack200 == null || !pack200.canExecute()) {
+                            StringBuilder sb = new StringBuilder();
+                            for (String entry : pack200Entries) {
+                                sb.append("\n").append(entry);
+                            }
+                            throw new OperationException(OperationException.ERROR_TYPE.MISSING_UNPACK200,
+                                NbBundle.getMessage(InstallSupportImpl.class, "InstallSupportImpl_Validate_MissingUnpack200", nbmFile, sb.toString()) // NOI18N
+                            );
+                        }
+                    }
                     if (nbmCerts == null) {
                         res = Utilities.N_A;
                     } else if (nbmCerts.isEmpty()) {

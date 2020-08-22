@@ -289,13 +289,15 @@ public class Utilities {
      * Get the certpaths that were used to sign the NBM content.
      *
      * @param nbmFile
+     * @param pack200Entries list of strings to add any entries in the NBM file
+     *   that end with {@code .pack.gz} extension and may require pack200 tool
      * @return collection of CodeSigners, that were used to sign the non-signature
      * entries of the NBM
      * @throws IOException
      * @throws SecurityException if JAR was tampered with or if the certificate
      *         chains are not consistent
      */
-    public static Collection<CodeSigner> getNbmCertificates (File nbmFile) throws IOException, SecurityException {
+    public static Collection<CodeSigner> getNbmCertificates (File nbmFile, List<String> pack200Entries) throws IOException, SecurityException {
         Set<CodeSigner> certs = null;
 
         // Empty means only the MANIFEST.MF is present - special cased to be in
@@ -316,7 +318,7 @@ public class Utilities {
         //   ends with .SF, .DSA, .RSA or .EC
         try (JarFile jf = new JarFile(nbmFile)) {
             for (JarEntry entry : Collections.list(jf.entries())) {
-                verifyEntry(jf, entry);
+                verifyEntry(jf, entry, pack200Entries);
                 if ((! entry.isDirectory()) && (! isSignatureEntry(entry))) {
                     if(! entry.getName().equals("META-INF/MANIFEST.MF")) {
                         empty = false;
@@ -349,9 +351,12 @@ public class Utilities {
      * @throws SecurityException
      */
     @SuppressWarnings("empty-statement")
-    private static void verifyEntry (JarFile jf, JarEntry je) throws IOException, SecurityException {
+    private static void verifyEntry (JarFile jf, JarEntry je, List<String> pack200Entries) throws IOException, SecurityException {
         InputStream is = null;
         try {
+            if (je.getName().endsWith(".pack.gz")) {
+                pack200Entries.add(je.getName());
+            }
             is = jf.getInputStream (je);
             byte[] buffer = new byte[8192];
             while ((is.read (buffer, 0, buffer.length)) != -1);

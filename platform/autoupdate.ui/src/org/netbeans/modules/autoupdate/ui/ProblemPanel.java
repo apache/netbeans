@@ -78,6 +78,7 @@ public class ProblemPanel extends javax.swing.JPanel {
                     initWriteProblem(culprit, problemDescription);
                     break;
                 case INSTALL:
+                case MISSING_UNPACK200:
                     initInstallProblem(ex);
                     break;
                 case MODIFIED:
@@ -150,9 +151,9 @@ public class ProblemPanel extends javax.swing.JPanel {
     }
     
     @Messages({
-        "install_taTitle_Text=Cannot complete the validation of download plugins",
+        "install_taTitle_Text=Cannot complete the validation of downloaded plugins",
         "# {0} - message of exception",
-        "install_taMessage_ErrorText=The validation of download plugins cannot be completed, cause: {0}"})
+        "install_taMessage_ErrorText=The validation of downloaded plugins cannot be completed, cause: {0}"})
     private void initInstallProblem(OperationException ex) {
         problem = install_taTitle_Text();
         enhancedInitComponents();

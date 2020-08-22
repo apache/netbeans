@@ -318,7 +318,7 @@
                     <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbGradleVersionItemStateChanged"/>
                   </Events>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;NbGradleVersion&gt;"/>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;GradleDistribution&gt;"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JRadioButton" name="rbUseStandardGradle">

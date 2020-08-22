@@ -131,7 +131,7 @@ public class Server implements ArgsProcessor {
             if (folders != null) {
                 for (WorkspaceFolder w : folders) {
                     try {
-                        projectCandidates.add(TextDocumentServiceImpl.fromUri(w.getUri()));
+                        projectCandidates.add(Utils.fromUri(w.getUri()));
                     } catch (MalformedURLException ex) {
                         LOG.log(Level.FINE, null, ex);
                     }
@@ -141,7 +141,7 @@ public class Server implements ArgsProcessor {
 
                 if (root != null) {
                     try {
-                        projectCandidates.add(TextDocumentServiceImpl.fromUri(root));
+                        projectCandidates.add(Utils.fromUri(root));
                     } catch (MalformedURLException ex) {
                         LOG.log(Level.FINE, null, ex);
                     }
@@ -190,6 +190,7 @@ public class Server implements ArgsProcessor {
             capabilities.setDocumentSymbolProvider(true);
             capabilities.setDefinitionProvider(true);
             capabilities.setDocumentHighlightProvider(true);
+            capabilities.setWorkspaceSymbolProvider(true);
             return CompletableFuture.completedFuture(new InitializeResult(capabilities));
         }
 

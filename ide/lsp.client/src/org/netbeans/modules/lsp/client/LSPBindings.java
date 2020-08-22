@@ -48,6 +48,7 @@ import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.ResourceOperationKind;
 import org.eclipse.lsp4j.ServerCapabilities;
+import org.eclipse.lsp4j.SymbolCapabilities;
 import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.SymbolKindCapabilities;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
@@ -58,6 +59,7 @@ import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.progress.*;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -82,6 +84,11 @@ import org.openide.util.lookup.Lookups;
  * @author lahvac
  */
 public class LSPBindings {
+
+    static {
+        //Don't perform null checks. The servers may not adhere to the specification, and send illegal nulls.
+        Preconditions.enableNullChecks(false);
+    }
 
     private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
     private static final int DELAY = 500;
@@ -114,6 +121,14 @@ public class LSPBindings {
             return null;
         }
 
+        return getBindingsImpl(prj, mimeType, true);
+    }
+
+    public static void ensureServerRunning(Project prj, String mimeType) {
+        getBindingsImpl(prj, mimeType, false);
+    }
+
+    public static synchronized LSPBindings getBindingsImpl(Project prj, String mimeType, boolean forceBindings) {
         LSPBindings bindings =
                 project2MimeType2Server.computeIfAbsent(prj, p -> new HashMap<>())
                                        .computeIfAbsent(mimeType, mt -> {
@@ -166,15 +181,19 @@ public class LSPBindings {
                                                    }
                                                }
                                            }
-                                           return new LSPBindings(null, null, null);
+                                           return forceBindings ? new LSPBindings(null, null, null) : null;
                                        });
 
+        if (bindings == null) {
+            return null;
+        }
         if (bindings.process != null && !bindings.process.isAlive()) {
             //XXX: what now
             return null;
         }
         return bindings.server != null ? bindings : null;
     }
+
     private static final Logger LOG = Logger.getLogger(LSPBindings.class.getName());
 
     @Messages("LBL_Connecting=Connecting to language server")
@@ -221,6 +240,8 @@ public class LSPBindings {
        wcc.setWorkspaceEdit(new WorkspaceEditCapabilities());
        wcc.getWorkspaceEdit().setDocumentChanges(true);
        wcc.getWorkspaceEdit().setResourceOperations(Arrays.asList(ResourceOperationKind.Create, ResourceOperationKind.Delete, ResourceOperationKind.Rename));
+       SymbolCapabilities sc = new SymbolCapabilities(new SymbolKindCapabilities(Arrays.asList(SymbolKind.values())));
+       wcc.setSymbol(sc);
        initParams.setCapabilities(new ClientCapabilities(wcc, tdcc, null));
        CompletableFuture<InitializeResult> initResult = server.initialize(initParams);
        while (true) {
@@ -234,6 +255,21 @@ public class LSPBindings {
                }
            }
        }
+    }
+
+    public static Set<LSPBindings> getAllBindings() {
+        Set<LSPBindings> allBindings = Collections.newSetFromMap(new IdentityHashMap<>());
+
+        project2MimeType2Server.values()
+                               .stream()
+                               .flatMap(n -> n.values().stream())
+                               .forEach(allBindings::add);
+        workspace2Extension2Server.values()
+                                  .stream()
+                                  .flatMap(n -> n.values().stream())
+                                  .forEach(allBindings::add);
+
+        return allBindings;
     }
 
     private final LanguageServer server;

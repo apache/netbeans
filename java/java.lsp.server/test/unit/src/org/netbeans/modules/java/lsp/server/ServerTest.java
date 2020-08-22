@@ -71,6 +71,7 @@ import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.launch.LSPLauncher;
@@ -80,6 +81,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.sendopts.CommandLine;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.BootClassPathUtil;
@@ -150,6 +152,7 @@ public class ServerTest extends NbTestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         serverThread.stop();
+        OpenProjects.getDefault().close(OpenProjects.getDefault().getOpenProjects());
     }
 
     public void testMain() throws Exception {
@@ -413,7 +416,16 @@ public class ServerTest extends NbTestCase {
                           "    line = 7\n" +
                           "    character = 5\n" +
                           "  ]\n" +
-                          "]:(Method:innerMethod:Range [\n" +
+                          "]:(Constructor:Inner:Range [\n" +
+                          "  start = Position [\n" +
+                          "    line = 4\n" +
+                          "    character = 4\n" +
+                          "  ]\n" +
+                          "  end = Position [\n" +
+                          "    line = 4\n" +
+                          "    character = 4\n" +
+                          "  ]\n" +
+                          "]:(), Method:innerMethod:Range [\n" +
                           "  start = Position [\n" +
                           "    line = 5\n" +
                           "    character = 8\n" +
@@ -422,7 +434,16 @@ public class ServerTest extends NbTestCase {
                           "    line = 6\n" +
                           "    character = 9\n" +
                           "  ]\n" +
-                          "]:()), Field:field:Range [\n" +
+                          "]:()), Constructor:Test:Range [\n" +
+                          "  start = Position [\n" +
+                          "    line = 0\n" +
+                          "    character = 7\n" +
+                          "  ]\n" +
+                          "  end = Position [\n" +
+                          "    line = 0\n" +
+                          "    character = 7\n" +
+                          "  ]\n" +
+                          "]:(), Field:field:Range [\n" +
                           "  start = Position [\n" +
                           "    line = 1\n" +
                           "    character = 4\n" +
@@ -846,6 +867,71 @@ public class ServerTest extends NbTestCase {
         Diagnostic unresolvable = assertDiags(diags, "Error:2:8-2:12").get(0);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(src.toURI().toString()), unresolvable.getRange(), new CodeActionContext(Arrays.asList(unresolvable)))).get();
         assertEquals(2, codeActions.size());
+    }
+
+    public void testWorkspaceSymbols() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(new File(src.getParentFile(), ".test-project"))) {}
+        String code = "public class Test {\n" +
+                      "    public static class TestNested {}\n" +
+                      "    public static void testMethod() {}\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        CountDownLatch indexingComplete = new CountDownLatch(1);
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setRootUri(getWorkDir().toURI().toString());
+        InitializeResult result = server.initialize(initParams).get();
+        indexingComplete.await();
+        List<? extends SymbolInformation> symbols = server.getWorkspaceService().symbol(new WorkspaceSymbolParams("Tes")).get();
+        List<String> actual = symbols.stream().map(si -> si.getKind() + ":" + si.getName() + ":" + si.getContainerName() + ":" + si.getDeprecated() + ":" + toString(si.getLocation())).collect(Collectors.toList());
+        assertEquals(Arrays.asList("Class:Test:Test:false:Test.java:0:0-3:1",
+                                   "Constructor:():Test:false:Test.java:0:7-0:7",
+                                   "Method:():Test:false:Test.java:2:4-2:38",
+                                   "Class:TestNested:Test.TestNested:false:Test.java:1:4-1:37",
+                                   "Constructor:():Test.TestNested:false:Test.java:1:18-1:18"),
+                     actual);
+    }
+
+    private String toString(Location location) {
+        String path = location.getUri();
+        String simpleName = path.substring(path.lastIndexOf('/') + 1);
+        return simpleName + ":" + location.getRange().getStart().getLine() + ":" + location.getRange().getStart().getCharacter() +
+                            "-" + location.getRange().getEnd().getLine() + ":" + location.getRange().getEnd().getCharacter();
     }
 
     private void assertHighlights(List<? extends DocumentHighlight> highlights, String... expected) {

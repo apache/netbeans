@@ -17,7 +17,8 @@
 		"vscode": "^1.26.0"
 	},
 	"activationEvents": [
-		"onLanguage:java"
+		"onLanguage:java",
+		"workspaceContains:**/*.java"
 	],
 	"main": "./out/extension",
 	"scripts": {

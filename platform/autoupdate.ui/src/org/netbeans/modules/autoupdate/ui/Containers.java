@@ -19,11 +19,13 @@
 
 package org.netbeans.modules.autoupdate.ui;
 
+import java.io.File;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import org.netbeans.api.autoupdate.InstallSupport;
 import org.netbeans.api.autoupdate.OperationContainer;
 import org.netbeans.api.autoupdate.OperationSupport;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -69,7 +71,7 @@ public class Containers {
                 container = OperationContainer.createForInstall();
                 INSTALL_FOR_NBMS = new WeakReference<OperationContainer<InstallSupport>>(container);
             }
-            return container;
+            return useUnpack200(container);
         }        
     }
     public static OperationContainer<InstallSupport> forUpdateNbms() {
@@ -82,7 +84,7 @@ public class Containers {
                 container = OperationContainer.createForUpdate();
                 UPDATE_FOR_NBMS = new WeakReference<OperationContainer<InstallSupport>>(container);
             }
-            return container;
+            return useUnpack200(container);
         }        
     }
     
@@ -96,7 +98,7 @@ public class Containers {
                 container  = OperationContainer.createForInstall();
                 INSTALL = new WeakReference<OperationContainer<InstallSupport>>(container);
             }
-            return container;
+            return useUnpack200(container);
         }        
     }
     public static OperationContainer<InstallSupport> forUpdate() {
@@ -109,7 +111,7 @@ public class Containers {
                 container = OperationContainer.createForUpdate();
                 UPDATE = new WeakReference<OperationContainer<InstallSupport>>(container);
             }
-            return container;
+            return useUnpack200(container);
         }        
     }
     public static OperationContainer<OperationSupport> forUninstall() {
@@ -122,7 +124,7 @@ public class Containers {
                 container = OperationContainer.createForUninstall();
                 UNINSTALL = new WeakReference<OperationContainer<OperationSupport>>(container);
             }
-            return container;
+            return useUnpack200(container);
         }        
     }
     public static OperationContainer<OperationSupport> forEnable() {
@@ -135,7 +137,7 @@ public class Containers {
                 container = OperationContainer.createForEnable();
                 ENABLE = new WeakReference<OperationContainer<OperationSupport>>(container);
             }
-            return container;
+            return useUnpack200(container);
         }        
     }
     public static OperationContainer<OperationSupport> forDisable() {
@@ -148,7 +150,7 @@ public class Containers {
                 container = OperationContainer.createForDisable();
                 DISABLE = new WeakReference<OperationContainer<OperationSupport>>(container);
             }
-            return container;
+            return useUnpack200(container);
         }        
     }
     public static OperationContainer<OperationSupport> forCustomInstall () {
@@ -161,7 +163,7 @@ public class Containers {
                 container = OperationContainer.createForCustomInstallComponent ();
                 CUSTOM_INSTALL = new WeakReference<OperationContainer<OperationSupport>> (container);
             }
-            return container;
+            return useUnpack200(container);
         }        
     }
     public static OperationContainer<OperationSupport> forCustomUninstall () {
@@ -174,7 +176,7 @@ public class Containers {
                 container = OperationContainer.createForCustomUninstallComponent ();
                 CUSTOM_UNINSTALL = new WeakReference<OperationContainer<OperationSupport>> (container);
             }
-            return container;
+            return useUnpack200(container);
         }        
     }
     public static OperationContainer<InstallSupport> forInternalUpdate () {
@@ -187,7 +189,32 @@ public class Containers {
                 container = OperationContainer.createForInternalUpdate();
                 INTERNAL_UPDATE = new WeakReference<OperationContainer<InstallSupport>> (container);
             }
-            return container;
+            return useUnpack200(container);
         }
+    }
+    
+    public static void defineUnpack200(File executable) {
+        NbPreferences.forModule(Containers.class).put("unpack200", executable.getPath()); // NOI18N
+        INSTALL.clear();
+        INTERNAL_UPDATE.clear();
+        UPDATE.clear();
+        INSTALL_FOR_NBMS.clear();
+        UPDATE_FOR_NBMS.clear();
+        UNINSTALL.clear();
+        ENABLE.clear();
+        DISABLE.clear();
+        CUSTOM_INSTALL.clear();
+        CUSTOM_UNINSTALL.clear();
+    }
+    
+    private static <T> OperationContainer<T> useUnpack200(OperationContainer<T> container) {
+        String pack200 = NbPreferences.forModule(Containers.class).get("unpack200", null); // NOI18N
+        if (pack200 != null) {
+            final File file = new File(pack200);
+            if (file.canExecute()) {
+                container.setUnpack200(file);
+            }
+        }
+        return container;
     }
 }

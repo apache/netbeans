@@ -506,6 +506,8 @@ class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescriptor> 
             ProblemPanel problem = new ProblemPanel(ex, detailLabel.getText(), false);
             if (ex.getErrorType() == OperationException.ERROR_TYPE.MODIFIED) {
                 problem.showModifiedProblemDialog(detailLabel.getText());
+            } else if (ex.getErrorType() == OperationException.ERROR_TYPE.MISSING_UNPACK200) {
+                problem.showUnpack200ProblemDialog();
             } else {
                 problem.showNetworkProblemDialog();
             }

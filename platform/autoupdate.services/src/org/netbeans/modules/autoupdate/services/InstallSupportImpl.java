@@ -1126,8 +1126,8 @@ public class InstallSupportImpl {
                     if (!pack200Entries.isEmpty()) {
                         OperationContainer<InstallSupport> operationContainer = support.getContainer();
                         OperationContainerImpl ocImpl = Trampoline.API.impl(operationContainer);
-                        File pack200 = ocImpl.getUnpack200();
-                        if (pack200 == null || !pack200.canExecute()) {
+                        File unpack200 = ocImpl.getUnpack200();
+                        if (unpack200 == null || !unpack200.canExecute()) {
                             StringBuilder sb = new StringBuilder();
                             for (String entry : pack200Entries) {
                                 sb.append("\n").append(entry);

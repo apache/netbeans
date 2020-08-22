@@ -22,8 +22,10 @@ package org.netbeans.modules.autoupdate.ui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.prefs.Preferences;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JTextPane;
 import org.netbeans.api.autoupdate.OperationException;
 import org.netbeans.api.autoupdate.UpdateElement;
@@ -33,6 +35,7 @@ import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.Mnemonics;
+import org.openide.util.BaseUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
@@ -235,6 +238,12 @@ public class ProblemPanel extends javax.swing.JPanel {
         return dd.getValue ();
     }
     
+    public Object showUnpack200ProblemDialog () {
+        DialogDescriptor dd = getUnpack200ProblemDescriptor();
+        DialogDisplayer.getDefault ().createDialog (dd).setVisible (true);
+        return dd.getValue ();
+    }
+    
     public Object showWriteProblemDialog () {
         DialogDescriptor dd = getWriteProblemDescriptor();
         DialogDisplayer.getDefault().createDialog(dd).setVisible(true);
@@ -263,6 +272,38 @@ public class ProblemPanel extends javax.swing.JPanel {
                 
         if (isWarning) {
             descriptor.setAdditionalOptions(new Object [] {showProxyOptions});
+        }
+        
+        return descriptor;
+    }
+
+    private DialogDescriptor getUnpack200ProblemDescriptor() {
+        DialogDescriptor descriptor = getProblemDesriptor(NbBundle.getMessage(ProblemPanel.class, "CTL_ShowUnpack200Options"));
+
+        JButton chooseUnpack200 = new JButton ();
+        Mnemonics.setLocalizedText (chooseUnpack200, NbBundle.getMessage(ProblemPanel.class, "CTL_ShowUnpack200Options"));
+        
+        chooseUnpack200.getAccessibleContext ().setAccessibleDescription (NbBundle.getMessage(ProblemPanel.class, "ACSD_ShowUnpack200Options"));
+        chooseUnpack200.addActionListener ((ev) -> {
+            String unpackName = BaseUtilities.isWindows() ? "unpack200.exe" : "unpack200"; // NOI18N
+            final JFileChooser choose = new JFileChooser(unpackName);
+            choose.setSelectedFile(new File(new File(System.getProperty("java.home"), "bin"), unpackName));
+            choose.setDialogTitle(NbBundle.getMessage(ProblemPanel.class, "CTL_ShowUnpack200Title"));
+            for (;;) {
+                if (choose.showOpenDialog(chooseUnpack200) == JFileChooser.APPROVE_OPTION) {
+                    File f = choose.getSelectedFile();
+                    if (f.canExecute()) {
+                        Containers.defineUnpack200(f);
+                        return;
+                    }
+                } else {
+                    return;
+                }
+            }
+        });
+                
+        if (isWarning) {
+            descriptor.setAdditionalOptions(new Object [] {chooseUnpack200});
         }
         
         return descriptor;

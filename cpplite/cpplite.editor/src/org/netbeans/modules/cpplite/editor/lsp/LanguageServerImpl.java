@@ -158,7 +158,7 @@ public class LanguageServerImpl implements LanguageServerProvider {
     private static File getCompileCommandsDir(CProjectConfigurationProvider configProvider) {
         ProjectConfiguration config = configProvider.getProjectConfiguration();
 
-        if (config.commandJsonCommand != null || configProvider.getProjectConfiguration().commandJsonPath != null) {
+        if (config.commandJsonCommand != null || config.commandJsonPath != null || config.commandJsonContent != null) {
             File tempFile = Places.getCacheSubfile("cpplite/compile_commands/" + tempDirIndex++ + "/compile_commands.json");
             if (config.commandJsonCommand != null) {
                 try {
@@ -167,8 +167,8 @@ public class LanguageServerImpl implements LanguageServerProvider {
                     LOG.log(Level.WARNING, null, ex);
                     return null;
                 }
-            } else {
-                File commandsPath = new File(configProvider.getProjectConfiguration().commandJsonPath);
+            } else if (config.commandJsonPath != null) {
+                File commandsPath = new File(config.commandJsonPath);
                 if (commandsPath.canRead()) {
                     try (InputStream in = new FileInputStream(commandsPath);
                          OutputStream out = new FileOutputStream(tempFile)) {
@@ -178,6 +178,15 @@ public class LanguageServerImpl implements LanguageServerProvider {
                         return null;
                     }
                 }
+            } else if (config.commandJsonContent != null) {
+                try (OutputStream out = new FileOutputStream(tempFile)) {
+                    out.write(config.commandJsonContent.getBytes());
+                } catch (IOException ex) {
+                    LOG.log(Level.WARNING, null, ex);
+                    return null;
+                }
+            } else {
+                return null;
             }
             return tempFile.getParentFile();
         }

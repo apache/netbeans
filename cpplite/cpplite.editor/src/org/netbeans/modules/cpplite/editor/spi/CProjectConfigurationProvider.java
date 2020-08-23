@@ -36,16 +36,24 @@ public interface CProjectConfigurationProvider {
     public static class ProjectConfiguration {
         public final String commandJsonPath;
         public final List<String> commandJsonCommand;
+        public final String commandJsonContent;
 
         public ProjectConfiguration(String commandJsonPath) {
             this.commandJsonPath = commandJsonPath;
             this.commandJsonCommand = null;
+            this.commandJsonContent = null;
         }
 
         public ProjectConfiguration(List<String> commandJsonCommand) {
             this.commandJsonPath = null;
             this.commandJsonCommand = commandJsonCommand;
+            this.commandJsonContent = null;
         }
-        
+
+        public ProjectConfiguration(String commandJsonContent, boolean content) {
+            this.commandJsonPath = null;
+            this.commandJsonCommand = null;
+            this.commandJsonContent = commandJsonContent;
+        }
     }
 }

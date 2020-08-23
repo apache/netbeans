@@ -35,14 +35,14 @@ public class Containers {
     private static Reference<OperationContainer<InstallSupport>> INSTALL;
     private static Reference<OperationContainer<InstallSupport>> INTERNAL_UPDATE;
     private static Reference<OperationContainer<InstallSupport>> UPDATE;
-    private static Reference<OperationContainer<InstallSupport>> INSTALL_FOR_NBMS;   
+    private static Reference<OperationContainer<InstallSupport>> INSTALL_FOR_NBMS;
     private static Reference<OperationContainer<InstallSupport>> UPDATE_FOR_NBMS;
     private static Reference<OperationContainer<OperationSupport>> UNINSTALL;
     private static Reference<OperationContainer<OperationSupport>> ENABLE;
     private static Reference<OperationContainer<OperationSupport>> DISABLE;
     private static Reference<OperationContainer<OperationSupport>> CUSTOM_INSTALL;
     private static Reference<OperationContainer<OperationSupport>> CUSTOM_UNINSTALL;
-    
+
     private Containers(){}
     public static void initNotify() {
         try {
@@ -72,7 +72,7 @@ public class Containers {
                 INSTALL_FOR_NBMS = new WeakReference<OperationContainer<InstallSupport>>(container);
             }
             return useUnpack200(container);
-        }        
+        }
     }
     public static OperationContainer<InstallSupport> forUpdateNbms() {
         synchronized(Containers.class) {
@@ -85,9 +85,9 @@ public class Containers {
                 UPDATE_FOR_NBMS = new WeakReference<OperationContainer<InstallSupport>>(container);
             }
             return useUnpack200(container);
-        }        
+        }
     }
-    
+
     public static OperationContainer<InstallSupport> forAvailable() {
         synchronized(Containers.class) {
             OperationContainer<InstallSupport> container = null;
@@ -99,7 +99,7 @@ public class Containers {
                 INSTALL = new WeakReference<OperationContainer<InstallSupport>>(container);
             }
             return useUnpack200(container);
-        }        
+        }
     }
     public static OperationContainer<InstallSupport> forUpdate() {
         synchronized(Containers.class) {
@@ -112,7 +112,7 @@ public class Containers {
                 UPDATE = new WeakReference<OperationContainer<InstallSupport>>(container);
             }
             return useUnpack200(container);
-        }        
+        }
     }
     public static OperationContainer<OperationSupport> forUninstall() {
         synchronized(Containers.class) {
@@ -125,7 +125,7 @@ public class Containers {
                 UNINSTALL = new WeakReference<OperationContainer<OperationSupport>>(container);
             }
             return useUnpack200(container);
-        }        
+        }
     }
     public static OperationContainer<OperationSupport> forEnable() {
         synchronized(Containers.class) {
@@ -138,7 +138,7 @@ public class Containers {
                 ENABLE = new WeakReference<OperationContainer<OperationSupport>>(container);
             }
             return useUnpack200(container);
-        }        
+        }
     }
     public static OperationContainer<OperationSupport> forDisable() {
         synchronized(Containers.class) {
@@ -151,7 +151,7 @@ public class Containers {
                 DISABLE = new WeakReference<OperationContainer<OperationSupport>>(container);
             }
             return useUnpack200(container);
-        }        
+        }
     }
     public static OperationContainer<OperationSupport> forCustomInstall () {
         synchronized (Containers.class) {
@@ -164,7 +164,7 @@ public class Containers {
                 CUSTOM_INSTALL = new WeakReference<OperationContainer<OperationSupport>> (container);
             }
             return useUnpack200(container);
-        }        
+        }
     }
     public static OperationContainer<OperationSupport> forCustomUninstall () {
         synchronized (Containers.class) {
@@ -177,7 +177,7 @@ public class Containers {
                 CUSTOM_UNINSTALL = new WeakReference<OperationContainer<OperationSupport>> (container);
             }
             return useUnpack200(container);
-        }        
+        }
     }
     public static OperationContainer<InstallSupport> forInternalUpdate () {
         synchronized (Containers.class) {
@@ -192,7 +192,7 @@ public class Containers {
             return useUnpack200(container);
         }
     }
-    
+
     public static void defineUnpack200(File executable) {
         NbPreferences.forModule(Containers.class).put("unpack200", executable.getPath()); // NOI18N
         INSTALL.clear();
@@ -206,7 +206,7 @@ public class Containers {
         CUSTOM_INSTALL.clear();
         CUSTOM_UNINSTALL.clear();
     }
-    
+
     private static <T> OperationContainer<T> useUnpack200(OperationContainer<T> container) {
         String pack200 = NbPreferences.forModule(Containers.class).get("unpack200", null); // NOI18N
         if (pack200 != null) {

@@ -194,7 +194,7 @@ public class Containers {
     }
 
     public static void defineUnpack200(File executable) {
-        NbPreferences.forModule(Containers.class).put("unpack200", executable.getPath()); // NOI18N
+        NbPreferences.forModule(OperationContainer.class).put("unpack200", executable.getPath()); // NOI18N
         INSTALL.clear();
         INTERNAL_UPDATE.clear();
         UPDATE.clear();
@@ -208,7 +208,7 @@ public class Containers {
     }
 
     private static <T> OperationContainer<T> useUnpack200(OperationContainer<T> container) {
-        String pack200 = NbPreferences.forModule(Containers.class).get("unpack200", null); // NOI18N
+        String pack200 = NbPreferences.forModule(OperationContainer.class).get("unpack200", null); // NOI18N
         if (pack200 != null) {
             final File file = new File(pack200);
             if (file.canExecute()) {

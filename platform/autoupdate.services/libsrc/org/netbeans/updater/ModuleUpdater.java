@@ -585,7 +585,7 @@ public final class ModuleUpdater extends Thread {
             for (File clusterRoot : UpdateTracking.clusters(true)) {
                 File uiConfig = new File(new File(new File(new File(new File(new File(new File(
                         clusterRoot, "config"), "Preferences"), "org"), "netbeans"), "modules"), // NOI18N
-                        "autoupdate"), "ui.properties"); // NOI18N
+                        "autoupdate"), "services.properties"); // NOI18N
                 if (uiConfig.canRead()) {
                     Properties p = new Properties();
                     try (FileInputStream is = new FileInputStream(uiConfig)) {

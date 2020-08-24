@@ -165,10 +165,11 @@ public class DialogsTest {
     @JavaScriptBody(args = { "id", "state" }, body = "window.document.getElementById(id).disabled = state;")
     private static native void setDisabled(String id, boolean state);
     
-    @JavaScriptBody(args = { "id", "t" }, body = ""
-            + "var prev = window.document.getElementById(id).innerHTML;\n"
-            + "window.document.getElementById(id).innerHTML = t;\n"
-            + "return prev;\n"
+    @JavaScriptBody(args = { "id", "t" }, body = """
+            var prev = window.document.getElementById(id).innerHTML;
+            window.document.getElementById(id).innerHTML = t;
+            return prev;
+            """
     )
     private static native String setText(String id, String t);
     

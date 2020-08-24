@@ -116,6 +116,7 @@ public class CustomJavac extends Javac {
                     public boolean execute() throws BuildException {
                         attributes.log("Using modern compiler", Project.MSG_VERBOSE);
                         Commandline cmd = setupModernJavacCommand();
+                        cmd.addArguments(new String[] { "--enable-safe-preview" });
 
                         // Use reflection to be able to build on all JDKs >= 1.1:
                         try {

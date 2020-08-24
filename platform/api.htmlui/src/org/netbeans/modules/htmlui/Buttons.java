@@ -31,36 +31,37 @@ import org.openide.util.NbBundle;
  */
 final class Buttons {
     private final List<JButton> arr = new ArrayList<>();
-    
-    @JavaScriptBody(args = {}, javacall = true, body = 
-        "var self = this;\n" +
-        "var list = window.document.getElementsByTagName('button');\n" +
-        "var arr = [];\n" +
-        "function add(target) {\n" +
-        "  var l = function(changes) {\n" +
-        "    var b = target;\n" +
-        "    self.@org.netbeans.modules.htmlui.Buttons::changeState(Ljava/lang/String;ZLjava/lang/String;)(b.id, b.disabled, b.innerHTML);\n" +
-        "  }\n" +
-        "  target.addEventListener('DOMSubtreeModified', l, false);\n" +
-        "}\n" +
-        "var l = function(changes) { throw 'Here';\n" +
-        "  for (var i = 0; i < changes.length; i++) {\n" +
-        "    var b = changes[i].target;\n" +
-        "  };\n" +
-        "};\n" +
-        "for (var i = 0; i < list.length; i++) {\n" +
-        "  var b = list[i];\n" +
-        "  if (b.hidden === true) {\n" +
-        "    arr.push(b.id);\n" +
-        "    arr.push(b.innerHTML);\n" +
-        "    arr.push(b.disabled);\n" +
-        "    add(b);\n" +
-        "  }\n" +
-        "}\n" +
-        "return arr;\n"
-    )
+
+
+    @JavaScriptBody(args = {}, javacall = true, body = """
+        var self = this;
+        var list = window.document.getElementsByTagName('button');
+        var arr = [];
+        function add(target) {
+          var l = function(changes) {
+            var b = target;
+            self.@org.netbeans.modules.htmlui.Buttons::changeState(Ljava/lang/String;ZLjava/lang/String;)(b.id, b.disabled, b.innerHTML);
+          }
+          target.addEventListener('DOMSubtreeModified', l, false);
+        }
+        var l = function(changes) { throw 'Here';
+          for (var i = 0; i < changes.length; i++) {
+            var b = changes[i].target;
+          };
+        };
+        for (var i = 0; i < list.length; i++) {
+          var b = list[i];
+          if (b.hidden === true) {
+            arr.push(b.id);
+            arr.push(b.innerHTML);
+            arr.push(b.disabled);
+            add(b);
+          }
+        }
+        return arr;
+        """)
     private native Object[] list();
-    
+
     final void changeState(final String id, final boolean disabled, final String text) {
         EventQueue.invokeLater(new Runnable() {
             @Override
@@ -74,7 +75,7 @@ final class Buttons {
             }
         });
     }
-    
+
     @NbBundle.Messages({
         "CTL_OK=OK",
         "CTL_Cancel=Cancel",

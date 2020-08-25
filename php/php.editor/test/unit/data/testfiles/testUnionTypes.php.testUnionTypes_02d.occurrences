@@ -1,0 +1,5 @@
+class |>MARK_OCCURRENCES:ChildClass<| extends ParentClass
+    private ParentClass||>MARK_OCCURRENCES:ChildClass<| $field;
+    public function testMethod(ParentClass||>MARK_OCCURRENCES:ChildClass<||null $param): |>MARK_OCCURRENCES:ChildClass<||\Union\Types1\ParentClass {
+        return new |>MARK_OCCURRENCES:ChildClass<|;
+    public static function testStaticMethod(TestClass1|\Union\Types2\TestClass2|null $param1, |>MARK_OCCURRENCES:ChildCl^ass<||null $param2): TestClass2|ParentClass|null {

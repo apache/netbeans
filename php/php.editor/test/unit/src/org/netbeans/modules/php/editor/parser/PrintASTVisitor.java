@@ -821,6 +821,13 @@ public class PrintASTVisitor implements Visitor {
     }
 
     @Override
+    public void visit(UnionType node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "UnionType");
+        printNode.addChildren(node.getTypes());
+        printNode.print(this);
+    }
+
+    @Override
     public void visit(UnpackableArrayElement node) {
         XMLPrintNode printNode = new XMLPrintNode(node, "UnpackableArrayElement");
         printNode.addChild("Value", node.getValue());

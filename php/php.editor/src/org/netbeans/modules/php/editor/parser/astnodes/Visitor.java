@@ -265,6 +265,8 @@ public interface Visitor {
     //public void endVisit(TryStatement tryStatement);
     public void visit(UnaryOperation unaryOperation);
 
+    public void visit(UnionType unionType);
+
     public void visit(UnpackableArrayElement unpackableArrayElement);
 
     public void visit(UseTraitStatement useTraitStatement);

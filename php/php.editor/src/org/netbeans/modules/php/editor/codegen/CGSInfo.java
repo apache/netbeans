@@ -71,6 +71,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TypeDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
@@ -361,11 +362,15 @@ public final class CGSInfo {
                 type = getPropertyType(singleFieldDeclaration);
             } else {
                 // PHP 7.4 or newer
-                QualifiedName qualifiedName = QualifiedName.create(fieldsDeclaration.getFieldType());
-                if (qualifiedName != null) {
-                    type = qualifiedName.toString();
-                    if (fieldsDeclaration.getFieldType() instanceof NullableType) {
-                        type = CodeUtils.NULLABLE_TYPE_PREFIX + type;
+                if (fieldsDeclaration.getFieldType() instanceof UnionType) {
+                    type = VariousUtils.getUnionType((UnionType) fieldsDeclaration.getFieldType());
+                } else {
+                    QualifiedName qualifiedName = QualifiedName.create(fieldsDeclaration.getFieldType());
+                    if (qualifiedName != null) {
+                        type = qualifiedName.toString();
+                        if (fieldsDeclaration.getFieldType() instanceof NullableType) {
+                            type = CodeUtils.NULLABLE_TYPE_PREFIX + type;
+                        }
                     }
                 }
                 assert !type.isEmpty() : "couldn't get the qualified name from the field type(" + fieldsDeclaration.getFieldType() + ")"; // NOI18N

@@ -589,6 +589,17 @@ public class PHPIndexTest extends PHPNavTestBase {
         checkIndexer(getTestPath());
     }
 
+    // NETBEANS-4443 PHP 8.0
+    public void testPHP80UnionTypesFunctions() throws Exception {
+        // function, lambda function, arrow function
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP80UnionTypesTypes() throws Exception {
+        // class, abstract class, interface, trait
+        checkIndexer(getTestPath());
+    }
+
     @Override
     protected FileObject[] createSourceClassPathsForTest() {
         final File folder = new File(getDataDir(), getTestFolderPath());

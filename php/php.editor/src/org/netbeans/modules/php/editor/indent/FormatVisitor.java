@@ -38,6 +38,7 @@ import org.netbeans.modules.php.editor.indent.FormatToken.AssignmentAnchorToken;
 import org.netbeans.modules.php.editor.indent.TokenFormatter.DocumentOptions;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
@@ -91,6 +92,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.TraitConflictResolutionDe
 import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TryStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
@@ -1242,9 +1244,9 @@ public class FormatVisitor extends DefaultVisitor {
             return;
         }
         int endPosition = returnType.getEndOffset();
-        if (returnType instanceof NullableType) {
-            NullableType nullableType = (NullableType) returnType;
-            endPosition = nullableType.getStartOffset();
+        if (returnType instanceof NullableType
+                || returnType instanceof UnionType) {
+            endPosition = returnType.getStartOffset();
         }
         while (ts.moveNext()
                 && ts.offset() < endPosition
@@ -1252,8 +1254,9 @@ public class FormatVisitor extends DefaultVisitor {
             addFormatToken(formatTokens);
         }
         ts.movePrevious();
-        if (returnType instanceof NullableType) {
-            scan((NullableType) returnType);
+        if (returnType instanceof NullableType
+                || returnType instanceof UnionType) {
+            scan(returnType);
         }
     }
 
@@ -1898,6 +1901,22 @@ public class FormatVisitor extends DefaultVisitor {
         scan(node.getBody());
     }
 
+    @Override
+    public void visit(UnionType node) {
+        List<Expression> types = node.getTypes();
+        assert !types.isEmpty();
+        final Expression lastType = types.get(types.size() - 1);
+        for (int i = 0; i < types.size(); i++) {
+            Expression type = types.get(i);
+            scan(type);
+            if (type != lastType) {
+                Expression nextType = types.get(i + 1);
+                // add "|"
+                addAllUntilOffset(nextType.getStartOffset());
+            }
+        }
+    }
+
     private int lastIndex = -1;
 
     private String showAssertionFor188809() {
@@ -2157,6 +2176,14 @@ public class FormatVisitor extends DefaultVisitor {
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_DECLARE_EQUAL, ts.offset() + ts.token().length()));
                     break;
                 }
+                if (TokenUtilities.equals(txt2, Type.SEPARATOR)
+                        && path.get(0) instanceof UnionType) {
+                    // NETBEANS-4443 PHP 8.0 Union Types
+                    tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_UNION_TYPE_SEPARATOR, ts.offset()));
+                    tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), txt2.toString()));
+                    tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_UNION_TYPE_SEPARATOR, ts.offset() + ts.token().length()));
+                    break;
+                }
                 if (!TokenUtilities.startsWith(txt2, "==") // NOI18N NETBEANS-2149
                         && TokenUtilities.endsWith(txt2, "=")) { // NOI18N
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_ASSIGN_OP, ts.offset()));
@@ -2198,7 +2225,7 @@ public class FormatVisitor extends DefaultVisitor {
                     }
                     tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), txt2.toString()));
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_UNARY_OP, ts.offset() + ts.token().length()));
-                } else if (TokenUtilities.textEquals(txt2, "|") // NOI18N
+                } else if (TokenUtilities.textEquals(txt2, Type.SEPARATOR)
                         && path.get(0) instanceof CatchClause) {
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_MULTI_CATCH_SEPARATOR, ts.offset()));
                     tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
@@ -2618,6 +2645,7 @@ public class FormatVisitor extends DefaultVisitor {
 
     private boolean isFieldTypeOrVariableToken(Token<PHPTokenId> token) {
         return PHPTokenId.PHP_VARIABLE == token.id()
+                || PHPTokenId.PHP_STRING == token.id()
                 || PHPTokenId.PHP_ARRAY == token.id()
                 || PHPTokenId.PHP_ITERABLE == token.id()
                 || PHPTokenId.PHP_PARENT == token.id()
@@ -2627,6 +2655,8 @@ public class FormatVisitor extends DefaultVisitor {
                 || PHPTokenId.PHP_TYPE_FLOAT == token.id()
                 || PHPTokenId.PHP_TYPE_OBJECT == token.id()
                 || PHPTokenId.PHP_TYPE_STRING == token.id()
+                || PHPTokenId.PHP_NULL == token.id()
+                || PHPTokenId.PHP_FALSE == token.id()
                 || PHPTokenId.PHP_NS_SEPARATOR == token.id() // \
                 || (PHPTokenId.PHP_TOKEN == token.id() && TokenUtilities.textEquals(token.text(), "?")) // NOI18N
                 || PHPTokenId.PHP_TYPE_VOID == token.id() // not supported type but just check it

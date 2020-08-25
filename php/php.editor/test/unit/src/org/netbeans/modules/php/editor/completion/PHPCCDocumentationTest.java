@@ -67,6 +67,8 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
     }
 
     public void testFunctionWithArrayParamWithoutDesc() throws Exception {
+        // phpdoc missing the parameter name, so just use actual parameter name
+        // ignore phpdoc types
         checkCompletionDocumentation("testfiles/completion/documentation/functionWithArrayParamWithoutDesc.php", "aFunctionNam^e(null);", false, "");
     }
 
@@ -151,6 +153,42 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         // not {@inheritdoc} but @inheritdoc
         // the same result as the normal tag
         checkCompletionDocumentation("testfiles/completion/documentation/inheritdoc.php", "$childClass->testInvalidT^ag();", false, "");
+    }
+
+    public void testFieldTypedWithoutPhpDoc() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/fieldWithoutPhpDoc.php", "$this->typ^ed;", false, "");
+    }
+
+    public void testFieldNullableTypeWithoutPhpDoc() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/fieldWithoutPhpDoc.php", "$this->nullabl^e;", false, "");
+    }
+
+    public void testFieldUnionTypeWithoutPhpDoc() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/fieldWithoutPhpDoc.php", "self::$union^Type", false, "");
+    }
+
+    public void testMethodTypedWithoutPhpDoc() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/functionWithoutPhpDoc.php", "$instance->testTy^ped(1, null, null);", false, "");
+    }
+
+    public void testMethodNullableTypeWithoutPhpDoc() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/functionWithoutPhpDoc.php", "TestClass::testNullableTy^pe(null, null, null);", false, "");
+    }
+
+    public void testMethodUnionTypeWithoutPhpDoc() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/functionWithoutPhpDoc.php", "$instance->testUnionTy^pe(1, null, null);", false, "");
+    }
+
+    public void testFunctionTypedWithoutPhpDoc() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/functionWithoutPhpDoc.php", "testTyp^ed(2, null, null);", false, "");
+    }
+
+    public void testFunctionNullableTypeWithoutPhpDoc() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/functionWithoutPhpDoc.php", "testNullableTy^pe(2, null, null);", false, "");
+    }
+
+    public void testFunctionUnionTypeWithoutPhpDoc() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/functionWithoutPhpDoc.php", "testUnionTy^pe(2, null, null);", false, "");
     }
 
     @Override

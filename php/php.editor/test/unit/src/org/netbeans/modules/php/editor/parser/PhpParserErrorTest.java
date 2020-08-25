@@ -1116,4 +1116,24 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php80/matchExpressionError_06.php");
     }
 
+    public void testUnionTypesTypes() throws Exception {
+        checkErrors("testfiles/parser/php80/unionTypesTypes.php");
+    }
+
+    public void testUnionTypesFunctions() throws Exception {
+        checkErrors("testfiles/parser/php80/unionTypesFunctions.php");
+    }
+
+    public void testUnionTypesError_01() throws Exception {
+        checkErrors("testfiles/parser/php80/unionTypesError_01.php");
+    }
+
+    public void testUnionTypesError_02() throws Exception {
+        checkErrors("testfiles/parser/php80/unionTypesError_02.php");
+    }
+
+    public void testUnionTypesError_03() throws Exception {
+        checkErrors("testfiles/parser/php80/unionTypesError_03.php");
+    }
+
 }

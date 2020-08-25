@@ -185,4 +185,410 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
     public void testMatchExpressionInClassSimple03() throws Exception {
         checkCompletion(getTestPath("matchExpressionInClassSimple03"), "            $this->suspend => ^", false);
     }
+
+    public void testUnionTypesImplementMethod01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesImplementMethod01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesImplementMethod02() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesImplementMethod02"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesImplementMethod03() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesImplementMethod03"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesImplementMethod04() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesImplementMethod04"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesOverrideMethod01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesOverrideMethod01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesOverrideMethod02() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesOverrideMethod02"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesOverrideMethod03() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesOverrideMethod03"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesOverrideMethodSpecialTypes01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesOverrideMethodSpecialTypes01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesOverrideMethodSpecialTypes02() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesOverrideMethodSpecialTypes02"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesOverrideMethodSpecialTypes03() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesOverrideMethodSpecialTypes03"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesOverrideMethodSpecialTypes04() throws Exception {
+        // default namespace
+        checkCompletionCustomTemplateResult(getTestPath("testUnionTypesOverrideMethodSpecialTypes04"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testUnionTypesFunctionParameterType01() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctionParameterType01"), "function union_types(int|^)", false);
+    }
+
+    public void testUnionTypesFunctionParameterType02() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctionParameterType02"), "function union_types(int|\\Test\\U^)", false);
+    }
+
+    public void testUnionTypesFunctionParameterType03() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctionParameterType03"), "function union_types(int|\\Test\\UnionTypes|^)", false);
+    }
+
+    public void testUnionTypesFunctionParameterType04() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctionParameterType04"), "function union_types(int|^|\\Test\\UnionTypes)", false);
+    }
+
+    public void testUnionTypesFunctionParameterType05() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctionParameterType05"), "function union_types(int|^) {", false);
+    }
+
+    public void testUnionTypesFunctionParameterType06() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctionParameterType06"), "function union_types(int|Uni^) {", false);
+    }
+
+    public void testUnionTypesFunctionParameterType07() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctionParameterType07"), "function union_types(int|UnionTypes $param, int|float|string|^) {", false);
+    }
+
+    public void testUnionTypesFunctionParameterType08() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctionParameterType08"), "function union_types(int|UnionTypes $param, int|float|string|\\Test\\^ ) {", false);
+    }
+
+    public void testUnionTypesFunctionParameterType09() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctionParameterType09"), "function union_types(int|UnionTypes $param, int|float|string|\\Test\\Uni^ ) {", false);
+    }
+
+    public void testUnionTypesFunctionReturnType01() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctionReturnType01"), "function union_types(int|\\Test\\UnionTypes|null $param): null|^", false);
+    }
+
+    public void testUnionTypesFunctionReturnType02() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctionReturnType02"), "function union_types(int|\\Test\\UnionTypes|null $param): null|\\Test\\^", false);
+    }
+
+    public void testUnionTypesFunctionReturnType03() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctionReturnType03"), "function union_types(int|\\Test\\UnionTypes|null $param): null|\\Test\\UnionTyes1|U^", false);
+    }
+
+    public void testUnionTypesFunctionReturnType04() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctionReturnType04"), "function union_types(int|\\Test\\UnionTypes|null $param): null|^|\\Test\\UnionTyes1", false);
+    }
+
+    public void testUnionTypesFunctions_01() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "function union_types(n^ull|int|float $param1, string|object $param): UnionTypes1| UnionTypes2 {", false);
+    }
+
+    public void testUnionTypesFunctions_02() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "function union_types(null|int|float $param1, string|^object $param): UnionTypes1| UnionTypes2 {", false);
+    }
+
+    public void testUnionTypesFunctions_03() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "function union_types(null|int|float $param1, string|obj^ect $param): UnionTypes1| UnionTypes2 {", false);
+    }
+
+    public void testUnionTypesFunctions_04() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "function union_types(null|int|float $param1, string|object $param): ^UnionTypes1| UnionTypes2 {", false);
+    }
+
+    public void testUnionTypesFunctions_05() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "function union_types(null|int|float $param1, string|object $param): UnionTypes1| ^UnionTypes2 {", false);
+    }
+
+    public void testUnionTypesFunctions_06() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "function union_types(null|int|float $param1, string|object $param): UnionTypes1| Uni^onTypes2 {", false);
+    }
+
+    public void testUnionTypesFunctions_07() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "$closure = function(null|int|float $param1, st^ring| object $param): iterable|false {", false);
+    }
+
+    public void testUnionTypesFunctions_08() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "$closure = function(null|int|float $param1, string| ^object $param): iterable|false {", false);
+    }
+
+    public void testUnionTypesFunctions_09() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "$closure = function(null|int|float $param1, string| object $param): ^iterable|false {", false);
+    }
+
+    public void testUnionTypesFunctions_10() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "$closure = function(null|int|float $param1, string| object $param): iterable|^false {", false);
+    }
+
+    public void testUnionTypesFunctions_11() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "$closure = function(null|int|float $param1, string| object $param): iterable|f^alse {", false);
+    }
+
+    public void testUnionTypesFunctions_12() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "$arrow = fn(null|int|^float $param1, string|object $param): \\Test\\UnionTypes1|\\Test\\UnionTypes2|null {", false);
+    }
+
+    public void testUnionTypesFunctions_13() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "$arrow = fn(null|int|float $param1, string|^object $param): \\Test\\UnionTypes1|\\Test\\UnionTypes2|null {", false);
+    }
+
+    public void testUnionTypesFunctions_14() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "$arrow = fn(null|int|float $param1, string|object^ $param): \\Test\\UnionTypes1|\\Test\\UnionTypes2|null {", false);
+    }
+
+    public void testUnionTypesFunctions_15() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "$arrow = fn(null|int|float $param1, string|object $param): ^\\Test\\UnionTypes1|\\Test\\UnionTypes2|null {", false);
+    }
+
+    public void testUnionTypesFunctions_16() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "$arrow = fn(null|int|float $param1, string|object $param): \\Test\\Un^ionTypes1|\\Test\\UnionTypes2|null {", false);
+    }
+
+    public void testUnionTypesFunctions_17() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "$arrow = fn(null|int|float $param1, string|object $param): \\Test\\UnionTypes1|^\\Test\\UnionTypes2|null {", false);
+    }
+
+    public void testUnionTypesFunctions_18() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "$arrow = fn(null|int|float $param1, string|object $param): \\Test\\UnionTypes1|\\Test\\^UnionTypes2|null {", false);
+    }
+
+    public void testUnionTypesFunctions_19() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "$arrow = fn(null|int|float $param1, string|object $param): \\Test\\UnionTypes1|\\Test\\UnionTypes2|^null {", false);
+    }
+
+    public void testUnionTypesFunctions_20() throws Exception {
+        checkCompletion(getTestPath("unionTypesFunctions"), "$arrow = fn(null|int|float $param1, string|object $param): \\Test\\UnionTypes1|\\Test\\UnionTypes2|n^ull {", false);
+    }
+
+    public void testUnionTypesFields01() throws Exception {
+        checkCompletion(getTestPath("unionTypesFields01"), "    private int|^", false);
+    }
+
+    public void testUnionTypesFields02() throws Exception {
+        checkCompletion(getTestPath("unionTypesFields02"), "    private int|\\Test1\\^", false);
+    }
+
+    public void testUnionTypesFields03() throws Exception {
+        checkCompletion(getTestPath("unionTypesFields03"), "    private int|\\Test1\\UnionTypes2|^", false);
+    }
+
+    public void testUnionTypesFields04() throws Exception {
+        checkCompletion(getTestPath("unionTypesFields04"), "    private int|\\Test1\\UnionTypes2|nu^ll $test;", false);
+    }
+
+    public void testUnionTypesFields05() throws Exception {
+        checkCompletion(getTestPath("unionTypesFields05"), "    private int|\\Test1\\UnionTypes2|^|null $test;", false);
+    }
+
+    public void testUnionTypesFields06() throws Exception {
+        checkCompletion(getTestPath("unionTypesFields06"), "    private static int|\\Test1\\UnionTypes2|^null $test;", false);
+    }
+
+    public void testUnionTypesFieldsStaticKeyword() throws Exception {
+        checkCompletion(getTestPath("unionTypesFieldsStaticKeyword"), "    private stat^", false);
+    }
+
+    public void testUnionTypesMethods_01() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "            ^\\Test1\\UnionTypes1|TestClass $object,", false);
+    }
+
+    public void testUnionTypesMethods_02() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "            \\Test1\\^UnionTypes1|TestClass $object,", false);
+    }
+
+    public void testUnionTypesMethods_03() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "            \\Test1\\UnionTypes1|^TestClass $object,", false);
+    }
+
+    public void testUnionTypesMethods_04() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "            \\Test1\\UnionTypes1|Test^Class $object,", false);
+    }
+
+    public void testUnionTypesMethods_05() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "            ^string|int|float|null $param,", false);
+    }
+
+    public void testUnionTypesMethods_06() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "            string|int|float|n^ull $param,", false);
+    }
+
+    public void testUnionTypesMethods_07() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "    ): ^\\Test1\\UnionTypes2|\\Test1\\UnionTypes1|null {", false);
+    }
+
+    public void testUnionTypesMethods_08() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "    ): \\Test1\\UnionTypes2|^\\Test1\\UnionTypes1|null {", false);
+    }
+
+    public void testUnionTypesMethods_09() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "    ): \\Test1\\UnionTypes2|\\Test1\\Un^ionTypes1|null {", false);
+    }
+
+    public void testUnionTypesMethods_10() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "            \\Test1\\UnionTypes1|Test^Class $object, // static", false);
+    }
+
+    public void testUnionTypesMethods_11() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "            string|int|float|^null $param, // static", false);
+    }
+
+    public void testUnionTypesMethods_12() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "    ): \\Test1\\UnionTypes2|^self|null {", false);
+    }
+
+    public void testUnionTypesMethods_13() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "    ): \\Test1\\UnionTypes2|se^lf|null {", false);
+    }
+
+    public void testUnionTypesMethods_14() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "    public function childClassMethod(parent|self|null $object, self|^parent|null $object2): self|parent|null {", false);
+    }
+
+    public void testUnionTypesMethods_15() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "    public function childClassMethod(parent|self|null $object, self|par^ent|null $object2): self|parent|null {", false);
+    }
+
+    public void testUnionTypesMethods_16() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "    public function childClassMethod(parent|self|null $object, self|parent|null $object2): self|p^arent|null {", false);
+    }
+
+    public void testUnionTypesMethods_17() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "    public function interfaceMethod(\\Test1\\UnionTypes1|TestClass $object, string|int|float|^null $param, ): int|float|null;", false);
+    }
+
+    public void testUnionTypesMethods_18() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "    public function interfaceMethod(\\Test1\\UnionTypes1|TestClass $object, string|int|float|null $param, ): int|^float|null;", false);
+    }
+
+    public void testUnionTypesMethods_19() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "    abstract protected function abstractClassMethod(array|object $param, TestInerface|Test^Class|null $object,): iterable|false;", false);
+    }
+
+    public void testUnionTypesMethods_20() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "    abstract protected function abstractClassMethod(array|object $param, TestInerface|TestClass|null $object,): iterable|^false;", false);
+    }
+
+    public void testUnionTypesMethods_21() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "    private function traitMethod(TestInterface|\\Test1\\TestUnionTypes2 $object, bool|ca^llable $param): TestInterface|false|null {", false);
+    }
+
+    public void testUnionTypesMethods_22() throws Exception {
+        checkCompletion(getTestPath("unionTypesMethods"), "    private function traitMethod(TestInterface|\\Test1\\TestUnionTypes2 $object, bool|callable $param): TestInterface|^false|null {", false);
+    }
+
+    public void testUnionTypes_01() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $this->^publicFieldInterfaceImpl->publicMethodClass1();", false);
+    }
+
+    public void testUnionTypes_02() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $this->publicFieldInterfaceImpl->^publicMethodClass1();", false);
+    }
+
+    public void testUnionTypes_03() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $this->publicFieldTrait1->^publicMethodClass1();", false);
+    }
+
+    public void testUnionTypes_04() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        self::^$publicStaticFieldInterfaceImpl->publicMethodClass1();", false);
+    }
+
+    public void testUnionTypes_05() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        self::$publicStaticFieldInterfaceImpl->^publicMethodClass1();", false);
+    }
+
+    public void testUnionTypes_06() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        self::$publicStaticFieldInterfaceImpl::^CONST_CLASS1;", false);
+    }
+
+    public void testUnionTypes_07() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $object->^publicMethodClass1()->publicMethodClass2();", false);
+    }
+
+    public void testUnionTypes_08() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $object->publicMethodClass1()->^publicMethodClass2();", false);
+    }
+
+    public void testUnionTypes_09() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $object->publicMethodClass1()::^CONST_CLASS2;", false);
+    }
+
+    public void testUnionTypes_10() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $object::^$publicFieldClass1->publicMethodClass1();", false);
+    }
+
+    public void testUnionTypes_11() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $object::$publicFieldClass1->^publicMethodClass1();", false);
+    }
+
+    public void testUnionTypes_12() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $object::$publicFieldClass1::^publicStaticMethodClass1();", false);
+    }
+
+    public void testUnionTypes_13() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $object->^publicMethodClass2(); // phpdoc", false);
+    }
+
+    public void testUnionTypes_14() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $object::^publicStaticMethodClass2(); // phpdoc", false);
+    }
+
+    public void testUnionTypes_15() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $this::^$publicStaticFieldTrait1->publicMethodClass1();", false);
+    }
+
+    public void testUnionTypes_16() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $this::$publicStaticFieldTrait1->^publicMethodClass1();", false);
+    }
+
+    public void testUnionTypes_17() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $this::publicStaticMethodTrait1()::^publicStaticMethodClass1();", false);
+    }
+
+    public void testUnionTypes_18() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $object->^publicMethodClass1(); // with whitespaces", false);
+    }
+
+    public void testUnionTypes_19() throws Exception {
+        checkCompletion(getTestPath("unionTypes"), "        $object::^publicStaticMethodClass1(); // with whitespaces", false);
+    }
+
+    // self & parent types
+    public void testUnionTypesWithSpecialTypes_01() throws Exception {
+        checkCompletion(getTestPath("unionTypesWithSpecialTypes"), "$param->^testMethod();", false);
+    }
+
+    public void testUnionTypesWithSpecialTypes_02() throws Exception {
+        checkCompletion(getTestPath("unionTypesWithSpecialTypes"), "$param->^parentMethod(); // parent", false);
+    }
+
+    public void testUnionTypesWithSpecialTypes_03() throws Exception {
+        checkCompletion(getTestPath("unionTypesWithSpecialTypes"), "$this->union->^parentMethod();", false);
+    }
+
+    public void testUnionTypesWithSpecialTypes_04() throws Exception {
+        checkCompletion(getTestPath("unionTypesWithSpecialTypes"), "$this->childMethod($this)->^parentMethod();", false);
+    }
+
+    public void testUnionTypesWithSpecialTypes_05() throws Exception {
+        checkCompletion(getTestPath("unionTypesWithSpecialTypes"), "$this->childMethodParent(null)->^parentMethod();", false);
+    }
+
+    public void testUnionTypesWithSpecialTypes_06() throws Exception {
+        checkCompletion(getTestPath("unionTypesWithSpecialTypes"), "$this->traitMethod($this)->^parentMethod();", false);
+    }
+
 }

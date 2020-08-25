@@ -153,4 +153,71 @@ public class OccurrencesFinderImplPHP80Test extends OccurrencesFinderImplTestBas
         checkOccurrences(getTestPath(), "echo $instance->mat^ch();", true);
     }
 
+    public void testUnionTypes_01a() throws Exception {
+        checkOccurrences(getTestPath(), "    private Paren^tClass|ChildClass $field;", true);
+    }
+
+    public void testUnionTypes_01b() throws Exception {
+        checkOccurrences(getTestPath(), "    public function testMethod(Parent^Class|ChildClass|null $param): ChildClass|\\Union\\Types1\\ParentClass {", true);
+    }
+
+    public void testUnionTypes_01c() throws Exception {
+        checkOccurrences(getTestPath(), "    public function testMethod(ParentClass|ChildClass|null $param): ChildClass|\\Union\\Types1\\Pare^ntClass {", true);
+    }
+
+    public void testUnionTypes_01d() throws Exception {
+        checkOccurrences(getTestPath(), "    public static function testStaticMethod(TestClass1|\\Union\\Types2\\TestClass2|null $param1, ChildClass|null $param2): TestClass2|ParentClass^|null {", true);
+    }
+
+    public void testUnionTypes_02a() throws Exception {
+        checkOccurrences(getTestPath(), "    private ParentClass|ChildCl^ass $field;", true);
+    }
+    public void testUnionTypes_02b() throws Exception {
+        checkOccurrences(getTestPath(), "    public function testMethod(ParentClass|ChildC^lass|null $param): ChildClass|\\Union\\Types1\\ParentClass {", true);
+    }
+
+    public void testUnionTypes_02c() throws Exception {
+        checkOccurrences(getTestPath(), "    public function testMethod(ParentClass|ChildClass|null $param): Chi^ldClass|\\Union\\Types1\\ParentClass {", true);
+    }
+
+    public void testUnionTypes_02d() throws Exception {
+        checkOccurrences(getTestPath(), "    public static function testStaticMethod(TestClass1|\\Union\\Types2\\TestClass2|null $param1, ChildCl^ass|null $param2): TestClass2|ParentClass|null {", true);
+    }
+
+    public void testUnionTypes_03a() throws Exception {
+        checkOccurrences(getTestPath(), "    private static \\Union\\Types2\\TestCla^ss1|TestClass2 $staticField;", true);
+    }
+
+    public void testUnionTypes_03b() throws Exception {
+        checkOccurrences(getTestPath(), "    public static function testStaticMethod(Te^stClass1|\\Union\\Types2\\TestClass2|null $param1, ChildClass|null $param2): TestClass2|ParentClass|null {", true);
+    }
+
+    public void testUnionTypes_03c() throws Exception {
+        checkOccurrences(getTestPath(), "    public function traitMethod(TestCla^ss1|TestClass2 $param): TestClass1|TestClass2|null {", true);
+    }
+
+    public void testUnionTypes_03d() throws Exception {
+        checkOccurrences(getTestPath(), "    public function traitMethod(TestClass1|TestClass2 $param): Test^Class1|TestClass2|null {", true);
+    }
+
+    public void testUnionTypes_04a() throws Exception {
+        checkOccurrences(getTestPath(), "    private static \\Union\\Types2\\TestClass1|TestCla^ss2 $staticField;", true);
+    }
+
+    public void testUnionTypes_04b() throws Exception {
+        checkOccurrences(getTestPath(), "    public static function testStaticMethod(TestClass1|\\Union\\Types2\\TestCl^ass2|null $param1, ChildClass|null $param2): TestClass2|ParentClass|null {", true);
+    }
+
+    public void testUnionTypes_04c() throws Exception {
+        checkOccurrences(getTestPath(), "    public static function testStaticMethod(TestClass1|\\Union\\Types2\\TestClass2|null $param1, ChildClass|null $param2): TestClas^s2|ParentClass|null {", true);
+    }
+
+    public void testUnionTypes_04d() throws Exception {
+        checkOccurrences(getTestPath(), "    public function traitMethod(TestClass1|TestCla^ss2 $param): TestClass1|TestClass2|null {", true);
+    }
+
+    public void testUnionTypes_04e() throws Exception {
+        checkOccurrences(getTestPath(), "    public function traitMethod(TestClass1|TestClass2 $param): TestClass1|TestCl^ass2|null {", true);
+    }
+
 }

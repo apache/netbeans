@@ -112,6 +112,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TryStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.UnpackableArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement;
@@ -531,6 +532,11 @@ public class DefaultVisitor implements Visitor {
     @Override
     public void visit(UnaryOperation node) {
         scan(node.getExpression());
+    }
+
+    @Override
+    public void visit(UnionType node) {
+        scan(node.getTypes());
     }
 
     @Override

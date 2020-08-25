@@ -397,8 +397,6 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 defaultKeywords.remove("default =>"); // NOI18N
                 autoCompleteExpression(completionResult, request, defaultKeywords);
                 break;
-
-
             case GLOBAL_CONST_EXPRESSION:
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteTypeNames(completionResult, request, null, true);
@@ -483,15 +481,33 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             case TYPE_NAME:
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteTypeNames(completionResult, request);
-                autoCompleteKeywords(completionResult, request, Type.getTypesForEditor());
+                final ArrayList<String> typesForTypeName = new ArrayList<>(Type.getTypesForEditor());
+                if (isInType(request)) {
+                    // add self and parent
+                    typesForTypeName.addAll(Type.getSpecialTypesForType());
+                }
+                if (isNullableType(info, caretOffset)) {
+                    typesForTypeName.remove(Type.FALSE);
+                    typesForTypeName.remove(Type.NULL);
+                }
+                autoCompleteKeywords(completionResult, request, typesForTypeName);
                 break;
             case RETURN_TYPE_NAME:
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteTypeNames(completionResult, request);
-                autoCompleteKeywords(completionResult, request, Type.getTypesForReturnType());
+                final ArrayList<String> typesForReturnTypeName = new ArrayList<>(Type.getTypesForReturnType());
+                if (isInType(request)) {
+                    // add self and parent
+                    typesForReturnTypeName.addAll(Type.getSpecialTypesForType());
+                }
+                if (isNullableType(info, caretOffset)) {
+                    typesForReturnTypeName.remove(Type.FALSE);
+                    typesForReturnTypeName.remove(Type.NULL);
+                }
+                autoCompleteKeywords(completionResult, request, typesForReturnTypeName);
                 break;
             case FIELD_TYPE_NAME:
-                autoCompleteFieldType(completionResult, request);
+                autoCompleteFieldType(info, caretOffset, completionResult, request, false);
                 break;
             case STRING:
                 // LOCAL VARIABLES
@@ -1025,7 +1041,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             if (start >= 0) {
                 String prefix = doc.getText(start, 1);
                 if (CodeUtils.NULLABLE_TYPE_PREFIX.equals(prefix)) {
-                    autoCompleteKeywords(completionResult, request, Type.getTypesForEditor());
+                    List<String> keywords = new ArrayList<>(Type.getTypesForEditor());
+                    keywords.remove(Type.FALSE);
+                    keywords.remove(Type.NULL);
+                    autoCompleteKeywords(completionResult, request, keywords);
                 } else {
                     autoCompleteKeywords(completionResult, request, Type.getTypesForPhpDoc());
                 }
@@ -1116,16 +1135,41 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 }
             }
         } else if (completeFieldTypes(tokenSequence, caretOffset, th, info.getSnapshot().getSource().getFileObject())){
-            autoCompleteFieldType(completionResult, request);
+            autoCompleteFieldType(info, caretOffset, completionResult, request, true);
         }
     }
 
-    private void autoCompleteFieldType(final PHPCompletionResult completionResult, CompletionRequest request) {
+    private void autoCompleteFieldType(ParserResult info, int caretOffset, final PHPCompletionResult completionResult, CompletionRequest request, boolean isInClassContext) {
         // PHP 7.4 Typed Properties 2.0
         // https://wiki.php.net/rfc/typed_properties_v2
         autoCompleteNamespaces(completionResult, request);
         autoCompleteTypeNames(completionResult, request);
-        autoCompleteKeywords(completionResult, request, Type.getTypesForFieldType());
+        List<String> keywords = new ArrayList<>(Type.getTypesForFieldType());
+        boolean isNullableType = isNullableType(info, caretOffset);
+        if (!isInClassContext && !isNullableType) {
+            // e.g. private stat^
+            TokenHierarchy<?> th = info.getSnapshot().getTokenHierarchy();
+            TokenSequence<PHPTokenId> tokenSequence = th.tokenSequence(PHPTokenId.language());
+            assert tokenSequence != null;
+            tokenSequence.move(caretOffset);
+            boolean addStaticKeyword = false;
+            if (!(!tokenSequence.moveNext() && !tokenSequence.movePrevious())) {
+                Token<PHPTokenId> token = tokenSequence.token();
+                int tokenIdOffset = tokenSequence.token().offset(th);
+                addStaticKeyword = !CompletionContextFinder.lineContainsAny(token, caretOffset - tokenIdOffset, tokenSequence, Arrays.asList(
+                        PHPTokenId.PHP_STATIC,
+                        PHPTokenId.PHP_OPERATOR // "|"
+                ));
+            }
+            if (addStaticKeyword) {
+                keywords.add("static"); // NOI18N
+            }
+        }
+        if (isNullableType) {
+            keywords.remove(Type.FALSE);
+            keywords.remove(Type.NULL);
+        }
+        autoCompleteKeywords(completionResult, request, keywords);
     }
 
     private boolean offerMagicAndInherited(TokenSequence<PHPTokenId> tokenSequence, int caretOffset, TokenHierarchy<?> th) {
@@ -1134,7 +1178,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         if (!(!tokenSequence.moveNext() && !tokenSequence.movePrevious())) {
             Token<PHPTokenId> token = tokenSequence.token();
             int tokenIdOffset = tokenSequence.token().offset(th);
-            offerMagicAndInherited = !CompletionContextFinder.lineContainsAny(token, caretOffset - tokenIdOffset, tokenSequence, Arrays.asList(new PHPTokenId[]{
+            offerMagicAndInherited = !CompletionContextFinder.lineContainsAny(token, caretOffset - tokenIdOffset, tokenSequence, Arrays.asList(
                 PHPTokenId.PHP_PRIVATE,
                 PHPTokenId.PHP_PUBLIC,
                 PHPTokenId.PHP_PROTECTED,
@@ -1142,7 +1186,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 PHPTokenId.PHP_VAR,
                 PHPTokenId.PHP_STATIC,
                 PHPTokenId.PHP_CONST
-            }));
+            ));
         }
         return offerMagicAndInherited;
     }
@@ -1151,12 +1195,13 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         if (!isPhp74OrNewer(fileObject)) {
             return false;
         }
+        // e.g. private static s^tring|int $field; private bool ^$bool;
         boolean completeTypes = false;
         tokenSequence.move(caretOffset);
         if (!(!tokenSequence.moveNext() && !tokenSequence.movePrevious())) {
             Token<PHPTokenId> token = tokenSequence.token();
             int tokenIdOffset = tokenSequence.token().offset(th);
-            completeTypes = !CompletionContextFinder.lineContainsAny(token, caretOffset - tokenIdOffset, tokenSequence, Arrays.asList(new PHPTokenId[]{
+            completeTypes = !CompletionContextFinder.lineContainsAny(token, caretOffset - tokenIdOffset, tokenSequence, Arrays.asList(
                 PHPTokenId.PHP_TYPE_BOOL,
                 PHPTokenId.PHP_TYPE_INT,
                 PHPTokenId.PHP_TYPE_FLOAT,
@@ -1166,9 +1211,11 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 PHPTokenId.PHP_ITERABLE,
                 PHPTokenId.PHP_SELF,
                 PHPTokenId.PHP_PARENT,
+                PHPTokenId.PHP_FALSE,
+                PHPTokenId.PHP_NULL,
                 PHPTokenId.PHP_STRING,
                 PHPTokenId.PHP_CONST
-            }));
+            ));
         }
         return completeTypes;
     }
@@ -1431,6 +1478,24 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             }
         }
         return (enclosingTypes == null || enclosingTypes.isEmpty()) ? null : enclosingTypes.iterator().next();
+    }
+
+    private static boolean isNullableType(ParserResult info, int caretOffset) {
+            TokenHierarchy<?> th = info.getSnapshot().getTokenHierarchy();
+            TokenSequence<PHPTokenId> tokenSequence = th.tokenSequence(PHPTokenId.language());
+        assert tokenSequence != null;
+        tokenSequence.move(caretOffset);
+        if (tokenSequence.movePrevious()) {
+            Token<? extends PHPTokenId> previousToken = LexUtilities.findPrevious(tokenSequence, Arrays.asList(PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING));
+            if (previousToken.id() == PHPTokenId.PHP_TOKEN && TokenUtilities.textEquals(previousToken.text(), "?")) { // NOI18N
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isInType(CompletionRequest request) {
+        return findEnclosingType(request.info, lexerToASTOffset(request.result, request.anchor)) != null;
     }
 
     @CheckForNull

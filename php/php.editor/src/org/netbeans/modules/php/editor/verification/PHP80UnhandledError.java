@@ -49,6 +49,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ThrowExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -172,6 +173,15 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
+        @Override
+        public void visit(UnionType node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkUnionType(node);
+            super.visit(node);
+        }
+
         private void addLastParam(List<FormalParameter> parameters) {
             if (!parameters.isEmpty()) {
                 lastParams.add(parameters.get(parameters.size() - 1));
@@ -260,6 +270,10 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
                     createError(node);
                 }
             }
+        }
+
+        private void checkUnionType(UnionType node) {
+            createError(node);
         }
 
         private void checkMatchExpression(MatchExpression node) {

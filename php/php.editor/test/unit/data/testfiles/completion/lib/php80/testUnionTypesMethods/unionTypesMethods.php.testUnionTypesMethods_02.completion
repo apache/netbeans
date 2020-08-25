@@ -1,0 +1,5 @@
+Code completion result for source line:
+\Test1\|UnionTypes1|TestClass $object,
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      UnionTypes1                     [PUBLIC]   Test1
+CLASS      UnionTypes2                     [PUBLIC]   Test1

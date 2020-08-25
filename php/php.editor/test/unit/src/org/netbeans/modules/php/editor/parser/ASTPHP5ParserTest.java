@@ -1189,6 +1189,26 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php80/matchExpressionError_06");
     }
 
+    public void testUnionTypesTypes() throws Exception {
+        performTest("parser/php80/unionTypesTypes");
+    }
+
+    public void testUnionTypesFunctions() throws Exception {
+        performTest("parser/php80/unionTypesFunctions");
+    }
+
+    public void testUnionTypesError_01() throws Exception {
+        performTest("parser/php80/unionTypesError_01");
+    }
+
+    public void testUnionTypesError_02() throws Exception {
+        performTest("parser/php80/unionTypesError_02");
+    }
+
+    public void testUnionTypesError_03() throws Exception {
+        performTest("parser/php80/unionTypesError_03");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

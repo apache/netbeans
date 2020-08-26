@@ -1,0 +1,9 @@
+Code completion result for source line:
+->|testStaticReturnUnionTypeTrait() // trait test6
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testStaticReturnNullableTypeTr  [PUBLIC]   TestTrait
+METHOD     testStaticReturnNullableTypeTr  [STATIC]   TestTrait
+METHOD     testStaticReturnTypeTrait()     [PUBLIC]   TestTrait
+METHOD     testStaticReturnTypeTraitStati  [STATIC]   TestTrait
+METHOD     testStaticReturnUnionTypeTrait  [PUBLIC]   TestTrait
+METHOD     testStaticReturnUnionTypeTrait  [STATIC]   TestTrait

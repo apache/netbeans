@@ -510,10 +510,13 @@ non terminal ClassDeclaration.Modifier class_entry_type;
 non terminal Expression extends_from;
 non terminal List implements_list;
 non terminal List interface_list;
-non terminal Expression optional_class_type;
+non terminal Expression optional_class_type_without_static;
 non terminal Expression type_expr;
+non terminal Expression type_expr_without_static;
 non terminal Expression class_type;
+non terminal Expression class_type_without_static;
 non terminal List<Expression> union_type;
+non terminal List<Expression> union_type_without_static;
 non terminal Expression optional_return_type;
 non terminal VariableBase r_variable;
 non terminal Integer variable_modifiers;
@@ -1798,7 +1801,7 @@ trait_statement_list:list trait_statement:traitStatement
 ;
 
 trait_statement ::=
-variable_modifiers:modifier optional_class_type:fieldType class_variable_declaration:decList T_SEMICOLON:end
+variable_modifiers:modifier optional_class_type_without_static:fieldType class_variable_declaration:decList T_SEMICOLON:end
 {:
     FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(modifierleft, endright, modifier.intValue(), fieldType, decList);
     RESULT = fieldsDeclaration;
@@ -2173,7 +2176,7 @@ parameter:parameter
 ;
 
 parameter ::=
-optional_class_type:classType is_variadic:isVariadic T_VARIABLE:var
+optional_class_type_without_static:classType is_variadic:isVariadic T_VARIABLE:var
 {:
     int start = classType == null ? (isVariadic ? isVariadicleft : varleft) : classTypeleft;
     Variable v = new Variable(varleft, varright, var);
@@ -2185,7 +2188,7 @@ optional_class_type:classType is_variadic:isVariadic T_VARIABLE:var
     RESULT = parameter;
 :}
 
-| optional_class_type:classType T_REFERENCE:ref T_VARIABLE:var
+| optional_class_type_without_static:classType T_REFERENCE:ref T_VARIABLE:var
 {:
     int start = classType == null ? refleft : classTypeleft;
     Variable v = new Variable(varleft, varright, var);
@@ -2194,7 +2197,7 @@ optional_class_type:classType is_variadic:isVariadic T_VARIABLE:var
     RESULT = parameter;
 :}
 
-| optional_class_type:classType T_REFERENCE:ref T_ELLIPSIS:ell T_VARIABLE:var
+| optional_class_type_without_static:classType T_REFERENCE:ref T_ELLIPSIS:ell T_VARIABLE:var
 {:
     int start = classType == null ? refleft : classTypeleft;
     Variable v = new Variable(varleft, varright, var);
@@ -2204,7 +2207,7 @@ optional_class_type:classType is_variadic:isVariadic T_VARIABLE:var
     RESULT = parameter;
 :}
 
-| optional_class_type:classType is_variadic:isVariadic T_VARIABLE:var T_EQUAL static_scalar:scalar
+| optional_class_type_without_static:classType is_variadic:isVariadic T_VARIABLE:var T_EQUAL static_scalar:scalar
 {:
     int start = classType == null ? (isVariadic ? isVariadicleft : varleft) : classTypeleft;
     Variable v = new Variable(varleft, varright, var);
@@ -2216,7 +2219,7 @@ optional_class_type:classType is_variadic:isVariadic T_VARIABLE:var
     RESULT = parameter;
 :}
 
-| optional_class_type:classType T_REFERENCE:ref T_VARIABLE:var T_EQUAL static_scalar:scalar
+| optional_class_type_without_static:classType T_REFERENCE:ref T_VARIABLE:var T_EQUAL static_scalar:scalar
 {:
     int start = classType == null ? refleft : classTypeleft;
     Variable v = new Variable(varleft, varright, var);
@@ -2238,13 +2241,13 @@ optional_return_type ::=
 :}
 ;
 
-optional_class_type ::=
+optional_class_type_without_static ::=
 /* empty */
 {:
     RESULT = null;
 :}
 
-| type_expr:type
+| type_expr_without_static:type
 {:
     RESULT = type;
 :}
@@ -2268,6 +2271,19 @@ class_type:type
 ;
 
 class_type ::=
+class_type_without_static:type
+{:
+    RESULT = type;
+:}
+
+| T_STATIC:s
+{:
+    Identifier classId = new Identifier(sleft, sright, "static");
+    RESULT = classId;
+:}
+;
+
+class_type_without_static ::=
 fully_qualified_class_name:className
 {:
     RESULT = className;
@@ -2296,6 +2312,39 @@ class_type:type1 T_OR class_type:type2
 :}
 
 | union_type:list T_OR class_type:type
+{:
+    list.add(type);
+    RESULT = list;
+:}
+;
+
+type_expr_without_static ::=
+class_type_without_static:type
+{:
+    RESULT = type;
+:}
+
+| T_QUESTION_MARK:start class_type_without_static:type
+{:
+    RESULT = new NullableType(startleft, typeright, type);
+:}
+
+| union_type_without_static:list
+{:
+    RESULT = new UnionType(listleft, listright, list);
+:}
+;
+
+union_type_without_static ::=
+class_type_without_static:type1 T_OR class_type_without_static:type2
+{:
+    List list = new ArrayList<>();
+    list.add(type1);
+    list.add(type2);
+    RESULT = list;
+:}
+
+| union_type_without_static:list T_OR class_type_without_static:type
 {:
     list.add(type);
     RESULT = list;
@@ -2457,7 +2506,7 @@ class_statement_list:list class_statement:classStatement
 ;
 
 class_statement ::=
-variable_modifiers:modifier optional_class_type:fieldType class_variable_declaration:decList T_SEMICOLON:end
+variable_modifiers:modifier optional_class_type_without_static:fieldType class_variable_declaration:decList T_SEMICOLON:end
 {:
     FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(modifierleft, endright, modifier.intValue(), fieldType, decList);
     RESULT = fieldsDeclaration;

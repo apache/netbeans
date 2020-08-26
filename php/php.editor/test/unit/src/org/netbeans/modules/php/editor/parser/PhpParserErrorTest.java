@@ -1136,4 +1136,32 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php80/unionTypesError_03.php");
     }
 
+    public void testStaticReturnType_01() throws Exception {
+        checkErrors("testfiles/parser/php80/staticReturnType_01.php");
+    }
+
+    public void testStaticReturnTypeErrorWithFieldType_01() throws Exception {
+        // nullable type
+        checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithFieldType_01.php");
+    }
+
+    public void testStaticReturnTypeErrorWithFieldType_02() throws Exception {
+        // union type
+        checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithFieldType_02.php");
+    }
+
+    public void testStaticReturnTypeErrorWithParameterType_01() throws Exception {
+        checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithParameterType_01.php");
+    }
+
+    public void testStaticReturnTypeErrorWithParameterType_02() throws Exception {
+        // nullable type
+        checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithParameterType_02.php");
+    }
+
+    public void testStaticReturnTypeErrorWithParameterType_03() throws Exception {
+        // union type
+        checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithParameterType_03.php");
+    }
+
 }

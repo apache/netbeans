@@ -22,7 +22,6 @@
 -->
 
 <filesystem>
-
     <folder name="Actions">
         <folder name="View">
             <file name="org.netbeans.modules.cnd.discovery.wizard.DiscoveryWizardAction.instance">

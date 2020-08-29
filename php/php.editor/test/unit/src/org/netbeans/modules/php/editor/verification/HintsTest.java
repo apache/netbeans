@@ -142,6 +142,18 @@ public class HintsTest extends PHPHintsTestBase {
         checkHints(new IntroduceSuggestion(), "testIntroduceSuggestion.php", "new class {};^");
     }
 
+    public void testIntroduceSuggestionSpecialTypes_01() throws Exception {
+        checkHints(new IntroduceSuggestion(), "testIntroduceSuggestionSpecialTypes.php", "        return new static;^");
+    }
+
+    public void testIntroduceSuggestionSpecialTypes_02() throws Exception {
+        checkHints(new IntroduceSuggestion(), "testIntroduceSuggestionSpecialTypes.php", "        return new self;^");
+    }
+
+    public void testIntroduceSuggestionSpecialTypes_03() throws Exception {
+        checkHints(new IntroduceSuggestion(), "testIntroduceSuggestionSpecialTypes.php", "        return new parent;^");
+    }
+
     // #257264
     public void testIntroduceSuggestionFix_01() throws Exception {
         // in case of class, a new file is created

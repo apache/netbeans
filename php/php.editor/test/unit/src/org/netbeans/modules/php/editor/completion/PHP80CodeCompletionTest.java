@@ -783,4 +783,14 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath("staticReturnTypeMixed"), "                ::^testStaticReturnTypeTraitStatic(); // trait test7", false);
     }
 
+    public void testStaticReturnTypeOverrideMethod01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testStaticReturnTypeOverrideMethod01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testStaticReturnTypeImplementMethod01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testStaticReturnTypeImplementMethod01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
 }

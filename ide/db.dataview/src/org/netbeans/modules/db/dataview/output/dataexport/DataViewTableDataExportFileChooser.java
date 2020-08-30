@@ -45,11 +45,11 @@ public class DataViewTableDataExportFileChooser {
             new TSVDataExporter(),
             new XLSXDataExporter()
     );
+    
+    private static File defaultDirectory;
 
     public static void extractAsFile(final JTable table) {
-        final JFileChooser fc = new JFileChooser();
-        fc.setAcceptAllFileFilterUsed(false);
-        EXPORTERS.forEach(exporter -> fc.addChoosableFileFilter(exporter.getFileFilter()));
+        final JFileChooser fc = initializeFileChooser();
         int returnVal = fc.showDialog(null, Bundle.LBL_FILE_CHOOSER());
         switch (returnVal) {
             case JFileChooser.APPROVE_OPTION:
@@ -89,6 +89,18 @@ public class DataViewTableDataExportFileChooser {
             return new File(file.getAbsolutePath() + "." + exporter.getDefaultFileExtension());
         }
         return file;
+    }
+    
+    private static JFileChooser initializeFileChooser() {
+        final JFileChooser fc = new JFileChooser();
+        fc.setAcceptAllFileFilterUsed(false);
+        EXPORTERS.forEach(exporter -> fc.addChoosableFileFilter(exporter.getFileFilter()));
+        if (defaultDirectory == null) {
+            defaultDirectory = fc.getCurrentDirectory();
+        }
+        fc.setCurrentDirectory(defaultDirectory);
+        fc.setFileFilter(EXPORTERS.get(0).getFileFilter());
+        return fc;
     }
 
 }

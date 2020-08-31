@@ -783,6 +783,42 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath("staticReturnTypeMixed"), "                ::^testStaticReturnTypeTraitStatic(); // trait test7", false);
     }
 
+    public void testMixedType_01() throws Exception {
+        checkCompletion(getTestPath("mixedType"), "    private ^mixed $mixed;", false);
+    }
+
+    public void testMixedType_02() throws Exception {
+        checkCompletion(getTestPath("mixedType"), "    private mixe^d $mixed;", false);
+    }
+
+    public void testMixedType_03() throws Exception {
+        checkCompletion(getTestPath("mixedType"), "    public function mixed(^mixed $mixed): mixed {", false);
+    }
+
+    public void testMixedType_04() throws Exception {
+        checkCompletion(getTestPath("mixedType"), "    public function mixed(mi^xed $mixed): mixed {", false);
+    }
+
+    public void testMixedType_05() throws Exception {
+        checkCompletion(getTestPath("mixedType"), "    public function mixed(mixed $mixed): ^mixed {", false);
+    }
+
+    public void testMixedType_06() throws Exception {
+        checkCompletion(getTestPath("mixedType"), "    public function mixed(mixed $mixed): mix^ed {", false);
+    }
+
+    public void testMixedType_07() throws Exception {
+        checkCompletion(getTestPath("mixedType"), "    private int|^null $union;", false);
+    }
+
+    public void testMixedType_08() throws Exception {
+        checkCompletion(getTestPath("mixedType"), "    public function union(int|^string $mixed): object|array {", false);
+    }
+
+    public void testMixedType_09() throws Exception {
+        checkCompletion(getTestPath("mixedType"), "    public function union(int|string $mixed): object|^array {", false);
+    }
+
     public void testStaticReturnTypeOverrideMethod01() throws Exception {
         checkCompletionCustomTemplateResult(getTestPath("testStaticReturnTypeOverrideMethod01"), "    test^",
                 new DefaultFilter(PhpVersion.PHP_80, "test"), true);

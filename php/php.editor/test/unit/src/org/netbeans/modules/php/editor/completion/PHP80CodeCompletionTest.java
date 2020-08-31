@@ -793,4 +793,13 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
                 new DefaultFilter(PhpVersion.PHP_80, "test"), true);
     }
 
+    public void testMixedTypeOverrideMethod01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testMixedTypeOverrideMethod01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testMixedTypeImplementMethod01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testMixedTypeImplementMethod01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
 }

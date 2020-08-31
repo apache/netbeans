@@ -193,6 +193,17 @@ public enum PhpVersion {
     }
 
     /**
+     * Check whether this version supports the mixed type.
+     *
+     * @return {@code true} if this version supports mixed type, {@code false}
+     * otherwise
+     * @since 2.73
+     */
+    public boolean hasMixedType() {
+        return this.compareTo(PhpVersion.PHP_80) >= 0;
+    }
+
+    /**
      * Check whether this is supported version yet by PHP official.
      *
      * @return {@code true} if this is supported version, {@code false}

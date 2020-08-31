@@ -557,4 +557,20 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
         ));
     }
 
+    public void testMixedTypeOverrideMethod01_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Child extends MixedType {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testMixedTypeImplementMethod01_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Child implements MixedType {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
 }

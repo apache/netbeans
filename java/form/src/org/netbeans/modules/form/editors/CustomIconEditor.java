@@ -247,13 +247,8 @@ public class CustomIconEditor extends javax.swing.JPanel {
     }
 
     private FileObject[] findSourceRoots(FileObject fo) {
-        try {
-            ClassPath cp = ClassPath.getClassPath(propertyEditor.getSourceFile(), ClassPath.EXECUTE);
-            return SourceForBinaryQuery.findSourceRoots(cp.findOwnerRoot(fo).getURL()).getRoots();
-        } catch (FileStateInvalidException fsiex) {
-            Logger.getLogger(CustomIconEditor.class.getName()).log(Level.INFO, null, fsiex);
-        }
-        return null;
+        ClassPath cp = ClassPath.getClassPath(propertyEditor.getSourceFile(), ClassPath.EXECUTE);
+        return SourceForBinaryQuery.findSourceRoots(cp.findOwnerRoot(fo).toURL()).getRoots();
     }
 
     private FileObject findSourceRootOf(FileObject[] roots, String resName) {

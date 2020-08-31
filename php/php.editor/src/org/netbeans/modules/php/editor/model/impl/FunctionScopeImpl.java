@@ -515,7 +515,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         }
         sb.append(Signature.ITEM_DELIMITER);
         String type = getReturnType();
-        if (type != null && !Type.MIXED.equalsIgnoreCase(type)) {
+        if (type != null) {
             sb.append(type);
         }
         sb.append(Signature.ITEM_DELIMITER);

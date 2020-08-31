@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,32 +17,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.lexer;
 
+interface MixedType {
+    public function testMixed(mixed $mixed): mixed;
+}
 
-public class PHP80FeaturesTest extends PHPLexerTestBase {
-
-    public PHP80FeaturesTest(String testName) {
-        super(testName);
+class Child implements MixedType {
+    
+    public function testMixed(mixed $mixed): mixed {
+        
     }
 
-    public void testMatchExpression_01() throws Exception {
-        performTest("lexer/php80/matchExpression_01");
-    }
-
-    public void testMatchExpression_02() throws Exception {
-        performTest("lexer/php80/matchExpression_02");
-    }
-
-    public void testMatchExpression_03() throws Exception {
-        performTest("lexer/php80/matchExpression_03");
-    }
-
-    public void testMatchExpression_04() throws Exception {
-        performTest("lexer/php80/matchExpression_04");
-    }
-
-    public void testMixedType_01() throws Exception {
-        performTest("lexer/php80/mixedType_01");
-    }
 }

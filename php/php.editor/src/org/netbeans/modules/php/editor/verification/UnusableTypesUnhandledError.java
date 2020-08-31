@@ -27,6 +27,7 @@ import java.util.Locale;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
+import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.model.Model;
@@ -77,7 +78,7 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
         if (phpParseResult.getProgram() != null) {
             FileObject fileObject = phpParseResult.getSnapshot().getSource().getFileObject();
             if (fileObject != null) {
-                CheckVisitor checkVisitor = new CheckVisitor(fileObject, phpParseResult.getModel());
+                CheckVisitor checkVisitor = new CheckVisitor(fileObject, phpParseResult.getModel(), CodeUtils.getPhpVersion(fileObject));
                 phpParseResult.getProgram().accept(checkVisitor);
                 result.addAll(checkVisitor.getErrors());
             }
@@ -90,14 +91,16 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
         private final List<VerificationError> errors = new ArrayList<>();
         private final FileObject fileObject;
         private final Model model;
+        private final PhpVersion phpVersion;
         private boolean isInMethod;
         private boolean isInLambdaFunction;
         private boolean isInMethodBody;
 
-        private CheckVisitor(FileObject fileObject, Model model) {
+        private CheckVisitor(FileObject fileObject, Model model, PhpVersion phpVersion) {
             assert fileObject != null;
             this.fileObject = fileObject;
             this.model = model;
+            this.phpVersion = phpVersion;
         }
 
         private List<VerificationError> getErrors() {
@@ -181,6 +184,27 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
             isInMethod = false;
         }
 
+        @Override
+        public void visit(UnionType node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkUnionType(node);
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(NullableType nullableType) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            Expression type = nullableType.getType();
+            if (phpVersion.hasMixedType() && type instanceof NamespaceName && isMixedType((NamespaceName) type)) {
+                createError(type, Type.MIXED, UnusableType.Context.Nullable);
+            }
+            super.visit(nullableType);
+        }
+
         private void checkFieldType(@NullAllowed Expression fieldType, boolean isInUnionType) {
             // unusable types: void and callable PHP 7.4
             Expression type = fieldType;
@@ -203,7 +227,6 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
                 }
             } else if (type instanceof UnionType) {
                 ((UnionType) type).getTypes().forEach(unionType -> checkFieldType(unionType, true));
-                checkUnionType((UnionType) type);
             }
         }
 
@@ -218,7 +241,6 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
                 }
             } else if (parameterType instanceof UnionType) {
                 ((UnionType) parameterType).getTypes().forEach(type -> checkParameterType(type, true));
-                checkUnionType((UnionType) parameterType);
             }
         }
 
@@ -233,7 +255,6 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
                 }
             } else if (returnType instanceof UnionType) {
                 ((UnionType) returnType).getTypes().forEach(type -> checkArrowFunctionReturnType(type, true));
-                checkUnionType((UnionType) returnType);
             }
         }
 
@@ -257,9 +278,8 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
                 }
             } else if (type instanceof UnionType) {
                 ((UnionType) type).getTypes().forEach(unionType -> checkReturnType(unionType, true));
-                checkUnionType((UnionType) type);
             } else if (type instanceof Identifier) {
-                // method, labmda funciton, and arrow function can use static return type
+                // method, lambda function, and arrow function can use static return type
                 // e.g. $closure = function(): static {return new static};, $af = fn(): static => new static; no errors
                 // function cannot use static return type e.g. function a(): static {return new static;} error
                 if (((Identifier) type).getName().equals(Type.STATIC)) {
@@ -304,6 +324,7 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
 
         private void checkRedundantTypeCombination(UnionType unionType) {
             checkRedundantTypeCombinationWithObject(unionType);
+            checkRedundantMixedType(unionType);
             checkRedundantTypeCombinationWithIterable(unionType);
         }
 
@@ -327,6 +348,17 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
                             createRedundantTypeCombinationError(type, unionType, Type.OBJECT, ((Identifier)type).getName());
                         }
                     }
+                }
+            }
+        }
+
+        private void checkRedundantMixedType(UnionType unionType) {
+            // mixed can only be used as a standalone type
+            // e.g. mixed|null, mixed|object, mixed|void, and so on are errors
+            for (Expression type : unionType.getTypes()) {
+                if (type instanceof NamespaceName && isMixedType((NamespaceName) type)) {
+                    createError(type, Type.MIXED, UnusableType.Context.Union);
+                    break;
                 }
             }
         }
@@ -417,6 +449,10 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
             return Type.OBJECT.equals(CodeUtils.extractUnqualifiedName(namespaceName));
         }
 
+        private static boolean isMixedType(NamespaceName namespaceName) {
+            return Type.MIXED.equals(CodeUtils.extractUnqualifiedName(namespaceName));
+        }
+
         private static boolean isIterableType(NamespaceName namespaceName) {
             return Type.ITERABLE.equals(CodeUtils.extractUnqualifiedName(namespaceName));
         }
@@ -433,6 +469,7 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
         "UnusableType.Context.property=property",
         "UnusableType.Context.standalone=standalone",
         "UnusableType.Context.union=union",
+        "UnusableType.Context.nullable=nullable",
     })
     private static final class UnusableType extends VerificationError {
 
@@ -442,6 +479,7 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
             Property(Bundle.UnusableType_Context_property()),
             Standalone(Bundle.UnusableType_Context_standalone()),
             Union(Bundle.UnusableType_Context_union()),
+            Nullable(Bundle.UnusableType_Context_nullable()),
             ;
             private final String context;
 

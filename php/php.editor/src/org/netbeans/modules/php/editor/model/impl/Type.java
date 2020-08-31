@@ -57,12 +57,13 @@ public final class Type {
     public static final String PARENT = "parent"; //NOI18N
     public static final String STATIC = "static"; //NOI18N NETBEANS-4443 PHP 8.0
 
-    private static final List<String> TYPES_FOR_EDITOR = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, NULL, FALSE);
-    private static final List<String> TYPES_FOR_RETURN_TYPE = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, VOID, OBJECT, NULL, FALSE);
-    private static final List<String> TYPES_FOR_FIELD_TYPE = Arrays.asList(ARRAY, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, SELF, PARENT, NULL, FALSE); // PHP 7.4 Typed Properties 2.0
+    private static final List<String> TYPES_FOR_EDITOR = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, NULL, FALSE, MIXED);
+    private static final List<String> TYPES_FOR_RETURN_TYPE = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, VOID, OBJECT, NULL, FALSE, MIXED);
+    private static final List<String> TYPES_FOR_FIELD_TYPE = Arrays.asList(ARRAY, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, SELF, PARENT, NULL, FALSE, MIXED); // PHP 7.4 Typed Properties 2.0
     private static final List<String> SPECIAL_TYPES_FOR_TYPE = Arrays.asList(SELF, PARENT);
     private static final List<String> TYPES_FOR_PHP_DOC = Arrays.asList(STRING, INTEGER, INT, BOOLEAN, BOOL, FLOAT, DOUBLE, OBJECT, MIXED, ARRAY,
             RESOURCE, VOID, NULL, CALLBACK, CALLABLE, ITERABLE, FALSE, TRUE, SELF);
+    private static final List<String> MIXED_TYPE = Arrays.asList(ARRAY, BOOL, CALLABLE, INT, FLOAT, NULL, OBJECT, /*RESOURCE, */STRING);
 
 
     public static boolean isPrimitive(String typeName) {
@@ -151,5 +152,9 @@ public final class Type {
      */
     public static String asUnionType(Collection<String> types) {
         return StringUtils.implode(types, SEPARATOR);
+    }
+
+    public static List<String> getMixedType() {
+        return MIXED_TYPE;
     }
 }

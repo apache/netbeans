@@ -295,6 +295,8 @@ PHP_TYPE_VOID=[v][o][i][d]
 PHP_ITERABLE=[i][t][e][r][a][b][l][e]
 // PHP7.2
 PHP_TYPE_OBJECT=[o][b][j][e][c][t]
+// NETBEANS-4443 PHP8.0
+PHP_TYPE_MIXED=[m][i][x][e][d]
 
 
 
@@ -619,6 +621,10 @@ PHP_TYPE_OBJECT=[o][b][j][e][c][t]
 
 <ST_PHP_IN_SCRIPTING>{PHP_TYPE_OBJECT} {
     return PHPTokenId.PHP_TYPE_OBJECT;
+}
+
+<ST_PHP_IN_SCRIPTING>{PHP_TYPE_MIXED} {
+    return PHPTokenId.PHP_TYPE_MIXED;
 }
 
 <ST_PHP_IN_SCRIPTING>"->" {

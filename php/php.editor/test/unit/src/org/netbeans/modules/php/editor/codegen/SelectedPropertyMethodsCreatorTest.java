@@ -541,4 +541,20 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
         ));
     }
 
+    public void testStaticReturnTypeOverrideMethod01_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class ChildClass extends ParentClass {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testStaticReturnTypeImplementMethod01_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class TestClass implements TestInterface {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
 }

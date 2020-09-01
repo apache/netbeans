@@ -1,0 +1,664 @@
+<testresult testFile='staticReturnType_01.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='824'>
+            <text>Foo</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='825' end='826'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='827' end='828'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='830' end='835'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='836' end='852'>
+            <text>StaticReturnType</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='853' end='854'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='859' end='865'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='866' end='874'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='875' end='891'>
+            <text>staticReturnType</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='891' end='892'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='892' end='895'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='896' end='902'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='902' end='903'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='903' end='904'>
+            <text>:</text>
+        </token>
+        <token id='T_STATIC' start='905' end='911'>
+            <text>static</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='912' end='913'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='922' end='928'>
+            <text>return</text>
+        </token>
+        <token id='T_NEW' start='929' end='932'>
+            <text>new</text>
+        </token>
+        <token id='T_STATIC' start='933' end='939'>
+            <text>static</text>
+        </token>
+        <token id='T_SEMICOLON' start='939' end='940'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='945' end='946'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='952' end='958'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='959' end='967'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='968' end='992'>
+            <text>staticReturnNullableType</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='992' end='993'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='993' end='996'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='997' end='1003'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1003' end='1004'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1004' end='1005'>
+            <text>:</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='1006' end='1007'>
+            <text>?</text>
+        </token>
+        <token id='T_STATIC' start='1007' end='1013'>
+            <text>static</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1014' end='1015'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1024' end='1030'>
+            <text>return</text>
+        </token>
+        <token id='T_NEW' start='1031' end='1034'>
+            <text>new</text>
+        </token>
+        <token id='T_STATIC' start='1035' end='1041'>
+            <text>static</text>
+        </token>
+        <token id='T_SEMICOLON' start='1041' end='1042'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1047' end='1048'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1054' end='1060'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1061' end='1067'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1068' end='1076'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1077' end='1098'>
+            <text>staticReturnUnionType</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1098' end='1099'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1099' end='1100'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1100' end='1101'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1102' end='1106'>
+            <text>self</text>
+        </token>
+        <token id='T_OR' start='1106' end='1107'>
+            <text>|</text>
+        </token>
+        <token id='T_STATIC' start='1107' end='1113'>
+            <text>static</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1114' end='1115'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1124' end='1130'>
+            <text>return</text>
+        </token>
+        <token id='T_NEW' start='1131' end='1134'>
+            <text>new</text>
+        </token>
+        <token id='T_STATIC' start='1135' end='1141'>
+            <text>static</text>
+        </token>
+        <token id='T_SEMICOLON' start='1141' end='1142'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1147' end='1148'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1149' end='1150'>
+            <text>}</text>
+        </token>
+        <token id='T_TRAIT' start='1152' end='1157'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='1158' end='1167'>
+            <text>TestTrait</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1168' end='1169'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='1175' end='1181'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1182' end='1190'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1191' end='1212'>
+            <text>traitStaticReturnType</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1212' end='1213'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1213' end='1214'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1214' end='1215'>
+            <text>:</text>
+        </token>
+        <token id='T_STATIC' start='1216' end='1222'>
+            <text>static</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1223' end='1224'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1233' end='1239'>
+            <text>return</text>
+        </token>
+        <token id='T_NEW' start='1240' end='1243'>
+            <text>new</text>
+        </token>
+        <token id='T_STATIC' start='1244' end='1250'>
+            <text>static</text>
+        </token>
+        <token id='T_SEMICOLON' start='1250' end='1251'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1256' end='1257'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1263' end='1269'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1270' end='1278'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1279' end='1308'>
+            <text>traitStaticReturnNullableType</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1308' end='1309'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1309' end='1310'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1310' end='1311'>
+            <text>:</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='1312' end='1313'>
+            <text>?</text>
+        </token>
+        <token id='T_STATIC' start='1313' end='1319'>
+            <text>static</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1320' end='1321'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1330' end='1336'>
+            <text>return</text>
+        </token>
+        <token id='T_NEW' start='1337' end='1340'>
+            <text>new</text>
+        </token>
+        <token id='T_STATIC' start='1341' end='1347'>
+            <text>static</text>
+        </token>
+        <token id='T_SEMICOLON' start='1347' end='1348'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1353' end='1354'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1360' end='1366'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1367' end='1373'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1374' end='1382'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1383' end='1409'>
+            <text>traitStaticReturnUnionType</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1409' end='1410'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1410' end='1411'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1411' end='1412'>
+            <text>:</text>
+        </token>
+        <token id='T_STATIC' start='1413' end='1419'>
+            <text>static</text>
+        </token>
+        <token id='T_OR' start='1419' end='1420'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1420' end='1424'>
+            <text>null</text>
+        </token>
+        <token id='T_OR' start='1424' end='1425'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1425' end='1428'>
+            <text>Foo</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1429' end='1430'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1439' end='1445'>
+            <text>return</text>
+        </token>
+        <token id='T_NEW' start='1446' end='1449'>
+            <text>new</text>
+        </token>
+        <token id='T_STATIC' start='1450' end='1456'>
+            <text>static</text>
+        </token>
+        <token id='T_SEMICOLON' start='1456' end='1457'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1462' end='1463'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1465' end='1466'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='1468' end='1476'>
+            <text>$closure</text>
+        </token>
+        <token id='T_EQUAL' start='1477' end='1478'>
+            <text>=</text>
+        </token>
+        <token id='T_FUNCTION' start='1479' end='1487'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1487' end='1488'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1488' end='1489'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1489' end='1490'>
+            <text>:</text>
+        </token>
+        <token id='T_STATIC' start='1491' end='1497'>
+            <text>static</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1498' end='1499'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1504' end='1510'>
+            <text>return</text>
+        </token>
+        <token id='T_NEW' start='1511' end='1514'>
+            <text>new</text>
+        </token>
+        <token id='T_STATIC' start='1515' end='1521'>
+            <text>static</text>
+        </token>
+        <token id='T_SEMICOLON' start='1521' end='1522'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1523' end='1524'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1524' end='1525'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1527' end='1530'>
+            <text>$af</text>
+        </token>
+        <token id='T_EQUAL' start='1531' end='1532'>
+            <text>=</text>
+        </token>
+        <token id='T_FN' start='1533' end='1535'>
+            <text>fn</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1535' end='1536'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1536' end='1537'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1537' end='1538'>
+            <text>:</text>
+        </token>
+        <token id='T_STATIC' start='1539' end='1545'>
+            <text>static</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1546' end='1548'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_NEW' start='1549' end='1552'>
+            <text>new</text>
+        </token>
+        <token id='T_STATIC' start='1553' end='1559'>
+            <text>static</text>
+        </token>
+        <token id='T_SEMICOLON' start='1559' end='1560'>
+            <text>;</text>
+        </token>
+        <token id='T_FUNCTION' start='1636' end='1644'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1645' end='1661'>
+            <text>staticReturnType</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1661' end='1662'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1662' end='1663'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1663' end='1664'>
+            <text>:</text>
+        </token>
+        <token id='T_STATIC' start='1665' end='1671'>
+            <text>static</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1672' end='1673'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1674' end='1675'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1676' end='1676'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1676'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='1562' end='1605' commentType='singleLine'/>
+            <Comment start='1605' end='1636' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='1562' end='1605' commentType='singleLine'/>
+            <Comment start='1605' end='1636' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='828' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='824' name='Foo'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='825' end='828' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+            <ClassDeclaration start='830' end='1150' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='836' end='852' name='StaticReturnType'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='853' end='1150' isCurly='true'>
+                    <MethodDeclaration start='859' end='946' modifiers='public'>
+                        <FunctionDeclaration start='866' end='946' isReference='false'>
+                            <Identifier start='875' end='891' name='staticReturnType'/>
+                            <FormalParameters>
+                                <FormalParameter start='892' end='902' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='892' end='895' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='892' end='895' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='896' end='902' isDollared='true'>
+                                            <Identifier start='897' end='902' name='param'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Identifier start='905' end='911' name='static'/>
+                            <Block start='912' end='946' isCurly='true'>
+                                <ReturnStatement start='922' end='940'>
+                                    <ClassInstanceCreation start='929' end='939' anonymous='false'>
+                                        <ClassName start='933' end='939'>
+                                            <Identifier start='933' end='939' name='static'/>
+                                        </ClassName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </ClassInstanceCreation>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='952' end='1048' modifiers='public'>
+                        <FunctionDeclaration start='959' end='1048' isReference='false'>
+                            <Identifier start='968' end='992' name='staticReturnNullableType'/>
+                            <FormalParameters>
+                                <FormalParameter start='993' end='1003' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='993' end='996' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='993' end='996' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='997' end='1003' isDollared='true'>
+                                            <Identifier start='998' end='1003' name='param'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NullableType start='1006' end='1013'>
+                                <Identifier start='1007' end='1013' name='static'/>
+                            </NullableType>
+                            <Block start='1014' end='1048' isCurly='true'>
+                                <ReturnStatement start='1024' end='1042'>
+                                    <ClassInstanceCreation start='1031' end='1041' anonymous='false'>
+                                        <ClassName start='1035' end='1041'>
+                                            <Identifier start='1035' end='1041' name='static'/>
+                                        </ClassName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </ClassInstanceCreation>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1054' end='1148' modifiers='public static'>
+                        <FunctionDeclaration start='1068' end='1148' isReference='false'>
+                            <Identifier start='1077' end='1098' name='staticReturnUnionType'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <UnionType start='1102' end='1113'>
+                                <NamespaceName start='1102' end='1106' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1102' end='1106' name='self'/>
+                                </NamespaceName>
+                                <Identifier start='1107' end='1113' name='static'/>
+                            </UnionType>
+                            <Block start='1114' end='1148' isCurly='true'>
+                                <ReturnStatement start='1124' end='1142'>
+                                    <ClassInstanceCreation start='1131' end='1141' anonymous='false'>
+                                        <ClassName start='1135' end='1141'>
+                                            <Identifier start='1135' end='1141' name='static'/>
+                                        </ClassName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </ClassInstanceCreation>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <TraitDeclaration start='1152' end='1466'>
+                <TraitName>
+                    <Identifier start='1158' end='1167' name='TestTrait'/>
+                </TraitName>
+                <Block start='1168' end='1466' isCurly='true'>
+                    <MethodDeclaration start='1175' end='1257' modifiers='public'>
+                        <FunctionDeclaration start='1182' end='1257' isReference='false'>
+                            <Identifier start='1191' end='1212' name='traitStaticReturnType'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Identifier start='1216' end='1222' name='static'/>
+                            <Block start='1223' end='1257' isCurly='true'>
+                                <ReturnStatement start='1233' end='1251'>
+                                    <ClassInstanceCreation start='1240' end='1250' anonymous='false'>
+                                        <ClassName start='1244' end='1250'>
+                                            <Identifier start='1244' end='1250' name='static'/>
+                                        </ClassName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </ClassInstanceCreation>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1263' end='1354' modifiers='public'>
+                        <FunctionDeclaration start='1270' end='1354' isReference='false'>
+                            <Identifier start='1279' end='1308' name='traitStaticReturnNullableType'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NullableType start='1312' end='1319'>
+                                <Identifier start='1313' end='1319' name='static'/>
+                            </NullableType>
+                            <Block start='1320' end='1354' isCurly='true'>
+                                <ReturnStatement start='1330' end='1348'>
+                                    <ClassInstanceCreation start='1337' end='1347' anonymous='false'>
+                                        <ClassName start='1341' end='1347'>
+                                            <Identifier start='1341' end='1347' name='static'/>
+                                        </ClassName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </ClassInstanceCreation>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1360' end='1463' modifiers='public static'>
+                        <FunctionDeclaration start='1374' end='1463' isReference='false'>
+                            <Identifier start='1383' end='1409' name='traitStaticReturnUnionType'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <UnionType start='1413' end='1428'>
+                                <Identifier start='1413' end='1419' name='static'/>
+                                <NamespaceName start='1420' end='1424' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1420' end='1424' name='null'/>
+                                </NamespaceName>
+                                <NamespaceName start='1425' end='1428' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1425' end='1428' name='Foo'/>
+                                </NamespaceName>
+                            </UnionType>
+                            <Block start='1429' end='1463' isCurly='true'>
+                                <ReturnStatement start='1439' end='1457'>
+                                    <ClassInstanceCreation start='1446' end='1456' anonymous='false'>
+                                        <ClassName start='1450' end='1456'>
+                                            <Identifier start='1450' end='1456' name='static'/>
+                                        </ClassName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </ClassInstanceCreation>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </TraitDeclaration>
+            <ExpressionStatement start='1468' end='1525'>
+                <Assignment start='1468' end='1524' operator='EQUAL'>
+                    <Variable start='1468' end='1476' isDollared='true'>
+                        <Identifier start='1469' end='1476' name='closure'/>
+                    </Variable>
+                    <LambdaFunctionDeclaration start='1479' end='1524' isReference='false'>
+                        <Identifier start='1491' end='1497' name='static'/>
+                        <Block start='1498' end='1524' isCurly='true'>
+                            <ReturnStatement start='1504' end='1522'>
+                                <ClassInstanceCreation start='1511' end='1521' anonymous='false'>
+                                    <ClassName start='1515' end='1521'>
+                                        <Identifier start='1515' end='1521' name='static'/>
+                                    </ClassName>
+                                    <Parameters>
+                                    </Parameters>
+                                </ClassInstanceCreation>
+                            </ReturnStatement>
+                        </Block>
+                    </LambdaFunctionDeclaration>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1527' end='1560'>
+                <Assignment start='1527' end='1559' operator='EQUAL'>
+                    <Variable start='1527' end='1530' isDollared='true'>
+                        <Identifier start='1528' end='1530' name='af'/>
+                    </Variable>
+                    <ArrowFunctionDeclaration start='1533' end='1559' isReference='false' isStatic='false'>
+                        <Identifier start='1539' end='1545' name='static'/>
+                        <ClassInstanceCreation start='1549' end='1559' anonymous='false'>
+                            <ClassName start='1553' end='1559'>
+                                <Identifier start='1553' end='1559' name='static'/>
+                            </ClassName>
+                            <Parameters>
+                            </Parameters>
+                        </ClassInstanceCreation>
+                    </ArrowFunctionDeclaration>
+                </Assignment>
+            </ExpressionStatement>
+            <FunctionDeclaration start='1636' end='1675' isReference='false'>
+                <Identifier start='1645' end='1661' name='staticReturnType'/>
+                <FormalParameters>
+                </FormalParameters>
+                <Identifier start='1665' end='1671' name='static'/>
+                <Block start='1672' end='1675' isCurly='true'>
+                </Block>
+            </FunctionDeclaration>
+        </Statements>
+    </Program>
+</testresult>

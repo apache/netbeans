@@ -591,4 +591,206 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath("unionTypesWithSpecialTypes"), "$this->traitMethod($this)->^parentMethod();", false);
     }
 
+    public void testStaticReturnTypeInReturnType_01() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeInReturnType"), "    public function testReturnType(): sta^tic {", false);
+    }
+
+    public void testStaticReturnTypeInReturnType_02() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeInReturnType"), "    public function testReturnNullableType(): ?stat^ic {", false);
+    }
+
+    public void testStaticReturnTypeInReturnType_03() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeInReturnType"), "    public static function testReturnUnionType(): self|\\Foo\\Bar|stat^ic|null {", false);
+    }
+
+    public void testStaticReturnType_01() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "$child->testStaticReturnTypeParent()->^testStaticReturnTypeChild(); // all", false);
+    }
+
+    public void testStaticReturnType_02() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "$child->testSelfReturnTypeParent()->^testStaticReturnTypeParent(); // parent items", false);
+    }
+
+    public void testStaticReturnType_03() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "$child->testStaticReturnNullableTypeParent()->^testStaticReturnTypeChild(); // all", false);
+    }
+
+    public void testStaticReturnType_04() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "$child->testSelfReturnNullableTypeParent()->^testStaticReturnTypeParent(); // parent items", false);
+    }
+
+    public void testStaticReturnType_05() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "$child->testStaticReturnUnionTypeParent()->^testStaticReturnTypeChild(); // all", false);
+    }
+
+    public void testStaticReturnType_06() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "$child->testSelfReturnUnionTypeParent()->^testStaticReturnTypeParent(); // parent items", false);
+    }
+
+    public void testStaticReturnType_07() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "$child->testStaticSelfReturnUnionTypeParent()->^testStaticReturnTypeChild(); // all", false);
+    }
+
+    public void testStaticReturnType_08() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "$child->testStaticReturnTypeTrait()->^testStaticReturnTypeChild(); // all", false);
+    }
+
+    public void testStaticReturnType_09() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "$child->testStaticReturnNullableTypeTrait()->^testStaticReturnTypeChild(); // all", false);
+    }
+
+    public void testStaticReturnType_10() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "$child->testStaticReturnUnionTypeTrait()->^testStaticReturnTypeChild(); // all", false);
+    }
+
+    public void testStaticReturnType_11() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "$child->testStaticReturnTypeChild()->^testSelfReturnNullableTypeParent(); // all", false);
+    }
+
+    public void testStaticReturnType_12() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "$child->testStaticReturnNullableTypeChild()->^testSelfReturnNullableTypeParent(); // all", false);
+    }
+
+    public void testStaticReturnType_13() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "$child->testStaticReturnUnionTypeChild()->^testStaticReturnTypeTrait(); // all", false);
+    }
+
+    public void testStaticReturnType_14() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "                ->^testSelfReturnNullableTypeParent() // parent", false);
+    }
+
+    public void testStaticReturnType_15() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "                ->^testSelfReturnUnionTypeParent(); // parent", false);
+    }
+
+    public void testStaticReturnType_16() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "                ->^testSelfReturnTypeParent() // all test16", false);
+    }
+
+    public void testStaticReturnType_17() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "                ->^testStaticReturnNullableTypeParent() // parent test17", false);
+    }
+
+    public void testStaticReturnType_18() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "                ->^testStaticReturnTypeParent(); // parent test 18", false);
+    }
+
+    public void testStaticReturnType_19() throws Exception {
+        checkCompletion(getTestPath("staticReturnType"), "                ->^testStaticReturnUnionTypeTrait(); // trait test19", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_01() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "ChildClass::testStaticReturnTypeParentStatic()::^testStaticReturnTypeChildStatic(); // all", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_02() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "ChildClass::testSelfReturnTypeParentStatic()::^testStaticReturnTypeParentStatic(); // parent items", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_03() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "ChildClass::testStaticReturnNullableTypeParentStatic()::^testStaticReturnTypeChildStatic(); // all", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_04() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "ChildClass::testSelfReturnNullableTypeParentStatic()::^testStaticReturnTypeParentStatic(); // parent items", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_05() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "ChildClass::testStaticReturnUnionTypeParentStatic()::^testStaticReturnTypeChildStatic(); // all", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_06() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "ChildClass::testSelfReturnUnionTypeParentStatic()::^testStaticReturnTypeParentStatic(); // parent items", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_07() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "$child::testStaticSelfReturnUnionTypeParentStatic()::^testStaticReturnTypeChildStatic(); // all", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_08() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "$child::testStaticReturnTypeTraitStatic()::^testStaticReturnTypeChildStatic(); // all", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_09() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "$child::testStaticReturnNullableTypeTraitStatic()::^testStaticReturnTypeChildStatic(); // all", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_10() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "$child::testStaticReturnUnionTypeTraitStatic()::^testStaticReturnTypeChildStatic(); // all", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_11() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "$child::testStaticReturnTypeChildStatic()::^testSelfReturnNullableTypeParentStatic(); // all", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_12() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "$child::testStaticReturnNullableTypeChildStatic()::^testSelfReturnNullableTypeParentStatic(); // all", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_13() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "$child::testStaticReturnUnionTypeChildStatic()::^testStaticReturnTypeTraitStatic(); // all", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_14() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "                ::^testSelfReturnNullableTypeParentStatic() // parent", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_15() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "                ::^testSelfReturnUnionTypeParentStatic(); // parent", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_16() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "            ::^testSelfReturnTypeParentStatic() // all test16", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_17() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "            ::^testStaticReturnNullableTypeParentStatic() // parent test17", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_18() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "            ::^testStaticReturnTypeParentStatic(); // parent test 18", false);
+    }
+
+    public void testStaticReturnTypeOfStaticMethod_19() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeOfStaticMethod"), "                ::^testStaticReturnUnionTypeTraitStatic(); // trait test19", false);
+    }
+
+    public void testStaticReturnTypeMixed_01() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeMixed"), "                ->^testSelfReturnNullableTypeParent() // parent test1", false);
+    }
+
+    public void testStaticReturnTypeMixed_02() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeMixed"), "                ::^testSelfReturnUnionTypeParentStatic(); // parent test2", false);
+    }
+
+    public void testStaticReturnTypeMixed_03() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeMixed"), "                ->^testSelfReturnTypeParent() // all test3", false);
+    }
+
+    public void testStaticReturnTypeMixed_04() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeMixed"), "                ::^testStaticReturnNullableTypeParentStatic() // parent test4", false);
+    }
+
+    public void testStaticReturnTypeMixed_05() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeMixed"), "                ->^testStaticReturnTypeParent(); // parent test5", false);
+    }
+
+    public void testStaticReturnTypeMixed_06() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeMixed"), "                ->^testStaticReturnUnionTypeTrait() // trait test6", false);
+    }
+
+    public void testStaticReturnTypeMixed_07() throws Exception {
+        checkCompletion(getTestPath("staticReturnTypeMixed"), "                ::^testStaticReturnTypeTraitStatic(); // trait test7", false);
+    }
+
+    public void testStaticReturnTypeOverrideMethod01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testStaticReturnTypeOverrideMethod01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
+    public void testStaticReturnTypeImplementMethod01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testStaticReturnTypeImplementMethod01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_80, "test"), true);
+    }
+
 }

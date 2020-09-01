@@ -1209,6 +1209,34 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php80/unionTypesError_03");
     }
 
+    public void testStaticReturnType_01() throws Exception {
+        performTest("parser/php80/staticReturnType_01");
+    }
+
+    public void testStaticReturnTypeErrorWithFieldType_01() throws Exception {
+        // nullable type
+        performTest("parser/php80/staticReturnTypeErrorWithFieldType_01");
+    }
+
+    public void testStaticReturnTypeErrorWithFieldType_02() throws Exception {
+        // union type
+        performTest("parser/php80/staticReturnTypeErrorWithFieldType_02");
+    }
+
+    public void testStaticReturnTypeErrorWithParameterType_01() throws Exception {
+        performTest("parser/php80/staticReturnTypeErrorWithParameterType_01");
+    }
+
+    public void testStaticReturnTypeErrorWithParameterType_02() throws Exception {
+        // nullable type
+        performTest("parser/php80/staticReturnTypeErrorWithParameterType_02");
+    }
+
+    public void testStaticReturnTypeErrorWithParameterType_03() throws Exception {
+        // union type
+        performTest("parser/php80/staticReturnTypeErrorWithParameterType_03");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

@@ -661,6 +661,78 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
         );
     }
 
+    public void testStaicReturnType() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "class StaticReturnType {\n"
+                + "    /**^\n"
+                + "    public function test(): static {\n"
+                + "    }\n"
+                + "}",
+                // expected
+                ""
+                + "<?php\n"
+                + "class StaticReturnType {\n"
+                + "    /**\n"
+                + "     * \n"
+                + "     * @return static^\n"
+                + "     */\n"
+                + "    public function test(): static {\n"
+                + "    }\n"
+                + "}"
+        );
+    }
+
+    public void testStaicReturnTypeWithNullableType() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "class StaticReturnType {\n"
+                + "    /**^\n"
+                + "    public function testNullable(): ?static {\n"
+                + "    }\n"
+                + "}",
+                // expected
+                ""
+                + "<?php\n"
+                + "class StaticReturnType {\n"
+                + "    /**\n"
+                + "     * \n"
+                + "     * @return static|null^\n"
+                + "     */\n"
+                + "    public function testNullable(): ?static {\n"
+                + "    }\n"
+                + "}"
+        );
+    }
+
+    public void testStaicReturnTypeWithUnionType() throws Exception {
+        insertBreak(
+                // original
+                ""
+                + "<?php\n"
+                + "class StaticReturnType {\n"
+                + "    /**^\n"
+                + "    public function testUnionType(): static|null|string {\n"
+                + "    }\n"
+                + "}",
+                // expected
+                ""
+                + "<?php\n"
+                + "class StaticReturnType {\n"
+                + "    /**\n"
+                + "     * \n"
+                + "     * @return static|null|string^\n"
+                + "     */\n"
+                + "    public function testUnionType(): static|null|string {\n"
+                + "    }\n"
+                + "}"
+        );
+    }
+
     @Override
     public void insertNewline(String source, String reformatted, IndentPrefs preferences) throws Exception {
         int sourcePos = source.indexOf('^');
@@ -685,11 +757,7 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
         runKitAction(ta, DefaultEditorKit.insertBreakAction, "\n");
 
         // wait for generating comment
-        Future<?> future = PhpCommentGenerator.RP.submit(new Runnable() {
-            @Override
-            public void run() {
-            }
-        });
+        Future<?> future = PhpCommentGenerator.RP.submit(() -> {});
         future.get();
 
         String formatted = doc.getText(0, doc.getLength());

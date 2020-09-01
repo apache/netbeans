@@ -35,8 +35,10 @@ import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.ExpressionStatement;
@@ -48,6 +50,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.MatchArm;
 import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ThrowExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
+import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
@@ -115,13 +118,30 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
 
         @Override
         public void visit(FunctionDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
             addLastParam(node.getFormalParameters());
+            checkStaticReturnType(node.getReturnType());
             super.visit(node);
         }
 
         @Override
         public void visit(LambdaFunctionDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
             addLastParam(node.getFormalParameters());
+            checkStaticReturnType(node.getReturnType());
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(ArrowFunctionDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkStaticReturnType(node.getReturnType());
             super.visit(node);
         }
 
@@ -284,12 +304,27 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             createError(node);
         }
 
+        private void checkStaticReturnType(Expression returnType) {
+            // don't check union types because they are already errors (see checkUnionType())
+            Expression type = returnType;
+            if (type instanceof NullableType) {
+                type = ((NullableType) type).getType();
+            }
+            if (type instanceof Identifier && isStatic((Identifier) type)) {
+                createError(returnType);
+            }
+        }
+
         private void createError(ASTNode node) {
             createError(node.getStartOffset(), node.getEndOffset());
         }
 
         private void createError(int startOffset, int endOffset) {
             errors.add(new PHP80VersionError(fileObject, startOffset, endOffset));
+        }
+
+        private static boolean isStatic(Identifier identifier) {
+            return Type.STATIC.equals(identifier.getName());
         }
     }
 

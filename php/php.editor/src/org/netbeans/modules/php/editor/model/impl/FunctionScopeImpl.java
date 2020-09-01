@@ -273,6 +273,9 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
                 if (CodeUtils.isNullableType(typeName)) {
                     typeName = typeName.substring(1);
                 }
+                if (Type.STATIC.equals(typeName)) {
+                    typeName = "\\" + typeName; // NOI18N
+                }
                 if (isSpecialTypeName(typeName)) {
                     typeNames[i] = typeName;
                     continue;

@@ -19,6 +19,7 @@
 package org.netbeans.modules.php.editor.verification;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -42,12 +43,14 @@ import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
+import org.openide.util.Pair;
 
 /**
  * Handle unusable types as errors here to avoid complicating the grammar(cup
@@ -57,6 +60,10 @@ import org.openide.util.NbBundle;
 public class UnusableTypesUnhandledError extends UnhandledErrorRule {
 
     private static final String TRAVERSABLE_TYPE = "Traversable"; // NOI18N
+    private static final List<String> VALID_TYPES_WITH_OBJECT_TYPE = Arrays.asList(
+            Type.ARRAY, Type.BOOL, Type.CALLABLE, Type.FALSE, Type.FLOAT,
+            Type.INT, Type.ITERABLE, Type.NULL, Type.STRING, Type.VOID
+    );
 
     @Override
     @NbBundle.Messages("UnusableTypesUnhandledError.displayName=Unusable types.")
@@ -83,6 +90,9 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
         private final List<VerificationError> errors = new ArrayList<>();
         private final FileObject fileObject;
         private final Model model;
+        private boolean isInMethod;
+        private boolean isInLambdaFunction;
+        private boolean isInMethodBody;
 
         private CheckVisitor(FileObject fileObject, Model model) {
             assert fileObject != null;
@@ -139,8 +149,10 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
+            isInLambdaFunction = true;
             checkReturnType(node.getReturnType(), false);
             super.visit(node);
+            isInLambdaFunction = false;
         }
 
         @Override
@@ -150,6 +162,23 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
             }
             checkReturnType(node.getReturnType(), false);
             super.visit(node);
+        }
+
+        @Override
+        public void visit(MethodDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            isInMethod = true;
+            FunctionDeclaration function = node.getFunction();
+            scan(function.getFunctionName());
+            scan(function.getFormalParameters());
+            checkReturnType(function.getReturnType(), false);
+            scan(function.getReturnType());
+            isInMethodBody = true;
+            scan(function.getBody());
+            isInMethodBody = false;
+            isInMethod = false;
         }
 
         private void checkFieldType(@NullAllowed Expression fieldType, boolean isInUnionType) {
@@ -229,6 +258,16 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
             } else if (type instanceof UnionType) {
                 ((UnionType) type).getTypes().forEach(unionType -> checkReturnType(unionType, true));
                 checkUnionType((UnionType) type);
+            } else if (type instanceof Identifier) {
+                // method, labmda funciton, and arrow function can use static return type
+                // e.g. $closure = function(): static {return new static};, $af = fn(): static => new static; no errors
+                // function cannot use static return type e.g. function a(): static {return new static;} error
+                if (((Identifier) type).getName().equals(Type.STATIC)) {
+                    if ((!isInMethod && !isInLambdaFunction)
+                            || (!isInLambdaFunction && isInMethodBody)) { // nested function
+                        createError(type, Type.STATIC, UnusableType.Context.Return);
+                    }
+                }
             }
         }
 
@@ -242,7 +281,7 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
 
         private void checkUnionType(UnionType unionType) {
             checkDuplicateType(unionType);
-            checkRedundantCombinationTypeWithIterable(unionType);
+            checkRedundantTypeCombination(unionType);
         }
 
         private void checkDuplicateType(UnionType unionType) {
@@ -263,7 +302,36 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
             }
         }
 
-        private void checkRedundantCombinationTypeWithIterable(UnionType unionType) {
+        private void checkRedundantTypeCombination(UnionType unionType) {
+            checkRedundantTypeCombinationWithObject(unionType);
+            checkRedundantTypeCombinationWithIterable(unionType);
+        }
+
+        private void checkRedundantTypeCombinationWithObject(UnionType unionType) {
+            boolean hasObjectType = false;
+            for (Expression type : unionType.getTypes()) {
+                if (type instanceof NamespaceName && isObjectType((NamespaceName) type)) {
+                    hasObjectType = true;
+                }
+            }
+            // e.g. object|self, object|parent, object|static object|\Foo\Bar
+            if (hasObjectType) {
+                for (Expression type : unionType.getTypes()) {
+                    if (type instanceof NamespaceName && !isObjectType((NamespaceName) type)) {
+                        String typeName = CodeUtils.extractUnqualifiedName((NamespaceName) type);
+                        if (!VALID_TYPES_WITH_OBJECT_TYPE.contains(typeName)) {
+                            createRedundantTypeCombinationError(type, unionType, Type.OBJECT, CodeUtils.extractQualifiedName((NamespaceName) type));
+                        }
+                    } else if (type instanceof Identifier) {
+                        if (!VALID_TYPES_WITH_OBJECT_TYPE.contains(((Identifier)type).getName())) {
+                            createRedundantTypeCombinationError(type, unionType, Type.OBJECT, ((Identifier)type).getName());
+                        }
+                    }
+                }
+            }
+        }
+
+        private void checkRedundantTypeCombinationWithIterable(UnionType unionType) {
             // Iterable: https://www.php.net/manual/en/language.types.iterable.php
             // Iterable accepts any array or object implementing the Traversable interface.
             boolean hasIterable = false;
@@ -296,10 +364,10 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
                 }
             }
             if (hasIterable && hasArray) {
-                createIterableRedundantCombinationTypeError(unionType, IterableRedundantCombinationType.RedundantType.Array);
+                createIterableRedundantTypeCombinationError(unionType, IterableRedundantTypeCombination.RedundantType.Array);
             }
             if (hasIterable && hasTraversable) {
-                createIterableRedundantCombinationTypeError(unionType, IterableRedundantCombinationType.RedundantType.Traversable);
+                createIterableRedundantTypeCombinationError(unionType, IterableRedundantTypeCombination.RedundantType.Traversable);
             }
         }
 
@@ -315,8 +383,12 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
             errors.add(new DuplicateType(fileObject, node.getStartOffset(), node.getEndOffset(), type));
         }
 
-        private void createIterableRedundantCombinationTypeError(UnionType unionType, IterableRedundantCombinationType.RedundantType redundantType) {
-            errors.add(new IterableRedundantCombinationType(fileObject, unionType.getStartOffset(), unionType.getEndOffset(), unionType, redundantType));
+        private void createRedundantTypeCombinationError(ASTNode node, UnionType unionType, String type, String redundantType) {
+            errors.add(new RedundantTypeCombination(fileObject, node.getStartOffset(), node.getEndOffset(), unionType, Pair.of(type, redundantType)));
+        }
+
+        private void createIterableRedundantTypeCombinationError(UnionType unionType, IterableRedundantTypeCombination.RedundantType redundantType) {
+            errors.add(new IterableRedundantTypeCombination(fileObject, unionType.getStartOffset(), unionType.getEndOffset(), unionType, redundantType));
         }
 
         private static boolean isArrayType(Identifier identifier) {
@@ -339,6 +411,10 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
 
         private static boolean isNullType(NamespaceName namespaceName) {
             return Type.NULL.equals(CodeUtils.extractUnqualifiedName(namespaceName));
+        }
+
+        private static boolean isObjectType(NamespaceName namespaceName) {
+            return Type.OBJECT.equals(CodeUtils.extractUnqualifiedName(namespaceName));
         }
 
         private static boolean isIterableType(NamespaceName namespaceName) {
@@ -450,13 +526,54 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
 
     }
 
+    private static class RedundantTypeCombination extends VerificationError {
+
+        private static final String KEY = "Php.Redundant.Type.Combination"; // NOI18N
+        private final UnionType unionType;
+        private final Pair<String, String> types;
+
+        public RedundantTypeCombination(FileObject fileObject, int startOffset, int endOffset, UnionType unionType, Pair<String, String> types) {
+            super(fileObject, startOffset, endOffset);
+            this.unionType = unionType;
+            this.types = types;
+        }
+
+        @NbBundle.Messages({
+            "# {0} - union type",
+            "# {1} - type",
+            "# {2} - redundant type",
+            "RedundantTypeCombination.displayName=Redundant combination: \"{0}\" contains both \"{1}\" and \"{2}\"."
+        })
+        @Override
+        public String getDisplayName() {
+            return Bundle.RedundantTypeCombination_displayName(VariousUtils.getUnionType(unionType), types.first(), types.second());
+        }
+
+        @NbBundle.Messages({
+            "# {0} - union type",
+            "# {1} - type",
+            "# {2} - redundant type",
+            "RedundantTypeCombination.description=\"{0}\" contains both \"{1}\" and \"{2}\"."
+        })
+        @Override
+        public String getDescription() {
+            return Bundle.RedundantTypeCombination_description(VariousUtils.getUnionType(unionType), types.first(), types.second());
+        }
+
+        @Override
+        public String getKey() {
+            return KEY;
+        }
+
+    }
+
     /**
      * Iterable accepts any array or object implementing the Traversable
      * interface.
      *
      * @see https://www.php.net/manual/en/language.types.iterable.php
      */
-    private static final class IterableRedundantCombinationType extends VerificationError {
+    private static final class IterableRedundantTypeCombination extends RedundantTypeCombination {
 
         enum RedundantType {
             Array(Type.ARRAY),
@@ -473,40 +590,8 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
             }
         }
 
-        private final UnionType unionType;
-        private final RedundantType redundantType;
-
-        private static final String KEY = "Php.Iterable.Redundant.Combination.Type"; // NOI18N
-
-        public IterableRedundantCombinationType(FileObject fileObject, int startOffset, int endOffset, UnionType unionType, RedundantType redundantType) {
-            super(fileObject, startOffset, endOffset);
-            this.unionType = unionType;
-            this.redundantType = redundantType;
-        }
-
-        @NbBundle.Messages({
-            "# {0} - union type",
-            "# {1} - redundant type",
-            "IterableRedundantCombinationType.displayName=Redundant combination type with iterable: \"{0}\" is contains both \"iterable\" and \"{1}\"."
-        })
-        @Override
-        public String getDisplayName() {
-            return Bundle.IterableRedundantCombinationType_displayName(VariousUtils.getUnionType(unionType), redundantType.getType());
-        }
-
-        @NbBundle.Messages({
-            "# {0} - union type",
-            "# {1} - redundant type",
-            "IterableRedundantCombinationType.description=\"{0}\" is contains both \"iterable\" and \"{1}\"."
-        })
-        @Override
-        public String getDescription() {
-            return Bundle.IterableRedundantCombinationType_description(VariousUtils.getUnionType(unionType), redundantType.getType());
-        }
-
-        @Override
-        public String getKey() {
-            return KEY;
+        public IterableRedundantTypeCombination(FileObject fileObject, int startOffset, int endOffset, UnionType unionType, RedundantType redundantType) {
+            super(fileObject, startOffset, endOffset, unionType, Pair.of(Type.ITERABLE, redundantType.getType()));
         }
 
     }

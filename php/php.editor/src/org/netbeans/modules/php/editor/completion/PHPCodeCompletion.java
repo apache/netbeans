@@ -492,6 +492,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 }
                 autoCompleteKeywords(completionResult, request, typesForTypeName);
                 break;
+            case RETURN_UNION_TYPE_NAME: // no break
             case RETURN_TYPE_NAME:
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteTypeNames(completionResult, request);
@@ -499,10 +500,14 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 if (isInType(request)) {
                     // add self and parent
                     typesForReturnTypeName.addAll(Type.getSpecialTypesForType());
+                    typesForReturnTypeName.add(Type.STATIC);
                 }
                 if (isNullableType(info, caretOffset)) {
                     typesForReturnTypeName.remove(Type.FALSE);
                     typesForReturnTypeName.remove(Type.NULL);
+                    typesForReturnTypeName.remove(Type.VOID);
+                } else if (context == CompletionContext.RETURN_UNION_TYPE_NAME) {
+                    typesForReturnTypeName.remove(Type.VOID);
                 }
                 autoCompleteKeywords(completionResult, request, typesForReturnTypeName);
                 break;

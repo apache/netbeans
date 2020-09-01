@@ -207,7 +207,7 @@ final class CompletionContextFinder {
     public static enum CompletionContext {
 
         EXPRESSION, GLOBAL_CONST_EXPRESSION, CLASS_CONST_EXPRESSION, MATCH_EXPRESSION,
-        HTML, CLASS_NAME, INTERFACE_NAME, TYPE_NAME, RETURN_TYPE_NAME, FIELD_TYPE_NAME, STRING,
+        HTML, CLASS_NAME, INTERFACE_NAME, TYPE_NAME, RETURN_TYPE_NAME, RETURN_UNION_TYPE_NAME, FIELD_TYPE_NAME, STRING,
         CLASS_MEMBER, STATIC_CLASS_MEMBER, PHPDOC, INHERITANCE, EXTENDS, IMPLEMENTS, METHOD_NAME,
         CLASS_CONTEXT_KEYWORDS, SERVER_ENTRY_CONSTANTS, NONE, NEW_CLASS, GLOBAL, NAMESPACE_KEYWORD,
         GROUP_USE_KEYWORD, GROUP_USE_CONST_KEYWORD, GROUP_USE_FUNCTION_KEYWORD,
@@ -901,6 +901,7 @@ final class CompletionContextFinder {
         boolean isNamespaceSeparator = false;
         boolean testCompletionSeparator = true;
         boolean checkReturnTypeSeparator = false;
+        boolean isUnionType = false;
         int orgOffset = tokenSequence.offset();
         tokenSequence.moveNext();
         boolean first = true;
@@ -931,14 +932,19 @@ final class CompletionContextFinder {
                     if (isEqualSign(cToken)) {
                         isCompletionSeparator = true;
                         contextForSeparator = CompletionContext.DEFAULT_PARAMETER_VALUE;
-                    } else if (isParamSeparator(cToken)
-                            || isNullableTypesPrefix(cToken)) {
+                    } else if (isParamSeparator(cToken)) {
                         isCompletionSeparator = true;
                         contextForSeparator = CompletionContext.TYPE_NAME;
                     } else if (isArray(token)
                             || isCallable(token)
-                            || isIterable(token)) {
+                            || isIterable(token)
+                            || isNullableTypesPrefix(cToken)
+                            || isVerticalBar(cToken)
+                            || isOrOperator(cToken)) {
                         isCompletionSeparator = true;
+                        if (isVerticalBar(cToken) || isOrOperator(cToken)) {
+                            isUnionType = true;
+                        }
                         contextForSeparator = CompletionContext.TYPE_NAME;
                         checkReturnTypeSeparator = true;
                     } else if (isReturnTypeSeparator(cToken)) {
@@ -965,11 +971,15 @@ final class CompletionContextFinder {
                         testCompletionSeparator = false;
                     }
                 } else if (checkReturnTypeSeparator) {
-                    if (!isWhiteSpace(cToken)) {
+                    if (!isReturnTypeToken(cToken)) {
                         checkReturnTypeSeparator = false;
+                    } else if (isVerticalBar(cToken)) {
+                        isUnionType = true;
                     }
                     if (isReturnTypeSeparator(cToken)) {
-                        contextForSeparator = CompletionContext.RETURN_TYPE_NAME;
+                        contextForSeparator = isUnionType
+                                ? CompletionContext.RETURN_UNION_TYPE_NAME
+                                : CompletionContext.RETURN_TYPE_NAME;
                     }
                 } else if (isFunctionDeclaration(cToken)) {
                     isFunctionDeclaration = true;
@@ -1022,7 +1032,7 @@ final class CompletionContextFinder {
     }
 
     private static boolean isParamSeparator(Token<PHPTokenId> token) {
-        return isComma(token) || isLeftBracket(token) || isVerticalBar(token) || isOrOperator(token);
+        return isComma(token) || isLeftBracket(token);
     }
 
     private static boolean isReturnTypeSeparator(Token<PHPTokenId> token) {
@@ -1091,6 +1101,7 @@ final class CompletionContextFinder {
                 || id == PHPTokenId.PHP_TYPE_OBJECT
                 || id == PHPTokenId.PHP_SELF
                 || id == PHPTokenId.PHP_PARENT
+                || id == PHPTokenId.PHP_STATIC
                 || id == PHPTokenId.PHP_NULL
                 || id == PHPTokenId.PHP_FALSE
                 || id == PHPTokenId.PHP_ARRAY
@@ -1115,6 +1126,11 @@ final class CompletionContextFinder {
         return isQuoteString(token)
                 || isEqualSign(token)
                 || isMinus(token);
+    }
+
+    private static boolean isReturnTypeToken(Token<PHPTokenId> token) {
+        return isVerticalBar(token)|| isNullableTypesPrefix(token) || isType(token)
+                || isString(token) || isWhiteSpace(token) || isNamespaceSeparator(token);
     }
 
     static boolean lineContainsAny(Token<PHPTokenId> token, int tokenOffset, TokenSequence<PHPTokenId> tokenSequence, List<PHPTokenId> ids) {

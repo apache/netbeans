@@ -1522,4 +1522,18 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         options.put(FmtOptions.SPACE_AROUND_UNION_TYPE_SEPARATOR, false);
         reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundUnionTypeSeparator_02b.php", options);
     }
+
+    public void testSpacesAroundUnionTypeSeparator_03a() throws Exception {
+        // static return type
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNION_TYPE_SEPARATOR, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundUnionTypeSeparator_03a.php", options);
+    }
+
+    public void testSpacesAroundUnionTypeSeparator_03b() throws Exception {
+        // static return type
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_UNION_TYPE_SEPARATOR, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundUnionTypeSeparator_03b.php", options);
+    }
 }

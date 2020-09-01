@@ -32,4 +32,5 @@ KEYWORD    iterable                                   null
 KEYWORD    object                                     null
 KEYWORD    parent                                     null
 KEYWORD    self                                       null
+KEYWORD    static                                     null
 KEYWORD    string                                     null

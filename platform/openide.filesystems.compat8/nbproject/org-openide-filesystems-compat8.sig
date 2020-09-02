@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.17
+#Version 9.18
 
 CLSS public java.io.IOException
 cons public init()
@@ -548,7 +548,6 @@ meth protected boolean isPersistent()
  anno 0 java.lang.Deprecated()
 meth protected final void setCapability(org.openide.filesystems.FileSystemCapability)
  anno 0 java.lang.Deprecated()
-meth public abstract org.openide.util.actions.SystemAction[] getActions()
 meth public final boolean isHidden()
  anno 0 java.lang.Deprecated()
 meth public final org.openide.filesystems.FileSystemCapability getCapability()
@@ -556,12 +555,13 @@ meth public final org.openide.filesystems.FileSystemCapability getCapability()
 meth public final void setHidden(boolean)
  anno 0 java.lang.Deprecated()
 meth public org.openide.filesystems.FileSystem$Status getStatus()
+meth public org.openide.util.actions.SystemAction[] getActions()
 meth public org.openide.util.actions.SystemAction[] getActions(java.util.Set<org.openide.filesystems.FileObject>)
 meth public static org.openide.filesystems.FileSystemCompat compat(org.openide.filesystems.FileSystem)
 meth public void prepareEnvironment(org.openide.filesystems.FileSystem$Environment) throws org.openide.filesystems.EnvironmentNotSupportedException
  anno 0 java.lang.Deprecated()
 supr java.lang.Object
-hfds PROP_CAPABILITIES,capability,capabilityListener,hidden,status
+hfds NO_SYSTEM_ACTIONS,PROP_CAPABILITIES,capability,capabilityListener,hidden,status
 hcls StatusImpl,SystemStatus
 
 CLSS public final org.openide.filesystems.FileUtil

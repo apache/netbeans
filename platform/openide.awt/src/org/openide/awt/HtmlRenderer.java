@@ -339,7 +339,7 @@ public final class HtmlRenderer {
             // #54257 - on macosx + chinese/japanese fonts, the getStringBounds() method returns bad value
             wid = fm.stringWidth(s);
         } else {
-            wid = (int)fm.getStringBounds(s, g).getWidth();
+            wid = (int) Math.ceil(fm.getStringBounds(s, g).getWidth());
         }
 
         if (paint) {

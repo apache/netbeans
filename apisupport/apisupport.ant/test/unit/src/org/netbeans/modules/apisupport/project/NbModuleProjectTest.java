@@ -26,7 +26,6 @@ import java.util.logging.LogManager;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
-import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.SourceGroupModifier;
 import org.netbeans.junit.MemoryFilter;
 import org.netbeans.modules.apisupport.project.api.Util;
@@ -59,7 +58,7 @@ public class NbModuleProjectTest extends TestBase {
         super.setUp();
         clearWorkDir();
         TestBase.initializeBuildProperties(getWorkDir(), getDataDir());
-        FileObject dir = nbRoot().getFileObject("java.project");
+        FileObject dir = nbRoot().getFileObject("java/java.project");
         assertNotNull("have java.project checked out", dir);
         Project p = ProjectManager.getDefault().findProject(dir);
         javaProjectProject = (NbModuleProject)p;
@@ -98,7 +97,7 @@ public class NbModuleProjectTest extends TestBase {
 
     public void testSupportsJavadoc() throws Exception {
         assertTrue(javaProjectProject.supportsJavadoc());
-        FileObject dir = nbRoot().getFileObject("beans");
+        FileObject dir = nbRoot().getFileObject("java/beans");
         assertNotNull("have beans checked out", dir);
         Project p = ProjectManager.getDefault().findProject(dir);
         NbModuleProject beansProject = (NbModuleProject) p;

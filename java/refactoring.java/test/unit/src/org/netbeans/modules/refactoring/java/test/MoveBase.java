@@ -76,6 +76,7 @@ public class MoveBase extends RefactoringTestBase {
             addAllProblems(problems, r[0].prepare(rs));
         }
         if (!problemIsFatal(problems)) {
+            rs.getRefactoringElements();
             addAllProblems(problems, rs.doRefactoring(true));
         }
         assertProblems(Arrays.asList(expectedProblems), problems);
@@ -260,6 +261,23 @@ public class MoveBase extends RefactoringTestBase {
             addAllProblems(problems, r[0].prepare(rs));
         }
         if (!problemIsFatal(problems)) {
+            addAllProblems(problems, rs.doRefactoring(true));
+        }
+        assertProblems(Arrays.asList(expectedProblems), problems);
+    }
+    
+    void performMove(FileObject source, final URL target, Problem... expectedProblems) throws IOException, IllegalArgumentException, InterruptedException {
+        MoveRefactoring r = new MoveRefactoring(Lookups.singleton(source));
+        r.setTarget(Lookups.singleton(target));
+
+        RefactoringSession rs = RefactoringSession.create("Session");
+        List<Problem> problems = new LinkedList<Problem>();
+        addAllProblems(problems, r.preCheck());
+        if (!problemIsFatal(problems)) {
+            addAllProblems(problems, r.prepare(rs));
+        }
+        if (!problemIsFatal(problems)) {
+            rs.getRefactoringElements();
             addAllProblems(problems, rs.doRefactoring(true));
         }
         assertProblems(Arrays.asList(expectedProblems), problems);

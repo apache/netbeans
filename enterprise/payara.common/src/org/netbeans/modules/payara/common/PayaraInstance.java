@@ -1011,7 +1011,6 @@ public class PayaraInstance implements ServerInstanceImplementation,
     /**
      * Set Payara server domain name from stored properties.
      * <p/>
-     * @param domainsFolder Payara server domain name.
      */
     @Override
     public String getDomainName() {
@@ -1181,7 +1180,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
      * Method {@see #writeInstanceToFile(PayaraInstance)} must be called
      * to persist value.
      * <p/>
-     * @param usern Payara server administration user name.
+     * @param user Payara server administration user name.
      */
     public void setAdminUser(final String user) {
         properties.put(PayaraModule.USERNAME_ATTR, user);

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.39
+#Version 1.40
 
 CLSS public java.lang.Object
 cons public init()
@@ -215,6 +215,7 @@ fld protected final static java.lang.String JAVA_EE_VERSION_15 = "java-ee-versio
 fld protected final static java.lang.String JAVA_EE_VERSION_16 = "java-ee-version-16"
 fld protected final static java.lang.String JAVA_EE_VERSION_17 = "java-ee-version-17"
 fld protected final static java.lang.String JAVA_EE_VERSION_18 = "java-ee-version-18"
+fld protected final static java.lang.String JAKARTA_EE_VERSION_8="jakarta-ee-version-8"
 fld protected final static java.lang.String JAVA_EE_VERSION_NONE = "java-ee-version-none"
 intf org.netbeans.modules.websvc.spi.jaxws.client.JAXWSClientSupportImpl
 meth protected abstract void addJaxWs20Library() throws java.lang.Exception
@@ -234,4 +235,3 @@ meth public void removeServiceClient(java.lang.String)
 supr java.lang.Object
 hfds DEFAULT_WSIMPORT_OPTIONS,DEFAULT_WSIMPORT_VALUES,PACKAGE_OPTION,TARGET_OPTION,WSDL_LOCATION_OPTION,XENDORSED_OPTION,XNOCOMPILE_OPTION,clientArtifactsFolder,helper,project
 hcls WsImportFailedMessage
-

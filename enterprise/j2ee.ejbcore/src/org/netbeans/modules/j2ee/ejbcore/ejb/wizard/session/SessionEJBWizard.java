@@ -90,14 +90,15 @@ public final class SessionEJBWizard implements WizardDescriptor.AsynchronousInst
         Profile profile = ejbModule.getJ2eeProfile();
         boolean isSimplified = Profile.JAVA_EE_5.equals(profile) || Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_6_WEB.equals(profile) ||
                  Profile.JAVA_EE_7_FULL.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile) ||
-                 Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAVA_EE_8_WEB.equals(profile);
+                 Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAVA_EE_8_WEB.equals(profile) ||
+                 Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile);
         SessionGenerator sessionGenerator = SessionGenerator.create(
-                Templates.getTargetName(wiz), 
-                pkg, 
-                ejbPanel.hasRemote(), 
-                ejbPanel.hasLocal(), 
+                Templates.getTargetName(wiz),
+                pkg,
+                ejbPanel.hasRemote(),
+                ejbPanel.hasLocal(),
                 ejbPanel.getSessionType(),
-                isSimplified, 
+                isSimplified,
                 true, // TODO: UI - add checkbox for creation of business interface
                 !isSimplified, // TODO: UI - add checkbox for option XML (not annotation) usage
                 ejbPanel.getTimerOptions(),
@@ -148,4 +149,3 @@ public final class SessionEJBWizard implements WizardDescriptor.AsynchronousInst
     }
 
 }
-

@@ -24,33 +24,36 @@ import org.netbeans.spi.lexer.LexerInput;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 import org.netbeans.spi.lexer.TokenFactory;
 
+import static org.netbeans.modules.languages.yaml.YamlLexer.State.*;
+
 /**
  *
  * @author Tor Norbye
  */
 public final class YamlLexer implements Lexer<YamlTokenId> {
-
+    enum State {
+        ISI_WHITESPACE,           //  0 - initial lexer state = content language, no whitespace seen
+        ISA_LT,                   //  1 - after '<' char
+        ISA_LT_PC,                //  2 - after '<%' - comment or directive or scriptlet
+        ISI_SCRIPTLET,            //  3 - inside Ruby scriptlet
+        ISI_SCRIPTLET_PC,         //  4 - just after % in scriptlet
+        ISI_COMMENT_SCRIPTLET,    //  5 - Inside a Ruby comment scriptlet
+        ISI_COMMENT_SCRIPTLET_PC, //  6 - just after % in a Ruby comment scriptlet
+        ISI_EXPR_SCRIPTLET,       //  7 - inside Ruby expression scriptlet
+        ISI_EXPR_SCRIPTLET_PC,    //  8 - just after % in an expression scriptlet
+        ISI_RUBY_LINE,            //  9 - just after % in an %-line
+        ISI_NONWHITESPACE,        // 10 - after seeing non space characters on a line
+        ISI_PHP,                  // 11 - after <?
+        ISA_CURLY,                // 12 - after '{' char
+        ISI_MUSTACHE,             // 13 - after '{{'
+        ISI_MUSTACHE_QUOTE,       // 14 - cover {{ '}}' }} inside mouthstache
+    }
     private static final int EOF = LexerInput.EOF;
     private final LexerInput input;
     private final TokenFactory<YamlTokenId> tokenFactory;
     //main internal lexer state
-    private int state = ISI_WHITESPACE;
+    private State state = ISI_WHITESPACE;
     // Internal analyzer states
-    private static final int ISI_WHITESPACE = 0;  // initial lexer state = content language, no whitespace seen
-    private static final int ISA_LT = 1; // after '<' char
-    private static final int ISA_LT_PC = 2; // after '<%' - comment or directive or scriptlet
-    private static final int ISI_SCRIPTLET = 3; // inside Ruby scriptlet
-    private static final int ISI_SCRIPTLET_PC = 4; // just after % in scriptlet
-    private static final int ISI_COMMENT_SCRIPTLET = 5; // Inside a Ruby comment scriptlet
-    private static final int ISI_COMMENT_SCRIPTLET_PC = 6; // just after % in a Ruby comment scriptlet
-    private static final int ISI_EXPR_SCRIPTLET = 7; // inside Ruby expression scriptlet
-    private static final int ISI_EXPR_SCRIPTLET_PC = 8; // just after % in an expression scriptlet
-    private static final int ISI_RUBY_LINE = 9; // just after % in an %-line
-    private static final int ISI_NONWHITESPACE = 10; // after seeing non space characters on a line
-    private static final int ISI_PHP = 11; // after <?
-    private static final int ISA_CURLY = 12; // after '{' char
-    private static final int ISI_MUSTACHE = 13; // after '{{'
-    private static final int ISI_MUSTACHE_QUOTE = 14; // cover {{ '}}' }} inside mouthstache
 
     /**
      * A Lexer for ruby strings
@@ -64,13 +67,13 @@ public final class YamlLexer implements Lexer<YamlTokenId> {
         if (info.state() == null) {
             this.state = ISI_WHITESPACE;
         } else {
-            state = ((Integer) info.state());
+            state = State.values()[(Integer) info.state()];
         }
     }
 
     @Override
     public Object state() {
-        return state;
+        return (Integer) state.ordinal();
     }
 
     @Override
@@ -462,6 +465,15 @@ public final class YamlLexer implements Lexer<YamlTokenId> {
             case ISI_COMMENT_SCRIPTLET:
                 state = ISI_WHITESPACE;
                 return token(YamlTokenId.RUBYCOMMENT);
+            case ISA_CURLY:
+                state = ISI_WHITESPACE;
+                return token(YamlTokenId.TEXT);
+            case ISI_MUSTACHE:
+                state = ISI_WHITESPACE;
+                return token(YamlTokenId.MUSTACHE);
+            case ISI_MUSTACHE_QUOTE:
+                state = ISI_WHITESPACE;
+                return token(YamlTokenId.MUSTACHE);
             case ISI_PHP:
                 state = ISI_WHITESPACE;
                 return token(YamlTokenId.PHP);

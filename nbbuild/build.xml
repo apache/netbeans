@@ -1186,18 +1186,21 @@ PKGINST=${pkg.svr4.pkginst}</echo>
 It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in debug mode" 
    >
     <script language="javascript">
-        v = ''
-        i = new Packages.java.util.TreeMap(project.getProperties()).entrySet().iterator()
-        while (i.hasNext()) {
-            e = i.next()
-            if (e.getKey().startsWith('tryme.arg.')) {
-                v += ' ' + e.getValue()
+        if (typeof Packages !== 'undefined') {
+            v = '';
+            i = new Packages.java.util.TreeMap(project.getProperties()).entrySet().iterator()
+            while (i.hasNext()) {
+                e = i.next()
+                if (e.getKey().startsWith('tryme.arg.')) {
+                    v += ' ' + e.getValue()
+                }
             }
+            project.setNewProperty('tryme.args', v)
         }
-        project.setNewProperty('tryme.args', v)
     </script>
     <property name="tryme.jdkhome" value="${nbjdk.home}"/>
     <property name="tryme.debug.args" value="" />
+    <property name="tryme.args" value="" />
     <property environment="env"/>
     <condition property="run.env.display" value="${env.NBDISPLAY}" else="${env.DISPLAY}">
 	<isset property="env.NBDISPLAY"/>
@@ -1377,7 +1380,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <element name="test" implicit="true"/>
             <sequential>
                 <mkdir dir="${nb.build.dir}/test/unit/classes"/>
-                <javac srcdir="test/unit/src" destdir="${nb.build.dir}/test/unit/classes" debug="true" source="1.7">
+                <javac srcdir="test/unit/src" destdir="${nb.build.dir}/test/unit/classes" debug="true" source="1.8">
                     <classpath path="${test.unit.cp}"/>
                     <compilerarg line="-Xlint -Xlint:-serial"/>
                 </javac>

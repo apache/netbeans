@@ -58,6 +58,7 @@ public class TabDataRenderer implements TableCellRenderer {
     private static final Color underlineColor = UIManager.getColor("nb.multitabs.underlineColor"); // NOI18N
     private static final Color inactiveUnderlineColor = UIManager.getColor("nb.multitabs.inactiveUnderlineColor"); // NOI18N
     private static final Color activeBackground = UIManager.getColor("nb.multitabs.activeBackground"); // NOI18N
+    private static final Color hoverBackground = UIManager.getColor("nb.multitabs.hoverBackground"); // NOI18N
 
     private final RendererPanel renderer = new RendererPanel();
     private final List<TabDecorator> decorators = getDecorators();
@@ -96,6 +97,10 @@ public class TabDataRenderer implements TableCellRenderer {
                 if( null != i ) {
                     icon = i;
                 }
+            }
+            boolean isHover = (hoverBackground != null && TabTableUI.isHover(table, row, column));
+            if (isHover) {
+                colBackground = hoverBackground;
             }
             renderer.label.setText( text );
             renderer.label.setIcon( icon );

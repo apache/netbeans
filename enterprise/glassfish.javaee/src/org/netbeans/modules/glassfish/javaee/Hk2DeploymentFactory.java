@@ -38,6 +38,7 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
     private static Hk2DeploymentFactory ee6Instance;
     private static Hk2DeploymentFactory ee7Instance;
     private static Hk2DeploymentFactory ee8Instance;
+    private static Hk2DeploymentFactory jakartaee8Instance;
     private String[] uriFragments;
     private String version;
     private String displayName;
@@ -70,7 +71,7 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static synchronized DeploymentFactory createEe7() {
@@ -84,7 +85,7 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
         }
         return ee7Instance;
     }
-    
+
     /**
      *
      * @return
@@ -102,9 +103,25 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
     }
 
     /**
-     * 
-     * @param uri 
-     * @return 
+     *
+     * @return
+     */
+    public static synchronized DeploymentFactory createJakartaEe8() {
+        // FIXME -- these strings should come from some constant place
+        if (jakartaee8Instance == null) {
+            ServerUtilities tmp = ServerUtilities.getJakartaEe8Utilities();
+            jakartaee8Instance = new Hk2DeploymentFactory(new String[]{"deployer:gfv510ee8:", "deployer:gfv510"}, "0.3", // NOI18N
+                    NbBundle.getMessage(Hk2DeploymentFactory.class, "TXT_FactoryDisplayName"));  // NOI18N
+            DeploymentFactoryManager.getInstance().registerDeploymentFactory(jakartaee8Instance);
+            jakartaee8Instance.setServerUtilities(tmp);
+        }
+        return jakartaee8Instance;
+    }
+
+    /**
+     *
+     * @param uri
+     * @return
      */
     // also check the urlPattern in layer.xml when changing this
     @Override
@@ -112,7 +129,7 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
         if (uri == null) {
             return false;
         }
-        
+
         if(uri.startsWith("[")) {//NOI18N
             for (String uriFragment : uriFragments) {
                 if (uri.indexOf(uriFragment)!=-1) {
@@ -125,12 +142,12 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
     }
 
     /**
-     * 
-     * @param uri 
-     * @param uname 
-     * @param passwd 
-     * @return 
-     * @throws javax.enterprise.deploy.spi.exceptions.DeploymentManagerCreationException 
+     *
+     * @param uri
+     * @param uname
+     * @param passwd
+     * @return
+     * @throws javax.enterprise.deploy.spi.exceptions.DeploymentManagerCreationException
      */
     @Override
     public DeploymentManager getDeploymentManager(String uri, String uname, String passwd) throws DeploymentManagerCreationException {
@@ -145,10 +162,10 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
     }
 
     /**
-     * 
-     * @param uri 
-     * @return 
-     * @throws javax.enterprise.deploy.spi.exceptions.DeploymentManagerCreationException 
+     *
+     * @param uri
+     * @return
+     * @throws javax.enterprise.deploy.spi.exceptions.DeploymentManagerCreationException
      */
     @Override
     public DeploymentManager getDisconnectedDeploymentManager(String uri) throws DeploymentManagerCreationException {
@@ -163,8 +180,8 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     @Override
     public String getProductVersion() {
@@ -172,8 +189,8 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     @Override
     public String getDisplayName() {

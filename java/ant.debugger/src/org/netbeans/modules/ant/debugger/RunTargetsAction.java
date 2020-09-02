@@ -142,7 +142,7 @@ public final class RunTargetsAction extends AbstractAction implements ContextAwa
                 } catch (IOException e) {
                     DialogDisplayer.getDefault().notify(
                             new NotifyDescriptor.Message(e.getLocalizedMessage()));
-                    allTargets = Collections.EMPTY_SET;
+                    allTargets = Collections.emptySet();
                 }
                 String defaultTarget = null;
                 SortedSet<String> describedTargets = new TreeSet(Collator.getInstance());

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -31,16 +32,26 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
 import java.util.stream.Collectors;
 import junit.framework.Test;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.source.ClassIndex;
+import org.netbeans.api.java.source.ClassIndex.SearchKind;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.indexing.CompileWorker.ParsingOutput;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.parsing.spi.indexing.Context;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 
 /**
  *
@@ -161,7 +172,8 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig",
+                                                       "cache/s1/java/15/classes/test/Test4$1.sig")),
                      createdFiles);
         //TODO: check file content!!!
     }
@@ -179,7 +191,8 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig",
+                                                       "cache/s1/java/15/classes/test/Test4$1.sig")),
                      createdFiles);
         //TODO: check file content!!!
     }
@@ -511,6 +524,118 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/package-info.sig")),
                      createdFiles);
         //TODO: check file content!!!
+    }
+
+    public void testIndexEnumConstants() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", "package test; public enum Test implements Runnable { A() { public void run() {} }; }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig",
+                                                            "cache/s1/java/15/classes/test/Test$1.sig")),
+                     createdFiles);
+        ClasspathInfo cpInfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getRoot()));
+        Set<ElementHandle<TypeElement>> classIndexResult = cpInfo.getClassIndex().getElements(ElementHandle.createTypeElementHandle(ElementKind.ENUM, "test.Test"), EnumSet.of(SearchKind.IMPLEMENTORS), EnumSet.of(ClassIndex.SearchScope.SOURCE));
+        assertEquals(1, classIndexResult.size());
+    }
+
+    public void testAnonymousClasses() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", 
+                                                                      "package test;\n" +
+                                                                      "public class Test {\n" +
+                                                                      "    private int i;\n" +
+                                                                      "    private final Runnable ri = new Runnable() { void t() { System.err.println(i); } };\n" +
+                                                                      "    private static final Runnable rs = new Runnable() { void t() { } };\n" +
+                                                                      "    void testI() { System.err.println(new Runnable() { }); }\n" +
+                                                                      "    static void testS() { System.err.println(new Runnable() { }); }\n" +
+                                                                      "}\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig",
+                                                            "cache/s1/java/15/classes/test/Test$1.sig",
+                                                            "cache/s1/java/15/classes/test/Test$2.sig",
+                                                            "cache/s1/java/15/classes/test/Test$3.sig",
+                                                            "cache/s1/java/15/classes/test/Test$4.sig")),
+                     createdFiles);
+        ClasspathInfo cpInfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(getRoot()));
+        Set<ElementHandle<TypeElement>> classIndexResult = cpInfo.getClassIndex().getElements(ElementHandle.createTypeElementHandle(ElementKind.INTERFACE, "java.lang.Runnable"), EnumSet.of(SearchKind.IMPLEMENTORS), EnumSet.of(ClassIndex.SearchScope.SOURCE));
+        assertEquals(4, classIndexResult.size());
+        
+        JavaSource js = JavaSource.create(ClasspathInfo.create(getRoot()));
+        
+        js.runUserActionTask(cc -> {
+            cc.toPhase(JavaSource.Phase.PARSED);
+            verifyAnonymous(cc, "test.Test$1", "test.Test");
+            verifyAnonymous(cc, "test.Test$2", "test.Test");
+            verifyAnonymous(cc, "test.Test$3", "testI()");
+            verifyAnonymous(cc, "test.Test$4", "testS()");
+        }, true);
+    }
+
+    private void verifyAnonymous(CompilationInfo info, String binaryName, String owner) {
+        TypeElement ann = ElementHandle.createTypeElementHandle(ElementKind.CLASS, binaryName).resolve(info);
+        assertEquals(binaryName, owner, ann.getEnclosingElement().toString());
+    }
+
+    public void testErroneousNewClass() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", "package test; public class Test { void t() { new Undef(); new Undef() { }; } }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+    }
+
+    public void testBasedAnonymous() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java",
+                                                                      "package test;\n" +
+                                                                      "public class Test {\n" +
+                                                                      "    private int i;\n" +
+                                                                      "    static void test(Test t) {\n" +
+                                                                      "        t.new Inner() {};\n" +
+                                                                      "    }\n" +
+                                                                      "    class Inner {}\n" +
+                                                                      "}\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig",
+                                                       "cache/s1/java/15/classes/test/Test$Inner.sig",
+                                                       "cache/s1/java/15/classes/test/Test$1.sig")),
+                     createdFiles);
     }
 
     public static void noop() {}

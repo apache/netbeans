@@ -304,7 +304,7 @@ public class WebServiceListModel {
                     try {
                         WebServiceManager.getInstance().addWebService(target, true);
                     } catch (IOException ex) {
-                        Logger.global.log(Level.INFO, ex.getLocalizedMessage(), ex);
+                        Logger.getGlobal().log(Level.INFO, ex.getLocalizedMessage(), ex);
                     }
                 }
             };

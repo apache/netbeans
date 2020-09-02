@@ -88,7 +88,7 @@ public abstract class RestSupport {
     public static final String REST_SERVLET_ADAPTOR = "ServletAdaptor";//NOI18N
     public static final String JAX_RS_APPLICATION_CLASS = "javax.ws.rs.core.Application"; //NOI18N
     public static final String REST_SERVLET_ADAPTOR_CLASS = "com.sun.jersey.spi.container.servlet.ServletContainer"; //NOI18N
-    public static final String REST_SERVLET_ADAPTOR_CLASS_OLD = "com.sun.ws.rest.impl.container.servlet.ServletAdaptor";  //NOI18N 
+    public static final String REST_SERVLET_ADAPTOR_CLASS_OLD = "com.sun.ws.rest.impl.container.servlet.ServletAdaptor";  //NOI18N
     public static final String REST_SERVLET_ADAPTOR_CLASS_2_0 = "org.glassfish.jersey.servlet.ServletContainer"; //NOI18N
     public static final String REST_SPRING_SERVLET_ADAPTOR_CLASS = "com.sun.jersey.spi.spring.container.servlet.SpringServlet";    //NOI18N
     public static final String REST_SERVLET_ADAPTOR_MAPPING = "/resources/*";//NOI18N
@@ -130,7 +130,7 @@ public abstract class RestSupport {
     private volatile PropertyChangeListener restModelListener;
 
     private RequestProcessor RP = new RequestProcessor(RestSupport.class);
-    
+
     private AntProjectHelper helper;
     private RestServicesModel restServicesModel;
     private RestApplicationModel restApplicationModel;
@@ -157,7 +157,7 @@ public abstract class RestSupport {
             }
         });
     }
-   
+
     private void initListener() {
         if ( restModelListener == null ){
             restModelListener = new PropertyChangeListener() {
@@ -186,7 +186,7 @@ public abstract class RestSupport {
         if (isRestSupportOn()) {
             return;
         }
-        
+
         setProjectProperty(PROP_REST_CONFIG_TYPE, restConfig == RestConfig.DD ? CONFIG_TYPE_DD : CONFIG_TYPE_IDE);
 
         RP.post(new Runnable() {
@@ -207,16 +207,16 @@ public abstract class RestSupport {
         // JAX-RS APIs. The value should be false only in case of EE5 specification
         // and server without any Jersey on its classpath, eg. Tomcat or some
         // very very old GF (v2? or older)
-        
+
         // extend build script if necessary
         extendBuildScripts();
-        
+
         boolean hasJersey2 = hasJersey2(true);
         boolean hasJaxRsOnClasspath = hasJaxRsOnClasspath(false);
-        
+
         final boolean hasJaxRs = isEESpecWithJaxRS() || hasJaxRsOnClasspath ||
                 hasJersey1(true) || hasJersey2;
-        
+
         if (isEE5() && (hasJersey2 || !hasJaxRs)) {
             webXmlUpdater.addJersey2ResourceConfigToWebApp(restConfig);
         }
@@ -244,8 +244,8 @@ public abstract class RestSupport {
 
         ProjectManager.getDefault().saveProject(getProject());
     }
-    
-    
+
+
     protected void extendJerseyClasspath() {
         JaxRsStackSupport support = getJaxRsStackSupport();
         boolean jerseyAdded = false;
@@ -261,7 +261,7 @@ public abstract class RestSupport {
     protected abstract void extendBuildScripts() throws IOException;
 
     protected abstract void handleSpring() throws IOException;
-    
+
     public abstract String getApplicationPathFromDialog(List<RestApplication> restApplications);
 
     public synchronized RestServicesModel getRestServicesModel() {
@@ -323,10 +323,10 @@ public abstract class RestSupport {
         }
         return classPath;
     }
-    
-    public abstract FileObject generateTestClient(File testdir, String url) 
-        throws IOException; 
-    
+
+    public abstract FileObject generateTestClient(File testdir, String url)
+        throws IOException;
+
     public Project getProject() {
         return project;
     }
@@ -334,7 +334,7 @@ public abstract class RestSupport {
     public void setProjectProperty(String name, String value) {
         MiscPrivateUtilities.setProjectProperty(getProject(), getAntProjectHelper(), name, value, AntProjectHelper.PROJECT_PROPERTIES_PATH);
     }
-    
+
     public void setPrivateProjectProperty(String name, String value) {
         MiscPrivateUtilities.setProjectProperty(getProject(), getAntProjectHelper(), name, value, AntProjectHelper.PRIVATE_PROPERTIES_PATH );
     }
@@ -349,7 +349,7 @@ public abstract class RestSupport {
     public void removeProjectProperties(final String[] propertyNames) {
         if (getAntProjectHelper() == null) {
             return;
-        }   
+        }
         try {
         ProjectManager.mutex().writeAccess(new Mutex.ExceptionAction() {
             @Override
@@ -361,7 +361,7 @@ public abstract class RestSupport {
                     MiscPrivateUtilities.removeProperty(getAntProjectHelper(), propertyNames,
                             AntProjectHelper.PRIVATE_PROPERTIES_PATH );
                     ProjectManager.getDefault().saveProject(getProject());
-                } 
+                }
                 catch(IOException ioe) {
                     Logger.getLogger(this.getClass().getName()).log(Level.INFO, ioe.getLocalizedMessage(), ioe);
                 }
@@ -371,8 +371,8 @@ public abstract class RestSupport {
         }
         catch (MutexException e) {
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, null, e);
-        } 
-        
+        }
+
     }
 
     public AntProjectHelper getAntProjectHelper() {
@@ -394,15 +394,15 @@ public abstract class RestSupport {
     public boolean hasJTASupport() {
         return MiscPrivateUtilities.hasResource(getProject(), "javax/transaction/UserTransaction.class");  // NOI18N
     }
-    
+
     /**
      * Check to see if there is Spring framework support.
-     * 
+     *
      */
     public boolean hasSpringSupport() {
         return MiscPrivateUtilities.hasResource(getProject(), "org/springframework/transaction/annotation/Transactional.class"); // NOI18N
     }
-    
+
     public String getServerType() {
         return getProjectProperty(J2EE_SERVER_TYPE);
     }
@@ -429,7 +429,7 @@ public abstract class RestSupport {
     }
 
     public abstract File getLocalTargetTestRest();
-    
+
     public String getBaseURL() {
         String applicationPath = getApplicationPath();
         if (applicationPath != null) {
@@ -440,9 +440,9 @@ public abstract class RestSupport {
         return MiscUtilities.getContextRootURL(getProject())+"||"+applicationPath;            //NOI18N
     }
 
-    
+
     public abstract void deploy() throws IOException;
-    
+
     public boolean isRestSupportOn() {
         if (getAntProjectHelper() == null) {
             return false;
@@ -497,8 +497,23 @@ public abstract class RestSupport {
                         Profile.JAVA_EE_7_FULL.equals(profile);
         boolean isJee8 = Profile.JAVA_EE_8_WEB.equals(profile) ||
                         Profile.JAVA_EE_8_FULL.equals(profile);
+        boolean isJakartaee8 = Profile.JAKARTA_EE_8_WEB.equals(profile) ||
+                        Profile.JAKARTA_EE_8_FULL.equals(profile);
         // Fix for BZ#216345: JAVA_EE_6_WEB profile doesn't contain JAX-RS API
         return (isJee6 && MiscPrivateUtilities.supportsTargetProfile(project, Profile.JAVA_EE_6_FULL)) || isJee7;
+    }
+
+    /**
+     * Is this JAKARTAEE8 profile project?
+     */
+    public boolean isJakartaEE8(){
+        WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
+        if ( webModule == null ){
+            return false;
+        }
+        Profile profile = webModule.getJ2eeProfile();
+        return Profile.JAKARTA_EE_8_WEB.equals(profile) ||
+                        Profile.JAKARTA_EE_8_FULL.equals(profile);
     }
 
     /**
@@ -526,7 +541,7 @@ public abstract class RestSupport {
         return Profile.JAVA_EE_7_WEB.equals(profile) ||
                         Profile.JAVA_EE_7_FULL.equals(profile);
     }
-    
+
     /**
      * Is this EE6 profile project?
      */
@@ -677,18 +692,17 @@ public abstract class RestSupport {
         USER,
         // web.xml deployment descriptor registration
         DD;
-        
-        // application class-name (useful only for IDE config type) 
+
+        // application class-name (useful only for IDE config type)
         private String appClassName;
-        
+
         public void setAppClassName(String appClassName) {
             this.appClassName = appClassName;
         }
-        
+
         public String getAppClassName() {
             return appClassName;
         }
     }
 
 }
-

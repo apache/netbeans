@@ -31,12 +31,10 @@
         <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-aop-3.2.18.RELEASE.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-aspects-3.2.18.RELEASE.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-beans-3.2.18.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-build-src-3.2.18.RELEASE.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-context-3.2.18.RELEASE.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-context-support-3.2.18.RELEASE.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-core-3.2.18.RELEASE.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-expression-3.2.18.RELEASE.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-framework-bom-3.2.18.RELEASE.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-instrument-3.2.18.RELEASE.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-instrument-tomcat-3.2.18.RELEASE.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.libs.springframework/modules/ext/spring-3.0/spring-jdbc-3.2.18.RELEASE.jar!/</resource>

@@ -40,13 +40,13 @@ import org.openide.util.test.MockLookup;
  * @author Martin Krauskopf, Radko Najman
  */
 public class WebProjectTest extends NbTestCase {
-    
+
     private String serverID;
-    
+
     public WebProjectTest(String testName) {
         super(testName);
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -66,7 +66,7 @@ public class WebProjectTest extends NbTestCase {
         MockLookup.setLookup(Lookup.EMPTY);
         super.tearDown();
     }
-    
+
 //    // see #99077, #70052
 //    // TODO investigate more
 //    @RandomlyFails
@@ -84,7 +84,7 @@ public class WebProjectTest extends NbTestCase {
 //        webProject = null;
 //        assertGC("project cannot be garbage collected", wr);
 //    }
-    
+
     public void testWebPropertiesEvaluator() throws Exception {
         File f = new File(getDataDir().getAbsolutePath(), "projects/WebApplication1");
         FileObject projdir = FileUtil.toFileObject(f);
@@ -107,6 +107,9 @@ public class WebProjectTest extends NbTestCase {
         JavaEEProjectSettings.setProfile(webProject, Profile.JAVA_EE_8_WEB);
         Profile obtainedProfileEE8 = JavaEEProjectSettings.getProfile(webProject);
         assertEquals(Profile.JAVA_EE_8_WEB, obtainedProfileEE8);
+        JavaEEProjectSettings.setProfile(webProject, Profile.JAKARTA_EE_8_WEB);
+        Profile obtainedProfileJakartaEE8 = JavaEEProjectSettings.getProfile(webProject);
+        assertEquals(Profile.JAKARTA_EE_8_WEB, obtainedProfileJakartaEE8);
     }
 
     /**
@@ -118,11 +121,11 @@ public class WebProjectTest extends NbTestCase {
         assertNotNull("has an OpenedHook", hook);
         ProjectOpenedTrampoline.DEFAULT.projectOpened(hook);
     }
-    
+
     public static void closeProject(final WebProject p) throws Exception {
         ProjectOpenedHook hook = p.getLookup().lookup(ProjectOpenedHook.class);
         assertNotNull("has an OpenedHook", hook);
         ProjectOpenedTrampoline.DEFAULT.projectClosed(hook);
     }
-    
+
 }

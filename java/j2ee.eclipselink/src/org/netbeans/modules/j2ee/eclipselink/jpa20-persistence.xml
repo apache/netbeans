@@ -25,17 +25,17 @@
     <localizing-bundle>org.netbeans.modules.j2ee.eclipselink.Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/javax.persistence-2.1.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/javax.persistence-2.2.1.jar!/</resource>
     </volume>
     <volume>
         <type>javadoc</type>
-        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/docs/javax.persistence-2.1.0-doc.zip!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/docs/javax.persistence-2.2.1-doc.zip!/</resource>
     </volume>
     <properties>
         <!-- please check with mkleint@netbeans.org before/after updating this or "classpath" section -->
         <property>
             <name>maven-dependencies</name>
-            <value>org.eclipse.persistence:javax.persistence:2.1.0:jar</value>
+            <value>org.eclipse.persistence:javax.persistence:2.2.1:jar</value>
         </property>
     </properties>
 </library>

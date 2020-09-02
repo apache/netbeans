@@ -61,7 +61,9 @@ public class NioNotifier extends Notifier<WatchKey> {
         try {
             key.cancel();
         } catch (ClosedWatchServiceException ex) {
-            throw new IOException(ex);
+            // This happens on shutdown as watcher service can be closed before
+            // all watches are removed from it. It is safe to swallow this
+            // exception here.
         }
     }
 

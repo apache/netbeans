@@ -637,7 +637,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                             if (jsfVersion != null && !jsfVersion.isAtLeast(JSFVersion.JSF_2_0) && !isMyFaces) {
                                 ViewHandler viewHandler = model.getFactory().createViewHandler();
                                 viewHandler.setFullyQualifiedClassType(HANDLER);
-                                application.addViewHandler(viewHandler);                                
+                                application.addViewHandler(viewHandler);
                             }
 //                            // A component library may require a render kit
 //                            if (isJSF20Plus && panel.getJsfComponentDescriptor() != null) {
@@ -741,7 +741,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
             String shortName;
             try {
                 shortName = Deployment.getDefault().getServerInstance(serverInstanceID).getServerID();
-                if ("gfv5ee8".equals(shortName) || "gfv5".equals(shortName) || "gfv3ee6".equals(shortName) || "gfv3".equals(shortName)) {
+                if ("gfv510ee8".equals(shortName) || "gfv5ee8".equals(shortName) || "gfv5".equals(shortName) || "gfv3ee6".equals(shortName) || "gfv3".equals(shortName)) {
                     return true;
                 }
             } catch (InstanceRemovedException ex) {

@@ -41,7 +41,7 @@ public final class NullResultImpl<T> implements ResultImplementation<T> {
     
     @Override
     public List<T> getResults() {            
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     @Override

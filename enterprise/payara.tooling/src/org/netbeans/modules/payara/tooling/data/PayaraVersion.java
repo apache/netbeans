@@ -83,7 +83,9 @@ public enum PayaraVersion {
     /** Payara 5.194 */
     PF_5_194 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 19, (short) 4, (short) 0, PayaraVersion.PF_5_194_STR),
     /** Payara 5.201 */
-    PF_5_201 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 20, (short) 1, (short) 0, PayaraVersion.PF_5_201_STR);
+    PF_5_201 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 20, (short) 1, (short) 0, PayaraVersion.PF_5_201_STR),
+    /** Payara 5.202 */
+    PF_5_202 ((short) 5, (short) 0, (short) 0, (short) 0, (short) 20, (short) 2, (short) 0, PayaraVersion.PF_5_202_STR);
 
     //add new version
     /**  A <code>String</code> representation of PF_4_1_144 value. */
@@ -178,6 +180,10 @@ public enum PayaraVersion {
     static final String PF_5_201_STR = "5.201";
     /** Additional <code>String</code> representations of 5.201 value. */
     static final String PF_5_201_STR_NEXT[] = {"5.201.0"};
+    /**  A <code>String</code> representation of PF_5_202 value. */
+    static final String PF_5_202_STR = "5.202";
+    /** Additional <code>String</code> representations of 5.202 value. */
+    static final String PF_5_202_STR_NEXT[] = {"5.202.0"};
 
 
     ////////////////////////////////////////////////////////////////////////////
@@ -230,6 +236,7 @@ public enum PayaraVersion {
         initStringValuesMapFromArray(PF_5_193, PF_5_193_STR_NEXT);
         initStringValuesMapFromArray(PF_5_194, PF_5_194_STR_NEXT);
         initStringValuesMapFromArray(PF_5_201, PF_5_201_STR_NEXT);
+        initStringValuesMapFromArray(PF_5_202, PF_5_202_STR_NEXT);
     }
 
     ////////////////////////////////////////////////////////////////////////////

@@ -79,6 +79,7 @@ import org.openide.util.Exceptions;
  */
 public class ParameterNameProviderImpl {
     public static boolean DISABLE_ARTIFICAL_PARAMETER_NAMES;
+    public static boolean DISABLE_PARAMETER_NAMES_LOADING;
 
     public static void register(JavacTask task, ClasspathInfo cpInfo) {
         try {
@@ -116,6 +117,10 @@ public class ParameterNameProviderImpl {
     }
 
     public CharSequence getParameterName(VariableElement parameter) {
+        if (DISABLE_PARAMETER_NAMES_LOADING) {
+            return null;
+        }
+
         Element method = parameter.getEnclosingElement();
         String methodKey = computeKey(method);
         List<String> names = null;
@@ -203,7 +208,7 @@ public class ParameterNameProviderImpl {
 
     static void capCache(LinkedHashMap<String, ?> map) {
         Iterator<String> it = map.keySet().iterator();
-        while (map.size() > MAX_CACHE_SIZE) {
+        while (map.size() > MAX_CACHE_SIZE && it.hasNext()) {
             it.next();
             it.remove();
         }

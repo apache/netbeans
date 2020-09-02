@@ -22,6 +22,7 @@ package org.netbeans.modules.java.source.indexing;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -51,7 +52,9 @@ import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCModuleDecl;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
@@ -489,39 +492,44 @@ final class VanillaCompileWorker extends CompileWorker {
         }
     }
 
+    public static class HandledUnits {
+        public final List<CompilationUnitTree> handled = new ArrayList<>();
+    }
+
     private void dropMethodsAndErrors(com.sun.tools.javac.util.Context ctx, CompilationUnitTree cut) {
+        HandledUnits hu = ctx.get(HandledUnits.class);
+        if (hu == null) {
+            ctx.put(HandledUnits.class, hu = new HandledUnits());
+        }
+        if (hu.handled.contains(cut)) {
+            //already seen
+            return ;
+        }
+        hu.handled.add(cut);
         Symtab syms = Symtab.instance(ctx);
         Names names = Names.instance(ctx);
         Types types = Types.instance(ctx);
         TreeMaker make = TreeMaker.instance(ctx);
         //TODO: should preserve error types!!!
         new TreePathScanner<Void, Void>() {
+            private List<JCNewClass> anonymousClasses = new ArrayList<>();
             @Override
             public Void visitVariable(VariableTree node, Void p) {
                 JCTree.JCVariableDecl decl = (JCTree.JCVariableDecl) node;
+                super.visitVariable(node, p);
                 if ((decl.mods.flags & Flags.ENUM) == 0) {
                     decl.init = null;
-                } else {
-                    MethodSymbol constructor = (MethodSymbol) decl.type.tsym.members().findFirst(names.init);
-                    ListBuffer<JCExpression> args = new ListBuffer<>();
-                    for (VarSymbol param : constructor.params) {
-                        args.add(make.TypeCast(param.type, make.Literal(TypeTag.BOT, null).setType(syms.botType)));
-                    }
-                    JCNewClass nct = (JCNewClass) decl.init;
-                    nct.args = args.toList();
-                    nct.constructor = constructor;
-                    nct.constructorType = constructor.type;
-                    nct.def = null;
                 }
                 decl.sym.type = decl.type = error2Object(decl.type);
                 clearAnnotations(decl.sym.getMetadata());
-                return super.visitVariable(node, p);
+                return null;
             }
 
             @Override
             public Void visitMethod(MethodTree node, Void p) {
                 JCTree.JCMethodDecl decl = (JCTree.JCMethodDecl) node;
                 Symbol.MethodSymbol msym = decl.sym;
+                super.visitMethod(node, p);
                 if (Collections.disjoint(msym.getModifiers(), EnumSet.of(Modifier.NATIVE, Modifier.ABSTRACT))) {
                     JCTree.JCNewClass nct =
                             make.NewClass(null,
@@ -552,7 +560,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 if (decl.sym.defaultValue != null && isAnnotationErroneous(decl.sym.defaultValue)) {
                     decl.sym.defaultValue = null;
                 }
-                return super.visitMethod(node, p);
+                return null;
             }
 
             private void clearMethodType(Type.MethodType mt) {
@@ -563,6 +571,9 @@ final class VanillaCompileWorker extends CompileWorker {
 
             @Override
             public Void visitClass(ClassTree node, Void p) {
+                List<JCNewClass> oldAnonymousClasses = anonymousClasses;
+                try {
+                    anonymousClasses = new ArrayList<>();
                 JCClassDecl clazz = (JCTree.JCClassDecl) node;
                 Symbol.ClassSymbol csym = clazz.sym;
                 if (isErroneousClass(csym)) {
@@ -597,7 +608,34 @@ final class VanillaCompileWorker extends CompileWorker {
                     }
                 }
                 super.visitClass(node, p);
+                clazz.defs = clazz.defs.prepend(make.Block(0, anonymousClasses.stream().map(nc -> make.Exec(nc)).collect(com.sun.tools.javac.util.List.collector())));
+                } finally {
+                    anonymousClasses = oldAnonymousClasses;
+                }
                 return null;
+            }
+
+            @Override
+            public Void visitNewClass(NewClassTree node, Void p) {
+                //TODO: fix constructors:
+                JCNewClass nc = (JCNewClass) node;
+                if (node.getClassBody() != null && !nc.clazz.type.hasTag(TypeTag.ERROR)) {
+                    MethodSymbol constructor = (MethodSymbol) nc.constructor;
+                    ListBuffer<JCExpression> args = new ListBuffer<>();
+                    int startIdx = 0;
+                    if (node.getEnclosingExpression() != null) {
+                        startIdx = 1;
+                    }
+                    for (VarSymbol param : constructor.params.subList(startIdx, constructor.params.size())) {
+                        args.add(make.TypeCast(param.type, make.Literal(TypeTag.BOT, null).setType(syms.botType)));
+                    }
+                    nc.args = args.toList();
+                    anonymousClasses.add(nc);
+                }
+//                    nct.constructor = constructor;
+//                    nct.constructorType = constructor.type;
+//                    nct.def = null;
+                return super.visitNewClass(node, p);
             }
 
             private void clearAnnotations(SymbolMetadata metadata) {

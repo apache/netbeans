@@ -62,7 +62,7 @@ public class ConstructorGenerationCompletion extends BaseCompletion {
         boolean camelCaseMatch = CamelCaseUtil.compareCamelCase(className, request.getPrefix());
         if (camelCaseMatch) {
             LOG.log(Level.FINEST, "Prefix matches Class's CamelCase signature. Adding."); // NOI18N
-            proposals.add(new CompletionItem.ConstructorItem(className, Collections.EMPTY_LIST, anchor, true));
+            proposals.add(new CompletionItem.ConstructorItem(className, Collections.emptyList(), anchor, true));
         }
 
         return camelCaseMatch;

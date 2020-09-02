@@ -20,6 +20,8 @@ package org.netbeans.modules.debugger.ui;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
@@ -313,6 +315,9 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
     }
 
     private void setupToolbar(final DebuggerEngine engine) {
+        if (GraphicsEnvironment.isHeadless()) {
+            return;
+        }
         final List<Component> buttonsToClose = new ArrayList<Component>();
         buttonsToClose.add(new java.awt.Label("EMPTY"));
         final boolean isFirst;

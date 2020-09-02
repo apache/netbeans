@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.90
+#Version 1.91
 
 CLSS public abstract interface java.io.Serializable
 
@@ -329,6 +329,7 @@ fld public final static org.netbeans.modules.css.lib.api.CssTokenId H
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId HASH
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId HASH_SYMBOL
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId HEXCHAR
+fld public final static org.netbeans.modules.css.lib.api.CssTokenId HEXCHAR_WILDCARD
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId I
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId IDENT
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId IMPORTANT_SYM
@@ -422,6 +423,7 @@ fld public final static org.netbeans.modules.css.lib.api.CssTokenId TOPRIGHTCORN
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId TOPRIGHT_SYM
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId U
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId UNICODE
+fld public final static org.netbeans.modules.css.lib.api.CssTokenId URANGE
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId URI
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId URL
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId V
@@ -1062,6 +1064,7 @@ innr public static Resolution
 innr public static Semitones
 innr public static StringAcceptor
 innr public static Time
+innr public static Urange
 innr public static Uri
 innr public static Variable
 meth public abstract boolean accepts(org.netbeans.modules.css.lib.api.properties.Token)
@@ -1210,6 +1213,13 @@ cons public init(java.lang.String)
 meth public abstract boolean accepts(java.lang.String)
 meth public boolean accepts(org.netbeans.modules.css.lib.api.properties.Token)
 supr org.netbeans.modules.css.lib.api.properties.TokenAcceptor
+
+CLSS public static org.netbeans.modules.css.lib.api.properties.TokenAcceptor$Urange
+ outer org.netbeans.modules.css.lib.api.properties.TokenAcceptor
+cons public init(java.lang.String)
+meth public boolean accepts(org.netbeans.modules.css.lib.api.properties.Token)
+supr org.netbeans.modules.css.lib.api.properties.TokenAcceptor
+hfds URANGE_TOKEN_IMAGE
 
 CLSS public static org.netbeans.modules.css.lib.api.properties.TokenAcceptor$Uri
  outer org.netbeans.modules.css.lib.api.properties.TokenAcceptor

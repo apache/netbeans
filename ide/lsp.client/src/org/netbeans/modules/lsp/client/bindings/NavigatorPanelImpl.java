@@ -170,7 +170,7 @@ public class NavigatorPanelImpl extends Children.Keys<Either<SymbolInformation, 
         }
 
         private static Children createChildren(String currentFileUri, DocumentSymbol sym) {
-            if (sym.getChildren().isEmpty()) {
+            if (sym.getChildren() == null || sym.getChildren().isEmpty()) {
                 return LEAF;
             }
             return new Keys<DocumentSymbol>() {

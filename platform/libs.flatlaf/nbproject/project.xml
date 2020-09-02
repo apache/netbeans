@@ -30,8 +30,8 @@
                 <package>com.formdev.flatlaf.util</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/flatlaf-0.28.jar</runtime-relative-path>
-                <binary-origin>external/flatlaf-0.28.jar</binary-origin>
+                <runtime-relative-path>ext/flatlaf-0.31.jar</runtime-relative-path>
+                <binary-origin>external/flatlaf-0.31.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

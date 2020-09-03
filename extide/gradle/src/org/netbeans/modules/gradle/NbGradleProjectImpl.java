@@ -165,11 +165,12 @@ public final class NbGradleProjectImpl implements Project {
                 aux,
                 aux.getProblemProvider(),
                 new GradleAuxiliaryPropertiesImpl(this),
-                new GradleSharabilityQueryImpl(this),
                 UILookupMergerSupport.createProjectOpenHookMerger(new ProjectOpenedHookImpl()),
                 UILookupMergerSupport.createProjectProblemsProviderMerger(),
                 UILookupMergerSupport.createRecommendedTemplatesMerger(),
                 UILookupMergerSupport.createPrivilegedTemplatesMerger(),
+                LookupProviderSupport.createSourcesMerger(),
+                LookupProviderSupport.createSharabilityQueryMerger(),
                 state
         );
     }

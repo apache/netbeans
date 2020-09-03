@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.nodes.AbstractGradleNodeList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +35,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.modules.gradle.java.classpath.GradleSourcesImpl;
 import org.netbeans.spi.java.project.support.ui.PackageView;
 import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeList;
@@ -69,8 +71,13 @@ public final class SourcesNodeFactory implements NodeFactory {
         @Override
         public List<SourceGroup> keys() {
             Sources srcs = ProjectUtils.getSources(project);
-            SourceGroup[] javagroup = srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-            return Arrays.asList(javagroup);
+            List<SourceGroup> ret = new ArrayList<>();
+            ret.addAll(Arrays.asList(srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)));
+            ret.addAll(Arrays.asList(srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES)));
+            ret.addAll(Arrays.asList(srcs.getSourceGroups(GradleSourcesImpl.SOURCE_TYPE_GENERATED)));
+            ret.addAll(Arrays.asList(srcs.getSourceGroups(GradleSourcesImpl.SOURCE_TYPE_GROOVY)));
+            ret.sort(Comparator.comparing(SourceGroup::getName));
+            return ret;
         }
         
         @NbBundle.Messages({

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.38
+#Version 1.39
 
 CLSS public abstract interface org.netbeans.modules.xml.jaxb.spi.JAXBWizModuleConstants
 fld public final static java.lang.String CATALOG_FILE = "jaxb.catalog.file"

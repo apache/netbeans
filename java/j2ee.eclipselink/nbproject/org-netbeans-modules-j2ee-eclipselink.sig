@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.40
+#Version 1.41
 
 CLSS public abstract interface java.io.Serializable
 
@@ -91,6 +91,13 @@ CLSS public abstract interface !annotation java.lang.annotation.Documented
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 
+CLSS public abstract interface !annotation java.lang.annotation.Repeatable
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> value()
+
 CLSS public abstract interface !annotation java.lang.annotation.Retention
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -119,6 +126,7 @@ meth public static javax.persistence.AccessType[] values()
 supr java.lang.Enum<javax.persistence.AccessType>
 
 CLSS public abstract interface !annotation javax.persistence.AssociationOverride
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.AssociationOverrides)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
 intf java.lang.annotation.Annotation
@@ -143,6 +151,7 @@ meth public abstract java.util.Map<java.lang.Class,javax.persistence.Subgraph> g
 meth public abstract java.util.Map<java.lang.Class,javax.persistence.Subgraph> getSubgraphs()
 
 CLSS public abstract interface !annotation javax.persistence.AttributeOverride
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.AttributeOverrides)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
 intf java.lang.annotation.Annotation
@@ -251,6 +260,7 @@ meth public abstract java.lang.Class targetClass()
 meth public abstract javax.persistence.ColumnResult[] columns()
 
 CLSS public abstract interface !annotation javax.persistence.Convert
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.Converts)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD, TYPE])
 intf java.lang.annotation.Annotation
@@ -543,6 +553,7 @@ meth public static javax.persistence.InheritanceType[] values()
 supr java.lang.Enum<javax.persistence.InheritanceType>
 
 CLSS public abstract interface !annotation javax.persistence.JoinColumn
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.JoinColumns)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
 intf java.lang.annotation.Annotation
@@ -658,6 +669,7 @@ intf java.lang.annotation.Annotation
 meth public abstract !hasdefault javax.persistence.EnumType value()
 
 CLSS public abstract interface !annotation javax.persistence.MapKeyJoinColumn
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.MapKeyJoinColumns)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, FIELD])
 intf java.lang.annotation.Annotation
@@ -705,6 +717,7 @@ meth public abstract !hasdefault java.lang.String subgraph()
 meth public abstract java.lang.String value()
 
 CLSS public abstract interface !annotation javax.persistence.NamedEntityGraph
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.NamedEntityGraphs)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
 intf java.lang.annotation.Annotation
@@ -727,6 +740,7 @@ intf java.lang.annotation.Annotation
 meth public abstract javax.persistence.NamedNativeQuery[] value()
 
 CLSS public abstract interface !annotation javax.persistence.NamedNativeQuery
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.NamedNativeQueries)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
 intf java.lang.annotation.Annotation
@@ -743,6 +757,7 @@ intf java.lang.annotation.Annotation
 meth public abstract javax.persistence.NamedQuery[] value()
 
 CLSS public abstract interface !annotation javax.persistence.NamedQuery
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.NamedQueries)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
 intf java.lang.annotation.Annotation
@@ -758,6 +773,7 @@ intf java.lang.annotation.Annotation
 meth public abstract javax.persistence.NamedStoredProcedureQuery[] value()
 
 CLSS public abstract interface !annotation javax.persistence.NamedStoredProcedureQuery
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.NamedStoredProcedureQueries)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
 intf java.lang.annotation.Annotation
@@ -862,6 +878,7 @@ supr java.lang.Object
 hcls PersistenceUtilImpl
 
 CLSS public abstract interface !annotation javax.persistence.PersistenceContext
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.PersistenceContexts)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
 intf java.lang.annotation.Annotation
@@ -899,6 +916,7 @@ meth public abstract java.lang.String name()
 meth public abstract java.lang.String value()
 
 CLSS public abstract interface !annotation javax.persistence.PersistenceUnit
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.PersistenceUnits)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
 intf java.lang.annotation.Annotation
@@ -975,6 +993,7 @@ CLSS public abstract interface !annotation javax.persistence.PreUpdate
 intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation javax.persistence.PrimaryKeyJoinColumn
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.PrimaryKeyJoinColumns)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
 intf java.lang.annotation.Annotation
@@ -1023,6 +1042,7 @@ meth public abstract javax.persistence.Query setParameter(java.lang.String,java.
 meth public abstract javax.persistence.Query setParameter(java.lang.String,java.util.Date,javax.persistence.TemporalType)
 meth public abstract javax.persistence.Query setParameter(javax.persistence.Parameter<java.util.Calendar>,java.util.Calendar,javax.persistence.TemporalType)
 meth public abstract javax.persistence.Query setParameter(javax.persistence.Parameter<java.util.Date>,java.util.Date,javax.persistence.TemporalType)
+meth public java.util.stream.Stream getResultStream()
 
 CLSS public abstract interface !annotation javax.persistence.QueryHint
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -1050,6 +1070,7 @@ cons public init(java.lang.Throwable)
 supr javax.persistence.PersistenceException
 
 CLSS public abstract interface !annotation javax.persistence.SecondaryTable
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.SecondaryTables)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
 intf java.lang.annotation.Annotation
@@ -1068,6 +1089,7 @@ intf java.lang.annotation.Annotation
 meth public abstract javax.persistence.SecondaryTable[] value()
 
 CLSS public abstract interface !annotation javax.persistence.SequenceGenerator
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.SequenceGenerators)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
 intf java.lang.annotation.Annotation
@@ -1077,6 +1099,12 @@ meth public abstract !hasdefault java.lang.String catalog()
 meth public abstract !hasdefault java.lang.String schema()
 meth public abstract !hasdefault java.lang.String sequenceName()
 meth public abstract java.lang.String name()
+
+CLSS public abstract interface !annotation javax.persistence.SequenceGenerators
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.SequenceGenerator[] value()
 
 CLSS public final !enum javax.persistence.SharedCacheMode
 fld public final static javax.persistence.SharedCacheMode ALL
@@ -1089,6 +1117,7 @@ meth public static javax.persistence.SharedCacheMode[] values()
 supr java.lang.Enum<javax.persistence.SharedCacheMode>
 
 CLSS public abstract interface !annotation javax.persistence.SqlResultSetMapping
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.SqlResultSetMappings)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
 intf java.lang.annotation.Annotation
@@ -1167,6 +1196,7 @@ meth public abstract !hasdefault javax.persistence.Index[] indexes()
 meth public abstract !hasdefault javax.persistence.UniqueConstraint[] uniqueConstraints()
 
 CLSS public abstract interface !annotation javax.persistence.TableGenerator
+ anno 0 java.lang.annotation.Repeatable(java.lang.Class<? extends java.lang.annotation.Annotation> value=class javax.persistence.TableGenerators)
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
 intf java.lang.annotation.Annotation
@@ -1181,6 +1211,12 @@ meth public abstract !hasdefault java.lang.String valueColumnName()
 meth public abstract !hasdefault javax.persistence.Index[] indexes()
 meth public abstract !hasdefault javax.persistence.UniqueConstraint[] uniqueConstraints()
 meth public abstract java.lang.String name()
+
+CLSS public abstract interface !annotation javax.persistence.TableGenerators
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, FIELD])
+intf java.lang.annotation.Annotation
+meth public abstract javax.persistence.TableGenerator[] value()
 
 CLSS public abstract interface !annotation javax.persistence.Temporal
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -1237,6 +1273,7 @@ meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%
 meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setParameter(javax.persistence.Parameter<java.util.Calendar>,java.util.Calendar,javax.persistence.TemporalType)
 meth public abstract javax.persistence.TypedQuery<{javax.persistence.TypedQuery%0}> setParameter(javax.persistence.Parameter<java.util.Date>,java.util.Date,javax.persistence.TemporalType)
 meth public abstract {javax.persistence.TypedQuery%0} getSingleResult()
+meth public java.util.stream.Stream<{javax.persistence.TypedQuery%0}> getResultStream()
 
 CLSS public abstract interface !annotation javax.persistence.UniqueConstraint
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)

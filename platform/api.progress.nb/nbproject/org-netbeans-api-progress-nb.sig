@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.55
+#Version 1.56
 
 CLSS public abstract interface java.lang.AutoCloseable
 meth public abstract void close() throws java.lang.Exception

@@ -20,6 +20,7 @@ package org.netbeans.modules.gradle.java.queries;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,9 @@ import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
+import org.openide.util.WeakListeners;
+
+import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType.*;
 
 /**
  *
@@ -54,11 +58,12 @@ public final class GradleCompilerOptionsQuery implements CompilerOptionsQueryImp
                 //TODO: How shall we handle source set removal?
                 synchronized(GradleCompilerOptionsQuery.this) {
                     for (ResultImpl res : cache.values()) {
-                        res.support.fireChange();
+                        res.changeCheck();
                     }
                 }
             }
         };
+        watcher.addPropertyChangeListener(WeakListeners.propertyChange(listener, project));
     }
 
     @Override
@@ -69,7 +74,11 @@ public final class GradleCompilerOptionsQuery implements CompilerOptionsQueryImp
         ResultImpl ret = null;
         if (sourceSet != null) {
             GradleJavaSourceSet.SourceType sourceType = sourceSet.getSourceType(f);
-            if ((sourceType != null) && (sourceType != GradleJavaSourceSet.SourceType.RESOURCES)) {
+            if (sourceType == GENERATED) {
+                // Assume that generated sources have the same compiler options as java
+                sourceType = JAVA;
+            }
+            if ((sourceType != null) && (sourceType != RESOURCES)) {
                 String key = sourceSet.getName() + "." + sourceType.name();
                 synchronized(this) {
                     ret = cache.get(key);
@@ -88,19 +97,19 @@ public final class GradleCompilerOptionsQuery implements CompilerOptionsQueryImp
         final String sourceSetName;
         final GradleJavaSourceSet.SourceType type;
         final ChangeSupport support;
+        List<String> args;
 
         public ResultImpl(String sourceSetName, GradleJavaSourceSet.SourceType type) {
             this.sourceSetName = sourceSetName;
             this.type = type;
             support = new ChangeSupport(this);
+            args = checkArgs();
         }
 
 
         @Override
-        public List<? extends String> getArguments() {
-            GradleJavaProject gjp = GradleJavaProject.get(project);
-            GradleJavaSourceSet ss = gjp.getSourceSets().get(sourceSetName);
-            return ss.getCompilerArgs(type);
+        public synchronized List<? extends String> getArguments() {
+            return args;
         }
 
         @Override
@@ -113,5 +122,22 @@ public final class GradleCompilerOptionsQuery implements CompilerOptionsQueryImp
             support.removeChangeListener(listener);
         }
 
+        private List<String> checkArgs() {
+            GradleJavaProject gjp = GradleJavaProject.get(project);
+            GradleJavaSourceSet ss = gjp.getSourceSets().get(sourceSetName);
+            return ss != null ? ss.getCompilerArgs(type) : Collections.emptyList();
+        }
+
+        private void changeCheck() {
+            boolean modified = false;
+            synchronized (this) {
+                List<String> newArgs = checkArgs();
+                if (!args.equals(newArgs)) {
+                    args = newArgs;
+                    modified = true;
+                }
+            }
+            if (modified) support.fireChange();
+        }
     }
 }

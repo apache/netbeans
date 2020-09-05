@@ -25,6 +25,7 @@ import java.util.prefs.Preferences;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.errors.ErrorFixesFakeHint.FixKind;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
+import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.spi.editor.hints.Fix;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -180,7 +181,7 @@ public class MagicSurroundWithTryCatchFixTest extends ErrorHintsTestBase {
         List<Fix> fixes = computeFixes(info, pos, path);
         
         for (Fix e : fixes) {
-            if (e instanceof MagicSurroundWithTryCatchFix) {
+            if (e instanceof JavaFixImpl && ((JavaFixImpl) e).jf instanceof MagicSurroundWithTryCatchFix) {
                 fail ("Should not provide the MagicSurroundWithTryCatchFix!");
             }
         }
@@ -197,7 +198,7 @@ public class MagicSurroundWithTryCatchFixTest extends ErrorHintsTestBase {
 
     @Override
     protected String toDebugString(CompilationInfo info, Fix f) {
-        if (f instanceof MagicSurroundWithTryCatchFix) {
+        if (f instanceof JavaFixImpl && ((JavaFixImpl) f).jf instanceof MagicSurroundWithTryCatchFix) {
             return "FixImpl";
         }
         

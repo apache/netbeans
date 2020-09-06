@@ -120,7 +120,7 @@
         </Comments>
         <Statements>
             <ExpressionStatement start='6' end='39'>
-                <FieldAccess start='6' end='38'>
+                <FieldAccess start='6' end='38' isNullsafe='false'>
                     <AnonymousObjectVariable start='6' end='30'>
                         <ClassInstanceCreation start='7' end='29' anonymous='false'>
                             <ClassName start='11' end='27'>
@@ -140,7 +140,7 @@
                 </FieldAccess>
             </ExpressionStatement>
             <ExpressionStatement start='40' end='76'>
-                <MethodInvocation start='40' end='75'>
+                <MethodInvocation start='40' end='75' isNullsafe='false'>
                     <AnonymousObjectVariable start='40' end='64'>
                         <ClassInstanceCreation start='41' end='63' anonymous='false'>
                             <ClassName start='45' end='61'>
@@ -166,7 +166,7 @@
                 </MethodInvocation>
             </ExpressionStatement>
             <ExpressionStatement start='77' end='108'>
-                <FieldAccess start='77' end='107'>
+                <FieldAccess start='77' end='107' isNullsafe='false'>
                     <AnonymousObjectVariable start='77' end='99'>
                         <ClassInstanceCreation start='78' end='98' anonymous='false'>
                             <ClassName start='82' end='98'>
@@ -186,7 +186,7 @@
                 </FieldAccess>
             </ExpressionStatement>
             <ExpressionStatement start='109' end='143'>
-                <MethodInvocation start='109' end='142'>
+                <MethodInvocation start='109' end='142' isNullsafe='false'>
                     <AnonymousObjectVariable start='109' end='131'>
                         <ClassInstanceCreation start='110' end='130' anonymous='false'>
                             <ClassName start='114' end='130'>

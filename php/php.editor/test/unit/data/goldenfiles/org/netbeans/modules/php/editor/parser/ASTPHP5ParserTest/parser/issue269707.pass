@@ -178,7 +178,7 @@
                                         <Expressions>
                                             <Scalar start='67' end='74' type='STRING' value='Hello, '/>
                                             <ReflectionVariable start='74' end='94'>
-                                                <MethodInvocation start='75' end='93'>
+                                                <MethodInvocation start='75' end='93' isNullsafe='false'>
                                                     <Variable start='75' end='82' isDollared='true'>
                                                         <Identifier start='76' end='82' name='person'/>
                                                     </Variable>

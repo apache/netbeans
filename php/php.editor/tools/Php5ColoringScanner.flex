@@ -632,11 +632,23 @@ PHP_TYPE_MIXED=[m][i][x][e][d]
     return PHPTokenId.PHP_OBJECT_OPERATOR;
 }
 
+// NETBEANS-4443 PHP 8.0: Nullsafe operator
+// https://wiki.php.net/rfc/nullsafe_operator
+<ST_PHP_IN_SCRIPTING>"?->" {
+    pushState(ST_PHP_LOOKING_FOR_PROPERTY);
+    return PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR;
+}
+
 <ST_PHP_QUOTES_AFTER_VARIABLE> {
     "->" {
     popState();
     pushState(ST_PHP_LOOKING_FOR_PROPERTY);
     return PHPTokenId.PHP_OBJECT_OPERATOR;
+    }
+    "?->" {
+    popState();
+    pushState(ST_PHP_LOOKING_FOR_PROPERTY);
+    return PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR;
     }
     {ANY_CHAR} {
         yypushback(1);
@@ -650,6 +662,12 @@ PHP_TYPE_MIXED=[m][i][x][e][d]
 
 <ST_PHP_LOOKING_FOR_PROPERTY>"->" {
     return PHPTokenId.PHP_OBJECT_OPERATOR;
+}
+
+// NETBEANS-4443 PHP 8.0: Nullsafe operator
+// https://wiki.php.net/rfc/nullsafe_operator
+<ST_PHP_LOOKING_FOR_PROPERTY>"?->" {
+    return PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR;
 }
 
 <ST_PHP_LOOKING_FOR_PROPERTY>{LABEL} {

@@ -1536,4 +1536,16 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         options.put(FmtOptions.SPACE_AROUND_UNION_TYPE_SEPARATOR, false);
         reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundUnionTypeSeparator_03b.php", options);
     }
+
+    public void testSpacesAroundNullsafeOperator_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_NULLSAFE_OBJECT_OPS, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundNullsafeOperator_01a.php", options);
+    }
+
+    public void testSpacesAroundNullsafeOperator_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_NULLSAFE_OBJECT_OPS, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundNullsafeOperator_01b.php", options);
+    }
 }

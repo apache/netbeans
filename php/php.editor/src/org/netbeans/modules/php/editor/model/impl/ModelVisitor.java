@@ -51,7 +51,6 @@ import org.netbeans.modules.php.editor.model.CodeMarker;
 import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.FunctionScope;
 import org.netbeans.modules.php.editor.model.IndexScope;
-import static org.netbeans.modules.php.editor.model.impl.Type.SEPARATOR;
 import org.netbeans.modules.php.editor.model.MethodScope;
 import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.ModelUtils;

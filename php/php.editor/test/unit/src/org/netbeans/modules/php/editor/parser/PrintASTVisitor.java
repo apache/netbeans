@@ -404,7 +404,7 @@ public class PrintASTVisitor implements Visitor {
 
     @Override
     public void visit(FieldAccess fieldAccess) {
-        XMLPrintNode printNode = new XMLPrintNode(fieldAccess, "FieldAccess");
+        XMLPrintNode printNode = new XMLPrintNode(fieldAccess, "FieldAccess", new String[]{"isNullsafe", fieldAccess.isNullsafe() ? "true" : "false"});
         printNode.addChild(fieldAccess.getDispatcher());
         printNode.addChild("Field", fieldAccess.getField());
         printNode.print(this);
@@ -664,7 +664,7 @@ public class PrintASTVisitor implements Visitor {
 
     @Override
     public void visit(MethodInvocation node) {
-        XMLPrintNode printNode = new XMLPrintNode(node, "MethodInvocation");
+        XMLPrintNode printNode = new XMLPrintNode(node, "MethodInvocation", new String[]{"isNullsafe", node.isNullsafe() ? "true" : "false"});
         printNode.addChild(node.getDispatcher());
         printNode.addChild("Method", node.getMethod());
         printNode.print(this);

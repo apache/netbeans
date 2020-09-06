@@ -1,6 +1,8 @@
 [[824,829]-Syntax error
+ unexpected:	match
  after:	function
  expected:	identifier, define, &, (] 824-829:Syntax error
+ unexpected:	match
  after:	function
  expected:	identifier, define, &, (
 [[830,831]-POSSIBLE Syntax Error (check preceding valid syntax error)

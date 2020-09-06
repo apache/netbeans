@@ -1090,7 +1090,7 @@
                                         </NamespaceName>
                                     </FucntionName>
                                     <Parameters>
-                                        <MethodInvocation start='1004' end='1021'>
+                                        <MethodInvocation start='1004' end='1021' isNullsafe='false'>
                                             <Variable start='1004' end='1007' isDollared='true'>
                                                 <Identifier start='1005' end='1007' name='ex'/>
                                             </Variable>
@@ -1559,7 +1559,7 @@
             </ExpressionStatement>
             <ExpressionStatement start='1749' end='1784'>
                 <ThrowExpression start='1749' end='1783'>
-                    <MethodInvocation start='1755' end='1783'>
+                    <MethodInvocation start='1755' end='1783' isNullsafe='false'>
                         <Variable start='1755' end='1764' isDollared='true'>
                             <Identifier start='1756' end='1764' name='instance'/>
                         </Variable>
@@ -1580,7 +1580,7 @@
             <ExpressionStatement start='1785' end='1822'>
                 <ThrowExpression start='1785' end='1821'>
                     <DereferencableVariable start='1791' end='1821'>
-                        <MethodInvocation start='1792' end='1820'>
+                        <MethodInvocation start='1792' end='1820' isNullsafe='false'>
                             <Variable start='1792' end='1801' isDollared='true'>
                                 <Identifier start='1793' end='1801' name='instance'/>
                             </Variable>

@@ -47,7 +47,7 @@ public class JsStructureTest extends JsTestBase {
             URL source = new URL("https://cdnjs.cloudflare.com/ajax/libs/extjs/4.2.1/src/class/ClassManager.js");
             URLConnection connection = source.openConnection();
             connection.addRequestProperty("User-Agent", "NetBeans Unittesting");
-            try(InputStream is = source.openStream();
+            try(InputStream is = connection.getInputStream();
                 OutputStream os = new FileOutputStream(classManagerJs)) {
                 byte[] buffer = new byte[1024 * 10];
                 int read;

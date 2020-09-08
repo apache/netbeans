@@ -249,6 +249,14 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
     private static final List<String> INHERITANCE_KEYWORDS =
             Arrays.asList(new String[]{"extends", "implements"}); //NOI18N
     private static final String EXCEPTION_CLASS_NAME = "\\Exception"; // NOI18N
+    private static final List<PHPTokenId> VALID_UNION_TYPE_TOKENS = Arrays.asList(
+            PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING, PHPTokenId.PHP_NS_SEPARATOR,
+            PHPTokenId.PHP_TYPE_BOOL, PHPTokenId.PHP_TYPE_FLOAT, PHPTokenId.PHP_TYPE_INT, PHPTokenId.PHP_TYPE_STRING, PHPTokenId.PHP_TYPE_VOID,
+            PHPTokenId.PHP_TYPE_OBJECT, PHPTokenId.PHP_TYPE_MIXED, PHPTokenId.PHP_SELF, PHPTokenId.PHP_PARENT, PHPTokenId.PHP_STATIC,
+            PHPTokenId.PHP_NULL, PHPTokenId.PHP_FALSE, PHPTokenId.PHP_ARRAY, PHPTokenId.PHP_ITERABLE, PHPTokenId.PHP_CALLABLE,
+            PHPTokenId.PHPDOC_COMMENT_START, PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END,
+            PHPTokenId.PHP_COMMENT_START, PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END
+    );
     private boolean caseSensitive;
     private QuerySupport.Kind nameKind;
 
@@ -490,6 +498,9 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     typesForTypeName.remove(Type.FALSE);
                     typesForTypeName.remove(Type.NULL);
                 }
+                if (isUnionType(info, caretOffset)) {
+                    typesForTypeName.remove(Type.MIXED);
+                }
                 autoCompleteKeywords(completionResult, request, typesForTypeName);
                 break;
             case RETURN_UNION_TYPE_NAME: // no break
@@ -508,6 +519,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     typesForReturnTypeName.remove(Type.VOID);
                 } else if (context == CompletionContext.RETURN_UNION_TYPE_NAME) {
                     typesForReturnTypeName.remove(Type.VOID);
+                    typesForReturnTypeName.remove(Type.MIXED);
                 }
                 autoCompleteKeywords(completionResult, request, typesForReturnTypeName);
                 break;
@@ -1174,6 +1186,9 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             keywords.remove(Type.FALSE);
             keywords.remove(Type.NULL);
         }
+        if (isUnionType(info, caretOffset)) {
+            keywords.remove(Type.MIXED);
+        }
         autoCompleteKeywords(completionResult, request, keywords);
     }
 
@@ -1493,6 +1508,20 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         if (tokenSequence.movePrevious()) {
             Token<? extends PHPTokenId> previousToken = LexUtilities.findPrevious(tokenSequence, Arrays.asList(PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING));
             if (previousToken.id() == PHPTokenId.PHP_TOKEN && TokenUtilities.textEquals(previousToken.text(), "?")) { // NOI18N
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isUnionType(ParserResult info, int caretOffset) {
+            TokenHierarchy<?> th = info.getSnapshot().getTokenHierarchy();
+            TokenSequence<PHPTokenId> tokenSequence = th.tokenSequence(PHPTokenId.language());
+        assert tokenSequence != null;
+        tokenSequence.move(caretOffset);
+        if (tokenSequence.movePrevious()) {
+            Token<? extends PHPTokenId> previousToken = LexUtilities.findPrevious(tokenSequence, VALID_UNION_TYPE_TOKENS);
+            if (previousToken.id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals(previousToken.text(), Type.SEPARATOR)) {
                 return true;
             }
         }

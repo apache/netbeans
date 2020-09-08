@@ -1164,4 +1164,12 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php80/staticReturnTypeErrorWithParameterType_03.php");
     }
 
+    public void testMixedType_01() throws Exception {
+        checkErrors("testfiles/parser/php80/mixedType_01.php");
+    }
+
+    public void testMixedError_01() throws Exception {
+        checkErrors("testfiles/parser/php80/mixedTypeError_01.php");
+    }
+
 }

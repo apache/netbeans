@@ -173,6 +173,10 @@ public class ImplementAbstractMethodsHintErrorTest extends PHPHintsTestBase {
         checkHints(new ImplementAbstractMethodsHintError(), "testStaticReturnTypeImplementMethod01.php");
     }
 
+    public void testMixedType_01() throws Exception {
+        checkHints(new ImplementAbstractMethodsHintError(), "testMixedTypeImplementMethod01.php");
+    }
+
     public void testUnionTypesFix_01() throws Exception {
         applyHint(new ImplementAbstractMethodsHintError(), "testUnionTypesImplementMethod01.php", "class Impleme^nt", "Implement");
     }
@@ -207,6 +211,10 @@ public class ImplementAbstractMethodsHintErrorTest extends PHPHintsTestBase {
 
     public void testStaticReturnTypeFix_01() throws Exception {
         applyHint(new ImplementAbstractMethodsHintError(), "testStaticReturnTypeImplementMethod01.php", "class TestC^lass implements TestInterface {", "Implement");
+    }
+
+    public void testMixedTypeFix_01() throws Exception {
+        applyHint(new ImplementAbstractMethodsHintError(), "testMixedTypeImplementMethod01.php", "class Chil^d implements MixedType {", "Implement");
     }
 
     //~ Inner classes

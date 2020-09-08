@@ -38,7 +38,7 @@ import org.openide.util.NbBundle.Messages;
         displayName = "#LBL_TypeScriptDataObject_LOADER",
         mimeType = "application/x-typescript",
         extension = {"ts"},
-        position = 600
+        position = 193 // lower than 218 as CND also recognizes .ts file
 )
 @DataObject.Registration(
         mimeType = "application/x-typescript",

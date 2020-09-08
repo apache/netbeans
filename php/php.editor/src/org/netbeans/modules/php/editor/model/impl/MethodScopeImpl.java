@@ -259,7 +259,7 @@ final class MethodScopeImpl extends FunctionScopeImpl implements MethodScope, Va
         }
         sb.append(Signature.ITEM_DELIMITER);
         String returnType = getReturnType();
-        if (returnType != null && !Type.MIXED.equalsIgnoreCase(returnType)) {
+        if (returnType != null) {
             sb.append(returnType);
         }
         sb.append(Signature.ITEM_DELIMITER);

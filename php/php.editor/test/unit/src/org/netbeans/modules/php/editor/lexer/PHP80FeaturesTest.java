@@ -40,4 +40,8 @@ public class PHP80FeaturesTest extends PHPLexerTestBase {
     public void testMatchExpression_04() throws Exception {
         performTest("lexer/php80/matchExpression_04");
     }
+
+    public void testMixedType_01() throws Exception {
+        performTest("lexer/php80/mixedType_01");
+    }
 }

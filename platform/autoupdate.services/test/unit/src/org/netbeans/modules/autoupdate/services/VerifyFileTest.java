@@ -74,11 +74,11 @@ public class VerifyFileTest extends NbTestCase {
         assertTrue(jar.exists());
         String res = null;
         try {
-            Collection<CodeSigner> nbmCerts = Utilities.getNbmCertificates(jar, new ArrayList<>());
+            Collection<CodeSigner> nbmCerts = Utilities.getNbmCertificates(jar);
             Collection<Certificate> trustedCerts = Utilities.getCertificates(ks);
-            Set<TrustAnchor> trustedCACerts = Collections.EMPTY_SET;
+            Set<TrustAnchor> trustedCACerts = Collections.emptySet();
             Collection<Certificate> validationAnchors = new HashSet<>(Utilities.getCertificates(validateKs));
-            Set<TrustAnchor> validationCACerts = Collections.EMPTY_SET;
+            Set<TrustAnchor> validationCACerts = Collections.emptySet();
             if (nbmCerts == null) {
                 res = Utilities.N_A;
             } else if (nbmCerts.isEmpty()) {

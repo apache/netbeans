@@ -905,7 +905,11 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
 
     public void testKeymapOverrides() throws Exception { // #170677
         List<String> warnings = new ArrayList<String>();
-        FileObject[] keymaps = FileUtil.getConfigFile("Keymaps").getChildren();
+        FileObject keymapRoot = FileUtil.getConfigFile("Keymaps");
+        if (keymapRoot == null) {
+            return;
+        }
+        FileObject[] keymaps = keymapRoot.getChildren();
         Map<String,Integer> definitionCountById = new HashMap<String,Integer>();
         assertTrue("Too many keymaps for too little bitfield", keymaps.length < 31);
         int keymapFlag = 1;

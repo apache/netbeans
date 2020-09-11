@@ -84,7 +84,7 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
                 try {
                     dist = mgr.distributionFromWrapper(gbp.getRootDir());
                 } catch (Exception ex) {
-                    LOGGER.log(Level.WARNING, "Cannot evaulate Gradle Wrapper", ex); //NOI18N
+                    LOGGER.log(Level.FINE, "Cannot evaulate Gradle Wrapper", ex); //NOI18N
                 }
             }
 
@@ -92,13 +92,13 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
                 try {
                     dist = mgr.distributionFromDir(new File(settings.getDistributionHome()));
                 } catch (IOException ex) {
-                    LOGGER.log(Level.WARNING, "Cannot evaulate Gradle Distribution", ex); //NOI18N
+                    LOGGER.log(Level.FINE, "Cannot evaulate Gradle Distribution", ex); //NOI18N
                 }
             }
             if (dist == null) {
                 dist = mgr.distributionFromVersion(settings.getGradleVersion());
             }
-
+            LOGGER.log(Level.INFO, "Gradle Distribution for {0} is {1}", new Object[]{project, dist}); //NOI18N
         }
         return dist;
     }

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.applemenu;
 
+import org.netbeans.modules.applemenu.spi.NbApplicationAdapter;
 import java.awt.Desktop;
 import java.awt.desktop.AboutEvent;
 import java.awt.desktop.AboutHandler;
@@ -29,6 +30,7 @@ import java.awt.desktop.QuitEvent;
 import java.awt.desktop.QuitHandler;
 import java.awt.desktop.QuitResponse;
 import org.openide.ErrorManager;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -37,25 +39,21 @@ import org.openide.ErrorManager;
  * Uses new 'JEP 272: Platform-Specific Desktop Features' API.
  * This class can be merged with superclass, once NetBeans is built by JDK 9.
  */
-public class NbApplicationAdapterJDK9 extends NbApplicationAdapter implements AboutHandler, OpenFilesHandler, PreferencesHandler, QuitHandler {
+@ServiceProvider(position = 5000, service = NbApplicationAdapter.class)
+public final class NbApplicationAdapterJDK9 extends NbApplicationAdapter implements AboutHandler, OpenFilesHandler, PreferencesHandler, QuitHandler {
 
-    static void install() {
-        try {
-            Desktop app = Desktop.getDesktop();
-            NbApplicationAdapterJDK9 al = new NbApplicationAdapterJDK9();
-
-            app.setAboutHandler(al);
-            app.setOpenFileHandler(al);
-            app.setPreferencesHandler(al);
-            app.setQuitHandler(al);
-        } catch (Throwable ex) {
-            ErrorManager.getDefault().notify(ErrorManager.WARNING, ex);
-        } finally {
-        }
-        NbApplicationAdapter.install();
+    @Override
+    public void install() throws Throwable {
+        Desktop app = Desktop.getDesktop();
+        app.setAboutHandler(this);
+        app.setOpenFileHandler(this);
+        app.setPreferencesHandler(this);
+        app.setQuitHandler(this);
+        handleInstall();
     }
 
-    static void uninstall() {
+    @Override
+    public void uninstall() {
         Desktop app = Desktop.getDesktop();
 
         app.setAboutHandler(null);

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.applemenu;
+package org.netbeans.modules.applemenu.spi;
 
 import java.awt.Dialog;
 import java.awt.Frame;
@@ -48,14 +48,22 @@ import org.openide.windows.WindowSystemListener;
  * correct action instance as defined in the system filesystem.
  *
  * @author  Tim Boudreau
+ * @since 1.47
  */
-
-abstract class NbApplicationAdapter {
+public abstract class NbApplicationAdapter {
     
-    NbApplicationAdapter() {
+    protected NbApplicationAdapter() {
     }
+    
+    /** Installs the provider.
+     * @exception Throwable if the install fails
+     */
+    public abstract void install() throws Throwable;
+    /** Uninstalls the provider. Only called if the install succeeded.
+     */
+    public abstract void uninstall();
 
-    static void install() {
+    protected final void handleInstall() {
         WindowManager.getDefault().addWindowSystemListener(new WindowSystemListener() {
 
             @Override
@@ -84,7 +92,7 @@ abstract class NbApplicationAdapter {
         });
     }
 
-    void handleAbout() {
+    protected final void handleAbout() {
         //#221571 - check if About window is showing already
         Window[] windows = Dialog.getWindows();
         if( null != windows ) {
@@ -103,7 +111,7 @@ abstract class NbApplicationAdapter {
         performAction("Help", "org.netbeans.core.actions.AboutAction"); // NOI18N
     }
     
-    void openFiles(List<File> files) {
+    protected final void openFiles(List<File> files) {
         for (File f : files) {
             if (f.exists() && !f.isDirectory()) {
                 FileObject obj = FileUtil.toFileObject(f);
@@ -132,10 +140,10 @@ abstract class NbApplicationAdapter {
         }
     }
     
-    public void handlePreferences() {
+    protected final void handlePreferences() {
         performAction("Window", "org.netbeans.modules.options.OptionsWindowAction");    // NOI18N
     }
-    public void handleQuit() {
+    protected final void handleQuit() {
         performAction("System", "org.netbeans.core.actions.SystemExit");    // NOI18N
     }
     

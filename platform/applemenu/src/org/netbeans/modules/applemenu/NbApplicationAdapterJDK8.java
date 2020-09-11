@@ -26,7 +26,6 @@ import com.apple.eawt.OpenFilesHandler;
 import com.apple.eawt.PreferencesHandler;
 import com.apple.eawt.QuitHandler;
 import com.apple.eawt.QuitResponse;
-import org.openide.ErrorManager;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

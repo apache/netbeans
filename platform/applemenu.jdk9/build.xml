@@ -20,6 +20,6 @@
 
 -->
 
-<project name="platform/applemenu" basedir="." default="build">
+<project name="platform/applemenu.jdk9" basedir="." default="build">
   <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

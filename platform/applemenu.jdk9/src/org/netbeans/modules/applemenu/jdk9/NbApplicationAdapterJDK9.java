@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.applemenu;
+package org.netbeans.modules.applemenu.jdk9;
 
 import org.netbeans.modules.applemenu.spi.NbApplicationAdapter;
 import java.awt.Desktop;
@@ -29,7 +29,6 @@ import java.awt.desktop.PreferencesHandler;
 import java.awt.desktop.QuitEvent;
 import java.awt.desktop.QuitHandler;
 import java.awt.desktop.QuitResponse;
-import org.openide.ErrorManager;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -44,7 +43,7 @@ public final class NbApplicationAdapterJDK9 extends NbApplicationAdapter impleme
 
     @Override
     public void install() throws Throwable {
-        Desktop app = Desktop.getDesktop();
+        var app = Desktop.getDesktop();
         app.setAboutHandler(this);
         app.setOpenFileHandler(this);
         app.setPreferencesHandler(this);
@@ -54,8 +53,7 @@ public final class NbApplicationAdapterJDK9 extends NbApplicationAdapter impleme
 
     @Override
     public void uninstall() {
-        Desktop app = Desktop.getDesktop();
-
+        var app = Desktop.getDesktop();
         app.setAboutHandler(null);
         app.setOpenFileHandler(null);
         app.setPreferencesHandler(null);

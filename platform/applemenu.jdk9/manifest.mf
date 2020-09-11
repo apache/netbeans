@@ -1,0 +1,7 @@
+Manifest-version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.applemenu.jdk9/1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/applemenu/jdk9/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Requires: org.openide.modules.os.MacOSX
+

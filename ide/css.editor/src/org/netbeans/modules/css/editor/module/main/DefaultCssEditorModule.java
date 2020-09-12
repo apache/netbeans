@@ -92,7 +92,7 @@ public class DefaultCssEditorModule extends CssEditorModule {
         module("fonts", "http://www.w3.org/TR/css3-fonts"),
         module("basic_box_model", "http://www.w3.org/TR/css3-box"),
         module("speech", "http://www.w3.org/TR/css3-speech"),
-        //        module("grid_positioning", "http://www.w3.org/TR/css3-grid"), //obsolete
+        module("grid", "http://www.w3.org/TR/css3-grid"),
         module("flexible_box_layout", "http://www.w3.org/TR/css3-flexbox"),
         module("image_values", "http://www.w3.org/TR/css3-images"),
         module("animations", "http://www.w3.org/TR/css3-animations"),

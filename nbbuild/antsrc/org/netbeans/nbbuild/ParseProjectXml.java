@@ -973,7 +973,9 @@ public final class ParseProjectXml extends Task {
             File depJar = computeClasspathModuleLocation(modules, cnb, clusterPath, excludedModules, runtime);
 
             List<File> additions = new ArrayList<>();
-            additions.add(depJar);
+            if (!depJar.getName().equals("org-netbeans-libs-javafx.jar")) {
+                additions.add(depJar);
+            }
             if (recursive) {
                 addRecursiveDeps(additions, modules, cnb, clusterPath, excludedModules, new HashSet<>(), runtime);
             }
@@ -1071,7 +1073,9 @@ public final class ParseProjectXml extends Task {
             log("  Added dep " + nextModule + " due to " + cnb, Project.MSG_DEBUG);
             File depJar = computeClasspathModuleLocation(modules, nextModule, clusterPath, excludedModules, true);
             if (!additions.contains(depJar)) {
-                additions.add(depJar);
+                if (!depJar.getName().equals("org-netbeans-libs-javafx.jar")) {
+                    additions.add(depJar);
+                }
             }
             addRecursiveDeps(additions, modules, nextModule, clusterPath, excludedModules, skipCnb, runtime);
         }

@@ -213,6 +213,12 @@ public abstract class JavaFix {
             public void setChangeInfoConvertor(JavaFix jf, Function<ModificationResult, ChangeInfo> modResult2ChangeInfo) {
                 jf.modResult2ChangeInfo = modResult2ChangeInfo;
             }
+
+            @Override
+            public Function<ModificationResult, ChangeInfo> getChangeInfoConvertor(JavaFix jf) {
+                return jf.modResult2ChangeInfo;
+            }
+
         };
     }
 

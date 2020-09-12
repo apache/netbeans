@@ -37,7 +37,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.VariableElement;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TypeMirrorHandle;
@@ -88,8 +87,6 @@ class OrigSurroundWithTryCatchFix extends JavaFix {
             p = p.getParentPath();
             leaf = (StatementTree)p.getLeaf();
         }
-
-        GeneratorUtilities.get(parameter).importComments(p.getParentPath().getLeaf(), parameter.getCompilationUnit());
 
         TreeMaker make = parameter.getTreeMaker();
 

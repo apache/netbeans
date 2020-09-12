@@ -35,10 +35,10 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = TagFeatureProvider.class)
 public class BootsFacesTagFeatureProvider implements TagFeatureProvider {
 
-    private static final String BOOTSFACES_UI_NAMESPACE = "http://bootsfaces.net/ui";
+    private static final String BOOTSFACES_UI_NAMESPACE = "http://bootsfaces.net/ui"; //NOI18N
 
-    private static final String VALUE = "value";
-    private static final String VAR = "var";
+    private static final String VALUE = "value"; //NOI18N
+    private static final String VAR = "var"; //NOI18N
         
     @Override
     public <T extends TagFeature> Collection<T> getFeatures(final Tag tag, Library library, Class<T> clazz) {
@@ -75,7 +75,7 @@ public class BootsFacesTagFeatureProvider implements TagFeatureProvider {
 
     private enum IterableTag {
 
-        DATA_TABLE(BOOTSFACES_UI_NAMESPACE, "dataTable", VALUE, VAR);
+        DATA_TABLE(BOOTSFACES_UI_NAMESPACE, "dataTable", VALUE, VAR); //NOI18N
 
         private final String namespace;
         private final String name;

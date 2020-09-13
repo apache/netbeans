@@ -599,7 +599,6 @@ matrix:
             #- hide-logs.sh ant $OPTS -f webcommon/cordova test
             #- hide-logs.sh ant $OPTS -f webcommon/html.angular test
             - hide-logs.sh ant $OPTS -f webcommon/html.knockout test-unit
-            - hide-logs.sh ant $OPTS -f webcommon/html.ojet test
             - hide-logs.sh ant $OPTS -f webcommon/javascript.bower test
             - hide-logs.sh ant $OPTS -f webcommon/javascript.cdnjs test
             - hide-logs.sh ant $OPTS -f webcommon/javascript.grunt test

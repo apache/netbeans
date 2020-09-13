@@ -168,8 +168,8 @@ final class ParagraphViewChildren extends ViewChildren<EditorView> {
                 view.setRawEndOffset(relEndOffset); // Below offset-gap
                 view.setParent(pView);
                 // Possibly assign text layout
-                if (view instanceof HighlightsView || (view instanceof PrependedTextView && ((PrependedTextView) view).getDelegate() instanceof HighlightsView)) {
-                    HighlightsView hView = (HighlightsView) (view instanceof HighlightsView ? view : ((PrependedTextView) view).getDelegate());
+                if (viewOrDelegate(view) instanceof HighlightsView) {
+                    HighlightsView hView = (HighlightsView) viewOrDelegate(view);
                     // Fill in text layout if necessary
                     if (hView.getTextLayout() == null) { // Fill in text layout
                         if (docText == null) {
@@ -430,7 +430,7 @@ final class ParagraphViewChildren extends ViewChildren<EditorView> {
         while (startIndex < endIndex) {
             EditorView view = get(startIndex);
             Shape childAlloc = getChildAllocation(startIndex, pAlloc);
-            if (view.getClass() == NewlineView.class) {
+            if (viewOrDelegate(view).getClass() == NewlineView.class) {
                 // Extend till end of screen (docView's width)
                 Rectangle2D.Double childRect = ViewUtils.shape2Bounds(childAlloc);
                 DocumentView docView = pView.getDocumentView();
@@ -845,6 +845,10 @@ final class ParagraphViewChildren extends ViewChildren<EditorView> {
     @Override
     protected String getXYInfo(int index) {
         return new StringBuilder(10).append(" x=").append(startVisualOffset(index)).toString();
+    }
+
+    private View viewOrDelegate(View view) {
+        return view instanceof PrependedTextView ? ((PrependedTextView) view).getDelegate() : view;
     }
 
     private static final class IndexAndAlloc {

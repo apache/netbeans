@@ -85,7 +85,7 @@ public class Utilities {
     public static final String SIGNATURE_VERIFIED = "SIGNATURE_VERIFIED";
     public static final String TRUSTED = "TRUSTED";
     public static final String MODIFIED = "MODIFIED";
-    
+
     private Utilities() {}
 
     public static final String UPDATE_DIR = "update"; // NOI18N
@@ -283,6 +283,24 @@ public class Utilities {
             }
         }
         return certs;
+    }
+    /**
+     * Get entries packed with pack200 in given NBM file.
+     *
+     * @param nbmFile the file to scan
+     * @return names of entries 
+     * @throws IOException in case of I/O error
+     */
+    static List<String> getNbmPack200Entries(File nbmFile) throws IOException {
+        List<String> pack200Entries = new ArrayList<>();
+        try (JarFile jf = new JarFile(nbmFile)) {
+            for (JarEntry entry : Collections.list(jf.entries())) {
+                if (entry.getName().endsWith(".pack.gz")) {
+                    pack200Entries.add(entry.getName());
+                }
+            }
+        }
+        return pack200Entries;
     }
 
     /**

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.46.0
+#Version 2.47.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -9,6 +9,7 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitArrayType(com.sun.
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAssert(com.sun.source.tree.AssertTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAssignment(com.sun.source.tree.AssignmentTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBinary(com.sun.source.tree.BinaryTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBindingPattern(com.sun.source.tree.BindingPatternTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBlock(com.sun.source.tree.BlockTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitBreak(com.sun.source.tree.BreakTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitCase(com.sun.source.tree.CaseTree,{com.sun.source.tree.TreeVisitor%1})
@@ -52,7 +53,6 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitRequires(com.sun.s
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.tree.TreeVisitor%1})
- anno 0 java.lang.Deprecated()
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.tree.TreeVisitor%1})
@@ -65,7 +65,6 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitVariable(com.sun.s
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.tree.TreeVisitor%1})
- anno 0 java.lang.Deprecated()
 
 CLSS public com.sun.source.util.TreePathScanner<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init()
@@ -88,6 +87,7 @@ meth public {com.sun.source.util.TreeScanner%0} visitArrayType(com.sun.source.tr
 meth public {com.sun.source.util.TreeScanner%0} visitAssert(com.sun.source.tree.AssertTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitAssignment(com.sun.source.tree.AssignmentTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitBinary(com.sun.source.tree.BinaryTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitBindingPattern(com.sun.source.tree.BindingPatternTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitBlock(com.sun.source.tree.BlockTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitBreak(com.sun.source.tree.BreakTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitCase(com.sun.source.tree.CaseTree,{com.sun.source.util.TreeScanner%1})
@@ -131,7 +131,6 @@ meth public {com.sun.source.util.TreeScanner%0} visitRequires(com.sun.source.tre
 meth public {com.sun.source.util.TreeScanner%0} visitReturn(com.sun.source.tree.ReturnTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitSwitch(com.sun.source.tree.SwitchTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitSwitchExpression(com.sun.source.tree.SwitchExpressionTree,{com.sun.source.util.TreeScanner%1})
- anno 0 java.lang.Deprecated()
 meth public {com.sun.source.util.TreeScanner%0} visitSynchronized(com.sun.source.tree.SynchronizedTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitThrow(com.sun.source.tree.ThrowTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitTry(com.sun.source.tree.TryTree,{com.sun.source.util.TreeScanner%1})
@@ -144,7 +143,6 @@ meth public {com.sun.source.util.TreeScanner%0} visitVariable(com.sun.source.tre
 meth public {com.sun.source.util.TreeScanner%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitYield(com.sun.source.tree.YieldTree,{com.sun.source.util.TreeScanner%1})
- anno 0 java.lang.Deprecated()
 supr java.lang.Object
 
 CLSS public java.io.IOException

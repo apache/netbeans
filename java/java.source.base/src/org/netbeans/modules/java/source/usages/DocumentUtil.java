@@ -21,6 +21,8 @@ package org.netbeans.modules.java.source.usages;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -50,6 +52,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.parsing.lucene.support.Convertor;
 import org.netbeans.modules.parsing.lucene.support.Convertors;
@@ -115,12 +118,18 @@ public class DocumentUtil {
     }
 
     @NonNull
-    public static Convertor<Document,ElementHandle<TypeElement>> typeElementConvertor() {
-        return new ElementHandleConvertor<> (
-                ElementKind.CLASS,
-                ElementKind.ENUM,
-                ElementKind.INTERFACE,
-                ElementKind.ANNOTATION_TYPE);
+    public static Convertor<Document, ElementHandle<TypeElement>> typeElementConvertor() {
+        ElementKind recordKind = TreeShims.getRecordKind();
+
+        List<ElementKind> eleKindList = new ArrayList<>();
+        ElementKind[] otherElekinds = {ElementKind.ENUM, ElementKind.INTERFACE, ElementKind.ANNOTATION_TYPE};
+        eleKindList.addAll(Arrays.asList(otherElekinds));
+        if (recordKind != null) {
+            eleKindList.add(recordKind);
+        }
+        return new ElementHandleConvertor<>(
+                ElementKind.CLASS, eleKindList.toArray(new ElementKind[0]));
+
     }
     
     @NonNull

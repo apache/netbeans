@@ -83,6 +83,44 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="gradle-project-connection">
+            <api name="general"/>
+            <summary>Expose Gradle ProjectConnection through Project's Lookup.</summary>
+            <version major="2" minor="4"/>
+            <date year="2020" month="8" day="21"/>
+            <author login="lkishalmi"/>
+            <compatibility binary="compatible" source="compatible"/>
+            <description>
+                <p>
+                    Gradle's <code><a href="https://docs.gradle.org/current/javadoc/org/gradle/tooling/ProjectConnection.html">ProjectConnection</a></code>
+                    is now available on the project lookup, making possible for modules to interact with Gradle in deeper level.
+                </p>
+            </description>
+        </change>
+        <change id="gradle-distribution-manager">
+            <api name="general"/>
+            <summary>Expose GradleDistribution manager as an API.</summary>
+            <version major="2" minor="4"/>
+            <date year="2020" month="8" day="21"/>
+            <author login="lkishalmi"/>
+            <compatibility binary="compatible" source="compatible"/>
+            <description>
+                <p>
+                    Starting to give the project more freedom over control of
+                    their <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleDistributionManager.GradleDistribution.html">GradleDistribution</a></code> in use, the previously non-API
+                    <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleDistributionManager.html">GradleDistributionManager</a></code> got a review and got moved into
+                    execution apis. Together with the <code>GradleDistributionProvider</code>
+                    (API/SPI) it is possible to fetch information on the Gradle
+                    Distribution used in the project.
+                </p>
+                <p>
+                    <code><a href="@TOP@/org/netbeans/modules/gradle/spi/execute/GradleDistributionProvider.html">GradleDistributionProvider</a></code> has a default implementation it
+                    is not necessary to implement it. With that new interface
+                    the <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html#evaluateGradleDistribution-org.netbeans.api.project.Project-boolean-">RunUtils.evaluateGradleDistribution()</a></code>
+                    got deprecated.
+                </p>
+            </description>
+        </change>
         <change id="gradle-java-independence">
             <api name="general"/>
             <summary>Remove Java Platform dependency.</summary>
@@ -97,15 +135,14 @@ is the proper place.
                     Java Platform module has been removed.
                 </p>
                 <p>
-                    The removal affects <code>org.netbeans.modules.gradle.api.execute.RunUtils</code>
-                    <code>getActivePlatform</code> methods. The method returns a
-                    Pair with <code>null</code> as <code>second</code> which
+                    The removal affects <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html#getActivePlatform-java.lang.String-">RunUtils.getActivePlatform</a></code>
+                    methods. The method returns a Pair with <code>null</code> as <code>second</code> which
                     indicates a broken Platform. This is for keeping the binary compatibility only.
                     These methods shall be not used at all. There is no
                     replacement planned for these API functions.
                 </p>
                 <p>
-                    Added <code>org.netbeans.modules.gradle.spi.exectute.GradleJavaPlatformProvider</code>
+                    Added <code><a href="@TOP@/org/netbeans/modules/gradle/spi/exectute/GradleJavaPlatformProvider.html">GradleJavaPlatformProvider</a></code>
                     which can be put into the project lookup, to be able to specify the JDK
                     to be used for Gradle build execution.
                 </p>
@@ -133,7 +170,7 @@ is the proper place.
                     This change is backported to version 2.0.1 as well.
                 </p>
                 <p>
-                    Added <code>RunUtils.isProjectTrusted(Project,boolean)</code>
+                    Added <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html#isProjectTrusted-org.netbeans.api.project.Project-boolean-">RunUtils.isProjectTrusted(Project,boolean)</a></code>
                     where plugin can check if a project is trusted or request
                     one time trust with interactive mode.
                 </p>
@@ -144,8 +181,8 @@ is the proper place.
                     a result of an user action.
                 </p>
                 <p>
-                    Added <code>org.netbeans.modules.gradle.spi.GradleSettings.GradleExecutionRule</code>
-                    with setter ad getter in <code>org.netbeans.modules.gradle.spi.GradleSettings</code>
+                    Added <code><a href="@TOP@/org/netbeans/modules/gradle/spi/GradleSettings.GradleExecutionRule.html">GradleSettings.GradleExecutionRule</a></code>
+                    with setter ad getter in <code><a href="@TOP@/org/netbeans/modules/gradle/spi/GradleSettings.html">GradleSettings</a></code>
                     as a global option to how to treat automatic Gradle Execution globally.
                 </p>
             </description>
@@ -199,7 +236,7 @@ is the proper place.
             <compatibility source="compatible"/>
             <description>
                 <p>
-                    Added <code>RunUtils.cancelGradle(RunConfig)</code> to allow plugins to cancel an executed Gradle process.
+                    Added <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html#cancelGradle-org.netbeans.modules.gradle.api.execute.RunConfig-">RunUtils.cancelGradle(RunConfig)</a></code> to allow plugins to cancel an executed Gradle process.
                 </p>
             </description>
             <class package="org.netbeans.modules.gradle.api.execute" name="RunUtils"/>

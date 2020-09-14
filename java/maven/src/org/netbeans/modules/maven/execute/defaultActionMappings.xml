@@ -114,7 +114,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
         </goals>
         <properties>
             <exec.args>-classpath %classpath ${packageClassName}</exec.args>
@@ -128,7 +128,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
         </goals>
         <properties>
             <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName}</exec.args>
@@ -143,7 +143,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
         </goals>
         <properties>
             <exec.args>-classpath %classpath ${packageClassName}</exec.args>
@@ -159,7 +159,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
         </goals>
         <properties>
             <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName}</exec.args>
@@ -224,7 +224,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
         </goals>
         <properties>
             <exec.args>-classpath %classpath ${packageClassName}</exec.args>
@@ -239,7 +239,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:1.5.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
         </goals>
         <properties>
             <exec.args>-classpath %classpath ${packageClassName}</exec.args>

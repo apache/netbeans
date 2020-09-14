@@ -163,21 +163,9 @@ public final class GradleProjectCache {
         NbProjectInfo info = null;
         Quality quality = ctx.aim;
         GradleBaseProject base = ctx.previous.getBaseProject();
-        GradleConnector gconn = GradleConnector.newConnector();
 
-        File gradleInstall = RunUtils.evaluateGradleDistribution(ctx.project, true);
-        if (gradleInstall == null) {
-            GradleDistributionManager gdm = GradleDistributionManager.get(GradleSettings.getDefault().getGradleUserHome());
-            GradleDistributionManager.NbGradleVersion version = gdm.createVersion(GradleSettings.getDefault().getGradleVersion());
-            gradleInstall = gdm.install(version);
-        }
-        if (gradleInstall == null) {
-            return ctx.previous;
-        }
-        gconn.useInstallation(gradleInstall);
-        gconn.useGradleUserHomeDir(GradleSettings.getDefault().getGradleUserHome());
+        ProjectConnection pconn = ctx.project.getLookup().lookup(ProjectConnection.class);
 
-        ProjectConnection pconn = gconn.forProjectDirectory(base.getProjectDir()).connect();
 
         GradleCommandLine cmd = new GradleCommandLine(ctx.args);
         cmd.setFlag(GradleCommandLine.Flag.CONFIGURE_ON_DEMAND, GradleSettings.getDefault().isConfigureOnDemand());
@@ -246,10 +234,6 @@ public final class GradleProjectCache {
             openNotification(base.getProjectDir(), Bundle.TIT_LOAD_FAILED(base.getProjectDir()), ex.getMessage(), sb.toString());
             return ctx.previous.invalidate(sb.toString());
         } finally {
-            try {
-                pconn.close();
-            } catch (NullPointerException ex) {
-            }
             loadedProjects.incrementAndGet();
         }
         long finish = System.currentTimeMillis();

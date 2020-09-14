@@ -81,6 +81,7 @@ final class NbBrowsers {
             case "Windows":
                 return "win";
             case "Darcula":
+            case "Flat Dark":
                 return "darcula";
         }
         return null;

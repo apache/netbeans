@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.64
+#Version 1.65
 
 CLSS public abstract java.awt.AWTEvent
 cons public init(java.awt.Event)
@@ -2395,11 +2395,12 @@ meth public java.awt.Dimension getMinimumSize(javax.swing.JComponent)
 meth public java.awt.Insets getAutoscrollInsets()
 meth public java.awt.Insets getTabAreaInsets()
 meth public static java.awt.Graphics2D getOffscreenGraphics()
+meth public static java.awt.Graphics2D getOffscreenGraphics(javax.swing.JComponent)
 meth public void autoscroll(java.awt.Point)
 meth public void makeTabVisible(int)
 supr org.netbeans.swing.tabcontrol.plaf.BasicTabDisplayerUI
-hfds autoscroll,btnDropDown,btnMaximizeRestore,btnScrollLeft,btnScrollRight,controlButtons,ctx,lastKnownModelSize,scratch
-hcls Autoscroller,WCLayout
+hfds autoscroll,btnDropDown,btnMaximizeRestore,btnScrollLeft,btnScrollRight,cachedScratchGraphics,controlButtons,lastKnownModelSize,scratch
+hcls Autoscroller,ScratchGraphics,WCLayout
 
 CLSS protected org.netbeans.swing.tabcontrol.plaf.BasicScrollingTabDisplayerUI$ScrollingDisplayerComponentListener
  outer org.netbeans.swing.tabcontrol.plaf.BasicScrollingTabDisplayerUI
@@ -2605,7 +2606,7 @@ fld protected org.netbeans.swing.tabcontrol.TabDataModel model
 intf org.netbeans.swing.tabcontrol.plaf.TabLayoutModel
 meth protected int iconHeight(int)
 meth protected int iconWidth(int)
-meth protected int textHeight(int)
+meth protected int textHeight(int,javax.swing.JComponent)
 meth protected int textWidth(int)
 meth public int dropIndexOfPoint(int,int)
 meth public int getH(int)

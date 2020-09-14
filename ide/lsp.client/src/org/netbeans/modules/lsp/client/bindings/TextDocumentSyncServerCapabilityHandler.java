@@ -86,39 +86,7 @@ public class TextDocumentSyncServerCapabilityHandler {
 
             Document doc = opened.getDocument();
 
-            WORKER.post(() -> {
-                LSPBindings server = LSPBindings.getBindings(file);
-
-                if (server == null)
-                    return ; //ignore
-
-                doc.putProperty(HyperlinkProviderImpl.class, Boolean.TRUE);
-
-                String uri = Utils.toURI(file);
-                String[] text = new String[1];
-
-                doc.render(() -> {
-                    try {
-                        text[0] = doc.getText(0, doc.getLength());
-                    } catch (BadLocationException ex) {
-                        Exceptions.printStackTrace(ex);
-                        text[0] = "";
-                    }
-                });
-
-                TextDocumentItem textDocumentItem = new TextDocumentItem(uri,
-                                                                         FileUtil.getMIMEType(file),
-                                                                         0,
-                                                                         text[0]);
-
-                server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(textDocumentItem));
-                if (opened.getClientProperty(MarkOccurrences.class) == null) {
-                    MarkOccurrences mo = new MarkOccurrences(opened);
-                    LSPBindings.addBackgroundTask(file, mo);
-                    opened.putClientProperty(MarkOccurrences.class, mo);
-                }
-                server.scheduleBackgroundTasks(file);
-            });
+            ensureOpenedInServer(opened);
 
             doc.addDocumentListener(new DocumentListener() { //XXX: listener
                 int version; //XXX: proper versioning!
@@ -190,7 +158,6 @@ public class TextDocumentSyncServerCapabilityHandler {
 
                             if (typingModification && oldText.isEmpty() && event.length == 1) {
                                 if (newText.equals("}") || newText.equals("\n")) {
-                                    System.err.println("going to compute indent:");
                                     List<TextEdit> edits = new ArrayList<>();
                                     doc.render(() -> {
                                         if (documentVersion != DocumentUtilities.getDocumentVersion(doc))
@@ -216,12 +183,68 @@ public class TextDocumentSyncServerCapabilityHandler {
         }
     }
 
+    private void ensureOpenedInServer(JTextComponent opened) {
+        FileObject file = NbEditorUtilities.getFileObject(opened.getDocument());
+
+        if (file == null)
+            return; //ignore
+
+        Document doc = opened.getDocument();
+        WORKER.post(() -> {
+            LSPBindings server = LSPBindings.getBindings(file);
+
+            if (server == null)
+                return ; //ignore
+
+            if (!server.getOpenedFiles().add(file)) {
+                //already opened:
+                return ;
+            }
+
+            doc.putProperty(HyperlinkProviderImpl.class, Boolean.TRUE);
+
+            String uri = Utils.toURI(file);
+            String[] text = new String[1];
+
+            doc.render(() -> {
+                try {
+                    text[0] = doc.getText(0, doc.getLength());
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
+                    text[0] = "";
+                }
+            });
+
+            TextDocumentItem textDocumentItem = new TextDocumentItem(uri,
+                                                                     FileUtil.getMIMEType(file),
+                                                                     0,
+                                                                     text[0]);
+
+            server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(textDocumentItem));
+            if (opened.getClientProperty(MarkOccurrences.class) == null) {
+                MarkOccurrences mo = new MarkOccurrences(opened);
+                LSPBindings.addBackgroundTask(file, mo);
+                opened.putClientProperty(MarkOccurrences.class, mo);
+            }
+            server.scheduleBackgroundTasks(file);
+        });
+    }
+
+    public static void refreshOpenedFilesInServers() {
+        SwingUtilities.invokeLater(() -> {
+            assert SwingUtilities.isEventDispatchThread();
+            for (JTextComponent c : EditorRegistry.componentList()) {
+                h.ensureOpenedInServer(c);
+            }
+        });
+    }
+
+    private static final TextDocumentSyncServerCapabilityHandler h = new TextDocumentSyncServerCapabilityHandler();
     @OnStart
     public static class Init implements Runnable {
 
         @Override
         public void run() {
-            TextDocumentSyncServerCapabilityHandler h = new TextDocumentSyncServerCapabilityHandler();
             EditorRegistry.addPropertyChangeListener(evt -> h.handleChange());
             SwingUtilities.invokeLater(() -> h.handleChange());
         }

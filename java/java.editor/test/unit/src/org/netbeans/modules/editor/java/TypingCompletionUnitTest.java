@@ -1375,6 +1375,18 @@ public void testPositionInTextBlock() throws Exception {
         ctx.assertDocumentTextEquals("t(\"\"\"\n  |\"\"\")");
     } 
     
+    public void testTextBlock6() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test:
+            return ;
+        }
+        Context ctx = new Context(new JavaKit(), "t(\"\"\"\n|\"\n\"\"\")");
+        ctx.typeChar('\f');
+        ctx.assertDocumentTextEquals("t(\"\"\"\n\n\"\"\")");
+    } 
+    
     public void testCorrectHandlingOfStringEscapes184059() throws Exception {
         assertTrue(isInsideString("foo\n\"bar|\""));
         assertTrue(isInsideString("foo\n\"bar\\\"|\""));

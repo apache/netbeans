@@ -25,6 +25,33 @@
     <apidef name="lookup">Lookup API</apidef>
 </apidefs>
 <changes>
+    <change id="ProxyLookupController">
+        <api name="lookup"/>
+        <summary>Add ProxyLookup.Controller to set lookups dynamically without 
+            subclassing</summary>
+        <version major="8" minor="43"/>
+        <date year="2020" month="7" day="4"/>
+        <author login="tboudreau"/>
+        <compatibility addition="yes" source="compatible" semantic="compatible" binary="compatible"/>
+        <description>
+            <p>
+                One of the most common usages of  <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html">ProxyLookup</a>
+                is to dynamically change the set of lookups being delegated to. However the 
+                <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html#setLookups-org.openide.util.Lookup...-">setLookups(...)</a>
+                method is <code>protected</code>. To avoid the need to subclass 
+                <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html">ProxyLookup</a>
+                this change introduces
+                <a href="@TOP@/org/openide/util/lookup/ProxyLookup.Controller.html">ProxyLookup.Controller</a>
+                that gives the creator of <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html">ProxyLookup</a>
+                a way to call 
+                <a href="@TOP@/org/openide/util/lookup/ProxyLookup.Controller.html#setLookups-org.openide.util.Lookup...-">setLookups(...)</a>
+                without exposing the method to others having just a reference to 
+                the <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html">ProxyLookup</a>.
+            </p>
+        </description>
+        <class name="ProxyLookup" package="org.openide.util.lookup"/>
+        <issue number="NETBEANS-4699"/>
+    </change>    
     <change id="AbstractProcessorSupportedSource">
         <api name="lookup"/>
         <summary>Declare support for all source levels.</summary>

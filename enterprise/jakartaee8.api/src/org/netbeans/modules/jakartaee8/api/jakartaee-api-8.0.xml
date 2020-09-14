@@ -26,16 +26,16 @@
     <localizing-bundle>org/netbeans/modules/jakartaee8/api/Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-	<resource>jar:nbinst://org.netbeans.modules.jakartaee8.api/modules/ext/jakartaee-api-8.0.jar!/</resource>
+	<resource>jar:nbinst://org.netbeans.modules.jakartaee8.api/modules/ext/jakarta.jakartaee-api-8.0.0.jar!/</resource>
     </volume>
     <volume>
         <type>javadoc</type>
-        <resource>jar:nbinst://org.netbeans.modules.j2ee.platform/docs/jakartaee-doc-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.jakartaee8.platform/docs/jakartaee8-doc-api.jar!/</resource>
     </volume>
     <properties>
         <property>
             <name>maven-dependencies</name>
-            <value>jakarta:jakartaee-api:8.0:jar</value>
+            <value>jakarta.platform:jakarta.jakartaee-api:8.0.0:jar</value>
         </property>
     </properties>
 </library>

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -114,15 +115,7 @@ public class Server implements ArgsProcessor {
         LanguageServerImpl server = new LanguageServerImpl();
         Launcher<LanguageClient> serverLauncher = LSPLauncher.createServerLauncher(server, in, out);
         ((LanguageClientAware) server).connect(serverLauncher.getRemoteProxy());
-        serverLauncher.startListening();
-
-        while (true) {
-            try {
-                Thread.sleep(100000);
-            } catch (InterruptedException ex) {
-                //ignore
-            }
-        }
+        serverLauncher.startListening().get();
     }
 
     private static class LanguageServerImpl implements LanguageServer, LanguageClientAware {

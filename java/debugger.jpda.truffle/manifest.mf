@@ -3,8 +3,9 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.debugger.jpda.truffle/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/debugger/jpda/truffle/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/debugger/jpda/truffle/layer.xml
-OpenIDE-Module-Specification-Version: 1.6
+OpenIDE-Module-Specification-Version: 1.7
 OpenIDE-Module-Provides: org.netbeans.modules.debugger.jpda.truffle
 OpenIDE-Module-Requires: org.netbeans.api.debugger.jpda.JPDADebuggerEngineImpl,
   org.netbeans.spi.debugger.ui
+OpenIDE-Module-Recommends: cnb.org.netbeans.modules.java.kit
 OpenIDE-Module-Package-Dependencies: com.sun.jdi[VirtualMachineManager]

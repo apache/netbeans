@@ -70,10 +70,11 @@ final class MavenUtilities {
             if (!this.settings.isFile()) {
                 return null;
             }
-            var dbFactory = DocumentBuilderFactory.newInstance();
-            var dBuilder = dbFactory.newDocumentBuilder();
-            var settingsDoc = dBuilder.parse(this.settings);
-            var elementsByTagName = settingsDoc.getElementsByTagName(tag);
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder;
+            dBuilder = dbFactory.newDocumentBuilder();
+            Document settingsDoc = dBuilder.parse(this.settings);
+            NodeList elementsByTagName = settingsDoc.getElementsByTagName(tag);
             if (elementsByTagName.getLength() >0) return elementsByTagName.item(0).getTextContent();
             return null;
         } catch (NoSuchFileException ex) {

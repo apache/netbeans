@@ -87,16 +87,16 @@ final class NbBrowsers {
         return null;
     }
 
-    @JavaScriptBody(args = { "css" }, body = """
-        if (!document.head || document.head.getAttribute("data-netbeans-css") == "false") {
-           return;
-        }
-        var link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.type = "text/css";
-        link.href = css;
-        document.head.appendChild(link);
-    """)
+    @JavaScriptBody(args = { "css" }, body =
+"  if (!document.head || document.head.getAttribute(\"data-netbeans-css\") == \"false\") {\n" +
+"     return;\n" +
+"  }\n" +
+"  var link = document.createElement(\"link\");\n" +
+"  link.rel = \"stylesheet\";\n" +
+"  link.type = \"text/css\";\n" +
+"  link.href = css;\n" +
+"  document.head.appendChild(link);"
+    )
     private static native void loadCss(String css);
 
     private static void load0(WebView view, URL page, Runnable onPageLoad, ClassLoader loader, Object... args) {

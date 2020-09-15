@@ -164,8 +164,18 @@ class Ordering {
                 previousChild = subsequentChild;
             }
         }
-        if (logWarnings && /* #201893*/ !parent.getPath().matches("Projects/.+/Lookup") && !childrenByPosition.isEmpty() && childrenByPosition.size() < children.size() && 
-                ((ordered ^ unordered) > 0)) {
+        boolean shouldLog = logWarnings && !childrenByPosition.isEmpty() && childrenByPosition.size() < children.size();
+        if (shouldLog) {
+            // exceptions:  See Bugzilla#201893 
+            if (parent.getPath().matches("Projects/.+/Lookup")) {
+                // do not report any order issues for Projects/Lookup, even between files, or between folders.
+                shouldLog = false;
+            } else if (FileUtil.isParentOf(FileUtil.getConfigRoot(), parent) && ((ordered & unordered) == 0)) {
+                // do not report folder / file mismatch on configfs, but DO report mismatch inside folder/file category.
+                shouldLog = false;
+            }
+        }
+        if (shouldLog) {
             List<FileObject> missingPositions = new ArrayList<FileObject>(children);
             for (ChildAndPosition cap : childrenByPosition) {
                 missingPositions.remove(cap.child);

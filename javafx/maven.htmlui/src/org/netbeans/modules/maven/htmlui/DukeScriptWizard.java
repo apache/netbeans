@@ -88,7 +88,7 @@ public class DukeScriptWizard {
     static void init(WizardData data,
             Boolean android, Boolean ios, Boolean web, Boolean netbeans
     ) {
-        var nbHome = new File(System.getProperty("netbeans.home"));
+        File nbHome = new File(System.getProperty("netbeans.home"));
         data.setNbhome(nbHome.getParent());
 
         final ArchetypeData koArch = new ArchetypeData(
@@ -120,7 +120,7 @@ public class DukeScriptWizard {
         );
         data.getArchetypes().add(visArch);
         data.setIosMoe(true);
-        var srvPath = Boolean.getBoolean("staging.archetypes") ? "stage" : "archetypes";
+        String srvPath = Boolean.getBoolean("staging.archetypes") ? "stage" : "archetypes";
         data.loadArchetypes(srvPath);
         data.setAndroidSdkPath(MavenUtilities.getDefault().readAndroidSdkPath());
     }
@@ -142,7 +142,7 @@ public class DukeScriptWizard {
 
     @ComputedProperty
     static String archetypeOpen(ArchetypeData archetype) {
-        var sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         if (archetype != null) {
             for (String item : archetype.getOpen()) {
                 if (sb.length() > 0) {
@@ -229,26 +229,29 @@ public class DukeScriptWizard {
 
     @Function
     static void chooseAndroidSDK(final WizardData data) {
-        EventQueue.invokeLater(() -> {
-            var b = new FileChooserBuilder(WizardData.class).
-                    setSelectionApprover(new FileChooserBuilder.SelectionApprover() {
-                        @Override
-                        public boolean approve(File[] files) {
-                            if (files.length != 1) {
-                                return false;
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                FileChooserBuilder b = new FileChooserBuilder(WizardData.class).
+                        setSelectionApprover(new FileChooserBuilder.SelectionApprover() {
+                            @Override
+                            public boolean approve(File[] files) {
+                                if (files.length != 1) {
+                                    return false;
+                                }
+                                return isValidAndroidSdk(files[0]);
                             }
-                            return isValidAndroidSdk(files[0]);
-                        }
-                    }).
-                    setDirectoriesOnly(true);
-            if (data.getAndroidSdkPath() != null) {
-                b.setDefaultWorkingDirectory(new File(data.getAndroidSdkPath()));
-            }
-            var fc = b.createFileChooser();
-            int res = fc.showOpenDialog(null);
-            if (res == JFileChooser.APPROVE_OPTION) {
-                data.setAndroidSdkPath(fc.getSelectedFile().getPath());
-                MavenUtilities.getDefault().writeAndroidSdkPath(fc.getSelectedFile().getPath());
+                        }).
+                        setDirectoriesOnly(true);
+                if (data.getAndroidSdkPath() != null) {
+                    b.setDefaultWorkingDirectory(new File(data.getAndroidSdkPath()));
+                }
+                JFileChooser fc = b.createFileChooser();
+                int res = fc.showOpenDialog(null);
+                if (res == JFileChooser.APPROVE_OPTION) {
+                    data.setAndroidSdkPath(fc.getSelectedFile().getPath());
+                    MavenUtilities.getDefault().writeAndroidSdkPath(fc.getSelectedFile().getPath());
+                }
             }
         });
     }
@@ -260,7 +263,7 @@ public class DukeScriptWizard {
 
     @OnPropertyChange(value = "netbeans")
     static void verifyNbInstallationDefined(WizardData data) {
-        var ok = !data.isNetbeans() || MavenUtilities.getDefault().readNetBeansInstallation() != null;
+        boolean ok = !data.isNetbeans() || MavenUtilities.getDefault().readNetBeansInstallation() != null;
         data.setNbInstallationDefined(ok);
     }
 
@@ -276,7 +279,7 @@ public class DukeScriptWizard {
     private static final RequestProcessor DEVICES = new RequestProcessor("List iOS Devices");
     @OnPropertyChange(value = "ios")
     static void verifySimulator(WizardData data) {
-        var arr = data.getAvailableSimulators();
+        final List<Device> arr = data.getAvailableSimulators();
         DEVICES.post(() -> {
             DeviceType.listDevices(arr);
             String selectedDevice = MavenUtilities.getDefault().readMoeDevice();
@@ -299,29 +302,32 @@ public class DukeScriptWizard {
 
     @Function
     static void defineNbInstallation(final WizardData data) {
-        EventQueue.invokeLater(() -> {
-            var b = new FileChooserBuilder(WizardData.class).
-                    setSelectionApprover(new FileChooserBuilder.SelectionApprover() {
-                        @Override
-                        public boolean approve(File[] files) {
-                            if (files.length != 1) {
-                                return false;
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                FileChooserBuilder b = new FileChooserBuilder(WizardData.class).
+                        setSelectionApprover(new FileChooserBuilder.SelectionApprover() {
+                            @Override
+                            public boolean approve(File[] files) {
+                                if (files.length != 1) {
+                                    return false;
+                                }
+                                File platform = new File(files[0], "platform");
+                                File lib = new File(platform, "lib");
+                                File bootJar = new File(lib, "boot.jar");
+                                return bootJar.exists();
                             }
-                            File platform = new File(files[0], "platform");
-                            File lib = new File(platform, "lib");
-                            File bootJar = new File(lib, "boot.jar");
-                            return bootJar.exists();
-                        }
-                    }).
-                    setDirectoriesOnly(true);
-            var fc = b.createFileChooser();
-            var f = new File(System.getProperty("netbeans.home"));
-            fc.setCurrentDirectory(f);
-            int res = fc.showOpenDialog(null);
-            if (res == JFileChooser.APPROVE_OPTION) {
-                MavenUtilities.getDefault().writeNetBeansInstallation(f.getParent());
-                if (MavenUtilities.getDefault().readNetBeansInstallation() != null) {
-                    data.setNbInstallationDefined(true);
+                        }).
+                        setDirectoriesOnly(true);
+                JFileChooser fc = b.createFileChooser();
+                File f = new File(System.getProperty("netbeans.home"));
+                fc.setCurrentDirectory(f);
+                int res = fc.showOpenDialog(null);
+                if (res == JFileChooser.APPROVE_OPTION) {
+                    MavenUtilities.getDefault().writeNetBeansInstallation(f.getParent());
+                    if (MavenUtilities.getDefault().readNetBeansInstallation() != null) {
+                        data.setNbInstallationDefined(true);
+                    }
                 }
             }
         });

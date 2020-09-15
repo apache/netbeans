@@ -16,9 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.applemenu.jdk9;
+package org.netbeans.modules.applemenu;
 
-import org.netbeans.modules.applemenu.spi.NbApplicationAdapter;
 import java.awt.Desktop;
 import java.awt.desktop.AboutEvent;
 import java.awt.desktop.AboutHandler;
@@ -29,7 +28,7 @@ import java.awt.desktop.PreferencesHandler;
 import java.awt.desktop.QuitEvent;
 import java.awt.desktop.QuitHandler;
 import java.awt.desktop.QuitResponse;
-import org.openide.util.lookup.ServiceProvider;
+import org.openide.ErrorManager;
 
 /**
  *
@@ -38,22 +37,27 @@ import org.openide.util.lookup.ServiceProvider;
  * Uses new 'JEP 272: Platform-Specific Desktop Features' API.
  * This class can be merged with superclass, once NetBeans is built by JDK 9.
  */
-@ServiceProvider(position = 5000, service = NbApplicationAdapter.class)
-public final class NbApplicationAdapterJDK9 extends NbApplicationAdapter implements AboutHandler, OpenFilesHandler, PreferencesHandler, QuitHandler {
+public class NbApplicationAdapterJDK9 extends NbApplicationAdapter implements AboutHandler, OpenFilesHandler, PreferencesHandler, QuitHandler {
 
-    @Override
-    public void install() throws Throwable {
-        var app = Desktop.getDesktop();
-        app.setAboutHandler(this);
-        app.setOpenFileHandler(this);
-        app.setPreferencesHandler(this);
-        app.setQuitHandler(this);
-        handleInstall();
+    static void install() {
+        try {
+            Desktop app = Desktop.getDesktop();
+            NbApplicationAdapterJDK9 al = new NbApplicationAdapterJDK9();
+
+            app.setAboutHandler(al);
+            app.setOpenFileHandler(al);
+            app.setPreferencesHandler(al);
+            app.setQuitHandler(al);
+        } catch (Throwable ex) {
+            ErrorManager.getDefault().notify(ErrorManager.WARNING, ex);
+        } finally {
+        }
+        NbApplicationAdapter.install();
     }
 
-    @Override
-    public void uninstall() {
-        var app = Desktop.getDesktop();
+    static void uninstall() {
+        Desktop app = Desktop.getDesktop();
+
         app.setAboutHandler(null);
         app.setOpenFileHandler(null);
         app.setPreferencesHandler(null);

@@ -131,16 +131,16 @@ public final class HtmlComponent extends TopComponent  {
         ic.set(instances, null);
     }
 
-    @JavaScriptBody(args = {"onChange"}, javacall = true, body = """
-        if (typeof ko === 'undefined') return;
-        var data = ko.dataFor(window.document.body);
-        if (typeof data === 'undefined') return;
-        if (typeof data.context === 'undefined') return;
-        data.context.subscribe(function(value) {
-          onChange.@org.netbeans.modules.htmlui.HtmlComponent::onChange([Ljava/lang/Object;)(value);
-        });
-        onChange.@org.netbeans.modules.htmlui.HtmlComponent::onChange([Ljava/lang/Object;)(data.context());
-        """)
+    @JavaScriptBody(args = {"onChange"}, javacall = true, body = ""
+        + "if (typeof ko === 'undefined') return;\n"
+        + "var data = ko.dataFor(window.document.body);\n"
+        + "if (typeof data === 'undefined') return;\n"
+        + "if (typeof data.context === 'undefined') return;\n"
+        + "data.context.subscribe(function(value) {\n"
+        + "  onChange.@org.netbeans.modules.htmlui.HtmlComponent::onChange([Ljava/lang/Object;)(value);\n"
+        + "});\n"
+        + "onChange.@org.netbeans.modules.htmlui.HtmlComponent::onChange([Ljava/lang/Object;)(data.context());\n"
+    )
     private static native void listenOnContext(HtmlComponent onChange);
 
     static Class loadClass(String c) throws ClassNotFoundException {

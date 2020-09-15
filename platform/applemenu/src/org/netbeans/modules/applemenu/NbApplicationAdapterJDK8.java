@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.applemenu;
 
-import org.netbeans.modules.applemenu.spi.NbApplicationAdapter;
 import com.apple.eawt.AboutHandler;
 import com.apple.eawt.AppEvent;
 import com.apple.eawt.Application;
@@ -26,7 +25,7 @@ import com.apple.eawt.OpenFilesHandler;
 import com.apple.eawt.PreferencesHandler;
 import com.apple.eawt.QuitHandler;
 import com.apple.eawt.QuitResponse;
-import org.openide.util.lookup.ServiceProvider;
+import org.openide.ErrorManager;
 
 /**
  *
@@ -35,20 +34,25 @@ import org.openide.util.lookup.ServiceProvider;
  * Uses old com.apple.eawt.* API. 
  * This class can be deleted once NetBeans is built by JDK 9.
  */
-@ServiceProvider(position = 10000, service = NbApplicationAdapter.class)
-public final class NbApplicationAdapterJDK8 extends NbApplicationAdapter implements AboutHandler, OpenFilesHandler, PreferencesHandler, QuitHandler {
-    @Override
-    public void install() throws Throwable {
-        Application app = Application.getApplication();
-        app.setAboutHandler(this);
-        app.setOpenFileHandler(this);
-        app.setPreferencesHandler(this);
-        app.setQuitHandler(this);
-        handleInstall();
+public class NbApplicationAdapterJDK8 extends NbApplicationAdapter implements AboutHandler, OpenFilesHandler, PreferencesHandler, QuitHandler {
+
+    static void install() {
+        try {
+            Application app = Application.getApplication();
+            NbApplicationAdapterJDK8 al = new NbApplicationAdapterJDK8();
+
+            app.setAboutHandler(al);
+            app.setOpenFileHandler(al);
+            app.setPreferencesHandler(al);
+            app.setQuitHandler(al);
+        } catch (Throwable ex) {
+            ErrorManager.getDefault().notify(ErrorManager.WARNING, ex);
+        } finally {
+        }
+        NbApplicationAdapter.install();
     }
 
-    @Override
-    public void uninstall() {
+    static void uninstall() {
         Application app = Application.getApplication();
 
         app.setAboutHandler(null);

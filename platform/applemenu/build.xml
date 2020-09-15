@@ -22,4 +22,15 @@
 
 <project name="platform/applemenu" basedir="." default="build">
   <import file="../../nbbuild/templates/projectized.xml"/>
+
+  <available property="desktop.classes.available" classname="java.awt.desktop.AppEvent"/>
+  <target name="build-init" depends="projectized.build-init" unless="desktop.classes.available">
+        <mkdir dir="${build.dir}/desktop-classes-src" />
+        <unzip src="external/applemenu-external-desktop-classes-8.2.zip" dest="${build.dir}/desktop-classes-src"/>
+        <mkdir dir="${build.dir}/desktop-classes-classes" />
+        <javac srcdir="${build.dir}/desktop-classes-src" destdir="${build.dir}/desktop-classes-classes"
+            source="1.8" target="1.8">
+        </javac>
+  </target>
+
 </project>

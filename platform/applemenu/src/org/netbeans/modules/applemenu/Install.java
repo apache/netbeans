@@ -19,12 +19,10 @@
 
 package org.netbeans.modules.applemenu;
 
-import org.netbeans.modules.applemenu.spi.NbApplicationAdapter;
 import java.awt.AWTEvent;
 import java.awt.Toolkit;
-import org.openide.ErrorManager;
+import java.lang.reflect.*;
 import org.openide.modules.ModuleInstall;
-import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 
 /** Module installer that installs listeners, which will interpret
@@ -34,7 +32,7 @@ import org.openide.util.Utilities;
  */
 public class Install extends ModuleInstall {
     private CtrlClickHack listener;
-    private NbApplicationAdapter adapter;
+    private Class adapter;
 
     @Override
     public void restored () {
@@ -45,17 +43,26 @@ public class Install extends ModuleInstall {
             if (System.getProperty(pn) == null) {
                 System.setProperty(pn, "true"); // NOI18N
             }
-            for (NbApplicationAdapter a : Lookup.getDefault().lookupAll(NbApplicationAdapter.class)) {
-                try {
-                    a.install();
-                    this.adapter = a;
-                } catch (Throwable ex) {
-                    ErrorManager.getDefault().notify(ErrorManager.WARNING, ex);
-                }
+            if (!installAdapter("org.netbeans.modules.applemenu.NbApplicationAdapterJDK8")) {   // NOI18N
+                // JDK 8 failed, try JDK 9
+                installAdapter("org.netbeans.modules.applemenu.NbApplicationAdapterJDK9");      // NOI18N
             }
         }
     }
 
+    private boolean installAdapter(String className) {
+        try {
+            adapter = Class.forName(className);
+            Method m = adapter.getDeclaredMethod("install", new Class[0] ); // NOI18N
+            m.invoke(adapter, new Object[0]);
+            return true;
+        }catch (NoClassDefFoundError e) {
+        }catch (ClassNotFoundException e) {
+        }catch (Exception e) {
+        }
+        return false;
+    }
+    
     @Override
     public void uninstalled () {
          if (listener != null) {
@@ -63,8 +70,12 @@ public class Install extends ModuleInstall {
             listener = null;
          }
         if (Utilities.isMac() && adapter != null) {
-            adapter.uninstall();
-            adapter = null;
+            try {
+                Method m = adapter.getDeclaredMethod("uninstall", new Class[0] );   // NOI18N
+                m.invoke(adapter, new Object[0]);
+            } catch (NoClassDefFoundError e) {
+            } catch (Exception e) {
+            }
         }
     }
 }

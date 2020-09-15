@@ -104,10 +104,7 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <friend-packages>
-                <package>org.netbeans.modules.applemenu.spi</package>
-                <friend>org.netbeans.modules.applemenu.jdk9</friend>
-            </friend-packages>
+            <public-packages/>
         </data>
     </configuration>
 </project>

@@ -256,7 +256,7 @@ public class JavaScriptEnginesTest {
         // BEGIN: org.netbeans.api.scripting.JavaScriptEnginesTest#allowLoadAClassInJS
         Object fn = engine.eval("(function(obj) {\n"
                 + "  var Long = Java.type('java.lang.Long');\n"
-                + "  return new Long(33);\n"
+                + "  return new Long(\"33\");\n"
                 + "})\n");
         // END: org.netbeans.api.scripting.JavaScriptEnginesTest#allowLoadAClassInJS
         assertNotNull(fn);

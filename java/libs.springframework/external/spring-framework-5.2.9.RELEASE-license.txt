@@ -1,9 +1,9 @@
 Name: Spring Framework
 Description: Java/J2EE application framework
-Version: 5.2.2.RELEASE
+Version: 5.2.9.RELEASE
 Origin: Spring
-License: Apache-2.0-spring5.2.2
-Files: spring-instrument-5.2.2.RELEASE.jar spring-context-support-5.2.2.RELEASE.jar spring-context-indexer-5.2.2.RELEASE.jar spring-jms-5.2.2.RELEASE.jar spring-beans-5.2.2.RELEASE.jar spring-webmvc-5.2.2.RELEASE.jar spring-expression-5.2.2.RELEASE.jar spring-context-5.2.2.RELEASE.jar spring-orm-5.2.2.RELEASE.jar spring-core-5.2.2.RELEASE.jar spring-aspects-5.2.2.RELEASE.jar spring-websocket-5.2.2.RELEASE.jar spring-tx-5.2.2.RELEASE.jar spring-jdbc-5.2.2.RELEASE.jar spring-webflux-5.2.2.RELEASE.jar spring-jcl-5.2.2.RELEASE.jar spring-oxm-5.2.2.RELEASE.jar spring-messaging-5.2.2.RELEASE.jar spring-aop-5.2.2.RELEASE.jar spring-web-5.2.2.RELEASE.jar spring-test-5.2.2.RELEASE.jar
+License: Apache-2.0-spring5.2.9
+Files: spring-instrument-5.2.9.RELEASE.jar spring-context-support-5.2.9.RELEASE.jar spring-context-indexer-5.2.9.RELEASE.jar spring-jms-5.2.9.RELEASE.jar spring-beans-5.2.9.RELEASE.jar spring-webmvc-5.2.9.RELEASE.jar spring-expression-5.2.9.RELEASE.jar spring-context-5.2.9.RELEASE.jar spring-orm-5.2.9.RELEASE.jar spring-core-5.2.9.RELEASE.jar spring-aspects-5.2.9.RELEASE.jar spring-websocket-5.2.9.RELEASE.jar spring-tx-5.2.9.RELEASE.jar spring-jdbc-5.2.9.RELEASE.jar spring-webflux-5.2.9.RELEASE.jar spring-jcl-5.2.9.RELEASE.jar spring-oxm-5.2.9.RELEASE.jar spring-messaging-5.2.9.RELEASE.jar spring-aop-5.2.9.RELEASE.jar spring-web-5.2.9.RELEASE.jar spring-test-5.2.9.RELEASE.jar
 URL: https://spring.io/projects/spring-framework
 
                                  Apache License
@@ -210,9 +210,9 @@ URL: https://spring.io/projects/spring-framework
 
 =======================================================================
 
-SPRING FRAMEWORK 5.2.2.RELEASE SUBCOMPONENTS:
+SPRING FRAMEWORK 5.2.9.RELEASE SUBCOMPONENTS:
 
-Spring Framework 5.2.2.RELEASE includes a number of subcomponents
+Spring Framework 5.2.9.RELEASE includes a number of subcomponents
 with separate copyright notices and license terms. The product that
 includes this file does not necessarily use all the open source
 subcomponents referred to below. Your use of the source
@@ -220,7 +220,7 @@ code for these subcomponents is subject to the terms and
 conditions of the following licenses.
 
 
->>> ASM 4.0 (org.ow2.asm:asm:4.0, org.ow2.asm:asm-commons:4.0):
+>>> ASM 7.1 (org.ow2.asm:asm:7.1, org.ow2.asm:asm-commons:7.1):
 
 Copyright (c) 2000-2011 INRIA, France Telecom
 All rights reserved.
@@ -255,12 +255,26 @@ THE POSSIBILITY OF SUCH DAMAGE.
 Copyright (c) 1999-2009, OW2 Consortium <https://www.ow2.org/>
 
 
->>> CGLIB 3.0 (cglib:cglib:3.0):
+>>> CGLIB 3.3 (cglib:cglib:3.3):
 
 Per the LICENSE file in the CGLIB JAR distribution downloaded from
-https://sourceforge.net/projects/cglib/files/cglib3/3.0/cglib-3.0.jar/download,
-CGLIB 3.0 is licensed under the Apache License, version 2.0, the text of which
+https://github.com/cglib/cglib/releases/download/RELEASE_3_3_0/cglib-3.3.0.jar,
+CGLIB 3.3 is licensed under the Apache License, version 2.0, the text of which
 is included above.
+
+
+>>> Objenesis 3.1 (org.objenesis:objenesis:3.1):
+
+Per the LICENSE file in the Objenesis ZIP distribution downloaded from
+http://objenesis.org/download.html, Objenesis 3.1 is licensed under the
+Apache License, version 2.0, the text of which is included above.
+
+Per the NOTICE file in the Objenesis ZIP distribution downloaded from
+http://objenesis.org/download.html and corresponding to section 4d of the
+Apache License, Version 2.0, in this case for Objenesis:
+
+Objenesis
+Copyright 2006-2019 Joe Walnes, Henri Tremblay, Leonardo Mesquita
 
 
 ===============================================================================

@@ -117,6 +117,11 @@ public class WorkspaceServiceImpl implements WorkspaceService {
                                               for (Entry<ElementHandle<TypeElement>, List<String>> e : sources.get(cc.getFileObject()).entrySet()) {
                                                   TypeElement te = e.getKey().resolve(cc);
 
+                                                  if (te == null) {
+                                                      //cannot resolve
+                                                      continue;
+                                                  }
+
                                                   for (String ident : e.getValue()) {
                                                       if (ident.equals(getSimpleName(te, null, false))) {
                                                           TreePath path = cc.getTrees().getPath(te);

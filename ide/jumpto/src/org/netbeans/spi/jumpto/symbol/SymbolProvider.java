@@ -198,7 +198,6 @@ public interface SymbolProvider {
         private boolean dirty;
         private boolean highlightTextAlreadySet;
         private int retry;
-        private boolean requiresCustomFiltering;
 
         Result(
                 @NonNull final Collection<? super SymbolDescriptor> result,
@@ -290,10 +289,6 @@ public interface SymbolProvider {
          */
         public void pendingResult() {
             retry = 2000;
-        }
-
-        public void requiresCustomFiltering() {
-            requiresCustomFiltering = true;
         }
     }
 

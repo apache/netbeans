@@ -21,7 +21,6 @@ package org.netbeans.modules.java.lsp.server;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.Tree;
-import com.sun.source.util.TreePath;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

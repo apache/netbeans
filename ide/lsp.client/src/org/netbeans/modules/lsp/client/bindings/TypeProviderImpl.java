@@ -68,6 +68,7 @@ public class TypeProviderImpl extends BaseSymbolProvider implements TypeProvider
             this.simpleName = simpleName;
         }
 
+        @Override
         public SymbolInformation getInfo() {
             return info;
         }

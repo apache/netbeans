@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.lang.model.element.Element;
@@ -288,9 +287,8 @@ public class JavaSymbolProvider implements SymbolProvider {
             });
         } catch (IOException ioe) {
             Exceptions.printStackTrace(ioe);
-        }
-        catch (InterruptedException ie) {
-            return;
+        } catch (InterruptedException ie) {
+            //ignore
         }
     }
 

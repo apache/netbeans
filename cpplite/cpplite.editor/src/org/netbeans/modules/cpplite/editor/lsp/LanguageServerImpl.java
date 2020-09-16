@@ -67,7 +67,7 @@ public class LanguageServerImpl implements LanguageServerProvider {
     private static final boolean DEBUG = Boolean.getBoolean("cpplite.lsp.debug");
     private static final Logger LOG = Logger.getLogger(LanguageServerImpl.class.getName());
 
-    private static Map<Project, LanguageServerDescription> prj2Server = new HashMap<>();
+    private static final Map<Project, LanguageServerDescription> prj2Server = new HashMap<>();
 
     @Override
     public LanguageServerDescription startServer(Lookup lookup) {

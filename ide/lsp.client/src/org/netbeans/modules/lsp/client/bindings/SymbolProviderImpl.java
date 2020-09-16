@@ -54,6 +54,7 @@ public class SymbolProviderImpl extends BaseSymbolProvider implements SymbolProv
             this.simpleName = simpleName;
         }
 
+        @Override
         public SymbolInformation getInfo() {
             return info;
         }

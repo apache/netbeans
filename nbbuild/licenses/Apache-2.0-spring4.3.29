@@ -202,9 +202,9 @@
 
 =======================================================================
 
-SPRING FRAMEWORK 4.3.25.RELEASE SUBCOMPONENTS:
+SPRING FRAMEWORK 4.3.29.RELEASE SUBCOMPONENTS:
 
-Spring Framework 4.3.25.RELEASE includes a number of subcomponents
+Spring Framework 4.3.29.RELEASE includes a number of subcomponents
 with separate copyright notices and license terms. The product that
 includes this file does not necessarily use all the open source
 subcomponents referred to below. Your use of the source
@@ -212,7 +212,7 @@ code for these subcomponents is subject to the terms and
 conditions of the following licenses.
 
 
->>> ASM 4.0 (org.ow2.asm:asm:4.0, org.ow2.asm:asm-commons:4.0):
+>>> ASM 6.0 (org.ow2.asm:asm:6.0, org.ow2.asm:asm-commons:6.0):
 
 Copyright (c) 2000-2011 INRIA, France Telecom
 All rights reserved.
@@ -247,12 +247,26 @@ THE POSSIBILITY OF SUCH DAMAGE.
 Copyright (c) 1999-2009, OW2 Consortium <https://www.ow2.org/>
 
 
->>> CGLIB 3.0 (cglib:cglib:3.0):
+>>> CGLIB 3.2.6 (cglib:cglib:3.2.6):
 
 Per the LICENSE file in the CGLIB JAR distribution downloaded from
-https://sourceforge.net/projects/cglib/files/cglib3/3.0/cglib-3.0.jar/download,
-CGLIB 3.0 is licensed under the Apache License, version 2.0, the text of which
-is included above.
+https://github.com/cglib/cglib/releases/download/RELEASE_3_2_6/cglib-3.2.6.jar,
+CGLIB 3.2.6 is licensed under the Apache License, version 2.0, the text of
+which is included above.
+
+
+>>> Objenesis 2.6 (org.objenesis:objenesis:2.6):
+
+Per the LICENSE file in the Objenesis ZIP distribution downloaded from
+http://objenesis.org/download.html, Objenesis 2.6 is licensed under the
+Apache License, version 2.0, the text of which is included above.
+
+Per the NOTICE file in the Objenesis ZIP distribution downloaded from
+http://objenesis.org/download.html and corresponding to section 4d of the
+Apache License, Version 2.0, in this case for Objenesis:
+
+Objenesis
+Copyright 2006-2017 Joe Walnes, Henri Tremblay, Leonardo Mesquita
 
 
 ===============================================================================

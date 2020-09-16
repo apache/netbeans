@@ -72,7 +72,7 @@ public class ConfigBuilderProvider {
     /** Library builder configuration since GlassFish 5.1. */
     private static final Config.Next CONFIG_V5_1
             = new Config.Next(GlassFishVersion.GF_5_1_0,
-            ConfigBuilderProvider.class.getResource("GlassFishV5_1.xml"));
+            ConfigBuilderProvider.class.getResource("GlassFishV5_1_0.xml"));
 
     /** Library builder configuration for GlassFish cloud. */
     private static final Config config

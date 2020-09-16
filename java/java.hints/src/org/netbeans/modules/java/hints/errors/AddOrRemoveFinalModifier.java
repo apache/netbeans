@@ -23,7 +23,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -32,16 +31,13 @@ import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.modules.java.hints.spi.ErrorRule.Data;
-import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.java.hints.JavaFix;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
@@ -119,7 +115,7 @@ public class AddOrRemoveFinalModifier implements ErrorRule<Void> {
             
             // do not offer any modifications for members in other CUs
             if (declaration != null && declaration.getCompilationUnit() == compilationInfo.getCompilationUnit()) {
-                return Collections.singletonList((Fix) new FixImpl(compilationInfo.getFileObject(), el.getSimpleName().toString(), TreePathHandle.create(declaration, compilationInfo), fixDescription, type));
+                return Collections.singletonList(new FixImpl(compilationInfo.getFileObject(), el.getSimpleName().toString(), TreePathHandle.create(declaration, compilationInfo), fixDescription, type).toEditorFix());
             }
         }
         
@@ -142,7 +138,7 @@ public class AddOrRemoveFinalModifier implements ErrorRule<Void> {
         return description;
      }
 
-    private static final class FixImpl implements Fix {
+    private static final class FixImpl extends JavaFix {
         
         private String variableName;
         private TreePathHandle variable;
@@ -151,6 +147,7 @@ public class AddOrRemoveFinalModifier implements ErrorRule<Void> {
         private final Type type;
         
         public FixImpl(FileObject file, String variableName, TreePathHandle variable, String fixDescription, Type type) {
+            super(variable);
             this.file = file;
             this.variableName = variableName;
             this.variable = variable;
@@ -160,43 +157,36 @@ public class AddOrRemoveFinalModifier implements ErrorRule<Void> {
 
         public String getText() {
             return NbBundle.getMessage(AddOrRemoveFinalModifier.class, fixDescription, String.valueOf(variableName));
-         }
+        }
 
-        public ChangeInfo implement() throws IOException {
-            JavaSource js = JavaSource.forFileObject(file);
-            
-            js.runModificationTask(new Task<WorkingCopy>() {
-                public void run(WorkingCopy wc) throws IOException {
-                    wc.toPhase(Phase.RESOLVED);
-                    TreePath tp = variable.resolve(wc);
+        @Override
+        protected void performRewrite(TransformationContext ctx) throws Exception {
+            WorkingCopy wc = ctx.getWorkingCopy();
+            TreePath tp = ctx.getPath();
 
-                    if (tp == null) {
-                        return;
-                    }
+            if (tp == null) {
+                return;
+            }
 
-                    VariableTree vt = (VariableTree) tp.getLeaf();
-                    ModifiersTree mt = vt.getModifiers();
-                    Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
+            VariableTree vt = (VariableTree) tp.getLeaf();
+            ModifiersTree mt = vt.getModifiers();
+            Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
 
-                    modifiers.addAll(mt.getFlags());
-                    switch (type) {
-                        case ADD:
-			    modifiers.add(Modifier.FINAL);
-                            break;
-                        case REMOVE:
-                            modifiers.remove(Modifier.FINAL);
-                            break;
-                        default:
-                            throw new IllegalArgumentException("Type " + type + " not supported");
-                    }
- 
-                    ModifiersTree newMod = wc.getTreeMaker().Modifiers(modifiers, mt.getAnnotations());
+            modifiers.addAll(mt.getFlags());
+            switch (type) {
+                case ADD:
+                    modifiers.add(Modifier.FINAL);
+                    break;
+                case REMOVE:
+                    modifiers.remove(Modifier.FINAL);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Type " + type + " not supported");
+            }
 
-                    wc.rewrite(mt, newMod);
-                }
-            }).commit();
-            
-            return null;
+            ModifiersTree newMod = wc.getTreeMaker().Modifiers(modifiers, mt.getAnnotations());
+
+            wc.rewrite(mt, newMod);
         }
 
         @Override

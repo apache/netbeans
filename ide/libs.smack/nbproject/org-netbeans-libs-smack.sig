@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.34
+#Version 3.35
 
 CLSS public final com.jcraft.jzlib.Deflate
 supr java.lang.Object

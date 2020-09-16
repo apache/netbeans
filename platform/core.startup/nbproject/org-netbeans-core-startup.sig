@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.70.0
+#Version 1.71.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -738,6 +738,8 @@ meth public abstract void resultChanged(org.openide.util.LookupEvent)
 CLSS public org.openide.util.lookup.ProxyLookup
 cons protected init()
 cons public !varargs init(org.openide.util.Lookup[])
+cons public init(org.openide.util.lookup.ProxyLookup$Controller)
+innr public final static Controller
 meth protected !varargs final void setLookups(java.util.concurrent.Executor,org.openide.util.Lookup[])
 meth protected !varargs final void setLookups(org.openide.util.Lookup[])
 meth protected final org.openide.util.Lookup[] getLookups()

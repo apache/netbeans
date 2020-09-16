@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.lang.model.type.TypeMirror;
@@ -40,6 +41,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.GeneratorUtilities;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.queries.FileEncodingQuery;
@@ -67,6 +69,7 @@ public abstract class JavaFix {
     private final TreePathHandle handle;
     private final Map<String, String> options;
     private final String sortText;
+    private volatile Function<ModificationResult, ChangeInfo> modResult2ChangeInfo;
 
     /**Create JavaFix with the given base {@link TreePath}. The base {@link TreePath}
      * will be passed back to the real implementation of the fix.
@@ -205,6 +208,17 @@ public abstract class JavaFix {
             public String getSortText(JavaFix jf) {
                 return jf.sortText;
             }
+
+            @Override
+            public void setChangeInfoConvertor(JavaFix jf, Function<ModificationResult, ChangeInfo> modResult2ChangeInfo) {
+                jf.modResult2ChangeInfo = modResult2ChangeInfo;
+            }
+
+            @Override
+            public Function<ModificationResult, ChangeInfo> getChangeInfoConvertor(JavaFix jf) {
+                return jf.modResult2ChangeInfo;
+            }
+
         };
     }
 

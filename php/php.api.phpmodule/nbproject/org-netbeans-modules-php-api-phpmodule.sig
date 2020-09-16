@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.70
+#Version 2.72
 
 CLSS public abstract interface java.io.Serializable
 
@@ -122,6 +122,7 @@ meth public boolean hasNullableTypes()
 meth public boolean hasPropertyTypes()
 meth public boolean hasScalarAndReturnTypes()
 meth public boolean hasVoidReturnType()
+meth public boolean isSupportedVersion()
 meth public java.lang.String getDisplayName()
 meth public java.lang.String toString()
 meth public static org.netbeans.modules.php.api.PhpVersion getDefault()
@@ -130,6 +131,7 @@ meth public static org.netbeans.modules.php.api.PhpVersion valueOf(java.lang.Str
 meth public static org.netbeans.modules.php.api.PhpVersion[] values()
 supr java.lang.Enum<org.netbeans.modules.php.api.PhpVersion>
 hfds displayName,namespaces
+hcls Period
 
 CLSS public abstract interface org.netbeans.modules.php.api.phpmodule.PhpModule
 fld public final static java.lang.String PROPERTY_FRAMEWORKS = "PROPERTY_FRAMEWORKS"
@@ -379,6 +381,10 @@ meth public boolean hasWarnings()
 meth public boolean isFaultless()
 meth public java.util.List<org.netbeans.modules.php.api.validation.ValidationResult$Message> getErrors()
 meth public java.util.List<org.netbeans.modules.php.api.validation.ValidationResult$Message> getWarnings()
+meth public org.netbeans.modules.php.api.validation.ValidationResult$Message getFirstError()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public org.netbeans.modules.php.api.validation.ValidationResult$Message getFirstWarning()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public void addError(org.netbeans.modules.php.api.validation.ValidationResult$Message)
 meth public void addWarning(org.netbeans.modules.php.api.validation.ValidationResult$Message)
 meth public void merge(org.netbeans.modules.php.api.validation.ValidationResult)

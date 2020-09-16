@@ -449,10 +449,13 @@ public class Utilities {
             return null;
         }
         
+        diff.commit();
+        return computeChangeInfo(target, diff, tag);
+    }
+        
+    public static ChangeInfo computeChangeInfo(FileObject target, final ModificationResult diff, final Object tag) {
         List<? extends Difference> differences = diff.getDifferences(target);
         ChangeInfo result = null;
-        
-        diff.commit();
         
         try {
             if (differences != null) {

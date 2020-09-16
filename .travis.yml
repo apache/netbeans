@@ -264,6 +264,7 @@ matrix:
             #- ant $OPTS -f ide/libs.git test
             - ant $OPTS -f ide/libs.graalsdk test
             #- ant $OPTS -f ide/localhistory test
+            - ant $OPTS -f ide/libs.truffleapi test
             - ant $OPTS -f ide/lsp.client test
             - ant $OPTS -f ide/notifications test
             - ant $OPTS -f ide/o.openidex.util test
@@ -599,7 +600,6 @@ matrix:
             #- hide-logs.sh ant $OPTS -f webcommon/cordova test
             #- hide-logs.sh ant $OPTS -f webcommon/html.angular test
             - hide-logs.sh ant $OPTS -f webcommon/html.knockout test-unit
-            - hide-logs.sh ant $OPTS -f webcommon/html.ojet test
             - hide-logs.sh ant $OPTS -f webcommon/javascript.bower test
             - hide-logs.sh ant $OPTS -f webcommon/javascript.cdnjs test
             - hide-logs.sh ant $OPTS -f webcommon/javascript.grunt test
@@ -625,7 +625,6 @@ matrix:
             - hide-logs.sh ant $OPTS -f webcommon/languages.ini test
             #- hide-logs.sh ant $OPTS -f webcommon/lib.v8debug test
             - hide-logs.sh ant $OPTS -f webcommon/libs.graaljs test
-            - hide-logs.sh ant $OPTS -f webcommon/libs.truffleapi test
             - hide-logs.sh ant $OPTS -f webcommon/selenium2.webclient test
             - hide-logs.sh ant $OPTS -f webcommon/web.clientproject test-unit
             - hide-logs.sh ant $OPTS -f webcommon/web.clientproject.api test

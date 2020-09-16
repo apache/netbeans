@@ -98,9 +98,16 @@ public class GrammarResolver {
     private final GroupGrammarElement grammar;
     
     private final Map<Feature, Object> FEATURES = new EnumMap<>(Feature.class);
-    
+
+    private ValueGrammarElement[] globalValues;
+
     public GrammarResolver(GroupGrammarElement grammar) {
         this.grammar = grammar;
+        this.globalValues = new ValueGrammarElement[]{
+            new FixedTextGrammarElement(this.grammar, "inherit", "inherit"),
+            new FixedTextGrammarElement(this.grammar, "initial", "initial"),
+            new FixedTextGrammarElement(this.grammar, "unset", "unset")
+        };
     }
     
     //the grammar resolve has its internal state so this method needs to be synchronized
@@ -276,6 +283,23 @@ public class GrammarResolver {
                 GroupGrammarElement group = (GroupGrammarElement) e;
                 fireEntering(group);
                 resolves = processGroup(group);
+                if (!resolves && (group == this.grammar && tokenizer.tokenIndex() == -1)) {
+                    InputState beforeState = createInputState();
+                    List<ValueGrammarElement> matching = new ArrayList<>(globalValues.length);
+                    for(ValueGrammarElement vge: globalValues) {
+                        backupInputState(beforeState);
+                        if(processValue(vge)) {
+                            matching.add(vge);
+                        } else {
+                            valueNotAccepted(vge);
+                        }
+                    }
+                    if(! matching.isEmpty()) {
+                        boolean matched = processValue(matching.get(0));
+                        assert matched;
+                        resolves = true;
+                    }
+                }
                 fireExited(group, resolves);
         } else if(e instanceof ValueGrammarElement) {
                 ValueGrammarElement value = (ValueGrammarElement) e;

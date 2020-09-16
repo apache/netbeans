@@ -57,8 +57,8 @@
         </p>
         <p>Several several services means that Autoupdate feature contain several <b>parts of functionality</b>.
             These part of AutoUpdate should communicate each other. Moreover, some interface <b>should be public</b>.
-            One of them is <b>SPI</b> for Update Center backend - allows to create and subscribe the Update Center in IDE.
-            Next there should be a <b>API</b> which communicate to rest of IDE and provide some services what is useful for
+            One of them is <b>SPI</b> (<code><api type="export" category="official" group="java" name="org.netbeans.spi.autoupdate" url="@TOP@/overview-summary.html"/></code>) for Update Center backend - allows to create and subscribe the Update Center in IDE.
+            Next there should be a <b>API</b> (<code><api type="export" category="official" group="java" name="org.netbeans.api.autoupdate" url="@TOP@/overview-summary.html"/></code>) which communicate to rest of IDE and provide some services what is useful for
             NB installers, a non-visual client of Auto Update which make possible to use Auto Update from command line
             as standalone application in "admin" mode. All of them needs a APIs. This document describes proposed APIs,
             supposed use-cases and design of interaction Auto Update parts each other.
@@ -299,8 +299,7 @@
     </question>
     -->
     <answer id="arch-what">
-        <code><api type="export" category="official" group="java" name="org.netbeans.api.autoupdate" url="@TOP@/overview-summary.html"/></code>
-        <code><api type="export" category="official" group="java" name="org.netbeans.spi.autoupdate" url="@TOP@/overview-summary.html"/></code>
+        Provides the APIs and SPIs to support the AutoUpdate feature.
     </answer>
 
 

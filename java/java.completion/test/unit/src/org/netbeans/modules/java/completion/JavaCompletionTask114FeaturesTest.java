@@ -78,6 +78,10 @@ public class JavaCompletionTask114FeaturesTest extends CompletionTestBase {
         performTest("Records", 1014, "rec", "record.pass", SOURCE_LEVEL);
     } 
     
+    public void testVariableNameSuggestion() throws Exception {
+        performTest("Records", 1071, null, "recordVariableSuggestion.pass", SOURCE_LEVEL);
+    } 
+    
     public void noop() {
     }
 

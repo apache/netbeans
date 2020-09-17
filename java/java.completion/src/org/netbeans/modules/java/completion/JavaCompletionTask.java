@@ -6266,6 +6266,8 @@ public final class JavaCompletionTask<T> extends BaseTask {
     private static ElementKind simplifyElementKind(ElementKind kind) {
         if (TreeShims.BINDING_VARIABLE.equals(kind.name())) {
             return ElementKind.LOCAL_VARIABLE;
+        } else if (TreeShims.RECORD.equals(kind.name())) {
+            return ElementKind.CLASS;
         }
         return kind;
     }

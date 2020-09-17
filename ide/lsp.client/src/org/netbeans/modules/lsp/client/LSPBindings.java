@@ -113,49 +113,48 @@ public class LSPBindings {
                 break;
             }
         }
-        Project prj = FileOwnerQuery.getOwner(file);
-        FileObject dir;
-        if (prj == null) {
-            dir = file.getParent();
-        } else {
-            dir = prj.getProjectDirectory();
-        }
-        URI uri = dir.toURI();
 
         String mimeType = FileUtil.getMIMEType(file);
+        Project prj = FileOwnerQuery.getOwner(file);
 
         if (mimeType == null) {
             return null;
         }
 
-        return getBindingsImpl(prj, mimeType, true);
+        return getBindingsImpl(prj, file, mimeType, true);
     }
 
     public static void ensureServerRunning(Project prj, String mimeType) {
-        getBindingsImpl(prj, mimeType, false);
+        getBindingsImpl(prj, prj.getProjectDirectory(), mimeType, false);
     }
 
-    public static synchronized LSPBindings getBindingsImpl(Project prj, String mimeType, boolean forceBindings) {
+    public static synchronized LSPBindings getBindingsImpl(Project prj, FileObject file, String mimeType, boolean forceBindings) {
+        FileObject dir;
+
+        if (prj == null) {
+            dir = file.getParent();
+        } else {
+            dir = prj.getProjectDirectory();
+        }
+
+        URI uri = dir.toURI();
+
         LSPBindings bindings =
                 project2MimeType2Server.computeIfAbsent(uri, p -> new HashMap<>())
                                        .computeIfAbsent(mimeType, mt -> {
                                            MimeTypeInfo mimeTypeInfo = new MimeTypeInfo(mt);
-                                           Reference<Project> prjRef = new WeakReference<>(prj);
                                            ServerRestarter restarter = () -> {
                                                synchronized (LSPBindings.class) {
-                                                   Project p = prjRef.get();
-                                                   if (p != null) {
-                                                       LSPBindings b = project2MimeType2Server.getOrDefault(uri, Collections.emptyMap()).remove(mimeType);
+                                                   LSPBindings b = project2MimeType2Server.getOrDefault(uri, Collections.emptyMap()).remove(mimeType);
 
-                                                       if (b != null) {
-                                                           try {
-                                                               b.server.shutdown().get();
-                                                           } catch (InterruptedException | ExecutionException ex) {
-                                                               LOG.log(Level.FINE, null, ex);
-                                                           }
-                                                           if (b.process != null) {
-                                                               b.process.destroy();
-                                                           }
+                                                   if (b != null) {
+                                                       try {
+                                                           b.server.shutdown().get();
+                                                       } catch (InterruptedException | ExecutionException ex) {
+                                                           LOG.log(Level.FINE, null, ex);
+                                                       }
+                                                       if (b.process != null) {
+                                                           b.process.destroy();
                                                        }
                                                    }
                                                }

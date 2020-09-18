@@ -84,14 +84,6 @@ public class CustomJavac extends Javac {
     }
 
     @Override
-    public Path getBootclasspath() {
-        if (intVersion(getTarget()) >= 9) {
-            return null;
-        }
-        return super.getBootclasspath();
-    }
-
-    @Override
     protected void compile() {
         if (processorPath != null && processorPath.size() > 0) {
             createCompilerArg().setValue("-processorpath");

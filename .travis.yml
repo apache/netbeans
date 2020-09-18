@@ -57,7 +57,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - ant $OPTS check-sigtests -Dfail.on.error=true
+            - ant $OPTS check-sigtests-release -Dfail.on.error=true
             - ant $OPTS gen-sigtests-release
 
         - name: Run gen-sigtests-release for platform cluster

@@ -57,7 +57,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - ant $OPTS check-sigtests -Dfail.on.error=true
+            - ant $OPTS check-sigtests-release -Dfail.on.error=true
             - ant $OPTS gen-sigtests-release
 
         - name: Run gen-sigtests-release for platform cluster
@@ -752,9 +752,21 @@ matrix:
           script:
             - (cd java/java.lsp.server; ant build-vscode-ext)
 
-        - name: GRAALVM Tests
+        - name: "GraalVM Tests (latest)"
           jdk: openjdk8
           env: 
+            - GRAAL_VERSION="20.2.0"
+            - OPTS="-quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+          before_script:
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - nbbuild/travis/scripting.sh
+
+        - name: "GraalVM Tests (LTS)"
+          jdk: openjdk8
+          env: 
+            - GRAAL_VERSION="19.3.3"
             - OPTS="-quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           before_script:
             - ant $OPTS clean

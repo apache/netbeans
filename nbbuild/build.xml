@@ -409,7 +409,7 @@ metabuild.hash=${metabuild.hash}</echo>
       <taskdef name="checkhelpsetsbin" classname="org.netbeans.nbbuild.CheckHelpSetsBin">
         <classpath>
           <pathelement location="${nbantext.jar}"/>
-            <fileset dir="${nb_all}/javahelp/external">
+            <fileset dir="${nb_all}/platform/javahelp/external">
               <include name="jh*.jar"/>
             </fileset>
         </classpath>
@@ -1275,9 +1275,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
   <target name="hg-l10n-kit">
     <property name="l10n.kit" location="${nb.build.dir}/l10n.zip"/>
     <zip destfile="${l10n.kit}">
-        <fileset dir="${nb_all}" includesfile="${nb_all}/installer/l10n.list"/>
+        <fileset dir="${nb_all}" includesfile="${nb_all}/nbbuild/installer/l10n.list"/>
         <fileset dir="${nb_all}" includesfile="${nb_all}/nbi/l10n.list"/>
-        <fileset dir="${nb_all}" includesfile="${nb_all}/ide.branding/l10n.list"/>
+        <fileset dir="${nb_all}" includesfile="${nb_all}/nb/ide.branding/l10n.list"/>
     </zip>
   </target>
 

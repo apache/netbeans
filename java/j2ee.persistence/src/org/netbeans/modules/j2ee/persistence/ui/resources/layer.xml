@@ -103,13 +103,6 @@
                     </file>
                 </folder>                
             </folder>
-            <folder name="x-jpql">
-                <folder name="CompletionProviders">
-                    <file name="org-netbeans-modules-j2ee-persistence-jpqleditor-completion-JPQLEditorCodeCompletionProvider.instance">
-                        <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.completion.CompletionProvider"/>
-                    </file>
-                </folder>
-            </folder>
         </folder>
     </folder>
 

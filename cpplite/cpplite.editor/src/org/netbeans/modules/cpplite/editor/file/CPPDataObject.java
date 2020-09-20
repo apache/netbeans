@@ -38,7 +38,7 @@ import org.openide.util.NbBundle.Messages;
         displayName = "#LBL_CPP_LOADER",
         mimeType = MIMETypes.CPP,
         extension = {"cpp", "cc", "c++", "cxx"},
-        position = 1000000
+        position = 1000100
 )
 @DataObject.Registration(
         mimeType = MIMETypes.CPP,

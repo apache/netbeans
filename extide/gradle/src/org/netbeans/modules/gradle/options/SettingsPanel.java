@@ -744,7 +744,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     GradleDistribution[] items = get().toArray(new GradleDistribution[0]);
                     ComboBoxModel<GradleDistribution> model = new DefaultComboBoxModel<>(items);
                     cbGradleVersion.setModel(model);
-                    model.setSelectedItem(settings.getGradleVersion());
+                    model.setSelectedItem(gdm.distributionFromVersion(settings.getGradleVersion()));
                 } catch (InterruptedException | ExecutionException ex) {
                     Exceptions.printStackTrace(ex);
                 }

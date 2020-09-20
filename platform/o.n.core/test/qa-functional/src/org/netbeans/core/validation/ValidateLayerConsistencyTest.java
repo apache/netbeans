@@ -77,7 +77,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
 
     static {
         System.setProperty("java.awt.headless", "true");
-        System.setProperty("org.openide.util.lookup.level", "FINE");
+//        System.setProperty("org.openide.util.lookup.level", "FINE");
     }
 
     private static final String SFS_LB = "SystemFileSystem.localizingBundle";

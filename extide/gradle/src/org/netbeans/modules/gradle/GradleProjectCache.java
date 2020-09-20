@@ -96,7 +96,7 @@ public final class GradleProjectCache {
     private static final Map<File, Set<File>> SUB_PROJECT_DIR_CACHE = new ConcurrentHashMap<>();
 
     // Increase this number if new info is gathered from the projects.
-    private static final int COMPATIBLE_CACHE_VERSION = 13;
+    private static final int COMPATIBLE_CACHE_VERSION = 14;
 
     private GradleProjectCache() {
     }
@@ -446,8 +446,9 @@ public final class GradleProjectCache {
         assert gp.getQuality().betterThan(FALLBACK) : "Never attempt to cache FALLBACK projects."; //NOi18N
         //TODO: Make it possible to handle external file set as cache.
         GradleFiles gf = new GradleFiles(gp.getBaseProject().getProjectDir(), true);
-
-        ProjectCacheEntry entry = new ProjectCacheEntry(new StoredProjectInfo(data), gp, gf.getProjectFiles());
+        Set<File> cacheInvalidators = new HashSet<>(gf.getProjectFiles());
+        if (gf.hasWrapper()) cacheInvalidators.add(gf.getWrapperProperties());
+        ProjectCacheEntry entry = new ProjectCacheEntry(new StoredProjectInfo(data), gp, cacheInvalidators);
         File cacheFile = new File(getCacheDir(gp), INFO_CACHE_FILE_NAME);
         if (!cacheFile.exists()) {
             cacheFile.getParentFile().mkdirs();

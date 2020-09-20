@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -440,9 +441,41 @@ public final class GradleDistributionManager {
             return isAvailable() ? null : RP.schedule(new DownloadTask(this), 500, TimeUnit.MILLISECONDS);
         }
 
+        /**
+         * This method only compare the version attribute. It could happen that
+         * two distribution are equal using this method when their versions are
+         * equal, though the {@link #equals(java.lang.Object)} return false as
+         * that is based on comparing the distribution directory.
+         * @param o the GradleDistribution to compare with.
+         * @return a signed value comparing the version attribute of this and
+         *         the specified distribution.
+         */
         @Override
         public int compareTo(GradleDistribution o) {
             return version.compareTo(o.version);
+        }
+
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 97 * hash + Objects.hashCode(this.distributionDir);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final GradleDistribution other = (GradleDistribution) obj;
+            return Objects.equals(this.distributionDir, other.distributionDir);
         }
 
         @Override

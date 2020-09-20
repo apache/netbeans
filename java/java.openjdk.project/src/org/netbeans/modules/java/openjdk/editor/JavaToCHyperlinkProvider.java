@@ -60,6 +60,8 @@ import org.openide.util.Exceptions;
 @MimeRegistration(mimeType="text/x-java", position=0, service=HyperlinkProviderExt.class)
 public class JavaToCHyperlinkProvider implements HyperlinkProviderExt {
 
+    private static final SourceGroup[] NO_GROUPS = new SourceGroup[0];
+
     @Override
     public Set<HyperlinkType> getSupportedHyperlinkTypes() {
         return EnumSet.of(HyperlinkType.GO_TO_DECLARATION);
@@ -79,8 +81,8 @@ public class JavaToCHyperlinkProvider implements HyperlinkProviderExt {
     public void performClickAction(Document doc, final int offset, HyperlinkType type) {
         FileObject file = NbEditorUtilities.getFileObject(doc);
         Project prj = file != null ? FileOwnerQuery.getOwner(file) : null;
-        SourceGroup[] nativeGroups = ProjectUtils.getSources(prj).getSourceGroups(SourcesImpl.SOURCES_TYPE_JDK_PROJECT_NATIVE);
-
+        SourceGroup[] nativeGroups = prj != null ? ProjectUtils.getSources(prj).getSourceGroups(SourcesImpl.SOURCES_TYPE_JDK_PROJECT_NATIVE)
+                                                 : NO_GROUPS;
         if (nativeGroups.length == 0) {
             findNext().performClickAction(doc, offset, type);
             return ;

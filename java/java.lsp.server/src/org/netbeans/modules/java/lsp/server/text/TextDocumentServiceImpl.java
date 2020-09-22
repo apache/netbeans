@@ -19,17 +19,11 @@
 package org.netbeans.modules.java.lsp.server.text;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.util.TreePath;
-import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
-import com.vladsch.flexmark.parser.Parser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -57,12 +51,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.prefs.Preferences;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -88,6 +77,7 @@ import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
@@ -96,13 +86,16 @@ import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.DidSaveTextDocumentParams;
 import org.eclipse.lsp4j.DocumentFormattingParams;
 import org.eclipse.lsp4j.DocumentHighlight;
+import org.eclipse.lsp4j.DocumentHighlightParams;
 import org.eclipse.lsp4j.DocumentOnTypeFormattingParams;
 import org.eclipse.lsp4j.DocumentRangeFormattingParams;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.Hover;
+import org.eclipse.lsp4j.HoverParams;
 import org.eclipse.lsp4j.InsertTextFormat;
 import org.eclipse.lsp4j.Location;
+import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.MarkupContent;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
@@ -112,6 +105,7 @@ import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ReferenceParams;
 import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.SignatureHelp;
+import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
@@ -139,9 +133,6 @@ import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.java.source.ui.ElementJavadoc;
-import org.netbeans.api.java.source.ui.ElementOpen;
-import org.netbeans.api.lexer.TokenHierarchy;
-import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.editor.java.GoToSupport.Context;
 import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
@@ -165,6 +156,9 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
+import org.netbeans.modules.refactoring.api.RefactoringElement;
+import org.netbeans.modules.refactoring.api.RefactoringSession;
+import org.netbeans.modules.refactoring.api.WhereUsedQuery;
 import org.netbeans.spi.editor.hints.EnhancedFix;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
@@ -176,8 +170,10 @@ import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.modules.Places;
 import org.openide.text.NbDocument;
+import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -186,6 +182,7 @@ import org.openide.util.RequestProcessor;
 public class TextDocumentServiceImpl implements TextDocumentService, LanguageClientAware {
 
     private static final RequestProcessor BACKGROUND_TASKS = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
+    private static final RequestProcessor WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
 
     private final Map<String, Document> openedDocuments = new HashMap<>();
     private final Map<String, RequestProcessor.Task> diagnosticTasks = new HashMap<>();
@@ -538,17 +535,17 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public CompletableFuture<Hover> hover(TextDocumentPositionParams arg0) {
+    public CompletableFuture<Hover> hover(HoverParams arg0) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public CompletableFuture<SignatureHelp> signatureHelp(TextDocumentPositionParams arg0) {
+    public CompletableFuture<SignatureHelp> signatureHelp(SignatureHelpParams arg0) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public CompletableFuture<List<? extends Location>> definition(TextDocumentPositionParams params) {
+    public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(DefinitionParams params) {
         JavaSource js = getSource(params.getTextDocument().getUri());
         GoToTarget[] target = new GoToTarget[1];
         LineMap[] thisFileLineMap = new LineMap[1];
@@ -591,16 +588,69 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                                   createPosition(thisFileLineMap[0], end))));
             }
         }
-        return CompletableFuture.completedFuture(result);
+        return CompletableFuture.completedFuture(Either.forLeft(result));
     }
 
     @Override
-    public CompletableFuture<List<? extends Location>> references(ReferenceParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public CompletableFuture<List<? extends Location>> references(ReferenceParams params) {
+        AtomicBoolean cancel = new AtomicBoolean();
+        Runnable[] cancelCallback = new Runnable[1];
+        CompletableFuture<List<? extends Location>> result = new CompletableFuture<List<? extends Location>>() {
+            @Override
+            public boolean cancel(boolean mayInterruptIfRunning) {
+                cancel.set(mayInterruptIfRunning);
+                if (cancelCallback[0] != null) {
+                    cancelCallback[0].run();
+                }
+                return super.cancel(mayInterruptIfRunning);
+            }
+        };
+        WORKER.post(() -> {
+            JavaSource js = getSource(params.getTextDocument().getUri());
+            try {
+                WhereUsedQuery[] query = new WhereUsedQuery[1];
+                js.runUserActionTask(cc -> {
+                    cc.toPhase(JavaSource.Phase.RESOLVED);
+                    if (cancel.get()) return ;
+                    Document doc = cc.getSnapshot().getSource().getDocument(true);
+                    TreePath path = cc.getTreeUtilities().pathFor(getOffset(doc, params.getPosition()));
+                    query[0] = new WhereUsedQuery(Lookups.singleton(TreePathHandle.create(path, cc)));
+                }, true);
+                if (cancel.get()) return ;
+                cancelCallback[0] = () -> query[0].cancelRequest();
+                RefactoringSession refactoring = RefactoringSession.create("FindUsages");
+                query[0].fastCheckParameters();
+                if (cancel.get()) return ;
+                query[0].checkParameters();
+                if (cancel.get()) return ;
+                query[0].preCheck();
+                if (cancel.get()) return ;
+                query[0].prepare(refactoring);
+                List<Location> locations = new ArrayList<>();
+                for (RefactoringElement re : refactoring.getRefactoringElements()) {
+                    if (cancel.get()) return ;
+                    locations.add(new Location(toUri(re.getParentFile()), toRange(re.getPosition())));
+                }
+
+                refactoring.finished();
+
+                result.complete(locations);
+            } catch (Throwable ex) {
+                result.completeExceptionally(ex);
+            }
+        });
+        return result;
+    }
+
+    private static Range toRange(PositionBounds bounds) throws IOException {
+        return new Range(new Position(bounds.getBegin().getLine(),
+                                      bounds.getBegin().getColumn()),
+                         new Position(bounds.getEnd().getLine(),
+                                      bounds.getEnd().getColumn()));
     }
 
     @Override
-    public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(TextDocumentPositionParams params) {
+    public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(DocumentHighlightParams params) {
         class MOHighligther extends MarkOccurrencesHighlighterBase {
             @Override
             protected void process(CompilationInfo arg0, Document arg1, SchedulerEvent arg2) {
@@ -730,7 +780,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         JavaSource js = JavaSource.forDocument(doc);
         List<Either<Command, CodeAction>> result = new ArrayList<>();
         for (Diagnostic diag : params.getContext().getDiagnostics()) {
-            ErrorDescription err = id2Errors.get(diag.getCode());
+            ErrorDescription err = id2Errors.get(diag.getCode().getLeft());
 
             if (err == null) {
                 client.logMessage(new MessageParams(MessageType.Log, "Cannot resolve error, code: " + diag.getCode()));
@@ -796,7 +846,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         CodeAction action = new CodeAction(f.getText());
                         action.setDiagnostics(Collections.singletonList(diag));
                         action.setKind(CodeActionKind.QuickFix);
-                        action.setEdit(new WorkspaceEdit(Collections.singletonList(te)));
+                        action.setEdit(new WorkspaceEdit(Collections.singletonList(Either.forLeft(te))));
                         result.add(Either.forRight(action));
                     } catch (IOException ex) {
                         //TODO: include stack trace:

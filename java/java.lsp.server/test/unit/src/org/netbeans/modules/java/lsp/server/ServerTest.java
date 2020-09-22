@@ -46,11 +46,13 @@ import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.DocumentHighlight;
 import org.eclipse.lsp4j.DocumentHighlightKind;
+import org.eclipse.lsp4j.DocumentHighlightParams;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.InitializeParams;
@@ -62,6 +64,8 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.Range;
+import org.eclipse.lsp4j.ReferenceContext;
+import org.eclipse.lsp4j.ReferenceParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
@@ -239,8 +243,8 @@ public class ServerTest extends NbTestCase {
         CodeAction action = codeActions.get(0).getRight();
         assertEquals("Cast ...o to String", action.getTitle());
         assertEquals(1, action.getEdit().getDocumentChanges().size());
-        assertEquals(1, action.getEdit().getDocumentChanges().get(0).getEdits().size());
-        TextEdit edit = action.getEdit().getDocumentChanges().get(0).getEdits().get(0);
+        assertEquals(1, action.getEdit().getDocumentChanges().get(0).getLeft().getEdits().size());
+        TextEdit edit = action.getEdit().getDocumentChanges().get(0).getLeft().getEdits().get(0);
         assertEquals(1, edit.getRange().getStart().getLine());
         assertEquals(7, edit.getRange().getStart().getCharacter());
         assertEquals(1, edit.getRange().getEnd().getLine());
@@ -302,8 +306,8 @@ public class ServerTest extends NbTestCase {
         CodeAction action = codeActions.get(0).getRight();
         assertEquals("Remove .toString()", action.getTitle());
         assertEquals(1, action.getEdit().getDocumentChanges().size());
-        assertEquals(1, action.getEdit().getDocumentChanges().get(0).getEdits().size());
-        TextEdit edit = action.getEdit().getDocumentChanges().get(0).getEdits().get(0);
+        assertEquals(1, action.getEdit().getDocumentChanges().get(0).getLeft().getEdits().size());
+        TextEdit edit = action.getEdit().getDocumentChanges().get(0).getLeft().getEdits().get(0);
         assertEquals(1, edit.getRange().getStart().getLine());
         assertEquals(8, edit.getRange().getStart().getCharacter());
         assertEquals(1, edit.getRange().getEnd().getLine());
@@ -506,7 +510,7 @@ public class ServerTest extends NbTestCase {
         InitializeResult result = server.initialize(new InitializeParams()).get();
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
         Position pos = new Position(3, 30);
-        List<? extends Location> definition = server.getTextDocumentService().definition(new TextDocumentPositionParams(new TextDocumentIdentifier(src.toURI().toString()), pos)).get();
+        List<? extends Location> definition = server.getTextDocumentService().definition(new DefinitionParams(new TextDocumentIdentifier(src.toURI().toString()), pos)).get().getLeft();
         assertEquals(1, definition.size());
         assertEquals(src.toURI().toString(), definition.get(0).getUri());
         assertEquals(1, definition.get(0).getRange().getStart().getLine());
@@ -514,7 +518,7 @@ public class ServerTest extends NbTestCase {
         assertEquals(1, definition.get(0).getRange().getEnd().getLine());
         assertEquals(22, definition.get(0).getRange().getEnd().getCharacter());
         pos = new Position(4, 30);
-        definition = server.getTextDocumentService().definition(new TextDocumentPositionParams(new TextDocumentIdentifier(src.toURI().toString()), pos)).get();
+        definition = server.getTextDocumentService().definition(new DefinitionParams(new TextDocumentIdentifier(src.toURI().toString()), pos)).get().getLeft();
         assertEquals(1, definition.size());
         assertEquals(src.toURI().toString(), definition.get(0).getUri());
         assertEquals(2, definition.get(0).getRange().getStart().getLine());
@@ -522,7 +526,7 @@ public class ServerTest extends NbTestCase {
         assertEquals(2, definition.get(0).getRange().getEnd().getLine());
         assertEquals(30, definition.get(0).getRange().getEnd().getCharacter());
         pos = new Position(5, 22);
-        definition = server.getTextDocumentService().definition(new TextDocumentPositionParams(new TextDocumentIdentifier(src.toURI().toString()), pos)).get();
+        definition = server.getTextDocumentService().definition(new DefinitionParams(new TextDocumentIdentifier(src.toURI().toString()), pos)).get().getLeft();
         assertEquals(1, definition.size());
         assertEquals(otherSrc.toURI().toString(), definition.get(0).getUri());
         assertEquals(2, definition.get(0).getRange().getStart().getLine());
@@ -646,9 +650,9 @@ public class ServerTest extends NbTestCase {
         InitializeResult result = server.initialize(new InitializeParams()).get();
         assertTrue(result.getCapabilities().getDocumentHighlightProvider());
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
-        assertHighlights(server.getTextDocumentService().documentHighlight(new TextDocumentPositionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(1, 13))).get(),
+        assertHighlights(server.getTextDocumentService().documentHighlight(new DocumentHighlightParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(1, 13))).get(),
                          "<none>:2:21-2:31", "<none>:3:26-3:35", "<none>:4:13-4:22");
-        assertHighlights(server.getTextDocumentService().documentHighlight(new TextDocumentPositionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(1, 27))).get(),
+        assertHighlights(server.getTextDocumentService().documentHighlight(new DocumentHighlightParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(1, 27))).get(),
                          "<none>:1:26-1:29", "<none>:2:12-2:15", "<none>:3:17-3:20");
     }
 
@@ -846,6 +850,94 @@ public class ServerTest extends NbTestCase {
         Diagnostic unresolvable = assertDiags(diags, "Error:2:8-2:12").get(0);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(src.toURI().toString()), unresolvable.getRange(), new CodeActionContext(Arrays.asList(unresolvable)))).get();
         assertEquals(2, codeActions.size());
+    }
+
+    public void testFindUsages() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(new File(src.getParentFile(), ".test-project"))) {}
+        String code = "public class Test {\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        try (Writer w = new FileWriter(new File(getWorkDir(), "Test2.java"))) {
+            w.write("public class Test2 extends Test {\n" +
+                    "    Test t;\n" +
+                    "    void m(Test p) {};\n" +
+                    "}\n");
+        }
+        List<Diagnostic>[] diags = new List[1];
+        CountDownLatch indexingComplete = new CountDownLatch(1);
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setRootUri(getWorkDir().toURI().toString());
+        InitializeResult result = server.initialize(initParams).get();
+        indexingComplete.await();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
+
+        {
+            ReferenceParams params = new ReferenceParams(new TextDocumentIdentifier(src.toURI().toString()),
+                                                         new Position(0, 15),
+                                                         new ReferenceContext(false));
+
+            Set<? extends String> locations = server.getTextDocumentService().references(params).get().stream().map(this::toString).collect(Collectors.toSet());
+            Set<? extends String> expected = new HashSet<>(Arrays.asList("Test2.java:1:4-1:8", "Test2.java:0:27-0:31", "Test2.java:2:11-2:15"));
+
+            assertEquals(expected, locations);
+        }
+
+        {
+            ReferenceParams params = new ReferenceParams(new TextDocumentIdentifier(src.toURI().toString()),
+                                                         new Position(0, 15),
+                                                         new ReferenceContext(true));
+
+            Set<? extends String> locations = server.getTextDocumentService().references(params).get().stream().map(this::toString).collect(Collectors.toSet());
+            Set<? extends String> expected = new HashSet<>(Arrays.asList("Test2.java:1:4-1:8", "Test2.java:0:27-0:31", "Test2.java:2:11-2:15", ""));
+
+            assertEquals(expected, locations);
+        }
+    }
+
+    private String toString(Location location) {
+        String path = location.getUri();
+        String simpleName = path.substring(path.lastIndexOf('/') + 1);
+        return simpleName + ":" + location.getRange().getStart().getLine() + ":" + location.getRange().getStart().getCharacter() +
+                            "-" + location.getRange().getEnd().getLine() + ":" + location.getRange().getEnd().getCharacter();
     }
 
     private void assertHighlights(List<? extends DocumentHighlight> highlights, String... expected) {

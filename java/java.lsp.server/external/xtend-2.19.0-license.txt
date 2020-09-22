@@ -1,10 +1,10 @@
 Name: Eclipse Xtend library
 Origin: Eclipse
-Version: 2.14.0
+Version: 2.19.0
 License: EPL-v10
 URL: http://www.eclipse.org/
 Description: Eclipse Xtend library
-Files: org.eclipse.xtend.lib-2.14.0.jar org.eclipse.xtend.lib.macro-2.14.0.jar org.eclipse.xtext.xbase.lib-2.14.0.jar
+Files: org.eclipse.xtend.lib-2.19.0.jar org.eclipse.xtend.lib.macro-2.19.0.jar org.eclipse.xtext.xbase.lib-2.19.0.jar
 
 Eclipse Public License - v 1.0
 

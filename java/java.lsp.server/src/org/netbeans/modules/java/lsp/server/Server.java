@@ -190,6 +190,7 @@ public class Server implements ArgsProcessor {
             capabilities.setDocumentSymbolProvider(true);
             capabilities.setDefinitionProvider(true);
             capabilities.setDocumentHighlightProvider(true);
+            capabilities.setReferencesProvider(true);
             return CompletableFuture.completedFuture(new InitializeResult(capabilities));
         }
 

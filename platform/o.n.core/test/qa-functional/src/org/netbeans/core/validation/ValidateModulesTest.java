@@ -71,7 +71,7 @@ public class ValidateModulesTest extends NbTestCase {
         suite.addTest(NbModuleSuite.createConfiguration(ValidateModulesTest.class).
                 clusters(".*").enableModules(".*").honorAutoloadEager(true).gui(false).enableClasspathModules(false).suite());
         suite.addTest(NbModuleSuite.createConfiguration(ValidateModulesTest.NoStrictEager.class).
-                clusters("platform|harness|ide|websvccommon|java|profiler|nb|extide").enableModules(".*").
+                clusters("platform|harness|ide|webcommon|websvccommon|java|profiler|nb|extide").enableModules(".*").
                 honorAutoloadEager(true).gui(false).enableClasspathModules(false).suite());
         suite.addTest(NbModuleSuite.createConfiguration(ValidateModulesTest.NoStrictEager.class).
                 clusters("platform|harness|ide|extide").enableModules(".*").honorAutoloadEager(true).gui(false).enableClasspathModules(false).suite());

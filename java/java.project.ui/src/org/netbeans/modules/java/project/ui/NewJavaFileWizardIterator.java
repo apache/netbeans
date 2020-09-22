@@ -44,6 +44,7 @@ import org.netbeans.api.java.queries.BinaryForSourceQuery;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.project.Project;
@@ -241,17 +242,28 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
             final JavaSource src = JavaSource.forFileObject(createdFile);
             if (src != null) {
                 final Set<String> mNames = requiredModuleNames;
-                src.runModificationTask((WorkingCopy copy) -> {
-                    copy.toPhase(JavaSource.Phase.RESOLVED);
-                    TreeMaker tm = copy.getTreeMaker();
-                    ModuleTree modle = (ModuleTree) copy.getCompilationUnit().getTypeDecls().get(0);
-                    ModuleTree newModle = modle;
-                    for (String mName : mNames) {
-                        newModle = tm.addModuleDirective(newModle, tm.Requires(false, false, tm.QualIdent(mName)));
-                    }
-                    copy.rewrite(modle, newModle);
-                }).commit();
+                src.runModificationTask(new AddRequiresDirective(mNames)).commit();
             }
+        }
+    }
+    
+    private class AddRequiresDirective implements Task<WorkingCopy> {
+        final Set<String> mNames;
+
+        public AddRequiresDirective(Set<String> mNames) {
+            this.mNames = mNames;
+        }
+        
+        @Override
+        public void run(WorkingCopy copy) throws Exception {
+            copy.toPhase(JavaSource.Phase.RESOLVED);
+            TreeMaker tm = copy.getTreeMaker();
+            ModuleTree modle = (ModuleTree) copy.getCompilationUnit().getTypeDecls().get(0);
+            ModuleTree newModle = modle;
+            for (String mName : mNames) {
+                newModle = tm.addModuleDirective(newModle, tm.Requires(false, false, tm.QualIdent(mName)));
+            }
+            copy.rewrite(modle, newModle);
         }
     }
 

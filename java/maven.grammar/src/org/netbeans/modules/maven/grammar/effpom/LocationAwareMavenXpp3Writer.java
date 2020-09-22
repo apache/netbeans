@@ -1012,8 +1012,8 @@ public class LocationAwareMavenXpp3Writer {
         }
         if ((plugin.getExecutions() != null) && (plugin.getExecutions().size() > 0)) {
             serializer.startTag(NAMESPACE, "executions");
-            for (Iterator iter = plugin.getExecutions().iterator(); iter.hasNext();) {
-                PluginExecution o = (PluginExecution) iter.next();
+            for (Iterator<PluginExecution> iter = plugin.getExecutions().iterator(); iter.hasNext();) {
+                PluginExecution o = iter.next();
                 writePluginExecution(o, "execution", serializer);
             }
             serializer.endTag(NAMESPACE, "executions");
@@ -1058,8 +1058,8 @@ public class LocationAwareMavenXpp3Writer {
             int index = 0;
             InputLocation tracker = pluginExecution.getLocation("goals");
 
-            for (Iterator iter = pluginExecution.getGoals().iterator(); iter.hasNext();) {
-                String goal = (String) iter.next();
+            for (Iterator<String> iter = pluginExecution.getGoals().iterator(); iter.hasNext();) {
+                String goal = iter.next();
                 writeValue(serializer, "goal", goal, tracker, index);
                 index = index + 1;
             }
@@ -1157,16 +1157,16 @@ public class LocationAwareMavenXpp3Writer {
         }
         if ((profile.getDependencies() != null) && (profile.getDependencies().size() > 0)) {
             serializer.startTag(NAMESPACE, "dependencies");
-            for (Iterator iter = profile.getDependencies().iterator(); iter.hasNext();) {
-                Dependency o = (Dependency) iter.next();
+            for (Iterator<Dependency> iter = profile.getDependencies().iterator(); iter.hasNext();) {
+                Dependency o = iter.next();
                 writeDependency(o, "dependency", serializer);
             }
             serializer.endTag(NAMESPACE, "dependencies");
         }
         if ((profile.getRepositories() != null) && (profile.getRepositories().size() > 0)) {
             serializer.startTag(NAMESPACE, "repositories");
-            for (Iterator iter = profile.getRepositories().iterator(); iter.hasNext();) {
-                Repository o = (Repository) iter.next();
+            for (Iterator<Repository> iter = profile.getRepositories().iterator(); iter.hasNext();) {
+                Repository o = iter.next();
                 writeRepository(o, "repository", serializer);
             }
             serializer.endTag(NAMESPACE, "repositories");

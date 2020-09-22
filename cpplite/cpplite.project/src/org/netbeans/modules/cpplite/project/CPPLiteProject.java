@@ -20,8 +20,6 @@ package org.netbeans.modules.cpplite.project;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import org.netbeans.api.project.Project;
@@ -31,14 +29,11 @@ import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectFactory2;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
-import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.netbeans.spi.project.ui.RecommendedTemplates;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
-import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -48,9 +43,6 @@ import org.openide.util.lookup.ServiceProvider;
  */
 public class CPPLiteProject implements Project {
     
-    private static final Logger LOG = Logger.getLogger(ProjectOpenedHookImpl.class.getName());
-    private static final RequestProcessor WORKER = new RequestProcessor(CPPLiteProject.class.getName(), 1, false, false);
-
     public static final String PROJECT_KEY = "org-netbeans-modules-cpplite-project-CPPLiteProject";
     public static final String KEY_COMPILE_COMMANDS = "compile-commands";
     public static final String KEY_COMPILE_COMMANDS_EXECUTABLE = "compile-commands-executable";
@@ -100,7 +92,6 @@ public class CPPLiteProject implements Project {
                                     new CPPLiteCProjectConfigurationProvider(getRootPreferences(projectDirectory)),
                                     new RecommendedTemplatesImpl(),
                                     new PrivilegedTemplatesImpl(),
-                                    new ProjectOpenedHookImpl(),
                                     this);
         buildConfigurations.set(BuildConfiguration.read(getBuildPreferences(projectDirectory)));
     }
@@ -196,34 +187,4 @@ public class CPPLiteProject implements Project {
             return TEMPLATES;
         }
     }
-    private static class ProjectOpenedHookImpl extends ProjectOpenedHook {
-
-        @Override
-        protected void projectOpened() {
-            WORKER.post(() -> {
-                //ensure cpplite is not disabled:
-                FileObject modules = FileUtil.getConfigFile("Modules"); // NOI18N
-                if (modules == null) {
-                    return;
-                }
-                for (FileObject cpplite : modules.getChildren()) {
-                    if (!cpplite.getNameExt().contains("cpplite")) {
-                        continue;
-                    }
-                    try {
-                        if (cpplite.getAttribute("ergonomicsUnused") != null) {
-                            cpplite.setAttribute("ergonomicsUnused", 0); // NOI18N
-                        }
-                    } catch (IOException ex) {
-                        LOG.log(Level.INFO, null, ex);
-                    }
-                }
-            });
-        }
-
-        @Override
-        protected void projectClosed() {}
-
-    }
-
 }

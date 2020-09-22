@@ -231,6 +231,10 @@ public final class FeatureInfo {
         return s;
     }
 
+    public final String getExtraProjectMarkerClass() {
+        return properties.getProperty("extra.project.marker.class");
+    }
+
     static final class ExtraModuleInfo {
         private final Pattern cnb;
         private final SpecificationVersion recMinJDK;

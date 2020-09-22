@@ -23,6 +23,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JScrollPane;
@@ -72,6 +73,11 @@ public class GtkLFCustoms extends LFCustoms {
         if (borderColor == null) {
             borderColor = new Color(144,150,162);
         }
+
+        /* This icon pair exists in both PNG and SVG versions; the SVG version will be substituted
+        automatically if ImageUtilities and the SVG Loader implementation module is available. */
+        Image explorerFolderIcon       = UIUtils.loadImage("org/netbeans/swing/plaf/resources/hidpi-folder-closed.png");
+        Image explorerFolderOpenedIcon = UIUtils.loadImage("org/netbeans/swing/plaf/resources/hidpi-folder-open.png");
         
         Object[] result = {
             EDITOR_PREFERRED_COLOR_PROFILE, "NetBeans", //NOI18N
@@ -115,6 +121,10 @@ public class GtkLFCustoms extends LFCustoms {
             SLIDING_BUTTON_UI, "org.netbeans.swing.tabcontrol.plaf.GtkSlidingButtonUI", //NOI18N
 
             DESKTOP_BACKGROUND, ThemeValue.functioning() ? new ThemeValue (Region.BUTTON, ThemeValue.LIGHT, Color.GRAY) : (Object) Color.GRAY,
+
+            EXPLORER_FOLDER_ICON ,explorerFolderIcon,
+            EXPLORER_FOLDER_OPENED_ICON, explorerFolderOpenedIcon,
+
             EXPLORER_MINISTATUSBAR_BORDER, BorderFactory.createEmptyBorder(),
 
             //TOOLBAR_UI, "org.netbeans.swing.plaf.gtk.GtkToolbarUI", //NOI18N

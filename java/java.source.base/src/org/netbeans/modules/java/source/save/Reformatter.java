@@ -1162,8 +1162,21 @@ public class Reformatter implements ReformatTask {
                             space();
                         }
                     } else if (afterAnnotation) {
+                        WrapStyle newWrapStyle = cs.wrapAnnotations();
+                        if (parent instanceof ClassTree) {
+                            for (Tree member : ((ClassTree) parent).getMembers()) {
+                                if (member.getKind().toString().equals(TreeShims.RECORD)) {
+                                    ClassTree cls = (ClassTree) member;
+                                    for (Tree recMember : cls.getMembers()) {
+                                        if (recMember.equals(getCurrentPath().getLeaf())) {
+                                            newWrapStyle = WrapStyle.WRAP_NEVER;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         if (org.netbeans.api.java.source.TreeUtilities.CLASS_TREE_KINDS.contains(parent.getKind()) || parent.getKind() == Tree.Kind.BLOCK) {
-                            switch (cs.wrapAnnotations()) {
+                            switch (newWrapStyle) {
                                 case WRAP_ALWAYS:
                                     newline();
                                     break;

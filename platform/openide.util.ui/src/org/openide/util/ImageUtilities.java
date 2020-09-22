@@ -42,6 +42,7 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectStreamException;
 import java.lang.ref.SoftReference;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -61,7 +62,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import org.openide.util.spi.LegacyIconLocator;
 import org.openide.util.spi.SVGLoader;
+import org.openide.util.spi.WhateverIcon;
 
 /** 
  * Useful static methods for manipulation with images/icons, results are cached.
@@ -186,7 +189,9 @@ public final class ImageUtilities {
      * @param resource resource path of the image (no initial slash)
      * @param localized true for localized search
      * @return icon's Image or null if the icon cannot be loaded
+     * @deprecated Use Whatevericons or another kind of loadImage
      */
+    @Deprecated
     public static final Image loadImage(String resource, boolean localized) {
         return loadImageInternal(resource, localized);
     }
@@ -682,83 +687,93 @@ public final class ImageUtilities {
                 n = name;
             }
 
-            // Load the icon.
-            SVGLoader svgLoader = null; // If not null, url should be loaded as an SVG file.
-            ClassLoader useClassLoader =
-                    (loader != null) ? loader : ImageUtilities.class.getClassLoader();
-            java.net.URL url = null;
-            if (n.endsWith(".png") || n.endsWith(".gif") || n.endsWith(".svg")) {
-                /* If an SVG version of the image is available, always load that one. Only attempt
-                to load the SVGLoader implementation module if an actual SVG file exists. */
-                URL svgURL = useClassLoader.getResource(n.substring(0, n.length() - 4) + ".svg");
-                if (svgURL != null) {
-                    svgLoader = getSVGLoader();
-                    if (svgLoader != null) {
-                        url = svgURL;
-                    } else {
-                        ERR.log(Level.INFO, "No SVG loader available for loading {0}", svgURL);
-                    }
-                }
+            Collection<? extends LegacyIconLocator> legacyLocator = Lookup.getDefault().lookupAll(LegacyIconLocator.class);
+            WhateverIcon legacy = null;
+            for (LegacyIconLocator locator : legacyLocator) {
+                legacy = locator.findIcon(name);
+                if (legacy != null) break;
             }
-            if (url == null && !n.endsWith(".svg")) { // The SVG case was handled before.
-                url = useClassLoader.getResource(n);
-            }
-
-//            img = (url == null) ? null : Toolkit.getDefaultToolkit().createImage(url);
             Image result = null;
-            try {
-                if (url != null) {
-                    if (svgLoader != null) {
-                        try {
-                            result = icon2ToolTipImage(svgLoader.loadIcon(url), url);
-                        } catch (IOException e) {
-                            ERR.log(Level.INFO, "Failed to load SVG image " + url, e);
+            if (legacy != null) {
+                // result = legacy.doWhatever();
+                return null;
+            } else {
+                // Load the icon.
+                SVGLoader svgLoader = null; // If not null, url should be loaded as an SVG file.
+                ClassLoader useClassLoader =
+                        (loader != null) ? loader : ImageUtilities.class.getClassLoader();
+                java.net.URL url = null;
+                if (n.endsWith(".png") || n.endsWith(".gif") || n.endsWith(".svg")) {
+                    /* If an SVG version of the image is available, always load that one. Only attempt
+                    to load the SVGLoader implementation module if an actual SVG file exists. */
+                    URL svgURL = useClassLoader.getResource(n.substring(0, n.length() - 4) + ".svg");
+                    if (svgURL != null) {
+                        svgLoader = getSVGLoader();
+                        if (svgLoader != null) {
+                            url = svgURL;
+                        } else {
+                            ERR.log(Level.INFO, "No SVG loader available for loading {0}", svgURL);
                         }
-                    } else if (name.endsWith(".png")) {
-                        ImageInputStream stream = ImageIO.createImageInputStream(url.openStream());
-                        ImageReadParam param = PNG_READER.getDefaultReadParam();
-                        try {
-                            PNG_READER.setInput(stream, true, true);
-                            result = PNG_READER.read(0, param);
-                        }
-                        catch (IOException ioe1) {
-                            ERR.log(Level.INFO, "Image "+name+" is not PNG", ioe1);
-                        }
-                        stream.close();
-                    } 
-
-                    if (result == null) {
-                        result = ImageIO.read(url);
                     }
                 }
-            } catch (IOException ioe) {
-                ERR.log(Level.WARNING, "Cannot load " + name + " image", ioe);
-            }
-
-            if (result != null) {
-                if (warn && extraInitialSlashes.add(name)) {
-                    ERR.warning(
-                        "Initial slashes in Utilities.loadImage deprecated (cf. #20072): " +
-                        name
-                    ); // NOI18N
+                if (url == null && !n.endsWith(".svg")) { // The SVG case was handled before.
+                    url = useClassLoader.getResource(n);
                 }
 
-//                Image img2 = toBufferedImage(result);
+    //            img = (url == null) ? null : Toolkit.getDefaultToolkit().createImage(url);
+                try {
+                    if (url != null) {
+                        if (svgLoader != null) {
+                            try {
+                                result = icon2ToolTipImage(svgLoader.loadIcon(url), url);
+                            } catch (IOException e) {
+                                ERR.log(Level.INFO, "Failed to load SVG image " + url, e);
+                            }
+                        } else if (name.endsWith(".png")) {
+                            ImageInputStream stream = ImageIO.createImageInputStream(url.openStream());
+                            ImageReadParam param = PNG_READER.getDefaultReadParam();
+                            try {
+                                PNG_READER.setInput(stream, true, true);
+                                result = PNG_READER.read(0, param);
+                            }
+                            catch (IOException ioe1) {
+                                ERR.log(Level.INFO, "Image "+name+" is not PNG", ioe1);
+                            }
+                            stream.close();
+                        }
 
-                if (ERR.isLoggable(Level.FINE)) {
-                    ERR.log(Level.FINE, "loading icon {0} = {1}", new Object[] {n, result});
+                        if (result == null) {
+                            result = ImageIO.read(url);
+                        }
+                    }
+                } catch (IOException ioe) {
+                    ERR.log(Level.WARNING, "Cannot load " + name + " image", ioe);
                 }
-                name = new String(name).intern(); // NOPMD
-                ToolTipImage toolTipImage = (result instanceof ToolTipImage)
-                        ? (ToolTipImage) result
-                        : ToolTipImage.createNew("", result, url);
-                cache.put(name, new ActiveRef<String>(toolTipImage, cache, name));
-                return toolTipImage;
-            } else { // no icon found
-                if (!localizedQuery) {
-                    cache.put(name, NO_ICON);
+                if (result != null) {
+                    if (warn && extraInitialSlashes.add(name)) {
+                        ERR.warning(
+                            "Initial slashes in Utilities.loadImage deprecated (cf. #20072): " +
+                            name
+                        ); // NOI18N
+                    }
+
+    //                Image img2 = toBufferedImage(result);
+
+                    if (ERR.isLoggable(Level.FINE)) {
+                        ERR.log(Level.FINE, "loading icon {0} = {1}", new Object[] {n, result});
+                    }
+                    name = new String(name).intern(); // NOPMD
+                    ToolTipImage toolTipImage = (result instanceof ToolTipImage)
+                            ? (ToolTipImage) result
+                            : ToolTipImage.createNew("", result, url);
+                    cache.put(name, new ActiveRef<String>(toolTipImage, cache, name));
+                    return toolTipImage;
+                } else { // no icon found
+                    if (!localizedQuery) {
+                        cache.put(name, NO_ICON);
+                    }
+                    return null;
                 }
-                return null;
             }
         }
     }

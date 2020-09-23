@@ -42,6 +42,7 @@
         <copy todir="${build.test.unit.dir}/data">
             <fileset dir="../cnd.modelimpl/test/unit/data">
                 <include name="cnd/common/**"/>
+
             </fileset>
         </copy>
     </target>

@@ -118,11 +118,21 @@
             </folder>
         </folder>
         <folder name="AnnotationTypes">
-            <file name="CurrentPCLinePart.xml" url="CurrentPCLinePart.xml"/>
-            <file name="CurrentPC2.xml" url="CurrentPC2.xml"/>
-            <file name="CurrentPC2LinePart.xml" url="CurrentPC2LinePart.xml"/>
-            <file name="CurrentPC2_BP.xml" url="CurrentPC2_BP.xml"/>
-            <file name="CurrentPC2_DBP.xml" url="CurrentPC2_DBP.xml"/>
+            <file name="CurrentPCLinePart.xml" url="CurrentPCLinePart.xml">
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="CurrentPC2.xml" url="CurrentPC2.xml">
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="CurrentPC2LinePart.xml" url="CurrentPC2LinePart.xml">
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="CurrentPC2_BP.xml" url="CurrentPC2_BP.xml">
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="CurrentPC2_DBP.xml" url="CurrentPC2_DBP.xml">
+                <attr name="weight" intvalue="100"/>
+            </file>
         </folder>
     </folder>
     

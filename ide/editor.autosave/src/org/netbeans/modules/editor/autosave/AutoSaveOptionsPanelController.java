@@ -27,7 +27,7 @@ import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
-@OptionsPanelController.SubRegistration(location = OptionsDisplayer.EDITOR, displayName = "#AdvancedOption_DisplayName")
+@OptionsPanelController.SubRegistration(location = OptionsDisplayer.EDITOR, displayName = "#AdvancedOption_DisplayName", position = 0)
 @NbBundle.Messages("AdvancedOption_DisplayName=Autosave")
 public final class AutoSaveOptionsPanelController extends OptionsPanelController {
 

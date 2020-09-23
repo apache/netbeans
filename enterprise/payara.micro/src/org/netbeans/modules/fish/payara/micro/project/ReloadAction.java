@@ -65,7 +65,7 @@ import org.openide.util.Utilities;
     ,
     @ActionReference(path = "Toolbars/Build", position = 325)
     ,
-    @ActionReference(path = "Projects/org-netbeans-modules-maven/Actions", position = 1000)
+    @ActionReference(path = "Projects/org-netbeans-modules-maven/Actions", position = 1020)
     ,
     @ActionReference(path = "Shortcuts", name = "DS-A")
 })

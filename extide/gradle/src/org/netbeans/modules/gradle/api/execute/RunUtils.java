@@ -199,7 +199,7 @@ public final class RunUtils {
                 new ProxyNonSelectableInputOutput(io));
         if (initialOutput != null) {
             try {
-                if (IOColorPrint.isSupported(io)) {
+                if (IOColorPrint.isSupported(io) && IOColors.isSupported(io)) {
                     IOColorPrint.print(io, initialOutput, IOColors.getColor(io, IOColors.OutputType.LOG_DEBUG));
                 } else {
                     io.getOut().println(initialOutput);

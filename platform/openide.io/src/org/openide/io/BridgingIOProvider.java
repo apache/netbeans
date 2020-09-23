@@ -22,7 +22,6 @@ import java.awt.Color;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -236,7 +235,7 @@ public class BridgingIOProvider<IO, S extends PrintWriter, P, F>
         private final IO ioDelegate;
 
         public BridgingOutputWriter(IO ioDelegate, S delegate) {
-            super(new StringWriter());
+            super(delegate);
             this.writerDelegate = delegate;
             this.ioDelegate = ioDelegate;
         }
@@ -294,9 +293,10 @@ public class BridgingIOProvider<IO, S extends PrintWriter, P, F>
                 boolean important, Color color) throws IOException {
 
             Hyperlink h = listenerToHyperlink(listener, important);
+            final OutputColor outColor = color == null ? null : OutputColor.rgb(color.getRGB());
             providerDelegate.print(ioDelegate,
                     providerDelegate.getOut(ioDelegate), text.toString(),
-                    h, OutputColor.rgb(color.getRGB()), false);
+                    h, outColor, false);
         }
     }
 

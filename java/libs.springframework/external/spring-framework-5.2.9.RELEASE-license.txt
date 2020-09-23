@@ -2,7 +2,7 @@ Name: Spring Framework
 Description: Java/J2EE application framework
 Version: 5.2.9.RELEASE
 Origin: Spring
-License: Apache-2.0-spring5.2.9
+License: Apache-2.0-spring5
 Files: spring-instrument-5.2.9.RELEASE.jar spring-context-support-5.2.9.RELEASE.jar spring-context-indexer-5.2.9.RELEASE.jar spring-jms-5.2.9.RELEASE.jar spring-beans-5.2.9.RELEASE.jar spring-webmvc-5.2.9.RELEASE.jar spring-expression-5.2.9.RELEASE.jar spring-context-5.2.9.RELEASE.jar spring-orm-5.2.9.RELEASE.jar spring-core-5.2.9.RELEASE.jar spring-aspects-5.2.9.RELEASE.jar spring-websocket-5.2.9.RELEASE.jar spring-tx-5.2.9.RELEASE.jar spring-jdbc-5.2.9.RELEASE.jar spring-webflux-5.2.9.RELEASE.jar spring-jcl-5.2.9.RELEASE.jar spring-oxm-5.2.9.RELEASE.jar spring-messaging-5.2.9.RELEASE.jar spring-aop-5.2.9.RELEASE.jar spring-web-5.2.9.RELEASE.jar spring-test-5.2.9.RELEASE.jar
 URL: https://spring.io/projects/spring-framework
 

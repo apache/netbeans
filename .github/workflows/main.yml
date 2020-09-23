@@ -25,6 +25,8 @@ jobs:
   windows:
     name: Windows build
     runs-on: windows-2019
+    env:
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -81,6 +83,8 @@ jobs:
   linux:
     name: Check Build System
     runs-on: ubuntu-18.04
+    env:
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -106,6 +110,7 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       DISPLAY: ":99.0"
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
       OPTS: -Dcluster.config=php -Dtest-unit-sys-prop.ignore.random.failures=true
     steps:
       - name: Checkout
@@ -222,6 +227,8 @@ jobs:
   macos:
     name: MacOS build
     runs-on: macos-10.15
+    env:
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     steps:
       - uses: actions/checkout@v2
         

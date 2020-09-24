@@ -100,6 +100,9 @@ public final class RunUtils {
             SingleMethod method = methods.iterator().next();
             files.add(method.getFile());
         }
+        if (files.isEmpty()) {
+            files.addAll(lookup.lookupAll(FileObject.class));
+        }
         return files.toArray(new FileObject[files.size()]);
     }
 

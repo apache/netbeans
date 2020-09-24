@@ -4,4 +4,5 @@ OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/parsing/indexing/Bundle.p
 OpenIDE-Module-Layer: org/netbeans/modules/parsing/impl/indexing/layer.xml
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Needs: org.netbeans.modules.parsing.impl.indexing.implspi.ActiveDocumentProvider
 

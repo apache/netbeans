@@ -287,11 +287,11 @@ public final class Util {
                     for (Dependency dep : f.getDependenciesArray()) {
                         if (dep.getType() == Dependency.TYPE_REQUIRES) {
                             Collection<Module> providers = providersOf.get(dep.getName());
-                            if (providers.contains(m1)) {
-                                providers = new ArrayList<>(providers);
-                                providers.remove(m1);
-                            }
                             if (providers != null) {
+                                if (providers.contains(m1)) {
+                                    providers = new ArrayList<>(providers);
+                                    providers.remove(m1);
+                                }
                                 l = fillMapSlot(m, m1);
                                 l.addAll(providers);
                             }

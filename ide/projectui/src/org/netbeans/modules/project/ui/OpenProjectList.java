@@ -443,6 +443,7 @@ public final class OpenProjectList {
         }
 
         @NbBundle.Messages({
+            "#NOI18N",
             "LOAD_PROJECTS_ON_START=true"
         })
         private void loadOnBackground() {

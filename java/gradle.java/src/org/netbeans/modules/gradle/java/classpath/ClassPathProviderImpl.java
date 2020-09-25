@@ -299,8 +299,7 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
 
         private synchronized ClassPath getModuleBoothPath() {
             if (moduleBoot == null) {
-                //TODO: Is this Ok? Made after the Maven's ClassPathProviderImpl.getModuleBootPath
-                moduleBoot = createMultiplexClassPath(getPlatformModulesPath(), getPlatformModulesPath());
+                moduleBoot = createMultiplexClassPath(getPlatformModulesPath(), getBootClassPath());
             }
             return moduleBoot;
         }

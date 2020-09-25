@@ -81,7 +81,7 @@ public final class LocationOpener {
     }
 
    private static String stripMethodParams(String methodNameWithParams) {
-        final int paramsIndex = methodNameWithParams.indexOf("(");
+        final int paramsIndex = methodNameWithParams.indexOf('(');
         String cleanName = methodNameWithParams;
         if (paramsIndex > 0) {
             cleanName = methodNameWithParams.substring(0, paramsIndex);

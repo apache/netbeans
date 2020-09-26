@@ -26,17 +26,11 @@ import org.netbeans.modules.gradle.api.NbProjectInfo;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,6 +63,8 @@ import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.JLabel;
+import org.netbeans.modules.gradle.AbstractDiskCache.CacheEntry;
+import org.netbeans.modules.gradle.ProjectInfoDiskCache.QualifiedProjectInfo;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.openide.awt.Notification;
 import org.openide.awt.NotificationDisplayer;
@@ -86,7 +82,6 @@ public final class GradleProjectCache {
     private enum GoOnline { NEVER, ON_DEMAND, ALWAYS }
 
     private static final Logger LOG = Logger.getLogger(GradleProjectCache.class.getName());
-    private static final String INFO_CACHE_FILE_NAME = "project-info.ser"; //NOI18N
 
     private static final Map<File, List<Notification>> NOTIFICATIONS = new WeakHashMap<>();
 
@@ -94,9 +89,6 @@ public final class GradleProjectCache {
     private static AtomicInteger loadedProjects = new AtomicInteger();
 
     private static final Map<File, Set<File>> SUB_PROJECT_DIR_CACHE = new ConcurrentHashMap<>();
-
-    // Increase this number if new info is gathered from the projects.
-    private static final int COMPATIBLE_CACHE_VERSION = 15;
 
     private GradleProjectCache() {
     }
@@ -123,10 +115,10 @@ public final class GradleProjectCache {
         // Try to turn to the cache
         if (!(ignoreCache || GradleSettings.getDefault().isCacheDisabled())
                 && (prev.getQuality() == FALLBACK)) {
-            ProjectCacheEntry cacheEntry = loadCachedProject(files);
+            CacheEntry<QualifiedProjectInfo> cacheEntry = new ProjectInfoDiskCache(files).loadEntry();
             if (cacheEntry != null) {
                 if (cacheEntry.isCompatible()) {
-                    prev = createGradleProject(cacheEntry.quality, cacheEntry.data);
+                    prev = createGradleProject(cacheEntry.getData());
                     if (cacheEntry.isValid()) {
                         updateSubDirectoryCache(prev);
                         return prev;
@@ -242,12 +234,13 @@ public final class GradleProjectCache {
         if (SwingUtilities.isEventDispatchThread()) {
             LOG.log(FINE, "Load happened on AWT event dispatcher", new RuntimeException());
         }
-        GradleProject ret = createGradleProject(quality, info);
+        QualifiedProjectInfo qinfo = new QualifiedProjectInfo(quality, info);
+        GradleProject ret = createGradleProject(qinfo);
         GradleArtifactStore.getDefault().processProject(ret);
         if (info.getMiscOnly()) {
             ret = ctx.previous;
         } else {
-            saveCachedProjectInfo(info, ret);
+            saveCachedProjectInfo(qinfo, ret);
         }
         return ret;
     }
@@ -391,24 +384,7 @@ public final class GradleProjectCache {
         return sb.toString();
     }
 
-    private static ProjectCacheEntry loadCachedProject(GradleFiles gf) {
-        File cacheFile = new File(getCacheDir(gf), INFO_CACHE_FILE_NAME);
-        ProjectCacheEntry ret = null;
-        if (cacheFile.canRead()) {
-            try (ObjectInputStream is = new ObjectInputStream(new FileInputStream(cacheFile))) {
-                try {
-                    ret = (ProjectCacheEntry) is.readObject();
-                } catch (ClassNotFoundException ex) {
-                    LOG.log(FINE, "Invalid cache entry.", ex);
-                }
-            } catch (IOException ex) {
-                LOG.log(FINE, "Could no load project info from " + cacheFile, ex);
-            }
-        }
-        return ret;
-    }
-
-    private static GradleProject createGradleProject(Quality quality, NbProjectInfo info) {
+    private static GradleProject createGradleProject(QualifiedProjectInfo info) {
         Collection<? extends ProjectInfoExtractor> extractors = Lookup.getDefault().lookupAll(ProjectInfoExtractor.class);
         Map<Class, Object> results = new HashMap<>();
         Set<String> problems = new LinkedHashSet<>(info.getProblems());
@@ -424,7 +400,7 @@ public final class GradleProjectCache {
             }
 
         }
-        return new GradleProject(quality, problems, results.values());
+        return new GradleProject(info.getQuality(), problems, results.values());
 
     }
 
@@ -442,22 +418,10 @@ public final class GradleProjectCache {
         return (cache != null) ? cache.contains(subProjectDir) : null;
     }
 
-    private static void saveCachedProjectInfo(NbProjectInfo data, GradleProject gp) {
+    private static void saveCachedProjectInfo(QualifiedProjectInfo data, GradleProject gp) {
         assert gp.getQuality().betterThan(FALLBACK) : "Never attempt to cache FALLBACK projects."; //NOi18N
-        //TODO: Make it possible to handle external file set as cache.
         GradleFiles gf = new GradleFiles(gp.getBaseProject().getProjectDir(), true);
-        Set<File> cacheInvalidators = new HashSet<>(gf.getProjectFiles());
-        if (gf.hasWrapper()) cacheInvalidators.add(gf.getWrapperProperties());
-        ProjectCacheEntry entry = new ProjectCacheEntry(new StoredProjectInfo(data), gp, cacheInvalidators);
-        File cacheFile = new File(getCacheDir(gp), INFO_CACHE_FILE_NAME);
-        if (!cacheFile.exists()) {
-            cacheFile.getParentFile().mkdirs();
-        }
-        try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(cacheFile))) {
-            os.writeObject(entry);
-        } catch (IOException ex) {
-            LOG.log(FINE, "Failed to persist project info to" + cacheFile, ex);
-        }
+        new ProjectInfoDiskCache(gf).storeData(data);
     }
 
     private static GradleProject fallbackProject(GradleFiles files) {
@@ -497,7 +461,7 @@ public final class GradleProjectCache {
         return dir;
     }
 
-    static final class ReloadContext {
+    private static final class ReloadContext {
 
         final NbGradleProjectImpl project;
         final GradleProject previous;
@@ -519,85 +483,4 @@ public final class GradleProjectCache {
         }
     }
 
-    private static class ProjectCacheEntry implements Serializable {
-
-        int version;
-
-        long timestamp;
-        Set<File> sourceFiles;
-        Quality quality;
-        NbProjectInfo data;
-
-        protected ProjectCacheEntry() {
-        }
-
-        public ProjectCacheEntry(NbProjectInfo data, GradleProject gp, Set<File> sourceFiles) {
-            this.sourceFiles = sourceFiles;
-            this.data = data;
-            this.quality = gp.getQuality();
-            this.timestamp = gp.getEvaluationTime();
-            this.version = COMPATIBLE_CACHE_VERSION;
-        }
-
-        public boolean isCompatible() {
-            return version == COMPATIBLE_CACHE_VERSION;
-        }
-
-        public boolean isValid() {
-            boolean ret = isCompatible();
-            if (ret && (sourceFiles != null)) {
-                for (File f : sourceFiles) {
-                    if (!f.exists() || (f.lastModified() > timestamp)) {
-                        ret = false;
-                        break;
-                    }
-                }
-            }
-            return ret;
-        }
-    }
-
-    private static class StoredProjectInfo implements NbProjectInfo {
-
-        private final Map<String, Object> info;
-        private final Set<String> problems;
-        private final String gradleException;
-
-        public StoredProjectInfo(NbProjectInfo pinfo) {
-            info = new LinkedHashMap<>(pinfo.getInfo());
-            problems = new LinkedHashSet<>(pinfo.getProblems());
-            gradleException = pinfo.getGradleException();
-        }
-
-        @Override
-        public Map<String, Object> getInfo() {
-            return info;
-        }
-
-        @Override
-        public Map<String, Object> getExt() {
-            return Collections.emptyMap();
-        }
-
-        @Override
-        public Set<String> getProblems() {
-            return problems;
-        }
-
-        @Override
-        public String getGradleException() {
-            return gradleException;
-        }
-
-        @Override
-        public boolean hasException() {
-            return gradleException != null;
-        }
-
-        @Override
-        public boolean getMiscOnly() {
-            return false;
-        }
-
-    }
 }

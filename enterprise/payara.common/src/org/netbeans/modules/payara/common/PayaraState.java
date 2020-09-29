@@ -122,10 +122,8 @@ public class PayaraState {
             if (added) {
                 if (instance.getVersion() != null) {
                    AuthFailureStateListener authListener
-                           =  new AuthFailureStateListener(
-                           instance.getVersion().ordinal()
-                           >= PayaraVersion.PF_4_1_144.ordinal());
-                   PayaraStatus.addChangeListener(instance, authListener, PayaraStatus.STARTUP);
+                            = new AuthFailureStateListener(instance.getVersion().isMinimumSupportedVersion());
+                    PayaraStatus.addChangeListener(instance, authListener, PayaraStatus.STARTUP);
                     PayaraStatus.addErrorListener(instance, authListener);
                 }
                 try {

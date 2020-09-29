@@ -721,8 +721,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
     private String getAccConfigFile() {
         final PayaraVersion version = getPFVersion();
         final String accConfigFile;
-        if (version != null
-                && version.ordinal() >= PayaraVersion.PF_4_1_144.ordinal()) {
+        if (version != null && version.isMinimumSupportedVersion()) {
             accConfigFile = GF_ACC_XML;
         } else {
             accConfigFile = SUN_ACC_XML;
@@ -830,11 +829,12 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
             try {
                 if (version == null) {
                     return false;
-                }
-                else if (version.equalsMajorMinor(PayaraVersion.PF_4_1_144)) {
-                    final File javaxWsRs = ServerUtilities.getJarName(dm.getProperties().
-                            getPayaraRoot(), "javax.ws.rs-api.jar"); // NOI18N
-                    if ( javaxWsRs== null || !javaxWsRs.exists()){
+                } else if (version.getMajor() == 4) {
+                    final File javaxWsRs = ServerUtilities.getJarName(
+                            dm.getProperties().getPayaraRoot(),
+                            "javax.ws.rs-api.jar" // NOI18N
+                    );
+                    if (javaxWsRs == null || !javaxWsRs.exists()) {
                         return false;
                     }
                     return addJars(project, Collections.singletonList(

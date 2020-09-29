@@ -164,10 +164,10 @@ public class AddDomainLocationPanel implements WizardDescriptor.Panel, ChangeLis
         JavaPlatform defaultJava = JavaPlatform.getDefault();
         JavaSEPlatform defaultJavaPlatform = JavaSEPlatform.toValue(
                     defaultJava.getSpecification().getVersion().toString());
-        PayaraVersion gpayaraVersion
+        PayaraVersion payaraVersion
                 = ServerUtils.getServerVersion(gfRoot);
         PayaraConfig configAdapter = PayaraConfigManager.getConfig(
-                ConfigBuilderProvider.getBuilderConfig(gpayaraVersion));
+                ConfigBuilderProvider.getBuilderConfig(payaraVersion));
         JavaSESet javaSEConfig = configAdapter != null
                 ? configAdapter.getJavaSE() : null;
         Set<JavaSEPlatform> javaSEPlatfors = javaSEConfig != null

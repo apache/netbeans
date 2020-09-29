@@ -1230,9 +1230,15 @@ public class PayaraInstance implements ServerInstanceImplementation,
         return properties.get(PayaraModule.USERNAME_ATTR);
     }
 
+    public boolean isHotDeployFeatureAvailable() {
+        return this.getVersion().getMajor() > 5 || (this.getVersion().getMajor() == 5 && this.getVersion().getMinor() >= 201);
+    }
+
     public boolean isHotDeployEnabled() {
-       return PayaraVersion.ge(this.getVersion(), PayaraVersion.PF_5_201) ?
-                    Boolean.parseBoolean(this.getProperty(PayaraModule.HOT_DEPLOY)) : false;
+        if (this.isHotDeployFeatureAvailable()) {
+            return Boolean.parseBoolean(this.getProperty(PayaraModule.HOT_DEPLOY));
+        }
+        return false;
     }
 
     /**

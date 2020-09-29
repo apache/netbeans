@@ -139,7 +139,7 @@ public abstract class PayaraConfiguration implements
             return new int[]{0,1};
         }
         // glassfish-resources.xml for v4
-        if (PayaraVersion.ge(version, PayaraVersion.PF_4_1_144)) {
+        if (version.getMajor() >= 4) {
             return new int[]{0};
         } else {
             // sun-resources.xml for older
@@ -159,11 +159,10 @@ public abstract class PayaraConfiguration implements
             final PayaraVersion version) {
         // glassfish-resources.xml is returned for versions 3.1 and higher
         // or as default for unknown version.
-        if (version == null
-                || PayaraVersion.ge(version, PayaraVersion.PF_4_1_144)) {
+        if (version == null || version.getMajor() >= 4) {
             return 0;
         } else {
-        // sun-resources.xml is returned for old versions
+            // sun-resources.xml is returned for old versions
             return 1;
         }
     }
@@ -228,7 +227,7 @@ public abstract class PayaraConfiguration implements
     public static final Pair<File, Boolean> getNewResourceFile(
             final J2eeModule module, final PayaraVersion version) {
         final int index = versionToNewResourceFilesIndex(version);
-        if (PayaraVersion.lt(version, PayaraVersion.PF_4_1_144)) {
+        if (!version.isMinimumSupportedVersion()) {
             return Pair.of(new File(module.getResourceDirectory(), RESOURCE_FILES[index]), false);
         }
         final String name = resourceFilePath(module, RESOURCE_FILES[index]);

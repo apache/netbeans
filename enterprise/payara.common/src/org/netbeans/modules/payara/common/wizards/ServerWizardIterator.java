@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static java.util.stream.Collectors.toList;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
@@ -46,7 +47,9 @@ import org.openide.util.NbPreferences;
 import org.openide.util.Utilities;
 import org.netbeans.modules.payara.common.PayaraInstanceProvider;
 import org.netbeans.modules.payara.common.PortCollection;
+import static org.netbeans.modules.payara.common.ServerDetails.getVersionFromInstallDirectory;
 import org.netbeans.modules.payara.spi.PayaraModule;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 
 
 /**
@@ -68,10 +71,10 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
     private final transient List<ChangeListener> listeners = new CopyOnWriteArrayList<>();
     private String domainsDir;
     private String domainName;
-    private ServerDetails serverDetails;
+    private PayaraVersion serverDetails;
     private final PayaraInstanceProvider instanceProvider;
-    ServerDetails[] acceptedValues;
-    ServerDetails[] downloadableValues;
+    final List<PayaraVersion> acceptedValues;
+    final List<PayaraVersion> downloadableValues;
     private String targetValue;
 
     public String getTargetValue() {
@@ -82,12 +85,12 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         this.targetValue = targetValue;
     }
 
-    public ServerWizardIterator(ServerDetails[] possibleValues) {
+    public ServerWizardIterator(List<PayaraVersion> possibleValues) {
         this.acceptedValues = possibleValues;
-        this.downloadableValues = Arrays.stream(possibleValues)
-                .filter(ServerDetails::isDownloadable)
+        this.downloadableValues = possibleValues
+                .stream()
                 .sorted(Collections.reverseOrder())
-                .toArray(ServerDetails[]::new);
+                .collect(toList());
         this.instanceProvider = PayaraInstanceProvider.getProvider();
         this.hostName = "localhost"; // NOI18N
     }
@@ -341,7 +344,7 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         return instanceProvider.hasServer(uri);
     }
 
-    ServerDetails isValidInstall(File installDir, File payaraDir, WizardDescriptor wizard) {
+    PayaraVersion isValidInstall(File installDir, File payaraDir, WizardDescriptor wizard) {
         String errMsg = NbBundle.getMessage(AddServerLocationPanel.class, "ERR_InstallationInvalid", // NOI18N
                 FileUtil.normalizeFile(installDir).getPath());
         wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, errMsg); // getSanitizedPath(installDir)));
@@ -354,15 +357,13 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         if (!containerRef.exists()) {
             return null;
         }
-        for (ServerDetails candidate : acceptedValues) {
-            if (candidate.isInstalledInDirectory(payaraDir)) {
-                wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, "   ");
-                this.serverDetails = candidate;
-                return candidate;
-            }
+        Optional<PayaraVersion> serverDetails = getVersionFromInstallDirectory(payaraDir);
+        if (serverDetails.isPresent()) {
+            wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, "   ");
+            this.serverDetails = serverDetails.get();
+            return serverDetails.get();
         }
         return null;
-
     }
 
     /**

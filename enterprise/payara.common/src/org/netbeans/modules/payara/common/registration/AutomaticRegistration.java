@@ -84,16 +84,14 @@ public class AutomaticRegistration {
         String deployer = "deployer:pfv3ee6";
         String defaultDisplayNamePrefix = "Payara Server ";
         PayaraVersion version = ServerUtils.getServerVersion(payaraRoot);
-        if (PayaraVersion.ge(version, PayaraVersion.PF_4_1_144)) {
-            deployer = "deployer:pfv4ee7";
-        } 
-        if (PayaraVersion.ge(version, PayaraVersion.PF_5_181)) {
-            deployer = "deployer:pfv5ee8";
-        }
-
         StringBuilder sb = new StringBuilder(
                 defaultDisplayNamePrefix.length() + 12);
         if (version != null) {
+            if (version.isEE8Supported()) {
+                deployer = "deployer:pfv5ee8";
+            } else if (version.isEE7Supported()) {
+                deployer = "deployer:pfv4ee7";
+            }
             sb.append(defaultDisplayNamePrefix);
             sb.append(version.toString());
         } else {

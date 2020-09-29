@@ -161,7 +161,7 @@ public class PayaraConfigurationTest extends NbTestCase {
      */
     @Test 
     public void testGetNewResourceFile() {
-        for (PayaraVersion version : PayaraVersion.values()) {
+        for (PayaraVersion version : PayaraVersion.getVersions()) {
             final Pair<File, Boolean> pairCar = PayaraConfiguration.getNewResourceFile(moduleCar, version);
             final Pair<File, Boolean> pairEar = PayaraConfiguration.getNewResourceFile(moduleEar, version);
             final Pair<File, Boolean> pairEjb = PayaraConfiguration.getNewResourceFile(moduleEjb, version);
@@ -177,7 +177,7 @@ File verifyPrefixCar;
             File verifyPrefixEjb;
             File verifyPrefixRar;
             File verifyPrefixWar;
-            if (PayaraVersion.lt(version, PayaraVersion.PF_4_1_144)) {
+            if (!version.isMinimumSupportedVersion()) {
                 verifyPrefixCar = moduleCar.getResourceDirectory();
                 verifyPrefixEar = moduleEar.getResourceDirectory();
                 verifyPrefixEjb = moduleEjb.getResourceDirectory();
@@ -195,7 +195,7 @@ File verifyPrefixCar;
                 verifyPrefixWar = moduleWar.getDeploymentConfigurationFile(
                         JavaEEModule.getConfigDir(moduleWar.getType()));
             }
-            final String fileName = PayaraVersion.lt(version, PayaraVersion.PF_4_1_144)
+            final String fileName = !version.isMinimumSupportedVersion()
                     ? "sun-resources.xml"
                     : "glassfish-resources.xml";
             final File verifyFileCar = new File(verifyPrefixCar, fileName);
@@ -255,7 +255,7 @@ File verifyPrefixCar;
             sunResource.createNewFile();
             gfResource.createNewFile();
         }
-        for (PayaraVersion version : PayaraVersion.values()) {
+        for (PayaraVersion version : PayaraVersion.getVersions()) {
             final Pair<File, Boolean> pairCar = PayaraConfiguration.getNewResourceFile(moduleCar, version);
             final Pair<File, Boolean> pairEar = PayaraConfiguration.getNewResourceFile(moduleEar, version);
             final Pair<File, Boolean> pairEjb = PayaraConfiguration.getNewResourceFile(moduleEjb, version);
@@ -271,7 +271,7 @@ File verifyPrefixCar;
             File verifyPrefixEjb;
             File verifyPrefixRar;
             File verifyPrefixWar;
-            if (PayaraVersion.lt(version, PayaraVersion.PF_4_1_144)) {
+            if (!version.isMinimumSupportedVersion()) {
                 verifyPrefixCar = moduleCar.getResourceDirectory();
                 verifyPrefixEar = moduleEar.getResourceDirectory();
                 verifyPrefixEjb = moduleEjb.getResourceDirectory();
@@ -289,7 +289,7 @@ File verifyPrefixCar;
                 verifyPrefixWar = moduleWar.getDeploymentConfigurationFile(
                         JavaEEModule.getConfigDir(moduleWar.getType()));
             }
-            final String fileName = PayaraVersion.lt(version, PayaraVersion.PF_4_1_144)
+            final String fileName = !version.isMinimumSupportedVersion()
                     ? "sun-resources.xml"
                     : "glassfish-resources.xml";
             final File verifyFileCar = new File(verifyPrefixCar, fileName);

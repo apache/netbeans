@@ -96,7 +96,7 @@ public class Hk2DatasourceManagerTest extends NbTestCase {
             throw new Error(x);
         }
         Set<Datasource> result = Hk2DatasourceManager.getDatasources(
-                j2eeModule, PayaraVersion.PF_4_1_144);
+                j2eeModule, PayaraVersion.getLatestVersion());
 //        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         assert null != result : "null result";

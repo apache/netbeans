@@ -402,7 +402,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         httpMonitor.setSelected(httpMonitorFlag);
         jdbcDriverDeployment.setSelected(jdbcDriverDeploymentFlag);
         showPassword.setSelected(showPasswordFlag);
-        hotDeploy.setSelected(PayaraVersion.ge(instance.getVersion(), PayaraVersion.PF_5_201)? hotDeployFlag : false);
+        hotDeploy.setSelected(instance.isHotDeployFeatureAvailable()? hotDeployFlag : false);
         preserveSessions.setSelected(preserverSessionsFlag);
         startDerby.setSelected(startDerbyFlag);
         localIpCB.setSelected(loopbackFlag);
@@ -531,7 +531,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         commetSupport.setEnabled(true);
         httpMonitor.setEnabled(true);
         jdbcDriverDeployment.setEnabled(true);
-        hotDeploy.setEnabled(PayaraVersion.ge(instance.getVersion(), PayaraVersion.PF_5_201));
+        hotDeploy.setEnabled(instance.isHotDeployFeatureAvailable());
         showPassword.setEnabled(true);
         preserveSessions.setEnabled(true);
         startDerby.setEnabled(true);

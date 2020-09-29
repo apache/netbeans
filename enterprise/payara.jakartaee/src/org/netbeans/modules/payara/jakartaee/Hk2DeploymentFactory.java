@@ -35,13 +35,12 @@ import org.openide.util.NbBundle;
  */
 public class Hk2DeploymentFactory implements DeploymentFactory {
 
-    private static Hk2DeploymentFactory preludeInstance;
     private static Hk2DeploymentFactory ee6Instance;
     private static Hk2DeploymentFactory ee7Instance;
     private static Hk2DeploymentFactory ee8Instance;
-    private String[] uriFragments;
-    private String version;
-    private String displayName;
+    private final String[] uriFragments;
+    private final String version;
+    private final String displayName;
     private ServerUtilities su;
 
     private Hk2DeploymentFactory(String[] uriFragments, String version, String displayName) {
@@ -55,11 +54,9 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
     }
 
     public static synchronized DeploymentFactory createEe(PayaraVersion version) {
-        if (version != null
-                && PayaraVersion.ge(version, PayaraVersion.PF_5_181)) {
+        if (version.isEE8Supported()) {
             return createEe8();
-        } else if (version != null
-                && PayaraVersion.ge(version, PayaraVersion.PF_4_1_144)) {
+        } else if (version.isEE7Supported()) {
             return createEe7();
         }
         return createEe6();

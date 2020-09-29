@@ -104,16 +104,16 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
      * @return Payara JavaEE platform name related to given server version.
      */
     private static String getDisplayName(final PayaraVersion version) {
-        final int ord = version.ordinal();
-        if (ord >= PayaraVersion.PF_5_181.ordinal()) {
+        final int majorVersion = version.getMajor();
+        if (majorVersion >= 5) {
             return NbBundle.getMessage(
                     Hk2JavaEEPlatformFactory.class, "MSG_V5ServerPlatform");
-        } else if (ord >= PayaraVersion.PF_4_1_144.ordinal()) {
+        } else if (majorVersion >= 4) {
             return NbBundle.getMessage(
                     Hk2JavaEEPlatformFactory.class, "MSG_V4ServerPlatform");
         } else {
             return NbBundle.getMessage(
-                    Hk2JavaEEPlatformFactory.class, "MSG_V1ServerPlatform");
+                    Hk2JavaEEPlatformFactory.class, "MSG_UnsupportedServerPlatform");
         }
     }
 
@@ -125,16 +125,16 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
      * @return Payara JavaEE library name related to given server version.
      */
     private static String getLibraryName(final PayaraVersion version) {
-        final int ord = version.ordinal();
-        if (ord >= PayaraVersion.PF_5_181.ordinal()) {
+        final int majorVersion = version.getMajor();
+        if (majorVersion >= 5) {
             return NbBundle.getMessage(
                     Hk2JavaEEPlatformFactory.class, "LBL_V5ServerLibraries");
-        } else if (ord >= PayaraVersion.PF_4_1_144.ordinal()) {
+        } else if (majorVersion >= 4) {
             return NbBundle.getMessage(
                     Hk2JavaEEPlatformFactory.class, "LBL_V4ServerLibraries");
         } else {
             return NbBundle.getMessage(
-                    Hk2JavaEEPlatformFactory.class, "LBL_V1ServerLibraries");
+                    Hk2JavaEEPlatformFactory.class, "LBL_UnsupportedServerLibraries");
         }
     }
 
@@ -146,10 +146,10 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
      * @return Lookup key for given Payara server version.
      */
     private static String getLookupKey(final PayaraVersion version) {
-        final int ord = version.ordinal();
-        if (ord >= PayaraVersion.PF_5_181.ordinal()) {
+        final int majorVersion = version.getMajor();
+        if (majorVersion >= 5) {
             return V5_LOOKUP_KEY;
-        } else if (ord >= PayaraVersion.PF_4_1_144.ordinal()) {
+        } else if (majorVersion >= 4) {
             return V4_LOOKUP_KEY;
         } else {
             return V3_LOOKUP_KEY;

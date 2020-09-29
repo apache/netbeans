@@ -223,7 +223,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
     private static ApplicationScopedResourcesUtils.ResourceFileDescription resourceFileForDSCreation(
             final String jndiName, final String url, final String username,
             final String password, final String driver, final J2eeModule module,
-            final PayaraVersion version,final ConnectionPoolFinder cpFinder
+            final PayaraVersion version, final ConnectionPoolFinder cpFinder
     ) throws ConfigurationException, DatasourceAlreadyExistsException {
         Pair<File, Boolean> pair = PayaraConfiguration.getExistingResourceFile(module, version);
         File file = pair == null ? null : pair.first();
@@ -401,8 +401,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
                         dataSources.add(dataSource);
                         // Add Java EE 7 comp/DefaultDataSource data source
                         // as jdbc/__default clone (since PF 4).
-                        if (version != null && version.ordinal()
-                                >= PayaraVersion.PF_4_1_144.ordinal()
+                        if (version != null && version.isEE7Supported()
                                 && DataSourcesReader.DEFAULT_DATA_SOURCE
                                 .equals(jdbc.getJndiName()) ) {
                             dataSources.add(dataSource.copy(

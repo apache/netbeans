@@ -177,11 +177,10 @@ public class DataSourcesReader {
             buildJDBCContentObjects(properties, pools, resources);
             assignConnectionPoolsToResources(pools, resources);
             // Add Java EE 7 comp/DefaultDataSource data source (since PF 4).
-            if (server.getVersion().ordinal()
-                    >= PayaraVersion.PF_4_1_144.ordinal()) {
+            if (server.getVersion().isEE7Supported()) {
                 addNewJavaEE7dataSource(resources);
             }
-            return new HashSet<Datasource>(resources.values());
+            return new HashSet<>(resources.values());
         } else {
             return null;
         }

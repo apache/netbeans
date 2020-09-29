@@ -46,7 +46,7 @@ public class AdminFactoryTest extends CommandTest {
     @Test
     public void testGetInstanceforVersionPF4() {
         PayaraServerEntity srv = new PayaraServerEntity();
-        srv.setVersion(PayaraVersion.PF_4_1_144);
+        srv.setVersion(PayaraVersion.getLatestVersion());
         AdminFactory af = AdminFactory.getInstance(srv.getVersion());
         assertTrue(af instanceof AdminFactoryHttp);
         Command cmd = new CommandVersion();
@@ -72,7 +72,7 @@ public class AdminFactoryTest extends CommandTest {
     @Test
     public void testGetInstanceforVersionPF5() {
         PayaraServerEntity srv = new PayaraServerEntity();
-        srv.setVersion(PayaraVersion.PF_5_181);
+        srv.setVersion(PayaraVersion.getLatestVersion());
         AdminFactory af = AdminFactory.getInstance(srv.getVersion());
         assertTrue(af instanceof AdminFactoryRest);
         Command cmd = new CommandVersion();

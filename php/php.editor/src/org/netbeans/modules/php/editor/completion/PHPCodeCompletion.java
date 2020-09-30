@@ -1277,7 +1277,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             boolean instanceContext = !staticContext;
 
             if (tokenSequence.token().id() != PHPTokenId.PHP_PAAMAYIM_NEKUDOTAYIM
-                    && tokenSequence.token().id() != PHPTokenId.PHP_OBJECT_OPERATOR) {
+                    && tokenSequence.token().id() != PHPTokenId.PHP_OBJECT_OPERATOR
+                    && tokenSequence.token().id() != PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR) {
                 tokenSequence.movePrevious();
             }
             tokenSequence.movePrevious();
@@ -1988,7 +1989,9 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                             }
                         }
 
-                        if (t.id() == PHPTokenId.PHP_OBJECT_OPERATOR || t.id() == PHPTokenId.PHP_PAAMAYIM_NEKUDOTAYIM) {
+                        if (t.id() == PHPTokenId.PHP_OBJECT_OPERATOR
+                                || t.id() == PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR
+                                || t.id() == PHPTokenId.PHP_PAAMAYIM_NEKUDOTAYIM) {
                             return QueryType.ALL_COMPLETION;
                         }
                     }

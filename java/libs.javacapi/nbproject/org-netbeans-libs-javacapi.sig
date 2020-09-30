@@ -979,6 +979,7 @@ meth public abstract com.sun.source.doctree.DocCommentTree getDocCommentTree(jav
 meth public abstract com.sun.source.doctree.DocCommentTree getDocCommentTree(javax.lang.model.element.Element,java.lang.String) throws java.io.IOException
 meth public abstract com.sun.source.doctree.DocCommentTree getDocCommentTree(javax.tools.FileObject)
 meth public abstract com.sun.source.util.DocSourcePositions getSourcePositions()
+meth public abstract javax.lang.model.type.TypeMirror getType(com.sun.source.util.DocTreePath)
 meth public abstract com.sun.source.util.DocTreeFactory getDocTreeFactory()
 meth public abstract com.sun.source.util.DocTreePath getDocTreePath(javax.tools.FileObject,javax.lang.model.element.PackageElement)
 meth public abstract java.text.BreakIterator getBreakIterator()

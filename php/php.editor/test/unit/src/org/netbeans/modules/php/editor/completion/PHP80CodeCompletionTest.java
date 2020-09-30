@@ -819,6 +819,130 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath("mixedType"), "    public function union(int|string $mixed): object|^array {", false);
     }
 
+    public void testNullsafeOperator_01() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperator"), "        return $this?->^address;", false);
+    }
+
+    public void testNullsafeOperator_02() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperator"), "$country = $session?->^user?->getAddress()?->country;", false);
+    }
+
+    public void testNullsafeOperator_03() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperator"), "$country = $session?->user?->^getAddress()?->country;", false);
+    }
+
+    public void testNullsafeOperator_04() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperator"), "$country = $session?->user?->getAddress()?->^country;", false);
+    }
+
+    public void testNullsafeOperator_05() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperator"), "$country = $session?->user::^$test;", false);
+    }
+
+    public void testNullsafeOperator_06() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperator"), "$country = $session?->user->^id;", false);
+    }
+
+    public void testNullsafeOperator_07() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperator"), "$country = $session?->user?->getAddress()::^ID;", false);
+    }
+
+    public void testNullsafeOperator_08() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperator"), "$country = User::create(\"test\")?->^getAddress()?->country;", false);
+    }
+
+    public void testNullsafeOperator_09() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperator"), "$country = User::create(\"test\")?->getAddress()?->^country;", false);
+    }
+
+    public void testNullsafeOperator_10() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperator"), "$country = $session->getUser()::create(\"test\")?->^getAddress()->country;", false);
+    }
+
+    public void testNullsafeOperator_11() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperator"), "$country = $session->getUser()::create(\"test\")?->getAddress()->^country;", false);
+    }
+
+    public void testNullsafeOperator_12() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperator"), "$country = (new User(\"test\"))?->^getAddress()->country;", false);
+    }
+
+    public void testNullsafeOperator_13() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperator"), "$country = (new User(\"test\"))?->getAddress()->^country;", false);
+    }
+
+    public void testNullsafeOperatorWithComments_01() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?->^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_02() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj /**/?->^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_03() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/ ?->^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_04() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj /* aa */ ?->^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_05() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?-> /**/^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_06() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?-> /**/ ^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_07() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?->/**/ ^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_08() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?->/**/^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_09() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?-> /* aa */^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_10() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?-> /* aa */ ^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_11() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?->/* aa */^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_12() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?->/* aa */ ^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_13() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?->\n /* aa */\n ^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_14() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?->\n /** aa */\n ^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_15() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?->\n /**/\n ^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_16() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?->\n // aa\n ^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_17() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?->\n // aa\n^foo();", false);
+    }
+
+    public void testNullsafeOperatorWithComments_18() throws Exception {
+        checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?->\n// aa\n^foo();", false);
+    }
+
     public void testStaticReturnTypeOverrideMethod01() throws Exception {
         checkCompletionCustomTemplateResult(getTestPath("testStaticReturnTypeOverrideMethod01"), "    test^",
                 new DefaultFilter(PhpVersion.PHP_80, "test"), true);

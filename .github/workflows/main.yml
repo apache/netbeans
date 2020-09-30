@@ -253,6 +253,9 @@ jobs:
           ant -f platform/masterfs.macosx test
           ant -f platform/core.network test
 
+      - name: Validate consistency and basic tests
+        run: ant -Dcluster.config=release commit-validation
+
   commit-validation:
     name: Commit-validation (on Linux)
     runs-on: ubuntu-18.04

@@ -92,6 +92,9 @@
                 <attr name="originalFile" stringvalue="Actions/Refactoring/org-netbeans-modules-refactoring-api-ui-RenameAction.instance"/>
             </file>
         </folder>
+        <folder name="Idea">
+            <file name="CA-F11.shadow_hidden"/>
+        </folder>
     </folder>
 
     <folder name="Toolbars">

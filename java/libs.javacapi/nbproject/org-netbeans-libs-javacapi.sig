@@ -1676,14 +1676,17 @@ fld public final static javax.lang.model.element.Modifier ABSTRACT
 fld public final static javax.lang.model.element.Modifier DEFAULT
 fld public final static javax.lang.model.element.Modifier FINAL
 fld public final static javax.lang.model.element.Modifier NATIVE
+fld public final static javax.lang.model.element.Modifier NON_SEALED
 fld public final static javax.lang.model.element.Modifier PRIVATE
 fld public final static javax.lang.model.element.Modifier PROTECTED
 fld public final static javax.lang.model.element.Modifier PUBLIC
+fld public final static javax.lang.model.element.Modifier SEALED
 fld public final static javax.lang.model.element.Modifier STATIC
 fld public final static javax.lang.model.element.Modifier STRICTFP
 fld public final static javax.lang.model.element.Modifier SYNCHRONIZED
 fld public final static javax.lang.model.element.Modifier TRANSIENT
 fld public final static javax.lang.model.element.Modifier VOLATILE
+
 meth public java.lang.String toString()
 meth public static javax.lang.model.element.Modifier valueOf(java.lang.String)
 meth public static javax.lang.model.element.Modifier[] values()

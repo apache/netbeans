@@ -72,7 +72,7 @@ public class ElementUtils {
                 if (result != null) {
                     if (foundInUnamedModule == true) {
                         for (TypeElement elem : new TypeElement[]{result, found}) {
-                            if ((elem.getKind() == ElementKind.CLASS || elem.getKind() == ElementKind.INTERFACE)
+                            if ((elem.getKind().isClass() || elem.getKind().isInterface())
                                     && (((ClassSymbol) elem).packge().modle != syms.unnamedModule)) {
                                 return elem;
                             }

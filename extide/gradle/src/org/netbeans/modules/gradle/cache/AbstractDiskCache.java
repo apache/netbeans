@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.gradle;
+package org.netbeans.modules.gradle.cache;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,47 +25,52 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 import static java.util.logging.Level.*;
 import java.util.logging.Logger;
+import org.netbeans.modules.gradle.spi.GradleSettings;
 
 /**
  *
  * @author lkishalmi
  */
-public abstract class AbstractDiskCache <K, T extends Serializable>  {
+public abstract class AbstractDiskCache <K extends Serializable, T extends Serializable> implements Serializable {
 
     private static final Logger LOG = Logger.getLogger(AbstractDiskCache.class.getName());
 
-    protected final K key;
+    protected K key;
     private boolean valid = false;
+    private transient CacheEntry<T> entry;
 
+    protected AbstractDiskCache() {}
+    
     protected AbstractDiskCache(K key) {
         this.key = key;
     }
 
     public synchronized final CacheEntry<T> loadEntry() {
-        File cacheFile = cacheFile();
-        CacheEntry<T> ret = null;
-        if (cacheFile.canRead()) {
-            try (ObjectInputStream is = new ObjectInputStream(new FileInputStream(cacheFile))) {
-                try {
+        CacheEntry<T> ret = entry;
+        if (ret == null && !GradleSettings.getDefault().isCacheDisabled()) {
+            File cacheFile = cacheFile();
+            if (cacheFile.canRead()) {
+                try (ObjectInputStream is = new ObjectInputStream(new FileInputStream(cacheFile))) {
                     ret = (CacheEntry<T>) is.readObject();
                     valid = true;
-                } catch (ClassNotFoundException ex) {
-                    LOG.log(FINE, "Invalid cache entry.", ex);
+                } catch (ClassNotFoundException | IOException ex) {
+                    LOG.log(INFO, "Could no load project info from {0} due to: {1}", new Object[]{cacheFile, ex.getMessage()});
+                    cacheFile.delete();
                 }
-            } catch (IOException ex) {
-                LOG.log(FINE, "Could no load project info from " + cacheFile, ex);
             }
+            entry = ret;
         }
         return ret;
 
     }
 
     public synchronized final T loadData() {
-        CacheEntry<T> entry = loadEntry();
-        return entry != null && entry.isValid() ? entry.getData() : null;
+        CacheEntry<T> e = loadEntry();
+        return e != null && e.isValid() ? e.getData() : null;
     }
 
     public synchronized final void storeData(T data) {
@@ -74,9 +79,12 @@ public abstract class AbstractDiskCache <K, T extends Serializable>  {
             cacheFile.getParentFile().mkdirs();
         }
         try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(cacheFile))) {
-            os.writeObject(new CacheEntryImpl(data));
+            CacheEntry e = new CacheEntryImpl(data);
+            os.writeObject(e);
+            entry = e;
         } catch (IOException ex) {
-            LOG.log(FINE, "Failed to persist info to" + cacheFile, ex);
+            LOG.log(INFO, "Failed to persist info to {0} due to {1}", new Object[]{cacheFile, ex.getMessage()});
+            cacheFile.delete();
         }
     }
 
@@ -121,7 +129,7 @@ public abstract class AbstractDiskCache <K, T extends Serializable>  {
 
         @Override
         public boolean isValid() {
-            boolean ret = isCompatible();
+            boolean ret = (data != null) && isCompatible();
             if (AbstractDiskCache.this.valid && ret && (sourceFiles != null)) {
                 for (File f : sourceFiles) {
                     if (!f.exists() || (f.lastModified() > timestamp)) {
@@ -137,5 +145,12 @@ public abstract class AbstractDiskCache <K, T extends Serializable>  {
         public T getData() {
             return data;
         }
+
+        @Override
+        public String toString() {
+            Class dataClass = data != null ? data.getClass() : null;
+            return "CacheEntryImpl{" + "data:version=" + dataClass + ":" + version + ", timestamp=" + new Date(timestamp) + ", sourceFiles=" + sourceFiles + '}';
+        }
+        
     }
 }

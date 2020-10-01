@@ -91,7 +91,12 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
         prj.license = (String) info.get("license");
 
         prj.plugins = new TreeSet<>(createSet((Set<String>) info.get("plugins")));
-        prj.subProjects = (Map<String, File>) info.get("project_subProjects");
+        Map<String, File> rawSubprojects = (Map<String, File>) info.get("project_subProjects");
+        Map<String, File> refinedSubprojects = (Map<String, File>) info.get("project_subProjects");
+        for (Map.Entry<String, File> entry : rawSubprojects.entrySet()) {
+            refinedSubprojects.put(entry.getKey(), entry.getValue().isAbsolute() ? entry.getValue() : new File(prj.rootDir, entry.getValue().toString()));
+        }
+        prj.subProjects = Collections.unmodifiableMap(refinedSubprojects);
         prj.includedBuilds = (Map<String, File>) info.get("project_includedBuilds");
         if (info.containsKey("buildClassPath")) {
             prj.buildClassPath = (Set<File>) info.get("buildClassPath");

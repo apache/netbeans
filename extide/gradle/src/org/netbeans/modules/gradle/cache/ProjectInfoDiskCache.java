@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.gradle;
+package org.netbeans.modules.gradle.cache;
 
 import java.io.File;
 import java.util.Collections;
@@ -25,7 +25,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import org.netbeans.modules.gradle.ProjectInfoDiskCache.QualifiedProjectInfo;
+import org.netbeans.modules.gradle.GradleProjectCache;
+import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache.QualifiedProjectInfo;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
 import org.netbeans.modules.gradle.spi.GradleFiles;
@@ -34,7 +35,7 @@ import org.netbeans.modules.gradle.spi.GradleFiles;
  *
  * @author lkishalmi
  */
-public class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, QualifiedProjectInfo> {
+public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, QualifiedProjectInfo> {
 
     // Increase this number if new info is gathered from the projects.
     private static final int COMPATIBLE_CACHE_VERSION = 16;
@@ -108,5 +109,11 @@ public class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Qualifi
         public Quality getQuality() {
             return quality;
         }
+
+        @Override
+        public String toString() {
+            return "QualifiedProjectInfo{" + "quality=" + quality + '}';
+        }
+
     }
 }

@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.gradle;
 
+import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
+import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
@@ -30,7 +32,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,10 +62,9 @@ import static org.netbeans.modules.gradle.GradleDaemon.*;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.JLabel;
-import org.netbeans.modules.gradle.AbstractDiskCache.CacheEntry;
-import org.netbeans.modules.gradle.ProjectInfoDiskCache.QualifiedProjectInfo;
+import org.netbeans.modules.gradle.cache.AbstractDiskCache.CacheEntry;
+import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache.QualifiedProjectInfo;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.openide.awt.Notification;
 import org.openide.awt.NotificationDisplayer;
@@ -87,8 +87,6 @@ public final class GradleProjectCache {
 
     private static AtomicLong timeInLoad = new AtomicLong();
     private static AtomicInteger loadedProjects = new AtomicInteger();
-
-    private static final Map<File, Set<File>> SUB_PROJECT_DIR_CACHE = new ConcurrentHashMap<>();
 
     private GradleProjectCache() {
     }
@@ -113,8 +111,7 @@ public final class GradleProjectCache {
         GradleProject prev = project.project != null ? project.project : fallbackProject(files);
 
         // Try to turn to the cache
-        if (!(ignoreCache || GradleSettings.getDefault().isCacheDisabled())
-                && (prev.getQuality() == FALLBACK)) {
+        if (!ignoreCache  && (prev.getQuality() == FALLBACK)) {
             CacheEntry<QualifiedProjectInfo> cacheEntry = new ProjectInfoDiskCache(files).loadEntry();
             if (cacheEntry != null) {
                 if (cacheEntry.isCompatible()) {
@@ -408,14 +405,10 @@ public final class GradleProjectCache {
         if (gp.getQuality().atLeast(EVALUATED)) {
             GradleBaseProject baseProject = gp.getBaseProject();
             if (baseProject.isRoot()) {
-                SUB_PROJECT_DIR_CACHE.put(baseProject.getProjectDir(), new HashSet<File>(baseProject.getSubProjects().values()));
+                SubProjectDiskCache spCache = SubProjectDiskCache.get(baseProject.getRootDir());
+                spCache.storeData(new SubProjectDiskCache.SubProjectInfo(baseProject));
             }
         }
-    }
-
-    static Boolean isKnownSubProject(File rootDir, File subProjectDir) {
-        Set<File> cache = SUB_PROJECT_DIR_CACHE.get(rootDir);
-        return (cache != null) ? cache.contains(subProjectDir) : null;
     }
 
     private static void saveCachedProjectInfo(QualifiedProjectInfo data, GradleProject gp) {

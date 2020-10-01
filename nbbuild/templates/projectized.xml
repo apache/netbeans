@@ -575,7 +575,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <taskdef name="checkhelpsets" classname="org.netbeans.nbbuild.CheckHelpSets">
             <classpath>
                 <pathelement location="${nbantext.jar}"/>
-                <fileset dir="${nb_all}/javahelp/external">
+                <fileset dir="${nb_all}/platform/javahelp/external">
                     <include name="jh*.jar"/>
                 </fileset>
             </classpath>

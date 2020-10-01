@@ -77,7 +77,7 @@
                 <selector refid="no-extensions" />
             </fileset>
         </path>
-        <property location="${nb_all}/installer/jnlp/release/" name="dirname"/>
+        <property location="${nb_all}/nbbuild/installer/jnlp/release/" name="dirname"/>
         <!-- save directory name for replacing back -->
         <replace file="release/nb-launch.jnlp" token="${dirname}" value="D#I#R#_#N#A#M#E"/>
         <pathconvert dirsep="${file.separator}" pathsep="" property="jar-files-list" refid="jarfiles"/>

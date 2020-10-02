@@ -156,6 +156,7 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
+import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RefactoringElement;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
 import org.netbeans.modules.refactoring.api.WhereUsedQuery;
@@ -619,13 +620,24 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 if (cancel.get()) return ;
                 cancelCallback[0] = () -> query[0].cancelRequest();
                 RefactoringSession refactoring = RefactoringSession.create("FindUsages");
-                query[0].fastCheckParameters();
+                Problem p;
+                p = query[0].checkParameters();
                 if (cancel.get()) return ;
-                query[0].checkParameters();
+                if (p.isFatal()) {
+                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    return ;
+                }
+                p = query[0].preCheck();
+                if (p.isFatal()) {
+                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    return ;
+                }
                 if (cancel.get()) return ;
-                query[0].preCheck();
-                if (cancel.get()) return ;
-                query[0].prepare(refactoring);
+                p = query[0].prepare(refactoring);
+                if (p.isFatal()) {
+                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    return ;
+                }
                 List<Location> locations = new ArrayList<>();
                 for (RefactoringElement re : refactoring.getRefactoringElements()) {
                     if (cancel.get()) return ;

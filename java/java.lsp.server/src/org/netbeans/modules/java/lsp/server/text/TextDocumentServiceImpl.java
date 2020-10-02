@@ -623,18 +623,18 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 Problem p;
                 p = query[0].checkParameters();
                 if (cancel.get()) return ;
-                if (p.isFatal()) {
+                if (p != null && p.isFatal()) {
                     result.completeExceptionally(new IllegalStateException(p.getMessage()));
                     return ;
                 }
                 p = query[0].preCheck();
-                if (p.isFatal()) {
+                if (p != null && p.isFatal()) {
                     result.completeExceptionally(new IllegalStateException(p.getMessage()));
                     return ;
                 }
                 if (cancel.get()) return ;
                 p = query[0].prepare(refactoring);
-                if (p.isFatal()) {
+                if (p != null && p.isFatal()) {
                     result.completeExceptionally(new IllegalStateException(p.getMessage()));
                     return ;
                 }

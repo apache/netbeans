@@ -20,8 +20,13 @@ package org.netbeans.modules.java.lsp.server.text;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
 import java.io.File;
@@ -130,6 +135,7 @@ import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreePathHandle;
+import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.java.source.ui.ElementJavadoc;
@@ -610,11 +616,43 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             JavaSource js = getSource(params.getTextDocument().getUri());
             try {
                 WhereUsedQuery[] query = new WhereUsedQuery[1];
+                List<Location> locations = new ArrayList<>();
                 js.runUserActionTask(cc -> {
                     cc.toPhase(JavaSource.Phase.RESOLVED);
                     if (cancel.get()) return ;
                     Document doc = cc.getSnapshot().getSource().getDocument(true);
                     TreePath path = cc.getTreeUtilities().pathFor(getOffset(doc, params.getPosition()));
+                    if (params.getContext().isIncludeDeclaration()) {
+                        Element decl = cc.getTrees().getElement(path);
+                        if (decl != null) {
+                            TreePath declPath = cc.getTrees().getPath(decl);
+                            if (declPath != null && cc.getCompilationUnit() == declPath.getCompilationUnit()) {
+                                Range range = declarationRange(cc, declPath);
+                                if (range != null) {
+                                    locations.add(new Location(toUri(cc.getFileObject()),
+                                                               range));
+                                }
+                            } else {
+                                ElementHandle<Element> declHandle = ElementHandle.create(decl);
+                                FileObject sourceFile = SourceUtils.getFile(declHandle, cc.getClasspathInfo());
+                                JavaSource source = sourceFile != null ? JavaSource.forFileObject(sourceFile) : null;
+                                if (source != null) {
+                                    source.runUserActionTask(nestedCC -> {
+                                        nestedCC.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                                        Element declHandle2 = declHandle.resolve(nestedCC);
+                                        TreePath declPath2 = declHandle2 != null ? nestedCC.getTrees().getPath(declHandle2) : null;
+                                        if (declPath2 != null) {
+                                            Range range = declarationRange(nestedCC, declPath2);
+                                            if (range != null) {
+                                                locations.add(new Location(toUri(nestedCC.getFileObject()),
+                                                                           range));
+                                            }
+                                        }
+                                    }, true);
+                                }
+                            }
+                        }
+                    }
                     query[0] = new WhereUsedQuery(Lookups.singleton(TreePathHandle.create(path, cc)));
                 }, true);
                 if (cancel.get()) return ;
@@ -638,7 +676,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     result.completeExceptionally(new IllegalStateException(p.getMessage()));
                     return ;
                 }
-                List<Location> locations = new ArrayList<>();
                 for (RefactoringElement re : refactoring.getRefactoringElements()) {
                     if (cancel.get()) return ;
                     locations.add(new Location(toUri(re.getParentFile()), toRange(re.getPosition())));
@@ -652,6 +689,28 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
         });
         return result;
+    }
+
+    private static Range declarationRange(CompilationInfo info, TreePath tp) {
+        Tree t = tp.getLeaf();
+        int[] span;
+        if (TreeUtilities.CLASS_TREE_KINDS.contains(t.getKind())) {
+            span = info.getTreeUtilities().findNameSpan((ClassTree) t);
+        } else if (t.getKind() == Kind.VARIABLE) {
+            span = info.getTreeUtilities().findNameSpan((VariableTree) t);
+        } else if (t.getKind() == Kind.METHOD) {
+            span = info.getTreeUtilities().findNameSpan((MethodTree) t);
+            if (span == null) {
+                span = info.getTreeUtilities().findNameSpan((ClassTree) tp.getParentPath().getLeaf());
+            }
+        } else {
+            return null;
+        }
+        if (span == null) {
+            return null;
+        }
+        return new Range(createPosition(info.getCompilationUnit().getLineMap(), span[0]),
+                         createPosition(info.getCompilationUnit().getLineMap(), span[1]));
     }
 
     private static Range toRange(PositionBounds bounds) throws IOException {

@@ -35,6 +35,7 @@ enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_1_4/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_5_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_6_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_7_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_8_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_2_1/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_1/*

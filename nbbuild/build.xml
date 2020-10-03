@@ -394,6 +394,10 @@ metabuild.hash=${metabuild.hash}</echo>
   <target name="javadoc" depends="bootstrap" description="Builds Javadoc for all NetBeans modules with some APIs">
       <ant dir="javadoctools" target="build-javadoc"/>
   </target>
+  
+  <target name="javadoc-nb" depends="javadoc" description="Builds Javadoc and opens it in a web browser">
+      <nbbrowse file="${netbeans.javadoc.dir}/index.html"/>
+  </target>
 
   <!-- build source zips for selected modules - useful for populating maven repository only-->
   <target name="build-source-zips" depends="init" description="Builds source zips for maven repository inclusion.">

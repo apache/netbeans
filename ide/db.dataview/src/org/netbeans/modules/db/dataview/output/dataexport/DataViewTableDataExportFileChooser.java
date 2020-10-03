@@ -45,15 +45,16 @@ public class DataViewTableDataExportFileChooser {
             new TSVDataExporter(),
             new XLSXDataExporter()
     );
-    
-    private static File defaultDirectory;
 
-    public static void extractAsFile(final JTable table) {
+    private static File previouslySelectedDirectory;
+
+    public synchronized static void extractAsFile(final JTable table) {
         final JFileChooser fc = initializeFileChooser();
         int returnVal = fc.showDialog(null, Bundle.LBL_FILE_CHOOSER());
         switch (returnVal) {
             case JFileChooser.APPROVE_OPTION:
                 FileFilter filter = fc.getFileFilter();
+                previouslySelectedDirectory = fc.getCurrentDirectory();
                 DataExporter selectedExporter = EXPORTERS.stream()
                         .filter(exporter -> exporter.getFileFilter() == filter)
                         .findAny().orElseThrow(() -> new AssertionError("No matching file exporter filter found."));
@@ -90,15 +91,14 @@ public class DataViewTableDataExportFileChooser {
         }
         return file;
     }
-    
+
     private static JFileChooser initializeFileChooser() {
         final JFileChooser fc = new JFileChooser();
         fc.setAcceptAllFileFilterUsed(false);
         EXPORTERS.forEach(exporter -> fc.addChoosableFileFilter(exporter.getFileFilter()));
-        if (defaultDirectory == null) {
-            defaultDirectory = fc.getCurrentDirectory();
+        if (previouslySelectedDirectory != null) {
+            fc.setCurrentDirectory(previouslySelectedDirectory);
         }
-        fc.setCurrentDirectory(defaultDirectory);
         fc.setFileFilter(EXPORTERS.get(0).getFileFilter());
         return fc;
     }

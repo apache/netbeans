@@ -60,54 +60,57 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
     private void initialize(){
         // xml.xsd
         schemas.add(new SchemaInfo("xml.xsd", XML_NS));
-        // application-client
+        // Application Client schema
         schemas.add(new SchemaInfo("application-client_1_4.xsd", J2EE_NS));
         schemas.add(new SchemaInfo("application-client_5.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("application-client_6.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("application-client_7.xsd", NEW_JAVAEE_NS));
-        // application
+        schemas.add(new SchemaInfo("application-client_8.xsd", NEW_JAVAEE_NS));
+        // Application schema
         schemas.add(new SchemaInfo("application_1_4.xsd", J2EE_NS));
         schemas.add(new SchemaInfo("application_5.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("application_6.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("application_7.xsd", NEW_JAVAEE_NS));
-        // web services
+        schemas.add(new SchemaInfo("application_8.xsd", NEW_JAVAEE_NS));
+        // Web services schema
         schemas.add(new SchemaInfo("j2ee_web_services_1_1.xsd", J2EE_NS));
         schemas.add(new SchemaInfo("javaee_web_services_1_2.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("javaee_web_services_1_3.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("javaee_web_services_1_4.xsd", NEW_JAVAEE_NS));
-        // web services client
+        // Web services client schema
         schemas.add(new SchemaInfo("j2ee_web_services_client_1_1.xsd", J2EE_NS));
         schemas.add(new SchemaInfo("javaee_web_services_client_1_2.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("javaee_web_services_client_1_3.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("javaee_web_services_client_1_4.xsd", NEW_JAVAEE_NS));
-        // JCA connector 1.5
+        // Java EE Connector schema
         schemas.add(new SchemaInfo("connector_1_5.xsd", J2EE_NS));
+        schemas.add(new SchemaInfo("connector_1_6.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("connector_1_7.xsd", NEW_JAVAEE_NS));
-        // ejb-jar
+        // Enterprise JavaBeans Deployment Descriptor Schema
         schemas.add(new SchemaInfo("ejb-jar_2_1.xsd", J2EE_NS));
         schemas.add(new SchemaInfo("ejb-jar_3_0.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("ejb-jar_3_1.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("ejb-jar_3_2.xsd", NEW_JAVAEE_NS));
-        // web-app
+        // Web Application Deployment Descriptor schema
         schemas.add(new SchemaInfo("web-app_2_4.xsd", J2EE_NS));
         schemas.add(new SchemaInfo("web-app_2_5.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("web-app_3_0.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("web-app_3_1.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("web-app_4_0.xsd", NEW_JAVAEE_NS));
-
+        // Web Application Deployment Descriptor common definitions schema
         schemas.add(new SchemaInfo("web-common_3_0.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("web-common_3_1.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("web-common_4_0.xsd", NEW_JAVAEE_NS));
-
+        // Web Application Deployment Descriptor fragment schema
         schemas.add(new SchemaInfo("web-fragment_3_0.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("web-fragment_3_1.xsd", NEW_JAVAEE_NS));
         schemas.add(new SchemaInfo("web-fragment_4_0.xsd", NEW_JAVAEE_NS));
-        // jsp
+        // JavaServer Pages Deployment Descriptor schema
         schemas.add(new SchemaInfo("jsp_2_0.xsd", J2EE_NS));
         schemas.add(new SchemaInfo("jsp_2_1.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("jsp_2_2.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("jsp_2_3.xsd", NEW_JAVAEE_NS));
-        // j2ee and java ee schemas
+        // J2EE and Java EE definitions file that contains common schema components
         schemas.add(new SchemaInfo("j2ee_1_4.xsd", J2EE_NS));
         schemas.add(new SchemaInfo("javaee_5.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("javaee_6.xsd", JAVAEE_NS));
@@ -116,13 +119,15 @@ public final class EnterpriseCatalog implements CatalogReader, CatalogDescriptor
         // web 2.2 and 2.3 dtds
         schemas.add(new SchemaInfo("web-app_2_2.dtd", "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN", true)); //NO18N
         schemas.add(new SchemaInfo("web-app_2_3.dtd", "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN", true)); //NO18N
-        // cdi
+        // Contexts and Dependency Injection schema
         schemas.add(new SchemaInfo("beans_1_0.xsd", JAVAEE_NS));
         schemas.add(new SchemaInfo("beans_1_1.xsd", NEW_JAVAEE_NS));
-        // permissions
+        schemas.add(new SchemaInfo("beans_2_0.xsd", NEW_JAVAEE_NS));
+        // Java EE application permissions schema
         schemas.add(new SchemaInfo("permissions_7.xsd", NEW_JAVAEE_NS));
-        // batch API
+        // Schema for batch.xml-based artifact loading in Java Batch
         schemas.add(new SchemaInfo("batchXML_1_0.xsd", NEW_JAVAEE_NS));
+        // Batch Job Specification Language (JSL) schema
         schemas.add(new SchemaInfo("jobXML_1_0.xsd", NEW_JAVAEE_NS));
 
     }

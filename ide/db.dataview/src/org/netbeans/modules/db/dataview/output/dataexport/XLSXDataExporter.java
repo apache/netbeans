@@ -41,6 +41,8 @@ public class XLSXDataExporter extends DataExporter {
     private final String DATE_FORMAT = "yyyy-mm-dd";
     private final String TIME_FORMAT = "hh:mm:ss";
     private final String TIMESTAMP_FORMAT = "yyyy-mm-dd hh:mm:ss.000";
+    private final int MAX_XLSX_CELL_LENGTH = 32767;
+    private final String EXCESS_LENGTH_SUFFIX = " [...]";
 
     private final String APP_VERSION = "Apache NetBeans IDE " + System.getProperty("netbeans.buildnumber");
 
@@ -76,7 +78,13 @@ public class XLSXDataExporter extends DataExporter {
                     } else if (value instanceof Boolean) {
                         ws.value(i + 1, j, (Boolean) value);
                     } else if (value != null) {
-                        ws.value(i + 1, j, value.toString());
+                        String stringValue;
+                        if (value.toString().length() > MAX_XLSX_CELL_LENGTH) {
+                            stringValue = value.toString().subSequence(0, MAX_XLSX_CELL_LENGTH - EXCESS_LENGTH_SUFFIX.length()) + EXCESS_LENGTH_SUFFIX;
+                        } else {
+                            stringValue = value.toString();
+                        }
+                        ws.value(i + 1, j, stringValue);
                     }
                 }
             }

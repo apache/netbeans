@@ -455,7 +455,7 @@ final class DataViewTableUI extends ResultSetJXTable {
         
         JMenuItem exportTable = new JMenuItem(NbBundle.getMessage(DataViewTableUI.class, "TOOLTIP_export_data"));
         
-        exportTable.addActionListener(e -> DataViewTableDataExportFileChooser.extractAsFile(this));
+        exportTable.addActionListener(e -> DataViewTableDataExportFileChooser.extractAsFile(getModel()));
         tablePopupMenu.add(exportTable);
 
         JMenuItem miRefreshAction = new JMenuItem(NbBundle.getMessage(DataViewTableUI.class, "TOOLTIP_refresh"));

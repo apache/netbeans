@@ -18,10 +18,11 @@
  */
 package org.netbeans.modules.db.dataview.output.dataexport;
 
+import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.SQLException;
-import javax.swing.JTable;
-import org.netbeans.modules.db.dataview.util.FileBackedClob;
-import org.openide.util.Exceptions;
+import org.netbeans.modules.db.dataview.output.DataViewTableUIModel;
+import org.netbeans.modules.db.dataview.util.LobHelper;
 
 /**
  * Data export utility methods.
@@ -31,39 +32,44 @@ import org.openide.util.Exceptions;
 public class DataExportUtils {
 
     /**
-     * Returns the column names of a JTable as an array of strings.
+     * Returns the column names of a DataViewTableUIModel as an array of
+     * strings.
      *
-     * @param table A JTable.
+     * @param model DataViewTableUIModel model.
      * @return String[] populated with the column names.
      */
-    public static String[] getColumnNames(JTable table) {
-        String[] header = new String[table.getColumnCount()];
-        for (int i = 0; i < table.getColumnCount(); i++) {
-            header[i] = table.getColumnName(i);
+    public static String[] getColumnNames(final DataViewTableUIModel model) {
+        String[] header = new String[model.getColumnCount()];
+        for (int i = 0; i < model.getColumnCount(); i++) {
+            header[i] = model.getColumnName(i);
         }
         return header;
     }
 
     /**
-     * Returns the contents of a JTable as a two dimensional Object array.
+     * Returns the printable contents of a DataViewTableUIModel as a two
+     * dimensional Object array.
      *
-     * @param table A JTable.
+     * @param model DataViewTableUIModel model.
      * @return Object[][] populated with the table contents.
      */
-    public static Object[][] getTableContents(JTable table) {
-        Object[][] contents = new Object[table.getRowCount()][table.getColumnCount()];
-        for (int i = 0; i < table.getRowCount(); i++) {
-            for (int j = 0; j < table.getColumnCount(); j++) {
-                if (table.getValueAt(i, j) instanceof FileBackedClob) {
-                    FileBackedClob lob = (FileBackedClob) table.getValueAt(i, j);
+    public static Object[][] getTableContents(final DataViewTableUIModel model) {
+        Object[][] contents = new Object[model.getRowCount()][model.getColumnCount()];
+        for (int i = 0; i < model.getRowCount(); i++) {
+            for (int j = 0; j < model.getColumnCount(); j++) {
+                Object value = model.getValueAt(i, j);
+                Class c = model.getColumnClass(j);
+                if (value != null && c == Blob.class) {
+                    value = LobHelper.blobToString((Blob) value);
+                } else if (value != null && c == Clob.class) {
+                    Clob lob = (Clob) value;
                     try {
-                        contents[i][j] = lob.getSubString(1, (int) lob.length());
+                        value = lob.getSubString(1, (int) lob.length());
                     } catch (SQLException ex) {
-                        Exceptions.printStackTrace(ex);
+                        value = LobHelper.clobToString(lob);
                     }
-                } else {
-                    contents[i][j] = table.getValueAt(i, j);
                 }
+                contents[i][j] = value;
             }
         }
         return contents;

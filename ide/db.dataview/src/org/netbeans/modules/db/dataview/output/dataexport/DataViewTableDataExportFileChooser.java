@@ -26,6 +26,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.filechooser.FileFilter;
 import org.netbeans.api.progress.BaseProgressUtils;
+import org.netbeans.modules.db.dataview.output.DataViewTableUIModel;
 import org.openide.util.NbBundle;
 
 /**
@@ -48,7 +49,7 @@ public class DataViewTableDataExportFileChooser {
 
     private static File previouslySelectedDirectory;
 
-    public synchronized static void extractAsFile(final JTable table) {
+    public synchronized static void extractAsFile(final DataViewTableUIModel model) {
         final JFileChooser fc = initializeFileChooser();
         int returnVal = fc.showDialog(null, Bundle.LBL_FILE_CHOOSER());
         switch (returnVal) {
@@ -60,8 +61,8 @@ public class DataViewTableDataExportFileChooser {
                         .findAny().orElseThrow(() -> new AssertionError("No matching file exporter filter found."));
                 final File file = checkFileExtension(fc.getSelectedFile(), selectedExporter);
                 if (checkFile(file)) {
-                    final String[] columnNames = DataExportUtils.getColumnNames(table);
-                    final Object[][] content = DataExportUtils.getTableContents(table);
+                    final String[] columnNames = DataExportUtils.getColumnNames(model);
+                    final Object[][] content = DataExportUtils.getTableContents(model);
                     BaseProgressUtils.showProgressDialogAndRun(
                             () -> selectedExporter.exportData(
                                     columnNames,

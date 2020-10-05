@@ -932,7 +932,7 @@ public class BuildArtifactMapperImpl {
             return false;
         }
     }
-    
+
     @ServiceProvider(service = CompileOnSaveAction.Provider.class, position = Integer.MAX_VALUE)
     public static final class Provider implements CompileOnSaveAction.Provider {
         //@GuardedBy("normCache")

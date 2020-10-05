@@ -355,7 +355,7 @@ public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesC
         }
         File fl = new File(path);
         fl = FileUtil.normalizeFile(fl);
-        return  new File(fl, BaseActionProvider.AUTOMATIC_BUILD_TAG);
+        return new File(fl, BaseActionProvider.AUTOMATIC_BUILD_TAG);
     }
 
     /**

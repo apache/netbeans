@@ -99,7 +99,7 @@ public class BuildArtifactMapperImpl {
 //    private static final Map<URL, File> source2Target = new HashMap<URL, File>();
     private static final Map<URL, Set<ArtifactsUpdated>> source2Listener = new HashMap<URL, Set<ArtifactsUpdated>>();
 
-    private static final long MINIMAL_TIMESTAMP = 2000L;
+    private static final boolean COMPARE_TIMESTAMPS = Boolean.getBoolean(BuildArtifactMapperImpl.class.getName() + ".COMPARE_TIMESTAMPS"); //NOI18N
 
     public static synchronized void addArtifactsUpdatedListener(URL sourceRoot, ArtifactsUpdated listener) {
         Set<ArtifactsUpdated> listeners = source2Listener.get(sourceRoot);
@@ -898,6 +898,10 @@ public class BuildArtifactMapperImpl {
     }
 
     private static boolean targetNewerThanSourceFile(File target, URL approximateSource) {
+        if (!COMPARE_TIMESTAMPS) {
+            LOG.finest("#227791: timestamp comparison disabled");
+            return false;
+        }
         if (!"file".equals(approximateSource.getProtocol())) {
             LOG.log(Level.FINER, "#227791: ignoring non-file-based source {0}", approximateSource);
             return false;

@@ -29,8 +29,8 @@
                 <subpackages>org</subpackages>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/lucene-core-3.5.0.jar</runtime-relative-path>
-                <binary-origin>external/lucene-core-3.5.0.jar</binary-origin>
+                <runtime-relative-path>ext/lucene-core-3.6.2.jar</runtime-relative-path>
+                <binary-origin>external/lucene-core-3.6.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -83,7 +83,7 @@ public class ArchetypeWizards {
     }
 
     public static WizardDescriptor.Panel<WizardDescriptor> basicWizardPanel(ValidationGroup vg, boolean isFinish, @NullAllowed Archetype archetype) {
-        return new BasicWizardPanel(vg, archetype, isFinish, false);
+        return new BasicWizardPanel(vg, archetype, isFinish, false, null);
     }
 
     static WizardDescriptor.Panel<WizardDescriptor> basicWizardPanel(Object p, String type) {
@@ -109,12 +109,21 @@ public class ArchetypeWizards {
      * @see #TEMPLATE_FOLDER
      */
     public static WizardDescriptor.InstantiatingIterator<?> definedArchetype(String groupId, String artifactId, String version, @NullAllowed String repository, String title) {
+        return definedArchetype(groupId, artifactId, version, repository, title, null);
+    }
+    /** 
+     * @sinced 2.138
+     */
+    public static WizardDescriptor.InstantiatingIterator<?> definedArchetype(
+        String groupId, String artifactId, String version, @NullAllowed String repository, String title,
+        Map<String,String> defaultProps
+    ) {
         Archetype arch = new Archetype();
         arch.setGroupId(groupId);
         arch.setArtifactId(artifactId);
         arch.setVersion(version);
         arch.setRepository(repository);
-        return new MavenWizardIterator(arch, title);
+        return new MavenWizardIterator(arch, title, defaultProps);
     }
 
 }

@@ -394,8 +394,8 @@ public final class GenerationUtils {
         Parameters.notNull("fieldTrees", fieldTrees); // NOI18N
 
         int firstNonFieldIndex = 0;
-        Iterator memberTrees = classTree.getMembers().iterator();
-        while (memberTrees.hasNext() && ((Tree)memberTrees.next()).getKind() == Tree.Kind.VARIABLE) {
+        Iterator<? extends Tree> memberTrees = classTree.getMembers().iterator();
+        while (memberTrees.hasNext() && memberTrees.next().getKind() == Tree.Kind.VARIABLE) {
             firstNonFieldIndex++;
         }
         TreeMaker make = getTreeMaker();

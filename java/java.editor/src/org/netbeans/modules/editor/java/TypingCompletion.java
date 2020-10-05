@@ -76,7 +76,7 @@ class TypingCompletion {
         int caretOffset = context.isBackwardDelete() ? context.getOffset() - 1 : context.getOffset();
         if (removedChar == '\"') {
             if ((ts.token().id() == JavaTokenId.STRING_LITERAL && ts.offset() == caretOffset) ||
-                (ts.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL && ts.offset() <= caretOffset - 2)) {
+                (ts.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL && ts.offset() == caretOffset - 2)) {
                 context.getDocument().remove(caretOffset, 1);
             }
         } else if (removedChar == '\'') {
@@ -547,6 +547,13 @@ class TypingCompletion {
         return posWithinQuotes(doc, caretOffset, JavaTokenId.STRING_LITERAL);
     }
     
+ static boolean posWithinTextBlock(Document doc, int caretOffset) {
+        TokenSequence<JavaTokenId> javaTS=javaTokenSequence(doc,caretOffset, false);
+        if(javaTS == null)return false;
+        boolean movePrevious = javaTS.movePrevious();
+        if(!movePrevious)return false;
+        return posWithinQuotes(doc, caretOffset, JavaTokenId.STRING_LITERAL) && javaTS.token().text().toString().equals("\"\"");
+    }
     private static boolean posWithinQuotes(Document doc, int caretOffset, JavaTokenId tokenId) {
         TokenSequence<JavaTokenId> javaTS = javaTokenSequence(doc, caretOffset, false);
         if (javaTS != null) {

@@ -41,7 +41,7 @@ import org.openide.util.NbBundle;
  */
 public class OutputPanel extends javax.swing.JPanel implements HelpCtx.Provider {
 
-    private DefaultListModel listModel;
+    private DefaultListModel<String> listModel;
     private File lastChosenFile = null;
     private boolean isSeparateClasspath = true;
     private List<ProjectModel.CompilationUnitKey> compUnitsKeys;
@@ -51,7 +51,7 @@ public class OutputPanel extends javax.swing.JPanel implements HelpCtx.Provider 
     public OutputPanel() {
         initComponents();
         jTextArea1.setBackground(getBackground());
-        listModel = new DefaultListModel();
+        listModel = new DefaultListModel<>();
         output.setModel(listModel);
         // XXX: for now only single selection
         output.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

@@ -90,7 +90,7 @@ class MultiViewTopComponentLookup extends Lookup {
     private static final class ExclusionResult extends Lookup.Result implements LookupListener {
         
         private final Lookup.Result delegate;
-        private final List listeners = new ArrayList(); // List<LookupListener>
+        private final List<LookupListener> listeners = new ArrayList<>();
         private Collection lastResults;
         
         public ExclusionResult(Lookup.Result delegate) {

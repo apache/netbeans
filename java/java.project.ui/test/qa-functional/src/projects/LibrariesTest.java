@@ -182,9 +182,8 @@ public class LibrariesTest extends JellyTestCase {
         set.add("jar:nbinst://org.netbeans.modules.web.struts/modules/ext/struts/struts.jar!/");
         librariesUrls.put("struts", set);
         set = new TreeSet<String>();
-        set.add("jar:nbinst://org.netbeans.modules.junit/docs/junit-3.8.2-api.zip!/");
-        set.add("jar:nbinst://org.netbeans.modules.junit/modules/ext/junit-3.8.2.jar!/");
-        set.add("jar:nbinst://org.netbeans.modules.junit/modules/ext/junit-4.1.jar!/");
+        set.add("jar:nbinst://org.netbeans.modules.junit/docs/junit-4.12-javadoc.jar!/");
+        set.add("jar:nbinst://org.netbeans.modules.junit/modules/ext/junit-4.12.jar!/");
         librariesUrls.put("junit", set);
         set = new TreeSet<String>();
         set.add("jar:nbinst://org.netbeans.modules.java.j2seproject/ant/extra/org-netbeans-modules-java-j2seproject-copylibstask.jar!/");

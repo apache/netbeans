@@ -163,9 +163,9 @@ ALL:
                             it.set(pref.substring(0, i));
 
                             // next is the list or null
-                            List listForPref = (List) it.next();
+                            List<Object> listForPref = (List<Object>) it.next();
 
-                            ArrayList<Object> switchList = new ArrayList<Object>();
+                            List<Object> switchList = new ArrayList<Object>();
                             it.set(switchList);
 
                             switchList.add(pref.substring(i));
@@ -214,12 +214,12 @@ ALL:
 
     /** Compress tree of Lists into tree of Objects.
      */
-    private static Object[] compress(List item) {
+    private static Object[] compress(List<Object> item) {
         Object[] arr = new Object[item.size()];
 
         Integer last = null;
 
-        Iterator it = item.iterator();
+        Iterator<?> it = item.iterator();
         int i = 0;
 
         while (it.hasNext()) {

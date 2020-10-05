@@ -224,10 +224,19 @@ public final class VariousUtils {
         if (returnType != null) {
             QualifiedName name = QualifiedName.create(returnType);
             assert name != null : returnType;
-            if (returnType instanceof NullableType) {
-                return CodeUtils.NULLABLE_TYPE_PREFIX + name.toString();
+            String typeName = name.toString();
+            if (Type.ARRAY.equals(typeName) || Type.SELF.equals(typeName)) {
+                // For "array" type PHPDoc can contain more specific definition, i.e. MyClass[]
+                // For "self" type PHPDoc can contain more specific definition, i.e. static or $this
+                String typeFromPHPDoc = getReturnTypeFromPHPDoc(root, functionDeclaration);
+                if (typeFromPHPDoc != null) {
+                    return typeFromPHPDoc;
+                }
             }
-            return name.toString();
+            if (returnType instanceof NullableType) {
+                return CodeUtils.NULLABLE_TYPE_PREFIX + typeName;
+            }
+            return typeName;
         }
         return getReturnTypeFromPHPDoc(root, functionDeclaration);
     }

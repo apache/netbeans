@@ -50,7 +50,7 @@ abstract class ContentModel {
     private static ContentModel parseContentModel(PushbackStringTokenizer tokens) {
 
         ContentModel model = null;;
-        List models = new ArrayList(7);
+        List<ContentModel> models = new ArrayList<>(7);
         char type = 'E';
         char ch;            
         String next;
@@ -551,7 +551,7 @@ abstract class ContentModel {
     private static class Food {
 
         // stack emulator
-        private final List list = new LinkedList();
+        private final List<String> list = new LinkedList<>();
         
         // source of lazy stack initilization
         private final Enumeration en;

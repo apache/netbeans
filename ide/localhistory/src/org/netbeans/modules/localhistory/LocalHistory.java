@@ -110,7 +110,7 @@ public class LocalHistory {
         
         String rootPaths = System.getProperty("netbeans.localhistory.historypath");
         if(rootPaths == null || rootPaths.trim().equals("")) {            
-            userDefinedRoots = Collections.EMPTY_SET;               
+            userDefinedRoots = Collections.emptySet();
         } else {
             String[] paths = rootPaths.split(";");
             userDefinedRoots = new HashSet<String>(paths.length);

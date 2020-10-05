@@ -40,6 +40,7 @@ import org.openide.text.NbDocument.CustomToolbar;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.windows.CloneableTopComponent;
 import org.openide.windows.TopComponent;
 
 /**
@@ -197,7 +198,7 @@ class MultiViewCloneableEditor extends CloneableEditor  implements MultiViewElem
     @Override
     public CloseOperationState canCloseElement() {
         final CloneableEditorSupport sup = getLookup().lookup(CloneableEditorSupport.class);
-        Enumeration en = getReference().getComponents();
+        Enumeration<CloneableTopComponent> en = getReference().getComponents();
         if (en.hasMoreElements()) {
             en.nextElement();
             if (en.hasMoreElements()) {

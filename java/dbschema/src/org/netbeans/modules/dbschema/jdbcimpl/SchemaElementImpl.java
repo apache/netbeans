@@ -62,39 +62,41 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
   
     public SchemaElementImpl(ConnectionProvider cp) {
         tables = new DBElementsCollection(this, new TableElement[0]);
-        
-        //workaround for bug #4396371
-        //http://andorra.eng:8080/cgi-bin/ws.exe/bugtraq/bug.hts?where=bugid_value%3D4396371
-        Object hc = String.valueOf(tables.hashCode());
+
+        // NOTE - After doing research, not sure this comment still applys? Remove it?
+        // workaround for bug #4396371
+        // http://andorra.eng:8080/cgi-bin/ws.exe/bugtraq/bug.hts?where=bugid_value%3D4396371
+        String hc = String.valueOf(tables.hashCode());
+
         while (DBElementsCollection.instances.contains(hc)) {
             tables = new DBElementsCollection(this, new TableElement[0]);
             hc = String.valueOf(tables.hashCode());
         }
         DBElementsCollection.instances.add(hc);
-        
-		if (cp != null) {
-			try {
-				String schema;
 
-				dmd = cp.getDatabaseMetaData();
+        if (cp != null) {
+            try {
+                String schema;
 
-				_url = dmd.getURL();
-				_username = dmd.getUserName();
-//				schema = dmd.getUserName();
-				schema = cp.getSchema();
-				_schema = schema == null ? DBIdentifier.create("") : DBIdentifier.create(schema); //NOI18N
-				catalog = cp.getConnection().getCatalog();
-				_catalog = catalog == null ? DBIdentifier.create("") : DBIdentifier.create(catalog); //NOI18N
-				_driver = cp.getDriver();
-				_databaseProductName = dmd.getDatabaseProductName().trim();
-				_databaseProductVersion = dmd.getDatabaseProductVersion();
-				_driverName = dmd.getDriverName();
-				_driverVersion = dmd.getDriverVersion();
-			} catch (Exception exc) {
-				exc.printStackTrace();
-			}
-		}
-        
+                dmd = cp.getDatabaseMetaData();
+
+                _url = dmd.getURL();
+                _username = dmd.getUserName();
+//		schema = dmd.getUserName();
+                schema = cp.getSchema();
+                _schema = schema == null ? DBIdentifier.create("") : DBIdentifier.create(schema); //NOI18N
+                catalog = cp.getConnection().getCatalog();
+                _catalog = catalog == null ? DBIdentifier.create("") : DBIdentifier.create(catalog); //NOI18N
+                _driver = cp.getDriver();
+                _databaseProductName = dmd.getDatabaseProductName().trim();
+                _databaseProductVersion = dmd.getDatabaseProductVersion();
+                _driverName = dmd.getDriverName();
+                _driverVersion = dmd.getDriverVersion();
+            } catch (Exception exc) {
+                exc.printStackTrace();
+            }
+        }
+
         stop = false;
     }
   
@@ -176,7 +178,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
      */
     public TableElement[] getTables() {
         DBElement[] dbe = tables.getElements();
-        return (TableElement[]) Arrays.asList(dbe).toArray(new TableElement[dbe.length]);
+        return Arrays.asList(dbe).toArray(new TableElement[dbe.length]);
     }
 
     /** Find a table by name.
@@ -217,7 +219,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                 LinkedList viewsTmp = new LinkedList();
 //                String user = dmd.getUserName().trim();
                 String user = cp.getSchema();
-                List recycleBinTables;
+                List<String> recycleBinTables;
                 ResultSet rs;
                 
                 DDLBridge bridge = null;
@@ -712,7 +714,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
     }
     
     private List getOracleRecycleBinTables() {
-        List result = new ArrayList();
+        List<String> result = new ArrayList<>();
         try {
             if ( dmd.getDatabaseMajorVersion() < 10 ) {
                 return Collections.EMPTY_LIST;
@@ -739,13 +741,13 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                     " Setting recycle bin tables to an empty list.", 
                     exc); // NOI18N
 
-            result = Collections.EMPTY_LIST;
+            result = Collections.emptyList();
         } catch (AbstractMethodError ame) {
             LOGGER.log(Level.WARNING, "Some older versions of the Oracle " +
                     " driver do not support getDatabaseMajorVersion().  " +
                     " Setting recycle bin tables to an empty list.", 
                     ame); // NOI18N
-            result = Collections.EMPTY_LIST;
+            result = Collections.emptyList();
         }
         return result;
     }

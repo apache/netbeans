@@ -778,7 +778,7 @@ abstract class BaseTable extends JTable implements FocusListener {
         }
 
         if (!isAncestorOf(fe.getOppositeComponent()) || (fe.getOppositeComponent() == null)) {
-            if (isEditing() && (fe.getID() == fe.FOCUS_LOST)) {
+            if (isEditing() && (fe.getID() == FocusEvent.FOCUS_LOST)) {
                 if (PropUtils.isLoggable(BaseTable.class)) {
                     PropUtils.log(
                         BaseTable.class, "ProcessFocusEvent got focus lost to unknown component, removing editor"
@@ -791,7 +791,7 @@ abstract class BaseTable extends JTable implements FocusListener {
 
         if (!inEditorRemoveRequest() && !inEditRequest()) { //XXX inEditRequest probably shouldn't be here
 
-            if ((fe.getOppositeComponent() == null) && (fe.getID() == fe.FOCUS_LOST)) {
+            if ((fe.getOppositeComponent() == null) && (fe.getID() == FocusEvent.FOCUS_LOST)) {
                 //ignore the strange focus to null stuff NetBeans does
                 return;
             }
@@ -842,7 +842,7 @@ abstract class BaseTable extends JTable implements FocusListener {
 
         //Manually hook in the bindings for tab - does not seem to get called
         //automatically
-        if (e.getKeyCode() != e.VK_TAB) {
+        if (e.getKeyCode() != KeyEvent.VK_TAB) {
             if (!suppressDefaultHandling) {
                 //Either the search field or the table should handle up/down, not both
                 super.processKeyEvent(e);

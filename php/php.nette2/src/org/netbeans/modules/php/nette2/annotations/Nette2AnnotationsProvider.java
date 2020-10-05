@@ -41,12 +41,12 @@ public class Nette2AnnotationsProvider extends AnnotationCompletionTagProvider {
 
     @Override
     public List<AnnotationCompletionTag> getFunctionAnnotations() {
-        return Collections.emptyList();
+        return Collections.<AnnotationCompletionTag>emptyList();
     }
 
     @Override
     public List<AnnotationCompletionTag> getTypeAnnotations() {
-        return Collections.emptyList();
+        return Collections.<AnnotationCompletionTag>emptyList();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class Nette2AnnotationsProvider extends AnnotationCompletionTagProvider {
 
     @Override
     public List<AnnotationCompletionTag> getMethodAnnotations() {
-        return Collections.emptyList();
+        return Collections.<AnnotationCompletionTag>emptyList();
     }
 
 }

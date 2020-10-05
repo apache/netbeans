@@ -322,7 +322,7 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
         
         void clear() {
             stopListeners();
-            Reference r = instDelegate;
+            Reference<Object> r = instDelegate;
             instDelegate = null;
             if (r != null) {
                 Object o = r.get();
@@ -458,7 +458,7 @@ implements Action, ContextAwareAction, ChangeListener, Runnable {
                 return true;
             }
             if (obj instanceof Performer) {
-                Performer l = (Performer)obj;
+                Performer<?> l = (Performer<?>) obj;
                 return delegate.equals(l.delegate);
             }
             return false;

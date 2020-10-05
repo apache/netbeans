@@ -68,6 +68,20 @@
                 <file name="x-yaml" url="YamlExample.yaml"/>
             </folder>
         </folder>
+        <folder name="Editor">
+            <folder name="Formatting">
+                <folder name="text">
+                    <folder name="x-yaml">
+                        <file name="TabsAndIndents.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.options.editor.spi.CustomizerFactories.createDefaultTabsAndIndentsCustomizerFactory"/>
+                            <attr name="previewTextFile" stringvalue="org/netbeans/modules/languages/yaml/YamlExample.html"/>
+                            <attr name="position" intvalue="100"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
     </folder>
     <folder name="Templates">
         <folder name="Other">

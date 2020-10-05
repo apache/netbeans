@@ -51,12 +51,12 @@ class DTDGrammar implements ExtendedGrammarQuery {
     // Map<elementname + " " + attributename, String>
     private Map defaultAttributeValues;
     
-    private Set entities, notations;
+    private Set<String> entities, notations;
 
     /** Set&lt;elementName:String> holding all emenets with <code>EMPTY</code> content model.*/
     private Set emptyElements;
 
-    private List/*<String>*/ resolvedEntities;
+    private List<String> resolvedEntities;
     
     /** Creates new DTDGrammar */
     DTDGrammar(Map elementDecls, Map contentModels, Map attrDecls, Map attrDefs, Map enums, Set entities, Set notations, Set emptyElements) {
@@ -85,10 +85,10 @@ class DTDGrammar implements ExtendedGrammarQuery {
     public Enumeration queryEntities(String prefix) {
         if (entities == null) return org.openide.util.Enumerations.empty();
         
-        LinkedList list = new LinkedList();
-        Iterator it = entities.iterator();
+        List<MyEntityReference> list = new LinkedList<>();
+        Iterator<String> it = entities.iterator();
         while ( it.hasNext()) {
-            String next = (String) it.next();
+            String next = it.next();
             if (next.startsWith(prefix)) {
                 list.add (new MyEntityReference(next));
             }
@@ -144,9 +144,9 @@ class DTDGrammar implements ExtendedGrammarQuery {
         String prefix = ctx.getCurrentPrefix();
         
         LinkedList list = new LinkedList ();
-        Iterator it = possibleAttributes.iterator();
+        Iterator<String> it = possibleAttributes.iterator();
         while ( it.hasNext()) {
-            String next = (String) it.next();
+            String next = it.next();
             if (next.startsWith(prefix)) {
                 if (existingAttributes.getNamedItem(next) == null ||
                         next.equals(currentAttrName)) {
@@ -217,9 +217,9 @@ class DTDGrammar implements ExtendedGrammarQuery {
         String prefix = ctx.getCurrentPrefix();
         
         LinkedList list = new LinkedList ();
-        Iterator it = elements.iterator();
+        Iterator<String> it = elements.iterator();
         while ( it.hasNext()) {
-            String next = (String) it.next();
+            String next = it.next();
             if (next.startsWith(prefix)) {
                 boolean empty = emptyElements.contains(next);
                 list.add(new MyElement(next, empty));
@@ -237,9 +237,9 @@ class DTDGrammar implements ExtendedGrammarQuery {
         if (notations == null) return org.openide.util.Enumerations.empty();;
         
         LinkedList list = new LinkedList ();
-        Iterator it = notations.iterator();
+        Iterator<String> it = notations.iterator();
         while ( it.hasNext()) {
-            String next = (String) it.next();
+            String next = it.next();
             if (next.startsWith(prefix)) {
                 list.add (new MyNotation(next));
             }

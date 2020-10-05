@@ -77,7 +77,7 @@ public final class MultiKeyBinding {
      * @see #getKeyStrokeCount()
      */
     public KeyStroke getKeyStroke(int index) {
-        return (KeyStroke)keyStrokeList.get(index);
+        return keyStrokeList.get(index);
     }
     
     /**

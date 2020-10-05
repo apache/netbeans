@@ -492,7 +492,7 @@ public class DomainEditor {
         NodeList propsNodeList = cpElement.getElementsByTagName(CONST_PROP);
 
         //Cycle through each property element
-        HashMap map = new HashMap();
+        Map<String, String> map = new HashMap<>();
         for (int j = 0; j < propsNodeList.getLength(); j++) {
             Node propNode = propsNodeList.item(j);
             NamedNodeMap propsMap = propNode.getAttributes();

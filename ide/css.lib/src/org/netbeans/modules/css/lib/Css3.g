@@ -914,7 +914,9 @@ term
         (functionName ws? LPAREN)=>function //"myfunction(" as predicate
         | VARIABLE
         | IDENT
+        | (LBRACKET WS? IDENT (WS IDENT)* WS? RBRACKET)
         | NUMBER
+        | URANGE
         | PERCENTAGE
         | LENGTH
         | EMS
@@ -1898,6 +1900,10 @@ URI :   U R L
             ((WS)=>WS)? (URL|STRING) WS?
         ')'
     ;
+
+fragment HEXCHAR_WILDCARD: '?' | HEXCHAR;
+
+URANGE: ('u'|'U') PLUS HEXCHAR_WILDCARD+ (MINUS HEXCHAR_WILDCARD+)?;
 
 MOZ_URL_PREFIX
 	:

@@ -1,9 +1,10 @@
 Code completion result for source line:
-set.t|
+text.t|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     take(int)                                  CharSequence
-METHOD     takeWhile(Closure)                         CharSequence
+METHOD     take(int)                                  String
+METHOD     takeWhile(Closure)                         String
+METHOD     tap(Closure)                               Object
 METHOD     toBigDecimal()                             BigDecimal
 METHOD     toBigInteger()                             BigInteger
 METHOD     toBoolean()                                Boolean
@@ -26,7 +27,5 @@ METHOD     toUpperCase(Locale)             [PUBLIC]   String
 METHOD     tokenize()                                 List
 METHOD     tokenize(CharSequence)                     List
 METHOD     tokenize(Character)                        List
-METHOD     tokenize(String)                           List
-METHOD     tr(CharSequence, CharSequence)             CharSequence
-METHOD     tr(String, String)                         String
+METHOD     tr(CharSequence, CharSequence)             String
 METHOD     trim()                          [PUBLIC]   String

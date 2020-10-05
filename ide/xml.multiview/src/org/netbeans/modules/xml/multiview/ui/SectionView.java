@@ -21,6 +21,7 @@ package org.netbeans.modules.xml.multiview.ui;
 
 import javax.swing.JPanel;
 import java.awt.*;
+import java.util.Hashtable;
 
 import org.openide.nodes.Node;
 import org.netbeans.modules.xml.multiview.cookies.SectionFocusCookie;
@@ -34,7 +35,7 @@ import org.netbeans.modules.xml.multiview.cookies.SectionFocusCookie;
 public class SectionView extends PanelView implements SectionFocusCookie, ContainerPanel {
     private JPanel scrollPanel, filler;
     javax.swing.JScrollPane scrollPane;
-    private java.util.Hashtable map;
+    private Hashtable<Node, NodeSectionPanel> map;
     private int sectionCount=0;
     private NodeSectionPanel activePanel;
     private InnerPanelFactory factory = null;
@@ -59,7 +60,7 @@ public class SectionView extends PanelView implements SectionFocusCookie, Contai
     
     public void initComponents() {
         super.initComponents();
-        map = new java.util.Hashtable();
+        map = new Hashtable<>();
         setLayout(new java.awt.BorderLayout());
         scrollPanel = new JPanel();
         scrollPanel.setLayout(new java.awt.GridBagLayout());
@@ -203,7 +204,7 @@ public class SectionView extends PanelView implements SectionFocusCookie, Contai
         
         // the rest components have to be moved up
         java.awt.Component[] components = scrollPanel.getComponents();
-        java.util.AbstractList removedPanels = new java.util.ArrayList();
+        java.util.List<NodeSectionPanel> removedPanels = new java.util.ArrayList<>();
         for (int i=0;i<components.length;i++) {
             if (components[i] instanceof NodeSectionPanel) {
                 NodeSectionPanel pan = (NodeSectionPanel)components[i];
@@ -216,7 +217,7 @@ public class SectionView extends PanelView implements SectionFocusCookie, Contai
             }
         }
         for (int i=0;i<removedPanels.size();i++) {
-            NodeSectionPanel pan = (NodeSectionPanel)removedPanels.get(i);
+            NodeSectionPanel pan = removedPanels.get(i);
             java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 0;
             gridBagConstraints.gridy = pan.getIndex();

@@ -26,7 +26,7 @@ import javax.jws.WebService;
  */
 @WebService
 public class InvalidExcludeAttributeTest {
-    @WebMethod(exclude=true)
+    @WebMethod(operationName = "", exclude=true)
     public void getNamespace(){
     }
 }

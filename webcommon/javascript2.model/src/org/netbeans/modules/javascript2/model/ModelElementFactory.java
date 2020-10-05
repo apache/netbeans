@@ -194,7 +194,7 @@ class ModelElementFactory {
         if (newObject.hasExactName()) {
             newObject.addOccurrence(newObject.getDeclarationName().getOffsetRange());
         }
-        return (JsObjectImpl)newObject;
+        return newObject;
     }
     
     @CheckForNull

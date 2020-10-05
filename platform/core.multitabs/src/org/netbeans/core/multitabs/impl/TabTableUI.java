@@ -28,6 +28,7 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.event.MouseInputListener;
+import javax.swing.plaf.TableUI;
 import javax.swing.plaf.basic.BasicTableUI;
 
 /**
@@ -37,20 +38,34 @@ import javax.swing.plaf.basic.BasicTableUI;
 final class TabTableUI extends BasicTableUI {
 
     static final boolean IS_AQUA = "Aqua".equals( UIManager.getLookAndFeel().getID() );
-    
+
+    private boolean hoverSupport;
+    private int hoverRow = -1;
+    private int hoverColumn = -1;
+
     static Border createTabBorder( JTable table, int tabsLocation ) {
         if( IS_AQUA ) {
             return BorderFactory.createMatteBorder( 1, 0, 0, 0, table.getGridColor());
         } else {
-            if( tabsLocation != JTabbedPane.TOP )
+            if( tabsLocation != JTabbedPane.TOP && !UIManager.getBoolean("nb.multitabs.noTabBorder") ) //NOI18N
                 return BorderFactory.createMatteBorder( 1, 0, 0, 0, table.getGridColor());
         }
         return BorderFactory.createEmptyBorder();
     }
 
+    static boolean isHover( JTable table, int row, int column ) {
+        TableUI ui = table.getUI();
+        if( !(ui instanceof TabTableUI) )
+            return false;
+
+        TabTableUI tabUI = (TabTableUI) ui;
+        return tabUI.hoverRow == row && tabUI.hoverColumn == column;
+    }
+
     @Override
     protected void installDefaults() {
-        super.installDefaults(); //To change body of generated methods, choose Tools | Templates.
+        super.installDefaults();
+
         String lafId = UIManager.getLookAndFeel().getID();
         if( "Windows".equals( lafId ) ) { //NOI18N
             Color background = UIManager.getColor( "TabbedPane.background"); //NOI18N
@@ -100,6 +115,25 @@ final class TabTableUI extends BasicTableUI {
                 txtFont = new Font(txtFont.getName(), Font.PLAIN, txtFont.getSize());
             }
             table.setFont( txtFont );
+        } else {
+            Color background = UIManager.getColor("nb.multitabs.background"); //NOI18N
+            Color foreground = UIManager.getColor("nb.multitabs.foreground"); //NOI18N
+            Color selectedBackground = UIManager.getColor("nb.multitabs.selectedBackground"); //NOI18N
+            Color selectedForeground = UIManager.getColor("nb.multitabs.selectedForeground"); //NOI18N
+            Color gridColor = UIManager.getColor("nb.multitabs.gridColor"); //NOI18N
+
+            if (background != null)
+                table.setBackground(background);
+            if (foreground != null)
+                table.setForeground(foreground);
+            if (selectedBackground != null)
+                table.setSelectionBackground(selectedBackground);
+            if (selectedForeground != null)
+                table.setSelectionForeground(selectedForeground);
+            if (gridColor != null)
+                table.setGridColor(gridColor);
+
+            hoverSupport = UIManager.getColor("nb.multitabs.hoverBackground") != null; //NOI18N
         }
     }
 
@@ -145,6 +179,10 @@ final class TabTableUI extends BasicTableUI {
             @Override
             public void mouseExited( MouseEvent e ) {
                 orig.mouseExited( e );
+
+                if (hoverSupport) {
+                    setHover( -1, -1 );
+                }
             }
 
             @Override
@@ -155,6 +193,31 @@ final class TabTableUI extends BasicTableUI {
             @Override
             public void mouseMoved( MouseEvent e ) {
                 orig.mouseMoved( e );
+
+                if (hoverSupport) {
+                    Point p = e.getPoint();
+                    int row = table.rowAtPoint( p );
+                    int column = table.columnAtPoint( p );
+                    setHover(row, column);
+                }
+            }
+
+            private void setHover( int row, int column ) {
+                if (row == hoverRow && column == hoverColumn) {
+                    return;
+                }
+
+                int oldRow = hoverRow;
+                int oldColumn = hoverColumn;
+                hoverRow = row;
+                hoverColumn = column;
+
+                if (oldRow != -1 && oldColumn != -1) {
+                    table.repaint(table.getCellRect(oldRow, oldColumn, true));
+                }
+                if (row != -1 && column != -1) {
+                    table.repaint(table.getCellRect(row, column, true));
+                }
             }
         };
     }

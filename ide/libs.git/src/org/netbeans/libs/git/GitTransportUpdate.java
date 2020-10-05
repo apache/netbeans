@@ -74,14 +74,27 @@ public final class GitTransportUpdate {
         this.type = getType(update.getLocalName());
     }
 
-    GitTransportUpdate (URIish uri, RemoteRefUpdate update, Map<String, GitBranch> remoteBranches) {
+    /**
+     *
+     * @param uri uri of the repo.
+     * @param update
+     * @param remoteBranches key value list of remote branches.
+     * @param remoteTags key value list of remote tags. Key - name of the tag, value - id (hash) of the tag.
+     */
+    GitTransportUpdate(URIish uri, RemoteRefUpdate update, Map<String, GitBranch> remoteBranches, Map<String, String> remoteTags) {
         this.localName = stripRefs(update.getSrcRef());
         this.remoteName = stripRefs(update.getRemoteName());
-        this.oldObjectId = getOldRevisionId(remoteBranches.get(remoteName));
+        this.type = getType(update.getRemoteName());
+        if (type == type.TAG) {
+            //get object id for deleted tag.
+            this.oldObjectId = remoteTags.get(remoteName);
+        } else {
+            this.oldObjectId = getOldRevisionId(remoteBranches.get(remoteName));
+        }
+
         this.newObjectId = update.getNewObjectId() == null || ObjectId.zeroId().equals(update.getNewObjectId()) ? null : update.getNewObjectId().getName();
         this.result = GitRefUpdateResult.valueOf(update.getStatus().name());
         this.uri = uri.toString();
-        this.type = getType(update.getRemoteName());
     }
     
     /**

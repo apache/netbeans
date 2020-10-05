@@ -38,7 +38,8 @@ public class DarkNimbusLookAndFeel extends NimbusLookAndFeel {
     @Override
     public UIDefaults getDefaults() {
         UIDefaults res = super.getDefaults();
-        res.put( "nb.dark.theme", Boolean.TRUE );
+        res.put( "nb.dark.theme", Boolean.TRUE ); //NOI18N
+        res.put( "nb.preferred.color.profile", "Norway Today"); //NOI18N
         return res;
     }
     

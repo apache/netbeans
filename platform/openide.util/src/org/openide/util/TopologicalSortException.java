@@ -316,10 +316,10 @@ public final class TopologicalSortException extends Exception {
         visited.add(vertex.object);
         vertex.visited = true;
 
-        Iterator it = vertex.edges();
+        Iterator<Vertex> it = vertex.edges();
 
         while (it.hasNext()) {
-            Vertex v = (Vertex) it.next();
+            Vertex v = it.next();
             visitDualGraph(v, visited);
         }
     }
@@ -355,7 +355,7 @@ public final class TopologicalSortException extends Exception {
         /** Iterator over edges
          * @return iterator of Vertex items
          */
-        public Iterator edges() {
+        public Iterator<Vertex> edges() {
             if (!sorted) {
                 Collections.sort(edgesFrom);
                 sorted = true;

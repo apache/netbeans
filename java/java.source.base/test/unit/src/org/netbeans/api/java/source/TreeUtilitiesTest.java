@@ -34,6 +34,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.File;
 import java.io.OutputStreamWriter;
@@ -45,6 +46,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -641,6 +643,52 @@ public class TreeUtilitiesTest extends NbTestCase {
 
         assertNotNull(el);
         assertEquals("s", el.toString());
+    }
+
+    public void testNotUsingLiveScope() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_12");
+        } catch (IllegalArgumentException ex) {
+            //this test cannot pass on JDK <12, as javac there does not allow variables to own other variables
+            return ;
+        }
+        ClassPath boot = ClassPathSupport.createClassPath(SourceUtilsTestUtil.getBootClassPath().toArray(new URL[0]));
+        FileObject testFile = FileUtil.createData(FileUtil.createMemoryFileSystem().getRoot(), "Test.java");
+        try (Writer w = new OutputStreamWriter(testFile.getOutputStream())) {
+            w.append("import java.lang.String;\n" +
+                     "public class Test {\n" +
+                     "    void test(boolean b) {\n" +
+                     "        int i1;\n" +
+                     "        int i2;\n" +
+                     "        int i3;\n" +
+                     "        int i4;\n" +
+                     "        int i5;\n" +
+                     "        int i6;\n" +
+                     "        int scopeHere = 0;\n" +
+                     "    }\n" +
+                     "}\n");
+        }
+        JavaSource js = JavaSource.create(ClasspathInfo.create(boot, ClassPath.EMPTY, ClassPath.EMPTY), testFile);
+        js.runUserActionTask(new Task<CompilationController>() {
+            @Override
+            public void run(CompilationController parameter) throws Exception {
+                parameter.toPhase(Phase.RESOLVED);
+                TreePath[] path = new TreePath[1];
+                new TreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitVariable(VariableTree node, Void p) {
+                        if (node.getName().contentEquals("scopeHere")) {
+                            path[0] = new TreePath(getCurrentPath(), node.getInitializer());
+                        }
+                        return super.visitVariable(node, p);
+                    }
+                }.scan(parameter.getCompilationUnit(), null);
+                Scope scope = parameter.getTrees().getScope(path[0]);
+                StatementTree st = parameter.getTreeUtilities().parseStatement("{ String t; }", new SourcePositions[1]);
+                assertEquals(Kind.BLOCK, st.getKind());
+                parameter.getTreeUtilities().attributeTree(st, scope);
+            }
+        }, true);
     }
 
     public void testIsEndOfCompoundVariableDeclaration() throws Exception {

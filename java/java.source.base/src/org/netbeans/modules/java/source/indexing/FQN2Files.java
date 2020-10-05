@@ -38,8 +38,10 @@ import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.ElementScanner9;
 import javax.tools.JavaFileObject;
+import org.netbeans.modules.java.source.TreeShims;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -76,7 +78,7 @@ public final class FQN2Files {
                 if (value == null) {
                     props.setProperty(fqn, file.toExternalForm());
                 }
-                return super.visitType(e, p);
+                return scan(e.getEnclosedElements(), p);
             }
             @Override
             public Object visitModule(ModuleElement e, Object p) {
@@ -99,7 +101,15 @@ public final class FQN2Files {
                     }
                 }
                 return null;
-            }            
+            }  
+            @Override
+            public Object scan(Element e, Object p) {
+                if (TreeShims.isRecordComponent(e)) {
+                    return visitVariable((VariableElement) e, p);
+                } else {
+                    return super.scan(e, p);
+                }
+            }
         }.scan(topLevelElements, null);
     }
 

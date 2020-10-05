@@ -21,6 +21,7 @@ package org.netbeans.modules.java.editor.completion;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 import java.util.Collections;
 import java.util.List;
@@ -46,6 +47,10 @@ import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
+import org.openide.util.lookup.ServiceProvider;
+import org.openide.xml.EntityCatalog;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -118,4 +123,19 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         LifecycleManager.getDefault().saveAll();
     }
 
+    @ServiceProvider(service=EntityCatalog.class)
+    public static final class TestEntityCatalogImpl extends EntityCatalog {
+
+        @Override
+        public InputSource resolveEntity(String publicID, String systemID) throws SAXException, IOException {
+            switch (publicID) {
+                case "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN":
+                    return new InputSource(TestEntityCatalogImpl.class.getResourceAsStream("/org/netbeans/modules/editor/settings/storage/fontscolors/EditorFontsColors-1_1.dtd"));
+                case "-//NetBeans//DTD Editor Code Templates settings 1.0//EN":
+                    return new InputSource(TestEntityCatalogImpl.class.getResourceAsStream("/org/netbeans/lib/editor/codetemplates/storage/EditorCodeTemplates-1_0.dtd"));
+            }
+            return null;
+        }
+
+    }
 }

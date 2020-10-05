@@ -139,7 +139,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden1, res);
     }
 
@@ -355,7 +355,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden);
     }
 
@@ -429,7 +429,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden);
     }
 
@@ -512,10 +512,10 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden1);
         res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden2);
     }
      
@@ -603,10 +603,10 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden1);
         res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden2);
     }
      
@@ -692,10 +692,10 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden1);
         res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden2);
     }
      
@@ -751,7 +751,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         }).commit();
         
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden);
     }
      
@@ -801,7 +801,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/package-info.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -841,7 +841,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -878,7 +878,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
 
@@ -953,7 +953,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden);
     }
     
@@ -998,7 +998,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/package-info.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden, res);
     }
     
@@ -1064,7 +1064,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden1);
     }
 
@@ -1130,7 +1130,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(golden1, res);
     }
 
@@ -1209,7 +1209,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/Krtek.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden1);
     }
 
@@ -1308,7 +1308,7 @@ public class CompilationUnitTest extends GeneratorTestMDRCompat {
         ModificationResult result = javaSource.runModificationTask(task);
         result.commit();
         String res = TestUtilities.copyFileToString(new File(getDataDir().getAbsolutePath() + "/zoo/I.java"));
-        System.err.println(res);
+        //System.err.println(res);
         assertEquals(res, golden1);
     }
     

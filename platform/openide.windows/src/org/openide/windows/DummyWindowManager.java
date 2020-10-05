@@ -20,6 +20,7 @@
 package org.openide.windows;
 
 import java.awt.Frame;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
@@ -301,6 +302,10 @@ final class DummyWindowManager extends WindowManager {
     }
 
     protected void topComponentOpen(TopComponent tc) {
+        if (GraphicsEnvironment.isHeadless()) {
+            return;
+        }
+
         JFrame f = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, tc);
 
         if (f == null) {

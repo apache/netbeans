@@ -859,7 +859,8 @@ public final class ClassIndex {
                         case CLASS:
                             result.add(ClassIndexImpl.UsageType.SUPER_CLASS);
                             break;
-                        case ENUM:	//enum is final
+                        case ENUM:
+                            result.add(ClassIndexImpl.UsageType.SUPER_CLASS);
                             break;
                         case OTHER:
                         case PACKAGE:
@@ -867,6 +868,10 @@ public final class ClassIndex {
                             result.add(ClassIndexImpl.UsageType.SUPER_CLASS);
                             break;
                         default:
+                            if (elementKind.name().equals("RECORD")) {
+                                //no subclasses(?)
+                                break;
+                            }
                             throw new IllegalArgumentException ();                                        
                     }
                     break;

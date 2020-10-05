@@ -43,7 +43,7 @@ public class PropertyInfo {
         name = (String)propertyInfo.get("name"); // NOI18N
         JSONArray longHandsArray = (JSONArray)propertyInfo.get("longhands"); // NOI18N
         if (longHandsArray == null) {
-            longhands = Collections.EMPTY_LIST;
+            longhands = Collections.emptyList();
         } else {
             longhands = (List<String>)longHandsArray;
         }
@@ -57,7 +57,7 @@ public class PropertyInfo {
      */
     PropertyInfo(String name) {
         this.name = name;
-        this.longhands = Collections.EMPTY_LIST;
+        this.longhands = Collections.emptyList();
     }
 
     /**

@@ -1020,35 +1020,41 @@ public class ElementJavadoc {
                     }
                     break;
                 }
-                if (element.getKind() == ElementKind.METHOD) {
-                    if (!ret.containsKey(DocTree.Kind.RETURN)) {
+            }
+
+            if (element.getKind() == ElementKind.METHOD) {
+                if (!ret.containsKey(DocTree.Kind.RETURN)) {
+                    //If the method does not have a return javadoc then we need to get javadoc from parent.
+                    if (inheritedDoc == null && !inheritedDocNeeded.getAndSet(true)) {
+                        inheritedDoc = getInherited((ExecutableElement)element, (TypeElement)element.getEnclosingElement(), info, funct);
+                    }
+                    if (inheritedDoc != null && inheritedDoc.containsKey(DocTree.Kind.RETURN)) {
+                        ret.put(DocTree.Kind.RETURN, new StringBuilder(inheritedDoc.get(DocTree.Kind.RETURN)));
+                    }
+                }
+                for (int i = 0; i < ((ExecutableElement)element).getParameters().size(); i++) {
+                    //Check every parameters in the method. If the current parameter has javadoc we do nothing.
+                    //If the current parameter does not have javadoc we try to get javadoc from the parent.
+                    if (!ret.containsKey(i)) {
                         if (inheritedDoc == null && !inheritedDocNeeded.getAndSet(true)) {
                             inheritedDoc = getInherited((ExecutableElement)element, (TypeElement)element.getEnclosingElement(), info, funct);
                         }
-                        if (inheritedDoc != null && inheritedDoc.containsKey(DocTree.Kind.RETURN)) {
-                            ret.put(DocTree.Kind.RETURN, new StringBuilder(inheritedDoc.get(DocTree.Kind.RETURN)));
-                        }                    
-                    }
-                    for (int i = 0; i < ((ExecutableElement)element).getParameters().size(); i++) {
-                        if (!ret.containsKey(i)) {
-                            if (inheritedDoc == null && !inheritedDocNeeded.getAndSet(true)) {
-                                inheritedDoc = getInherited((ExecutableElement)element, (TypeElement)element.getEnclosingElement(), info, funct);
-                            }
-                            if (inheritedDoc != null && inheritedDoc.containsKey(i)) {
-                                ret.put(i, new StringBuilder(inheritedDoc.get(i)));
-                            }                    
+                        if (inheritedDoc != null && inheritedDoc.containsKey(i)) {
+                            ret.put(i, new StringBuilder(inheritedDoc.get(i)));
                         }
                     }
-                    for (TypeMirror thrownType : ((ExecutableElement)element).getThrownTypes()) {
-                        Element e = thrownType.getKind() == TypeKind.TYPEVAR ? ((TypeVariable)thrownType).asElement() : ((DeclaredType)thrownType).asElement();
-                        if (!ret.containsKey(e)) {
-                            if (inheritedDoc == null && !inheritedDocNeeded.getAndSet(true)) {
-                                inheritedDoc = getInherited((ExecutableElement)element, (TypeElement)element.getEnclosingElement(), info, funct);
-                            }
-                            if (inheritedDoc != null && inheritedDoc.containsKey(e)) {
-                                ret.put(e, new StringBuilder(inheritedDoc.get(e)));
-                            }
-                        }                    
+                }
+                for (TypeMirror thrownType : ((ExecutableElement)element).getThrownTypes()) {
+                    //Check every throwables listed in the method. If for the current throwable there is not a javadoc try to get it from the parent.
+                    //If for the current throwable there is a javadoc we show the current javadoc.
+                    Element e = thrownType.getKind() == TypeKind.TYPEVAR ? ((TypeVariable)thrownType).asElement() : ((DeclaredType)thrownType).asElement();
+                    if (!ret.containsKey(e)) {
+                        if (inheritedDoc == null && !inheritedDocNeeded.getAndSet(true)) {
+                            inheritedDoc = getInherited((ExecutableElement)element, (TypeElement)element.getEnclosingElement(), info, funct);
+                        }
+                        if (inheritedDoc != null && inheritedDoc.containsKey(e)) {
+                            ret.put(e, new StringBuilder(inheritedDoc.get(e)));
+                        }
                     }
                 }
             }

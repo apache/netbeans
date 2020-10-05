@@ -76,11 +76,7 @@ public final class XMLDataObjectMimeTypeTest extends NbTestCase {
 
     private void waitForAWT() throws Exception {
         // just wait till all the stuff from AWT is finished
-        Mutex.EVENT.readAccess(new Mutex.Action() {
-            public Object run() {
-                return null;
-            }
-        });
+        Mutex.EVENT.readAccess((Mutex.Action) () -> null);
     }
 
     protected void tearDown() throws Exception {
@@ -89,7 +85,7 @@ public final class XMLDataObjectMimeTypeTest extends NbTestCase {
         super.tearDown();
         if (obj != null) {
             CloseCookie cc;
-            cc = (CloseCookie)obj.getCookie(CloseCookie.class);
+            cc = obj.getCookie(CloseCookie.class);
             if (cc != null) {
                 cc.close();
             }

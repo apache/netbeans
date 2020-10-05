@@ -34,6 +34,7 @@ import java.util.*;
 import javax.lang.model.element.Name;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.lang.model.element.Modifier;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.guards.DocumentGuards;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -577,7 +578,28 @@ public class Reformatter implements ReformatTask {
             try {
                 if (endPos < 0)
                     return false;
-                Boolean ret = tokens.offset() <= endPos ? (tree.getKind().toString().equals(TreeShims.SWITCH_EXPRESSION)) ? scanSwitchExpression(tree, p) : (tree.getKind().toString().equals(TreeShims.YIELD)) ? scanYield(tree, p) : super.scan(tree, p) : null;
+                if (tokens.offset() > endPos)
+                    return true;
+
+                Boolean ret;
+
+                switch (tree.getKind().toString()) {
+                    case TreeShims.SWITCH_EXPRESSION:
+                        ret = scanSwitchExpression(tree, p);
+                        break;
+                    case TreeShims.YIELD:
+                        ret = scanYield(tree, p);
+                        break;
+                    case TreeShims.BINDING_PATTERN:
+                        ret = scanBindingPattern(tree, p);
+                        break;
+                    case TreeShims.RECORD:
+                        ret = scanRecord((ClassTree) tree, p);
+                        break;
+                    default:
+                        ret = super.scan(tree, p);
+                        break;
+                }
                 return ret != null ? ret : true;
             }
             finally {
@@ -1061,6 +1083,14 @@ public class Reformatter implements ReformatTask {
                                 }
                                 blankLines(cs.getBlankLinesAfterClass());
                                 break;
+                            default:
+                                if (member.getKind().toString().equals(TreeShims.RECORD)) {
+                                if (!first)
+                                   blankLines(cs.getBlankLinesBeforeMethods());
+                                    scanRecord((ClassTree)member, p);
+                                blankLines(cs.getBlankLinesAfterMethods());
+                                break;
+                                }    
                         }
                         first = false;
                     }
@@ -1132,8 +1162,21 @@ public class Reformatter implements ReformatTask {
                             space();
                         }
                     } else if (afterAnnotation) {
+                        WrapStyle newWrapStyle = cs.wrapAnnotations();
+                        if (parent instanceof ClassTree) {
+                            for (Tree member : ((ClassTree) parent).getMembers()) {
+                                if (member.getKind().toString().equals(TreeShims.RECORD)) {
+                                    ClassTree cls = (ClassTree) member;
+                                    for (Tree recMember : cls.getMembers()) {
+                                        if (recMember.equals(getCurrentPath().getLeaf())) {
+                                            newWrapStyle = WrapStyle.WRAP_NEVER;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         if (org.netbeans.api.java.source.TreeUtilities.CLASS_TREE_KINDS.contains(parent.getKind()) || parent.getKind() == Tree.Kind.BLOCK) {
-                            switch (cs.wrapAnnotations()) {
+                            switch (newWrapStyle) {
                                 case WRAP_ALWAYS:
                                     newline();
                                     break;
@@ -1236,6 +1279,179 @@ public class Reformatter implements ReformatTask {
                 continuationIndent = old;
             }
             return true;
+        }
+
+        private Boolean scanRecord(ClassTree node, Void p) {
+            boolean old = continuationIndent;
+            int oldIndent = indent;
+            try {
+                continuationIndent = true;
+                ModifiersTree mods = node.getModifiers();
+                if (mods != null) {
+                    if (scan(mods, p)) {
+
+                        if (cs.placeNewLineAfterModifiers()) {
+                            newline();
+                        } else {
+                            space();
+                        }
+                    } else if (afterAnnotation) {
+                        newline();
+                    }
+                    afterAnnotation = false;
+                }
+                accept(IDENTIFIER);
+                space();
+
+                if (!ERROR.contentEquals(node.getSimpleName())) {
+                    accept(IDENTIFIER, UNDERSCORE);
+                }
+
+                List<? extends TypeParameterTree> tparams = node.getTypeParameters();
+                if (tparams != null && !tparams.isEmpty()) {
+                    if (LT == accept(LT)) {
+                        tpLevel++;
+                    }
+
+                    for (Iterator<? extends TypeParameterTree> it = tparams.iterator(); it.hasNext();) {
+                        TypeParameterTree tparam = it.next();
+                        scan(tparam, p);
+                        if (it.hasNext()) {
+                            spaces(cs.spaceBeforeComma() ? 1 : 0);
+                            accept(COMMA);
+                            spaces(cs.spaceAfterComma() ? 1 : 0);
+                        }
+                    }
+                    JavaTokenId accepted;
+                    if (tpLevel > 0 && (accepted = accept(GT, GTGT, GTGTGT)) != null) {
+                        switch (accepted) {
+                            case GTGTGT:
+                                tpLevel -= 3;
+                                break;
+                            case GTGT:
+                                tpLevel -= 2;
+                                break;
+                            case GT:
+                                tpLevel--;
+                                break;
+                        }
+                    }
+                    spaces(0, true);
+                }
+
+                spaces(cs.spaceBeforeMethodDeclParen() ? 1 : 0);
+                accept(LPAREN);
+                List<? extends Tree> members = node.getMembers();
+                List recParams = new ArrayList<Tree>();
+
+                for (Tree member : members) {
+                    if (member.getKind() == Tree.Kind.VARIABLE) {
+                        ModifiersTree modifiers = ((VariableTree) member).getModifiers();
+                        Set<Modifier> modifierSet = modifiers.getFlags();
+
+                        if (!modifierSet.contains(Modifier.STATIC)) {
+                            recParams.add(member);
+                        }
+                    }
+                }
+
+                if (!recParams.isEmpty()) {
+                    spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
+                    wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, recParams);
+                }
+                accept(RPAREN);
+                List<? extends Tree> impls = node.getImplementsClause();
+                if (impls != null && !impls.isEmpty()) {
+                    wrapToken(cs.wrapExtendsImplementsKeyword(), 1, IMPLEMENTS);
+                    wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, impls);
+                }
+                int oldLastIndent = lastIndent;
+                int lastMaxPreservedBlankLines = maxPreservedBlankLines;
+                maxPreservedBlankLines = cs.getMaximumBlankLinesInDeclarations();
+                classLeftBracePlacement();
+
+                continuationIndent = old;
+                try {
+                    if (members != null && !members.isEmpty()) {
+
+                        boolean isFirstMember = true;
+                        blankLines(node.getSimpleName().length() == 0 ? 0 : cs.getBlankLinesAfterClassHeader());
+                        for (Tree member : members) {
+                            if (recParams.contains(member)) {
+                                continue;
+                            }
+                            blankLines(0);
+                            switch (member.getKind()) {
+                                case VARIABLE:
+                                    boolean b = tokens.moveNext();
+                                    if (b) {
+                                        tokens.movePrevious();
+                                        if (!isFirstMember) {
+                                            blankLines(cs.getBlankLinesBeforeFields());
+                                        }
+                                        scan(member, p);
+                                        blankLines(cs.getBlankLinesAfterFields());
+                                    }
+                                    break;
+                                default:
+                                    if (!isFirstMember) {
+                                        blankLines(cs.getBlankLinesBeforeMethods());
+                                    }
+                                    scan(member, p);
+                                    blankLines(cs.getBlankLinesAfterMethods());
+                            }
+                            if (isFirstMember) {
+                                isFirstMember = false;
+                            }
+                        }
+
+                        spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
+                    }
+                } finally {
+                    indent = oldIndent;
+                    lastIndent = oldLastIndent;
+                    continuationIndent = old;
+                    maxPreservedBlankLines = lastMaxPreservedBlankLines;
+                }
+                newline();
+                accept(RBRACE);
+            } finally {
+                continuationIndent = old;
+            }
+            return true;
+        }
+
+        private void classLeftBracePlacement() {
+            CodeStyle.BracePlacement bracePlacement = cs.getClassDeclBracePlacement();
+            boolean spaceBeforeLeftBrace = cs.spaceBeforeClassDeclLeftBrace();
+            int old = indent = lastIndent;
+            int halfIndent = lastIndent;
+            switch (bracePlacement) {
+                case SAME_LINE:
+                    spaces(spaceBeforeLeftBrace ? 1 : 0, tokens.offset() < startOffset);
+                    accept(LBRACE);
+                    indent = lastIndent + indentSize;
+                    break;
+                case NEW_LINE:
+                    newline();
+                    accept(LBRACE);
+                    indent = lastIndent + indentSize;
+                    break;
+                case NEW_LINE_HALF_INDENTED:
+                    int oldLast = lastIndent;
+                    indent = lastIndent + (indentSize >> 1);
+                    halfIndent = indent;
+                    newline();
+                    accept(LBRACE);
+                    indent = oldLast + indentSize;
+                    break;
+                case NEW_LINE_INDENTED:
+                    indent = lastIndent + indentSize;
+                    halfIndent = indent;
+                    newline();
+                    accept(LBRACE);
+                    break;
+            }
         }
 
         @Override
@@ -1350,7 +1566,7 @@ public class Reformatter implements ReformatTask {
             TreePath path = getCurrentPath().getParentPath();
             Tree parent = path.getLeaf();
             path = path.getParentPath();
-            Tree grandParent = path.getLeaf();
+            Tree grandParent = path != null ? path.getLeaf(): parent;
             boolean isStandalone = parent.getKind() != Tree.Kind.VARIABLE ||
                     org.netbeans.api.java.source.TreeUtilities.CLASS_TREE_KINDS.contains(grandParent.getKind()) || grandParent.getKind() == Tree.Kind.BLOCK;
             while (tokens.offset() < endPos) {
@@ -2576,6 +2792,17 @@ public class Reformatter implements ReformatTask {
             return handleYield(node, p);
         }
 
+        private Boolean scanBindingPattern(Tree node, Void p) {
+            Name name = TreeShims.getBinding(node);
+            Tree type = TreeShims.getBindingPatternType(node);
+            scan(type, p);
+            if (name != null) {
+                space();
+                accept(IDENTIFIER);
+            }
+            return true;
+        }
+
         private Boolean handleYield(Tree node, Void p) {
             ExpressionTree exprTree = TreeShims.getYieldValue(node);
             if (exprTree != null) {
@@ -2712,6 +2939,7 @@ public class Reformatter implements ReformatTask {
             if(statements != null)
             accept(COLON);
             else {
+                space();
                 accept(ARROW);
                 caseBody = TreeShims.getBody(node);
                 if (caseBody instanceof StatementTree)
@@ -3131,7 +3359,10 @@ public class Reformatter implements ReformatTask {
             space();
             accept(INSTANCEOF);
             space();
-            scan(node.getType(), p);
+            Tree pattern = TreeShims.getPattern(node);
+            if (pattern == null)
+                pattern = node.getType();
+            scan(pattern, p);
             return true;
         }
 

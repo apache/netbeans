@@ -25,7 +25,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Locale;
 import javax.swing.JComponent;
-import javafx.scene.Node;
 import org.netbeans.html.context.spi.Contexts.Id;
 
 /** Generates factory method in class specified by {@link #className()}
@@ -58,9 +57,9 @@ public @interface HTMLComponent {
      * two types: <em>Swing</em> and <em>JavaFX</em>. 
      * To request Swing component
      * return {@link JComponent}.<b>class</b>. To request JavaFX 
-     * component, return {@link Node}.<b>class</b>.
+     * component, return {@link javafx.scene.Node}.<b>class</b>.
      * 
-     * @return either {@link JComponent} or {@link Node} class
+     * @return either {@link JComponent} or {@link javafx.scene.Node} class
      */
     Class<?> type();
     

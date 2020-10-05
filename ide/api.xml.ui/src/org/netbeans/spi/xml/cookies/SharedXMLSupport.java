@@ -302,7 +302,7 @@ class SharedXMLSupport {
 
         // report which parser implementation is used
         
-        Class klass = parser.getClass();
+        Class<?> klass = parser.getClass();
         try {
             ProtectionDomain domain = klass.getProtectionDomain();
             CodeSource source = domain.getCodeSource();
@@ -455,7 +455,7 @@ class SharedXMLSupport {
         if (res==null) return null;
         NsHandler nsHandler = getNamespaces(is); 
         String[] namespaces = nsHandler.getNamespaces();
-        List loc = new ArrayList();
+        List<String> loc = new ArrayList<>();
         for (int i=0;i<namespaces.length;i++) {
             String ns = namespaces[i];
             if (nsHandler.mapping.containsKey(ns)) {
@@ -501,12 +501,12 @@ class SharedXMLSupport {
     }
     
     private static class NsHandler extends org.xml.sax.helpers.DefaultHandler {
-        Set namespaces;
-        private Map mapping;
+        Set<String> namespaces;
+        private Map<String, String> mapping;
 
         NsHandler() {
-            namespaces=new HashSet();
-            mapping = new HashMap();
+            namespaces=new HashSet<>();
+            mapping = new HashMap<>();
         }
         
         public void startElement(String uri, String localName, String rawName, Attributes atts) throws SAXException {

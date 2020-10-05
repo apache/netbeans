@@ -84,7 +84,7 @@ public class DataFolderCopyMoreWindowsLikeTest extends TestCase {
             StringBuffer sb = new StringBuffer (msg);
             sb.append (" - cannot find ");
             sb.append (name);
-            Enumeration en = FileUtil.getConfigRoot().getChildren (true);
+            Enumeration<? extends FileObject> en = FileUtil.getConfigRoot().getChildren(true);
             while (en.hasMoreElements ()) {
                 sb.append ('\n');
                 sb.append ("    ");

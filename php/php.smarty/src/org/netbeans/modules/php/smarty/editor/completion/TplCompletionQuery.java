@@ -91,9 +91,9 @@ public class TplCompletionQuery extends UserTask {
             // first command contain main keyword
             ArrayList<TplCompletionItem> availableItems = new ArrayList<TplCompletionItem>(functionParams.get(commands.get(0)));
             // rest of them is just removed from codecompletion
-            Iterator it = availableItems.iterator();
+            Iterator<TplCompletionItem> it = availableItems.iterator();
             while (it.hasNext()) {
-                TplCompletionItem tplCompletionItem = (TplCompletionItem)it.next();
+                TplCompletionItem tplCompletionItem = it.next();
                 for (String command : commands) {
                     if (tplCompletionItem.getItemText().equals(command)) {
                         it.remove();

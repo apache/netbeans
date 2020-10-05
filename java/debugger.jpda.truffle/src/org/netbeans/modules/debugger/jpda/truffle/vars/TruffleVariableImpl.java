@@ -26,6 +26,7 @@ import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.modules.debugger.jpda.models.AbstractVariable;
+import org.netbeans.modules.debugger.jpda.truffle.LanguageName;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
@@ -35,6 +36,7 @@ public class TruffleVariableImpl implements TruffleVariable {
     
     private static final String GUEST_OBJECT_TYPE = "org.netbeans.modules.debugger.jpda.backend.truffle.GuestObject";   // NOI18N
     private static final String FIELD_NAME = "name";                            // NOI18N
+    private static final String FIELD_LANGUAGE = "language";                    // NOI18N
     private static final String FIELD_TYPE = "type";                            // NOI18N
     private static final String FIELD_READABLE = "readable";                    // NOI18N
     private static final String FIELD_WRITABLE = "writable";                    // NOI18N
@@ -50,29 +52,36 @@ public class TruffleVariableImpl implements TruffleVariable {
     
     private final ObjectVariable guestObject;
     private final String name;
+    private final LanguageName language;
     private final String type;
     private final String displayValue;
     private final boolean readable;
     private final boolean writable;
     private final boolean internal;
     private final boolean leaf;
+    private final boolean hasValueSource;
+    private final boolean hasTypeSource;
     private SourcePosition valueSource;
     private SourcePosition typeSource;
     
     private TruffleVariableImpl(ObjectVariable guestObject, String name,
-                                String type, String displayValue,
+                                LanguageName language, String type, String displayValue,
                                 boolean readable, boolean writable, boolean internal,
+                                boolean hasValueSource, boolean hasTypeSource,
                                 boolean leaf) {
         this.guestObject = guestObject;
         this.name = name;
+        this.language = language;
         this.type = type;
         this.displayValue = displayValue;
         this.readable = readable;
         this.writable = writable;
         this.internal = internal;
+        this.hasValueSource = hasValueSource;
+        this.hasTypeSource = hasTypeSource;
         this.leaf = leaf;
     }
-    
+
     public static TruffleVariableImpl get(Variable var) {
         if (GUEST_OBJECT_TYPE.equals(var.getType())) {
             ObjectVariable truffleObj = (ObjectVariable) var;
@@ -83,6 +92,12 @@ public class TruffleVariableImpl implements TruffleVariable {
                 return null;
             }
             String name = (String) f.createMirrorObject();
+
+            f = truffleObj.getField(FIELD_LANGUAGE);
+            if (f == null) {
+                return null;
+            }
+            LanguageName language = LanguageName.parse((String) f.createMirrorObject());
 
             f = truffleObj.getField(FIELD_TYPE);
             if (f == null) {
@@ -120,8 +135,13 @@ public class TruffleVariableImpl implements TruffleVariable {
                 internal = (Boolean) f.createMirrorObject();
             }
 
+            f = truffleObj.getField(FIELD_VALUE_SOURCE);
+            boolean hasValueSource = ((ObjectVariable) f).getUniqueID() != 0L;
+            f = truffleObj.getField(FIELD_TYPE_SOURCE);
+            boolean hasTypeSource = ((ObjectVariable) f).getUniqueID() != 0L;
+
             boolean leaf = isLeaf(truffleObj);
-            return new TruffleVariableImpl(truffleObj, name, type, dispVal, readable, writable, internal, leaf);
+            return new TruffleVariableImpl(truffleObj, name, language, type, dispVal, readable, writable, internal, hasValueSource, hasTypeSource, leaf);
         } else {
             return null;
         }
@@ -142,6 +162,11 @@ public class TruffleVariableImpl implements TruffleVariable {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public LanguageName getLanguage() {
+        return language;
     }
 
     @Override
@@ -175,6 +200,9 @@ public class TruffleVariableImpl implements TruffleVariable {
 
     @Override
     public ObjectVariable setValue(JPDADebugger debugger, String newExpression) {
+        if (this.displayValue.equals(newExpression)) {
+            return null;
+        }
         return setValue(debugger, guestObject, newExpression);
     }
 
@@ -196,12 +224,22 @@ public class TruffleVariableImpl implements TruffleVariable {
     }
 
     @Override
+    public boolean hasValueSource() {
+        return hasValueSource;
+    }
+
+    @Override
     public synchronized SourcePosition getValueSource() {
         if (valueSource == null) {
             Field f = getFieldChecked(FIELD_VALUE_SOURCE, guestObject);
             valueSource = TruffleAccess.getSourcePosition(((AbstractVariable) f).getDebugger(), (ObjectVariable) f);
         }
         return valueSource;
+    }
+
+    @Override
+    public boolean hasTypeSource() {
+        return hasTypeSource;
     }
 
     @Override

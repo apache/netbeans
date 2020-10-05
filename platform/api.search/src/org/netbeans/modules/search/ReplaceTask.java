@@ -72,7 +72,8 @@ public final class ReplaceTask implements Runnable {
         
         problems = new ArrayList<String>(4);
         progressHandle = ProgressHandleFactory.createHandle(
-                NbBundle.getMessage(getClass(), "LBL_Replacing"));      //NOI18N
+                NbBundle.getMessage(getClass(), "LBL_Replacing"), //NOI18N
+                null, null);
     }
     
     /**

@@ -24,11 +24,13 @@
 Apache NetBeans is an open source development environment, tooling platform, and application framework.
 
 ### Build status
+   * GitHub actions
+     * [![Apache Netbeans Continuous Integration](https://github.com/apache/netbeans/workflows/Apache%20Netbeans%20Continuous%20Integration/badge.svg)](https://github.com/apache/netbeans/actions)
    * TravisCI:
      * [![Build Status](https://travis-ci.org/apache/netbeans.svg?branch=master)](https://travis-ci.org/apache/netbeans)
    * Apache Jenkins: 
-     * Linux: [![Build Status](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-linux/badge/icon)](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-linux/)
-     * Windows: [![Build Status](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-windows/badge/icon)](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-windows/)
+     * Linux: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/)
+     * Windows: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows)
 
 ### Requirements
 
@@ -63,7 +65,9 @@ Build the NetBeans Platform:
 $ ant -Dcluster.config=platform
 ```
 
-**Note:** You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
+#### Notes:
+* You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
+* It is possible to compile with newer JDK versions, by adding the ' -Dpermit.jdk9.builds=true' parameter to the ant build expression
 
 #### Building Windows Launchers
 Windows launchers can be build using [MinGW](http://www.mingw.org/) both on Windows and Linux.

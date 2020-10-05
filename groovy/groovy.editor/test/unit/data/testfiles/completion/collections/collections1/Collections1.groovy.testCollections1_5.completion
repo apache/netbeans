@@ -84,6 +84,7 @@ METHOD     forEach(Consumer<? super T>)    [PUBLIC]   void
 METHOD     get(int)                        [PUBLIC]   E
 METHOD     getAt(Collection)                          List
 METHOD     getAt(EmptyRange)                          List
+METHOD     getAt(Number)                              Object
 METHOD     getAt(Range)                               List
 METHOD     getAt(String)                              List
 METHOD     getAt(int)                                 Object
@@ -164,6 +165,7 @@ METHOD     putAt(IntRange, Collection)                void
 METHOD     putAt(IntRange, Object)                    void
 METHOD     putAt(List, List)                          void
 METHOD     putAt(List, Object)                        void
+METHOD     putAt(Number, Object)                      void
 METHOD     putAt(String, Object)                      void
 METHOD     putAt(int, Object)                         void
 METHOD     remove(Object)                  [PUBLIC]   boolean

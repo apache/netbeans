@@ -82,6 +82,18 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="no-friends">
+            <api name="general"/>
+            <summary>Opening the module to public</summary>
+            <version major="1" minor="63"/>
+            <date day="29" month="2" year="2020"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes">
+            </compatibility>
+            <description>
+                Opening the module to everyone.
+            </description>
+        </change>
         <change id="NameMatcher_constants">
             <api name="general"/>
             <summary>Added <code>NameMatcher.NONE</code> and <code>NameMatcher.ALL</code></summary>
@@ -292,12 +304,12 @@ is the proper place.
             <compatibility addition="yes"/>
             <description>
                 Added method TypeProvider.Result.pendingResult() and
-                SymbolProvider.Result.pendingResult()  to notify 
+                SymbolProvider.Result.pendingResult()  to notify
                 provider's caller that the provider should be called again.
             </description>
             <issue number="175998"/>
         </change>
-        
+
     </changes>
     <!-- Now the surrounding HTML text and document structure: -->
 

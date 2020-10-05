@@ -68,7 +68,7 @@ public class NewMirrorPanel extends javax.swing.JPanel {
         ALL_BUT_FOO,
         LIST
     };
-    private DefaultComboBoxModel urlmodel;
+    private DefaultComboBoxModel<String> urlmodel;
 
 
     public NewMirrorPanel(SettingsModel model) {

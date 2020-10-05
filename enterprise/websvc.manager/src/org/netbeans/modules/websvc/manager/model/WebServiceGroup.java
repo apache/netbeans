@@ -102,7 +102,7 @@ public class WebServiceGroup {
             Iterator<WebServiceGroupListener> iter = listeners.iterator();
             while(iter.hasNext()) {
                 WebServiceGroupEvent evt = new  WebServiceGroupEvent(webServiceId, getId());
-                ((WebServiceGroupListener)iter.next()).webServiceAdded(evt);
+                iter.next().webServiceAdded(evt);
             }
         }else if (!quietly) {
             // This is a hack to make the nodes to appear while restoring 
@@ -110,7 +110,7 @@ public class WebServiceGroup {
             Iterator<WebServiceGroupListener> iter = listeners.iterator();
             while(iter.hasNext()) {
                 WebServiceGroupEvent evt = new  WebServiceGroupEvent(webServiceId, getId());
-                ((WebServiceGroupListener)iter.next()).webServiceAdded(evt);
+                iter.next().webServiceAdded(evt);
             }
         }
     }
@@ -124,7 +124,7 @@ public class WebServiceGroup {
             Iterator<WebServiceGroupListener> iter = listeners.iterator();
             while(iter.hasNext()) {
                 WebServiceGroupEvent evt = new  WebServiceGroupEvent(webServiceId, getId());
-                ((WebServiceGroupListener)iter.next()).webServiceRemoved(evt);
+                iter.next().webServiceRemoved(evt);
             }
         }
     }
@@ -134,15 +134,15 @@ public class WebServiceGroup {
         Iterator<WebServiceGroupListener> iter = listeners.iterator();
         while(iter.hasNext()) {
             WebServiceGroupEvent evt = new  WebServiceGroupEvent(webServiceId, getId());
-            ((WebServiceGroupListener)iter.next()).webServiceRemoved(evt);
+            iter.next().webServiceRemoved(evt);
         }
     }
     
     public void setWebServiceIds(Set ids){
         webserviceIds = ids;
-        Iterator iter = webserviceIds.iterator();
+        Iterator<String> iter = webserviceIds.iterator();
         while(iter.hasNext()) {
-            WebServiceData wsData = WebServiceListModel.getInstance().getWebService((String)iter.next());
+            WebServiceData wsData = WebServiceListModel.getInstance().getWebService(iter.next());
             wsData.setGroupId(getId());
         }
     }

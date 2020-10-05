@@ -46,6 +46,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ElementUtils;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.usages.ClassFileUtil;
 import org.openide.util.Parameters;
 import org.openide.util.WeakSet;
@@ -143,7 +144,14 @@ public final class ElementHandle<T extends Element> {
     private T resolveImpl (final ModuleElement module, final JavacTaskImpl jt) {
         if (log.isLoggable(Level.FINE))
             log.log(Level.FINE, "Resolving element kind: {0}", this.kind); // NOI18N       
-        switch (this.kind) {
+        ElementKind simplifiedKind = this.kind;
+        if (simplifiedKind.name().equals("RECORD")) {
+            simplifiedKind = ElementKind.CLASS; //TODO: test
+        }
+        if (simplifiedKind.name().equals("RECORD_COMPONENT")) {
+            simplifiedKind = ElementKind.FIELD; //TODO: test
+        }
+        switch (simplifiedKind) {
             case PACKAGE:
                 assert signatures.length == 1;
                 return (T) jt.getElements().getPackageElement(signatures[0]);
@@ -461,8 +469,15 @@ public final class ElementHandle<T extends Element> {
     private static @NonNull <T extends Element> ElementHandle<T> createImpl (@NonNull final T element) throws IllegalArgumentException {
         Parameters.notNull("element", element);
         ElementKind kind = element.getKind();
+        ElementKind simplifiedKind = kind;
+        if (TreeShims.isRecord(element)) {
+            simplifiedKind = ElementKind.CLASS;
+        }
+        if (TreeShims.isRecordComponent(element)) {
+            simplifiedKind = ElementKind.FIELD;
+        }
         String[] signatures;
-        switch (kind) {
+        switch (simplifiedKind) {
             case PACKAGE:
                 assert element instanceof PackageElement;
                 signatures = new String[]{((PackageElement)element).getQualifiedName().toString()};
@@ -619,7 +634,12 @@ public final class ElementHandle<T extends Element> {
                     }
                     return new ElementHandle<VariableElement> (kind, descriptors);
                 default:
-                    throw new IllegalArgumentException ();
+                    if (kind.name().equals(TreeShims.RECORD) && (descriptors.length == 1)) {
+                        return new ElementHandle<TypeElement>(kind, descriptors);
+                    } else {
+                        throw new IllegalArgumentException();
+                    }
+                    
             }            
         }
 

@@ -206,7 +206,7 @@ public class JSFConfigUtilities {
         ClassPath bootCP = cpp.findClassPath(webModule.getDocumentBase(), ClassPath.BOOT);
         ClassPath compileCP = cpp.findClassPath(webModule.getDocumentBase(), ClassPath.COMPILE);
         ClassPath sourceCP = cpp.findClassPath(webModule.getDocumentBase(), ClassPath.SOURCE);
-        return JavaSource.create(ClasspathInfo.create(bootCP, compileCP, sourceCP), Collections.EMPTY_LIST);
+        return JavaSource.create(ClasspathInfo.create(bootCP, compileCP, sourceCP), Collections.<FileObject>emptyList());
     }
 
     private static boolean containsAnnotatedJsfResource(CompilationController parameter) {
@@ -247,7 +247,7 @@ public class JSFConfigUtilities {
     }
 
     public static Set extendJsfFramework(FileObject fileObject, boolean createWelcomeFile) {
-        Set result = Collections.EMPTY_SET;
+        Set result = Collections.emptySet();
         if (fileObject == null) {
             return result;
         }

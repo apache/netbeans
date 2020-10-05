@@ -201,8 +201,8 @@ public class WrappingTest extends GeneratorTestMDRCompat {
                 src.runModificationTask(task).commit();
                 String res = TestUtilities.copyFileToString(testFile);
                 String formattedRes = Reformatter.reformat(res.replaceAll("[\\s]+", " "), CodeStyle.getDefault(FileUtil.toFileObject(testFile)));
-                System.err.println(res);
-                System.err.println(formattedRes);
+                //System.err.println(res);
+                //System.err.println(formattedRes);
                 assertEquals("margin=" + m, formattedRes, res);
             }
         } finally {

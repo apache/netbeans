@@ -51,9 +51,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.jar.JarOutputStream;
-import java.util.jar.Pack200;
-import java.util.jar.Pack200.Unpacker;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -78,8 +75,7 @@ import org.netbeans.installer.utils.system.WindowsNativeUtils;
 public final class FileUtils {
     /////////////////////////////////////////////////////////////////////////////////
     // Static
-    private final static Unpacker unpacker = Pack200.newUnpacker();
-
+    
     // file/stream read/write ///////////////////////////////////////////////////////
     public static String readFile(
             final File file, String charset) throws IOException {
@@ -1169,140 +1165,6 @@ public final class FileUtils {
         }
     }
     
-    // pack200/unpack200 ////////////////////////////////////////////////////////////
-    public static File pack(
-            final File source) throws IOException {
-        final File target = new File(source.getParentFile(),
-                source.getName() + PACK_GZ_SUFFIX);
-        if(SystemUtils.isWindows() && source.getAbsolutePath().length() > 255) {
-            /*
-             * WORKAROUND for two issues (and 6612389 in BugTrack):
-             * http://www.netbeans.org/issues/show_bug.cgi?id=96548
-             * http://www.netbeans.org/issues/show_bug.cgi?id=97984
-             * The issue is that unpack200/pack200 doesn`t support long path names
-             * Copy source to tmp dir, unpack it there and copy to target.
-             */
-            File tmpSource = null;
-            File tmpTarget = null;
-            try {
-                tmpSource = File.createTempFile(source.getName(), ".jar");
-                copyFile(source, tmpSource);
-                tmpTarget = pack(tmpSource);
-                deleteFile(tmpSource);
-                tmpSource = null;
-                copyFile(tmpTarget,target);
-                deleteFile(tmpTarget);
-                tmpTarget = null;
-            } finally {
-                if(tmpSource!=null) {
-                    deleteFile(tmpSource);
-                }
-                if(tmpTarget!=null) {
-                    deleteFile(tmpTarget);
-                }
-            }
-        } else {
-            ExecutionResults er = SystemUtils.executeCommand(
-                    SystemUtils.getPacker().getAbsolutePath(),
-                    target.getAbsolutePath(),
-                    source.getAbsolutePath());
-            if( er.getErrorCode() != 0) {
-                throw new IOException(ResourceUtils.getString(FileUtils.class,
-                        ERROR_PACK200_FAILED_KEY,
-                        er.getErrorCode(), er.getStdOut(),er.getStdErr()));
-            }
-        }
-        
-        return target;
-    }
-    
-    public static File unpack(
-            final File source) throws IOException {
-        final String name = source.getName();
-        final File target = new File(source.getParentFile(),
-                name.substring(0, name.length() - PACK_GZ_SUFFIX.length()));
-
-        if(SystemUtils.isWindows() && source.getAbsolutePath().length() > 255) {
-            /*
-             * WORKAROUND for two issues (and 6612389 in BugTrack):
-             * http://www.netbeans.org/issues/show_bug.cgi?id=96548
-             * http://www.netbeans.org/issues/show_bug.cgi?id=97984
-             * The issue is that unpack200/pack200 doesn`t support long path names
-             * Copy source to tmp dir, unpack it there and copy to target.
-             */
-            File tmpSource = null;
-            File tmpTarget = null;
-            try {
-                tmpSource = File.createTempFile(target.getName(),
-                        ".tmp" + PACK_GZ_SUFFIX);
-                copyFile(source, tmpSource);
-                tmpTarget = unpack(tmpSource);
-                deleteFile(tmpSource);
-                tmpSource = null;
-                copyFile(tmpTarget,target);
-                deleteFile(tmpTarget);
-                tmpTarget = null;
-            } finally {
-                if(tmpSource!=null) {
-                    deleteFile(tmpSource);
-                }
-                if(tmpTarget!=null) {
-                    deleteFile(tmpTarget);
-                }
-            }
-        } else if((System.getProperty("os.name").equals("AIX") && 
-                   System.getProperty("java.version").startsWith("1.6")) ||
-                   Boolean.getBoolean(USE_INTERNAL_UNPACK200_PROPERTY)) {
-            //workaround the bug when unpack200 command from Java6 on AIX corrupts the jar
-            //by using inverting zip magic numbers
-            unpack200Internal(source, target);
-        } else {
-            ExecutionResults er = SystemUtils.executeCommand(
-                    SystemUtils.getUnpacker().getAbsolutePath(),
-                    source.getAbsolutePath(),
-                    target.getAbsolutePath());
-            int errorCode = er.getErrorCode();
-            if (errorCode != 0) {
-                if(errorCode == -1073741801 || errorCode == -1073741502) {
-                    // Workaround for the issue in lvprcsrv.exe process
-                    // http://www.netbeans.org/issues/show_bug.cgi?id=117334
-                    // http://www.netbeans.org/issues/show_bug.cgi?id=165319
-                    LogManager.log("\n\n");
-                    LogManager.log("Attention!");
-                    LogManager.log("You have run into the Issue 117334");
-                    LogManager.log("http://www.netbeans.org/issues/show_bug.cgi?id=117334");
-                    LogManager.log("This is the result of error in process lvprcsrv.exe (Logitech QuickCam)");
-                    LogManager.log("You should turn it off if you have had any issues during installations");
-                    LogManager.log("\n\n");
-                } else {
-                    throw new IOException(ResourceUtils.getString(FileUtils.class,
-                            ERROR_UNPACK200_FAILED_KEY,
-                            errorCode, er.getStdOut(),er.getStdErr()));
-                }
-            }
-        }
-        return target;
-    }
-
-    private static void unpack200Internal (File source, File target) throws IOException {
-        InputStream is = null;
-        JarOutputStream os = null;
-        try {
-            //Unpacker has memory leaks so use with care
-            LogManager.log("unpacking " + source);
-            is = new GZIPInputStream(new FileInputStream(source));
-            os = new JarOutputStream(new FileOutputStream(target));
-            unpacker.unpack(is, os);
-        } finally {
-            if(is!=null) {
-                is.close();
-            }
-            if(os!=null) {
-                os.close();
-            }
-        }
-    }
-    
     // miscellaneous ////////////////////////////////////////////////////////////////
     public static FilesList mkdirs(
             final File file) throws IOException {
@@ -1826,23 +1688,6 @@ public final class FileUtils {
                     }
                 }
                 
-                if (listEntry.isPackedJarFile()) {
-                    final File packed   = listEntry.getFile();;
-                    final File unpacked = unpack(packed);
-                    
-                    deleteFile(packed);
-                    
-                    listEntry = new FileEntry(
-                            unpacked,
-                            listEntry.getSize(),
-                            listEntry.getMd5(),
-                            listEntry.isJarFile(),
-                            false,
-                            listEntry.isSignedJarFile(),
-                            listEntry.getLastModified(),
-                            listEntry.getPermissions());
-                }
-                
                 listEntryFile.setLastModified(listEntry.getLastModified());
                 
                 SystemUtils.setPermissions(
@@ -2082,10 +1927,4 @@ public final class FileUtils {
     public static final String MESSAGE_DELETE_DIR =
             ResourceUtils.getString(FileUtils.class,
             "FU.message.delete.dir");//NOI18N
-    public static final String ERROR_PACK200_FAILED_KEY =
-            "FU.error.pack200.failed";//NOI18N
-    public static final String ERROR_UNPACK200_FAILED_KEY =
-            "FU.error.unpack200.failed";//NOI18N
-    public static final String USE_INTERNAL_UNPACK200_PROPERTY =
-            "nbi.use.internal.unpack200";//NOI18N
 }

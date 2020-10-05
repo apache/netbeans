@@ -428,7 +428,7 @@ public class JavaKit extends NbEditorKit {
         public void insert(MutableContext context) throws BadLocationException {
             int dotPos = context.getCaretOffset();
             Document doc = context.getDocument();
-            
+            if(TypingCompletion.posWithinTextBlock(doc, dotPos))return;
             if (TypingCompletion.posWithinString(doc, dotPos)) {
                 if (CodeStyle.getDefault(doc).wrapAfterBinaryOps()) {
                     context.setText("\" +\n \"", 3, 6); // NOI18N

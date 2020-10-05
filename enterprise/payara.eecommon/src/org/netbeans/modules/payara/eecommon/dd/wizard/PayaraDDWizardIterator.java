@@ -106,7 +106,7 @@ public final class PayaraDDWizardIterator implements WizardDescriptor.Instantiat
     
     @Override
     public Set instantiate() throws IOException {
-        Set result = Collections.EMPTY_SET;
+        Set result = Collections.emptySet();
         PayaraDDWizardPanel wizardPanel = (PayaraDDWizardPanel) panels[0];
         
         File configDir = wizardPanel.getSelectedLocation();

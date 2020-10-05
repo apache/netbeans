@@ -88,6 +88,7 @@ public final class XPLFCustoms extends LFCustoms {
         Object propertySheetValues = new XPPropertySheetColorings();
 
         Object[] uiDefaults = {
+            EDITOR_PREFERRED_COLOR_PROFILE, "NetBeans", //NOI18N
             EDITOR_TAB_DISPLAYER_UI, editorTabsUI,
             VIEW_TAB_DISPLAYER_UI, viewTabsUI,
             

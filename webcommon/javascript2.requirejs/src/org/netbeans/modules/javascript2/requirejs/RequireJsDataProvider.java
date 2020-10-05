@@ -77,7 +77,7 @@ public class RequireJsDataProvider {
     /**
      * Translating names from documentation to the real option names
      */
-    private final static HashMap<String, String> TRANSLATE_NAME = new HashMap();
+    private final static HashMap<String, String> TRANSLATE_NAME = new HashMap<>();
 
     static {
         TRANSLATE_NAME.put("moduleconfig", "config");//NOI18N

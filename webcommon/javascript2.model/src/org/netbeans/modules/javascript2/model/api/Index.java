@@ -210,9 +210,9 @@ public final class Index {
 
                     value = new CacheValue(fieldsToLoad, result);
                     if ((result.size() * AVERAGE_BASIC_INFO_SIZE) < MAX_CACHE_VALUE_SIZE) {
-                        CACHE_INDEX_RESULT_SMALL.put(key, new SoftReference(value));
+                        CACHE_INDEX_RESULT_SMALL.put(key, new SoftReference<>(value));
                     } else {
-                        CACHE_INDEX_RESULT_LARGE.put(key, new SoftReference(value));
+                        CACHE_INDEX_RESULT_LARGE.put(key, new SoftReference<>(value));
                     }
                     logStats(result, false, fieldsToLoad);
                     return value.getResult();

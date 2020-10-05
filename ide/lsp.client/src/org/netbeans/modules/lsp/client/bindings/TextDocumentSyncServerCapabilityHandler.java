@@ -18,9 +18,11 @@
  */
 package org.netbeans.modules.lsp.client.bindings;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Set;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
@@ -28,6 +30,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.Position;
@@ -36,16 +39,19 @@ import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.TextDocumentSyncOptions;
+import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.editor.BaseDocumentEvent;
+import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.*;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.OnStart;
+import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 
@@ -80,34 +86,7 @@ public class TextDocumentSyncServerCapabilityHandler {
 
             Document doc = opened.getDocument();
 
-            WORKER.post(() -> {
-                LSPBindings server = LSPBindings.getBindings(file);
-
-                if (server == null)
-                    return ; //ignore
-
-                doc.putProperty(HyperlinkProviderImpl.class, Boolean.TRUE);
-
-                String uri = Utils.toURI(file);
-                String[] text = new String[1];
-
-                doc.render(() -> {
-                    try {
-                        text[0] = doc.getText(0, doc.getLength());
-                    } catch (BadLocationException ex) {
-                        Exceptions.printStackTrace(ex);
-                        text[0] = "";
-                    }
-                });
-
-                TextDocumentItem textDocumentItem = new TextDocumentItem(uri,
-                                                                         FileUtil.getMIMEType(file),
-                                                                         0,
-                                                                         text[0]);
-
-                server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(textDocumentItem));
-                server.scheduleBackgroundTasks(file);
-            });
+            ensureOpenedInServer(opened);
 
             doc.addDocumentListener(new DocumentListener() { //XXX: listener
                 int version; //XXX: proper versioning!
@@ -132,6 +111,9 @@ public class TextDocumentSyncServerCapabilityHandler {
                                                                              endPos),
                                                                    oldText.length(),
                                                                    newText);
+
+                        boolean typingModification = DocumentUtilities.isTypingModification(doc);
+                        long documentVersion = DocumentUtilities.getDocumentVersion(doc);
 
                         WORKER.post(() -> {
                             LSPBindings server = LSPBindings.getBindings(file);
@@ -173,6 +155,22 @@ public class TextDocumentSyncServerCapabilityHandler {
                             DidChangeTextDocumentParams params = new DidChangeTextDocumentParams(di, Arrays.asList(event));
 
                             server.getTextDocumentService().didChange(params);
+
+                            if (typingModification && oldText.isEmpty() && event.length == 1) {
+                                if (newText.equals("}") || newText.equals("\n")) {
+                                    List<TextEdit> edits = new ArrayList<>();
+                                    doc.render(() -> {
+                                        if (documentVersion != DocumentUtilities.getDocumentVersion(doc))
+                                            return ;
+                                        edits.addAll(Utils.computeDefaultOnTypeIndent(doc, start, startPos, newText));
+                                    });
+                                    NbDocument.runAtomic((StyledDocument) doc, () -> {
+                                        if (documentVersion == DocumentUtilities.getDocumentVersion(doc)) {
+                                            Utils.applyEditsNoLock(doc, edits);
+                                        }
+                                    });
+                                }
+                            }
                             server.scheduleBackgroundTasks(file);
                         });
                     } catch (BadLocationException ex) {
@@ -185,12 +183,68 @@ public class TextDocumentSyncServerCapabilityHandler {
         }
     }
 
+    private void ensureOpenedInServer(JTextComponent opened) {
+        FileObject file = NbEditorUtilities.getFileObject(opened.getDocument());
+
+        if (file == null)
+            return; //ignore
+
+        Document doc = opened.getDocument();
+        WORKER.post(() -> {
+            LSPBindings server = LSPBindings.getBindings(file);
+
+            if (server == null)
+                return ; //ignore
+
+            if (!server.getOpenedFiles().add(file)) {
+                //already opened:
+                return ;
+            }
+
+            doc.putProperty(HyperlinkProviderImpl.class, Boolean.TRUE);
+
+            String uri = Utils.toURI(file);
+            String[] text = new String[1];
+
+            doc.render(() -> {
+                try {
+                    text[0] = doc.getText(0, doc.getLength());
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
+                    text[0] = "";
+                }
+            });
+
+            TextDocumentItem textDocumentItem = new TextDocumentItem(uri,
+                                                                     FileUtil.getMIMEType(file),
+                                                                     0,
+                                                                     text[0]);
+
+            server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(textDocumentItem));
+            if (opened.getClientProperty(MarkOccurrences.class) == null) {
+                MarkOccurrences mo = new MarkOccurrences(opened);
+                LSPBindings.addBackgroundTask(file, mo);
+                opened.putClientProperty(MarkOccurrences.class, mo);
+            }
+            server.scheduleBackgroundTasks(file);
+        });
+    }
+
+    public static void refreshOpenedFilesInServers() {
+        SwingUtilities.invokeLater(() -> {
+            assert SwingUtilities.isEventDispatchThread();
+            for (JTextComponent c : EditorRegistry.componentList()) {
+                h.ensureOpenedInServer(c);
+            }
+        });
+    }
+
+    private static final TextDocumentSyncServerCapabilityHandler h = new TextDocumentSyncServerCapabilityHandler();
     @OnStart
     public static class Init implements Runnable {
 
         @Override
         public void run() {
-            TextDocumentSyncServerCapabilityHandler h = new TextDocumentSyncServerCapabilityHandler();
             EditorRegistry.addPropertyChangeListener(evt -> h.handleChange());
             SwingUtilities.invokeLater(() -> h.handleChange());
         }

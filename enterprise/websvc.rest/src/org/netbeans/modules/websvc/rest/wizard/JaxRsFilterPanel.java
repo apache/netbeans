@@ -39,13 +39,13 @@ import org.openide.util.NbBundle;
  *
  */
 class JaxRsFilterPanel implements Panel<WizardDescriptor> {
-    
+
     static final String CLIENT_FILTER = "client.filter";        // NOI18N
     static final String SERVER_FILTER = "server.filter";        // NOI18N
-    
+
     static final String REQUEST = "request.filter";             // NOI18N
     static final String RESPONSE = "response.filter";            // NOI18N
-    
+
     static final String PRE_MATCHING = "prematching.filter";    // NOI18N
     static final String PROVIDER = "provider.filter";           // NOI18N
 
@@ -89,17 +89,19 @@ class JaxRsFilterPanel implements Panel<WizardDescriptor> {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
             Profile profile = webModule.getJ2eeProfile();
-            if ( !Profile.JAVA_EE_8_FULL.equals(profile) && 
+            if ( !Profile.JAKARTA_EE_8_FULL.equals(profile) && 
+                    !Profile.JAKARTA_EE_8_WEB.equals(profile) &&
+                    !Profile.JAVA_EE_8_FULL.equals(profile) &&
                     !Profile.JAVA_EE_8_WEB.equals(profile) &&
                     !Profile.JAVA_EE_7_FULL.equals(profile) &&
                     !Profile.JAVA_EE_7_WEB.equals(profile))
             {
-                setErrorMessage(NbBundle.getMessage(JaxRsFilterPanel.class, 
+                setErrorMessage(NbBundle.getMessage(JaxRsFilterPanel.class,
                         "MSG_NoJEE7Profile"));          // NOI18N
                 return false;
             }
         }
-        
+
         String msg = getComponent().getError();
         setErrorMessage(msg);
         return msg==null;
@@ -128,11 +130,11 @@ class JaxRsFilterPanel implements Panel<WizardDescriptor> {
     public void storeSettings( WizardDescriptor descriptor ) {
         getComponent().storeSettings(descriptor);
     }
-    
+
     private void setErrorMessage(String message) {
         myDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, message);
     }
-    
+
     private JaxRsFilterVisual myComponent;
     private WizardDescriptor myDescriptor;
 

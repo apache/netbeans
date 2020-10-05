@@ -209,7 +209,7 @@ public class UtilitiesTranslateTest extends NbTestCase {
         }
      
         
-        protected Enumeration findResources (String res) throws IOException {
+        protected Enumeration<java.net.URL> findResources (String res) throws IOException {
             if (file != null) {
                 return Enumerations.singleton (getClass ().getResource (file));
             } else {

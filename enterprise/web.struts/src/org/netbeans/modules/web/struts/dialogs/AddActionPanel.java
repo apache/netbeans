@@ -46,7 +46,7 @@ public class AddActionPanel extends javax.swing.JPanel implements ValidatingPane
         config=dObject;
         initComponents();
         List actions = StrutsConfigUtilities.getAllActionsInModule(dObject);
-        DefaultComboBoxModel model = (DefaultComboBoxModel)CBInputAction.getModel();
+        DefaultComboBoxModel<String> model = (DefaultComboBoxModel)CBInputAction.getModel();
         Iterator iter = actions.iterator();
         while (iter.hasNext())
             model.addElement(((Action)iter.next()).getAttributeValue("path")); //NOI18N

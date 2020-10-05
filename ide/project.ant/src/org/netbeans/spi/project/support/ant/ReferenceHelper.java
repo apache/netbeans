@@ -1701,7 +1701,7 @@ public final class ReferenceHelper {
             if (!REF_NAME.equals(xml.getLocalName()) || !REFS_NS2.equals(xml.getNamespaceURI())) {
                 throw new IllegalArgumentException("bad element name: " + xml); // NOI18N
             }
-            List nl = XMLUtil.findSubElements(xml);
+            List<Element> nl = XMLUtil.findSubElements(xml);
             if (nl.size() < 6) {
                 throw new IllegalArgumentException("missing or extra data: " + xml); // NOI18N
             }

@@ -64,7 +64,6 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -89,6 +88,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.*;
 import org.netbeans.swing.outline.DefaultOutlineModel;
+import org.openide.util.ImageUtilities;
 
 /**
  * Extended JTable (ETable) adds these features to JTable:
@@ -134,7 +134,7 @@ public class ETable extends JTable {
     private static final String SEARCH_COLUMN = "SearchColumn";
     
     // icon of column button
-    private static final String DEFAULT_COLUMNS_ICON = "columns.gif"; // NOI18N
+    private static final String DEFAULT_COLUMNS_ICON = "org/netbeans/swing/etable/columns.gif"; // NOI18N
     
     /**
      * Property allowing to make the table FULLY_NONEDITABLE and
@@ -1048,9 +1048,11 @@ public class ETable extends JTable {
                 if( isColumnHidingAllowed() ) {
                     Icon ii = UIManager.getIcon("Table.columnSelection");
                     if (ii == null) {
-                        ii = new ImageIcon(ETable.class.getResource(DEFAULT_COLUMNS_ICON));
+                        ii = ImageUtilities.image2Icon(ImageUtilities.loadImage(DEFAULT_COLUMNS_ICON));
                     }
                     final JButton b = new JButton(ii);
+                    // For HiDPI support.
+                    b.setDisabledIcon(ImageUtilities.createDisabledIcon(ii));
                     b.setToolTipText(selectVisibleColumnsLabel);
                     b.getAccessibleContext().setAccessibleName(selectVisibleColumnsLabel);
                     b.getAccessibleContext().setAccessibleDescription(selectVisibleColumnsLabel);
@@ -1449,11 +1451,10 @@ public class ETable extends JTable {
         }
 
         if (modelColumn != TableModelEvent.ALL_COLUMNS) {
-            Enumeration enumeration = getColumnModel().getColumns();
+            Enumeration<TableColumn> enumeration = getColumnModel().getColumns();
             TableColumn aColumn;
-            int index = 0;
             while (enumeration.hasMoreElements()) {
-                aColumn = (TableColumn)enumeration.nextElement();
+                aColumn = enumeration.nextElement();
                 if (aColumn.getModelIndex() == modelColumn) {
                     ETableColumn etc = (ETableColumn)aColumn;
                     if ((! etc.isSorted()) && (quickFilterColumn != modelColumn)){
@@ -1951,9 +1952,9 @@ public class ETable extends JTable {
      * Compute the preferredVidths of all columns.
      */
     void updatePreferredWidths() {
-        Enumeration en = getColumnModel().getColumns();
+        Enumeration<TableColumn> en = getColumnModel().getColumns();
         while (en.hasMoreElements()) {
-            Object obj = en.nextElement();
+            TableColumn obj = en.nextElement();
             if (obj instanceof ETableColumn) {
                 ETableColumn etc = (ETableColumn) obj;
                 etc.updatePreferredWidth(this, false);
@@ -2157,7 +2158,7 @@ public class ETable extends JTable {
             implements DocumentListener, FocusListener {
         
         /** The last search results */
-        private List results = new ArrayList();
+        private List<Integer> results = new ArrayList<>();
         /** The last selected index from the search results. */
         private int currentSelectionIndex;
         
@@ -2226,8 +2227,8 @@ public class ETable extends JTable {
                 int rows[] = getSelectedRows();
                 int selectedRowIndex = (rows == null || rows.length == 0) ? 0 : rows[0];
                 int r = 0;
-                for (Iterator it = results.iterator(); it.hasNext(); r++) {
-                    int curResult = ((Integer)it.next()).intValue();
+                for (Iterator<Integer> it = results.iterator(); it.hasNext(); r++) {
+                    int curResult = it.next().intValue();
                     if (selectedRowIndex <= curResult) {
                         currentSelectionIndex = r;
                         break;
@@ -2285,8 +2286,8 @@ public class ETable extends JTable {
         @Override
         public void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
             Object selItem = searchCombo.getSelectedItem();
-            for (Enumeration en = getColumnModel().getColumns(); en.hasMoreElements(); ) {
-                Object column = en.nextElement();
+            for (Enumeration<TableColumn> en = getColumnModel().getColumns(); en.hasMoreElements(); ) {
+                TableColumn column = en.nextElement();
                 if (column instanceof ETableColumn) {
                     ETableColumn etc = (ETableColumn)column;
                     Object value = etc.getHeaderValue();
@@ -2364,10 +2365,10 @@ public class ETable extends JTable {
         }
     }
     
-    private ComboBoxModel getSearchComboModel() {
-        DefaultComboBoxModel result = new DefaultComboBoxModel();
-        for (Enumeration en = getColumnModel().getColumns(); en.hasMoreElements(); ) {
-            Object column = en.nextElement();
+    private ComboBoxModel<String> getSearchComboModel() {
+        DefaultComboBoxModel<String> result = new DefaultComboBoxModel();
+        for (Enumeration<TableColumn> en = getColumnModel().getColumns(); en.hasMoreElements(); ) {
+            TableColumn column = en.nextElement();
             if (column instanceof ETableColumn) {
                 ETableColumn etc = (ETableColumn)column;
                 Object value = etc.getHeaderValue();

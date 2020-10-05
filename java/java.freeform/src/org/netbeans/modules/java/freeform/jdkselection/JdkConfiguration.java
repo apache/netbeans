@@ -263,7 +263,7 @@ public class JdkConfiguration {
     }
 
     private static String getPlatformID(JavaPlatform platform) {
-        String s = (String) platform.getProperties().get("platform.ant.name"); // NOI18N
+        String s = platform.getProperties().get("platform.ant.name"); // NOI18N
         if (s != null) {
             return s;
         } else {

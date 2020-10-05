@@ -113,17 +113,17 @@ public class Selenium2PhpSupportImpl extends Selenium2SupportImpl {
         configureProject(refFileObject);
         Project p = FileOwnerQuery.getOwner(refFileObject);
         if (p == null) {
-            return Collections.emptyList();
+            return Collections.<Object>emptyList();
         }
         PhpSeleniumProvider seleniumProvider = getSeleniumProvider(p);
         if(seleniumProvider == null) {
-            return Collections.emptyList();
+            return Collections.<Object>emptyList();
         }
         // selenium test dir was not set by user during configureProject()
         // user probably pressed Cancel. Do not bother him with extra
         // configuration dialogs.
         if(getSeleniumDir(p, false) == null) {
-            return Collections.emptyList();
+            return Collections.<Object>emptyList();
         }
         return seleniumProvider.getTestSourceRoots(createdSourceRoots, refFileObject);
     }

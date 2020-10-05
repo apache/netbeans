@@ -310,7 +310,7 @@ public final class HintsPanel extends javax.swing.JPanel   {
         errorTreeModel = constructTM(hints, !batchOnly && !filterSuggestions);
 
         if (filter != null) {
-             ((OptionsFilter) filter).installFilteringModel(errorTree, errorTreeModel, new AcceptorImpl());
+             filter.installFilteringModel(errorTree, errorTreeModel, new AcceptorImpl());
         } else {
             setModel(errorTreeModel);
         }

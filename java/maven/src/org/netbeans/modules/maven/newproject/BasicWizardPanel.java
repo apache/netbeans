@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.maven.newproject;
 
+import java.util.Map;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.maven.api.archetype.Archetype;
@@ -38,12 +39,16 @@ public class BasicWizardPanel implements WizardDescriptor.FinishablePanel<Wizard
     private final boolean additional;
     private final ValidationGroup validationGroup;
     private final Archetype arch;
+    private final Map<String, String> defaultProps;
     
-    public BasicWizardPanel(ValidationGroup vg, @NullAllowed Archetype arch, boolean isFinish, boolean additional) {
+    public BasicWizardPanel(ValidationGroup vg, @NullAllowed
+            Archetype arch, boolean isFinish, boolean additional, Map<String,String> defaultArgs
+    ) {
         this.isFinish = isFinish;
         this.additional = additional;
         this.validationGroup = vg;
         this.arch = arch;
+        this.defaultProps = defaultArgs;
     }
 
     ValidationGroup getValidationGroup() {
@@ -81,7 +86,7 @@ public class BasicWizardPanel implements WizardDescriptor.FinishablePanel<Wizard
     
     public @Override void readSettings(WizardDescriptor settings) {
         wizardDescriptor = settings;
-        getComponent().read(wizardDescriptor);
+        getComponent().read(wizardDescriptor, defaultProps);
         // XXX hack, TemplateWizard in final setTemplateImpl() forces new wizard's title
         // this name is used in NewProjectWizard to modify the title
 //        Object substitute = getComponent().getClientProperty ("NewProjectWizard_Title"); // NOI18N

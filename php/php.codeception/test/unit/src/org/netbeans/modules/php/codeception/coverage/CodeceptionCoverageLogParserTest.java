@@ -24,6 +24,7 @@ import java.io.FileReader;
 import java.io.Reader;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
+import org.openide.filesystems.FileUtil;
 
 public class CodeceptionCoverageLogParserTest extends NbTestCase {
 
@@ -45,7 +46,7 @@ public class CodeceptionCoverageLogParserTest extends NbTestCase {
 
         // 1st file
         CoverageImpl.FileImpl file = (CoverageImpl.FileImpl) coverage.getFiles().get(0);
-        assertEquals("/home/junichi11/NetBeansProjects/codeception/src/FizzBuzz.php", file.getPath());
+        assertEquals(FileUtil.normalizePath("/home/junichi11/NetBeansProjects/codeception/src/FizzBuzz.php"), file.getPath());
         assertEquals(1, file.getClasses().size());
 
         // class
@@ -98,7 +99,7 @@ public class CodeceptionCoverageLogParserTest extends NbTestCase {
 
         // 2nd file
         file = (CoverageImpl.FileImpl) coverage.getFiles().get(1);
-        assertEquals("/home/junichi11/NetBeansProjects/codeception/tests/_support/UnitTester.php", file.getPath());
+        assertEquals(FileUtil.normalizePath("/home/junichi11/NetBeansProjects/codeception/tests/_support/UnitTester.php"), file.getPath());
         assertEquals(1, file.getClasses().size());
 
         // class
@@ -138,7 +139,7 @@ public class CodeceptionCoverageLogParserTest extends NbTestCase {
 
         // 3rd file
         file = (CoverageImpl.FileImpl) coverage.getFiles().get(2);
-        assertEquals("/home/junichi11/NetBeansProjects/codeception/tests/_support/_generated/UnitTesterActions.php", file.getPath());
+        assertEquals(FileUtil.normalizePath("/home/junichi11/NetBeansProjects/codeception/tests/_support/_generated/UnitTesterActions.php"), file.getPath());
         assertEquals(1, file.getClasses().size());
 
         // class

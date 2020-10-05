@@ -633,6 +633,14 @@
                 <friend>org.netbeans.modules.web.jsf</friend>
                 <friend>org.netbeans.modules.web.project</friend>
                 <friend>org.netbeans.modules.websvc.rest</friend>
+                <friend>io.github.jeddict.jcode.util</friend>
+                <friend>io.github.jeddict.jpa.modeler</friend>
+                <friend>io.github.jeddict.reveng</friend>
+                <friend>io.github.jeddict.orm.generator</friend>
+                <friend>io.github.jeddict.runtime</friend>
+                <friend>io.github.jeddict.rest.generator</friend>
+                <friend>io.github.jeddict.mvc.generator</friend>
+                <friend>io.github.jeddict.infra</friend>
                 <package>org.netbeans.modules.j2ee.persistence.action</package>
                 <package>org.netbeans.modules.j2ee.persistence.api.entity.generator</package>
                 <package>org.netbeans.modules.j2ee.persistence.dd</package>

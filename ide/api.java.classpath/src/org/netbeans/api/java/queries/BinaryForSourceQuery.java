@@ -232,11 +232,11 @@ public final class BinaryForSourceQuery {
     static final class QueriesAccessorImpl extends QueriesAccessor {
         QueriesAccessorImpl() {
         }
-        private final Map<Object, Result2Impl> cache = new WeakHashMap<>();
+        private final Map<Object, Result2Impl<?>> cache = new WeakHashMap<>();
 
         @Override
         public synchronized <T> Result2 create(BinaryForSourceQueryImplementation2<T> impl, T value) {
-            Result2Impl result = cache.get(value);
+            Result2Impl<?> result = cache.get(value);
             if (result == null) {
                 result = new Result2Impl<>(impl, value);
                 cache.put(value, result);

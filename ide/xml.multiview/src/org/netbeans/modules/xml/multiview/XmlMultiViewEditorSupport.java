@@ -702,7 +702,7 @@ public class XmlMultiViewEditorSupport extends DataEditorSupport implements Seri
         
         protected void reloadModelFromData() {
             if (loading == 0) {
-                Utils.replaceDocument((StyledDocument)getDocument(), dObj.getDataCache().getStringData());
+                Utils.replaceDocument(getDocument(), dObj.getDataCache().getStringData());
             }
         }
     }

@@ -56,8 +56,8 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
     private Identifier declarationName;
     private JsObject parent;
     final private List<Occurrence> occurrences = new ArrayList<Occurrence>();
-    final private NavigableMap<Integer, Collection<TypeUsage>> assignments = new TreeMap<Integer, Collection<TypeUsage>>();
-    final private Map<String, Integer>assignmentsReverse = new HashMap();
+    final private NavigableMap<Integer, Collection<TypeUsage>> assignments = new TreeMap<>();
+    final private Map<String, Integer>assignmentsReverse = new HashMap<>();
     private int countOfAssignments = 0;
     private boolean hasName;
     private Documentation documentation;
@@ -384,12 +384,13 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
         this.kind = kind;
     }
 
-    protected Collection<TypeUsage> resolveAssignments(JsObject jsObject, int offset) {        Collection<String> visited = new HashSet();  // for preventing infinited loops
+    protected Collection<TypeUsage> resolveAssignments(JsObject jsObject, int offset) {
+        Collection<String> visited = new HashSet<>();  // for preventing infinited loops
         return resolveAssignments(jsObject, offset, visited);
     }
 
     protected Collection<TypeUsage> resolveAssignments(JsObject jsObject, int offset, Collection<String> visited) {
-        Collection<TypeUsage> result = new HashSet();
+        Collection<TypeUsage> result = new HashSet<>();
         String fqn = jsObject.getFullyQualifiedName();
         if (visited.contains(fqn)) {
             return result;

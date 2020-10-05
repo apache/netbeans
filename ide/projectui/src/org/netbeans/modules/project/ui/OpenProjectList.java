@@ -441,12 +441,19 @@ public final class OpenProjectList {
                 }
             });
         }
-            
+
+        @NbBundle.Messages({
+            "#NOI18N",
+            "LOAD_PROJECTS_ON_START=true"
+        })
         private void loadOnBackground() {
-            lazilyOpenedProjects = new ArrayList<Project>();
-            List<URL> URLs = OpenProjectListSettings.getInstance().getOpenProjectsURLs();
-            final List<Project> initial = new ArrayList<Project>();
-            final LinkedList<Project> projects = URLs2Projects(URLs);
+            lazilyOpenedProjects = new ArrayList<>();
+            final boolean loadProjectsOnStart = "true".equals(Bundle.LOAD_PROJECTS_ON_START());
+            List<URL> urls = loadProjectsOnStart ?
+                    OpenProjectListSettings.getInstance().getOpenProjectsURLs() :
+                    Collections.emptyList();
+            final List<Project> initial = new ArrayList<>();
+            final LinkedList<Project> projects = URLs2Projects(urls);
             OpenProjectList.MUTEX.writeAccess(new Mutex.Action<Void>() {
                 public @Override Void run() {
                     toOpenProjects.addAll(projects);

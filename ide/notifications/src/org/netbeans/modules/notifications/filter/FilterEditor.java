@@ -216,9 +216,9 @@ public class FilterEditor extends JPanel implements PropertyChangeListener {
     void updateFilters() {
         filterRepository.clear();             // throw away all original filters
 
-        Iterator filterIt = filterModel.iterator();
+        Iterator<NotificationFilter> filterIt = filterModel.iterator();
         while (filterIt.hasNext()) {
-            NotificationFilter f = (NotificationFilter) filterIt.next();
+            NotificationFilter f = filterIt.next();
             if (filter2types.get(f.getCategoryFilter()) != null) {
                 f.setCategoryFilter(filter2types.get(f.getCategoryFilter()).getFilter()); // has panel, was touched
             }
@@ -414,7 +414,7 @@ private void onNewFilter(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onNe
         }
 
         public NotificationFilter get(int i) {
-            return (NotificationFilter) filters.get(i);
+            return filters.get(i);
         }
 
         public boolean add(NotificationFilter f) {

@@ -48,7 +48,7 @@ import org.openide.util.lookup.Lookups;
 public abstract class GrammarQueryManager {
 
     // default instance
-    private static Reference instance;
+    private static Reference<GrammarQueryManager> instance;
     
     /**
      * Can this manager provide a grammar for given context?
@@ -92,12 +92,12 @@ public abstract class GrammarQueryManager {
      * @return Best effort instance.
      */
     public static synchronized GrammarQueryManager getDefault() {
-        Object cached = instance != null ? instance.get() : null;
+        GrammarQueryManager cached = instance != null ? instance.get() : null;
         if (cached == null) {
             cached = new DefaultQueryManager();
-            instance = new WeakReference(cached);
+            instance = new WeakReference<GrammarQueryManager>(cached);
         }
-        return (GrammarQueryManager) cached;        
+        return cached;
     }
 
     /**
@@ -126,7 +126,7 @@ public abstract class GrammarQueryManager {
                     GrammarQuery query = g.getGrammar(ctx);
                     if (query == null) {
                         ErrorManager err = ErrorManager.getDefault();
-                        err.log(err.WARNING, "Broken contract: " + g.getClass());
+                        err.log(ErrorManager.WARNING, "Broken contract: " + g.getClass());
                     }
                     return query;
                 } else {
@@ -136,7 +136,7 @@ public abstract class GrammarQueryManager {
                     PrintWriter writer = new PrintWriter(stringWriter);
                     ex.printStackTrace(writer);
                     writer.flush();
-                    err.log(err.WARNING, stringWriter.getBuffer().toString());
+                    err.log(ErrorManager.WARNING, stringWriter.getBuffer().toString());
                     return null;
                 }
             } finally {
@@ -145,7 +145,7 @@ public abstract class GrammarQueryManager {
         }
         
         public Enumeration enabled(GrammarEnvironment ctx) {
-            Iterator it = getRegistrations();
+            Iterator<GrammarQueryManager> it = getRegistrations();
             transaction.set(null);
             ArrayList list = new ArrayList(5);
             {
@@ -156,7 +156,7 @@ public abstract class GrammarQueryManager {
             }
             Object[] array = list.toArray();
             while (it.hasNext()) {
-                GrammarQueryManager next = (GrammarQueryManager) it.next();
+                GrammarQueryManager next = it.next();
                 GrammarEnvironment env = new GrammarEnvironment(
                     org.openide.util.Enumerations.array (array), 
                     ctx.getInputSource(),

@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE actions SYSTEM "action-mapping.dtd">
+<actions>
+    <apply-for plugins="java">
+        <action name="test.single">
+            <args>--rerun-tasks test --tests "${selectedClass}"</args>
+        </action>
+        <action name="run.single.method">
+            <args>--rerun-tasks test --tests "${selectedMethod}"</args>
+        </action>
+        <action name="debug.single.method">
+            <args>--rerun-tasks test --debug-jvm --tests "${selectedMethod}"</args>
+        </action>
+        <action name="debug.test.single">
+            <args>--rerun-tasks test --debug-jvm --tests "${selectedClass}"</args>
+        </action>
+
+        <action name="javadoc">
+            <args>javadoc</args>
+        </action>
+
+        <action name="debug.fix" repeatable="false">
+            <args>--offline ${affectedBuildTasks}</args>
+            <reload rule="NEVER"/>
+        </action>
+
+        <action name="compile.single" repetable="false">
+            <args>--offline ${affectedBuildTasks}</args>
+            <reload rule="NEVER"/>
+        </action>
+
+        <action name="run.single">
+            <args>-PrunClassName=${selectedClass} runSingle</args>
+        </action>
+
+        <action name="debug.single">
+            <args>-PrunClassName=${selectedClass} runSingle --debug-jvm</args>
+        </action>
+    </apply-for>
+
+    <apply-for plugins="application">
+        <action name="run">
+            <args>run</args>
+        </action>
+
+        <action name="debug">
+            <args>run --debug-jvm</args>
+        </action>
+    </apply-for>
+
+    <apply-for plugins="java-base,scala-base,com.github.lkishalmi.gatling">
+        <action name="build">
+            <args>gatlingClasses</args>
+        </action>
+        <action name="rebuild">
+            <args>clean gatlingClasses</args>
+        </action>
+        <action name="run">
+            <args>gatlingRun</args>
+        </action>
+        <action name="run.single">
+            <args>gatlingRun-${selectedClass}</args>
+        </action>
+    </apply-for>
+</actions>

@@ -54,6 +54,7 @@ public class DarkMetalTheme extends MetalTheme {
     public void addCustomEntriesToTable( UIDefaults table ) {
         super.addCustomEntriesToTable( table );
         table.put( "nb.dark.theme", Boolean.TRUE );
+        table.put( "nb.preferred.color.profile", "Norway Today");
         table.put( "nb.imageicon.filter", new DarkIconFilter() ); //NOI18N
         table.put( "nb.errorForeground", new Color(255,71,71) ); //NOI18N
         table.put( "nb.warningForeground", new Color(255,216,0) ); //NOI18N
@@ -64,24 +65,9 @@ public class DarkMetalTheme extends MetalTheme {
         table.put( "PropSheet.selectionBackground", primary3 ); //NOI18N
         table.put( "PropSheet.selectionForeground", black ); //NOI18N
 
-        table.put( "nb.heapview.border1", secondary1 ); //NOI18N
-        table.put( "nb.heapview.border2", secondary2 ); //NOI18N
-        table.put( "nb.heapview.border3", white ); //NOI18N
-
         table.put( "nb.heapview.foreground", black ); //NOI18N
 
-        table.put( "nb.heapview.background1", primary1 ); //NOI18N
-
-        table.put( "nb.heapview.background2", primary2 ); //NOI18N
-
-        table.put( "nb.heapview.grid1.start", new Color( 97, 95, 87 ) ); //NOI18N
-        table.put( "nb.heapview.grid1.end", new Color( 98, 96, 88 ) ); //NOI18N
-        table.put( "nb.heapview.grid2.start", new Color( 99, 97, 90 ) ); //NOI18N
-        table.put( "nb.heapview.grid2.end", new Color( 101, 99, 92 ) ); //NOI18N
-        table.put( "nb.heapview.grid3.start", new Color( 102, 101, 93 ) ); //NOI18N
-        table.put( "nb.heapview.grid3.end", new Color( 105, 103, 95 ) ); //NOI18N
-        table.put( "nb.heapview.grid4.start", new Color( 107, 105, 97 ) ); //NOI18N
-        table.put( "nb.heapview.grid4.end", new Color( 109, 107, 99 ) ); //NOI18N
+        table.put( "nb.heapview.background", primary1 ); //NOI18N
 
         UIManager.put( "nb.bugtracking.comment.background", new Color(71, 71, 75) ); //NOI18N
         UIManager.put( "nb.bugtracking.comment.foreground", new Color(230, 230, 230) ); //NOI18N

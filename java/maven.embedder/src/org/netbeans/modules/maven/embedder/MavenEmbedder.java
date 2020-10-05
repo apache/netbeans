@@ -45,7 +45,7 @@ import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
-import org.apache.maven.cli.MavenCli;
+import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.apache.maven.execution.DefaultMavenExecutionRequest;
 import org.apache.maven.execution.DefaultMavenExecutionResult;
 import org.apache.maven.execution.MavenExecutionRequest;
@@ -183,7 +183,7 @@ public final class MavenEmbedder {
             return testSettings; // could instead make public void setSettings(Settings settingsOverride)
         }
         File settingsXml = embedderConfiguration.getSettingsXml();
-        long newSettingsTimestamp = settingsXml.hashCode() ^ settingsXml.lastModified() ^ MavenCli.DEFAULT_USER_SETTINGS_FILE.lastModified();
+        long newSettingsTimestamp = settingsXml.hashCode() ^ settingsXml.lastModified() ^ SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE.lastModified();
         // could be included but currently constant: hashCode() of those files; getSystemProperties.hashCode()
         if (settings != null && settingsTimestamp == newSettingsTimestamp) {
             LOG.log(Level.FINER, "settings.xml cache hit for {0}", this);
@@ -192,7 +192,7 @@ public final class MavenEmbedder {
         LOG.log(Level.FINE, "settings.xml cache miss for {0}", this);
         SettingsBuildingRequest req = new DefaultSettingsBuildingRequest();
         req.setGlobalSettingsFile(settingsXml);
-        req.setUserSettingsFile(MavenCli.DEFAULT_USER_SETTINGS_FILE);
+        req.setUserSettingsFile(SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE);
         req.setSystemProperties(getSystemProperties());
         req.setUserProperties(embedderConfiguration.getUserProperties());
         try {
@@ -489,8 +489,8 @@ public final class MavenEmbedder {
         if (settingsXml !=null && settingsXml.exists()) {
             req.setGlobalSettingsFile(settingsXml);
         }
-        if (MavenCli.DEFAULT_USER_SETTINGS_FILE != null && MavenCli.DEFAULT_USER_SETTINGS_FILE.exists()) {
-          req.setUserSettingsFile(MavenCli.DEFAULT_USER_SETTINGS_FILE);
+        if (SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE != null && SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE.exists()) {
+          req.setUserSettingsFile(SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE);
         }
         
         req.setSystemProperties(getSystemProperties());

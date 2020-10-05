@@ -308,4 +308,47 @@ public class DeclarativeHintLexerTest {
         assertFalse(ts.moveNext());
     }
 
+    @Test
+    public void testDoubleColonDisamgibuation() {
+        {
+            String text = "System.err::println;;";
+            TokenHierarchy<?> hi = TokenHierarchy.create(text, language());
+            TokenSequence<?> ts = hi.tokenSequence();
+            TestUtils.assertNextTokenEquals(ts, JAVA_SNIPPET, "System.err::println");
+            TestUtils.assertNextTokenEquals(ts, DOUBLE_SEMICOLON, ";;");
+
+            assertFalse(ts.moveNext());
+        }
+        {
+            String text = "System.err::!println();;";
+            TokenHierarchy<?> hi = TokenHierarchy.create(text, language());
+            TokenSequence<?> ts = hi.tokenSequence();
+            TestUtils.assertNextTokenEquals(ts, JAVA_SNIPPET, "System.err");
+            TestUtils.assertNextTokenEquals(ts, DOUBLE_COLON, "::");
+            TestUtils.assertNextTokenEquals(ts, NOT, "!");
+            TestUtils.assertNextTokenEquals(ts, JAVA_SNIPPET, "println()");
+            TestUtils.assertNextTokenEquals(ts, DOUBLE_SEMICOLON, ";;");
+
+            assertFalse(ts.moveNext());
+        }
+        {
+            String text = "$1.isDirectory <!suppress-warnings=isDirectory> :: $1 instanceof java.io.File ;;";
+            TokenHierarchy<?> hi = TokenHierarchy.create(text, language());
+            TokenSequence<?> ts = hi.tokenSequence();
+            TestUtils.assertNextTokenEquals(ts, VARIABLE, "$1");
+            TestUtils.assertNextTokenEquals(ts, JAVA_SNIPPET, ".isDirectory ");
+            TestUtils.assertNextTokenEquals(ts, OPTIONS, "<!suppress-warnings=isDirectory>");
+            TestUtils.assertNextTokenEquals(ts, WHITESPACE, " ");
+            TestUtils.assertNextTokenEquals(ts, DOUBLE_COLON, "::");
+            TestUtils.assertNextTokenEquals(ts, WHITESPACE, " ");
+            TestUtils.assertNextTokenEquals(ts, VARIABLE, "$1");
+            TestUtils.assertNextTokenEquals(ts, WHITESPACE, " ");
+            TestUtils.assertNextTokenEquals(ts, INSTANCEOF, "instanceof");
+            TestUtils.assertNextTokenEquals(ts, JAVA_SNIPPET, " java.io.File ");
+            TestUtils.assertNextTokenEquals(ts, DOUBLE_SEMICOLON, ";;");
+
+            assertFalse(ts.moveNext());
+        }
+    }
+
 }

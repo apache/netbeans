@@ -31,8 +31,10 @@ import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.GeneratorUtilities;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
+import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import org.netbeans.modules.refactoring.api.Problem;
@@ -42,6 +44,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 import static org.netbeans.modules.refactoring.java.plugins.Bundle.*;
+import org.netbeans.modules.refactoring.java.spi.ToPhaseException;
 
 /**
  *
@@ -67,6 +70,12 @@ public class InlineMethodTransformer extends RefactoringVisitor {
         translateQueue = new LinkedList<>();
         definedIds = new LinkedList<>();
         changedParamters = new HashSet<>();
+    }
+
+    @Override
+    public void setWorkingCopy(WorkingCopy workingCopy) throws ToPhaseException {
+        SourceUtils.forceSource(workingCopy, tph.getFileObject());
+        super.setWorkingCopy(workingCopy);
     }
 
     public Problem getProblem() {

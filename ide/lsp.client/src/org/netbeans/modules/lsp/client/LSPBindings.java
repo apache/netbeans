@@ -18,19 +18,29 @@
  */
 package org.netbeans.modules.lsp.client;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.URI;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -39,6 +49,9 @@ import org.eclipse.lsp4j.DocumentSymbolCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.ResourceOperationKind;
+import org.eclipse.lsp4j.ServerCapabilities;
+import org.eclipse.lsp4j.SymbolKind;
+import org.eclipse.lsp4j.SymbolKindCapabilities;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceEditCapabilities;
@@ -52,14 +65,19 @@ import org.netbeans.api.progress.*;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.lsp.client.bindings.LanguageClientImpl;
+import org.netbeans.modules.lsp.client.bindings.TextDocumentSyncServerCapabilityHandler;
+import org.netbeans.modules.lsp.client.options.MimeTypeInfo;
+import org.netbeans.modules.lsp.client.spi.ServerRestarter;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider.LanguageServerDescription;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.OnStop;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
+import org.openide.util.RequestProcessor.Task;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -71,9 +89,10 @@ public class LSPBindings {
     private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
     private static final int DELAY = 500;
 
-    private static final Map<Project, Map<String, LSPBindings>> project2MimeType2Server = new WeakHashMap<>();
+    private static final Map<URI, Map<String, LSPBindings>> project2MimeType2Server = new WeakHashMap<>();
     private static final Map<FileObject, Map<String, LSPBindings>> workspace2Extension2Server = new HashMap<>();
     private final Map<FileObject, Map<BackgroundTask, RequestProcessor.Task>> backgroundTasks = new WeakHashMap<>();
+    private final Set<FileObject> openedFiles = new HashSet<>();
 
     public static synchronized LSPBindings getBindings(FileObject file) {
         for (Entry<FileObject, Map<String, LSPBindings>> e : workspace2Extension2Server.entrySet()) {
@@ -88,9 +107,13 @@ public class LSPBindings {
             }
         }
         Project prj = FileOwnerQuery.getOwner(file);
-
-        if (prj == null)
-            return null;
+        FileObject dir;
+        if (prj == null) {
+            dir = file.getParent();
+        } else {
+            dir = prj.getProjectDirectory();
+        }
+        URI uri = dir.toURI();
 
         String mimeType = FileUtil.getMIMEType(file);
 
@@ -99,22 +122,52 @@ public class LSPBindings {
         }
 
         LSPBindings bindings =
-                project2MimeType2Server.computeIfAbsent(prj, p -> new HashMap<>())
+                project2MimeType2Server.computeIfAbsent(uri, p -> new HashMap<>())
                                        .computeIfAbsent(mimeType, mt -> {
+                                           MimeTypeInfo mimeTypeInfo = new MimeTypeInfo(mt);
+                                           Reference<Project> prjRef = new WeakReference<>(prj);
+                                           ServerRestarter restarter = () -> {
+                                               synchronized (LSPBindings.class) {
+                                                   Project p = prjRef.get();
+                                                   if (p != null) {
+                                                       LSPBindings b = project2MimeType2Server.getOrDefault(uri, Collections.emptyMap()).remove(mimeType);
+
+                                                       if (b != null) {
+                                                           try {
+                                                               b.server.shutdown().get();
+                                                           } catch (InterruptedException | ExecutionException ex) {
+                                                               LOG.log(Level.FINE, null, ex);
+                                                           }
+                                                           if (b.process != null) {
+                                                               b.process.destroy();
+                                                           }
+                                                       }
+                                                   }
+                                               }
+                                           };
+
                                            for (LanguageServerProvider provider : MimeLookup.getLookup(mimeType).lookupAll(LanguageServerProvider.class)) {
-                                               LanguageServerDescription desc = provider.startServer(Lookups.singleton(prj));
+                                               final Lookup lkp = prj != null ? Lookups.fixed(prj, mimeTypeInfo, restarter) : Lookups.fixed(mimeTypeInfo, restarter);
+                                               LanguageServerDescription desc = provider.startServer(lkp);
 
                                                if (desc != null) {
+                                                   LSPBindings b = LanguageServerProviderAccessor.getINSTANCE().getBindings(desc);
+                                                   if (b != null) {
+                                                       return b;
+                                                   }
                                                    try {
                                                        LanguageClientImpl lci = new LanguageClientImpl();
                                                        InputStream in = LanguageServerProviderAccessor.getINSTANCE().getInputStream(desc);
                                                        OutputStream out = LanguageServerProviderAccessor.getINSTANCE().getOutputStream(desc);
+                                                       Process p = LanguageServerProviderAccessor.getINSTANCE().getProcess(desc);
                                                        Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(lci, in, out);
                                                        launcher.startListening();
                                                        LanguageServer server = launcher.getRemoteProxy();
-                                                       InitializeResult result = initServer(server, prj.getProjectDirectory()); //XXX: what if a different root is expected????
-                                                       LSPBindings b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
+                                                       InitializeResult result = initServer(p, server, dir); //XXX: what if a different root is expected????
+                                                       b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
                                                        lci.setBindings(b);
+                                                       LanguageServerProviderAccessor.getINSTANCE().setBindings(desc, b);
+                                                       TextDocumentSyncServerCapabilityHandler.refreshOpenedFilesInServers();
                                                        return b;
                                                    } catch (InterruptedException | ExecutionException ex) {
                                                        LOG.log(Level.WARNING, null, ex);
@@ -150,7 +203,7 @@ public class LSPBindings {
                 });
                 launcher.startListening();
                 LanguageServer server = launcher.getRemoteProxy();
-                InitializeResult result = initServer(server, root);
+                InitializeResult result = initServer(null, server, root);
                 LSPBindings bindings = new LSPBindings(server, result, null);
 
                 lc.setBindings(bindings);
@@ -162,21 +215,36 @@ public class LSPBindings {
         }, Bundle.LBL_Connecting());
     }
 
-    private static InitializeResult initServer(LanguageServer server, FileObject root) throws InterruptedException, ExecutionException {
+    private static InitializeResult initServer(Process p, LanguageServer server, FileObject root) throws InterruptedException, ExecutionException {
        InitializeParams initParams = new InitializeParams();
        initParams.setRootUri(Utils.toURI(root));
-       initParams.setRootPath(FileUtil.toFile(root).getAbsolutePath()); //some servers still expect root path
+       final File rootFile = FileUtil.toFile(root);
+       if (rootFile != null) {
+           initParams.setRootPath(rootFile.getAbsolutePath()); //some servers still expect root path
+       }
        initParams.setProcessId(0);
        TextDocumentClientCapabilities tdcc = new TextDocumentClientCapabilities();
        DocumentSymbolCapabilities dsc = new DocumentSymbolCapabilities();
        dsc.setHierarchicalDocumentSymbolSupport(true);
+       dsc.setSymbolKind(new SymbolKindCapabilities(Arrays.asList(SymbolKind.values())));
        tdcc.setDocumentSymbol(dsc);
        WorkspaceClientCapabilities wcc = new WorkspaceClientCapabilities();
        wcc.setWorkspaceEdit(new WorkspaceEditCapabilities());
        wcc.getWorkspaceEdit().setDocumentChanges(true);
        wcc.getWorkspaceEdit().setResourceOperations(Arrays.asList(ResourceOperationKind.Create, ResourceOperationKind.Delete, ResourceOperationKind.Rename));
        initParams.setCapabilities(new ClientCapabilities(wcc, tdcc, null));
-       return server.initialize(initParams).get();
+       CompletableFuture<InitializeResult> initResult = server.initialize(initParams);
+       while (true) {
+           try {
+               return initResult.get(100, TimeUnit.MILLISECONDS);
+           } catch (TimeoutException ex) {
+               if (p != null && !p.isAlive()) {
+                   InitializeResult emptyResult = new InitializeResult();
+                   emptyResult.setCapabilities(new ServerCapabilities());
+                   return emptyResult;
+               }
+           }
+       }
     }
 
     private final LanguageServer server;
@@ -220,7 +288,7 @@ public class LSPBindings {
         if (bindings == null)
             return ;
 
-        RequestProcessor.Task req = bindings.backgroundTasks.computeIfAbsent(file, f -> new LinkedHashMap<>()).remove(task);
+        RequestProcessor.Task req = bindings.backgroundTasksMapFor(file).remove(task);
 
         if (req != null) {
             req.cancel();
@@ -235,8 +303,29 @@ public class LSPBindings {
         WORKER.post(req, DELAY);
     }
 
+    public static void rescheduleBackgroundTask(FileObject file, BackgroundTask task) {
+        LSPBindings bindings = getBindings(file);
+
+        if (bindings == null)
+            return ;
+
+        RequestProcessor.Task req = bindings.backgroundTasksMapFor(file).get(task);
+
+        if (req != null) {
+            WORKER.post(req, DELAY);
+        }
+    }
+
     public void scheduleBackgroundTasks(FileObject file) {
-        backgroundTasks.computeIfAbsent(file, f -> new IdentityHashMap<>()).values().stream().forEach(this::scheduleBackgroundTask);
+        backgroundTasksMapFor(file).values().stream().forEach(this::scheduleBackgroundTask);
+    }
+
+    private Map<BackgroundTask, Task> backgroundTasksMapFor(FileObject file) {
+        return backgroundTasks.computeIfAbsent(file, f -> new IdentityHashMap<>());
+    }
+
+    public Set<FileObject> getOpenedFiles() {
+        return openedFiles;
     }
 
     public interface BackgroundTask {

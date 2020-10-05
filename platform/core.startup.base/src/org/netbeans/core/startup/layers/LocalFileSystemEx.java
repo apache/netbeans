@@ -100,10 +100,10 @@ public final class LocalFileSystemEx extends LocalFileSystem {
 
     private static Set<String> getInvalid (Set names) {
         LOGGER.finest("133616 - checking invalid");
-        HashSet<String> invalid = new HashSet<String>();
-        Iterator i = names.iterator ();
+        Set<String> invalid = new HashSet<String>();
+        Iterator<String> i = names.iterator();
         while (i.hasNext ()) {
-            String name = (String) i.next ();
+            String name = i.next();
             FileObject fo = FileUtil.getConfigFile(name);
             if (null == fo || !fo.isLocked()) {
                 // file lock recorded in potentialLock has been used

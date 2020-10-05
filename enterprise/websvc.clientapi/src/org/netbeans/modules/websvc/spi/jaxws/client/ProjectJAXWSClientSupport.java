@@ -69,7 +69,7 @@ import org.openide.windows.WindowManager;
  * @author mkuchtiak
  */
 public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImpl {
-    
+
     private static final String[] DEFAULT_WSIMPORT_OPTIONS = {"extension", "verbose", "fork"};  //NOI18N
     private static final String[] DEFAULT_WSIMPORT_VALUES = {"true", "true", "false"};  //NOI18N
     private static final String XNOCOMPILE_OPTION = "xnocompile"; //NOI18N
@@ -82,28 +82,29 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
     protected static final String JAVA_EE_VERSION_16="java-ee-version-16"; //NOI18N
     protected static final String JAVA_EE_VERSION_17="java-ee-version-17"; //NOI18N
     protected static final String JAVA_EE_VERSION_18="java-ee-version-18";
-    
+    protected static final String JAKARTA_EE_VERSION_8="jakarta-ee-version-8"; //NOI18N
+
     Project project;
     private AntProjectHelper helper;
     private FileObject clientArtifactsFolder;
-    
+
     /** Creates a new instance of WebProjectJAXWSClientSupport */
     public ProjectJAXWSClientSupport(Project project, AntProjectHelper helper ) {
         this.project=project;
         this.helper = helper;
     }
-    
+
     public void removeServiceClient(String serviceName) {
         JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
         if (jaxWsModel!=null && jaxWsModel.removeClient(serviceName)) {
             writeJaxWsModel(jaxWsModel);
         }
     }
-    
+
     public AntProjectHelper getAntProjectHelper() {
         return helper;
     }
-    
+
     public String getWsdlUrl(String serviceName) {
         JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
         if (jaxWsModel!=null) {
@@ -112,9 +113,9 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
         }
         return null;
     }
-    
+
     public String addServiceClient(String clientName, String wsdlUrl, String packageName, boolean isJsr109) {
-        
+
         // create jax-ws.xml if necessary
         FileObject fo = WSUtils.findJaxWsFileObject(project);
         if (fo==null) {
@@ -124,12 +125,12 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
                 ErrorManager.getDefault().notify(ex);
             }
         }
-        
+
         final JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
         String finalClientName=clientName;
         boolean clientAdded=false;
         if (jaxWsModel!=null) {
-            
+
             if(!isJsr109){
                 try{
                     addJaxWs20Library();
@@ -137,10 +138,10 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
                     ErrorManager.getDefault().notify(e);
                 }
             }
-            
+
             Client client=null;
             finalClientName = findProperClientName(clientName, jaxWsModel);
-            FileObject xmlResourcesFo = getLocalWsdlFolderForClient(finalClientName,true);                      
+            FileObject xmlResourcesFo = getLocalWsdlFolderForClient(finalClientName,true);
             FileObject localWsdl=null;
             try {
                 localWsdl = WSUtils.retrieveResource(
@@ -162,7 +163,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
                 NotifyDescriptor desc = new NotifyDescriptor.Message(mes, NotifyDescriptor.Message.ERROR_MESSAGE);
                 DialogDisplayer.getDefault().notify(desc);
             }
-            
+
             if (localWsdl!=null) {
                 try {
                     String localWsdlUrl = FileUtil.getRelativePath(xmlResourcesFo, localWsdl);
@@ -179,7 +180,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
 
                 FileObject catalog = getCatalogFileObject();
                 if (catalog!=null) client.setCatalogFile(CATALOG_FILE);
-                
+
                 WsimportOptions wsimportOptions = client.getWsImportOptions();
                 WsimportOption wsimportOption = null;
                 if (wsimportOptions != null) {
@@ -263,7 +264,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
                                 });
                             } else {
                                 Client client = jaxWsModel.findClientByName(clientName2);
-                                String packName = client.getPackageName();                               
+                                String packName = client.getPackageName();
                                 // this shuldn't normally happen
                                 // this applies only for case when package name cannot be resolved for namespace
                                 if (packName == null) {
@@ -275,7 +276,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
                                             packName = javaName.substring(0,index );
                                         } else {
                                             packName = javaName;
-                                        }                                 
+                                        }
                                         client.setPackageName(packName);
                                         writeJaxWsModel(jaxWsModel);
                                     }
@@ -290,7 +291,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
         }
         return null;
     }
-    
+
     private void runWsimport(String finalClientName){
         final FileObject buildImplFo = project.getProjectDirectory().getFileObject(GeneratedFilesHelper.BUILD_XML_PATH);
         final String finalName = finalClientName;
@@ -302,7 +303,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
                 public void run() {
                     openOutputWindow();
                 }
-            });            
+            });
         }
 
         try {
@@ -318,14 +319,14 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
             ErrorManager.getDefault().notify(e);
         }
     }
-    
+
     private void openOutputWindow() {
         TopComponent outputTc = WindowManager.getDefault().findTopComponent("output"); //NOI18N
         if (outputTc != null) {
             outputTc.open();
-        }       
+        }
     }
-    
+
     private String findProperClientName(String name, JaxWsModel jaxWsModel) {
         String firstName=name.length()==0?NbBundle.getMessage(ProjectJAXWSClientSupport.class,"LBL_defaultClientName"):name;
         if (jaxWsModel.findClientByName(firstName)==null) return firstName;
@@ -335,7 +336,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
                 return finalName;
         }
     }
-    
+
     private void writeJaxWsModel(JaxWsModel jaxWsModel) {
         try {
             jaxWsModel.write();
@@ -343,7 +344,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
             Logger.getLogger(this.getClass().getName()).log(Level.FINE, "failed to save jax-ws.xml", ex); //NOI18N
         }
     }
-    
+
     public List getServiceClients() {
         List<Client> jaxWsClients = new ArrayList<Client>();
         JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
@@ -353,21 +354,21 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
         }
         return jaxWsClients;
     }
-    
+
     /**
      *  return root folder for wsdl artifacts
      */
     public FileObject getLocalWsdlFolderForClient(String clientName, boolean createFolder) {
         return getArtifactsFolder(clientName, createFolder, true);
     }
-    
+
     /**
      *  return folder for local wsdl bindings
      */
     public FileObject getBindingsFolderForClient(String clientName, boolean createFolder) {
         return getArtifactsFolder(clientName, createFolder, false);
     }
-    
+
     private FileObject getArtifactsFolder(String clientName, boolean createFolder, boolean forWsdl) {
         String folderName = forWsdl?"wsdl":"bindings"; //NOI18N
         FileObject root = getXmlArtifactsRoot();
@@ -389,40 +390,40 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
         }
         return wsdlLocalFolder;
     }
-    
+
     /** return root folder for xml artifacts
      */
     protected FileObject getXmlArtifactsRoot() {
         return project.getProjectDirectory();
     }
-    
+
     private FileObject getCatalogFileObject() {
         return project.getProjectDirectory().getFileObject(CATALOG_FILE);
     }
-    
+
     public URL getCatalog() {
         FileObject catalog = getCatalogFileObject();
         return ((catalog==null) ? null : catalog.toURL());
     }
-    
+
     protected abstract void addJaxWs20Library() throws Exception;
-    
+
     public abstract FileObject getWsdlFolder(boolean create) throws IOException;
-    
+
     public String getServiceRefName(Node clientNode) {
         WsdlService service = clientNode.getLookup().lookup(WsdlService.class);
         String serviceName = service.getName();
         return "service/" + serviceName;
     }
-    
+
     private class WsImportFailedMessage extends NotifyDescriptor.Message {
         public WsImportFailedMessage(Throwable ex) {
             super(NbBundle.getMessage(ProjectJAXWSClientSupport.class,"TXT_CannotGenerateClient",ex.getLocalizedMessage()),
                     NotifyDescriptor.ERROR_MESSAGE);
         }
-        
+
     }
-    
+
     /** folder where xml client artifacts should be saved, e.g. WEB-INF/wsdl/client/SampleClient
      */
     protected FileObject getWsdlFolderForClient(String name) throws IOException {
@@ -440,7 +441,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
         if (clientWsdlFolder==null) clientWsdlFolder = globalWsdlFolder.createFolder("client"); //NOI18N
         return clientWsdlFolder.createFolder(name);
     }
-    
+
     private static boolean isXnocompile(Project project){
         JAXWSVersionProvider jvp = project.getLookup().lookup(JAXWSVersionProvider.class);
         if (jvp != null) {
@@ -464,7 +465,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
         // Defaultly return false
         return false;
     }
-    
+
     private static boolean isVersionSatisfied(String version, String requiredVersion) {
         int len1 = version.length();
         int len2 = requiredVersion.length();
@@ -483,5 +484,5 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
     protected String getProjectJavaEEVersion() {
         return JAVA_EE_VERSION_NONE;
     }
-    
+
 }

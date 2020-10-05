@@ -15,6 +15,5 @@
 # specific language governing permissions and limitations
 # under the License.
 
-F787C9B484CD7526F866C21D8925C4DACE467F8A org.apache.derby:derby:10.2.2.0
-
-C264E2114579474D13DD808A510FC74E762DDA8C mysql:mysql-connector-java:5.1.23
+7EFAD40EF52FBB1F08142F07A83B42D29E47D8CE org.apache.derby:derby:10.14.2.0
+9140BE77AAFA5050BF4BB936D560CBACB5A6B5C1 mysql:mysql-connector-java:5.1.48

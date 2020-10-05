@@ -503,7 +503,7 @@ public final class DeployOnSaveManager {
 
                 // create target FOs map keyed by relative paths
                 java.util.Enumeration destFiles = destRoot.getChildren(true);
-                Map destMap = new HashMap();
+                Map<String, FileObject> destMap = new HashMap<>();
                 int rootPathLen = destRoot.getPath().length();
                 for (; destFiles.hasMoreElements();) {
                     FileObject destFO = (FileObject) destFiles.nextElement();

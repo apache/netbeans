@@ -51,6 +51,7 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -60,6 +61,12 @@ import org.netbeans.modules.classfile.Access;
 import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.classfile.InvalidClassFormatException;
 import org.netbeans.modules.java.source.usages.ExecutableFilesIndex;
+import org.netbeans.modules.parsing.api.ParserManager;
+import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.spi.ParseException;
+import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.java.loaders.RenameHandler;
 import org.openide.filesystems.*;
 import org.openide.loaders.DataNode;
@@ -255,16 +262,24 @@ public final class JavaNode extends DataNode implements ChangeListener {
                         return vmOptions != null ? (String) vmOptions : "";
                     }
 
-                    public void setValue (String o) {
+                    public void setValue(String o) {
                         try {
                             dObj.getPrimaryFile().setAttribute(FILE_VM_OPTIONS, o);
-                        } catch (IOException ex) {
+                            Source s = Source.create(dObj.getPrimaryFile());
+                            ModificationResult result = ModificationResult.runModificationTask(Collections.singleton(s), new UserTask() {
+
+                                @Override
+                                public void run(ResultIterator resultIterator) {
+                                }
+                            });
+                            result.commit();
+                        } catch (IOException | ParseException ex) {
                             LOG.log(
                                     Level.WARNING,
                                     "Java File does not exist : {0}", //NOI18N
                                     dObj.getPrimaryFile().getName());
                         }
-                    }
+                }
                 };
             Sheet.Set ss = new Sheet.Set();
             ss.setName("runFileArguments"); // NOI18N

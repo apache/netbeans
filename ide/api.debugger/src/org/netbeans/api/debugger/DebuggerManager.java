@@ -163,7 +163,7 @@ public final class DebuggerManager implements ContextProvider {
     private final Vector                      breakpoints = new Vector ();
     private boolean                           breakpointsInitializing = false;
     private boolean                           breakpointsInitialized = false;
-    private final Vector                      watches = new Vector ();
+    private final Vector<Watch>               watches = new Vector<>();
     private boolean                           watchesInitialized = false;
     private ThreadLocal<Boolean>              watchesInitializing = new ThreadLocal<Boolean>();
     private SessionListener                   sessionListener = new SessionListener ();
@@ -706,7 +706,7 @@ public final class DebuggerManager implements ContextProvider {
                 throw new IllegalArgumentException("Permutation of length "+permutation.length+", but have "+watches.size()+" watches.");
             }
             checkPermutation(permutation);
-            Vector v = (Vector) watches.clone ();
+            Vector<Watch> v = (Vector<Watch>)watches.clone();
             for (int i = 0; i < v.size(); i++) {
                 watches.set(permutation[i], v.get(i));
             }
@@ -992,7 +992,7 @@ public final class DebuggerManager implements ContextProvider {
                 initDebuggerManagerListeners ();
 
                 createdBreakpoints = new ArrayList<>();
-                originatingListeners = new HashMap();
+                originatingListeners = new HashMap<>();
 
                 Vector l = (Vector) listeners.clone ();
                 int i, k = l.size ();

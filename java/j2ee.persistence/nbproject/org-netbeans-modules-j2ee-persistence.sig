@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.60.0
+#Version 1.63.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,8 +159,6 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
-meth public java.awt.peer.ComponentPeer getPeer()
- anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -464,7 +462,7 @@ meth public void setClassAssertionStatus(java.lang.String,boolean)
 meth public void setDefaultAssertionStatus(boolean)
 meth public void setPackageAssertionStatus(java.lang.String,boolean)
 supr java.lang.Object
-hfds assertionLock,classAssertionStatus,classes,defaultAssertionStatus,defaultDomain,domains,loadedLibraryNames,nativeLibraries,nativeLibraryContext,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,sclSet,sys_paths,systemNativeLibraries,usr_paths
+hfds assertionLock,classAssertionStatus,classes,defaultAssertionStatus,defaultDomain,loadedLibraryNames,nativeLibraries,nativeLibraryContext,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,sclSet,sys_paths,systemNativeLibraries,usr_paths
 hcls NativeLibrary,ParallelLoaders
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
@@ -3496,12 +3494,13 @@ meth public static void setDescriptionAsResource(org.openide.loaders.DataObject,
 meth public static void setIterator(org.openide.loaders.DataObject,org.openide.loaders.TemplateWizard$Iterator) throws java.io.IOException
  anno 0 java.lang.Deprecated()
 meth public void setTargetFolder(org.openide.loaders.DataFolder)
+meth public void setTargetFolderLazy(java.util.function.Supplier<org.openide.loaders.DataFolder>)
 meth public void setTargetName(java.lang.String)
 meth public void setTemplate(org.openide.loaders.DataObject)
 meth public void setTemplatesFolder(org.openide.loaders.DataFolder)
 meth public void setTitleFormat(java.text.MessageFormat)
 supr org.openide.WizardDescriptor
-hfds CUSTOM_DESCRIPTION,CUSTOM_ITERATOR,EA_DESCRIPTION,EA_DESC_RESOURCE,EA_ITERATOR,LOG,PREF_DIM,isInstantiating,iterator,lastComp,newObjects,pcl,progressHandle,showTargetChooser,targetChooser,targetDataFolder,targetIterator,targetName,template,templateChooser,templatesFolder,titleFormatSet
+hfds CUSTOM_DESCRIPTION,CUSTOM_ITERATOR,EA_DESCRIPTION,EA_DESC_RESOURCE,EA_ITERATOR,LOG,PREF_DIM,isInstantiating,iterator,lastComp,newObjects,pcl,progressHandle,showTargetChooser,targetChooser,targetDataFolder,targetDataFolderCreator,targetIterator,targetName,template,templateChooser,templatesFolder,titleFormatSet
 hcls DefaultIterator,InstantiatingIteratorBridge
 
 CLSS public abstract interface static org.openide.loaders.TemplateWizard$Iterator

@@ -140,5 +140,41 @@ public class GrammarParserTest extends CssTestBase {
         assertNull(g2.getName());
         
     }
-    
+
+    public void testParsingMultiplicity() {
+        GroupGrammarElement m1 = GrammarParser.parse("a{1,4}");
+        assertEquals(1, m1.elements().size());
+        assertEquals(1, m1.elements().get(0).getMinimumOccurances());
+        assertEquals(4, m1.elements().get(0).getMaximumOccurances());
+
+        GroupGrammarElement m2 = GrammarParser.parse("a{4}");
+        assertEquals(1, m2.elements().size());
+        assertEquals(4, m2.elements().get(0).getMinimumOccurances());
+        assertEquals(4, m2.elements().get(0).getMaximumOccurances());
+
+        GroupGrammarElement m3 = GrammarParser.parse("a{4,}");
+        assertEquals(1, m3.elements().size());
+        assertEquals(4, m3.elements().get(0).getMinimumOccurances());
+        assertEquals(Integer.MAX_VALUE, m3.elements().get(0).getMaximumOccurances());
+
+        GroupGrammarElement m4 = GrammarParser.parse("a{,4}");
+        assertEquals(1, m4.elements().size());
+        assertEquals(0, m4.elements().get(0).getMinimumOccurances());
+        assertEquals(4, m4.elements().get(0).getMaximumOccurances());
+
+        GroupGrammarElement m5 = GrammarParser.parse("a?");
+        assertEquals(1, m5.elements().size());
+        assertEquals(0, m5.elements().get(0).getMinimumOccurances());
+        assertEquals(1, m5.elements().get(0).getMaximumOccurances());
+
+        GroupGrammarElement m6 = GrammarParser.parse("a+");
+        assertEquals(1, m6.elements().size());
+        assertEquals(1, m6.elements().get(0).getMinimumOccurances());
+        assertEquals(Integer.MAX_VALUE, m6.elements().get(0).getMaximumOccurances());
+
+        GroupGrammarElement m7 = GrammarParser.parse("a*");
+        assertEquals(1, m7.elements().size());
+        assertEquals(0, m7.elements().get(0).getMinimumOccurances());
+        assertEquals(Integer.MAX_VALUE, m7.elements().get(0).getMaximumOccurances());
+    }
 }

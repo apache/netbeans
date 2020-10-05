@@ -44,7 +44,7 @@ public abstract class AttrValuesCompletion {
     private static final ValueCompletion<HtmlCompletionItem> LINK_TYPE_SUPPORT =
             new ValuesSetSupport(new String[]{"text/css", "text/javascript"});
     private static final ValueCompletion<HtmlCompletionItem> SCRIPT_TYPE_SUPPORT = 
-            new ValuesSetSupport(new String[]{"text/javascript"});
+            new ValuesSetSupport(new String[]{"text/javascript", "module"}); // NOI18N
     private static final ValueCompletion<HtmlCompletionItem> STYLE_TYPE_SUPPORT = 
             new ValuesSetSupport(new String[]{"text/css"});
     private static final ValueCompletion<HtmlCompletionItem> TRUE_FALSE_SUPPORT =

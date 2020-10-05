@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.TestUtil;
 import org.openide.filesystems.FileUtil;
 
 /**
@@ -54,6 +55,9 @@ public class FastJarTest extends NbTestCase {
 
     public void testFastJar () throws Exception {
         String prop = System.getProperty("sun.boot.class.path");    //NOI18N
+        if (prop == null) {
+            prop = TestUtil.createRT_JAR(getWorkDir()).getAbsolutePath();
+        }
         assertNotNull(prop);
         String[] paths = prop.split(Pattern.quote(System.getProperty("path.separator")));
         for (String path : paths) {

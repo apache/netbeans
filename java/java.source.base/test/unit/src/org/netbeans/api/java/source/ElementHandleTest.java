@@ -19,6 +19,9 @@
 
 package org.netbeans.api.java.source;
 
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.model.JavacElements;
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +38,7 @@ import junit.framework.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -49,6 +53,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.TestUtil;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -69,6 +74,7 @@ public class ElementHandleTest extends NbTestCase {
     
     private FileObject src;
     private FileObject data;
+    private String orignalNetbeansUsr;
     
     
     static {
@@ -125,9 +131,15 @@ public class ElementHandleTest extends NbTestCase {
         ClassPathProviderImpl.getDefault().setClassPaths(TestUtil.getBootClassPath(),
                                                          ClassPathSupport.createClassPath(new URL[0]),
                                                          ClassPathSupport.createClassPath(new FileObject[]{this.src}));
+        orignalNetbeansUsr = System.getProperty("netbeans.user");
+        System.setProperty("netbeans.user", getWorkDirPath());
     }
 
     protected void tearDown() throws Exception {
+        if (orignalNetbeansUsr != null)
+            System.setProperty("netbeans.user", orignalNetbeansUsr);
+        else
+            System.clearProperty("netbeans.user");
     }
 
 
@@ -189,7 +201,7 @@ public class ElementHandleTest extends NbTestCase {
                 assertNotNull (cadd);
                 collectionAddHandle[0] = ElementHandle.create(cadd);
                 assertNotNull (collectionAddHandle[0]);
-                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1"); //NOI18N
+                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.System$1"); //NOI18N
                 assertNotNull (annonClass);
                 annonClassHandle[0] = ElementHandle.create(annonClass);
                 assertNotNull (annonClassHandle[0]);
@@ -269,7 +281,7 @@ public class ElementHandleTest extends NbTestCase {
                 assertEquals (resolved, cadd);
                 resolved = annonClassHandle[0].resolve(parameter);
                 assertNotNull (resolved);
-                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1"); //NOI18N
+                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.System$1"); //NOI18N
                 assertNotNull (annonClass);
                 assertEquals(resolved,annonClass);
                 
@@ -355,7 +367,7 @@ public class ElementHandleTest extends NbTestCase {
                 assertNotNull (cadd);
                 collectionAddHandle[0] = ElementHandle.create(cadd);
                 assertNotNull (collectionAddHandle[0]);
-                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1"); //NOI18N
+                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.System$1"); //NOI18N
                 assertNotNull (annonClass);
                 annonClassHandle[0] = ElementHandle.create(annonClass);
                 assertNotNull (annonClassHandle[0]);
@@ -399,7 +411,7 @@ public class ElementHandleTest extends NbTestCase {
                 Element cadd = getCollectionAdd(elements.getTypeElement(java.util.Collection.class.getName()));
                 assertNotNull(cadd);
                 assertTrue (collectionAddHandle[0].signatureEquals(cadd));
-                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1"); //NOI18N
+                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.System$1"); //NOI18N
                 assertNotNull (annonClass);
                 assertTrue(annonClassHandle[0].signatureEquals(annonClass));
             }
@@ -422,6 +434,9 @@ public class ElementHandleTest extends NbTestCase {
             ElementKind.ENUM,
             ElementKind.ANNOTATION_TYPE
         }));
+        ElementKind recordKind = TreeShims.getRecordKind();
+        if (recordKind != null)
+            allowed.add(recordKind);
         for (ElementKind aek : allowed) {
             ElementHandle<TypeElement> eh = ElementHandle.createTypeElementHandle(aek, "org.me.Foo");    //NOI18N
             assertEquals(aek, eh.getKind());
@@ -493,7 +508,7 @@ public class ElementHandleTest extends NbTestCase {
                 assertNotNull (cadd);
                 collectionAddHandle[0] = ElementHandle.create(cadd);
                 assertNotNull (collectionAddHandle[0]);
-                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1"); //NOI18N
+                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.System$1"); //NOI18N
                 assertNotNull (annonClass);
                 annonClassHandle[0] = ElementHandle.create(annonClass);
                 assertNotNull (annonClassHandle[0]);
@@ -607,17 +622,50 @@ public class ElementHandleTest extends NbTestCase {
 
             public void run(CompilationController parameter) throws Exception {
                 JavacElements elements = (JavacElements) parameter.getElements();
-                TypeElement te = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1");
+                TypeElement te = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.System$1");
                 List<? extends Element> content = elements.getAllMembers(te);                
             }
         }, true);
     }
     
+    public void testAnonymousFromSource() throws Exception {
+        try (PrintWriter out = new PrintWriter ( new OutputStreamWriter (data.getOutputStream()))) {
+            out.println ("public class Test {" +
+                        "    public void test() {" +
+                        "        Object o = new Object() {};" +
+                        "    }" +
+                         "}");
+        }
+        final JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPathProviderImpl.getDefault().findClassPath(data,ClassPath.BOOT), ClassPathProviderImpl.getDefault().findClassPath(data, ClassPath.COMPILE), null), data);
+        assertNotNull(js);
+        AtomicBoolean didTest = new AtomicBoolean();
+
+        js.runUserActionTask(new Task<CompilationController>() {
+            public void run(CompilationController parameter) throws Exception {
+                parameter.toPhase(JavaSource.Phase.RESOLVED);
+                new TreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitNewClass(NewClassTree node, Void p) {
+                        TreePath clazz = new TreePath(getCurrentPath(), node.getClassBody());
+                        Element el = parameter.getTrees().getElement(clazz);
+                        assertNotNull(el);
+                        assertNotNull(ElementHandle.create(el).resolve(parameter));
+                        didTest.set(true);
+                        return super.visitNewClass(node, p);
+                    }
+                }.scan(parameter.getCompilationUnit(), null);
+            }
+        }, true);
+
+        assertTrue(didTest.get());
+    }
+
     public void testHandleClassBasedCompilations() throws Exception {
         ClassPath systemClasses = BootClassPathUtil.getModuleBootPath();
-        FileObject jlObject = systemClasses.findResource("java/lang/Object.class");
+        ClassPath bcp = BootClassPathUtil.getBootClassPath();
+        FileObject jlObject = bcp.findResource("java/lang/Object.class");
         assertNotNull(jlObject);
-        ClasspathInfo cpInfo = new ClasspathInfo.Builder(BootClassPathUtil.getBootClassPath())
+        ClasspathInfo cpInfo = new ClasspathInfo.Builder(bcp)
                                                 .setModuleBootPath(systemClasses)
                                                 .build();
         JavaSource js = JavaSource.create(cpInfo, jlObject);

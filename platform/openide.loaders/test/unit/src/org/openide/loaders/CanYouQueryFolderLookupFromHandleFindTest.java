@@ -240,7 +240,7 @@ public class CanYouQueryFolderLookupFromHandleFindTest extends NbTestCase {
         public Pool() {
         }
         
-        public Enumeration loaders() {
+        public Enumeration<? extends DataLoader> loaders() {
             return Enumerations.singleton(DataLoader.getLoader(MyLoader.class));
         }
     }

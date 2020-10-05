@@ -15,7 +15,5 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-4E84CDA13657513FAE498C45D77075B38CF6EE21 org.jvnet.winp:winp:1.26
-2E07375E5CA3A452472F0E87FB33F243F7A5C08C org.jvnet.libpam4j:libpam4j:1.1
-# processtreekiller is not available in Maven, and its web page was hosted in Kenai, now extinct.
-6819C79348FCF4F5125C834E7D3B742582DCA34D processtreekiller-1.0.7.jar
+8DCFCC7214E73A906786B80704784D90FB593E75 org.jvnet.winp:winp:1.28
+93A5E6FC4B7E18B78B68EEC0212CBD0B253F15AE eu.doppel-helix.netbeans.lib:processtreekiller:2.0.1

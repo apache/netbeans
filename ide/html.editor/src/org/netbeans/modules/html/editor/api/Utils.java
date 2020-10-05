@@ -90,7 +90,7 @@ public class Utils {
         }
 
         do {
-            Token t = ts.token();
+            Token<HTMLTokenId> t = ts.token();
             TokenId id = t.id();
             if( id == HTMLTokenId.TAG_OPEN) {
                 return t;

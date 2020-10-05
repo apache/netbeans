@@ -20,6 +20,7 @@
 package org.netbeans.modules.debugger.jpda.backend.truffle;
 
 import com.oracle.truffle.api.debug.DebugStackFrame;
+import com.oracle.truffle.api.nodes.LanguageInfo;
 import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.SourceSection;
 import java.lang.reflect.InvocationTargetException;
@@ -40,7 +41,7 @@ final class FrameInfo {
 
     FrameInfo(DebugStackFrame topStackFrame, Iterable<DebugStackFrame> stackFrames) {
         SourceSection topSS = topStackFrame.getSourceSection();
-        SourcePosition position = JPDATruffleDebugManager.getPosition(topSS);
+        SourcePosition position = new SourcePosition(topSS);
         ArrayList<DebugStackFrame> stackFramesArray = new ArrayList<>();
         for (DebugStackFrame sf : stackFrames) {
             if (sf == topStackFrame) {
@@ -55,10 +56,13 @@ final class FrameInfo {
         }
         frame = topStackFrame;
         stackTrace = stackFramesArray.toArray(new DebugStackFrame[stackFramesArray.size()]);
+        LanguageInfo sfLang = topStackFrame.getLanguage();
         topFrame = topStackFrame.getName() + "\n" +
+                   ((sfLang != null) ? sfLang.getId() + " " + sfLang.getName() : "") + "\n" +
                    DebuggerVisualizer.getSourceLocation(topSS) + "\n" +
                    position.id + "\n" + position.name + "\n" + position.path + "\n" +
-                   position.uri.toString() + "\n" + position.line + "\n" + isInternal(topStackFrame);
+                   position.uri.toString() + "\n" + position.sourceSection +/* "," + position.startColumn + "," +
+                   position.endLine + "," + position.endColumn +*/ "\n" + isInternal(topStackFrame);
         topVariables = JPDATruffleAccessor.getVariables(topStackFrame);
     }
     

@@ -90,6 +90,8 @@ import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
@@ -118,6 +120,7 @@ import org.netbeans.modules.java.source.save.PositionEstimator;
 import org.netbeans.modules.java.source.save.Reformatter;
 import org.netbeans.modules.java.source.transform.FieldGroupTree;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.openide.util.Exceptions;
 
 /** Prints out a tree as an indented Java source program.
  */
@@ -1209,7 +1212,12 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitLambda(JCLambda tree) {
-        print(cs.spaceWithinLambdaParens() && tree.params.nonEmpty() ? "( " : "(");
+        boolean useParens = cs.parensAroundSingularLambdaParam() ||
+                            tree.params.size() != 1 ||
+                            tree.paramKind != JCLambda.ParameterKind.IMPLICIT;
+        if (useParens) {
+            print(cs.spaceWithinLambdaParens() && tree.params.nonEmpty() ? "( " : "(");
+        }
         boolean oldPrintingMethodParams = printingMethodParams;
         printingMethodParams = true;
         suppressVariableType = tree.paramKind == JCLambda.ParameterKind.IMPLICIT;
@@ -1218,9 +1226,11 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                   true);
         suppressVariableType = false;
         printingMethodParams = oldPrintingMethodParams;
-        if (cs.spaceWithinLambdaParens() && tree.params.nonEmpty())
-            needSpace();
-        print(')');
+        if (useParens) {
+            if (cs.spaceWithinLambdaParens() && tree.params.nonEmpty())
+                needSpace();
+            print(')');
+        }
         print(cs.spaceAroundLambdaArrow() ? " ->" : "->");
         if (tree.getBodyKind() == BodyKind.STATEMENT) {
             printBlock(tree.body, cs.getOtherBracePlacement(), cs.spaceAroundLambdaArrow());
@@ -1830,7 +1840,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     public void visitTypeTest(JCInstanceOf tree) {
 	printExpr(tree.expr, TreeInfo.ordPrec);
 	print(" instanceof ");
-	print(tree.clazz);
+	print(CasualDiff.getPattern(tree));
     }
 
     @Override
@@ -2065,6 +2075,19 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitTree(JCTree tree) {
+        if ("BINDING_PATTERN".equals(tree.getKind().name())) {
+            try {
+                Class bindingPatternClass = Class.forName("com.sun.source.tree.BindingPatternTree");
+                Method getBinding = bindingPatternClass.getMethod("getBinding");
+                Method getType = bindingPatternClass.getMethod("getType");
+                print((JCTree) getType.invoke(tree));
+                print(' ');
+                print((Name) getBinding.invoke(tree));
+                return ;
+            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
 	print("(UNKNOWN: " + tree + ")");
 	newline();
     }

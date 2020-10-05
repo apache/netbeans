@@ -132,9 +132,9 @@ public class NbLexerCharStream implements CharStream {
         }
         
         //remove all markers from the given one, including the requested one
-        for(int i = marker; i < markers.size(); i++) {
-            markers.remove(i);
-        }
+        do {
+            markers.pop();
+        } while (marker < markers.size());
     }
 
     @Override

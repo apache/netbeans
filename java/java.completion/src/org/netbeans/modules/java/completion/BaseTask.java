@@ -35,6 +35,7 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 
 import com.sun.source.tree.*;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
@@ -344,6 +345,13 @@ abstract class BaseTask extends UserTask {
                     case CASE:
                         stmts = ((CaseTree) path.getLeaf()).getStatements();
                         break;
+                    case CONDITIONAL_AND: case CONDITIONAL_OR:
+                        BinaryTree bt = (BinaryTree) last;
+                        if (sourcePositions.getStartPosition(path.getCompilationUnit(), bt.getRightOperand()) == offset &&
+                            bt.getRightOperand().getKind() == Kind.ERRONEOUS) {
+                            last = bt.getRightOperand();
+                        }
+                        break;
                 }
                 if (stmts != null) {
                     for (StatementTree st : stmts) {
@@ -378,6 +386,9 @@ abstract class BaseTask extends UserTask {
                         }
                         sourcePositions = new SourcePositionsImpl(block, sourcePositions, sp[0], blockPos, -1);
                         path = tu.getPathElementOfKind(Tree.Kind.LAMBDA_EXPRESSION, tu.pathFor(new TreePath(blockPath.getParentPath(), block), offset, sourcePositions));
+                        if (path == null) {
+                            return null;
+                        }
                         lambdaBody = ((LambdaExpressionTree) path.getLeaf()).getBody();
                         bodyPos = (int) sourcePositions.getStartPosition(root, lambdaBody);
                         if (bodyPos >= offset) {

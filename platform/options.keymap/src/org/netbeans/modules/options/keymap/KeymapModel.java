@@ -548,7 +548,7 @@ public class KeymapModel {
             public void run() {
                 KL k = keymapData;
                 if (k != null) {
-                    Map newMap = new HashMap<String, Map<ShortcutAction,Set<String>>>();
+                    Map<String, Map<ShortcutAction,Set<String>>> newMap = new HashMap<>();
                     newMap.putAll(k.keyMaps);
                     newMap.put(profile, m);
                     k.keyMaps = newMap;

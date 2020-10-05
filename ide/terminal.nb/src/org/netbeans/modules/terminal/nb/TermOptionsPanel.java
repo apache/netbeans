@@ -170,7 +170,7 @@ public final class TermOptionsPanel extends JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(fontSizeLabel, org.openide.util.NbBundle.getMessage(TermOptionsPanel.class, "TermOptionsPanel.fontSizeLabel.text")); // NOI18N
 
-        fontSizeSpinner.setModel(new SpinnerNumberModel(12, termOptions.MIN_FONT_SIZE, termOptions.MAX_FONT_SIZE, 1));
+        fontSizeSpinner.setModel(new SpinnerNumberModel(12, TermOptions.MIN_FONT_SIZE, TermOptions.MAX_FONT_SIZE, 1));
         fontSizeSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 fontSizeSpinnerStateChanged(evt);

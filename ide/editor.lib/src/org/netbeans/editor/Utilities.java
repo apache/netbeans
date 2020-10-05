@@ -20,6 +20,7 @@
 package org.netbeans.editor;
 
 import java.awt.AWTKeyStroke;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -30,6 +31,8 @@ import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
@@ -44,6 +47,7 @@ import javax.swing.Action;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JViewport;
@@ -1511,6 +1515,10 @@ public class Utilities {
         im.put(escKs, NO_ACTION);
         im.put(tabKs, NO_ACTION);
 
+        // The editor pane must not have any insets because otherwise the caret
+        // is not positions correctly (maybe a bug somewhere in class DocumentView
+        // where `allocation.x` and `allocation.y` are always zero, but should be
+        // insets left and top).
         editorPane.setBorder (
             new EmptyBorder (0, 0, 0, 0)
         );
@@ -1521,21 +1529,45 @@ public class Utilities {
         tfkeys = referenceTextField.getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
         editorPane.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, tfkeys);
 
-        final Insets margin = referenceTextField.getMargin();
-        final Insets borderInsets = referenceTextField.getBorder().getBorderInsets(referenceTextField);
+        final Insets textFieldInsets = referenceTextField.getInsets();
+
+        // Because the insets include the margin, temporary clear margin to get
+        // the real border insets. Subtracting margin from insets does not work
+        // correctly because FlatLaf does some scaling on HiDPI screens
+        // (getInsets() returns scaled values, but getMargin() unscaled values).
+        final Insets oldMargin = referenceTextField.getMargin();
+        referenceTextField.setMargin(new Insets(0, 0, 0, 0));
+        final Insets borderInsets = referenceTextField.getInsets();
+        referenceTextField.setMargin(oldMargin);
+
+        // Compute insets used for scrollpane view, which is textFieldInsets minus
+        // borderInsets because the scrollpane gets the border of the textfield.
+        final Insets viewInsets = new Insets(
+                textFieldInsets.top - borderInsets.top,
+                textFieldInsets.left - borderInsets.left,
+                textFieldInsets.bottom - borderInsets.bottom,
+                textFieldInsets.right - borderInsets.right);
+
+        // This view panel is only needed to have some margin between
+        // the scrollpane border and the editor pane.
+        final JPanel viewPanel = new JPanel(new BorderLayout()) {
+            // overridden so that FlatLaf changes scrollpane border color if editor pane is focused
+            @Override
+            public boolean hasFocus() {
+                return editorPane.hasFocus();
+            }
+        };
+        viewPanel.setBorder(new EmptyBorder(viewInsets));
+        viewPanel.setOpaque(true);
+        viewPanel.setBackground(referenceTextField.getBackground());
+        viewPanel.add(editorPane, BorderLayout.NORTH);
+
         //logger.fine("createSingleLineEditor(): margin = "+margin+", borderInsets = "+borderInsets);
         final JScrollPane sp = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_NEVER,
                                                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER) {
-
             @Override
             public void setViewportView(Component view) {
-                if (view instanceof JComponent) {
-                    //logger.fine("createSingleLineEditor() setViewportView(): setting empty border with insets = "+borderInsets);
-                    ((JComponent) view).setBorder(new EmptyBorder(margin)); // borderInsets
-                }
-                if (view instanceof JEditorPane) {
-                    adjustScrollPaneSize(this, (JEditorPane) view);
-                }
+                adjustScrollPaneSize(this, editorPane);
                 super.setViewportView(view);
             }
 
@@ -1549,6 +1581,18 @@ public class Utilities {
             }
         });
 
+        // Repaint scrollpane on focus gained/lost to update border color in case
+        // the current LaF uses different border color for focused state.
+        editorPane.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                sp.repaint();
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                sp.repaint();
+            }
+        });
 
         sp.setBorder(new DelegatingBorder(referenceTextField.getBorder(), borderInsets));
         sp.setBackground(referenceTextField.getBackground());
@@ -1556,13 +1600,12 @@ public class Utilities {
         int preferredHeight = referenceTextField.getPreferredSize().height;
         Dimension spDim = sp.getPreferredSize();
         spDim.height = preferredHeight;
-        spDim.height += margin.bottom + margin.top;//borderInsets.top + borderInsets.bottom;
         sp.setPreferredSize(spDim);
         sp.setMinimumSize(spDim);
         sp.setMaximumSize(spDim);
-        
-        sp.setViewportView(editorPane);
-        
+
+        sp.setViewportView(viewPanel);
+
         final DocumentListener manageViewListener = new ManageViewPositionListener(editorPane, sp);
         DocumentUtilities.addDocumentListener(editorPane.getDocument(), manageViewListener, DocumentListenerPriority.AFTER_CARET_UPDATE);
         editorPane.addPropertyChangeListener(new PropertyChangeListener() {
@@ -1598,7 +1641,6 @@ public class Utilities {
         //logger.fine("createSingleLineEditor(): editorPane's insets = "+editorPane.getInsets());
         Dimension prefSize = sp.getPreferredSize();
         Insets borderInsets = sp.getBorder().getBorderInsets(sp);//sp.getInsets();
-        int vBorder = borderInsets.bottom + borderInsets.top;
         EditorUI eui = org.netbeans.editor.Utilities.getEditorUI(editorPane);
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("createSingleLineEditor(): editor UI = "+eui);
@@ -1619,7 +1661,7 @@ public class Utilities {
             //logger.fine("createSingleLineEditor(): editor's font = "+font+" with metrics = "+fontMetrics+", leading = "+fontMetrics.getLeading());
             //logger.fine("createSingleLineEditor(): font's height = "+height);
         }
-        height += vBorder + getLFHeightAdjustment();
+        height += getLFHeightAdjustment();
         //height += 2; // 2 for border
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("createSingleLineEditor(): border vertical insets = "+borderInsets.bottom+" + "+borderInsets.top);

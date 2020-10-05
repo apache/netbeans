@@ -18,6 +18,11 @@
  */
 package org.netbeans.modules.php.editor.verification;
 
+import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.openide.filesystems.FileObject;
 
@@ -29,6 +34,13 @@ public class HintsTest extends PHPHintsTestBase {
 
     public HintsTest(String testName) {
         super(testName);
+    }
+
+    @Override
+    protected File getDataFile(String relFilePath) {
+        // Overriden because CslTestBase loads file from different location.
+        File inputFile = new File(getDataDir(), relFilePath);
+        return inputFile;
     }
 
     public void testModifiersCheckHint() throws Exception {
@@ -149,6 +161,8 @@ public class HintsTest extends PHPHintsTestBase {
     }
 
     public void testIntroduceSuggestion_01() throws Exception {
+        // Needs to replace directory separators in expected result.
+        fixContent(new File(getDataDir(), getTestDirectory() + "testIntroduceSuggestion.php.testIntroduceSuggestion_01.hints"));
         checkHints(new IntroduceSuggestion(), "testIntroduceSuggestion.php", "new MyClass();^");
     }
 
@@ -728,6 +742,14 @@ public class HintsTest extends PHPHintsTestBase {
     public void testFieldRedeclarationTypedProperties20Hint_02() throws Exception {
         // PHP 7.4
         checkHints(new FieldRedeclarationHintError(), "testFieldRedeclarationTypedProperties20Hint_02.php");
+    }
+
+    private void fixContent(File file) throws Exception {
+        Path path = file.toPath();
+        Charset charset = StandardCharsets.UTF_8;
+        String content = new String(Files.readAllBytes(path), charset);
+        content = content.replace("%SEP%", File.separator);
+        Files.write(path, content.getBytes(charset));
     }
 
     //~ Inner classes

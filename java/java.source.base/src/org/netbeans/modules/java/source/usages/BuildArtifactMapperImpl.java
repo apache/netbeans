@@ -255,7 +255,6 @@ public class BuildArtifactMapperImpl {
             out = new FileOutputStream(target);
 
             FileUtil.copy(ins, out);
-            //target.setLastModified(MINIMAL_TIMESTAMP); see 156153
             return true;
         } catch (FileNotFoundException fnf) {
             LOG.log(Level.INFO, "Cannot open file.", fnf);   //NOI18N

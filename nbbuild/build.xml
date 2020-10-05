@@ -116,9 +116,18 @@
             <isset property="metabuild.jsonurl"/>
         </not>
     </condition>
-    <configureproxy connectTo="${metabuild.jsonurl}" hostProperty="proxyHost" portProperty="proxyPort"/>
-    <setproxy proxyhost="${proxyHost}" proxyPort="${proxyPort}"/>
-    <get dest="${metabuild.releasejson}" skipexisting="false" src="${metabuild.jsonurl}" />
+    <condition property="needjsondownload" value="true" else="false">
+        <not>
+            <available file="${binaries.cache}/netbeansrelease.json" />
+        </not>
+    </condition>
+    <sequential if:true="${needjsondownload}" >
+        <configureproxy connectTo="${metabuild.jsonurl}" hostProperty="proxyHost" portProperty="proxyPort"/>
+        <setproxy proxyhost="${proxyHost}" proxyPort="${proxyPort}"/>
+        <get dest="${metabuild.releasejson}" skipexisting="false" src="${metabuild.jsonurl}" />
+        <copy file="${metabuild.releasejson}" tofile="${binaries.cache}/netbeansrelease.json" />
+    </sequential>
+    <copy file="${binaries.cache}/netbeansrelease.json" tofile="${metabuild.releasejson}" />
     <!-- read info from gitinfo.properties , if present in source bundle copy gitinfo-->
     <copy file="${nb_all}/nbbuild/gitinfo.properties" tofile="${nb_all}/nbbuild/build/gitinfo.properties" failonerror="false"/>
     <copy file="${nb_all}/nbbuild/netbeansrelease.properties" tofile="${nb_all}/nbbuild/build/netbeansrelease.properties" failonerror="false"/>

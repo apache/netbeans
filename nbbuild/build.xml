@@ -131,10 +131,9 @@
     <property name="xmlrelease" value="${nb_all}/nbbuild/build/netbeansrelease.xml"/>
     <property name="propertiesrelease" value="${nb_all}/nbbuild/build/netbeansrelease.properties"/>
     <property file="${nb_all}/nbbuild/build/gitinfo.properties"/>
-    <property file="${nb_all}/nbbuild/build/netbeansrelease.properties"/>
     <releasejson file="${releasejson}" xmloutput="${xmlrelease}" propertiesoutput="${propertiesrelease}" branch="${metabuild.branch}" hash="${metabuild.hash}"/>
+    <property file="${nb_all}/nbbuild/build/netbeansrelease.properties"/>    
     <!-- javadoc content filtering -->
-    
     <setjavadoc branch="${metabuild.branch}"/>
   </target>
   <target name="getjsonfile">
@@ -142,7 +141,6 @@
     <copy file="${nb_all}/nbbuild/netbeansrelease.json" tofile="${nb_all}/nbbuild/build/netbeansrelease.json" failonerror="false"/>
     <!-- read info from gitinfo.properties , if present in source bundle copy gitinfo-->
     <copy file="${nb_all}/nbbuild/gitinfo.properties" tofile="${nb_all}/nbbuild/build/gitinfo.properties" failonerror="false"/>
-    <copy file="${nb_all}/nbbuild/netbeansrelease.properties" tofile="${nb_all}/nbbuild/build/netbeansrelease.properties" failonerror="false"/>
     
     <property name="metabuild.releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
     <!-- get all json info we have on apache gitbox  -->
@@ -159,9 +157,17 @@
     <sequential if:true="${needjsondownload}" >
         <configureproxy connectTo="${metabuild.jsonurl}" hostProperty="proxyHost" portProperty="proxyPort"/>
         <setproxy proxyhost="${proxyHost}" proxyPort="${proxyPort}"/>
-        <get dest="${metabuild.releasejson}" skipexisting="false" src="${metabuild.jsonurl}" />
-        <copy file="${metabuild.releasejson}" tofile="${nb_all}/nbbuild/netbeansrelease.json" />
+        <get dest="${metabuild.releasejson}" skipexisting="false" src="${metabuild.jsonurl}" />      
     </sequential>
+  </target>
+  <target name="cache-release-json">
+      <property name="needjsondownload" value="true" />
+      <antcall target="getjsonfile" />
+      <copy file="${metabuild.releasejson}" tofile="${nb_all}/nbbuild/netbeansrelease.json" />
+  </target>
+  <target name="clear-release-json">
+      <delete file="${nb_all}/nbbuild/netbeansrelease.json" />
+      <delete file="${nb_all}/nbbuild/build/netbeansrelease.json" />
   </target>
   <target name="-gitinfo.ispresent">
       <available file="${nb_all}/nbbuild/build/gitinfo.properties" property="gitinfo.present" />      
@@ -1770,7 +1776,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <zipfileset file="${nb.build.dir}/LICENSE" />
       <zipfileset dir="${nb.build.dir}/licenses" includes="**" prefix="licenses" /> 
       <zipfileset file="${source.zip.readme}" fullpath="README.md" erroronmissingarchive="false" />
-      <zipfileset file="${nb_all}/nbbuild/build/netbeansrelease.properties" fullpath="nbbuild/netbeansrelease.properties" erroronmissingarchive="false"/>
       <zipfileset file="${nb_all}/nbbuild/build/gitinfo.properties" fullpath="nbbuild/gitinfo.properties" erroronmissingarchive="false" />
       <zipfileset file="${nb_all}/nbbuild/build/netbeansrelease.json" fullpath="nbbuild/netbeansrelease.json" erroronmissingarchive="false" />
     </zip>

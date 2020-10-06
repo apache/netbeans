@@ -521,11 +521,6 @@
                         <test/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.java.editor</code-name-base>
-                        <recursive/>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.netbeans.modules.java.editor.base</code-name-base>
                         <compile-dependency/>
                         <test/>
@@ -603,7 +598,7 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.java.editor</code-name-base>
+                        <code-name-base>org.netbeans.modules.java.editor.base</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>

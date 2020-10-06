@@ -22,35 +22,29 @@ package org.netbeans.editor.ext.java;
 import org.netbeans.api.editor.fold.FoldType;
 import org.netbeans.spi.editor.fold.FoldManager;
 
-import static org.netbeans.editor.ext.java.Bundle.*;
-import org.openide.util.NbBundle;
+import org.netbeans.modules.java.editor.fold.JavaElementFoldManager;
 
 /**
  * Java fold maintainer creates and updates folds for java sources.
  *
  * @author Miloslav Metelka
  * @version 1.00
+ * @deprecated This package introduces a dependency on an obsoleted pre-NetBeans 6.5 features.
+ * It is possible to use generic {@link FoldType} categories and use {@link FoldType#isKindOf(org.netbeans.api.editor.fold.FoldType)}.
  */
 
+@Deprecated
 public abstract class JavaFoldManager implements FoldManager {
 
     public static final FoldType INITIAL_COMMENT_FOLD_TYPE = FoldType.INITIAL_COMMENT; // NOI18N
 
-    @NbBundle.Messages("FoldType_Imports=Imports")
-    public static final FoldType IMPORTS_FOLD_TYPE = FoldType.create("import", FoldType_Imports(), 
-	     new org.netbeans.api.editor.fold.FoldTemplate(0, 0, "...")); // NOI18N
+    public static final FoldType IMPORTS_FOLD_TYPE = JavaElementFoldManager.IMPORTS_FOLD_TYPE;
     
-    @NbBundle.Messages("FoldType_Javadoc=Javadoc Comments")
-    public static final FoldType JAVADOC_FOLD_TYPE = FoldType.DOCUMENTATION.derive("javadoc", FoldType_Javadoc(), 
-	     new org.netbeans.api.editor.fold.FoldTemplate(3, 2, "/**...*/")); // NOI18N
+    public static final FoldType JAVADOC_FOLD_TYPE = JavaElementFoldManager.JAVADOC_FOLD_TYPE;
 
-    @NbBundle.Messages("FoldType_Methods=Methods")
-    public static final FoldType CODE_BLOCK_FOLD_TYPE = FoldType.MEMBER.derive("method", FoldType_Methods(), 
-	     new org.netbeans.api.editor.fold.FoldTemplate(1, 1, "{...}")); // NOI18N
+    public static final FoldType CODE_BLOCK_FOLD_TYPE = JavaElementFoldManager.CODE_BLOCK_FOLD_TYPE;
     
-    @NbBundle.Messages("FoldType_InnerClasses=Inner Classes")
-    public static final FoldType INNERCLASS_TYPE = FoldType.NESTED.derive("innerclass", "Inner Classes", 
-	     new org.netbeans.api.editor.fold.FoldTemplate(1, 1, "{...}")); // NOI18N
+    public static final FoldType INNERCLASS_TYPE = JavaElementFoldManager.INNERCLASS_TYPE;
     
     private static final String IMPORTS_FOLD_DESCRIPTION = "..."; // NOI18N
 

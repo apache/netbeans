@@ -31,7 +31,7 @@
             </trigger-dependency>
             <implies>
                 <result>
-                    <module-dependency codenamebase="org.netbeans.modules.java.editor.lib" major="1" spec="1.49"/>
+                    <module-dependency codenamebase="org.netbeans.modules.java.editor.lib" major="1" spec="1.49.0"/>
                 </result>
             </implies>
         </transformation>

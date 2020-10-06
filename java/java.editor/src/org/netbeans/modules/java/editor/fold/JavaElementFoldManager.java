@@ -83,35 +83,6 @@ public class JavaElementFoldManager implements FoldManager {
     public static final FoldType INNERCLASS_TYPE = FoldType.NESTED.derive("innerclass", "Inner Classes", 
 	     new org.netbeans.api.editor.fold.FoldTemplate(1, 1, "{...}")); // NOI18N
     
-    private static final String IMPORTS_FOLD_DESCRIPTION = "..."; // NOI18N
-
-    private static final String COMMENT_FOLD_DESCRIPTION = "/*...*/"; // NOI18N
-
-    private static final String JAVADOC_FOLD_DESCRIPTION = "/**...*/"; // NOI18N
-    
-    private static final String CODE_BLOCK_FOLD_DESCRIPTION = "{...}"; // NOI18N
-
-    @Deprecated
-    public static final FoldTemplate INITIAL_COMMENT_FOLD_TEMPLATE
-        = new FoldTemplate(INITIAL_COMMENT_FOLD_TYPE, COMMENT_FOLD_DESCRIPTION, 2, 2);
-
-    @Deprecated
-    public static final FoldTemplate IMPORTS_FOLD_TEMPLATE
-        = new FoldTemplate(IMPORTS_FOLD_TYPE, IMPORTS_FOLD_DESCRIPTION, 0, 0);
-
-    @Deprecated
-    public static final FoldTemplate JAVADOC_FOLD_TEMPLATE
-        = new FoldTemplate(JAVADOC_FOLD_TYPE, JAVADOC_FOLD_DESCRIPTION, 3, 2);
-
-    @Deprecated
-    public static final FoldTemplate CODE_BLOCK_FOLD_TEMPLATE
-        = new FoldTemplate(CODE_BLOCK_FOLD_TYPE, CODE_BLOCK_FOLD_DESCRIPTION, 1, 1);
-
-    @Deprecated
-    public static final FoldTemplate INNER_CLASS_FOLD_TEMPLATE
-        = new FoldTemplate(INNERCLASS_TYPE, CODE_BLOCK_FOLD_DESCRIPTION, 1, 1);
-
-    
     protected static final class FoldTemplate {
         
         private FoldType type;

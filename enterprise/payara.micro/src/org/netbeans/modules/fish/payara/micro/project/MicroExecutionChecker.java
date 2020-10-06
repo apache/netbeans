@@ -34,6 +34,7 @@ import org.netbeans.modules.maven.api.execute.ExecutionContext;
 import org.netbeans.modules.maven.api.execute.ExecutionResultChecker;
 import org.netbeans.modules.maven.api.execute.PrerequisitesChecker;
 import org.netbeans.modules.maven.api.execute.RunConfig;
+import org.netbeans.modules.maven.j2ee.execution.ExecutionChecker;
 import static org.netbeans.spi.project.ActionProvider.COMMAND_BUILD;
 import static org.netbeans.spi.project.ActionProvider.COMMAND_CLEAN;
 import static org.netbeans.spi.project.ActionProvider.COMMAND_DEBUG;
@@ -53,29 +54,32 @@ import org.netbeans.spi.project.ProjectServiceProvider;
         }, 
         projectType = MAVEN_WAR_PROJECT_TYPE
 )
-public class ExecutionChecker implements ExecutionResultChecker, PrerequisitesChecker {
+public class MicroExecutionChecker extends ExecutionChecker {
     
     private static final String COMMAND_BUILD_WITH_DEPENDENCIES = "build-with-dependencies";
     
-    private static final Set<String> BUILD_ACTIONS = new HashSet<>(asList(new String[]{
+    private static final Set<String> BUILD_ACTIONS = new HashSet<>(asList(
         COMMAND_CLEAN, 
         COMMAND_BUILD, 
         COMMAND_REBUILD,
         COMMAND_BUILD_WITH_DEPENDENCIES,
         COMPILE_EXPLODE_ACTION, 
         EXPLODE_ACTION
-    }));
+    ));
     
-    private static final Set<String> RUN_ACTIONS = new HashSet<>(asList(new String[]{
+    private static final Set<String> RUN_ACTIONS = new HashSet<>(asList(
         COMMAND_RUN, 
         COMMAND_DEBUG, 
         COMMAND_PROFILE, 
         RUN_SINGLE_ACTION, 
         DEBUG_SINGLE_ACTION,
         PROFILE_SINGLE_ACTION
-    }));
+    ));
     
-    
+    public MicroExecutionChecker(Project project) {
+        super(project);
+    }
+
     @Override
     public boolean checkRunConfig(RunConfig config) {
         Project project = config.getProject();
@@ -86,8 +90,10 @@ public class ExecutionChecker implements ExecutionResultChecker, PrerequisitesCh
             }else if (RUN_ACTIONS.contains(config.getActionName())) {
                 microApplication.setRunning(true, config.getActionName());
             }
+            return true;
+        } else {
+           return super.checkRunConfig(config);
         }
-        return true;
     }
 
     @Override
@@ -104,6 +110,8 @@ public class ExecutionChecker implements ExecutionResultChecker, PrerequisitesCh
             } else if (RUN_ACTIONS.contains(config.getActionName())) {
                 microApplication.setRunning(false);
             }
+        } else {
+            super.executionResult(config, res, resultCode);
         }
     }
     

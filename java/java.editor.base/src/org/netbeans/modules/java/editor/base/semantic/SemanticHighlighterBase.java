@@ -873,13 +873,14 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             scan(tree.getExtendsClause(), null);
             scan(tree.getImplementsClause(), null);
             try {
-                while (!TokenUtilities.textEquals(tl.currentToken().text(), "{")) {// NOI18N
-                    if (TokenUtilities.textEquals(tl.currentToken().text(), "permits")) {// NOI18N
-                        Token t = firstIdentifierToken("permits");// NOI18N
-                        contextKeywords.add(t);
-                        break;
-                    }
+                List<? extends Tree> permitList = TreeShims.getPermits(tree);
+                if (permitList != null && !permitList.isEmpty()) {
                     tl.moveNext();
+                    Token t = firstIdentifierToken("permits");// NOI18N
+                    if (tl != null) {
+                        contextKeywords.add(t);
+                        scan(permitList, null);
+                    }
                 }
             } catch (NullPointerException ex) {
                 //Do nothing
@@ -966,26 +967,30 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 tl.moveToOffset(sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), TreeShims.getBindingPatternType(tree)));
                 firstIdentifier(tp, TreeShims.getBinding(tree).toString());
             } else if (tree != null && tree.getKind().equals(Kind.MODIFIERS)) {
-                tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
-                Token t = null;
-                if (tree.toString().contains("non-sealed")) {// NOI18N
-                    Token firstIdentifier = tl.firstIdentifier(getCurrentPath(), "non");// NOI18N
-                    if (firstIdentifier != null) {
-                        contextKeywords.add(firstIdentifier);
-                    }
-                    tl.moveNext();
-                    tl.moveNext();
-                    if (TokenUtilities.textEquals(tl.currentToken().text(), "sealed")) {// NOI18N
-                        contextKeywords.add(tl.currentToken());
-                    }
-                } else if (tree.toString().contains("sealed")) {// NOI18N
-                    t = firstIdentifierToken("sealed"); //NOI18N
-                    if (t != null) {
-                        contextKeywords.add(t);
-                    }
-                }
+               visitModifier(tree);
             }
             return super.scan(tree, p);
+        }
+        
+        private void visitModifier(Tree tree) {
+            tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
+            Token t = null;
+            if (tree.toString().contains("non-sealed")) {// NOI18N
+                Token firstIdentifier = tl.firstIdentifier(getCurrentPath(), "non");// NOI18N
+                if (firstIdentifier != null) {
+                    contextKeywords.add(firstIdentifier);
+                }
+                tl.moveNext();
+                tl.moveNext();
+                if (TokenUtilities.textEquals(tl.currentToken().text(), "sealed")) {// NOI18N
+                    contextKeywords.add(tl.currentToken());
+                }
+            } else if (tree.toString().contains("sealed")) {// NOI18N
+                t = firstIdentifierToken("sealed"); //NOI18N
+                if (t != null) {
+                    contextKeywords.add(t);
+                }
+            }
         }
 
         private int leadingIndent(String line) {

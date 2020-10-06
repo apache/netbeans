@@ -575,7 +575,46 @@ public class DetectorTest extends TestBase {
                     "[PUBLIC, RECORD_COMPONENT, DECLARATION], 4:40-4:41",
                     "[STATIC, PUBLIC, INTERFACE], 4:54-4:59");
     }
+    
+    public void testSealed() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_15"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip tests
+            return;
+        }
+        enablePreview();
+        performTest("SealedTest",
+                "sealed class Test{}\n"
+                + "non-sealed class Child extends Test{}\n",
+                "[KEYWORD], 0:0-0:6",
+                "[PACKAGE_PRIVATE, CLASS, DECLARATION], 0:13-0:17",
+                "[KEYWORD], 1:0-1:3",
+                "[KEYWORD], 1:4-1:10",
+                "[PACKAGE_PRIVATE, CLASS, DECLARATION], 1:17-1:22",
+                "[PACKAGE_PRIVATE, CLASS], 1:31-1:35");
+    }
 
+    public void testSealed2() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_15"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip tests
+            return;
+        }
+        enablePreview();
+        performTest("SealedTest",
+                "sealed class Test permits Child{}\n"
+                + "non-sealed class Child extends Test{}\n",
+                "[KEYWORD], 0:0-0:6",
+                "[PACKAGE_PRIVATE, CLASS, DECLARATION], 0:13-0:17",
+                "[KEYWORD], 0:18-0:25",
+                "[PACKAGE_PRIVATE, CLASS], 0:26-0:31",
+                "[KEYWORD], 1:0-1:3",
+                "[KEYWORD], 1:4-1:10",
+                "[PACKAGE_PRIVATE, CLASS, DECLARATION], 1:17-1:22",
+                "[PACKAGE_PRIVATE, CLASS], 1:31-1:35");
+    }
     public void testYield() throws Exception {
         enablePreview();
         performTest("YieldTest.java",

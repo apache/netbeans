@@ -957,7 +957,7 @@ public class Reformatter implements ReformatTask {
                     }
                     List<? extends Tree> perms = TreeShims.getPermits(node);
                     if (perms != null && !perms.isEmpty()) {
-                        wrapToken(cs.wrapExtendsImplementsKeyword(), 1, PERMITS);
+                        wrapToken(cs.wrapExtendsImplementsKeyword(), 1, EXTENDS); 
                         wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, perms);
                     }
                 } finally {
@@ -1591,7 +1591,7 @@ public class Reformatter implements ReformatTask {
                 int lblti = lastBlankLinesTokenIndex;
                 Diff lbld = lastBlankLinesDiff;
                 id = accept(PRIVATE, PROTECTED, PUBLIC, STATIC, DEFAULT, TRANSIENT, FINAL,
-                        ABSTRACT, NATIVE, VOLATILE, SYNCHRONIZED, STRICTFP, AT, SEALED, NONSEALED);
+                        ABSTRACT, NATIVE, VOLATILE, SYNCHRONIZED, STRICTFP, AT);
                 if (id == null)
                     break;
                 if (id == AT) {
@@ -3530,9 +3530,20 @@ public class Reformatter implements ReformatTask {
                             contains = true;
                             break;
                         }
-                        if (TokenUtilities.textEquals(tokens.token().text(), "non") && tokens.moveNext() && TokenUtilities.textEquals(tokens.token().text(), "-") && tokens.moveNext() && TokenUtilities.textEquals(tokens.token().text(), "sealed")) {// NOI18N
-                            contains = true;
-                            break;
+                    }
+                    if (TokenUtilities.textEquals(tokens.token().text(), "sealed") || TokenUtilities.textEquals(tokens.token().text(), "permits")) {
+                        contains = true;
+                    }
+                    if (TokenUtilities.textEquals(tokens.token().text(), "non") && tokens.moveNext()) {
+                        if (TokenUtilities.textEquals(tokens.token().text(), "-") && tokens.moveNext()) {
+                            if (TokenUtilities.textEquals(tokens.token().text(), "sealed")) {// NOI18N
+                                contains = true;
+                            } else {
+                                tokens.movePrevious();
+                                tokens.movePrevious();
+                            }
+                        } else {
+                            tokens.movePrevious();
                         }
                     }
                 }

@@ -40,29 +40,114 @@ import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.fold.Fold;
 import org.netbeans.api.editor.fold.FoldType;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.editor.ext.java.JavaFoldManager;
 import org.netbeans.modules.java.editor.base.fold.JavaElementFoldVisitor;
 import org.netbeans.modules.java.editor.semantic.ScanningCancellableTask;
 import org.netbeans.spi.editor.fold.FoldHierarchyTransaction;
 import org.netbeans.spi.editor.fold.FoldInfo;
+import org.netbeans.spi.editor.fold.FoldManager;
 import org.netbeans.spi.editor.fold.FoldOperation;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author Jan Lahoda
  */
-public class JavaElementFoldManager extends JavaFoldManager {
+public class JavaElementFoldManager implements FoldManager {
     
     private FoldOperation operation;
     private FileObject    file;
     private JavaElementFoldTask task;
     private boolean first = true;
     
+
+    public static final FoldType INITIAL_COMMENT_FOLD_TYPE = FoldType.INITIAL_COMMENT; // NOI18N
+
+    @NbBundle.Messages("FoldType_Imports=Imports")
+    public static final FoldType IMPORTS_FOLD_TYPE = FoldType.create("import", Bundle.FoldType_Imports(), 
+	     new org.netbeans.api.editor.fold.FoldTemplate(0, 0, "...")); // NOI18N
+    
+    @NbBundle.Messages("FoldType_Javadoc=Javadoc Comments")
+    public static final FoldType JAVADOC_FOLD_TYPE = FoldType.DOCUMENTATION.derive("javadoc", Bundle.FoldType_Javadoc(), 
+	     new org.netbeans.api.editor.fold.FoldTemplate(3, 2, "/**...*/")); // NOI18N
+
+    @NbBundle.Messages("FoldType_Methods=Methods")
+    public static final FoldType CODE_BLOCK_FOLD_TYPE = FoldType.MEMBER.derive("method", Bundle.FoldType_Methods(), 
+	     new org.netbeans.api.editor.fold.FoldTemplate(1, 1, "{...}")); // NOI18N
+    
+    @NbBundle.Messages("FoldType_InnerClasses=Inner Classes")
+    public static final FoldType INNERCLASS_TYPE = FoldType.NESTED.derive("innerclass", "Inner Classes", 
+	     new org.netbeans.api.editor.fold.FoldTemplate(1, 1, "{...}")); // NOI18N
+    
+    private static final String IMPORTS_FOLD_DESCRIPTION = "..."; // NOI18N
+
+    private static final String COMMENT_FOLD_DESCRIPTION = "/*...*/"; // NOI18N
+
+    private static final String JAVADOC_FOLD_DESCRIPTION = "/**...*/"; // NOI18N
+    
+    private static final String CODE_BLOCK_FOLD_DESCRIPTION = "{...}"; // NOI18N
+
+    @Deprecated
+    public static final FoldTemplate INITIAL_COMMENT_FOLD_TEMPLATE
+        = new FoldTemplate(INITIAL_COMMENT_FOLD_TYPE, COMMENT_FOLD_DESCRIPTION, 2, 2);
+
+    @Deprecated
+    public static final FoldTemplate IMPORTS_FOLD_TEMPLATE
+        = new FoldTemplate(IMPORTS_FOLD_TYPE, IMPORTS_FOLD_DESCRIPTION, 0, 0);
+
+    @Deprecated
+    public static final FoldTemplate JAVADOC_FOLD_TEMPLATE
+        = new FoldTemplate(JAVADOC_FOLD_TYPE, JAVADOC_FOLD_DESCRIPTION, 3, 2);
+
+    @Deprecated
+    public static final FoldTemplate CODE_BLOCK_FOLD_TEMPLATE
+        = new FoldTemplate(CODE_BLOCK_FOLD_TYPE, CODE_BLOCK_FOLD_DESCRIPTION, 1, 1);
+
+    @Deprecated
+    public static final FoldTemplate INNER_CLASS_FOLD_TEMPLATE
+        = new FoldTemplate(INNERCLASS_TYPE, CODE_BLOCK_FOLD_DESCRIPTION, 1, 1);
+
+    
+    protected static final class FoldTemplate {
+        
+        private FoldType type;
+        
+        private String description;
+        
+        private int startGuardedLength;
+        
+        private int endGuardedLength;
+        
+        protected FoldTemplate(FoldType type, String description,
+        int startGuardedLength, int endGuardedLength) {
+            this.type = type;
+            this.description = description;
+            this.startGuardedLength = startGuardedLength;
+            this.endGuardedLength = endGuardedLength;
+        }
+        
+        public FoldType getType() {
+            return type;
+        }
+        
+        public String getDescription() {
+            return description;
+        }
+        
+        public int getStartGuardedLength() {
+            return startGuardedLength;
+        }
+        
+        public int getEndGuardedLength() {
+            return endGuardedLength;
+        }
+
+    }
+
     public void init(FoldOperation operation) {
         this.operation = operation;
     }

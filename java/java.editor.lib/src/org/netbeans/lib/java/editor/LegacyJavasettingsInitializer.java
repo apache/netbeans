@@ -17,10 +17,13 @@
  * under the License.
  */
 
-package org.netbeans.modules.editor.java;
+package org.netbeans.lib.java.editor;
 
-import org.netbeans.editor.Acceptor;
-import org.netbeans.editor.AcceptorFactory;
+import java.util.Arrays;
+import java.util.List;
+import org.netbeans.editor.TokenContext;
+import org.netbeans.editor.ext.java.JavaLayerTokenContext;
+import org.netbeans.editor.ext.java.JavaTokenContext;
 
 /**
 * Nb settings for Java.
@@ -29,29 +32,14 @@ import org.netbeans.editor.AcceptorFactory;
 * @version 1.00
 */
 
-public final class NbJavaSettingsInitializer {
-
-    public static Acceptor getAbbrevResetAcceptor() {
-        return AcceptorFactory.NON_JAVA_IDENTIFIER;
-    }
-    public static Acceptor getIdentifierAcceptor() {
-        return AcceptorFactory.JAVA_IDENTIFIER;
-    }
-    public static Acceptor getIndentHotCharsAcceptor() {
-        return indentHotCharsAcceptor;
-    }
-    private NbJavaSettingsInitializer() {
+public final class LegacyJavasettingsInitializer {
+    private LegacyJavasettingsInitializer() {
     }
 
-    private static final Acceptor indentHotCharsAcceptor = new Acceptor() {
-        public boolean accept(char ch) {
-            switch (ch) {
-                case '{': //NOI18N
-                case '}': //NOI18N
-                    return true;
-            }
-            return false;
-        }
-    };
-    
+    public static List getTokenContextList() {
+        return Arrays.asList(new TokenContext[] {
+            JavaTokenContext.context,
+            JavaLayerTokenContext.context
+        });
+    }
 }

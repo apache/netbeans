@@ -36,7 +36,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.html.editor.indexing.HtmlIndexer;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.netbeans.modules.web.common.api.DependenciesGraph;
@@ -57,8 +56,21 @@ import org.openide.util.Exceptions;
  */
 public class HtmlIndex {
 
-    private static final Logger LOGGER = Logger.getLogger(HtmlIndex.class.getSimpleName());
-    private static final boolean LOG = LOGGER.isLoggable(Level.FINE);
+    /**
+     * Name of the index file.
+     */
+    public static final String NAME = "html"; //NOI18N
+    
+    /**
+     * Index version.
+     */
+    public static final int VERSION = 2;
+
+    /**
+     * Name of the field with references.
+     */
+    public static final String REFERS_KEY = "imports"; //NOI18N
+
     private static final Map<Project, HtmlIndex> INDEXES = new WeakHashMap<>();
 
     /**
@@ -93,7 +105,7 @@ public class HtmlIndex {
                 null /* all source roots */,
                 Collections.<String>emptyList(),
                 Collections.<String>emptyList());
-        this.querySupport = QuerySupport.forRoots(HtmlIndexer.Factory.NAME, HtmlIndexer.Factory.VERSION, sourceRoots.toArray(new FileObject[]{}));
+        this.querySupport = QuerySupport.forRoots(NAME, VERSION, sourceRoots.toArray(new FileObject[]{}));
         this.changeSupport = new ChangeSupport(this);
     }
 
@@ -145,11 +157,12 @@ public class HtmlIndex {
      * @throws IOException
      */
     public AllDependenciesMaps getAllDependencies() throws IOException {
-        Collection<? extends IndexResult> results = filterDeletedFiles(querySupport.query(HtmlIndexer.REFERS_KEY, "", QuerySupport.Kind.PREFIX, HtmlIndexer.REFERS_KEY));
+        Collection<? extends IndexResult> results = filterDeletedFiles(querySupport.query(
+                REFERS_KEY, "", QuerySupport.Kind.PREFIX, REFERS_KEY));
         Map<FileObject, Collection<FileReference>> source2dests = new HashMap<>();
         Map<FileObject, Collection<FileReference>> dest2sources = new HashMap<>();
         for (IndexResult result : results) {
-            String importsValue = result.getValue(HtmlIndexer.REFERS_KEY);
+            String importsValue = result.getValue(REFERS_KEY);
             if (importsValue != null) {
                 FileObject file = result.getFile();
                 Collection<String> imports = decodeListValue(importsValue);
@@ -181,10 +194,10 @@ public class HtmlIndex {
      * Returns list of all remote URLs
      */
     public List<URL> getAllRemoteDependencies() throws IOException {
-        Collection<? extends IndexResult> results = filterDeletedFiles(querySupport.query(HtmlIndexer.REFERS_KEY, "", QuerySupport.Kind.PREFIX, HtmlIndexer.REFERS_KEY));
+        Collection<? extends IndexResult> results = filterDeletedFiles(querySupport.query(REFERS_KEY, "", QuerySupport.Kind.PREFIX, REFERS_KEY));
         Set<String> paths = new HashSet<>();
         for (IndexResult result : results) {
-            String importsValue = result.getValue(HtmlIndexer.REFERS_KEY);
+            String importsValue = result.getValue(REFERS_KEY);
             if(importsValue != null) {
                 paths.addAll(decodeListValue(importsValue));
             }

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.web.clientproject;
+package org.netbeans.modules.html.indexing;
 
 import java.io.IOException;
 import java.util.Collection;

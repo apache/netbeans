@@ -173,4 +173,104 @@ public class GotoDeclarationPHP80Test extends GotoDeclarationTestBase {
         checkDeclaration(getTestPath(), "    public function traitMethod(TestClass1|TestClass2 $param): TestClass1|Tes^tClass2|null {", "class ^TestClass2");
     }
 
+    public void testNullsafeOperator_01a() throws Exception {
+        checkDeclaration(getTestPath(), "       $test = $this?->addr^ess?->country;", "    private ?Address $^address;");
+    }
+
+    public void testNullsafeOperator_01b() throws Exception {
+        checkDeclaration(getTestPath(), "        return $this?->a^ddress;", "    private ?Address $^address;");
+    }
+
+    public void testNullsafeOperator_02a() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $sess^ion?->user?->getAddress()?->country;", "$^session = new Session(new User(\"test\"));");
+    }
+
+    public void testNullsafeOperator_03a() throws Exception {
+        checkDeclaration(getTestPath(), "        $test = $this?->address?->cou^ntry;", "    public Country $^country;");
+    }
+
+    public void testNullsafeOperator_03b() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session?->user?->getAddress()?->count^ry;", "    public Country $^country;");
+    }
+
+    public void testNullsafeOperator_03c() throws Exception {
+        checkDeclaration(getTestPath(), "$country = User::create(\"test\")?->getAddress()?->c^ountry;", "    public Country $^country;");
+    }
+
+    public void testNullsafeOperator_03d() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session->getUser()::create(\"test\")?->getAddress()->cou^ntry;", "    public Country $^country;");
+    }
+
+    public void testNullsafeOperator_03e() throws Exception {
+        checkDeclaration(getTestPath(), "$country = (new User(\"test\"))?->getAddress()->co^untry;", "    public Country $^country;");
+    }
+
+    public void testNullsafeOperator_04a() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session?->us^er?->getAddress()?->country;", "    public ?User $^user;");
+    }
+
+    public void testNullsafeOperator_04b() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session?->us^er::$test;", "    public ?User $^user;");
+    }
+
+    public void testNullsafeOperator_0c() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session?->^user::test();", "    public ?User $^user;");
+    }
+
+    public void testNullsafeOperator_04d() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session?->us^er->id;", "    public ?User $^user;");
+    }
+
+    public void testNullsafeOperator_04e() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session?->us^er?->getAddress()::ID;", "    public ?User $^user;");
+    }
+
+    public void testNullsafeOperator_05a() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session?->user?->getAdd^ress()?->country;", "    public function ^getAddress(): ?Address {");
+    }
+
+    public void testNullsafeOperator_05b() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session?->user?->getAdd^ress()::ID;", "    public function ^getAddress(): ?Address {");
+    }
+
+    public void testNullsafeOperator_05c() throws Exception {
+        checkDeclaration(getTestPath(), "$country = User::create(\"test\")?->getA^ddress()?->country;", "    public function ^getAddress(): ?Address {");
+    }
+
+    public void testNullsafeOperator_05d() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session->getUser()::create(\"test\")?->getAd^dress()->country;", "    public function ^getAddress(): ?Address {");
+    }
+
+    public void testNullsafeOperator_05e() throws Exception {
+        checkDeclaration(getTestPath(), "$country = (new User(\"test\"))?->getAd^dress()->country;", "    public function ^getAddress(): ?Address {");
+    }
+
+    public void testNullsafeOperator_06a() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session?->user::$te^st;", "    public static string $^test = \"test\";");
+    }
+
+    public void testNullsafeOperator_07a() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session?->user::tes^t();", "    public static function ^test(): string {");
+    }
+
+    public void testNullsafeOperator_08a() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session?->user->i^d;", "    public int $^id = 1;");
+    }
+
+    public void testNullsafeOperator_09a() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session?->user?->getAddress()::I^D;", "    public const ^ID = \"Adress\";");
+    }
+
+    public void testNullsafeOperator_10a() throws Exception {
+        checkDeclaration(getTestPath(), "$country = User::crea^te(\"test\")?->getAddress()?->country;", "    public static function ^create(string $name): User {");
+    }
+
+    public void testNullsafeOperator_10b() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session->getUser()::cre^ate(\"test\")?->getAddress()->country;", "    public static function ^create(string $name): User {");
+    }
+
+    public void testNullsafeOperator_11a() throws Exception {
+        checkDeclaration(getTestPath(), "$country = $session->ge^tUser()::create(\"test\")?->getAddress()->country;", "    public function ^getUser(): ?User {");
+    }
+
 }

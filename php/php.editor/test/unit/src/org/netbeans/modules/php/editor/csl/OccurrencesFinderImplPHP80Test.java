@@ -220,4 +220,152 @@ public class OccurrencesFinderImplPHP80Test extends OccurrencesFinderImplTestBas
         checkOccurrences(getTestPath(), "    public function traitMethod(TestClass1|TestClass2 $param): TestClass1|TestCl^ass2|null {", true);
     }
 
+    public void testNullsafeOperator_01a() throws Exception {
+        checkOccurrences(getTestPath(), "    public ?User $^user;", true);
+    }
+
+    public void testNullsafeOperator_01b() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session?->use^r?->getAddress()?->country;", true);
+    }
+
+    public void testNullsafeOperator_01c() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session?->us^er::$test;", true);
+    }
+
+    public void testNullsafeOperator_01d() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session?->use^r::test();", true);
+    }
+
+    public void testNullsafeOperator_01e() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session?->^user->id;", true);
+    }
+
+    public void testNullsafeOperator_01f() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session?->use^r?->getAddress()::ID;", true);
+    }
+
+    public void testNullsafeOperator_02a() throws Exception {
+        checkOccurrences(getTestPath(), "    public function getAdd^ress(): ?Address {", true);
+    }
+
+    public void testNullsafeOperator_02b() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session?->user?->getAdd^ress()?->country;", true);
+    }
+
+    public void testNullsafeOperator_02c() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session?->user?->getAd^dress()::ID;", true);
+    }
+
+    public void testNullsafeOperator_02d() throws Exception {
+        checkOccurrences(getTestPath(), "$country = User::create(\"test\")?->getAddre^ss()?->country;", true);
+    }
+
+    public void testNullsafeOperator_02e() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session->getUser()::create(\"test\")?->getAd^dress()->country;", true);
+    }
+
+    public void testNullsafeOperator_02f() throws Exception {
+        checkOccurrences(getTestPath(), "$country = (new User(\"test\"))?->getAd^dress()->country;", true);
+    }
+
+    public void testNullsafeOperator_03a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const I^D = \"Adress\";", true);
+    }
+
+    public void testNullsafeOperator_03b() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session?->user?->getAddress()::I^D;", true);
+    }
+
+    public void testNullsafeOperator_04a() throws Exception {
+        checkOccurrences(getTestPath(), "        $test = $this?->address?->count^ry;", true);
+    }
+
+    public void testNullsafeOperator_04b() throws Exception {
+        checkOccurrences(getTestPath(), "    public Country $cou^ntry;", true);
+    }
+
+    public void testNullsafeOperator_04c() throws Exception {
+        checkOccurrences(getTestPath(), "        $this->co^untry = new Country();", true);
+    }
+
+    public void testNullsafeOperator_04d() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session?->user?->getAddress()?->coun^try;", true);
+    }
+
+    public void testNullsafeOperator_04e() throws Exception {
+        checkOccurrences(getTestPath(), "$country = User::create(\"test\")?->getAddress()?->count^ry;", true);
+    }
+
+    public void testNullsafeOperator_04f() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session->getUser()::create(\"test\")?->getAddress()->count^ry;", true);
+    }
+
+    public void testNullsafeOperator_04g() throws Exception {
+        checkOccurrences(getTestPath(), "$country = (new User(\"test\"))?->getAddress()->countr^y;", true);
+    }
+
+    public void testNullsafeOperator_05a() throws Exception {
+        checkOccurrences(getTestPath(), "    public int $i^d = 1;", true);
+    }
+
+    public void testNullsafeOperator_05b() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session?->user->i^d;", true);
+    }
+
+    public void testNullsafeOperator_06a() throws Exception {
+        checkOccurrences(getTestPath(), "    public static string $t^est = \"test\";", true);
+    }
+
+    public void testNullsafeOperator_06b() throws Exception {
+        checkOccurrences(getTestPath(), "        return self::$^test;", true);
+    }
+
+    public void testNullsafeOperator_06c() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session?->user::$te^st;", true);
+    }
+
+    public void testNullsafeOperator_07a() throws Exception {
+        checkOccurrences(getTestPath(), "    public static function tes^t(): string {", true);
+    }
+
+    public void testNullsafeOperator_07b() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session?->user::te^st();", true);
+    }
+
+    public void testNullsafeOperator_08a() throws Exception {
+        checkOccurrences(getTestPath(), "    public static function creat^e(string $name): User {", true);
+    }
+
+    public void testNullsafeOperator_08b() throws Exception {
+        checkOccurrences(getTestPath(), "$country = User::crea^te(\"test\")?->getAddress()?->country;", true);
+    }
+
+    public void testNullsafeOperator_08c() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session->getUser()::cre^ate(\"test\")?->getAddress()->country;", true);
+    }
+
+    public void testNullsafeOperator_09a() throws Exception {
+        checkOccurrences(getTestPath(), "    public function getUse^r(): ?User {", true);
+    }
+
+    public void testNullsafeOperator_09b() throws Exception {
+        checkOccurrences(getTestPath(), "$country = $session->getUse^r()::create(\"test\")?->getAddress()->country;", true);
+    }
+
+    public void testNullsafeOperator_10a() throws Exception {
+        checkOccurrences(getTestPath(), "private ?Address $add^ress;", true);
+    }
+
+    public void testNullsafeOperator_10b() throws Exception {
+        checkOccurrences(getTestPath(), "        $this->a^ddress = new Address();", true);
+    }
+
+    public void testNullsafeOperator_10c() throws Exception {
+        checkOccurrences(getTestPath(), "        $test = $this?->addre^ss?->country;", true);
+    }
+
+    public void testNullsafeOperator_10d() throws Exception {
+        checkOccurrences(getTestPath(), "        return $this?->addr^ess;", true);
+    }
+
 }

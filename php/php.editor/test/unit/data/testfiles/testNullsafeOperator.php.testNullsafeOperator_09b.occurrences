@@ -1,0 +1,2 @@
+    public function |>MARK_OCCURRENCES:getUser<|(): ?User {
+$country = $session->|>MARK_OCCURRENCES:getUse^r<|()::create("test")?->getAddress()->country;

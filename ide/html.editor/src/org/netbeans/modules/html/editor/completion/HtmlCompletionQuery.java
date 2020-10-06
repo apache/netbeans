@@ -51,6 +51,7 @@ import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.web.common.api.LexerUtils;
 import org.netbeans.modules.web.common.api.ValueCompletion;
+import org.netbeans.modules.web.common.api.WebPageMetadata;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -194,7 +195,7 @@ public class HtmlCompletionQuery extends UserTask {
         HtmlModel model = htmlResult.model();
 
         Snapshot snapshot = parserResult.getSnapshot();
-        String sourceMimetype = Utils.getWebPageMimeType(syntaxResult);
+        String sourceMimetype = WebPageMetadata.getContentMimeType(parserResult, true);
         int astOffset = snapshot.getEmbeddedOffset(offset);
 
         //in some cases the embedded offset cannot be mapped, then we can do very less

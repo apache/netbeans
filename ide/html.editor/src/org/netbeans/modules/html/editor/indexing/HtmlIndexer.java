@@ -29,7 +29,6 @@ import org.netbeans.modules.html.editor.api.HtmlKit;
 import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
 import org.netbeans.modules.html.editor.api.index.HtmlIndex;
 import org.netbeans.modules.parsing.api.Snapshot;
-import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
@@ -65,7 +64,7 @@ public class HtmlIndexer extends EmbeddingIndexer {
                 LOGGER.log(Level.FINE, "indexing {0}", fo.getPath()); //NOI18N
             }
 
-            HtmlFileModel model = new HtmlFileModel((HtmlParserResult)parserResult);
+            HtmlFileModel model = new HtmlFileModel(parserResult, (HtmlParserResult)parserResult);
 
             IndexingSupport support = IndexingSupport.getInstance(context);
             IndexDocument document = support.createDocument(indexable);

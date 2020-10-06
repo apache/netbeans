@@ -109,39 +109,8 @@
       <zipfileset dir="${nb_all}/nbbuild" includes="notice-stub.txt" fullpath="META-INF/NOTICE"/>
     </jar>
     <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
-    <!-- get all json info we have on apache gitbox  -->
-    <property name="metabuild.releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
-    <condition property="metabuild.jsonurl" value="https://gitbox.apache.org/repos/asf?p=netbeans-jenkins-lib.git;a=blob_plain;f=meta/netbeansrelease.json">
-        <not>
-            <isset property="metabuild.jsonurl"/>
-        </not>
-    </condition>
-    <condition property="needjsondownload" value="true" else="false">
-        <not>
-            <available file="${binaries.cache}/netbeansrelease.json" />
-        </not>
-    </condition>
-    <sequential if:true="${needjsondownload}" >
-        <configureproxy connectTo="${metabuild.jsonurl}" hostProperty="proxyHost" portProperty="proxyPort"/>
-        <setproxy proxyhost="${proxyHost}" proxyPort="${proxyPort}"/>
-        <get dest="${metabuild.releasejson}" skipexisting="false" src="${metabuild.jsonurl}" />
-        <copy file="${metabuild.releasejson}" tofile="${binaries.cache}/netbeansrelease.json" />
-    </sequential>
-    <copy file="${binaries.cache}/netbeansrelease.json" tofile="${metabuild.releasejson}" />
-    <!-- read info from gitinfo.properties , if present in source bundle copy gitinfo-->
-    <copy file="${nb_all}/nbbuild/gitinfo.properties" tofile="${nb_all}/nbbuild/build/gitinfo.properties" failonerror="false"/>
-    <copy file="${nb_all}/nbbuild/netbeansrelease.properties" tofile="${nb_all}/nbbuild/build/netbeansrelease.properties" failonerror="false"/>
-    <!-- get branches and git information as previous not overrided this will take new-->
-    <antcall target="getgitinformation" />
-    <!-- javadoc content filtering -->
-    <taskdef name="setjavadoc" classname="org.netbeans.nbbuild.SetApidocClustersConfig" classpath="${nbantext.jar}"/>
-    <property file="${nb_all}/nbbuild/build/gitinfo.properties"/>
-    <property file="${nb_all}/nbbuild/build/netbeansrelease.properties"/>
-    <setjavadoc branch="${metabuild.branch}"/>
-    <echo message="Building branch: ${metabuild.branch}"/>
-    <property name="releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
-    <property name="xmlrelease" value="${nb_all}/nbbuild/build/netbeansrelease.xml"/>
-    <property name="propertiesrelease" value="${nb_all}/nbbuild/build/netbeansrelease.properties"/>
+    
+    <!-- prepare task to create properties files-->
     <taskdef name="releasejson" classname="org.netbeans.nbbuild.ReleaseJsonProperties" >
         <classpath>
             <pathelement location="${nbantext.jar}"/>
@@ -150,7 +119,49 @@
             </fileset>
         </classpath>
     </taskdef>
+    <!-- task to alter cluster definition for javadoc -->
+    <taskdef name="setjavadoc" classname="org.netbeans.nbbuild.SetApidocClustersConfig" classpath="${nbantext.jar}"/>    
+    
+    <antcall target="getjsonfile" />
+    <!-- get branches and git information as previous not overrided this will take new-->
+    <antcall target="getgitinformation" />
+    
+    <echo message="Building branch: ${metabuild.branch}"/>
+    <property name="releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
+    <property name="xmlrelease" value="${nb_all}/nbbuild/build/netbeansrelease.xml"/>
+    <property name="propertiesrelease" value="${nb_all}/nbbuild/build/netbeansrelease.properties"/>
+    <property file="${nb_all}/nbbuild/build/gitinfo.properties"/>
+    <property file="${nb_all}/nbbuild/build/netbeansrelease.properties"/>
     <releasejson file="${releasejson}" xmloutput="${xmlrelease}" propertiesoutput="${propertiesrelease}" branch="${metabuild.branch}" hash="${metabuild.hash}"/>
+    <!-- javadoc content filtering -->
+    
+    <setjavadoc branch="${metabuild.branch}"/>
+  </target>
+  <target name="getjsonfile">
+    <!-- copy all related release properties -->
+    <copy file="${nb_all}/nbbuild/netbeansrelease.json" tofile="${nb_all}/nbbuild/build/netbeansrelease.json" failonerror="false"/>
+    <!-- read info from gitinfo.properties , if present in source bundle copy gitinfo-->
+    <copy file="${nb_all}/nbbuild/gitinfo.properties" tofile="${nb_all}/nbbuild/build/gitinfo.properties" failonerror="false"/>
+    <copy file="${nb_all}/nbbuild/netbeansrelease.properties" tofile="${nb_all}/nbbuild/build/netbeansrelease.properties" failonerror="false"/>
+    
+    <property name="metabuild.releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
+    <!-- get all json info we have on apache gitbox  -->
+    <condition property="metabuild.jsonurl" value="https://gitbox.apache.org/repos/asf?p=netbeans-jenkins-lib.git;a=blob_plain;f=meta/netbeansrelease.json">
+        <not>
+            <isset property="metabuild.jsonurl"/>
+        </not>
+    </condition>
+    <condition property="needjsondownload" value="true" else="false">
+        <not>
+            <available file="${nb_all}/nbbuild/build/netbeansrelease.json" />
+        </not>
+    </condition>
+    <sequential if:true="${needjsondownload}" >
+        <configureproxy connectTo="${metabuild.jsonurl}" hostProperty="proxyHost" portProperty="proxyPort"/>
+        <setproxy proxyhost="${proxyHost}" proxyPort="${proxyPort}"/>
+        <get dest="${metabuild.releasejson}" skipexisting="false" src="${metabuild.jsonurl}" />
+        <copy file="${metabuild.releasejson}" tofile="${nb_all}/nbbuild/netbeansrelease.json" />
+    </sequential>
   </target>
   <target name="-gitinfo.ispresent">
       <available file="${nb_all}/nbbuild/build/gitinfo.properties" property="gitinfo.present" />      
@@ -1761,6 +1772,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <zipfileset file="${source.zip.readme}" fullpath="README.md" erroronmissingarchive="false" />
       <zipfileset file="${nb_all}/nbbuild/build/netbeansrelease.properties" fullpath="nbbuild/netbeansrelease.properties" erroronmissingarchive="false"/>
       <zipfileset file="${nb_all}/nbbuild/build/gitinfo.properties" fullpath="nbbuild/gitinfo.properties" erroronmissingarchive="false" />
+      <zipfileset file="${nb_all}/nbbuild/build/gitinfo.properties" fullpath="nbbuild/netbeansrelease.json" erroronmissingarchive="false" />
     </zip>
   </target>
 

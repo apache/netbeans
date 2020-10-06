@@ -133,7 +133,7 @@ public class ReleaseJsonProperties extends Task {
         }
 
         if (requiredbranchinfo == null) {
-            throw new BuildException("No Release Information found for branch '" + branch + "', update json file section");
+            throw new BuildException("No Release Information found for branch '" + branch + "', update json file section with ant -Dneedjsondownload=true");
         }
         List<String> updateValues = new ArrayList<>();
         for (ReleaseInfo releaseInfo : ri) {

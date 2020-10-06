@@ -25,15 +25,15 @@
     <localizing-bundle>org.netbeans.libs.graaljs.Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/js-19.3.0.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/js-launcher-19.3.0.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/regex-19.3.0.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/icu4j-65.1.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/js-20.2.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/js-launcher-20.2.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/regex-20.2.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graaljs/modules/ext/icu4j-67.1.jar!/</resource>
 
-        <resource>jar:nbinst://org.netbeans.libs.graalsdk/modules/ext/graal-sdk-19.3.0.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.graalsdk/modules/ext/launcher-common-19.3.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graalsdk/modules/ext/graal-sdk-20.2.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.graalsdk/modules/ext/launcher-common-20.2.0.jar!/</resource>
 
-        <resource>jar:nbinst://org.netbeans.libs.truffleapi/modules/ext/truffle-api-19.3.0.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.truffleapi/modules/ext/truffle-api-20.2.0.jar!/</resource>
     </volume>
     <volume>
         <type>src</type>
@@ -45,8 +45,8 @@
         <property>
             <name>maven-dependencies</name>
             <value>
-                org.graalvm.js:js:19.3.0:jar
-                org.graalvm.js:js-launcher:19.3.0:jar
+                org.graalvm.js:js:20.2.0:jar
+                org.graalvm.js:js-launcher:20.2.0:jar
             </value>
         </property>
     </properties>

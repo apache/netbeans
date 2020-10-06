@@ -311,8 +311,9 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             if (fields == null) {
                 return;
             }
-            ArrayList<FieldNode> enumFields   = new ArrayList<FieldNode>(fields.size());
-            ArrayList<FieldNode> normalFields = new ArrayList<FieldNode>(fields.size());
+
+            List<FieldNode> enumFields   = new ArrayList<>(fields.size());
+            List<FieldNode> normalFields = new ArrayList<>(fields.size());
             
             for (FieldNode fieldNode : fields) {
                 boolean isEnumField = (fieldNode.getModifiers() & Opcodes.ACC_ENUM) != 0;
@@ -386,7 +387,7 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             }
         }
 
-        private void genEnumFields(List fields, PrintWriter out) {
+        private void genEnumFields(List<FieldNode> fields, PrintWriter out) {
             if (fields.isEmpty()) {
                 return;
             }

@@ -37,7 +37,8 @@ import org.openide.util.NbBundle.Messages;
 @MIMEResolver.ExtensionRegistration(
         displayName = "#LBL_H_LOADER",
         mimeType = MIMETypes.H,
-        extension = {"h"}
+        extension = {"h"},
+        position = 1000200
 )
 @DataObject.Registration(
         mimeType = MIMETypes.H,

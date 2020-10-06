@@ -41,6 +41,7 @@
         <copy todir="${lsp.build.dir}/etc" file="script/etc/nb-java-lsp-server.conf" />
         <copy todir="${lsp.build.dir}/etc" file="script/etc/nb-java-lsp-server.clusters" />
         <chmod file="${lsp.build.dir}/bin/nb-java-lsp-server" perm="u+x" />
+        <chmod file="${lsp.build.dir}/java/maven/bin/mvn" perm="u+x" />
         <delete file="${lsp.build.dir}/lib/nb-javac-9-api.jar" />
         <delete file="${lsp.build.dir}/lib/nb-javac-9-impl.jar" />
         <delete file="${lsp.build.dir}/lib/org-netbeans-modules-java-source-nbjavac.jar" />
@@ -80,7 +81,7 @@
         <exec executable="${build.dir}/vsce/node_modules/vsce/out/vsce" failonerror="true" dir="${basedir}/vscode">
             <arg value="package" />
             <arg value="--out" />
-            <arg value="${build.dir}/apache-netbeans-java-0.0.1.vsix" />
+            <arg value="${build.dir}/apache-netbeans-java-0.1.0.vsix" />
         </exec>
 
         <delete dir="${build.dir}/vscode" />
@@ -88,7 +89,7 @@
         <delete dir="${build.dir}/vscode-mandatory" />
         <mkdir dir="${build.dir}/vscode-mandatory/licenses" />
 
-        <unzip dest="${build.dir}/vscode" src="${build.dir}/apache-netbeans-java-0.0.1.vsix" />
+        <unzip dest="${build.dir}/vscode" src="${build.dir}/apache-netbeans-java-0.1.0.vsix" />
 
         <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
 
@@ -110,6 +111,6 @@
                               includeAllFiles="true"
         />
 
-        <zip destfile="${build.dir}/apache-netbeans-java-0.0.1.vsix" basedir="${build.dir}/vscode-mandatory/" update="true" />
+        <zip destfile="${build.dir}/apache-netbeans-java-0.1.0.vsix" basedir="${build.dir}/vscode-mandatory/" update="true" />
     </target>
 </project>

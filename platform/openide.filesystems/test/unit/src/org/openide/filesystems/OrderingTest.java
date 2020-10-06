@@ -92,6 +92,73 @@ public class OrderingTest extends NbTestCase {
         assertLog("cone");
         assertLog("dent");
     }
+    
+    private FileObject cdir;
+    
+    private void setupConfigData() throws IOException {
+        String n = "test/" + getName();
+        FileObject f = FileUtil.getConfigFile(n);
+        if (f != null) {
+            f.delete();
+        }
+        dir = FileUtil.createFolder(FileUtil.getConfigRoot(), n);
+        apex = dir.createData("apex");
+        ball = dir.createData("ball");
+        cone = dir.createData("cone");
+        dent = dir.createData("dent");
+    }
+    
+    public void setupFilesOrderedFoldersUnkown() throws Exception {
+        FileObject zafod = dir.createFolder("zafod");
+        FileObject arthur = dir.createFolder("arthur");
+
+        apex.setAttribute("position", 17);
+        ball.setAttribute("position", 5);
+        cone.setAttribute("position", 22);
+        dent.setAttribute("position", 9);
+
+        assertOrder(false, ball, dent, apex, cone, zafod, arthur);
+        assertEmptyLog();
+        assertOrder(true, ball, dent, apex, cone, zafod, arthur);
+    }
+    
+    public void setupFoldersOrderedFilesUnkown() throws Exception {
+        FileObject zafod = dir.createFolder("zafod");
+        FileObject arthur = dir.createFolder("arthur");
+
+        zafod.setAttribute("position", 17);
+        arthur.setAttribute("position", 5);
+
+        assertOrder(false, apex,ball, cone, dent, arthur, zafod);
+        assertEmptyLog();
+        assertOrder(true, apex,ball,cone,  dent, arthur, zafod);
+    }
+    
+    public void testMissingFolderOrderingFilesOrderedConfig() throws Exception {
+        setupConfigData();
+        setupFilesOrderedFoldersUnkown();
+        assertEmptyLog();
+    }
+
+    public void testMissingFolderOrderingFilesOrderedRegular() throws Exception {
+        setupFilesOrderedFoldersUnkown();
+        assertLog("zafod");
+        assertLog("arthur");
+    }
+
+    public void testMissingFileOrderingFoldersOrderedConfig() throws Exception {
+        setupConfigData();
+        setupFoldersOrderedFilesUnkown();
+        assertEmptyLog();
+    }
+
+    public void testMissingFileOrderingFoldersOrderedRegular() throws Exception {
+        setupFoldersOrderedFilesUnkown();
+        assertLog("apex");
+        assertLog("ball");
+        assertLog("cone");
+        assertLog("dent");
+    }
 
     public void testGetOrderEqualPositions() throws Exception {
         apex.setAttribute("position", 17);

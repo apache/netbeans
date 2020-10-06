@@ -21,6 +21,7 @@ package org.netbeans.modules.java.editor.base.semantic;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExportsTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -42,9 +43,12 @@ import com.sun.source.util.TreePath;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,6 +60,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.TypeMirror;
 import javax.swing.text.Document;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -712,6 +717,50 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             
             addParameterInlineHint(tree);
             return null;
+        }
+
+        @Override
+        public Void visitExpressionStatement(ExpressionStatementTree node, Void p) {
+            List<TreePath> chain = new ArrayList<>(); //TODO: avoid creating an instance if possible!
+            TreePath current = new TreePath(getCurrentPath(), node.getExpression());
+            OUTER: while (true) {
+                chain.add(current);
+                switch (current.getLeaf().getKind()) {
+                    case METHOD_INVOCATION:
+                        MethodInvocationTree mit = (MethodInvocationTree) current.getLeaf();
+                        if (mit.getMethodSelect().getKind() == Kind.MEMBER_SELECT) {
+                            current = new TreePath(new TreePath(current, mit.getMethodSelect()), ((MemberSelectTree) mit.getMethodSelect()).getExpression());
+                            break;
+                        }
+                        break OUTER;
+                    default:
+                        break OUTER;
+                }
+            }
+            int prevIndex = tl.index();
+            Collections.reverse(chain);
+            List<Pair<String, Integer>> typeToPosition = new ArrayList<>();
+            for (TreePath tp : chain) {
+                long end = info.getTrees().getSourcePositions().getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
+                tl.moveToOffset(end);
+                Token t = tl.currentToken();
+                int pos;
+                if (t.id() == JavaTokenId.WHITESPACE && (pos = t.text().toString().indexOf("\n")) != -1) {
+                    TypeMirror type = info.getTrees().getTypeMirror(tp);
+                    String typeName = info.getTypeUtilities().getTypeName(type).toString();
+                    if (typeToPosition.isEmpty() || !typeName.equals(typeToPosition.get(typeToPosition.size() - 1).first())) {
+                        typeToPosition.add(Pair.of(typeName, tl.offset() + pos));
+                    }
+                }
+            }
+            if (typeToPosition.size() >= 2) {
+                for (Pair<String, Integer> typeAndPosition : typeToPosition) {
+                    preText.put(new int[] {(int) typeAndPosition.second(), (int) typeAndPosition.second() + 1},
+                                                "  " + typeAndPosition.first());
+                }
+            }
+            tl.resetToIndex(prevIndex);
+            return super.visitExpressionStatement(node, p);
         }
 
         @Override

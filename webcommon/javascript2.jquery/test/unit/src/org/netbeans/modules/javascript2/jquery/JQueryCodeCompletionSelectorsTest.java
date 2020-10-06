@@ -44,6 +44,7 @@ import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -65,7 +66,7 @@ public class JQueryCodeCompletionSelectorsTest extends JsCodeCompletionBase {
         TestLanguageProvider.register(CssTokenId.language());
         TestLanguageProvider.register(HTMLTokenId.language());
     }
-
+    
     public void testSelectorTag01() throws Exception {
         checkCompletion("testfiles/completion/jQuery/selectors/basic/selectors.js", "$(\"ta^ble\").css(\"border\",\"3px solid red\");", false);
     }
@@ -190,6 +191,7 @@ public class JQueryCodeCompletionSelectorsTest extends JsCodeCompletionBase {
     }
 
     public void checkAppliedCompletion(final String file, final String caretLine, final String expectedLine, final String itemToComplete, final boolean includeModifiers) throws Exception {
+        RepositoryUpdater.getDefault().waitUntilFinished(10000);
         final CodeCompletionHandler.QueryType type = CodeCompletionHandler.QueryType.COMPLETION;
         final boolean caseSensitive = true;
 

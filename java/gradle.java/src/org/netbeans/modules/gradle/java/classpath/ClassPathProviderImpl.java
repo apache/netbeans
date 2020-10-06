@@ -69,8 +69,7 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
             MODULE_COMPILE_PATH,
             MODULE_CLASS_PATH,
             MODULE_EXECUTE_PATH,
-            MODULE_EXECUTE_CLASS_PATH,
-            MODULE_PROCESSOR_PATH
+            MODULE_EXECUTE_CLASS_PATH
     ));
 
 
@@ -80,29 +79,25 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
 
     public ClassPathProviderImpl(Project project) {
         this.project = project;
-        this.pcl = new PropertyChangeListener() {
+        this.pcl = (PropertyChangeEvent evt) -> {
+            if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
+                GradleJavaProject p = GradleJavaProject.get(ClassPathProviderImpl.this.project);
+                if (p != null) {
+                    updateGroups(p.getSourceSets().keySet());
+                } else {
+                    //We are no longer a Java Project
+                    updateGroups(Collections.<String>emptySet());
 
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
-                    GradleJavaProject p = GradleJavaProject.get(ClassPathProviderImpl.this.project);
-                    if (p != null) {
-                        updateGroups(p.getSourceSets().keySet());
-                    } else {
-                        //We are no longer a Java Project
-                        updateGroups(Collections.<String>emptySet());
-
-                    }
                 }
-                if (NbGradleProject.PROP_RESOURCES.endsWith(evt.getPropertyName())) {
-                    URI uri = (URI) evt.getNewValue();
-                    if ((uri != null) && (uri.getPath() != null) && uri.getPath().endsWith(MODULE_INFO_JAVA)) {
-                        GradleJavaProject gjp = GradleJavaProject.get(ClassPathProviderImpl.this.project);
-                        if (gjp != null) {
-                            GradleJavaSourceSet ss = gjp.containingSourceSet(Utilities.toFile(uri));
-                            if ((ss != null) && (groups.get(ss.getName()) != null)) {
-                                groups.get(ss.getName()).reset();
-                            }
+            }
+            if (NbGradleProject.PROP_RESOURCES.endsWith(evt.getPropertyName())) {
+                URI uri = (URI) evt.getNewValue();
+                if ((uri != null) && (uri.getPath() != null) && uri.getPath().endsWith(MODULE_INFO_JAVA)) {
+                    GradleJavaProject gjp = GradleJavaProject.get(ClassPathProviderImpl.this.project);
+                    if (gjp != null) {
+                        GradleJavaSourceSet ss = gjp.containingSourceSet(Utilities.toFile(uri));
+                        if ((ss != null) && (groups.get(ss.getName()) != null)) {
+                            groups.get(ss.getName()).reset();
                         }
                     }
                 }
@@ -199,7 +194,6 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
                 case MODULE_EXECUTE_CLASS_PATH: return getModuleLegacyRuntimeClassPath();
 
                 case PROCESSOR_PATH: return getJava8AnnotationProcessorPath();
-                case MODULE_PROCESSOR_PATH: return getModuleAnnotationProcessorPath();
 
                 default: return null;
             }
@@ -305,8 +299,7 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
 
         private synchronized ClassPath getModuleBoothPath() {
             if (moduleBoot == null) {
-                //TODO: Is this Ok? Made after the Maven's ClassPathProviderImpl.getModuleBootPath
-                moduleBoot = createMultiplexClassPath(getPlatformModulesPath(), getPlatformModulesPath());
+                moduleBoot = createMultiplexClassPath(getPlatformModulesPath(), getBootClassPath());
             }
             return moduleBoot;
         }
@@ -316,14 +309,6 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
                 moduleCompile = createMultiplexClassPath(getJava8CompileClassPath(), ClassPath.EMPTY);
             }
             return moduleCompile;
-        }
-
-        private synchronized ClassPath getModuleAnnotationProcessorPath() {
-            if (moduleAnnotationProcessor == null) {
-                //TODO: This one is pretty identical to the Java8 annotation processor path, maybe it should be removed?
-                moduleAnnotationProcessor = createMultiplexClassPath(getJava8AnnotationProcessorPath(), getJava8AnnotationProcessorPath());
-            }
-            return moduleAnnotationProcessor;
         }
 
         private ClassPath createMultiplexClassPath(ClassPath modulePath, ClassPath classPath) {

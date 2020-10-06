@@ -48,7 +48,7 @@ public class ListsAndCountersModuleTest extends CssModuleTestBase {
                 "upper-latin","linear-gradient","!string","image","decimal",
                 "upper-roman","!uri","cross-fade","radial-gradient","inside",
                 "decimal-leading-zero","square", "circle","none","symbols",
-                "outside", "initial", "inherit", "var");
+                "outside", "initial", "inherit", "unset", "var");
     }
     
     public void testListStyleType() {
@@ -66,7 +66,7 @@ public class ListsAndCountersModuleTest extends CssModuleTestBase {
             "lower-latin", "circle", "lower-greek", "decimal", "upper-roman",
             "disc", "lower-alpha", "symbols", "lower-roman", "none",
             "decimal-leading-zero", "square", "!identifier", "initial",
-            "inherit", "var");
+            "inherit", "unset", "var");
         
         assertAlternatives(p.getGrammarElement(null), "symbols", "(");
         assertAlternatives(p.getGrammarElement(null), "symbols(",

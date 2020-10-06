@@ -16,15 +16,3 @@
 # under the License.
 5983B3E05328AA17EFA9A5EA91F3DE474E60342F jakarta.platform:jakarta.jakartaee-api:8.0.0
 D8B6BC85DEEFD37299341F6B8D88938CCF12A9CE jakarta.platform:jakarta.jakartaee-web-api:8.0.0
-59EB84EE0D616332FF44ABA065F3888CF002CD2D jakarta.annotation:jakarta.annotation-api:1.3.5
-BDAA44A4CAAA9E14D5B466888F617306F6472F3A jakarta.faces:jakarta.faces-api:2.3.2
-C3267A1A8129BA26E1093E7B51AE296891C5FA17 jakarta.jms:jakarta.jms-api:2.0.3
-1CE0C37301D50810028A27F0B12E956CCE1F0C19 jakarta.mail:jakarta.mail-api:1.6.4
-BFC06BC961C1BE81B444F56754BF6D614B2CCD46 jakarta.resource:jakarta.resource-api:1.7.4
-DBBE7575F97EFD0B04F3A8455CF82C256C853055 jakarta.management.j2ee:jakarta.management.j2ee-api:1.1.4
-80D16C2D3226BD593B0CA7401D6883A11891997D jakarta.security.jacc:jakarta.security.jacc-api:1.6.1
-7A218C255AEBB81B526E3A3E580F6F30AFF4BC9C jakarta.enterprise.concurrent:jakarta.enterprise.concurrent-api:1.1.2
-254BD3BE5C68B45F488D3BAC47291AE3AC09EAA4 jakarta.batch:jakarta.batch-api:1.0.2
-ADB36570B632EC6317E22E945A7E51326C7B828D jakarta.enterprise.deploy:jakarta.enterprise.deploy-api:1.7.2
-17773ADDBD61C312FB881471ED20DA4A167667F6 jakarta.xml.registry:jakarta.xml.registry-api:1.0.10
-00B5C2578C5D7132CA691E52C44CE5416AE473EB jakarta.xml.rpc:jakarta.xml.rpc-api:1.1.4

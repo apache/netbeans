@@ -59,7 +59,7 @@ import org.openide.util.Exceptions;
  *
  * @author lahvac
  */
-@MimeRegistration(mimeType="", service=HyperlinkProviderExt.class)
+@MimeRegistration(mimeType="", service=HyperlinkProviderExt.class, position = 1600)
 public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
     @Override

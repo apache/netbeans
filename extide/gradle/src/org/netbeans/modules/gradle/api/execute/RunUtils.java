@@ -51,16 +51,16 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.modules.gradle.GradleDistributionManager;
 import org.netbeans.modules.gradle.ProjectTrust;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
 import org.netbeans.modules.gradle.execute.TrustProjectPanel;
 import org.netbeans.modules.gradle.spi.GradleSettings;
+import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
@@ -99,6 +99,9 @@ public final class RunUtils {
         if (methods.size() == 1) {
             SingleMethod method = methods.iterator().next();
             files.add(method.getFile());
+        }
+        if (files.isEmpty()) {
+            files.addAll(lookup.lookupAll(FileObject.class));
         }
         return files.toArray(new FileObject[files.size()]);
     }
@@ -199,7 +202,7 @@ public final class RunUtils {
                 new ProxyNonSelectableInputOutput(io));
         if (initialOutput != null) {
             try {
-                if (IOColorPrint.isSupported(io)) {
+                if (IOColorPrint.isSupported(io) && IOColors.isSupported(io)) {
                     IOColorPrint.print(io, initialOutput, IOColors.getColor(io, IOColors.OutputType.LOG_DEBUG));
                 } else {
                     io.getOut().println(initialOutput);
@@ -275,40 +278,18 @@ public final class RunUtils {
         return args != null ? new GradleCommandLine(args) : null;
     }
 
+    @Deprecated
     public static File evaluateGradleDistribution(Project project, boolean forceCompatibility) {
-        File ret = null;
 
-        GradleSettings settings = GradleSettings.getDefault();
-        GradleDistributionManager mgr = GradleDistributionManager.get(settings.getGradleUserHome());
-
-        GradleBaseProject gbp = GradleBaseProject.get(project);
-
-        if ((gbp != null) && settings.isWrapperPreferred()) {
-            GradleDistributionManager.NbGradleVersion ngv = mgr.evaluateGradleWrapperDistribution(gbp.getRootDir());
-            if ( (ngv != null) && forceCompatibility && !ngv.isCompatibleWithSystemJava()) {
-                ngv = mgr.defaultToolingVersion();
-            }
-            if ((ngv != null) && ngv.isAvailable()) {
-                ret = ngv.distributionDir();
-            }
+        GradleDistributionProvider pvd = project != null ? project.getLookup().lookup(GradleDistributionProvider.class) : null;
+        GradleDistribution dist = pvd != null ? pvd.getGradleDistribution() : null;
+        if (dist != null && (dist.isCompatibleWithSystemJava() || !forceCompatibility)) {
+            return dist.getDistributionDir();
+        } else {
+            GradleSettings settings = GradleSettings.getDefault();
+            dist = GradleDistributionManager.get(dist != null ? dist.getGradleUserHome() : settings.getGradleUserHome()).defaultDistribution();
+            return dist.getDistributionDir();
         }
-
-        if ((ret == null) && settings.useCustomGradle() && !settings.getDistributionHome().isEmpty()) {
-            File f = FileUtil.normalizeFile(new File(settings.getDistributionHome()));
-            if (f.isDirectory()) {
-                ret = f;
-            }
-        }
-        if (ret == null) {
-            GradleDistributionManager.NbGradleVersion ngv = mgr.createVersion(settings.getGradleVersion());
-            if ( (ngv != null) && forceCompatibility && !ngv.isCompatibleWithSystemJava()) {
-                ngv = mgr.defaultToolingVersion();
-            }
-            if ((ngv != null) && ngv.isAvailable()) {
-                ret = ngv.distributionDir();
-            }
-        }
-        return ret;
     }
 
     private static boolean isOptionEnabled(Project project, String option, boolean defaultValue) {

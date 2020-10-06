@@ -61,6 +61,7 @@ public abstract class TokenAcceptor {
         ACCEPTORS.add(new Uri("uri"));
         ACCEPTORS.add(new Anything("anything"));
         ACCEPTORS.add(new Urange("urange"));
+        ACCEPTORS.add(new Flex("flex"));
         
         ACCEPTORS.add(new GenericFunctionContent("function-content")); 
         
@@ -441,6 +442,20 @@ public abstract class TokenAcceptor {
         private static final List<String> POSTFIXES = Collections.singletonList("st"); //NOI18N
 
         public Semitones(String id) {
+            super(id);
+        }
+
+        @Override
+        protected List<String> postfixes() {
+            return POSTFIXES;
+        }
+    }
+
+    public static class Flex extends NumberPostfixAcceptor {
+
+        private static final List<String> POSTFIXES = Collections.singletonList("fr"); //NOI18N
+
+        public Flex(String id) {
             super(id);
         }
 

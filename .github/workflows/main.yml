@@ -25,6 +25,8 @@ jobs:
   windows:
     name: Windows build
     runs-on: windows-2019
+    env:
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -81,6 +83,8 @@ jobs:
   linux:
     name: Check Build System
     runs-on: ubuntu-18.04
+    env:
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -106,6 +110,7 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       DISPLAY: ":99.0"
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
       OPTS: -Dcluster.config=php -Dtest-unit-sys-prop.ignore.random.failures=true
     steps:
       - name: Checkout
@@ -222,6 +227,8 @@ jobs:
   macos:
     name: MacOS build
     runs-on: macos-10.15
+    env:
+      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     steps:
       - uses: actions/checkout@v2
         
@@ -245,3 +252,32 @@ jobs:
         run: |
           ant -f platform/masterfs.macosx test
           ant -f platform/core.network test
+
+      - name: Validate consistency and basic tests
+        run: ant -Dcluster.config=release commit-validation
+
+  commit-validation:
+    name: Commit-validation (on Linux)
+    runs-on: ubuntu-18.04
+    env:
+      OPTS: -Dcluster.config=release -Dtest-unit-sys-prop.ignore.random.failures=true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Caching dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('**/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Clean
+        run: ant -Dcluster.config=release clean
+
+      - name: Build
+        run: ant -Dcluster.config=release build
+
+      - name: Validate consistency and basic tests
+        run: ant -Dcluster.config=release commit-validation
+

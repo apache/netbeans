@@ -219,7 +219,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                 LinkedList viewsTmp = new LinkedList();
 //                String user = dmd.getUserName().trim();
                 String user = cp.getSchema();
-                List recycleBinTables;
+                List<String> recycleBinTables;
                 ResultSet rs;
                 
                 DDLBridge bridge = null;

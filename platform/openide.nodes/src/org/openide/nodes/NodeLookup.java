@@ -122,7 +122,7 @@ final class NodeLookup extends AbstractLookup {
     private void blockingBeforeLookup(Class<?> type) {
         if (type == Object.class) {
             // ok, this is likely query for everything
-            java.util.Set all;
+            Set<Class> all;
             Object prev = null;
 
             try {

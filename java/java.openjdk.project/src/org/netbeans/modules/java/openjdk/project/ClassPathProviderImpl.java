@@ -253,8 +253,10 @@ public class ClassPathProviderImpl implements ClassPathProvider {
             GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, new ClassPath[] {testsRegCP});
         GlobalPathRegistry.getDefault().register(TEST_SOURCE, new ClassPath[] {testsRegCP});
         try {
-            JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, testsCompileCP, ClassPath.EMPTY))
-                      .runWhenScanFinished(cc -> initialScanDone.set(true), true);
+            JavaSource js = JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, testsCompileCP, ClassPath.EMPTY));
+            if (js != null) {
+                js.runWhenScanFinished(cc -> initialScanDone.set(true), true);
+            }
         } catch (IOException ex) {
             Logger.getLogger(ClassPathProviderImpl.class.getName())
                   .log(Level.FINE, null, ex);

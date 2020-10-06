@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.15
+#Version 1.16
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1780,6 +1780,7 @@ fld public final static org.netbeans.modules.glassfish.tooling.server.config.Jav
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v1_6
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v1_7
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v1_8
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version v8_0_0
 meth public java.lang.String toString()
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version valueOf(java.lang.String)
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaEEProfile$Version[] values()
@@ -2456,3 +2457,4 @@ meth public void startPrefixMapping(java.lang.String,java.lang.String) throws or
 meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
 supr java.lang.Object
+

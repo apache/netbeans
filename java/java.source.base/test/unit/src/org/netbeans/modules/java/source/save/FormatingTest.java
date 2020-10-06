@@ -5226,6 +5226,33 @@ public class FormatingTest extends NbTestCase {
         reformat(doc, content, golden);
     }
 
+    
+    public void testRecord4() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "public record g3(@Override int a, @Override int b){}}";
+        String golden
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public record g3(@Override int a, @Override int b) {\n\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+    }
+  
     public void testSealed() throws Exception {
         try {
             SourceVersion.valueOf("RELEASE_15"); //NOI18N
@@ -5240,8 +5267,7 @@ public class FormatingTest extends NbTestCase {
         EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
-        String content
-                = "sealed class x{}\n"
+        String content = "sealed class x{}\n"
                 + "non-sealed class y extends x {}\n"
                 + "final class z extends x {}";
 
@@ -5322,7 +5348,7 @@ public class FormatingTest extends NbTestCase {
                 + "}\n";
         reformat(doc, content, golden);
     }
-
+  
     private void reformat(Document doc, String content, String golden) throws Exception {
         reformat(doc, content, golden, 0, content.length());
     }

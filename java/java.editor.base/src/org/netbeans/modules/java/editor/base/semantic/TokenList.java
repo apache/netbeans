@@ -355,7 +355,20 @@ public class TokenList {
             }
         });
     }
-    
+
+    public int offset() {
+        return ts.offset();
+    }
+
+    public int index() {
+        return ts.index();
+    }
+
+    public void resetToIndex(int index) {
+        ts.moveIndex(index);
+        ts.moveNext();
+    }
+
     private static List<TokenSequence<?>> embeddedTokenSequences(TokenHierarchy<Document> th, int offset) {
         TokenSequence<?> embedded = th.tokenSequence();
         List<TokenSequence<?>> sequences = new ArrayList<TokenSequence<?>>();

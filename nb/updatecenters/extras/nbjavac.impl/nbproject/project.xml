@@ -35,8 +35,8 @@
             </module-dependencies>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>ext/nb-javac-13-impl.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/nb-javac-13-impl.jar</binary-origin>
+                <runtime-relative-path>ext/nb-javac-15-impl.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/nb-javac-15-impl.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

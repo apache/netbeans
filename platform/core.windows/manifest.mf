@@ -4,6 +4,7 @@ OpenIDE-Module-Localizing-Bundle: org/netbeans/core/windows/resources/Bundle.pro
 OpenIDE-Module-Layer: org/netbeans/core/windows/resources/layer.xml
 OpenIDE-Module-Provides: org.netbeans.core.WindowSystem, org.openide.windows.WindowManager, org.openide.windows.TopComponent$Registry, org.openide.DialogDisplayer, org.openide.nodes.NodeOperation
 OpenIDE-Module-Recommends: org.netbeans.core.windows.nativeaccess.NativeWindowSystem
+OpenIDE-Module-Needs: org.netbeans.swing.tabcontrol.customtabs.TabbedComponentFactory
 AutoUpdate-Show-In-Client: false
 AutoUpdate-Essential-Module: true
-OpenIDE-Module-Specification-Version: 2.94
+OpenIDE-Module-Specification-Version: 2.95

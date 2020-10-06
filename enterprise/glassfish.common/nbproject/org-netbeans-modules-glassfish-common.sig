@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.82
+#Version 1.83
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1410,8 +1410,8 @@ CLSS public final org.netbeans.modules.glassfish.common.GlassfishInstanceProvide
 fld public final static java.lang.String EE6WC_DEPLOYER_FRAGMENT = "deployer:gfv3ee6wc"
 fld public final static java.lang.String EE6_DEPLOYER_FRAGMENT = "deployer:gfv3ee6"
 fld public final static java.lang.String EE8_DEPLOYER_FRAGMENT = "deployer:gfv5ee8"
-fld public final static java.lang.String JAKARTAEE8_DEPLOYER_FRAGMENT = "deployer:gfv510ee8"
 fld public final static java.lang.String GLASSFISH_AUTOREGISTERED_INSTANCE = "glassfish_autoregistered_instance"
+fld public final static java.lang.String JAKARTAEE8_DEPLOYER_FRAGMENT = "deployer:gfv510ee8"
 fld public final static java.lang.String PRELUDE_DEPLOYER_FRAGMENT = "deployer:gfv3"
 fld public final static java.util.Set<java.lang.String> activeRegistrationSet
 fld public static java.lang.String EE6WC_DEFAULT_NAME
@@ -2240,6 +2240,7 @@ meth public static java.util.List<java.lang.String> filterByManifest(java.util.L
 meth public static org.netbeans.modules.glassfish.spi.ServerUtilities getEe6Utilities()
 meth public static org.netbeans.modules.glassfish.spi.ServerUtilities getEe7Utilities()
 meth public static org.netbeans.modules.glassfish.spi.ServerUtilities getEe8Utilities()
+meth public static org.netbeans.modules.glassfish.spi.ServerUtilities getJakartaEe8Utilities()
 meth public static org.openide.WizardDescriptor$InstantiatingIterator getInstantiatingIterator()
 supr java.lang.Object
 hfds gip,gwp
@@ -2545,3 +2546,4 @@ meth public void startPrefixMapping(java.lang.String,java.lang.String) throws or
 meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
 supr java.lang.Object
+

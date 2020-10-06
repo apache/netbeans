@@ -87,7 +87,7 @@ public class PacEngineTest extends NbTestCase {
 
         PacScriptEvaluator pacEvaluator = factory.createPacScriptEvaluator(pacSource);
 
-        URI testURL = new URI("http://netbeans.apache.org");  // doesn't actually matter which URL we use
+        URI testURL = new URI("https://netbeans.apache.org");  // doesn't actually matter which URL we use
         List<Proxy> proxies = pacEvaluator.findProxyForURL(testURL);
 
         assertEquals(expectedReturnedProxies, proxies.size());
@@ -99,7 +99,7 @@ public class PacEngineTest extends NbTestCase {
 
         PacScriptEvaluator pacEvaluator = factory.createPacScriptEvaluator(pacSource);
 
-        URI testURL = new URI("http://netbeans.apache.org");  // doesn't actually matter which URL we use
+        URI testURL = new URI("https://netbeans.apache.org");  // doesn't actually matter which URL we use
         List<Proxy> proxies = pacEvaluator.findProxyForURL(testURL);
 
         assertEquals(Collections.singletonList(Proxy.NO_PROXY), proxies);
@@ -110,7 +110,7 @@ public class PacEngineTest extends NbTestCase {
 
         PacScriptEvaluator pacEvaluator = factory.createPacScriptEvaluator(pacSource);
 
-        URI testURL = new URI("http://netbeans.apache.org");  // doesn't actually matter which URL we use
+        URI testURL = new URI("https://netbeans.apache.org");  // doesn't actually matter which URL we use
         List<Proxy> proxies = pacEvaluator.findProxyForURL(testURL);
 
         assertEquals(Collections.singletonList(Proxy.NO_PROXY), proxies);

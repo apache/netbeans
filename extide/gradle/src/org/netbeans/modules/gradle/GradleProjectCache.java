@@ -96,7 +96,7 @@ public final class GradleProjectCache {
     private static final Map<File, Set<File>> SUB_PROJECT_DIR_CACHE = new ConcurrentHashMap<>();
 
     // Increase this number if new info is gathered from the projects.
-    private static final int COMPATIBLE_CACHE_VERSION = 13;
+    private static final int COMPATIBLE_CACHE_VERSION = 15;
 
     private GradleProjectCache() {
     }
@@ -163,21 +163,9 @@ public final class GradleProjectCache {
         NbProjectInfo info = null;
         Quality quality = ctx.aim;
         GradleBaseProject base = ctx.previous.getBaseProject();
-        GradleConnector gconn = GradleConnector.newConnector();
 
-        File gradleInstall = RunUtils.evaluateGradleDistribution(ctx.project, true);
-        if (gradleInstall == null) {
-            GradleDistributionManager gdm = GradleDistributionManager.get(GradleSettings.getDefault().getGradleUserHome());
-            GradleDistributionManager.NbGradleVersion version = gdm.createVersion(GradleSettings.getDefault().getGradleVersion());
-            gradleInstall = gdm.install(version);
-        }
-        if (gradleInstall == null) {
-            return ctx.previous;
-        }
-        gconn.useInstallation(gradleInstall);
-        gconn.useGradleUserHomeDir(GradleSettings.getDefault().getGradleUserHome());
+        ProjectConnection pconn = ctx.project.getLookup().lookup(ProjectConnection.class);
 
-        ProjectConnection pconn = gconn.forProjectDirectory(base.getProjectDir()).connect();
 
         GradleCommandLine cmd = new GradleCommandLine(ctx.args);
         cmd.setFlag(GradleCommandLine.Flag.CONFIGURE_ON_DEMAND, GradleSettings.getDefault().isConfigureOnDemand());
@@ -246,10 +234,6 @@ public final class GradleProjectCache {
             openNotification(base.getProjectDir(), Bundle.TIT_LOAD_FAILED(base.getProjectDir()), ex.getMessage(), sb.toString());
             return ctx.previous.invalidate(sb.toString());
         } finally {
-            try {
-                pconn.close();
-            } catch (NullPointerException ex) {
-            }
             loadedProjects.incrementAndGet();
         }
         long finish = System.currentTimeMillis();
@@ -462,8 +446,9 @@ public final class GradleProjectCache {
         assert gp.getQuality().betterThan(FALLBACK) : "Never attempt to cache FALLBACK projects."; //NOi18N
         //TODO: Make it possible to handle external file set as cache.
         GradleFiles gf = new GradleFiles(gp.getBaseProject().getProjectDir(), true);
-
-        ProjectCacheEntry entry = new ProjectCacheEntry(new StoredProjectInfo(data), gp, gf.getProjectFiles());
+        Set<File> cacheInvalidators = new HashSet<>(gf.getProjectFiles());
+        if (gf.hasWrapper()) cacheInvalidators.add(gf.getWrapperProperties());
+        ProjectCacheEntry entry = new ProjectCacheEntry(new StoredProjectInfo(data), gp, cacheInvalidators);
         File cacheFile = new File(getCacheDir(gp), INFO_CACHE_FILE_NAME);
         if (!cacheFile.exists()) {
             cacheFile.getParentFile().mkdirs();

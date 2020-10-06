@@ -21,7 +21,4 @@
 -->
 <project basedir="." default="build" name="enterprise/web.core">
     <import file="../../nbbuild/templates/projectized.xml"/>
-    <taskdef name="configureproxy" classname="org.netbeans.nbbuild.extlibs.ConfigureProxy" classpath="${nbantext.jar}"/>
-    <configureproxy connectTo="http://netbeans.apache.org" hostProperty="proxyHost" portProperty="proxyPort"/>
-    <setproxy proxyhost="${proxyHost}" proxyPort="${proxyPort}"/>
 </project>

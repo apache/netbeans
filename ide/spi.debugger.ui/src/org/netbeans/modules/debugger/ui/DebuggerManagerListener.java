@@ -20,6 +20,8 @@ package org.netbeans.modules.debugger.ui;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
@@ -86,8 +88,10 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
 
     @Override
     public void engineAdded (DebuggerEngine engine) {
-        openEngineComponents(engine);
-        setupToolbar(engine);
+        if (!GraphicsEnvironment.isHeadless()) {
+            openEngineComponents(engine);
+            setupToolbar(engine);
+        }
     }
 
     private void openEngineComponents (final DebuggerEngine engine) {

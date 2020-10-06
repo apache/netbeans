@@ -416,9 +416,9 @@ public class ActionProviderImpl implements ActionProvider {
         @ActionReference(position = 250, path = "Loaders/text/x-gradle+x-groovy/Actions"),
         @ActionReference(position = 250, path = "Loaders/text/x-gradle+x-kotlin/Actions"),
         @ActionReference(position = 1295, path = "Loaders/text/x-java/Actions"),
-        @ActionReference(position = 1821, path = "Editors/text/x-java/Popup"),
+        @ActionReference(position = 1825, path = "Editors/text/x-java/Popup"),
         @ActionReference(position = 1295, path = "Loaders/text/x-groovy/Actions"),
-        @ActionReference(position = 1821, path = "Editors/text/x-groovy/Popup")
+        @ActionReference(position = 1825, path = "Editors/text/x-groovy/Popup")
     })
     @NbBundle.Messages({"LBL_Custom_Run=Run Gradle", "LBL_Custom_Run_File=Run Gradle"})
     public static ContextAwareAction customPopupActions() {

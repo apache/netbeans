@@ -99,5 +99,19 @@ public final class SearchResponse {
                 new ResultsModel.ItemResult(catResult, sRequest, action,
                 htmlDisplayName, shortcut, displayHint));
     }
+    
+    /**
+     * Determines if the response is already obsolete. The result is the same as the 
+     * return value from {@link #addResult(java.lang.Runnable, java.lang.String)}: if
+     * false, the Provider should terminate the search immediately. Provider can query
+     * this status in case it does not find any results so it does not waste time
+     * searching further. 
+     * 
+     * @return true, if the result is obsolete.
+     * @since 12.2
+     */
+    public boolean isObsolete() {
+        return catResult.isObsolete();
+    }
 
 }

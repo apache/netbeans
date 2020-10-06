@@ -18,30 +18,19 @@
  */
 package org.netbeans.modules.javascript2.editor.spi;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.List;
-import org.netbeans.modules.csl.api.CodeCompletionContext;
-import org.netbeans.modules.csl.api.CompletionProposal;
-import org.netbeans.modules.csl.api.ElementHandle;
-import org.netbeans.modules.csl.spi.ParserResult;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.modules.csl.api.Documentation;
 
 /**
- *
- * @author Petr Hejl
+ * Mixin interface for ElementHandles to provide a documentation.
+ * 
+ * @author sdedic
+ * @since 0.84
  */
-public interface CompletionProvider {
-
-    List<CompletionProposal> complete(CodeCompletionContext ccContext, CompletionContext jsCompletionContext, String prefix);
-
-    String getHelpDocumentation(ParserResult info, ElementHandle element);
-    
-    @Retention(RetentionPolicy.SOURCE)
-    @Target(ElementType.TYPE)
-    public @interface Registration {
-
-        int priority() default 100;
-    }
+public interface ElementDocumentation {
+    /**
+     * Returns Documentation for the element, either URL or content.
+     * @return documentation object, or {@code null} for none.
+     */
+    @CheckForNull Documentation getDocumentation();
 }

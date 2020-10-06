@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.javascript2.editor.doc;
+package org.netbeans.modules.javascript2.html;
 
 import java.util.Collections;
 import java.util.Set;
@@ -26,21 +26,21 @@ import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
+import org.netbeans.modules.html.editor.lib.api.HelpItem;
+import org.netbeans.modules.html.editor.lib.api.model.HtmlTagAttribute;
 import org.netbeans.modules.javascript2.editor.spi.ElementDocumentation;
 import org.openide.filesystems.FileObject;
 
 /**
  *
- * @author Martin Fousek <marfous@netbeans.org>
+ * @author sdedic
  */
-public class JsDocumentationElement implements ElementHandle, ElementDocumentation {
+class HtmlAttrElement implements ElementHandle, ElementDocumentation {
+    
+    private final HtmlTagAttribute attribute;
 
-    private final String name;
-    private final String documentation;
-
-    JsDocumentationElement(String name, String documentation) {
-        this.name = name;
-        this.documentation = documentation;
+    public HtmlAttrElement(HtmlTagAttribute attribute) {
+        this.attribute = attribute;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class JsDocumentationElement implements ElementHandle, ElementDocumentati
 
     @Override
     public String getName() {
-        return name;
+        return attribute.getName();
     }
 
     @Override
@@ -65,7 +65,7 @@ public class JsDocumentationElement implements ElementHandle, ElementDocumentati
 
     @Override
     public ElementKind getKind() {
-        return ElementKind.OTHER;
+        return ElementKind.ATTRIBUTE;
     }
 
     @Override
@@ -85,7 +85,18 @@ public class JsDocumentationElement implements ElementHandle, ElementDocumentati
 
     @Override
     public Documentation getDocumentation() {
-        return Documentation.create(documentation);
+        HelpItem hi = attribute.getHelp();
+        if (hi == null) {
+            return null;
+        }
+        String content = attribute.getHelp().getHelpContent();
+        if (content == null) {
+            if (attribute.getHelp().getHelpResolver() != null && attribute.getHelp().getHelpURL() != null) {
+                content = attribute.getHelp().getHelpResolver().getHelpContent(attribute.getHelp().getHelpURL());
+            }
+        }
+        // PENDING: it's now possible to return URL, that will be loaded by editor infrastructure.
+        return Documentation.create(content);
     }
-
+    
 }

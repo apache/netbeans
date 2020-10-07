@@ -861,7 +861,7 @@ public class OutlineView extends JScrollPane {
         Node[] arr = manager.getSelectedNodes ();
         
         // [NETBEANS-4857]: prevent property change events during synchronization  
-        outline.getSelectionModel().removeListSelectionListener(managerListener);
+        outline.getSelectionModel().setValueIsAdjusting(true);
         
         outline.getSelectionModel().clearSelection();
         int size = outline.getRowCount();
@@ -881,7 +881,7 @@ public class OutlineView extends JScrollPane {
             }
         }
         // [NETBEANS-4857]: re-activate property change events
-        outline.getSelectionModel().addListSelectionListener(managerListener);
+        outline.getSelectionModel().setValueIsAdjusting(false);
         
 //        System.err.println("\nOutlineView.synchronizeSelectedNodes("+java.util.Arrays.toString(arr)+"): "+
 //                           "columnModel = "+outline.getColumnModel()+", column selection model = "+outline.getColumnModel().getSelectionModel()+

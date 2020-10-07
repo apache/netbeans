@@ -67,12 +67,21 @@ public final class NbGradleProjectFactory implements ProjectFactory2 {
         }
         File suspect = FileUtil.toFile(dir);
         GradleFiles files = new GradleFiles(suspect);
-        if ((files.getSettingsScript() != null) && !files.isRootProject()) {
+        if (files.isRootProject()) return true;
+        
+        if ((files.getSettingsScript() != null) && !files.isBuildSrcProject()) {
             SubProjectDiskCache spCache = SubProjectDiskCache.get(files.getRootDir());
             SubProjectDiskCache.SubProjectInfo data = spCache.loadData();
-            return data != null && data.getProjectPath(suspect) != null;
+            if (data != null) {
+                // Use the cached sub-project data, even if it's invalid,
+                // it may have better results, than the heuristics
+                return data.getProjectPath(suspect) != null;
+            } else {
+                // No cached info available, use heuristics.
+                return files.isProject();
+            }
         } else {
-            return true;
+            return false;
         }
     }
 

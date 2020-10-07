@@ -37,8 +37,11 @@ import javax.swing.SwingUtilities;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
+import org.netbeans.modules.gradle.NbGradleProjectImpl;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 
 /**
@@ -73,8 +76,12 @@ public final class Info implements ProjectInformation, PropertyChangeListener {
     }
 
     @Override
+    @NbBundle.Messages({
+        "# {0} - the folder or name of the root project",
+        "LBL_BuildSrcProject=Custom Build Logic [{0}]"
+    })
     public String getDisplayName() {
-        final NbGradleProject nb = project.getLookup().lookup(NbGradleProject.class);
+        final NbGradleProject nb = NbGradleProject.get(project);
         if (SwingUtilities.isEventDispatchThread() && !nb.isGradleProjectLoaded()) {
             return project.getProjectDirectory().getNameExt();
         }
@@ -89,6 +96,12 @@ public final class Info implements ProjectInformation, PropertyChangeListener {
             // The current implementation of Gradle's displayName is kind of ugly
             // and cannot be configured.
             //ret = prj.getDisplayName() != null ? prj.getDisplayName() : getName();
+            if (project instanceof NbGradleProjectImpl) {
+                GradleFiles gf = ((NbGradleProjectImpl) project).getGradleFiles();
+                if (gf.isBuildSrcProject()) {
+                    return Bundle.LBL_BuildSrcProject(gf.getRootDir().getName());
+                }
+            }
             ret = getName();
         }
         return ret;

@@ -85,6 +85,15 @@ $ ant -Ddo.build.windows.launchers=true
 sudo apt install make mingw-w64
 ```
 
+#### Generating Javadoc 
+
+Build javadoc:
+```
+$ ant build javadoc
+```
+
+**Note** Run `javadoc-nb` task in Netbeans to run the javadoc build and display it in a web browser.
+
 ### Running NetBeans
 
 Run the build:

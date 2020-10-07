@@ -130,8 +130,8 @@ public class SubProjectsNode extends AbstractNode {
         @Override
         protected boolean createKeys(final List<String> paths) {
             Map<String, File> subProjects = project.getGradleProject().getBaseProject().getSubProjects();
-            Set<String> components = new TreeSet<>();
-            Set<String> projects = new TreeSet<>();
+            Set<String> components = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+            Set<String> projects = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
             for (String path : subProjects.keySet()) {
                 if (path.startsWith(rootPath)) {
                     String relPath = path.substring(rootPath.length());
@@ -158,19 +158,7 @@ public class SubProjectsNode extends AbstractNode {
             if (projectDir != null) {
                 FileObject fo = FileUtil.toFileObject(projectDir);
                 if (fo != null) {
-                    try {
-                        Project prj = ProjectManager.getDefault().findProject(fo);
-                        if (prj != null && prj.getLookup().lookup(NbGradleProjectImpl.class) != null) {
-                            NbGradleProjectImpl proj = (NbGradleProjectImpl) prj;
-                            assert prj.getLookup().lookup(LogicalViewProvider.class) != null;
-                            Node original = proj.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
-                            ret = new ProjectFilterNode(proj, original);
-                        }
-                    } catch (IllegalArgumentException | IOException ex) {
-                        ErrorManager.getDefault().notify(ex);
-                    }
-                } else {
-                    //TODO broken module reference.. show as such..
+                    ret = createSubProjectNode(fo);
                 }
             } else {
                 ret = new SubProjectsNode(project, path);
@@ -178,6 +166,22 @@ public class SubProjectsNode extends AbstractNode {
             return ret;
         }
 
+    }
+
+    public static Node createSubProjectNode(FileObject fo) {
+        Node ret = null;
+        try {
+            Project prj = ProjectManager.getDefault().findProject(fo);
+            if (prj != null && prj.getLookup().lookup(NbGradleProjectImpl.class) != null) {
+                NbGradleProjectImpl proj = (NbGradleProjectImpl) prj;
+                assert prj.getLookup().lookup(LogicalViewProvider.class) != null;
+                Node original = proj.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
+                ret = new ProjectFilterNode(proj, original);
+            }
+        } catch (IllegalArgumentException | IOException ex) {
+            ErrorManager.getDefault().notify(ex);
+        }
+        return ret;
     }
 
     public static class ProjectFilterNode extends FilterNode {

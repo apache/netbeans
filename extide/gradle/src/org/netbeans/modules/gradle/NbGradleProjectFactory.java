@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle;
 
+import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
 import java.io.File;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.api.NbGradleProject;
@@ -66,9 +67,10 @@ public final class NbGradleProjectFactory implements ProjectFactory2 {
         }
         File suspect = FileUtil.toFile(dir);
         GradleFiles files = new GradleFiles(suspect);
-        if (!files.isRootProject()) {
-            Boolean inSubDirCache = GradleProjectCache.isKnownSubProject(files.getRootDir(), suspect);
-            return inSubDirCache != null ? inSubDirCache : files.isProject();
+        if ((files.getSettingsScript() != null) && !files.isRootProject()) {
+            SubProjectDiskCache spCache = SubProjectDiskCache.get(files.getRootDir());
+            SubProjectDiskCache.SubProjectInfo data = spCache.loadData();
+            return data != null && data.getProjectPath(suspect) != null;
         } else {
             return true;
         }

@@ -30,7 +30,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -117,12 +116,10 @@ public class SubProjectsNode extends AbstractNode {
             project = proj;
             this.rootPath = rootPath;
             NbGradleProject watcher = project.getProjectWatcher();
-            listener = new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
-                        refresh(false);
-                    }
+            listener = (PropertyChangeEvent evt) -> {
+                if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
+                    ProjectManager.getDefault().clearNonProjectCache();
+                    refresh(false);
                 }
             };
 
@@ -133,7 +130,7 @@ public class SubProjectsNode extends AbstractNode {
         @Override
         protected boolean createKeys(final List<String> paths) {
             Map<String, File> subProjects = project.getGradleProject().getBaseProject().getSubProjects();
-            Set<String> components = new TreeSet<String>();
+            Set<String> components = new TreeSet<>();
             Set<String> projects = new TreeSet<>();
             for (String path : subProjects.keySet()) {
                 if (path.startsWith(rootPath)) {
@@ -228,11 +225,8 @@ public class SubProjectsNode extends AbstractNode {
                     final NbGradleProjectImpl[] projectsArray = projects.toArray(new NbGradleProjectImpl[0]);
                     OpenProjects.getDefault().open(projectsArray, false, true);
                     if (projectsArray.length > 0) {
-                        RequestProcessor.getDefault().post(new Runnable() {
-                            public @Override
-                            void run() {
-                                OpenProjects.getDefault().open(projectsArray, false, true);
-                            }
+                        RequestProcessor.getDefault().post(() -> {
+                            OpenProjects.getDefault().open(projectsArray, false, true);
                         }, 500);
                     }
                 }

@@ -20,6 +20,7 @@ package org.netbeans.modules.java.source;
 
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.SwitchTree;
@@ -147,6 +148,19 @@ public class TreeShims {
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw TreeShims.<RuntimeException>throwAny(ex);
         }
+    }
+    public static List<? extends Tree> getPermits(ClassTree node) {
+        List<? extends Tree> perms = null;
+        try {
+            Class classTree = Class.forName("com.sun.source.tree.ClassTree");
+            Method getPerms = classTree.getDeclaredMethod("getPermitsClause");
+            perms = (List<? extends Tree>) getPerms.invoke(node);
+        } catch (ClassNotFoundException | NoSuchMethodException ex) {
+            return null;
+        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+        return perms;
     }
 
     public static ExpressionTree getYieldValue(Tree node) {

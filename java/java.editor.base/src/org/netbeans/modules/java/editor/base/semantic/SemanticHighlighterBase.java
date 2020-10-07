@@ -71,6 +71,7 @@ import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.api.lexer.PartType;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.java.editor.base.imports.UnusedImports;
 import org.netbeans.modules.java.editor.base.semantic.ColoringAttributes.Coloring;
 import org.netbeans.modules.java.editor.base.semantic.UnusedDetector.UnusedDescription;
@@ -367,7 +368,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             }
             
             boolean accessModifier = false;
-            
+
             if (decl.getModifiers().contains(Modifier.PUBLIC)) {
                 c.add(ColoringAttributes.PUBLIC);
                 accessModifier = true;
@@ -920,7 +921,19 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             }
             scan(tree.getExtendsClause(), null);
             scan(tree.getImplementsClause(), null);
-
+            try {
+                List<? extends Tree> permitList = TreeShims.getPermits(tree);
+                if (permitList != null && !permitList.isEmpty()) {
+                    tl.moveNext();
+                    Token t = firstIdentifierToken("permits");// NOI18N
+                    if (tl != null) {
+                        contextKeywords.add(t);
+                        scan(permitList, null);
+                    }
+                }
+            } catch (NullPointerException ex) {
+                //Do nothing
+            }
             ExecutableElement prevRecursionDetector = recursionDetector;
 
             recursionDetector = null;
@@ -1002,8 +1015,31 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 handlePossibleIdentifier(tp, true, info.getTrees().getElement(tp));
                 tl.moveToOffset(sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), TreeShims.getBindingPatternType(tree)));
                 firstIdentifier(tp, TreeShims.getBinding(tree).toString());
+            } else if (tree != null && tree.getKind().equals(Kind.MODIFIERS)) {
+               visitModifier(tree);
             }
             return super.scan(tree, p);
+        }
+        
+        private void visitModifier(Tree tree) {
+            tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
+            Token t = null;
+            if (tree.toString().contains("non-sealed")) {// NOI18N
+                Token firstIdentifier = tl.firstIdentifier(getCurrentPath(), "non");// NOI18N
+                if (firstIdentifier != null) {
+                    contextKeywords.add(firstIdentifier);
+                }
+                tl.moveNext();
+                tl.moveNext();
+                if (TokenUtilities.textEquals(tl.currentToken().text(), "sealed")) {// NOI18N
+                    contextKeywords.add(tl.currentToken());
+                }
+            } else if (tree.toString().contains("sealed")) {// NOI18N
+                t = firstIdentifierToken("sealed"); //NOI18N
+                if (t != null) {
+                    contextKeywords.add(t);
+                }
+            }
         }
 
         private int leadingIndent(String line) {

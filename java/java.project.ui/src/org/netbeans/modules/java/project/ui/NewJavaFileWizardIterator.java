@@ -163,7 +163,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
         else {
             final List<WizardDescriptor.Panel<?>> panels = new ArrayList<>();
             if (this.type == Type.FILE) {
-                panels.add(JavaTemplates.createPackageChooser(project, groups, new ExtensionAndImplementationWizardPanel()));
+                panels.add(JavaTemplates.createPackageChooser(project, groups, new ExtensionAndImplementationWizardPanel(wizardDescriptor)));
             } else if (type == Type.PKG_INFO) {
                 panels.add(new JavaTargetChooserPanel(project, groups, null, Type.PKG_INFO, true));
             } else if (type == Type.MODULE_INFO) {
@@ -325,12 +325,18 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
                     Collections.singletonMap("moduleName", moduleName)); //NOI18N
             createdFile = dobj.getPrimaryFile();
         } else {
-            DataObject dTemplate = DataObject.find( template );                
-            String superclass = (String) wiz.getProperty(SUPERCLASS);
-            String interfaces = (String) wiz.getProperty(INTERFACES);
-            Map<String, String> parameters = new HashMap<>();
-            parameters.put(SUPERCLASS, superclass);
-            parameters.put(INTERFACES, interfaces);
+            DataObject dTemplate = DataObject.find(template);
+            Object superclassProperty = wiz.getProperty(SUPERCLASS);
+            String superclass = superclassProperty != null ? (String) superclassProperty : ""; //NOI18N
+            Object interfacesProperty = wiz.getProperty(INTERFACES);
+            String interfaces = interfacesProperty != null ? (String) interfacesProperty : ""; //NOI18N
+            Map<String, String> parameters = new HashMap<>(Short.BYTES);
+            if (!superclass.isEmpty()) {
+                parameters.put(SUPERCLASS, superclass);
+            }
+            if (!interfaces.isEmpty()) {
+                parameters.put(INTERFACES, interfaces);
+            }
             DataObject dobj = dTemplate.createFromTemplate(df, targetName, parameters);
             createdFile = dobj.getPrimaryFile();
         }

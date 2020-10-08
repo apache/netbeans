@@ -19,510 +19,228 @@
 package org.openide.explorer.view;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyVetoException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Comparator;
-import java.util.Properties;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
+import javax.swing.ListSelectionModel;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.swing.etable.ETableColumn;
-import org.netbeans.swing.etable.ETableColumnModel;
 import org.netbeans.swing.outline.Outline;
 import org.openide.explorer.ExplorerManager;
-import org.openide.explorer.view.OutlineView.OutlineViewOutline.OutlineViewOutlineColumn;
 import org.openide.nodes.AbstractNode;
+import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.nodes.Sheet;
-import org.openide.util.Exceptions;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 
 /**
+ * Tests fix of Jira issue [NETBEANS-4857]. There should be no additional
+ * property change events during outline view tree synchronization.
  *
- * @author  Jiri Rechtacek
+ * @author Michael Kuettner
  */
-public final class OutlineViewTest extends NbTestCase {
+public final class OutlineViewSynchronizationTest extends NbTestCase {
 
-    private OutlineViewComponent component;
-    private OutlineView view;
-    private Node toExpand200_299,  toExpand0_99;
-
-    public OutlineViewTest (String testName) {
-        super (testName);
+    public OutlineViewSynchronizationTest(String testName) {
+        super(testName);
     }
 
     @Override
-    protected boolean runInEQ () {
+    protected boolean runInEQ() {
         return true;
     }
 
-    @Override
-    public void setUp () {
-        TestNode[] childrenNodes = new TestNode[3];
-        for (int i = 0; i < childrenNodes.length; i ++) {
-            TestNode[] leafNodes = new TestNode[100];
-            for (int j = 0; j < leafNodes.length; j ++) {
-                leafNodes[j] = new TestNode ("[" + (100 * i + j) + "]");
-            }
-            Children.Array leafs = new Children.Array ();
-            leafs.add (leafNodes);
-            //childrenNodes [i] = new TestNode (leafs, "[" + (i * 100) + "-" + ((i + 1) *100 - 1) + "]");
-            switch (i) {
-                case 0:
-                    childrenNodes[i] = new TestNode (leafs, "[1-index from 0 to 99]");
-                    break;
-                case 1:
-                    childrenNodes[i] = new TestNode (leafs, "[10-index from 100 to 199]");
-                    break;
-                case 2:
-                    childrenNodes[i] = new TestNode (leafs, "[2-index from 200 to 299]");
-                    break;
-                default:
-                    fail ("Unexcepted value " + i);
-            }
-            if (toExpand0_99 == null) {
-                toExpand0_99 = childrenNodes[i];
-            }
-            toExpand200_299 = childrenNodes[i];
-        }
+    public void testSingleOutlineSelection() throws InterruptedException, IllegalAccessException, InvocationTargetException, PropertyVetoException {
 
-        Children.Array children = new Children.Array ();
-        children.add (childrenNodes);
+        MultipleOutlinesPanel outlinesPanel = new MultipleOutlinesPanel(1);
+        outlinesPanel.addNotify();
 
-        Node rootNode = new TestNode (children, "[0 - 1000]");
+        Node[] nodes = outlinesPanel.getExplorerManager().getRootContext().getChildren().getNodes();
 
-        component = new OutlineViewComponent (rootNode);
-        view = component.getOutlineView ();
+        LoggingPropertyChangeListener evtLog = new LoggingPropertyChangeListener();
+        ExplorerManager manager = outlinesPanel.getExplorerManager();
+        manager.addPropertyChangeListener(evtLog);
+
+        // select a single node
+        manager.setSelectedNodes(new Node[]{nodes[0]});
+
+        assertEquals(1, evtLog.getEventCount());
+        assertEquals("[] -> [0]", evtLog.getEvent(0));
+        assertEquals(1, outlinesPanel.getOutline(0).getSelectedRowCount());
+
+        // remove already collected events
+        evtLog.clearEvents();
+
+        // select all nodes
+        manager.setSelectedNodes(nodes);
+
+        assertEquals(1, evtLog.getEventCount());
+        assertEquals("[0] -> [0,1,2,3,4,5,6,7,8,9]", evtLog.getEvent(0));
+        assertEquals(10, outlinesPanel.getOutline(0).getSelectedRowCount());
     }
 
-    public void testNaturallySortingTree () throws InterruptedException, IllegalAccessException, InvocationTargetException {
-        view.expandNode (toExpand0_99);
+    public void testMultipleOutlinesSelectionSynchronization() throws InterruptedException, IllegalAccessException, InvocationTargetException, PropertyVetoException {
 
-        // should look like
-        // - [1-index from 0 to 99]
-        //   [0]
-        //   [1]
-        //   [2]
-        //   ....
-        // + [10-index from 100 to 199]
-        // + [2-index from 200 to 299]
-        assertEquals ("[1-index from 0 to 99]", view.getOutline ().getValueAt (0, 0).toString ());
-        assertEquals ("[0]", view.getOutline ().getValueAt (1, 0).toString ());
-        assertEquals ("[1]", view.getOutline ().getValueAt (2, 0).toString ());
-        assertEquals ("[2]", view.getOutline ().getValueAt (3, 0).toString ());
-        assertEquals ("[10-index from 100 to 199]", view.getOutline ().getValueAt (101, 0).toString ());
-        assertEquals ("[2-index from 200 to 299]", view.getOutline ().getValueAt (102, 0).toString ());
-    }
+        MultipleOutlinesPanel outlinesPanel = new MultipleOutlinesPanel(4);
+        outlinesPanel.addNotify();
 
-    public void testDescendingSortingTreeWithNaturallyStringOrdering () throws InterruptedException, IllegalAccessException, InvocationTargetException {
-        ETableColumnModel etcm = (ETableColumnModel) view.getOutline ().getColumnModel ();
-        ETableColumn etc = (ETableColumn) etcm.getColumn (0); // tree column
-        etcm.setColumnSorted (etc, false, 1); // descending order
-        etc.setNestedComparator (testComarator);
-        view.expandNode (toExpand200_299);
+        Node[] nodes = outlinesPanel.getExplorerManager().getRootContext().getChildren().getNodes();
 
-//        org.openide.DialogDescriptor dd = new org.openide.DialogDescriptor (component, "", true, null);
-//        java.awt.Dialog d = org.openide.DialogDisplayer.getDefault ().createDialog (dd);
-//        d.setVisible (true);
+        LoggingPropertyChangeListener evtLog = new LoggingPropertyChangeListener();
+        ExplorerManager manager = outlinesPanel.getExplorerManager();
+        manager.addPropertyChangeListener(evtLog);
 
-        // should look like
-        // - [2-index from 200 to 299]
-        //   [299]
-        //   [298]
-        // + [10-index from 100 to 199]
-        //   ....
-        // + [1-index from 0 to 99]
-        assertEquals ("[2-index from 200 to 299]", view.getOutline ().getValueAt (1, 0).toString ());
-        assertEquals ("[10-index from 100 to 199]", view.getOutline ().getValueAt (0, 0).toString ());
-        assertEquals ("[299]", view.getOutline ().getValueAt (2, 0).toString ());
-        assertEquals ("[298]", view.getOutline ().getValueAt (3, 0).toString ());
-    }
+        // select a single node
+        manager.setSelectedNodes(new Node[]{nodes[0]});
 
-    public void testDescendingSortingTreeWithNaturallyStringOrderingViaETable () throws InterruptedException, IllegalAccessException, InvocationTargetException {
-        ETableColumnModel etcm = (ETableColumnModel) view.getOutline ().getColumnModel ();
-        ETableColumn etc = (ETableColumn) etcm.getColumn (0); // tree column
-        etc.setNestedComparator (testComarator);
-        view.getOutline ().setColumnSorted (0, false, 1); // descending order
-        view.expandNode (toExpand200_299);
+        assertEquals(1, evtLog.getEventCount());
+        assertEquals("[] -> [0]", evtLog.getEvent(0));
+        assertEquals(1, outlinesPanel.getOutline(0).getSelectedRowCount());
+        assertEquals(1, outlinesPanel.getOutline(1).getSelectedRowCount());
+        assertEquals(1, outlinesPanel.getOutline(2).getSelectedRowCount());
+        assertEquals(1, outlinesPanel.getOutline(3).getSelectedRowCount());
 
-        assertEquals ("[2-index from 200 to 299]", view.getOutline ().getValueAt (1, 0).toString ());
-        assertEquals ("[10-index from 100 to 199]", view.getOutline ().getValueAt (0, 0).toString ());
-        assertEquals ("[299]", view.getOutline ().getValueAt (2, 0).toString ());
-        assertEquals ("[298]", view.getOutline ().getValueAt (3, 0).toString ());
-    }
+        // remove already collected events
+        evtLog.clearEvents();
 
-    public void testAscendingSortingTreeWithNaturallyStringOrdering () throws InterruptedException, IllegalAccessException, InvocationTargetException {
-        ETableColumnModel etcm = (ETableColumnModel) view.getOutline ().getColumnModel ();
-        ETableColumn etc = (ETableColumn) etcm.getColumn (0); // tree column
-        etcm.setColumnSorted (etc, true, 1); // ascending order
-        view.expandNode (toExpand0_99);
+        // select all nodes
+        manager.setSelectedNodes(nodes);
 
-//        org.openide.DialogDescriptor dd = new org.openide.DialogDescriptor (component, "", true, null);
-//        java.awt.Dialog d = org.openide.DialogDisplayer.getDefault ().createDialog (dd);
-//        d.setVisible (true);
-
-        // should look like
-        // - [1-index from 0 to 99]
-        //   [0]
-        //   [10]
-        //   [11]
-        //   ....
-        // + [10-index from 100 to 199]
-        // + [2-index from 200 to 299]
-        assertEquals ("[1-index from 0 to 99]", view.getOutline ().getValueAt (0, 0).toString ());
-        assertEquals ("[0]", view.getOutline ().getValueAt (1, 0).toString ());
-        assertEquals ("[10]", view.getOutline ().getValueAt (2, 0).toString ());
-        assertEquals ("[11]", view.getOutline ().getValueAt (3, 0).toString ());
-        assertEquals ("[10-index from 100 to 199]", view.getOutline ().getValueAt (101, 0).toString ());
-        assertEquals ("[2-index from 200 to 299]", view.getOutline ().getValueAt (102, 0).toString ());
-    }
-
-    public void testAscendingSortingTreeWithNaturallyStringOrderingViaETable () throws InterruptedException, IllegalAccessException, InvocationTargetException {
-        ETableColumnModel etcm = (ETableColumnModel) view.getOutline ().getColumnModel ();
-        view.getOutline ().setColumnSorted (0, true, 1); // ascending order
-        view.expandNode (toExpand0_99);
-
-        assertEquals ("[1-index from 0 to 99]", view.getOutline ().getValueAt (0, 0).toString ());
-        assertEquals ("[0]", view.getOutline ().getValueAt (1, 0).toString ());
-        assertEquals ("[10]", view.getOutline ().getValueAt (2, 0).toString ());
-        assertEquals ("[11]", view.getOutline ().getValueAt (3, 0).toString ());
-        assertEquals ("[10-index from 100 to 199]", view.getOutline ().getValueAt (101, 0).toString ());
-        assertEquals ("[2-index from 200 to 299]", view.getOutline ().getValueAt (102, 0).toString ());
-    }
-
-    public void testDescendingSortingTreeWithCustomComparator () throws InterruptedException, IllegalAccessException, InvocationTargetException {
-        ETableColumnModel etcm = (ETableColumnModel) view.getOutline ().getColumnModel ();
-        ETableColumn etc = (ETableColumn) etcm.getColumn (0); // tree column
-        etc.setNestedComparator (testComarator);
-        etcm.setColumnSorted (etc, false, 1); // descending order
-        view.expandNode (toExpand200_299);
-
-//        org.openide.DialogDescriptor dd = new org.openide.DialogDescriptor (component, "", true, null);
-//        java.awt.Dialog d = org.openide.DialogDisplayer.getDefault ().createDialog (dd);
-//        d.setVisible (true);
-
-        // should look like
-        // + [10-index from 100 to 199]
-        // - [2-index from 200 to 299]
-        //   [299]
-        //   [298]
-        //   ....
-        // + [1-index from 0 to 99]
-        assertEquals ("[10-index from 100 to 199]", view.getOutline ().getValueAt (0, 0).toString ());
-        assertEquals ("[2-index from 200 to 299]", view.getOutline ().getValueAt (1, 0).toString ());
-        assertEquals ("[299]", view.getOutline ().getValueAt (2, 0).toString ());
-        assertEquals ("[298]", view.getOutline ().getValueAt (3, 0).toString ());
-    }
-
-    public void testDescendingSortingTreeWithCustomComparatorViaETable() throws InterruptedException, IllegalAccessException, InvocationTargetException {
-        ETableColumnModel etcm = (ETableColumnModel) view.getOutline ().getColumnModel ();
-        ETableColumn etc = (ETableColumn) etcm.getColumn (0); // tree column
-        etc.setNestedComparator (testComarator);
-        view.getOutline().setColumnSorted (0, false, 1); // descending order
-        view.expandNode (toExpand200_299);
-
-        assertEquals ("[10-index from 100 to 199]", view.getOutline ().getValueAt (0, 0).toString ());
-        assertEquals ("[2-index from 200 to 299]", view.getOutline ().getValueAt (1, 0).toString ());
-        assertEquals ("[299]", view.getOutline ().getValueAt (2, 0).toString ());
-        assertEquals ("[298]", view.getOutline ().getValueAt (3, 0).toString ());
-    }
-
-    public void testAscendingSortingTreeWithCustomComparator () throws InterruptedException, IllegalAccessException, InvocationTargetException {
-        ETableColumnModel etcm = (ETableColumnModel) view.getOutline ().getColumnModel ();
-        ETableColumn etc = (ETableColumn) etcm.getColumn (0); // tree column
-        etc.setNestedComparator (testComarator);
-        etcm.setColumnSorted (etc, true, 1); // ascending order
-
-//        org.openide.DialogDescriptor dd = new org.openide.DialogDescriptor (component, "", true, null);
-//        java.awt.Dialog d = org.openide.DialogDisplayer.getDefault ().createDialog (dd);
-//        d.setVisible (true);
-
-        view.expandNode (toExpand0_99);
-
-        // should look like
-        // - [1-index from 0 to 99]
-        //   [0]
-        //   [1]
-        //   [2]
-        //   ....
-        // + [2-index from 200 to 299]
-        // + [10-index from 100 to 199]
-        assertEquals ("[1-index from 0 to 99]", view.getOutline ().getValueAt (0, 0).toString ());
-        assertEquals ("[0]", view.getOutline ().getValueAt (1, 0).toString ());
-        assertEquals ("[1]", view.getOutline ().getValueAt (2, 0).toString ());
-        assertEquals ("[2]", view.getOutline ().getValueAt (3, 0).toString ());
-        assertEquals ("[2-index from 200 to 299]", view.getOutline ().getValueAt (101, 0).toString ());
-    }
-    
-    public void testAscendingSortingTreeWithCustomComparatorViaETable() throws InterruptedException, IllegalAccessException, InvocationTargetException {
-        ETableColumnModel etcm = (ETableColumnModel) view.getOutline ().getColumnModel ();
-        ETableColumn etc = (ETableColumn) etcm.getColumn (0); // tree column
-        etc.setNestedComparator (testComarator);
-        view.getOutline().setColumnSorted (0, true, 1); // ascending order
-        view.expandNode (toExpand0_99);
-
-        assertEquals ("[1-index from 0 to 99]", view.getOutline ().getValueAt (0, 0).toString ());
-        assertEquals ("[0]", view.getOutline ().getValueAt (1, 0).toString ());
-        assertEquals ("[1]", view.getOutline ().getValueAt (2, 0).toString ());
-        assertEquals ("[2]", view.getOutline ().getValueAt (3, 0).toString ());
-        assertEquals ("[2-index from 200 to 299]", view.getOutline ().getValueAt (101, 0).toString ());
-    }
-    
-    public void testColumnSortability() throws Exception {
-        ETableColumnModel etcm = (ETableColumnModel) view.getOutline().getColumnModel();
-        ETableColumn etc = (ETableColumn) etcm.getColumn(1);
-        boolean sortable = etc.isSortingAllowed();
-        assertEquals("Has to be sortable, initially.", true, sortable);
-        view.setPropertyColumnAttribute("unitTestPropName", "SortableColumn", Boolean.FALSE);
-        sortable = etc.isSortingAllowed();
-        assertEquals("Should not be sortable after attribute change.", false, sortable);
-        view.setPropertyColumnAttribute("unitTestPropName", "SortableColumn", Boolean.TRUE);
-        sortable = etc.isSortingAllowed();
-        assertEquals("Sortable, again.", true, sortable);
-    }
-    
-    public void testPropertiesPersistence() throws Exception {
-        OutlineView ov = new OutlineView ("test-outline-view-component");
-        Outline outline = ov.getOutline();
-        ov.addPropertyColumn("c1", "Column 1", "Description 1");
-        ov.addPropertyColumn("c2", "Column 2", "Description 2");
-        Properties p = new Properties();
-        outline.writeSettings(p, "test");
-        
-        OutlineView ov2 = new OutlineView ("test-outline-view-component");
-        Outline outline2 = ov2.getOutline();
-        outline2.readSettings(p, "test");
-        
-        int cc = outline.getColumnCount();
-        int cc2 = outline2.getColumnCount();
-        assertEquals("Column count", cc, cc2);
-        for (int c = 0; c < cc; c++) {
-            String cn = outline.getColumnName(c);
-            String cn2 = outline2.getColumnName(c);
-            assertEquals("Column "+c+" name", cn, cn2);
-            OutlineViewOutlineColumn oc = (OutlineViewOutlineColumn) outline.getColumnModel().getColumn(c);
-            OutlineViewOutlineColumn oc2 = (OutlineViewOutlineColumn) outline2.getColumnModel().getColumn(c);
-            String shortDescription = oc.getShortDescription(null);
-            String shortDescription2 = oc2.getShortDescription(null);
-            assertEquals("Column "+c+" short description", shortDescription, shortDescription2);
-        }
-        
-        ETableColumnModel etcm = (ETableColumnModel) outline2.getColumnModel();
-        etcm.setColumnHidden(etcm.getColumn(1), true);
-        outline2.writeSettings(p, "test");
-        
-        ov2 = new OutlineView ("test-outline-view-component");
-        outline2 = ov2.getOutline();
-        outline2.readSettings(p, "test");
-        cc2 = outline2.getColumnCount();
-        assertEquals("Column count", cc - 1, cc2);
-        OutlineViewOutlineColumn oc = (OutlineViewOutlineColumn) outline.getColumnModel().getColumn(2);
-        OutlineViewOutlineColumn oc2 = (OutlineViewOutlineColumn) outline2.getColumnModel().getColumn(1);
-        String shortDescription = oc.getShortDescription(null);
-        String shortDescription2 = oc2.getShortDescription(null);
-        assertEquals("Last column short description", shortDescription, shortDescription2);
+        assertEquals(1, evtLog.getEventCount());
+        assertEquals("[0] -> [0,1,2,3,4,5,6,7,8,9]", evtLog.getEvent(0));
+        assertEquals(10, outlinesPanel.getOutline(0).getSelectedRowCount());
+        assertEquals(10, outlinesPanel.getOutline(1).getSelectedRowCount());
+        assertEquals(10, outlinesPanel.getOutline(2).getSelectedRowCount());
+        assertEquals(10, outlinesPanel.getOutline(3).getSelectedRowCount());
     }
 
     /**
-     * Test for bug 236331 - After reading the persistence settings all the
-     * OutlineView property cells become empty.
-     *
-     * @throws Exception
+     * A panel that provides an {@link ExplorerManager} and contains multiple
+     * panels with outlines.
      */
-    public void testPropertiesPersistence2() throws Exception {
-
-        TestNode[] childrenNodes = new TestNode[2];
-        childrenNodes[0] = new TestNode(Children.LEAF, "First");
-        childrenNodes[1] = new TestNode(Children.LEAF, "Second");
-        Children.Array children = new Children.Array();
-        children.add(childrenNodes);
-        Node rootNode = new TestNode(children, "Invisible Root");
-
-        OutlineViewComponentWithLabels comp
-                = new OutlineViewComponentWithLabels(rootNode);
-        OutlineView ov = comp.getOutlineView();
-        Outline o = ov.getOutline();
-
-        ov.expandNode(rootNode);
-        o.moveColumn(1, 0);
-        assertEquals("First", getDummyValue(o.getValueAt(0, 0)));
-        assertEquals("Second", getDummyValue(o.getValueAt(1, 0)));
-
-        Properties p = new Properties();
-        o.writeSettings(p, "test");
-
-        OutlineViewComponentWithLabels comp2
-                = new OutlineViewComponentWithLabels(rootNode);
-        OutlineView ov2 = comp2.getOutlineView();
-        Outline o2 = ov2.getOutline();
-
-        ov2.readSettings(p, "test");
-        ov2.expandNode(rootNode);
-        assertNotSame(o, o2);
-
-        // ensure the order of columns was restored
-        assertEquals("First", getDummyValue(o2.getValueAt(0, 0)));
-        assertEquals("Second", getDummyValue(o2.getValueAt(1, 0)));
-    }
-
-    private String getDummyValue(Object prop) {
-        if (prop instanceof TestNode.DummyProperty) {
-            TestNode.DummyProperty dummyProp = (TestNode.DummyProperty) prop;
-            Object val = dummyProp.getValue("unitTestPropName");
-            return val == null ? null : val.toString();
-        } else {
-            fail("DummyProperty expected, but was " + prop
-                    + " (" + (prop == null ? "null" : prop.getClass()) + "). "
-                    + "The order of columns is probably incorrect.");
-            return null;
-        }
-    }
-
-    private class OutlineViewComponent extends JPanel implements ExplorerManager.Provider {
-
-        private final ExplorerManager manager = new ExplorerManager ();
-        private OutlineView view;
-
-        private OutlineViewComponent (Node rootNode) {
-            setLayout (new BorderLayout ());
-            manager.setRootContext (rootNode);
-
-            Node.Property[] props = rootNode.getPropertySets ()[0].getProperties ();
-            view = new OutlineView ("test-outline-view-component");
-            view.setProperties (props);
-
-            view.getOutline ().setRootVisible (false);
-
-            add (view, BorderLayout.CENTER);
-        }
-
-        public ExplorerManager getExplorerManager () {
-            return manager;
-        }
-
-        public OutlineView getOutlineView () {
-            return view;
-        }
-    }
-
-    /**
-     * View component with outline where column display names are different from
-     * column property names. Used in {@link #testPropertiesPersistence2()}.
-     */
-    private class OutlineViewComponentWithLabels extends JPanel implements
-            ExplorerManager.Provider {
+    public static class MultipleOutlinesPanel extends JPanel implements ExplorerManager.Provider {
 
         private final ExplorerManager manager = new ExplorerManager();
-        private OutlineView view;
 
-        private OutlineViewComponentWithLabels(Node rootNode) {
-            setLayout(new BorderLayout());
+        public MultipleOutlinesPanel(int numberOfOutlineViews) {
+            setLayout(new FlowLayout(FlowLayout.LEFT));
+            for (int i = 0; i < numberOfOutlineViews; i++) {
+                add(new OutlinePanel());
+            }
+            Node rootNode = new AbstractNode(Children.create(new MultipleTreesNodeFactory(), false));
             manager.setRootContext(rootNode);
+        }
 
-            view = new OutlineView("test-outline-view-component");
-            view.setPropertyColumns("unitTestPropName", "TestProperty");
-
-            view.getOutline().setRootVisible(false);
-
-            add(view, BorderLayout.CENTER);
+        public Outline getOutline(int index) {
+            OutlinePanel panel = (OutlinePanel) getComponent(index);
+            return panel.getOutlineView().getOutline();
         }
 
         @Override
         public ExplorerManager getExplorerManager() {
             return manager;
         }
+    }
+
+    /**
+     * A panel that contains a single {@link OutlineView}.
+     */
+    private static class OutlinePanel extends JPanel {
+
+        private OutlineView outlineView;
+
+        public OutlinePanel() {
+            setLayout(new BorderLayout());
+
+            outlineView = new OutlineView("tree");
+            outlineView.getOutline().setRootVisible(false);
+            // activate multiple interval selection
+            outlineView.getOutline().getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+            outlineView.getOutline().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+            add(outlineView, BorderLayout.CENTER);
+        }
 
         public OutlineView getOutlineView() {
-            return view;
+            return outlineView;
         }
     }
 
-    static class TestNode extends AbstractNode {
+    /**
+     * A simple node factory that creates some String nodes.
+     */
+    private static class MultipleTreesNodeFactory extends ChildFactory<String> {
 
-        public TestNode (String name) {
-            super (Children.LEAF);
-            setName (name);
-        }
-
-        public TestNode (Children children, String name) {
-            super (children);
-            setName (name);
+        @Override
+        protected boolean createKeys(final List<String> values) {
+            for (int i = 0; i < 10; i++) {
+                values.add(Integer.toString(i));
+            }
+            return true;
         }
 
         @Override
-        protected Sheet createSheet () {
-            Sheet s = super.createSheet ();
-            Sheet.Set ss = s.get (Sheet.PROPERTIES);
-            if (ss == null) {
-                ss = Sheet.createPropertiesSet ();
-                s.put (ss);
-            }
-            ss.put (new DummyProperty (getName ()));
-            return s;
-        }
-
-        void forcePropertyChangeEvent () {
-            firePropertyChange ("unitTestPropName", null, new Object ());
-        }
-
-        class DummyProperty extends Property<String> {
-
-            public DummyProperty (String val) {
-                super (String.class);
-                setName ("unitTestPropName");
-                try {
-                    setValue (val);
-                } catch (IllegalAccessException ex) {
-                    Exceptions.printStackTrace (ex);
-                } catch (IllegalArgumentException ex) {
-                    Exceptions.printStackTrace (ex);
-                } catch (InvocationTargetException ex) {
-                    Exceptions.printStackTrace (ex);
-                }
-            }
-
-            public boolean canRead () {
-                return true;
-            }
-
-            public String getValue () throws IllegalAccessException,
-                    InvocationTargetException {
-                return (String) getValue ("unitTestPropName");
-            }
-
-            public boolean canWrite () {
-                return true;
-            }
-
-            public void setValue (String val) throws IllegalAccessException,
-                    IllegalArgumentException,
-                    InvocationTargetException {
-                setValue ("unitTestPropName", val);
-            }
+        protected Node createNodeForKey(final String key) {
+            return new MultipeTreesNode(key);
         }
     }
 
-    private Comparator testComarator = new Comparator () {
+    /**
+     * A simple node for a String.
+     */
+    private static class MultipeTreesNode extends AbstractNode {
 
-        public int compare (Object o1, Object o2) {
-            assertTrue (o1 + " instanceof String", o1 instanceof Node);
-            assertTrue (o2 + " instanceof String", o2 instanceof Node);
-            Node n1 = (Node) o1;
-            Node n2 = (Node) o2;
-
-            // my comparator
-            return getInteger (n1.getDisplayName ()).compareTo (getInteger (n2.getDisplayName ()));
+        public MultipeTreesNode(final String value) {
+            super(Children.LEAF, new AbstractLookup(new InstanceContent()));
+            setName(value);
         }
+    }
 
-        private Integer getInteger (Object o) {
-            String s = o.toString ();
-            assertTrue (s + "startsWith (\"[\") && s.endsWith (\"]\")", s.startsWith ("[") && s.endsWith ("]"));
-            int end = s.indexOf ("-");
-            if (end != -1) {
-                s = s.substring (1, end);
-            } else {
-                s = s.substring (1, s.length () - 1);
+    /**
+     * PropertyChangeListener implementation that keeps a string representation
+     * of each ExplorerManager.PROP_SELECTED_NODES event.
+     */
+    private static class LoggingPropertyChangeListener implements PropertyChangeListener {
+
+        private List<String> events = new ArrayList<String>();
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (ExplorerManager.PROP_SELECTED_NODES.equals(evt.getPropertyName())) {
+                Node[] oldNodes = (Node[]) evt.getOldValue();
+                Node[] newNodes = (Node[]) evt.getNewValue();
+                events.add(nodesToString(oldNodes) + " -> " + nodesToString(newNodes));
             }
-            //System.out.println ("###: " + o.toString () + " => " + Integer.parseInt (s));
-            return Integer.parseInt (s);
         }
-    };
+
+        private String nodesToString(final Node[] nodes) {
+            StringBuilder builder = new StringBuilder();
+            builder.append("[");
+            for (int i = 0; i < nodes.length; i++) {
+                builder.append(nodes[i].getName());
+                if (i != nodes.length - 1) {
+                    builder.append(",");
+                }
+            }
+            builder.append("]");
+            return builder.toString();
+        }
+
+        public int getEventCount() {
+            return events.size();
+        }
+
+        public String getEvent(int index) {
+            return events.get(index);
+        }
+
+        public void clearEvents() {
+            events.clear();
+        }
+    }
 }

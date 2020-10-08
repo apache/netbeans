@@ -73,7 +73,7 @@ public final class MavenJPDAStart {
     
     
     private final Project project;
-    private Future<?> lastFuture;
+    private volatile Future<?> lastFuture;
 
     private MavenJPDAStart(Project p) {
         this.project = p;

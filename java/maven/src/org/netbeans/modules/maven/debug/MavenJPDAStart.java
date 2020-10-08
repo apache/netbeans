@@ -20,15 +20,18 @@ package org.netbeans.modules.maven.debug;
 
 import com.sun.jdi.Bootstrap;
 import com.sun.jdi.connect.Connector;
+import com.sun.jdi.connect.IllegalConnectorArgumentsException;
 import com.sun.jdi.connect.ListeningConnector;
 import com.sun.jdi.connect.Transport;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Future;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import org.netbeans.api.debugger.Breakpoint;
@@ -51,9 +54,9 @@ import org.openide.windows.InputOutput;
  * Start the JPDA debugger
  * @author Milos Kleint
  */
-public class JPDAStart implements Runnable {
+public final class MavenJPDAStart {
 
-    private static final RequestProcessor RP = new RequestProcessor(JPDAStart.class);
+    private static final RequestProcessor RP = new RequestProcessor(MavenJPDAStart.class.getName(), 1, true);
     
     /**
      * @parameter expression="${jpda.transport}"
@@ -69,139 +72,126 @@ public class JPDAStart implements Runnable {
     private ClassPath additionalSourcePath;
     
     
-    private final Object[] lock = new Object[2];
-    
-    private Project project;
-    private final String actionName;
-    private final InputOutput io;
+    private final Project project;
+    private Future<?> lastFuture;
 
-    JPDAStart(InputOutput inputOutput, String actionName) {
-        io = inputOutput;
-        this.actionName = actionName;
+    private MavenJPDAStart(Project p) {
+        this.project = p;
+    }
+
+    /** Create and place into Project's Lookup.
+     * @param p the project to associate this start with
+     * @return new instance of the start infrastructure
+     */
+    public static MavenJPDAStart create(Project p) {
+        return new MavenJPDAStart(p);
     }
     
     /**
      * returns the port/address that the debugger listens to..
      */
-    public String execute(Project project) throws Throwable {
-        this.project = project;
+    public String execute(InputOutput io) throws Throwable {
+        Future<?> prev = lastFuture;
+        if (prev != null && !prev.isDone()) {
+            io.getOut().print("Cancelling previous JPDA listening..."); //NOI18N
+            if (prev.cancel(true)) {
+                io.getOut().println("done"); //NOI18N
+            } else {
+                io.getOut().println("failed"); //NOI18N
+            }
+        }
         io.getOut().println("JPDA Listening Start..."); //NOI18N
-//            getLog().debug("Entering synch lock"); //NOI18N
-        synchronized (lock) {
-//                getLog().debug("Entered synch lock"); //NOI18N
-            RP.post(this);
-//                    getLog().debug("Entering wait"); //NOI18N
-            lock.wait();
-//                    getLog().debug("Wait finished"); //NOI18N
-            if (lock[1] != null) {
-                throw ((Throwable) lock[1]); //NOI18N
-            }
-        }
-        return (String)lock[0];
+        Future<String> future = RP.submit(() -> {
+            return startDebugger(io);
+        });
+        lastFuture = future;
+        return future.get();
     }
     
-    @Override
-    public void run() {
-        synchronized (lock) {
-            
-            try {
-                
-                ListeningConnector lc = null;
-                Iterator i = Bootstrap.virtualMachineManager().
-                        listeningConnectors().iterator();
-                for (; i.hasNext();) {
-                    lc = (ListeningConnector) i.next();
-                    Transport t = lc.transport();
-                    if (t != null && t.name().equals(getTransport())) {
-                        break;
-                    }
-                }
-                if (lc == null) {
-                    throw new RuntimeException
-                            ("No trasports named " + getTransport() + " found!"); //NOI18N
-                }
-                // TODO: revisit later when http://developer.java.sun.com/developer/bugParade/bugs/4932074.html gets integrated into JDK
-                // This code parses the address string "HOST:PORT" to extract PORT and then point debugee to localhost:PORT
-                // This is NOT a clean solution to the problem but it SHOULD work in 99% cases
-                final Map args = lc.defaultArguments();
-                String address = lc.startListening(args);
-                try {
-                    int port = Integer.parseInt(address.substring(address.indexOf(':') + 1));
+    private String startDebugger(InputOutput io) throws IOException, IllegalConnectorArgumentsException {
+        String portOrAddress;
+        ListeningConnector lc = null;
+        Iterator i = Bootstrap.virtualMachineManager().
+                listeningConnectors().iterator();
+        for (; i.hasNext();) {
+            lc = (ListeningConnector) i.next();
+            Transport t = lc.transport();
+            if (t != null && t.name().equals(getTransport())) {
+                break;
+            }
+        }
+        if (lc == null) {
+            throw new RuntimeException
+                    ("No trasports named " + getTransport() + " found!"); //NOI18N
+        }
+        // TODO: revisit later when http://developer.java.sun.com/developer/bugParade/bugs/4932074.html gets integrated into JDK
+        // This code parses the address string "HOST:PORT" to extract PORT and then point debugee to localhost:PORT
+        // This is NOT a clean solution to the problem but it SHOULD work in 99% cases
+        final Map args = lc.defaultArguments();
+        String address = lc.startListening(args);
+        try {
+            int port = Integer.parseInt(address.substring(address.indexOf(':') + 1));
 //                    getProject ().setNewProperty (getAddressProperty (), "localhost:" + port);
-                    Connector.IntegerArgument portArg = (Connector.IntegerArgument) args.get("port"); //NOI18N
-                    portArg.setValue(port);
-                    lock[0] = Integer.toString(port);
-                } catch (NumberFormatException e) {
-                    // this address format is not known, use default
+            Connector.IntegerArgument portArg = (Connector.IntegerArgument) args.get("port"); //NOI18N
+            portArg.setValue(port);
+            portOrAddress = Integer.toString(port);
+        } catch (NumberFormatException e) {
+            // this address format is not known, use default
 //                    getProject ().setNewProperty (getAddressProperty (), address);
-                    lock[0] = address;
-                }
-                io.getOut().println("JPDA Address: " + address); //NOI18N
-                io.getOut().println("Port:" + lock[0]); //NOI18N
-                
-                ClassPath sourcePath = Utils.createSourcePath(project);
-                if (getAdditionalSourcePath() != null) {
-                    sourcePath = ClassPathSupport.createProxyClassPath(sourcePath, getAdditionalSourcePath());
-                }
-                ClassPath jdkSourcePath = Utils.createJDKSourcePath(project);
-                
-                if (getStopClassName() != null && getStopClassName().length() > 0) {
-                    final MethodBreakpoint b = getStopMethod() != null ? Utils.createBreakpoint(getStopClassName(), getStopMethod()) : Utils.createBreakpoint(getStopClassName());
-                    final Listener list = new Listener(b);
-                    b.addPropertyChangeListener(MethodBreakpoint.PROP_VALIDITY, new PropertyChangeListener() {
-                        @Override
-                        public void propertyChange(PropertyChangeEvent pce) {
-                            if (Breakpoint.VALIDITY.INVALID.equals(b.getValidity()) && getStopMethod() != null) {
-                                //when the original method with method is not available (maybe defined in parent class?), replace it with a class breakpoint
-                                DebuggerManager.getDebuggerManager().removeBreakpoint(b);
-                                MethodBreakpoint b2 = Utils.createBreakpoint(getStopClassName());
-                                list.replaceBreakpoint(b2);
-                            }
-                        }
-                    });
-                    DebuggerManager.getDebuggerManager().addDebuggerListener(
-                            DebuggerManager.PROP_DEBUGGER_ENGINES,
-                            list);
-                }
-                
-                final Map properties = new HashMap();
-                properties.put("sourcepath", sourcePath); //NOI18N
-                properties.put("name", getName()); //NOI18N
-                properties.put("jdksources", jdkSourcePath); //NOI18N
-                properties.put("baseDir", FileUtil.toFile(project.getProjectDirectory())); // NOI18N
-                if (RunUtils.isCompileOnSaveEnabled(project)) {
-                    properties.put ("listeningCP", "sourcepath"); // NOI18N
-                }
-                
-                final ListeningConnector flc = lc;
-                RP.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        try {
-                            JPDADebugger.startListening(flc, args,
-                                                        new Object[]{properties, project});
-                        }
-                        catch (DebuggerStartException ex) {
-                            io.getErr().println("Debugger Start Error."); //NOI18N
-                            Logger.getLogger(JPDAStart.class.getName()).log(Level.INFO, "Debugger Start Error.", ex);
-                        }
-                    }
-                });
-            } catch (java.io.IOException ioex) {
-                io.getErr().println("IO Error:"); //NOI18N
-//                org.openide.ErrorManager.getDefault().notify(ioex);
-                lock[1] = ioex;
-            } catch (com.sun.jdi.connect.IllegalConnectorArgumentsException icaex) {
-                io.getErr().println("Illegal Connector"); //NOI18N
-                lock[1] = icaex;
-            } finally {
-                lock.notify();
-            }
+            portOrAddress = address;
         }
+        io.getOut().println("JPDA Address: " + address); //NOI18N
+        io.getOut().println("Port:" + portOrAddress); //NOI18N
+
+        ClassPath sourcePath = Utils.createSourcePath(project);
+        if (getAdditionalSourcePath() != null) {
+            sourcePath = ClassPathSupport.createProxyClassPath(sourcePath, getAdditionalSourcePath());
+        }
+        ClassPath jdkSourcePath = Utils.createJDKSourcePath(project);
+
+        if (getStopClassName() != null && getStopClassName().length() > 0) {
+            final MethodBreakpoint b = getStopMethod() != null ? Utils.createBreakpoint(getStopClassName(), getStopMethod()) : Utils.createBreakpoint(getStopClassName());
+            final Listener list = new Listener(b);
+            b.addPropertyChangeListener(MethodBreakpoint.PROP_VALIDITY, new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent pce) {
+                    if (Breakpoint.VALIDITY.INVALID.equals(b.getValidity()) && getStopMethod() != null) {
+                        //when the original method with method is not available (maybe defined in parent class?), replace it with a class breakpoint
+                        DebuggerManager.getDebuggerManager().removeBreakpoint(b);
+                        MethodBreakpoint b2 = Utils.createBreakpoint(getStopClassName());
+                        list.replaceBreakpoint(b2);
+                    }
+                }
+            });
+            DebuggerManager.getDebuggerManager().addDebuggerListener(
+                    DebuggerManager.PROP_DEBUGGER_ENGINES,
+                    list);
+        }
+
+        final Map properties = new HashMap();
+        properties.put("sourcepath", sourcePath); //NOI18N
+        properties.put("name", getName()); //NOI18N
+        properties.put("jdksources", jdkSourcePath); //NOI18N
+        properties.put("baseDir", FileUtil.toFile(project.getProjectDirectory())); // NOI18N
+        if (RunUtils.isCompileOnSaveEnabled(project)) {
+            properties.put ("listeningCP", "sourcepath"); // NOI18N
+        }
+
+        final ListeningConnector flc = lc;
         
+        lastFuture = RP.submit(() -> {
+            try {
+                JPDADebugger.startListening(flc, args,
+                                            new Object[]{properties, project});
+            } catch (DebuggerStartException ex) {
+                io.getErr().println("Debugger Start Error."); //NOI18N
+                Logger.getLogger(MavenJPDAStart.class.getName()).log(Level.INFO, "Debugger Start Error.", ex);
+            }
+        });
+
+        return portOrAddress;
     }
-    
+
     private static class Listener extends DebuggerManagerAdapter {
         
         private MethodBreakpoint breakpoint;

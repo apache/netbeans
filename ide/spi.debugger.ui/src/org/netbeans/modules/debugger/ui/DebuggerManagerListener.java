@@ -395,6 +395,9 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
 
     @Override
     public void engineRemoved (final DebuggerEngine engine) {
+        if (GraphicsEnvironment.isHeadless()) {
+            return ;
+        }
         DebuggerModule dm = DebuggerModule.findObject(DebuggerModule.class);
         if (dm != null && dm.isClosing()) {
             // Do not interfere with closeDebuggerUI()

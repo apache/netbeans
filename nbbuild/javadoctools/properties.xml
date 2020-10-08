@@ -234,3 +234,5 @@
 <property name="javadoc.docs.org-netbeans-modules-gradle-java" value="${javadoc.web.root}/org-netbeans-modules-gradle-java"/>
 <property name="javadoc.docs.org-netbeans-modules-textmate-lexer" value="${javadoc.web.root}/org-netbeans-modules-textmate-lexer"/>
 <property name="javadoc.docs.org-netbeans-modules-jumpto" value="${javadoc.web.root}/org-netbeans-modules-jumpto"/>
+<property name="javadoc.docs.org-netbeans-modules-java-editor-lib" value="${javadoc.web.root}/org-netbeans-modules-java-editor-lib"/>
+<property name="javadoc.docs.org-netbeans-modules-web-common" value="${javadoc.web.root}/org-netbeans-modules-web-common"/>

@@ -54,6 +54,8 @@ import org.netbeans.modules.html.editor.lib.api.elements.Node;
 import org.netbeans.modules.html.editor.lib.api.foreign.MaskingChSReader;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
 
 /**
  * HTML parser result
@@ -74,7 +76,7 @@ public class HtmlParserResult extends ParserResult implements HtmlParsingResult 
         super(result.getSource().getSnapshot());
         this.result = result;
     }
-
+    
     @Override
     public SyntaxAnalyzerResult getSyntaxAnalyzerResult() {
         return result;
@@ -360,12 +362,35 @@ public class HtmlParserResult extends ParserResult implements HtmlParsingResult 
     static {
         HtmlParserResultAccessor.set(new Accessor());
     }
+    
+    /**
+     * This class is actually returned as Parser.Result instance for clients.
+     * It implements Lookup.Provider, so that web.common module may pass the 
+     * SyntaxAnalyzerResult on to the metadata providers. The only current user
+     * of the metadata API attempts to look up SyntaxAnalyzerResult directly.
+     * The addition of Lookup.Provider need not to be visible in APIs.
+     */
+    private static final class Lkp extends HtmlParserResult implements Lookup.Provider {
+        private Lookup lkp;
+        
+        private Lkp(SyntaxAnalyzerResult result) {
+            super(result);
+        }
+
+        @Override
+        public Lookup getLookup() {
+            if (lkp == null) {
+                lkp = Lookups.fixed(getSyntaxAnalyzerResult());
+            }
+            return lkp;
+        }
+    }
 
     private static class Accessor extends HtmlParserResultAccessor {
 
         @Override
         public HtmlParserResult createInstance(SyntaxAnalyzerResult result) {
-            return new HtmlParserResult(result);
+            return new Lkp(result);
         }
     }
 }

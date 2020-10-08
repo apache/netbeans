@@ -118,7 +118,7 @@
                     <code-name-base>org.netbeans.modules.java.editor</code-name-base>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>2.66</specification-version>
+                        <specification-version>2.78</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -309,11 +309,6 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.java.editor</code-name-base>
-                        <recursive/>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.java.editor.lib</code-name-base>
                         <recursive/>
                         <compile-dependency/>
                     </test-dependency>

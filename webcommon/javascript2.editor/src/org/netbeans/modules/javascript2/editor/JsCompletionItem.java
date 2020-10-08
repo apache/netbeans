@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,7 +34,7 @@ import javax.swing.ImageIcon;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.modules.csl.api.CodeCompletionResult;
+import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
@@ -42,7 +43,6 @@ import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
-import org.netbeans.modules.html.editor.lib.api.model.HtmlTagAttribute;
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 import org.netbeans.modules.javascript2.lexer.api.LexUtilities;
 import org.netbeans.modules.javascript2.model.api.IndexedElement;
@@ -55,6 +55,8 @@ import org.netbeans.modules.javascript2.model.api.ModelUtils;
 import org.netbeans.modules.javascript2.editor.options.OptionsUtils;
 import org.netbeans.modules.javascript2.editor.parser.JsParserResult;
 import org.netbeans.modules.javascript2.editor.spi.CompletionContext;
+import org.netbeans.modules.javascript2.editor.spi.ElementDocumentation;
+import org.netbeans.modules.javascript2.editor.spi.ProposalRequest;
 import org.netbeans.modules.javascript2.model.api.Index;
 import org.netbeans.modules.javascript2.model.api.Model;
 import org.netbeans.modules.parsing.api.Snapshot;
@@ -71,7 +73,7 @@ public class JsCompletionItem implements CompletionProposal {
     protected final CompletionRequest request;
     protected final ElementHandle element;
     
-    JsCompletionItem(ElementHandle element, CompletionRequest request) {
+    protected JsCompletionItem(ElementHandle element, CompletionRequest request) {
         this.element = element;
         this.request = request;
     }
@@ -237,6 +239,7 @@ public class JsCompletionItem implements CompletionProposal {
         public CompletionContext completionContext;
         public boolean addHtmlTagAttributes;
         public CancelSupport cancelSupport;
+        public Collection<String> fqnTypes = new LinkedHashSet<>();
     }
     
     private static ImageIcon priviligedIcon = null;
@@ -624,116 +627,6 @@ public class JsCompletionItem implements CompletionProposal {
             return 130;
         }
     }
-
-    static class CssCompletionItem extends JsCompletionItem {
-        
-        private static ImageIcon cssIcon = null;
-        
-        private final String name;
-        
-        public CssCompletionItem(String name, CompletionRequest request) {
-            super(null, request);
-            this.name = name;
-        }
-        
-        @Override
-        public ImageIcon getIcon() {
-            if (cssIcon == null) {
-                cssIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/jquery/resources/style_sheet_16.png")); //NOI18N
-            }
-            return cssIcon;
-        }
-        
-        @Override
-        public String getName() {
-            return name;
-        }
-        
-        @Override
-        public String getInsertPrefix() {
-            return getName();
-        }
-        
-        @Override
-        public String getLhsHtml(HtmlFormatter formatter) {
-            formatter.reset();
-            formatter.appendText(getName());
-            return formatter.getText();
-        }
-
-        @Override
-        public ElementKind getKind() {
-            return ElementKind.RULE;
-        }
-
-        @Override
-        public String getRhsHtml(HtmlFormatter formatter) {
-            return null;
-        }
-        
-    }
-    
-    public static class JsHtmlAttributeItem extends JsCompletionItem {
-        
-        private final HtmlTagAttribute attr;
-        
-        public JsHtmlAttributeItem(HtmlTagAttribute attr, CompletionRequest request) {
-            super(new HtmlAttrElement(attr), request);
-            this.attr = attr;
-        }
-        
-        @Override
-        public String getName() {
-            return attr.getName();
-        }
-        
-        @Override
-        public String getInsertPrefix() {
-            return getName();
-        }
-        
-        @Override
-        public String getLhsHtml(HtmlFormatter formatter) {
-            formatter.reset();
-            formatter.appendText(getName());
-            return formatter.getText();
-        }
-
-        @Override
-        public ElementKind getKind() {
-            return ElementKind.ATTRIBUTE;
-        }
-
-        @Messages("JsCompletionItem.lbl.html.attribute=HTML Attribute")
-        @Override
-        public String getRhsHtml(HtmlFormatter formatter) {
-            formatter.reset();
-            formatter.appendHtml("<font color=#999999>");
-            formatter.appendText(Bundle.JsCompletionItem_lbl_html_attribute());
-            formatter.appendHtml("</font>");
-            return formatter.getText();
-        }
-        
-        private static class HtmlAttrElement extends SimpleDocElement {
-            private final HtmlTagAttribute attribute;
-            
-            public HtmlAttrElement(HtmlTagAttribute attribute) {
-                super(attribute.getName(), ElementKind.ATTRIBUTE);
-                this.attribute = attribute;
-            }
-
-            @Override
-            public String getDocumentation() {
-                String content = attribute.getHelp().getHelpContent();
-                if (content == null) {
-                    if (attribute.getHelp().getHelpResolver() != null && attribute.getHelp().getHelpURL() != null) {
-                        content = attribute.getHelp().getHelpResolver().getHelpContent(attribute.getHelp().getHelpURL());
-                    }
-                }
-                return content;
-            }
-        }
-    }
     
     public static class JsPropertyCompletionItem extends JsCompletionItem {
 
@@ -949,7 +842,7 @@ public class JsCompletionItem implements CompletionProposal {
         }
     }
     
-    public abstract static class SimpleDocElement implements ElementHandle {
+    public abstract static class SimpleDocElement implements ElementHandle, ElementDocumentation {
 
         private final String name;
         private final ElementKind kind;
@@ -999,7 +892,22 @@ public class JsCompletionItem implements CompletionProposal {
         public OffsetRange getOffsetRange(ParserResult result) {
             return OffsetRange.NONE;
         }
-        
-        abstract public String getDocumentation();
+    }
+    
+    /**
+     * Creates default ProposalRequest. Used by compatibility bridge in new CC interface.
+     * @param ccContext parser context
+     * @param jsCompletionContext js completion type
+     * @param prefix typed prefix
+     * @return initialized ProposalRequest
+     */
+    public static ProposalRequest createRequest(CodeCompletionContext ccContext, CompletionContext jsCompletionContext, String prefix) {
+        int caretOffset = ccContext.getParserResult().getSnapshot().getEmbeddedOffset(ccContext.getCaretOffset());
+        String pref = ccContext.getPrefix();
+        int offset = pref == null ? caretOffset : caretOffset
+                    // can't just use 'prefix.getLength()' here cos it might have been calculated with
+                    // the 'upToOffset' flag set to false
+                    - pref.length();
+        return new ProposalRequest(ccContext, jsCompletionContext, null, offset);
     }
 }

@@ -212,7 +212,7 @@ public final class OpenProjectList {
     }
     
     public static void waitProjectsFullyOpen() {
-        getDefault().LOAD.waitFinished();
+        getDefault().LOAD.waitFinished(0);
     }
 
     static void preferredProject(final Project lazyP) {
@@ -340,14 +340,25 @@ public final class OpenProjectList {
             progress = ProgressHandleFactory.createHandle(CAP_Opening_Projects());
         }
 
-        final void waitFinished() {
+        final boolean waitFinished(long timeout) {
             log(Level.FINER, "waitFinished, action {0}", action); // NOI18N
             if (action == 0) {
                 run();
             }
             log(Level.FINER, "waitFinished, before wait"); // NOI18N
-            TASK.waitFinished();
+            if (timeout == 0) {
+                TASK.waitFinished();
+            } else {
+                try {
+                    if (!TASK.waitFinished(timeout)) {
+                        return false;
+                    }
+                } catch (InterruptedException ex) {
+                    return false;
+                }
+            }
             log(Level.FINER, "waitFinished, after wait"); // NOI18N
+            return true;
         }
         
         @Override
@@ -580,7 +591,7 @@ public final class OpenProjectList {
 
         @Override
         public Project[] get() throws InterruptedException, ExecutionException {
-            TASK.waitFinished();
+            waitFinished(0);
             try {
                 enteredGuard.lock();
                 while (entered > 0) {
@@ -595,7 +606,7 @@ public final class OpenProjectList {
         @Override
         public Project[] get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
             long ms = unit.convert(timeout, TimeUnit.MILLISECONDS);
-            if (!TASK.waitFinished(timeout)) {
+            if (!waitFinished(timeout)) {
                 throw new TimeoutException();
             } 
             try {
@@ -682,7 +693,7 @@ public final class OpenProjectList {
         "# {0} - project path", "OpenProjectList.deleted_project={0} seems to have been deleted."
     })
     public void open(Project[] projects, boolean openSubprojects, ProgressHandle handle, AtomicBoolean canceled) {
-        LOAD.waitFinished();
+        LOAD.waitFinished(0);
             
         List<Project> toHandle = new LinkedList<Project>();
 
@@ -868,7 +879,7 @@ public final class OpenProjectList {
         boolean doSave = false;
         if (!LOAD.closeBeforeOpen(someProjects)) {
             doSave = true;
-            LOAD.waitFinished();
+            LOAD.waitFinished(0);
         }
         
         final Project[] projects = new Project[someProjects.length];

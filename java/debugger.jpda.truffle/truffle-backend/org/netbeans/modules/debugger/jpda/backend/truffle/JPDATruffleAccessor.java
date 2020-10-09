@@ -78,7 +78,10 @@ public class JPDATruffleAccessor extends Object {
      */
     //private static int stepCmd = 0;
 
-    public JPDATruffleAccessor() {}
+    public JPDATruffleAccessor() {
+        // JDI needs to know about String class in this class loader.
+        new String("Initialize String class");
+    }
     
     static Thread startAccessLoop() {
         if (!accessLoopRunning) {

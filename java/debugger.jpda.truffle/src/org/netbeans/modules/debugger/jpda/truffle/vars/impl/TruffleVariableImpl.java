@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.debugger.jpda.truffle.vars;
+package org.netbeans.modules.debugger.jpda.truffle.vars.impl;
 
 import java.io.InvalidObjectException;
 import org.netbeans.api.debugger.jpda.Field;
@@ -30,6 +30,7 @@ import org.netbeans.modules.debugger.jpda.truffle.LanguageName;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
+import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
 import org.openide.util.Exceptions;
 
 public class TruffleVariableImpl implements TruffleVariable {

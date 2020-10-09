@@ -26,7 +26,7 @@ import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleStrataProvider;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
-import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleScope;
+import org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleScope;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;

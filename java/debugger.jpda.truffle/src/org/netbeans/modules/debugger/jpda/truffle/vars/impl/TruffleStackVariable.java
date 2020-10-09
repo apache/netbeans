@@ -17,13 +17,14 @@
  * under the License.
  */
 
-package org.netbeans.modules.debugger.jpda.truffle.vars;
+package org.netbeans.modules.debugger.jpda.truffle.vars.impl;
 
 import java.util.function.Supplier;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.modules.debugger.jpda.truffle.LanguageName;
 import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
+import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
 
 public class TruffleStackVariable implements TruffleVariable {
     
@@ -97,6 +98,11 @@ public class TruffleStackVariable implements TruffleVariable {
     
     @Override
     public Object getValue() {
+        return valueStr;
+    }
+
+    @Override
+    public String getDisplayValue() {
         return valueStr;
     }
 

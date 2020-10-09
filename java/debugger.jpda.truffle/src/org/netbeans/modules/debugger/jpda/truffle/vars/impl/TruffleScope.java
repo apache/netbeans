@@ -17,11 +17,12 @@
  * under the License.
  */
 
-package org.netbeans.modules.debugger.jpda.truffle.vars;
+package org.netbeans.modules.debugger.jpda.truffle.vars.impl;
 
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
+import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
 
 /**
  * Representation of DebugScope.

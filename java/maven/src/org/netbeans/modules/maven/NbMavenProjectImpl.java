@@ -74,6 +74,7 @@ import org.netbeans.modules.maven.configurations.M2ConfigProvider;
 import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.configurations.ProjectProfileHandlerImpl;
 import org.netbeans.modules.maven.cos.CopyResourcesOnSave;
+import org.netbeans.modules.maven.debug.MavenJPDAStart;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
 import org.netbeans.modules.maven.modelcache.MavenProjectCache;
@@ -881,7 +882,8 @@ public final class NbMavenProjectImpl implements Project {
                     LookupMergerSupport.createClassPathModifierMerger(),
                     new UnitTestsCompilerOptionsQueryImpl(this),
                     new PomCompilerOptionsQueryImpl(this),
-                    LookupMergerSupport.createCompilerOptionsQueryMerger()
+                    LookupMergerSupport.createCompilerOptionsQueryMerger(),
+                    MavenJPDAStart.create(this)
         );
     }
 

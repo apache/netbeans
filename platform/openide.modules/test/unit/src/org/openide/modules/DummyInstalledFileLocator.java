@@ -16,26 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-package org.netbeans.modules.apisupport.project;
+package org.openide.modules;
 
 import java.io.File;
-import junit.framework.TestCase;
 
 /**
  *
  * @author Jaroslav Tulach
  */
-@org.openide.util.lookup.ServiceProvider(service=org.openide.modules.InstalledFileLocator.class)
-public class InstalledFileLocatorImpl extends org.openide.modules.InstalledFileLocator {
+public class DummyInstalledFileLocator extends org.openide.modules.InstalledFileLocator {
     private static File installDir;
 
 
     /**
      * Creates a new instance of InstalledFileLocatorImpl
      */
-    public InstalledFileLocatorImpl() {
-}
+    public DummyInstalledFileLocator() {
+    }
 
 
     public File locate(String relativePath, String codeNameBase, boolean localized) {

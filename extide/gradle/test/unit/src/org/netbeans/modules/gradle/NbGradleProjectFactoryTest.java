@@ -74,7 +74,7 @@ public class NbGradleProjectFactoryTest extends AbstractGradleProjectTestCase {
     public void testBuildSrcProject() throws Exception {
         int rnd = new Random().nextInt(1000000);
         FileObject a = createGradleProject("projectA-" + rnd,
-                "apply plugin: 'java'\n", null);
+                "apply plugin: 'java'\n", "");
         FileObject b = createGradleProject("projectA-" + rnd + "/buildSrc",
                 null, null);
         assertTrue(NbGradleProjectFactory.isProjectCheck(a, false));

@@ -29,7 +29,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.net.URI;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -170,6 +172,17 @@ public final class DebuggingView {
          * @return the thread display name
          */
         public abstract String getDisplayName(DVThread thread);
+        
+        /**
+         * Get the display name of the frame. It can contain more information
+         * than a frame name, like source location, etc.
+         * @param frame the frame
+         * @return the frame display name
+         * @since 2.65
+         */
+        public String getDisplayName(DVFrame frame) {
+            return frame.getName();
+        }
         
         /**
          * Get the thread icon.
@@ -327,6 +340,40 @@ public final class DebuggingView {
         public void makeCurrent();
 
         /**
+         * Get frame count of this thread. The frame count is provided when the thread
+         * is suspended only.
+         * @return the frame count, <code>0</code> when the thread is running.
+         * @since 2.65
+         */
+        public default int getFrameCount() {
+            return 0;
+        }
+
+        /**
+         * Get the stack frames of this thread. Stack frames are provided when the thread
+         * is suspended only.
+         *
+         * @return a list of stack frames, it's empty when the thread is running.
+         * @since 2.65
+         */
+        public default List<DVFrame> getFrames() {
+            return Collections.emptyList();
+        }
+
+        /**
+         * Get the stack frames of this thread. Stack frames are provided when the thread
+         * is suspended only.
+         *
+         * @param from a from index, inclusive
+         * @param to a to index, exclusive
+         * @return a list of stack frames, it's empty when the thread is running.
+         * @since 2.65
+         */
+        public default List<DVFrame> getFrames(int from, int to) {
+            return Collections.emptyList();
+        }
+
+        /**
          * Get the debugging view support that provides this thread.
          * @return the debugging view support
          */
@@ -401,6 +448,58 @@ public final class DebuggingView {
         public DVThreadGroup[] getThreadGroups();
     }
     
+    /**
+     * Representation of a stack frame in debugging view.
+     * Nodes representing a stack frame in debugging view model should implement this
+     * interface.
+     * @since 2.65
+     */
+    public static interface DVFrame {
+
+        /**
+         * Get the name of the frame. Usually the frame's class + method name, or function name.
+         * @return the name of the frame to be displayed in the debugging view.
+         * @since 2.65
+         */
+        String getName();
+
+        /**
+         * Get the thread of this frame.
+         * @since 2.65
+         */
+        DVThread getThread();
+
+        /**
+         * Make this frame current. Code evaluation and stepping should be performed
+         * in the current frame.
+         * @since 2.65
+         */
+        void makeCurrent();
+
+        /**
+         * Gen URI of the source file associated with this frame, if any.
+         * @return a source URI, or <code>null</code> if the file is unknown.
+         * @since 2.65
+         */
+        URI getSourceURI();
+
+        /**
+         * Line location of the frame in the source code at {@link #getSourceURI()}.
+         *
+         * @return the line number, or <code>-1</code> if the line is unknown
+         * @since 2.65
+         */
+        int getLine();
+
+        /**
+         * Column location of the frame in the source code at {@link #getSourceURI()}.
+         *
+         * @return the column number, or <code>-1</code> if the column is unknown
+         * @since 2.65
+         */
+        int getColumn();
+    }
+
     /**
      * Representation of a deadlock - one set of mutually deadlocked threads.
      */

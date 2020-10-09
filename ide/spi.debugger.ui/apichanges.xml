@@ -244,6 +244,23 @@
         <issue number="262312"/>
     </change>
 
+    <change id="DebuggingViewFrames">
+        <api name="DebuggerCoreSPI"/>
+        <summary>Frames added into DebuggingView.</summary>
+        <version major="2" minor="65"/>
+        <date day="09" month="10" year="2020"/>
+        <author login="mentlicher"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" semantic="compatible"/>
+        <description>
+            <p>
+                DebuggingView is enhanced with stack frames.
+                <code>DVSupport.DVFrame</code> interface was added together with getters on
+                <code>DVThread</code> class.
+            </p>
+        </description>
+        <class package="org.netbeans.spi.debugger.ui" name="DebuggingView"/>
+    </change>
+
 </changes>
 
   <!-- Now the surrounding HTML text and document structure: -->

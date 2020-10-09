@@ -67,7 +67,7 @@ public final class NbGradleProjectFactory implements ProjectFactory2 {
         }
         File suspect = FileUtil.toFile(dir);
         GradleFiles files = new GradleFiles(suspect);
-        if (files.isRootProject()) return true;
+        if (files.isRootProject() || files.isBuildSrcProject()) return true;
         
         if ((files.getSettingsScript() != null) && !files.isBuildSrcProject()) {
             SubProjectDiskCache spCache = SubProjectDiskCache.get(files.getRootDir());

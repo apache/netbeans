@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.debugger.jpda.truffle.breakpoints;
+package org.netbeans.modules.debugger.jpda.truffle.breakpoints.impl;
 
 import com.sun.jdi.ArrayReference;
 import com.sun.jdi.ClassNotLoadedException;
@@ -35,7 +35,9 @@ import com.sun.jdi.VirtualMachine;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -50,18 +52,30 @@ import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAThread;
+import org.netbeans.api.java.queries.BinaryForSourceQuery;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.jdi.ClassNotPreparedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ClassTypeWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ObjectCollectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ObjectReferenceWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.UnsupportedOperationExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
+import org.netbeans.modules.debugger.jpda.truffle.PersistentValues;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.source.Source;
+import org.netbeans.modules.debugger.jpda.truffle.source.SourceBinaryTranslator;
 import org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint;
+import org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 
@@ -122,7 +136,7 @@ public class TruffleBreakpointsHandler {
             }
             URI uri = Source.getTruffleInternalURI(fileObject);
             if (uri == null) {
-                uri = fileObject.toURI();
+                uri = SourceBinaryTranslator.source2Binary(fileObject);
             }
             ObjectReference bpImpl;
             if (bp.isEnabled()) {
@@ -145,7 +159,7 @@ public class TruffleBreakpointsHandler {
             }
         }
     }
-    
+
     private static int getIgnoreCount(JSLineBreakpoint bp) {
         int ignoreCount = 0;
         if (Breakpoint.HIT_COUNT_FILTERING_STYLE.GREATER.equals(bp.getHitCountFilteringStyle())) {
@@ -160,6 +174,7 @@ public class TruffleBreakpointsHandler {
         assert t.isMethodInvoking();
         ThreadReference tr = t.getThreadReference();
         VirtualMachine vm = tr.virtualMachine();
+        PersistentValues persistents = new PersistentValues(vm);
         try {
             Method setLineBreakpointMethod = ClassTypeWrapper.concreteMethodByName(
                     accessorClass,
@@ -168,10 +183,10 @@ public class TruffleBreakpointsHandler {
             if (setLineBreakpointMethod == null) {
                 throw new IllegalStateException("Method "+ACCESSOR_SET_LINE_BREAKPOINT+" with signature:\n"+ACCESSOR_SET_LINE_BREAKPOINT_MGR_SIGNAT+"\nis not present in accessor class "+accessorClass);
             }
-            Value uriRef = vm.mirrorOf(uri.toString());
+            Value uriRef = persistents.mirrorOf(uri.toString());
             IntegerValue lineRef = vm.mirrorOf(line);
             IntegerValue icRef = vm.mirrorOf(ignoreCount);
-            StringReference conditionRef = (condition != null) ? vm.mirrorOf(condition) : null;
+            StringReference conditionRef = (condition != null) ? persistents.mirrorOf(condition) : null;
             List<? extends Value> args = Arrays.asList(new Value[] { debugManager, uriRef, lineRef, icRef, conditionRef });
             ObjectReference ret = (ObjectReference) ClassTypeWrapper.invokeMethod(
                     accessorClass,
@@ -183,9 +198,11 @@ public class TruffleBreakpointsHandler {
         } catch (VMDisconnectedExceptionWrapper | InternalExceptionWrapper |
                  ClassNotLoadedException | ClassNotPreparedExceptionWrapper |
                  IncompatibleThreadStateException | InvalidTypeException |
-                 ObjectCollectedExceptionWrapper ex) {
+                 UnsupportedOperationExceptionWrapper | ObjectCollectedExceptionWrapper ex) {
             Exceptions.printStackTrace(Exceptions.attachMessage(ex, "Setting breakpoint to "+uri+":"+line));
             return null;
+        } finally {
+            persistents.collect();
         }
     }
     
@@ -199,7 +216,7 @@ public class TruffleBreakpointsHandler {
         if (tiuri != null) {
             uri = tiuri;
         } else {
-            uri = fileObject.toURI();
+            uri = SourceBinaryTranslator.source2Binary(fileObject);
         }
         final int line = bp.getLineNumber();
         final int ignoreCount = getIgnoreCount(bp);
@@ -219,24 +236,28 @@ public class TruffleBreakpointsHandler {
                     public void callMethods(JPDAThread thread) throws InvocationException {
                         ThreadReference tr = ((JPDAThreadImpl) thread).getThreadReference();
                         VirtualMachine vm = tr.virtualMachine();
-                        StringReference uriRef = vm.mirrorOf(uri.toString());
-                        IntegerValue lineRef = vm.mirrorOf(line);
-                        IntegerValue icRef = vm.mirrorOf(ignoreCount);
-                        StringReference conditionRef = (condition != null) ? vm.mirrorOf(condition) : null;
-                        List<? extends Value> args = Arrays.asList(new Value[] { uriRef, lineRef, icRef, conditionRef });
+                        PersistentValues persistents = new PersistentValues(vm);
                         try {
+                            StringReference uriRef = persistents.mirrorOf(uri.toString());
+                            IntegerValue lineRef = vm.mirrorOf(line);
+                            IntegerValue icRef = vm.mirrorOf(ignoreCount);
+                            StringReference conditionRef = (condition != null) ? persistents.mirrorOf(condition) : null;
+                            List<? extends Value> args = Arrays.asList(new Value[] { uriRef, lineRef, icRef, conditionRef });
                             ArrayReference ret = (ArrayReference) ClassTypeWrapper.invokeMethod(
                                     accessorClass,
                                     tr,
                                     setLineBreakpointMethod,
                                     args,
                                     ObjectReference.INVOKE_SINGLE_THREADED);
+                            ret.disableCollection();
                             bpRef[0] = ret;
                         } catch (InvalidTypeException | ClassNotLoadedException |
-                                 IncompatibleThreadStateException |
+                                 IncompatibleThreadStateException | UnsupportedOperationExceptionWrapper |
                                  InternalExceptionWrapper | VMDisconnectedExceptionWrapper |
                                  ObjectCollectedExceptionWrapper ex) {
                             Exceptions.printStackTrace(Exceptions.attachMessage(ex, "Setting breakpoint to "+uri+":"+line));
+                        } finally {
+                            persistents.collect();
                         }
                     }
                 });
@@ -254,6 +275,7 @@ public class TruffleBreakpointsHandler {
                     breakpoints.add((ObjectReference) v);
                 }
             }
+            bpArray.enableCollection();
         }
         if (!breakpoints.isEmpty()) {
             synchronized (breakpointsMap) {
@@ -418,6 +440,7 @@ public class TruffleBreakpointsHandler {
             if (vm == null) {
                 return ;
             }
+            PersistentValues persistents = new PersistentValues(vm);
             switch (propertyName) {
                 case JSLineBreakpoint.PROP_ENABLED:
                     method = TruffleBPMethods.setEnabled;
@@ -426,7 +449,7 @@ public class TruffleBreakpointsHandler {
                 case JSLineBreakpoint.PROP_CONDITION:
                     method = TruffleBPMethods.setCondition;
                     String condition = jsbp.getCondition();
-                    StringReference conditionRef = (condition != null) ? vm.mirrorOf(condition) : null;
+                    StringReference conditionRef = (condition != null) ? persistents.mirrorOf0(condition) : null;
                     args = Collections.singletonList(conditionRef);
                     break;
                 case Breakpoint.PROP_HIT_COUNT_FILTER:
@@ -439,7 +462,11 @@ public class TruffleBreakpointsHandler {
             ((JPDADebuggerImpl) debugger).getRequestProcessor().post(new Runnable() {
                 @Override
                 public void run() {
-                    setBreakpointProperty(jsbp, method, args);
+                    try {
+                        setBreakpointProperty(jsbp, method, args);
+                    } finally {
+                        persistents.collect();
+                    }
                 }
             });
         }

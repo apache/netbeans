@@ -959,6 +959,22 @@ These are mainly class and thread filters and hit counts.
         </description>
         <class package="org.netbeans.api.debugger.jpda" name="ExceptionBreakpoint" />
     </change>
+
+    <change>
+        <api name="JPDADebuggerAPI"/>
+        <summary>JPDAStep enhanced with stepping filters and JPDADebugger.getSession() added.</summary>
+        <version major="3" minor="19"/>
+        <date day="9" month="10" year="2020"/>
+        <author login="mentlicher"/>
+        <compatibility addition="yes" source="compatible" binary="compatible"/>
+        <description>
+            <code>JPDAStep</code> enhanced with stepping filters for better control.
+            <code>JPDADebugger.getSession()</code> added to be able to easily retrieve the session
+            this JPDA debugger belongs into.
+        </description>
+        <class package="org.netbeans.api.debugger.jpda" name="JPDAStep" />
+        <class package="org.netbeans.api.debugger.jpda" name="JPDADebugger" />
+    </change>
 </changes>
 
   <!-- Now the surrounding HTML text and document structure: -->

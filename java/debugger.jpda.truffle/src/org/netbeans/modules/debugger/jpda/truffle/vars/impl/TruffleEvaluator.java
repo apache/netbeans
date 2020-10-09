@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.debugger.jpda.truffle.vars;
+package org.netbeans.modules.debugger.jpda.truffle.vars.impl;
 
 import org.netbeans.api.debugger.jpda.CallStackFrame;
 import org.netbeans.api.debugger.jpda.InvalidExpressionException;

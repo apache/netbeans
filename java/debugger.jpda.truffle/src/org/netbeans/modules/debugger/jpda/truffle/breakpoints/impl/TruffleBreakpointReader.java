@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.debugger.jpda.truffle.breakpoints;
+package org.netbeans.modules.debugger.jpda.truffle.breakpoints.impl;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,12 +25,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.Properties;
+import org.netbeans.modules.debugger.jpda.truffle.breakpoints.TruffleLineBreakpoint;
 import org.netbeans.modules.debugger.jpda.truffle.source.Source;
 import org.netbeans.modules.javascript2.debug.EditorLineHandler;
 import org.netbeans.modules.javascript2.debug.EditorLineHandlerFactory;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
+import org.openide.util.Lookup;
 
 /**
  * Breakpoints storage.
@@ -64,11 +66,15 @@ public class TruffleBreakpointReader implements Properties.Reader {
                         return null;
                     }
                 } else {
-                    EditorLineHandler line = EditorLineHandlerFactory.getHandler(fo, lineNumber);
-                    if (line != null) {
-                        b = new TruffleLineBreakpoint(line);
+                    if (Lookup.getDefault().lookup(EditorLineHandlerFactory.class) != null) {
+                        EditorLineHandler line = EditorLineHandlerFactory.getHandler(fo, lineNumber);
+                        if (line != null) {
+                            b = new TruffleLineBreakpoint(line);
+                        } else {
+                            return null;
+                        }
                     } else {
-                        return null;
+                        b = new TruffleLineBreakpoint(url, lineNumber);
                     }
                 }
             } catch (MalformedURLException ex) {

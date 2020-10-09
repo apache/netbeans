@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.debugger.jpda.truffle.vars;
+package org.netbeans.modules.debugger.jpda.truffle.vars.impl;
 
 public final class TruffleExpression {
     

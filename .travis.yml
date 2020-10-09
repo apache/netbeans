@@ -360,6 +360,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f java/debugger.jpda.js test
             - hide-logs.sh ant $OPTS -f java/debugger.jpda.projects test
             - hide-logs.sh ant $OPTS -f java/debugger.jpda.projectsui test
+            - hide-logs.sh ant $OPTS -f java/gradle.java test
             #- ant $OPTS -f java/debugger.jpda.truffle test
             #- ant $OPTS -f java/debugger.jpda.ui test
             - travis_wait hide-logs.sh ant $OPTS -f java/editor.htmlui test

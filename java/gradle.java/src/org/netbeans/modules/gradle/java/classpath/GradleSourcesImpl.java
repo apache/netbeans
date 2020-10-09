@@ -44,7 +44,6 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
-import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.spi.project.ProjectServiceProvider;
@@ -152,10 +151,6 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
 
     @Override
     public synchronized SourceGroup[] getSourceGroups(String type) {
-        if (Sources.TYPE_GENERIC.equals(type)) {
-            return new SourceGroup[]{new GradleSourceGroup(proj.getProjectDirectory(), "ProjectRoot", //NOI18N
-                ProjectUtils.getInformation(proj).getDisplayName())};
-        }
         checkChanges(false);
         SourceType stype = soureType2SourceType(type);
         if (stype != null) {

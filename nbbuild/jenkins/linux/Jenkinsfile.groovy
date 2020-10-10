@@ -50,12 +50,11 @@ pipeline {
             }
         }
         
-        /*stage("Linux build") {
+        stage("Linux build") {
             steps {
-                sh "ant clean"
                 sh "ant build"
             }
-        }*/
+        }
     }
  
     post { 

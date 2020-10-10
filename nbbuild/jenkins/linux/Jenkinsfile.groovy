@@ -38,9 +38,15 @@ pipeline {
     }
 
     stages {
-        stage("RAT report") {
+        stage("Verify RAT report") {
             steps {
                 sh 'ant rat'
+            }
+        }
+     
+        stage("Verify libs and licenses") {
+            steps {
+                sh 'ant verify-libs-and-licenses'
             }
         }
         
@@ -54,7 +60,7 @@ pipeline {
  
     post { 
         always { 
-            junit testResults: "nbbuild/build/rat/*.xml" , allowEmptyResults:true 
+            junit testResults: "nbbuild/build/rat/*.xml,nbbuild/build/verifylibsandlicenses.xml" , allowEmptyResults: true, healthScaleFactor: 0.0
             archiveArtifacts artifacts: "nbbuild/build/rat-report.txt", allowEmptyArchive: true
         }
     }

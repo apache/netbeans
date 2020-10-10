@@ -40,12 +40,8 @@ pipeline {
     stages {
         stage("RAT report") {
             steps {
-                sh 'ant build-source-config'
-                sh 'mkdir -p nbbuild/build/rat'
-                dir("nbbuild/build/rat") {
-                    //sh "unzip -qq ../release-src*"
-                    sh "ls"
-                }
+                sh 'ant rat'
+                sh 'ls nbbuild/build'
             }
         }
         
@@ -56,4 +52,5 @@ pipeline {
             }
         }*/
     }
+ 
 }

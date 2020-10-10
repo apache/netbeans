@@ -43,7 +43,7 @@ pipeline {
                 sh 'ant build-source-config'
                 sh 'mkdir -p nbbuild/build/rat'
                 dir("nbbuild/build/rat") {
-                    sh "unzip -qq ../release-src*"
+                    //sh "unzip -qq ../release-src*"
                     sh "ls"
                 }
             }

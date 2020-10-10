@@ -32,11 +32,16 @@ pipeline {
         jdk "JDK 1.8 (latest)"
         ant "Ant (latest)"        
     }
+ 
+    environment { 
+        ANT_OPTS = "-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json"
+    }
 
     stages {
-        stage("Linuc build") {
+        stage("Linux build") {
             steps {
-                sh 'ant build'
+                sh "ant clean"
+                sh "ant build"
             }
         }
     }

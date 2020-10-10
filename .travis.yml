@@ -36,18 +36,9 @@ cache:
 
 matrix:
     include:
-        - name: Check line endings and verify RAT report
+        - name: Check line endings
           script: 
             - nbbuild/travis/check-line-endings.sh
-            - ant -quiet build-source-config
-            - mkdir scratch
-            - cd scratch
-            - unzip -qq ../nbbuild/build/release-src*
-            - ant -quiet rat -Drat-report.haltonfailure=true -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
-          
-        - name: Verify libs and licenses
-          script:
-            - ant verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
 
         - name: Run sigtests
           jdk: openjdk8

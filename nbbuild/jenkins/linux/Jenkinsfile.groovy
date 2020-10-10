@@ -55,7 +55,7 @@ pipeline {
     post { 
         always { 
             junit testResults: "nbbuild/build/rat/*.xml" , allowEmptyResults:true 
-            archiveArtifacts "nbbuild/build/rat-report.txt", allowEmptyArchive: true
+            archiveArtifacts artifacts: "nbbuild/build/rat-report.txt", allowEmptyArchive: true
         }
     }
  

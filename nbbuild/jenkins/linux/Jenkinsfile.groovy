@@ -23,10 +23,20 @@ pipeline {
             label 'ubuntu' 
         }
     }
+
+    options {
+        disableConcurrentBuilds()
+    }
+    
+    tools {
+        jdk "JDK 1.8 (latest)"
+        ant "Ant (latest)"        
+    }
+
     stages {
-        stage("Print env") {
+        stage("Linuc build") {
             steps {
-                sh 'printenv'
+                sh 'ant build'
             }
         }
     }

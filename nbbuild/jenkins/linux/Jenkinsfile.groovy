@@ -41,7 +41,6 @@ pipeline {
         stage("RAT report") {
             steps {
                 sh 'ant rat'
-                sh 'ls nbbuild/build'
             }
         }
         
@@ -51,6 +50,13 @@ pipeline {
                 sh "ant build"
             }
         }*/
+    }
+ 
+    post { 
+        always { 
+            junit testResults: "nbbuild/build/rat/*.xml" , allowEmptyResults:true 
+            archiveArtifacts "nbbuild/build/rat-report.txt", allowEmptyArchive: true
+        }
     }
  
 }

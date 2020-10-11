@@ -340,9 +340,10 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.openide.modules</code-name-base>
-                        <run-dependency/>
+                        <compile-dependency/>
                         <test/>
-                    </test-dependency>                    <test-dependency>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.openide.util.ui</code-name-base>
                         <compile-dependency/>
                         <test/>

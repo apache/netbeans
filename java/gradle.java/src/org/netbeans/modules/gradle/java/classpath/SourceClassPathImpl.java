@@ -40,11 +40,7 @@ public final class SourceClassPathImpl extends AbstractSourceSetClassPathImpl {
         List<URL> ret = new ArrayList<>();
         GradleJavaSourceSet ss = getSourceSet();
         if (ss != null) {
-
             addAllFile(ret, ss.getAllDirs());
-            for (GradleJavaSourceSet sourceDependency : ss.getSourceDependencies()) {
-                addAllFile(ret, sourceDependency.getAllDirs());
-            }
         }
         return ret;
     }

@@ -157,7 +157,52 @@ public class JavaCodeTemplateProcessorTest extends NbTestCase {
                              "}");
         assertFileObjectTextMatchesRegex("(?s)\\s*?public class Test.*?");
     }
-    
+
+    public void testCodeTemplatesShouldWorkInsideParenthesesOfForEachLoop() throws Exception {
+         doTestTemplateInsert("${name newVarName}",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        for (String |) {\n" +
+                             "        }\n" +
+                             "    }\n" +
+                             "}",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        for (String name|) {\n" +
+                             "        }\n" +
+                             "    }\n" +
+                             "}");
+         doTestTemplateInsert("${names iterable}",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        for (String name: |) {\n" +
+                             "        }\n" +
+                             "    }\n" +
+                             "}",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        for (String name: args|) {\n" +
+                             "        }\n" +
+                             "    }\n" +
+                             "}");
+    }
+
+    public void testCodeTemplatesShouldWorkInsideParenthesesOfWhileLoop() throws Exception {
+         doTestTemplateInsert("${list instanceof=\"java.util.List\"}.isEmpty()",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        while (|) {\n" +
+                             "        }\n" +
+                             "    }\n" +
+                             "}",
+                             "public class Test {\n" +
+                             "    private void t(String... args) {\n" +
+                             "        while (list|.isEmpty()) {\n" +
+                             "        }\n" +
+                             "    }\n" +
+                             "}");
+    }
+
     private void assertFileObjectTextMatchesRegex(String regex) throws IOException {
         String text = testFile.asText();
         assertTrue("The file text must match the regular expression", text.matches(regex));

@@ -282,4 +282,8 @@ public class Utils {
             return c2 - c1;
         }
     };
+
+    public static boolean isTrue(Boolean b) {
+        return b != null && b;
+    }
 }

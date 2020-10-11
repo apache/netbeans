@@ -285,7 +285,7 @@ jobs:
         run: ant -Dcluster.config=release commit-validation
 
   commit-validation:
-    name: Commit-validation (on Linux)
+    name: Commit Validation (on Linux)
     runs-on: ubuntu-18.04
     env:
       OPTS: -Dcluster.config=release -Dtest-unit-sys-prop.ignore.random.failures=true

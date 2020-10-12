@@ -73,3 +73,6 @@ nbbuild/installer/mac/newbuild/dmg/template.sparseimage.bz2
 
 # Used in a pure ant project (installer), so not identified as a project
 nbbuild/installer/jnlp/external/*
+
+# Temporary product of building VSCode extension
+java/java.lsp.server/nbcode/dist/nbcode.zip

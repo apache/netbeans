@@ -37,9 +37,12 @@ let client: LanguageClient;
 let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
 
-function findClusters(): string[] {
+function findClusters(myPath : string): string[] {
     let clusters = [];
     for (let e of vscode.extensions.all) {
+        if (e.extensionPath === myPath) {
+            continue;
+        }
         const dir = path.join(e.extensionPath, 'nbcode');
         if (!fs.existsSync(dir)) {
             continue;
@@ -65,7 +68,7 @@ export function activate(context: ExtensionContext) {
     let specifiedJDK = workspace.getConfiguration('netbeans').get('jdkhome');
 
     let info = {
-        clusters : findClusters(),
+        clusters : findClusters(context.extensionPath),
         extensionPath: context.extensionPath,
         storagePath : context.globalStoragePath,
         jdkHome : specifiedJDK

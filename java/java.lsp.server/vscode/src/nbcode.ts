@@ -58,9 +58,7 @@ export function launch(
     }
 
     let clusterPath = info.clusters.join(path.delimiter);
-    let ideArgs: string[] = [
-        "--clusters", clusterPath
-    ];
+    let ideArgs: string[] = [];
     if (info.jdkHome) {
         ideArgs = ['--jdkhome', info.jdkHome as string];
     }
@@ -69,6 +67,9 @@ export function launch(
     let process: ChildProcessByStdio<any, Readable, Readable> = spawn(nbcodePath, ideArgs, {
         cwd : userDir,
         stdio : ["ignore", "pipe", "pipe"],
+        env : Object.assign({
+            'extra_clusters' : clusterPath
+        }, global.process.env)
     });
     return process;
 }

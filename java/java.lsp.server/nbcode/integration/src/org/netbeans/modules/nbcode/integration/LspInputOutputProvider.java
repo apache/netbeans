@@ -16,9 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-public class VerifyJDK14 {
-    public static void main(String[] args) {
-        if (Runtime.version().compareTo(Runtime.Version.parse("14-build")) < 0)
-            throw new IllegalStateException("Not JDK 14+.");
-    }
+package org.netbeans.modules.nbcode.integration;
+
+import org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider;
+import org.netbeans.spi.io.InputOutputProvider;
+import org.openide.util.lookup.ServiceProvider;
+
+@ServiceProvider(service = InputOutputProvider.class)
+public final class LspInputOutputProvider extends AbstractLspInputOutputProvider {
 }

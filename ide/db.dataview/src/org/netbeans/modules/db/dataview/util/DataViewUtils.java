@@ -190,10 +190,11 @@ public class DataViewUtils {
 
         if (isString(column.getJdbcType())) {
             strBuf.append("<tr> <td>&nbsp;").append(NbBundle.getMessage(DataViewUtils.class, "TOOLTIP_column_length")).append("</td> <td> &nbsp; : &nbsp; <b>");
+            strBuf.append(column.getDisplaySize()).append("</b> </td> </tr>");
         } else {
             strBuf.append("<tr> <td>&nbsp;").append(NbBundle.getMessage(DataViewUtils.class, "TOOLTIP_column_precision")).append("</td> <td> &nbsp; : &nbsp; <b>");
+            strBuf.append(column.getPrecision()).append("</b> </td> </tr>");
         }
-        strBuf.append(column.getPrecision()).append("</b> </td> </tr>");
 
         if (isScaleRequired(column.getJdbcType())) {
             strBuf.append("<tr> <td>&nbsp;").append(NbBundle.getMessage(DataViewUtils.class, "TOOLTIP_column_scale")).append("</td> <td> &nbsp; : &nbsp; <b>");

@@ -31,9 +31,10 @@ To build the VS Code extension invoke:
 ```bash
 netbeans$ ant build
 netbeans$ cd java/java.lsp.server
-java.lsp.server$ ant build-vscode-ext
+java.lsp.server$ ant build-vscode-ext -D3rdparty.modules=.*nbjavac.*
 ```
 
+The `3rdparty.modules` property doesn't have to be set at all.
 The resulting extension is then in the `build` directory, with the `.vsix` extension.
 
 ### Building for Development
@@ -42,13 +43,14 @@ If you want to develop the extension, use these steps for building instead:
 
 ```bash
 netbeans$ cd java/java.lsp.server
-java.lsp.server$ ant build-lsp-server
+java.lsp.server$ ant build-lsp-server -D3rdparty.modules=.*nbjavac.*
 java.lsp.server$ cd vscode
 vscode$ npm install
 vscode$ npm run watch
 ```
 
-This would be faster than building the `.vsix` file. Find the instructions
+The `3rdparty.modules` property doesn't have to be set at all.
+This target is faster than building the `.vsix` file. Find the instructions
 for running and debugging below.
 
 ### Cleaning

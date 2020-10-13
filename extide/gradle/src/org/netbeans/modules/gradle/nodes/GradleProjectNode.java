@@ -53,6 +53,7 @@ public class GradleProjectNode extends AbstractNode {
     public GradleProjectNode(Lookup lookup, NbGradleProjectImpl proj) {
         super(NodeFactorySupport.createCompositeChildren(proj, "Projects/" + NbGradleProject.GRADLE_PROJECT_TYPE + "/Nodes"), lookup); //NOI18N
         this.project = proj;
+        setName(proj.getProjectDirectory().getNameExt());
         info = ProjectUtils.getInformation(project);
         info.addPropertyChangeListener(new PropertyChangeListener() {
             @Override

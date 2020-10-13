@@ -69,7 +69,7 @@ public final class BuildScriptsNode extends AnnotatedAbstractNode {
 
     // The order in this array determines the order of the nodes under Build Scripts
     private final static Kind[] SCRIPTS = new Kind[] {
-        BUILD_SRC, USER_PROPERTIES, ROOT_SCRIPT, ROOT_PROPERTIES, BUILD_SCRIPT, PROJECT_PROPERTIES
+        BUILD_SRC, USER_PROPERTIES, SETTINGS_SCRIPT, ROOT_SCRIPT, ROOT_PROPERTIES, BUILD_SCRIPT, PROJECT_PROPERTIES
     };
 
     @Override
@@ -133,6 +133,8 @@ public final class BuildScriptsNode extends AnnotatedAbstractNode {
                     return createBuildFileNode(fo, isRoot ? null : Bundle.LBL_ProjectSuffixt());
                 case USER_PROPERTIES:
                     return createBuildFileNode(fo, Bundle.LBL_UserSuffix());
+                case SETTINGS_SCRIPT:
+                    return createBuildFileNode(fo, null);
                 case BUILD_SRC:
                     return SubProjectsNode.createSubProjectNode(fo);
                 default:

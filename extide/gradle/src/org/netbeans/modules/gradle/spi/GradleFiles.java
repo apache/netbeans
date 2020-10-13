@@ -257,26 +257,41 @@ public final class GradleFiles implements Serializable {
      * @return
      */
     public File getFile(Kind kind) {
-        switch (kind) {
-            case BUILD_SCRIPT:
-                return buildScript != null ? buildScript : new File(projectDir, BUILD_FILE_NAME);
-            case ROOT_SCRIPT:
-                return parentScript != null ? parentScript : new File(rootDir, BUILD_FILE_NAME);
-            case SETTINGS_SCRIPT:
-                return settingsScript != null ? settingsScript : new File(rootDir, SETTINGS_FILE_NAME);
-
-            case PROJECT_PROPERTIES:
-                return new File(projectDir, GRADLE_PROPERTIES_NAME);
-            case ROOT_PROPERTIES:
-                return new File(rootDir, GRADLE_PROPERTIES_NAME);
-            case USER_PROPERTIES: {
-                File guh = GradleSettings.getDefault().getGradleUserHome();
-                return new File(guh, GRADLE_PROPERTIES_NAME);
+        if (isBuildSrcProject()) {
+            switch (kind) {
+                case BUILD_SCRIPT:
+                    return buildScript != null ? buildScript : new File(projectDir, BUILD_FILE_NAME);
+                case PROJECT_PROPERTIES:
+                    return new File(projectDir, GRADLE_PROPERTIES_NAME);
+                case USER_PROPERTIES: {
+                    File guh = GradleSettings.getDefault().getGradleUserHome();
+                    return new File(guh, GRADLE_PROPERTIES_NAME);
+                }
+                default:
+                    return null;
             }
-            case BUILD_SRC:
-                return isBuildSrcProject() ? null : new File(rootDir, "buildSrc"); //NOI18N
-            default:
-                return null;
+        } else {
+            switch (kind) {
+                case BUILD_SCRIPT:
+                    return buildScript != null ? buildScript : new File(projectDir, BUILD_FILE_NAME);
+                case ROOT_SCRIPT:
+                    return parentScript != null ? parentScript : new File(rootDir, BUILD_FILE_NAME);
+                case SETTINGS_SCRIPT:
+                    return settingsScript != null ? settingsScript : new File(rootDir, SETTINGS_FILE_NAME);
+
+                case PROJECT_PROPERTIES:
+                    return new File(projectDir, GRADLE_PROPERTIES_NAME);
+                case ROOT_PROPERTIES:
+                    return new File(rootDir, GRADLE_PROPERTIES_NAME);
+                case USER_PROPERTIES: {
+                    File guh = GradleSettings.getDefault().getGradleUserHome();
+                    return new File(guh, GRADLE_PROPERTIES_NAME);
+                }
+                case BUILD_SRC:
+                    return new File(rootDir, "buildSrc"); //NOI18N
+                default:
+                    return null;
+            }
         }
     }
 

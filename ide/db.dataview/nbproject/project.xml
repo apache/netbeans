@@ -151,13 +151,25 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
-                <friend>org.netbeans.modules.etl.editor</friend>
                 <friend>org.netbeans.modules.db.core</friend>
                 <friend>org.netbeans.modules.dm.virtual.db</friend>
                 <friend>org.netbeans.modules.edm.editor</friend>
+                <friend>org.netbeans.modules.etl.editor</friend>
                 <package>org.netbeans.modules.db.dataview.api</package>
                 <package>org.netbeans.modules.db.dataview.spi</package>
             </friend-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/commons-csv-1.8.jar</runtime-relative-path>
+                <binary-origin>external/commons-csv-1.8.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/fastexcel-0.10.15.jar</runtime-relative-path>
+                <binary-origin>external/fastexcel-0.10.15.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/opczip-1.2.0.jar</runtime-relative-path>
+                <binary-origin>external/opczip-1.2.0.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

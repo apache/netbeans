@@ -355,7 +355,7 @@ public final class TopologicalSortException extends Exception {
         /** Iterator over edges
          * @return iterator of Vertex items
          */
-        public Iterator edges() {
+        public Iterator<Vertex> edges() {
             if (!sorted) {
                 Collections.sort(edgesFrom);
                 sorted = true;

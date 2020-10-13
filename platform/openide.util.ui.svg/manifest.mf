@@ -3,3 +3,5 @@ AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.openide.util.ui.svg
 OpenIDE-Module-Localizing-Bundle: org/openide/util/svg/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.3
+OpenIDE-Module-Provides: org.openide.util.spi.SVGLoader
+

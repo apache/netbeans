@@ -252,6 +252,11 @@ class NbProjectInfoBuilder {
                         }
                         model.info["sourceset_${sourceSet.name}_configuration_annotation"] = sourceSet.annotationProcessorConfigurationName;
                     }
+                    beforeGradle('5.0') {
+                        if (model.info["sourceset_${sourceSet.name}_classpath_annotation"] == null || model.info["sourceset_${sourceSet.name}_classpath_annotation"].isEmpty()) {
+                            model.info["sourceset_${sourceSet.name}_classpath_annotation"] = storeSet(sourceSet.compileClasspath.files)
+                        }
+                    }
                     model.info["sourceset_${sourceSet.name}_configuration_compile"] = sourceSet.compileConfigurationName;
                     model.info["sourceset_${sourceSet.name}_configuration_runtime"] = sourceSet.runtimeConfigurationName;
                 }

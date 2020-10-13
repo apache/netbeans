@@ -574,6 +574,8 @@
         </folder>
        </folder>
        <folder name="JavaScript">
+           <folder name="Editor">
+           </folder>
            <folder name="Model">
                <folder name="MethodCallProcessors">
                    <file name="org-netbeans-modules-javascript2-editor-extjs-ExtModelExtender$ExtDefineMethodProcessor.instance">

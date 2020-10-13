@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -76,7 +77,7 @@ public final class JavaDocumentationTask<T> extends BaseTask {
             }
         }
         if (!controller.getElementUtilities().isErroneous(el)) {
-            switch (el.getKind()) {
+            switch (simplifyElementKind(el.getKind())) {
                 case MODULE:
                 case PACKAGE:
                 case ANNOTATION_TYPE:
@@ -104,4 +105,11 @@ public final class JavaDocumentationTask<T> extends BaseTask {
         }
         return path;
     }    
+
+    private static ElementKind simplifyElementKind(ElementKind kind) {
+        if (TreeShims.RECORD.equals(kind.name())) {
+            return ElementKind.CLASS;
+        }
+        return kind;
+    }
 }

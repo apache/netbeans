@@ -18,12 +18,15 @@
  */
 package org.netbeans.modules.gradle.java.classpath;
 
+import java.io.IOException;
+import static junit.framework.TestCase.assertEquals;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
-import org.netbeans.modules.gradle.java.AbstractGradleJavaTestCase;
+import org.netbeans.modules.gradle.AbstractGradleProjectTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -31,7 +34,7 @@ import org.openide.filesystems.FileUtil;
  *
  * @author lkishalmi
  */
-public class GradleSourcesImplTest extends AbstractGradleJavaTestCase {
+public class GradleSourcesImplTest extends AbstractGradleProjectTestCase {
 
     public GradleSourcesImplTest(String name) {
         super(name);
@@ -55,4 +58,12 @@ public class GradleSourcesImplTest extends AbstractGradleJavaTestCase {
         assertFalse(groups[1].contains(source));
     }
 
+    public void testRootProjectSourceGroup() throws IOException {
+        FileObject d = createGradleProject(
+                "apply plugin: 'java'\n" +
+                "sourceSets { main { java { srcDirs = [ 'src', 'build/gen-src' ] }}}");
+        Project p = ProjectManager.getDefault().findProject(d);
+        SourceGroup[] groups = ProjectUtils.getSources(p).getSourceGroups(Sources.TYPE_GENERIC);
+        assertEquals(1, groups.length);
+    }
 }

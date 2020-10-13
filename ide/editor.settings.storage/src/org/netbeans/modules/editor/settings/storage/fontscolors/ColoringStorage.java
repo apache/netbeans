@@ -313,7 +313,7 @@ public final class ColoringStorage implements StorageDescription<String, Attribu
     private static final String V_PLAIN = "plain"; //NOI18N
     
     private static final String PUBLIC_ID = "-//NetBeans//DTD Editor Fonts and Colors settings 1.2//EN"; //NOI18N
-    private static final String SYSTEM_ID = "http://netbeans.apache.org/dtds/EditorFontsColors-1_2.dtd"; //NOI18N
+    private static final String SYSTEM_ID = "https://netbeans.apache.org/dtds/EditorFontsColors-1_2.dtd"; //NOI18N
 
     private static final String FA_TYPE = "nbeditor-settings-ColoringType"; //NOI18N
     public static final String FAV_TOKEN = "token"; //NOI18N

@@ -42,7 +42,7 @@ import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLIN
  * @author lkishalmi
  */
 @SuppressWarnings(value = "serial")
-@ActionID(id = "org.netbeans.modules.maven.refresh", category = "Project")
+@ActionID(id = "org.netbeans.modules.gradle.refresh", category = "Project")
 @ActionRegistration(displayName = "#ACT_Reload_Project", lazy=false)
 @ActionReference(position = 1700, path = "Projects/" + NbGradleProject.GRADLE_PROJECT_TYPE + "/Actions")
 @NbBundle.Messages("ACT_Reload_Project=Reload Project")

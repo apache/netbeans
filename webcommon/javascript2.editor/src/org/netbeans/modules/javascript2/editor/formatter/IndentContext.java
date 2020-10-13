@@ -23,8 +23,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
@@ -73,22 +74,31 @@ public final class IndentContext {
 
         this.embedded = !JsTokenId.JAVASCRIPT_MIME_TYPE.equals(context.mimePath())
                 && !JsTokenId.JSON_MIME_TYPE.equals(context.mimePath());
-
-        int lineStart;
-        try {
-            lineStart = Utilities.getRowStart((BaseDocument) context.document(),
-                    context.caretOffset());
-        } catch (BadLocationException ex) {
+        LineDocument doc = LineDocumentUtils.as(context.document(), LineDocument.class);
+        
+        int lineStart = -1;
+        if (doc != null) {
+            try {
+                lineStart = LineDocumentUtils.getLineStart(doc,
+                        context.caretOffset());
+            } catch (IndexOutOfBoundsException ex) {
+            }
+        }
+        if (lineStart == -1) {
             lineStart = context.caretOffset();
         }
         this.caretLineStart = lineStart;
 
-        int lineEnd;
-        try {
-            lineEnd = Utilities.getRowEnd((BaseDocument) context.document(),
-                    context.caretOffset());
-        } catch (BadLocationException ex) {
-            lineEnd = context.caretOffset();
+        int lineEnd = -1;
+        if (doc != null) {
+            try {
+                lineEnd = LineDocumentUtils.getLineEnd(doc,
+                        context.caretOffset());
+            } catch (BadLocationException | IndexOutOfBoundsException ex) {
+            }
+        }        
+        if (lineEnd == -1) {
+             lineEnd = context.caretOffset();
         }
         this.caretLineEnd = lineEnd;
     }

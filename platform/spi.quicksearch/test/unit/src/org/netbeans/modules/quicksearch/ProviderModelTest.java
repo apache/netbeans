@@ -41,7 +41,7 @@ public class ProviderModelTest extends NbTestCase {
     
     /** Tests ProviderModel functionality */
     public void testGetProviders () throws Exception {
-        UnitTestUtils.prepareTest(new String [] { "/org/netbeans/modules/quicksearch/resources/testGetProviders.xml" });
+        UnitTestUtils.prepareTest(new String [] { "org/netbeans/modules/quicksearch/resources/testGetProviders.xml" });
         
         ProviderModel model = ProviderModel.getInstance();
         

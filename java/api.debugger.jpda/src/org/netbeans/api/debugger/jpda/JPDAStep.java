@@ -20,8 +20,11 @@ package org.netbeans.api.debugger.jpda;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Arrays;
 
 import com.sun.jdi.request.StepRequest;
+
+import org.netbeans.api.debugger.Properties;
 
 /**
  * Represents one JPDA step.
@@ -32,6 +35,8 @@ public abstract class JPDAStep {
     private int size;
     private int depth;
     private boolean hidden;
+    private String[] classFilters;
+    private boolean stepThroughFilters;
     /** Associated JPDA debugger */
     protected JPDADebugger debugger;
     private PropertyChangeSupport pcs;
@@ -64,6 +69,9 @@ public abstract class JPDAStep {
         this.depth = depth;
         this.debugger = debugger;
         this.hidden = false;
+        Properties p = Properties.getDefault().getProperties("debugger.options.JPDA"); // NOI18N
+        boolean useStepFilters = p.getBoolean("UseStepFilters", true);
+        this.stepThroughFilters = useStepFilters && p.getBoolean("StepThroughFilters", false);
         pcs = new PropertyChangeSupport(this);
     }
    
@@ -111,6 +119,58 @@ public abstract class JPDAStep {
      */
     public int getDepth() {
         return depth;
+    }
+    
+    /**
+     * Add additional class exclusion filters to this step.
+     * The provided list of class filters is combined with the current
+     * {@link SmartSteppingFilter#getExclusionPatterns()} just for this step.
+     *
+     * @param classFilters A list of class filters
+     * @since 3.19
+     */
+    public void addSteppingFilters(String... classFilters) {
+        if (this.classFilters == null) {
+            this.classFilters = classFilters;
+        } else {
+            int cfl = this.classFilters.length;
+            this.classFilters = Arrays.copyOf(this.classFilters, cfl + classFilters.length);
+            System.arraycopy(classFilters, 0, this.classFilters, cfl, classFilters.length);
+        }
+    }
+    
+    /**
+     * Get the additional exclusion filters of this step.
+     *
+     * @return A list of exclusion patterns, or <code>null</code> when no additional
+     * filters are provided
+     * @since 3.19
+     */
+    public String[] getSteppingFilters() {
+        return classFilters;
+    }
+    
+    /**
+     * Set whether this step is stepping through exclusion filters, or not.
+     * The default value is taken from the option property.
+     *
+     * @param stepThroughFilters <code>true</code> to step through the filters,
+     *        <code>false</code> otherwise
+     * @since 3.19
+     */
+    public void setStepThroughFilters(boolean stepThroughFilters) {
+        this.stepThroughFilters = stepThroughFilters;
+    }
+    
+    /**
+     * Test whether this step is stepping through the exclusion filters.
+     *
+     * @return <code>true</code> to step through the filters,
+     *         <code>false</code> otherwise
+     * @since 3.19
+     */
+    public boolean isStepThroughFilters() {
+        return stepThroughFilters;
     }
     
     /** Adds the step request to the associated

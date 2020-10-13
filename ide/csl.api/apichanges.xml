@@ -25,6 +25,31 @@
 <apidef name="csl.api">Common Scripting Language API</apidef>
 </apidefs>
 <changes>
+    <change id="ExtraMockServices">
+        <summary>Allow subclasses to inject instances to MockLookup</summary>
+        <version major="2" minor="65"/>
+        <date day="30" month="9" year="2020"/>
+        <author login="sdedic"/>
+        <compatibility addition="yes"/>
+        <description>
+            Subclasses of <code>o.n.m.csl.api.test.TestBase</code> may subclass <code>createExtraMockLookupContent</code> to
+            add extra services into the <code>MockLookup</code> during test setup.
+        </description>
+        <class package="org.netbeans.modules.csl.api.test" name="TestBase" link="no"/>
+    </change>
+    <change id="Remove-BaseDocument">
+        <summary>BaseDocument references reduced</summary>
+        <version major="2" minor="65"/>
+        <date day="30" month="9" year="2020"/>
+        <author login="sdedic"/>
+        <compatibility addition="yes" deprecation="yes"/>
+        <description>
+            Decprecated API dependency on BaseDocument that introduces (unnecessary) dependency on <code>editor.lib</code> module
+            in clients.
+        </description>
+        <class package="org.netbeans.modules.csl.api" name="EditList"/>
+        <class package="org.netbeans.modules.csl.spi" name="GsfUtilities"/>
+    </change>
     <change id="TypesSplit">
         <summary>Separate common non UI classes</summary>
         <version major="2" minor="54"/>

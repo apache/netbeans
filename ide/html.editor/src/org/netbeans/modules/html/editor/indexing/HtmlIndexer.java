@@ -28,8 +28,8 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.html.editor.api.HtmlKit;
 import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
 import org.netbeans.modules.html.editor.api.index.HtmlIndex;
+import org.netbeans.modules.html.editor.lib.api.HtmlParsingResult;
 import org.netbeans.modules.parsing.api.Snapshot;
-import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
@@ -53,8 +53,6 @@ public class HtmlIndexer extends EmbeddingIndexer {
     private static final Logger LOGGER = Logger.getLogger(HtmlIndexer.class.getSimpleName());
     private static final boolean LOG = LOGGER.isLoggable(Level.FINE);
 
-    public static final String REFERS_KEY = "imports"; //NOI18N
-    
     private static RequestProcessor RP = new RequestProcessor();
 
     @Override
@@ -65,12 +63,12 @@ public class HtmlIndexer extends EmbeddingIndexer {
                 LOGGER.log(Level.FINE, "indexing {0}", fo.getPath()); //NOI18N
             }
 
-            HtmlFileModel model = new HtmlFileModel((HtmlParserResult)parserResult);
+            HtmlFileModel model = new HtmlFileModel(parserResult, (HtmlParsingResult)parserResult);
 
             IndexingSupport support = IndexingSupport.getInstance(context);
             IndexDocument document = support.createDocument(indexable);
 
-            storeEntries(model.getReferences(), document, REFERS_KEY);
+            storeEntries(model.getReferences(), document, HtmlIndex.REFERS_KEY);
 
             support.addDocument(document);
 

@@ -1,3 +1,5 @@
+# NBCode: A NetBeans based Extension for VSCode
+
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,21 +21,22 @@
 
 -->
 
-This is an extension for VS Code. Based on "lsp-sample" from:
-https://github.com/microsoft/vscode-extension-samples
 
-# Building
+Get all the goodies of NetBeans via the VSCode user interface!
 
-To build the VS Code extension do:
+## Building
+
+To build the VS Code extension invoke:
 
 ```bash
+netbeans$ ant build
 netbeans$ cd java/java.lsp.server
 java.lsp.server$ ant build-vscode-ext
 ```
 
 The resulting extension is then in the `build` directory, with the `.vsix` extension.
 
-# Building for Development
+### Building for Development
 
 If you want to develop the extension, use these steps for building instead:
 
@@ -42,31 +45,47 @@ netbeans$ cd java/java.lsp.server
 java.lsp.server$ ant build-lsp-server
 java.lsp.server$ cd vscode
 vscode$ npm install
-vscode$ npm run compile
+vscode$ npm run watch
 ```
 
-# Running and Debugging
+This would be faster than building the `.vsix` file. Find the instructions
+for running and debugging below.
+
+### Cleaning
+
+Often it is also important to properly clean everything. Use:
+
+```bash
+java.lsp.server$ ant clean-vscode-server
+java.lsp.server$ cd ../..
+netbeans$ ant clean
+```
+
+## Running and Debugging
+
+Have a sample Maven project, open it in NetBeans first and select the main file for both
+the Run and Debug actions.
 
 To use the extension created for developement you can run VSCode with
 following parameter:
 
 ```bash
-vscode$ code --extensionDevelopmentPath=`pwd` name_of_folder_to_open
+vscode$ code --extensionDevelopmentPath=`pwd` path_to_the_maven_project
 ```
 
 Or you can open the `vscode` folder in `code` directly and use **F5** to
-debug the extension's typescript code.
+debug the extension's *typescript code*.
 
-The idea when debugging Java code is to launch the NetBeans part of the LSP
-system first, provide suitable debug arguments:
+To debug the *Java code*, launch the NetBeans part of the VSCode system first
+and specify suitable debug arguments:
 
 ```bash
-vscode$ ./nb-java-lsp-server/bin/nb-java-lsp-server -J-agentlib:jdwp=transport=dt_socket,server=y,address=8000
+vscode$ npm run nbcode -- --jdkhome /jdk-14/ -J-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000
 ```
 
-and then connect to with debugger setup all breakpoints and then also connect
-from the VSCode extension:
+Connect to the process with Java debugger, setup all breakpoints. Then launch 
+and connect from the VSCode extension:
 
 ```bash
-vscode$ code --extensionDevelopmentPath=`pwd` name_of_folder_to_open
+vscode$ code --extensionDevelopmentPath=`pwd` path_to_the_maven_project
 ```

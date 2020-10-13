@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -58,6 +59,7 @@ import org.json.simple.parser.ParseException;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.openide.awt.Notification;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.util.Exceptions;
@@ -201,7 +203,31 @@ public final class GradleDistributionManager {
      *         the Gradle distribution cannot be determined form it.
      */
     public GradleDistribution distributionFromWrapper(File gradleProjectRoot) throws IOException, URISyntaxException {
-        File wrapperProps = new File(gradleProjectRoot, "gradle/wrapper/gradle-wrapper.properties"); //NOI18N
+        URI uri = getWrapperDistributionURI(gradleProjectRoot);
+        Matcher m = DIST_VERSION_PATTERN.matcher(uri.getPath());
+        if (m.matches()) {
+            String version = m.group(1);
+            return new GradleDistribution(distributionBaseDir(uri, version), uri, version);
+        } else {
+            throw new URISyntaxException(uri.getPath(), "Cannot get the Gradle distribution version from the URI"); //NOI18N
+        }
+    }
+
+    /**
+     * Retrieves a normalized URI for the Gradle Wrapper distribution for the
+     * given root project directory.
+     *
+     * @param rootDir the root project directory
+     * @return the normalized URI of the Gradle wrapper distribution.
+     * @throws IOException if there is no <code>gradle-wrapper.properties</code>
+     *         or it cannot be read.
+     * @throws URISyntaxException if the <code>distributionUrl</code> is missing
+     *         or cannot be resolved to a valid URI.
+     */
+    public static URI getWrapperDistributionURI(File rootDir) throws IOException, URISyntaxException {
+        URI ret;
+
+        File wrapperProps =  new File(rootDir, GradleFiles.WRAPPER_PROPERTIES);
         if (wrapperProps.isFile() && wrapperProps.canRead()) {
             Properties wrapper = new Properties();
             try (FileInputStream is = new FileInputStream(wrapperProps)) {
@@ -211,13 +237,9 @@ public final class GradleDistributionManager {
             }
             String distUrlProp = wrapper.getProperty("distributionUrl"); //NOI18N
             if (distUrlProp != null) {
-                URI uri = new URI(distUrlProp);
-                Matcher m = DIST_VERSION_PATTERN.matcher(distUrlProp);
-                if (m.matches()) {
-                    String version = m.group(1);
-                    return new GradleDistribution(distributionBaseDir(uri, version), uri, version);
-                } else {
-                    throw new URISyntaxException(distUrlProp, "Cannot get the Gradle distribution version from the URI"); //NOI18N
+                ret = new URI(distUrlProp);
+                if (ret.getScheme() == null) {
+                    ret = wrapperProps.getParentFile().toPath().resolve(distUrlProp).normalize().toUri();
                 }
             } else {
                 throw new URISyntaxException("", "No distributionUrl property found in: " + wrapperProps.getAbsolutePath()); //NOI18N
@@ -225,6 +247,7 @@ public final class GradleDistributionManager {
         } else {
             throw new FileNotFoundException("Gradle Wrapper properties not found at: " + wrapperProps.getAbsolutePath()); //NOI18N
         }
+        return ret;
     }
 
     /**
@@ -418,9 +441,41 @@ public final class GradleDistributionManager {
             return isAvailable() ? null : RP.schedule(new DownloadTask(this), 500, TimeUnit.MILLISECONDS);
         }
 
+        /**
+         * This method only compare the version attribute. It could happen that
+         * two distribution are equal using this method when their versions are
+         * equal, though the {@link #equals(java.lang.Object)} return false as
+         * that is based on comparing the distribution directory.
+         * @param o the GradleDistribution to compare with.
+         * @return a signed value comparing the version attribute of this and
+         *         the specified distribution.
+         */
         @Override
         public int compareTo(GradleDistribution o) {
             return version.compareTo(o.version);
+        }
+
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 97 * hash + Objects.hashCode(this.distributionDir);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final GradleDistribution other = (GradleDistribution) obj;
+            return Objects.equals(this.distributionDir, other.distributionDir);
         }
 
         @Override

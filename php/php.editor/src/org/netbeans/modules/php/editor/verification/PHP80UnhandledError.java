@@ -40,14 +40,17 @@ import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
+import org.netbeans.modules.php.editor.parser.astnodes.Dispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.ExpressionStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MatchArm;
 import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
+import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.ThrowExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
@@ -206,6 +209,24 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
+        @Override
+        public void visit(FieldAccess node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkNullsafeOperator(node);
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(MethodInvocation node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkNullsafeOperator(node);
+            super.visit(node);
+        }
+
         private void addLastParam(List<FormalParameter> parameters) {
             if (!parameters.isEmpty()) {
                 lastParams.add(parameters.get(parameters.size() - 1));
@@ -316,6 +337,12 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             }
             if (type instanceof Identifier && isStatic((Identifier) type)) {
                 createError(returnType);
+            }
+        }
+
+        private void checkNullsafeOperator(Dispatch dispatch) {
+            if (dispatch.isNullsafe()) {
+                createError(dispatch);
             }
         }
 

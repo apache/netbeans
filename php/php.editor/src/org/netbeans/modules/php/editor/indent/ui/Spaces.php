@@ -100,6 +100,10 @@ public function unionTypesExample(
         ): int|float|null {
     return null;
 }
+
+public function nullsafeOperatorExample(object $object){
+    $object?->nullsafe();
+}
 }
 
 // Wrapping: Method Call Arguments must be set

@@ -322,6 +322,10 @@ public final class CodeStyle {
         return preferences.getBoolean(SPACE_AROUND_OBJECT_OPS, getDefaultAsBoolean(SPACE_AROUND_OBJECT_OPS));
     }
 
+    public boolean spaceAroundNullsafeObjectOps() {
+        return preferences.getBoolean(SPACE_AROUND_NULLSAFE_OBJECT_OPS, getDefaultAsBoolean(SPACE_AROUND_NULLSAFE_OBJECT_OPS));
+    }
+
     public boolean spaceAroundDeclareEqual() {
         return preferences.getBoolean(SPACE_AROUND_DECLARE_EQUAL, getDefaultAsBoolean(SPACE_AROUND_DECLARE_EQUAL));
     }

@@ -840,7 +840,7 @@
                         <Block start='1496' end='1537' isCurly='true'>
                             <EchoStatement start='1502' end='1535'>
                                 <InfixExpression start='1507' end='1534' operator='CONCAT'>
-                                    <MethodInvocation start='1507' end='1524'>
+                                    <MethodInvocation start='1507' end='1524' isNullsafe='false'>
                                         <Variable start='1507' end='1510' isDollared='true'>
                                             <Identifier start='1508' end='1510' name='ex'/>
                                         </Variable>
@@ -874,7 +874,7 @@
                             </FucntionName>
                             <Parameters>
                                 <StaticConstantAccess start='1426' end='1455'>
-                                    <MethodInvocation start='1426' end='1448'>
+                                    <MethodInvocation start='1426' end='1448' isNullsafe='false'>
                                         <Variable start='1426' end='1431' isDollared='true'>
                                             <Identifier start='1427' end='1431' name='test'/>
                                         </Variable>
@@ -911,7 +911,7 @@
                     </FucntionName>
                     <Parameters>
                         <StaticConstantAccess start='1548' end='1575'>
-                            <MethodInvocation start='1548' end='1568'>
+                            <MethodInvocation start='1548' end='1568' isNullsafe='false'>
                                 <Variable start='1548' end='1553' isDollared='true'>
                                     <Identifier start='1549' end='1553' name='test'/>
                                 </Variable>

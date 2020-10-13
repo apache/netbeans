@@ -138,6 +138,7 @@ public enum PHPTokenId implements TokenId {
     PHP_IF("if", "keyword"), //NOI18N
     PHP_DECLARE(null, "keyword"), //NOI18N
     PHP_OBJECT_OPERATOR(null, "operator"), //NOI18N
+    PHP_NULLSAFE_OBJECT_OPERATOR(null, "operator"), //NOI18N NETBEANS-4443 PHP 8.0
     PHP_SELF(null, "keyword"), //NOI18N
     PHP_COMMENT(null, "comment"), //NOI18N
     PHP_COMMENT_START(null, "comment"), //NOI18N

@@ -1245,6 +1245,18 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php80/mixedTypeError_01");
     }
 
+    public void testNullsafeOperator_01() throws Exception {
+        performTest("parser/php80/nullsafeOperator_01");
+    }
+
+    public void testNullsafeOperator_02() throws Exception {
+        performTest("parser/php80/nullsafeOperator_02");
+    }
+
+    public void testNullsafeOperator_03() throws Exception {
+        performTest("parser/php80/nullsafeOperator_03");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

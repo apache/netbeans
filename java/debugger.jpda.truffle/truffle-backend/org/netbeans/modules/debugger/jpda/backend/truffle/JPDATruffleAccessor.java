@@ -27,6 +27,7 @@ import com.oracle.truffle.api.debug.Debugger;
 import com.oracle.truffle.api.debug.DebuggerSession;
 import com.oracle.truffle.api.debug.SuspendedEvent;
 import com.oracle.truffle.api.nodes.LanguageInfo;
+import com.oracle.truffle.api.source.SourceSection;
 
 import java.io.IOException;
 import java.net.URI;
@@ -451,6 +452,11 @@ public class JPDATruffleAccessor extends Object {
         // and methods can be executed via JPDA debugger.
     }
     
+    static void breakpointResolvedAccess(Breakpoint breakpoint, int startLine, int startColumn) {
+        // A Java breakpoint is submitted on this method.
+        // When a Truffle breakpoint gets resolved, this method is called.
+    }
+    
     static Breakpoint[] setLineBreakpoint(String uriStr, int line,
                                           int ignoreCount, String condition) throws URISyntaxException {
         return doSetLineBreakpoint(new URI(uriStr), line, ignoreCount, condition, false);
@@ -513,6 +519,13 @@ public class JPDATruffleAccessor extends Object {
         }
         if (oneShot) {
             bb.oneShot();
+        } else {
+            bb.resolveListener(new Breakpoint.ResolveListener() {
+                @Override
+                public void breakpointResolved(Breakpoint breakpoint, SourceSection section) {
+                    breakpointResolvedAccess(breakpoint, section.getStartLine(), section.getStartColumn());
+                }
+            });
         }
         Breakpoint lb = bb.build();
         if (condition != null) {

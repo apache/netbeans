@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.debugger.jpda.truffle.breakpoints.impl;
 
+import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.ArrayReference;
 import com.sun.jdi.ClassNotLoadedException;
 import com.sun.jdi.ClassType;
@@ -35,9 +36,7 @@ import com.sun.jdi.VirtualMachine;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -50,15 +49,16 @@ import java.util.logging.Logger;
 
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.debugger.jpda.CallStackFrame;
+import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAThread;
-import org.netbeans.api.java.queries.BinaryForSourceQuery;
-import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectManager;
-import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.api.project.SourceGroup;
-import org.netbeans.api.project.Sources;
+import org.netbeans.api.debugger.jpda.LocalVariable;
+import org.netbeans.api.debugger.jpda.MethodBreakpoint;
+import org.netbeans.api.debugger.jpda.event.JPDABreakpointEvent;
+import org.netbeans.api.debugger.jpda.event.JPDABreakpointListener;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
+import org.netbeans.modules.debugger.jpda.expr.JDIVariable;
 import org.netbeans.modules.debugger.jpda.jdi.ClassNotPreparedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ClassTypeWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
@@ -71,11 +71,9 @@ import org.netbeans.modules.debugger.jpda.truffle.PersistentValues;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.source.Source;
 import org.netbeans.modules.debugger.jpda.truffle.source.SourceBinaryTranslator;
+import org.netbeans.modules.javascript2.debug.breakpoints.JSBreakpointStatus;
 import org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint;
-import org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 
@@ -93,6 +91,7 @@ public class TruffleBreakpointsHandler {
             "(Lorg/netbeans/modules/debugger/jpda/backend/truffle/JPDATruffleDebugManager;Ljava/lang/String;IILjava/lang/String;)Lcom/oracle/truffle/api/debug/Breakpoint;";   // NOI18N
     public static final String ACCESSOR_REMOVE_BREAKPOINT = "removeBreakpoint"; // NOI18N
     public static final String ACCESSOR_REMOVE_BREAKPOINT_SIGNAT = "(Ljava/lang/Object;)V";    // NOI18N
+    private static final String ACCESSOR_LINE_BREAKPOINT_RESOLVED = "breakpointResolvedAccess";
     
     private final JPDADebugger debugger;
     private ClassType accessorClass;
@@ -100,6 +99,8 @@ public class TruffleBreakpointsHandler {
     private volatile boolean initialBreakpointsSubmitted = false;
     private final Map<JSLineBreakpoint, Set<ObjectReference>> breakpointsMap = new HashMap<>();
     private final JSBreakpointPropertyChangeListener breakpointsChangeListener = new JSBreakpointPropertyChangeListener();
+    private final Object breakpointResolvedHandlerLock = new Object();
+    private Breakpoint breakpointResolvedHandler;
     
     public TruffleBreakpointsHandler(JPDADebugger debugger) {
         this.debugger = debugger;
@@ -111,14 +112,63 @@ public class TruffleBreakpointsHandler {
                 jsbp.removePropertyChangeListener(breakpointsChangeListener);
             }
         }
+        if (breakpointResolvedHandler != null) {
+            DebuggerManager.getDebuggerManager().removeBreakpoint(breakpointResolvedHandler);
+        }
     }
     
+    private void setBreakpointResolvedHandler(ClassType accessorClass) {
+        synchronized (breakpointResolvedHandlerLock) {
+            if (this.breakpointResolvedHandler == null) {
+                MethodBreakpoint methodBreakpoint = MethodBreakpoint.create(accessorClass.name(), ACCESSOR_LINE_BREAKPOINT_RESOLVED);
+                methodBreakpoint.setSession(debugger);
+                methodBreakpoint.setHidden(true);
+                methodBreakpoint.setSuspend(JPDABreakpoint.SUSPEND_EVENT_THREAD);
+                methodBreakpoint.addJPDABreakpointListener(new JPDABreakpointListener() {
+                    @Override
+                    public void breakpointReached(JPDABreakpointEvent event) {
+                        LocalVariable[] localVariables;
+                        try {
+                            CallStackFrame[] topFrame = event.getThread().getCallStack(0, 1);
+                            localVariables = topFrame[0].getLocalVariables();
+                        } catch (AbsentInformationException ex) {
+                            localVariables = null;
+                        }
+                        if (localVariables != null) {
+                            JSLineBreakpoint breakpoint = findBreakpoint((ObjectReference) ((JDIVariable) localVariables[0]).getJDIValue());
+                            if (breakpoint != null) {
+                                int line = (int) localVariables[1].createMirrorObject();
+                                breakpoint.setLine(line);
+                                JSBreakpointStatus.setValid(breakpoint, "resolved");
+                            }
+                        }
+                        event.resume();
+                    }
+                });
+                DebuggerManager.getDebuggerManager().addBreakpoint(methodBreakpoint);
+                this.breakpointResolvedHandler = methodBreakpoint;
+            }
+        }
+    }
+
+    private JSLineBreakpoint findBreakpoint(ObjectReference bpValue) {
+        synchronized (breakpointsMap) {
+            for (Map.Entry<JSLineBreakpoint, Set<ObjectReference>> bpEntry : breakpointsMap.entrySet()) {
+                if (bpEntry.getValue().contains(bpValue)) {
+                    return bpEntry.getKey();
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Call in method invoking
      */
     public void submitBreakpoints(ClassType accessorClass, ObjectReference debugManager, JPDAThreadImpl t) throws InvocationException {
         assert t.isMethodInvoking();
         this.accessorClass = accessorClass;
+        setBreakpointResolvedHandler(accessorClass);
         Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints();
         initialBreakpointsSubmitted = true;
         if (LOG.isLoggable(Level.FINE)) {

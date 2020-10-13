@@ -44,4 +44,16 @@ public class PHP80FeaturesTest extends PHPLexerTestBase {
     public void testMixedType_01() throws Exception {
         performTest("lexer/php80/mixedType_01");
     }
+
+    public void testNullsafeOperator_01() throws Exception {
+        performTest("lexer/php80/nullsafeOperator_01");
+    }
+
+    public void testNullsafeOperator_02() throws Exception {
+        performTest("lexer/php80/nullsafeOperator_02");
+    }
+
+    public void testNullsafeOperator_03() throws Exception {
+        performTest("lexer/php80/nullsafeOperator_03");
+    }
 }

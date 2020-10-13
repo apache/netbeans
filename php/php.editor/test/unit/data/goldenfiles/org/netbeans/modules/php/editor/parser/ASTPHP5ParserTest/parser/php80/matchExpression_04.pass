@@ -625,7 +625,7 @@
                                                         </Member>
                                                     </StaticConstantAccess>
                                                 </Conditions>
-                                                <FieldAccess start='1278' end='1292'>
+                                                <FieldAccess start='1278' end='1292' isNullsafe='false'>
                                                     <Variable start='1278' end='1283' isDollared='true'>
                                                         <Identifier start='1279' end='1283' name='this'/>
                                                     </Variable>
@@ -650,7 +650,7 @@
                                                         </Member>
                                                     </StaticConstantAccess>
                                                 </Conditions>
-                                                <MethodInvocation start='1331' end='1349'>
+                                                <MethodInvocation start='1331' end='1349' isNullsafe='false'>
                                                     <Variable start='1331' end='1336' isDollared='true'>
                                                         <Identifier start='1332' end='1336' name='this'/>
                                                     </Variable>
@@ -775,7 +775,7 @@
                         </NamespaceName>
                     </FucntionName>
                     <Parameters>
-                        <MethodInvocation start='1717' end='1733'>
+                        <MethodInvocation start='1717' end='1733' isNullsafe='false'>
                             <Variable start='1717' end='1726' isDollared='true'>
                                 <Identifier start='1718' end='1726' name='instance'/>
                             </Variable>
@@ -795,7 +795,7 @@
                 </FunctionInvocation>
             </ExpressionStatement>
             <ExpressionStatement start='1736' end='1755'>
-                <MethodInvocation start='1736' end='1754'>
+                <MethodInvocation start='1736' end='1754' isNullsafe='false'>
                     <Variable start='1736' end='1745' isDollared='true'>
                         <Identifier start='1737' end='1745' name='instance'/>
                     </Variable>

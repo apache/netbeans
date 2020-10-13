@@ -1499,7 +1499,8 @@ public final class VariousUtils {
     }
 
     private static boolean isReference(Token<PHPTokenId> token) {
-        return token.id().equals(PHPTokenId.PHP_OBJECT_OPERATOR);
+        return token.id().equals(PHPTokenId.PHP_OBJECT_OPERATOR)
+                || token.id().equals(PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR);
     }
 
     private static boolean isNamespaceSeparator(Token<PHPTokenId> token) {

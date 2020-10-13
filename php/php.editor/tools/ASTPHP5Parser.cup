@@ -26,6 +26,9 @@ import org.openide.util.Pair;
 parser code {:
     private static short[][] getActionTable() {}
 
+    enum Access {
+        NON_STATIC, STATIC, NULLSAFE
+    }
     protected final static Integer IMPLICIT_PUBLIC = Integer.valueOf(BodyDeclaration.Modifier.IMPLICIT_PUBLIC);
     protected final static Integer PUBLIC = Integer.valueOf(BodyDeclaration.Modifier.PUBLIC);
     protected final static Integer PRIVATE = Integer.valueOf(BodyDeclaration.Modifier.PRIVATE);
@@ -64,10 +67,10 @@ parser code {:
         return anonymousClassCounter;
     }
 
-    public VariableBase createDispatch(VariableBase dispatcher, Pair<Expression, Boolean> pair, List dimensions) {
+    public VariableBase createDispatch(VariableBase dispatcher, Pair<Expression, Access> pair, List dimensions) {
         VariableBase dispatch = null;
         Expression property = pair.first();
-        boolean isStatic = pair.second();
+        Access access = pair.second();
         if (property instanceof DereferencedArrayAccess) {
             DereferencedArrayAccess arrayAccess = (DereferencedArrayAccess) property;
             dimensions = new LinkedList();
@@ -79,7 +82,7 @@ parser code {:
             property = arrayAccess.getDispatcher();
         }
         if (property instanceof Variable) {
-            if (isStatic) {
+            if (access == Access.STATIC) {
                 Variable variable = (Variable) property;
                 if (variable.isDollared() || variable instanceof ArrayAccess) {
                     dispatch = new StaticFieldAccess(dispatcher.getStartOffset(), property.getEndOffset(), dispatcher, (Variable) property);
@@ -91,13 +94,15 @@ parser code {:
                             new Identifier(variable.getStartOffset(), variable.getEndOffset(), name));
                 }
             } else {
-                dispatch = new FieldAccess(dispatcher.getStartOffset(), property.getEndOffset(), dispatcher, (Variable)property);
+                boolean isNullsafe = access == Access.NULLSAFE;
+                dispatch = new FieldAccess(dispatcher.getStartOffset(), property.getEndOffset(), dispatcher, (Variable)property, isNullsafe);
             }
         } else if (property instanceof FunctionInvocation) {
-            if (isStatic) {
+            if (access == Access.STATIC) {
                 dispatch = new StaticMethodInvocation(dispatcher.getStartOffset(), property.getEndOffset(), dispatcher, (FunctionInvocation)property);
             } else {
-                dispatch = new MethodInvocation(dispatcher.getStartOffset(), property.getEndOffset(), dispatcher, (FunctionInvocation)property);
+                boolean isNullsafe = access == Access.NULLSAFE;
+                dispatch = new MethodInvocation(dispatcher.getStartOffset(), property.getEndOffset(), dispatcher, (FunctionInvocation)property, isNullsafe);
             }
         } else if (property instanceof ExpressionArrayAccess || property instanceof Identifier) {
             dispatch = new StaticConstantAccess(dispatcher.getStartOffset(), property.getEndOffset(), dispatcher, property);
@@ -114,15 +119,15 @@ parser code {:
         return dispatch;
     }
 
-    public VariableBase createDispatch(VariableBase dispatcher, VariableBase property, List dimensions) {
-        return createDispatch(dispatcher, Pair.of(property, false), null);
+    public VariableBase createDispatch(VariableBase dispatcher, VariableBase property, List dimensions, Access access) {
+        return createDispatch(dispatcher, Pair.of(property, access), null);
     }
 
-    public VariableBase createDispatch(VariableBase dispatcher, VariableBase property) {
-        return createDispatch(dispatcher, property, null);
+    public VariableBase createDispatch(VariableBase dispatcher, VariableBase property, Access access) {
+        return createDispatch(dispatcher, property, null, access);
     }
 
-    public VariableBase createDispatch(boolean isStatic, VariableBase var, Expression memberProperty, int memberPropertyleft, int memberPropertyright,
+    public VariableBase createDispatch(Access access, VariableBase var, Expression memberProperty, int memberPropertyleft, int memberPropertyright,
             List<Expression> paramsList, int paramsListright, List propertyList, List aa) {
         Expression firstVarProperty = null;
         if (paramsList == null) {
@@ -132,9 +137,9 @@ parser code {:
             firstVarProperty = new FunctionInvocation(memberPropertyleft, paramsListright, functionName, paramsList);
         }
 
-        // then get the aggregated list of properties ([->|::]...[->|::]...[->|::]...)
+        // then get the aggregated list of properties ([->|?->|::]...[->|?->|::]...[->|?->|::]...)
         LinkedList list = (LinkedList) propertyList;
-        list.addFirst(Pair.of(firstVarProperty, isStatic));
+        list.addFirst(Pair.of(firstVarProperty, access));
 
         // now create the dispatch(es) nodes
         VariableBase dispatch = null;
@@ -142,7 +147,7 @@ parser code {:
         List arrayDimensiones = aa;
         Iterator listIt = list.iterator();
         while (listIt.hasNext()) {
-            Pair<Expression, Boolean> property = (Pair<Expression, Boolean>) listIt.next();
+            Pair<Expression, Access> property = (Pair<Expression, Access>) listIt.next();
             dispatch = createDispatch(dispatcher, property, arrayDimensiones);
             dispatcher = dispatch;
             arrayDimensiones = new LinkedList();
@@ -150,7 +155,7 @@ parser code {:
         return dispatch;
     }
 
-    public Pair<Expression, Boolean> createDispatchProperty(boolean isStatic, Expression memberProperty, int memberPropertyleft, int memberPropertyright,
+    public Pair<Expression, Access> createDispatchProperty(Access access, Expression memberProperty, int memberPropertyleft, int memberPropertyright,
             List<Expression> paramsList, int paramsListright, List aa) {
         Expression result = null;
         if (paramsList == null) {
@@ -165,7 +170,26 @@ parser code {:
                 result = new DereferencedArrayAccess(result.getStartOffset(), index.getEndOffset(), (VariableBase) result, index);
             }
         }
-        return Pair.of(result, isStatic);
+        return Pair.of(result, access);
+    }
+
+    ClassName createClassName(VariableBase var, VariableBase firstVarProperty, List<Pair<VariableBase, Access>> propertyList, int varleft, int propertyListright, Access access) {
+        // then get the aggregated list of properties ([->|?->]...[->|?->]...[->|?->]...)
+        LinkedList<Pair<VariableBase, Access>> list = (LinkedList<Pair<VariableBase, Access>>) propertyList;
+        list.addFirst(Pair.of(firstVarProperty, access));
+
+        // now create the dispatch(es) nodes
+        VariableBase dispatch = null;
+        VariableBase dispatcher = var;
+        Iterator<Pair<VariableBase, Access>> listIt = list.iterator();
+        while (listIt.hasNext()) {
+            Pair<VariableBase, Access> property = listIt.next();
+            dispatch = createDispatch(dispatcher, property.first(), property.second());
+            dispatcher = dispatch;
+        }
+
+        // create class name from the dispatch
+        return new ClassName(varleft, propertyListright, dispatch);
     }
 
     interface ErrorStrategy {
@@ -288,6 +312,7 @@ terminal String T_INTERFACE;
 terminal String T_EXTENDS;
 terminal String T_IMPLEMENTS;
 terminal T_OBJECT_OPERATOR;
+terminal T_NULLSAFE_OBJECT_OPERATOR;
 terminal T_DOUBLE_ARROW;
 terminal String T_LIST;
 terminal String T_ARRAY;
@@ -540,7 +565,7 @@ non terminal VariableBase dereferencable_variable;
 non terminal VariableBase base_variable;
 non terminal VariableBase base_variable_without_reference_variable;
 non terminal List dynamic_class_name_variable_properties;
-non terminal VariableBase dynamic_class_name_variable_property;
+non terminal Pair<VariableBase, ASTPHP5Parser.Access> dynamic_class_name_variable_property;
 non terminal StaticConstantAccess static_class_constant;
 non terminal Expression static_reference_constant;
 non terminal Expression static_array_creation_with_access;
@@ -3754,22 +3779,13 @@ class_name:className
 dynamic_class_name_reference ::=
 base_variable:var T_OBJECT_OPERATOR object_property:firstVarProperty dynamic_class_name_variable_properties:propertyList
 {:
-    // then get the aggregated list of properties (->...->...->...)
-    LinkedList list = (LinkedList) propertyList;
-    list.addFirst(firstVarProperty);
+    ClassName name = parser.createClassName(var, firstVarProperty, propertyList, varleft, propertyListright, ASTPHP5Parser.Access.NON_STATIC);
+    RESULT = name;
+:}
 
-    // now create the dispatch(es) nodes
-    VariableBase dispatch = null;
-    VariableBase dispatcher = var;
-    Iterator listIt = list.iterator();
-    while (listIt.hasNext()) {
-        VariableBase property = (VariableBase)listIt.next();
-        dispatch = parser.createDispatch(dispatcher, property);
-        dispatcher = dispatch;
-    }
-
-    // create class name from the dispatch
-    ClassName name = new ClassName(varleft, propertyListright, dispatch);
+| base_variable:var T_NULLSAFE_OBJECT_OPERATOR object_property:firstVarProperty dynamic_class_name_variable_properties:propertyList
+{:
+    ClassName name = parser.createClassName(var, firstVarProperty, propertyList, varleft, propertyListright, ASTPHP5Parser.Access.NULLSAFE);
     RESULT = name;
 :}
 
@@ -3789,14 +3805,19 @@ dynamic_class_name_variable_properties:variables dynamic_class_name_variable_pro
 
 | /* empty */
 {:
-    RESULT = new LinkedList();
+    RESULT = new LinkedList<Pair<VariableBase, ASTPHP5Parser.Access>>();
 :}
 ;
 
 dynamic_class_name_variable_property ::=
 T_OBJECT_OPERATOR object_property:var
 {:
-    RESULT = var;
+    RESULT = Pair.of(var, ASTPHP5Parser.Access.NON_STATIC);
+:}
+
+| T_NULLSAFE_OBJECT_OPERATOR object_property:var
+{:
+    RESULT = Pair.of(var, ASTPHP5Parser.Access.NULLSAFE);
 :}
 ;
 
@@ -4499,32 +4520,44 @@ variable:var
 field_or_method_access ::=
 base_variable_with_function_calls:var T_OBJECT_OPERATOR object_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
 {:
-    RESULT = parser.createDispatch(false, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
+    RESULT = parser.createDispatch(ASTPHP5Parser.Access.NON_STATIC, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
+:}
+
+| base_variable_with_function_calls:var T_NULLSAFE_OBJECT_OPERATOR object_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
+{:
+    RESULT = parser.createDispatch(ASTPHP5Parser.Access.NULLSAFE, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
 :}
 
 //| base_variable_with_function_calls:var T_PAAMAYIM_NEKUDOTAYIM object_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
 | function_call:var T_PAAMAYIM_NEKUDOTAYIM static_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
 {:
-    RESULT = parser.createDispatch(true, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
+    RESULT = parser.createDispatch(ASTPHP5Parser.Access.STATIC, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
 :}
 
 | base_variable_without_reference_variable:var T_PAAMAYIM_NEKUDOTAYIM static_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
 {:
-    RESULT = parser.createDispatch(true, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
+    RESULT = parser.createDispatch(ASTPHP5Parser.Access.STATIC, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
 :}
 
 | parenthesis_expr:pe T_OBJECT_OPERATOR object_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
 {:
     // e.g. ($uvs = new UVS())->method();
     DereferencableVariable var = new DereferencableVariable(peleft, peright, pe.getExpression());
-    RESULT = parser.createDispatch(false, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
+    RESULT = parser.createDispatch(ASTPHP5Parser.Access.NON_STATIC, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
+:}
+
+| parenthesis_expr:pe T_NULLSAFE_OBJECT_OPERATOR object_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
+{:
+    // e.g. ($uvs = new UVS())?->method();
+    DereferencableVariable var = new DereferencableVariable(peleft, peright, pe.getExpression());
+    RESULT = parser.createDispatch(ASTPHP5Parser.Access.NULLSAFE, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
 :}
 
 | parenthesis_expr:pe T_PAAMAYIM_NEKUDOTAYIM static_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
 {:
     // e.g. ($uvs = new UVS())::staticMethod();
     DereferencableVariable var = new DereferencableVariable(peleft, peright, pe.getExpression());
-    RESULT = parser.createDispatch(true, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
+    RESULT = parser.createDispatch(ASTPHP5Parser.Access.STATIC, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
 :}
 ;
 
@@ -4556,12 +4589,17 @@ variable_properties:variables variable_property:variableProperty
 variable_property ::=
 T_OBJECT_OPERATOR object_property:memberProperty method_or_not:paramsList array_access_or_not:aa
 {:
-    RESULT = parser.createDispatchProperty(false, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, aa);
+    RESULT = parser.createDispatchProperty(ASTPHP5Parser.Access.NON_STATIC, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, aa);
+:}
+
+| T_NULLSAFE_OBJECT_OPERATOR object_property:memberProperty method_or_not:paramsList array_access_or_not:aa
+{:
+    RESULT = parser.createDispatchProperty(ASTPHP5Parser.Access.NULLSAFE, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, aa);
 :}
 
 | T_PAAMAYIM_NEKUDOTAYIM static_property:memberProperty method_or_not:paramsList array_access_or_not:aa
 {:
-    RESULT = parser.createDispatchProperty(true, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, aa);
+    RESULT = parser.createDispatchProperty(ASTPHP5Parser.Access.STATIC, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, aa);
 :}
 ;
 
@@ -5026,7 +5064,14 @@ tracked_variable:var
 | tracked_variable:var T_OBJECT_OPERATOR string_st:string
 {:
     Variable property = new Variable(stringleft, stringright, string);
-    VariableBase dispatch = parser.createDispatch(var, property);
+    VariableBase dispatch = parser.createDispatch(var, property, ASTPHP5Parser.Access.NON_STATIC);
+    RESULT = dispatch;
+:}
+
+| tracked_variable:var T_NULLSAFE_OBJECT_OPERATOR string_st:string
+{:
+    Variable property = new Variable(stringleft, stringright, string);
+    VariableBase dispatch = parser.createDispatch(var, property, ASTPHP5Parser.Access.NULLSAFE);
     RESULT = dispatch;
 :}
 

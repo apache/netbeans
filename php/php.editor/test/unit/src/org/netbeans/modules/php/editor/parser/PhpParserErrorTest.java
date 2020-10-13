@@ -1172,4 +1172,16 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php80/mixedTypeError_01.php");
     }
 
+    public void testNullsafeOperator_01() throws Exception {
+        checkErrors("testfiles/parser/php80/nullsafeOperator_01.php");
+    }
+
+    public void testNullsafeOperator_02() throws Exception {
+        checkErrors("testfiles/parser/php80/nullsafeOperator_02.php");
+    }
+
+    public void testNullsafeOperator_03() throws Exception {
+        checkErrors("testfiles/parser/php80/nullsafeOperator_03.php");
+    }
+
 }

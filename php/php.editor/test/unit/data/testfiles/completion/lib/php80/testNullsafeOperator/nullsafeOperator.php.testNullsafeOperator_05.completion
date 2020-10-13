@@ -1,0 +1,7 @@
+Code completion result for source line:
+$country = $session?->user::|$test;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     create(string $name)            [STATIC]   User
+METHOD     test()                          [STATIC]   User
+VARIABLE   string $test                    [STATIC]   User
+CONSTANT   class \User                     [PUBLIC]   Magic Constant

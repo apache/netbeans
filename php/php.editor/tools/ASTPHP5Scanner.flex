@@ -539,12 +539,25 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     return createSymbol(ASTPHP5Symbols.T_OBJECT_OPERATOR);
 }
 
+// NETBEANS-4443 PHP 8.0: Nullsafe operator
+// https://wiki.php.net/rfc/nullsafe_operator
+<ST_IN_SCRIPTING>"?->" {
+    pushState(ST_LOOKING_FOR_PROPERTY);
+    return createSymbol(ASTPHP5Symbols.T_NULLSAFE_OBJECT_OPERATOR);
+}
+
 <ST_IN_SCRIPTING,ST_LOOKING_FOR_PROPERTY>{WHITESPACE}+ {
     whitespaceEndPosition = getTokenStartPosition() + yylength();
 }
 
 <ST_LOOKING_FOR_PROPERTY>"->" {
     return createSymbol(ASTPHP5Symbols.T_OBJECT_OPERATOR);
+}
+
+// NETBEANS-4443 PHP 8.0: Nullsafe operator
+// https://wiki.php.net/rfc/nullsafe_operator
+<ST_LOOKING_FOR_PROPERTY>"?->" {
+    return createSymbol(ASTPHP5Symbols.T_NULLSAFE_OBJECT_OPERATOR);
 }
 
 <ST_LOOKING_FOR_PROPERTY>{LABEL} {

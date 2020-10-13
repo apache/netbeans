@@ -1264,10 +1264,12 @@ public class FormatVisitor extends DefaultVisitor {
     public void visit(FunctionInvocation node) {
         if (path.size() > 1 && path.get(1) instanceof MethodInvocation) {
             while (ts.moveNext() && ts.token().id() != PHPTokenId.PHP_OBJECT_OPERATOR
+                    && ts.token().id() != PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR
                     && ((ts.offset() + ts.token().length()) < node.getStartOffset())) {
                 addFormatToken(formatTokens);
             }
-            if (ts.token().id() == PHPTokenId.PHP_OBJECT_OPERATOR) {
+            if (ts.token().id() == PHPTokenId.PHP_OBJECT_OPERATOR
+                    || ts.token().id() == PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR) {
                 formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_IN_CHAINED_METHOD_CALLS, ts.offset()));
                 addFormatToken(formatTokens);
             } else {
@@ -2006,6 +2008,11 @@ public class FormatVisitor extends DefaultVisitor {
                 tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_OBJECT_OP, ts.offset()));
                 tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                 tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_OBJECT_OP, ts.offset() + ts.token().length()));
+                break;
+            case PHP_NULLSAFE_OBJECT_OPERATOR:
+                tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_NULLSAFE_OBJECT_OP, ts.offset()));
+                tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_NULLSAFE_OBJECT_OP, ts.offset() + ts.token().length()));
                 break;
             case PHP_CASTING:
                 String text = ts.token().text().toString();

@@ -348,6 +348,9 @@ public final class Utils {
             case ASTPHP5Symbols.T_OBJECT_OPERATOR:
                 name = "T_OBJECT_OPERATOR"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_NULLSAFE_OBJECT_OPERATOR:
+                name = "T_NULLSAFE_OBJECT_OPERATOR"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_OPEN_PARENTHESE:
                 name = "T_OPEN_PARENTHESE"; //NOI18N
                 break;

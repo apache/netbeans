@@ -36,7 +36,6 @@ public interface Constants {
     String PROP_VERSION = "version";
     String PROP_PACKAGE = "package";
 
-    String PROP_JAVA_EE_VERSION = "javaeeVersion";
     String PROP_PAYARA_MICRO_VERSION = "payaraMicroVersion";
     String PROP_AUTO_BIND_HTTP = "autoBindHttp";
     String PROP_CONTEXT_ROOT = "contextRoot";

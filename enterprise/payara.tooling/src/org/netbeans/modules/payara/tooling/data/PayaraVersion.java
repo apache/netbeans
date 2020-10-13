@@ -66,6 +66,8 @@ public class PayaraVersion implements Comparable<PayaraVersion> {
 
     private static final String CDDL_LICENSE = "https://raw.githubusercontent.com/payara/Payara/master/LICENSE.txt"; // NOI18N
 
+    public static final PayaraVersion EMPTY = new PayaraVersion((short) 0, (short) 0, (short) 0, (short) 0, "", "");
+
     private static PayaraVersion latestVersion;
 
     private static final Map<String, PayaraVersion> versions = new TreeMap<>();
@@ -131,6 +133,9 @@ public class PayaraVersion implements Comparable<PayaraVersion> {
      */
     @CheckForNull
     public static PayaraVersion toValue(@NonNull final String versionStr) {
+        if(versionStr.trim().isEmpty()) {
+            return EMPTY;
+        }
         PayaraVersion version
                 = versions.get(versionStr.toUpperCase(Locale.ENGLISH));
         if (version == null) {

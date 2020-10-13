@@ -24,7 +24,6 @@ import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.MessageParams;
-import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -34,7 +33,6 @@ import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.modules.java.lsp.server.ui.IOContext;
 import org.netbeans.modules.java.lsp.server.ui.UIContext;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.util.Lookup;
@@ -45,11 +43,11 @@ import org.openide.util.lookup.ProxyLookup;
  *
  * @author lahvac
  */
-public class WorkspaceServiceImpl implements WorkspaceService, LanguageClientAware {
+public final class WorkspaceServiceImpl implements WorkspaceService, LanguageClientAware {
 
     private LanguageClient client;
     private UIContext ctx;
-    private final WorkspaceContext ioContext;
+    private final WorkspaceIOContext ioContext;
 
     public WorkspaceServiceImpl() {
         this.ioContext = new WorkspaceContext();
@@ -108,24 +106,10 @@ public class WorkspaceServiceImpl implements WorkspaceService, LanguageClientAwa
         };
     }
 
-    private class WorkspaceContext extends IOContext {
+    private final class WorkspaceContext extends WorkspaceIOContext {
         @Override
-        protected void stdOut(String line) {
-            if (client != null) {
-                client.logMessage(new MessageParams(MessageType.Info, line));
-            }
-        }
-
-        @Override
-        protected void stdErr(String line) {
-            if (client != null) {
-                client.logMessage(new MessageParams(MessageType.Error, line));
-            }
-        }
-
-        @Override
-        protected boolean isValid() {
-            return client != null;
+        protected LanguageClient client() {
+            return client;
         }
     }
 }

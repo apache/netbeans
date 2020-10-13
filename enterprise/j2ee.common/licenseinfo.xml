@@ -32,6 +32,7 @@
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/ear-5.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/ear-6.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/ear-7.xml</file>
+        <file>src/org/netbeans/modules/j2ee/common/dd/resources/ear-8.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/validation.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/web-2.3.xml</file>
         <file>src/org/netbeans/modules/j2ee/common/dd/resources/web-2.4.xml</file>

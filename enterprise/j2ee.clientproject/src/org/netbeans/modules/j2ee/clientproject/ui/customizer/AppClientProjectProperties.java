@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -55,7 +56,6 @@ import org.netbeans.modules.j2ee.clientproject.AppClientProject;
 import org.netbeans.modules.j2ee.clientproject.AppClientProjectType;
 import org.netbeans.modules.j2ee.clientproject.Utils;
 import org.netbeans.modules.j2ee.clientproject.classpath.ClassPathSupportCallbackImpl;
-import org.netbeans.modules.j2ee.common.SharabilityUtility;
 import org.netbeans.modules.java.api.common.classpath.ClassPathSupport;
 import org.netbeans.modules.java.api.common.project.ui.ClassPathUiSupport;
 import org.netbeans.modules.javaee.project.api.ui.utils.J2eePlatformUiSupport;
@@ -90,9 +90,9 @@ final public class AppClientProjectProperties {
     
     //Hotfix of the issue #70058
     //Should be removed when the StoreGroup SPI will be extended to allow false default value in ToggleButtonModel
-    private static final Integer BOOLEAN_KIND_TF = new Integer( 0 );
-    private static final Integer BOOLEAN_KIND_YN = new Integer( 1 );
-    private static final Integer BOOLEAN_KIND_ED = new Integer( 2 );
+    private static final Integer BOOLEAN_KIND_TF = 0;
+    private static final Integer BOOLEAN_KIND_YN = 1;
+    private static final Integer BOOLEAN_KIND_ED = 2;
     private Integer javacDebugBooleanKind;
     private Integer javadocPreviewBooleanKind;
     
@@ -323,12 +323,14 @@ final public class AppClientProjectProperties {
         PLATFORM_LIST_RENDERER = PlatformUiSupport.createPlatformListCellRenderer();
         SpecificationVersion minimalSourceLevel = null;
         Profile profile = Profile.fromPropertiesString(evaluator.getProperty(J2EE_PLATFORM));
-        if (Profile.JAVA_EE_6_FULL.equals(profile)) {
+        if (Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile)) {
+            minimalSourceLevel = new SpecificationVersion("1.8");
+        } else if (Profile.JAVA_EE_7_FULL.equals(profile)) {
+            minimalSourceLevel = new SpecificationVersion("1.7");
+        } else if (Profile.JAVA_EE_6_FULL.equals(profile)) {
             minimalSourceLevel = new SpecificationVersion("1.6");
         } else if (Profile.JAVA_EE_5.equals(profile)) {
             minimalSourceLevel = new SpecificationVersion("1.5");
-        } else if (Profile.JAVA_EE_7_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.7");
         }
         JAVAC_SOURCE_MODEL = PlatformUiSupport.createSourceLevelComboBoxModel(PLATFORM_MODEL, evaluator.getProperty(JAVAC_SOURCE), evaluator.getProperty(JAVAC_TARGET), minimalSourceLevel);
         JAVAC_SOURCE_RENDERER = PlatformUiSupport.createSourceLevelListCellRenderer ();
@@ -569,7 +571,7 @@ final public class AppClientProjectProperties {
     }
     
     /** Finds out what are new and removed project dependencies and 
-     * applyes the info to the project
+     * applies the info to the project
      */
     private void resolveProjectDependencies() {
             
@@ -663,10 +665,10 @@ final public class AppClientProjectProperties {
     //Hotfix of the issue #70058
     //Should be removed when the StoreGroup SPI will be extended to allow false default value in ToggleButtonModel
     private static String encodeBoolean (boolean value, Integer kind) {
-        if ( kind == BOOLEAN_KIND_ED ) {
+        if ( Objects.equals(kind, BOOLEAN_KIND_ED) ) {
             return value ? "on" : "off"; // NOI18N
         }
-        else if ( kind == BOOLEAN_KIND_YN ) { // NOI18N
+        else if ( Objects.equals(kind, BOOLEAN_KIND_YN) ) { // NOI18N
             return value ? "yes" : "no"; // NOI18N
         }
         else {
@@ -776,7 +778,7 @@ final public class AppClientProjectProperties {
                 projectProps.remove(CLIENT_NAME);
             }
             projectProps.put(APPCLIENT_MAINCLASS_ARGS, mainClassArgs);
-        } else if ((mainClassArgs = j2eePlatform.getToolProperty(J2eePlatform.TOOL_APP_CLIENT_RUNTIME, CLIENT_NAME)) != null) {
+        } else if ((j2eePlatform.getToolProperty(J2eePlatform.TOOL_APP_CLIENT_RUNTIME, CLIENT_NAME)) != null) {
             if (projectProps.getProperty(APPCLIENT_MAINCLASS_ARGS) != null) {
                 projectProps.remove(APPCLIENT_MAINCLASS_ARGS);
             }

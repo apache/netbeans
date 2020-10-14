@@ -79,9 +79,8 @@ pipeline {
  
     post { 
         always { 
-            junit testResults: 'nbbuild/build/rat/*.xml,nbbuild/build/verifylibsandlicenses.xml,**/test/*/results/TEST*.xml,**/sigtest/check-release/*.xml', healthScaleFactor: 0.0
+            junit 'nbbuild/build/rat/*.xml,nbbuild/build/verifylibsandlicenses.xml,**/test/*/results/TEST*.xml,**/sigtest/check-release/*.xml'
         }
     }
  
 }
-

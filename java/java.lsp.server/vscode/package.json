@@ -130,7 +130,7 @@
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
 		"test": "node ./out/test/runTest.js",
-		"nbcode": "./nbcode/bin/nbcode"
+		"nbcode": "node ./out/nbcode.js"
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.47.0",

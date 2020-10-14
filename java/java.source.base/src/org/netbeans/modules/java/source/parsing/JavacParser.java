@@ -46,8 +46,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
@@ -549,8 +547,9 @@ public class JavacParser extends Parser {
             final NewComilerTask nct = (NewComilerTask)task;
             if (nct.getCompilationController() == null || nct.getTimeStamp() != parseId) {
                 try {
-                    nct.setCompilationController(
-                        JavaSourceAccessor.getINSTANCE().createCompilationController(new CompilationInfoImpl(this, file, root, null, null, cachedSnapShot, true)),
+                    CompilationInfoImpl cii = new CompilationInfoImpl(this, file, root, null, null, cachedSnapShot, true);
+                    cii.setParsedTrees(new HashMap<>());
+                    nct.setCompilationController(JavaSourceAccessor.getINSTANCE().createCompilationController(cii),
                         parseId);
                 } catch (IOException ioe) {
                     throw new ParseException ("Javac Failure", ioe);

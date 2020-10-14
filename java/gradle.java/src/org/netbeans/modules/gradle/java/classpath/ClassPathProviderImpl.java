@@ -306,7 +306,7 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
 
         private synchronized ClassPath getModuleCompilePath() {
             if (moduleCompile == null) {
-                moduleCompile = createMultiplexClassPath(getJava8CompileClassPath(), ClassPath.EMPTY);
+                moduleCompile = createMultiplexClassPath(getJava8CompileClassPath(), getJava8CompileClassPath());
             }
             return moduleCompile;
         }

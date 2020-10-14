@@ -101,7 +101,6 @@ public class ReloadAction extends AbstractAction {
                 NetbeansActionMapping mapping = ActionToGoalUtils.getDefaultMapping(action, project);
                 ModelRunConfig rc = new ModelRunConfig(project, mapping, mapping.getActionName(), null, Lookup.EMPTY, false);
                 rc.setTaskDisplayName(getMessage(ReloadAction.class, "TXT_Reload", mavenProject.getArtifactId()));
-                rc.getGoals().addAll(MicroActionsProvider.getGoals(action));
                 RunUtils.run(rc);
             });
         }
@@ -119,6 +118,5 @@ public class ReloadAction extends AbstractAction {
             }
         }
     }
-
 
 }

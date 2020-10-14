@@ -33,6 +33,7 @@ import org.eclipse.lsp4j.debug.BreakpointEventArguments;
 import org.eclipse.lsp4j.debug.SetBreakpointsArguments;
 import org.eclipse.lsp4j.debug.SetBreakpointsResponse;
 import org.eclipse.lsp4j.debug.SetExceptionBreakpointsArguments;
+import org.eclipse.lsp4j.debug.Source;
 import org.eclipse.lsp4j.debug.SourceBreakpoint;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
@@ -55,7 +56,8 @@ public final class NbBreakpointsRequestHandler {
             ErrorUtilities.completeExceptionally(resultFuture, "Empty debug session.", ResponseErrorCode.InvalidParams);
             return resultFuture;
         }
-        String clientPath = arguments.getSource().getPath();
+        Source source = arguments.getSource();
+        String clientPath = source.getPath();
         if (IS_WINDOWS) {
             // Normalize the drive letter case:
             String drivePrefix = FilenameUtils.getPrefix(clientPath);
@@ -74,19 +76,14 @@ public final class NbBreakpointsRequestHandler {
             return resultFuture;
         }
         List<Breakpoint> res = new ArrayList<>();
-        NbBreakpoint[] toAdds = this.convertClientBreakpointsToDebugger(sourcePath, arguments.getBreakpoints(), context);
+        NbBreakpoint[] toAdds = this.convertClientBreakpointsToDebugger(source, sourcePath, arguments.getBreakpoints(), context);
         // Decode the URI if it comes encoded:
         NbBreakpoint[] added = context.getBreakpointManager().setBreakpoints(decodeURI(sourcePath), toAdds, arguments.getSourceModified());
         for (int i = 0; i < arguments.getBreakpoints().length; i++) {
             // For newly added breakpoint, should install it to debuggee first.
-            if (toAdds[i] == added[i] && added[i].className() != null) {
-                added[i].install().thenAccept(bp -> {
-                    BreakpointEventArguments bpEvent = new BreakpointEventArguments();
-                    bpEvent.setReason("new");
-                    bpEvent.setBreakpoint(this.convertDebuggerBreakpointToClient(bp, context));
-                    context.getClient().breakpoint(bpEvent);
-                });
-            } else if (added[i].className() != null) {
+            if (toAdds[i] == added[i]) {
+                added[i].install();
+            } else {
                 if (toAdds[i].getHitCount() != added[i].getHitCount()) {
                     // Update hitCount condition.
                     added[i].setHitCount(toAdds[i].getHitCount());
@@ -101,7 +98,7 @@ public final class NbBreakpointsRequestHandler {
                 }
 
             }
-            res.add(this.convertDebuggerBreakpointToClient(added[i], context));
+            res.add(added[i].convertDebuggerBreakpointToClient());
         }
         SetBreakpointsResponse response = new SetBreakpointsResponse();
         response.setBreakpoints(res.toArray(new Breakpoint[res.size()]));
@@ -130,19 +127,7 @@ public final class NbBreakpointsRequestHandler {
         return CompletableFuture.completedFuture(null);
     }
 
-    private Breakpoint convertDebuggerBreakpointToClient(NbBreakpoint breakpoint, DebugAdapterContext context) {
-        int id = (int) breakpoint.getProperty("id");
-        boolean verified = breakpoint.getProperty("verified") != null && (boolean) breakpoint.getProperty("verified");
-        int lineNumber = context.getClientLine(breakpoint.getLineNumber());
-        Breakpoint bp = new Breakpoint();
-        bp.setId(id);
-        bp.setVerified(verified);
-        bp.setLine(lineNumber);
-        bp.setMessage("");
-        return bp;
-    }
-
-    private NbBreakpoint[] convertClientBreakpointsToDebugger(String sourceFile, SourceBreakpoint[] sourceBreakpoints, DebugAdapterContext context) {
+    private NbBreakpoint[] convertClientBreakpointsToDebugger(Source source, String sourceFile, SourceBreakpoint[] sourceBreakpoints, DebugAdapterContext context) {
         int n = sourceBreakpoints.length;
         int[] lines = new int[n];
         for (int i = 0; i < n; i++) {
@@ -156,7 +141,7 @@ public final class NbBreakpointsRequestHandler {
             } catch (NumberFormatException e) {
                 hitCount = 0; // If hitCount is not a number, ignore the hitCount.
             }
-            breakpoints[i] = new NbBreakpoint(sourceFile, lines[i], hitCount, sourceBreakpoints[i].getCondition(), sourceBreakpoints[i].getLogMessage());
+            breakpoints[i] = new NbBreakpoint(source, sourceFile, lines[i], hitCount, sourceBreakpoints[i].getCondition(), sourceBreakpoints[i].getLogMessage(), context);
         }
         return breakpoints;
     }

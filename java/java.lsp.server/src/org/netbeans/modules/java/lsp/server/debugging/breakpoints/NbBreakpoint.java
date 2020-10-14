@@ -27,10 +27,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.lsp4j.debug.BreakpointEventArguments;
+import org.eclipse.lsp4j.debug.Source;
+
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
 import org.netbeans.modules.debugger.jpda.truffle.breakpoints.TruffleLineBreakpoint;
+import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 
 /**
  *
@@ -40,31 +44,28 @@ public final class NbBreakpoint {
 
     private static final Logger LOGGER = Logger.getLogger(NbBreakpoint.class.getName());
 
+    private final DebugAdapterContext context;
+    private final Source source;
     private final String sourceURL;
-    private final int line;
+    private int line;
     private int hitCount;
     private String condition;
     private String logMessage;
     private final Map<Object, Object> properties = new HashMap<>();
     private Breakpoint breakpoint; // Either JPDA's LineBreakpoint, or TruffleLineBreakpoint
 
-    public NbBreakpoint(String sourceURL, int line, int hitCount, String condition, String logMessage) {
+    public NbBreakpoint(Source source, String sourceURL, int line, int hitCount, String condition, String logMessage, DebugAdapterContext context) {
+        this.source = source;
         this.sourceURL = sourceURL;
         this.line = line;
         this.hitCount = hitCount;
         this.condition = condition;
         this.logMessage = logMessage;
+        this.context = context;
     }
 
     public Breakpoint getNBBreakpoint() {
         return breakpoint;
-    }
-
-    /**
-     * Interpreted as a source URL.
-     */
-    public String className() {
-        return sourceURL;
     }
 
     public int getLineNumber() {
@@ -113,18 +114,33 @@ public final class NbBreakpoint {
             breakpoint.setHitCountFilter(hitCount, Breakpoint.HIT_COUNT_FILTERING_STYLE.GREATER);
         }
         breakpoint.addPropertyChangeListener(Breakpoint.PROP_VALIDITY, evt -> {
-            updateValid(breakpoint);
+            updateValid(breakpoint, true);
         });
-        updateValid(breakpoint);
+        updateValid(breakpoint, false);
         DebuggerManager d = DebuggerManager.getDebuggerManager();
         d.addBreakpoint(breakpoint);
         this.breakpoint = breakpoint;
         return CompletableFuture.completedFuture(this);
     }
 
-    private void updateValid(Breakpoint breakpoint) {
-        if (breakpoint.getValidity() == Breakpoint.VALIDITY.VALID) {
-            putProperty("verified", true);
+    private void updateValid(Breakpoint breakpoint, boolean sendNotify) {
+        String message = breakpoint.getValidityMessage();
+        boolean verified = breakpoint.getValidity() == Breakpoint.VALIDITY.VALID;
+        putProperty("message", message);
+        putProperty("verified", verified);
+        if (verified) {
+            // Update the line number
+            if (breakpoint instanceof LineBreakpoint) {
+                this.line = ((LineBreakpoint) breakpoint).getLineNumber();
+            } else {
+                this.line = ((TruffleLineBreakpoint) breakpoint).getLineNumber();
+            }
+        }
+        if (sendNotify) {
+            BreakpointEventArguments bea = new BreakpointEventArguments();
+            bea.setBreakpoint(convertDebuggerBreakpointToClient());
+            bea.setReason("changed");
+            context.getClient().breakpoint(bea);
         }
     }
 
@@ -164,6 +180,22 @@ public final class NbBreakpoint {
                 // no print text
             }
         }
+    }
+
+    org.eclipse.lsp4j.debug.Breakpoint convertDebuggerBreakpointToClient() {
+        int id = (int) getProperty("id");
+        boolean verified = getProperty("verified") != null && (boolean) getProperty("verified");
+        int lineNumber = context.getClientLine(getLineNumber());
+        org.eclipse.lsp4j.debug.Breakpoint bp = new org.eclipse.lsp4j.debug.Breakpoint();
+        bp.setId(id);
+        bp.setVerified(verified);
+        bp.setLine(lineNumber);
+        bp.setSource(source);
+        String message = (String) getProperty("message");
+        if (message != null) {
+            bp.setMessage(message);
+        }
+        return bp;
     }
 
     @Override

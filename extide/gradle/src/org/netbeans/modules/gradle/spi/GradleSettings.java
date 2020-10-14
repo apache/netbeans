@@ -24,6 +24,7 @@ import java.util.prefs.Preferences;
 import org.gradle.util.GradleVersion;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine.LogLevel;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine.StackTrace;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
 
@@ -190,8 +191,17 @@ public final class GradleSettings {
         getPreferences().putBoolean(PROP_REUSE_OUTPUT_TABS, b);
     }
 
+    @NbBundle.Messages({
+        "#reuse output tabs: true, false, never",
+        "#NOI18N",
+        "DEFAULT_REUSE_OUTPUT=true"
+    })
     public boolean isReuseOutputTabs() {
-        return getPreferences().getBoolean(PROP_REUSE_OUTPUT_TABS, true);
+        String def = Bundle.DEFAULT_REUSE_OUTPUT();
+        if ("never".equals(def)) { // NOI18N
+            return false;
+        }
+        return getPreferences().getBoolean(PROP_REUSE_OUTPUT_TABS, "true".equals(def)); // NOI18N
     }
 
     public void setOffline(boolean b) {

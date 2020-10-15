@@ -286,9 +286,12 @@ public final class Util {
                     fragmentDep.add(m1);
                     for (Dependency dep : f.getDependenciesArray()) {
                         if (dep.getType() == Dependency.TYPE_REQUIRES) {
-                            List<Module> providers = providersOf.get(dep.getName());
-
+                            Collection<Module> providers = providersOf.get(dep.getName());
                             if (providers != null) {
+                                if (providers.contains(m1)) {
+                                    providers = new ArrayList<>(providers);
+                                    providers.remove(m1);
+                                }
                                 l = fillMapSlot(m, m1);
                                 l.addAll(providers);
                             }
@@ -297,7 +300,7 @@ public final class Util {
                             String cnb = (String) parseCodeName(dep.getName())[0];
                             Module m2 = modulesByName.get(cnb);
 
-                            if (m2 != null && modulesSet.contains(m2)) {
+                            if (m2 != null && m2 != m1 && modulesSet.contains(m2)) {
                                 l = fillMapSlot(m, m1);
                                 l.add(m2);
                             }
@@ -312,6 +315,7 @@ public final class Util {
                 m.put(m1, l);
             }
         }
+
         return m;
     }
 

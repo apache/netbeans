@@ -186,7 +186,7 @@ public class XMLDataLoader extends UniFileLoader {
         /**
          * Holds a collection of readers that read the file.
          */
-        private Collection  activeReaders;
+        private Collection<InputStream>  activeReaders;
         
         /** Creates new MakefileFileEntry */
         public XMLFileEntry (MultiDataObject obj, FileObject file) {
@@ -295,7 +295,7 @@ public class XMLDataLoader extends UniFileLoader {
 
         private synchronized void addReader(InputStream r) {
             if (activeReaders == null) {
-                activeReaders = new LinkedList();
+                activeReaders = new LinkedList<>();
             }
             activeReaders.add(r);
         }
@@ -310,8 +310,8 @@ public class XMLDataLoader extends UniFileLoader {
         public void delete() throws IOException {
             synchronized (this) {
                 if (activeReaders != null && activeReaders.size() > 0) {
-                    for (Iterator it = activeReaders.iterator(); it.hasNext(); ) {
-                        InputStream r = (InputStream)it.next();
+                    for (Iterator<InputStream> it = activeReaders.iterator(); it.hasNext(); ) {
+                        InputStream r = it.next();
                         r.close();
                         it.remove();
                     }

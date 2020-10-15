@@ -29,6 +29,8 @@ public class Test {
     {
         record Record1(@Ov )  {}
         
-        record Rec( )  {}        
+        record Rec( )  {}    
+        
+        Records 
     }
     }

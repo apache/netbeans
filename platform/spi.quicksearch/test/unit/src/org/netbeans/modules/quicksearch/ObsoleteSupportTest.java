@@ -35,7 +35,7 @@ public class ObsoleteSupportTest extends NbTestCase {
     public void testObsoleteSupport () throws Exception {
         System.out.println("Testing obsolete support...");
 
-        UnitTestUtils.prepareTest(new String [] { "/org/netbeans/modules/quicksearch/resources/testGetProviders.xml" });
+        UnitTestUtils.prepareTest(new String [] { "org/netbeans/modules/quicksearch/resources/testGetProviders.xml" });
         ResultsModel rm = ResultsModel.getInstance();
 
         CommandEvaluator.evaluate("test obsolete 1", rm);

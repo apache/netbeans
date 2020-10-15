@@ -70,7 +70,9 @@
                 </test-type>
             </test-dependencies>
             <public-packages>
+                <package>org.graalvm.home</package>
                 <package>org.graalvm.options</package>
+                <package>org.graalvm.nativeimage</package>
                 <package>org.graalvm.collections</package>
                 <package>org.graalvm.polyglot</package>
                 <package>org.graalvm.polyglot.io</package>
@@ -80,12 +82,12 @@
                 <package>org.netbeans.libs.graalsdk</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/graal-sdk-19.3.0.jar</runtime-relative-path>
-                <binary-origin>external/graal-sdk-19.3.0.jar</binary-origin>
+                <runtime-relative-path>ext/graal-sdk-20.2.0.jar</runtime-relative-path>
+                <binary-origin>external/graal-sdk-20.2.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/launcher-common-19.3.0.jar</runtime-relative-path>
-                <binary-origin>external/launcher-common-19.3.0.jar</binary-origin>
+                <runtime-relative-path>ext/launcher-common-20.2.0.jar</runtime-relative-path>
+                <binary-origin>external/launcher-common-20.2.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

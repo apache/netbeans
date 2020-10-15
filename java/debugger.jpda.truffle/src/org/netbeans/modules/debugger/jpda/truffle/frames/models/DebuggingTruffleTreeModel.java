@@ -21,6 +21,7 @@ package org.netbeans.modules.debugger.jpda.truffle.frames.models;
 
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -33,10 +34,13 @@ import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleStrataProvider;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
 import org.netbeans.modules.debugger.jpda.truffle.options.TruffleOptions;
+import org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVFrame;
+import org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThread;
 import org.netbeans.modules.debugger.jpda.util.WeakCacheMap;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.debugger.ui.DebuggingView;
+import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.viewmodel.ModelEvent;
 import org.netbeans.spi.viewmodel.ModelListener;
 import org.netbeans.spi.viewmodel.TreeModel;
@@ -118,7 +122,7 @@ public class DebuggingTruffleTreeModel implements TreeModelFilter {
         }
     }
 
-    private Object[] filterAndAppend(Object[] children, TruffleStackFrame[] stackFrames,
+    private static Object[] filterAndAppend(Object[] children, TruffleStackFrame[] stackFrames,
                                      TruffleStackFrame topFrame) {
         List<Object> newChildren = new ArrayList<>(children.length);
         //newChildren.addAll(Arrays.asList(children));
@@ -141,5 +145,29 @@ public class DebuggingTruffleTreeModel implements TreeModelFilter {
         }
         return newChildren.toArray();
     }
-    
+
+    static List<DVFrame> filterAndAppend(JPDADVThread thread, List<DVFrame> children,
+                                         TruffleStackFrame[] stackFrames,
+                                         TruffleStackFrame topFrame) {
+        List<DVFrame> newChildren = new ArrayList<>(children.size());
+        for (DVFrame ch : children) {
+            if (ch instanceof JPDADVFrame) {
+                String className = ((JPDADVFrame) ch).getCallStackFrame().getClassName();
+                if (PREDICATE1.test(className) ||
+                    className.startsWith(FILTER2) ||
+                    className.startsWith(FILTER3)) {
+                    
+                    continue;
+                }
+            }
+            newChildren.add(ch);
+        }
+        int i = 0;
+        newChildren.add(i++, new TruffleDVFrame(thread, topFrame));
+        for (TruffleStackFrame tsf : stackFrames) {
+            newChildren.add(i++, new TruffleDVFrame(thread, tsf));
+        }
+        return Collections.unmodifiableList(newChildren);
+    }
+
 }

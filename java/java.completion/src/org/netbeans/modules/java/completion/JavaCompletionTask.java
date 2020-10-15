@@ -49,7 +49,7 @@ import org.netbeans.api.java.source.ClassIndex.Symbols;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.modules.java.completion.TreeShims;
+import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.parsing.api.Source;
 import org.openide.util.Pair;
 
@@ -168,16 +168,19 @@ public final class JavaCompletionTask<T> extends BaseTask {
     private static final String MODULE_KEYWORD = "module"; //NOI18N
     private static final String NATIVE_KEYWORD = "native"; //NOI18N
     private static final String NEW_KEYWORD = "new"; //NOI18N
+    private static final String NON_SEALED_KEYWORD = "non-sealed"; //NOI18N
     private static final String NULL_KEYWORD = "null"; //NOI18N
     private static final String OPEN_KEYWORD = "open"; //NOI18N
     private static final String OPENS_KEYWORD = "opens"; //NOI18N
     private static final String PACKAGE_KEYWORD = "package"; //NOI18N
+    private static final String PERMITS_KEYWORD = "permits"; //NOI18N
     private static final String PRIVATE_KEYWORD = "private"; //NOI18N
     private static final String PROTECTED_KEYWORD = "protected"; //NOI18N
     private static final String PROVIDES_KEYWORD = "provides"; //NOI18N
     private static final String PUBLIC_KEYWORD = "public"; //NOI18N
     private static final String RETURN_KEYWORD = "return"; //NOI18N
     private static final String REQUIRES_KEYWORD = "requires"; //NOI18N
+    private static final String SEALED_KEYWORD = "sealed"; //NOI18N
     private static final String SHORT_KEYWORD = "short"; //NOI18N
     private static final String STATIC_KEYWORD = "static"; //NOI18N
     private static final String STRICT_KEYWORD = "strictfp"; //NOI18N
@@ -238,8 +241,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
     private static final SourceVersion SOURCE_VERSION_RELEASE_11;
     private static final SourceVersion SOURCE_VERSION_RELEASE_13;
     private static final SourceVersion SOURCE_VERSION_RELEASE_14;
+    private static final SourceVersion SOURCE_VERSION_RELEASE_15;
+
     static {
-        SourceVersion r10, r11, r13, r14;
+        SourceVersion r10, r11, r13, r14, r15;
 
         try {
             r10 = SourceVersion.valueOf("RELEASE_10");
@@ -261,12 +266,19 @@ public final class JavaCompletionTask<T> extends BaseTask {
         } catch (IllegalArgumentException ex) {
             r14 = null;
         }
+         
+        try {
+            r15 = SourceVersion.valueOf("RELEASE_15");
+        } catch (IllegalArgumentException ex) {
+            r15 = null;
+        }
 
         SOURCE_VERSION_RELEASE_10 = r10;
         SOURCE_VERSION_RELEASE_11 = r11;
         SOURCE_VERSION_RELEASE_13 = r13;
         SOURCE_VERSION_RELEASE_14 = r14;
-    }
+        SOURCE_VERSION_RELEASE_15 = r15;
+   }
 
     private final ItemFactory<T> itemFactory;
     private final Set<Options> options;
@@ -765,6 +777,26 @@ public final class JavaCompletionTask<T> extends BaseTask {
             return;
         }
         TreeUtilities tu = controller.getTreeUtilities();
+        Tree lastPerm = null;
+        List<? extends Tree> permits = TreeShims.getPermits(cls);
+        permits = permits == null ? new ArrayList<>() : permits;
+        for (Tree perm : permits) {
+            int permPos = (int) sourcePositions.getEndPosition(root, perm);
+            if (permPos == Diagnostic.NOPOS || offset <= permPos) {
+                break;
+            }
+            lastPerm = perm;
+            startPos = permPos;
+        }
+        if (lastPerm != null) {
+            TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, startPos, offset);
+            if (last != null && last.token().id() == JavaTokenId.COMMA) {
+                controller.toPhase(Phase.ELEMENTS_RESOLVED);
+                env.addToExcludes(controller.getTrees().getElement(path));
+                addClassTypes(env, null);
+            }
+            return;
+        }
         Tree lastImpl = null;
         for (Tree impl : cls.getImplementsClause()) {
             int implPos = (int) sourcePositions.getEndPosition(root, impl);
@@ -780,6 +812,12 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 controller.toPhase(Phase.ELEMENTS_RESOLVED);
                 env.addToExcludes(controller.getTrees().getElement(path));
                 addTypes(env, EnumSet.of(INTERFACE, ANNOTATION_TYPE), null);
+            } else if (isSealedSupported(env) && last != null && TokenUtilities.textEquals(last.token().text(),PERMITS_KEYWORD)) {
+                controller.toPhase(Phase.ELEMENTS_RESOLVED);
+                env.addToExcludes(controller.getTrees().getElement(path));
+                addClassTypes(env, null);
+            } else if (isSealedSupported(env)) {
+                addKeyword(env, PERMITS_KEYWORD, SPACE, false);
             }
             return;
         }
@@ -792,8 +830,15 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     controller.toPhase(Phase.ELEMENTS_RESOLVED);
                     env.addToExcludes(controller.getTrees().getElement(path));
                     addTypes(env, EnumSet.of(INTERFACE, ANNOTATION_TYPE), null);
+                } else if (isSealedSupported(env) && last != null && TokenUtilities.textEquals(last.token().text(),PERMITS_KEYWORD)) {
+                    controller.toPhase(Phase.ELEMENTS_RESOLVED);
+                    env.addToExcludes(controller.getTrees().getElement(path));
+                    addClassTypes(env, null);
                 } else {
                     addKeyword(env, IMPLEMENTS_KEYWORD, SPACE, false);
+                    if (isSealedSupported(env)) {
+                        addKeyword(env, PERMITS_KEYWORD, SPACE, false);
+                    }
                 }
                 return;
             }
@@ -831,6 +876,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 if (!tu.isAnnotation(cls)) {
                     if (!tu.isEnum(cls)) {
                         addKeyword(env, EXTENDS_KEYWORD, SPACE, false);
+                        if (isSealedSupported(env)) {
+                            addKeyword(env, PERMITS_KEYWORD, SPACE, false);
+                        }
                     }
                     if (!tu.isInterface(cls)) {
                         addKeyword(env, IMPLEMENTS_KEYWORD, SPACE, false);
@@ -858,9 +906,18 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     addTypes(env, EnumSet.of(INTERFACE, ANNOTATION_TYPE), null);
                     break;
                 case IDENTIFIER:
+                    if (isSealedSupported(env) && TokenUtilities.textEquals(lastNonWhitespaceToken.token().text(),PERMITS_KEYWORD)) {
+                        controller.toPhase(Phase.ELEMENTS_RESOLVED);
+                        env.addToExcludes(controller.getTrees().getElement(path));
+                        addClassTypes(env, null);
+                        break;
+                    }
                     if (!tu.isAnnotation(cls)) {
                         if (!tu.isEnum(cls)) {
                             addKeyword(env, EXTENDS_KEYWORD, SPACE, false);
+                            if (isSealedSupported(env)) {
+                                addKeyword(env, PERMITS_KEYWORD, SPACE, false);
+                            }
                         }
                         if (!tu.isInterface(cls)) {
                             addKeyword(env, IMPLEMENTS_KEYWORD, SPACE, false);
@@ -3038,6 +3095,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
     private boolean isRecordSupported(final Env env) {
         return (SOURCE_VERSION_RELEASE_14 != null && env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_14) >= 0);
     }
+    private boolean isSealedSupported(final Env env) {
+        return (SOURCE_VERSION_RELEASE_15 != null && env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_15) >= 0);
+    }
 
     private void insideRecord(Env env) throws IOException {
         int offset = env.getOffset();
@@ -4513,6 +4573,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
             if (isRecordSupported(env)) {
                 kws.add(RECORD_KEYWORD);
             }
+            if (isSealedSupported(env)) {
+                kws.add(SEALED_KEYWORD);
+                kws.add(NON_SEALED_KEYWORD);
+            }
         }
         boolean beforeAnyClass = true;
         boolean beforePublicClass = true;
@@ -4574,6 +4638,14 @@ public final class JavaCompletionTask<T> extends BaseTask {
         for (String kw : CLASS_BODY_KEYWORDS) {
             if (Utilities.startsWith(kw, prefix)) {
                 results.add(itemFactory.createKeywordItem(kw, SPACE, anchorOffset, false));
+            }
+        }
+        if (isSealedSupported(env)) {
+            if (Utilities.startsWith(SEALED_KEYWORD, prefix)) {
+                results.add(itemFactory.createKeywordItem(SEALED_KEYWORD, SPACE, anchorOffset, false));
+            }
+            if (Utilities.startsWith(NON_SEALED_KEYWORD, prefix)) {
+                results.add(itemFactory.createKeywordItem(NON_SEALED_KEYWORD, SPACE, anchorOffset, false));
             }
         }
         if (env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0
@@ -4779,9 +4851,13 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (!modifiers.contains(PUBLIC) && !modifiers.contains(PRIVATE)) {
             kws.add(PUBLIC_KEYWORD);
         }
-        if (!modifiers.contains(FINAL) && !modifiers.contains(ABSTRACT)) {
+        if (!modifiers.contains(FINAL) && !modifiers.contains(ABSTRACT) && !modifiers.contains(SEALED_KEYWORD) && !modifiers.contains(NON_SEALED_KEYWORD)) {
             kws.add(ABSTRACT_KEYWORD);
             kws.add(FINAL_KEYWORD);
+            if (isSealedSupported(env)) {
+                kws.add(SEALED_KEYWORD);
+                kws.add(NON_SEALED_KEYWORD);
+            }
         }
         kws.add(CLASS_KEYWORD);
         kws.add(INTERFACE_KEYWORD);
@@ -6266,6 +6342,8 @@ public final class JavaCompletionTask<T> extends BaseTask {
     private static ElementKind simplifyElementKind(ElementKind kind) {
         if (TreeShims.BINDING_VARIABLE.equals(kind.name())) {
             return ElementKind.LOCAL_VARIABLE;
+        } else if (TreeShims.RECORD.equals(kind.name())) {
+            return ElementKind.CLASS;
         }
         return kind;
     }

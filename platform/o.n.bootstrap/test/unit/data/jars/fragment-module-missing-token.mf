@@ -3,3 +3,6 @@ OpenIDE-Module: org.foo.fragment.missing.token
 OpenIDE-Module-Fragment-Host: org.foo.host
 OpenIDE-Module-Name: Fragment Content Module with missing token
 OpenIDE-Module-Requires: missing.token
+OpenIDE-Module-Provides: org.openide.modules.fragservice2
+OpenIDE-Module-Public-Packages: -
+

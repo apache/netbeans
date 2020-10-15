@@ -234,3 +234,5 @@
 <replacefilter token="@org-netbeans-modules-gradle-java@" value="${javadoc.docs.org-netbeans-modules-gradle-java}"/>
 <replacefilter token="@org-netbeans-modules-textmate-lexer@" value="${javadoc.docs.org-netbeans-modules-textmate-lexer}"/>
 <replacefilter token="@org-netbeans-modules-jumpto@" value="${javadoc.docs.org-netbeans-modules-jumpto}"/>
+<replacefilter token="@org-netbeans-modules-java-editor-lib@" value="${javadoc.docs.org-netbeans-modules-java-editor-lib}"/>
+<replacefilter token="@org-netbeans-modules-web-common@" value="${javadoc.docs.org-netbeans-modules-web-common}"/>

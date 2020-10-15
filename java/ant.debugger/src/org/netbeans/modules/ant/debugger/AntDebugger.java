@@ -894,7 +894,7 @@ public class AntDebugger extends ActionsProviderSupport {
                     projectNamesByFiles.put(file, projName);
                 }
                 try {
-                    Set targets = TargetLister.getTargets (ant);
+                    Set<TargetLister.Target> targets = TargetLister.getTargets(ant);
                     Iterator<TargetLister.Target> it = targets.iterator ();
                     while (it.hasNext ()) {
                         TargetLister.Target t = it.next();

@@ -19,8 +19,8 @@
     under the License.
 
 -->
-<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
-  <!ENTITY api-questions SYSTEM "../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
 ]>
 
 <api-answers
@@ -482,6 +482,16 @@
     These properties affect which category and project are preselected in 1st panel
     of <code>NewProjectWizard</code>. If properties are empty (as default) then 
     category/project are selected by UI spec.
+  </p>
+  <p>
+      By default this module also opens all projects that were opened before
+      shutting down. This behavior can however be disabled in application using
+      this module: <api name="LOAD_PROJECTS_ON_START" group="branding" type="export" category="stable">
+        To disable loading of previously opened projects on startup
+          set <code>LOAD_PROJECTS_ON_START=false</code> in
+          <code>org/netbeans/modules/project/ui/Bundle.properties</code>
+          branding file in your application.
+      </api>
   </p>
  </answer>
 

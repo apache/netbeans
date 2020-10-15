@@ -51,7 +51,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
     // Map<elementname + " " + attributename, String>
     private Map defaultAttributeValues;
     
-    private Set entities, notations;
+    private Set<String> entities, notations;
 
     /** Set&lt;elementName:String> holding all emenets with <code>EMPTY</code> content model.*/
     private Set emptyElements;

@@ -158,8 +158,7 @@ class ETableHeader extends JTableHeader {
                             Integer.toString(sortRank) :
                             sortRank+" "+valueString;
                     }
-                    // don't use deriveFont() - see #49973 for details
-                    label.setFont (new Font (label.getFont ().getName (), Font.BOLD, label.getFont ().getSize ()));
+                    label.setFont(label.getFont().deriveFont(Font.BOLD));
 
                     if (ascending) {
                         sortIcon = UIManager.getIcon("ETableHeader.ascendingIcon");

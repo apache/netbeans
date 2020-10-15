@@ -32,12 +32,17 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.SimpleFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.netbeans.Module;
 import org.netbeans.ModuleManager;
+import org.netbeans.Util;
 import org.netbeans.core.startup.AutomaticDependencies;
 import org.netbeans.core.startup.ConsistencyVerifier;
 import org.netbeans.core.startup.Main;
@@ -53,7 +58,7 @@ public class ValidateModulesTest extends NbTestCase {
     static {
         System.setProperty("java.awt.headless", "true");
     }
-
+    
     public ValidateModulesTest(String n) {
         super(n);
     }
@@ -71,13 +76,13 @@ public class ValidateModulesTest extends NbTestCase {
         suite.addTest(NbModuleSuite.createConfiguration(ValidateModulesTest.class).
                 clusters(".*").enableModules(".*").honorAutoloadEager(true).gui(false).enableClasspathModules(false).suite());
         suite.addTest(NbModuleSuite.createConfiguration(ValidateModulesTest.NoStrictEager.class).
-                clusters("platform|harness|ide|websvccommon|java|profiler|nb|extide").enableModules(".*").
+                clusters("platform|harness|ide|webcommon|websvccommon|java|profiler|nb|extide").enableModules(".*").
                 honorAutoloadEager(true).gui(false).enableClasspathModules(false).suite());
         suite.addTest(NbModuleSuite.createConfiguration(ValidateModulesTest.NoStrictEager.class).
                 clusters("platform|harness|ide|extide").enableModules(".*").honorAutoloadEager(true).gui(false).enableClasspathModules(false).suite());
         return suite;
     }
-
+    
     public void testInvisibleModules() throws Exception {
         Set<Manifest> manifests = loadManifests();
         Set<String> requiredBySomeone = new HashSet<String>();
@@ -143,6 +148,9 @@ public class ValidateModulesTest extends NbTestCase {
     }
 
     public void testConsistency() throws Exception {
+        LogHandler h = new LogHandler();
+        Util.err.addHandler(h);
+        
         Set<Manifest> manifests = loadManifests();
         SortedMap<String,SortedSet<String>> problems = ConsistencyVerifier.findInconsistencies(manifests, null);
         if (!problems.isEmpty()) {
@@ -197,6 +205,12 @@ public class ValidateModulesTest extends NbTestCase {
                     }
                 }
                 message.append("\nProblems found for module ").append(entry.getKey()).append(": ").append(entry.getValue());
+            }
+            if (!h.warnings.isEmpty()) {
+                message.append("\nWarnings were logged: ");
+                for (LogRecord lr : h.warnings) {
+                    message.append("\n").append(new SimpleFormatter().format(lr));
+                }
             }
             if (message.length() == 0) {
                 return;
@@ -303,4 +317,23 @@ public class ValidateModulesTest extends NbTestCase {
         }
     }
 
+    class LogHandler extends Handler {
+        List<LogRecord> warnings = new ArrayList<>();
+        
+        @Override
+        public void publish(LogRecord record) {
+            if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
+                warnings.add(record);
+            }
+        }
+
+        @Override
+        public void flush() {
+        }
+
+        @Override
+        public void close() throws SecurityException {
+        }
+        
+    }
 }

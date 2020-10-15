@@ -83,6 +83,34 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="reusetabs">
+            <api name="general"/>
+            <summary>Default for reusing tabs</summary>
+            <version major="2" minor="5"/>
+            <date day="15" month="10" year="2020"/>
+            <author login="jtulach"/>
+            <compatibility semantic="compatible"/>
+            <description>
+                <p>
+                    Introducing <a href="@TOP@architecture-summary.html#group-branding">branding APIs</a>
+                    to configure default value for <b>reusing tabs</b> in Gradle projects.
+                </p>
+            </description>
+        </change>
+        <change id="gradle-buildsrc-project">
+            <api name="general"/>
+            <summary>GradleFiles SPI has the methods to deal with the buildSrc project.</summary>
+            <version major="2" minor="4"/>
+            <date year="2020" month="10" day="7"/>
+            <author login="lkishalmi"/>
+            <compatibility binary="compatible" source="compatible"/>
+            <description>
+                <p>
+                    <code><a href="@TOP@/org/netbeans/modules/gradle/spi/GradleFiles.html#isBuildSrcProject()">GradleFiles.isBuildSrcProject()</a></code> was
+                    added to detect if a project id a buildSrc project, and a new file Kind has been introduced <code>BUILD_SRC</code>.
+                </p>
+            </description>
+        </change>
         <change id="gradle-project-connection">
             <api name="general"/>
             <summary>Expose Gradle ProjectConnection through Project's Lookup.</summary>

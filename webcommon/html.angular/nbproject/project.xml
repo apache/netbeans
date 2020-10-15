@@ -110,7 +110,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.33</specification-version>
+                        <specification-version>2.66</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -137,7 +137,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>0.63</specification-version>
+                        <specification-version>0.84</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

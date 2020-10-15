@@ -139,7 +139,7 @@ public class Utils {
             //but that locks up VS Code, using a temp directory:
             File cacheDir;
             try {
-                cacheDir = Files.createTempDirectory("nb-java-lsp-server").toFile();
+                cacheDir = Files.createTempDirectory("nbcode").toFile();
             } catch (IOException ex) {
                 throw new UncheckedIOException(ex);
             }

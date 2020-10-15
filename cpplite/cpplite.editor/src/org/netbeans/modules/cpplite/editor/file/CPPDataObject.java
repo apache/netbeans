@@ -38,7 +38,7 @@ import org.openide.util.NbBundle.Messages;
         displayName = "#LBL_CPP_LOADER",
         mimeType = MIMETypes.CPP,
         extension = {"cpp", "cc", "c++", "cxx"},
-        position = 1000000
+        position = 1000100
 )
 @DataObject.Registration(
         mimeType = MIMETypes.CPP,
@@ -96,6 +96,12 @@ import org.openide.util.NbBundle.Messages;
             path = "Loaders/" + MIMETypes.CPP + "/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
             position = 1400
+    ),
+    @ActionReference(
+            path = "Editors/" + MIMETypes.CPP + "/Popup",
+            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.WhereUsedAction"),
+            position = 1400,
+            separatorAfter = 1450
     )
 })
 @GrammarRegistration(grammar="resources/cpp.tmLanguage.json", mimeType=MIMETypes.CPP)

@@ -653,7 +653,7 @@ public class PathFinderVisitor extends ClassCodeVisitorSupport {
                     && ((code.getLineNumber() < 0 && code.getColumnNumber() < 0)
                     || (code.getLastLineNumber() < 0 && code.getLastColumnNumber() < 0))) {
                 BlockStatement block = (BlockStatement) code;
-                List statements = block.getStatements();
+                List<Statement> statements = block.getStatements();
                 if (statements != null && !statements.isEmpty()) {
                     if (code.getLineNumber() < 0 && code.getColumnNumber() < 0) {
                         Statement first = (Statement) statements.get(0);

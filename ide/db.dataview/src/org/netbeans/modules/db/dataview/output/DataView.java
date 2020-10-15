@@ -51,7 +51,6 @@ import org.openide.xml.XMLUtil;
  *
  * TODO: Show execution plan for executed query
  * TODO: Navigate foreign key relationships in results
- * TODO: Save results in various formats (CSV, spreadsheet, html etc)
  * 
  * @author Ahimanikya Satapathy
  */

@@ -27,14 +27,10 @@ ARCH:sh = arch
 ifeq (armv, $(shell expr substr `arch` 1 4))
     OS_ARCH = $(OS)-arm
 else 
-  ifeq (sun4, $(ARCH))
+  ifeq (sparc64, $(ARCH))
     OS_ARCH = $(OS)-sparc
-  else 
-    ifeq (sparc64, $(ARCH))
-      OS_ARCH = $(OS)-sparc
-    else
-      OS_ARCH = $(OS)-x86
-    endif
+  else
+    OS_ARCH = $(OS)-x86
   endif
 endif
 
@@ -53,7 +49,6 @@ SOURCES_Mac=\
 
 SOURCES_SunOS-x86=$(SOURCES_SunOS)
 SOURCES_SunOS-x86_64=$(SOURCES_SunOS)
-SOURCES_SunOS-sparc=$(SOURCES_SunOS)
 SOURCES_SunOS-sparc_64=$(SOURCES_SunOS)
 SOURCES_Linux-x86=$(SOURCES_Linux)
 SOURCES_Linux-arm=$(SOURCES_Linux)
@@ -85,7 +80,6 @@ EXEC=$(DIST_DIR)/$(PNAME)
 CF_Linux-x86      = $(CF_COMMON) -DLINUX -m32
 CF_Linux-arm      = $(CF_COMMON) -DLINUX   -D_GNU_SOURCE -D_XOPEN_SOURCE=700 -std=c99
 CF_MacOSX-x86     = $(CF_COMMON) -DMACOSX  -D_DARWIN_C_SOURCE -m32
-CF_SunOS-sparc    = $(CF_COMMON) -DSOLARIS -D__EXTENSIONS__ -m32
 CF_SunOS-x86      = $(CF_COMMON) -DSOLARIS -D__EXTENSIONS__ -m32
 CF_Windows-x86    = $(CF_COMMON) -DWINDOWS -m32
 
@@ -100,7 +94,6 @@ LF_Windows-x86    = --static-libgcc
 LF_Windows-x86_64 = --static-libgcc
 LF_SunOS-x86      = -lrt
 LF_SunOS-x86_64   = -lrt
-LF_SunOS-sparc    = -lrt
 LF_SunOS-sparc_64 = -lrt
 
 CFLAGS=$(CF_$(CONF)) $(CFLAGS_EXTRA)

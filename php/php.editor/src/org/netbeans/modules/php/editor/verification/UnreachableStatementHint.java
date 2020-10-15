@@ -252,7 +252,7 @@ public class UnreachableStatementHint extends HintRule {
                 return;
             }
             super.visit(node);
-            // PHP 8.0: throw statement -> throw expression
+            // NETBEANS-4443 PHP 8.0: throw statement -> throw expression
             // https://wiki.php.net/rfc/throw_expression
             // i.e.
             // PHP 7.x:

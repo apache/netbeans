@@ -88,7 +88,7 @@ public enum PhpVersion {
     PHP_74(Bundle.PhpVersion_PHP_74()),
     /**
      * PHP 8.0.
-     * @since 2.73
+     * @since 2.74
      */
     PHP_80(Bundle.PhpVersion_PHP_80());
 
@@ -197,7 +197,7 @@ public enum PhpVersion {
      *
      * @return {@code true} if this version supports mixed type, {@code false}
      * otherwise
-     * @since 2.73
+     * @since 2.74
      */
     public boolean hasMixedType() {
         return this.compareTo(PhpVersion.PHP_80) >= 0;

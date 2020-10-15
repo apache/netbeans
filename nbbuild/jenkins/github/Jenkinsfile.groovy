@@ -60,17 +60,23 @@ pipeline {
             }
         }
         
-        stage('Commit validation') {
+        stage('Build') {
             steps {
-                wrap([$class: 'Xvfb']) {
-                    sh 'ant commit-validation'
-                }
+                sh 'ant build'
             }
         }
      
         stage('Verify sigtests') {
             steps {
                 sh 'ant check-sigtests-release'
+            }
+        }
+     
+        stage('Commit validation') {
+            steps {
+                wrap([$class: 'Xvfb']) {
+                    sh 'ant commit-validation'
+                }
             }
         }
     }

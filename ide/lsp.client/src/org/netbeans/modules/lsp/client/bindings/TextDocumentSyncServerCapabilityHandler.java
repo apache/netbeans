@@ -226,6 +226,11 @@ public class TextDocumentSyncServerCapabilityHandler {
                 LSPBindings.addBackgroundTask(file, mo);
                 opened.putClientProperty(MarkOccurrences.class, mo);
             }
+            if (opened.getClientProperty(BreadcrumbsImpl.class) == null) {
+                BreadcrumbsImpl bi = new BreadcrumbsImpl(opened);
+                LSPBindings.addBackgroundTask(file, bi);
+                opened.putClientProperty(BreadcrumbsImpl.class, bi);
+            }
             server.scheduleBackgroundTasks(file);
         });
     }

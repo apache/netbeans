@@ -20,8 +20,13 @@ package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
 import java.io.File;
@@ -129,6 +134,7 @@ import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreePathHandle;
+import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.java.source.ui.ElementJavadoc;
@@ -155,6 +161,10 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
+import org.netbeans.modules.refactoring.api.Problem;
+import org.netbeans.modules.refactoring.api.RefactoringElement;
+import org.netbeans.modules.refactoring.api.RefactoringSession;
+import org.netbeans.modules.refactoring.api.WhereUsedQuery;
 import org.netbeans.spi.editor.hints.EnhancedFix;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
@@ -166,8 +176,10 @@ import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.modules.Places;
 import org.openide.text.NbDocument;
+import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -176,6 +188,7 @@ import org.openide.util.RequestProcessor;
 public class TextDocumentServiceImpl implements TextDocumentService, LanguageClientAware {
 
     private static final RequestProcessor BACKGROUND_TASKS = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
+    private static final RequestProcessor WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
 
     private final Map<String, Document> openedDocuments = new HashMap<>();
     private final Map<String, RequestProcessor.Task> diagnosticTasks = new HashMap<>();
@@ -539,7 +552,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(DefinitionParams params) {
-            JavaSource js = getSource(params.getTextDocument().getUri());
+        JavaSource js = getSource(params.getTextDocument().getUri());
         GoToTarget[] target = new GoToTarget[1];
         LineMap[] thisFileLineMap = new LineMap[1];
         try {
@@ -585,8 +598,125 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public CompletableFuture<List<? extends Location>> references(ReferenceParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public CompletableFuture<List<? extends Location>> references(ReferenceParams params) {
+        AtomicBoolean cancel = new AtomicBoolean();
+        Runnable[] cancelCallback = new Runnable[1];
+        CompletableFuture<List<? extends Location>> result = new CompletableFuture<List<? extends Location>>() {
+            @Override
+            public boolean cancel(boolean mayInterruptIfRunning) {
+                cancel.set(mayInterruptIfRunning);
+                if (cancelCallback[0] != null) {
+                    cancelCallback[0].run();
+                }
+                return super.cancel(mayInterruptIfRunning);
+            }
+        };
+        WORKER.post(() -> {
+            JavaSource js = getSource(params.getTextDocument().getUri());
+            try {
+                WhereUsedQuery[] query = new WhereUsedQuery[1];
+                List<Location> locations = new ArrayList<>();
+                js.runUserActionTask(cc -> {
+                    cc.toPhase(JavaSource.Phase.RESOLVED);
+                    if (cancel.get()) return ;
+                    Document doc = cc.getSnapshot().getSource().getDocument(true);
+                    TreePath path = cc.getTreeUtilities().pathFor(getOffset(doc, params.getPosition()));
+                    if (params.getContext().isIncludeDeclaration()) {
+                        Element decl = cc.getTrees().getElement(path);
+                        if (decl != null) {
+                            TreePath declPath = cc.getTrees().getPath(decl);
+                            if (declPath != null && cc.getCompilationUnit() == declPath.getCompilationUnit()) {
+                                Range range = declarationRange(cc, declPath);
+                                if (range != null) {
+                                    locations.add(new Location(toUri(cc.getFileObject()),
+                                                               range));
+                                }
+                            } else {
+                                ElementHandle<Element> declHandle = ElementHandle.create(decl);
+                                FileObject sourceFile = SourceUtils.getFile(declHandle, cc.getClasspathInfo());
+                                JavaSource source = sourceFile != null ? JavaSource.forFileObject(sourceFile) : null;
+                                if (source != null) {
+                                    source.runUserActionTask(nestedCC -> {
+                                        nestedCC.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                                        Element declHandle2 = declHandle.resolve(nestedCC);
+                                        TreePath declPath2 = declHandle2 != null ? nestedCC.getTrees().getPath(declHandle2) : null;
+                                        if (declPath2 != null) {
+                                            Range range = declarationRange(nestedCC, declPath2);
+                                            if (range != null) {
+                                                locations.add(new Location(toUri(nestedCC.getFileObject()),
+                                                                           range));
+                                            }
+                                        }
+                                    }, true);
+                                }
+                            }
+                        }
+                    }
+                    query[0] = new WhereUsedQuery(Lookups.singleton(TreePathHandle.create(path, cc)));
+                }, true);
+                if (cancel.get()) return ;
+                cancelCallback[0] = () -> query[0].cancelRequest();
+                RefactoringSession refactoring = RefactoringSession.create("FindUsages");
+                Problem p;
+                p = query[0].checkParameters();
+                if (cancel.get()) return ;
+                if (p != null && p.isFatal()) {
+                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    return ;
+                }
+                p = query[0].preCheck();
+                if (p != null && p.isFatal()) {
+                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    return ;
+                }
+                if (cancel.get()) return ;
+                p = query[0].prepare(refactoring);
+                if (p != null && p.isFatal()) {
+                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    return ;
+                }
+                for (RefactoringElement re : refactoring.getRefactoringElements()) {
+                    if (cancel.get()) return ;
+                    locations.add(new Location(toUri(re.getParentFile()), toRange(re.getPosition())));
+                }
+
+                refactoring.finished();
+
+                result.complete(locations);
+            } catch (Throwable ex) {
+                result.completeExceptionally(ex);
+            }
+        });
+        return result;
+    }
+
+    private static Range declarationRange(CompilationInfo info, TreePath tp) {
+        Tree t = tp.getLeaf();
+        int[] span;
+        if (TreeUtilities.CLASS_TREE_KINDS.contains(t.getKind())) {
+            span = info.getTreeUtilities().findNameSpan((ClassTree) t);
+        } else if (t.getKind() == Kind.VARIABLE) {
+            span = info.getTreeUtilities().findNameSpan((VariableTree) t);
+        } else if (t.getKind() == Kind.METHOD) {
+            span = info.getTreeUtilities().findNameSpan((MethodTree) t);
+            if (span == null) {
+                span = info.getTreeUtilities().findNameSpan((ClassTree) tp.getParentPath().getLeaf());
+            }
+        } else {
+            return null;
+        }
+        if (span == null) {
+            return null;
+        }
+        return new Range(createPosition(info.getCompilationUnit().getLineMap(), span[0]),
+                         createPosition(info.getCompilationUnit().getLineMap(), span[1]));
+    }
+
+    private static Range toRange(PositionBounds bounds) throws IOException {
+        return new Range(new Position(bounds.getBegin().getLine(),
+                                      bounds.getBegin().getColumn()),
+                         new Position(bounds.getEnd().getLine(),
+                                      bounds.getEnd().getColumn()));
     }
 
     @Override

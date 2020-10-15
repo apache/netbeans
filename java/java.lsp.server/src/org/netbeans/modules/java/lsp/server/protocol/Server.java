@@ -158,6 +158,7 @@ public final class Server {
             capabilities.setDocumentSymbolProvider(true);
             capabilities.setDefinitionProvider(true);
             capabilities.setDocumentHighlightProvider(true);
+            capabilities.setReferencesProvider(true);
             capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(Arrays.asList(JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT)));
             return CompletableFuture.completedFuture(new InitializeResult(capabilities));
         }

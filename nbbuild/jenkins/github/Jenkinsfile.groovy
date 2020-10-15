@@ -33,6 +33,10 @@ pipeline {
         issueCommentTrigger('.*test this please.*')
     }
  
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+ 
     environment { 
         ANT_OPTS = '-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json'
     }

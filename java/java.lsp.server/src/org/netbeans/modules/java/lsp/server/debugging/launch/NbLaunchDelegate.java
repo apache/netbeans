@@ -18,17 +18,17 @@
  */
 package org.netbeans.modules.java.lsp.server.debugging.launch;
 
-import com.sun.jdi.VMDisconnectedException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+
+import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
+import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
+import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.debugger.DebuggerManager;
@@ -63,7 +63,9 @@ public abstract class NbLaunchDelegate {
         Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, debug);
         CompletableFuture<Void> launchFuture = new CompletableFuture<>();
         if (providerAndCommand == null) {
-            launchFuture.completeExceptionally(new CancellationException("Cannot find " + (debug ? "debug" : "run") + " action!"));
+            launchFuture.completeExceptionally(new ResponseErrorException(new ResponseError(
+                    ResponseErrorCode.MethodNotFound,
+                    "Cannot find " + (debug ? "debug" : "run") + " action!", null)));
             return launchFuture;
         }
         NbProcessConsole ioContext = new NbProcessConsole(consoleMessages);

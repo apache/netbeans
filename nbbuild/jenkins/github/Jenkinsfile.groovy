@@ -50,32 +50,42 @@ pipeline {
         
         stage('Verify RAT report') {
             steps {
-                sh 'ant rat'
+                withAnt {
+                    sh 'ant rat'
+                }
             }
         }
      
         stage('Verify libs and licenses') {
             steps {
-                sh 'ant verify-libs-and-licenses'
+                withAnt {
+                    sh 'ant verify-libs-and-licenses'
+                }
             }
         }
         
         stage('Build') {
             steps {
-                sh 'ant build'
+                withAnt {
+                    sh 'ant build'
+                }
             }
         }
      
         stage('Verify sigtests') {
             steps {
-                sh 'ant check-sigtests-release'
+                withAnt {
+                    sh 'ant check-sigtests-release'
+                }
             }
         }
      
         stage('Commit validation') {
             steps {
                 wrap([$class: 'Xvfb']) {
-                    sh 'ant commit-validation'
+                    withAnt {
+                        sh 'ant commit-validation'
+                    }
                 }
             }
         }

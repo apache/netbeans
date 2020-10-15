@@ -1,0 +1,17 @@
+Code completion result for source line:
+->|testStaticReturnTypeParent(); // parent test5
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testSelfReturnNullableTypePare  [PUBLIC]   ParentClass
+METHOD     testSelfReturnNullableTypePare  [STATIC]   ParentClass
+METHOD     testSelfReturnTypeParent()      [PUBLIC]   ParentClass
+METHOD     testSelfReturnTypeParentStatic  [STATIC]   ParentClass
+METHOD     testSelfReturnUnionTypeParent(  [PUBLIC]   ParentClass
+METHOD     testSelfReturnUnionTypeParentS  [STATIC]   ParentClass
+METHOD     testStaticReturnNullableTypePa  [PUBLIC]   ParentClass
+METHOD     testStaticReturnNullableTypePa  [STATIC]   ParentClass
+METHOD     testStaticReturnTypeParent()    [PUBLIC]   ParentClass
+METHOD     testStaticReturnTypeParentStat  [STATIC]   ParentClass
+METHOD     testStaticReturnUnionTypeParen  [PUBLIC]   ParentClass
+METHOD     testStaticReturnUnionTypeParen  [STATIC]   ParentClass
+METHOD     testStaticSelfReturnUnionTypeP  [PUBLIC]   ParentClass
+METHOD     testStaticSelfReturnUnionTypeP  [STATIC]   ParentClass

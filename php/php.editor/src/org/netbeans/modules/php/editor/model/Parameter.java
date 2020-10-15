@@ -38,6 +38,7 @@ public interface Parameter {
     boolean isMandatory();
     boolean isReference();
     boolean isVariadic();
+    boolean isUnionType();
     /*mixed types can be documented in php doc*/
     List<QualifiedName> getTypes();
     OffsetRange getOffsetRange();

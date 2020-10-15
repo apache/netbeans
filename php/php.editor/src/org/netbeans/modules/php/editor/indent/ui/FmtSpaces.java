@@ -21,6 +21,8 @@ package org.netbeans.modules.php.editor.indent.ui;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -36,12 +38,14 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.modules.options.editor.spi.PreferencesCustomizer;
 import org.netbeans.modules.php.editor.indent.FmtOptions;
 import static org.netbeans.modules.php.editor.indent.FmtOptions.*;
@@ -54,12 +58,15 @@ import org.openide.util.NbBundle;
 public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseListener, KeyListener {
 
     private static final Logger LOGGER = Logger.getLogger(FmtSpaces.class.getName());
+    private static final long serialVersionUID = -6294326198369301057L;
+    @StaticResource
+    private static final String PREVIEW_FILE = "org/netbeans/modules/php/editor/indent/ui/Spaces.php"; // NOI18N
 
     private SpacesCategorySupport scs;
-    private DefaultTreeModel model;
+    private final DefaultTreeModel model;
 
-    private DefaultTreeCellRenderer dr = new DefaultTreeCellRenderer();
-    private JCheckBox renderer = new JCheckBox();
+    private final DefaultTreeCellRenderer dr = new DefaultTreeCellRenderer();
+    private final JCheckBox renderer = new JCheckBox();
 
     /** Creates new form FmtSpaces */
     private FmtSpaces() {
@@ -91,9 +98,9 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
         return new PreferencesCustomizer.Factory() {
             @Override
             public PreferencesCustomizer create(Preferences preferences) {
-                String preview = "";
+                String preview = ""; // NOI18N
                 try {
-                    preview = Utils.loadPreviewText(FmtTabsIndents.class.getClassLoader().getResourceAsStream("org/netbeans/modules/php/editor/indent/ui/Spaces.php"));
+                    preview = Utils.loadPreviewText(FmtTabsIndents.class.getClassLoader().getResourceAsStream(PREVIEW_FILE));
                 } catch (IOException ex) {
                     LOGGER.log(Level.WARNING, null, ex);
                 }
@@ -109,38 +116,38 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
+        GridBagConstraints gridBagConstraints;
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        cfgTree = new javax.swing.JTree();
+        jScrollPane1 = new JScrollPane();
+        cfgTree = new JTree();
 
-        setName(org.openide.util.NbBundle.getMessage(FmtSpaces.class, "LBL_Spaces")); // NOI18N
+        setName(NbBundle.getMessage(FmtSpaces.class, "LBL_Spaces")); // NOI18N
         setOpaque(false);
-        setLayout(new java.awt.GridBagLayout());
+        setLayout(new GridBagLayout());
 
         cfgTree.setRootVisible(false);
         jScrollPane1.setViewportView(cfgTree);
-        cfgTree.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtSpaces.class, "FmtSpaces.cfgTree.AccessibleContext.accessibleName")); // NOI18N
-        cfgTree.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtSpaces.class, "FmtSpaces.cfgTree.AccessibleContext.accessibleDescription")); // NOI18N
+        cfgTree.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtSpaces.class, "FmtSpaces.cfgTree.AccessibleContext.accessibleName")); // NOI18N
+        cfgTree.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtSpaces.class, "FmtSpaces.cfgTree.AccessibleContext.accessibleDescription")); // NOI18N
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridheight = GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         add(jScrollPane1, gridBagConstraints);
-        jScrollPane1.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtSpaces.class, "FmtSpaces.jScrollPane1.AccessibleContext.accessibleName")); // NOI18N
-        jScrollPane1.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtSpaces.class, "FmtSpaces.jScrollPane1.AccessibleContext.accessibleDescription")); // NOI18N
+        jScrollPane1.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtSpaces.class, "FmtSpaces.jScrollPane1.AccessibleContext.accessibleName")); // NOI18N
+        jScrollPane1.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtSpaces.class, "FmtSpaces.jScrollPane1.AccessibleContext.accessibleDescription")); // NOI18N
 
-        getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtSpaces.class, "FmtSpaces.AccessibleContext.accessibleName")); // NOI18N
-        getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtSpaces.class, "FmtSpaces.AccessibleContext.accessibleDescription")); // NOI18N
+        getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtSpaces.class, "FmtSpaces.AccessibleContext.accessibleName")); // NOI18N
+        getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtSpaces.class, "FmtSpaces.AccessibleContext.accessibleDescription")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTree cfgTree;
-    private javax.swing.JScrollPane jScrollPane1;
+    private JTree cfgTree;
+    private JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
     // TreeCellRenderer implemetation ------------------------------------------
@@ -250,6 +257,7 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
                 new Item(SPACE_BEFORE_WHILE_PAREN),
                 new Item(SPACE_BEFORE_CATCH_PAREN),
                 new Item(SPACE_BEFORE_SWITCH_PAREN),
+                new Item(SPACE_BEFORE_MATCH_PAREN),
                 new Item(SPACE_BEFORE_ARRAY_DECL_PAREN)
                 ),
 
@@ -261,7 +269,9 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
                 new Item(SPACE_AROUND_KEY_VALUE_OPS),
                 new Item(SPACE_AROUND_ASSIGN_OPS),
                 new Item(SPACE_AROUND_OBJECT_OPS),
-                new Item(SPACE_AROUND_DECLARE_EQUAL)),
+                new Item(SPACE_AROUND_NULLSAFE_OBJECT_OPS),
+                new Item(SPACE_AROUND_DECLARE_EQUAL),
+                new Item(SPACE_AROUND_UNION_TYPE_SEPARATOR)),
 
             new Item("BeforeLeftBraces",                        // NOI18N
                 new Item(SPACE_BEFORE_CLASS_DECL_LEFT_BRACE),
@@ -272,6 +282,7 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
                 new Item(SPACE_BEFORE_FOR_LEFT_BRACE),
                 new Item(SPACE_BEFORE_DO_LEFT_BRACE),
                 new Item(SPACE_BEFORE_SWITCH_LEFT_BRACE),
+                new Item(SPACE_BEFORE_MATCH_LEFT_BRACE),
                 new Item(SPACE_BEFORE_TRY_LEFT_BRACE),
                 new Item(SPACE_BEFORE_CATCH_LEFT_BRACE),
                 new Item(SPACE_BEFORE_FINALLY_LEFT_BRACE),
@@ -286,6 +297,7 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
                 new Item(SPACE_WITHIN_FOR_PARENS),
                 new Item(SPACE_WITHIN_WHILE_PARENS),
                 new Item(SPACE_WITHIN_SWITCH_PARENS),
+                new Item(SPACE_WITHIN_MATCH_PARENS),
                 new Item(SPACE_WITHIN_CATCH_PARENS),
                 new Item(SPACE_WITHIN_ARRAY_DECL_PARENS),
                 new Item(SPACE_WITHIN_TYPE_CAST_PARENS),

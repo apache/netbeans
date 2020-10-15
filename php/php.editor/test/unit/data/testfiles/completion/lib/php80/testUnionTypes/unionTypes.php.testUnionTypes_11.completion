@@ -1,0 +1,9 @@
+Code completion result for source line:
+$object::$publicFieldClass1->|publicMethodClass1();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicMethodClass1()            [PUBLIC]   \UnionTypes1\Class1
+METHOD     publicMethodClass2()            [PUBLIC]   \UnionTypes1\Class2
+METHOD     publicStaticMethodClass1()      [STATIC]   \UnionTypes1\Class1
+METHOD     publicStaticMethodClass2()      [STATIC]   \UnionTypes1\Class2
+VARIABLE   mixed publicFieldClass1         [PUBLIC]   \UnionTypes1\Class1
+VARIABLE   mixed publicFieldClass2         [PUBLIC]   \UnionTypes1\Class2

@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,45 +17,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.parser.astnodes;
 
-/**
- * Represent a break statement
- *
- * <pre>
- * e.g.&lt;pre&gt; throw $exceptionClass;
- *
- */
-public class ThrowStatement extends Statement {
+namespace Test1 {
 
-    private Expression expression;
+    use Test2\Foo;
+    use Test2\Bar;
 
-    public ThrowStatement(int start, int end, Expression expr) {
-        super(start, end);
+    interface ImplementMethodTest {
 
-        if (expr == null) {
-            throw new IllegalArgumentException();
+        public function testMethod(float|int|array|Foo|null $param): Foo|Bar;
+    }
+
+}
+
+namespace Test2 {
+
+    use Test1\ImplementMethodTest;
+
+    class Implement implements ImplementMethodTest {
+        public function testMethod(float|int|array|Foo|null $param): Foo|Bar {
+            
         }
-        this.expression = expr;
+
     }
 
-    /**
-     * Returns the expression of this throw statement.
-     *
-     * @return the expression node
-     */
-    public Expression getExpression() {
-        return expression;
-    }
+    class Foo {}
 
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
+    class Bar {}
 
-    @Override
-    public String toString() {
-        return "throw " + getExpression(); //NOI18N
-    }
-
+    $instance = new Implement();
+    $instance->testMethod(null);
 }

@@ -29,9 +29,11 @@ import org.netbeans.modules.php.editor.api.elements.ParameterElement;
 import org.netbeans.modules.php.editor.elements.ParameterElementImpl;
 import org.netbeans.modules.php.editor.elements.TypeResolverImpl;
 import org.netbeans.modules.php.editor.model.impl.Type;
+import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.openide.util.Pair;
 
 /**
@@ -49,6 +51,7 @@ public final class FormalParameterInfo extends ASTNodeInfo<FormalParameter> {
         Expression parameterType = formalParameter.getParameterType();
         final boolean isRawType = parameterType != null;
         final boolean isNullableType = parameterType instanceof NullableType;
+        final boolean isUnionType = parameterType instanceof UnionType;
         QualifiedName parameterTypeName = QualifiedName.create(parameterType);
         List<Pair<QualifiedName, Boolean>> types;
         if (isRawType && parameterTypeName != null) {
@@ -57,6 +60,8 @@ public final class FormalParameterInfo extends ASTNodeInfo<FormalParameter> {
             } else {
                 types = paramDocTypes.get(name);
             }
+        } else if (isUnionType) {
+            types = VariousUtils.getParamTypesFromUnionTypes((UnionType) parameterType);
         } else {
             types = paramDocTypes.get(name);
         }
@@ -71,7 +76,8 @@ public final class FormalParameterInfo extends ASTNodeInfo<FormalParameter> {
                 formalParameter.isMandatory(),
                 isRawType,
                 formalParameter.isReference(),
-                formalParameter.isVariadic());
+                formalParameter.isVariadic(),
+                formalParameter.isUnionType());
     }
 
     public static FormalParameterInfo create(FormalParameter node, Map<String, List<Pair<QualifiedName, Boolean>>> paramDocTypes) {

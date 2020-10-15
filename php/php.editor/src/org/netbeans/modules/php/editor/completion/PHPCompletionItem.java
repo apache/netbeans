@@ -595,7 +595,8 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                             param.isMandatory(),
                             param.hasDeclaredType(),
                             param.isReference(),
-                            param.isVariadic());
+                            param.isVariadic(),
+                            param.isUnionType());
                 }
             }
             return param;
@@ -1067,8 +1068,10 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                 if (phpVersion != null
                         && phpVersion.compareTo(PhpVersion.PHP_70) >= 0) {
                     Collection<TypeResolver> returnTypes = getBaseFunctionElement().getReturnTypes();
-                    if (returnTypes.size() == 1) {
-                        String returnType = getBaseFunctionElement().asString(PrintAs.ReturnTypes);
+                    // we can also write a union type in phpdoc e.g. @return int|float
+                    // check whether the union type is actual declared return type to avoid adding the union type for phpdoc
+                    if (returnTypes.size() == 1 || getBaseFunctionElement().isReturnUnionType()) {
+                        String returnType = getBaseFunctionElement().asString(PrintAs.ReturnTypes, typeNameResolver, phpVersion);
                         if (StringUtils.hasText(returnType)) {
                             boolean nullableType = CodeUtils.isNullableType(returnType);
                             if (nullableType) {
@@ -1109,7 +1112,12 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             if (isMagic() || type.isInterface() || method.isAbstract()) {
                 template.append("${cursor};\n"); //NOI18N
             } else {
-                template.append("${cursor}parent::").append(getSignature().replace("&$", "$")).append(";\n"); //NOI18N
+                Collection<TypeResolver> returnTypes = getBaseFunctionElement().getReturnTypes();
+                if (returnTypes.size() == 1 || getBaseFunctionElement().isReturnUnionType()) {
+                    template.append("${cursor}return parent::").append(getSignature().replace("&$", "$")).append(";\n"); //NOI18N
+                } else {
+                    template.append("${cursor}parent::").append(getSignature().replace("&$", "$")).append(";\n"); //NOI18N
+                }
             }
             return template.toString();
         }
@@ -1185,12 +1193,13 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
     static class KeywordItem extends PHPCompletionItem {
 
-        String keyword = null;
+        final String keyword;
         private static final List<String> CLS_KEYWORDS =
                 Arrays.asList(PHPCodeCompletion.PHP_CLASS_KEYWORDS);
 
         KeywordItem(String keyword, CompletionRequest request) {
             super(null, request);
+            assert keyword != null;
             this.keyword = keyword;
         }
 

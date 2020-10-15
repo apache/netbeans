@@ -38,6 +38,7 @@ import org.netbeans.modules.php.editor.indent.FormatToken.AssignmentAnchorToken;
 import org.netbeans.modules.php.editor.indent.TokenFormatter.DocumentOptions;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTError;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
@@ -71,11 +72,12 @@ import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ListVariable;
+import org.netbeans.modules.php.editor.parser.astnodes.MatchArm;
+import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
-import org.netbeans.modules.php.editor.parser.astnodes.ParenthesisExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
@@ -90,6 +92,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.TraitConflictResolutionDe
 import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TryStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
@@ -455,7 +458,7 @@ public class FormatVisitor extends DefaultVisitor {
             } else if (parent instanceof DoStatement) {
                 formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_DO_LEFT_BRACE, ts.offset()));
             } else if (parent instanceof SwitchStatement) {
-                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_SWITCH_LEFT_BACE, ts.offset()));
+                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_SWITCH_LEFT_BRACE, ts.offset()));
             } else if (parent instanceof TryStatement) {
                 formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_TRY_LEFT_BRACE, ts.offset()));
             } else if (parent instanceof CatchClause) {
@@ -557,7 +560,7 @@ public class FormatVisitor extends DefaultVisitor {
                         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_WHILE_RIGHT_BRACE, ts.offset()));
                         addFormatToken(formatTokens);
                     } else if (parent instanceof SwitchStatement) {
-                        formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_SWITCH_RIGHT_BACE, ts.offset()));
+                        formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_SWITCH_RIGHT_BRACE, ts.offset()));
                         addFormatToken(formatTokens);
                     } else if (parent instanceof CatchClause || parent instanceof TryStatement || parent instanceof FinallyClause) {
                         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_CATCH_RIGHT_BRACE, ts.offset()));
@@ -977,9 +980,15 @@ public class FormatVisitor extends DefaultVisitor {
                     // anonymous classes
                     Assignment assignment = (Assignment) expression;
                     Expression right = assignment.getRightHandSide();
-                    if (isAnonymousClass(right)) {
+                    if (isAnonymousClass(right)
+                            || right instanceof LambdaFunctionDeclaration
+                            || right instanceof MatchExpression) {
                         addIndent = false;
                     }
+                } else if (expression instanceof LambdaFunctionDeclaration
+                        || expression instanceof ArrowFunctionDeclaration
+                        || expression instanceof MatchExpression) {
+                    addIndent = false;
                 }
                 if (addIndent) {
                     formatTokens.add(new FormatToken.IndentToken(ts.offset() + ts.token().length(), options.continualIndentSize));
@@ -1143,15 +1152,7 @@ public class FormatVisitor extends DefaultVisitor {
         // #270903 add indent
         formatTokens.add(new FormatToken.IndentToken(node.getFunctionName().getEndOffset(), options.continualIndentSize));
 
-        List<FormalParameter> parameters = node.getFormalParameters();
-        if (parameters != null && parameters.size() > 0) {
-            while (ts.moveNext() && ts.offset() < parameters.get(0).getStartOffset()
-                    && lastIndex < ts.index()) {
-                addFormatToken(formatTokens);
-            }
-            ts.movePrevious();
-            addListOfNodes(parameters, FormatToken.Kind.WHITESPACE_IN_PARAMETER_LIST);
-        }
+        addParameters(node.getFormalParameters());
 
         // #270903 add indent
         int indentEndOffset;
@@ -1172,41 +1173,70 @@ public class FormatVisitor extends DefaultVisitor {
 
     @Override
     public void visit(LambdaFunctionDeclaration node) {
-        scan(node.getFormalParameters());
-        addReturnType(node.getReturnType());
-        scan(node.getLexicalVariables());
+        disableIndentForFunctionInvocation(node.getStartOffset());
+
+        List<FormalParameter> parameters = node.getFormalParameters();
         Block body = node.getBody();
+        if (!parameters.isEmpty()) {
+            // enable indent only parameter list
+            addAllUntilOffset(parameters.get(0).getStartOffset());
+            formatTokens.add(new FormatToken.IndentToken(parameters.get(0).getStartOffset(), options.continualIndentSize));
+            addParameters(parameters);
+
+            int indentEndOffset;
+            Expression returnType = node.getReturnType();
+            if (!node.getLexicalVariables().isEmpty()) {
+                indentEndOffset = parameters.get(parameters.size() - 1).getEndOffset();
+            } else if (returnType != null) {
+                indentEndOffset = returnType.getStartOffset();
+            } else if (body != null) {
+                indentEndOffset = body.getStartOffset();
+            } else {
+                indentEndOffset = node.getEndOffset();
+            }
+            formatTokens.add(new FormatToken.IndentToken(indentEndOffset, -1 * options.continualIndentSize));
+        }
+
+        addLexicalVariables(node.getLexicalVariables());
+
+        addReturnType(node.getReturnType());
+
         if (body != null) {
-            // in case of (function(){echo "foo";})() and fn() => function() use ($y) {return $y;}, missing an indent
-            boolean addIndent = isParentParenthesisExpr() || isParentArrowFunctionParenthesisExpr();
-            if (addIndent) {
-                formatTokens.add(new FormatToken.IndentToken(ts.offset() + ts.token().length(), options.continualIndentSize));
-            }
-
             addAllUntilOffset(body.getStartOffset());
-            if (inArrayBalance == 0) {
-                formatTokens.add(new FormatToken.IndentToken(body.getStartOffset(), -1 * options.continualIndentSize));
-            }
             scan(body);
-            if (inArrayBalance == 0) {
-                formatTokens.add(new FormatToken.IndentToken(body.getEndOffset(), options.continualIndentSize));
-            }
+        }
 
-            if (addIndent) {
-                formatTokens.add(new FormatToken.IndentToken(node.getEndOffset(), -1 * options.continualIndentSize));
-            }
+        enableIndentForFunctionInvocation(node.getEndOffset());
+    }
+
+    private void disableIndentForFunctionInvocation(int offset) {
+        if (path.get(1) instanceof FunctionInvocation) {
+            // #233353 disable indent for function invocation temporarily
+            formatTokens.add(new FormatToken.IndentToken(offset, -1 * options.continualIndentSize));
         }
     }
 
-    private boolean isParentParenthesisExpr() {
-        return path.size() > 1
-                && (path.get(1) instanceof ParenthesisExpression);
+    private void enableIndentForFunctionInvocation(int offset) {
+        if (path.get(1) instanceof FunctionInvocation) {
+            // #233353 enable indent for function invocation
+            formatTokens.add(new FormatToken.IndentToken(offset, options.continualIndentSize));
+        }
     }
 
-    private boolean isParentArrowFunctionParenthesisExpr() {
-        return path.size() > 2
-                && (path.get(1) instanceof ArrowFunctionDeclaration)
-                && (path.get(2) instanceof ParenthesisExpression);
+    private void addParameters(List<FormalParameter> parameters) {
+        if (!parameters.isEmpty()) {
+            addAllUntilOffset(parameters.get(0).getStartOffset());
+            addListOfNodes(parameters, FormatToken.Kind.WHITESPACE_IN_PARAMETER_LIST);
+        }
+    }
+
+    private void addLexicalVariables(List<Expression> lexicalVariables) {
+        if (!lexicalVariables.isEmpty()) {
+            addAllUntilOffset(lexicalVariables.get(0).getStartOffset());
+            formatTokens.add(new FormatToken.IndentToken(lexicalVariables.get(0).getStartOffset(), options.continualIndentSize));
+            addListOfNodes(lexicalVariables, FormatToken.Kind.WHITESPACE_IN_PARAMETER_LIST);
+            formatTokens.add(new FormatToken.IndentToken(lexicalVariables.get(lexicalVariables.size() - 1).getEndOffset(), -1 * options.continualIndentSize));
+        }
     }
 
     private void addReturnType(@NullAllowed Expression returnType) {
@@ -1214,9 +1244,9 @@ public class FormatVisitor extends DefaultVisitor {
             return;
         }
         int endPosition = returnType.getEndOffset();
-        if (returnType instanceof NullableType) {
-            NullableType nullableType = (NullableType) returnType;
-            endPosition = nullableType.getStartOffset();
+        if (returnType instanceof NullableType
+                || returnType instanceof UnionType) {
+            endPosition = returnType.getStartOffset();
         }
         while (ts.moveNext()
                 && ts.offset() < endPosition
@@ -1224,8 +1254,9 @@ public class FormatVisitor extends DefaultVisitor {
             addFormatToken(formatTokens);
         }
         ts.movePrevious();
-        if (returnType instanceof NullableType) {
-            scan((NullableType) returnType);
+        if (returnType instanceof NullableType
+                || returnType instanceof UnionType) {
+            scan(returnType);
         }
     }
 
@@ -1233,10 +1264,12 @@ public class FormatVisitor extends DefaultVisitor {
     public void visit(FunctionInvocation node) {
         if (path.size() > 1 && path.get(1) instanceof MethodInvocation) {
             while (ts.moveNext() && ts.token().id() != PHPTokenId.PHP_OBJECT_OPERATOR
+                    && ts.token().id() != PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR
                     && ((ts.offset() + ts.token().length()) < node.getStartOffset())) {
                 addFormatToken(formatTokens);
             }
-            if (ts.token().id() == PHPTokenId.PHP_OBJECT_OPERATOR) {
+            if (ts.token().id() == PHPTokenId.PHP_OBJECT_OPERATOR
+                    || ts.token().id() == PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR) {
                 formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_IN_CHAINED_METHOD_CALLS, ts.offset()));
                 addFormatToken(formatTokens);
             } else {
@@ -1540,7 +1573,9 @@ public class FormatVisitor extends DefaultVisitor {
             addFormatToken(formatTokens);
         }
 
-        boolean addIndent = !isAnonymousClass(node.getExpression());
+        boolean addIndent = !isAnonymousClass(node.getExpression())
+                && !(path.size() > 2 && path.get(2) instanceof LambdaFunctionDeclaration) // #259111
+                && !(node.getExpression() instanceof MatchExpression);
 
         if (ts.token().id() == PHPTokenId.PHP_RETURN) {
             addFormatToken(formatTokens);
@@ -1625,6 +1660,55 @@ public class FormatVisitor extends DefaultVisitor {
             addAllUntilOffset(node.getEndOffset());
         } else {
             scan(node.getBody());
+        }
+    }
+
+    @Override
+    public void visit(MatchExpression node) {
+        disableIndentForFunctionInvocation(node.getStartOffset());
+
+        scan(node.getExpression());
+
+        addWhitespaceBeforeMatchLeftBraceToken(node);
+        List<MatchArm> matchArms = node.getMatchArms();
+        if (!matchArms.isEmpty()) {
+            MatchArm first = matchArms.get(0);
+            addAllUntilOffset(first.getStartOffset());
+            formatTokens.add(new FormatToken.IndentToken(first.getStartOffset(), options.indentSize));
+            scan(node.getMatchArms());
+            MatchArm last = matchArms.get(matchArms.size() - 1);
+            formatTokens.add(new FormatToken.IndentToken(last.getEndOffset(), -1 * options.indentSize));
+        }
+        addWhitespaceBeforeMatchRightBraceToken(node);
+
+        enableIndentForFunctionInvocation(node.getEndOffset());
+    }
+
+    private void addWhitespaceBeforeMatchRightBraceToken(MatchExpression node) {
+        // find }
+        while (moveNext() && ts.offset() < node.getEndOffset()
+                && (ts.offset() + ts.token().length()) <= node.getEndOffset()) {
+            Token<PHPTokenId> token = ts.token();
+            if (token.id() == PHPTokenId.PHP_CURLY_CLOSE) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_MATCH_RIGHT_BRACE, ts.offset()));
+                addFormatToken(formatTokens);
+                break;
+            }
+            addFormatToken(formatTokens);
+        }
+    }
+
+    private void addWhitespaceBeforeMatchLeftBraceToken(MatchExpression node) {
+        // find {
+        while (moveNext() && ts.offset() < node.getEndOffset()
+                && (ts.offset() + ts.token().length()) <= node.getEndOffset()) {
+            Token<PHPTokenId> token = ts.token();
+            if (token.id() == PHPTokenId.PHP_CURLY_OPEN) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_MATCH_LEFT_BRACE, ts.offset()));
+                addFormatToken(formatTokens);
+                break;
+            }
+            addFormatToken(formatTokens);
         }
     }
 
@@ -1819,6 +1903,22 @@ public class FormatVisitor extends DefaultVisitor {
         scan(node.getBody());
     }
 
+    @Override
+    public void visit(UnionType node) {
+        List<Expression> types = node.getTypes();
+        assert !types.isEmpty();
+        final Expression lastType = types.get(types.size() - 1);
+        for (int i = 0; i < types.size(); i++) {
+            Expression type = types.get(i);
+            scan(type);
+            if (type != lastType) {
+                Expression nextType = types.get(i + 1);
+                // add "|"
+                addAllUntilOffset(nextType.getStartOffset());
+            }
+        }
+    }
+
     private int lastIndex = -1;
 
     private String showAssertionFor188809() {
@@ -1909,6 +2009,11 @@ public class FormatVisitor extends DefaultVisitor {
                 tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                 tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_OBJECT_OP, ts.offset() + ts.token().length()));
                 break;
+            case PHP_NULLSAFE_OBJECT_OPERATOR:
+                tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_NULLSAFE_OBJECT_OP, ts.offset()));
+                tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_NULLSAFE_OBJECT_OP, ts.offset() + ts.token().length()));
+                break;
             case PHP_CASTING:
                 String text = ts.token().text().toString();
                 String part1 = text.substring(0, text.indexOf('(') + 1);
@@ -1981,6 +2086,10 @@ public class FormatVisitor extends DefaultVisitor {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_SWITCH_PAREN, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_SWITCH_PARENS, ts.offset() + ts.token().length()));
+                    } else if (parent instanceof MatchExpression) {
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_MATCH_PAREN, ts.offset()));
+                        tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_MATCH_PARENS, ts.offset() + ts.token().length()));
                     } else if (parent instanceof CatchClause) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_CATCH_PAREN, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
@@ -2014,6 +2123,9 @@ public class FormatVisitor extends DefaultVisitor {
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     } else if (parent instanceof SwitchStatement) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_SWITCH_PARENS, ts.offset()));
+                        tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                    } else if (parent instanceof MatchExpression) {
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_MATCH_PARENS, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     } else if (parent instanceof CatchClause) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_CATCH_PARENS, ts.offset()));
@@ -2071,6 +2183,14 @@ public class FormatVisitor extends DefaultVisitor {
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_DECLARE_EQUAL, ts.offset() + ts.token().length()));
                     break;
                 }
+                if (TokenUtilities.equals(txt2, Type.SEPARATOR)
+                        && path.get(0) instanceof UnionType) {
+                    // NETBEANS-4443 PHP 8.0 Union Types
+                    tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_UNION_TYPE_SEPARATOR, ts.offset()));
+                    tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), txt2.toString()));
+                    tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_UNION_TYPE_SEPARATOR, ts.offset() + ts.token().length()));
+                    break;
+                }
                 if (!TokenUtilities.startsWith(txt2, "==") // NOI18N NETBEANS-2149
                         && TokenUtilities.endsWith(txt2, "=")) { // NOI18N
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_ASSIGN_OP, ts.offset()));
@@ -2112,7 +2232,7 @@ public class FormatVisitor extends DefaultVisitor {
                     }
                     tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), txt2.toString()));
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_UNARY_OP, ts.offset() + ts.token().length()));
-                } else if (TokenUtilities.textEquals(txt2, "|") // NOI18N
+                } else if (TokenUtilities.textEquals(txt2, Type.SEPARATOR)
                         && path.get(0) instanceof CatchClause) {
                     tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_MULTI_CATCH_SEPARATOR, ts.offset()));
                     tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
@@ -2532,6 +2652,7 @@ public class FormatVisitor extends DefaultVisitor {
 
     private boolean isFieldTypeOrVariableToken(Token<PHPTokenId> token) {
         return PHPTokenId.PHP_VARIABLE == token.id()
+                || PHPTokenId.PHP_STRING == token.id()
                 || PHPTokenId.PHP_ARRAY == token.id()
                 || PHPTokenId.PHP_ITERABLE == token.id()
                 || PHPTokenId.PHP_PARENT == token.id()
@@ -2541,6 +2662,8 @@ public class FormatVisitor extends DefaultVisitor {
                 || PHPTokenId.PHP_TYPE_FLOAT == token.id()
                 || PHPTokenId.PHP_TYPE_OBJECT == token.id()
                 || PHPTokenId.PHP_TYPE_STRING == token.id()
+                || PHPTokenId.PHP_NULL == token.id()
+                || PHPTokenId.PHP_FALSE == token.id()
                 || PHPTokenId.PHP_NS_SEPARATOR == token.id() // \
                 || (PHPTokenId.PHP_TOKEN == token.id() && TokenUtilities.textEquals(token.text(), "?")) // NOI18N
                 || PHPTokenId.PHP_TYPE_VOID == token.id() // not supported type but just check it

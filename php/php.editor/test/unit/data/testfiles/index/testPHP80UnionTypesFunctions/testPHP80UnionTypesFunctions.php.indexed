@@ -1,0 +1,89 @@
+
+
+Document 0
+Searchable Keys:
+  base : arrowfunctiondeclaration:1205;ArrowFunctionDeclaration:1205;1205;$param:int|float:1::1:0:0:1;string|false;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;
+  base : arrowfunctiondeclaration:1262;ArrowFunctionDeclaration:1262;1262;$param:int|float:1::1:0:0:1;\Test1\Foo|\Test2\Bar|string;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;
+  base : lambdafunctiondeclaration:1030;LambdaFunctionDeclaration:1030;1030;$number:int|float|null:1::1:0:0:1;Foo|Bar;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;
+  base : lambdafunctiondeclaration:1112;LambdaFunctionDeclaration:1112;1112;$number:int|float|null:1::1:0:0:1;\Test1\Foo|\Test2\Bar;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;
+  base : union_types;union_types;824;$number:int|float:1::1:0:0:1,$param:Foo|Bar|null:1::1:0:0:1;int|float|\Foo;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;
+  base : union_types;union_types;919;$number:int|float:1::1:0:0:1,$param:\Test1|Foo|Bar|null:1::1:0:0:1;int|float|\Test1\Foo;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;
+  top : $arrow
+  top : $arrow2
+  top : $closure
+  top : $closure2
+  top : arrowfunctiondeclaration:1205
+  top : arrowfunctiondeclaration:1262
+  top : lambdafunctiondeclaration:1030
+  top : lambdafunctiondeclaration:1112
+  top : union_types
+  top : union_types
+  var : $arrow2;$arrow2;;1253;0;<TESTURL>/testPHP80UnionTypesFunctions.php;
+  var : $arrow;$arrow;;1197;0;<TESTURL>/testPHP80UnionTypesFunctions.php;
+  var : $closure2;$closure2;;1101;0;<TESTURL>/testPHP80UnionTypesFunctions.php;
+  var : $closure;$closure;;1020;0;<TESTURL>/testPHP80UnionTypesFunctions.php;
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  identifier_used : arrow2;
+  identifier_used : arrow;
+  identifier_used : bar;
+  identifier_used : bar;
+  identifier_used : bar;
+  identifier_used : bar;
+  identifier_used : bar;
+  identifier_used : closure2;
+  identifier_used : closure;
+  identifier_used : false;
+  identifier_used : float;
+  identifier_used : float;
+  identifier_used : float;
+  identifier_used : float;
+  identifier_used : float;
+  identifier_used : float;
+  identifier_used : float;
+  identifier_used : float;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : number;
+  identifier_used : number;
+  identifier_used : number;
+  identifier_used : number;
+  identifier_used : param;
+  identifier_used : param;
+  identifier_used : param;
+  identifier_used : param;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : test1;
+  identifier_used : test1;
+  identifier_used : test1;
+  identifier_used : test1;
+  identifier_used : test2;
+  identifier_used : test2;
+  identifier_used : union_types;
+  identifier_used : union_types;
+
+Not Searchable Keys:

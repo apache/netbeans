@@ -1,0 +1,10 @@
+Code completion result for source line:
+$this->|publicFieldInterfaceImpl->publicMethodClass1();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     interfaceMethod(Class1|Class2|  [PUBLIC]   \UnionTypes1\InterfaceImpl
+METHOD     publicMethodTrait1(Class2|Clas  [PUBLIC]   \UnionTypes1\Trait1
+METHOD     publicStaticMethodTrait1()      [STATIC]   \UnionTypes1\Trait1
+METHOD     testMethodPhpDoc($object)       [PUBLIC]   \UnionTypes1\InterfaceImpl
+METHOD     testWithWhitespaces(Class1|Cla  [PUBLIC]   \UnionTypes1\InterfaceImpl
+VARIABLE   mixed publicFieldInterfaceImpl  [PUBLIC]   \UnionTypes1\InterfaceImpl
+VARIABLE   mixed publicFieldTrait1         [PUBLIC]   \UnionTypes1\Trait1

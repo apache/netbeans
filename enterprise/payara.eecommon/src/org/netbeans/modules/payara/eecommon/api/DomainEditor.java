@@ -62,8 +62,8 @@ public class DomainEditor {
     private static final String HTTPS_PROXY_PORT = "-Dhttps.proxyPort=";
     private static final String HTTP_PROXY_NO_HOST = "-Dhttp.nonProxyHosts=";
     
-    private static String SAMPLE_DATASOURCE = "jdbc/sample"; //NOI18N
-    private static String SAMPLE_CONNPOOL = "SamplePool"; //NOI18N
+    private static String SAMPLE_DATASOURCE = "jdbc/__default"; //NOI18N
+    private static String SAMPLE_CONNPOOL = "H2Pool"; //NOI18N
     
     private static String NBPROFILERNAME = "NetBeansProfiler"; //NOI18N
     
@@ -82,7 +82,6 @@ public class DomainEditor {
     static private String CONST_DS_CLASS = "datasource-classname"; // NOI18N
     static private String CONST_RES_TYPE = "res-type"; // NOI18N
     static private String CONST_JVM_OPTIONS = "jvm-options"; // NOI18N
-    static private String CONST_DERBY_CONN_ATTRS = "connectionAttributes"; // NOI18N
     static private String CONST_JNDINAME = "jndi-name"; // NOI18N
     static private String CONST_PROP = "property"; // NOI18N
     static private String CONST_POOLNAME = "pool-name"; // NOI18N
@@ -517,7 +516,6 @@ public class DomainEditor {
         pValues.put(CONST_DATABASE_NAME, (String) map.get(CONST_DATABASE_NAME));
         pValues.put(CONST_SID, (String) map.get(CONST_SID));
         pValues.put(CONST_DRIVER_CLASS, (String) map.get(CONST_DRIVER_CLASS));
-        pValues.put(CONST_DERBY_CONN_ATTRS, (String) map.get(CONST_DERBY_CONN_ATTRS));
         if (dsClassName != null) {
             pValues.put("dsClassName", dsClassName.getNodeValue());
         }
@@ -603,18 +601,13 @@ public class DomainEditor {
                 cpAttrMap.getNamedItem(CONST_NAME).setNodeValue(SAMPLE_CONNPOOL);
             }
             if(cpAttrMap.getNamedItem(CONST_DS_CLASS) != null) {
-                cpAttrMap.getNamedItem(CONST_DS_CLASS).setNodeValue("org.apache.derby.jdbc.ClientDataSource"); //N0I18N
+                cpAttrMap.getNamedItem(CONST_DS_CLASS).setNodeValue("org.h2.jdbcx.JdbcDataSource"); //N0I18N
             }
             if(cpAttrMap.getNamedItem(CONST_RES_TYPE) != null) {
                 cpAttrMap.getNamedItem(CONST_RES_TYPE).setNodeValue("javax.sql.DataSource"); //N0I18N
             }
-            HashMap<String, String> poolProps = new HashMap<String, String>();
-            poolProps.put(CONST_SERVER_NAME, "localhost"); //N0I18N
-            poolProps.put(CONST_PASSWORD, "app"); //N0I18N
-            poolProps.put(CONST_USER, "app"); //N0I18N
-            poolProps.put(CONST_DATABASE_NAME, "sample"); //N0I18N
-            poolProps.put(CONST_PORT_NUMBER, "1527"); //N0I18N
-            poolProps.put(CONST_URL, "jdbc:derby://localhost:1527/sample"); //N0I18N
+            HashMap<String, String> poolProps = new HashMap<>();
+            poolProps.put(CONST_URL, "jdbc:h2:${com.sun.aas.instanceRoot}/lib/databases/embedded_default;AUTO_SERVER=TRUE"); //N0I18N
 
             Object[] propNames = poolProps.keySet().toArray();
             for(int i=0; i<propNames.length; i++){
@@ -654,7 +647,7 @@ public class DomainEditor {
     }
 
     private HashMap<String,Node> getConnPoolsNodeMap(Document domainDoc){
-        HashMap<String,Node> connPoolMap = new HashMap<String,Node>();
+        HashMap<String,Node> connPoolMap = new HashMap<>();
         NodeList connPoolNodeList = domainDoc.getElementsByTagName(CONST_CP);
         for(int i=0; i<connPoolNodeList.getLength(); i++){
             Node cpNode = connPoolNodeList.item(i);
@@ -666,7 +659,7 @@ public class DomainEditor {
     }
 
     public HashMap<String,String> getAdminObjectResourcesFromXml(){
-        HashMap<String,String> aoResources = new HashMap<String,String>();
+        HashMap<String,String> aoResources = new HashMap<>();
         Document domainDoc = getDomainDocument();
         if (domainDoc != null) {
             NodeList adminObjectNodeList = domainDoc.getElementsByTagName(CONST_AO);

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.4
+#Version 2.5.1
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -2358,8 +2358,7 @@ fld public final static java.lang.String MANIFEST_COMPONENTS_SEPARATOR = ";"
 fld public final static java.lang.String MANIFEST_EOL = "%%%EOL%%%"
 fld public final static java.lang.String MANIFEST_RESOURCES_SEPARATOR = "[,;]"
 fld public final static java.lang.String PF_COMMON_UTIL_JAR = "common-util.jar"
-fld public final static java.lang.String PF_DERBY_DIR_NAME = "javadb"
-fld public final static java.lang.String PF_DERBY_ROOT_PROPERTY = "com.sun.aas.derbyRoot"
+fld public final static java.lang.String PF_H2_DIR_NAME = "h2db"
 fld public final static java.lang.String PF_DOMAINS_DIR_NAME = "domains"
 fld public final static java.lang.String PF_DOMAIN_CONFIG_DIR_NAME = "config"
 fld public final static java.lang.String PF_DOMAIN_CONFIG_FILE_NAME = "domain.xml"
@@ -2397,7 +2396,7 @@ meth public static java.io.File getJerseyCommonJarInModules(java.lang.String)
 meth public static java.io.File getServerLogFile(org.netbeans.modules.payara.tooling.data.PayaraServer)
 meth public static java.lang.String basicAuthCredentials(java.lang.String,java.lang.String)
 meth public static java.lang.String cmdLineArgument(java.lang.String,java.lang.String)
-meth public static java.lang.String getDerbyRoot(org.netbeans.modules.payara.tooling.data.PayaraServer)
+meth public static java.lang.String getH2Root(org.netbeans.modules.payara.tooling.data.PayaraServer)
 meth public static java.lang.String getDomainConfigFile(java.lang.String,java.lang.String)
 meth public static java.lang.String getDomainConfigPath(java.lang.String)
 meth public static java.lang.String getDomainPath(org.netbeans.modules.payara.tooling.data.PayaraServer)

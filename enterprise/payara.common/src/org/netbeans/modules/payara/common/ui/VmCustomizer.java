@@ -29,7 +29,6 @@ import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.PlatformsCustomizer;
 import org.netbeans.modules.payara.common.PayaraInstance;
 import org.netbeans.modules.payara.common.utils.JavaUtils;
-import org.netbeans.modules.payara.spi.RegisteredDerbyServer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
@@ -180,18 +179,6 @@ public class VmCustomizer extends javax.swing.JPanel {
             }
         }
         instance.setJavaHome(selectedJavaHome);
-        if (selectedJavaHome != null) {
-            RegisteredDerbyServer db = Lookup.getDefault().lookup(RegisteredDerbyServer.class);
-            if (null != db) {
-                File f = new File(selectedJavaHome);
-                if (f.exists() && f.canRead() && f.isDirectory()) {
-                    File dbdir = new File(f, "db"); // NOI18N
-                    if (dbdir.exists() && dbdir.isDirectory() && dbdir.canRead()) {
-                        db.initialize(dbdir.getAbsolutePath());
-                    }
-                }
-            }
-        }
         instance.putProperty(PayaraModule.USE_SHARED_MEM_ATTR,
                 Boolean.toString(useSharedMemRB.isSelected()));
         instance.putProperty(PayaraModule.USE_IDE_PROXY_FLAG,

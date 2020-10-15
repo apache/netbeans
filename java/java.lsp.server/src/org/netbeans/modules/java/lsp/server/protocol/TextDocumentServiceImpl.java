@@ -52,6 +52,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 import java.util.prefs.Preferences;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -884,6 +885,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         doc.insertString(0, text, null);
                     }
                 } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
                     //TODO: include stack trace:
                     client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
                 }
@@ -894,6 +896,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             runDiagnoticTasks(params.getTextDocument().getUri());
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
+        } finally {
+            reportNotificationDone("didOpen", params);
         }
     }
 
@@ -913,11 +917,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
         });
         runDiagnoticTasks(params.getTextDocument().getUri());
+        reportNotificationDone("didChange", params);
     }
 
     @Override
     public void didClose(DidCloseTextDocumentParams params) {
         openedDocuments.remove(params.getTextDocument().getUri());
+        reportNotificationDone("didClose", params);
     }
 
     @Override
@@ -1151,4 +1157,16 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         return edits;
     }
+    
+    private static void reportNotificationDone(String s, Object parameter) {
+        if (HOOK_NOTIFICATION != null) {
+            HOOK_NOTIFICATION.accept(s, parameter);
+        }
+    }
+    
+    /**
+     * For testing only; calls that do not return a result should call
+     * this hook, if defined, with the method name and parameter.
+     */
+    static BiConsumer<String, Object> HOOK_NOTIFICATION = null;
 }

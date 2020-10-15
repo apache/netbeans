@@ -47,7 +47,7 @@ import static org.netbeans.modules.gradle.Bundle.*;
 import org.netbeans.modules.gradle.actions.KeyValueTableModel;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
-import org.netbeans.modules.gradle.actions.ProjectActionMappingProvider;
+import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.customizer.CustomActionMapping;
 import org.netbeans.modules.gradle.spi.actions.AfterBuildActionHook;
 import org.netbeans.modules.gradle.spi.actions.BeforeBuildActionHook;

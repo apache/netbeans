@@ -17,13 +17,14 @@
  * under the License.
  */
 
-package org.netbeans.modules.gradle.actions;
+package org.netbeans.modules.gradle.spi.actions;
 
 import java.util.Set;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
 
 /**
  * @author Laszlo Kishalmi
+ * @since 2.6
  */
 public interface ProjectActionMappingProvider {
 

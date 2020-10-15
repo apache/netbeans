@@ -27,6 +27,8 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gradle.AbstractGradleProjectTestCase;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -70,4 +72,15 @@ public class RunUtilsTest extends AbstractGradleProjectTestCase {
         assertEquals(0, params.size());
     }
 
+    public void testEvaluateArgs1() throws Exception {
+        FileObject a = createGradleProject("projectA",
+                "apply plugin: 'java'\n", "");
+        Project prjA = ProjectManager.getDefault().findProject(a);
+        ProjectTrust.getDefault().trustProject(prjA);
+        openProject(a);
+        String[] args = RunUtils.evaluateActionArgs(prjA, null, "Project: ${projectPath}${projectName}", Lookups.singleton(prjA));
+        assertEquals(2, args.length);
+        assertEquals("Project:", args[0]);
+        assertEquals(":projectA", args[1]);
+    }
 }

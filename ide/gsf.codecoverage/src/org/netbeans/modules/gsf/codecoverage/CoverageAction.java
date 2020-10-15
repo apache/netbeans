@@ -38,13 +38,14 @@ import org.openide.util.actions.Presenter;
 // TODO  -  ShowMenu extends AbstractAction implements DynamicMenuContent {
 // See ShowMenu.java in mercurial for simpler way to do this
 public final class CoverageAction extends AbstractAction implements ContextAwareAction {
+
     private static final int ACTION_TOGGLE_COLLECT = 1;
     private static final int ACTION_TOGGLE_AGGREGATION = 2;
     private static final int ACTION_CLEAR_RESULTS = 3;
     private static final int ACTION_SHOW_REPORT = 4;
     private static final int ACTION_TOGGLE_EDITORBAR = 5;
-    private Action configureAction;
-    private Action[] extraActions;
+    private final Action configureAction;
+    private final Action[] extraActions;
 
     public CoverageAction(Action configureAction, Action[] extraActions) {
         super();
@@ -57,6 +58,7 @@ public final class CoverageAction extends AbstractAction implements ContextAware
         assert false : "Action should never be called without a context";
     }
 
+    @Override
     public Action createContextAwareInstance(Lookup actionContext) {
         return new ContextAction(actionContext, configureAction, extraActions);
     }
@@ -68,14 +70,16 @@ public final class CoverageAction extends AbstractAction implements ContextAware
         return new LazyMenu(project, configureAction, extraActions);
     }
 
-    /** Build up a nested menu of migration tasks for the given project */
+    /**
+     * Build up a nested menu of migration tasks for the given project
+     */
     static void buildMenu(JMenu menu, Project project, Action configureAction, Action[] extraActions) {
         boolean enabled = true;
         if (configureAction != null && configureAction.isEnabled()) {
             enabled = false;
 
-            JMenuItem menuitem =
-                    new JMenuItem((String) configureAction.getValue(Action.NAME));
+            JMenuItem menuitem
+                = new JMenuItem((String) configureAction.getValue(Action.NAME));
             menuitem.addActionListener(configureAction);
             menu.add(menuitem);
 
@@ -85,7 +89,6 @@ public final class CoverageAction extends AbstractAction implements ContextAware
 
         }
         CoverageManagerImpl manager = CoverageManagerImpl.getInstance();
-
 
         boolean selected = manager.isEnabled(project);
         JMenuItem menuitem = new JCheckBoxMenuItem(NbBundle.getMessage(CoverageAction.class, "LBL_CollectCoverageAction"), selected);
@@ -121,7 +124,7 @@ public final class CoverageAction extends AbstractAction implements ContextAware
         menu.addSeparator();
 
         menuitem = new JMenuItem(NbBundle.getMessage(CoverageAction.class,
-                "LBL_ShowReportAction"));
+            "LBL_ShowReportAction"));
         menuitem.addActionListener(new CoverageItemHandler(project, ACTION_SHOW_REPORT));
         //menuitem.setToolTipText(target.getDescription());
         if (!enabled || !on) {
@@ -131,7 +134,7 @@ public final class CoverageAction extends AbstractAction implements ContextAware
         menu.addSeparator();
 
         menuitem = new JCheckBoxMenuItem(NbBundle.getMessage(CoverageAction.class, "LBL_ShowEditorBar"),
-                manager.getShowEditorBar());
+            manager.getShowEditorBar());
         menuitem.addActionListener(new CoverageItemHandler(project, ACTION_TOGGLE_EDITORBAR));
         if (!enabled || !on) {
             menuitem.setEnabled(false);
@@ -166,9 +169,10 @@ public final class CoverageAction extends AbstractAction implements ContextAware
      * The particular instance of this action for a given project.
      */
     private static final class ContextAction extends AbstractAction implements Presenter.Popup {
+
         private final Project project;
-        private Action configureAction;
-        private Action[] extraActions;
+        private final Action configureAction;
+        private final Action[] extraActions;
 
         public ContextAction(Lookup lkp, Action configureAction, Action[] extraActions) {
             super(NbBundle.getMessage(CoverageAction.class, "LBL_CodeCoverage"));
@@ -186,10 +190,12 @@ public final class CoverageAction extends AbstractAction implements ContextAware
             super.setEnabled(project != null);
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             assert false : "Action should not be called directly";
         }
 
+        @Override
         public JMenuItem getPopupPresenter() {
             if (project != null) {
                 return createMenu(project, configureAction, extraActions);
@@ -205,10 +211,11 @@ public final class CoverageAction extends AbstractAction implements ContextAware
     }
 
     private static final class LazyMenu extends JMenu {
+
         private final Project project;
         private boolean initialized = false;
-        private Action configureAction;
-        private Action[] extraActions;
+        private final Action configureAction;
+        private final Action[] extraActions;
 
         public LazyMenu(Project project, Action configureAction, Action[] extraActions) {
             super(NbBundle.getMessage(CoverageAction.class, "LBL_CodeCoverage"));
@@ -234,6 +241,7 @@ public final class CoverageAction extends AbstractAction implements ContextAware
      * Action handler for a menu item representing one target.
      */
     private static final class CoverageItemHandler implements ActionListener {
+
         private final Project project;
         private final int action;
 
@@ -242,6 +250,7 @@ public final class CoverageAction extends AbstractAction implements ContextAware
             this.action = action;
         }
 
+        @Override
         public void actionPerformed(ActionEvent ev) {
             CoverageManagerImpl manager = CoverageManagerImpl.getInstance();
             switch (action) {

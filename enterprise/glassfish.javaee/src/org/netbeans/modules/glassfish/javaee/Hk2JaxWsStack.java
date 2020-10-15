@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.netbeans.api.j2ee.core.Profile;
+import org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformImpl;
 import org.netbeans.modules.javaee.specs.support.api.JaxWs;
 import org.netbeans.modules.websvc.wsstack.api.WSStack.Feature;
 import org.netbeans.modules.websvc.wsstack.api.WSStack.Tool;
@@ -55,9 +56,9 @@ public class Hk2JaxWsStack implements WSStackImplementation<JaxWs> {
 
     private String gfRootStr;
     private JaxWs jaxWs;
-    private Hk2JavaEEPlatformImpl platform;
+    private J2eePlatformImpl platform;
 
-    public Hk2JaxWsStack(String gfRootStr, Hk2JavaEEPlatformImpl platform ) {
+    public Hk2JaxWsStack(String gfRootStr, J2eePlatformImpl platform ) {
         this.gfRootStr = gfRootStr;
         jaxWs = new JaxWs(getUriDescriptor());
         this.platform = platform;

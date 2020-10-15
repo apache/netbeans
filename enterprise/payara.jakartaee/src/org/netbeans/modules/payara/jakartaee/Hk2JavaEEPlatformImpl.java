@@ -43,6 +43,8 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.libraries.Library;
+import org.netbeans.modules.glassfish.javaee.Hk2JaxRpcStack;
+import org.netbeans.modules.glassfish.javaee.Hk2JaxWsStack;
 import org.netbeans.modules.payara.spi.PayaraModule;
 import org.netbeans.modules.payara.spi.ServerUtilities;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;

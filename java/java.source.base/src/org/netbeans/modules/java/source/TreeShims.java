@@ -20,11 +20,13 @@ package org.netbeans.modules.java.source;
 
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.ListBuffer;
 import java.lang.reflect.InvocationTargetException;
@@ -147,6 +149,32 @@ public class TreeShims {
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw TreeShims.<RuntimeException>throwAny(ex);
         }
+    }
+    public static List<? extends Tree> getPermits(ClassTree node) {
+        List<? extends Tree> perms = null;
+        try {
+            Class classTree = Class.forName("com.sun.source.tree.ClassTree");
+            Method getPerms = classTree.getDeclaredMethod("getPermitsClause");
+            perms = (List<? extends Tree>) getPerms.invoke(node);
+        } catch (ClassNotFoundException | NoSuchMethodException ex) {
+            return null;
+        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+        return perms;
+    }
+
+    public static List<? extends Tree> getPermits(JCClassDecl newT) {
+        List<JCTree.JCExpression> newPermitings = new ArrayList<>();
+        try {
+            Class jCClassDecl = Class.forName("com.sun.tools.javac.tree.JCTree$JCClassDecl");
+            newPermitings = (com.sun.tools.javac.util.List<JCTree.JCExpression>) jCClassDecl.getDeclaredField("permitting").get(newT);
+        } catch (ClassNotFoundException | NoSuchFieldException ex) {
+            return null;
+        } catch (IllegalArgumentException | IllegalAccessException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+        return newPermitings;
     }
 
     public static ExpressionTree getYieldValue(Tree node) {

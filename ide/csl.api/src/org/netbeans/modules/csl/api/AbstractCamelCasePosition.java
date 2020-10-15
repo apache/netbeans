@@ -24,8 +24,9 @@ import java.util.prefs.Preferences;
 import javax.swing.Action;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.AtomicLockDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseAction;
-import org.netbeans.editor.BaseDocument;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -65,11 +66,11 @@ public abstract class AbstractCamelCasePosition extends BaseAction {
                     originalAction.actionPerformed(evt);
                 }
             } else {
-                final BaseDocument bdoc = org.netbeans.editor.Utilities.getDocument(target);
+                AtomicLockDocument bdoc = LineDocumentUtils.as(target.getDocument(), AtomicLockDocument.class);
                 if (bdoc != null) {
                     bdoc.runAtomic(new Runnable() {
                         public void run() {
-                            DocumentUtilities.setTypingModification(bdoc, true);
+                            DocumentUtilities.setTypingModification(target.getDocument(), true);
                             try {
                                 int offset = newOffset(target);
                                 if (offset != -1) {
@@ -78,7 +79,7 @@ public abstract class AbstractCamelCasePosition extends BaseAction {
                             } catch (BadLocationException ble) {
                                 target.getToolkit().beep();
                             } finally {
-                                DocumentUtilities.setTypingModification(bdoc, false);
+                                DocumentUtilities.setTypingModification(target.getDocument(), false);
                             }
                         }
                     });

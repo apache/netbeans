@@ -237,3 +237,5 @@
 <link href="${javadoc.docs.org-netbeans-modules-textmate-lexer}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-textmate-lexer"/>
 <link href="https://www.graalvm.org/truffle/javadoc/" offline="true" packagelistloc="./truffle"/>
 <link href="${javadoc.docs.org-netbeans-modules-jumpto}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-jumpto"/>
+<link href="${javadoc.docs.org-netbeans-modules-java-editor-lib}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-editor-lib"/>
+<link href="${javadoc.docs.org-netbeans-modules-web-common}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-web-common"/>

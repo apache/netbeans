@@ -1,0 +1,3 @@
+Code completion result for source line:
+var_dump($test->noReturnTypes()::|class); // test7 Type Error
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)

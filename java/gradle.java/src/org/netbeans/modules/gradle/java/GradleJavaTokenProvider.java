@@ -45,10 +45,18 @@ import org.openide.util.Lookup;
 @ProjectServiceProvider(service = ReplaceTokenProvider.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public class GradleJavaTokenProvider implements ReplaceTokenProvider {
 
+    private static final String SELECTED_CLASS      = "selectedClass";     //NOI18N
+    private static final String SELECTED_CLASS_NAME = "selectedClassName"; //NOI18N
+    private static final String SELECTED_PACKAGE    = "selectedPackage";   //NOI18N
+    private static final String SELECTED_METHOD     = "selectedMethod";    //NOI18N
+    private static final String AFFECTED_BUILD_TASK = "affectedBuildTasks";//NOI18N
+
     private static final Set<String> SUPPORTED = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
-            "selectedClass",       //NOI18N
-            "selectedMethod",      //NOI18N
-            "affectedBuildTasks"   //NOI18N
+            SELECTED_CLASS,
+            SELECTED_CLASS_NAME,
+            SELECTED_METHOD,
+            SELECTED_PACKAGE,
+            AFFECTED_BUILD_TASK
     )));
 
     final Project project;
@@ -76,7 +84,15 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
         GradleJavaProject gjp = GradleJavaProject.get(project);
         String className = evaluateClassName(gjp, fo);
         if (className != null) {
-            map.put("selectedClass", className);
+            map.put(SELECTED_CLASS, className);
+            int dot = className.lastIndexOf('.');
+            if (dot != -1) {
+                map.put(SELECTED_CLASS_NAME, className.substring(dot + 1));
+                map.put(SELECTED_PACKAGE, className.substring(0, dot));
+            } else {
+                map.put(SELECTED_CLASS_NAME, className);
+                map.put(SELECTED_PACKAGE, "");
+            }
         }
     }
 
@@ -87,7 +103,7 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
             GradleJavaProject gjp = GradleJavaProject.get(project);
             String className = evaluateClassName(gjp, fo);
             String selectedMethod = method != null ? className + '.' + method.getMethodName() : className;
-            map.put("selectedMethod", selectedMethod);
+            map.put(SELECTED_METHOD, selectedMethod);
         }
     }
 
@@ -110,7 +126,7 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
             for (String task : buildTasks) {
                 tasks.append(task).append(' ');
             }
-            map.put("affectedBuildTasks", tasks.toString()); //NOI18N
+            map.put(AFFECTED_BUILD_TASK, tasks.toString()); //NOI18N
         }
     }
 

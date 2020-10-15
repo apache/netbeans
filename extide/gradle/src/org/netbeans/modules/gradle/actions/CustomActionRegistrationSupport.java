@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.gradle.actions;
 
+import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

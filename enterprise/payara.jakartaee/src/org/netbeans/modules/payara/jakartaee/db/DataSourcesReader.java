@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.netbeans.modules.glassfish.javaee.db.JDBCConnectionPool;
+import org.netbeans.modules.glassfish.javaee.db.JDBCResource;
 import org.netbeans.modules.payara.tooling.TaskState;
 import org.netbeans.modules.payara.tooling.admin.CommandGetProperty;
 import org.netbeans.modules.payara.tooling.admin.ResultMap;

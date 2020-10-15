@@ -1,0 +1,2 @@
+    public const |>MARK_OCCURRENCES:START<| = "start";
+            MatchExpression::|>MARK_OCCURRENCES:STA^RT<| => self::$start,

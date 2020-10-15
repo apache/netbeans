@@ -1,0 +1,14 @@
+[[863,864]-Syntax error
+ unexpected:	|
+ expected:	variable, &] 863-864:Syntax error
+ unexpected:	|
+ expected:	variable, &
+[[870,876]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	variable '$param'] 870-876:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	variable '$param'
+[[876,877]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	)] 876-877:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	)
+[[886,887]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 886-887:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}

@@ -44,7 +44,6 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
-import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.spi.project.ProjectServiceProvider;
@@ -152,19 +151,17 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
 
     @Override
     public synchronized SourceGroup[] getSourceGroups(String type) {
-        if (Sources.TYPE_GENERIC.equals(type)) {
-            return new SourceGroup[]{new GradleSourceGroup(proj.getProjectDirectory(), "ProjectRoot", //NOI18N
-                ProjectUtils.getInformation(proj).getDisplayName())};
-        }
         checkChanges(false);
         SourceType stype = soureType2SourceType(type);
         if (stype != null) {
             ArrayList<SourceGroup> ret = new ArrayList<>();
+            Set<File> processed = new HashSet();
             for (String group : gradleSources.keySet()) {
                 Set<File> dirs = gradleSources.get(group).getSourceDirs(stype);
                 boolean unique = dirs.size() == 1;
                 for (File dir : dirs) {
-                    if (dir.isDirectory()) {
+                    if (!processed.contains(dir) && dir.isDirectory()) {
+                        processed.add(dir);
                         ret.add(createSourceGroup(unique, group, dir, stype));
                     }
                 }

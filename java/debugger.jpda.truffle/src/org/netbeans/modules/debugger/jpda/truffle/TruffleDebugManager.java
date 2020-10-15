@@ -20,18 +20,8 @@
 package org.netbeans.modules.debugger.jpda.truffle;
 
 import com.sun.jdi.ClassType;
-import com.sun.jdi.IncompatibleThreadStateException;
-import com.sun.jdi.Location;
-import com.sun.jdi.Method;
 import com.sun.jdi.ObjectReference;
-import com.sun.jdi.ReferenceType;
-import com.sun.jdi.StackFrame;
-import com.sun.jdi.ThreadReference;
 import com.sun.jdi.Value;
-import com.sun.jdi.event.Event;
-import com.sun.jdi.event.LocatableEvent;
-import com.sun.jdi.request.BreakpointRequest;
-import com.sun.jdi.request.EventRequest;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -47,39 +37,22 @@ import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.DebuggerManagerAdapter;
 import org.netbeans.api.debugger.LazyDebuggerManagerListener;
 import org.netbeans.api.debugger.Session;
-import org.netbeans.api.debugger.jpda.ClassLoadUnloadBreakpoint;
 import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.JPDAClassType;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.api.debugger.jpda.MethodBreakpoint;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointEvent;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointListener;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.expr.JDIVariable;
-import org.netbeans.modules.debugger.jpda.jdi.ClassNotPreparedExceptionWrapper;
-import org.netbeans.modules.debugger.jpda.jdi.IllegalThreadStateExceptionWrapper;
-import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
-import org.netbeans.modules.debugger.jpda.jdi.InvalidRequestStateExceptionWrapper;
-import org.netbeans.modules.debugger.jpda.jdi.InvalidStackFrameExceptionWrapper;
-import org.netbeans.modules.debugger.jpda.jdi.MethodWrapper;
-import org.netbeans.modules.debugger.jpda.jdi.ObjectCollectedExceptionWrapper;
-import org.netbeans.modules.debugger.jpda.jdi.ReferenceTypeWrapper;
-import org.netbeans.modules.debugger.jpda.jdi.StackFrameWrapper;
-import org.netbeans.modules.debugger.jpda.jdi.ThreadReferenceWrapper;
-import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
-import org.netbeans.modules.debugger.jpda.jdi.event.LocatableEventWrapper;
-import org.netbeans.modules.debugger.jpda.jdi.request.EventRequestManagerWrapper;
-import org.netbeans.modules.debugger.jpda.jdi.request.EventRequestWrapper;
-import org.netbeans.modules.debugger.jpda.models.JPDAClassTypeImpl;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.actions.PauseInGraalScriptActionProvider;
-import org.netbeans.modules.debugger.jpda.util.Executor;
 import org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint;
 import org.netbeans.spi.debugger.ActionsProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
-import org.openide.util.Exceptions;
 
 /**
  * Initiates guest language debugging, detects Engine in the JVM.
@@ -89,7 +62,8 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
     
     private static final Logger LOG = Logger.getLogger(TruffleDebugManager.class.getName());
     
-    private static final String SESSION_CREATION_BP_CLASS = "org.graalvm.polyglot.Engine";
+    private static final String ENGINE_CLASS = "org.graalvm.polyglot.Engine";
+    private static final String ENGINE_BUILDER_CLASS = "org.graalvm.polyglot.Engine$Builder";
     // Breakpoint on this class triggers search of existing engines
     private static final String EXISTING_ENGINES_TRIGGER = "com.oracle.truffle.api.frame.FrameSlot";
     
@@ -115,7 +89,8 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
         debugManagerLoadBP = MethodBreakpoint.create(SESSION_CREATION_BP_CLASS, SESSION_CREATION_BP_METHOD);
         ((MethodBreakpoint) debugManagerLoadBP).setBreakpointType(MethodBreakpoint.TYPE_METHOD_EXIT);
         */
-        debugManagerLoadBP = ClassLoadUnloadBreakpoint.create(SESSION_CREATION_BP_CLASS, false, ClassLoadUnloadBreakpoint.TYPE_CLASS_LOADED);
+        debugManagerLoadBP = MethodBreakpoint.create(ENGINE_BUILDER_CLASS, "build");
+        ((MethodBreakpoint) debugManagerLoadBP).setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY);
         debugManagerLoadBP.setHidden(true);
         
         LOG.log(Level.FINE, "TruffleDebugManager.initBreakpoints(): submitted BP {0}", debugManagerLoadBP);
@@ -171,7 +146,7 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
             @Override
             public void breakpointReached(JPDABreakpointEvent event) {
                 try {
-                    submitPECreationBP(debugger, event.getReferenceType());
+                    handleEngineBuilder(debugger, event);
                 } finally {
                     event.resume();
                 }
@@ -180,16 +155,7 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
         debugManagerLoadBP.addJPDABreakpointListener(bpl);
         // Submit creation BPs for existing engine classes:
         Runnable submitEngineCreation = () -> {
-            List<JPDAClassType> polyglotEngines = new ArrayList<>();
-            //polyglotEngines.addAll(debugger.getClassesByName(SESSION_CREATION_BP_CLASS[0]));
-            List<JPDAClassType> enginePe = debugger.getClassesByName(SESSION_CREATION_BP_CLASS);
-            polyglotEngines.addAll(enginePe);
-            for (JPDAClassType pe : polyglotEngines) {
-                submitPECreationBP(debugger, ((JPDAClassTypeImpl) pe).getType());
-                // TODO: Find possible existing instances of the engine
-                // List<ObjectVariable> engines = pe.getInstances(0);
-                // We have no suspended thread... :-(
-            }
+            List<JPDAClassType> enginePe = debugger.getClassesByName(ENGINE_CLASS);
             // Find possible existing instances of the engine
             if (!enginePe.isEmpty() && debugger.canGetInstanceInfo()) {
                 long engineInstances = 0;
@@ -217,60 +183,27 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
         return bpl;
     }
 
-    private void submitPECreationBP(final JPDADebugger debugger, ReferenceType type) {
-        try {
-            List<Method> constructors = ReferenceTypeWrapper.methodsByName(type, "<init>");
-            for (Method c : constructors) {
-                if (!c.argumentTypeNames().isEmpty()) {
-                    Location lastLocation = null;
-                    Location l;
-                    int i = 0;
-                    // Search for the last (return) statement:
-                    while ((l = MethodWrapper.locationOfCodeIndex(c, i)) != null) {
-                        lastLocation = l;
-                        i++;
-                    }
-                    BreakpointRequest bp = EventRequestManagerWrapper.createBreakpointRequest(lastLocation.virtualMachine().eventRequestManager(), lastLocation);
-                    EventRequestWrapper.setSuspendPolicy(bp, EventRequest.SUSPEND_EVENT_THREAD);
-                    ((JPDADebuggerImpl) debugger).getOperator().register(bp, new Executor() {
-                        @Override
-                        public boolean exec(Event event) {
-                            try {
-                                ThreadReference threadReference = LocatableEventWrapper.thread((LocatableEvent) event);
-                                JPDAThreadImpl thread = ((JPDADebuggerImpl) debugger).getThread(threadReference);
-                                StackFrame topFrame = ThreadReferenceWrapper.frame(threadReference, 0);
-                                List<Value> argumentValues = topFrame.getArgumentValues();
-                                if (argumentValues.get(0) == null) {
-                                    // An empty constructor used for the builder only.
-                                    return true;
-                                }
-                                ObjectReference engine = StackFrameWrapper.thisObject(topFrame);
-                                haveNewPE(debugger, thread, engine);
-                            } catch (InternalExceptionWrapper | VMDisconnectedExceptionWrapper |
-                                     ObjectCollectedExceptionWrapper ex) {
-                            } catch (IllegalThreadStateExceptionWrapper |
-                                     IncompatibleThreadStateException |
-                                     InvalidStackFrameExceptionWrapper ex) {
-                                Exceptions.printStackTrace(ex);
-                            }
-                            return true;
-                        }
-
-                        @Override
-                        public void removed(EventRequest eventRequest) {
-                        }
-
-                    });
-                    try {
-                        EventRequestWrapper.enable(bp);
-                    } catch (InvalidRequestStateExceptionWrapper irsx) {
-                        Exceptions.printStackTrace(irsx);
-                    }
-                }
+    /**
+     * Called from a method entry breakpoint on Engine$Builder.build().
+     * We need to submit a temporary method-exit breakpoint on the build method.
+     * We must not keep the method exit breakpoint active as it causes a significant performance degradation.
+     */
+    private void handleEngineBuilder(final JPDADebugger debugger, JPDABreakpointEvent entryEvent) {
+        MethodBreakpoint builderExitBreakpoint = MethodBreakpoint.create(ENGINE_BUILDER_CLASS, "build");
+        builderExitBreakpoint.setBreakpointType(MethodBreakpoint.TYPE_METHOD_EXIT);
+        builderExitBreakpoint.setThreadFilters(debugger, new JPDAThread[]{entryEvent.getThread()});
+        builderExitBreakpoint.setSuspend(JPDABreakpoint.SUSPEND_EVENT_THREAD);
+        builderExitBreakpoint.setHidden(true);
+        builderExitBreakpoint.addJPDABreakpointListener(exitEvent -> {
+            try {
+                builderExitBreakpoint.disable();
+                DebuggerManager.getDebuggerManager().removeBreakpoint(builderExitBreakpoint);
+                haveNewPE(debugger, (JPDAThreadImpl) exitEvent.getThread(), (ObjectReference) ((JDIVariable) exitEvent.getVariable()).getJDIValue());
+            } finally {
+                exitEvent.resume();
             }
-        } catch (InternalExceptionWrapper | VMDisconnectedExceptionWrapper |
-                 ObjectCollectedExceptionWrapper | ClassNotPreparedExceptionWrapper ex) {
-        }
+        });
+        DebuggerManager.getDebuggerManager().addBreakpoint(builderExitBreakpoint);
     }
 
     private void submitExistingEnginesProbe(final JPDADebugger debugger, List<JPDAClassType> enginePe) {

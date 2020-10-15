@@ -130,6 +130,14 @@
 
 
  <answer id="exec-property">
+     <api category="devel" group="branding" name="DEFAULT_REUSE_OUTPUT" type="export">
+         Brand the <code>DEFAULT_REUSE_OUTPUT</code> key in a 
+         <code>org.netbeans.modules.gradle.spi.Bundle</code> file
+         with one of the values <code>true</code> or <code>false</code>
+         to specify the default behavior of reusing output by your application.
+         Use <code>never</code> value, if the reuse shall never be done,
+         regardless of the settings value.
+     </api> 
  </answer>
 
  <answer id="resources-file">

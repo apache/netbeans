@@ -24,6 +24,8 @@ import org.openide.filesystems.FileUtil;
 
 public abstract class OccurrencesFinderImplTestBase extends PHPNavTestBase {
 
+    protected static final String BASE_TEST_FOLDER_PATH = "testfiles/markoccurences/";
+
     public OccurrencesFinderImplTestBase(String testName) {
         super(testName);
     }
@@ -33,8 +35,12 @@ public abstract class OccurrencesFinderImplTestBase extends PHPNavTestBase {
         return new FileObject[]{FileUtil.toFileObject(new File(getDataDir(), getTestFolderPath()))};
     }
 
+    protected String getBaseTestFolderPath() {
+        return BASE_TEST_FOLDER_PATH;
+    }
+
     protected String getTestFolderPath() {
-        return "testfiles/markoccurences/" + getTestName();//NOI18N
+        return getBaseTestFolderPath() + getTestName();
     }
 
     protected String getTestPath() {

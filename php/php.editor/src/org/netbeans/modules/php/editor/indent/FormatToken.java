@@ -47,7 +47,9 @@ public class FormatToken {
         WHITESPACE_BEFORE_CLASS_LEFT_BRACE,
         WHITESPACE_BEFORE_ANONYMOUS_CLASS_LEFT_BRACE,
         WHITESPACE_AROUND_OBJECT_OP,
+        WHITESPACE_AROUND_NULLSAFE_OBJECT_OP,
         WHITESPACE_AROUND_DECLARE_EQUAL,
+        WHITESPACE_AROUND_UNION_TYPE_SEPARATOR,
         WHITESPACE_AROUND_CONCAT_OP,
         WHITESPACE_AROUND_UNARY_OP,
         WHITESPACE_BEFORE_BINARY_OP,
@@ -65,6 +67,7 @@ public class FormatToken {
         WHITESPACE_BEFORE_WHILE_PAREN,
         WHITESPACE_BEFORE_CATCH_PAREN,
         WHITESPACE_BEFORE_SWITCH_PAREN,
+        WHITESPACE_BEFORE_MATCH_PAREN,
         WHITESPACE_BEFORE_ARRAY_DECL_PAREN,
         WHITESPACE_AFTER_CLASS_LEFT_BRACE,
         WHITESPACE_AFTER_ANONYMOUS_CLASS_LEFT_BRACE,
@@ -75,7 +78,8 @@ public class FormatToken {
         WHITESPACE_BEFORE_FOR_LEFT_BRACE,
         WHITESPACE_BEFORE_WHILE_LEFT_BRACE,
         WHITESPACE_BEFORE_DO_LEFT_BRACE,
-        WHITESPACE_BEFORE_SWITCH_LEFT_BACE,
+        WHITESPACE_BEFORE_SWITCH_LEFT_BRACE,
+        WHITESPACE_BEFORE_MATCH_LEFT_BRACE,
         WHITESPACE_BEFORE_TRY_LEFT_BRACE,
         WHITESPACE_BEFORE_CATCH_LEFT_BRACE,
         WHITESPACE_BEFORE_FINALLY_LEFT_BRACE,
@@ -87,8 +91,9 @@ public class FormatToken {
         WHITESPACE_BEFORE_IF_RIGHT_BRACE,
         WHITESPACE_BEFORE_FOR_RIGHT_BRACE,
         WHITESPACE_BEFORE_WHILE_RIGHT_BRACE,
-        WHITESPACE_BEFORE_SWITCH_RIGHT_BACE,
+        WHITESPACE_BEFORE_SWITCH_RIGHT_BRACE,
         WHITESPACE_BEFORE_CATCH_RIGHT_BRACE,
+        WHITESPACE_BEFORE_MATCH_RIGHT_BRACE,
         WHITESPACE_BEFORE_OTHER_RIGHT_BRACE,
         WHITESPACE_BEFORE_USES_PART,
         WHITESPACE_BEFORE_USE_TRAIT,
@@ -108,6 +113,7 @@ public class FormatToken {
         WHITESPACE_WITHIN_WHILE_PARENS,
         WHITESPACE_WITHIN_SWITCH_PARENS,
         WHITESPACE_WITHIN_CATCH_PARENS,
+        WHITESPACE_WITHIN_MATCH_PARENS,
         WHITESPACE_WITHIN_ARRAY_BRACKETS_PARENS,
         WHITESPACE_WITHIN_TYPE_CAST_PARENS,
         WHITESPACE_BEFORE_COMMA,
@@ -219,9 +225,12 @@ public class FormatToken {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(id.name());
-        sb.append(" offset: ").append(offset);
+        if (this instanceof IndentToken) {
+            sb.append("(").append(((IndentToken) this).getDelta()).append(")"); // NOI18N
+        }
+        sb.append(" offset: ").append(offset); // NOI18N
         if (oldText != null) {
-            sb.append(" lexerToken <").append(oldText.length()).append(">: ").append("'").append(oldText).append("'");
+            sb.append(" lexerToken <").append(oldText.length()).append(">: ").append("'").append(oldText).append("'"); // NOI18N
         }
         return sb.toString();
     }

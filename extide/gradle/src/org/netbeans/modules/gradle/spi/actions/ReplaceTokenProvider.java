@@ -49,4 +49,38 @@ public interface ReplaceTokenProvider {
      */
     Map<String, String> createReplacements(String action, Lookup context);
 
+    /**
+     * Replaces tokens in the given String. The format of the token marker is
+     * the following: {@code ${<token_key>[,<default value>]}}
+     * <p>
+     * If there would be no value or default value provided the token marker
+     * will be left untouched.
+     *
+     * @param line the input line with token markers
+     * @param replaceMap key-value map for the replacement
+     *
+     * @return the line with replaced tokens
+     *
+     * @since 2.6
+     */
+    public static String replaceTokens(String line, Map<String, String> replaceMap) {
+        StringBuilder sb = new StringBuilder(line);
+        int start = sb.indexOf("${");
+        while (start >= 0) {
+            int end = sb.indexOf("}", start);
+            int comma = sb.indexOf(",", start);
+            int keyEnd = comma > start && comma < end ? comma : end;
+            String key = sb.substring(start + 2, keyEnd);
+            String defaultValue = comma > start && comma < end ? sb.substring(comma + 1, end) : null;
+            String value = replaceMap.get(key);
+            value = value != null ? value : defaultValue;
+            if (value != null) {
+                sb.replace(start, end + 1, value);
+                start = sb.indexOf("${");
+            } else {
+                start = sb.indexOf("${", end);
+            }
+        }
+        return sb.toString();
+    }
 }

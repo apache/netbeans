@@ -62,6 +62,7 @@ import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
+import org.openide.util.BaseUtilities;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
 
@@ -303,6 +304,24 @@ public final class RunUtils {
             }
         }
         return false;
+    }
+
+    /**
+     * Replace the tokens in <code>argLine</code> provided by the <code>project</code> for
+     * the action using the given context;
+     * 
+     * @param project the that holds the {@link ReplaceTokenProvider}-s.
+     * @param argLine a string which might hold tokens to be replaced.
+     * @param action  the action name to do the replacement for. It can be <code>null</code>
+     * @param context the context of the action.
+     *
+     * @return the <code>argLine</code> where the tokens are replaced.
+     * @since 2.6
+     */
+    public static String[] evaluateActionArgs(Project project, String action, String argLine, Lookup context) {
+        ReplaceTokenProvider tokenProvider = project.getLookup().lookup(ReplaceTokenProvider.class);
+        String repLine = ReplaceTokenProvider.replaceTokens(argLine, tokenProvider.createReplacements(action, context));
+        return BaseUtilities.parseParameters(repLine);
     }
 
     /**

@@ -99,7 +99,8 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
                             case COMMAND_RUN_SINGLE:
                                 ProjectActionMappingProvider pamp = project.getLookup().lookup(ProjectActionMappingProvider.class);
                                 ActionMapping runSingleMapping = pamp.findMapping(COMMAND_RUN_SINGLE);
-                                Set<String> runSingleTasks = new GradleCommandLine(runSingleMapping.getArgs()).getTasks();
+                                GradleCommandLine cli = new GradleCommandLine(RunUtils.evaluateActionArgs(project, action, runSingleMapping.getArgs(), context));
+                                Set<String> runSingleTasks = cli.getTasks();
                                 if (gbp.getTaskNames().containsAll(runSingleTasks) || RunUtils.isAugmentedBuildEnabled(project)) {
                                     File f = FileUtil.toFile(fo);
                                     GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
@@ -112,6 +113,7 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
                                     }
                                 }
                                 break;
+
                             case COMMAND_TEST_SINGLE:
                             case COMMAND_DEBUG_TEST_SINGLE:
                             case COMMAND_RUN_SINGLE_METHOD:

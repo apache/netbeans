@@ -63,7 +63,6 @@ extide/gradle/external/gradle-4.10.2-bin.zip ide/o.apache.commons.lang/external/
 extide/gradle/external/gradle-4.10.2-bin.zip java/maven.embedder/external/apache-maven-3.6.3-bin.zip
 extide/gradle/external/gradle-4.10.2-bin.zip platform/api.annotations.common/external/jsr305-3.0.2.jar
 extide/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
-extide/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/junit-4.12.jar
 extide/gradle/external/gradle-4.10.2-bin.zip java/maven/external/aether-api-1.13.1.jar
 
 # These are the endorsed version of the javaee apis and create libraries, so they are better kept separate

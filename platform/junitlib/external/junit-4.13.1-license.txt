@@ -1,10 +1,10 @@
 Name: JUnit
-Version: 4.12
+Version: 4.13.1
 License: EPL-v10
 OSR: 19398
-Origin: http://search.maven.org/#artifactdetails|junit|junit|4.12|jar
+Origin: http://search.maven.org/#artifactdetails|junit|junit|4.13.1|jar
 Description: JUnit is a regression testing framework
-Files: junit-4.12-sources.jar junit-4.12-javadoc.jar
+Files: junit-4.13.1-sources.jar junit-4.13.1-javadoc.jar
 
 Eclipse Public License - v 1.0
 

@@ -35,7 +35,12 @@
 					],
 					"default": null,
 					"description": "Specifies the JDK on which the Java language server should be run"
-				}
+				},
+                                "netbeans.verbose": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "description": "Enables verbose messages from the Java Language Server"
+                                }
 			}
 		},
 		"breakpoints": [

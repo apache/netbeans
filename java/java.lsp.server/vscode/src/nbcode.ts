@@ -29,6 +29,7 @@ export interface LaunchInfo {
     extensionPath: string;
     storagePath: string;
     jdkHome: string | unknown;
+    verbose? : boolean;
 }
 
 function find(info: LaunchInfo): string {
@@ -61,6 +62,9 @@ export function launch(
     let ideArgs: string[] = [];
     if (info.jdkHome) {
         ideArgs = ['--jdkhome', info.jdkHome as string];
+    }
+    if (info.verbose) {
+        ideArgs.push('-J-Dnetbeans.logger.console=true');
     }
     ideArgs.push(...extraArgs);
 

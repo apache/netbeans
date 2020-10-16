@@ -37,6 +37,7 @@ CLASS      InsideClosure1                             null
 CLASS      InstantiationError                         null
 CLASS      InstantiationException                     null
 CLASS      IntRange                                   null
+CLASS      IntSummaryStatistics                       null
 CLASS      Integer                                    null
 CLASS      Interceptor                                null
 CLASS      InterfaceAddress                           null

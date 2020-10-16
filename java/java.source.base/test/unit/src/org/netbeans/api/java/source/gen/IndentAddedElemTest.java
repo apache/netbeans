@@ -192,7 +192,7 @@ public class IndentAddedElemTest extends GeneratorTestBase {
         
         );
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println("res=" + res);
+        //System.err.println("res=" + res);
         assertEquals(golden, res);
     }
     
@@ -236,7 +236,7 @@ public class IndentAddedElemTest extends GeneratorTestBase {
         
         );
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println("res=" + res);
+        //System.err.println("res=" + res);
         assertEquals(golden, res);
     }
     
@@ -280,7 +280,7 @@ public class IndentAddedElemTest extends GeneratorTestBase {
         
         );
         String res = TestUtilities.copyFileToString(testFile);
-        System.err.println("res=" + res);
+        //System.err.println("res=" + res);
         assertEquals(golden, res);
     }
     

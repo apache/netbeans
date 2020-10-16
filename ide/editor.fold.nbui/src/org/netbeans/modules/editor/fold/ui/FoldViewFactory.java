@@ -260,24 +260,25 @@ public final class FoldViewFactory extends EditorViewFactory implements FoldHier
 
     @Override
     public void foldHierarchyChanged(FoldHierarchyEvent evt) {
-        if (!collapsedFoldEncountered) {
-            // Check if any collapsed fold was added or a collapsed/expanded state changed
-            for (int i = evt.getAddedFoldCount() - 1; i >= 0; i--) {
-                if (evt.getAddedFold(i).isCollapsed()) {
-                    collapsedFoldEncountered = true;
+        boolean collapsedAdded = false;
+        boolean changedToCollapsed = false;
+        // Check if any collapsed fold was added or a collapsed/expanded state changed
+        for (int i = evt.getAddedFoldCount() - 1; i >= 0; i--) {
+            if (evt.getAddedFold(i).isCollapsed()) {
+                collapsedAdded = true;
+                break;
+            }
+        }
+        if (!collapsedAdded) {
+            for (int i = evt.getFoldStateChangeCount() - 1; i >= 0; i--) {
+                FoldStateChange foldStateChange = evt.getFoldStateChange(i);
+                if (foldStateChange.isCollapsedChanged() && foldStateChange.getFold().isCollapsed()) {
+                    changedToCollapsed = true;
                     break;
                 }
             }
-            if (!collapsedFoldEncountered) {
-                for (int i = evt.getFoldStateChangeCount() - 1; i >= 0; i--) {
-                    FoldStateChange foldStateChange = evt.getFoldStateChange(i);
-                    if (foldStateChange.isCollapsedChanged() && foldStateChange.getFold().isCollapsed()) {
-                        collapsedFoldEncountered = true;
-                        break;
-                    }
-                }
-            }
         }
+        collapsedFoldEncountered |= collapsedAdded || changedToCollapsed;
         JTextComponent comp = textComponent();
         if (collapsedFoldEncountered && comp != null) {
             // [TODO] there could be more detailed inspection done among folds
@@ -289,7 +290,11 @@ public final class FoldViewFactory extends EditorViewFactory implements FoldHier
                 ViewUtils.log(CHANGE_LOG, "CHANGE in FoldViewFactory: <" + // NOI18N
                         startOffset + "," + endOffset + ">\n"); // NOI18N
             }
-            comp.putClientProperty("editorcaret.updateRetainsVisibleOnce", Boolean.TRUE);
+            if (collapsedAdded) {
+                // this hint covers a specific case when a fold is created as *initially* collapsed
+                // to maintain caret position on screen, if the caret was visible. 
+                comp.putClientProperty("editorcaret.updateRetainsVisibleOnce", Boolean.TRUE);
+            }
             fireEvent(EditorViewFactoryChange.createList(startOffset, endOffset,
                     EditorViewFactoryChange.Type.PARAGRAPH_CHANGE));
         }

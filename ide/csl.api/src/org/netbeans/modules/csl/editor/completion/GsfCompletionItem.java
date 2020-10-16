@@ -648,16 +648,16 @@ public abstract class GsfCompletionItem implements CompletionItem {
     /** Format parameters in orange etc. */
     private static class CompletionFormatter extends GsfHtmlFormatter {
         private static final String METHOD_COLOR = LFCustoms.getTextFgColorHTML();
-        private static final String PARAMETER_NAME_COLOR = getHTMLColor(160, 96, 1);
+        private static final String PARAMETER_NAME_COLOR = getHTMLColor(224, 160, 65);
         private static final String END_COLOR = "</font>"; // NOI18N
-        private static final String CLASS_COLOR = getHTMLColor(86, 0, 0);
-        private static final String PKG_COLOR = getHTMLColor(128, 128, 128);
-        private static final String KEYWORD_COLOR = getHTMLColor(0, 0, 153);
-        private static final String FIELD_COLOR = getHTMLColor(0, 134, 24);
-        private static final String VARIABLE_COLOR = getHTMLColor(0, 0, 124);
-        private static final String CONSTRUCTOR_COLOR = getHTMLColor(178, 139, 0);
-        private static final String INTERFACE_COLOR = getHTMLColor(64, 64, 64);
-        private static final String PARAMETERS_COLOR = getHTMLColor(128, 128, 128);
+        private static final String CLASS_COLOR = getHTMLColor(150, 64, 64);
+        private static final String PKG_COLOR = getHTMLColor(192, 192, 192);
+        private static final String KEYWORD_COLOR = getHTMLColor(64, 64, 217);
+        private static final String FIELD_COLOR = getHTMLColor(64, 198, 88);
+        private static final String VARIABLE_COLOR = getHTMLColor(64, 64, 188);
+        private static final String CONSTRUCTOR_COLOR = getHTMLColor(242, 203, 64);
+        private static final String INTERFACE_COLOR = getHTMLColor(128, 128, 128);
+        private static final String PARAMETERS_COLOR = getHTMLColor(192, 192, 192);
         private static final String ACTIVE_PARAMETER_COLOR = LFCustoms.getTextFgColorHTML();
 
         @Override

@@ -458,6 +458,9 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
+                        <code-name-base>org.netbeans.libs.truffleapi</code-name-base>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.modules.editor.codetemplates</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
@@ -492,10 +495,6 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.java.editor.lib</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.netbeans.modules.java.hints</code-name-base>
                     </test-dependency>
                     <test-dependency>
@@ -521,11 +520,6 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.java.source.base</code-name-base>
                         <recursive/>
-                        <compile-dependency/>
-                        <test/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.java.source.nbjavac</code-name-base>
                         <compile-dependency/>
                         <test/>
                     </test-dependency>

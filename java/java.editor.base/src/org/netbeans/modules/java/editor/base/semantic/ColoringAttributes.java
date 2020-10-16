@@ -30,16 +30,17 @@ import java.util.Set;
 public enum ColoringAttributes {
 
     UNUSED,
-
     ABSTRACT,
 
     FIELD,
+    RECORD_COMPONENT,
     LOCAL_VARIABLE,
     PARAMETER,
     METHOD,
     CONSTRUCTOR,
     MODULE,
     CLASS,
+    RECORD,
     INTERFACE,
     ANNOTATION_TYPE,
     ENUM,

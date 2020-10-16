@@ -21,30 +21,40 @@ package org.netbeans.modules.nashorn.execution.options;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
+import java.util.prefs.Preferences;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.PlatformsCustomizer;
 import org.netbeans.modules.java.api.common.ui.PlatformUiSupport;
 import org.netbeans.modules.nashorn.execution.NashornPlatform;
 import org.netbeans.modules.options.java.api.JavaOptions;
 import org.netbeans.spi.options.OptionsPanelController;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author Martin Entlicher
  */
-@OptionsPanelController.Keywords(keywords={"JavaScript, Nashorn", "#KW_JavaScript"}, location=JavaOptions.JAVA, tabTitle= "#LBL_Nashorn")
+@OptionsPanelController.Keywords(keywords={"JavaScript, Nashorn", "#KW_JavaScript"}, location=JavaOptions.JAVA, tabTitle= "#LBL_JSonJVM")
 public class JavaScriptNashornPanel extends javax.swing.JPanel {
-    
+
     private final JavaScriptNashornOptionsPanelController optionsController;
+    private final String nashorn;
+    private final String graalJs;
 
     /**
      * Creates new form JavaScriptNashornPanel
      */
     public JavaScriptNashornPanel(JavaScriptNashornOptionsPanelController optionsController) {
+        this.nashorn = NbBundle.getMessage(JavaScriptNashornPanel.class, "LBL_Nashorn");
+        this.graalJs = NbBundle.getMessage(JavaScriptNashornPanel.class, "LBL_GraalJs");
         this.optionsController = optionsController;
         initComponents();
         platformsComboBox.setModel(new NashornPlatformComboBoxModel());
-        platformsComboBox.addActionListener(new PlatformChangeListener());
+        platformsComboBox.addActionListener(new PlatformChangeListener(true));
+        engineSelector.addActionListener(new PlatformChangeListener(false));
         setFieldsEnabled();
     }
 
@@ -68,6 +78,8 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
         argumentsTextField = new javax.swing.JTextField();
         platformManageButton = new javax.swing.JButton();
         fillPanel = new javax.swing.JPanel();
+        engineLabel = new javax.swing.JLabel();
+        engineSelector = new javax.swing.JComboBox<>();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -112,7 +124,7 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(engineOptionsLabel, org.openide.util.NbBundle.getMessage(JavaScriptNashornPanel.class, "JavaScriptNashornPanel.engineOptionsLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(14, 0, 0, 0);
@@ -121,7 +133,7 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
         engineOptionsTextField.setText(org.openide.util.NbBundle.getMessage(JavaScriptNashornPanel.class, "JavaScriptNashornPanel.engineOptionsTextField.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 5;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -136,7 +148,7 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
         platformHintLabel.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 329;
@@ -149,7 +161,7 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(argumentsLabel, org.openide.util.NbBundle.getMessage(JavaScriptNashornPanel.class, "JavaScriptNashornPanel.argumentsLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(8, 0, 0, 0);
         add(argumentsLabel, gridBagConstraints);
@@ -157,7 +169,7 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
         argumentsTextField.setText(org.openide.util.NbBundle.getMessage(JavaScriptNashornPanel.class, "JavaScriptNashornPanel.argumentsTextField.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipadx = 312;
@@ -175,7 +187,7 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 8;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.gridheight = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 0, 0);
         add(platformManageButton, gridBagConstraints);
@@ -184,14 +196,48 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
         fillPanel.setLayout(null);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
         add(fillPanel, gridBagConstraints);
+
+        engineLabel.setLabelFor(engineSelector);
+        org.openide.awt.Mnemonics.setLocalizedText(engineLabel, org.openide.util.NbBundle.getMessage(JavaScriptNashornPanel.class, "JavaScriptNashornPanel.engineLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        add(engineLabel, gridBagConstraints);
+
+        engineSelector.setModel(initEngineSelector());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 24, 0, 0);
+        add(engineSelector, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    ComboBoxModel<String> initEngineSelector() {
+        Vector<String> names = new Vector();
+        JavaPlatform p = getSelectedPlatform();
+        if (NashornPlatform.isNashornSupported(p)) {
+            names.add(nashorn);
+        }
+        if (NashornPlatform.isGraalJsSupported(p)) {
+            if (NashornPlatform.isGraalJSPreferred(p)) {
+                names.add(0, graalJs);
+            } else {
+                names.add(graalJs);
+            }
+        }
+        return new DefaultComboBoxModel<>(names);
+    }
 
     private void platformManageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_platformManageButtonActionPerformed
         PlatformsCustomizer.showCustomizer(null);
@@ -205,8 +251,10 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel argumentsLabel;
     private javax.swing.JTextField argumentsTextField;
+    private javax.swing.JLabel engineLabel;
     private javax.swing.JLabel engineOptionsLabel;
     private javax.swing.JTextField engineOptionsTextField;
+    private javax.swing.JComboBox<String> engineSelector;
     private javax.swing.JPanel fillPanel;
     private javax.swing.JLabel infoLabel;
     private javax.swing.JLabel platformHintLabel;
@@ -223,7 +271,7 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
             return PlatformUiSupport.getPlatform(selObj);
         }
     }
-    
+
     private void selectPlatform(JavaPlatform platform) {
         int n = platformsComboBox.getItemCount();
         for (int i = 0; i < n; i++) {
@@ -235,18 +283,34 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
             }
         }
     }
-    
+
     void load() {
         JavaPlatform njp = NashornPlatform.getDefault().getPlatform();
         if (njp != null) {
             selectPlatform(njp);
         }
-        String options = Settings.getPreferences().get(Settings.PREF_NASHORN_OPTIONS, null);
-        String arguments = Settings.getPreferences().get(Settings.PREF_NASHORN_ARGUMENTS, null);
+        final Preferences p = Settings.getPreferences();
+        String options = p.get(Settings.PREF_NASHORN_OPTIONS, null);
+        String arguments = p.get(Settings.PREF_NASHORN_ARGUMENTS, null);
         engineOptionsTextField.setText(options != null ? options : "");
         argumentsTextField.setText(arguments != null ? arguments : "");
+        if (isSettingsNashorn(njp)) {
+            engineSelector.setSelectedItem(nashorn);
+        } else {
+            engineSelector.setSelectedItem(graalJs);
+        }
     }
-    
+
+    private boolean isSettingsNashorn(JavaPlatform njp) {
+        final Preferences p = Settings.getPreferences();
+        String item = p.get(Settings.PREF_NASHORN, null);
+        if (item == null) {
+            return !NashornPlatform.isGraalJSPreferred(njp);
+        } else {
+            return p.getBoolean(Settings.PREF_NASHORN, false);
+        }
+    }
+
     void store() {
         NashornPlatform.getDefault().setPlatform(getSelectedPlatform());
         String options = engineOptionsTextField.getText().trim();
@@ -261,12 +325,18 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
         } else {
             Settings.getPreferences().put(Settings.PREF_NASHORN_ARGUMENTS, arguments);
         }
+        Settings.getPreferences().putBoolean(Settings.PREF_NASHORN, isNashorn());
     }
-    
+
+    private boolean isNashorn() {
+        Object item = engineSelector.getSelectedItem();
+        return item == nashorn;
+    }
+
     boolean valid() {
         return true;
     }
-    
+
     boolean isChanged() {
         if (NashornPlatform.getDefault().getPlatform() != getSelectedPlatform()) {
             return true;
@@ -279,22 +349,31 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
                 Settings.getPreferences().get(Settings.PREF_NASHORN_ARGUMENTS, ""))) {
             return true;
         }
+        if (isSettingsNashorn(getSelectedPlatform()) != isNashorn()) {
+            return true;
+        }
         return false;
     }
-    
+
     private void setFieldsEnabled() {
         boolean enabled = getSelectedPlatform() != null;
         engineOptionsTextField.setEnabled(enabled);
         argumentsTextField.setEnabled(enabled);
     }
-    
+
     private class PlatformChangeListener implements ActionListener {
+        private final boolean resetEngines;
+
+        PlatformChangeListener(boolean resetEngines) {
+            this.resetEngines = resetEngines;
+        }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            //firePropertyChange (WizardSettings.PROP_JAVA_PLATFORM, null, getSelectedPlatform());
             optionsController.changed();
+            if (resetEngines) {
+                engineSelector.setModel(initEngineSelector());
+            }
         }
-        
     }
 }

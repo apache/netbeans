@@ -19,13 +19,9 @@
 package org.netbeans.modules.gsf.testrunner;
 
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.modules.gsf.testrunner.api.TestCreatorProvider;
@@ -41,7 +37,6 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=Processor.class)
 @SupportedAnnotationTypes("org.netbeans.modules.gsf.testrunner.api.TestCreatorProvider.Registration")
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class TestCreatorProviderProcessor extends LayerGeneratingProcessor {
 
     @Override
@@ -52,10 +47,20 @@ public class TestCreatorProviderProcessor extends LayerGeneratingProcessor {
             if(registration == null) {
                 continue;
             }
-            File f = layer(e).instanceFile("Services", null);
+            File f = layer(e).instanceFile("Services/TestCreatorProviders", null);
             f.stringvalue("instanceOf", TestCreatorProvider.class.getName());
             f.bundlevalue("displayName", registration.displayName());
             f.bundlevalue("identifier", registration.identifier());
+            int pos = registration.position();
+            if (pos != -1) {
+                if (pos == Integer.MAX_VALUE) {
+                    String n = f.getPath();
+                    int lsl = n.lastIndexOf("/");
+                    n = n.substring(lsl + 1);
+                    pos = 1000000 + (n.hashCode() % 100000);
+                }
+                f.position(pos);
+            }
             f.write();
         }
 

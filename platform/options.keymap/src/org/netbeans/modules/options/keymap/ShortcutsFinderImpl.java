@@ -196,7 +196,7 @@ public class ShortcutsFinderImpl implements ShortcutsFinder {
             synchronized (this) {
                 res = shortcutsCache.get(profile);
                 if (res == null) {
-                    Map m = new HashMap(shortcutsCache);
+                    Map<String, Map<ShortcutAction, Set<String>>> m = new HashMap<>(shortcutsCache);
                     m.put(profile, profileMap);
                     shortcutsCache = m;
                     res = profileMap;

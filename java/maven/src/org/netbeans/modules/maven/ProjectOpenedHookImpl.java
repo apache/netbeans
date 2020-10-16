@@ -462,7 +462,7 @@ public class ProjectOpenedHookImpl extends ProjectOpenedHook {
     private Set<String> getDoNotIndexRepos() {
         String st = System.getProperty("maven.indexing.doNotAutoIndex");
         if(st == null || "".equals(st)) {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
         String[] repos = st.split(";");
         return new HashSet<>(Arrays.asList(repos));

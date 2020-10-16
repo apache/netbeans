@@ -60,8 +60,8 @@ public final class NodesRegistrationSupport {
                 @Override
                 void register() {
                     ClassLoader clsLoader = findClsLoader();
-                    for (Iterator it = lookupResult.allInstances().iterator(); it.hasNext();) {
-                        PEClassRegistration clsReg = (PEClassRegistration) it.next();
+                    for (Iterator<PEClassRegistration> it = lookupResult.allInstances().iterator(); it.hasNext();) {
+                        PEClassRegistration clsReg = it.next();
                         for (String type : clsReg.targetTypes) {
                             try {
                                 Class<?> cls = getClassFromCanonicalName(type);
@@ -88,8 +88,8 @@ public final class NodesRegistrationSupport {
                 @Override
                 void register() {
                     Set<String> newPath = new LinkedHashSet<String> ();
-                    for (Iterator it = lookupResult.allInstances().iterator(); it.hasNext();) {
-                        PEPackageRegistration pkgReg = (PEPackageRegistration) it.next();
+                    for (Iterator<PEPackageRegistration> it = lookupResult.allInstances().iterator(); it.hasNext();) {
+                        PEPackageRegistration pkgReg = it.next();
                         newPath.add(pkgReg.pkg);
                     }
                     newPath.addAll(originalPath);
@@ -113,8 +113,8 @@ public final class NodesRegistrationSupport {
                 @Override
                 void register() {
                     Set<String> newPath = new LinkedHashSet<String> ();
-                    for (Iterator it = lookupResult.allInstances().iterator(); it.hasNext();) {
-                        BeanInfoRegistration biReg = (BeanInfoRegistration) it.next();
+                    for (Iterator<BeanInfoRegistration> it = lookupResult.allInstances().iterator(); it.hasNext();) {
+                        BeanInfoRegistration biReg = it.next();
                         newPath.add(biReg.searchPath);
                     }
                     newPath.addAll(originalBeanInfoSearchPath);

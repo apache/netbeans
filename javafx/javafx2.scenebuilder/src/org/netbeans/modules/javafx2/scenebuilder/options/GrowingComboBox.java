@@ -37,7 +37,7 @@ import javax.swing.event.PopupMenuListener;
  */
 public class GrowingComboBox extends javax.swing.JPanel {
     private static final String SEPARATOR = "---";
-    final public static class GrowingListModel<T> implements ComboBoxModel {
+    public static final class GrowingListModel<T> implements ComboBoxModel<Object> {
         final private Set<ListDataListener> listeners = new CopyOnWriteArraySet<ListDataListener>();
         final private List<T> predefinedList = new ArrayList<T>();
         final private List<T> userList = new ArrayList<T>();
@@ -244,7 +244,7 @@ public class GrowingComboBox extends javax.swing.JPanel {
                 return super.getListCellRendererComponent(list, s, index, isSelected, cellHasFocus);
             }
         });
-        combo.setModel(new GrowingListModel());
+        combo.setModel(new GrowingListModel<Object>());
     }
 
     /**

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.16
+#Version 9.19
 
 CLSS public java.io.IOException
 cons public init()
@@ -950,6 +950,7 @@ cons protected init()
 meth protected !varargs final org.openide.filesystems.annotations.LayerBuilder layer(javax.lang.model.element.Element[])
 meth protected abstract boolean handleProcess(java.util.Set<? extends javax.lang.model.element.TypeElement>,javax.annotation.processing.RoundEnvironment) throws org.openide.filesystems.annotations.LayerGenerationException
 meth public final boolean process(java.util.Set<? extends javax.lang.model.element.TypeElement>,javax.annotation.processing.RoundEnvironment)
+meth public javax.lang.model.SourceVersion getSupportedSourceVersion()
 supr javax.annotation.processing.AbstractProcessor
 hfds ENTITY_RESOLVER,ERROR_HANDLER,GENERATED_LAYER,LOCAL_DTD_RESOURCE,NETWORK_DTD_URL,PUBLIC_DTD_ID,createdBuilders,generatedLayerByProcessor,originatingElementsByProcessor
 

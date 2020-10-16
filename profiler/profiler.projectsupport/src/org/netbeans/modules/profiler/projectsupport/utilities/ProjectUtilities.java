@@ -84,7 +84,7 @@ public class ProjectUtilities {
     }
 
     public static Project[] getOpenedProjects() {
-        Set<Project> projects = new HashSet();
+        Set<Project> projects = new HashSet<>();
         for (Project project : OpenProjects.getDefault().getOpenProjects()) // #256930
             if (!project.getClass().getName().equals("org.netbeans.modules.project.ui.LazyProject")) // NOI18N
                 projects.add(project);

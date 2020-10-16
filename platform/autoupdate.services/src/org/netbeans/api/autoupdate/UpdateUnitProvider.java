@@ -193,4 +193,27 @@ public final class UpdateUnitProvider {
     public String toString() {
         return super.toString() + "[" + impl + "]";
     }
+
+    /** Sets the trusted flag.
+     *
+     * @see #isTrusted
+     * @param trusted
+     * @since 1.62
+     */
+    public void setTrusted (boolean trusted) {
+        impl.setTrusted(trusted);
+    }
+
+    /** Returns <code>true</code> if the provider is considered to be trusted.
+     * If {@link UpdateItem} are provided by a trusted {@code UpdateUnitProvider}
+     * and can be linked to it (for example because the provider provides
+     * checksums in the catalog), they are considered trusted by the Autoupdate
+     * mechanism and will not trigger certificate warnings.
+     *
+     * @return trusted flag
+     * @since 1.62
+     */
+    public boolean isTrusted () {
+        return impl.isTrusted();
+    }
 }

@@ -83,7 +83,21 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
-        <change>
+         <change>
+            <summary>Adding Color definitions in Color Schema XML-s</summary>
+            <version major="1" minor="59"/>
+            <date day="24" month="11" year="2019"/>
+            <author login="lkishalmi"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible" addition="yes" deprecation="no" deletion="no" modification="no" />
+            <description>
+            <p>
+                Adding new element &lt;colordef name="" color="" /&gt; to fontcolors XML schema, which makes possible custom string to color mapping. It
+                allows to define a color palette, then lookup colors from that palette, making porting color schemas easier.
+            </p>
+            </description>
+            <issue number="NETBEANS-3440"/>
+        </change>
+       <change>
             <summary>Module split</summary>
             <version major="1" minor="49"/>
             <date day="6" month="3" year="2015"/>

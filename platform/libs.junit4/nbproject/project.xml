@@ -30,6 +30,8 @@
                 <package>junit.framework</package>
                 <package>junit.runner</package>
                 <package>junit.textui</package>
+                <package>org.hamcrest</package>
+                <package>org.hamcrest.core</package>
                 <package>org.junit</package>
                 <package>org.junit.matchers</package>
                 <package>org.junit.rules</package>

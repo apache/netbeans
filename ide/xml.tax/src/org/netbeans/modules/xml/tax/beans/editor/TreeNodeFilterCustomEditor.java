@@ -44,7 +44,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 
     
     /** */
-    private static final Map publicNodeTypeNamesMap = new HashMap();
+    private static final Map<Class<?>, String> publicNodeTypeNamesMap = new HashMap();
 
 
     //
@@ -82,7 +82,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     private final TreeNodeFilter filter;
     
     /** */
-    private final List nodeTypesList;
+    private final List<Class> nodeTypesList;
 
     /** */
     private NodeTypesTableModel tableModel;
@@ -96,7 +96,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     /** Creates new TreeNodeFilterEditor */
     public TreeNodeFilterCustomEditor (TreeNodeFilter filter) {
         this.filter = filter;
-        this.nodeTypesList = new LinkedList (Arrays.asList (filter.getNodeTypes()));
+        this.nodeTypesList = new LinkedList<>(Arrays.asList(filter.getNodeTypes()));
         
         initComponents();
         ownInitComponents();
@@ -555,10 +555,10 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     
     /**
      */
-    private static void fillPublicNodeTypesInheritanceTree (Set layer, String prefix) {
-        Iterator it = layer.iterator();
+    private static void fillPublicNodeTypesInheritanceTree (Set<Item> layer, String prefix) {
+        Iterator<Item> it = layer.iterator();
         while ( it.hasNext() ) {
-            Item item = (Item) it.next();
+            Item item = it.next();
             String itemPrefix = ""; // NOI18N
             if ( prefix.length() != 0 ) {
                 if ( it.hasNext() ) {

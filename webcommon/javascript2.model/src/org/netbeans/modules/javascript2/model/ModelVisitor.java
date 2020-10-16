@@ -170,7 +170,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                             }
                             List<TypeUsage> types = functionCalls.get(call.getCallOffset());
                             if (types == null) {
-                                types = new ArrayList();
+                                types = new ArrayList<>();
                                 functionCalls.put(new Integer(call.getCallOffset()), types);
                             }
                             for (TypeUsage type: returnTypes) {
@@ -911,7 +911,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
         } else {
             JsObject property = fncParent.getProperty(modelBuilder.getFunctionName(functionNode));
             if (property == null && functionNode.isStrict()) {
-                property = ((DeclarationScopeImpl)modelBuilder.getCurrentDeclarationScope()).getProperty(modelBuilder.getFunctionName(functionNode));
+                property = modelBuilder.getCurrentDeclarationScope().getProperty(modelBuilder.getFunctionName(functionNode));
             }
             if(!(property instanceof JsFunction)) {
                 property = fncParent.getProperty(modelBuilder.getGlobal().getName() + modelBuilder.getFunctionName(functionNode));
@@ -980,7 +980,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                     if (fncScope.isAnonymous()) {
                         // TODO we probably should not move the properties, or at least increase offset range
                         // of the singleton to fit offsets of these methods in the singleton object
-                        List<JsObject> properties = new ArrayList(fncScope.getProperties().values());
+                        List<JsObject> properties = new ArrayList<>(fncScope.getProperties().values());
                         for (JsObject property : properties) {
                             ModelUtils.moveProperty(singleton, property);
                         }
@@ -1400,7 +1400,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                 JsObject parentObject = parentFqn.isEmpty() ? getGlobalObject() : ModelUtils.getJsObject(modelBuilder, parentFqn, true);
                 JsFunctionImpl callBackFunction = new JsFunctionImpl(
                         parentObject instanceof DeclarationScope ? (DeclarationScope) parentObject : ModelUtils.getDeclarationScope(parentObject),
-                        parentObject, fqn.get(fqn.size() - 1), Collections.EMPTY_LIST,
+                        parentObject, fqn.get(fqn.size() - 1), Collections.emptyList(),
                         callBack.getOffset() > -1 ? new OffsetRange(callBack.getOffset(), callBack.getOffset() + callBack.getType().length()) : OffsetRange.NONE,
                         JsTokenId.JAVASCRIPT_MIME_TYPE, null);
                 parentObject.addProperty(callBackFunction.getName(), callBackFunction);
@@ -1450,11 +1450,9 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
             
             DeclarationScopeImpl currentBlockScope = parentFn;
             private boolean isParameterBlock = false;
-            private List<FunctionNode> declaredFunctions = new ArrayList();
-            private List<VarNode> declaredVars = new ArrayList();
-            
-            
-            
+            private List<FunctionNode> declaredFunctions = new ArrayList<>();
+            private List<VarNode> declaredVars = new ArrayList<>();
+
             private void handleDeclarations() {
                 if (!declaredFunctions.isEmpty() || !declaredVars.isEmpty()) {
                     for (FunctionNode fnNode : declaredFunctions) {
@@ -1568,7 +1566,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
             return;
         }
         // process parameters
-        List<Identifier> parameters = new ArrayList(fnNode.getParameters().size());
+        List<Identifier> parameters = new ArrayList<>(fnNode.getParameters().size());
         for(IdentNode node: fnNode.getParameters()) {
             Identifier param = create(parserResult, node);
             if (param != null && !node.isDestructuredParameter()) {
@@ -1850,7 +1848,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
         } else if (previousVisited instanceof ExportNode && ((ExportNode)previousVisited).isDefault()) { 
             // we are handling case: export default {}
             // the node should be visible in navigator
-            List<Identifier> fqName = new ArrayList(1);
+            List<Identifier> fqName = new ArrayList<>(1);
             fqName.add(new Identifier("default", OffsetRange.NONE)); // NOI18N
             JsObjectImpl objectScope = ModelElementFactory.create(parserResult, objectNode, fqName, modelBuilder, true); //ModelElementFactory.createAnonymousObject(parserResult, objectNode, modelBuilder);
             modelBuilder.setCurrentObject(objectScope);
@@ -2607,7 +2605,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
     }
 
     private List<Identifier> getName(PropertyNode propertyNode) {
-        List<Identifier> name = new ArrayList(1);
+        List<Identifier> name = new ArrayList<>(1);
         if (propertyNode.getGetter() != null || propertyNode.getSetter() != null) {
             // check whether this is not defining getter or setter of a property.
             Node previousNode = getPreviousFromPath(1);
@@ -2625,7 +2623,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
     }
 
     private static List<Identifier> getName(PropertyNode propertyNode, ParserResult parserResult) {
-        List<Identifier> name = new ArrayList(1);
+        List<Identifier> name = new ArrayList<>(1);
         if (propertyNode.getKey() instanceof IdentNode) {
             IdentNode ident = (IdentNode) propertyNode.getKey();
             name.add(new Identifier(ident.getName(), getOffsetRange(ident)));
@@ -2638,14 +2636,14 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
     }
 
     private static List<Identifier> getName(VarNode varNode, ParserResult parserResult) {
-        List<Identifier> name = new ArrayList();
+        List<Identifier> name = new ArrayList<>();
         name.add(new Identifier(varNode.getName().getName(),
                 new OffsetRange(varNode.getName().getStart(), varNode.getName().getFinish())));
         return name;
     }
 
     private static List<Identifier> getName(BinaryNode binaryNode, ParserResult parserResult) {
-        List<Identifier> name = new ArrayList();
+        List<Identifier> name = new ArrayList<>();
         Node lhs = binaryNode.lhs();
         if (lhs instanceof AccessNode) {
             name = getName((AccessNode)lhs, parserResult);
@@ -2678,7 +2676,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
     }
 
     private static List<Identifier> getName(AccessNode aNode, ParserResult parserResult) {
-        List<Identifier> name = new ArrayList();
+        List<Identifier> name = new ArrayList<>();
         name.add(new Identifier(aNode.getProperty(),
                 new OffsetRange(aNode.getFinish() - aNode.getProperty().length(), aNode.getFinish())));
         Node base = aNode.getBase();

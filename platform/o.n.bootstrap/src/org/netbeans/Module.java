@@ -567,7 +567,9 @@ public abstract class Module extends ModuleInfo {
                 findResources.setAccessible(true);
             }
             ClassLoader cl = getClassLoader();
-            return (Enumeration<URL>) findResources.invoke(cl, resources); // NOI18N
+            @SuppressWarnings("unchecked")
+            Enumeration<URL> en = (Enumeration<URL>) findResources.invoke(cl, resources); // NOI18N
+            return en;
         } catch (Exception x) {
             Exceptions.printStackTrace(x);
             return Enumerations.empty();

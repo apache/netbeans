@@ -110,7 +110,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
     /** Internal {@see PayaraServer} to {@see Hk2LibraryProvider}
      *  mapping. */
     private static final Map <PayaraServer, Hk2LibraryProvider> providers
-            = new HashMap();
+            = new HashMap<>();
 
     ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //

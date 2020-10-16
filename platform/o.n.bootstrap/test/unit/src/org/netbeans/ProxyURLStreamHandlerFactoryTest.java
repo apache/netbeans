@@ -73,7 +73,7 @@ public class ProxyURLStreamHandlerFactoryTest extends NbTestCase {
         os.write(10);
         os.close();
         
-        URL u = new URL("jar:" + f.toURL() + "!/test.txt");
+        URL u = new URL("jar:" + f.toURI().toURL() + "!/test.txt");
         DataInputStream is = new DataInputStream(u.openStream());
         byte[] arr = new byte[100];
         is.readFully(arr, 0, 1);

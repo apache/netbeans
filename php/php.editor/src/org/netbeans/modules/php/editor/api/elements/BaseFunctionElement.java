@@ -41,6 +41,13 @@ public interface BaseFunctionElement extends PhpElement {
 
     List<ParameterElement> getParameters();
     Collection<TypeResolver> getReturnTypes();
+    /**
+     * Check whether return type is a union type.
+     *
+     * @return {@code true} if not phpdoc but actual return type is a union
+     * type, {@code false} otherwise
+     */
+    boolean isReturnUnionType();
     String asString(PrintAs as);
     String asString(PrintAs as, TypeNameResolver typeNameResolver);
     String asString(PrintAs as, TypeNameResolver typeNameResolver, PhpVersion phpVersion);

@@ -44,6 +44,7 @@ import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -195,7 +196,7 @@ public class BinaryUsagesTest extends NbTestCase {
         private ClassPath getBootCp() {
             ClassPath cp = cache.get(0);
             if (cp == null) {
-                cp = ClassPathSupport.createClassPath(System.getProperty("sun.boot.class.path"));
+                cp = BootClassPathUtil.getBootClassPath();
                 if (!cache.compareAndSet(0, null, cp)) {
                     cp = cache.get(0);
                 }

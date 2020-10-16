@@ -102,8 +102,8 @@ public class FoDUpdateUnitProvider implements UpdateProvider {
                 }
                 boolean required = false;
 
-                if (mi.recMinJDK != null && jdk.compareTo(mi.recMinJDK) < 0) {
-                    required = true;
+                if (mi.isRequiredFor(jdk)) {
+//                    required = true;
                 }
                 if (fi.getExtraModulesRequiredText() != null && fi.getExtraModulesRecommendedText() == null) {
                     required = true;

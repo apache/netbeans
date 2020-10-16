@@ -991,7 +991,7 @@ public class CreateRulePanel extends javax.swing.JPanel {
     private static Document getDocument(FileObject file) {
         try {
             DataObject d = DataObject.find(file);
-            EditorCookie ec = (EditorCookie) d.getLookup().lookup(EditorCookie.class);
+            EditorCookie ec = d.getLookup().lookup(EditorCookie.class);
 
             if (ec == null) {
                 return null;
@@ -1834,14 +1834,14 @@ public class CreateRulePanel extends javax.swing.JPanel {
      */
     public class ExtDefaultComboBoxModel extends AbstractListModel implements MutableComboBoxModel, Serializable {
 
-        private final List objects;
+        private final List<Object> objects;
         private Object selectedObject;
 
         /**
          * Constructs an empty DefaultComboBoxModel object.
          */
         public ExtDefaultComboBoxModel() {
-            objects = new ArrayList();
+            objects = new ArrayList<>();
         }
 
         public void setItems(Collection items) {

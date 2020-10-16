@@ -966,6 +966,52 @@ public class TypingCompletionUnitTest extends NbTestCase {
                 + "}\n");
     }
     
+public void testPositionInTextBlock() throws Exception {
+              try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
+        Context ctx = new Context(new JavaKit(),
+                "class Test {\n"
+                + "    {\n"
+                + "        \"\"\"|abcd\"\"\"\n"
+                + "    }\n"
+                + "}\n");
+        ctx.typeChar('\n');
+        ctx.assertDocumentTextEquals(
+                "class Test {\n"
+                + "    {\n"
+                + "        \"\"\"\n"
+                + "        |abcd\"\"\"\n"
+                + "    }\n"
+                + "}\n");
+    }
+        
+      public void testPositionInEmptyTextBlock() throws Exception {
+              try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test
+            return ;
+        }
+        Context ctx = new Context(new JavaKit(),
+                "class Test {\n"
+                + "    {\n"
+                + "        \"\"\"|\"\"\"\n"
+                + "    }\n"
+                + "}\n");
+        ctx.typeChar('\n');
+        ctx.assertDocumentTextEquals(
+                "class Test {\n"
+                + "    {\n"
+                + "        \"\"\"\n"
+                + "        |\"\"\"\n"
+                + "    }\n"
+                + "}\n");
+    }
+
     public void testCommentBlockCompletion() throws Exception {
         Preferences prefs = MimeLookup.getLookup(JavaKit.JAVA_MIME_TYPE).lookup(Preferences.class);
         try {
@@ -1327,6 +1373,18 @@ public class TypingCompletionUnitTest extends NbTestCase {
         Context ctx = new Context(new JavaKit(), "t(|\"\")");
         ctx.typeChar('\"');
         ctx.assertDocumentTextEquals("t(\"\"\"\n  |\"\"\")");
+    } 
+    
+    public void testTextBlock6() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_13");
+        } catch (IllegalArgumentException ex) {
+            //OK, skip test:
+            return ;
+        }
+        Context ctx = new Context(new JavaKit(), "t(\"\"\"\n|\"\n\"\"\")");
+        ctx.typeChar('\f');
+        ctx.assertDocumentTextEquals("t(\"\"\"\n\n\"\"\")");
     } 
     
     public void testCorrectHandlingOfStringEscapes184059() throws Exception {

@@ -66,26 +66,32 @@ public final class KeyMapsStorage implements StorageDescription<Collection<KeySt
     public KeyMapsStorage() {
     }
 
+    @Override
     public String getId() {
         return ID;
     }
 
+    @Override
     public boolean isUsingProfiles() {
         return true;
     }
 
+    @Override
     public String getMimeType() {
         return MIME_TYPE;
     }
 
+    @Override
     public String getLegacyFileName() {
         return "keybindings.xml"; //NOI18N
     }
 
+    @Override
     public StorageReader<Collection<KeyStroke>, MultiKeyBinding> createReader(FileObject f, String mimePath) {
         return new KeyMapsReader(f, mimePath);
     }
 
+    @Override
     public StorageWriter<Collection<KeyStroke>, MultiKeyBinding> createWriter(FileObject f, String mimePath) {
         return new KeyMapsWriter();
     }
@@ -105,18 +111,20 @@ public final class KeyMapsStorage implements StorageDescription<Collection<KeySt
     private static final String SYSTEM_ID = "http://www.netbeans.org/dtds/EditorKeyBindings-1_1.dtd"; //NOI18N
 
     private static class KeyMapsReader extends StorageReader<Collection<KeyStroke>, MultiKeyBinding> {
-        private Map<Collection<KeyStroke>, MultiKeyBinding> keyMap = new HashMap<Collection<KeyStroke>, MultiKeyBinding>();
-        private Set<Collection<KeyStroke>> removedShortcuts = new HashSet<Collection<KeyStroke>>();
+        private final Map<Collection<KeyStroke>, MultiKeyBinding> keyMap = new HashMap<>();
+        private final Set<Collection<KeyStroke>> removedShortcuts = new HashSet<>();
 
         public KeyMapsReader(FileObject f, String mimePath) {
             super(f, mimePath);
             LOG.log(Level.FINEST, "Processing file: {0}", f.getPath());
         }
         
+        @Override
         public Map<Collection<KeyStroke>, MultiKeyBinding> getAdded() {
             return keyMap;
         }
         
+        @Override
         public Set<Collection<KeyStroke>> getRemoved() {
             return removedShortcuts;
         }
@@ -180,11 +188,12 @@ public final class KeyMapsStorage implements StorageDescription<Collection<KeySt
         public KeyMapsWriter() {
         }
         
+        @Override
         public Document getDocument() {
             Document doc = XMLUtil.createDocument(ROOT, null, PUBLIC_ID, SYSTEM_ID);
             Node root = doc.getElementsByTagName(ROOT).item(0);
 
-            List<MultiKeyBinding> added = new ArrayList<MultiKeyBinding>(getAdded().values());
+            List<MultiKeyBinding> added = new ArrayList<>(getAdded().values());
             Collections.sort(added, ACTION_NAME_COMPARATOR);
             for(MultiKeyBinding mkb : added) {
                 Element bind = doc.createElement(E_BIND);
@@ -206,13 +215,7 @@ public final class KeyMapsStorage implements StorageDescription<Collection<KeySt
             return doc;
         }
 
-        private static final Comparator<MultiKeyBinding> ACTION_NAME_COMPARATOR = new Comparator<MultiKeyBinding>() {
-            public int compare(MultiKeyBinding mkb1, MultiKeyBinding mkb2) {
-                String actionName1 = mkb1.getActionName();
-                String actionName2 = mkb2.getActionName();
-                return actionName1.compareToIgnoreCase(actionName2);
-            }
-        };
+        private static final Comparator<MultiKeyBinding> ACTION_NAME_COMPARATOR = Comparator.comparing(MultiKeyBinding::getActionName);
     } // End of KeyMapsWriter class
     
 }

@@ -1126,6 +1126,137 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php74/arrowFunctionsParseError_04");
     }
 
+    // PHP 8.0
+    public void testNonCapturingCatches_01() throws Exception {
+        performTest("parser/php80/nonCapturingCatches_01");
+    }
+
+    public void testAllowTrailingCommaInParameterList_01() throws Exception {
+        performTest("parser/php80/allowTrailingCommaInParameterList_01");
+    }
+
+    public void testThrowExpression_01() throws Exception {
+        performTest("parser/php80/throwExpression_01");
+    }
+
+    public void testClassNameLiteralOnObjects_01() throws Exception {
+        performTest("parser/php80/classNameLiteralOnObjects_01");
+    }
+
+    public void testMatchExpression_01() throws Exception {
+        performTest("parser/php80/matchExpression_01");
+    }
+
+    public void testMatchExpression_02() throws Exception {
+        // nested match
+        performTest("parser/php80/matchExpression_02");
+    }
+
+    public void testMatchExpression_03() throws Exception {
+        // multiple conditions
+        performTest("parser/php80/matchExpression_03");
+    }
+
+    public void testMatchExpression_04() throws Exception {
+        performTest("parser/php80/matchExpression_04");
+    }
+
+    public void testMatchExpression_05() throws Exception {
+        performTest("parser/php80/matchExpression_05");
+    }
+
+    public void testMatchExpressionError_01() throws Exception {
+        performTest("parser/php80/matchExpressionError_01");
+    }
+
+    public void testMatchExpressionError_02() throws Exception {
+        performTest("parser/php80/matchExpressionError_02");
+    }
+
+    public void testMatchExpressionError_03() throws Exception {
+        performTest("parser/php80/matchExpressionError_03");
+    }
+
+    public void testMatchExpressionError_04() throws Exception {
+        performTest("parser/php80/matchExpressionError_04");
+    }
+
+    public void testMatchExpressionError_05() throws Exception {
+        performTest("parser/php80/matchExpressionError_05");
+    }
+
+    public void testMatchExpressionError_06() throws Exception {
+        performTest("parser/php80/matchExpressionError_06");
+    }
+
+    public void testUnionTypesTypes() throws Exception {
+        performTest("parser/php80/unionTypesTypes");
+    }
+
+    public void testUnionTypesFunctions() throws Exception {
+        performTest("parser/php80/unionTypesFunctions");
+    }
+
+    public void testUnionTypesError_01() throws Exception {
+        performTest("parser/php80/unionTypesError_01");
+    }
+
+    public void testUnionTypesError_02() throws Exception {
+        performTest("parser/php80/unionTypesError_02");
+    }
+
+    public void testUnionTypesError_03() throws Exception {
+        performTest("parser/php80/unionTypesError_03");
+    }
+
+    public void testStaticReturnType_01() throws Exception {
+        performTest("parser/php80/staticReturnType_01");
+    }
+
+    public void testStaticReturnTypeErrorWithFieldType_01() throws Exception {
+        // nullable type
+        performTest("parser/php80/staticReturnTypeErrorWithFieldType_01");
+    }
+
+    public void testStaticReturnTypeErrorWithFieldType_02() throws Exception {
+        // union type
+        performTest("parser/php80/staticReturnTypeErrorWithFieldType_02");
+    }
+
+    public void testStaticReturnTypeErrorWithParameterType_01() throws Exception {
+        performTest("parser/php80/staticReturnTypeErrorWithParameterType_01");
+    }
+
+    public void testStaticReturnTypeErrorWithParameterType_02() throws Exception {
+        // nullable type
+        performTest("parser/php80/staticReturnTypeErrorWithParameterType_02");
+    }
+
+    public void testStaticReturnTypeErrorWithParameterType_03() throws Exception {
+        // union type
+        performTest("parser/php80/staticReturnTypeErrorWithParameterType_03");
+    }
+
+    public void testMixedType_01() throws Exception {
+        performTest("parser/php80/mixedType_01");
+    }
+
+    public void testMixedTypeError_01() throws Exception {
+        performTest("parser/php80/mixedTypeError_01");
+    }
+
+    public void testNullsafeOperator_01() throws Exception {
+        performTest("parser/php80/nullsafeOperator_01");
+    }
+
+    public void testNullsafeOperator_02() throws Exception {
+        performTest("parser/php80/nullsafeOperator_02");
+    }
+
+    public void testNullsafeOperator_03() throws Exception {
+        performTest("parser/php80/nullsafeOperator_03");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

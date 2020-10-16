@@ -47,4 +47,6 @@
     <fontcolor name="indent-whitespace"/>
     <fontcolor name="trailing-whitespace"/>
     <fontcolor name="nbeditor-bracesMatching-sidebar"/>
+    <fontcolor name="remove-surround-code-delete" foreColor="ffB4B4B4" bgColor="ffF5F5F5"/>
+    <fontcolor name="remove-surround-code-remain" bgColor="ffCCFFCC"/>
 </fontscolors>

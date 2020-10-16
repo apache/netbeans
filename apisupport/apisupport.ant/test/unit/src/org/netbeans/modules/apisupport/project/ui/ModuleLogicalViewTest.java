@@ -42,7 +42,7 @@ public class ModuleLogicalViewTest extends TestBase {
     public ModuleLogicalViewTest(String name) {
         super(name);
     }
-
+   
     @RandomlyFails // NB-Core-Build #7306: same result for DataObject as for FileObject expected:<null> but was:<FilterNode[Name=FreeformProjectTest...]>
     public void testFindPath() throws Exception {
         Project freeform = ProjectManager.getDefault().findProject(FileUtil.toFileObject(file("ant.freeform")));

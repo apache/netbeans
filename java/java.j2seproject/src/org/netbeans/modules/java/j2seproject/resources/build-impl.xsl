@@ -3021,6 +3021,7 @@ is divided into following sections:
             <target name="debug-test-method">
                 <xsl:attribute name="depends">init,compile-test-single,-init-test-run-module-properties,-debug-start-debugger-test,-debug-start-debuggee-test-method</xsl:attribute>
             </target>
+            <target name="debug-single-method" depends="debug-test-method" />
             
             <target name="-do-debug-fix-test">
                 <xsl:attribute name="if">netbeans.home</xsl:attribute>

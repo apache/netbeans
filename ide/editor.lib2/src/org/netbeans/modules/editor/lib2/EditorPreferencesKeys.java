@@ -429,12 +429,6 @@ public final class EditorPreferencesKeys {
      */
     public static final String COLORING_NAME_LIST = "coloring-name-list"; // NOI18N
 
-    /** The list of the token contexts that the kit can use.
-    * The editor-ui uses this setting to determine all the token-ids
-    * and token-categories for the colorings.
-    */
-    public static final String TOKEN_CONTEXT_LIST = "token-context-list"; // NOI18N
-
     /** Suffix added to the coloring settings. The resulting name is used
      * as the name of the setting.
      * @deprecated Use Editor Settings and Editor Settings Storage APIs instead.

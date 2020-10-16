@@ -9,5 +9,9 @@ KEYWORD    callable                                   null
 KEYWORD    float                                      null
 KEYWORD    int                                        null
 KEYWORD    iterable                                   null
+KEYWORD    mixed                                      null
 KEYWORD    object                                     null
+KEYWORD    parent                                     null
+KEYWORD    self                                       null
+KEYWORD    static                                     null
 KEYWORD    string                                     null

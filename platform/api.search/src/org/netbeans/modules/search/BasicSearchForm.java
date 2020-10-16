@@ -26,7 +26,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.ItemSelectable;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -877,7 +876,6 @@ final class BasicSearchForm extends JPanel implements ChangeListener,
             c.insets = new Insets(5, 5, 5, 5);
             c.fill = GridBagConstraints.HORIZONTAL;
             JSeparator separator = new JSeparator(JSeparator.HORIZONTAL);
-            separator.setForeground(SystemColor.controlShadow);
             add(separator, c);
             row++;
         }

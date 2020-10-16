@@ -56,8 +56,8 @@
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="domainsFolderField" max="32767" attributes="0"/>
-                          <Component id="installationLocationField" max="32767" attributes="0"/>
+                          <Component id="domainsFolderField" pref="0" max="32767" attributes="0"/>
+                          <Component id="installationLocationField" pref="0" max="32767" attributes="0"/>
                           <Component id="hostRemoteField" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -71,15 +71,15 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="hostLocalField" max="32767" attributes="0"/>
+                              <Component id="hostLocalField" pref="207" max="32767" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="localIpCB" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="domainField" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="dasPortField" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="userNameField" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="domainField" alignment="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="dasPortField" alignment="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="userNameField" alignment="0" pref="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -89,24 +89,28 @@
                               </Group>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="httpPortField" max="32767" attributes="0"/>
-                                  <Component id="targetField" max="32767" attributes="0"/>
-                                  <Component id="passwordField" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="httpPortField" pref="0" max="32767" attributes="0"/>
+                                  <Component id="targetField" pref="0" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="passwordField" pref="0" max="32767" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="showPassword" min="-2" pref="27" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jdbcDriverDeployment" alignment="0" pref="265" max="32767" attributes="0"/>
+                          <Component id="jdbcDriverDeployment" alignment="0" pref="0" max="32767" attributes="0"/>
                           <Component id="httpMonitor" alignment="0" max="32767" attributes="0"/>
                           <Component id="commetSupport" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="preserveSessions" pref="319" max="32767" attributes="0"/>
-                          <Component id="startDerby" max="32767" attributes="0"/>
-                          <Component id="showPassword" alignment="0" max="32767" attributes="0"/>
+                          <Component id="preserveSessions" max="32767" attributes="0"/>
+                          <Component id="hotDeploy" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -153,16 +157,19 @@
                   <Component id="targetField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" max="-2" attributes="0">
-                  <Component id="userNameField" max="32767" attributes="0"/>
-                  <Component id="passwordLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="userNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="passwordField" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="passwordField" alignment="0" max="32767" attributes="0"/>
+                  <Component id="showPassword" alignment="0" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="userNameField" max="32767" attributes="0"/>
+                      <Component id="passwordLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="userNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="commetSupport" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="showPassword" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="hotDeploy" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -170,11 +177,8 @@
                   <Component id="preserveSessions" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jdbcDriverDeployment" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="startDerby" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <Component id="jdbcDriverDeployment" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="120" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -370,16 +374,6 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="httpMonitorActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="startDerby">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/glassfish/common/ui/Bundle.properties" key="InstanceLocalPanel.startDerby" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="startDerbyActionPerformed"/>
-      </Events>
-    </Component>
     <Component class="javax.swing.JCheckBox" name="jdbcDriverDeployment">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
@@ -388,16 +382,6 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jdbcDriverDeploymentActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="showPassword">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/glassfish/common/ui/Bundle.properties" key="InstanceLocalPanel.showPassword" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showPasswordActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JPasswordField" name="passwordField">
@@ -423,6 +407,30 @@
           <ResourceString bundle="org/netbeans/modules/glassfish/common/ui/Bundle.properties" key="InstancePanel.hostRemoteField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="hotDeploy">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/payara/common/ui/Bundle.properties" key="InstancePanel.hotDeploy.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="hotDeployActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JToggleButton" name="showPassword">
+      <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/org/netbeans/modules/payara/common/resources/show-password.png"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/payara/common/ui/Bundle.properties" key="InstancePanel.showPassword.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+        <Property name="alignmentY" type="float" value="0.0"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showPasswordActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

@@ -2555,10 +2555,10 @@ public class FileObjectTestHid extends TestBaseHid {
         try {
             for (int i = 0; i < names.length; i++) 
                 file1.setAttribute(names[i],"value");
-                        
-             Enumeration en = file1.getAttributes();
+
+            Enumeration<String> en = file1.getAttributes();
              while (en.hasMoreElements()) {
-                String name = (String)en.nextElement();
+                String name = en.nextElement();
                 fsAssert ("Expected getAttributes return this key: "+ name,namesList.contains(name));
                 compareList.add (name);
              }            

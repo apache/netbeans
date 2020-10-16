@@ -747,7 +747,7 @@ public final class EditorRegistry {
             if (!item.ignoreAncestorChange) {
                 // Only start timer when ancestor changes are not ignored.
                 // Use weak ref to component since if the timer would not fire the component would not get released
-                final Reference<JComponent> componentRef = new WeakReference(component);
+                final Reference<JComponent> componentRef = new WeakReference<>(component);
                 item.runningTimer = new Timer(BEFORE_REMOVE_DELAY,
                     new ActionListener() {
                         public @Override void actionPerformed(ActionEvent e) {

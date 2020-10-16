@@ -151,7 +151,7 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
                     }
                 }
 
-                URL[] urls = (URL[]) urlList.toArray(new URL[0]);
+                URL[] urls = urlList.toArray(new URL[0]);
                 /**
                  * Delegate to the module's classloader since core/startup/NbInstaller
                  * overrides the JAX-WS 2.0 jars present in JDK 6
@@ -677,7 +677,7 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
         private final LinkedList paramList;
         private final JavaMethod javaMethod;
         private final URLClassLoader urlClassLoader;
-        private final List listeners = new ArrayList();
+        private final List<MethodTaskListener> listeners = new ArrayList<>();
         private boolean cancelled=false;
 
 
@@ -696,9 +696,9 @@ public class TestWebServiceMethodDlg extends JPanel implements ActionListener, M
         }
 
         private void notifyListeners(Object returnedObject) {
-            Iterator listenerIterator = listeners.iterator();
+            Iterator<MethodTaskListener> listenerIterator = listeners.iterator();
             while(listenerIterator.hasNext()) {
-                MethodTaskListener currentListener = (MethodTaskListener)listenerIterator.next();
+                MethodTaskListener currentListener = listenerIterator.next();
                 currentListener.methodFinished(returnedObject, paramList);
             }
         }

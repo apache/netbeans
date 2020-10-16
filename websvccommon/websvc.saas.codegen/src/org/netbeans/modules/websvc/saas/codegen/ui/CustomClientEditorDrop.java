@@ -123,7 +123,7 @@ public class CustomClientEditorDrop implements ActiveEditorDrop {
         if (d == null) {
             return null;
         }
-        EditorCookie ec = (EditorCookie) d.getCookie(EditorCookie.class);
+        EditorCookie ec = d.getCookie(EditorCookie.class);
         if (ec == null || ec.getOpenedPanes() == null) {
             return null;
         }

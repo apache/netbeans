@@ -88,7 +88,7 @@ public class LaunchingSessionProvider extends SessionProvider {
             }
 
             try {
-                int t = Integer.parseInt (pn.substring (sessionName.length ()));
+                int t = Integer.parseInt (pn.substring (sessionName.length () + 3)); // 3 = " - ".length
                 m.add (Integer.valueOf(t));
             } catch (Exception e) {
             }
@@ -99,7 +99,7 @@ public class LaunchingSessionProvider extends SessionProvider {
         for (i = 0; i < k; i++)
            if (!m.contains (Integer.valueOf(i)))
                break;
-        if (i > 0) sessionName = sessionName + i;
+        if (i > 0) sessionName = sessionName + " - " + i; //NOI18N
         return sessionName;
     };
 }

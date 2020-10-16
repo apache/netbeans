@@ -29,11 +29,11 @@ public final class Constants {
     /**
      * maximum number of found objects
      */
-    public static final int COUNT_LIMIT = 500;
+    public static final int COUNT_LIMIT = Integer.getInteger("netbeans.search.count.limit", 500);
     /**
      * maximum total number of detail entries for found objects
      */
-    public static final int DETAILS_COUNT_LIMIT = 5000;
+    public static final int DETAILS_COUNT_LIMIT = Integer.getInteger("netbeans.search.details.count.limit", 5000);
 
     public enum Limit {
 

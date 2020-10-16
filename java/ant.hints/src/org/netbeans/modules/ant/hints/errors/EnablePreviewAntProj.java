@@ -54,6 +54,7 @@ import org.openide.util.MutexException;
 public class EnablePreviewAntProj implements ErrorRule<Void> {
 
     private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
+            "compiler.err.preview.feature.disabled",          // NOI18N
             "compiler.err.preview.feature.disabled.plural")); // NOI18N
     private static final String ENABLE_PREVIEW_FLAG = "--enable-preview";   // NOI18N
     private static final String JAVAC_COMPILER_ARGS = "javac.compilerargs"; // NOI18N
@@ -127,8 +128,10 @@ public class EnablePreviewAntProj implements ErrorRule<Void> {
             compilerArgs = compilerArgs != null ? compilerArgs + " " + ENABLE_PREVIEW_FLAG : ENABLE_PREVIEW_FLAG;
 
             String runJVMArgs = ep.getProperty(RUN_JVMARGS);
-            if (!runJVMArgs.contains(ENABLE_PREVIEW_FLAG)) {
-                runJVMArgs = runJVMArgs != null ? runJVMArgs + " " + ENABLE_PREVIEW_FLAG : ENABLE_PREVIEW_FLAG;
+            if (runJVMArgs == null) {
+                runJVMArgs = ENABLE_PREVIEW_FLAG;
+            } else if (!runJVMArgs.contains(ENABLE_PREVIEW_FLAG)) {
+                runJVMArgs = runJVMArgs + " " + ENABLE_PREVIEW_FLAG;
             }
 
             ep.setProperty(JAVAC_COMPILER_ARGS, compilerArgs);

@@ -59,7 +59,6 @@ import org.netbeans.modules.payara.common.utils.JavaUtils;
 import org.netbeans.modules.payara.common.utils.Util;
 import org.netbeans.modules.payara.spi.PayaraModule.ServerState;
 import org.netbeans.modules.payara.spi.Recognizer;
-import org.netbeans.modules.payara.spi.RegisteredDerbyServer;
 import org.netbeans.modules.payara.spi.VMIntrospector;
 import org.openide.execution.NbProcessDescriptor;
 import org.openide.filesystems.FileObject;
@@ -514,12 +513,6 @@ public class StartTask extends BasicTask<TaskState> {
         long start = System.currentTimeMillis();
         StartStateListener listener;
         try {
-            // lookup the javadb start service and use it here.
-            RegisteredDerbyServer db
-                    = Lookup.getDefault().lookup(RegisteredDerbyServer.class);
-            if (null != db && "true".equals(instance.getProperty(PayaraModule.START_DERBY_FLAG))) { // NOI18N
-                db.start();
-            }
             // This may be an autheticated server... so we will say it is
             // started. Other operations will fail if the process on the port
             // is not a GF v3 server.

@@ -73,7 +73,7 @@ public class RebaseCommand extends GitCommand {
         if (operation == GitClient.RebaseOperationType.BEGIN) {
             Ref ref = null;
             try {
-                ref = repository.getRef(revision);
+                ref = repository.findRef(revision);
             } catch (IOException ex) {
                 throw new GitException(ex);
             }
@@ -118,7 +118,6 @@ public class RebaseCommand extends GitCommand {
     private GitRebaseResult createResult (RebaseResult res) {
         String currHead;
         Repository repository = getRepository();
-        File workTree = repository.getWorkTree();
         try {
             currHead = repository.resolve(Constants.HEAD).name();
         } catch (IOException ex) {
@@ -148,7 +147,7 @@ public class RebaseCommand extends GitCommand {
                     });
             cmd.execute();
             Map<File, GitStatus> statuses = cmd.getStatuses();
-            conflicts = new ArrayList<File>(statuses.size());
+            conflicts = new ArrayList<>(statuses.size());
             for (Map.Entry<File, GitStatus> e : statuses.entrySet()) {
                 if (e.getValue().isConflict()) {
                     conflicts.add(e.getKey());
@@ -162,7 +161,7 @@ public class RebaseCommand extends GitCommand {
     }
 
     private List<File> getFailures (RebaseResult result) {
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         File workDir = getRepository().getWorkTree();
         if (result.getStatus() == RebaseResult.Status.CONFLICTS) {
             List<String> conflicts = result.getConflicts();

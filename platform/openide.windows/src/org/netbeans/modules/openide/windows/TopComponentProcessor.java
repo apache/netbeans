@@ -19,23 +19,16 @@
 
 package org.netbeans.modules.openide.windows;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import org.openide.awt.ActionID;
-import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.annotations.LayerBuilder.File;
 import org.openide.filesystems.annotations.LayerGeneratingProcessor;
 import org.openide.filesystems.annotations.LayerGenerationException;
@@ -44,7 +37,6 @@ import org.openide.windows.TopComponent;
 import org.openide.windows.TopComponent.Description;
 import org.openide.windows.TopComponent.Registration;
 
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 @ServiceProvider(service=Processor.class)
 public final class TopComponentProcessor extends LayerGeneratingProcessor {
     public TopComponentProcessor() {

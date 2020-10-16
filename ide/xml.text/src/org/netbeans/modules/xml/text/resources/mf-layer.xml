@@ -90,10 +90,6 @@
                     <attr name="regex1" stringvalue="\s*\&lt;/\w+\>"/>
                 </file>
 
-                <folder name="CompletionProviders">
-                    <file name="org-netbeans-modules-xml-text-completion-XMLCompletionProvider.instance"/>
-                </folder>
-
                 <folder name="BracesMatchers">
                     <file name="org-netbeans-modules-xml-text-bracematch-XMLBraceMatcherFactory.instance">
                         <attr name="position" intvalue="50"/>
@@ -197,10 +193,6 @@
                     <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit,org.netbeans.modules.xml.text.syntax.ENTKit"/>
                     <attr name="beaninfo" boolvalue="false"/>
                 </file>
-                
-                <folder name="CompletionProviders">
-                    <file name="org-netbeans-modules-xml-text-completion-XMLCompletionProvider.instance"/>
-                </folder>
                 
                 <folder name="FontsColors">
                     <folder name="NetBeans">
@@ -319,6 +311,21 @@
             </folder>
             <folder name="text">
                 <file name="xml" url="XMLExample"/>
+                <file name="xml-indent" url="XMLExampleIndent"/>
+            </folder>
+        </folder>
+        <folder name="Editor">
+            <folder name="Formatting">
+                <folder name="text">
+                    <folder name="xml">
+                        <file name="TabsAndIndents.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.options.editor.spi.CustomizerFactories.createDefaultTabsAndIndentsCustomizerFactory"/>
+                            <attr name="previewTextFile" stringvalue="OptionsDialog/PreviewExamples/text/xml-indent"/>
+                            <attr name="position" intvalue="100"/>
+                        </file>
+                    </folder>
+                </folder>
             </folder>
         </folder>
     </folder>

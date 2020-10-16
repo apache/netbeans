@@ -57,7 +57,7 @@
         </Comments>
         <Statements>
             <ExpressionStatement start='7' end='40'>
-                <MethodInvocation start='7' end='39'>
+                <MethodInvocation start='7' end='39' isNullsafe='false'>
                     <DereferencedArrayAccess start='7' end='32'>
                         <ArrayDimension start='30' end='32'>
                             <Index>
@@ -69,7 +69,7 @@
                                     <Scalar start='28' end='29' type='INT' value='0'/>
                                 </Index>
                             </ArrayDimension>
-                            <MethodInvocation start='7' end='27'>
+                            <MethodInvocation start='7' end='27' isNullsafe='false'>
                                 <Variable start='7' end='15' isDollared='true'>
                                     <Identifier start='8' end='15' name='myClass'/>
                                 </Variable>

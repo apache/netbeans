@@ -143,7 +143,7 @@ public final class TeamAccessorUtils {
                 Logger.getLogger(TeamAccessorUtils.class.getName()).log(Level.WARNING, null, ex);
             }
         }
-        return Collections.EMPTY_LIST;
+        return Collections.<RepositoryUser>emptyList();
     }    
     
     /**

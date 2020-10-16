@@ -169,6 +169,25 @@
           in case reparsing starts too soon (wasting CPU) or too late (impeding editing).
       </api>
   </p>
+  
+  <p>
+      <api category="devel" group="branding" name="DEFAULT_REUSE_OUTPUT" type="export">
+          Brand the <code>DEFAULT_REUSE_OUTPUT</code> key in a 
+          <code>org.netbeans.modules.maven.options.Bundle</code> file
+          with one of the values <code>true</code> or <code>false</code>
+          to specify the default behavior of reusing output by your application.
+          Use <code>never</code> value, if the reuse shall never be done,
+          regardless of the settings value.
+      </api> 
+      <api category="devel" group="branding" name="DEFAULT_COMPILE_ON_SAVE" type="export">
+          Brand the <code>DEFAULT_COMPILE_ON_SAVE</code> key in a 
+          <code>org.netbeans.modules.maven.api.execute.Bundle</code> file
+          with one of the values <code>all</code> or <code>none</code>
+          to specify the default behavior of compile on save in Maven 
+          projects.
+      </api> 
+  </p>
+  
  </answer>
  
  <answer id="resources-file">

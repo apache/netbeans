@@ -23,7 +23,9 @@ import java.net.URL;
 import javax.swing.Action;
 import javax.swing.SwingUtilities;
 
+import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.modules.debugger.jpda.EditorContextBridge;
+import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleStrataProvider;
 import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
@@ -37,6 +39,7 @@ import org.netbeans.spi.viewmodel.UnknownTypeException;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
 
 @DebuggerServiceRegistrations({
     @DebuggerServiceRegistration(path="netbeans-JPDASession/"+TruffleStrataProvider.TRUFFLE_STRATUM+"/LocalsView",  types=NodeActionsProviderFilter.class),
@@ -45,9 +48,11 @@ import org.openide.util.NbBundle;
     @DebuggerServiceRegistration(path="netbeans-JPDASession/"+TruffleStrataProvider.TRUFFLE_STRATUM+"/WatchesView", types=NodeActionsProviderFilter.class),
 })
 public class TruffleVariablesActionsProviderFilter implements NodeActionsProviderFilter {
-    
+
+    private final RequestProcessor rp;
+
     public TruffleVariablesActionsProviderFilter(ContextProvider contextProvider) {
-        System.err.println("new TruffleVariablesActionsProviderFilter()");
+        this.rp = ((JPDADebuggerImpl) contextProvider.lookupFirst(null, JPDADebugger.class)).getRequestProcessor();
     }
 
     @NbBundle.Messages("CTL_GoToSource=Go to source")
@@ -61,7 +66,7 @@ public class TruffleVariablesActionsProviderFilter implements NodeActionsProvide
             @Override
             public void perform (final Object[] nodes) {
                 TruffleVariable var = (TruffleVariable) nodes[0];
-                showSource(var.getValueSource());
+                rp.post(() -> showSource(var.getValueSource()));
             }
         },
         Models.MULTISELECTION_TYPE_EXACTLY_ONE
@@ -78,7 +83,7 @@ public class TruffleVariablesActionsProviderFilter implements NodeActionsProvide
             @Override
             public void perform (final Object[] nodes) {
                 TruffleVariable var = (TruffleVariable) nodes[0];
-                showSource(var.getTypeSource());
+                rp.post(() -> showSource(var.getTypeSource()));
             }
         },
         Models.MULTISELECTION_TYPE_EXACTLY_ONE
@@ -86,19 +91,18 @@ public class TruffleVariablesActionsProviderFilter implements NodeActionsProvide
 
     @Override
     public void performDefaultAction(NodeActionsProvider original, Object node) throws UnknownTypeException {
-        boolean shown = false;
         if (node instanceof TruffleVariable) {
             TruffleVariable var = (TruffleVariable) node;
-            SourcePosition source = var.getValueSource();
-            if (source == null) {
-                source = var.getTypeSource();
-            }
-            if (source != null) {
-                showSource(source);
-                shown = true;
-            }
-        }
-        if (!shown) {
+            rp.post(() -> {
+                SourcePosition source = var.getValueSource();
+                if (source == null) {
+                    source = var.getTypeSource();
+                }
+                if (source != null) {
+                    showSource(source);
+                }
+            });
+        } else {
             original.performDefaultAction(node);
         }
     }
@@ -115,23 +119,23 @@ public class TruffleVariablesActionsProviderFilter implements NodeActionsProvide
         }
         if (node instanceof TruffleVariable) {
             TruffleVariable var = (TruffleVariable) node;
-            SourcePosition valueSource = var.getValueSource();
-            SourcePosition typeSource = var.getTypeSource();
-            if (valueSource != null || typeSource != null) {
+            boolean hasValueSource = var.hasValueSource();
+            boolean hasTypeSource = var.hasTypeSource();
+            if (hasValueSource || hasTypeSource) {
                 int l = actions.length;
-                if (valueSource != null) {
+                if (hasValueSource) {
                     l++;
                 }
-                if (typeSource != null) {
+                if (hasTypeSource) {
                     l++;
                 }
                 Action[] newActions = new Action[l];
                 System.arraycopy(actions, 0, newActions, 0, actions.length);
                 l = actions.length;
-                if (valueSource != null) {
+                if (hasValueSource) {
                     newActions[l++] = GO_TO_VALUE_SOURCE_ACTION;
                 }
-                if (typeSource != null) {
+                if (hasTypeSource) {
                     newActions[l++] = GO_TO_TYPE_SOURCE_ACTION;
                 }
                 actions = newActions;
@@ -145,7 +149,7 @@ public class TruffleVariablesActionsProviderFilter implements NodeActionsProvide
     @NbBundle.Messages({"# {0} - The file path", "MSG_NoSourceFile=Cannot find source file {0}."})
     private void showSource(SourcePosition source) {
         URL url = source.getSource().getUrl();
-        int lineNumber = source.getLine();
+        int lineNumber = source.getStartLine();
         SwingUtilities.invokeLater (() -> {
             boolean success = EditorContextBridge.getContext().showSource(url.toExternalForm(), lineNumber, null);
             if (!success) {

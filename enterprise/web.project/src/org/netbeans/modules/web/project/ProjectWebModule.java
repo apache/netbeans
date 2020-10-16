@@ -72,21 +72,21 @@ import org.openide.filesystems.FileEvent;
  * @author  Pavel Buzek
  * @author ads
  */
-public final class ProjectWebModule extends J2eeModuleProvider 
-        implements J2eeModuleImplementation2, ModuleChangeReporter, 
+public final class ProjectWebModule extends J2eeModuleProvider
+        implements J2eeModuleImplementation2, ModuleChangeReporter,
         EjbChangeDescriptor, PropertyChangeListener,
-        Lookup.Provider 
+        Lookup.Provider
 {
-      
+
     public static final String FOLDER_WEB_INF = "WEB-INF";//NOI18N
 //    public static final String FOLDER_CLASSES = "classes";//NOI18N
 //    public static final String FOLDER_LIB     = "lib";//NOI18N
     public static final String FILE_DD        = "web.xml";//NOI18N
-    
+
     public static final String LOOKUP_ITEM    = "lookup.item";//NOI18N
 
     private final ResourceChangeReporter rcr = ResourceChangeReporterFactory.createResourceChangeReporter(new WebResourceChangeReporter());
-    
+
     private WebProject project;
     private UpdateHelper helper;
     private ClassPathProviderImpl cpProvider;
@@ -95,13 +95,13 @@ public final class ProjectWebModule extends J2eeModuleProvider
     private InstanceContent myContent;
 
     private long notificationTimeout = 0; // used to suppress repeating the same messages
-    
+
     private MetadataModel<WebAppMetadata> webAppMetadataModel;
     private MetadataModel<WebAppMetadata> webAppAnnMetadataModel;
     private MetadataModel<WebservicesMetadata> webservicesMetadataModel;
-  
+
     private PropertyChangeSupport propertyChangeSupport;
-    
+
     private J2eeModule j2eeModule;
 
     ProjectWebModule (WebProject project, UpdateHelper helper, ClassPathProviderImpl cpProvider) {
@@ -112,11 +112,11 @@ public final class ProjectWebModule extends J2eeModuleProvider
         myLookup = new AbstractLookup( myContent );
         //project.evaluator().addPropertyChangeListener(this);
     }
-    
+
     public Lookup getLookup(){
         return myLookup;
     }
-    
+
     public void addCookie( Object cookie ){
         if ( cookie == null ){
             return;
@@ -125,7 +125,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
         myContent.add( cookie );
         getPropertyChangeSupport().firePropertyChange(LOOKUP_ITEM, old, cookie);
     }
-    
+
     public void removeCookie( Object cookie ){
         if ( cookie == null ){
             return;
@@ -133,7 +133,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
         myContent.remove( cookie);
         getPropertyChangeSupport().firePropertyChange(LOOKUP_ITEM, cookie, null);
     }
-    
+
     public FileObject getDeploymentDescriptor() {
         return getDeploymentDescriptor(false);
     }
@@ -144,7 +144,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
             return null;
         }
         FileObject dd = webInfFo.getFileObject (FILE_DD);
-        if (dd == null && !silent 
+        if (dd == null && !silent
                 && (Profile.J2EE_13.equals(getJ2eeProfile()) ||
                     Profile.J2EE_14.equals(getJ2eeProfile()))) {
             showErrorMessage(NbBundle.getMessage(ProjectWebModule.class,"MSG_WebXmlNotFound", //NOI18N
@@ -161,7 +161,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
             return null;
         }
     }
-    
+
     public void setContextPath (String path) {
         try {
             getConfigSupport().setWebContextRoot(path);
@@ -169,20 +169,20 @@ public final class ProjectWebModule extends J2eeModuleProvider
             Exceptions.printStackTrace(e);
         }
     }
-    
+
     public String getContextPath (String serverInstId) {
         fakeServerInstId = serverInstId;
         String result = getContextPath();
         fakeServerInstId = null;
         return result;
     }
-    
+
     public void setContextPath (String serverInstId, String path) {
         fakeServerInstId = serverInstId;
         setContextPath(path);
         fakeServerInstId = null;
     }
-    
+
     private void showErrorMessage(final String message) {
         synchronized (this) {
             if(new Date().getTime() > notificationTimeout && isProjectOpened()) {
@@ -196,7 +196,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
         // #240818
         DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(message, NotifyDescriptor.ERROR_MESSAGE));
     }
-    
+
     public FileObject getDocumentBase () {
         return getDocumentBase(false);
     }
@@ -227,7 +227,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
     public FileObject[] getJavaSources() {
         return project.getSourceRoots().getRoots();
     }
-    
+
 //    public ClassPath getJavaSources () {
 //        ClassPathProvider cpp = (ClassPathProvider) project.getLookup ().lookup (ClassPathProvider.class);
 //        if (cpp != null) {
@@ -235,11 +235,11 @@ public final class ProjectWebModule extends J2eeModuleProvider
 //        }
 //        return null;
 //    }
-    
+
     public FileObject getWebInf () {
         return getWebInf(false);
     }
-    
+
     public FileObject getWebInf (boolean silent) {
         String value = helper.getAntProjectHelper().getStandardPropertyEvaluator()
                 .getProperty(WebProjectProperties.WEBINF_DIR);
@@ -294,31 +294,31 @@ public final class ProjectWebModule extends J2eeModuleProvider
         }
         return webInf;
     }
-    
+
     public FileObject getConfDir() {
         return getFileObject(WebProjectProperties.CONF_DIR);
     }
-    
+
     public File getConfDirAsFile() {
         return getFile(WebProjectProperties.CONF_DIR);
     }
-    
+
     public FileObject getPersistenceXmlDir() {
         return getFileObject(WebProjectProperties.PERSISTENCE_XML_DIR);
     }
-    
+
     public File getPersistenceXmlDirAsFile() {
         return getFile(WebProjectProperties.PERSISTENCE_XML_DIR);
     }
-    
+
     public ClassPathProvider getClassPathProvider () {
         return (ClassPathProvider) project.getLookup ().lookup (ClassPathProvider.class);
     }
-    
+
     public FileObject getArchive () {
         return getFileObject ("dist.war"); //NOI18N
     }
-    
+
     private FileObject getFileObject(String propname) {
         String prop = helper.getAntProjectHelper().getStandardPropertyEvaluator().getProperty(propname);
         if (prop != null) {
@@ -327,7 +327,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
             return null;
         }
     }
-    
+
     private File getFile(String propname) {
         String prop = helper.getAntProjectHelper().getStandardPropertyEvaluator().getProperty(propname);
         if (prop != null) {
@@ -336,14 +336,14 @@ public final class ProjectWebModule extends J2eeModuleProvider
             return null;
         }
     }
-    
+
     public synchronized J2eeModule getJ2eeModule () {
         if (j2eeModule == null) {
             j2eeModule = J2eeModuleFactory.createJ2eeModule(this);
         }
         return j2eeModule;
     }
-    
+
     public org.netbeans.modules.j2ee.deployment.devmodules.api.ModuleChangeReporter getModuleChangeReporter () {
         return this;
     }
@@ -363,16 +363,16 @@ public final class ProjectWebModule extends J2eeModuleProvider
         return Boolean.parseBoolean(project.evaluator().getProperty(WebProjectProperties.J2EE_COMPILE_ON_SAVE)) &&
             !Boolean.parseBoolean(project.evaluator().getProperty(WebProjectProperties.J2EE_DEPLOY_ON_SAVE));
     }
-    
-    
+
+
     public File getDeploymentConfigurationFile(String name) {
         assert name != null : "File name of the deployement configuration file can't be null"; //NOI18N
-        
+
         String path = getConfigSupport().getContentRelativePath(name);
         if (path == null) {
             path = name;
         }
-        
+
         if (path.startsWith("WEB-INF/")) { //NOI18N
             path = path.substring(8); //removing "WEB-INF/"
 
@@ -389,13 +389,13 @@ public final class ProjectWebModule extends J2eeModuleProvider
                 return new File(getConfDirAsFile(), name);
             }
             return new File(FileUtil.toFile(documentBase), path);
-        }        
+        }
     }
 
     public FileObject getModuleFolder () {
         return getDocumentBase ();
     }
-    
+
     public String getServerID () {
         String inst = getServerInstanceID ();
         if (inst != null) {
@@ -412,11 +412,11 @@ public final class ProjectWebModule extends J2eeModuleProvider
             return fakeServerInstId;
         return helper.getAntProjectHelper().getStandardPropertyEvaluator ().getProperty (WebProjectProperties.J2EE_SERVER_INSTANCE);
     }
-    
+
     public void setServerInstanceID(String severInstanceID) {
         WebProjectProperties.setServerInstance(project, helper, severInstanceID);
     }
-    
+
     public Iterator<J2eeModule.RootedEntry> getArchiveContents () throws java.io.IOException {
         FileObject content = getContentDirectory();
         content.refresh();
@@ -434,7 +434,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
     public File getContentDirectoryAsFile() {
         return getFile ("build.web.dir"); //NOI18N
     }
-    
+
     public <T> MetadataModel<T> getMetadataModel(Class<T> type) {
         if (type == WebAppMetadata.class) {
             @SuppressWarnings("unchecked") // NOI18N
@@ -447,7 +447,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
         }
         return null;
     }
-    
+
     public synchronized MetadataModel<WebAppMetadata> getMetadataModel() {
         if (webAppMetadataModel == null) {
             FileObject ddFO = getDeploymentDescriptor();
@@ -473,13 +473,13 @@ public final class ProjectWebModule extends J2eeModuleProvider
         }
         return webAppMetadataModel;
     }
-    
+
     private synchronized void resetMetadataModel() {
         webAppMetadataModel = null;
     }
-    
+
     /**
-     * The server plugin needs all models to be either merged on annotation-based. 
+     * The server plugin needs all models to be either merged on annotation-based.
      * Currently only the web model does a bit of merging, other models don't. So
      * for web we actually need two models (one for the server plugins and another
      * for everyone else). Temporary solution until merging is implemented
@@ -499,7 +499,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
         }
         return webAppAnnMetadataModel;
     }
-    
+
     public synchronized MetadataModel<WebservicesMetadata> getWebservicesMetadataModel() {
         if (webservicesMetadataModel == null) {
             FileObject ddFO = getDD();
@@ -514,7 +514,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
         }
         return webservicesMetadataModel;
     }
-   
+
     public void uncacheDescriptors() {
         // this.getConfigSupport().resetStorage();
         // reset timeout when closing the project
@@ -523,7 +523,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
         }
     }
 
-    // TODO MetadataModel: rewrite when MetadataModel is ready    
+    // TODO MetadataModel: rewrite when MetadataModel is ready
 //    private Webservices getWebservices() {
 //        if (Util.isJavaEE5orHigher(project)) {
 //            WebServicesSupport wss = WebServicesSupport.getWebServicesSupport(project.getProjectDirectory());
@@ -545,7 +545,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
 //        }
 //        return null;
 //    }
-    
+
     public org.netbeans.modules.j2ee.deployment.common.api.EjbChangeDescriptor getEjbChanges (long timestamp) {
         return this;
     }
@@ -558,7 +558,9 @@ public final class ProjectWebModule extends J2eeModuleProvider
     public String getModuleVersion () {
         // return a version based on the Java EE version
         Profile platformVersion = getJ2eeProfile();
-        if (Profile.JAVA_EE_8_FULL.equals(platformVersion) || Profile.JAVA_EE_8_WEB.equals(platformVersion)) {
+        if (Profile.JAKARTA_EE_8_FULL.equals(platformVersion) || Profile.JAKARTA_EE_8_WEB.equals(platformVersion)) {
+            return WebApp.VERSION_4_0;
+        } else if (Profile.JAVA_EE_8_FULL.equals(platformVersion) || Profile.JAVA_EE_8_WEB.equals(platformVersion)) {
             return WebApp.VERSION_4_0;
         } else if (Profile.JAVA_EE_7_FULL.equals(platformVersion) || Profile.JAVA_EE_7_WEB.equals(platformVersion)) {
             return WebApp.VERSION_3_1;
@@ -573,7 +575,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
             return WebApp.VERSION_3_1;
         }
     }
-    
+
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(org.netbeans.modules.j2ee.dd.api.web.WebApp.PROPERTY_VERSION)) {
             String oldVersion = (String) evt.getOldValue();
@@ -588,7 +590,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
             String oldValue = (String) evt.getOldValue();
             String newValue = (String) evt.getNewValue();
             getPropertyChangeSupport().firePropertyChange(
-                    J2eeModule.PROP_RESOURCE_DIRECTORY, 
+                    J2eeModule.PROP_RESOURCE_DIRECTORY,
                     oldValue == null ? null : new File(oldValue),
                     newValue == null ? null : new File(newValue));
         }  else if (WebProjectProperties.WEB_DOCBASE_DIR.equals(evt.getPropertyName())) {
@@ -603,7 +605,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
                     (String)evt.getNewValue());
         }
     }
-        
+
     public String getUrl () {
          EditableProperties ep =  helper.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
          String warName = ep.getProperty(WebProjectProperties.WAR_NAME);
@@ -629,7 +631,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
     public Profile getJ2eeProfile () {
         return Profile.fromPropertiesString(helper.getAntProjectHelper().getStandardPropertyEvaluator ().getProperty(WebProjectProperties.J2EE_PLATFORM));
     }
-    
+
     public FileObject getDD() {
        FileObject webInfFo = getWebInf();
        if (webInfFo==null) {
@@ -638,34 +640,34 @@ public final class ProjectWebModule extends J2eeModuleProvider
        }
        return getWebInf().getFileObject(WebServicesConstants.WEBSERVICES_DD, "xml"); // NOI18N
    }
-    
+
     @Override
     public FileObject[] getSourceRoots() {
         Sources sources = ProjectUtils.getSources(project);
         SourceGroup[] groups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        
+
         List<FileObject> roots = new LinkedList<FileObject>();
         FileObject documentBase = getDocumentBase();
         if (documentBase != null)
             roots.add(documentBase);
-        
+
         for (int i = 0; i < groups.length; i++) {
             roots.add(groups[i].getRootFolder());
         }
-        
+
         FileObject[] rootArray = new FileObject[roots.size()];
         return roots.toArray(rootArray);
     }
-    
+
     private boolean isProjectOpened() {
-        // XXX workaround: OpenProjects.getDefault() can be null 
+        // XXX workaround: OpenProjects.getDefault() can be null
         // when called from ProjectOpenedHook.projectOpened() upon IDE startup
         if (OpenProjects.getDefault() == null)
             return true;
-        
+
         Project[] projects = OpenProjects.getDefault().getOpenProjects();
         for (int i = 0; i < projects.length; i++) {
-            if (projects[i].equals(project)) 
+            if (projects[i].equals(project))
                 return true;
         }
         return false;
@@ -703,14 +705,14 @@ public final class ProjectWebModule extends J2eeModuleProvider
         //}
         getPropertyChangeSupport().addPropertyChangeListener(listener);
     }
-    
+
     public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
         if (propertyChangeSupport == null) {
             return;
         }
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
-    
+
     private synchronized PropertyChangeSupport getPropertyChangeSupport() {
         if (propertyChangeSupport == null) {
             propertyChangeSupport = new PropertyChangeSupport(this);
@@ -739,17 +741,17 @@ public final class ProjectWebModule extends J2eeModuleProvider
     private static class IT implements Iterator<J2eeModule.RootedEntry> {
         ArrayList<FileObject> ch;
         FileObject root;
-        
+
         private IT (FileObject f) {
             this.ch = new ArrayList<FileObject>();
             ch.add (f);
             this.root = f;
         }
-        
+
         public boolean hasNext () {
             return ! ch.isEmpty();
         }
-        
+
         public J2eeModule.RootedEntry next () {
             FileObject f = ch.get(0);
             ch.remove(0);
@@ -762,26 +764,26 @@ public final class ProjectWebModule extends J2eeModuleProvider
             }
             return new FSRootRE (root, f);
         }
-        
+
         public void remove () {
             throw new UnsupportedOperationException ();
         }
-        
+
     }
 
     private static final class FSRootRE implements J2eeModule.RootedEntry {
         FileObject f;
         FileObject root;
-        
+
         FSRootRE (FileObject root, FileObject f) {
             this.f = f;
             this.root = root;
         }
-        
+
         public FileObject getFileObject () {
             return f;
         }
-        
+
         public String getRelativePath () {
             return FileUtil.getRelativePath (root, f);
         }

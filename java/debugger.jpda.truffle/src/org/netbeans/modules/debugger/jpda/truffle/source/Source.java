@@ -64,6 +64,8 @@ public final class Source {
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
+        } else {
+            uri = SourceBinaryTranslator.binary2Source(uri);
         }
         if (url == null) {
             try {

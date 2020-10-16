@@ -649,21 +649,21 @@ public final class ExternalBrowserPlugin {
     }
     
     private String createCloseTabMessage(int tabId) {
-        Map params = new HashMap();
+        Map<String, Integer> params = new HashMap<>();
         params.put( Message.TAB_ID, tabId );
         Message msg = new Message( Message.MessageType.CLOSE, params);
         return msg.toStringValue();
     }
 
     private String createAttachDebuggerMessage(int tabId) {
-        Map params = new HashMap();
+        Map<String, Integer> params = new HashMap<>();
         params.put( Message.TAB_ID, tabId );
         Message msg = new Message( Message.MessageType.ATTACH_DEBUGGER, params);
         return msg.toStringValue();
     }
 
     private String createDetachDebuggerMessage(int tabId) {
-        Map params = new HashMap();
+        Map<String, Integer> params = new HashMap<>();
         params.put( Message.TAB_ID, tabId );
         Message msg = new Message( Message.MessageType.DETACH_DEBUGGER, params);
         return msg.toStringValue();

@@ -76,8 +76,8 @@ class DiffContentPanel extends JPanel implements HighlightsContainer,Lookup.Prov
         editorPane.putClientProperty(DiffHighlightsLayerFactory.HIGHLITING_LAYER_ID, this);
         if (!isFirst) {
             // disable focus traversal, but permit just the up-cycle on ESC key
-            editorPane.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
-            editorPane.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
+            editorPane.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.emptySet());
+            editorPane.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.emptySet());
             editorPane.setFocusTraversalKeys(KeyboardFocusManager.UP_CYCLE_TRAVERSAL_KEYS, Collections.singleton(
                     KeyStroke.getAWTKeyStroke(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_DOWN_MASK)));
             

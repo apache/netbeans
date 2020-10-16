@@ -105,10 +105,10 @@ public class JPDAStart implements Runnable {
             try {
                 
                 ListeningConnector lc = null;
-                Iterator i = Bootstrap.virtualMachineManager().
+                Iterator<ListeningConnector> i = Bootstrap.virtualMachineManager().
                         listeningConnectors().iterator();
                 for (; i.hasNext();) {
-                    lc = (ListeningConnector) i.next();
+                    lc = i.next();
                     Transport t = lc.transport();
                     if (t != null && t.name().equals(getTransport())) {
                         break;
@@ -202,7 +202,7 @@ public class JPDAStart implements Runnable {
     private static class Listener extends DebuggerManagerAdapter {
         
         private MethodBreakpoint breakpoint;
-        private final Set debuggers = new HashSet();
+        private final Set<JPDADebugger> debuggers = new HashSet<>();
         
         
         Listener(MethodBreakpoint breakpoint) {

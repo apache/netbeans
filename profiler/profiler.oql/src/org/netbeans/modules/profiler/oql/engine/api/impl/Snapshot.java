@@ -65,7 +65,7 @@ public class Snapshot {
             weakReferenceClass = findClass("sun.misc.Ref"); // NOI18N
             referentFieldIndex = 0;
         } else {
-            List flds = weakReferenceClass.getFields();
+            List<Field> flds = weakReferenceClass.getFields();
             int fldsCount = flds.size();
 
             for (int i = 0; i < fldsCount; i++) {
@@ -167,7 +167,7 @@ public class Snapshot {
     }
 
     public Iterator getClassNames(String regex)  {
-        final Iterator delegated = delegate.getJavaClassesByRegExp(regex).iterator();
+        final Iterator<JavaClass> delegated = delegate.getJavaClassesByRegExp(regex).iterator();
         return new Iterator() {
 
             public boolean hasNext() {
@@ -175,7 +175,7 @@ public class Snapshot {
             }
 
             public Object next() {
-                return ((JavaClass)delegated.next()).getName();
+                return delegated.next().getName();
             }
 
             public void remove() {
@@ -199,14 +199,14 @@ public class Snapshot {
 
             @Override
             protected Iterator<JavaClass> getTraversingIterator(JavaClass popped) {
-                return includeSubclasses ? popped.getSubClasses().iterator() : Collections.EMPTY_LIST.iterator();
+                return includeSubclasses ? popped.getSubClasses().iterator() : Collections.<JavaClass>emptyList().iterator();
             }
         };
     }
 
     public Iterator getReferrers(Object obj, boolean includeWeak) {
-        List instances = new ArrayList();
-        List references = new ArrayList();
+        List<Object> instances  = new ArrayList<>();
+        List<Object> references = new ArrayList<>();
         
         if (obj instanceof Instance) {
             references.addAll(((Instance)obj).getReferences());
@@ -233,8 +233,8 @@ public class Snapshot {
     }
 
     public Iterator getReferees(Object obj, boolean includeWeak) {
-        List instances = new ArrayList();
-        List values = new ArrayList();
+        List<Object> instances = new ArrayList<>();
+        List<Object> values    = new ArrayList<>();
         
         if (obj instanceof Instance) {
             Instance o = (Instance)obj;
@@ -275,21 +275,20 @@ public class Snapshot {
 
     public Iterator getFinalizerObjects() {
         JavaClass clazz = findClass("java.lang.ref.Finalizer"); // NOI18N
-        Instance queue = ((ObjectFieldValue) clazz.getValueOfStaticField("queue")).getInstance(); // NOI18N
-        ObjectFieldValue headFld = (ObjectFieldValue) queue.getValueOfField("head"); // NOI18N
+        Instance queue = (Instance) clazz.getValueOfStaticField("queue"); // NOI18N
+        Instance head = (Instance) queue.getValueOfField("head"); // NOI18N
 
         List finalizables = new ArrayList();
-        if (headFld != null) {
-            Instance head = headFld.getInstance();
+        if (head != null) {
             while (true) {
-                ObjectFieldValue referentFld = (ObjectFieldValue) head.getValueOfField("referent"); // NOI18N
-                ObjectFieldValue nextFld = (ObjectFieldValue) head.getValueOfField("next"); // NOI18N
+                Instance referent = (Instance) head.getValueOfField("referent"); // NOI18N
+                Instance next = (Instance) head.getValueOfField("next"); // NOI18N
 
-                if (nextFld == null || nextFld.getInstance().equals(head)) {
+                finalizables.add(referent);
+                if (next == null || next.equals(head)) {
                     break;
                 }
-                head = nextFld.getInstance();
-                finalizables.add(referentFld.getInstance());
+                head = next;
             }
         }
         return finalizables.iterator();
@@ -319,7 +318,7 @@ public class Snapshot {
     }
 
     public GCRoot[] getRootsArray() {
-        List rootList = getRootsList();
+        List<GCRoot> rootList = getRootsList();
         return (GCRoot[]) rootList.toArray(new GCRoot[0]);
     }
    
@@ -334,12 +333,12 @@ public class Snapshot {
                 this.path = path;
             }
         }
-        Deque<State> stack = new ArrayDeque<State>();
-        Set ignored = new HashSet();
+        Deque<State> stack = new ArrayDeque<>();
+        Set<Object> ignored = new HashSet<>();
         
-        List<ReferenceChain> result = new ArrayList<ReferenceChain>();
+        List<ReferenceChain> result = new ArrayList<>();
         
-        Iterator toInspect = getRoots();
+        Iterator<Instance> toInspect = getRoots();
         ReferenceChain path = null;
         State s = new State(path, toInspect);
         

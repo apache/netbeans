@@ -23,11 +23,15 @@ import org.netbeans.modules.web.common.api.FileReference;
 import org.netbeans.modules.web.common.api.WebUtils;
 import org.openide.filesystems.FileObject;
 
-public class HtmlLinkEntry extends Entry {
+/**
+ * Describes an external content referenced from HTML document. 
+ * @author sdedic
+ */
+public final class HtmlLinkEntry extends Entry {
 
-    private String tagName;
-    private String attributeName;
-    private FileReference ref;
+    private final String tagName;
+    private final String attributeName;
+    private final FileReference ref;
 
     public HtmlLinkEntry(FileObject baseFile, String link, OffsetRange astRange, OffsetRange documentRange, String tagName, String attributeName) {
         super(link, astRange, documentRange);

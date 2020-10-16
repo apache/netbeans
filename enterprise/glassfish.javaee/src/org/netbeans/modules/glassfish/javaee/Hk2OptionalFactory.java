@@ -45,7 +45,7 @@ import org.openide.util.Lookup;
  * @author vince kraemer
  */
 public class Hk2OptionalFactory extends OptionalDeploymentManagerFactory {
-    
+
     private final DeploymentFactory df;
     private final ServerUtilities commonUtilities;
     private final boolean hasWizard;
@@ -61,24 +61,30 @@ public class Hk2OptionalFactory extends OptionalDeploymentManagerFactory {
 //        return null == t ? null : new Hk2OptionalFactory(Hk2DeploymentFactory.createPrelude(),
 //                t, false);
 //    }
-    
+
     public static Hk2OptionalFactory createEe6() {
         ServerUtilities t = ServerUtilities.getEe6Utilities();
         return null == t ? null : new Hk2OptionalFactory(Hk2DeploymentFactory.createEe6(),
                 t, true);
     }
-    
+
     public static Hk2OptionalFactory createEe8() {
         ServerUtilities t = ServerUtilities.getEe8Utilities();
         return null == t ? null : new Hk2OptionalFactory(Hk2DeploymentFactory.createEe8(),
                 t, true);
     }
-    
+
+    public static Hk2OptionalFactory createJakartaEe8() {
+        ServerUtilities t = ServerUtilities.getJakartaEe8Utilities();
+        return null == t ? null : new Hk2OptionalFactory(Hk2DeploymentFactory.createJakartaEe8(),
+                t, true);
+    }
+
     @Override
     public StartServer getStartServer(DeploymentManager dm) {
         return new Hk2StartServer(dm);
     }
-    
+
     @Override
     public IncrementalDeployment getIncrementalDeployment(DeploymentManager dm) {
         IncrementalDeployment result = null;
@@ -90,7 +96,7 @@ public class Hk2OptionalFactory extends OptionalDeploymentManagerFactory {
         }
         return result;
     }
-    
+
     @Override
     public FindJSPServlet getFindJSPServlet(DeploymentManager dm) {
         // if assertions are on... blame the caller
@@ -112,18 +118,18 @@ public class Hk2OptionalFactory extends OptionalDeploymentManagerFactory {
     public boolean isCommonUIRequired() {
         return false;
     }
-    
+
     @Override
     public InstantiatingIterator getAddInstanceIterator() {
         return hasWizard ? new J2eeInstantiatingIterator(commonUtilities) : null;
     }
-    
+
     @Override
     public DatasourceManager getDatasourceManager(DeploymentManager dm) {
         return dm instanceof Hk2DeploymentManager ?
                 new Hk2DatasourceManager((Hk2DeploymentManager) dm) : null;
     }
-    
+
     @Override
     public JDBCDriverDeployer getJDBCDriverDeployer(DeploymentManager dm) {
         // if assertions are on... blame the caller
@@ -137,7 +143,7 @@ public class Hk2OptionalFactory extends OptionalDeploymentManagerFactory {
         }
         return retVal;
     }
-    
+
     @Override
      public MessageDestinationDeployment getMessageDestinationDeployment(DeploymentManager dm) {
         return dm instanceof Hk2DeploymentManager ?
@@ -170,7 +176,7 @@ public class Hk2OptionalFactory extends OptionalDeploymentManagerFactory {
     }
 
     private static class J2eeInstantiatingIterator implements InstantiatingIterator {
-        
+
         private final InstantiatingIterator delegate;
         private ServerUtilities su;
 
@@ -254,6 +260,6 @@ public class Hk2OptionalFactory extends OptionalDeploymentManagerFactory {
         public void initialize(WizardDescriptor wizard) {
             delegate.initialize(wizard);
         }
-        
+
     }
 }

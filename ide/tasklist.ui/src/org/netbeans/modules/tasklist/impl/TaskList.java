@@ -100,7 +100,7 @@ public class TaskList {
         if( null != removed && !removed.isEmpty() )
             fireTasksRemoved( removed );
         if( null != tasksToAdd && !tasksToAdd.isEmpty() )
-            fireTasksAdded(new ArrayList(tasksToAdd));
+            fireTasksAdded(new ArrayList<Task>(tasksToAdd));
     }
     
     void clear( PushTaskScanner scanner ) {
@@ -150,7 +150,7 @@ public class TaskList {
                 groupTasks.removeAll( toRemove );
             }
         }
-        return toRemove == null ? null : new LinkedList(toRemove);
+        return toRemove == null ? null : new LinkedList<Task>(toRemove);
     }
     
     void update( FileTaskScanner scanner, FileObject resource, List<Task> newTasks, TaskFilter filter ) {
@@ -294,7 +294,7 @@ public class TaskList {
                 groupTasks.removeAll( toRemove );
             }
         }
-        return toRemove == null ? null : new LinkedList(toRemove);
+        return toRemove == null ? null : new LinkedList<Task>(toRemove);
     }
     
     void clear( FileObject resource ) {

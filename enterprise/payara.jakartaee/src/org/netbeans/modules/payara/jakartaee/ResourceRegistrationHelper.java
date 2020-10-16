@@ -149,9 +149,9 @@ public class ResourceRegistrationHelper {
             Map<String, String> localData = resourceFinder.getResourceData().get(jndiName);
             String remoteKey = prefix + jndiName + "."; // NOI18N
             Map<String, String> remoteData = new HashMap<String, String>();
-            Iterator itr = allRemoteData.keySet().iterator();
+            Iterator<String> itr = allRemoteData.keySet().iterator();
             while (itr.hasNext()) {
-                String key = (String) itr.next();
+                String key = itr.next();
                 if(key.startsWith(remoteKey)){
                     remoteData.put(key, allRemoteData.get(key));
                 }
@@ -175,7 +175,7 @@ public class ResourceRegistrationHelper {
             if (key.indexOf("property.") != -1) { // NOI18N
                 props.add(key);
             }
-            String localValue = (String) localData.get(key);
+            String localValue = localData.get(key);
             if (localValue != null) {
                 if (remoteValue == null || !localValue.equals(remoteValue)) {
                     changedData.put(remoteDataKey, localValue);

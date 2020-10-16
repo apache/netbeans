@@ -1285,6 +1285,8 @@ public class JavaFixUtilities {
             List<? extends VariableTree> args = resolveMultiParameters(node.getParameters());
             LambdaExpressionTree nue = make.LambdaExpression(args, node.getBody());
 
+            Hacks.copyLambdaKind(node, nue);
+
             rewrite(node, nue);
 
             return super.visitLambdaExpression(node, p);

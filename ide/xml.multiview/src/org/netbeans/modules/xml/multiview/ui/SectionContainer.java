@@ -39,9 +39,7 @@ public class SectionContainer extends javax.swing.JPanel implements NodeSectionP
 
     //private HashMap map = new HashMap();
     //private JScrollPane scrollPane;
-    private Node activeNode=null;
     private SectionView sectionView;
-    private String title;
     private Node root;
     private boolean active;
     private int sectionCount=0;
@@ -66,7 +64,6 @@ public class SectionContainer extends javax.swing.JPanel implements NodeSectionP
         fillerEnd.setForeground(SectionVisualTheme.getFoldLineColor());
         Mnemonics.setLocalizedText(titleButton, title);
         titleButton.setToolTipText(titleButton.getText());
-        this.title=titleButton.getText();
         titleButton.addMouseListener(new org.openide.awt.MouseUtils.PopupMouseAdapter() {
             protected void showPopup(java.awt.event.MouseEvent e) {
                 JPopupMenu popup = getNode().getContextMenu();
@@ -174,7 +171,7 @@ public class SectionContainer extends javax.swing.JPanel implements NodeSectionP
         
         // the rest components have to be moved up
         java.awt.Component[] components = contentPanel.getComponents();
-        java.util.AbstractList removedPanels = new java.util.ArrayList(); 
+        java.util.List<NodeSectionPanel> removedPanels = new java.util.ArrayList<>();
         for (int i=0;i<components.length;i++) {
             if (components[i] instanceof NodeSectionPanel) {
                 NodeSectionPanel pan = (NodeSectionPanel)components[i];
@@ -187,7 +184,7 @@ public class SectionContainer extends javax.swing.JPanel implements NodeSectionP
             }
         }
         for (int i=0;i<removedPanels.size();i++) {
-            NodeSectionPanel pan = (NodeSectionPanel)removedPanels.get(i);
+            NodeSectionPanel pan = removedPanels.get(i);
             java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 0;
             gridBagConstraints.gridy = pan.getIndex();

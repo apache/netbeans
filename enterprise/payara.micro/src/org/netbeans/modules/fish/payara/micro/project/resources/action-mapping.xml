@@ -25,13 +25,31 @@
         <packagings>
             <packaging>war</packaging>
         </packagings>
+        <goals>
+            <goal>resources:resources</goal>
+            <goal>compiler:compile</goal>
+            <goal>war:exploded</goal>
+            <goal>payara-micro:stop</goal>
+            <goal>payara-micro:start</goal>
+        </goals>
+        <properties>
+            <netbeans.deploy>false</netbeans.deploy>
+        </properties>
     </action>
     <action>
         <actionName>run.single.deploy</actionName>
         <packagings>
             <packaging>war</packaging>
         </packagings>
+        <goals>
+            <goal>resources:resources</goal>
+            <goal>compiler:compile</goal>
+            <goal>war:exploded</goal>
+            <goal>payara-micro:stop</goal>
+            <goal>payara-micro:start</goal>
+        </goals>
         <properties>
+            <netbeans.deploy>false</netbeans.deploy>
             <netbeans.deploy.clientUrlPart>${webpagePath}</netbeans.deploy.clientUrlPart>
         </properties>
     </action>
@@ -40,10 +58,18 @@
         <packagings>
             <packaging>war</packaging>
         </packagings>
+        <goals>
+            <goal>resources:resources</goal>
+            <goal>compiler:compile</goal>
+            <goal>war:exploded</goal>
+            <goal>payara-micro:stop</goal>
+            <goal>payara-micro:start</goal>
+        </goals>
         <properties>
             <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address}</exec.args>
             <jpda.listen>true</jpda.listen>
             <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
+            <netbeans.deploy>false</netbeans.deploy>
         </properties>
     </action>
     <action>
@@ -51,11 +77,19 @@
         <packagings>
             <packaging>war</packaging>
         </packagings>
+        <goals>
+            <goal>resources:resources</goal>
+            <goal>compiler:compile</goal>
+            <goal>war:exploded</goal>
+            <goal>payara-micro:stop</goal>
+            <goal>payara-micro:start</goal>
+        </goals>
         <properties>
             <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address}</exec.args>
             <jpda.listen>true</jpda.listen>
-            <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
             <netbeans.deploy.clientUrlPart>${webpagePath}</netbeans.deploy.clientUrlPart>
+            <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
+            <netbeans.deploy>false</netbeans.deploy>
         </properties>
     </action>
     <action>
@@ -63,9 +97,17 @@
         <packagings>
             <packaging>war</packaging>
         </packagings>
+        <goals>
+            <goal>resources:resources</goal>
+            <goal>compiler:compile</goal>
+            <goal>war:exploded</goal>
+            <goal>payara-micro:stop</goal>
+            <goal>payara-micro:start</goal>
+        </goals>
         <properties>
             <exec.args></exec.args>
             <exec.executable>java</exec.executable>
+            <netbeans.deploy>false</netbeans.deploy>
             <netbeans.deploy.profilemode>true</netbeans.deploy.profilemode>
         </properties>
     </action>
@@ -74,9 +116,17 @@
         <packagings>
             <packaging>war</packaging>
         </packagings>
+        <goals>
+            <goal>resources:resources</goal>
+            <goal>compiler:compile</goal>
+            <goal>war:exploded</goal>
+            <goal>payara-micro:stop</goal>
+            <goal>payara-micro:start</goal>
+        </goals>
         <properties>
             <exec.args></exec.args>
             <exec.executable>java</exec.executable>
+            <netbeans.deploy>false</netbeans.deploy>
             <netbeans.deploy.profilemode>true</netbeans.deploy.profilemode>
             <netbeans.deploy.clientUrlPart>${webpagePath}</netbeans.deploy.clientUrlPart>
         </properties>
@@ -87,14 +137,25 @@
         <packagings>
             <packaging>war</packaging>
         </packagings>
+        <goals>
+            <goal>resources:resources</goal>
+            <goal>compiler:compile</goal>
+            <goal>war:exploded</goal>
+        </goals>
     </action>
     <action>
         <actionName>micro-explode</actionName>
         <packagings>
             <packaging>war</packaging>
         </packagings>
+        <goals>
+            <goal>war:exploded</goal>
+        </goals>
     </action>
     <action>
         <actionName>micro-stop</actionName>
+        <goals>
+            <goal>payara-micro:stop</goal>
+        </goals>
     </action>
 </actions>

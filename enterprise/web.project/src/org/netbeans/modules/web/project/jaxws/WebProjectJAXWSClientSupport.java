@@ -43,11 +43,11 @@ import org.openide.filesystems.FileObject;
  */
 public class WebProjectJAXWSClientSupport extends ProjectJAXWSClientSupport /*implements JAXWSClientSupportImpl*/ {
     WebProject project;
-    
+
     /** Creates a new instance of WebProjectJAXWSClientSupport */
     public WebProjectJAXWSClientSupport(WebProject project,AntProjectHelper helper) {
         super(project,helper);
-        this.project=project;    
+        this.project=project;
     }
 
     public FileObject getWsdlFolder(boolean create) throws IOException {
@@ -97,7 +97,7 @@ public class WebProjectJAXWSClientSupport extends ProjectJAXWSClientSupport /*im
             }
         }
     }
-    
+
     /** return root folder for xml artifacts
      */
     @Override
@@ -122,6 +122,10 @@ public class WebProjectJAXWSClientSupport extends ProjectJAXWSClientSupport /*im
                 return JAVA_EE_VERSION_18;
             } else if (Profile.JAVA_EE_8_FULL.equals(webModule.getJ2eeProfile())) {
                 return JAVA_EE_VERSION_18;
+            } else if (Profile.JAKARTA_EE_8_WEB.equals(webModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_8;
+            } else if (Profile.JAKARTA_EE_8_FULL.equals(webModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_8;
             } else if (Profile.JAVA_EE_5.equals(webModule.getJ2eeProfile())) {
                 return JAVA_EE_VERSION_15;
             }

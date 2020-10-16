@@ -688,7 +688,7 @@ public abstract class AbstractLogicalViewProvider implements LogicalViewProvider
             if (p == null) {
                 return this;
             }
-            J2eeModuleProvider provider = (J2eeModuleProvider) p.getLookup().lookup(J2eeModuleProvider.class);
+            J2eeModuleProvider provider = p.getLookup().lookup(J2eeModuleProvider.class);
             if (provider == null) {
                 return this;
             }

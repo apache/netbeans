@@ -177,7 +177,7 @@ public class RequireJsHtmlExtension extends HtmlExtension {
             HTMLTokenId tokenId = token.id();
             if (tokenId == HTMLTokenId.VALUE) {
                 String value = token.text().toString();
-                token = LexerUtils.followsToken(ts, Arrays.asList(HTMLTokenId.ARGUMENT), true, false, HTMLTokenId.OPERATOR, HTMLTokenId.ARGUMENT.WS, HTMLTokenId.BLOCK_COMMENT);
+                token = LexerUtils.followsToken(ts, Arrays.asList(HTMLTokenId.ARGUMENT), true, false, HTMLTokenId.OPERATOR, HTMLTokenId.WS, HTMLTokenId.BLOCK_COMMENT);
                 if (token != null && token.id() == HTMLTokenId.ARGUMENT && DATAMAIN.equals(token.text().toString())) {
                     return value.substring(1, value.length() - 1);
                 }

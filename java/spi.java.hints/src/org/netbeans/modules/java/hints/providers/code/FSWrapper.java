@@ -205,6 +205,7 @@ public class FSWrapper {
 
     private static final Object MARKER = new Object();
     
+    @SuppressWarnings("unchecked")
     private static Object computeAttributeValue(ClassLoader loader, FileObject folder, String attributeName, Class<?> returnType, Object defaulValue) throws ClassNotFoundException {
         Object result = folder.getAttribute(attributeName);
 
@@ -245,6 +246,7 @@ public class FSWrapper {
             if (returnType.isEnum()) {
                 String fqn = (String) result;
                 int lastDot = fqn.lastIndexOf('.');
+                @SuppressWarnings("rawtypes")
                 Class<? extends Enum> enumClass = (Class<? extends Enum>) loader.loadClass(fqn.substring(0, lastDot));
 
                 result = Enum.valueOf(enumClass, fqn.substring(lastDot + 1));

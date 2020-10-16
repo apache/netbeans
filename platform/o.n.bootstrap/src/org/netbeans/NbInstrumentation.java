@@ -151,11 +151,13 @@ final class NbInstrumentation implements Instrumentation {
         return false;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public Class[] getAllLoadedClasses() {
         return new Class[0];
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public Class[] getInitiatedClasses(ClassLoader loader) {
         return new Class[0];

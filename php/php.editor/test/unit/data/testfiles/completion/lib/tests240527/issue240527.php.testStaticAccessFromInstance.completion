@@ -4,3 +4,4 @@ $staticAccessTest::|publicStaticSAMethod(); // test
 METHOD     publicStaticSAMethod()          [STATIC]   StaticAccessTest
 VARIABLE   ? $publicStaticSAField          [STATIC]   StaticAccessTest
 CONSTANT   CONSTANT_SA 'CONSTANT_SA'       [PUBLIC]   StaticAccessTest
+CONSTANT   class \StaticAccessTest         [PUBLIC]   Magic Constant

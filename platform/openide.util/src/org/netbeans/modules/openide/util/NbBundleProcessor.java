@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -57,11 +56,15 @@ import org.openide.util.NbCollections;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = Processor.class)
-@SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class NbBundleProcessor extends AbstractProcessor {
 
     public @Override Set<String> getSupportedAnnotationTypes() {
         return Collections.singleton(NbBundle.Messages.class.getCanonicalName());
+    }
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latest();
     }
 
     public @Override boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

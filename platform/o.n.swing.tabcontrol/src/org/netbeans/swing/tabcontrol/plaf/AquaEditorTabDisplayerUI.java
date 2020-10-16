@@ -100,7 +100,7 @@ public class AquaEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
         int prefHeight = 28;
         //Never call getGraphics() on the control, it resets in-process
         //painting on OS-X 1.4.1 and triggers gratuitous repaints
-        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics();
+        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics(c);
         if (g != null) {
             FontMetrics fm = g.getFontMetrics(displayer.getFont());
             Insets ins = getTabAreaInsets();

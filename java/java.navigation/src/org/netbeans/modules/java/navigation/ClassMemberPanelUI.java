@@ -114,7 +114,7 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
     private static final String CMD_HISTORY = "history";    //NOI18N
     private static final int MIN_HISTORY_WIDTH = 50;
     private static final int HISTORY_HEIGHT = 20;
-    private static final ThreadLocal<Boolean> ignoreJavaDoc = new ThreadLocal();
+    private static final ThreadLocal<Boolean> ignoreJavaDoc = new ThreadLocal<>();
 
     private final ExplorerManager manager = new ExplorerManager();
     private final MyBeanTreeView elementView;

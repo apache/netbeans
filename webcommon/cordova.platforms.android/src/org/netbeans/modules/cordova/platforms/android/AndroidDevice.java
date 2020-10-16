@@ -70,7 +70,7 @@ public class AndroidDevice implements Device {
     @Override
     public void openUrl(String url) {
         try {
-            if (browser == browser.DEFAULT) {
+            if (browser == Browser.DEFAULT) {
             ProcessUtilities.callProcess(
                     ((AndroidPlatform) getPlatform()).getAdbCommand(), 
                     true,

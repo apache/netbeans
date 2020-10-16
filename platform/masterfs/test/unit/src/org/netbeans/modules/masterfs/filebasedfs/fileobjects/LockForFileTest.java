@@ -206,7 +206,7 @@ public class LockForFileTest extends NbTestCase {
         LockForFile lock = LockForFile.tryLock(testFile);
         LOG.log(Level.INFO, "lock is here: {0}", lock);
         assertFalse(lock.isHardLocked());
-        Reference ref = new WeakReference(lock);
+        Reference<LockForFile> ref = new WeakReference<>(lock);
         lock = null;
         LOG.log(Level.INFO, "Hard Reference is cleared: {0}", ref);
         assertGC("", ref);

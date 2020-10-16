@@ -227,12 +227,6 @@
                 <os arch="amd64"/>
             </and>
         </condition>
-        <condition property="jvm.platform" value="solaris-sparc">
-            <and>
-                <equals arg1="${os.name}" arg2="SunOS"/>
-                <os arch="sparc"/>
-            </and>
-        </condition>
         <condition property="jvm.platform" value="solaris-sparcv9">
             <and>
                 <equals arg1="${os.name}" arg2="SunOS"/>
@@ -274,7 +268,6 @@
         <condition property="make-shared-classed">
             <or>
                 <equals arg1="${jvm.platform}" arg2="solaris-i586"/>
-                <equals arg1="${jvm.platform}" arg2="solaris-sparc"/>		
                 <equals arg1="${jvm.platform}" arg2="linux-i586"/>
                 <equals arg1="${jvm.platform}" arg2="windows-i586"/>
             </or>

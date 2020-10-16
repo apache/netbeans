@@ -109,7 +109,7 @@ public class WebCodeEvaluator extends CodeEvaluator.EvaluatorService {
         
         private CodeEvaluator.Result.DefaultHistoryItem getHistoryItem(final String expr, final ScopedRemoteObject result) {
             if (result != null) {
-                RemoteObject var = ((ScopedRemoteObject) result).getRemoteObject();
+                RemoteObject var = result.getRemoteObject();
                 RemoteObject.Type type = var.getType();
                 String typeStr;
                 if (type == RemoteObject.Type.OBJECT) {

@@ -35,7 +35,7 @@ import org.openide.util.Parameters;
  */
 public class AnnotationUtils {
 
-    private static final String PARAM_TYPE_PATTERN = "\\s*=\\s*\\\"\\s*([\\w\\\\]+)\\s*\\\""; //NOI18N
+    private static final String PARAM_TYPE_PATTERN = "\\s*=\\s*(\\\"?)\\s*([\\w\\\\]+)(?:::class)?\\s*\\1"; //NOI18N
 
     private static final Pattern INLINE_TYPE_PATTERN = Pattern.compile("@([\\w\\\\]+)"); //NOI18N
 

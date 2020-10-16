@@ -101,13 +101,13 @@ public class CatalogAction implements ActionListener {
         
         // ActionListener
         public void actionPerformed (ActionEvent ev) {
-            Node [] nodes = (Node []) cp.getExplorerManager ().getSelectedNodes ();
+            Node[] nodes = cp.getExplorerManager().getSelectedNodes();
             assert nodes != null && nodes.length > 0 : "Selected templates cannot be null or empty.";
-            Set nodes2open = getNodes2Open (nodes);
+            Set<Node> nodes2open = getNodes2Open (nodes);
             assert ! nodes2open.isEmpty () : "Selected templates to open cannot by empty for nodes " + Arrays.asList (nodes);
             Iterator<Node> it = nodes2open.iterator();
             while (it.hasNext ()) {
-                Node n = (Node) it.next ();
+                Node n = it.next();
                 ViewCookie vc = n.getLookup().lookup(ViewCookie.class);
                 if (vc != null) {
                     vc.view();

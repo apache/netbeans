@@ -24,8 +24,6 @@ import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.modules.php.api.util.UiUtils.PhpOptionsPanelRegistration;
@@ -40,7 +38,6 @@ import org.openide.util.lookup.ServiceProvider;
  * @author S. Aubrecht
  */
 @ServiceProvider(service = Processor.class)
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 @SupportedAnnotationTypes("org.netbeans.modules.php.api.util.UiUtils.PhpOptionsPanelRegistration")
 public class PhpOptionsPanelControllerProcessor extends LayerGeneratingProcessor {
 

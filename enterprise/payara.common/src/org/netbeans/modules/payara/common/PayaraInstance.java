@@ -1011,7 +1011,6 @@ public class PayaraInstance implements ServerInstanceImplementation,
     /**
      * Set Payara server domain name from stored properties.
      * <p/>
-     * @param domainsFolder Payara server domain name.
      */
     @Override
     public String getDomainName() {
@@ -1181,7 +1180,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
      * Method {@see #writeInstanceToFile(PayaraInstance)} must be called
      * to persist value.
      * <p/>
-     * @param usern Payara server administration user name.
+     * @param user Payara server administration user name.
      */
     public void setAdminUser(final String user) {
         properties.put(PayaraModule.USERNAME_ATTR, user);
@@ -1229,6 +1228,11 @@ public class PayaraInstance implements ServerInstanceImplementation,
 
     public String getUserName() {
         return properties.get(PayaraModule.USERNAME_ATTR);
+    }
+
+    public boolean isHotDeployEnabled() {
+       return PayaraVersion.ge(this.getVersion(), PayaraVersion.PF_5_201) ?
+                    Boolean.parseBoolean(this.getProperty(PayaraModule.HOT_DEPLOY)) : false;
     }
 
     /**
@@ -1521,9 +1525,9 @@ public class PayaraInstance implements ServerInstanceImplementation,
                 "Bogus display name");
         updateInt(properties, PayaraModule.ADMINPORT_ATTR,
                 DEFAULT_ADMIN_PORT);
+        updateString(properties, PayaraModule.HOT_DEPLOY, "false");
         updateString(properties, PayaraModule.SESSION_PRESERVATION_FLAG,
                 "true");
-        updateString(properties, PayaraModule.START_DERBY_FLAG, "false");
         updateString(properties, PayaraModule.USE_IDE_PROXY_FLAG, "true");
         updateString(properties, PayaraModule.DRIVER_DEPLOY_FLAG, "true");
         updateString(properties, PayaraModule.HTTPHOST_ATTR, "localhost");

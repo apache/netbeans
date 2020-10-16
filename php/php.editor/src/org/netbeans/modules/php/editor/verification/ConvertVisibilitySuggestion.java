@@ -38,6 +38,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration.Modifier;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
@@ -120,7 +121,7 @@ public class ConvertVisibilitySuggestion extends SuggestionRule {
                 }
                 List<HintFix> createFixes = createFixes(fixInfo);
                 if (!createFixes.isEmpty()) {
-                    hints.add(new Hint(suggestion, Bundle.ConvertVisibilitySuggestion_Hint_Description(), fileObject, lineRange, createFixes, 500));
+                    hints.add(new Hint(suggestion, Bundle.ConvertVisibilitySuggestion_Hint_Description(), fileObject, lineRange, createFixes, 1000));
                 }
             }
             return hints;
@@ -177,7 +178,8 @@ public class ConvertVisibilitySuggestion extends SuggestionRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            OffsetRange nodeRange = new OffsetRange(node.getStartOffset(), node.getEndOffset());
+            Identifier functionName = node.getFunction().getFunctionName();
+            OffsetRange nodeRange = new OffsetRange(node.getStartOffset(), functionName.getStartOffset());
             if (lineRange.overlaps(nodeRange)) {
                 processBodyDeclaration(node);
             }

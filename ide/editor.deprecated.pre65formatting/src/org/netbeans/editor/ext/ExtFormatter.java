@@ -79,13 +79,13 @@ import org.openide.util.WeakListeners;
 public class ExtFormatter extends Formatter implements FormatLayer {
 
     /** List holding the format layers */
-    private List formatLayerList = new ArrayList();
+    private List<FormatLayer> formatLayerList = new ArrayList<>();
 
     /** Use this instead of testing by containsKey() */
     private static final Object NULL_VALUE = new Object();
 
     /** Map that contains the requested [setting-name, setting-value] pairs */
-    private final HashMap settingsMap = new HashMap();
+    private final HashMap<String, Object> settingsMap = new HashMap<>();
 
     private Acceptor indentHotCharsAcceptor;
     private boolean reindentWithTextBefore;
@@ -187,9 +187,9 @@ public class ExtFormatter extends Formatter implements FormatLayer {
     /** Remove the first layer which has the same name as the given one.
     */
     public synchronized void removeFormatLayer(String layerName) {
-        Iterator it = formatLayerIterator();
+        Iterator<FormatLayer> it = formatLayerIterator();
         while (it.hasNext()) {
-            if (layerName.equals(((FormatLayer)it.next()).getName())) {
+            if (layerName.equals(it.next().getName())) {
                 it.remove();
                 return;
             }
@@ -219,9 +219,9 @@ public class ExtFormatter extends Formatter implements FormatLayer {
             fw.setChainModified(false);
             fw.setRestartFormat(false);
 
-            Iterator it = formatLayerIterator();
+            Iterator<FormatLayer> it = formatLayerIterator();
             while (it.hasNext()) {
-                ((FormatLayer)it.next()).format(fw);
+                it.next().format(fw);
                 if (fw.isRestartFormat()) {
                     break;
                 }

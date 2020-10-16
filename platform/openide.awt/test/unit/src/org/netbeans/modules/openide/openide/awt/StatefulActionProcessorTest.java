@@ -754,7 +754,7 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
         
         reinitActionLookup();
         
-        Reference r = new WeakReference(mod);
+        Reference<ActionModel3> r = new WeakReference<>(mod);
         mod = null;
         assertGC("Action model must be GCed", r);
     }
@@ -813,7 +813,7 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
         
         reinitActionLookup();
         
-        Reference r = new WeakReference(mod);
+        Reference<ActionModel3> r = new WeakReference<>(mod);
         instance = null;
         mod = null;
         assertGC("Action model must be GCed", r);
@@ -964,7 +964,7 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
         
         reinitActionLookup();
         
-        Reference r = new WeakReference(mod);
+        Reference<ActionModel3> r = new WeakReference<>(mod);
         mod = null;
         assertGC("Action model must be GCed", r);
     }

@@ -73,6 +73,7 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 
 import org.netbeans.api.java.lexer.JavaTokenId;
+import org.netbeans.modules.java.source.TreeShims;
 
 import org.netbeans.modules.java.source.builder.ASTService;
 import org.netbeans.modules.java.source.query.CommentSet;
@@ -1210,6 +1211,20 @@ public final class TreeMaker {
         return delegate.Variable(modifiers, name, type, initializer);
     }
     
+    /**
+     * Creates a new BindingPatternTree.
+     *
+     * @param name name of the binding variable
+     * @param type the type of the pattern
+     * @return the newly created BindingPatternTree
+     * @throws NoSuchMethodException if the used javac does not support
+     *                               BindingPatternTree.
+     */
+    public Tree BindingPattern(CharSequence name,
+                               Tree type) {
+        return delegate.BindingPattern(name, type);
+    }
+
     /**
      * Creates a new VariableTree from a VariableElement.
      *
@@ -2855,8 +2870,8 @@ public final class TreeMaker {
         // todo (#pf): Shouldn't here be check that names are not the same?
         // i.e. node label == aLabel? -- every case branch has to check itself
         // This will improve performance, no change was done by API user.
-        Tree.Kind kind = node.getKind();
-
+        Tree.Kind kind = TreeShims.isRecord(node) ? Kind.CLASS : node.getKind();
+       
         switch (kind) {
             case BREAK: {
                 BreakTree t = (BreakTree) node;

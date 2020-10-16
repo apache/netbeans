@@ -22,7 +22,6 @@ package org.netbeans.insane.impl;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.concurrent.CancellationException;
 import javax.swing.DefaultBoundedRangeModel;
 import junit.framework.TestCase;
 import org.netbeans.insane.live.CancelException;

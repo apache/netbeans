@@ -153,7 +153,7 @@ public class GenericResourceBean {
     }
 
     public void setMethodTypes(HttpMethodType[] types) {
-        methodTypes = new HashSet(Arrays.asList(types));
+        methodTypes = new HashSet<>(Arrays.asList(types));
     }
     
     private String[] uriParams = null;

@@ -74,9 +74,11 @@ import org.netbeans.modules.maven.configurations.M2ConfigProvider;
 import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.configurations.ProjectProfileHandlerImpl;
 import org.netbeans.modules.maven.cos.CopyResourcesOnSave;
+import org.netbeans.modules.maven.debug.MavenJPDAStart;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
 import org.netbeans.modules.maven.modelcache.MavenProjectCache;
+import org.netbeans.modules.maven.options.MavenSettings;
 import org.netbeans.modules.maven.problems.ProblemReporterImpl;
 import org.netbeans.modules.maven.queries.PomCompilerOptionsQueryImpl;
 import org.netbeans.modules.maven.queries.UnitTestsCompilerOptionsQueryImpl;
@@ -230,7 +232,7 @@ public final class NbMavenProjectImpl implements Project {
 
             @Override
             public File[] getFiles() {
-                File homeFile = FileUtil.normalizeFile(MavenCli.userMavenConfigurationHome);
+                File homeFile = FileUtil.normalizeFile(MavenCli.USER_MAVEN_CONFIGURATION_HOME);
                 return new File[] {
                     new File(projectFile.getParentFile(), "nb-configuration.xml"), //NOI18N
                     projectFile,
@@ -260,6 +262,14 @@ public final class NbMavenProjectImpl implements Project {
 
     public ProblemReporterImpl getProblemReporter() {
         return problemReporter;
+    }
+
+    public String getHintJavaPlatform() {
+        String hint = getAuxProps().get(Constants.HINT_JDK_PLATFORM, true);
+        if (hint == null) {
+            hint = MavenSettings.getDefault().getDefaultJdk();
+        }
+        return hint == null || hint.isEmpty() ? null : hint;
     }
 
     /**
@@ -872,7 +882,8 @@ public final class NbMavenProjectImpl implements Project {
                     LookupMergerSupport.createClassPathModifierMerger(),
                     new UnitTestsCompilerOptionsQueryImpl(this),
                     new PomCompilerOptionsQueryImpl(this),
-                    LookupMergerSupport.createCompilerOptionsQueryMerger()
+                    LookupMergerSupport.createCompilerOptionsQueryMerger(),
+                    MavenJPDAStart.create(this)
         );
     }
 
@@ -966,7 +977,7 @@ public final class NbMavenProjectImpl implements Project {
         }
 
         synchronized void attachAll() {
-            this.filesToWatch = new ArrayList(Arrays.asList(fileProvider.getFiles()));
+            this.filesToWatch = new ArrayList<>(Arrays.asList(fileProvider.getFiles()));
             
             filesToWatch.addAll(getParents()); 
             Collections.sort(filesToWatch);

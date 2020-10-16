@@ -356,7 +356,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
      * @return true if the file is folder, false otherwise
      */
     private boolean isFolder(String name) {
-        Reference ref = findReference(name);
+        Reference<? extends FileObject> ref = findReference(name);
 
         if ((ref != null) && (ref instanceof FileObjRef)) {
             return ((FileObjRef) ref).isFolder();
@@ -373,7 +373,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
     * @exception FileNotFoundException if the file does not exists or is invalid
     */
     private InputStream getInputStream(String name) throws java.io.FileNotFoundException {
-        Reference ref = findReference(name);
+        Reference<? extends FileObject> ref = findReference(name);
 
         if ((ref != null) && (ref instanceof FileObjRef)) {
             return (((FileObjRef) ref).getInputStream(name));
@@ -390,7 +390,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
     * @exception FileNotFoundException if the file does not exists or is invalid
     */
     URL getURL(String name) throws java.io.FileNotFoundException {
-        Reference ref = findReference(name);
+        Reference<? extends FileObject> ref = findReference(name);
 
         if ((ref != null) && (ref instanceof FileObjRef)) {
             return ((FileObjRef) ref).createAbsoluteUrl(name);
@@ -401,7 +401,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
 
     /** Get size of stream*/
     private long getSize(String name) {
-        Reference ref = findReference(name);
+        Reference<? extends FileObject> ref = findReference(name);
 
         if ((ref != null) && (ref instanceof FileObjRef)) {
             return ((FileObjRef) ref).getSize(name);
@@ -412,7 +412,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
 
     /**returns value of last modification*/
     private java.util.Date lastModified(String name) {
-        Reference ref = findReference(name);
+        Reference<? extends FileObject> ref = findReference(name);
 
         if ((ref != null) && (ref instanceof FileObjRef)) {
             return ((FileObjRef) ref).lastModified(name);
@@ -861,10 +861,10 @@ public final class XMLFileSystem extends AbstractFileSystem {
                 foAttrs = new XMLMapAttr();
             }
 
-            Iterator it = attrs.entrySet().iterator();
+            Iterator<Map.Entry> it = attrs.entrySet().iterator();
             boolean ch = false;
             while (it.hasNext()) {
-                Map.Entry attrEntry = (Map.Entry) it.next();
+                Map.Entry attrEntry = it.next();
                 Object prev = foAttrs.put(attrEntry.getKey(), attrEntry.getValue());
                 
                 ch |= (prev == null && attrEntry.getValue() != null) || !prev.equals(attrEntry.getValue());

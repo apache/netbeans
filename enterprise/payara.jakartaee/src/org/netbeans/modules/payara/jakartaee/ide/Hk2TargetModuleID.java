@@ -122,6 +122,10 @@ public class Hk2TargetModuleID implements TargetModuleID {
         this.contextPath = p;
     }
 
+    public String getContextRoot() {
+        return contextPath;
+    }
+
     public void addChild(Hk2TargetModuleID child) {
         children.add(child);
         child.setParent(this);

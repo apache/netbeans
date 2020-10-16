@@ -237,9 +237,9 @@ public class OQLCompletionProvider implements CompletionProvider {
                         Set<String> pkgCompletions = new HashSet<String>();
                         Set<String> completions = new HashSet<String>();
 
-                        Iterator clzs = e.getHeap().getJavaClassesByRegExp(regex).iterator();
+                        Iterator<JavaClass> clzs = e.getHeap().getJavaClassesByRegExp(regex).iterator();
                         while(clzs.hasNext()) {
-                            String className = ((JavaClass)clzs.next()).getName();
+                            String className = clzs.next().getName();
                             String[] sig = splitClassName(className);
                             if (sig[1].startsWith(tokentext)) {
                                 completions.add("00 " + className); // NOI18N

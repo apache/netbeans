@@ -51,4 +51,9 @@ public interface ModuleChangeDescriptor {
      * Returns distribution relative paths of changed files.
      */
     public File[] getChangedFiles();
+
+    /**
+     * Returns distribution relative paths of deleted files.
+     */
+    public File[] getRemovedFiles();
 }

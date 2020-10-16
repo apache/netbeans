@@ -45,10 +45,11 @@ public class ProxyClassLoaderNB11PackageAnnotationsTest extends NbTestCase {
             PackageClassLoader() {
                 super(new ClassLoader[0], false);
                 addCoveredPackages(Collections.singleton(TEST_PACKAGE));
+                definePackage(TEST_PACKAGE, null, null, null, null, null, null, null);
             }
 
             @Override
-            protected Class doLoadClass(String pkg, String name) {
+            protected Class<?> doLoadClass(String pkg, String name) {
                 if (name.startsWith(TEST_PACKAGE)) {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     InputStream is = PackageClassLoader.class.getClassLoader().getResourceAsStream(name.replace('.', '/') + ".class");
@@ -77,9 +78,9 @@ public class ProxyClassLoaderNB11PackageAnnotationsTest extends NbTestCase {
             }
 
         }
-        
+
         final ProxyClassLoader cl = new PackageClassLoader();
-        final Class<? extends Annotation> annotClz = (Class<? extends Annotation>) cl.loadClass(TEST_PACKAGE + ".NB11PackageTestAnnotation");
+        final Class<? extends Annotation> annotClz = cl.loadClass(TEST_PACKAGE + ".NB11PackageTestAnnotation").asSubclass(Annotation.class);
         final Package pkg = annotClz.getPackage();
         final Object annot = pkg.getAnnotation(annotClz);
         assertTrue("Annotation not found", annot != null);

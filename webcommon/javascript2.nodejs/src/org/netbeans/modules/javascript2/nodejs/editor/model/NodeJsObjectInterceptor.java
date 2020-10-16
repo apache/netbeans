@@ -80,7 +80,7 @@ public class NodeJsObjectInterceptor implements ObjectInterceptor {
             }
         }
         if (exports != null) {
-            JsFunction module = factory.newFunction((DeclarationScope) global, global, NodeJsUtils.FAKE_OBJECT_NAME_PREFIX + global.getName(), Collections.EMPTY_LIST, global.getOffsetRange(), null);
+            JsFunction module = factory.newFunction((DeclarationScope) global, global, NodeJsUtils.FAKE_OBJECT_NAME_PREFIX + global.getName(), Collections.<String>emptyList(), global.getOffsetRange(), null);
             module.setAnonymous(true);
             global.addProperty(module.getName(), module);
             ((DeclarationScope)global).addDeclaredScope(module);

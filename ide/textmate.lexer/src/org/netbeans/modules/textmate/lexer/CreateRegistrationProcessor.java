@@ -31,8 +31,6 @@ import javax.annotation.processing.Completion;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
@@ -55,7 +53,6 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @SupportedAnnotationTypes({"org.netbeans.modules.textmate.lexer.api.GrammarRegistration", "org.netbeans.modules.textmate.lexer.api.GrammarRegistrations",
     "org.netbeans.modules.textmate.lexer.api.GrammarInjectionRegistration", "org.netbeans.modules.textmate.lexer.api.GrammarInjectionRegistrations"})
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 @ServiceProvider(service = Processor.class)
 public class CreateRegistrationProcessor extends LayerGeneratingProcessor {
 

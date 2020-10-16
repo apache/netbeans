@@ -956,7 +956,7 @@ public final class ELTypeUtilities {
                                     return;
                                 } else {
                                     if (propertyType != null) {
-                                        enclosing = getTypeFor(info, ((ExecutableElement) propertyType).getReturnType().toString());
+                                        enclosing = getTypeFor(info, propertyType.getReturnType().toString());
                                     }
                                 }
                             }

@@ -117,23 +117,23 @@ public class WsdlSaasNode extends SaasNode {
         }
         
         // Service name (from the wsdl)
-        ss.put( new PropertySupport.ReadOnly( "name", // NOI18N
+        ss.put( new PropertySupport.ReadOnly<String>( "name", // NOI18N
                 String.class,
                 NbBundle.getMessage(WsdlSaasNode.class, "PORT_NAME_IN_WSDL"), // NOI18N
                 NbBundle.getMessage(WsdlSaasNode.class, "PORT_NAME_IN_WSDL")) { // NOI18N
             @Override
-            public Object getValue() {
+            public String getValue() {
                 return getName();
             }
         });
         
         // URL for the wsdl file (entered by the user)
-        ss.put( new PropertySupport.ReadOnly( "URL", // NOI18N
+        ss.put( new PropertySupport.ReadOnly<String>( "URL", // NOI18N
                 String.class,
                 NbBundle.getMessage(WsdlSaasNode.class, "WS_URL"), // NOI18N
                 NbBundle.getMessage(WsdlSaasNode.class, "WS_URL")) { // NOI18N
             @Override
-            public Object getValue() {
+            public String getValue() {
                 return saas.getUrl();
             }
         });

@@ -56,6 +56,11 @@ public class LinuxNotifier235632Test extends NbTestCase {
         clearWorkDir();
     }
 
+    @Override
+    public boolean canRun() {
+        return super.canRun() && Utilities.getOperatingSystem() == Utilities.OS_LINUX;
+    }
+
     /**
      * Prepare folders and files for testing.
      *
@@ -89,11 +94,6 @@ public class LinuxNotifier235632Test extends NbTestCase {
      * @throws java.lang.Exception
      */
     public void testNextEvent() throws Exception {
-
-        if (Utilities.getOperatingSystem() != Utilities.OS_LINUX) {
-            System.out.println("Skipping linux-only test: " + getName());
-            return;
-        }
 
         prepareFiles();
 

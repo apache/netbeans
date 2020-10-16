@@ -127,6 +127,41 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
         p = Properties.getDefault().getProperties("debugger.options.JPDA"); // NOI18N
     }
     
+    private String[] applyExclusionPatterns(StepRequest stepRequest) throws InternalExceptionWrapper, VMDisconnectedExceptionWrapper {
+        String[] exclusionPatterns;
+        String[] stepFilters = getSteppingFilters();
+        if (ignoreStepFilters || steppingFromFilteredLocation) {
+            exclusionPatterns = stepFilters;
+        } else {
+            exclusionPatterns = debugger.getSmartSteppingFilter().getExclusionPatterns();
+            if (stepFilters != null) {
+                int epl = exclusionPatterns.length;
+                exclusionPatterns = Arrays.copyOf(exclusionPatterns, epl + stepFilters.length);
+                System.arraycopy(stepFilters, 0, exclusionPatterns, epl, stepFilters.length);
+            }
+        }
+        if (exclusionPatterns != null) {
+            for (int i = 0; i < exclusionPatterns.length; i++) {
+                StepRequestWrapper.addClassExclusionFilter(stepRequest, exclusionPatterns [i]);
+                logger.finer("   add pattern: "+exclusionPatterns[i]);
+            }
+        } else {
+            exclusionPatterns = new String[]{};
+        }
+        return exclusionPatterns;
+    }
+    
+    private String[] getCurrentExclusionPatterns() {
+        String[] exclusionPatterns = debugger.getSmartSteppingFilter().getExclusionPatterns();
+        String[] stepFilters = getSteppingFilters();
+        if (stepFilters != null) {
+            int epl = exclusionPatterns.length;
+            exclusionPatterns = Arrays.copyOf(exclusionPatterns, epl + stepFilters.length);
+            System.arraycopy(stepFilters, 0, exclusionPatterns, epl, stepFilters.length);
+        }
+        return exclusionPatterns;
+    }
+    
     @Override
     public void addStep(JPDAThread tr) {
         JPDADebuggerImpl debuggerImpl = (JPDADebuggerImpl) debugger;
@@ -191,28 +226,11 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                     getDepth()
                 );
                 //stepRequest.addCountFilter(1); - works bad with exclusion filters!
-                String[] exclusionPatterns;
-                if (ignoreStepFilters || steppingFromFilteredLocation) {
-                    exclusionPatterns = null;
-                } else {
-                    exclusionPatterns = debuggerImpl.getSmartSteppingFilter().getExclusionPatterns();
-                    for (int i = 0; i < exclusionPatterns.length; i++) {
-                        StepRequestWrapper.addClassExclusionFilter(stepRequest, exclusionPatterns [i]);
-                        logger.finer("   add pattern: "+exclusionPatterns[i]);
-                    }
-                }
+                String[] exclusionPatterns = applyExclusionPatterns(stepRequest);
                 debuggerImpl.getOperator().register(stepRequest, this);
                 EventRequestWrapper.setSuspendPolicy(stepRequest, debugger.getSuspend());
-                boolean useStepFilters = p.getBoolean("UseStepFilters", true);
-                boolean stepThrough = useStepFilters && p.getBoolean("StepThroughFilters", false);
-                if (!stepThrough && exclusionPatterns != null && exclusionPatterns.length > 0) {
-                    StepPatternDepth spd = new StepPatternDepth();
-                    spd.exclusionPatterns = exclusionPatterns;
-                    spd.stackDepth = tr.getStackDepth();
-                    stepPatternDepth = spd;
-                } else {
-                    stepPatternDepth = null;
-                }
+                boolean stepThrough = isStepThroughFilters();
+                stepPatternDepth = new StepPatternDepth(tr.getStackDepth(), exclusionPatterns, stepThrough);
                 logger.fine("Set stepPatternDepth to "+stepPatternDepth);
 
                 try {
@@ -583,13 +601,12 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                 tr.addLastOperation(lastOperation);
             }
             logger.fine("Have stepPatternDepth : "+stepPatternDepth);
-            int stepDepthDiff = 0;
-            if (stepPatternDepth != null) {
+            int sd = tr.getStackDepth();
+            int stepDepthDiff = (stepPatternDepth != null) ? sd - stepPatternDepth.stackDepth : 0;
+            if (stepPatternDepth != null && !stepPatternDepth.isStepThrough && stepPatternDepth.exclusionPatterns != null && stepPatternDepth.exclusionPatterns.length >= 0) {
                 StepPatternDepth newStepPatternDepth = null;
                 try {
-                    int sd = tr.getStackDepth();
                     logger.fine("Current stack depth = "+sd);
-                    stepDepthDiff = sd - stepPatternDepth.stackDepth;
                     if (stepDepthDiff > 1) {
                         // There are some (possibly filtered) stack frames in between.
                         // StepThroughFilters is false, therefore we should step out if we can not stop here:
@@ -616,16 +633,14 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                                 StepRequest.STEP_OUT
                             );
                             EventRequestWrapper.addCountFilter(stepRequest, 1);
-                            String[] exclusionPatterns = debuggerImpl.getSmartSteppingFilter().getExclusionPatterns();
+                            String[] exclusionPatterns = getCurrentExclusionPatterns();
                             // JDI is inconsistent!!! Step into steps *through* filters, but step out does *NOT*
                             //for (int i = 0; i < exclusionPatterns.length; i++) {
                                 //StepRequestWrapper.addClassExclusionFilter(stepRequest, exclusionPatterns [i]);
                             //}
                             if (sd > (stepPatternDepth.stackDepth + 2)) {
                                 // There's still something perhaps filterable in beteen
-                                newStepPatternDepth = new StepPatternDepth();
-                                newStepPatternDepth.exclusionPatterns = exclusionPatterns;
-                                newStepPatternDepth.stackDepth = stepPatternDepth.stackDepth;
+                                newStepPatternDepth = new StepPatternDepth(stepPatternDepth.stackDepth, exclusionPatterns, stepPatternDepth.isStepThrough);
                             }
                             
                             debuggerImpl.getOperator ().register (stepRequest, this);
@@ -832,7 +847,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
         JPDADebuggerImpl debuggerImpl = (JPDADebuggerImpl) debugger;
         // 2) init info about current state
         boolean useStepFilters = p.getBoolean("UseStepFilters", true);
-        boolean stepThrough = useStepFilters && p.getBoolean("StepThroughFilters", false);
+        boolean stepThrough = isStepThroughFilters();
         try {
             ThreadReference tr = LocatableEventWrapper.thread (event);
             JPDAThreadImpl t = debuggerImpl.getThread (tr);
@@ -887,7 +902,7 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                             stop = debuggerImpl.stopHere(t);
                         }
                         if (stop.isStop() && !steppingFromFilteredLocation) {
-                            String[] exclusionPatterns = debuggerImpl.getSmartSteppingFilter().getExclusionPatterns();
+                            String[] exclusionPatterns = getCurrentExclusionPatterns();
                             String className = ReferenceTypeWrapper.name(LocationWrapper.declaringType(loc));
                             for (String pattern : exclusionPatterns) {
                                 if (match(className, pattern)) {
@@ -932,27 +947,10 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                             doStepDepth
                         );
                         //EventRequestWrapper.addCountFilter(stepRequest, 1);
-                        String[] exclusionPatterns;
-                        if (ignoreStepFilters || steppingFromFilteredLocation) {
-                            exclusionPatterns = null;
-                        } else {
-                            exclusionPatterns = debuggerImpl.getSmartSteppingFilter().getExclusionPatterns();
-                            if (doStepDepth != StepRequest.STEP_OUT) {
-                                for (int i = 0; i < exclusionPatterns.length; i++) {
-                                    StepRequestWrapper.addClassExclusionFilter(stepRequest, exclusionPatterns [i]);
-                                }
-                            }
-                        }
+                        String[] exclusionPatterns = applyExclusionPatterns(stepRequest);
                         debuggerImpl.getOperator ().register (stepRequest, this);
                         EventRequestWrapper.setSuspendPolicy (stepRequest, debugger.getSuspend ());
-                        if (!stepThrough && exclusionPatterns != null && exclusionPatterns.length > 0) {
-                            StepPatternDepth spd = new StepPatternDepth();
-                            spd.exclusionPatterns = exclusionPatterns;
-                            spd.stackDepth = t.getStackDepth();
-                            stepPatternDepth = spd;
-                        } else {
-                            stepPatternDepth = null;
-                        }
+                        stepPatternDepth = new StepPatternDepth(t.getStackDepth(), exclusionPatterns, stepThrough);
                         logger.fine("Set stepPatternDepth to "+stepPatternDepth);
                         try {
                             EventRequestWrapper.enable (stepRequest);
@@ -1019,24 +1017,8 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
                         logger.throwing(getClass().getName(), "shouldNotStopHere", ex);
                     }
                 }
-                String[] exclusionPatterns;
-                if (steppingFromFilteredLocation) {
-                    exclusionPatterns = null;
-                } else {
-                    exclusionPatterns = debuggerImpl.getSmartSteppingFilter().getExclusionPatterns();
-                    for (int i = 0; i < exclusionPatterns.length; i++) {
-                        StepRequestWrapper.addClassExclusionFilter(stepRequest, exclusionPatterns [i]);
-                        logger.finer("   add pattern: "+exclusionPatterns[i]);
-                    }
-                }
-                if (!stepThrough && exclusionPatterns != null && exclusionPatterns.length > 0) {
-                    StepPatternDepth spd = new StepPatternDepth();
-                    spd.exclusionPatterns = exclusionPatterns;
-                    spd.stackDepth = t.getStackDepth();
-                    stepPatternDepth = spd;
-                } else {
-                    stepPatternDepth = null;
-                }
+                String[] exclusionPatterns = applyExclusionPatterns(stepRequest);
+                stepPatternDepth = new StepPatternDepth(t.getStackDepth(), exclusionPatterns, stepThrough);
                 logger.fine("Set stepPatternDepth to "+stepPatternDepth);
 
                 debuggerImpl.getOperator ().register (stepRequest, this);
@@ -1232,8 +1214,15 @@ public class JPDAStepImpl extends JPDAStep implements Executor {
     
     private static final class StepPatternDepth {
         
-        String[] exclusionPatterns;
-        int stackDepth;
+        final String[] exclusionPatterns;
+        final int stackDepth;
+        final boolean isStepThrough;
+
+        StepPatternDepth(int stackDepth, String[] exclusionPatterns, boolean isStepThrough) {
+            this.stackDepth = stackDepth;
+            this.exclusionPatterns = exclusionPatterns;
+            this.isStepThrough = isStepThrough;
+        }
 
         private boolean isFiltered(String className) {
             for (int i = 0; i < exclusionPatterns.length; i++) {

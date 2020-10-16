@@ -42,6 +42,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -221,15 +222,18 @@ abstract class AbstractWindowRunner<T> extends WindowAdapter implements Runnable
         panel.add(mainLabel);
         JComponent progressBar = ProgressHandleFactory.createProgressComponent(handle);
         progressBar.setMinimumSize(new Dimension(400, 32));
-        JPanel progressPanel = new JPanel(new GridBagLayout());
+        GridBagLayout gb = new GridBagLayout();
+        // give first row, which contains the progress bar and the cancel button, a minimum height
+        gb.rowHeights = new int[] { mainLabel.getFontMetrics(mainLabel.getFont()).getHeight() };
+        JPanel progressPanel = new JPanel(gb);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.weightx = 1D;
-        gbc.weighty = 1.0D;
+        gbc.weighty = 0D;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.BOTH;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         progressPanel.add (progressBar, gbc);
         if (showCancel) {
             final JButton closeButton = new JButton();
@@ -252,21 +256,21 @@ abstract class AbstractWindowRunner<T> extends WindowAdapter implements Runnable
             closeButton.setOpaque(false);
             closeButton.setContentAreaFilled(false);
 
-            Image img = (Image)UIManager.get("nb.progress.cancel.icon"); //NOI18N
+            Object img = UIManager.get("nb.progress.cancel.icon"); //NOI18N
             if( null != img ) {
-                closeButton.setIcon( ImageUtilities.image2Icon( img ) );
+                closeButton.setIcon( (img instanceof Icon) ? (Icon) img : ImageUtilities.image2Icon( (Image) img ) );
             } else {
                 closeButton.setText ( NbBundle.getMessage(AbstractWindowRunner.class,
                         "ModalDialog.btnClose.text")); //NOI18N
             }
-            img = (Image)UIManager.get("nb.progress.cancel.icon.mouseover"); //NOI18N
+            img = UIManager.get("nb.progress.cancel.icon.mouseover"); //NOI18N
             if( null != img ) {
                 closeButton.setRolloverEnabled(true);
-                closeButton.setRolloverIcon( ImageUtilities.image2Icon( img ) );
+                closeButton.setRolloverIcon( (img instanceof Icon) ? (Icon) img : ImageUtilities.image2Icon( (Image) img ) );
             }
-            img = (Image)UIManager.get("nb.progress.cancel.icon.pressed"); //NOI18N
+            img = UIManager.get("nb.progress.cancel.icon.pressed"); //NOI18N
             if( null != img ) {
-                closeButton.setPressedIcon( ImageUtilities.image2Icon( img ) ); //NOI18N
+                closeButton.setPressedIcon( (img instanceof Icon) ? (Icon) img : ImageUtilities.image2Icon( (Image) img ) );
             }
             closeButton.setToolTipText(NbBundle.getMessage(AbstractWindowRunner.class,
                     "ModalDialog.btnClose.tooltip")); //NOI18N

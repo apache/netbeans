@@ -33,7 +33,6 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.server.ServerInstance;
 import org.netbeans.modules.payara.common.CreateDomain;
 import org.netbeans.modules.payara.common.PayaraInstance;
-import org.netbeans.modules.payara.spi.RegisteredDerbyServer;
 import org.netbeans.modules.payara.spi.ServerUtilities;
 import org.netbeans.modules.payara.spi.Utils;
 import org.openide.DialogDisplayer;
@@ -82,13 +81,16 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         this.targetValue = targetValue;
     }
 
-    public ServerWizardIterator(ServerDetails[] possibleValues, ServerDetails[] downloadableValues) {
+    public ServerWizardIterator(ServerDetails[] possibleValues) {
         this.acceptedValues = possibleValues;
-        this.downloadableValues = downloadableValues;
+        this.downloadableValues = Arrays.stream(possibleValues)
+                .filter(ServerDetails::isDownloadable)
+                .sorted(Collections.reverseOrder())
+                .toArray(ServerDetails[]::new);
         this.instanceProvider = PayaraInstanceProvider.getProvider();
         this.hostName = "localhost"; // NOI18N
     }
-    
+
     @Override
     public void removeChangeListener(ChangeListener l) {
         listeners.remove(l);
@@ -144,14 +146,6 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
             handleLocalDomains(result, ir);
         } else {
             handleRemoteDomains(result,ir);
-        }
-        // lookup the javadb register service here and use it.
-        RegisteredDerbyServer db = Lookup.getDefault().lookup(RegisteredDerbyServer.class);
-        if (null != db) {
-            File f = new File(ir, "javadb");
-            if (f.exists() && f.isDirectory() && f.canRead()) {
-                db.initialize(f.getAbsolutePath());
-            }
         }
         NbPreferences.forModule(this.getClass()).put("INSTALL_ROOT_KEY", installRoot); // NOI18N
         return result;

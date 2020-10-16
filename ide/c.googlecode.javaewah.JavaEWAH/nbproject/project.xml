@@ -28,7 +28,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>com-googlecode-javaewah-JavaEWAH.jar</runtime-relative-path>
-                <binary-origin>external/JavaEWAH-0.7.9.jar</binary-origin>
+                <binary-origin>external/JavaEWAH-1.1.6.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

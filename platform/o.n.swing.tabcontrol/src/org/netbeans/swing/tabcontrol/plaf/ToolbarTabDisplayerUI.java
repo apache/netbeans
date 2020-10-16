@@ -287,7 +287,7 @@ public class ToolbarTabDisplayerUI extends AbstractTabDisplayerUI {
         public Dimension getPreferredSize() {
             Dimension result = super.getPreferredSize();
             String s = doGetText();
-            int w = DefaultTabLayoutModel.textWidth(s, getFont());
+            int w = DefaultTabLayoutModel.textWidth(s, getFont(), this);
             result.width += w;
             // as we cannot get the button small enough using the margin and border...
             if (Utilities.isMac()) {
@@ -310,7 +310,7 @@ public class ToolbarTabDisplayerUI extends AbstractTabDisplayerUI {
             int w = getWidth() - (ins.left + ins.right);
             int h = getHeight();
             
-            int txtW = DefaultTabLayoutModel.textWidth(s, getFont());
+            int txtW = DefaultTabLayoutModel.textWidth(s, getFont(), this);
             if (txtW < w) {
                 x += (w / 2) - (txtW / 2);
             }

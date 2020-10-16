@@ -89,7 +89,6 @@ public class ResultsOutlineCellRenderer extends DefaultOutlineCellRenderer {
             ((JLabel) renderer).setHorizontalAlignment(SwingConstants.RIGHT);
             ((JLabel) renderer).setHorizontalTextPosition(SwingConstants.RIGHT);
         }
-        renderer.setForeground(Color.BLACK);
         return renderer;
     }
 

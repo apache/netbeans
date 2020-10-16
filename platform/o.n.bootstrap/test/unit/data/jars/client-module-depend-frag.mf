@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.foo.client
+OpenIDE-Module-Name: Client that Needs an autoload fragment
+OpenIDE-Module-Module-Dependencies: org.foo.fragment.auto
+OpenIDE-Module-Public-Packages: -
+

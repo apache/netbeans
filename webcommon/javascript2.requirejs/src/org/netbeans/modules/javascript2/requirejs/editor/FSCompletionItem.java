@@ -157,7 +157,7 @@ public class FSCompletionItem implements CompletionProposal {
 
         public FSElementHandle(FileObject fo) {
             this.fo = fo;
-            this.representedFiles = new HashSet(1);
+            this.representedFiles = new HashSet<>(1);
             representedFiles.add(fo);
         }
 
@@ -189,7 +189,7 @@ public class FSCompletionItem implements CompletionProposal {
 
         @Override
         public Set<Modifier> getModifiers() {
-            return Collections.EMPTY_SET;
+            return Collections.emptySet();
         }
 
         @Override

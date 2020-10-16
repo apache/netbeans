@@ -78,6 +78,10 @@ public class FormalParameter extends ASTNode {
         return getParameterType() instanceof NullableType;
     }
 
+    public boolean isUnionType() {
+        return getParameterType() instanceof UnionType;
+    }
+
     public Expression getParameterName() {
         return parameterName;
     }

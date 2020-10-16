@@ -18,6 +18,7 @@
  */
 package org.netbeans.libs.graalsdk;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.script.Bindings;
@@ -55,7 +56,7 @@ public final class GraalEnginesTest {
     public void invokeEngineViaGeneratedScriptEngine() {
         ScriptEngineManager man = Scripting.createManager();
         ScriptEngine llvm = man.getEngineByName("GraalVM:llvm");
-        assertNotNull("llvm engine found: " + man.getEngineFactories(), llvm);
+        assumeNotNull("Need llvm. Found: " + man.getEngineFactories(), llvm);
 
         ScriptEngineFactory jsFactory = null;
         ScriptEngineFactory graalvmJsFactory = null;
@@ -77,7 +78,7 @@ public final class GraalEnginesTest {
                 if (factory.getEngineName().startsWith("GraalVM:")) {
                     assertNull("No previous generic GraalVM javascript factory: " + graalvmJsFactory, graalvmJsFactory);
                     graalvmJsFactory = factory;
-                } else {
+                } else if (!factory.getEngineName().equalsIgnoreCase("Oracle Nashorn")) {
                     assertNull("No previous javascript factory: " + jsFactory, jsFactory);
                     jsFactory = factory;
                 }
@@ -97,6 +98,7 @@ public final class GraalEnginesTest {
 
     @Test
     public void pythonDirect() throws Exception {
+        assumeNotNull("Need python", Scripting.createManager().getEngineByMimeType("text/x-python"));
         final Context ctx = Context.newBuilder().allowAllAccess(true).build();
         Value mul = ctx.eval("python", MUL);
         Value fourtyTwo = mul.execute(6, 7);
@@ -257,10 +259,11 @@ public final class GraalEnginesTest {
         ScriptEngineManager man = Scripting.createManager();
         ScriptEngine js = man.getEngineByName("GraalVM:js");
         ScriptEngine python = man.getEngineByName("GraalVM:python");
-
+        assumeNotNull("Need python", python);
+        
         List<Integer> scopes = js.getContext().getScopes();
-        assertEquals(1, scopes.size());
-        assertEquals(ScriptContext.GLOBAL_SCOPE, scopes.get(0).intValue());
+        assertEquals(2, scopes.size());
+        assertEquals(ScriptContext.GLOBAL_SCOPE, scopes.get(1).intValue());
 
         Bindings bindings = js.getBindings(ScriptContext.GLOBAL_SCOPE);
         bindings.put("x", 42);
@@ -290,7 +293,8 @@ public final class GraalEnginesTest {
         ScriptEngineManager man = Scripting.createManager();
         ScriptEngine python = man.getEngineByName("GraalVM:python");
         ScriptEngine js = man.getEngineByName("GraalVM:js");
-
+        assumeNotNull("Need python", python);
+        
         python.eval("\n"
                 + "import polyglot;\n"
                 + "@polyglot.export_value\n"
@@ -315,4 +319,86 @@ public final class GraalEnginesTest {
         assertEquals("Fourty two from JS", 42, numbers2.fourtyTwo());
         assertEquals("Eighty one from JS", 81, numbers2.eightyOne());
     }
+    
+    /**
+     * Attributes that have been set up as global scope should be accessible as polyglot 
+     * bindings. Polyglot bindings should be visible as global scope attributes.
+     * @throws Exception 
+     */
+    @Test
+    public void polyglotBindingsAsAttributes() throws Exception {
+        ScriptEngineManager man = Scripting.newBuilder().build();
+
+        ScriptEngine snake = man.getEngineByName("GraalVM:python");
+        ScriptEngine js = man.getEngineByName("GraalVM:js");
+        
+        snake.getContext().setAttribute("preSnake", 1111, ScriptContext.GLOBAL_SCOPE);
+        js.getContext().setAttribute("preJs", 2222, ScriptContext.GLOBAL_SCOPE);
+        
+        Bindings pythonBindings = snake.getBindings(ScriptContext.GLOBAL_SCOPE);
+        Bindings jsBindings = js.getBindings(ScriptContext.GLOBAL_SCOPE);
+
+        pythonBindings.put("ctxSnake", 3333);
+        jsBindings.put("ctxJs", 4444);
+        
+        Object s = js.eval("var s = '' + Polyglot.import('preSnake') + Polyglot.import('preJs') + Polyglot.import('ctxSnake') + Polyglot.import('ctxJs');" 
+                + "Polyglot.export('s', s); s;");
+        assertEquals("1111222233334444", s);
+
+        assertEquals(s, js.getContext().getAttribute("s"));
+        assertEquals(s, js.getContext().getAttribute("s", ScriptContext.GLOBAL_SCOPE));
+        
+        assertEquals(s, snake.getContext().getAttribute("s"));
+        assertEquals(s, snake.getContext().getAttribute("s", ScriptContext.GLOBAL_SCOPE));
+
+    }
+
+    @Test
+    public void hostAccessGlobalAttributeWorks() throws Exception {
+        ScriptEngineManager man = Scripting.createManager();
+        ScriptEngine js = man.getEngineByName("GraalVM:js");
+        
+        js.getContext().setAttribute("allowAllAccess", true, ScriptContext.GLOBAL_SCOPE);
+        Object o = js.eval("var a = new java.util.ArrayList(); Polyglot.export('a', a); a;");
+        
+        assertTrue(o instanceof ArrayList);
+    }
+
+    @Test
+    public void allAccessEnabledBuilder() throws Exception {
+        ScriptEngineManager man = Scripting.newBuilder().allowAllAccess(true).build();
+        ScriptEngine js = man.getEngineByName("GraalVM:js");
+        
+        // consistency of builder / attribute
+        assertEquals(Boolean.TRUE, js.getContext().getAttribute("allowAllAccess"));
+        
+        Object o = js.eval("new java.util.ArrayList();");
+        assertTrue(o instanceof ArrayList);
+        
+        // consistency after Polyglot init:
+        assertEquals(Boolean.TRUE, js.getContext().getAttribute("allowAllAccess"));
+        // should not be exported into the language or polyglot
+        assertNull(js.get("allowAllAccess"));
+        // or its bindings
+        assertNull(js.getBindings(ScriptContext.GLOBAL_SCOPE).get("allowAllAccess"));
+    }
+
+    @Test
+    public void allAccessEnabledAttribute() throws Exception {
+        ScriptEngineManager man = Scripting.newBuilder().build();
+        ScriptEngine js = man.getEngineByName("GraalVM:js");
+
+        js.getContext().setAttribute("allowAllAccess", true, ScriptContext.GLOBAL_SCOPE);
+
+        Object o = js.eval("new java.util.ArrayList();");
+        assertTrue(o instanceof ArrayList);
+
+        // consistency after Polyglot init:
+        assertEquals(Boolean.TRUE, js.getContext().getAttribute("allowAllAccess"));
+        // should not be in engine scope
+        assertNull(js.get("allowAllAccess"));
+        // or its bindings
+        assertNull(js.getBindings(ScriptContext.GLOBAL_SCOPE).get("allowAllAccess"));
+    }
+    
 }

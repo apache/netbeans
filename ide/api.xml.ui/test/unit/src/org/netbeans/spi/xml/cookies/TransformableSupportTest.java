@@ -92,7 +92,7 @@ public class TransformableSupportTest extends NbTestCase {
         
         public void receive(CookieMessage msg) {
             receives++;
-            if (msg.getLevel() >= msg.WARNING_LEVEL) {
+            if (msg.getLevel() >= CookieMessage.WARNING_LEVEL) {
                 warnings++;
             }
         }

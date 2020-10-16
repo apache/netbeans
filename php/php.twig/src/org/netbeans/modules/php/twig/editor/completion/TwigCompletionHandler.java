@@ -128,7 +128,7 @@ public class TwigCompletionHandler implements CodeCompletionHandler2 {
         FILTERS.add(TwigElement.Factory.create("escape", documentationFactory, Arrays.asList(new Parameter[] {new Parameter("'html'")}))); //NOI18N
         FILTERS.add(TwigElement.Factory.create("format", documentationFactory, Arrays.asList(new Parameter[] {new Parameter("var")}))); //NOI18N
         FILTERS.add(TwigElement.Factory.create("join", documentationFactory, Arrays.asList(new Parameter[] {new Parameter("'separator'")}))); //NOI18N
-        FILTERS.add(TwigElement.Factory.create("json_encode", documentationFactory, Collections.EMPTY_LIST)); //NOI18N
+        FILTERS.add(TwigElement.Factory.create("json_encode", documentationFactory, Collections.emptyList())); //NOI18N
         FILTERS.add(TwigElement.Factory.create("keys", documentationFactory)); //NOI18N
         FILTERS.add(TwigElement.Factory.create("length", documentationFactory)); //NOI18N
         FILTERS.add(TwigElement.Factory.create("lower", documentationFactory)); //NOI18N
@@ -136,7 +136,7 @@ public class TwigCompletionHandler implements CodeCompletionHandler2 {
         FILTERS.add(TwigElement.Factory.create("nl2br", documentationFactory)); //NOI18N
         FILTERS.add(TwigElement.Factory.create("number_format", documentationFactory)); //NOI18N
         FILTERS.add(TwigElement.Factory.create("raw", documentationFactory)); //NOI18N
-        FILTERS.add(TwigElement.Factory.create("replace", documentationFactory, Collections.EMPTY_LIST)); //NOI18N
+        FILTERS.add(TwigElement.Factory.create("replace", documentationFactory, Collections.emptyList())); //NOI18N
         FILTERS.add(TwigElement.Factory.create("reverse", documentationFactory)); //NOI18N
         FILTERS.add(TwigElement.Factory.create("slice", documentationFactory, Arrays.asList(new Parameter[] {new Parameter("start"), new Parameter("length")}))); //NOI18N
         FILTERS.add(TwigElement.Factory.create("sort", documentationFactory)); //NOI18N
@@ -144,7 +144,7 @@ public class TwigCompletionHandler implements CodeCompletionHandler2 {
         FILTERS.add(TwigElement.Factory.create("title", documentationFactory)); //NOI18N
         FILTERS.add(TwigElement.Factory.create("trim", documentationFactory)); //NOI18N
         FILTERS.add(TwigElement.Factory.create("upper", documentationFactory)); //NOI18N
-        FILTERS.add(TwigElement.Factory.create("url_encode", documentationFactory, Collections.EMPTY_LIST)); //NOI18N
+        FILTERS.add(TwigElement.Factory.create("url_encode", documentationFactory, Collections.emptyList())); //NOI18N
         FILTERS.add(TwigElement.Factory.create("trans", documentationFactory)); //NOI18N
         FILTERS.add(TwigElement.Factory.create("truncate", documentationFactory, Arrays.asList(new Parameter[] {new Parameter("int")}))); //NOI18N
         FILTERS.add(TwigElement.Factory.create(
@@ -168,7 +168,7 @@ public class TwigCompletionHandler implements CodeCompletionHandler2 {
                 documentationFactory,
                 Arrays.asList(new Parameter[] {new Parameter("'date'"), new Parameter("'timezone'", Parameter.Need.OPTIONAL)}))); //NOI18N
         FUNCTIONS.add(TwigElement.Factory.create("dump", documentationFactory, Arrays.asList(new Parameter[] {new Parameter("variable", Parameter.Need.OPTIONAL)}))); //NOI18N
-        FUNCTIONS.add(TwigElement.Factory.create("parent", documentationFactory, Collections.EMPTY_LIST)); //NOI18N
+        FUNCTIONS.add(TwigElement.Factory.create("parent", documentationFactory, Collections.emptyList())); //NOI18N
         FUNCTIONS.add(TwigElement.Factory.create("random", documentationFactory, Arrays.asList(new Parameter[] {new Parameter("'value'")}))); //NOI18N
         FUNCTIONS.add(TwigElement.Factory.create(
                 "range",

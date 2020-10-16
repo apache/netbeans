@@ -78,7 +78,7 @@ public class BlacklistedClassesHandlerSingleton extends Handler implements Black
     private int violation;
     // TODO: Is it necessary to use synchronizedMap? Should the list be synchronized?
     final private Map blacklist = Collections.synchronizedMap(new HashMap());
-    final private Map whitelistViolators = Collections.synchronizedMap(new TreeMap());
+    final private Map<String, List<Exception>> whitelistViolators = Collections.synchronizedMap(new TreeMap<String, List<Exception>>());
     final private Set whitelist = Collections.synchronizedSortedSet(new TreeSet());
     final private Set previousWhitelist = Collections.synchronizedSortedSet(new TreeSet());
     final private Set newWhitelist = Collections.synchronizedSortedSet(new TreeSet());
@@ -368,9 +368,9 @@ public class BlacklistedClassesHandlerSingleton extends Handler implements Black
                         synchronized (whitelistViolators) {
                             // TODO: Probably we should synchronize by list
                             if (whitelistViolators.containsKey(className)) {
-                                ((List) whitelistViolators.get(className)).add(exc);
+                                whitelistViolators.get(className).add(exc);
                             } else {
-                                List exceptions = new ArrayList();
+                                List<Exception> exceptions = new ArrayList<>();
                                 exceptions.add(exc);
                                 whitelistViolators.put(className, exceptions);
                                 violation++;
@@ -753,11 +753,9 @@ public class BlacklistedClassesHandlerSingleton extends Handler implements Black
     public void filterViolators(String[] list) {
         if (list!=null) {
             StringBuilder violat =new StringBuilder();
-            final Set keySet = whitelistViolators.keySet();
+            final Set<String> keySet = whitelistViolators.keySet();
             int count = list.length;
-            Iterator iter = keySet.iterator();
-            while (iter.hasNext()) {
-                String violator = (String) iter.next();
+            for (String violator : keySet) {
                 boolean filtered = true;
                 for (int i = 0; i < count; i++) {
                     if (  (violator.toLowerCase().contains(list[i])) ) {

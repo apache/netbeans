@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<xsd:schema targetNamespace="http://xmlns.jcp.org/xml/ns/javaee"
+            xmlns:javaee="http://xmlns.jcp.org/xml/ns/javaee"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xml="http://www.w3.org/XML/1998/namespace"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            version="2.2">
+  <xsd:include schemaLocation="javaee_7.xsd"/>
+
+  <xsd:annotation>
+    <xsd:documentation>
 
       DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
       
-      Copyright (c) 2011 - 2012 Oracle and/or its affiliates. All rights reserved.
+      Copyright (c) 2011-2013 Oracle and/or its affiliates. All rights reserved.
       
       The contents of this file are subject to the terms of either the GNU
       General Public License Version 2 only ("GPL") or the Common Development
@@ -38,16 +48,9 @@
       and therefore, elected the GPL Version 2 license, then the option applies
       only if the new code is made subject to such option by the copyright
       holder.
-
--->
-<xsd:schema targetNamespace="http://java.sun.com/xml/ns/javaee"
-            xmlns:javaee="http://java.sun.com/xml/ns/javaee"
-            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            xmlns:xml="http://www.w3.org/XML/1998/namespace"
-            elementFormDefault="qualified"
-            attributeFormDefault="unqualified"
-            version="2.2">
-  <xsd:include schemaLocation="javaee_6.xsd"/>
+      
+    </xsd:documentation>
+  </xsd:annotation>
 
   <xsd:annotation>
     <xsd:documentation>
@@ -59,9 +62,9 @@
       <p>JSF 2.2 Facelet Tag Libraries that wish to conform to this
       schema must declare it in the following manner.</p>
       
-      <pre>&lt;facelet-taglib xmlns="http://java.sun.com/xml/ns/javaee"
+      &lt;facelet-taglib xmlns="http://xmlns.jcp.org/xml/ns/javaee"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facelettaglibary_2_2.xsd"
+      xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facelettaglibary_2_2.xsd"
       version="2.2"&gt;
       
       ...
@@ -72,7 +75,7 @@
       version of the schema using xsi:schemaLocation attribute
       for javaee namespace with the following location:</p>
       
-      <p>http://java.sun.com/xml/ns/javaee/web-facelettaglibary_2_2.xsd</p>
+      <p>http://xmlns.jcp.org/xml/ns/javaee/web-facelettaglibary_2_2.xsd</p>
       
       ]]>
     </xsd:documentation>

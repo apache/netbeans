@@ -41,6 +41,7 @@ import org.netbeans.modules.maven.api.execute.ActiveJ2SEPlatformProvider;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.platform.JavaPlatform;
+import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.java.api.common.classpath.ClassPathSupport;
@@ -538,9 +539,17 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
             if (ret == null) {
                 // see org.apache.maven.plugin.compiler.CompilerMojo.classpathElements
                 for (String sourceRoot : proj.getOriginalMavenProject().getCompileSourceRoots()) {
-                    if(new File(sourceRoot, MODULE_INFO_JAVA).exists()) {
-                        ret = hasModuleInfoCP.get();  
-                        LOGGER.log(Level.FINER, "ModuleInfoSelector {0} for project {1}: has module-info.java", new Object [] {logDesc, proj.getProjectDirectory().getPath()}); // NOI18N
+                    final File moduleInfoFile = new File(sourceRoot, MODULE_INFO_JAVA);
+                    if(moduleInfoFile.exists()) {
+                        FileObject moduleInfo = FileUtil.toFileObject(moduleInfoFile);
+                        String sourceLevel = SourceLevelQuery.getSourceLevel2(moduleInfo).getSourceLevel();
+                        String ide_jdkvers = System.getProperty("java.version"); //NOI18N
+                        if(!sourceLevel.startsWith("1.") && !ide_jdkvers.startsWith("1.")) { //NOI18N
+                            // both sourceLevel and ideJDK are 9+
+                            ret = hasModuleInfoCP.get();  
+                        }
+                        final Object retObject = ret;
+                        LOGGER.log(Level.FINER, () -> String.format("ModuleInfoSelector %s for project %s: has module-info.java %s", logDesc, proj.getProjectDirectory().getPath(), retObject == null ? "IGNORED" : "")); // NOI18N
                         break;
                     }
                 }

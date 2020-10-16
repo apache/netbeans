@@ -189,8 +189,8 @@ public class LogCommand extends GitCommand {
             } catch (IOException ex) {
                 throw new GitException(ex);
             } finally {
-                walk.release();
-                fullWalk.release();
+                walk.close();
+                fullWalk.close();
             }
         } 
     }
@@ -200,7 +200,7 @@ public class LogCommand extends GitCommand {
         Set<String> usedFlags = new HashSet<>();
         Repository repository = getRepository();
         for (Map.Entry<String, GitBranch> e : allBranches.entrySet()) {
-            if (e.getKey() != GitBranch.NO_BRANCH) {
+            if (! GitBranch.NO_BRANCH.equals(e.getKey())) {
                 String flagId = e.getValue().getId();
                 if (usedFlags.contains(flagId)) {
                     for (Map.Entry<RevFlag, List<GitBranch>> e2 : branchFlags.entrySet()) {
@@ -296,10 +296,9 @@ public class LogCommand extends GitCommand {
             @Override
             public boolean requiresCommitBody () {
                 return false;
-            }            
-            
+            }
         });
-        
+
         String username = criteria.getUsername();
         if (username != null && !(username = username.trim()).isEmpty()) {
             filter = AndRevFilter.create(filter, OrRevFilter.create(CommitterRevFilter.create(username), AuthorRevFilter.create(username)));

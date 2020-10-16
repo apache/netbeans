@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.text.Document;
 import org.netbeans.modules.java.hints.infrastructure.HintsTestBase;
+import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.spi.editor.hints.Fix;
 import org.openide.cookies.EditorCookie;
 import org.openide.loaders.DataObject;
@@ -457,8 +458,8 @@ public class CreateElementTest extends HintsTestBase {
                 real.add(((CreateFieldFix) f).toDebugString(info));
                 continue;
             }
-            if (f instanceof AddParameterOrLocalFix) {
-                real.add(((AddParameterOrLocalFix) f).toDebugString(info));
+            if (f instanceof JavaFixImpl && ((JavaFixImpl) f).jf instanceof AddParameterOrLocalFix) {
+                real.add(((AddParameterOrLocalFix) ((JavaFixImpl) f).jf).toDebugString(info));
                 continue;
             }
 	    if (f instanceof CreateMethodFix) {

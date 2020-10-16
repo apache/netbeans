@@ -201,6 +201,7 @@ public class JvmConfigReader extends NodeListener implements XMLReader {
     public static class JvmOption {
 
         public final String option;
+        public final Optional<String> vendor;
         public final Optional<JDKVersion> minVersion;
         public final Optional<JDKVersion> maxVersion;
 
@@ -212,16 +213,25 @@ public class JvmConfigReader extends NodeListener implements XMLReader {
         // Ex: [|1.8]-XX:MyJvmOption (only max version present)
         // Ex: [1.7|]-XX:MyJvmOption (only min version present)
         // Gr1 or Gr2 can be null (optional)
-        private static final Pattern PATTERN = Pattern.compile("^\\[(.*)\\|(.*)\\](.*)");
+        private static final Pattern PATTERN = Pattern.compile("^\\[(.*)\\|(.*)\\](.*)");  // NOI18N
 
         public JvmOption(String option) {
             Matcher matcher = PATTERN.matcher(option);
             if (matcher.matches()) {
-                this.minVersion = Optional.ofNullable(JDKVersion.toValue(matcher.group(1)));
+                if (matcher.group(1).contains("-")  // NOI18N
+                        && Character.isLetter(matcher.group(1).charAt(0))) {
+                    String[] parts = matcher.group(1).split("-"); // NOI18N
+                    this.vendor = Optional.ofNullable(parts[0]);
+                    this.minVersion = Optional.ofNullable(JDKVersion.toValue(parts[1]));
+                } else {
+                    this.vendor = Optional.empty();
+                    this.minVersion = Optional.ofNullable(JDKVersion.toValue(matcher.group(1)));
+                }
                 this.maxVersion = Optional.ofNullable(JDKVersion.toValue(matcher.group(2)));
                 this.option = matcher.group(3);
             } else {
                 this.option = option;
+                this.vendor = Optional.empty();
                 this.minVersion = Optional.empty();
                 this.maxVersion = Optional.empty();
             }
@@ -229,6 +239,7 @@ public class JvmConfigReader extends NodeListener implements XMLReader {
 
         public JvmOption(String option, String minVersion, String maxVersion) {
             this.option = option;
+            this.vendor = Optional.empty();
             this.minVersion = Optional.ofNullable(JDKVersion.toValue(minVersion));
             this.maxVersion = Optional.ofNullable(JDKVersion.toValue(maxVersion));
         }
@@ -256,10 +267,7 @@ public class JvmConfigReader extends NodeListener implements XMLReader {
                 return false;
             }
             final JvmOption other = (JvmOption) obj;
-            if (!Objects.equals(this.option, other.option)) {
-                return false;
-            }
-            return true;
+            return Objects.equals(this.option, other.option);
         }
 
         @Override

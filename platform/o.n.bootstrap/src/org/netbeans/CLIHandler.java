@@ -818,7 +818,7 @@ public abstract class CLIHandler extends Object {
                                     if (howMuch > outputArr.length) {
                                         outputArr = new byte[howMuch];
                                     }
-                                    replyStream.read(outputArr, 0, howMuch);
+                                    replyStream.readFully(outputArr, 0, howMuch);
                                     args.getOutputStream().write(outputArr, 0, howMuch);
                                     break;
                                 }
@@ -828,7 +828,7 @@ public abstract class CLIHandler extends Object {
                                     if (howMuch > outputArr.length) {
                                         outputArr = new byte[howMuch];
                                     }
-                                    replyStream.read(outputArr, 0, howMuch);
+                                    replyStream.readFully(outputArr, 0, howMuch);
                                     args.getErrorStream().write(outputArr, 0, howMuch);
                                     break;
                                 }
@@ -1293,6 +1293,9 @@ public abstract class CLIHandler extends Object {
             if (ex.getMessage().equals("Broken pipe")) { // NOI18N
                 return true;
             }
+            if (ex.getMessage().contains("SIGPIPE")) { // NOI18N
+                return true;
+            }
             if (ex.getMessage().startsWith("Connection reset by peer")) { // NOI18N
                 return true;
             }
@@ -1345,7 +1348,8 @@ public abstract class CLIHandler extends Object {
                     // read provided data
                     int really = requestedVersion >= 1 ? is.readInt() : is.read ();
                     if (really > 0) {
-                        return is.read(b, off, really);
+                        is.readFully(b, off, really);
+                        return really;
                     } else {
                         if (really < 0) {
                             return really;

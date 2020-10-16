@@ -150,6 +150,7 @@ import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
 import org.netbeans.modules.java.hints.errors.ImportClass;
 import org.netbeans.modules.java.hints.infrastructure.CreatorBasedLazyFixList;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
+import org.netbeans.modules.java.hints.project.IncompleteClassPath;
 import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
@@ -877,6 +878,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             //TODO: ordering
 
             for (Fix f : fixes) {
+                if (f instanceof IncompleteClassPath.ResolveFix) {
+                    CodeAction action = new CodeAction(f.getText());
+                    action.setDiagnostics(Collections.singletonList(diag));
+                    action.setKind(CodeActionKind.QuickFix);
+                    action.setCommand(new Command(f.getText(), Server.JAVA_BUILD_WORKSPACE));
+                    result.add(Either.forRight(action));
+                }
                 if (f instanceof ImportClass.FixImport) {
                     //TODO: FixImport is not a JavaFix, create one. Is there a better solution?
                     String text = f.getText();

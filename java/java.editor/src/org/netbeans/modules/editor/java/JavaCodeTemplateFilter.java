@@ -32,7 +32,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import javax.swing.text.Document;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource.Phase;
@@ -134,14 +133,14 @@ public class JavaCodeTemplateFilter implements CodeTemplateFilter {
                                             break;
                                         case FOR_LOOP:
                                         case ENHANCED_FOR_LOOP:
-                                            if (!isRightParenthesisOfLoopPresent(component, controller)) {
-                                                 treeKindCtx = null;
+                                            if (!isRightParenthesisOfLoopPresent(controller, so)) {
+                                                treeKindCtx = null;
                                             }
                                             break;
                                         case PARENTHESIZED:
-                                            if (isPartOfWhileLoop(component, controller)) {
-                                                if (!isRightParenthesisOfLoopPresent(component, controller)) {
-                                                        treeKindCtx = null;
+                                            if (isPartOfWhileLoop(controller, so)) {
+                                                if (!isRightParenthesisOfLoopPresent(controller, so)) {
+                                                    treeKindCtx = null;
                                                 }
                                             }
                                             break;
@@ -157,26 +156,15 @@ public class JavaCodeTemplateFilter implements CodeTemplateFilter {
         }
     }
     
-    private boolean isPartOfWhileLoop(JTextComponent component, CompilationController controller) {
-        TreeUtilities treeUtilities = controller.getTreeUtilities();
-        TreePath currentPath = treeUtilities.pathFor(component.getCaretPosition());
-        TreePath parentPath = treeUtilities.getPathElementOfKind(Tree.Kind.WHILE_LOOP, currentPath);
-        return parentPath != null;
-    }
-    
-    private boolean isRightParenthesisOfLoopPresent(JTextComponent component, CompilationController controller) {
-        AtomicBoolean result = new AtomicBoolean(true);
-        Document document = component.getDocument();
-        document.render(() -> {
-            TokenHierarchy<?> tokenHierarchy = controller.getTokenHierarchy();
-            TokenSequence<?> tokenSequence = tokenHierarchy.tokenSequence();
-            tokenSequence.move(component.getCaretPosition());
+    private boolean isRightParenthesisOfLoopPresent(CompilationController controller, int abbrevStartOffset) {
+        TokenHierarchy<?> tokenHierarchy = controller.getTokenHierarchy();
+        TokenSequence<?> tokenSequence = tokenHierarchy.tokenSequence();
+        tokenSequence.move(abbrevStartOffset);
+        if (tokenSequence.moveNext()) {
             TokenId tokenId = skipNextWhitespaces(tokenSequence);
-            if (tokenId != JavaTokenId.RPAREN) {
-                result.set(false);
-            }
-        });
-        return result.get();
+            return tokenId == null ? false : (tokenId == JavaTokenId.RPAREN);
+        }
+        return false;
     }
     
     private TokenId skipNextWhitespaces(TokenSequence<?> tokenSequence) {
@@ -191,6 +179,13 @@ public class JavaCodeTemplateFilter implements CodeTemplateFilter {
             }
         }
         return tokenId;
+    }
+    
+    private boolean isPartOfWhileLoop(CompilationController controller, int abbrevStartOffset) {
+        TreeUtilities treeUtilities = controller.getTreeUtilities();
+        TreePath currentPath = treeUtilities.pathFor(abbrevStartOffset);
+        TreePath parentPath = treeUtilities.getPathElementOfKind(Tree.Kind.WHILE_LOOP, currentPath);
+        return parentPath != null;
     }
 
     @Override

@@ -68,13 +68,16 @@ function findClusters(myPath : string): string[] {
 export function activate(context: ExtensionContext) {
     //verify acceptable JDK is available/set:
     let specifiedJDK = workspace.getConfiguration('netbeans').get('jdkhome');
-
+    const beVerbose : boolean = workspace.getConfiguration('netbeans').get('verbose', false);
     let info = {
         clusters : findClusters(context.extensionPath),
         extensionPath: context.extensionPath,
         storagePath : context.globalStoragePath,
-        jdkHome : specifiedJDK
+        jdkHome : specifiedJDK,
+        verbose: beVerbose
     };
+    
+    let log = vscode.window.createOutputChannel("Java Language Server");
 
     vscode.extensions.all.forEach((e, index) => {
         if (e.extensionPath.indexOf("redhat.java") >= 0) {
@@ -87,9 +90,8 @@ export function activate(context: ExtensionContext) {
         }
     });
 
-    let log = vscode.window.createOutputChannel("Java Language Server");
     log.appendLine("Launching Java Language Server");
-    vscode.window.showInformationMessage("Launching Java Language Server");
+    vscode.window.setStatusBarMessage("Launching Java Language Server", 2000);
 
     let ideRunning = new Promise((resolve, reject) => {
         let collectedText : string | null = '';
@@ -183,8 +185,8 @@ export function activate(context: ExtensionContext) {
                     workspace.createFileSystemWatcher('**/*.java')
                 ]
             },
-            outputChannelName: 'Java',
-            revealOutputChannelOn: 4,
+            outputChannel: log,
+            revealOutputChannelOn: 3, // error
             initializationOptions : {
                 'nbcodeCapabilities' : {
                     'statusBarMessageSupport' : true
@@ -213,7 +215,6 @@ export function activate(context: ExtensionContext) {
 
         let debugDescriptionFactory = new NetBeansDebugAdapterDescriptionFactory();
         context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('java-polyglot', debugDescriptionFactory));
-        window.showInformationMessage('Java Polyglot Debug Adapter ready.');
 
         // register commands
         context.subscriptions.push(commands.registerCommand('java.workspace.compile', () => {

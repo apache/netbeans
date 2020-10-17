@@ -278,6 +278,9 @@ public class BreadcrumbsImpl implements BackgroundTask {
         }
 
         public static List<BreadcrumbsElement> create(BreadcrumbsElement parent, List<DocumentSymbol> symbols, FileObject file, Document doc) {
+            if (symbols == null) {
+                return Collections.emptyList();
+            }
             return symbols.stream()
                           .map(c -> create(parent, file, doc, c))
                           .filter(e -> e != null)

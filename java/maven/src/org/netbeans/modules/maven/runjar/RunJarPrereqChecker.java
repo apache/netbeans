@@ -82,7 +82,7 @@ public class RunJarPrereqChecker implements PrerequisitesChecker {
         if ((ActionProvider.COMMAND_RUN.equals(actionName) ||
                 ActionProvider.COMMAND_DEBUG.equals(actionName) ||
                 ActionProvider.COMMAND_PROFILE.equals(actionName))) {
-            String mc = null;
+            String mc = config.getMavenProject().getProperties().getProperty("exec.mainClass");
             for (Map.Entry<? extends String,? extends String> entry : config.getProperties().entrySet()) {
                 if (entry.getValue().contains("${packageClassName}")) { //NOI18N
                     //show dialog to choose main class.

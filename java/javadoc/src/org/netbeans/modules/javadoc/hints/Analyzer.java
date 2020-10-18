@@ -65,6 +65,7 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -266,7 +267,7 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
             StartElementTree startTree = tagStack.pop();
             Name tagName = startTree.getName();
             HtmlTag tag = getTag(tagName);
-            if (!tag.hasOptionalEndTag() && !isVoid(tag)) {
+            if (tag != null && !tag.hasOptionalEndTag() && !isVoid(tag)) {
                 int s = (int) sp.getStartPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), startTree);
                 int e = (int) sp.getEndPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), startTree);
                 errors.add(ErrorDescriptionFactory.forSpan(ctx, s, e, TAG_START_UNMATCHED(tagName)));
@@ -307,17 +308,17 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
                 StartElementTree startTree = tagStack.peek();
                 Name tagName = startTree.getName();
                 HtmlTag tag = getTag(tagName);
-                if (t == tag) { //XXX
+                if (Objects.equals(t, tag)) {
                     tagStack.pop();
                     done = true;
                     break;
-                } else if (tag.hasOptionalEndTag()) {
+                } else if (tag != null && tag.hasOptionalEndTag()) {
                     tagStack.pop();
                 } else {
                     boolean found = false;
                     for (StartElementTree set : tagStack) {
                         HtmlTag si = getTag(set.getName());
-                        if (si == t) {//XXX
+                        if (Objects.equals(si, t)) {
                             found = true;
                             break;
                         }

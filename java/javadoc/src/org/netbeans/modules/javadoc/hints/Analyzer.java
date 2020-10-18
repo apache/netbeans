@@ -57,9 +57,9 @@ import com.sun.source.util.DocSourcePositions;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.TreePath;
-import com.sun.tools.doclint.HtmlTag;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
@@ -73,7 +73,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
-import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -86,6 +85,11 @@ import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.modules.html.editor.lib.api.HtmlVersion;
+import org.netbeans.modules.html.editor.lib.api.model.HtmlModel;
+import org.netbeans.modules.html.editor.lib.api.model.HtmlModelFactory;
+import org.netbeans.modules.html.editor.lib.api.model.HtmlTag;
+import org.netbeans.modules.html.editor.lib.api.model.HtmlTagType;
 import static org.netbeans.modules.javadoc.hints.Bundle.*;
 import static org.netbeans.modules.javadoc.hints.JavadocUtilities.resolveSourceVersion;
 import org.netbeans.spi.editor.hints.ErrorDescription;
@@ -115,6 +119,8 @@ import org.openide.util.NbBundle.Messages;
     @NbBundle.Messages({"MISSING_RETURN_DESC=Missing @return tag.",
                         "# {0} - @param name", "MISSING_PARAM_DESC=Missing @param tag for {0}"})
 final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
+
+    private static final HtmlModel model = HtmlModelFactory.getModel(HtmlVersion.XHTML5);
 
     private final CompilationInfo javac;
     private final FileObject file;
@@ -259,8 +265,8 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
         while (!tagStack.isEmpty()) {
             StartElementTree startTree = tagStack.pop();
             Name tagName = startTree.getName();
-            HtmlTag tag = HtmlTag.get(tagName);
-            if (tag.endKind == HtmlTag.EndKind.REQUIRED) {
+            HtmlTag tag = getTag(tagName);
+            if (!tag.hasOptionalEndTag() && !isVoid(tag)) {
                 int s = (int) sp.getStartPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), startTree);
                 int e = (int) sp.getEndPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), startTree);
                 errors.add(ErrorDescriptionFactory.forSpan(ctx, s, e, TAG_START_UNMATCHED(tagName)));
@@ -289,10 +295,10 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
         int end = (int) sp.getEndPosition(javac.getCompilationUnit(), currentDocPath.getDocComment(), node);
 
         final Name treeName = node.getName();
-        final HtmlTag t = HtmlTag.get(treeName);
+        final HtmlTag t = getTag(treeName);
         if (t == null) {
              errors.add(ErrorDescriptionFactory.forSpan(ctx, start, end, TAG_END_UNKNOWN(treeName)));
-        } else if (t.endKind == HtmlTag.EndKind.NONE) {
+        } else if (isVoid(t)) {
 //            env.messages.error(HTML, node, "dc.tag.end.not.permitted", treeName);
             errors.add(ErrorDescriptionFactory.forSpan(ctx, start, end, TAG_END_NOT_PERMITTED(treeName)));
         } else {
@@ -300,18 +306,18 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
             while (!tagStack.isEmpty()) {
                 StartElementTree startTree = tagStack.peek();
                 Name tagName = startTree.getName();
-                HtmlTag tag = HtmlTag.get(tagName);
-                if (t == tag) {
+                HtmlTag tag = getTag(tagName);
+                if (t == tag) { //XXX
                     tagStack.pop();
                     done = true;
                     break;
-                } else if (tag.endKind != HtmlTag.EndKind.REQUIRED) {
+                } else if (tag.hasOptionalEndTag()) {
                     tagStack.pop();
                 } else {
                     boolean found = false;
                     for (StartElementTree set : tagStack) {
-                        HtmlTag si = HtmlTag.get(set.getName());
-                        if (si == t) {
+                        HtmlTag si = getTag(set.getName());
+                        if (si == t) {//XXX
                             found = true;
                             break;
                         }
@@ -622,11 +628,11 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
 
 
         final Name treeName = node.getName();
-        final HtmlTag t = HtmlTag.get(treeName);
+        final HtmlTag t = getTag(treeName);
         if (t == null) {
             errors.add(ErrorDescriptionFactory.forSpan(ctx, start, end, TAG_UNKNOWN(treeName)));
         } else {
-            if(t.endKind != HtmlTag.EndKind.NONE) {
+            if (!t.hasOptionalEndTag() && !isVoid(t)) {
                 tagStack.push(node);
             }
         }
@@ -797,4 +803,17 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
             }
         }
     }
+
+    private static HtmlTag getTag(Name tagName) {
+        HtmlTag t = model.getTag(tagName.toString());
+
+        return t.getTagClass() == HtmlTagType.HTML ? t : null;
+    }
+
+    private static final Set<String> NON_VOID_TAGS = new HashSet<>(Arrays.asList("menuitem", "noscript", "script", "style"));
+
+    private boolean isVoid(HtmlTag tag) {
+        return tag.isEmpty() && !NON_VOID_TAGS.contains(tag.getName());
+    }
+
 }

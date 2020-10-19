@@ -26,6 +26,7 @@ nbbuild/user.build.properties
 ###### generated build artifacts
 nbbuild/gitinfo.properties
 nbbuild/netbeansrelease.properties
+nbbuild/netbeansrelease.json
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_1_4/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_5/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_6/*

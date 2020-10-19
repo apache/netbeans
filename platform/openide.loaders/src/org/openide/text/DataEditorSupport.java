@@ -21,6 +21,7 @@ package org.openide.text;
 
 
 import java.awt.EventQueue;
+import java.awt.GraphicsEnvironment;
 import org.netbeans.modules.openide.loaders.SimpleES;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -1352,12 +1353,19 @@ public class DataEditorSupport extends CloneableEditorSupport {
                 try {
                     des.superSaveDoc();
                 } catch (UserQuestionException ex) {
-                    NotifyDescriptor nd = new NotifyDescriptor.Confirmation(ex.getLocalizedMessage(),
-                            NotifyDescriptor.YES_NO_OPTION);
-                    Object res = DialogDisplayer.getDefault().notify(nd);
-
-                    if (NotifyDescriptor.OK_OPTION.equals(res)) {
+                    if (GraphicsEnvironment.isHeadless()) {
+                        // We cn not ask for anything in headless mode.
+                        // When there are e.g. external changes, we want to reload them,
+                        // otherwise we'd keep an inconsistent state.
                         ex.confirmed();
+                    } else {
+                        NotifyDescriptor nd = new NotifyDescriptor.Confirmation(ex.getLocalizedMessage(),
+                                NotifyDescriptor.YES_NO_OPTION);
+                        Object res = DialogDisplayer.getDefault().notify(nd);
+
+                        if (NotifyDescriptor.OK_OPTION.equals(res) || true) {
+                            ex.confirmed();
+                        }
                     }
                 }
             } catch (IOException e) {

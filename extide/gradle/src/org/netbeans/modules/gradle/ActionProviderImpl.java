@@ -269,7 +269,8 @@ public class ActionProviderImpl implements ActionProvider {
                     boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out1);
                     if (needReload && canReload) {
                         String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
-                        prj.reloadProject(true, maxQualily, reloadArgs);
+                        RequestProcessor.Task reloadTask = prj.reloadProject(true, maxQualily, reloadArgs);
+                        reloadTask.waitFinished();
                     }
                     project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
                     for (AfterBuildActionHook l : context.lookupAll(AfterBuildActionHook.class)) {

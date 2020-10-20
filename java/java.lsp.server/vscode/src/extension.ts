@@ -23,7 +23,8 @@ import { commands, window, workspace, ExtensionContext, ProgressLocation } from 
 import {
     LanguageClient,
     LanguageClientOptions,
-    StreamInfo
+    StreamInfo,
+    ShowMessageParams, MessageType,
 } from 'vscode-languageclient';
 
 import * as net from 'net';
@@ -32,6 +33,7 @@ import * as path from 'path';
 import { spawn, ChildProcess, SpawnOptions } from 'child_process';
 import * as vscode from 'vscode';
 import * as launcher from './nbcode';
+import { StatusMessageRequest, ShowStatusMessageParams  } from './protocol';
 
 let client: LanguageClient;
 let nbProcess : ChildProcess | null = null;
@@ -197,6 +199,7 @@ export function activate(context: ExtensionContext) {
         client.start();
         client.onReady().then((value) => {
             commands.executeCommand('setContext', 'nbJavaLSReady', true);
+            client.onNotification(StatusMessageRequest.type, showStatusBarMessage);
         });
 
         //register debugger:
@@ -238,6 +241,32 @@ export function activate(context: ExtensionContext) {
         window.showErrorMessage('Error initializing ' + reason);
     });
 
+}
+
+function showStatusBarMessage(params : ShowStatusMessageParams) {
+    let decorated : string = params.message;
+    let defTimeout;
+    
+    switch (params.type) {
+        case MessageType.Error:
+            decorated = '$(error) ' + params.message;
+            defTimeout = 0;
+            break;
+        case MessageType.Warning:
+            decorated = '$(warning) ' + params.message;
+            defTimeout = 0;
+            break;
+        default:
+            defTimeout = 10000;
+            break;
+    }
+    // params.timeout may be defined but 0 -> should be used
+    const timeout = params.timeout != undefined ? params.timeout : defTimeout;
+    if (timeout > 0) {
+        window.setStatusBarMessage(decorated, timeout);
+    } else {
+        window.setStatusBarMessage(decorated);
+    }
 }
 
 export function deactivate(): Thenable<void> {

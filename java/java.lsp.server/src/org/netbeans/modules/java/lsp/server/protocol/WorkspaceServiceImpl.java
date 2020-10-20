@@ -33,11 +33,8 @@ import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.modules.java.lsp.server.ui.UIContext;
 import org.netbeans.spi.project.ActionProvider;
-import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
-import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -46,11 +43,8 @@ import org.openide.util.lookup.ProxyLookup;
 public final class WorkspaceServiceImpl implements WorkspaceService, LanguageClientAware {
 
     private LanguageClient client;
-    private UIContext ctx;
-    private final WorkspaceIOContext ioContext;
 
     public WorkspaceServiceImpl() {
-        this.ioContext = new WorkspaceContext();
     }
 
     @Override
@@ -64,9 +58,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 for (Project prj : OpenProjects.getDefault().getOpenProjects()) {
                     ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
                     if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_BUILD, Lookups.fixed())) {
-                        Lookups.executeWith(new ProxyLookup(Lookups.fixed(ctx, ioContext), Lookup.getDefault()), () -> {
-                            ap.invokeAction(ActionProvider.COMMAND_REBUILD, Lookups.fixed());
-                        });
+                        ap.invokeAction(ActionProvider.COMMAND_REBUILD, Lookups.fixed());
                     }
                 }
                 return CompletableFuture.completedFuture(true);
@@ -93,23 +85,5 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     @Override
     public void connect(LanguageClient client) {
         this.client = client;
-        this.ctx = new UIContext() {
-            @Override
-            protected boolean isValid() {
-                return true;
-            }
-
-            @Override
-            protected void showMessage(MessageParams msg) {
-                client.showMessage(msg);
-            }
-        };
-    }
-
-    private final class WorkspaceContext extends WorkspaceIOContext {
-        @Override
-        protected LanguageClient client() {
-            return client;
-        }
     }
 }

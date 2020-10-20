@@ -63,6 +63,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
+import org.openide.util.Task;
 import org.openide.util.Utilities;
 
 /**
@@ -546,8 +547,8 @@ public final class NbMavenProject {
     /**
      * 
      */ 
-    private void fireProjectReload() {
-        project.fireProjectReload();
+    private RequestProcessor.Task fireProjectReload() {
+        return project.fireProjectReload();
     }
     
     private void doFireReload() {

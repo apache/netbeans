@@ -255,8 +255,8 @@ public final class NbGradleProjectImpl implements Project {
         return prj;
     }
 
-    void reloadProject(final boolean ignoreCache, final Quality aim, final String... args) {
-        RELOAD_RP.post(() -> {
+    RequestProcessor.Task reloadProject(final boolean ignoreCache, final Quality aim, final String... args) {
+        return RELOAD_RP.post(() -> {
             project = loadProject(ignoreCache, aim, args);
             ACCESSOR.doFireReload(watcher);
         });

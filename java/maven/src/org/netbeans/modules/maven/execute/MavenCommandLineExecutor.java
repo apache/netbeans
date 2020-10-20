@@ -58,6 +58,8 @@ import org.netbeans.api.extexecution.base.Processes;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
+import org.netbeans.api.project.Project;
+import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.NbMavenProject;
@@ -318,18 +320,13 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 ioput.getErr().close();
                 actionStatesAtFinish(out.createResumeFromFinder(), out.getExecutionTree());
                 markFreeTab();
-                RP.post(new Runnable() { //#103460
-                    @Override
-                    public void run() {
-                        //TODO we eventually know the coordinates of all built projects via EventSpy.
-                        if (clonedConfig.getProject() != null) {
-                            NbMavenProject.fireMavenProjectReload(clonedConfig.getProject());
-                        }
-                    }
-                });
-                
+                final Project prj = clonedConfig.getProject();
+                NbMavenProjectImpl impl = prj.getLookup().lookup(NbMavenProjectImpl.class);
+                if (impl != null) {
+                    RequestProcessor.Task reloadTask = impl.fireProjectReload();
+                    reloadTask.waitFinished();
+                }
             }
-            
         }
     }
 

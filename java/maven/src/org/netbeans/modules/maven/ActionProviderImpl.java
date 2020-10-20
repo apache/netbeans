@@ -275,10 +275,8 @@ public class ActionProviderImpl implements ActionProvider {
             final ActionProgress listener = ActionProgress.start(lookup);
             final ExecutorTask task = RunUtils.run(rc);
             if (task != null) {
-                task.addTaskListener(new TaskListener() {
-                    @Override public void taskFinished(Task t) {
-                        listener.finished(task.result() == 0);
-                    }
+                task.addTaskListener((Task t) -> {
+                    listener.finished(task.result() == 0);
                 });
             } else {
                 listener.finished(false);

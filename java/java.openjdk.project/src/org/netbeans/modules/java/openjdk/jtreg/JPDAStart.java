@@ -121,7 +121,7 @@ public class JPDAStart implements Runnable {
                 // TODO: revisit later when http://developer.java.sun.com/developer/bugParade/bugs/4932074.html gets integrated into JDK
                 // This code parses the address string "HOST:PORT" to extract PORT and then point debugee to localhost:PORT
                 // This is NOT a clean solution to the problem but it SHOULD work in 99% cases
-                final Map args = lc.defaultArguments();
+                final Map<String, Connector.Argument> args = lc.defaultArguments();
                 String address = lc.startListening(args);
 //                try {
                     int colon = address.indexOf(':');

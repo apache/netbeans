@@ -40,9 +40,8 @@ import org.netbeans.modules.cpplite.debugger.DebuggerBreakpointAnnotation;
 public class BreakpointAnnotationListener extends DebuggerManagerAdapter 
 implements PropertyChangeListener {
     
-    private Map breakpointToAnnotation = new HashMap ();
-    
- 
+    private Map<CPPLiteBreakpoint, DebuggerBreakpointAnnotation> breakpointToAnnotation = new HashMap<>();
+   
     @Override
     public String[] getProperties () {
         return new String[] {DebuggerManager.PROP_BREAKPOINTS};

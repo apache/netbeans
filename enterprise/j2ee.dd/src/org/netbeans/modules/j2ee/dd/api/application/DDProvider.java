@@ -56,7 +56,7 @@ public final class DDProvider {
     private static final String APP_13_DOCTYPE = "-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN"; //NOI18N
     private static final DDProvider ddProvider = new DDProvider();
     
-    private final Map ddMap;
+    private final Map<FileObject, ApplicationProxy> ddMap;
 
     private static final Logger LOGGER = Logger.getLogger(DDProvider.class.getName());
 
@@ -64,7 +64,7 @@ public final class DDProvider {
     
     private DDProvider() {
         //ddMap=new java.util.WeakHashMap(5);
-        ddMap = new HashMap(5);
+        ddMap = new HashMap<>(5);
     }
     
     /**

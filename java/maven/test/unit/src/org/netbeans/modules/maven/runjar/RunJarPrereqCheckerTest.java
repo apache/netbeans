@@ -19,13 +19,19 @@
 
 package org.netbeans.modules.maven.runjar;
 
+import java.io.IOException;
 import java.io.StringReader;
+import java.util.Collections;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.maven.NbMavenProjectImpl;
+import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.configurations.M2ConfigProvider;
+import org.netbeans.modules.maven.execute.ActionToGoalUtils;
 import org.netbeans.modules.maven.execute.model.ActionToGoalMapping;
 import org.netbeans.modules.maven.execute.model.io.xpp3.NetbeansBuildActionXpp3Reader;
+import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
@@ -63,4 +69,132 @@ public class RunJarPrereqCheckerTest extends NbTestCase {
         assertEquals(1, mapping.getActions().size());
     }
 
+    public void testMainClassManifest() throws Exception {
+        TestFileUtils.writeFile(d, "pom.xml",
+                "<project>\n" +
+                "    <modelVersion>4.0.0</modelVersion>\n" +
+                "    <groupId>testgrp</groupId>\n" +
+                "    <artifactId>testart</artifactId>\n" +
+                "    <version>1.0</version>\n" +
+                "    <build>\n" +
+                "        <plugins>\n" +
+                "            <plugin>\n" +
+                "                <groupId>org.apache.maven.plugins</groupId>\n" +
+                "                <artifactId>maven-jar-plugin</artifactId>\n" +
+                "                <configuration>\n" +
+                "                    <archive>\n" +
+                "                        <manifest>\n" +
+                "                            <mainClass>com.mycompany.Main2</mainClass>\n" +
+                "                        </manifest>\n" +
+                "                    </archive>\n" +
+                "                </configuration>\n" +
+                "            </plugin>\n" +
+                "        </plugins>\n" +
+                "    </build>" +
+                "</project>\n");
+        checkMainClass("com.mycompany.Main2");
+    }
+
+    public void testMainClassManifestProperty() throws Exception {
+        TestFileUtils.writeFile(d, "pom.xml",
+                "<project>\n" +
+                "    <modelVersion>4.0.0</modelVersion>\n" +
+                "    <groupId>testgrp</groupId>\n" +
+                "    <artifactId>testart</artifactId>\n" +
+                "    <version>1.0</version>\n" +
+                "    <properties>\n" +
+                "        <clazz>com.mycompany.Main1</clazz>\n" +
+                "    </properties>\n" +
+                "    <build>\n" +
+                "        <plugins>\n" +
+                "            <plugin>\n" +
+                "                <groupId>org.apache.maven.plugins</groupId>\n" +
+                "                <artifactId>maven-jar-plugin</artifactId>\n" +
+                "                <configuration>\n" +
+                "                    <archive>\n" +
+                "                        <manifest>\n" +
+                "                            <mainClass>${clazz}</mainClass>\n" +
+                "                        </manifest>\n" +
+                "                    </archive>\n" +
+                "                </configuration>\n" +
+                "            </plugin>\n" +
+                "        </plugins>\n" +
+                "    </build>" +
+                "</project>\n");
+        checkMainClass("com.mycompany.Main1");
+    }
+
+    public void testMainClassExecConfig() throws Exception {
+        TestFileUtils.writeFile(d, "pom.xml",
+                "<project>\n" +
+                "    <modelVersion>4.0.0</modelVersion>\n" +
+                "    <groupId>testgrp</groupId>\n" +
+                "    <artifactId>testart</artifactId>\n" +
+                "    <version>1.0</version>\n" +
+                "    <build>\n" +
+                "        <plugins>\n" +
+                "            <plugin>\n" +
+                "                <groupId>org.codehaus.mojo</groupId>\n" +
+                "                <artifactId>exec-maven-plugin</artifactId>\n" +
+                "                <configuration>\n" +
+                "                    <mainClass>com.example.Main2</mainClass>\n" +
+                "                </configuration>\n" +
+                "            </plugin>\n" +
+                "        </plugins>\n" +
+                "    </build>" +
+                "</project>\n");
+        checkMainClass("com.example.Main2");
+    }
+
+    public void testMainClassExecProperty1() throws Exception {
+        TestFileUtils.writeFile(d, "pom.xml",
+                "<project>\n" +
+                "    <modelVersion>4.0.0</modelVersion>\n" +
+                "    <groupId>testgrp</groupId>\n" +
+                "    <artifactId>testart</artifactId>\n" +
+                "    <version>1.0</version>\n" +
+                "    <properties>\n" +
+                "        <mainClass>org.demo.Main2</mainClass>\n" +
+                "    </properties>\n" +
+                "</project>\n");
+        checkMainClass("org.demo.Main2");
+    }
+
+    public void testMainClassExecProperty2() throws Exception {
+        TestFileUtils.writeFile(d, "pom.xml",
+                "<project>\n" +
+                "    <modelVersion>4.0.0</modelVersion>\n" +
+                "    <groupId>testgrp</groupId>\n" +
+                "    <artifactId>testart</artifactId>\n" +
+                "    <version>1.0</version>\n" +
+                "    <properties>\n" +
+                "        <exec.mainClass>org.demo.Main2</exec.mainClass>\n" +
+                "        <exec.java.bin>${java.home}/bin/java</exec.java.bin>\n" +
+                "    </properties>\n" +
+                "</project>\n");
+        checkMainClass("org.demo.Main2");
+    }
+
+    public void testMainClassExecProperty3() throws Exception {
+        TestFileUtils.writeFile(d, "pom.xml",
+                "<project>\n" +
+                "    <modelVersion>4.0.0</modelVersion>\n" +
+                "    <groupId>testgrp</groupId>\n" +
+                "    <artifactId>testart</artifactId>\n" +
+                "    <version>1.0</version>\n" +
+                "    <properties>\n" +
+                "        <project.mainclass>org.demo.Main2</project.mainclass>\n" +
+                "        <exec.java.bin>${java.home}/bin/java</exec.java.bin>\n" +
+                "    </properties>\n" +
+                "</project>\n");
+        checkMainClass("org.demo.Main2");
+    }
+
+    private void checkMainClass(String mainClass) throws IOException {
+        Project proj = ProjectManager.getDefault().findProject(d);
+        RunConfig rc = ActionToGoalUtils.createRunConfig(ActionProvider.COMMAND_RUN, proj.getLookup().lookup(NbMavenProjectImpl.class), proj.getLookup());
+        rc.addProperties(Collections.singletonMap("testMainClass", "${packageClassName}"));
+        new RunJarPrereqChecker().checkRunConfig(rc);
+        assertEquals(mainClass, rc.getProperties().get("testMainClass"));
+    }
 }

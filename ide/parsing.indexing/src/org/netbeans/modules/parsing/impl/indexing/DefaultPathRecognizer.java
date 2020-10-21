@@ -114,8 +114,8 @@ public final class DefaultPathRecognizer extends PathRecognizer {
         this.mimeTypes = mimeTypes;
     }
 
-    private static Set<String> readIdsAttribute(Map fileAttributes, String attributeName) {
-        Set<String> ids = new HashSet<String>();
+    private static Set<String> readIdsAttribute(Map<String, ?> fileAttributes, String attributeName) {
+        Set<String> ids = new HashSet<>();
         
         Object attributeValue = fileAttributes.get(attributeName); //NOI18N
         if (attributeValue instanceof String) {

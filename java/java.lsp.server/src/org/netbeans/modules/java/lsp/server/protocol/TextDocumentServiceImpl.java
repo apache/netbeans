@@ -57,6 +57,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 import java.util.prefs.Preferences;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -1009,19 +1010,32 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         try {
             FileObject file = fromUri(params.getTextDocument().getUri());
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
-            Document doc = ec.openDocument();
-            openedDocuments.put(params.getTextDocument().getUri(), doc);
-            String text = params.getTextDocument().getText();
-            try {
-                doc.remove(0, doc.getLength());
-                doc.insertString(0, text, null);
-            } catch (BadLocationException ex) {
-                //TODO: include stack trace:
-                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+            Document doc = ec.getDocument();
+            // the document may be not opened yet. Clash with in-memory content can happen only if
+            // the doc was opened prior to request reception.
+            if (doc != null) {
+                String text = params.getTextDocument().getText();
+                try {
+                    // could be faster with CharSequence, but requires a dependency on
+                    // org.netbeans.modules.editor.util
+                    if (!text.contentEquals(doc.getText(0, doc.getLength()))) {
+                        doc.remove(0, doc.getLength());
+                        doc.insertString(0, text, null);
+                    }
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
+                    //TODO: include stack trace:
+                    client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                }
+            } else {
+                doc = ec.openDocument();
             }
+            openedDocuments.put(params.getTextDocument().getUri(), doc);
             runDiagnoticTasks(params.getTextDocument().getUri());
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
+        } finally {
+            reportNotificationDone("didOpen", params);
         }
     }
 
@@ -1041,11 +1055,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
         });
         runDiagnoticTasks(params.getTextDocument().getUri());
+        reportNotificationDone("didChange", params);
     }
 
     @Override
     public void didClose(DidCloseTextDocumentParams params) {
         openedDocuments.remove(params.getTextDocument().getUri());
+        reportNotificationDone("didClose", params);
     }
 
     @Override
@@ -1279,4 +1295,16 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         return edits;
     }
+    
+    private static void reportNotificationDone(String s, Object parameter) {
+        if (HOOK_NOTIFICATION != null) {
+            HOOK_NOTIFICATION.accept(s, parameter);
+        }
+    }
+    
+    /**
+     * For testing only; calls that do not return a result should call
+     * this hook, if defined, with the method name and parameter.
+     */
+    static BiConsumer<String, Object> HOOK_NOTIFICATION = null;
 }

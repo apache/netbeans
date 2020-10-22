@@ -40,4 +40,10 @@ public interface NbCodeLanguageClient extends LanguageClient {
      */
     @JsonNotification("window/showStatusBarMessage")
     public void showStatusBarMessage(@NonNull ShowStatusMessageParams params);
+    
+    /**
+     * Returns extended code capabilities.
+     * @return code capabilities.
+     */
+    public NbCodeClientCapabilities getNbCodeCapabilities();
 }

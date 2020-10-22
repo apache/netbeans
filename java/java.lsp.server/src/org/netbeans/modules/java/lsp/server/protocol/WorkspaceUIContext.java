@@ -28,16 +28,10 @@ import org.openide.awt.StatusDisplayer;
  * @author sdedic
  */
 class WorkspaceUIContext extends UIContext {
-    private final NbCodeLanguageClient nbClient;
-    private final LanguageClient client;
+    private final NbCodeLanguageClient client;
 
-    public WorkspaceUIContext(LanguageClient client) {
+    public WorkspaceUIContext(NbCodeLanguageClient client) {
         this.client = client;
-        if (client instanceof NbCodeLanguageClient) {
-            nbClient = (NbCodeLanguageClient)client;
-        } else {
-            nbClient = null;
-        }
     }
 
     @Override
@@ -57,8 +51,8 @@ class WorkspaceUIContext extends UIContext {
 
     @Override
     protected StatusDisplayer.Message showStatusMessage(ShowStatusMessageParams msg) {
-        if (nbClient != null) {
-            nbClient.showStatusBarMessage(msg);
+        if (client.getNbCodeCapabilities().hasStatusBarMessageSupport()) {
+            client.showStatusBarMessage(msg);
         } else {
             client.showMessage(msg);
         }

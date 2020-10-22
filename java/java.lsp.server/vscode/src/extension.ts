@@ -184,7 +184,12 @@ export function activate(context: ExtensionContext) {
                 ]
             },
             outputChannelName: 'Java',
-            revealOutputChannelOn: 4 // never
+            revealOutputChannelOn: 4,
+            initializationOptions : {
+                'nbcodeCapabilities' : {
+                    'statusBarMessageSupport' : true
+                }
+            }
         }
 
         // Create the language client and start the client.

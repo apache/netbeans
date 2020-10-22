@@ -122,7 +122,7 @@ public final class Server {
     private static class LanguageServerImpl implements LanguageServer, LanguageClientAware {
 
         private static final Logger LOG = Logger.getLogger(LanguageServerImpl.class.getName());
-        private LanguageClient client;
+        private NbCodeClientWrapper client;
         private final TextDocumentService textDocumentService = new TextDocumentServiceImpl();
         private final WorkspaceService workspaceService = new WorkspaceServiceImpl();
         private final InstanceContent   sessionServices = new InstanceContent();
@@ -137,6 +137,8 @@ public final class Server {
         
         @Override
         public CompletableFuture<InitializeResult> initialize(InitializeParams init) {
+            NbCodeClientCapabilities capa = NbCodeClientCapabilities.get(init);
+            client.setClientCaps(capa);
             List<FileObject> projectCandidates = new ArrayList<>();
             List<WorkspaceFolder> folders = init.getWorkspaceFolders();
             if (folders != null) {
@@ -192,8 +194,11 @@ public final class Server {
             try {
                 JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY))
                           .runWhenScanFinished(cc -> {
-                  ((NbCodeLanguageClient)client).showStatusBarMessage(
-                          new ShowStatusMessageParams(MessageType.Info, INDEXING_COMPLETED, 0));
+                  if (client.getNbCodeCapabilities().hasStatusBarMessageSupport()) {
+                        client.showStatusBarMessage(new ShowStatusMessageParams(MessageType.Info, INDEXING_COMPLETED, 0));
+                  } else {
+                        client.showMessage(new ShowStatusMessageParams(MessageType.Info, INDEXING_COMPLETED, 0));
+                  }
                   //todo: refresh diagnostics all open editor?
                 }, true);
             } catch (IOException ex) {
@@ -234,8 +239,8 @@ public final class Server {
         }
 
         @Override
-        public void connect(LanguageClient client) {
-            this.client = client;
+        public void connect(LanguageClient aClient) {
+            this.client = new NbCodeClientWrapper((NbCodeLanguageClient)aClient);
             
             sessionServices.add(new WorkspaceIOContext() {
                 @Override
@@ -245,8 +250,8 @@ public final class Server {
             });
             sessionServices.add(new WorkspaceUIContext(client));
             
-            ((LanguageClientAware) getTextDocumentService()).connect(client);
-            ((LanguageClientAware) getWorkspaceService()).connect(client);
+            ((LanguageClientAware) getTextDocumentService()).connect(aClient);
+            ((LanguageClientAware) getWorkspaceService()).connect(aClient);
         }
     }
 

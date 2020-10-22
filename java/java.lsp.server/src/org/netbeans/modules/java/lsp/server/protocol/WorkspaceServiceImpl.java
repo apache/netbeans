@@ -23,7 +23,6 @@ import java.util.concurrent.CompletableFuture;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
-import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -42,7 +41,7 @@ import org.openide.util.lookup.Lookups;
  */
 public final class WorkspaceServiceImpl implements WorkspaceService, LanguageClientAware {
 
-    private LanguageClient client;
+    private NbCodeLanguageClient client;
 
     public WorkspaceServiceImpl() {
     }
@@ -84,6 +83,6 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     @Override
     public void connect(LanguageClient client) {
-        this.client = client;
+        this.client = (NbCodeLanguageClient)client;
     }
 }

@@ -35,12 +35,15 @@ import org.eclipse.lsp4j.CompletionOptions;
 import org.eclipse.lsp4j.ExecuteCommandOptions;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
-import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
+import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
+import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
+import org.eclipse.lsp4j.jsonrpc.messages.Message;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
@@ -57,6 +60,11 @@ import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -68,7 +76,7 @@ public final class Server {
     
     public static void launchServer(InputStream in, OutputStream out) {
         LanguageServerImpl server = new LanguageServerImpl();
-        Launcher<LanguageClient> serverLauncher = LSPLauncher.createServerLauncher(server, in, out);
+        Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, in, out);
         ((LanguageClientAware) server).connect(serverLauncher.getRemoteProxy());
         Future<Void> runningServer = serverLauncher.startListening();
         try {
@@ -77,16 +85,60 @@ public final class Server {
             Exceptions.printStackTrace(ex);
         }
     }
+    
+    private static Launcher<NbCodeLanguageClient> createLauncher(LanguageServerImpl server, InputStream in, OutputStream out) {
+        return new LSPLauncher.Builder<NbCodeLanguageClient>()
+            .setLocalService(server)
+            .setRemoteInterface(NbCodeLanguageClient.class)
+            .setInput(in)
+            .setOutput(out)
+            .wrapMessages(new ConsumeWithLookup(server.getSessionLookup())::attachLookup)
+            .create();
+    }
+    
+    /**
+     * Processes message while the default Lookup is set to 
+     * {@link LanguageServerImpl#getSessionLookup()}.
+     */
+    private static class ConsumeWithLookup {
+        private final Lookup sessionLookup;
 
+        public ConsumeWithLookup(Lookup sessionLookup) {
+            this.sessionLookup = sessionLookup;
+        }
+        
+        public MessageConsumer attachLookup(MessageConsumer delegate) {
+            return new MessageConsumer() {
+                @Override
+                public void consume(Message msg) throws MessageIssueException, JsonRpcException {
+                    Lookups.executeWith(sessionLookup, () -> {
+                        delegate.consume(msg);
+                    });
+                }
+            };
+        }
+    }
+    
     private static class LanguageServerImpl implements LanguageServer, LanguageClientAware {
 
         private static final Logger LOG = Logger.getLogger(LanguageServerImpl.class.getName());
-        private LanguageClient client;
+        private NbCodeClientWrapper client;
         private final TextDocumentService textDocumentService = new TextDocumentServiceImpl();
         private final WorkspaceService workspaceService = new WorkspaceServiceImpl();
-
+        private final InstanceContent   sessionServices = new InstanceContent();
+        private final Lookup sessionLookup = new ProxyLookup(
+                new AbstractLookup(sessionServices),
+                Lookup.getDefault()
+        );
+        
+        Lookup getSessionLookup() {
+            return sessionLookup;
+        }
+        
         @Override
         public CompletableFuture<InitializeResult> initialize(InitializeParams init) {
+            NbCodeClientCapabilities capa = NbCodeClientCapabilities.get(init);
+            client.setClientCaps(capa);
             List<FileObject> projectCandidates = new ArrayList<>();
             List<WorkspaceFolder> folders = init.getWorkspaceFolders();
             if (folders != null) {
@@ -142,7 +194,11 @@ public final class Server {
             try {
                 JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY))
                           .runWhenScanFinished(cc -> {
-                  client.showMessage(new MessageParams(MessageType.Info, INDEXING_COMPLETED));
+                  if (client.getNbCodeCapabilities().hasStatusBarMessageSupport()) {
+                        client.showStatusBarMessage(new ShowStatusMessageParams(MessageType.Info, INDEXING_COMPLETED, 0));
+                  } else {
+                        client.showMessage(new ShowStatusMessageParams(MessageType.Info, INDEXING_COMPLETED, 0));
+                  }
                   //todo: refresh diagnostics all open editor?
                 }, true);
             } catch (IOException ex) {
@@ -183,10 +239,19 @@ public final class Server {
         }
 
         @Override
-        public void connect(LanguageClient client) {
-            this.client = client;
-            ((LanguageClientAware) getTextDocumentService()).connect(client);
-            ((LanguageClientAware) getWorkspaceService()).connect(client);
+        public void connect(LanguageClient aClient) {
+            this.client = new NbCodeClientWrapper((NbCodeLanguageClient)aClient);
+            
+            sessionServices.add(new WorkspaceIOContext() {
+                @Override
+                protected LanguageClient client() {
+                    return client;
+                }
+            });
+            sessionServices.add(new WorkspaceUIContext(client));
+            
+            ((LanguageClientAware) getTextDocumentService()).connect(aClient);
+            ((LanguageClientAware) getWorkspaceService()).connect(aClient);
         }
     }
 

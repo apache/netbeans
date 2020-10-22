@@ -172,6 +172,7 @@ import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.LazyFixList;
 import org.netbeans.spi.java.hints.JavaFix;
+import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -194,7 +195,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private final Map<String, Document> openedDocuments = new HashMap<>();
     private final Map<String, RequestProcessor.Task> diagnosticTasks = new HashMap<>();
-    private LanguageClient client;
+    private NbCodeLanguageClient client;
 
     public TextDocumentServiceImpl() {
     }
@@ -245,7 +246,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public void connect(LanguageClient client) {
-        this.client = client;
+        this.client = (NbCodeLanguageClient)client;
     }
 
     private static class ItemFactoryImpl implements JavaCompletionTask.ItemFactory<CompletionItem> {

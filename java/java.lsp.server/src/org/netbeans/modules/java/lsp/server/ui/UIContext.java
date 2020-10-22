@@ -21,6 +21,8 @@ package org.netbeans.modules.java.lsp.server.ui;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import org.eclipse.lsp4j.MessageParams;
+import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
+import org.openide.awt.StatusDisplayer.Message;
 import org.openide.util.Lookup;
 
 public abstract class UIContext {
@@ -49,6 +51,8 @@ public abstract class UIContext {
 
     protected abstract boolean isValid();
     protected abstract void showMessage(MessageParams msg);
+    protected abstract void logMessage(MessageParams msg);
+    protected abstract Message showStatusMessage(ShowStatusMessageParams msg);
 
 
     private static final class LogImpl extends UIContext {
@@ -60,6 +64,17 @@ public abstract class UIContext {
         @Override
         protected void showMessage(MessageParams msg) {
             System.err.println(msg.getType() + ": " + msg.getMessage());
+        }
+
+        @Override
+        protected void logMessage(MessageParams msg) {
+            System.err.println(msg.getType() + ": " + msg.getMessage());
+        }
+
+        @Override
+        protected Message showStatusMessage(ShowStatusMessageParams msg) {
+            System.out.println(msg.getType() + ": " + msg.getMessage());
+            return (int timeInMillis) -> {};
         }
 
         @Override

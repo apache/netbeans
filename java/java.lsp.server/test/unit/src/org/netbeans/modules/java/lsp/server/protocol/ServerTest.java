@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -957,7 +959,19 @@ public class ServerTest extends NbTestCase {
         }
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
+            @Override
+            public void showStatusBarMessage(ShowStatusMessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                }
+            }
+
+            @Override
+            public NbCodeClientCapabilities getNbCodeCapabilities() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+            
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -973,11 +987,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public void showMessage(MessageParams params) {
-                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
-                    indexingComplete.countDown();
-                } else {
-                    throw new UnsupportedOperationException("Unexpected message.");
-                }
+                throw new UnsupportedOperationException("Unexpected message.");
             }
 
             @Override
@@ -993,6 +1003,8 @@ public class ServerTest extends NbTestCase {
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeParams initParams = new InitializeParams();
+        initParams.setInitializationOptions(new JsonParser().parse(
+                "{ nbcodeCapabilities: { statusBarMessageSupport : true } }").getAsJsonObject());
         initParams.setRootUri(getWorkDir().toURI().toString());
         InitializeResult result = server.initialize(initParams).get();
         indexingComplete.await();

@@ -103,16 +103,16 @@ function findJDK(onChange: (path : string | null) => void): void {
 export function activate(context: ExtensionContext) {
     vscode.extensions.all.forEach((e) => {
         if (e.extensionPath.indexOf("redhat.java") >= 0) {
-            vscode.window.showInformationMessage(`redhat.java found at ${e.extensionPath} - supressing`);
+            vscode.window.showInformationMessage(`redhat.java found at ${e.extensionPath} - Suppressing some services to not clash with Apache NetBeans Language Server.`);
             workspace.getConfiguration().update('java.completion.enabled', false, false).then(() => {
-                vscode.window.showInformationMessage('Disabling redhat.java code completion');
+                vscode.window.showInformationMessage('Disabling redhat.java code completion. Usage of only one Java extension is recommended.');
             }, (reason) => {
                 vscode.window.showInformationMessage('Disabling redhat.java code completion failed ' + reason);
             });
         }
     });
 
-    let log = vscode.window.createOutputChannel("Java Language Server");
+    let log = vscode.window.createOutputChannel("Apache NetBeans Language Server");
 
     // find acceptable JDK and launch the Java part
     findJDK((specifiedJDK) => {
@@ -155,7 +155,7 @@ export function activate(context: ExtensionContext) {
 
 function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel): void {
     if (nbProcess) {
-        vscode.window.showInformationMessage("Restarting Java Language Server.");
+        vscode.window.setStatusBarMessage("Restarting Apache NetBeans Language Server.", 2000);
         nbProcess.kill();
     }
 
@@ -168,7 +168,7 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
         verbose: beVerbose
     };
 
-    let launchMsg = `Launching Java Language Server with ${specifiedJDK ? specifiedJDK : 'default system JDK'}`;
+    let launchMsg = `Launching Apache NetBeans Language Server with ${specifiedJDK ? specifiedJDK : 'default system JDK'}`;
     log.appendLine(launchMsg);
     vscode.window.setStatusBarMessage(launchMsg, 2000);
 
@@ -195,7 +195,7 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
         nbProcess = p;
         nbProcess.on('close', function(code: number) {
             if (p == nbProcess && code != 0) {
-                vscode.window.showWarningMessage("Java Language Server exited with " + code);
+                vscode.window.showWarningMessage("Apache NetBeans Language Server exited with " + code);
             }
             if (collectedText != null) {
                 let match = collectedText.match(/org.netbeans.modules.java.lsp.server[^\n]*/)
@@ -205,7 +205,7 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
                     log.appendLine("Cannot find org.netbeans.modules.java.lsp.server in the log!");
                 }
                 log.show(false);
-                reject("Java Language Server not enabled!");
+                reject("Apache NetBeans Language Server not enabled!");
             } else {
                 log.appendLine("Exit code " + code);
             }

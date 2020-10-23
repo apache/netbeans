@@ -24,13 +24,13 @@ import {
     LanguageClient,
     LanguageClientOptions,
     StreamInfo,
-    ShowMessageParams, MessageType,
+    MessageType,
 } from 'vscode-languageclient';
 
 import * as net from 'net';
 import * as fs from 'fs';
 import * as path from 'path';
-import { spawn, ChildProcess, SpawnOptions } from 'child_process';
+import { ChildProcess } from 'child_process';
 import * as vscode from 'vscode';
 import * as launcher from './nbcode';
 import { StatusMessageRequest, ShowStatusMessageParams  } from './protocol';
@@ -79,10 +79,10 @@ export function activate(context: ExtensionContext) {
     
     let log = vscode.window.createOutputChannel("Java Language Server");
 
-    vscode.extensions.all.forEach((e, index) => {
+    vscode.extensions.all.forEach((e) => {
         if (e.extensionPath.indexOf("redhat.java") >= 0) {
             vscode.window.showInformationMessage(`redhat.java found at ${e.extensionPath} - supressing`);
-            workspace.getConfiguration().update('java.completion.enabled', false, false).then((ok) => {
+            workspace.getConfiguration().update('java.completion.enabled', false, false).then(() => {
                 vscode.window.showInformationMessage('Disabling redhat.java code completion');
             }, (reason) => {
                 vscode.window.showInformationMessage('Disabling redhat.java code completion failed ' + reason);
@@ -134,7 +134,7 @@ export function activate(context: ExtensionContext) {
         });
     });
 
-    ideRunning.then((value) => {
+    ideRunning.then(() => {
         const connection = () => new Promise<StreamInfo>((resolve, reject) => {
             const server = net.createServer(socket => {
                 server.close();
@@ -204,7 +204,7 @@ export function activate(context: ExtensionContext) {
 
         // Start the client. This will also launch the server
         client.start();
-        client.onReady().then((value) => {
+        client.onReady().then(() => {
             commands.executeCommand('setContext', 'nbJavaLSReady', true);
             client.onNotification(StatusMessageRequest.type, showStatusBarMessage);
         });
@@ -287,7 +287,7 @@ export function deactivate(): Thenable<void> {
 
 class NetBeansDebugAdapterDescriptionFactory implements vscode.DebugAdapterDescriptorFactory {
 
-    createDebugAdapterDescriptor(session: vscode.DebugSession, executable: vscode.DebugAdapterExecutable | undefined): vscode.ProviderResult<vscode.DebugAdapterDescriptor> {
+    createDebugAdapterDescriptor(_session: vscode.DebugSession, _executable: vscode.DebugAdapterExecutable | undefined): vscode.ProviderResult<vscode.DebugAdapterDescriptor> {
         return new vscode.DebugAdapterServer(debugPort);
     }
 }
@@ -295,7 +295,7 @@ class NetBeansDebugAdapterDescriptionFactory implements vscode.DebugAdapterDescr
 
 class NetBeansConfigurationProvider implements vscode.DebugConfigurationProvider {
 
-    resolveDebugConfiguration(folder: vscode.WorkspaceFolder | undefined, config: vscode.DebugConfiguration, token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
+    resolveDebugConfiguration(_folder: vscode.WorkspaceFolder | undefined, config: vscode.DebugConfiguration, _token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
         if (!config.type) {
             config.type = 'java-polyglot';
         }

@@ -54,71 +54,119 @@ import org.openide.util.lookup.ProxyLookup;
  * @author martin
  */
 public abstract class NbLaunchDelegate {
-
     public abstract void preLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
 
     public abstract void postLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
 
     public final CompletableFuture<Void> nbLaunch(FileObject toRun, DebugAdapterContext context, boolean debug, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
-        Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, debug);
         CompletableFuture<Void> launchFuture = new CompletableFuture<>();
-        if (providerAndCommand == null) {
-            launchFuture.completeExceptionally(new ResponseErrorException(new ResponseError(
-                    ResponseErrorCode.MethodNotFound,
-                    "Cannot find " + (debug ? "debug" : "run") + " action!", null)));
-            return launchFuture;
-        }
         NbProcessConsole ioContext = new NbProcessConsole(consoleMessages);
-        ActionProgress progress = new ActionProgress() {
+        CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(toRun, debug, ioContext);
+        commandFuture.thenAccept((providerAndCommand) -> {
+            if (debug) {
+                DebuggerManager.getDebuggerManager().addDebuggerListener(new DebuggerManagerAdapter() {
+                    @Override
+                    public void sessionAdded(Session session) {
+                        JPDADebugger debugger = session.lookupFirst(null, JPDADebugger.class);
+                        if (debugger != null) {
+                            DebuggerManager.getDebuggerManager().removeDebuggerListener(this);
+                            Map properties = session.lookupFirst(null, Map.class);
+                            NbSourceProvider sourceProvider = context.getSourceProvider();
+                            sourceProvider.setSourcePath(properties != null ? (ClassPath) properties.getOrDefault("sourcepath", ClassPath.EMPTY) : ClassPath.EMPTY);
+                            debugger.addPropertyChangeListener(JPDADebugger.PROP_STATE, new PropertyChangeListener() {
+                                @Override
+                                public void propertyChange(PropertyChangeEvent evt) {
+                                    int newState = (int) evt.getNewValue();
+                                    if (newState == JPDADebugger.STATE_RUNNING) {
+                                        debugger.removePropertyChangeListener(JPDADebugger.PROP_STATE, this);
+                                        NbDebugSession debugSession = new NbDebugSession(debugger);
+                                        context.setDebugSession(debugSession);
+                                        launchFuture.complete(null);
+                                        context.getConfigurationSemaphore().waitForConfigurationDone();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            } else {
+                launchFuture.complete(null);
+            }
+            ActionProgress progress = new ActionProgress() {
+                @Override
+                protected void started() {
+                }
+
+                @Override
+                public void finished(boolean success) {
+                    ioContext.stop();
+                }
+            };
+            Lookup launchCtx = new ProxyLookup(
+                    Lookups.fixed(
+                            toRun, ioContext, progress
+                    ), Lookup.getDefault()
+            );
+            Lookups.executeWith(launchCtx, () -> {
+                providerAndCommand.first().invokeAction(providerAndCommand.second(), Lookups.fixed(toRun, ioContext, progress));
+            });
+        }).exceptionally((t) -> {
+            launchFuture.completeExceptionally(t);
+            return null;
+        });
+        return launchFuture;
+    }
+
+    private CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(FileObject toRun, boolean debug, NbProcessConsole ioContext) throws IllegalArgumentException {
+        Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, debug);
+        if (providerAndCommand != null) {
+            return CompletableFuture.completedFuture(providerAndCommand);
+        }
+        CompletableFuture<Pair<ActionProvider,String>> afterBuild = new CompletableFuture<>();
+        class CheckBuildProgress extends ActionProgress {
+            boolean running;
+
             @Override
-            protected void started() {}
+            protected void started() {
+                running = true;
+            }
+
             @Override
             public void finished(boolean success) {
-                ioContext.stop();
+                if (success) {
+                    Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, debug);
+                    if (providerAndCommand != null) {
+                        afterBuild.complete(providerAndCommand);
+                        return;
+                    }
+                }
+                afterBuild.completeExceptionally(new ResponseErrorException(new ResponseError(
+                        ResponseErrorCode.MethodNotFound,
+                        "Cannot find " + (debug ? "debug" : "run") + " action!", null)));
             }
         };
-        if (debug) {
-            DebuggerManager.getDebuggerManager().addDebuggerListener(new DebuggerManagerAdapter() {
-                @Override
-                public void sessionAdded(Session session) {
-                    JPDADebugger debugger = session.lookupFirst(null, JPDADebugger.class);
-                    if (debugger != null) {
-                        DebuggerManager.getDebuggerManager().removeDebuggerListener(this);
-                        Map properties = session.lookupFirst(null, Map.class);
-                        NbSourceProvider sourceProvider = context.getSourceProvider();
-                        sourceProvider.setSourcePath(properties != null ? (ClassPath) properties.getOrDefault("sourcepath", ClassPath.EMPTY) : ClassPath.EMPTY);
-                        debugger.addPropertyChangeListener(JPDADebugger.PROP_STATE, new PropertyChangeListener() {
-                            @Override
-                            public void propertyChange(PropertyChangeEvent evt) {
-                                int newState = (int) evt.getNewValue();
-                                if (newState == JPDADebugger.STATE_RUNNING) {
-                                    debugger.removePropertyChangeListener(JPDADebugger.PROP_STATE, this);
-                                    NbDebugSession debugSession = new NbDebugSession(debugger);
-                                    context.setDebugSession(debugSession);
-                                    launchFuture.complete(null);
-                                    context.getConfigurationSemaphore().waitForConfigurationDone();
-                                }
-                            }
-                    });
-                }
-                }
-            });
-        } else {
-            launchFuture.complete(null);
-        }
-
+        CheckBuildProgress progress = new CheckBuildProgress();
         Lookup launchCtx = new ProxyLookup(
             Lookups.fixed(
                 toRun, ioContext, progress
             ), Lookup.getDefault()
         );
-        Lookups.executeWith(launchCtx, () -> {
-            providerAndCommand.first().invokeAction(providerAndCommand.second(), Lookups.fixed(toRun, ioContext, progress));
-        });
-        return launchFuture;
+
+        Collection<ActionProvider> providers = findActionProviders(toRun);
+        for (ActionProvider ap : providers) {
+            if (ap.isActionEnabled(ActionProvider.COMMAND_BUILD, launchCtx)) {
+                Lookups.executeWith(launchCtx, () -> {
+                    ap.invokeAction(ActionProvider.COMMAND_BUILD, launchCtx);
+                });
+                break;
+            }
+        }
+        if (!progress.running) {
+            progress.finished(true);
+        }
+        return afterBuild;
     }
 
-    
     protected static @CheckForNull Pair<ActionProvider, String> findTarget(FileObject toRun, boolean debug) {
         ClassPath sourceCP = ClassPath.getClassPath(toRun, ClassPath.SOURCE);
         FileObject fileRoot = sourceCP != null ? sourceCP.findOwnerRoot(toRun) : null;
@@ -130,13 +178,7 @@ public abstract class NbLaunchDelegate {
         }
         ActionProvider provider = null;
         String command = null;
-        Collection<ActionProvider> actionProviders = new ArrayList<>();
-        Project prj = FileOwnerQuery.getOwner(toRun);
-        if (prj != null) {
-            ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
-            actionProviders.add(ap);
-        }
-        actionProviders.addAll(Lookup.getDefault().lookupAll(ActionProvider.class));
+        Collection<ActionProvider> actionProviders = findActionProviders(toRun);
         Lookup testLookup = Lookups.singleton(toRun);
         String[] actions = debug ? mainSource ? new String[] {ActionProvider.COMMAND_DEBUG_SINGLE}
                                               : new String[] {ActionProvider.COMMAND_DEBUG_TEST_SINGLE, ActionProvider.COMMAND_DEBUG_SINGLE}
@@ -162,6 +204,17 @@ public abstract class NbLaunchDelegate {
             return null;
         }
         return Pair.of(provider, command);
+    }
+
+    private static Collection<ActionProvider> findActionProviders(FileObject toRun) {
+        Collection<ActionProvider> actionProviders = new ArrayList<>();
+        Project prj = FileOwnerQuery.getOwner(toRun);
+        if (prj != null) {
+            ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
+            actionProviders.add(ap);
+        }
+        actionProviders.addAll(Lookup.getDefault().lookupAll(ActionProvider.class));
+        return actionProviders;
     }
 
     private static boolean supportsAction(ActionProvider ap, String action) {

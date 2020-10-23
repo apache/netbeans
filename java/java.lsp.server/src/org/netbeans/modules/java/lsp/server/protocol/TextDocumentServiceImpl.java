@@ -57,6 +57,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 import java.util.prefs.Preferences;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -150,6 +151,7 @@ import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
 import org.netbeans.modules.java.hints.errors.ImportClass;
 import org.netbeans.modules.java.hints.infrastructure.CreatorBasedLazyFixList;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
+import org.netbeans.modules.java.hints.project.IncompleteClassPath;
 import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
@@ -170,6 +172,7 @@ import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.LazyFixList;
 import org.netbeans.spi.java.hints.JavaFix;
+import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -192,7 +195,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private final Map<String, Document> openedDocuments = new HashMap<>();
     private final Map<String, RequestProcessor.Task> diagnosticTasks = new HashMap<>();
-    private LanguageClient client;
+    private NbCodeLanguageClient client;
 
     public TextDocumentServiceImpl() {
     }
@@ -243,7 +246,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public void connect(LanguageClient client) {
-        this.client = client;
+        this.client = (NbCodeLanguageClient)client;
     }
 
     private static class ItemFactoryImpl implements JavaCompletionTask.ItemFactory<CompletionItem> {
@@ -877,6 +880,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             //TODO: ordering
 
             for (Fix f : fixes) {
+                if (f instanceof IncompleteClassPath.ResolveFix) {
+                    CodeAction action = new CodeAction(f.getText());
+                    action.setDiagnostics(Collections.singletonList(diag));
+                    action.setKind(CodeActionKind.QuickFix);
+                    action.setCommand(new Command(f.getText(), Server.JAVA_BUILD_WORKSPACE));
+                    result.add(Either.forRight(action));
+                }
                 if (f instanceof ImportClass.FixImport) {
                     //TODO: FixImport is not a JavaFix, create one. Is there a better solution?
                     String text = f.getText();
@@ -1001,19 +1011,32 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         try {
             FileObject file = fromUri(params.getTextDocument().getUri());
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
-            Document doc = ec.openDocument();
-            openedDocuments.put(params.getTextDocument().getUri(), doc);
-            String text = params.getTextDocument().getText();
-            try {
-                doc.remove(0, doc.getLength());
-                doc.insertString(0, text, null);
-            } catch (BadLocationException ex) {
-                //TODO: include stack trace:
-                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+            Document doc = ec.getDocument();
+            // the document may be not opened yet. Clash with in-memory content can happen only if
+            // the doc was opened prior to request reception.
+            if (doc != null) {
+                String text = params.getTextDocument().getText();
+                try {
+                    // could be faster with CharSequence, but requires a dependency on
+                    // org.netbeans.modules.editor.util
+                    if (!text.contentEquals(doc.getText(0, doc.getLength()))) {
+                        doc.remove(0, doc.getLength());
+                        doc.insertString(0, text, null);
+                    }
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
+                    //TODO: include stack trace:
+                    client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                }
+            } else {
+                doc = ec.openDocument();
             }
+            openedDocuments.put(params.getTextDocument().getUri(), doc);
             runDiagnoticTasks(params.getTextDocument().getUri());
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
+        } finally {
+            reportNotificationDone("didOpen", params);
         }
     }
 
@@ -1033,11 +1056,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
         });
         runDiagnoticTasks(params.getTextDocument().getUri());
+        reportNotificationDone("didChange", params);
     }
 
     @Override
     public void didClose(DidCloseTextDocumentParams params) {
         openedDocuments.remove(params.getTextDocument().getUri());
+        reportNotificationDone("didClose", params);
     }
 
     @Override
@@ -1271,4 +1296,16 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         return edits;
     }
+    
+    private static void reportNotificationDone(String s, Object parameter) {
+        if (HOOK_NOTIFICATION != null) {
+            HOOK_NOTIFICATION.accept(s, parameter);
+        }
+    }
+    
+    /**
+     * For testing only; calls that do not return a result should call
+     * this hook, if defined, with the method name and parameter.
+     */
+    static BiConsumer<String, Object> HOOK_NOTIFICATION = null;
 }

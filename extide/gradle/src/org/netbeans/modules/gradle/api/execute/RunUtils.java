@@ -120,11 +120,11 @@ public final class RunUtils {
     public static ExecutorTask executeGradle(RunConfig config, String initialOutput) {
         LifecycleManager.getDefault().saveAll();
 
-        GradleExecutor exec = new GradleDaemonExecutor(config);
+        GradleDaemonExecutor exec = new GradleDaemonExecutor(config);
         ExecutorTask task = executeGradleImpl(config.getTaskDisplayName(), exec, initialOutput);
         GRADLE_TASKS.put(config, exec);
 
-        return task;
+        return exec.createTask(task);
     }
 
     /**

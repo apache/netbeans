@@ -23,7 +23,8 @@ import { commands, window, workspace, ExtensionContext, ProgressLocation } from 
 import {
     LanguageClient,
     LanguageClientOptions,
-    StreamInfo
+    StreamInfo,
+    ShowMessageParams, MessageType,
 } from 'vscode-languageclient';
 
 import * as net from 'net';
@@ -32,6 +33,7 @@ import * as path from 'path';
 import { spawn, ChildProcess, SpawnOptions } from 'child_process';
 import * as vscode from 'vscode';
 import * as launcher from './nbcode';
+import { StatusMessageRequest, ShowStatusMessageParams  } from './protocol';
 
 let client: LanguageClient;
 let nbProcess : ChildProcess | null = null;
@@ -66,13 +68,16 @@ function findClusters(myPath : string): string[] {
 export function activate(context: ExtensionContext) {
     //verify acceptable JDK is available/set:
     let specifiedJDK = workspace.getConfiguration('netbeans').get('jdkhome');
-
+    const beVerbose : boolean = workspace.getConfiguration('netbeans').get('verbose', false);
     let info = {
         clusters : findClusters(context.extensionPath),
         extensionPath: context.extensionPath,
         storagePath : context.globalStoragePath,
-        jdkHome : specifiedJDK
+        jdkHome : specifiedJDK,
+        verbose: beVerbose
     };
+    
+    let log = vscode.window.createOutputChannel("Java Language Server");
 
     vscode.extensions.all.forEach((e, index) => {
         if (e.extensionPath.indexOf("redhat.java") >= 0) {
@@ -85,9 +90,8 @@ export function activate(context: ExtensionContext) {
         }
     });
 
-    let log = vscode.window.createOutputChannel("Java Language Server");
     log.appendLine("Launching Java Language Server");
-    vscode.window.showInformationMessage("Launching Java Language Server");
+    vscode.window.setStatusBarMessage("Launching Java Language Server", 2000);
 
     let ideRunning = new Promise((resolve, reject) => {
         let collectedText : string | null = '';
@@ -181,8 +185,13 @@ export function activate(context: ExtensionContext) {
                     workspace.createFileSystemWatcher('**/*.java')
                 ]
             },
-            outputChannelName: 'Java',
-            revealOutputChannelOn: 4 // never
+            outputChannel: log,
+            revealOutputChannelOn: 3, // error
+            initializationOptions : {
+                'nbcodeCapabilities' : {
+                    'statusBarMessageSupport' : true
+                }
+            }
         }
 
         // Create the language client and start the client.
@@ -197,6 +206,7 @@ export function activate(context: ExtensionContext) {
         client.start();
         client.onReady().then((value) => {
             commands.executeCommand('setContext', 'nbJavaLSReady', true);
+            client.onNotification(StatusMessageRequest.type, showStatusBarMessage);
         });
 
         //register debugger:
@@ -205,7 +215,6 @@ export function activate(context: ExtensionContext) {
 
         let debugDescriptionFactory = new NetBeansDebugAdapterDescriptionFactory();
         context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('java-polyglot', debugDescriptionFactory));
-        window.showInformationMessage('Java Polyglot Debug Adapter ready.');
 
         // register commands
         context.subscriptions.push(commands.registerCommand('java.workspace.compile', () => {
@@ -238,6 +247,32 @@ export function activate(context: ExtensionContext) {
         window.showErrorMessage('Error initializing ' + reason);
     });
 
+}
+
+function showStatusBarMessage(params : ShowStatusMessageParams) {
+    let decorated : string = params.message;
+    let defTimeout;
+    
+    switch (params.type) {
+        case MessageType.Error:
+            decorated = '$(error) ' + params.message;
+            defTimeout = 0;
+            break;
+        case MessageType.Warning:
+            decorated = '$(warning) ' + params.message;
+            defTimeout = 0;
+            break;
+        default:
+            defTimeout = 10000;
+            break;
+    }
+    // params.timeout may be defined but 0 -> should be used
+    const timeout = params.timeout != undefined ? params.timeout : defTimeout;
+    if (timeout > 0) {
+        window.setStatusBarMessage(decorated, timeout);
+    } else {
+        window.setStatusBarMessage(decorated);
+    }
 }
 
 export function deactivate(): Thenable<void> {

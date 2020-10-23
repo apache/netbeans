@@ -21,14 +21,12 @@ package org.netbeans.modules.java.source.parsing;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -116,22 +114,28 @@ public class OutputFileManager extends CachingFileManager {
             File activeRoot = getClassFolderForSource(l, sibling, baseName);
             if (activeRoot == null) {
                 activeRoot = getClassFolderForApt(l, sibling, baseName);
+            }
+            if (activeRoot == null && siblings.hasSibling()) {
+                URL siblingURL = siblings.getSibling();
+                activeRoot = getClassFolderForSourceImpl(siblingURL);
                 if (activeRoot == null) {
-                    //Deleted project
-                    if (this.scp.getRoots().length > 0) {
-                        LOG.log(
-                            Level.WARNING,
-                            "No output for class: {0} sibling: {1} srcRoots: {2}",    //NOI18N
-                            new Object[]{
-                                className,
-                                sibling,
-                                this.scp
-                            });
-                    }
-                    throw new InvalidSourcePath ();
+                    activeRoot = getClassFolderForApt(siblingURL);
                 }
             }
-            assertValidRoot(activeRoot, l);
+            if (activeRoot == null) {
+                //Deleted project
+                if (this.scp.getRoots().length > 0) {
+                    LOG.log(
+                        Level.WARNING,
+                        "No output for class: {0} sibling: {1} srcRoots: {2}",    //NOI18N
+                        new Object[]{
+                            className,
+                            sibling,
+                            this.scp
+                        });
+                }
+                throw new InvalidSourcePath ();
+            }
             baseName = className.replace('.', File.separatorChar);       //NOI18N
             String nameStr = baseName + '.' + FileObjects.SIG;
             final File f = new File (activeRoot, nameStr);
@@ -166,7 +170,6 @@ public class OutputFileManager extends CachingFileManager {
                 throw new InvalidSourcePath ();
             }
         }
-        assertValidRoot(activeRoot, l);
         final String path = FileObjects.resolveRelativePath(pkgName, relativeName);
         final File file = FileUtil.normalizeFile(new File (activeRoot,path.replace(FileObjects.NBFS_SEPARATOR_CHAR, File.separatorChar)));
         return tx.createFileObject(l, file, activeRoot,null,null);
@@ -459,19 +462,6 @@ public class OutputFileManager extends CachingFileManager {
                     .collect(Collectors.toSet());
         } else {
             return ModuleLocation.cast(l).getModuleRoots();
-        }
-    }
-
-    private void assertValidRoot(
-            final File activeRoot,
-            final Location l) throws IOException {
-        final Collection<? extends URL> roots = getLocationRoots(l);
-        if (!roots.contains(BaseUtilities.toURI(activeRoot).toURL())) {
-            throw new IOException(String.format(
-                    "Wrong cache folder: %s, allowed: %s, location: %s",    //NOI18N
-                    activeRoot,
-                    roots,
-                    l));
         }
     }
 }

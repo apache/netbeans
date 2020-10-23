@@ -16,35 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+'use strict';
 
-apply plugin: 'groovy'
-apply plugin: 'application'
+import {
+    NotificationType,
+    ShowMessageParams
+} from 'vscode-languageclient';
 
-mainClassName = 'org.netbeans.modules.gradle.DebugTooling'
-
-sourceCompatibility = '1.8'
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-
-repositories {
-    jcenter()
+export interface ShowStatusMessageParams extends ShowMessageParams {
+    /**
+     * The timeout
+     */
+    timeout?: number;
 }
 
-dependencies {
-    implementation gradleApi()
-    implementation localGroovy()
-}
-
-testClasses.dependsOn('jar')
-
-test {
-    systemProperty 'project.dir', projectDir
-    if (project.hasProperty('debugDaemon')) {
-        systemProperty 'debugDaemon', 'true'
-    }
-}
-
-run {
-    args = ["$projectDir/src/test/data/simple-with-tests", "-PdownloadSourcesAndJavadoc=ALL"]
-}
-
-[startScripts, distTar, distZip]*.enabled = false
+export namespace StatusMessageRequest {
+    export const type = new NotificationType<ShowStatusMessageParams, void>('window/showStatusBarMessage');
+};

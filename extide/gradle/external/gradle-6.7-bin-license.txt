@@ -1,6 +1,6 @@
 Name: Gradle
 Description: Gradle Build System
-Version: 4.10.2
+Version: 6.7
 License: Gradle
 Origin: Gradle Inc.
 URL: https://gradle.org/

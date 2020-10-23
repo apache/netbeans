@@ -272,20 +272,22 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
             }
         }
 
-        // Create the language client and start the client.
-        client = new LanguageClient(
-                'java',
-                'NetBeans Java',
-                connection,
-                clientOptions
-        );
+        if (!client) {
+            // Create the language client and start the client.
+            client = new LanguageClient(
+                    'java',
+                    'NetBeans Java',
+                    connection,
+                    clientOptions
+            );
 
-        // Start the client. This will also launch the server
-        client.start();
-        client.onReady().then(() => {
-            commands.executeCommand('setContext', 'nbJavaLSReady', true);
-            client.onNotification(StatusMessageRequest.type, showStatusBarMessage);
-        });
+            // Start the client. This will also launch the server
+            client.start();
+            client.onReady().then(() => {
+                commands.executeCommand('setContext', 'nbJavaLSReady', true);
+                client.onNotification(StatusMessageRequest.type, showStatusBarMessage);
+            });
+        }
     }).catch((reason) => {
         log.append(reason);
         window.showErrorMessage('Error initializing ' + reason);

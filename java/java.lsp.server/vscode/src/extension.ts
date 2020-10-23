@@ -101,18 +101,18 @@ function findJDK(onChange: (path : string | null) => void): void {
 }
 
 export function activate(context: ExtensionContext) {
-    vscode.extensions.all.forEach((e) => {
-        if (e.extensionPath.indexOf("redhat.java") >= 0) {
-            vscode.window.showInformationMessage(`redhat.java found at ${e.extensionPath} - Suppressing some services to not clash with Apache NetBeans Language Server.`);
-            workspace.getConfiguration().update('java.completion.enabled', false, false).then(() => {
-                vscode.window.showInformationMessage('Disabling redhat.java code completion. Usage of only one Java extension is recommended.');
-            }, (reason) => {
-                vscode.window.showInformationMessage('Disabling redhat.java code completion failed ' + reason);
-            });
-        }
-    });
-
     let log = vscode.window.createOutputChannel("Apache NetBeans Language Server");
+
+    let e = vscode.extensions.getExtension('redhat.java');
+    log.appendLine(`workspace ${workspace.name}`);
+    if (e && workspace.name) {
+        vscode.window.showInformationMessage(`redhat.java found at ${e.extensionPath} - Suppressing some services to not clash with Apache NetBeans Language Server.`);
+        workspace.getConfiguration().update('java.completion.enabled', false, false).then(() => {
+            vscode.window.showInformationMessage('Disabling redhat.java code completion. Usage of only one Java extension is recommended.');
+        }, (reason) => {
+            vscode.window.showInformationMessage('Disabling redhat.java code completion failed ' + reason);
+        });
+    }
 
     // find acceptable JDK and launch the Java part
     findJDK((specifiedJDK) => {

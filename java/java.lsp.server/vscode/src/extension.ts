@@ -65,20 +65,42 @@ function findClusters(myPath : string): string[] {
     return clusters;
 }
 
-export function activate(context: ExtensionContext) {
-    //verify acceptable JDK is available/set:
-    let specifiedJDK = workspace.getConfiguration('netbeans').get('jdkhome');
-    const beVerbose : boolean = workspace.getConfiguration('netbeans').get('verbose', false);
-    let info = {
-        clusters : findClusters(context.extensionPath),
-        extensionPath: context.extensionPath,
-        storagePath : context.globalStoragePath,
-        jdkHome : specifiedJDK,
-        verbose: beVerbose
-    };
-    
-    let log = vscode.window.createOutputChannel("Java Language Server");
+function findJDK(onChange: (path : string | null) => void): void {
+    function find(): string | null {
+        let nbJdk = workspace.getConfiguration('netbeans').get('jdkhome');
+        if (nbJdk) {
+            return nbJdk as string;
+        }
+        let javahome = workspace.getConfiguration('java').get('home');
+        if (javahome) {
+            return javahome as string;
+        }
 
+        let jdkHome: any = process.env.JDK_HOME;
+        if (jdkHome) {
+            return jdkHome as string;
+        }
+        let jHome: any = process.env.JAVA_HOME;
+        if (jHome) {
+            return jHome as string;
+        }
+        return null;
+    }
+
+    let currentJdk = find();
+    workspace.onDidChangeConfiguration(params => {
+        if (!params.affectsConfiguration('java') && !params.affectsConfiguration('netbeans')) {
+            return;
+        }
+        let newJdk = find();
+        if (newJdk !== currentJdk) {
+            onChange(newJdk);
+        }
+    });
+    onChange(currentJdk);
+}
+
+export function activate(context: ExtensionContext) {
     vscode.extensions.all.forEach((e) => {
         if (e.extensionPath.indexOf("redhat.java") >= 0) {
             vscode.window.showInformationMessage(`redhat.java found at ${e.extensionPath} - supressing`);
@@ -90,8 +112,65 @@ export function activate(context: ExtensionContext) {
         }
     });
 
-    log.appendLine("Launching Java Language Server");
-    vscode.window.setStatusBarMessage("Launching Java Language Server", 2000);
+    let log = vscode.window.createOutputChannel("Java Language Server");
+
+    // find acceptable JDK and launch the Java part
+    findJDK((specifiedJDK) => {
+        activateWithJDK(specifiedJDK, context, log);
+    })
+
+    //register debugger:
+    let configProvider = new NetBeansConfigurationProvider();
+    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java-polyglot', configProvider));
+
+    let debugDescriptionFactory = new NetBeansDebugAdapterDescriptionFactory();
+    context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('java-polyglot', debugDescriptionFactory));
+
+    // register commands
+    context.subscriptions.push(commands.registerCommand('java.workspace.compile', () => {
+        return window.withProgress({ location: ProgressLocation.Window }, p => {
+            return new Promise(async (resolve, reject) => {
+                const commands = await vscode.commands.getCommands();
+                if (commands.includes('java.build.workspace')) {
+                    p.report({ message: 'Compiling workspace...' });
+                    client.outputChannel.show(true);
+                    const start = new Date().getTime();
+                    const res = await vscode.commands.executeCommand('java.build.workspace');
+                    const elapsed = new Date().getTime() - start;
+                    const humanVisibleDelay = elapsed < 1000 ? 1000 : 0;
+                    setTimeout(() => { // set a timeout so user would still see the message when build time is short
+                        if (res) {
+                            resolve();
+                        } else {
+                            reject();
+                        }
+                    }, humanVisibleDelay);
+                } else {
+                    reject();
+                }
+            });
+        });
+    }));
+}
+
+function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel): void {
+    if (nbProcess) {
+        vscode.window.showInformationMessage("Restarting Java Language Server.");
+        nbProcess.kill();
+    }
+
+    const beVerbose : boolean = workspace.getConfiguration('netbeans').get('verbose', false);
+    let info = {
+        clusters : findClusters(context.extensionPath),
+        extensionPath: context.extensionPath,
+        storagePath : context.globalStoragePath,
+        jdkHome : specifiedJDK,
+        verbose: beVerbose
+    };
+
+    let launchMsg = `Launching Java Language Server with ${specifiedJDK ? specifiedJDK : 'default system JDK'}`;
+    log.appendLine(launchMsg);
+    vscode.window.setStatusBarMessage(launchMsg, 2000);
 
     let ideRunning = new Promise((resolve, reject) => {
         let collectedText : string | null = '';
@@ -115,7 +194,7 @@ export function activate(context: ExtensionContext) {
         });
         nbProcess = p;
         nbProcess.on('close', function(code: number) {
-            if (code != 0) {
+            if (p == nbProcess && code != 0) {
                 vscode.window.showWarningMessage("Java Language Server exited with " + code);
             }
             if (collectedText != null) {
@@ -130,7 +209,6 @@ export function activate(context: ExtensionContext) {
             } else {
                 log.appendLine("Exit code " + code);
             }
-            nbProcess = null;
         });
     });
 
@@ -208,51 +286,16 @@ export function activate(context: ExtensionContext) {
             commands.executeCommand('setContext', 'nbJavaLSReady', true);
             client.onNotification(StatusMessageRequest.type, showStatusBarMessage);
         });
-
-        //register debugger:
-        let configProvider = new NetBeansConfigurationProvider();
-        context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java-polyglot', configProvider));
-
-        let debugDescriptionFactory = new NetBeansDebugAdapterDescriptionFactory();
-        context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('java-polyglot', debugDescriptionFactory));
-
-        // register commands
-        context.subscriptions.push(commands.registerCommand('java.workspace.compile', () => {
-            return window.withProgress({ location: ProgressLocation.Window }, p => {
-                return new Promise(async (resolve, reject) => {
-                    const commands = await vscode.commands.getCommands();
-                    if (commands.includes('java.build.workspace')) {
-                        p.report({ message: 'Compiling workspace...' });
-                        client.outputChannel.show(true);
-                        const start = new Date().getTime();
-                        const res = await vscode.commands.executeCommand('java.build.workspace');
-                        const elapsed = new Date().getTime() - start;
-                        const humanVisibleDelay = elapsed < 1000 ? 1000 : 0;
-                        setTimeout(() => { // set a timeout so user would still see the message when build time is short
-                            if (res) {
-                                resolve();
-                            } else {
-                                reject();
-                            }
-                        }, humanVisibleDelay);
-                    } else {
-                        reject();
-                    }
-                });
-            });
-        }));
-
     }).catch((reason) => {
         log.append(reason);
         window.showErrorMessage('Error initializing ' + reason);
     });
-
 }
 
 function showStatusBarMessage(params : ShowStatusMessageParams) {
     let decorated : string = params.message;
     let defTimeout;
-    
+
     switch (params.type) {
         case MessageType.Error:
             decorated = '$(error) ' + params.message;

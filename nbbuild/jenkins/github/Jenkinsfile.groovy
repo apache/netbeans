@@ -25,8 +25,8 @@ pipeline {
     }
     
     tools {
-        jdk 'JDK 1.8 (latest)'
-        ant 'Ant (latest)'        
+      jdk 'jdk_1.8_latest'
+      ant 'ant_latest'
     }
 
     triggers {

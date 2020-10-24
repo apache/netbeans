@@ -64,7 +64,6 @@ import org.openide.modules.Places;
 })
 public class LanguageServerImpl implements LanguageServerProvider {
 
-    private static final boolean DEBUG = Boolean.getBoolean("cpplite.lsp.debug");
     private static final Logger LOG = Logger.getLogger(LanguageServerImpl.class.getName());
 
     private static final Map<Project, LanguageServerDescription> prj2Server = new HashMap<>();
@@ -119,13 +118,13 @@ public class LanguageServerImpl implements LanguageServerProvider {
                             command.add("--completion-style=detailed");
                         }
                         ProcessBuilder builder = new ProcessBuilder(command);
-                        if (DEBUG) {
+                        if (LOG.isLoggable(Level.FINEST)) {
                             builder.redirectError(Redirect.INHERIT);
                         }
                         Process process = builder.start();
                         InputStream in = process.getInputStream();
                         OutputStream out = process.getOutputStream();
-                        if (DEBUG) {
+                        if (LOG.isLoggable(Level.FINEST)) {
                             in = new CopyInput(in, System.err);
                             out = new CopyOutput(out, System.err);
                         }

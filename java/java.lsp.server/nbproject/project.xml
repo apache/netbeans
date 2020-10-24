@@ -245,7 +245,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.44</specification-version>
+                        <specification-version>2.47</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

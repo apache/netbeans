@@ -7,8 +7,11 @@ CLASS      ifaceA                          [PUBLIC]   paramdecltypes.php
 KEYWORD    array                                      null
 KEYWORD    bool                                       null
 KEYWORD    callable                                   null
+KEYWORD    false                                      null
 KEYWORD    float                                      null
 KEYWORD    int                                        null
 KEYWORD    iterable                                   null
+KEYWORD    mixed                                      null
+KEYWORD    null                                       null
 KEYWORD    object                                     null
 KEYWORD    string                                     null

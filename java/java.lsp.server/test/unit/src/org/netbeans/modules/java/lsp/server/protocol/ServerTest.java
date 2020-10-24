@@ -18,17 +18,22 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -37,7 +42,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -49,6 +57,7 @@ import org.eclipse.lsp4j.CompletionParams;
 import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
+import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.DocumentHighlight;
 import org.eclipse.lsp4j.DocumentHighlightKind;
@@ -80,7 +89,6 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
-import org.junit.Assume;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.source.JavaSource;
@@ -95,10 +103,14 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
+import org.openide.cookies.EditorCookie;
+import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.ModuleInfo;
 import org.openide.modules.Places;
+import org.openide.text.Line;
+import org.openide.text.NbDocument;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
@@ -155,8 +167,42 @@ public class ServerTest extends NbTestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
+        TextDocumentServiceImpl.HOOK_NOTIFICATION = null;
         serverThread.stop();
         OpenProjects.getDefault().close(OpenProjects.getDefault().getOpenProjects());
+    }
+    
+    List<Diagnostic>[] diags = new List[1];
+    
+    class LspClient implements LanguageClient {
+        List<MessageParams> loggedMessages = new ArrayList<>();
+        
+        @Override
+        public void telemetryEvent(Object arg0) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void publishDiagnostics(PublishDiagnosticsParams params) {
+            synchronized (diags) {
+                diags[0] = params.getDiagnostics();
+                diags.notifyAll();
+            }
+        }
+
+        @Override
+        public void showMessage(MessageParams arg0) {
+        }
+
+        @Override
+        public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void logMessage(MessageParams arg0) {
+            loggedMessages.add(arg0);
+        }
     }
 
     public void testMain() throws Exception {
@@ -166,35 +212,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        List<Diagnostic>[] diags = new List[1];
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
-            @Override
-            public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void publishDiagnostics(PublishDiagnosticsParams params) {
-                synchronized (diags) {
-                    diags[0] = params.getDiagnostics();
-                    diags.notifyAll();
-                }
-            }
-
-            @Override
-            public void showMessage(MessageParams arg0) {
-            }
-
-            @Override
-            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void logMessage(MessageParams arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        }, client.getInputStream(), client.getOutputStream());
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient(), client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
@@ -258,7 +276,143 @@ public class ServerTest extends NbTestCase {
         assertDiags(diags, "Error:1:0-1:9");//errors
         assertDiags(diags, "Error:1:0-1:9", "Warning:0:148-0:153", "Warning:0:152-0:153");//hints
     }
+    
+    private class OpenCloseHook {
+        private Semaphore didOpenCompleted = new Semaphore(0);
+        private Semaphore didCloseCompleted = new Semaphore(0);
+        
+        public void accept(String n, Object params){
+            switch (n) {
+                case "didOpen":
+                    didOpenCompleted.release();
+                    break;
+                case "didClose":
+                    didCloseCompleted.release();
+                    break;
+            }
+        }
+    }
+    
+    /**
+     * Checks that opening the document preserves lines. This is necessary for breakpoints
+     * or computed markers. The test will:
+     * <ul>
+     * <li>Open a document, create a Line object (which uses PositionRefs). Close the doucment. Load with didOpen(). This is the initial scenario.
+     * <li>Leave line's document opened; load with didOpen(). Simulates the case that the backend has been working with the text.
+     * <li>Initially opens a document with didOpen(). Then simulate close with didClose() with a recorded position; open again with didOpen().
+     * </ul>
+     * 
+     * @throws Exception 
+     */
+    public void testDidOpenPreservesLines() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        File src2 = new File(getWorkDir(), "Test2.java");
+        File src3 = new File(getWorkDir(), "Test3.java");
+        src.getParentFile().mkdirs();
+        String code = 
+                "public class Test \n"
+                + "{ \n"
+                + "  int i = \"\".hashCode();\n"
+                + "  public void run() {\n"
+                + "    this.test(); \n"
+                + "  }\n\n"
+                + "  /**Test.*/public void test() {\n"
+                + "  }\n"
+                + "}";
+        String code2 = code.replace("Test", "Test2");
+        String code3 = code.replace("Test", "Test3");
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        try (Writer w = new FileWriter(src2)) {
+            w.write(code2);
+        }
+        try (Writer w = new FileWriter(src3)) {
+            w.write(code3);
+        }
+        
+        FileObject f1 = FileUtil.toFileObject(src);
+        EditorCookie cake = f1.getLookup().lookup(EditorCookie.class);
+        LineCookie lines = f1.getLookup().lookup(LineCookie.class);
+        
+        StyledDocument d = cake.openDocument();
+        javax.swing.text.Position p = NbDocument.createPosition(d, 23, javax.swing.text.Position.Bias.Forward);
+        int offset1 = p.getOffset();
+        int line1 = NbDocument.findLineNumber(d, p.getOffset());
+        Line lineObject1 = lines.getLineSet().getCurrent(line1);
+        cake.close();
+        
+        
+        FileObject f2 = FileUtil.toFileObject(src2);
+        cake = f2.getLookup().lookup(EditorCookie.class);
+        StyledDocument d2 = cake.openDocument();
+        javax.swing.text.Position p2 = NbDocument.createPosition(d2, 40, javax.swing.text.Position.Bias.Forward);
+        int offset2 = p2.getOffset();
+        int line2 = NbDocument.findLineNumber(d2, offset2);
+        
+        LineCookie lines2 = f2.getLookup().lookup(LineCookie.class);
+        Line lineObject2 = lines2.getLineSet().getCurrent(line2);
+        
+        OpenCloseHook hook = new OpenCloseHook();
+        TextDocumentServiceImpl.HOOK_NOTIFICATION = hook::accept;
 
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient(), client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+
+
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src2.toURI().toString(), "java", 0, code2)));
+        assertTrue(hook.didOpenCompleted.tryAcquire(400, TimeUnit.MILLISECONDS));
+        int nl2 = NbDocument.findLineNumber(d2, p2.getOffset());
+        assertEquals(line2, lineObject2.getLineNumber());
+        assertEquals(line2, nl2);
+        
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
+        assertTrue(hook.didOpenCompleted.tryAcquire(400, TimeUnit.MILLISECONDS));
+        d = cake.openDocument();
+        int nl1 = NbDocument.findLineNumber(d, p.getOffset());
+        assertEquals(line1, lineObject1.getLineNumber());
+        assertEquals(line1, nl1);
+
+        FileObject f3 = FileUtil.toFileObject(src3);
+        TextDocumentItem tdi = new TextDocumentItem(src3.toURI().toString(), "java", 0, code3);
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(tdi));
+        assertTrue(hook.didOpenCompleted.tryAcquire(400, TimeUnit.MILLISECONDS));
+
+        cake = f3.getLookup().lookup(EditorCookie.class);
+        StyledDocument d3 = cake.openDocument();
+        javax.swing.text.Position p3 = NbDocument.createPosition(d3, 40, javax.swing.text.Position.Bias.Forward);
+        int offset3 = p3.getOffset();
+        int line3 = NbDocument.findLineNumber(d3, offset3);
+        LineCookie lines3 = f3.getLookup().lookup(LineCookie.class);
+        Line lineObject3 = lines3.getLineSet().getCurrent(line3);
+
+        server.getTextDocumentService().didClose(new DidCloseTextDocumentParams(new TextDocumentIdentifier(src3.toURI().toString())));
+        assertTrue(hook.didCloseCompleted.tryAcquire(400, TimeUnit.MILLISECONDS));
+        // open again
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(tdi));
+        assertTrue(hook.didOpenCompleted.tryAcquire(400, TimeUnit.MILLISECONDS));
+        int nl3 = NbDocument.findLineNumber(d, p3.getOffset());
+        assertEquals(line3, lineObject3.getLineNumber());
+        assertEquals(line3, nl3);
+
+        // close and release the document, too
+        server.getTextDocumentService().didClose(new DidCloseTextDocumentParams(new TextDocumentIdentifier(src3.toURI().toString())));
+        assertTrue(hook.didCloseCompleted.tryAcquire(400, TimeUnit.MILLISECONDS));
+        Reference<StyledDocument> refDoc = new WeakReference<>(d3);
+        d3 = null;
+        assertGC("Document should be collected", refDoc);
+        assertNull(cake.getDocument());
+
+        // open again
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(tdi));
+        assertTrue(hook.didOpenCompleted.tryAcquire(400, TimeUnit.MILLISECONDS));
+        nl3 = NbDocument.findLineNumber(d, p3.getOffset());
+        assertEquals(line3, lineObject3.getLineNumber());
+        assertEquals(line3, nl3);
+    }
+    
     public void testCodeActionWithRemoval() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
@@ -826,7 +980,19 @@ public class ServerTest extends NbTestCase {
         }
         List<Diagnostic>[] diags = new List[1];
         CountDownLatch indexingComplete = new CountDownLatch(1);
-        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new NbCodeLanguageClient() {
+            @Override
+            public void showStatusBarMessage(ShowStatusMessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                }
+            }
+
+            @Override
+            public NbCodeClientCapabilities getNbCodeCapabilities() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+            
             @Override
             public void telemetryEvent(Object arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
@@ -842,11 +1008,7 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public void showMessage(MessageParams params) {
-                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
-                    indexingComplete.countDown();
-                } else {
-                    throw new UnsupportedOperationException("Unexpected message.");
-                }
+                throw new UnsupportedOperationException("Unexpected message.");
             }
 
             @Override
@@ -862,6 +1024,8 @@ public class ServerTest extends NbTestCase {
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeParams initParams = new InitializeParams();
+        initParams.setInitializationOptions(new JsonParser().parse(
+                "{ nbcodeCapabilities: { statusBarMessageSupport : true } }").getAsJsonObject());
         initParams.setRootUri(toURI(getWorkDir()));
         InitializeResult result = server.initialize(initParams).get();
         indexingComplete.await();

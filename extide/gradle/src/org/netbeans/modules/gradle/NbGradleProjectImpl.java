@@ -255,8 +255,8 @@ public final class NbGradleProjectImpl implements Project {
         return prj;
     }
 
-    void reloadProject(final boolean ignoreCache, final Quality aim, final String... args) {
-        RELOAD_RP.post(() -> {
+    RequestProcessor.Task reloadProject(final boolean ignoreCache, final Quality aim, final String... args) {
+        return RELOAD_RP.post(() -> {
             project = loadProject(ignoreCache, aim, args);
             ACCESSOR.doFireReload(watcher);
         });
@@ -432,10 +432,12 @@ public final class NbGradleProjectImpl implements Project {
             filesToWatch = fileProvider.getFiles();
             if (filesToWatch != null) {
                 for (File f : filesToWatch) {
-                    try {
-                        FileUtil.addFileChangeListener(this, f);
-                    } catch (IllegalArgumentException ex) {
-                        assert false : "Project opened twice in a row";
+                    if (f != null) {
+                        try {
+                            FileUtil.addFileChangeListener(this, f);
+                        } catch (IllegalArgumentException ex) {
+                            assert false : "Project opened twice in a row";
+                        }
                     }
                 }
             }
@@ -444,10 +446,12 @@ public final class NbGradleProjectImpl implements Project {
         synchronized void detachAll() {
             if (filesToWatch != null) {
                 for (File f : filesToWatch) {
-                    try {
-                        FileUtil.removeFileChangeListener(this, f);
-                    } catch (IllegalArgumentException ex) {
-                        assert false : "Project closed twice in a row";
+                    if (f != null) {
+                        try {
+                            FileUtil.removeFileChangeListener(this, f);
+                        } catch (IllegalArgumentException ex) {
+                            assert false : "Project closed twice in a row";
+                        }
                     }
                 }
             }

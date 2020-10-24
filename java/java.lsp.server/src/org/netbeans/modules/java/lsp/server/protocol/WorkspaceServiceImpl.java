@@ -35,7 +35,6 @@ import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.Location;
-import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -54,7 +53,6 @@ import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.java.lsp.server.Utils;
-import org.netbeans.modules.java.lsp.server.ui.UIContext;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider.ResultHandler;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider.ResultHandler.Exec;
@@ -63,11 +61,9 @@ import org.netbeans.modules.parsing.lucene.support.Queries;
 import org.netbeans.spi.jumpto.type.SearchType;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Lookup;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
-import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -77,12 +73,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     private static final RequestProcessor WORKER = new RequestProcessor(WorkspaceServiceImpl.class.getName(), 1, false, false);
 
-    private LanguageClient client;
-    private UIContext ctx;
-    private final WorkspaceIOContext ioContext;
+    private NbCodeLanguageClient client;
 
     public WorkspaceServiceImpl() {
-        this.ioContext = new WorkspaceContext();
     }
 
     @Override
@@ -96,9 +89,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 for (Project prj : OpenProjects.getDefault().getOpenProjects()) {
                     ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
                     if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_BUILD, Lookups.fixed())) {
-                        Lookups.executeWith(new ProxyLookup(Lookups.fixed(ctx, ioContext), Lookup.getDefault()), () -> {
-                            ap.invokeAction(ActionProvider.COMMAND_REBUILD, Lookups.fixed());
-                        });
+                        ap.invokeAction(ActionProvider.COMMAND_REBUILD, Lookups.fixed());
                     }
                 }
                 return CompletableFuture.completedFuture(true);
@@ -291,24 +282,6 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     @Override
     public void connect(LanguageClient client) {
-        this.client = client;
-        this.ctx = new UIContext() {
-            @Override
-            protected boolean isValid() {
-                return true;
-            }
-
-            @Override
-            protected void showMessage(MessageParams msg) {
-                client.showMessage(msg);
-            }
-        };
-    }
-
-    private final class WorkspaceContext extends WorkspaceIOContext {
-        @Override
-        protected LanguageClient client() {
-            return client;
-        }
+        this.client = (NbCodeLanguageClient)client;
     }
 }

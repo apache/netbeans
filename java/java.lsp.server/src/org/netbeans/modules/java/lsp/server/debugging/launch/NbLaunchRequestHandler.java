@@ -101,6 +101,9 @@ public final class NbLaunchRequestHandler {
         activeLaunchHandler.nbLaunch(file, context, !noDebug, new OutputListener(context)).thenRun(() -> {
             activeLaunchHandler.postLaunch(launchArguments, context);
             resultFuture.complete(null);
+        }).exceptionally(e -> {
+            resultFuture.completeExceptionally(e);
+            return null;
         });
         return resultFuture;
     }

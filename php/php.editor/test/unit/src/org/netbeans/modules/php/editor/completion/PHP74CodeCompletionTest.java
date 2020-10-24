@@ -257,6 +257,35 @@ public class PHP74CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath("typedProperties20Trait"), "    public const ^CONSTANT = \"constant\";", false);
     }
 
+    // self or parent
+    public void testTypedProperties20WithSpecialTypes_01() throws Exception {
+        checkCompletion(getTestPath("typedProperties20WithSpecialTypes"), "$param->^testMethod(); // self", false);
+    }
+
+    public void testTypedProperties20WithSpecialTypes_02() throws Exception {
+        checkCompletion(getTestPath("typedProperties20WithSpecialTypes"), "$param->^testMethod(); // parent", false);
+    }
+
+    public void testTypedProperties20WithSpecialTypes_03() throws Exception {
+        checkCompletion(getTestPath("typedProperties20WithSpecialTypes"), "$this->nullableSelf->^childMethodSelf($this);", false);
+    }
+
+    public void testTypedProperties20WithSpecialTypes_04() throws Exception {
+        checkCompletion(getTestPath("typedProperties20WithSpecialTypes"), "$this->nullableParent->^parentMethod();", false);
+    }
+
+    public void testTypedProperties20WithSpecialTypes_05() throws Exception {
+        checkCompletion(getTestPath("typedProperties20WithSpecialTypes"), "$this->childMethodSelf($this)->^childMethodSelf($this);", false);
+    }
+
+    public void testTypedProperties20WithSpecialTypes_06() throws Exception {
+        checkCompletion(getTestPath("typedProperties20WithSpecialTypes"), "$this->childMethodParent(null)->^parentMethod();", false);
+    }
+
+    public void testTypedProperties20WithSpecialTypes_07() throws Exception {
+        checkCompletion(getTestPath("typedProperties20WithSpecialTypes"), "$this->traitMethod($this)->^parentMethod();", false);
+    }
+
     public void testSpreadOperatorInArrayExpression_01() throws Exception {
         checkCompletion(getTestPath("spreadOperatorInArrayExpression"), "$array2 = [...$arra^y1];", false);
     }

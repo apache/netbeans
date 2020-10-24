@@ -83,6 +83,29 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="expose-project-action-mapping-provider">
+            <api name="general"/>
+            <summary>Make ProjectActionMappingProvider available for other modules.</summary>
+            <version major="2" minor="6"/>
+            <date day="15" month="10" year="2020"/>
+            <author login="lkishalmi"/>
+            <compatibility semantic="compatible"/>
+            <description>
+                <p>
+                    Made  <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/ProjectActionMappingProvider.html">ProjectActionMappingProvider</a> available
+                    for other modules, so they either can provide an alternative implementation or most probably able to take a sneak peek on
+                    the current action configuration.
+                </p>
+                <p>
+                    In order to make other modules interpret the action mapping in context <a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html">RunUtils</a> got a new evaluateActionArgs
+                    utility method which can replace tokens provided in ActionMapping arguments.
+                </p>
+                <p>
+                    Finally to support this token replacement, <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/ReplacementTokenProvider.html">ReplacementTokenProvider</a>
+                    got a new static method <code>replaceTokens</code>.
+                </p>
+            </description>
+        </change>
         <change id="reusetabs">
             <api name="general"/>
             <summary>Default for reusing tabs</summary>

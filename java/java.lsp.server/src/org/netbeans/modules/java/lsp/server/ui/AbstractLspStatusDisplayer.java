@@ -21,6 +21,7 @@ package org.netbeans.modules.java.lsp.server.ui;
 import javax.swing.event.ChangeListener;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.openide.awt.StatusDisplayer;
 
 public abstract class AbstractLspStatusDisplayer extends StatusDisplayer {
@@ -56,8 +57,8 @@ public abstract class AbstractLspStatusDisplayer extends StatusDisplayer {
         } else {
             type = MessageType.Info;
         }
-        ctx.showMessage(new MessageParams(type, text));
-        return (int timeInMillis) -> {
+        Message m = ctx.showStatusMessage(new ShowStatusMessageParams(type, text, 0));
+        return m != null ? m : (int timeInMillis) -> {
         };
     }
 

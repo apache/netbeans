@@ -72,14 +72,16 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         try {
             //XXX: not really using the server, are we?
             int[] ident = Utilities.getIdentifierBlock((BaseDocument) doc, offset);
+            if (ident == null) {
+                return null;
+            }
             TokenSequence<?> ts = TokenHierarchy.get(doc).tokenSequence();
+            if (ts == null) {
+                return null;
+            }
             ts.move(offset);
             if (ts.moveNext() && ts.token().id() == TextmateTokenId.TEXTMATE) {
-                if (ident != null) {
-                    return new int[] {ts.offset(), ts.offset() + ts.token().length()};
-                } else {
-                    return null;
-                }
+                return new int[]{ts.offset(), ts.offset() + ts.token().length()};
             }
             return ident;
         } catch (BadLocationException ex) {

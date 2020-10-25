@@ -23,12 +23,17 @@ import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.ListBuffer;
+import com.sun.tools.javac.util.Names;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -36,10 +41,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.lang.model.element.Name;
-import org.openide.util.Exceptions;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
 public class TreeShims {
@@ -176,7 +181,7 @@ public class TreeShims {
         return perms;
     }
 
-    public static List<? extends Tree> getPermits(JCClassDecl newT) {
+    public static List<? extends JCTree> getPermits(JCClassDecl newT) {
         List<JCTree.JCExpression> newPermitings = new ArrayList<>();
         try {
             Class jCClassDecl = Class.forName("com.sun.tools.javac.tree.JCTree$JCClassDecl");
@@ -231,7 +236,124 @@ public class TreeShims {
             throw TreeShims.<RuntimeException>throwAny(ex);
         }
     }
+    public static Modifier getSealed() {
+        try {
+            Class modifierEnum = Class.forName("javax.lang.model.element.Modifier");
+            Modifier[] enumConstants = (Modifier[]) modifierEnum.getEnumConstants();
+            for (int i = 0; i < enumConstants.length; i++) {
+                if (enumConstants[i].name().equals("SEALED")) {
+                    return enumConstants[i];
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            return null;
+        }
+        return null;
+    }
 
+    public static Modifier getNonSealed() {
+        try {
+            Class modifierEnum = Class.forName("javax.lang.model.element.Modifier");
+            Modifier[] enumConstants = (Modifier[]) modifierEnum.getEnumConstants();
+            for (int i = 0; i < enumConstants.length; i++) {
+                if (enumConstants[i].name().equals("NON_SEALED")) {
+                    return enumConstants[i];
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            return null;
+        }
+        return null;
+    }
+
+    public static long getFlagExtendedStandardFlags() {
+        Class flagsClass = null;
+        long flagExtendedStandardFlags = Flags.ExtendedStandardFlags;
+        try {
+            flagsClass = Class.forName("com.sun.tools.javac.code.Flags");
+            flagExtendedStandardFlags = flagsClass.getDeclaredField("ExtendedStandardFlags").getLong(null);
+        } catch (ClassNotFoundException | NoSuchFieldException ex) {
+            return flagExtendedStandardFlags;
+        } catch (IllegalArgumentException | IllegalAccessException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+        return flagExtendedStandardFlags;
+    }
+
+    public static long getSealedFlag() {
+        Class flagsClass = null;
+        long sealedFlag = 0;
+        try {
+            flagsClass = Class.forName("com.sun.tools.javac.code.Flags");
+            sealedFlag = flagsClass.getDeclaredField("SEALED").getLong(null);
+        } catch (ClassNotFoundException | NoSuchFieldException ex) {
+            return 0;
+        } catch (IllegalArgumentException | IllegalAccessException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+        return sealedFlag;
+    }
+
+    public static ClassTree getClassTree(TreeMaker make, Names names, ModifiersTree modifiers, CharSequence simpleName, ListBuffer<JCTree.JCTypeParameter> typarams, Tree extendsClause, ListBuffer<JCExpression> impls, ListBuffer<JCExpression> permits, ListBuffer<JCTree> defs) {
+        try {
+            Class treeMaker = Class.forName("com.sun.tools.javac.tree.TreeMaker");
+            Method allMethods[] = treeMaker.getDeclaredMethods();
+            Method classDefs = null;
+            for (int i = 0; i < allMethods.length; i++) {
+                Method oneMethod = allMethods[i];
+                if (oneMethod.getName().equals("ClassDef") && oneMethod.getParameterCount() == 7) {
+                    classDefs = oneMethod;
+                    break;
+                }
+            }
+            if (classDefs == null) {
+                return null;
+            }
+            ClassTree name = (ClassTree) classDefs.invoke(make, (JCTree.JCModifiers) modifiers,
+                    names.fromString(simpleName.toString()),
+                    typarams.toList(),
+                    (JCTree.JCExpression) extendsClause,
+                    impls.toList(),
+                    permits.toList(),
+                    defs.toList());
+            return name;
+        } catch (ClassNotFoundException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static ClassTree getClassTree(TreeMaker make, Names names, long modifiers,
+            com.sun.tools.javac.util.List<JCAnnotation> annotations, CharSequence simpleName, ListBuffer<JCTree.JCTypeParameter> typarams, Tree extendsClause, ListBuffer<JCExpression> impls, ListBuffer<JCExpression> permits, ListBuffer<JCTree> defs) {
+        try {
+            Class treeMaker = Class.forName("com.sun.tools.javac.tree.TreeMaker");
+            Method allMethods[] = treeMaker.getDeclaredMethods();
+            Method classDefs = null;
+            for (int i = 0; i < allMethods.length; i++) {
+                Method oneMethod = allMethods[i];
+                if (oneMethod.getName().equals("ClassDef") && oneMethod.getParameterCount() == 7) {
+                    classDefs = oneMethod;
+                    break;
+                }
+            }
+            if (classDefs == null) {
+                return null;
+            }
+            ClassTree name = (ClassTree) classDefs.invoke(make, make.Modifiers(modifiers, annotations),
+                    names.fromString(simpleName.toString()),
+                    typarams.toList(),
+                    (JCTree.JCExpression) extendsClause,
+                    impls.toList(),
+                    permits.toList(),
+                    defs.toList());
+            return name;
+        } catch (ClassNotFoundException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
     @SuppressWarnings("unchecked")
     private static <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {
         throw (T) t;

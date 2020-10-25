@@ -1043,9 +1043,14 @@ public class CasualDiff {
         PositionEstimator estimator = (flags & INTERFACE) == 0 ?
             EstimatorFactory.implementz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext) :
             EstimatorFactory.extendz(oldT.getImplementsClause(), newT.getImplementsClause(), diffContext);
+        PositionEstimator estimatorPermit=EstimatorFactory.permitz(filteredOldTDefs, filteredNewTDefs, diffContext);
+        
         if (!newT.implementing.isEmpty())
             copyTo(localPointer, insertHint);
         localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
+        insertHint = endPos(oldT) - 1;
+        List<? extends JCTree> permits = TreeShims.getPermits(newT);
+        localPointer = diffList2(new ArrayList<>(), permits, insertHint,estimatorPermit);
         insertHint = endPos(oldT) - 1;
 
         if (filteredOldTDefs.isEmpty()) {
@@ -1057,7 +1062,7 @@ public class CasualDiff {
         }
         tokenSequence.move(insertHint);
         tokenSequence.moveNext();
-        insertHint = moveBackToToken(tokenSequence, insertHint, JavaTokenId.LBRACE) + 1;
+        insertHint = moveBackToToken(tokenSequence, insertHint, JavaTokenId.LBRACE) ;
         } else {
             insertHint = moveFwdToToken(tokenSequence, oldT.getKind() == Kind.ENUM ? localPointer : getOldPos(oldT), JavaTokenId.LBRACE);
             tokenSequence.moveNext();

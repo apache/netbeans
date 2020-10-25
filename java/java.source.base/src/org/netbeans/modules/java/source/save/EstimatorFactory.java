@@ -67,6 +67,12 @@ final class EstimatorFactory {
     {
         return new PositionEstimator.ImplementsEstimator(oldL, newL, diffContext);
     }
+    static PositionEstimator permitz(List<? extends Tree> oldL, 
+                                        List<? extends Tree> newL,
+                                        DiffContext diffContext)
+    {
+        return new PositionEstimator.PermitsEstimator(oldL, newL, diffContext);
+    }
     
     static PositionEstimator extendz(List<? extends Tree> oldL, 
                                      List<? extends Tree> newL,

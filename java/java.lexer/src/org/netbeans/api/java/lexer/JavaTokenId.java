@@ -86,6 +86,7 @@ public enum JavaTokenId implements TokenId {
     /**@since 1.35*/
     OPENS("opens", "keyword"),
     PACKAGE("package", "keyword"),
+    PERMITS("permits", "keyword"),
     PRIVATE("private", "keyword"),
     PROTECTED("protected", "keyword"),
     /**@since 1.34*/

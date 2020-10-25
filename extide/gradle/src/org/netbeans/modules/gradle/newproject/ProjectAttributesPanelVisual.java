@@ -358,7 +358,7 @@ public final class ProjectAttributesPanelVisual extends JPanel implements Docume
         setText(tfPackageBase, settings, PROP_PACKAGE_BASE);
 
         Boolean initWrapper = (Boolean) settings.getProperty(PROP_INIT_WRAPPER);
-        cbInitWrapper.setSelected(initWrapper != null ? initWrapper: false);
+        cbInitWrapper.setSelected(initWrapper != null ? initWrapper : true);
 
         Boolean changedPkg = (Boolean) settings.getProperty(PROP_CHANGED_PKG);
         changedPackageBase = changedPkg == null ? false : changedPkg;

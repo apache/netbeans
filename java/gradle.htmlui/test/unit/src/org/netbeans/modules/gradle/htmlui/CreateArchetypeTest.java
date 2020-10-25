@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.gradle.htmlui;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -34,6 +35,7 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.gradle.spi.actions.AfterBuildActionHook;
+import org.netbeans.modules.gradle.spi.newproject.TemplateOperation;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -70,12 +72,15 @@ public class CreateArchetypeTest extends NbTestCase {
         FileObject dir = FileUtil.getConfigFile("Templates/Project/Gradle/org-netbeans-modules-gradle-htmlui-HtmlJavaApplicationProjectWizard");
         assertNotNull("Templates directory found", dir);
 
-        FileObject dest = FileUtil.createFolder(workFo, "sample/dest");
+        File rootDir = new File(getWorkDir(), "sample/dest");
 
         Map<String,Object> map = new HashMap<>();
         map.put("packageBase", "my.pkg.x");
-        GradleArchetype ga = new GradleArchetype(dir, dest, map);
-        ga.copyTemplates();
+        TemplateOperation ops = new TemplateOperation();
+        GradleArchetype ga = new GradleArchetype(dir, rootDir, map);
+        ga.copyTemplates(ops);
+        ops.run();
+        FileObject dest = FileUtil.toFileObject(rootDir);
         assertFile("Build script found", dest, "build.gradle");
         assertFile("Main class found", dest, "src", "main", "java", "my", "pkg", "x", "Demo.java").
                 assertPackage("my.pkg.x").

@@ -148,7 +148,8 @@ public class ConfigurationsNode extends AbstractNode {
 
         @Override
         protected Node createNodeForKey(GradleConfiguration conf) {
-            AbstractNode ret = new AbstractNode(Children.create(new ConfigurationChildren(project, conf.getName()), true));
+            Children ch = conf.isEmpty() ? Children.LEAF : Children.create(new ConfigurationChildren(project, conf.getName()), true);
+            AbstractNode ret = new AbstractNode(ch);
             ret.setName(conf.getName());
             ret.setShortDescription(conf.getDescription());
             StringBuilder displayName = new StringBuilder(conf.getName());

@@ -99,6 +99,7 @@ class NbProjectInfoBuilder {
         model.info.project_buildDir = project.buildDir;
         model.info.project_projectDir = project.projectDir;
         model.info.project_rootDir = project.rootDir;
+        model.info.gradle_user_home = project.gradle.gradleUserHomeDir;
 
         def visibleConfigurations = configurationsToSave()
         model.info.configurations = storeSet(visibleConfigurations.collect() {conf -> conf.name})

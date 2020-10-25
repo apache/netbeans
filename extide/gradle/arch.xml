@@ -137,7 +137,14 @@
          to specify the default behavior of reusing output by your application.
          Use <code>never</code> value, if the reuse shall never be done,
          regardless of the settings value.
-     </api> 
+     </api>
+     <api category="devel" group="systemproperty" name="netbeans.debug.gradle.info.action" type="export" >
+         Starting NetBeans with <code>netbeans.debug.gradle.info.action=true</code>
+         would make the Gradle project information loading into a debugabble JVM
+         where the debugging port is <code>5006</code>. A new debugger session
+         can be attached to that port, make the <code>netbeans-gradle-tooling</code>
+         project debuggable in action.
+     </api>
  </answer>
 
  <answer id="resources-file">

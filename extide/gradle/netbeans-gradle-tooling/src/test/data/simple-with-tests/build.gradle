@@ -35,27 +35,29 @@ dependencies {
     testCompile 'junit:junit:4.10'
 }
 
-task downloadDependencies << {
-     Set ids = new HashSet();
-     project.configurations.testCompile.incoming.resolutionResult.allDependencies.each() {
-        if (it instanceof ResolvedDependencyResult) {
-            if (it.requested instanceof ModuleComponentSelector) {
-                ids.add(it.selected.id)
-            }
-        }         
-     }
-     org.gradle.api.internal.artifacts.result.DefaultArtifactResolutionResult result = project.dependencies.createArtifactResolutionQuery()
-    .forComponents(ids)
-    .withArtifacts(JvmLibrary, SourcesArtifact, JavadocArtifact)
-    .execute()
-    Collection coll = result.resolvedComponents
-    for(def o: coll) {
-        def sources = o.getArtifacts(SourcesArtifact)
-        sources.each() {
-            if (it instanceof ResolvedArtifactResult) {
-                println it.file
+task('downloadDependencies') {
+    doLast {
+        Set ids = new HashSet();
+        project.configurations.testCompile.incoming.resolutionResult.allDependencies.each() {
+            if (it instanceof ResolvedDependencyResult) {
+                if (it.requested instanceof ModuleComponentSelector) {
+                    ids.add(it.selected.id)
+                }
             }
         }
+        org.gradle.api.internal.artifacts.result.DefaultArtifactResolutionResult result = project.dependencies.createArtifactResolutionQuery()
+        .forComponents(ids)
+        .withArtifacts(JvmLibrary, SourcesArtifact, JavadocArtifact)
+        .execute()
+        Collection coll = result.resolvedComponents
+        for(def o: coll) {
+            def sources = o.getArtifacts(SourcesArtifact)
+            sources.each() {
+                if (it instanceof ResolvedArtifactResult) {
+                    println it.file
+                }
+            }
 
+        }
     }
 }

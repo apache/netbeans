@@ -91,3 +91,16 @@ and connect from the VSCode extension:
 ```bash
 vscode$ code --extensionDevelopmentPath=`pwd` path_to_the_maven_project
 ```
+
+## Selecting the JDK
+
+The NbCode Java part needs to run on a JDK. The JDK is being searched in
+following locations:
+
+- `netbeans.jdkhome` setting (workspace then user settings)
+- `java.home` setting (workspace then user settings)
+- `JDK_HOME` environment variable
+- `JAVA_HOME` environment variable
+- current system path
+
+As soon as one of the settings is changed, the NbCode Java part is restarted.

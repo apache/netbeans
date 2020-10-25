@@ -24,13 +24,13 @@ import {
     LanguageClient,
     LanguageClientOptions,
     StreamInfo,
-    ShowMessageParams, MessageType,
+    MessageType,
 } from 'vscode-languageclient';
 
 import * as net from 'net';
 import * as fs from 'fs';
 import * as path from 'path';
-import { spawn, ChildProcess, SpawnOptions } from 'child_process';
+import { ChildProcess } from 'child_process';
 import * as vscode from 'vscode';
 import * as launcher from './nbcode';
 import { StatusMessageRequest, ShowStatusMessageParams  } from './protocol';
@@ -65,9 +65,100 @@ function findClusters(myPath : string): string[] {
     return clusters;
 }
 
+function findJDK(onChange: (path : string | null) => void): void {
+    function find(): string | null {
+        let nbJdk = workspace.getConfiguration('netbeans').get('jdkhome');
+        if (nbJdk) {
+            return nbJdk as string;
+        }
+        let javahome = workspace.getConfiguration('java').get('home');
+        if (javahome) {
+            return javahome as string;
+        }
+
+        let jdkHome: any = process.env.JDK_HOME;
+        if (jdkHome) {
+            return jdkHome as string;
+        }
+        let jHome: any = process.env.JAVA_HOME;
+        if (jHome) {
+            return jHome as string;
+        }
+        return null;
+    }
+
+    let currentJdk = find();
+    workspace.onDidChangeConfiguration(params => {
+        if (!params.affectsConfiguration('java') && !params.affectsConfiguration('netbeans')) {
+            return;
+        }
+        let newJdk = find();
+        if (newJdk !== currentJdk) {
+            onChange(newJdk);
+        }
+    });
+    onChange(currentJdk);
+}
+
 export function activate(context: ExtensionContext) {
-    //verify acceptable JDK is available/set:
-    let specifiedJDK = workspace.getConfiguration('netbeans').get('jdkhome');
+    let log = vscode.window.createOutputChannel("Apache NetBeans Language Server");
+
+    let e = vscode.extensions.getExtension('redhat.java');
+    log.appendLine(`workspace ${workspace.name}`);
+    if (e && workspace.name) {
+        vscode.window.showInformationMessage(`redhat.java found at ${e.extensionPath} - Suppressing some services to not clash with Apache NetBeans Language Server.`);
+        workspace.getConfiguration().update('java.completion.enabled', false, false).then(() => {
+            vscode.window.showInformationMessage('Disabling redhat.java code completion. Usage of only one Java extension is recommended.');
+        }, (reason) => {
+            vscode.window.showInformationMessage('Disabling redhat.java code completion failed ' + reason);
+        });
+    }
+
+    // find acceptable JDK and launch the Java part
+    findJDK((specifiedJDK) => {
+        activateWithJDK(specifiedJDK, context, log);
+    })
+
+    //register debugger:
+    let configProvider = new NetBeansConfigurationProvider();
+    context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java-polyglot', configProvider));
+
+    let debugDescriptionFactory = new NetBeansDebugAdapterDescriptionFactory();
+    context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('java-polyglot', debugDescriptionFactory));
+
+    // register commands
+    context.subscriptions.push(commands.registerCommand('java.workspace.compile', () => {
+        return window.withProgress({ location: ProgressLocation.Window }, p => {
+            return new Promise(async (resolve, reject) => {
+                const commands = await vscode.commands.getCommands();
+                if (commands.includes('java.build.workspace')) {
+                    p.report({ message: 'Compiling workspace...' });
+                    client.outputChannel.show(true);
+                    const start = new Date().getTime();
+                    const res = await vscode.commands.executeCommand('java.build.workspace');
+                    const elapsed = new Date().getTime() - start;
+                    const humanVisibleDelay = elapsed < 1000 ? 1000 : 0;
+                    setTimeout(() => { // set a timeout so user would still see the message when build time is short
+                        if (res) {
+                            resolve();
+                        } else {
+                            reject();
+                        }
+                    }, humanVisibleDelay);
+                } else {
+                    reject();
+                }
+            });
+        });
+    }));
+}
+
+function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel): void {
+    if (nbProcess) {
+        vscode.window.setStatusBarMessage("Restarting Apache NetBeans Language Server.", 2000);
+        nbProcess.kill();
+    }
+
     const beVerbose : boolean = workspace.getConfiguration('netbeans').get('verbose', false);
     let info = {
         clusters : findClusters(context.extensionPath),
@@ -76,22 +167,10 @@ export function activate(context: ExtensionContext) {
         jdkHome : specifiedJDK,
         verbose: beVerbose
     };
-    
-    let log = vscode.window.createOutputChannel("Java Language Server");
 
-    vscode.extensions.all.forEach((e, index) => {
-        if (e.extensionPath.indexOf("redhat.java") >= 0) {
-            vscode.window.showInformationMessage(`redhat.java found at ${e.extensionPath} - supressing`);
-            workspace.getConfiguration().update('java.completion.enabled', false, false).then((ok) => {
-                vscode.window.showInformationMessage('Disabling redhat.java code completion');
-            }, (reason) => {
-                vscode.window.showInformationMessage('Disabling redhat.java code completion failed ' + reason);
-            });
-        }
-    });
-
-    log.appendLine("Launching Java Language Server");
-    vscode.window.setStatusBarMessage("Launching Java Language Server", 2000);
+    let launchMsg = `Launching Apache NetBeans Language Server with ${specifiedJDK ? specifiedJDK : 'default system JDK'}`;
+    log.appendLine(launchMsg);
+    vscode.window.setStatusBarMessage(launchMsg, 2000);
 
     let ideRunning = new Promise((resolve, reject) => {
         let collectedText : string | null = '';
@@ -115,8 +194,8 @@ export function activate(context: ExtensionContext) {
         });
         nbProcess = p;
         nbProcess.on('close', function(code: number) {
-            if (code != 0) {
-                vscode.window.showWarningMessage("Java Language Server exited with " + code);
+            if (p == nbProcess && code != 0) {
+                vscode.window.showWarningMessage("Apache NetBeans Language Server exited with " + code);
             }
             if (collectedText != null) {
                 let match = collectedText.match(/org.netbeans.modules.java.lsp.server[^\n]*/)
@@ -126,15 +205,14 @@ export function activate(context: ExtensionContext) {
                     log.appendLine("Cannot find org.netbeans.modules.java.lsp.server in the log!");
                 }
                 log.show(false);
-                reject("Java Language Server not enabled!");
+                reject("Apache NetBeans Language Server not enabled!");
             } else {
                 log.appendLine("Exit code " + code);
             }
-            nbProcess = null;
         });
     });
 
-    ideRunning.then((value) => {
+    ideRunning.then(() => {
         const connection = () => new Promise<StreamInfo>((resolve, reject) => {
             const server = net.createServer(socket => {
                 server.close();
@@ -194,65 +272,32 @@ export function activate(context: ExtensionContext) {
             }
         }
 
-        // Create the language client and start the client.
-        client = new LanguageClient(
-                'java',
-                'NetBeans Java',
-                connection,
-                clientOptions
-        );
+        if (!client) {
+            // Create the language client and start the client.
+            client = new LanguageClient(
+                    'java',
+                    'NetBeans Java',
+                    connection,
+                    clientOptions
+            );
 
-        // Start the client. This will also launch the server
-        client.start();
-        client.onReady().then((value) => {
-            commands.executeCommand('setContext', 'nbJavaLSReady', true);
-            client.onNotification(StatusMessageRequest.type, showStatusBarMessage);
-        });
-
-        //register debugger:
-        let configProvider = new NetBeansConfigurationProvider();
-        context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('java-polyglot', configProvider));
-
-        let debugDescriptionFactory = new NetBeansDebugAdapterDescriptionFactory();
-        context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('java-polyglot', debugDescriptionFactory));
-
-        // register commands
-        context.subscriptions.push(commands.registerCommand('java.workspace.compile', () => {
-            return window.withProgress({ location: ProgressLocation.Window }, p => {
-                return new Promise(async (resolve, reject) => {
-                    const commands = await vscode.commands.getCommands();
-                    if (commands.includes('java.build.workspace')) {
-                        p.report({ message: 'Compiling workspace...' });
-                        client.outputChannel.show(true);
-                        const start = new Date().getTime();
-                        const res = await vscode.commands.executeCommand('java.build.workspace');
-                        const elapsed = new Date().getTime() - start;
-                        const humanVisibleDelay = elapsed < 1000 ? 1000 : 0;
-                        setTimeout(() => { // set a timeout so user would still see the message when build time is short
-                            if (res) {
-                                resolve();
-                            } else {
-                                reject();
-                            }
-                        }, humanVisibleDelay);
-                    } else {
-                        reject();
-                    }
-                });
+            // Start the client. This will also launch the server
+            client.start();
+            client.onReady().then(() => {
+                commands.executeCommand('setContext', 'nbJavaLSReady', true);
+                client.onNotification(StatusMessageRequest.type, showStatusBarMessage);
             });
-        }));
-
+        }
     }).catch((reason) => {
         log.append(reason);
         window.showErrorMessage('Error initializing ' + reason);
     });
-
 }
 
 function showStatusBarMessage(params : ShowStatusMessageParams) {
     let decorated : string = params.message;
     let defTimeout;
-    
+
     switch (params.type) {
         case MessageType.Error:
             decorated = '$(error) ' + params.message;
@@ -287,7 +332,7 @@ export function deactivate(): Thenable<void> {
 
 class NetBeansDebugAdapterDescriptionFactory implements vscode.DebugAdapterDescriptorFactory {
 
-    createDebugAdapterDescriptor(session: vscode.DebugSession, executable: vscode.DebugAdapterExecutable | undefined): vscode.ProviderResult<vscode.DebugAdapterDescriptor> {
+    createDebugAdapterDescriptor(_session: vscode.DebugSession, _executable: vscode.DebugAdapterExecutable | undefined): vscode.ProviderResult<vscode.DebugAdapterDescriptor> {
         return new vscode.DebugAdapterServer(debugPort);
     }
 }
@@ -295,7 +340,7 @@ class NetBeansDebugAdapterDescriptionFactory implements vscode.DebugAdapterDescr
 
 class NetBeansConfigurationProvider implements vscode.DebugConfigurationProvider {
 
-    resolveDebugConfiguration(folder: vscode.WorkspaceFolder | undefined, config: vscode.DebugConfiguration, token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
+    resolveDebugConfiguration(_folder: vscode.WorkspaceFolder | undefined, config: vscode.DebugConfiguration, _token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
         if (!config.type) {
             config.type = 'java-polyglot';
         }

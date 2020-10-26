@@ -1046,13 +1046,14 @@ public class CasualDiff {
         PositionEstimator estimatorPermit=EstimatorFactory.permitz(filteredOldTDefs, filteredNewTDefs, diffContext);
         
         if (!newT.implementing.isEmpty())
-            copyTo(localPointer, insertHint);
-        localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
-        insertHint = endPos(oldT) - 1;
+                copyTo(localPointer, insertHint);
+            localPointer = diffList2(oldT.implementing, newT.implementing, insertHint, estimator);
+            insertHint = endPos(oldT) - 1;
         List<? extends JCTree> permits = TreeShims.getPermits(newT);
-        localPointer = diffList2(new ArrayList<>(), permits, insertHint,estimatorPermit);
-        insertHint = endPos(oldT) - 1;
-
+        if(permits != null && !permits.isEmpty()){
+            localPointer = diffList2(new ArrayList<>(), permits, insertHint,estimatorPermit);
+            insertHint = endPos(oldT) - 1;
+        }
         if (filteredOldTDefs.isEmpty()) {
             // if there is nothing in class declaration, use position
             // before the closing curly.
@@ -1062,7 +1063,10 @@ public class CasualDiff {
         }
         tokenSequence.move(insertHint);
         tokenSequence.moveNext();
-        insertHint = moveBackToToken(tokenSequence, insertHint, JavaTokenId.LBRACE) ;
+        insertHint = moveBackToToken(tokenSequence, insertHint, JavaTokenId.LBRACE) + 1;
+        if (permits != null && !permits.isEmpty()) {
+            insertHint = insertHint - 1;
+        }
         } else {
             insertHint = moveFwdToToken(tokenSequence, oldT.getKind() == Kind.ENUM ? localPointer : getOldPos(oldT), JavaTokenId.LBRACE);
             tokenSequence.moveNext();

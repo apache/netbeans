@@ -155,8 +155,8 @@ public final class Server {
         }
     }
     
-    private static final RequestProcessor SERVER_INIT_RP = new RequestProcessor(LanguageServerImpl.class.getName(), 10);
-    private static final Map<NbCodeClientWrapper, Future> initializations = new WeakHashMap<>();
+    // change to a greater throughput if the initialization waits on more processes than just (serialized) project open.
+    private static final RequestProcessor SERVER_INIT_RP = new RequestProcessor(LanguageServerImpl.class.getName());
     
     
     private static class LanguageServerImpl implements LanguageServer, LanguageClientAware {

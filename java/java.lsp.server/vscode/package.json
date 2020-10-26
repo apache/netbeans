@@ -36,10 +36,20 @@
 					"default": null,
 					"description": "Specifies JDK for the Apache NetBeans Language Server"
 				},
-                                "netbeans.verbose": {
-                                        "type": "boolean",
-                                        "default": false,
-                                        "description": "Enables verbose messages from the Apache NetBeans Language Server"
+				"netbeans.verbose": {
+					"type": "boolean",
+					"default": false,
+					"description": "Enables verbose messages from the Apache NetBeans Language Server"
+				},
+				"netbeans.conflict.check" : {
+					"type" : "boolean",
+					"default" : true,
+					"description": "Avoid conflicts with other Java extensions"
+				},
+                                "java.test.editor.enableShortcuts": {
+                                    "type": "boolean",
+                                    "default": false,
+                                    "description": "Enable Run/Debug test in editor"
                                 }
 			}
 		},

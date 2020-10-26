@@ -111,6 +111,9 @@ class NotifyDescriptorAdapter {
      * @return 
      */
     private String translateText(String original) {
+        if (!original.startsWith("<html>")) { // NOI18N
+            return original;
+        }
         String res = 
                 original.replaceAll("<p/>|</p>|<br>", "\n"). // NOI18N
                     replaceAll( "<[^>]*>", "" ). // NOI18N 

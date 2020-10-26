@@ -83,8 +83,8 @@ public class ServerTasks {
         varMap.put(ServerUtils.PF_DOMAIN_ROOT_PROPERTY,
                 ServerUtils.getDomainPath(server));
         varMap.put(ServerUtils.PF_JAVA_ROOT_PROPERTY, javaHome);
-        varMap.put(ServerUtils.PF_DERBY_ROOT_PROPERTY,
-                ServerUtils.getDerbyRoot(server));
+        varMap.put(ServerUtils.PF_H2_DIR_NAME,
+                ServerUtils.getH2Root(server));
         return varMap;
     }
 

@@ -1,0 +1,6 @@
+Code completion result for source line:
+} catch (ExceptionA | Excep|tionB) { // test2 test3
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Exception                       [PUBLIC]   nonCapturingCatches.php
+CLASS      ExceptionA                      [PUBLIC]   nonCapturingCatches.php
+CLASS      ExceptionB                      [PUBLIC]   nonCapturingCatches.php

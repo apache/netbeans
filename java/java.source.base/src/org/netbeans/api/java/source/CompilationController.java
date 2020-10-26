@@ -21,12 +21,15 @@ package org.netbeans.api.java.source;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullUnknown;
 import org.netbeans.modules.java.source.parsing.CompilationInfoImpl;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.JavacParserResult;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Parameters;
 
 /** Class for explicit invocation of compilation phases on a java source.
@@ -39,7 +42,8 @@ import org.openide.util.Parameters;
  */
 public class CompilationController extends CompilationInfo {
     
-    
+    private final List<FileObject> forcedSources = new ArrayList<>();
+
     CompilationController(final CompilationInfoImpl impl) {        
         super(impl);
 
@@ -81,9 +85,9 @@ public class CompilationController extends CompilationInfo {
      * @throws IOException when the file cannot be red
      */    
     public @NonNull JavaSource.Phase toPhase(@NonNull JavaSource.Phase phase ) throws IOException {
-        return impl.toPhase (phase);
+        return impl.toPhase (phase, forcedSources);
     }
-    
+
     /**
      * Marks this {@link CompilationInfo} as invalid, may be used to
      * verify confinement.
@@ -97,4 +101,9 @@ public class CompilationController extends CompilationInfo {
             parser.resultFinished (false);
         }
     }
+
+    void addForceSource(FileObject file) {
+        forcedSources.add(file);
+    }
+
 }

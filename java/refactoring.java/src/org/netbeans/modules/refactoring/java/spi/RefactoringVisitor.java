@@ -68,6 +68,7 @@ import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.openide.ErrorManager;
+import org.openide.filesystems.FileObject;
 
 /**
  *

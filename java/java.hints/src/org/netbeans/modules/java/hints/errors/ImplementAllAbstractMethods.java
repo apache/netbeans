@@ -81,7 +81,7 @@ import org.openide.util.NbBundle;
 public final class ImplementAllAbstractMethods implements ErrorRule<Object>, OverrideErrorMessage<Object> {
 
     private static final String PREMATURE_EOF_CODE = "compiler.err.premature.eof"; // NOI18N
-    
+    private static final String RECORD = "RECORD"; // NOI18N
     /** Creates a new instance of ImplementAllAbstractMethodsCreator */
     public ImplementAllAbstractMethods() {
     }
@@ -169,11 +169,6 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
         }
         Element e = info.getTrees().getElement(path);
         final Tree leaf = path.getLeaf();
-        //TODO: Fix defect #NETBEANS-3702
-        //Disabling hints for record
-        if(leaf.getKind().toString().equals(TreeShims.RECORD)){
-            return null;
-        }
         boolean isUsableElement = e != null && (e.getKind().isClass() || e.getKind().isInterface());
         boolean containsDefaultMethod = saved == Boolean.FALSE;
 
@@ -185,7 +180,7 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
             return null;
         }
         List<Fix> fixes = new ArrayList<>();
-        if (TreeUtilities.CLASS_TREE_KINDS.contains(leaf.getKind())) {
+        if (TreeUtilities.CLASS_TREE_KINDS.contains(leaf.getKind()) || leaf.getKind().toString().equals(RECORD)) {
             CompilationUnitTree cut = info.getCompilationUnit();
             // do not offer for class declarations without body
             long start = info.getTrees().getSourcePositions().getStartPosition(cut, leaf);
@@ -565,7 +560,7 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
     // copy from GeneratorUtils, need to change the processing a little.
     public static Map<? extends ExecutableElement, ? extends ExecutableElement> generateAllAbstractMethodImplementations(
             WorkingCopy wc, TreePath path, List<ElementHandle<? extends Element>> toImplementHandles) {
-        assert TreeUtilities.CLASS_TREE_KINDS.contains(path.getLeaf().getKind());
+        assert TreeUtilities.CLASS_TREE_KINDS.contains(path.getLeaf().getKind()) || path.getLeaf().getKind().toString().equals(RECORD);
         TypeElement te = (TypeElement)wc.getTrees().getElement(path);
         if (te == null) {
             return null;

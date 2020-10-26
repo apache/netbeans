@@ -61,7 +61,7 @@ public abstract class SAXGeneratorAbstractPanel extends JPanel implements Custom
         private Object bean;
         private Integer index;
         
-        private Vector listeners = new Vector(); 
+        private Vector<ChangeListener> listeners = new Vector<>(); 
         private final ChangeEvent EVENT = new ChangeEvent(this);
         private boolean valid = true;
         
@@ -138,9 +138,9 @@ public abstract class SAXGeneratorAbstractPanel extends JPanel implements Custom
             this.valid = valid;
 
             synchronized (listeners) {
-                Iterator it = listeners.iterator();
+                Iterator<ChangeListener> it = listeners.iterator();
                 while (it.hasNext()) {
-                    ChangeListener next = (ChangeListener) it.next();
+                    ChangeListener next = it.next();
                     next.stateChanged(EVENT);
                 }
             }

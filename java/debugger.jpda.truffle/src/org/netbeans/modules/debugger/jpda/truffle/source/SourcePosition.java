@@ -28,20 +28,44 @@ public class SourcePosition {
 
     private final long id;
     private final Source src;
-    private final int line;
+    private final int startLine;
+    private final int startColumn;
+    private final int endLine;
+    private final int endColumn;
     
-    public SourcePosition(JPDADebugger debugger, long id, Source src, int line) {
+    public SourcePosition(JPDADebugger debugger, long id, Source src, String sourceSection) {
         this.id = id;
         this.src = src;
-        this.line = line;
+        int i1 = 0, i2 = sourceSection.indexOf(',');
+        this.startLine = Integer.parseInt(sourceSection.substring(i1, i2));
+        i1 = i2 + 1;
+        i2 = sourceSection.indexOf(',', i1);
+        this.startColumn = Integer.parseInt(sourceSection.substring(i1, i2));
+        i1 = i2 + 1;
+        i2 = sourceSection.indexOf(',', i1);
+        this.endLine = Integer.parseInt(sourceSection.substring(i1, i2));
+        i1 = i2 + 1;
+        this.endColumn = Integer.parseInt(sourceSection.substring(i1));
     }
 
     public Source getSource() {
         return src;
     }
-    
-    public int getLine() {
-        return line;
+
+    public int getStartLine() {
+        return startLine;
     }
 
+    public int getStartColumn() {
+        return startColumn;
+    }
+
+    public int getEndLine() {
+        return endLine;
+    }
+
+    public int getEndColumn() {
+        return endColumn;
+    }
+    
 }

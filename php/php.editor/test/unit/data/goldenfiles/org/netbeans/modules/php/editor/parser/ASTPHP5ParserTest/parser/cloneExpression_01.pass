@@ -220,10 +220,10 @@
                                         <Variable start='69' end='74' isDollared='true'>
                                             <Identifier start='70' end='74' name='test'/>
                                         </Variable>
-                                        <MethodInvocation start='77' end='108'>
+                                        <MethodInvocation start='77' end='108' isNullsafe='false'>
                                             <AnonymousObjectVariable start='77' end='99'>
                                                 <CloneExpression start='78' end='98'>
-                                                    <MethodInvocation start='84' end='98'>
+                                                    <MethodInvocation start='84' end='98' isNullsafe='false'>
                                                         <Variable start='84' end='89' isDollared='true'>
                                                             <Identifier start='85' end='89' name='this'/>
                                                         </Variable>
@@ -256,7 +256,7 @@
                                     </Assignment>
                                 </ExpressionStatement>
                                 <ReturnStatement start='118' end='148'>
-                                    <MethodInvocation start='125' end='147'>
+                                    <MethodInvocation start='125' end='147' isNullsafe='false'>
                                         <AnonymousObjectVariable start='125' end='138'>
                                             <CloneExpression start='126' end='137'>
                                                 <Variable start='132' end='137' isDollared='true'>
@@ -301,7 +301,7 @@
                 </Block>
             </ClassDeclaration>
             <ExpressionStatement start='233' end='275'>
-                <MethodInvocation start='233' end='274'>
+                <MethodInvocation start='233' end='274' isNullsafe='false'>
                     <AnonymousObjectVariable start='233' end='264'>
                         <CloneExpression start='234' end='263'>
                             <AnonymousObjectVariable start='240' end='263'>

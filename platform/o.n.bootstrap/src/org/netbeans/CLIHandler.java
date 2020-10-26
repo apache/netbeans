@@ -1293,6 +1293,9 @@ public abstract class CLIHandler extends Object {
             if (ex.getMessage().equals("Broken pipe")) { // NOI18N
                 return true;
             }
+            if (ex.getMessage().contains("SIGPIPE")) { // NOI18N
+                return true;
+            }
             if (ex.getMessage().startsWith("Connection reset by peer")) { // NOI18N
                 return true;
             }

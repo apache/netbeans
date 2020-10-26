@@ -35,7 +35,7 @@ public class BasicBoxModelModuleTest extends CssModuleTestBase {
     }
     
     public void testProperties() {
-        assertPropertyValues("display", "table", "cell");
+        assertPropertyValues("display", "table", "table-cell");
         assertPropertyValues("margin", "10px", "20px 30px 40px");
         assertPropertyValues("padding", "1px");
     }

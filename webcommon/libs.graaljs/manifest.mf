@@ -1,6 +1,7 @@
 Manifest-Version: 1.0
 AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.netbeans.libs.graaljs/1
+OpenIDE-Module-Layer: org/netbeans/libs/graaljs/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/graaljs/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.4
-OpenIDE-Module-Provides: javax.script.ScriptEngine.js
+OpenIDE-Module-Specification-Version: 1.11
+OpenIDE-Module-Provides: javax.script.ScriptEngine.js,org.netbeans.libs.graaljs

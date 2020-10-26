@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="general">Gradle Project API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change id="expose-project-action-mapping-provider">
+            <api name="general"/>
+            <summary>Make ProjectActionMappingProvider available for other modules.</summary>
+            <version major="2" minor="6"/>
+            <date day="15" month="10" year="2020"/>
+            <author login="lkishalmi"/>
+            <compatibility semantic="compatible"/>
+            <description>
+                <p>
+                    Made  <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/ProjectActionMappingProvider.html">ProjectActionMappingProvider</a> available
+                    for other modules, so they either can provide an alternative implementation or most probably able to take a sneak peek on
+                    the current action configuration.
+                </p>
+                <p>
+                    In order to make other modules interpret the action mapping in context <a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html">RunUtils</a> got a new evaluateActionArgs
+                    utility method which can replace tokens provided in ActionMapping arguments.
+                </p>
+                <p>
+                    Finally to support this token replacement, <a href="@TOP@/org/netbeans/modules/gradle/spi/actions/ReplacementTokenProvider.html">ReplacementTokenProvider</a>
+                    got a new static method <code>replaceTokens</code>.
+                </p>
+            </description>
+        </change>
+        <change id="reusetabs">
+            <api name="general"/>
+            <summary>Default for reusing tabs</summary>
+            <version major="2" minor="5"/>
+            <date day="15" month="10" year="2020"/>
+            <author login="jtulach"/>
+            <compatibility semantic="compatible"/>
+            <description>
+                <p>
+                    Introducing <a href="@TOP@architecture-summary.html#group-branding">branding APIs</a>
+                    to configure default value for <b>reusing tabs</b> in Gradle projects.
+                </p>
+            </description>
+        </change>
+        <change id="gradle-buildsrc-project">
+            <api name="general"/>
+            <summary>GradleFiles SPI has the methods to deal with the buildSrc project.</summary>
+            <version major="2" minor="4"/>
+            <date year="2020" month="10" day="7"/>
+            <author login="lkishalmi"/>
+            <compatibility binary="compatible" source="compatible"/>
+            <description>
+                <p>
+                    <code><a href="@TOP@/org/netbeans/modules/gradle/spi/GradleFiles.html#isBuildSrcProject()">GradleFiles.isBuildSrcProject()</a></code> was
+                    added to detect if a project id a buildSrc project, and a new file Kind has been introduced <code>BUILD_SRC</code>.
+                </p>
+            </description>
+        </change>
+        <change id="gradle-project-connection">
+            <api name="general"/>
+            <summary>Expose Gradle ProjectConnection through Project's Lookup.</summary>
+            <version major="2" minor="4"/>
+            <date year="2020" month="8" day="21"/>
+            <author login="lkishalmi"/>
+            <compatibility binary="compatible" source="compatible"/>
+            <description>
+                <p>
+                    Gradle's <code><a href="https://docs.gradle.org/current/javadoc/org/gradle/tooling/ProjectConnection.html">ProjectConnection</a></code>
+                    is now available on the project lookup, making possible for modules to interact with Gradle in deeper level.
+                </p>
+            </description>
+        </change>
+        <change id="gradle-distribution-manager">
+            <api name="general"/>
+            <summary>Expose GradleDistribution manager as an API.</summary>
+            <version major="2" minor="4"/>
+            <date year="2020" month="8" day="21"/>
+            <author login="lkishalmi"/>
+            <compatibility binary="compatible" source="compatible"/>
+            <description>
+                <p>
+                    Starting to give the project more freedom over control of
+                    their <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleDistributionManager.GradleDistribution.html">GradleDistribution</a></code> in use, the previously non-API
+                    <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleDistributionManager.html">GradleDistributionManager</a></code> got a review and got moved into
+                    execution apis. Together with the <code>GradleDistributionProvider</code>
+                    (API/SPI) it is possible to fetch information on the Gradle
+                    Distribution used in the project.
+                </p>
+                <p>
+                    <code><a href="@TOP@/org/netbeans/modules/gradle/spi/execute/GradleDistributionProvider.html">GradleDistributionProvider</a></code> has a default implementation it
+                    is not necessary to implement it. With that new interface
+                    the <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html#evaluateGradleDistribution-org.netbeans.api.project.Project-boolean-">RunUtils.evaluateGradleDistribution()</a></code>
+                    got deprecated.
+                </p>
+            </description>
+        </change>
+        <change id="gradle-java-independence">
+            <api name="general"/>
+            <summary>Remove Java Platform dependency.</summary>
+            <version major="2" minor="3"/>
+            <date year="2020" month="7" day="15"/>
+            <author login="lkishalmi"/>
+            <compatibility binary="compatible" source="compatible"/>
+            <description>
+                <p>
+                    Due to recent movement and the plan to support Gradle native
+                    projects as well in the future the dependency on
+                    Java Platform module has been removed.
+                </p>
+                <p>
+                    The removal affects <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html#getActivePlatform-java.lang.String-">RunUtils.getActivePlatform</a></code>
+                    methods. The method returns a Pair with <code>null</code> as <code>second</code> which
+                    indicates a broken Platform. This is for keeping the binary compatibility only.
+                    These methods shall be not used at all. There is no
+                    replacement planned for these API functions.
+                </p>
+                <p>
+                    Added <code><a href="@TOP@/org/netbeans/modules/gradle/spi/exectute/GradleJavaPlatformProvider.html">GradleJavaPlatformProvider</a></code>
+                    which can be put into the project lookup, to be able to specify the JDK
+                    to be used for Gradle build execution.
+                </p>
+            </description>
+        </change>
+        <change id="gradle-project-trust">
+            <api name="general"/>
+            <summary>Introduce Trust relationship with Gradle Projects to prevent unintentional Gradle invocation.</summary>
+            <version major="2" minor="2"/>
+            <date year="2020" month="6" day="24"/>
+            <author login="lkishalmi"/>
+            <compatibility binary="compatible" source="compatible"/>
+            <description>
+                <p>
+                    Gradle projects are maintaining a trust attribute from now.
+                    This trust is based on the NetBeans user directory and the
+                    a secret placed in the Gradle Root project directory.
+                </p>
+                <p>
+                    Trusting any project of a multi-project Gradle build means
+                    trust all project in that multi-project project, as the
+                    trust is placed on the root project.
+                </p>
+                <p>
+                    This change is backported to version 2.0.1 as well.
+                </p>
+                <p>
+                    Added <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html#isProjectTrusted-org.netbeans.api.project.Project-boolean-">RunUtils.isProjectTrusted(Project,boolean)</a></code>
+                    where plugin can check if a project is trusted or request
+                    one time trust with interactive mode.
+                </p>
+                <p>
+                    There is no API/SPI to mark a project trusted/untrusted.
+                    Projects are not trusted by default, but become trusted once
+                    a priming build is requested or a Gradle task is invoked as
+                    a result of an user action.
+                </p>
+                <p>
+                    Added <code><a href="@TOP@/org/netbeans/modules/gradle/spi/GradleSettings.GradleExecutionRule.html">GradleSettings.GradleExecutionRule</a></code>
+                    with setter ad getter in <code><a href="@TOP@/org/netbeans/modules/gradle/spi/GradleSettings.html">GradleSettings</a></code>
+                    as a global option to how to treat automatic Gradle Execution globally.
+                </p>
+            </description>
+        </change>
+        <change id="gradle-tooling-api-split">
+            <api name="general"/>
+            <summary>Move Gradle Tooling API to a separate module.</summary>
+            <version major="2" minor="0"/>
+            <date year="2020" month="4" day="4"/>
+            <author login="lkishalmi"/>
+            <compatibility binary="incompatible" source="compatible"/>
+            <description>
+                <p>
+                    The Gradle Tooling API has been removed from this module to
+                    its own into: <code>org.netbeans.modules.libs.gradle</code>
+                </p>
+                <p>
+                    Modules depending on previous versions of this module need
+                    an additional dependency on the new library module. The
+                    main reason behind this split is that it is easier to do
+                    Gradle Tooling API update in the future.
+                </p>
+                <pre>
+                    &lt;dependency&gt;
+                        &lt;code-name-base&gt;org.netbeans.modules.libs.gradle&lt;/code-name-base&gt;
+                        &lt;compile-dependency/&gt;
+                        &lt;run-dependency&gt;
+                            &lt;release-version&gt;6&lt;/release-version&gt;
+                            &lt;specification-version&gt;6.3&lt;/specification-version&gt;
+                        &lt;/run-dependency&gt;
+                    &lt;/dependency&gt;
+                </pre>
+                <p>
+                    <b>Note:</b> The specification version of the <code>org.netbeans.modules.libs.gradle</code>
+                    module is matching the provided Gradle Tooling API version. The release version number
+                    follows the major version.
+                </p>
+                <p>
+                    Besides of the library removal the source code provided in
+                    this module are backward compatible.
+                </p>
+            </description>
+            <issue number="NETBEANS-4118"/>
+        </change>
+        <change id="allow-cancelling-gradle-process">
+            <api name="general"/>
+            <summary>Added <code>RunUtils.cancelGradle(RunConfig)</code> to allow plugins to cancel an executed Gradle process.</summary>
+            <version major="1" minor="4"/>
+            <date year="2019" month="10" day="22"/>
+            <author login="lkishalmi"/>
+            <compatibility source="compatible"/>
+            <description>
+                <p>
+                    Added <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html#cancelGradle-org.netbeans.modules.gradle.api.execute.RunConfig-">RunUtils.cancelGradle(RunConfig)</a></code> to allow plugins to cancel an executed Gradle process.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.gradle.api.execute" name="RunUtils"/>
+            <issue number="NETBEANS-3279"/>
+        </change>
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+        <!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE projects/projectuiapi/apichanges.xml
+
+        -->
+        <head>
+            <title>Change History for the Gradle Project API</title>
+            <link rel="stylesheet" href="prose.css" type="text/css"/>
+        </head>
+        <body>
+
+            <p class="overviewlink">
+                <a href="overview-summary.html">Overview</a>
+            </p>
+
+            <h1>Introduction</h1>
+
+            <p>This document lists changes made to the <a href="@org-netbeans-modules-gradle@/index.html">Gradle Project API</a>.</p>
+
+            <!-- The actual lists of changes, as summaries and details: -->
+            <hr/>
+            <standard-changelists module-code-name="org.netbeans.modules.gradle/0"/>
+
+            <hr/>
+            <p>@FOOTER@</p>
+
+        </body>
+    </htmlcontents>
+
+</apichanges>

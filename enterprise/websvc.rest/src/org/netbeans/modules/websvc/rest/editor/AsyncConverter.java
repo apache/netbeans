@@ -98,27 +98,29 @@ abstract class AsyncConverter {
         if (!Profile.JAVA_EE_7_WEB.equals(profile)
                 && !Profile.JAVA_EE_7_FULL.equals( profile)
                 && !Profile.JAVA_EE_8_WEB.equals(profile)
-                && !Profile.JAVA_EE_8_FULL.equals(profile))
+                && !Profile.JAVA_EE_8_FULL.equals(profile)
+                && !Profile.JAKARTA_EE_8_WEB.equals(profile)
+                && !Profile.JAKARTA_EE_8_FULL.equals(profile))
         {
             return false;
         }
         return true;
     }
-    
+
     boolean isApplicable(Element element){
         if ( element == null || element.getKind() != ElementKind.METHOD){
             return false;
         }
-        
+
         Element enclosingElement = element.getEnclosingElement();
         if ( enclosingElement== null || !(enclosingElement instanceof TypeElement)){
             return false;
         }
         return true;
     }
-    
+
     protected abstract Logger getLogger();
-    
+
     protected boolean isAsync(Element method){
         if ( method instanceof ExecutableElement ){
             ExecutableElement exec = (ExecutableElement)method;
@@ -133,7 +135,7 @@ abstract class AsyncConverter {
                                 contentEquals("javax.ws.rs.container.AsyncResponse");   // NOI18N
                     }
                 }
-                if( hasAsyncType && hasAnnotation(param, 
+                if( hasAsyncType && hasAnnotation(param,
                         "javax.ws.rs.container.Suspended")){ // NOI18N
                     return true;
                 }
@@ -141,12 +143,12 @@ abstract class AsyncConverter {
         }
         return false;
     }
-    
+
     protected boolean checkRestMethod( final String fqn , Element method,
             FileObject source) {
         final String methodName = method.getSimpleName().toString();
         /*
-         *  TODO : method name doesn't uniquely identify the method. 
+         *  TODO : method name doesn't uniquely identify the method.
          *  So implementation should be improved
          */
         Project project = FileOwnerQuery.getOwner(source);
@@ -164,11 +166,11 @@ abstract class AsyncConverter {
                         throws Exception
                 {
                     RestServices services = metadata.getRoot();
-                    RestServiceDescription[] descriptions = 
+                    RestServiceDescription[] descriptions =
                             services.getRestServiceDescription();
                     for (RestServiceDescription description : descriptions) {
                         if ( fqn.equals(description.getClassName())){
-                            List<RestMethodDescription> methods = 
+                            List<RestMethodDescription> methods =
                                     description.getMethods();
                             for (RestMethodDescription method : methods){
                                 if ( methodName.equals(method.getName())){
@@ -189,7 +191,7 @@ abstract class AsyncConverter {
         }
         return false;
     }
-    
+
     protected boolean hasAnnotation(Element element, String... annotationFqns){
         List<? extends AnnotationMirror> annotations = element.getAnnotationMirrors();
         for (AnnotationMirror annotation : annotations) {
@@ -206,7 +208,7 @@ abstract class AsyncConverter {
         }
         return false;
     }
-    
+
     protected void convertMethod( final ElementHandle<Element> handle,
             FileObject fileObject ) throws IOException
     {
@@ -308,7 +310,7 @@ abstract class AsyncConverter {
                 });
         task.commit();
     }
-    
+
     private String findFreeName( String name,Element enclosingElement,
             Element havingName)
     {
@@ -324,7 +326,7 @@ abstract class AsyncConverter {
         }
         return name;
     }
-    
+
     private String convertMethodName(String name){
         if ( name.length()<=1){
             return "do"+name;       // NOI18N
@@ -333,37 +335,37 @@ abstract class AsyncConverter {
             return "do"+Character.toUpperCase(name.charAt(0))+name.substring(1);
         }
     }
-    
+
     private boolean isEjb(Element element){
-        return hasAnnotation(element, "javax.ejb.Stateless", 
+        return hasAnnotation(element, "javax.ejb.Stateless",
                 "javax.ejb.Singleton");// NOI18N
     }
-    
+
     private ClassTree createAsyncMethod( TreeMaker maker,
-            String asyncName, String service, MethodTree method, String movedName , 
+            String asyncName, String service, MethodTree method, String movedName ,
             WorkingCopy copy, ClassTree classTree, boolean isEjb)
     {
         ModifiersTree modifiers = method.getModifiers();
         if ( isEjb ){
             AnnotationTree async = maker.Annotation(maker.QualIdent(
-                    "javax.ejb.Asynchronous"),          // NOI18N 
+                    "javax.ejb.Asynchronous"),          // NOI18N
                     Collections.<ExpressionTree>emptyList());
             modifiers  = maker.addModifiersAnnotation(modifiers, async);
         }
         List<? extends VariableTree> parameters = method.getParameters();
         String asyncReponseParam = getAsynParam("asyncResponse",parameters);//NOI18N
-        
+
         ModifiersTree paramModifier = maker.Modifiers(EnumSet.of(Modifier.FINAL));
         AnnotationTree annotation = maker.Annotation(
                 maker.QualIdent("javax.ws.rs.container.Suspended"),        // NOI18N
                 Collections.<ExpressionTree>emptyList());
-        paramModifier = maker.Modifiers(paramModifier, 
+        paramModifier = maker.Modifiers(paramModifier,
                 Collections.singletonList(annotation));
-        VariableTree asyncParam = maker.Variable(paramModifier, asyncReponseParam, 
+        VariableTree asyncParam = maker.Variable(paramModifier, asyncReponseParam,
                 maker.QualIdent("javax.ws.rs.container.AsyncResponse"), null);//NOI18N
         List<VariableTree> params = new ArrayList<VariableTree>(parameters.size()+1);
         params.add(asyncParam);
-        
+
         Tree returnType = method.getReturnType();
         boolean noReturn =returnType.toString().equals("void");     // NOI18N
 
@@ -379,9 +381,9 @@ abstract class AsyncConverter {
         body.append(movedName);
         body.append('(');
         for (VariableTree param : parameters) {
-            ModifiersTree modifier = maker.addModifiersModifier(param.getModifiers(), 
+            ModifiersTree modifier = maker.addModifiersModifier(param.getModifiers(),
                     Modifier.FINAL);
-            VariableTree newParam = maker.Variable(modifier, param.getName(), 
+            VariableTree newParam = maker.Variable(modifier, param.getName(),
                     param.getType(), param.getInitializer());
             params.add(newParam);
             TreePath pathParam = copy.getTrees().getPath(
@@ -404,8 +406,8 @@ abstract class AsyncConverter {
             body.append("}});");
         }
         body.append('}');
-        
-        MethodTree newMethod = maker.Method(modifiers, asyncName, 
+
+        MethodTree newMethod = maker.Method(modifiers, asyncName,
                 maker.Type("void"),             // NOI18N
                 Collections.<TypeParameterTree> emptyList(),
                 params,
@@ -413,7 +415,7 @@ abstract class AsyncConverter {
                 body.toString(),null);
         return maker.addClassMember(classTree, newMethod);
     }
-    
+
     private String getAsynParam(String paramName, List<? extends VariableTree> parameters ) {
         for (VariableTree variableTree : parameters) {
             if ( paramName.equals(variableTree.getName())){
@@ -428,15 +430,15 @@ abstract class AsyncConverter {
     {
         List<? extends VariableTree> parameters = method.getParameters();
         Tree returnType = method.getReturnType();
-        BlockTree body = method.getBody();  
-        
+        BlockTree body = method.getBody();
+
         ModifiersTree modifiers = maker.Modifiers(EnumSet.of(Modifier.PRIVATE));
-        MethodTree newMethod = maker.Method(modifiers, movedName, 
+        MethodTree newMethod = maker.Method(modifiers, movedName,
                 returnType,
                 Collections.<TypeParameterTree> emptyList(),
                 parameters,
                 Collections.<ExpressionTree> emptyList(),body,null);
-        
+
         ClassTree newClass = maker.addClassMember(classTree, newMethod);
         newClass = maker.removeClassMember(newClass, method);
         return newClass;

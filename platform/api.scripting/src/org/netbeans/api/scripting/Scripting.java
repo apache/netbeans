@@ -188,9 +188,8 @@ public final class Scripting {
                 final Bindings b = eng.getBindings(ScriptContext.ENGINE_SCOPE);
                 if (allowAllAccess) {
                     b.put("polyglot.js.nashorn-compat", true); // NOI18N
-                } else {
-                    b.put("polyglot.js.allowHostAccess", true); // NOI18N
                 }
+                b.put("polyglot.js.allowHostAccess", true); // NOI18N
                 b.put("polyglot.js.allowHostClassLookup", (Predicate<String>) (s) -> { // NOI18N
                     return allowHostClassLookup(eng, s);
                 });

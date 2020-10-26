@@ -88,7 +88,6 @@ public class VanillaPartialReparser implements PartialReparser {
     private final Field lazyDocCommentsTable;
     private final Field parserDocComments;
     private final Method lineMapBuild;
-    private final Method typeEnterSuperCall;
     private final boolean allowPartialReparse;
 
     public VanillaPartialReparser() {
@@ -124,17 +123,8 @@ public class VanillaPartialReparser implements PartialReparser {
             lineMapBuild = null;
         }
         this.lineMapBuild = lineMapBuild;
-        Method typeEnterSuperCall;
-        try {
-            typeEnterSuperCall = TypeEnter.class.getDeclaredMethod("SuperCall", TreeMaker.class, com.sun.tools.javac.util.List.class, com.sun.tools.javac.util.List.class, boolean.class);
-            typeEnterSuperCall.setAccessible(true);
-        } catch (NoSuchMethodException ex) {
-            typeEnterSuperCall = null;
-        }
-        this.typeEnterSuperCall = typeEnterSuperCall;
         allowPartialReparse = unenter != null && lazyDocCommentsTable != null &&
                               parserDocComments != null && lineMapBuild != null &&
-                              typeEnterSuperCall != null &&
                               Boolean.getBoolean("java.enable.partial.reparse");
     }
 
@@ -401,10 +391,7 @@ public class VanillaPartialReparser implements PartialReparser {
             JCTree.JCBlock body = tree.body;
             if (body.stats.isEmpty() || !TreeInfo.isSelfCall(body.stats.head)) {
                 body.stats = body.stats.
-                prepend((JCTree.JCStatement) typeEnterSuperCall.invoke(typeEnter, make.at(body.pos),
-                    com.sun.tools.javac.util.List.<Type>nil(),
-                    com.sun.tools.javac.util.List.<JCTree.JCVariableDecl>nil(),
-                    false));
+                prepend(make.at(body.pos).Exec(make.Apply(com.sun.tools.javac.util.List.nil(), make.Ident(names._super), com.sun.tools.javac.util.List.nil())));
             } else if ((env.enclClass.sym.flags() & Flags.ENUM) != 0 &&
                 (tree.mods.flags & Flags.GENERATEDCONSTR) == 0 &&
                 TreeInfo.isSuperCall(body.stats.head)) {

@@ -122,7 +122,7 @@ final class NodeLookup extends AbstractLookup {
     private void blockingBeforeLookup(Class<?> type) {
         if (type == Object.class) {
             // ok, this is likely query for everything
-            java.util.Set all;
+            Set<Class> all;
             Object prev = null;
 
             try {
@@ -133,10 +133,10 @@ final class NodeLookup extends AbstractLookup {
                 all = CookieSet.exitAllClassesMode(prev);
             }
 
-            Iterator it = all.iterator();
+            Iterator<Class> it = all.iterator();
 
             while (it.hasNext()) {
-                Class c = (Class) it.next();
+                Class c = it.next();
                 updateLookupAsCookiesAreChanged(c);
             }
 

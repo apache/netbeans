@@ -167,13 +167,6 @@
     </antcall>
   </target>
 
-  <target name="profiler-server-solsparc-15">
-    <antcall target="profiler-server-15">
-      <param name="os-version" value="solsparc"/>
-      <param name="os-long-version" value="solaris-sparc"/>
-    </antcall>
-  </target>
-
   <target name="profiler-server-solsparcv9-15">
     <antcall target="profiler-server-solaris64-15">
       <param name="os-version" value="solsparcv9"/>
@@ -291,7 +284,7 @@
   </target>
 
   <!-- creates the remote packs as a profiler-server for all platforms -->
-  <target name="profiler-server-all" depends="profiler-server-win-15, profiler-server-winamd64-15, profiler-server-win-cvm, profiler-server-mac-15, profiler-server-linux-15, profiler-server-linuxamd64-15, profiler-server-linuxarm-15, profiler-server-linuxarmvfphflt-15, profiler-server-linux-cvm, profiler-server-solx86-15, profiler-server-solamd64-15, profiler-server-solsparc-15, profiler-server-solsparcv9-15" />
+  <target name="profiler-server-all" depends="profiler-server-win-15, profiler-server-winamd64-15, profiler-server-win-cvm, profiler-server-mac-15, profiler-server-linux-15, profiler-server-linuxamd64-15, profiler-server-linuxarm-15, profiler-server-linuxarmvfphflt-15, profiler-server-linux-cvm, profiler-server-solx86-15, profiler-server-solamd64-15, profiler-server-solsparcv9-15" />
 
 </project>
 

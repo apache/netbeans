@@ -448,6 +448,7 @@
                 <friend>org.netbeans.modules.html.editor</friend>
                 <friend>org.netbeans.modules.javafx2.editor</friend>
                 <friend>org.netbeans.modules.javascript2.editor</friend>
+                <friend>org.netbeans.modules.javascript2.html</friend>
                 <friend>org.netbeans.modules.javascript2.jade</friend>
                 <friend>org.netbeans.modules.javascript2.jquery</friend>
                 <friend>org.netbeans.modules.web.inspect</friend>

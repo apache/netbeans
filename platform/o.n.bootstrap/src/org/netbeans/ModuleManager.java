@@ -1154,8 +1154,8 @@ public final class ModuleManager extends Modules {
      */
     public void delete(Module m) throws IllegalArgumentException {
         assertWritable();
-        if (m.isFixed()) throw new IllegalArgumentException("fixed module: " + m); // NOI18N
-        if (m.isEnabled()) throw new IllegalArgumentException("enabled module: " + m); // NOI18N
+        if (m.isFixed()) throw new IllegalModuleException(IllegalModuleException.Reason.DELETE_FIXED_MODULE, m);
+        if (m.isEnabled()) throw new IllegalModuleException(IllegalModuleException.Reason.DELETE_ENABLED_MODULE, m);
         ev.log(Events.DELETE_MODULE, m);
         removeFragmentFromHost(m);
         modules.remove(m);
@@ -1190,8 +1190,8 @@ public final class ModuleManager extends Modules {
         if (Util.err.isLoggable(Level.FINE)) {
             Util.err.fine("reload: " + m);
         }
-        if (m.isFixed()) throw new IllegalArgumentException("reload fixed module: " + m); // NOI18N
-        if (m.isEnabled()) throw new IllegalArgumentException("reload enabled module: " + m); // NOI18N
+        if (m.isFixed()) throw new IllegalModuleException(IllegalModuleException.Reason.RELOAD_FIXED_MODULE, m);
+        if (m.isEnabled()) throw new IllegalModuleException(IllegalModuleException.Reason.RELOAD_ENABLED_MODULE, m);
         providersOf.possibleProviderRemoved(m);
         try {
             m.reload();
@@ -1275,11 +1275,15 @@ public final class ModuleManager extends Modules {
             if (! testing.containsAll(modules)) {
                 Set<Module> bogus = new HashSet<Module>(modules);
                 bogus.removeAll(testing);
-                throw new IllegalArgumentException("Not all requested modules can be enabled: " + bogus); // NOI18N
+                throw new IllegalModuleException(IllegalModuleException.Reason.ENABLE_MISSING, bogus);
             }
             for (Module m : testing) {
                 if (!modules.contains(m) && !m.isAutoload() && !m.isEager()) {
-                    throw new IllegalArgumentException("Would also need to enable " + m); // NOI18N
+                    // it is acceptable if the module is a non-autoload host fragment, and its host enabled (thus enabled the fragment):
+                    Module maybeHost =  attachModuleFragment(m);
+                    if (maybeHost == null && !testing.contains(maybeHost)) {
+                        throw new IllegalModuleException(IllegalModuleException.Reason.ENABLE_TESTING, m);
+                    }
                 }
             }
         }
@@ -1497,7 +1501,7 @@ public final class ModuleManager extends Modules {
             // Verify that dependencies are OK.
             for (Module m: toDisable) {
                 if (!modules.contains(m) && !m.isAutoload() && !m.isEager()) {
-                    throw new IllegalArgumentException("Would also need to disable: " + m); // NOI18N
+                    throw new IllegalModuleException(IllegalModuleException.Reason.DISABLE_TOO, m);
                 }
             }
         }
@@ -1624,11 +1628,11 @@ public final class ModuleManager extends Modules {
         Set<Module> willEnable = new TreeSet<Module>(new CodeNameBaseComparator());
         for (Module m: modules) {
             if (honorAutoloadEager) {
-                if (m.isAutoload()) throw new IllegalArgumentException("Cannot simulate enabling an autoload: " + m); // NOI18N
-                if (m.isEager()) throw new IllegalArgumentException("Cannot simulate enabling an eager module: " + m); // NOI18N
+                if (m.isAutoload()) throw new IllegalModuleException(IllegalModuleException.Reason.SIMULATE_ENABLE_AUTOLOAD, m);
+                if (m.isEager()) throw new IllegalModuleException(IllegalModuleException.Reason.SIMULATE_ENABLE_EAGER, m);
             }
-            if (m.isEnabled()) throw new IllegalArgumentException("Already enabled: " + m); // NOI18N
-            if (!m.isValid()) throw new IllegalArgumentException("Not managed by me: " + m + " in " + m); // NOI18N
+            if (m.isEnabled()) throw new IllegalModuleException(IllegalModuleException.Reason.SIMULATE_ENABLE_ALREADY, m);
+            if (!m.isValid()) throw new IllegalModuleException(IllegalModuleException.Reason.SIMULATE_ENABLE_INVALID, m);
             maybeAddToEnableList(willEnable, modules, m, true);
         }
         // XXX clumsy but should work:
@@ -1761,7 +1765,7 @@ public final class ModuleManager extends Modules {
         Collection<Module> frags = getAttachedFragments(m);
         for (Module fragMod : frags) {
             if (! fragMod.isEnabled()) {
-                maybeAddToEnableList(willEnable, mightEnable, fragMod, fragMod.isEager());
+                maybeAddToEnableList(willEnable, mightEnable, fragMod, fragMod.isAutoload() || fragMod.isEager());
             }
         }
     }
@@ -1893,10 +1897,10 @@ public final class ModuleManager extends Modules {
         // Probably not a very efficient algorithm. But it probably does not need to be.
         Set<Module> willDisable = new TreeSet<Module>(new CodeNameBaseComparator());
         for (Module m : modules) {
-            if (m.isAutoload()) throw new IllegalArgumentException("Cannot disable autoload: " + m); // NOI18N
-            if (m.isEager()) throw new IllegalArgumentException("Cannot disable eager module: " + m); // NOI18N
-            if (m.isFixed()) throw new IllegalArgumentException("Cannot disable fixed module: " + m); // NOI18N
-            if (! m.isEnabled()) throw new IllegalArgumentException("Already disabled: " + m); // NOI18N
+            if (m.isAutoload()) throw new IllegalModuleException(IllegalModuleException.Reason.SIMULATE_DISABLE_AUTOLOAD, m);
+            if (m.isEager()) throw new IllegalModuleException(IllegalModuleException.Reason.SIMULATE_DISABLE_EAGER, m);
+            if (m.isFixed()) throw new IllegalModuleException(IllegalModuleException.Reason.SIMULATE_DISABLE_FIXED, m);
+            if (! m.isEnabled()) throw new IllegalModuleException(IllegalModuleException.Reason.SIMULATE_DISABLE_ALREADY, m);
             addToDisableList(willDisable, m);
         }
         Set<Module> stillEnabled = new HashSet<Module>(getEnabledModules());

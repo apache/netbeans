@@ -68,6 +68,7 @@ import org.netbeans.modules.php.editor.model.nodes.ConstantDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.GroupUseStatementPartInfo;
 import org.netbeans.modules.php.editor.model.nodes.PhpDocTypeTagInfo;
 import org.netbeans.modules.php.editor.model.nodes.SingleUseStatementPartInfo;
+import static org.netbeans.modules.php.editor.model.impl.Type.SEPARATOR;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.api.Utils;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
@@ -131,6 +132,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.TraitConflictResolutionDe
 import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TryStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
@@ -1088,16 +1090,24 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 List<? extends ParameterElement> parameters = fncScope.getParameters();
                 for (ParameterElement parameter : parameters) {
                     Set<TypeResolver> types = parameter.getTypes();
+                    StringBuilder sb = new StringBuilder();
                     String typeName = null;
                     for (TypeResolver typeResolver : types) {
+                        if (sb.length() > 0) {
+                            sb.append(SEPARATOR);
+                        }
                         if (typeResolver.isResolved()) {
                             QualifiedName typeQualifiedName = typeResolver.getTypeName(false);
                             if (typeQualifiedName != null) {
-                                typeName = typeResolver.isNullableType()
-                                        ? CodeUtils.NULLABLE_TYPE_PREFIX + typeQualifiedName.toString()
-                                        : typeQualifiedName.toString();
+                                if (typeResolver.isNullableType()) {
+                                    sb.append(CodeUtils.NULLABLE_TYPE_PREFIX);
+                                }
+                                sb.append(typeQualifiedName.toString());
                             }
                         }
+                    }
+                    if (sb.length() > 0) {
+                        typeName = sb.toString();
                     }
                     VariableNameImpl var = createParameter(fncScope, parameter);
                     if (!types.isEmpty() && var != null) {
@@ -1117,7 +1127,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         Variable variable = node.getVariable();
         Scope scope = modelBuilder.getCurrentScope();
         List<Expression> classNames = node.getClassNames();
-        if (scope instanceof VariableNameFactory) {
+        if (variable != null && scope instanceof VariableNameFactory) {
             // add variable assignments
             VariableNameImpl varNameImpl = createVariable((VariableNameFactory) scope, variable);
             if (varNameImpl != null) {
@@ -1319,10 +1329,10 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 String typeName = phpDocTypeTagInfo.getTypeName();
                 if (typeName != null) {
                     if (sb.length() > 0) {
-                        sb.append("|"); //NOI18N
+                        sb.append(SEPARATOR);
                     }
                     if (fqNames.length() > 0) {
-                        fqNames.append("|"); //NOI18N
+                        fqNames.append(SEPARATOR);
                     }
                     String qualifiedTypeNames = VariousUtils.qualifyTypeNames(typeName, node.getStartOffset(), currentScope);
                     fqNames.append(qualifiedTypeNames);
@@ -1630,6 +1640,10 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
             if (nullableType.getType() instanceof NamespaceName) {
                 namespaceName = (NamespaceName) nullableType.getType();
             }
+        } else if (namespaceName instanceof UnionType) {
+            // NETBEANS-4443 PHP 8.0
+            UnionType unionType = (UnionType) namespaceName;
+            unionType.getTypes().forEach(t -> prepareType(t, scope));
         }
         if (namespaceName instanceof NamespaceName) {
             Kind[] kinds = {Kind.CLASS, Kind.IFACE};

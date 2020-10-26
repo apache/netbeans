@@ -23,9 +23,31 @@ nbbuild/licenses/**
 nbbuild/netbeans/**
 nbbuild/testuserdir/**
 nbbuild/user.build.properties
-###### generated build artefact
+###### generated build artifacts
 nbbuild/gitinfo.properties
 nbbuild/netbeansrelease.properties
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_1_4/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_5/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_6/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_7/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_8/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_1_4/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_5_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_6_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_7_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_8_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_2_1/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_1/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_2/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_2_4/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_2_5/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_1/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_4_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_0_frag/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_1_frag/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_4_0_frag/*
 
 ###### user-specific files  
 **/nbproject/private/**
@@ -118,7 +140,7 @@ java/java.j2semodule/src/org/netbeans/modules/java/j2semodule/ui/resources/modul
 java/java.platform.ui/src/org/netbeans/modules/java/platform/resources/templates/javaplatform.xml
 java/java.project.ui/src/org/netbeans/modules/java/project/ui/resources/*.template
 java/java.source/src/org/netbeans/modules/**/*.template
-groovy/gradle/src/org/netbeans/modules/gradle/newproject/*.template
+extide/gradle/src/org/netbeans/modules/gradle/newproject/*.template
 ### user templates for mercurial commits, etc.
 ide/mercurial/src/org/netbeans/modules/mercurial/util/log*
 ide/properties/src/org/netbeans/modules/properties/sample.properties.template

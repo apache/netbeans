@@ -58,8 +58,8 @@ public final class ServerUtilities {
     static public final String PROP_FIRST_RUN = "first_run";
     private GlassfishInstanceProvider gip;
     private GlassfishWizardProvider gwp;
-    
-    
+
+
     private ServerUtilities(GlassfishInstanceProvider gip, GlassfishWizardProvider gwp) {
         assert null != gip;
         this.gip = gip;
@@ -70,7 +70,7 @@ public final class ServerUtilities {
 //        GlassfishInstanceProvider gip = GlassfishInstanceProvider.getPrelude();
 //        return null == gip ? null : new ServerUtilities(gip,null);
 //    }
-    
+
     public static ServerUtilities getEe6Utilities() {
         GlassfishInstanceProvider gip = GlassfishInstanceProvider.getProvider();
         return null == gip ? null : new ServerUtilities(gip,
@@ -82,11 +82,17 @@ public final class ServerUtilities {
         return null == gip ? null : new ServerUtilities(gip,
                 GlassfishWizardProvider.createEe7());
     }
-    
+
     public static ServerUtilities getEe8Utilities() {
         GlassfishInstanceProvider gip = GlassfishInstanceProvider.getProvider();
         return null == gip ? null : new ServerUtilities(gip,
                 GlassfishWizardProvider.createEe8());
+    }
+
+    public static ServerUtilities getJakartaEe8Utilities() {
+        GlassfishInstanceProvider gip = GlassfishInstanceProvider.getProvider();
+        return null == gip ? null : new ServerUtilities(gip,
+                GlassfishWizardProvider.createJakartaEe8());
     }
 
 //    public static ServerUtilities getEe6WCUtilities() {
@@ -94,12 +100,12 @@ public final class ServerUtilities {
 //        return null == gip ? null : new ServerUtilities(gip,
 //                GlassfishWizardProvider.createEe6WC());
 //    }
-    
+
     /**
      * Returns the ServerInstance object for the server with the specified URI.
-     * 
+     *
      * @param uri uri identifying the server instance.
-     * 
+     *
      * @return ServerInstance object for this server instance.
      */
     public ServerInstance getServerInstance(String uri) {
@@ -146,58 +152,58 @@ public final class ServerUtilities {
     /**
      * Returns the facade implementation for the specified server, if that server
      * supports the facade class passed in.
-     * 
+     *
      * @param uri uri identifying the server instance.
      * @param serverFacadeClass class definition of the server facade we're
      *   looking for.
-     * 
+     *
      * @return facade implementation for specified server or null if either the
      *   server does not exist or the server does not implement this facade.
      */
     public <T> T getInstanceByCapability(String uri, Class <T> serverFacadeClass) {
         return gip.getInstanceByCapability(uri, serverFacadeClass);
     }
-    
+
     /**
-     * Returns a list of the server instances that support the facade class 
+     * Returns a list of the server instances that support the facade class
      * specified (e.g. all servers that support <code>RubyInstance</code>).
-     * 
+     *
      * @param serverFacadeClass class definition of the server facade we're
      *   looking for.
-     * 
+     *
      * @return list of servers that support the interface specified or an empty
      *   list if no servers support that interface.
      */
     public<T> List<T> getInstancesByCapability(Class<T> serverFacadeClass) {
         return gip.getInstancesByCapability(serverFacadeClass);
     }
-    
+
     /**
      * Returns the ServerInstanceImplementation instance for the server with the
      * specified URI.  Use when you need to avoid calling through the ServerInstance
      * facade wrapper.  Otherwise, you should call <code>getServerInstance()</code> instead.
-     * 
+     *
      * @param uri uri identifying the server instance.
-     * 
+     *
      * @return ServerInstanceImplementation object for this server instance.
      */
 //    public static ServerInstanceImplementation getInternalServerInstance(String uri) {
 //        return GlassfishInstanceProvider.getDefault().getInternalInstance(uri);
 //    }
-    
+
     /**
-     * Returns the ServerInstanceProvider for this server plugin so we don't 
+     * Returns the ServerInstanceProvider for this server plugin so we don't
      * have to look it up via common server SPI.
-     * 
+     *
      * @return the GlassFish V3 impl for ServerInstanceProvider.
      */
     public ServerInstanceProvider getServerProvider() {
         return gip;
     }
-    
+
      /**
-     * Returns the fqn jar name with the correct version 
-     * 
+     * Returns the fqn jar name with the correct version
+     *
      * @return the File with full path of the jar or null
      */
     public static File getJarName(String glassfishInstallRoot, String jarNamePattern) {
@@ -223,14 +229,14 @@ public final class ServerUtilities {
         }
         return retVal;
     }
-    
+
     /**
      * Get the url for a file, including proper protocol for archive files (jars).
-     * 
+     *
      * @param file File to create URL from.
-     * 
+     *
      * @return url URL for file with proper protocol specifier.
-     * 
+     *
      * @throws java.net.MalformedURLException
      */
     public static URL fileToUrl(File file) throws MalformedURLException {
@@ -239,7 +245,7 @@ public final class ServerUtilities {
             url = FileUtil.getArchiveRoot(url);
         }
         return url;
-    }    
+    }
 
     /**
      * Surround the submitted string with quotes if it contains any embedded
@@ -262,18 +268,18 @@ public final class ServerUtilities {
 
     /**
      *  Determine if the named directory is a TP2 install.
-     * 
+     *
      * @param gfRoot the name of the directory to check against.
      * @return true if the directory appears to be the root of a TP2 installation.
-     */    
+     */
     static public boolean isTP2(String gfRoot) {
         return ServerUtilities.getJarName(gfRoot, ServerUtilities.GFV3_JAR_MATCHER).getName().indexOf("-tp-2-") > -1; // NOI18N
     }
-  
+
     /**
-     * create a list of jars that appear to be Java EE api jars that live in the 
+     * create a list of jars that appear to be Java EE api jars that live in the
      * modules directory.
-     * 
+     *
      * @param jarList the list "so far"
      * @param parent the directory to look into. Should not be null.
      * @param depth depth of the server
@@ -322,7 +328,7 @@ public final class ServerUtilities {
                         }
                     }
                 } catch (IOException ex) {
-                    Logger.getLogger(ServerUtilities.class.getName()).log(Level.INFO, 
+                    Logger.getLogger(ServerUtilities.class.getName()).log(Level.INFO,
                             candidate.getPath(), ex);
                 } finally {
                     if (null != jarFile) {

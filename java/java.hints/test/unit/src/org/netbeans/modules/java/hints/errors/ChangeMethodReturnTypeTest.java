@@ -32,7 +32,7 @@ import org.openide.util.NbBundle;
 public class ChangeMethodReturnTypeTest extends ErrorHintsTestBase {
 
     public ChangeMethodReturnTypeTest(String name) {
-        super(name);
+        super(name, ChangeMethodReturnType.class);
     }
 
     public void testVoidToInt() throws Exception {
@@ -82,9 +82,12 @@ public class ChangeMethodReturnTypeTest extends ErrorHintsTestBase {
                             "}");
     }
     
-    @Override
-    protected List<Fix> computeFixes(CompilationInfo info, int pos, TreePath path) throws Exception {
-        return new ChangeMethodReturnType().run(info, null, pos, path, null);
+    public void testConditional() throws Exception {
+        performFixTest("test/Test.java",
+                       "package test; import java.util.Collections; public class Test { private int t() { return 1 == 1 ? Collections.emptyList() : Collections.emptyList(); } }",
+                       -1,
+                       "FIX_ChangeMethodReturnType List&lt;Object>",
+                       "package test; import java.util.Collections;import java.util.List; public class Test { private List<Object> t() { return 1 == 1 ? Collections.emptyList() : Collections.emptyList(); } }");
     }
 
     @Override

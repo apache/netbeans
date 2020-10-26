@@ -44,6 +44,7 @@ import org.netbeans.api.java.queries.BinaryForSourceQuery;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.project.Project;
@@ -77,7 +78,8 @@ import org.openide.util.NbBundle;
     @TemplateRegistration(folder = NewJavaFileWizardIterator.FOLDER, position = 800, content = "resources/Applet.java.template", scriptEngine = "freemarker", displayName = "#Applet.java", iconBase = JavaTemplates.JAVA_ICON, description = "resources/Applet.html", category = "java-classes"),
     @TemplateRegistration(folder = NewJavaFileWizardIterator.FOLDER, position = 900, content = "resources/Main.java.template", scriptEngine = "freemarker", displayName = "#Main.java", iconBase = "org/netbeans/modules/java/project/ui/resources/main-class.png", description = "resources/Main.html", category = "java-main-class"),
     @TemplateRegistration(folder = NewJavaFileWizardIterator.FOLDER, position = 950, content = "resources/Singleton.java.template", scriptEngine = "freemarker", displayName = "#Singleton.java", iconBase = JavaTemplates.JAVA_ICON, description = "resources/Singleton.html", category = "java-classes"),
-    @TemplateRegistration(folder = NewJavaFileWizardIterator.FOLDER, position = 1000, content = "resources/Empty.java.template", scriptEngine = "freemarker", displayName = "#Empty.java", iconBase = JavaTemplates.JAVA_ICON, description = "resources/Empty.html", category = {"java-classes", "java-classes-basic"})
+    @TemplateRegistration(folder = NewJavaFileWizardIterator.FOLDER, position = 1000, content = "resources/Empty.java.template", scriptEngine = "freemarker", displayName = "#Empty.java", iconBase = JavaTemplates.JAVA_ICON, description = "resources/Empty.html", category = {"java-classes", "java-classes-basic"}),
+    @TemplateRegistration(folder = NewJavaFileWizardIterator.FOLDER, position = 1150, content = "resources/Record.java.template", scriptEngine = "freemarker", displayName = "#Record.java", iconBase = JavaTemplates.JAVA_ICON, description = "resources/Record.html", category = {"java-classes", NewJavaFileWizardIterator.JDK_14}),
 })
 @Messages({
     "Class.java=Java Class",
@@ -89,7 +91,8 @@ import org.openide.util.NbBundle;
     "Applet.java=Applet",
     "Main.java=Java Main Class",
     "Singleton.java=Java Singleton Class",
-    "Empty.java=Empty Java File"
+    "Empty.java=Empty Java File",
+    "Record.java=Java Record"
 })
 public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousInstantiatingIterator<WizardDescriptor> {
 
@@ -99,6 +102,7 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
 
     static final String JDK_5 = "jdk5";
     static final String JDK_9 = "jdk9";
+    static final String JDK_14 = "jdk14";
     
     private static final long serialVersionUID = 1L;
 
@@ -238,17 +242,28 @@ public class NewJavaFileWizardIterator implements WizardDescriptor.AsynchronousI
             final JavaSource src = JavaSource.forFileObject(createdFile);
             if (src != null) {
                 final Set<String> mNames = requiredModuleNames;
-                src.runModificationTask((WorkingCopy copy) -> {
-                    copy.toPhase(JavaSource.Phase.RESOLVED);
-                    TreeMaker tm = copy.getTreeMaker();
-                    ModuleTree modle = (ModuleTree) copy.getCompilationUnit().getTypeDecls().get(0);
-                    ModuleTree newModle = modle;
-                    for (String mName : mNames) {
-                        newModle = tm.addModuleDirective(newModle, tm.Requires(false, false, tm.QualIdent(mName)));
-                    }
-                    copy.rewrite(modle, newModle);
-                }).commit();
+                src.runModificationTask(new AddRequiresDirective(mNames)).commit();
             }
+        }
+    }
+    
+    private class AddRequiresDirective implements Task<WorkingCopy> {
+        final Set<String> mNames;
+
+        public AddRequiresDirective(Set<String> mNames) {
+            this.mNames = mNames;
+        }
+        
+        @Override
+        public void run(WorkingCopy copy) throws Exception {
+            copy.toPhase(JavaSource.Phase.RESOLVED);
+            TreeMaker tm = copy.getTreeMaker();
+            ModuleTree modle = (ModuleTree) copy.getCompilationUnit().getTypeDecls().get(0);
+            ModuleTree newModle = modle;
+            for (String mName : mNames) {
+                newModle = tm.addModuleDirective(newModle, tm.Requires(false, false, tm.QualIdent(mName)));
+            }
+            copy.rewrite(modle, newModle);
         }
     }
 

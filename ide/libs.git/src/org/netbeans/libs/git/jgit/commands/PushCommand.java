@@ -96,10 +96,11 @@ public class PushCommand extends TransportCommand {
             transport.setTagOpt(TagOpt.AUTO_FOLLOW);
             PushResult pushResult = transport.push(new DelegatingProgressMonitor(monitor), fetchSpecs.isEmpty() ? transport.findRemoteRefUpdatesFor(specs) : Transport.findRemoteRefUpdatesFor(getRepository(), specs, fetchSpecs));
             Map<String, GitBranch> remoteBranches = Utils.refsToBranches(pushResult.getAdvertisedRefs(), Constants.R_HEADS, getClassFactory());
+            Map<String, String> remoteTags = Utils.refsToTags(pushResult.getAdvertisedRefs());
             processMessages(pushResult.getMessages());
             Map<String, GitTransportUpdate> remoteRepositoryUpdates = new HashMap<String, GitTransportUpdate>(pushResult.getRemoteUpdates().size());
             for (RemoteRefUpdate update : pushResult.getRemoteUpdates()) {
-                GitTransportUpdate upd = getClassFactory().createTransportUpdate(transport.getURI(), update, remoteBranches);
+                GitTransportUpdate upd = getClassFactory().createTransportUpdate(transport.getURI(), update, remoteBranches, remoteTags);
                 remoteRepositoryUpdates.put(upd.getRemoteName(), upd);
             }
             Map<String, GitTransportUpdate> localRepositoryUpdates = new HashMap<String, GitTransportUpdate>(pushResult.getTrackingRefUpdates().size());

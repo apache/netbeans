@@ -269,7 +269,9 @@
                 <friend>org.netbeans.modules.html.ojet</friend>
                 <friend>org.netbeans.modules.html.parser</friend>
                 <friend>org.netbeans.modules.html.validation</friend>
+                <friend>org.netbeans.modules.javadoc</friend>
                 <friend>org.netbeans.modules.javascript2.editor</friend>
+                <friend>org.netbeans.modules.javascript2.html</friend>
                 <friend>org.netbeans.modules.javascript2.jade</friend>
                 <friend>org.netbeans.modules.javascript2.jquery</friend>
                 <friend>org.netbeans.modules.javascript2.react</friend>

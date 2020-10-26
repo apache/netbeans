@@ -221,6 +221,7 @@ public class JDKProject implements Project {
                                     new CustomizerProviderImpl(this),
                                     new Settings(this),
                                     new BinaryForSourceQueryImpl(this, cpp.getSourceCP()),
+                                    CProjectConfigurationProviderImpl.create(this),
                                     this);
         base = new ProxyLookup(base, RemotePlatformImpl.createProvider(jdkRoot, this));
         this.lookup = LookupProviderSupport.createCompositeLookup(base, "Projects/" + PROJECT_KEY + "/Lookup");
@@ -376,7 +377,8 @@ public class JDKProject implements Project {
             Arrays.asList(Pair.<String, String>of("${basedir}/share/native/", null),
                           Pair.<String, String>of("${basedir}/${os}/native/", null),
                           Pair.<String, String>of("${basedir}/${generalized-os}/native/", null),
-                          Pair.<String, String>of("${outputRoot}/support/headers/${module}/", null)),
+                          Pair.<String, String>of("${outputRoot}/support/headers/${module}/", null),
+                          Pair.<String, String>of("${outputRoot}/support/modules_include/${module}/", null)),
             Arrays.<Pair<String, String>>asList()
     );
 

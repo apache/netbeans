@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
  * @author vkraemer
  */
 public enum ServerDetails {
-    
+
     /**
      * details for an instance of GlassFish Server 3.0/3.0.x
      */
@@ -135,7 +135,7 @@ public enum ServerDetails {
         "https://download.oracle.com/glassfish/4.0.1/release/glassfish-4.0.1-ml.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N"
     ),
-    
+
     /**
      * details for an instance of GlassFish Server 4.1 and dev 4.2
      */
@@ -157,7 +157,7 @@ public enum ServerDetails {
         "https://download.oracle.com/glassfish/4.1.1/release/glassfish-4.1.1.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
-    
+
     /**
      * details for an instance of GlassFish Server 4.1.2
      */
@@ -168,7 +168,7 @@ public enum ServerDetails {
         "https://download.oracle.com/glassfish/4.1.2/release/glassfish-4.1.2.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
-    
+
     /**
      * details for an instance of GlassFish Server 5
      */
@@ -179,7 +179,7 @@ public enum ServerDetails {
         "https://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
-    
+
     /**
      * details for an instance of GlassFish Server 5
      */
@@ -195,7 +195,7 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 5
      */
     GLASSFISH_SERVER_5_1_0(NbBundle.getMessage(ServerDetails.class, "STR_510_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv5ee8", // NOI18N
+        "deployer:gfv510ee8", // NOI18N
         510,
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/5.1.0/glassfish-5.1.0.zip", // NOI18N
         "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/5.1.0/glassfish-5.1.0.zip", // NOI18N
@@ -276,7 +276,7 @@ public enum ServerDetails {
 
     /**
      * Determine the version of the GlassFish Server that wrote the domain.xml file
-     * 
+     *
      * @param domainXml the file to analyze
      * @return -1 if domainXml is null, unreadable or not a directory
      * @throws IllegalStateException if domainXml cannot be parsed
@@ -296,14 +296,14 @@ public enum ServerDetails {
         TreeParser.readXml(domainXml, paths);
         return dp.hasDefaultConfig();
     }
-    
+
     private String displayName;
     private String uriFragment;
     private String indirectUrl;
     private String directUrl;
     private String licenseUrl;
     private int versionInt;
-    
+
 
     ServerDetails(String displayName, String uriFragment, int versionInt,
             String directUrl, String indirectUrl, String licenseUrl) {
@@ -314,8 +314,8 @@ public enum ServerDetails {
             this.versionInt = versionInt;
             this.licenseUrl = licenseUrl;
     }
-    
-    @Override 
+
+    @Override
     public String toString() {
         return displayName;
     }

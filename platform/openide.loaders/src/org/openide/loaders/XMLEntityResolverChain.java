@@ -99,9 +99,9 @@ final class XMLEntityResolverChain implements EntityResolver {
         IOException lioex = null;
         
         synchronized (resolverChain) {
-            Iterator it = resolverChain.iterator();
+            Iterator<EntityResolver> it = resolverChain.iterator();
             while (it.hasNext()) {
-                EntityResolver resolver = (EntityResolver) it.next();
+                EntityResolver resolver = it.next();
                 try {
                     InputSource test = resolver.resolveEntity(publicID, systemID);
                     if (test == null) continue;

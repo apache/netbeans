@@ -21,6 +21,10 @@ package org.netbeans.swing.laf.flatlaf;
 
 import com.formdev.flatlaf.util.UIScale;
 import java.awt.Color;
+import javax.swing.InputMap;
+import javax.swing.KeyStroke;
+import javax.swing.UIDefaults;
+import javax.swing.UIDefaults.LazyValue;
 import javax.swing.UIManager;
 import org.netbeans.swing.laf.flatlaf.ui.FlatTabControlIcon;
 import org.netbeans.swing.plaf.LFCustoms;
@@ -40,9 +44,14 @@ public class FlatLFCustoms extends LFCustoms {
     public Object[] createApplicationSpecificKeysAndValues() {
         Color editorContentBorderColor = UIManager.getColor("TabbedContainer.editor.contentBorderColor"); // NOI18N
 
+        Object[] removeCtrlPageUpDownKeyBindings = {
+            "ctrl PAGE_UP", null, // NOI18N
+            "ctrl PAGE_DOWN", null // NOI18N
+        };
+
         return new Object[] {
             // necessary for org.openide.explorer.propertysheet.PropertySheet and others
-            CONTROLFONT, UIManager.getFont("Label.font"),
+            CONTROLFONT, UIManager.getFont("Label.font"), // NOI18N
 
             EDITOR_TAB_DISPLAYER_UI, "org.netbeans.swing.laf.flatlaf.ui.FlatEditorTabDisplayerUI", // NOI18N
             VIEW_TAB_DISPLAYER_UI, "org.netbeans.swing.laf.flatlaf.ui.FlatViewTabDisplayerUI", // NOI18N
@@ -80,8 +89,56 @@ public class FlatLFCustoms extends LFCustoms {
             // Change some colors from ColorUIResource to Color because they are used as
             // background colors for checkboxes (e.g. in org.netbeans.modules.palette.ui.CategoryButton),
             // which in FlatLaf paint background only if background color is not a UIResource.
-            "PropSheet.setBackground", new Color(UIManager.getColor("PropSheet.setBackground").getRGB()),
-            "PropSheet.selectedSetBackground", new Color(UIManager.getColor("PropSheet.selectedSetBackground").getRGB()),
+            "PropSheet.setBackground", new Color(UIManager.getColor("PropSheet.setBackground").getRGB()), // NOI18N
+            "PropSheet.selectedSetBackground", new Color(UIManager.getColor("PropSheet.selectedSetBackground").getRGB()), // NOI18N
+
+            //#108517 - turn off ctrl+page_up and ctrl+page_down mapping
+            // Not using UIUtils.addInputMapsWithoutCtrlPageUpAndCtrlPageDown() here because
+            // this method replaces all key bindings for List, ScrollPane, Table and Tree.
+            // But FlatLaf uses slightly different key bindings. Especially on macOS the
+            // key bindings are different for platform specific behavior.
+            "List.focusInputMap", new LazyModifyInputMap( "List.focusInputMap", removeCtrlPageUpDownKeyBindings ), // NOI18N
+            "ScrollPane.ancestorInputMap", new LazyModifyInputMap( "ScrollPane.ancestorInputMap", removeCtrlPageUpDownKeyBindings ), // NOI18N
+            "ScrollPane.ancestorInputMap.RightToLeft", new LazyModifyInputMap( "ScrollPane.ancestorInputMap.RightToLeft", removeCtrlPageUpDownKeyBindings ), // NOI18N
+            "Table.ancestorInputMap", new LazyModifyInputMap( "Table.ancestorInputMap", removeCtrlPageUpDownKeyBindings ), // NOI18N
+            "Table.ancestorInputMap.RightToLeft", new LazyModifyInputMap( "Table.ancestorInputMap.RightToLeft", removeCtrlPageUpDownKeyBindings ), // NOI18N
+            "Tree.focusInputMap", new LazyModifyInputMap( "Tree.focusInputMap", removeCtrlPageUpDownKeyBindings ), // NOI18N
         };
+    }
+
+    //---- class LazyModifyInputMap -------------------------------------------
+
+    /**
+     * Lazily gets a base input map from the look and feel defaults and
+     * applies modifications to it specified in bindings.
+     */
+    private static class LazyModifyInputMap
+        implements LazyValue
+    {
+        private final String baseKey;
+        private final Object[] bindings;
+
+        LazyModifyInputMap(String baseKey, Object[] bindings) {
+            this.baseKey = baseKey;
+            this.bindings = bindings;
+        }
+
+        @Override
+        public Object createValue(UIDefaults table) {
+            // get base input map from look and feel defaults (resolves lazy base input map)
+            InputMap inputMap = (InputMap) UIManager.getLookAndFeelDefaults().get(baseKey);
+
+            // modify input map (replace or remove)
+            for (int i = 0; i < bindings.length; i += 2) {
+                KeyStroke keyStroke = KeyStroke.getKeyStroke((String) bindings[i]);
+                if (bindings[i + 1] != null) {
+                    inputMap.put(keyStroke, bindings[i + 1]);
+                } else {
+                    inputMap.remove(keyStroke);
+                }
+            }
+
+            return inputMap;
+        }
     }
 }

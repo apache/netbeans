@@ -22,12 +22,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.EditList;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
+import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
@@ -77,6 +79,10 @@ public class InitializeFieldSuggestion extends SuggestionRule {
                 }
             }
         }
+    }
+
+    protected PhpVersion getPhpVersion(@NullAllowed FileObject fileObject) {
+        return fileObject == null ? PhpVersion.getDefault() : CodeUtils.getPhpVersion(fileObject);
     }
 
     private final class ConstructorVisitor extends DefaultVisitor {
@@ -189,7 +195,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
                         initializers.add(new FieldAssignmentInitializer(constructorBodyEndOffset, parameterName));
                     }
                     if (!declaredFields.contains(parameterName)) {
-                        initializers.add(new FieldDeclarationInitializer(typeBodyStartOffset, formalParameter));
+                        initializers.add(new FieldDeclarationInitializer(typeBodyStartOffset, formalParameter, getPhpVersion(fileObject)));
                     }
                     if (!initializers.isEmpty()) {
                         result.add(new ParameterToInit(formalParameter, initializers));
@@ -275,7 +281,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
     private static class FieldDeclarationInitializer extends InitializerImpl {
         private final String initString;
 
-        public FieldDeclarationInitializer(int offset, FormalParameter node) {
+        public FieldDeclarationInitializer(int offset, FormalParameter node, PhpVersion phpVersion) {
             super(offset);
 
             Expression parameterType = node.getParameterType();
@@ -287,7 +293,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
 
             StringBuilder sb = new StringBuilder();
             sb.append("\n"); // NOI18N
-            if (typeName != null) {
+            if (typeName != null && !phpVersion.hasPropertyTypes()) {
                 // type part
                 sb.append("/**\n * @var "); // NOI18N
                 sb.append(typeName);
@@ -296,7 +302,16 @@ public class InitializeFieldSuggestion extends SuggestionRule {
                 }
                 sb.append("\n */\n"); // NOI18N
             }
-            sb.append("private ").append(parameterName).append(";\n"); // NOI18N
+            sb.append("private "); // NOI18N
+            if (typeName != null && phpVersion.hasPropertyTypes()) {
+                // typed properties are supported since PHP 7.4
+                // https://wiki.php.net/rfc/typed_properties_v2
+                if (node.isNullableType()) {
+                    sb.append(CodeUtils.NULLABLE_TYPE_PREFIX);
+                }
+                sb.append(typeName).append(" "); // NOI18N
+            }
+            sb.append(parameterName).append(";\n"); // NOI18N
             initString = sb.toString();
         }
 

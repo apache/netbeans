@@ -63,12 +63,12 @@ public class EvaluatorTest extends TestBase {
         clearWorkDir();
         super.setUp();
         userPropertiesFile = TestBase.initializeBuildProperties(getWorkDir(), getDataDir());
-        FileObject dir = nbRoot().getFileObject("java.project");
+        FileObject dir = nbRoot().getFileObject("java/java.project");
         assertNotNull("have java.project checked out", dir);
         ProjectManagerTest.resetProjectManager(ProjectManager.getDefault());
         Project p = ProjectManager.getDefault().findProject(dir);
         javaProjectProject = (NbModuleProject)p;
-        dir = nbRoot().getFileObject("openide.loaders");
+        dir = nbRoot().getFileObject("platform/openide.loaders");
         assertNotNull("have openide.loaders checked out", dir);
         p = ProjectManager.getDefault().findProject(dir);
         loadersProject = (NbModuleProject)p;
@@ -76,7 +76,7 @@ public class EvaluatorTest extends TestBase {
 
     public void testEvaluator() throws Exception {
         PropertyEvaluator eval = javaProjectProject.evaluator();
-        assertEquals("right basedir", file("java.project"),
+        assertEquals("right basedir", file("java/java.project"),
             javaProjectProject.getHelper().resolveFile(eval.getProperty("basedir")));
         assertEquals("right nb_all", nbRootFile(),
             javaProjectProject.getHelper().resolveFile(eval.getProperty("nb_all")));

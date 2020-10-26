@@ -62,7 +62,7 @@ public class CompletionJList extends JList {
         setFont(editorComponent.getFont());
         setLayoutOrientation(JList.VERTICAL);
         setFixedCellHeight(fixedItemHeight = Math.max(CompletionLayout.COMPLETION_ITEM_HEIGHT, getFontMetrics(getFont()).getHeight()));
-        setModel(new Model(Collections.EMPTY_LIST));
+        setModel(new Model(Collections.emptyList()));
         setFocusable(false);
 
         renderComponent = new RenderComponent();

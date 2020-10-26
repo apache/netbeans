@@ -274,9 +274,9 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
      * If the files are rescanned (e.g. after a disposal), the current data loader will be given preference.
     */
     protected final void markFiles () throws IOException {
-        Iterator en = files ().iterator ();
+        Iterator<FileObject> en = files ().iterator ();
         while (en.hasNext ()) {
-            FileObject fo = (FileObject)en.next ();
+            FileObject fo = en.next ();
             loader.markFile (fo);
         }
     }

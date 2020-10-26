@@ -268,7 +268,7 @@ public final class HtmlRenderer {
      * @return A cell renderer that can render HTML.
      */
     public static final Renderer createRenderer() {
-        return new HtmlRendererImpl();
+        return new HtmlRendererImpl(true);
     }
 
     /**
@@ -290,7 +290,7 @@ public final class HtmlRenderer {
      * @return a label which can render a subset of HTML very quickly
      */
     public static final JLabel createLabel() {
-        return new HtmlRendererImpl();
+        return new HtmlRendererImpl(false);
     }
 
     /**
@@ -339,7 +339,7 @@ public final class HtmlRenderer {
             // #54257 - on macosx + chinese/japanese fonts, the getStringBounds() method returns bad value
             wid = fm.stringWidth(s);
         } else {
-            wid = (int)fm.getStringBounds(s, g).getWidth();
+            wid = (int) Math.ceil(fm.getStringBounds(s, g).getWidth());
         }
 
         if (paint) {

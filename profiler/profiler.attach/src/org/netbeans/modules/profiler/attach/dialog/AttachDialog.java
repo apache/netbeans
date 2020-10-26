@@ -572,7 +572,6 @@ public class AttachDialog extends AttachWizard {
                                        null,
                                        new OsAction(IntegrationUtils.PLATFORM_MAC_OS),
                                        null,
-                                       new OsAction(IntegrationUtils.PLATFORM_SOLARIS_SPARC_OS),
                                        new OsAction(IntegrationUtils.PLATFORM_SOLARIS_SPARC64_OS),
                                        new OsAction(IntegrationUtils.PLATFORM_SOLARIS_INTEL_OS),
                                        new OsAction(IntegrationUtils.PLATFORM_SOLARIS_AMD64_OS));

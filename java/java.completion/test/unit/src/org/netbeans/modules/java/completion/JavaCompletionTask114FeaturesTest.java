@@ -48,7 +48,40 @@ public class JavaCompletionTask114FeaturesTest extends CompletionTestBase {
     public void testBindingUse() throws Exception {
         performTest("GenericMethodInvocation", 1231, "boolean b = argO instanceof String str && st", "BindingUse.pass", SOURCE_LEVEL);
     }
+    
 
+    public void testBeforeLeftRecordBraces() throws Exception {
+        performTest("Records", 896, null, "implementsKeyword.pass", SOURCE_LEVEL);
+    }
+        
+        public void testBeforeRecParamsLeftParen() throws Exception {
+        performTest("Records", 892, null, "empty.pass", SOURCE_LEVEL);
+    }
+
+    public void testInsideRecParams() throws Exception {
+        performTest("Records", 894, "R", "typesRecordLocalMembersAndVars.pass", SOURCE_LEVEL);
+    }
+    
+    public void testAfterTypeParamInRecParam() throws Exception {
+        performTest("Records", 890, null, "extendsKeyword.pass", SOURCE_LEVEL);
+    }
+    
+    public void testInsideRecAfterStaticKeyWord() throws Exception {
+        performTest("Records", 918, "R", "typesRecordStaticMembersAndVars.pass", SOURCE_LEVEL);
+    }
+    
+    public void testAnnotationInRecordParam() throws Exception {
+        performTest("Records", 999, null, "override.pass", SOURCE_LEVEL);
+    } 
+    
+    public void testRecordKeywordInsideClass() throws Exception {
+        performTest("Records", 1014, "rec", "record.pass", SOURCE_LEVEL);
+    } 
+    
+    public void testVariableNameSuggestion() throws Exception {
+        performTest("Records", 1071, null, "recordVariableSuggestion.pass", SOURCE_LEVEL);
+    } 
+    
     public void noop() {
     }
 

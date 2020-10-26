@@ -1,0 +1,28 @@
+public  function setNumber(int|float $$number): void {
+$$this->number = $number;
+}
+
+public  function setNullableInt(int|null $$nullableInt): void {
+$$this->nullableInt = $nullableInt;
+}
+
+public  function setFooBarBaz(Foo|Bar|Baz $$fooBarBaz): void {
+$$this->fooBarBaz = $fooBarBaz;
+}
+
+public  function setIterableFalse(iterable|false $$iterableFalse): void {
+$$this->iterableFalse = $iterableFalse;
+}
+
+public static function setStaticNullableArray(array|null $$staticNullableArray): void {
+self::$$staticNullableArray = $staticNullableArray;
+}
+
+public static function setStaticNullableStringBool(string|bool|null $$staticNullableStringBool): void {
+self::$$staticNullableStringBool = $staticNullableStringBool;
+}
+
+public static function setStaticFooBar(\Test\Foo|\Test\Bar $$staticFooBar): void {
+self::$$staticFooBar = $staticFooBar;
+}
+

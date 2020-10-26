@@ -55,8 +55,11 @@ import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.netbeans.api.extexecution.base.Processes;
+import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
+import org.netbeans.api.project.Project;
+import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.NbMavenProject;
@@ -83,6 +86,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.Places;
+import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
@@ -111,7 +115,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     private String processUUID;
     private Process preProcess;
     private String preProcessUUID;
-    
+    private static final SpecificationVersion VER17 = new SpecificationVersion("1.7"); //NOI18N
     private static final Logger LOGGER = Logger.getLogger(MavenCommandLineExecutor.class.getName());
     
     private static final RequestProcessor RP = new RequestProcessor(MavenCommandLineExecutor.class.getName(),1);
@@ -241,7 +245,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         processInitialMessage();
         boolean isMaven3 = !isMaven2();
         boolean singlethreaded = !isMultiThreaded(clonedConfig);
-        if (isMaven3 && singlethreaded) {
+        boolean eventSpyCompatible = isEventSpyCompatible(clonedConfig);
+        if (isMaven3 && singlethreaded && eventSpyCompatible) {
             injectEventSpy( clonedConfig );
             if (clonedConfig.getPreExecution() != null) {
                 injectEventSpy( (BeanRunConfig) clonedConfig.getPreExecution());
@@ -315,18 +320,24 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 ioput.getErr().close();
                 actionStatesAtFinish(out.createResumeFromFinder(), out.getExecutionTree());
                 markFreeTab();
-                RP.post(new Runnable() { //#103460
-                    @Override
-                    public void run() {
-                        //TODO we eventually know the coordinates of all built projects via EventSpy.
-                        if (clonedConfig.getProject() != null) {
-                            NbMavenProject.fireMavenProjectReload(clonedConfig.getProject());
-                        }
-                    }
-                });
-                
+                final Project prj = clonedConfig.getProject();
+                NbMavenProjectImpl impl = prj.getLookup().lookup(NbMavenProjectImpl.class);
+                if (impl != null) {
+                    RequestProcessor.Task reloadTask = impl.fireProjectReload();
+                    reloadTask.waitFinished();
+                }
             }
-            
+        }
+    }
+
+    private boolean isEventSpyCompatible(final BeanRunConfig clonedConfig) {
+        // EventSpy cannot work on jdk < 7
+        if (clonedConfig.getProject() != null) {
+            ActiveJ2SEPlatformProvider javaprov = clonedConfig.getProject().getLookup().lookup(ActiveJ2SEPlatformProvider.class);
+            JavaPlatform platform = javaprov.getJavaPlatform();
+            return (platform.getSpecification().getVersion().compareTo(VER17) >= 0);
+        } else {
+            return true;
         }
     }
 

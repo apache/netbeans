@@ -236,10 +236,10 @@ public class WebServiceListModel {
                 WebServiceManager.getInstance().removeWebService(getWebService(webserviceIds[ii]));
             }
             webServiceGroups.remove(group);
-            Iterator iter = listeners.iterator();
+            Iterator<WebServiceListModelListener> iter = listeners.iterator();
             while (iter.hasNext()) {
                 WebServiceListModelEvent evt = new WebServiceListModelEvent(groupId);
-                ((WebServiceListModelListener) iter.next()).webServiceGroupRemoved(evt);
+                iter.next().webServiceGroupRemoved(evt);
             }
         }
     }
@@ -304,7 +304,7 @@ public class WebServiceListModel {
                     try {
                         WebServiceManager.getInstance().addWebService(target, true);
                     } catch (IOException ex) {
-                        Logger.global.log(Level.INFO, ex.getLocalizedMessage(), ex);
+                        Logger.getGlobal().log(Level.INFO, ex.getLocalizedMessage(), ex);
                     }
                 }
             };

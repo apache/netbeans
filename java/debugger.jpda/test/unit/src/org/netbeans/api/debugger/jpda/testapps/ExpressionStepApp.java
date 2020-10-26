@@ -33,6 +33,8 @@ public class ExpressionStepApp {
         ExpressionStepApp exs = new ExpressionStepApp();
         x = exs.m1(exs.m2((int) x));
         x = exs.m3(exs.m1(exs.m2((int) x)), exs.m1((int) x)).intValue();
+        x = exs.m1(
+                    exs.m2((int)x));
         System.out.println(x);
     }
 

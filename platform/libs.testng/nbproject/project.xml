@@ -37,8 +37,12 @@
                 <package>org.testng.xml</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/testng-6.8.1-dist.jar</runtime-relative-path>
-                <binary-origin>external/testng-6.8.1-dist.jar</binary-origin>
+                <runtime-relative-path>ext/testng-6.14.3.jar</runtime-relative-path>
+                <binary-origin>external/testng-6.14.3.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jcommander-1.78.jar</runtime-relative-path>
+                <binary-origin>external/jcommander-1.78.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

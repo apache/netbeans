@@ -68,8 +68,8 @@ public class InstallationManager {
             ArrayList<Installation> stackInstalls = new ArrayList<Installation>();
             ArrayList<Installation> stdInstalls = new ArrayList<Installation>();
 
-            for ( Iterator it = loadedInstallations.iterator() ; it.hasNext() ; ) {
-                Installation installation = (Installation)it.next();
+            for ( Iterator<Installation> it = loadedInstallations.iterator() ; it.hasNext() ; ) {
+                Installation installation = it.next();
 
                 if ( installation.isStackInstall() ) {
                     stackInstalls.add(installation);                

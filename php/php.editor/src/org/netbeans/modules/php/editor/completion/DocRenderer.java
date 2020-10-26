@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -32,6 +33,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -56,10 +58,13 @@ import org.netbeans.modules.php.editor.api.ElementQuery;
 import org.netbeans.modules.php.editor.api.ElementQuery.Index;
 import org.netbeans.modules.php.editor.api.ElementQueryFactory;
 import org.netbeans.modules.php.editor.api.NameKind;
+import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.QuerySupportFactory;
+import org.netbeans.modules.php.editor.api.elements.BaseFunctionElement;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.ConstantElement;
 import org.netbeans.modules.php.editor.api.elements.ElementFilter;
+import org.netbeans.modules.php.editor.api.elements.FieldElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
 import org.netbeans.modules.php.editor.api.elements.ParameterElement;
@@ -67,10 +72,14 @@ import org.netbeans.modules.php.editor.api.elements.PhpElement;
 import org.netbeans.modules.php.editor.api.elements.TypeConstantElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.api.elements.TypeMemberElement;
+import org.netbeans.modules.php.editor.api.elements.TypeResolver;
+import org.netbeans.modules.php.editor.api.elements.TypedInstanceElement;
 import org.netbeans.modules.php.editor.index.PHPDOCTagElement;
 import org.netbeans.modules.php.editor.index.PredefinedSymbolElement;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
+import org.netbeans.modules.php.editor.model.impl.Type;
+import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.parser.PHPDocCommentParser;
 import org.netbeans.modules.php.editor.parser.annotation.LinkParsedLine;
 import org.netbeans.modules.php.editor.parser.api.Utils;
@@ -242,9 +251,10 @@ final class DocRenderer {
         private final PhpElement indexedElement;
         private final List<String> links = new ArrayList<>();
         private final ASTNode node;
+        @NullAllowed
         private PHPDocBlock phpDocBlock;
 
-        public PHPDocExtractor(CCDocHtmlFormatter header, PhpElement indexedElement, ASTNode node, PHPDocBlock phpDocBlock) {
+        public PHPDocExtractor(CCDocHtmlFormatter header, PhpElement indexedElement, ASTNode node, @NullAllowed PHPDocBlock phpDocBlock) {
             this.header = header;
             this.indexedElement = indexedElement;
             this.node = node;
@@ -380,9 +390,6 @@ final class DocRenderer {
         }
 
         private void extractPHPDocBlock() {
-            if (phpDocBlock == null) {
-                return;
-            }
             List<PHPDocVarTypeTag> params = new ArrayList<>();
             List<PHPDocTypeTag> returns = new ArrayList<>();
             StringBuilder others = new StringBuilder();
@@ -391,10 +398,11 @@ final class DocRenderer {
             List<PhpElement> inheritedElements = getInheritedElements();
             List<PHPDocBlock> inheritedComments = getInheritedComments(inheritedElements);
 
-            String description = phpDocBlock.getDescription();
+            String description = phpDocBlock == null ? null : phpDocBlock.getDescription();
             description = composeDescription(description, inheritedComments);
 
-            for (PHPDocTag tag : phpDocBlock.getTags()) {
+            List<PHPDocTag> tags = phpDocBlock == null ? Collections.emptyList() : phpDocBlock.getTags();
+            for (PHPDocTag tag : tags) {
                 AnnotationParsedLine kind = tag.getKind();
                 if (kind.equals(PHPDocTag.Type.PARAM)) {
                     PHPDocVarTypeTag paramTag = (PHPDocVarTypeTag) tag;
@@ -419,6 +427,14 @@ final class DocRenderer {
                             processPhpDoc(tag.getKind().getName()), processPhpDoc(tagDescription, "")); //NOI18N
                     others.append(oline);
                 }
+            }
+
+            // field without phpdoc
+            if (phpDocBlock == null
+                    && indexedElement instanceof FieldElement) {
+                TypedInstanceElement fieldElement = (FieldElement) indexedElement;
+                Set<TypeResolver> types = fieldElement.getInstanceTypes();
+                others.append(composeTypesAndDescription(composeType(types), "")); // NOI18N
             }
 
             phpDoc.append(composeFunctionDoc(processDescription(
@@ -495,7 +511,10 @@ final class DocRenderer {
         }
 
         private String composeParameterLine(List<PHPDocTypeNode> types, String variableValue, String documentation) {
-            String type = composeType(types);
+            return composeParameterLine(composeType(types), variableValue, documentation);
+        }
+
+        private String composeParameterLine(String type, String variableValue, String documentation) {
             String pline = String.format("<tr><td>&nbsp;</td><td valign=\"top\" %s><nobr>%s</nobr></td><td valign=\"top\" %s><nobr><b>%s</b></nobr></td><td valign=\"top\" %s>%s</td></tr>%n", //NOI18N
                     TD_STYLE,
                     type,
@@ -506,15 +525,19 @@ final class DocRenderer {
             return pline;
         }
 
+        private String composeTypesAndDescription(List<PHPDocTypeNode> types, String description) {
+            return composeTypesAndDescription(composeType(types), description);
+        }
+
         @NbBundle.Messages({
             "Type=Type",
             "Description=Description"
         })
-        private String composeTypesAndDescription(List<PHPDocTypeNode> types, String description) {
+        private String composeTypesAndDescription(String type, String description) {
             StringBuilder returnValue = new StringBuilder();
-            if (types != null && types.size() > 0) {
+            if (StringUtils.hasText(type)) {
                 returnValue.append(String.format("<tr><th align=\"left\">%s:</th><td>%s</td></tr>", //NOI18N
-                        Bundle.Type(), composeType(types)));
+                        Bundle.Type(), type));
             }
 
             if (description != null && description.length() > 0) {
@@ -546,6 +569,37 @@ final class DocRenderer {
             return type.toString();
         }
 
+        /**
+         * Create types separated with "|".
+         *
+         * @param types types
+         * @return types separated with "|"
+         */
+        private String composeType(Collection<TypeResolver> types) {
+            StringBuilder sb = new StringBuilder();
+            for (TypeResolver type : types) {
+                if (type.isResolved()) {
+                    QualifiedName typeName = type.getTypeName(true);
+                    if (typeName != null) {
+                        if (sb.length() > 0) {
+                            sb.append(" ").append(Type.SEPARATOR).append(" "); // NOI18N
+                        }
+                        if (type.isNullableType()) {
+                            sb.append(CodeUtils.NULLABLE_TYPE_PREFIX);
+                        }
+                        String tName = typeName.toString();
+                        if (tName.startsWith("\\")) { // NOI18N
+                            if (VariousUtils.isSpecialClassName(tName.substring(1))) {
+                                tName = tName.substring(1);
+                            }
+                        }
+                        sb.append(tName);
+                    }
+                }
+            }
+            return sb.toString();
+        }
+
         // because of unit tests
         static String processPhpDoc(String phpDoc) {
             return processPhpDoc(phpDoc, Bundle.PHPDocNotFound());
@@ -574,7 +628,11 @@ final class DocRenderer {
             return ret;
         }
 
-        private String replaceInheritdocForDescription(String description, String parentDescription) {
+        @CheckForNull
+        private String replaceInheritdocForDescription(@NullAllowed String description, @NullAllowed String parentDescription) {
+            if (description == null) {
+                return parentDescription;
+            }
             if (description != null && hasInlineInheritdoc(description)) {
                 if (parentDescription != null && !parentDescription.trim().isEmpty()) {
                     if (INLINE_INHERITDOC_PATTERN.matcher(description.trim()).matches()) {
@@ -590,9 +648,9 @@ final class DocRenderer {
         private String composeParamTags(List<PHPDocVarTypeTag> paramTags, List<PHPDocBlock> inheritedComments) {
             StringBuilder params = new StringBuilder();
             // add also missing params
-            if (indexedElement instanceof MethodElement) {
-                MethodElement methodElement = (MethodElement) indexedElement;
-                List<ParameterElement> parameters = methodElement.getParameters();
+            if (indexedElement instanceof BaseFunctionElement) {
+                BaseFunctionElement functionElement = (BaseFunctionElement) indexedElement;
+                List<ParameterElement> parameters = functionElement.getParameters();
                 for (ParameterElement parameter : parameters) {
                     PHPDocVarTypeTag param = null;
                     String name = parameter.getName();
@@ -603,7 +661,8 @@ final class DocRenderer {
                         }
                     }
                     // use fallback params
-                    if (param == null) {
+                    if (param == null
+                            && indexedElement instanceof MethodElement) {
                         for (PHPDocBlock inheritedComment : inheritedComments) {
                             List<PHPDocTag> tags = inheritedComment.getTags();
                             for (PHPDocTag tag : tags) {
@@ -628,7 +687,9 @@ final class DocRenderer {
                         String paramLine = composeParameterLine(param.getTypes(), param.getVariable().getValue(), paramDescription);
                         params.append(paramLine);
                     } else {
-                        String paramLine = composeParameterLine(Collections.<PHPDocTypeNode>emptyList(), name, ""); // NOI18N
+                        // use actual parameter types
+                        Set<TypeResolver> types = parameter.getTypes();
+                        String paramLine = composeParameterLine(composeType(types), name, ""); // NOI18N
                         params.append(paramLine);
                     }
                 }
@@ -693,6 +754,15 @@ final class DocRenderer {
             for (PHPDocTypeTag fallback : fallbacks) {
                 returnValue.append(composeTypesAndDescription(fallback.getTypes(), fallback.getDocumentation()));
             }
+
+            if (fallbacks.isEmpty()) {
+                // no phpdoc
+                if (indexedElement instanceof BaseFunctionElement) {
+                    BaseFunctionElement functionElement = (BaseFunctionElement) indexedElement;
+                    // currently, fully qualified type names are shown
+                    returnValue.append(composeTypesAndDescription(composeType(functionElement.getReturnTypes()), "")); // NOI18N
+                }
+            }
             return returnValue.toString();
         }
 
@@ -717,7 +787,7 @@ final class DocRenderer {
 
         private boolean needInheritedElements() {
             if (phpDocBlock == null) {
-                return false;
+                return true;
             }
             String description = phpDocBlock.getDescription();
             if (hasInlineInheritdoc(description)) {
@@ -752,7 +822,7 @@ final class DocRenderer {
             for (PhpElement element : elements) {
                 PHPDocBlock docBlock = getPhpDocBlock(element);
                 if (docBlock != null) {
-                    if (isOnlyInheritdoc(phpDocBlock)) {
+                    if (phpDocBlock == null || isOnlyInheritdoc(phpDocBlock)) {
                         phpDocBlock = docBlock;
                     } else {
                         inheritedComments.add(docBlock);
@@ -767,7 +837,11 @@ final class DocRenderer {
                     && phpDocBlock.getTags().isEmpty();
         }
 
-        static String replaceInlineInheritdoc(String description, String inheritdoc) {
+        @CheckForNull
+        static String replaceInlineInheritdoc(@NullAllowed String description, @NullAllowed String inheritdoc) {
+             if (description == null && inheritdoc != null) {
+                return inheritdoc;
+            }
             if (description == null || inheritdoc == null) {
                 return description;
             }

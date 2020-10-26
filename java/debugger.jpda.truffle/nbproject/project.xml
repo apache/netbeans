@@ -40,7 +40,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>3.5</specification-version>
+                        <specification-version>3.19</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -77,12 +77,6 @@
                     <run-dependency>
                         <release-version>2</release-version>
                         <specification-version>1.4</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.java.kit</code-name-base>
-                    <run-dependency>
-                        <specification-version>1.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -136,7 +130,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>2.50</specification-version>
+                        <specification-version>2.65</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -275,7 +269,12 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>org.netbeans.modules.debugger.jpda.truffle.breakpoints</package>
+                <package>org.netbeans.modules.debugger.jpda.truffle.frames</package>
+                <package>org.netbeans.modules.debugger.jpda.truffle.source</package>
+                <package>org.netbeans.modules.debugger.jpda.truffle.vars</package>
+            </public-packages>
             <extra-compilation-unit>
                 <package-root>truffle-backend</package-root>
                 <classpath>${module.classpath}:${truffle-backend.cp.extra}</classpath>

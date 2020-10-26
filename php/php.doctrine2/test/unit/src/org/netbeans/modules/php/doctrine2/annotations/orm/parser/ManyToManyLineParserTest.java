@@ -161,4 +161,17 @@ public class ManyToManyLineParserTest extends NbTestCase {
         assertEquals("Group", type2);
     }
 
+    public void testValidUseCase_09() throws Exception {
+        AnnotationParsedLine parsedLine = parser.parse("\\Foo\\Bar\\manytomany(targetEntity=\"\\Foo\\Bar\\Group::class\", inversedBy=\"features\")  \t");
+        assertEquals("ManyToMany", parsedLine.getName());
+        assertEquals("(targetEntity=\"\\Foo\\Bar\\Group::class\", inversedBy=\"features\")", parsedLine.getDescription());
+        Map<OffsetRange, String> types = parsedLine.getTypes();
+        assertNotNull(types);
+        assertEquals(2, types.size());
+        String type1 = types.get(new OffsetRange(0, 19));
+        assertEquals("\\Foo\\Bar\\manytomany", type1);
+        String type2 = types.get(new OffsetRange(34, 48));
+        assertEquals("\\Foo\\Bar\\Group", type2);
+    }
+
 }

@@ -1510,7 +1510,7 @@ public final class DocumentViewOp
        
         JTextComponent textComponent = docView.getTextComponent();
         Keymap keymap = textComponent.getKeymap();
-        int wheelRotation = evt.getWheelRotation();
+        double wheelRotation = evt.getPreciseWheelRotation();
         if (wheelRotation < 0) {
             Action action = keymap.getAction(KeyStroke.getKeyStroke(0x290, modifiers)); //WHEEL_UP constant
             if (action != null) {

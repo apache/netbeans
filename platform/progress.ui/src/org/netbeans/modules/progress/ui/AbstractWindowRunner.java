@@ -222,15 +222,18 @@ abstract class AbstractWindowRunner<T> extends WindowAdapter implements Runnable
         panel.add(mainLabel);
         JComponent progressBar = ProgressHandleFactory.createProgressComponent(handle);
         progressBar.setMinimumSize(new Dimension(400, 32));
-        JPanel progressPanel = new JPanel(new GridBagLayout());
+        GridBagLayout gb = new GridBagLayout();
+        // give first row, which contains the progress bar and the cancel button, a minimum height
+        gb.rowHeights = new int[] { mainLabel.getFontMetrics(mainLabel.getFont()).getHeight() };
+        JPanel progressPanel = new JPanel(gb);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.weightx = 1D;
-        gbc.weighty = 1.0D;
+        gbc.weighty = 0D;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.BOTH;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         progressPanel.add (progressBar, gbc);
         if (showCancel) {
             final JButton closeButton = new JButton();

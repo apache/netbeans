@@ -1,0 +1,143 @@
+
+
+Document 0
+Searchable Keys:
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  clz : uniontypesabstractclass;UnionTypesAbstractClass;1150;;;;1025;;0;<TESTURL>/testPHP80UnionTypesTypes.php;;
+  field : property;property;1199;2;int|float;int|float;0;<TESTURL>/testPHP80UnionTypesTypes.php;0;
+  field : staticproperty;staticProperty;1248;12;string|bool|null;string|bool|null;0;<TESTURL>/testPHP80UnionTypesTypes.php;0;
+  method : method;method;1294;$number:int|float:1::1:0:0:1;\Foo|\Bar|null;1025;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;
+  method : staticmethod;staticMethod;1375;$iterable:iterable|null:1::1:0:0:1;\Test\Foo|\Bar;1036;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;
+  top : uniontypesabstractclass
+
+Not Searchable Keys:
+
+
+Document 2
+Searchable Keys:
+  clz : uniontypesclass;UnionTypesClass;821;;;;1;;0;<TESTURL>/testPHP80UnionTypesTypes.php;;
+  field : property;property;862;2;int|float;int|float;0;<TESTURL>/testPHP80UnionTypesTypes.php;0;
+  field : staticproperty;staticProperty;911;12;string|bool|null;string|bool|null;0;<TESTURL>/testPHP80UnionTypesTypes.php;0;
+  method : method;method;948;$number:int|float:1::1:0:0:1;\Foo|\Bar|null;1;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;
+  method : staticmethod;staticMethod;1045;$iterable:iterable|null:1::1:0:0:1;\Test\Foo|\Bar;9;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;
+  top : uniontypesclass
+
+Not Searchable Keys:
+
+
+Document 3
+Searchable Keys:
+  field : property;property;1657;2;int|float;int|float;0;<TESTURL>/testPHP80UnionTypesTypes.php;0;
+  field : staticproperty;staticProperty;1706;12;string|bool|null;string|bool|null;0;<TESTURL>/testPHP80UnionTypesTypes.php;0;
+  method : method;method;1743;$number:int|float:1::1:0:0:1;\Foo|\Bar|null;1;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;
+  method : staticmethod;staticMethod;1840;$iterable:iterable|null:1::1:0:0:1;\Test\Foo|\Bar;9;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;
+  top : uniontypestrait
+  trait : uniontypestrait;UnionTypesTrait;1616;;;0;<TESTURL>/testPHP80UnionTypesTypes.php;
+
+Not Searchable Keys:
+
+
+Document 4
+Searchable Keys:
+  identifier_used : bar;
+  identifier_used : bar;
+  identifier_used : bar;
+  identifier_used : bar;
+  identifier_used : bar;
+  identifier_used : bar;
+  identifier_used : bar;
+  identifier_used : bar;
+  identifier_used : bar;
+  identifier_used : bar;
+  identifier_used : bool;
+  identifier_used : bool;
+  identifier_used : bool;
+  identifier_used : float;
+  identifier_used : float;
+  identifier_used : float;
+  identifier_used : float;
+  identifier_used : float;
+  identifier_used : float;
+  identifier_used : float;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : foo;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : iterable;
+  identifier_used : iterable;
+  identifier_used : iterable;
+  identifier_used : iterable;
+  identifier_used : iterable;
+  identifier_used : iterable;
+  identifier_used : iterable;
+  identifier_used : iterable;
+  identifier_used : method;
+  identifier_used : method;
+  identifier_used : method;
+  identifier_used : method;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : null;
+  identifier_used : number;
+  identifier_used : number;
+  identifier_used : number;
+  identifier_used : number;
+  identifier_used : property;
+  identifier_used : property;
+  identifier_used : property;
+  identifier_used : staticmethod;
+  identifier_used : staticmethod;
+  identifier_used : staticmethod;
+  identifier_used : staticmethod;
+  identifier_used : staticproperty;
+  identifier_used : staticproperty;
+  identifier_used : staticproperty;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : string;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : uniontypesabstractclass;
+  identifier_used : uniontypesclass;
+  identifier_used : uniontypesinterface;
+  identifier_used : uniontypestrait;
+
+Not Searchable Keys:
+
+
+Document 5
+Searchable Keys:
+  iface : uniontypesinterface;UnionTypesInterface;1442;;;0;<TESTURL>/testPHP80UnionTypesTypes.php;
+  method : method;method;1484;$number:int|float:1::1:0:0:1;\Foo|\Bar|null;1025;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;
+  method : staticmethod;staticMethod;1553;$iterable:iterable|null:1::1:0:0:1;\Test\Foo|\Bar;1033;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;
+  top : uniontypesinterface
+
+Not Searchable Keys:

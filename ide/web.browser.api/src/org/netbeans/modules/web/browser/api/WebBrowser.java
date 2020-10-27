@@ -252,6 +252,10 @@ public final class WebBrowser {
     private static final @StaticResource String CHROME_LARGE = "org/netbeans/modules/web/browser/ui/resources/browser_chrome_24x.png"; // NOI18N
     private static final @StaticResource String FIREFOX_SMALL = "org/netbeans/modules/web/browser/ui/resources/browser_firefox_16x.png"; // NOI18N
     private static final @StaticResource String FIREFOX_LARGE = "org/netbeans/modules/web/browser/ui/resources/browser_firefox_24x.png"; // NOI18N
+    private static final @StaticResource String FIREFOX_DEVEDITION_SMALL = "org/netbeans/modules/web/browser/ui/resources/browser_firefox_devedition_16x.png"; // NOI18N
+    private static final @StaticResource String FIREFOX_DEVEDITION_LARGE = "org/netbeans/modules/web/browser/ui/resources/browser_firefox_devedition_24x.png"; // NOI18N
+    private static final @StaticResource String FIREFOX_NIGHTLY_SMALL = "org/netbeans/modules/web/browser/ui/resources/browser_firefox_nightly_16x.png"; // NOI18N
+    private static final @StaticResource String FIREFOX_NIGHTLY_LARGE = "org/netbeans/modules/web/browser/ui/resources/browser_firefox_nightly_24x.png"; // NOI18N
     private static final @StaticResource String CHROMIUM_SMALL = "org/netbeans/modules/web/browser/ui/resources/browser_chromium_16x.png"; // NOI18N
     private static final @StaticResource String CHROMIUM_LARGE = "org/netbeans/modules/web/browser/ui/resources/browser_chromium_24x.png"; // NOI18N
     private static final @StaticResource String IE_SMALL = "org/netbeans/modules/web/browser/ui/resources/browser_ie_16x.png"; // NOI18N
@@ -269,6 +273,10 @@ public final class WebBrowser {
                 return small ? CHROME_SMALL : CHROME_LARGE;
             case FIREFOX:
                 return small ? FIREFOX_SMALL : FIREFOX_LARGE;
+            case FIREFOX_DEVEDITION:
+                return small ? FIREFOX_DEVEDITION_SMALL : FIREFOX_DEVEDITION_LARGE;
+            case FIREFOX_NIGHTLY:
+                return small ? FIREFOX_NIGHTLY_SMALL : FIREFOX_NIGHTLY_LARGE;
             case CHROMIUM:
                 return small ? CHROMIUM_SMALL : CHROMIUM_LARGE;
             case IE:

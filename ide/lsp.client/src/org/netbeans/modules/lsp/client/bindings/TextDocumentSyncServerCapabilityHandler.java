@@ -131,7 +131,6 @@ public class TextDocumentSyncServerCapabilityHandler {
             return; //ignore
 
         openDocument2PanesCount.computeIfAbsent(doc, d -> {
-            doc.putProperty(HyperlinkProviderImpl.class, true);
             doc.putProperty(TextDocumentSyncServerCapabilityHandler.class, true);
             ensureDidOpenSent(doc);
             doc.addDocumentListener(new DocumentListener() { //XXX: listener
@@ -288,6 +287,8 @@ public class TextDocumentSyncServerCapabilityHandler {
                 //already opened:
                 return ;
             }
+
+            doc.putProperty(HyperlinkProviderImpl.class, true);
 
             String uri = Utils.toURI(file);
             String[] text = new String[1];

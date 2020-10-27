@@ -77,7 +77,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             }
             TokenSequence<?> ts = TokenHierarchy.get(doc).tokenSequence();
             if (ts == null) {
-                return null;
+                return ident;
             }
             ts.move(offset);
             if (ts.moveNext() && ts.token().id() == TextmateTokenId.TEXTMATE) {

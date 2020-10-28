@@ -156,11 +156,19 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
         unresolvedProblems = unresolvedProblems != null ? unresolvedProblems : Collections.<String, String>emptyMap();
         Map<String, ModuleDependency> components = new HashMap<>();
         for (Map.Entry<String, Set<File>> entry : arts.entrySet()) {
-            ModuleDependency dep = new ModuleDependency(entry.getKey(), entry.getValue());
-
-            components.put(entry.getKey(), dep);
-            dep.sources = sources.get(entry.getKey());
-            dep.javadoc = javadocs.get(entry.getKey());
+            String componentId = entry.getKey();
+            // Looking at cache first as we might have the chance to find Sources and Javadocs
+            ModuleDependency dep = resolveModuleDependency(gradleUserHome, componentId);
+            if (!dep.getArtifacts().equals(entry.getValue())) {
+                dep = new ModuleDependency(componentId, entry.getValue());
+            }
+            components.put(componentId, dep);
+            if (sources.containsKey(componentId)) {
+                dep.sources = sources.get(entry.getKey());
+            }
+            if (javadocs.containsKey(componentId)) {
+                dep.javadoc = javadocs.get(entry.getKey());
+            }
         }
         Map<String, ProjectDependency> projects = new HashMap<>();
         for (Map.Entry<String, File> entry : prjs.entrySet()) {

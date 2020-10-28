@@ -121,8 +121,8 @@ public class WrappedTextViewTest extends NbTestCase {
      * tests if caret position is computed correctly (see issue #122492)
      */
     public void testViewToModel() {
-        final Integer pos1 = new Integer(-2);
-        final Integer pos2 = new Integer(-1);
+        final Integer pos1 = -2;
+        final Integer pos2 = -1;
         class R implements Runnable {
             int charPos;
             int expCharPos;

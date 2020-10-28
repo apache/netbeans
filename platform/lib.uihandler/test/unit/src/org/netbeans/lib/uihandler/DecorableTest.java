@@ -105,7 +105,7 @@ public class DecorableTest extends TestCase {
         LogRecord r = new LogRecord(Level.INFO, "test_msg");
         r.setResourceBundleName("org.netbeans.lib.uihandler.TestBundle");
         r.setResourceBundle(ResourceBundle.getBundle("org.netbeans.lib.uihandler.TestBundle"));
-        r.setParameters(new Object[] { new Integer(1), "Ahoj" });
+        r.setParameters(new Object[] { 1, "Ahoj" });
         
         Node n = UINode.create(r);
         assertEquals("Name is taken from the message", "test_msg", n.getName());
@@ -120,7 +120,7 @@ public class DecorableTest extends TestCase {
         LogRecord r = new LogRecord(Level.INFO, "icon_msg");
         r.setResourceBundleName("org.netbeans.lib.uihandler.TestBundle");
         r.setResourceBundle(ResourceBundle.getBundle("org.netbeans.lib.uihandler.TestBundle"));
-        r.setParameters(new Object[] { new Integer(1), "Ahoj" });
+        r.setParameters(new Object[] { 1, "Ahoj" });
         
         Node n = UINode.create(r);
         assertEquals("Name is taken from the message", "icon_msg", n.getName());

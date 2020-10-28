@@ -67,28 +67,28 @@ public class ErrorManagerCyclicDepTest extends NbTestCase {
         private static final Map<Level,Integer> exceptionLevelMap = new HashMap<Level,Integer>();
         
         static {
-            levelMap.put(Level.SEVERE, new Integer(ErrorManager.ERROR));
-            levelMap.put(Level.WARNING, new Integer(ErrorManager.WARNING));
-            levelMap.put(Level.INFO, new Integer(ErrorManager.INFORMATIONAL));
-            levelMap.put(Level.CONFIG, new Integer(ErrorManager.INFORMATIONAL));
-            levelMap.put(Level.FINE, new Integer(3));
-            levelMap.put(Level.FINER, new Integer(2));
-            levelMap.put(Level.FINEST, new Integer(1));
+            levelMap.put(Level.SEVERE, ErrorManager.ERROR);
+            levelMap.put(Level.WARNING, ErrorManager.WARNING);
+            levelMap.put(Level.INFO, ErrorManager.INFORMATIONAL);
+            levelMap.put(Level.CONFIG, ErrorManager.INFORMATIONAL);
+            levelMap.put(Level.FINE, 3);
+            levelMap.put(Level.FINER, 2);
+            levelMap.put(Level.FINEST, 1);
             
             for (Iterator<Map.Entry<Level,Integer>> i = levelMap.entrySet().iterator(); i.hasNext(); ) {
                 Map.Entry<Level,Integer> entry = i.next();
                 errorManagerMap.put(entry.getValue(), entry.getKey());
             }
             
-            errorManagerMap.put(new Integer(ErrorManager.INFORMATIONAL), Level.CONFIG);
+            errorManagerMap.put(ErrorManager.INFORMATIONAL, Level.CONFIG);
             
-            exceptionLevelMap.put(Level.SEVERE, new Integer(ErrorManager.USER));
-            exceptionLevelMap.put(Level.WARNING, new Integer(ErrorManager.USER));
-            exceptionLevelMap.put(Level.INFO, new Integer(ErrorManager.INFORMATIONAL));
-            exceptionLevelMap.put(Level.CONFIG, new Integer(ErrorManager.INFORMATIONAL));
-            exceptionLevelMap.put(Level.FINE, new Integer(3));
-            exceptionLevelMap.put(Level.FINER, new Integer(2));
-            exceptionLevelMap.put(Level.FINEST, new Integer(1));
+            exceptionLevelMap.put(Level.SEVERE, ErrorManager.USER);
+            exceptionLevelMap.put(Level.WARNING, ErrorManager.USER);
+            exceptionLevelMap.put(Level.INFO, ErrorManager.INFORMATIONAL);
+            exceptionLevelMap.put(Level.CONFIG, ErrorManager.INFORMATIONAL);
+            exceptionLevelMap.put(Level.FINE, 3);
+            exceptionLevelMap.put(Level.FINER, 2);
+            exceptionLevelMap.put(Level.FINEST, 1);
         }
         
         private ErrorManager errorManager;

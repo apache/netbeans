@@ -209,10 +209,10 @@ public class SystemOptionTest extends NbTestCase {
             setY("hello");
         }
         public int getX() {
-            return ((Integer)getProperty("x")).intValue();
+            return (Integer)getProperty("x");
         }
         public void setX(int x) {
-            putProperty("x", new Integer(x), true);
+            putProperty("x", x, true);
         }
         public String getY() {
             return (String)getProperty("y");
@@ -239,10 +239,10 @@ public class SystemOptionTest extends NbTestCase {
             setY("hello");
         }
         public int getX() {
-            return ((Integer)getProperty("x")).intValue();
+            return (Integer)getProperty("x");
         }
         public void setX(int x) {
-            putProperty("x", new Integer(x), true);
+            putProperty("x", x, true);
         }
         public String getY() {
             return (String)getProperty("y");
@@ -256,7 +256,7 @@ public class SystemOptionTest extends NbTestCase {
         public void setX2(int nue) {
             int old = x2;
             x2 = nue;
-            firePropertyChange("x2", new Integer(old), new Integer(nue));
+            firePropertyChange("x2", old, nue);
         }
         public String getY2() {
             return y2;
@@ -291,7 +291,7 @@ public class SystemOptionTest extends NbTestCase {
         }
         protected void initialize() {
             super.initialize();
-            putProperty("x", new Cell(new Integer(12), true));
+            putProperty("x", new Cell(12, true));
             putProperty("y", new Cell("12", true));
             putProperty("z", new Cell("http://www.netbeans.org/", true));
         }
@@ -299,7 +299,7 @@ public class SystemOptionTest extends NbTestCase {
             return ((Integer)((Cell)getProperty("x")).o).toString();
         }
         public void setX(String x) {
-            putProperty("x", new Cell(new Integer(x), saveNatural));
+            putProperty("x", new Cell(Integer.valueOf(x), saveNatural));
         }
         public int getY() {
             return Integer.parseInt((String)((Cell)getProperty("y")).o);

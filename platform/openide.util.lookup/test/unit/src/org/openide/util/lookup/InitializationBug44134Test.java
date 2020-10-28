@@ -54,7 +54,7 @@ public class InitializationBug44134Test extends NbTestCase {
                 try {
                     String id= "__" + i;
 
-                    addPair(new FooLookupItem(new Integer(i),id));
+                    addPair(new FooLookupItem(i,id));
                 }
                 catch (Exception e) {
                 }

@@ -108,7 +108,7 @@ public class ModuleInitTest extends Benchmark {
                 String k = kv.substring(0, x);
                 String v = kv.substring(x + 1);
                 try {
-                    m[i].put(k, new Integer(v));
+                    m[i].put(k, v);
                 } catch (NumberFormatException nfe) {
                     m[i].put(k, v);
                 }

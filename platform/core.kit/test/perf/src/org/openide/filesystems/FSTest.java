@@ -80,7 +80,7 @@ public abstract class FSTest extends ReadOnlyFSTest {
     protected Map createDefaultMap() {
         Map map = super.createDefaultMap();
         if (shouldDefAttrNo()) {
-            map.put(ATTRIBUTES_NO_KEY, new Integer(2));
+            map.put(ATTRIBUTES_NO_KEY, 2);
         }
         if (getName().startsWith("testSet")) {
             narrow(map);
@@ -100,7 +100,7 @@ public abstract class FSTest extends ReadOnlyFSTest {
             ret[0] = createDefaultMap();
 
             ret[1] = createDefaultMap();
-            ret[1].put(ATTRIBUTES_NO_KEY, new Integer(5));
+            ret[1].put(ATTRIBUTES_NO_KEY, 5);
             return ret;
         } else {
             return super.createArguments();
@@ -111,7 +111,7 @@ public abstract class FSTest extends ReadOnlyFSTest {
     private static final void narrow(Map map) {
         Integer in = (Integer) map.get(FILE_NO_KEY);
         int ival = Math.max(in.intValue() / 10, 10); 
-        map.put(FILE_NO_KEY, new Integer(ival));
+        map.put(FILE_NO_KEY, ival);
     }
     
     //--------------------------------------------------------------------------

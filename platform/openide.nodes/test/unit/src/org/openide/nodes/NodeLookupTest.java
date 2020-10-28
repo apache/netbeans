@@ -287,7 +287,7 @@ public class NodeLookupTest extends NbTestCase {
     public void testChangeInObjectVisibleInLookup () {
         CookieNode n = new CookieNode ();
         n.setSet(CookieSet.createGeneric(null));
-        checkInstanceInLookup (new Integer(1), n.cookieSet(), n.getLookup ());
+        checkInstanceInLookup (1, n.cookieSet(), n.getLookup ());
         checkInstanceInLookup (new Node.Cookie() {}, n.cookieSet(), n.getLookup ());
     }
     public void testChangeInCookieVisibleInLookup () {
@@ -306,7 +306,7 @@ public class NodeLookupTest extends NbTestCase {
         n.setSet(CookieSet.createGeneric(null));
         FilterNode f = new FilterNode (n);
         checkInstanceInLookup (new Node.Cookie() {}, n.cookieSet(), f.getLookup ());
-        checkInstanceInLookup (new Integer(2), n.cookieSet(), f.getLookup ());
+        checkInstanceInLookup (2, n.cookieSet(), f.getLookup ());
     }
     
     public void testChangeInCookieVisibleInLookupThruFilterNodeWhenItOverridesGetCookie () {
@@ -323,8 +323,8 @@ public class NodeLookupTest extends NbTestCase {
                 
         MyFilterNode f = new MyFilterNode (n, true);
         
-        checkInstanceInLookup (new Integer(3), n.cookieSet(), f.getLookup ());
-        checkInstanceInLookup (new Integer(4), f.set, f.getLookup ());
+        checkInstanceInLookup (3, n.cookieSet(), f.getLookup ());
+        checkInstanceInLookup (4, f.set, f.getLookup ());
     }
     
     public void testFilterNodeDelegatesCorrectly () {

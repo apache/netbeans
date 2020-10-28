@@ -766,7 +766,7 @@ public class EditorDisplayerTest extends NbTestCase {
     }
     
     public class NumProperty extends PropertySupport {
-        private Integer myValue = new Integer(4);
+        private Integer myValue = 4;
         // Create new Property
         public NumProperty(String name, boolean isWriteable) {
             super(name, Integer.class, name, "", true, isWriteable);
@@ -827,7 +827,7 @@ public class EditorDisplayerTest extends NbTestCase {
             String[] t = getTags();
             for (int i=0; i < t.length; i++) {
                 if (txt.trim().equals(t[i])) {
-                    setValue(new Integer(i));
+                    setValue(i);
                     return;
                 }
             }
@@ -836,7 +836,7 @@ public class EditorDisplayerTest extends NbTestCase {
         }
         
         public Object getValue() {
-            return new Integer(val);
+            return val;
         }
         
         public Component getCustomEditor() {

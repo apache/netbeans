@@ -234,7 +234,7 @@ public class ErrorManagerTest extends Benchmark {
         	} else {
             	    newEM.uniquifier = i.intValue() + 1;
         	}
-        	uniquifiedIds.put(newEM.prefix, new Integer(newEM.uniquifier));
+        	uniquifiedIds.put(newEM.prefix, newEM.uniquifier);
     	    }
     	    newEM.minLogSeverity = minLogSeverity;
     	    String prop = newEM.prefix;

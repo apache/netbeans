@@ -206,7 +206,7 @@ public class NbClipboardNativeTest extends NbTestCase implements ClipboardListen
         assertTrue("still supports stringFlavor", t.isDataFlavorSupported(DataFlavor.stringFlavor));
         assertEquals("correct string in clipboard", "17", t.getTransferData(DataFlavor.stringFlavor));
         assertTrue("support Integer too", t.isDataFlavorSupported(MYFLAV));
-        assertEquals("correct Integer", new Integer(17), t.getTransferData(MYFLAV));
+        assertEquals("correct Integer", 17, t.getTransferData(MYFLAV));
     }
     
     private static final DataFlavor MYFLAV = new DataFlavor("text/x-integer", "Integer"); // data: java.lang.Integer
@@ -220,7 +220,7 @@ public class NbClipboardNativeTest extends NbTestCase implements ClipboardListen
                         protected Object getData() throws IOException, UnsupportedFlavorException {
                             String s = (String)t2.getTransferData(DataFlavor.stringFlavor);
                             try {
-                                return new Integer(s);
+                                return s;
                             } catch (NumberFormatException nfe) {
                                 throw new IOException(nfe.toString());
                             }

@@ -85,7 +85,7 @@ public final class ProxySettings {
     public void setProxyPort(int proxyPort) {
         int oldProxyPort = this.proxyPort;
         this.proxyPort = proxyPort;
-        propertyChangeSupport.firePropertyChange(PROP_PROXYPORT, new Integer(oldProxyPort), new Integer(proxyPort));
+        propertyChangeSupport.firePropertyChange(PROP_PROXYPORT, oldProxyPort, proxyPort);
     }
     
     private void readProperties(Properties p) {

@@ -301,9 +301,9 @@ public abstract class BasicAbstractResultsPanel
                 bundleKey = "TEXT_MSG_FOUND_X_NODES";                   //NOI18N
                 args = new Object[1];
             }
-            args[0] = new Integer(resultModel.size());
+            args[0] = resultModel.size();
             if (args.length > 1) {
-                args[1] = new Integer(resultModel.getTotalDetailsCount());
+                args[1] = resultModel.getTotalDetailsCount();
             }
             if (args.length > 2) {
                 BasicSearchCriteria bsc = composition.getBasicSearchCriteria();

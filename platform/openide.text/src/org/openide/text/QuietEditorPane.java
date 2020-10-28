@@ -434,7 +434,7 @@ final class QuietEditorPane extends JEditorPane {
                     "exportDone",  // NOI18N
                     new Class<?>[] {javax.swing.JComponent.class, Transferable.class, int.class});
                 method.setAccessible(true);
-                method.invoke(delegator, new Object[] {source, data, new Integer(action)});
+                method.invoke(delegator, new Object[] {source, data, action});
             } catch (NoSuchMethodException ex) {
                 ex.printStackTrace();
             } catch (IllegalAccessException ex) {

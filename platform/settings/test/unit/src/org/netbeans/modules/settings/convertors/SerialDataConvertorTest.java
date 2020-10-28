@@ -474,7 +474,7 @@ public class SerialDataConvertorTest extends NbTestCase {
         public void setProperty(int property) {
             int oldProperty = this.property;
             this.property = property;
-            propertyChangeSupport.firePropertyChange("property", new Integer(oldProperty), new Integer(property));
+            propertyChangeSupport.firePropertyChange("property", oldProperty, property);
         }
         
     }

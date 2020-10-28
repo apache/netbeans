@@ -141,7 +141,7 @@ public class InstanceDataObjectTest extends NbTestCase {
         final InstanceDataObject ido = InstanceDataObject.create(
             DataFolder.findFolder(myFolder),
             "object",
-            new Integer(2),
+            2,
             null);
         System.err.println("Created instance " + ido);
         
@@ -692,7 +692,7 @@ public class InstanceDataObjectTest extends NbTestCase {
         public void setProperty(int property) {
             int oldProperty = this.property;
             this.property = property;
-            propertyChangeSupport.firePropertyChange("property", new Integer(oldProperty), new Integer(property));
+            propertyChangeSupport.firePropertyChange("property", oldProperty, property);
         }
         
     }

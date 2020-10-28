@@ -242,7 +242,7 @@ public class LocalFSTest extends FSTest implements DataManager {
         }
         
         void append(String s) {
-            positions.add(new Integer(buffer.length()));
+            positions.add(buffer.length());
             buffer.append(s);
         }
         

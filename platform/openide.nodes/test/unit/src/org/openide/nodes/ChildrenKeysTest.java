@@ -1415,7 +1415,7 @@ public class ChildrenKeysTest extends NbTestCase {
     }
     
     public void testChildrensAreNotCreatedOnNodeRemoval() {
-        final Integer cnt = new Integer(0);
+        final Integer cnt = 0;
         class K extends Keys {
 
             K() {

@@ -213,7 +213,7 @@ public final class Manager {
             throw new IllegalStateException(ex);
         }
 
-        callOnWindowFromAWT(theMethod, new Object[]{task ,new Integer(changeType)});
+        callOnWindowFromAWT(theMethod, new Object[]{task , changeType});
     }
 
     /**
@@ -231,7 +231,7 @@ public final class Manager {
         } catch (NoSuchMethodException ex) {
             throw new IllegalStateException(ex);
         }
-        callOnWindowFromAWT(theMethod, new Object[]{sTask, new Integer(blockingTask)});
+        callOnWindowFromAWT(theMethod, new Object[]{sTask, blockingTask});
     }
     
     /**

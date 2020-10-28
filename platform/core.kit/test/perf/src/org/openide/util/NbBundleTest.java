@@ -27,7 +27,7 @@ public class NbBundleTest extends Benchmark {
 
     public NbBundleTest(String name) {
         super( name, new Integer[] {
-            new Integer(1), new Integer(10), new Integer(100), new Integer(1000)
+            1, 10, 100, 1000
         });
     }
 

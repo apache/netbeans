@@ -139,7 +139,7 @@ ALL:
      */
     private static void placeString(List<Object> item, String s, int indx) {
         if (s.length() == 0) {
-            item.add(new Integer(indx));
+            item.add(indx);
 
             return;
         }
@@ -172,10 +172,10 @@ ALL:
                             switchList.add(listForPref);
 
                             if (i >= s.length()) {
-                                switchList.add(new Integer(indx));
+                                switchList.add(indx);
                             } else {
                                 ArrayList<Object> terminalList = new ArrayList<Object>();
-                                terminalList.add(new Integer(indx));
+                                terminalList.add(indx);
 
                                 switchList.add(s.substring(i));
                                 switchList.add(terminalList);
@@ -200,7 +200,7 @@ ALL:
         // ok new prefix in this item
         //
         ArrayList<Object> id = new ArrayList<Object>();
-        id.add(new Integer(indx));
+        id.add(indx);
 
         item.add(s);
         item.add(id);

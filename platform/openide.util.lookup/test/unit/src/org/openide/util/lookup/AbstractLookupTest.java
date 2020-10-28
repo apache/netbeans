@@ -233,7 +233,7 @@ public class AbstractLookupTest extends AbstractLookupBaseHid implements Abstrac
             assertEquals("None", 0, r.size());
         }
 
-        ICP item = new ICP(new Integer(10));
+        ICP item = new ICP(10);
         al.addPair(item);
         al.removePair(item);
 
@@ -250,7 +250,7 @@ public class AbstractLookupTest extends AbstractLookupBaseHid implements Abstrac
             assertEquals("one", 1, r.size());
 /*
             Iterator it = r.iterator();
-            assertEquals(new Integer(10), it.next());
+            assertEquals(10), it.next();
             assertEquals(new Long(20), it.next());*/
         }
     }

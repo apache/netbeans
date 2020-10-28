@@ -93,7 +93,7 @@ public abstract class ReadOnlyFSTest extends MapArgBenchmark {
     /** Creates a Map with default arguments values */
     protected Map createDefaultMap() {
         Map map = super.createDefaultMap();
-        map.put(FILE_NO_KEY, new Integer(1000));
+        map.put(FILE_NO_KEY, 1000);
         return map;
     }    
     

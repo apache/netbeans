@@ -522,7 +522,7 @@ class NbIO implements InputOutput, Lookup.Provider {
         }
 
         public void scrollTo() {
-            post(NbIO.this, IOEvent.CMD_SCROLL, new Integer(pos));
+            post(NbIO.this, IOEvent.CMD_SCROLL, pos);
         }
     }
 

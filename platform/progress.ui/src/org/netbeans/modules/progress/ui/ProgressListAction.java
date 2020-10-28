@@ -46,7 +46,7 @@ public class ProgressListAction extends AbstractAction implements ListDataListen
     
     public ProgressListAction(String name) {
         putValue(NAME, name);
-//        putValue(MNEMONIC_KEY, new Integer((int)NbBundle.getMessage(ProgressListAction.class, "ProcessListAction.mnemonic").charAt(0)));
+//        putValue(MNEMONIC_KEY, (int)NbBundle.getMessage(ProgressListAction.class, "ProcessListAction.mnemonic").charAt(0));
         Controller.getDefault().getModel().addListDataListener(this);
         updateEnabled();
     }

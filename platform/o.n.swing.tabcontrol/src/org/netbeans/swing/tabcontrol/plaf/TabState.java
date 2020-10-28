@@ -421,7 +421,7 @@ public abstract class TabState {
     }
     
     private boolean isAlarmTab (int tab) {
-        return attentionToggle && alarmTabs.contains(new Integer(tab));
+        return attentionToggle && alarmTabs.contains(tab);
     }
     
     private final HashSet<Integer> alarmTabs = new HashSet<Integer>(6);
@@ -429,11 +429,11 @@ public abstract class TabState {
     /** Add a tab to the list of those which should "flash" or otherwise give
      * some notification to the user to get their attention */
     public final void addAlarmTab (int alarmTab) {
-        Integer in = new Integer(alarmTab);
+        Integer in = alarmTab;
         boolean added = alarmTabs.contains(in);
         boolean wasEmpty = alarmTabs.isEmpty();
         if (!added) {
-            alarmTabs.add (new Integer(alarmTab));
+            alarmTabs.add (alarmTab);
             repaintTab (alarmTab);
         }
         if (wasEmpty) {
@@ -464,7 +464,7 @@ public abstract class TabState {
     /** Remove a tab to the list of those which should "flash" or otherwise give
      * some notification to the user to get their attention */
     public final void removeAlarmTab (int alarmTab) {
-        Integer in = new Integer(alarmTab);
+        Integer in = alarmTab;
         boolean contained = alarmTabs.contains(in);
         if (contained) {
             alarmTabs.remove(in);

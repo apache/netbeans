@@ -3574,8 +3574,8 @@ public class FileObjectTestHid extends TestBaseHid {
     private static void createResource(String prevLevel, int level, int maxLevel, boolean folder) {
         if (level < maxLevel && prevLevel.indexOf('.') == -1) {
             for (int i = 0; i < 2; i++) {
-                createResource(prevLevel + FOLDER_CHILD + new Integer(i).toString(),level + 1, maxLevel, true);
-                createResource(prevLevel + FILE_CHILD + new Integer(i).toString(),level + 1, maxLevel, false);
+                createResource(prevLevel + FOLDER_CHILD + i, level + 1, maxLevel, true);
+                createResource(prevLevel + FILE_CHILD + i, level + 1, maxLevel, false);
             }
         }
         
@@ -3608,13 +3608,13 @@ public class FileObjectTestHid extends TestBaseHid {
         FileObject retVal;
         
         if (isFolder) {
-            retVal = folder.getFileObject(folderName+new Integer(fileNumber).toString());
+            retVal = folder.getFileObject(folderName + fileNumber);
             fsTestFrameworkErrorAssert  ("Unexpected setUp behaviour: resource " + FOLDER_CHILD_NAME +" not found",retVal != null);
             fsTestFrameworkErrorAssert("Not really a folder: " + retVal.getPath(), retVal.isFolder());
             return retVal;
         }
         
-        retVal = folder.getFileObject(fileName,fileExt+new Integer(fileNumber).toString());
+        retVal = folder.getFileObject(fileName,fileExt + fileNumber);
         fsTestFrameworkErrorAssert  ("Unexpected setUp behaviour: resource " + FILE_CHILD_NAME +" not found",retVal != null);
         fsTestFrameworkErrorAssert("Not really a file: " + retVal.getPath(), retVal.isData());
         return retVal;

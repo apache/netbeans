@@ -523,7 +523,7 @@ public class FolderInstanceTest extends NbTestCase {
             DataFolder f = DataFolder.findFolder(folder);
             InvCheckFolderInstance icfi = new InvCheckFolderInstance(f, false);
             assertTrue(icfi.ok);
-            assertEquals(new Integer(0), icfi.instanceCreate());
+            assertEquals(0, icfi.instanceCreate());
             err.info("sample1: " + DataObject.find(lfs.findResource(names[0])));
             Pool.setExtra(l);
             try {
@@ -540,7 +540,7 @@ public class FolderInstanceTest extends NbTestCase {
                 System.err.println("sample: " + DataObject.find(lfs.findResource(names[0])));
                  */
                 Thread.sleep(sleep);
-                assertEquals(new Integer(cnt), icfi.instanceCreate());
+                assertEquals(cnt, icfi.instanceCreate());
                 //Thread.sleep(sleep);
                 assertTrue(icfi.ok);
                 //Thread.sleep(sleep);
@@ -564,7 +564,7 @@ public class FolderInstanceTest extends NbTestCase {
                     break;
                 }
             }
-            assertEquals(new Integer(0), instance);
+            assertEquals(0, instance);
             err.info("passed the usual failing point");
             //Thread.sleep(sleep);
             assertTrue(icfi.ok);
@@ -653,7 +653,7 @@ public class FolderInstanceTest extends NbTestCase {
                 return list;
             }
             
-            return new Integer(cookies.length);
+            return cookies.length;
         }
         
         protected InstanceCookie acceptDataObject(DataObject o) {

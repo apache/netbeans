@@ -362,7 +362,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
         return NbBundle.getMessage(DataObject.class, "FMT_LineDisplayName2",
             obj.getPrimaryFile().getNameExt(),
             FileUtil.getFileDisplayName(obj.getPrimaryFile()),
-            new Integer(line.getLineNumber() + 1));
+            line.getLineNumber() + 1);
     }
     
     

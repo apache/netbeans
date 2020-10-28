@@ -344,7 +344,7 @@ class IndexedPropertyEditor extends Object implements ExPropertyEditor {
 
         if (indexedProperty.getElementType().isPrimitive()) {
             if (getConvertedType().equals(Integer.class)) {
-                value = new Integer(0);
+                value = 0;
             }
 
             if (getConvertedType().equals(Boolean.class)) {

@@ -145,7 +145,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
         assertTrue("One change", listener.listenerCalled);
         listener.listenerCalled = false;
         
-        Integer i2 = new Integer(i1);
+        Integer i2 = i1;
         assertNotSame(i2, i1);
         
         ic.add(i2);
@@ -205,8 +205,8 @@ public class AbstractLookupBaseHid extends NbTestCase {
     }
     
     public void testCompareUsingEquals() {
-        Integer i1 = new Integer(10);
-        Integer i2 = new Integer(10);
+        Integer i1 = 10;
+        Integer i2 = 10;
         assertEquals(i1, i2);
         assertNotSame(i1, i2);
         
@@ -641,7 +641,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
     
     /** Test if it is possible to remove a registered object. */
     public void testRemoveRegisteredObject() {
-        Integer inst = new Integer(10);
+        Integer inst = 10;
         
         ic.add(inst);
         if (lookup.lookup(inst.getClass()) == null) {
@@ -1631,7 +1631,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
         listener.resultChanged(null);
         
         for(int i = 0; i < 100; i++) {
-            ic.add(new Integer(i));
+            ic.add(i);
         }
         
         assertEquals("3x100+1 checks", 301, listener.round);
@@ -1867,7 +1867,7 @@ public class AbstractLookupBaseHid extends NbTestCase {
         
         
         Liar l = new Liar();
-        l.obj = new Integer(5);
+        l.obj = 5;
         
         this.ic.addPair(l);
         

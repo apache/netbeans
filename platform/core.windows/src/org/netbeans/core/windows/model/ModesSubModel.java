@@ -255,7 +255,7 @@ final class ModesSubModel {
     public void setSlideInSize(String side, TopComponent tc, int size) {
         if( null != tc && null != side ) {
             String tcId = WindowManagerImpl.getInstance().findTopComponentID(tc);
-            slideInSizes.put( side+tcId, new Integer(size) );
+            slideInSizes.put( side+tcId, size) ;
         }
     }
     

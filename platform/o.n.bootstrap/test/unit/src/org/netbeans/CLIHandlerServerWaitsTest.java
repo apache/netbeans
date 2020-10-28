@@ -306,7 +306,7 @@ public class CLIHandlerServerWaitsTest extends NbTestCase {
         CLIHandler.finishInitialization(true);
         
         h.toReturn = 7;
-        CLIHandler.Status res = cliInitialize(new String[0], h, nullInput, nullOutput, nullOutput, new Integer(667));
+        CLIHandler.Status res = cliInitialize(new String[0], h, nullInput, nullOutput, nullOutput, 667);
         // finish all calls
         int newRes = CLIHandler.finishInitialization(false);
         

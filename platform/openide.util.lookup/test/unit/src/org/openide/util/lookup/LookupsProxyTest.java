@@ -204,7 +204,7 @@ implements AbstractLookupBaseHid.Impl {
         listener.resultChanged(null);
         ArrayList arr = new ArrayList();
         for(int i = 0; i < 100; i++) {
-            arr.add(new Integer(i));
+            arr.add(i);
 
             orig.lookup = Lookups.fixed(arr.toArray());
             // do the refresh

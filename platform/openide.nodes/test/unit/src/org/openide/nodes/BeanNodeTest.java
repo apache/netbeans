@@ -70,17 +70,17 @@ public class BeanNodeTest extends NbTestCase {
         assertNotNull(prop);
         assertEquals("Foo", prop.getDisplayName());
         assertEquals("The foo.", prop.getShortDescription());
-        assertEquals(new Integer(0), prop.getValue());
+        assertEquals(0, prop.getValue());
         b.setFoo(1);
-        assertEquals(new Integer(1), prop.getValue());
+        assertEquals(1, prop.getValue());
         WaitPCL l2 = new WaitPCL("foo");
         n.addPropertyChangeListener(l2);
         b.setFoo(2);
         assertTrue("Calling a bean setter fires a Node.Property value change", l2.changed());
-        assertEquals(new Integer(2), prop.getValue());
-        prop.setValue(new Integer(3));
-        assertEquals(new Integer(3), prop.getValue());
-        assertEquals(new Integer(3), new Integer(b.getFoo()));
+        assertEquals(2, prop.getValue());
+        prop.setValue(3);
+        assertEquals(3, prop.getValue());
+        assertEquals(3, b.getFoo());
         NL l1 = new NL();
         n.addNodeListener(l1);
         b.setName("newname");
@@ -117,9 +117,9 @@ public class BeanNodeTest extends NbTestCase {
             }
         }
         assertNotNull(prop);
-        assertEquals(new Integer(5), prop.getValue());
+        assertEquals(5, prop.getValue());
         b.setYaya(3);
-        assertEquals(new Integer(3), prop.getValue());
+        assertEquals(3, prop.getValue());
         // no foo, no listener
     }
     
@@ -199,7 +199,7 @@ public class BeanNodeTest extends NbTestCase {
         public void setFoo(int foo) {
             int oldFoo = this.foo;
             this.foo = foo;
-            propertyChangeSupport.firePropertyChange("foo", new Integer(oldFoo), new Integer(foo));
+            propertyChangeSupport.firePropertyChange("foo", oldFoo, foo);
         }
         
     }
@@ -251,7 +251,7 @@ public class BeanNodeTest extends NbTestCase {
         public void setYaya(int yaya) {
             int oldYaya = this.yaya;
             this.yaya = yaya;
-            propertyChangeSupport.firePropertyChange("yaya", new Integer(oldYaya), new Integer(yaya));
+            propertyChangeSupport.firePropertyChange("yaya", oldYaya, yaya);
         }
         
     }

@@ -188,6 +188,6 @@ public class IndexedPropertySupport<T,E> extends Node.IndexedProperty<T,E> {
         }
 
         Object validInstance = Beans.getInstanceOf(instance, indexedSetter.getDeclaringClass());
-        indexedSetter.invoke(validInstance, new Object[] { new Integer(index), val });
+        indexedSetter.invoke(validInstance, new Object[] { index, val });
     }
 }

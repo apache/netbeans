@@ -322,7 +322,7 @@ implements AbstractLookupBaseHid.Impl {
         // Changing lookup in proxy lookup, now it will contain 
         // StringBuffer Object instead of String
         InstanceContent ic2 = new InstanceContent();
-        ic2.add(new Integer(1234567890));
+        ic2.add(1234567890);
         lookups[0] = new AbstractLookup(ic2);
         proxy.setLookups(lookups);
         
@@ -421,7 +421,7 @@ implements AbstractLookupBaseHid.Impl {
         listener.resultChanged(null);
         ArrayList arr = new ArrayList();
         for(int i = 0; i < 100; i++) {
-            arr.add(new Integer(i));
+            arr.add(i);
             
             orig.setLookups(new Lookup[] { Lookups.fixed(arr.toArray()) });
         }

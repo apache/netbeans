@@ -98,9 +98,9 @@ public class PropertyType_Color extends PropertyEditorsTest {
         int first_comma = propertyValue_L.indexOf(',');
         int second_comma = propertyValue_L.indexOf(',',first_comma+1);
         
-        int r = new Integer(propertyValue_L.substring(0,first_comma)).intValue();
-        int g = new Integer(propertyValue_L.substring(first_comma+1, second_comma)).intValue();
-        int b = new Integer(propertyValue_L.substring(second_comma+1)).intValue();
+        int r = Integer.parseInt(propertyValue_L.substring(0,first_comma));
+        int g = Integer.parseInt(propertyValue_L.substring(first_comma+1, second_comma));
+        int b = Integer.parseInt(propertyValue_L.substring(second_comma+1));
         
         customizer.setRGBValue(r,g,b);
     }

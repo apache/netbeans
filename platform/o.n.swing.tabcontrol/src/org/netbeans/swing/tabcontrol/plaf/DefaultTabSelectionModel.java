@@ -201,7 +201,7 @@ final class DefaultTabSelectionModel implements SingleSelectionModel,
             Set<Integer> added = dif.getAddedIndices();
             
             //create an Integer to compare
-            Integer idx = new Integer(getSelectedIndex());
+            Integer idx = getSelectedIndex();
             
             //Don't iterate if everything was closed, we know what to do
             if (dataModel.size() == 0) {

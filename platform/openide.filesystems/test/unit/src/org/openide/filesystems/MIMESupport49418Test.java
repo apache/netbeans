@@ -109,7 +109,7 @@ public class MIMESupport49418Test extends NbTestCase {
             // because if the amount of elements in small, the ArrayStorage is 
             // used and it does not have the same problems like InheritanceTree
             for (int i = 0; i < 1000; i++) {
-                ic.add(new Integer(i));
+                ic.add(i);
             }
 
             QueryingPair qp = new QueryingPair();

@@ -217,7 +217,7 @@ public class NbCollectionsTest extends NbTestCase {
         Iterator<Integer> it3 = s3.iterator();
         assertTrue(it3.hasNext());
         assertTrue(it3.hasNext());
-        assertEquals(new Integer(1), it3.next());
+        assertEquals(Integer.valueOf(1), it3.next());
         assertFalse(it3.hasNext());
         assertFalse(it3.hasNext());
         try {

@@ -85,6 +85,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.editor.breadcrumbs</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0-1</release-version>
+                        <specification-version>1.27</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.editor.completion</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -138,24 +147,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.lexer</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>1.69</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.options.api</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.51</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.modules.editor.settings</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -174,12 +165,38 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.lexer</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>1.69</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.options.api</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.51</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.projectapi</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
                         <specification-version>1.70</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.refactoring.api</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.57</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -297,6 +314,14 @@
                         <specification-version>9.10</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>org.openide.windows</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>6.87</specification-version>
+                    </run-dependency>
+                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>
@@ -354,28 +379,28 @@
                 <package>org.netbeans.modules.lsp.client.spi</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j-0.8.1-p1.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j-0.8.1-p1.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j-0.9.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j-0.9.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.xtend.lib.macro-2.18.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.xtend.lib.macro-2.18.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.xtend.lib.macro-2.19.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.xtend.lib.macro-2.19.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j.generator-0.8.1.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j.generator-0.8.1.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.generator-0.9.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.generator-0.9.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.xtend.lib-2.18.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.xtend.lib-2.18.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.xtend.lib-2.19.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.xtend.lib-2.19.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.xtext.xbase.lib-2.18.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.xtext.xbase.lib-2.18.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.xtext.xbase.lib-2.19.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.xtext.xbase.lib-2.19.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc-0.8.1.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j.jsonrpc-0.8.1.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc-0.9.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.jsonrpc-0.9.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

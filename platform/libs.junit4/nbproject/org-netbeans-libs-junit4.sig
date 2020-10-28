@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.25
+#Version 1.27
 
 CLSS public abstract interface java.io.Serializable
 
@@ -617,8 +617,376 @@ meth public void testStarted(java.lang.String)
 supr junit.runner.BaseTestRunner
 hfds fPrinter
 
+CLSS public abstract org.hamcrest.BaseDescription
+cons public init()
+intf org.hamcrest.Description
+meth protected abstract void append(char)
+meth protected void append(java.lang.String)
+meth public !varargs <%0 extends java.lang.Object> org.hamcrest.Description appendValueList(java.lang.String,java.lang.String,java.lang.String,{%%0}[])
+meth public <%0 extends java.lang.Object> org.hamcrest.Description appendValueList(java.lang.String,java.lang.String,java.lang.String,java.lang.Iterable<{%%0}>)
+meth public org.hamcrest.Description appendDescriptionOf(org.hamcrest.SelfDescribing)
+meth public org.hamcrest.Description appendList(java.lang.String,java.lang.String,java.lang.String,java.lang.Iterable<? extends org.hamcrest.SelfDescribing>)
+meth public org.hamcrest.Description appendText(java.lang.String)
+meth public org.hamcrest.Description appendValue(java.lang.Object)
+supr java.lang.Object
+
+CLSS public abstract org.hamcrest.BaseMatcher<%0 extends java.lang.Object>
+cons public init()
+intf org.hamcrest.Matcher<{org.hamcrest.BaseMatcher%0}>
+meth public final void _dont_implement_Matcher___instead_extend_BaseMatcher_()
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String toString()
+meth public void describeMismatch(java.lang.Object,org.hamcrest.Description)
+supr java.lang.Object
+
+CLSS public abstract org.hamcrest.Condition<%0 extends java.lang.Object>
+fld public final static org.hamcrest.Condition$NotMatched<java.lang.Object> NOT_MATCHED
+innr public abstract interface static Step
+meth public abstract <%0 extends java.lang.Object> org.hamcrest.Condition<{%%0}> and(org.hamcrest.Condition$Step<? super {org.hamcrest.Condition%0},{%%0}>)
+meth public abstract boolean matching(org.hamcrest.Matcher<{org.hamcrest.Condition%0}>,java.lang.String)
+meth public final <%0 extends java.lang.Object> org.hamcrest.Condition<{%%0}> then(org.hamcrest.Condition$Step<? super {org.hamcrest.Condition%0},{%%0}>)
+meth public final boolean matching(org.hamcrest.Matcher<{org.hamcrest.Condition%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Condition<{%%0}> matched({%%0},org.hamcrest.Description)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Condition<{%%0}> notMatched()
+supr java.lang.Object
+hcls Matched,NotMatched
+
+CLSS public abstract interface static org.hamcrest.Condition$Step<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ outer org.hamcrest.Condition
+meth public abstract org.hamcrest.Condition<{org.hamcrest.Condition$Step%1}> apply({org.hamcrest.Condition$Step%0},org.hamcrest.Description)
+
+CLSS public org.hamcrest.CoreMatchers
+cons public init()
+meth public !varargs static <%0 extends java.lang.Object> org.hamcrest.Matcher<java.lang.Iterable<{%%0}>> hasItems(org.hamcrest.Matcher<? super {%%0}>[])
+meth public !varargs static <%0 extends java.lang.Object> org.hamcrest.Matcher<java.lang.Iterable<{%%0}>> hasItems({%%0}[])
+meth public !varargs static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> allOf(org.hamcrest.Matcher<? super {%%0}>[])
+meth public !varargs static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> describedAs(java.lang.String,org.hamcrest.Matcher<{%%0}>,java.lang.Object[])
+meth public !varargs static <%0 extends java.lang.Object> org.hamcrest.core.AnyOf<{%%0}> anyOf(org.hamcrest.Matcher<? super {%%0}>[])
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<java.lang.Iterable<? super {%%0}>> hasItem(org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<java.lang.Iterable<? super {%%0}>> hasItem({%%0})
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<java.lang.Iterable<{%%0}>> everyItem(org.hamcrest.Matcher<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> allOf(java.lang.Iterable<org.hamcrest.Matcher<? super {%%0}>>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> allOf(org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> allOf(org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> allOf(org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> allOf(org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> allOf(org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> any(java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> equalTo({%%0})
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> instanceOf(java.lang.Class<?>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> is(java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> is(org.hamcrest.Matcher<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> is({%%0})
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> isA(java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> not(org.hamcrest.Matcher<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> not({%%0})
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> notNullValue(java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> nullValue(java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> sameInstance({%%0})
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> theInstance({%%0})
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.AnyOf<{%%0}> anyOf(java.lang.Iterable<org.hamcrest.Matcher<? super {%%0}>>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.AnyOf<{%%0}> anyOf(org.hamcrest.Matcher<{%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.AnyOf<{%%0}> anyOf(org.hamcrest.Matcher<{%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.AnyOf<{%%0}> anyOf(org.hamcrest.Matcher<{%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.AnyOf<{%%0}> anyOf(org.hamcrest.Matcher<{%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.AnyOf<{%%0}> anyOf(org.hamcrest.Matcher<{%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.CombinableMatcher$CombinableBothMatcher<{%%0}> both(org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.CombinableMatcher$CombinableEitherMatcher<{%%0}> either(org.hamcrest.Matcher<? super {%%0}>)
+meth public static org.hamcrest.Matcher<java.lang.Object> anything()
+meth public static org.hamcrest.Matcher<java.lang.Object> anything(java.lang.String)
+meth public static org.hamcrest.Matcher<java.lang.Object> notNullValue()
+meth public static org.hamcrest.Matcher<java.lang.Object> nullValue()
+meth public static org.hamcrest.Matcher<java.lang.String> containsString(java.lang.String)
+meth public static org.hamcrest.Matcher<java.lang.String> endsWith(java.lang.String)
+meth public static org.hamcrest.Matcher<java.lang.String> startsWith(java.lang.String)
+supr java.lang.Object
+
+CLSS public abstract org.hamcrest.CustomMatcher<%0 extends java.lang.Object>
+cons public init(java.lang.String)
+meth public final void describeTo(org.hamcrest.Description)
+supr org.hamcrest.BaseMatcher<{org.hamcrest.CustomMatcher%0}>
+hfds fixedDescription
+
+CLSS public abstract org.hamcrest.CustomTypeSafeMatcher<%0 extends java.lang.Object>
+cons public init(java.lang.String)
+meth public final void describeTo(org.hamcrest.Description)
+supr org.hamcrest.TypeSafeMatcher<{org.hamcrest.CustomTypeSafeMatcher%0}>
+hfds fixedDescription
+
+CLSS public abstract interface org.hamcrest.Description
+fld public final static org.hamcrest.Description NONE
+innr public final static NullDescription
+meth public abstract !varargs <%0 extends java.lang.Object> org.hamcrest.Description appendValueList(java.lang.String,java.lang.String,java.lang.String,{%%0}[])
+meth public abstract <%0 extends java.lang.Object> org.hamcrest.Description appendValueList(java.lang.String,java.lang.String,java.lang.String,java.lang.Iterable<{%%0}>)
+meth public abstract org.hamcrest.Description appendDescriptionOf(org.hamcrest.SelfDescribing)
+meth public abstract org.hamcrest.Description appendList(java.lang.String,java.lang.String,java.lang.String,java.lang.Iterable<? extends org.hamcrest.SelfDescribing>)
+meth public abstract org.hamcrest.Description appendText(java.lang.String)
+meth public abstract org.hamcrest.Description appendValue(java.lang.Object)
+
+CLSS public final static org.hamcrest.Description$NullDescription
+ outer org.hamcrest.Description
+cons public init()
+intf org.hamcrest.Description
+meth public !varargs <%0 extends java.lang.Object> org.hamcrest.Description appendValueList(java.lang.String,java.lang.String,java.lang.String,{%%0}[])
+meth public <%0 extends java.lang.Object> org.hamcrest.Description appendValueList(java.lang.String,java.lang.String,java.lang.String,java.lang.Iterable<{%%0}>)
+meth public java.lang.String toString()
+meth public org.hamcrest.Description appendDescriptionOf(org.hamcrest.SelfDescribing)
+meth public org.hamcrest.Description appendList(java.lang.String,java.lang.String,java.lang.String,java.lang.Iterable<? extends org.hamcrest.SelfDescribing>)
+meth public org.hamcrest.Description appendText(java.lang.String)
+meth public org.hamcrest.Description appendValue(java.lang.Object)
+supr java.lang.Object
+
+CLSS public abstract org.hamcrest.DiagnosingMatcher<%0 extends java.lang.Object>
+cons public init()
+meth protected abstract boolean matches(java.lang.Object,org.hamcrest.Description)
+meth public final boolean matches(java.lang.Object)
+meth public final void describeMismatch(java.lang.Object,org.hamcrest.Description)
+supr org.hamcrest.BaseMatcher<{org.hamcrest.DiagnosingMatcher%0}>
+
+CLSS public abstract interface !annotation org.hamcrest.Factory
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract org.hamcrest.FeatureMatcher<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init(org.hamcrest.Matcher<? super {org.hamcrest.FeatureMatcher%1}>,java.lang.String,java.lang.String)
+meth protected abstract {org.hamcrest.FeatureMatcher%1} featureValueOf({org.hamcrest.FeatureMatcher%0})
+meth protected boolean matchesSafely({org.hamcrest.FeatureMatcher%0},org.hamcrest.Description)
+meth public final void describeTo(org.hamcrest.Description)
+supr org.hamcrest.TypeSafeDiagnosingMatcher<{org.hamcrest.FeatureMatcher%0}>
+hfds TYPE_FINDER,featureDescription,featureName,subMatcher
+
+CLSS public abstract interface org.hamcrest.Matcher<%0 extends java.lang.Object>
+intf org.hamcrest.SelfDescribing
+meth public abstract boolean matches(java.lang.Object)
+meth public abstract void _dont_implement_Matcher___instead_extend_BaseMatcher_()
+ anno 0 java.lang.Deprecated()
+meth public abstract void describeMismatch(java.lang.Object,org.hamcrest.Description)
+
+CLSS public org.hamcrest.MatcherAssert
+cons public init()
+meth public static <%0 extends java.lang.Object> void assertThat(java.lang.String,{%%0},org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> void assertThat({%%0},org.hamcrest.Matcher<? super {%%0}>)
+meth public static void assertThat(java.lang.String,boolean)
+supr java.lang.Object
+
 CLSS public abstract interface org.hamcrest.SelfDescribing
 meth public abstract void describeTo(org.hamcrest.Description)
+
+CLSS public org.hamcrest.StringDescription
+cons public init()
+cons public init(java.lang.Appendable)
+meth protected void append(char)
+meth protected void append(java.lang.String)
+meth public java.lang.String toString()
+meth public static java.lang.String asString(org.hamcrest.SelfDescribing)
+meth public static java.lang.String toString(org.hamcrest.SelfDescribing)
+supr org.hamcrest.BaseDescription
+hfds out
+
+CLSS public abstract org.hamcrest.TypeSafeDiagnosingMatcher<%0 extends java.lang.Object>
+cons protected init()
+cons protected init(java.lang.Class<?>)
+cons protected init(org.hamcrest.internal.ReflectiveTypeFinder)
+meth protected abstract boolean matchesSafely({org.hamcrest.TypeSafeDiagnosingMatcher%0},org.hamcrest.Description)
+meth public final boolean matches(java.lang.Object)
+meth public final void describeMismatch(java.lang.Object,org.hamcrest.Description)
+supr org.hamcrest.BaseMatcher<{org.hamcrest.TypeSafeDiagnosingMatcher%0}>
+hfds TYPE_FINDER,expectedType
+
+CLSS public abstract org.hamcrest.TypeSafeMatcher<%0 extends java.lang.Object>
+cons protected init()
+cons protected init(java.lang.Class<?>)
+cons protected init(org.hamcrest.internal.ReflectiveTypeFinder)
+meth protected abstract boolean matchesSafely({org.hamcrest.TypeSafeMatcher%0})
+meth protected void describeMismatchSafely({org.hamcrest.TypeSafeMatcher%0},org.hamcrest.Description)
+meth public final boolean matches(java.lang.Object)
+meth public final void describeMismatch(java.lang.Object,org.hamcrest.Description)
+supr org.hamcrest.BaseMatcher<{org.hamcrest.TypeSafeMatcher%0}>
+hfds TYPE_FINDER,expectedType
+
+CLSS public org.hamcrest.core.AllOf<%0 extends java.lang.Object>
+cons public init(java.lang.Iterable<org.hamcrest.Matcher<? super {org.hamcrest.core.AllOf%0}>>)
+meth public !varargs static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> allOf(org.hamcrest.Matcher<? super {%%0}>[])
+meth public boolean matches(java.lang.Object,org.hamcrest.Description)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> allOf(java.lang.Iterable<org.hamcrest.Matcher<? super {%%0}>>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> allOf(org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> allOf(org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> allOf(org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> allOf(org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> allOf(org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public void describeTo(org.hamcrest.Description)
+supr org.hamcrest.DiagnosingMatcher<{org.hamcrest.core.AllOf%0}>
+hfds matchers
+
+CLSS public org.hamcrest.core.AnyOf<%0 extends java.lang.Object>
+cons public init(java.lang.Iterable<org.hamcrest.Matcher<? super {org.hamcrest.core.AnyOf%0}>>)
+meth protected boolean matches(java.lang.Object,boolean)
+meth public !varargs static <%0 extends java.lang.Object> org.hamcrest.core.AnyOf<{%%0}> anyOf(org.hamcrest.Matcher<? super {%%0}>[])
+meth public boolean matches(java.lang.Object)
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.AnyOf<{%%0}> anyOf(java.lang.Iterable<org.hamcrest.Matcher<? super {%%0}>>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.AnyOf<{%%0}> anyOf(org.hamcrest.Matcher<{%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.AnyOf<{%%0}> anyOf(org.hamcrest.Matcher<{%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.AnyOf<{%%0}> anyOf(org.hamcrest.Matcher<{%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.AnyOf<{%%0}> anyOf(org.hamcrest.Matcher<{%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.AnyOf<{%%0}> anyOf(org.hamcrest.Matcher<{%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>,org.hamcrest.Matcher<? super {%%0}>)
+meth public void describeTo(org.hamcrest.Description)
+meth public void describeTo(org.hamcrest.Description,java.lang.String)
+supr org.hamcrest.BaseMatcher<{org.hamcrest.core.AnyOf%0}>
+
+CLSS public org.hamcrest.core.CombinableMatcher<%0 extends java.lang.Object>
+cons public init(org.hamcrest.Matcher<? super {org.hamcrest.core.CombinableMatcher%0}>)
+innr public final static CombinableBothMatcher
+innr public final static CombinableEitherMatcher
+meth protected boolean matchesSafely({org.hamcrest.core.CombinableMatcher%0},org.hamcrest.Description)
+meth public org.hamcrest.core.CombinableMatcher<{org.hamcrest.core.CombinableMatcher%0}> and(org.hamcrest.Matcher<? super {org.hamcrest.core.CombinableMatcher%0}>)
+meth public org.hamcrest.core.CombinableMatcher<{org.hamcrest.core.CombinableMatcher%0}> or(org.hamcrest.Matcher<? super {org.hamcrest.core.CombinableMatcher%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.CombinableMatcher$CombinableBothMatcher<{%%0}> both(org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.core.CombinableMatcher$CombinableEitherMatcher<{%%0}> either(org.hamcrest.Matcher<? super {%%0}>)
+meth public void describeTo(org.hamcrest.Description)
+supr org.hamcrest.TypeSafeDiagnosingMatcher<{org.hamcrest.core.CombinableMatcher%0}>
+hfds matcher
+
+CLSS public final static org.hamcrest.core.CombinableMatcher$CombinableBothMatcher<%0 extends java.lang.Object>
+ outer org.hamcrest.core.CombinableMatcher
+cons public init(org.hamcrest.Matcher<? super {org.hamcrest.core.CombinableMatcher$CombinableBothMatcher%0}>)
+meth public org.hamcrest.core.CombinableMatcher<{org.hamcrest.core.CombinableMatcher$CombinableBothMatcher%0}> and(org.hamcrest.Matcher<? super {org.hamcrest.core.CombinableMatcher$CombinableBothMatcher%0}>)
+supr java.lang.Object
+hfds first
+
+CLSS public final static org.hamcrest.core.CombinableMatcher$CombinableEitherMatcher<%0 extends java.lang.Object>
+ outer org.hamcrest.core.CombinableMatcher
+cons public init(org.hamcrest.Matcher<? super {org.hamcrest.core.CombinableMatcher$CombinableEitherMatcher%0}>)
+meth public org.hamcrest.core.CombinableMatcher<{org.hamcrest.core.CombinableMatcher$CombinableEitherMatcher%0}> or(org.hamcrest.Matcher<? super {org.hamcrest.core.CombinableMatcher$CombinableEitherMatcher%0}>)
+supr java.lang.Object
+hfds first
+
+CLSS public org.hamcrest.core.DescribedAs<%0 extends java.lang.Object>
+cons public init(java.lang.String,org.hamcrest.Matcher<{org.hamcrest.core.DescribedAs%0}>,java.lang.Object[])
+meth public !varargs static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> describedAs(java.lang.String,org.hamcrest.Matcher<{%%0}>,java.lang.Object[])
+meth public boolean matches(java.lang.Object)
+meth public void describeMismatch(java.lang.Object,org.hamcrest.Description)
+meth public void describeTo(org.hamcrest.Description)
+supr org.hamcrest.BaseMatcher<{org.hamcrest.core.DescribedAs%0}>
+hfds ARG_PATTERN,descriptionTemplate,matcher,values
+
+CLSS public org.hamcrest.core.Every<%0 extends java.lang.Object>
+cons public init(org.hamcrest.Matcher<? super {org.hamcrest.core.Every%0}>)
+meth public boolean matchesSafely(java.lang.Iterable<{org.hamcrest.core.Every%0}>,org.hamcrest.Description)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<java.lang.Iterable<{%%0}>> everyItem(org.hamcrest.Matcher<{%%0}>)
+meth public void describeTo(org.hamcrest.Description)
+supr org.hamcrest.TypeSafeDiagnosingMatcher<java.lang.Iterable<{org.hamcrest.core.Every%0}>>
+hfds matcher
+
+CLSS public org.hamcrest.core.Is<%0 extends java.lang.Object>
+cons public init(org.hamcrest.Matcher<{org.hamcrest.core.Is%0}>)
+meth public boolean matches(java.lang.Object)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> is(java.lang.Class<{%%0}>)
+ anno 0 java.lang.Deprecated()
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> is(org.hamcrest.Matcher<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> is({%%0})
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> isA(java.lang.Class<{%%0}>)
+meth public void describeMismatch(java.lang.Object,org.hamcrest.Description)
+meth public void describeTo(org.hamcrest.Description)
+supr org.hamcrest.BaseMatcher<{org.hamcrest.core.Is%0}>
+hfds matcher
+
+CLSS public org.hamcrest.core.IsAnything<%0 extends java.lang.Object>
+cons public init()
+cons public init(java.lang.String)
+meth public boolean matches(java.lang.Object)
+meth public static org.hamcrest.Matcher<java.lang.Object> anything()
+meth public static org.hamcrest.Matcher<java.lang.Object> anything(java.lang.String)
+meth public void describeTo(org.hamcrest.Description)
+supr org.hamcrest.BaseMatcher<{org.hamcrest.core.IsAnything%0}>
+hfds message
+
+CLSS public org.hamcrest.core.IsCollectionContaining<%0 extends java.lang.Object>
+cons public init(org.hamcrest.Matcher<? super {org.hamcrest.core.IsCollectionContaining%0}>)
+meth protected boolean matchesSafely(java.lang.Iterable<? super {org.hamcrest.core.IsCollectionContaining%0}>,org.hamcrest.Description)
+meth public !varargs static <%0 extends java.lang.Object> org.hamcrest.Matcher<java.lang.Iterable<{%%0}>> hasItems(org.hamcrest.Matcher<? super {%%0}>[])
+meth public !varargs static <%0 extends java.lang.Object> org.hamcrest.Matcher<java.lang.Iterable<{%%0}>> hasItems({%%0}[])
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<java.lang.Iterable<? super {%%0}>> hasItem(org.hamcrest.Matcher<? super {%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<java.lang.Iterable<? super {%%0}>> hasItem({%%0})
+meth public void describeTo(org.hamcrest.Description)
+supr org.hamcrest.TypeSafeDiagnosingMatcher<java.lang.Iterable<? super {org.hamcrest.core.IsCollectionContaining%0}>>
+hfds elementMatcher
+
+CLSS public org.hamcrest.core.IsEqual<%0 extends java.lang.Object>
+cons public init({org.hamcrest.core.IsEqual%0})
+meth public boolean matches(java.lang.Object)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> equalTo({%%0})
+meth public void describeTo(org.hamcrest.Description)
+supr org.hamcrest.BaseMatcher<{org.hamcrest.core.IsEqual%0}>
+hfds expectedValue
+
+CLSS public org.hamcrest.core.IsInstanceOf
+cons public init(java.lang.Class<?>)
+meth protected boolean matches(java.lang.Object,org.hamcrest.Description)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> any(java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> instanceOf(java.lang.Class<?>)
+meth public void describeTo(org.hamcrest.Description)
+supr org.hamcrest.DiagnosingMatcher<java.lang.Object>
+hfds expectedClass,matchableClass
+
+CLSS public org.hamcrest.core.IsNot<%0 extends java.lang.Object>
+cons public init(org.hamcrest.Matcher<{org.hamcrest.core.IsNot%0}>)
+meth public boolean matches(java.lang.Object)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> not(org.hamcrest.Matcher<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> not({%%0})
+meth public void describeTo(org.hamcrest.Description)
+supr org.hamcrest.BaseMatcher<{org.hamcrest.core.IsNot%0}>
+hfds matcher
+
+CLSS public org.hamcrest.core.IsNull<%0 extends java.lang.Object>
+cons public init()
+meth public boolean matches(java.lang.Object)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> notNullValue(java.lang.Class<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> nullValue(java.lang.Class<{%%0}>)
+meth public static org.hamcrest.Matcher<java.lang.Object> notNullValue()
+meth public static org.hamcrest.Matcher<java.lang.Object> nullValue()
+meth public void describeTo(org.hamcrest.Description)
+supr org.hamcrest.BaseMatcher<{org.hamcrest.core.IsNull%0}>
+
+CLSS public org.hamcrest.core.IsSame<%0 extends java.lang.Object>
+cons public init({org.hamcrest.core.IsSame%0})
+meth public boolean matches(java.lang.Object)
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> sameInstance({%%0})
+meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> theInstance({%%0})
+meth public void describeTo(org.hamcrest.Description)
+supr org.hamcrest.BaseMatcher<{org.hamcrest.core.IsSame%0}>
+hfds object
+
+CLSS public org.hamcrest.core.StringContains
+cons public init(java.lang.String)
+meth protected boolean evalSubstringOf(java.lang.String)
+meth protected java.lang.String relationship()
+meth public static org.hamcrest.Matcher<java.lang.String> containsString(java.lang.String)
+supr org.hamcrest.core.SubstringMatcher
+
+CLSS public org.hamcrest.core.StringEndsWith
+cons public init(java.lang.String)
+meth protected boolean evalSubstringOf(java.lang.String)
+meth protected java.lang.String relationship()
+meth public static org.hamcrest.Matcher<java.lang.String> endsWith(java.lang.String)
+supr org.hamcrest.core.SubstringMatcher
+
+CLSS public org.hamcrest.core.StringStartsWith
+cons public init(java.lang.String)
+meth protected boolean evalSubstringOf(java.lang.String)
+meth protected java.lang.String relationship()
+meth public static org.hamcrest.Matcher<java.lang.String> startsWith(java.lang.String)
+supr org.hamcrest.core.SubstringMatcher
+
+CLSS public abstract org.hamcrest.core.SubstringMatcher
+cons protected init(java.lang.String)
+fld protected final java.lang.String substring
+meth protected abstract boolean evalSubstringOf(java.lang.String)
+meth protected abstract java.lang.String relationship()
+meth public boolean matchesSafely(java.lang.String)
+meth public void describeMismatchSafely(java.lang.String,org.hamcrest.Description)
+meth public void describeTo(org.hamcrest.Description)
+supr org.hamcrest.TypeSafeMatcher<java.lang.String>
 
 CLSS public abstract interface !annotation org.junit.After
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)

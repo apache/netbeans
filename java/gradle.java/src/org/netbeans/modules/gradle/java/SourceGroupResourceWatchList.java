@@ -29,7 +29,6 @@ import java.util.HashSet;
 import java.util.Set;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.java.classpath.ClassPathProviderImpl;
-import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
 
 /**

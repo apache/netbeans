@@ -86,13 +86,10 @@ public final class AquaLFCustoms extends LFCustoms {
 
         Border empty = BorderFactory.createEmptyBorder();
 
-        Image explorerIcon = null;
-        Icon treeIcon = UIManager.getIcon("Tree.closedIcon"); //NOI18N
-        if( null != treeIcon )
-            explorerIcon = icon2Image(treeIcon);
-        else
-            explorerIcon = UIUtils.loadImage(
-            "org/netbeans/swing/plaf/resources/osx-folder.png"); //NOI18N
+        /* This icon pair exists in both PNG and SVG versions; the SVG version will be substituted
+        automatically if ImageUtilities and the SVG Loader implementation module is available. */
+        Image explorerFolderIcon       = UIUtils.loadImage("org/netbeans/swing/plaf/resources/hidpi-folder-closed.png");
+        Image explorerFolderOpenedIcon = UIUtils.loadImage("org/netbeans/swing/plaf/resources/hidpi-folder-open.png");
 
         Object[] result = {
             EDITOR_PREFERRED_COLOR_PROFILE, "NetBeans", //NOI18N
@@ -101,8 +98,8 @@ public final class AquaLFCustoms extends LFCustoms {
             // XXX  - EXPLORER_STATUS_BORDER,
             DESKTOP_BACKGROUND, new Color(226, 223, 214), //NOI18N
             SCROLLPANE_BORDER_COLOR, new Color(127, 157, 185),
-            EXPLORER_FOLDER_ICON ,explorerIcon,
-            EXPLORER_FOLDER_OPENED_ICON, explorerIcon,
+            EXPLORER_FOLDER_ICON ,explorerFolderIcon,
+            EXPLORER_FOLDER_OPENED_ICON, explorerFolderOpenedIcon,
             DESKTOP_BORDER, empty,
             SCROLLPANE_BORDER, UIManager.get("ScrollPane.border"),
             EXPLORER_STATUS_BORDER, topOnly,

@@ -48,6 +48,7 @@ import static org.netbeans.modules.fish.payara.micro.plugin.Constants.WAR_GOAL;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
+import org.netbeans.modules.maven.j2ee.J2eeActionsProvider;
 import org.netbeans.modules.maven.spi.actions.AbstractMavenActionsProvider;
 import org.netbeans.modules.maven.spi.actions.MavenActionsProvider;
 import static org.netbeans.spi.project.ActionProvider.COMMAND_DEBUG;
@@ -102,67 +103,46 @@ public class MicroActionsProvider implements MavenActionsProvider {
 
     @Override
     public RunConfig createConfigForDefaultAction(String actionName, Project project, Lookup lookup) {
+        MicroApplication microApplication = MicroApplication.getInstance(project);
+        if (microApplication == null) {
+            return project.getLookup()
+                    .lookup(J2eeActionsProvider.class)
+                    .createConfigForDefaultAction(actionName, project, lookup);
+        }
         Preferences pref = getPreferences(project, MicroApplication.class, true);
         String microVersionText = pref.get(VERSION, "");
         RunConfig config = actionsProvider.createConfigForDefaultAction(actionName, project, lookup);
         if(!microVersionText.isEmpty()){
             config.setProperty("version.payara", microVersionText);
         }
-        config.getGoals().addAll(getGoals(actionName));
         return config;
     }
 
     @Override
     public NetbeansActionMapping getMappingForAction(String actionName, Project project) {
+        MicroApplication microApplication = MicroApplication.getInstance(project);
+        if (microApplication == null) {
+            return project.getLookup()
+                .lookup(J2eeActionsProvider.class)
+                .getMappingForAction(actionName, project);
+        }
         return actionsProvider.getMappingForAction(actionName, project);
     }
 
     @Override
     public boolean isActionEnable(String action, Project project, Lookup lookup) {
+        MicroApplication microApplication = MicroApplication.getInstance(project);
+        if (microApplication == null) {
+            return project.getLookup()
+                    .lookup(J2eeActionsProvider.class)
+                    .isActionEnable(action, project, lookup);
+        }
         return actionsProvider.isActionEnable(action, project, lookup);
     }
 
     @Override
     public Set<String> getSupportedDefaultActions() {
         return actionsProvider.getSupportedDefaultActions();
-    }
-
-    public static List<String> getGoals(String actionName) {
-        List<String> goals = new ArrayList<>();
-        if (null != actionName) {
-            switch (actionName) {
-                case RUN_ACTION:
-                case RUN_SINGLE_ACTION:
-                    goals.add(RESOURCES_GOAL);
-                    goals.add(COMPILE_GOAL);
-                    goals.add(EXPLODED_GOAL);
-                    goals.add(STOP_GOAL);
-                    goals.add(START_GOAL);
-                    break;
-                case DEBUG_ACTION:
-                case DEBUG_SINGLE_ACTION:
-                case PROFILE_ACTION:
-                case PROFILE_SINGLE_ACTION:
-                    goals.add(WAR_GOAL);
-                    goals.add(STOP_GOAL);
-                    goals.add(START_GOAL);
-                    break;
-                case COMPILE_EXPLODE_ACTION:
-                    goals.add(RESOURCES_GOAL);
-                    goals.add(COMPILE_GOAL);
-                    goals.add(EXPLODED_GOAL);
-                    break;
-                case EXPLODE_ACTION:
-                    goals.add(EXPLODED_GOAL);
-                    break;
-                case STOP_ACTION:
-                    goals.add(STOP_GOAL);
-                    break;
-                default:
-                    break;
-            }
-        }
-        return goals;
     }
 
 }

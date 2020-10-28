@@ -62,7 +62,7 @@ public class ExternalDragAndDrop {
             final ArrayList fileList = new ArrayList( mto.getCount() );
             for( int i=0; i<mto.getCount(); i++ ) {
                 if( mto.isDataFlavorSupported( i, DataFlavor.javaFileListFlavor ) ) {
-                    List list = (List)mto.getTransferData( i, DataFlavor.javaFileListFlavor );
+                    List<?> list = (List<?>)mto.getTransferData( i, DataFlavor.javaFileListFlavor );
                     fileList.addAll( list );
                 }
             }

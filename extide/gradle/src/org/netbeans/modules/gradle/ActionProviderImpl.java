@@ -47,7 +47,7 @@ import static org.netbeans.modules.gradle.Bundle.*;
 import org.netbeans.modules.gradle.actions.KeyValueTableModel;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
-import org.netbeans.modules.gradle.actions.ProjectActionMappingProvider;
+import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.customizer.CustomActionMapping;
 import org.netbeans.modules.gradle.spi.actions.AfterBuildActionHook;
 import org.netbeans.modules.gradle.spi.actions.BeforeBuildActionHook;
@@ -60,7 +60,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static javax.swing.Action.NAME;
@@ -77,6 +76,7 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
+import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.support.ProjectOperations;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
 import org.openide.awt.ActionID;
@@ -87,7 +87,6 @@ import org.openide.awt.DynamicMenuContent;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
-import org.openide.util.BaseUtilities;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.actions.Presenter;
@@ -207,14 +206,13 @@ public class ActionProviderImpl implements ActionProvider {
         if (argLine == null) {
             return;
         }
-
         final StringWriter writer = new StringWriter();
 
         PrintWriter out = new PrintWriter(writer);
         Lookup ctx = project.getLookup().lookup(BeforeBuildActionHook.class).beforeAction(action, context, out);
 
         final NbGradleProjectImpl prj = project.getLookup().lookup(NbGradleProjectImpl.class);
-        final String[] args = evalueteArgs(project, action, argLine, ctx);
+        final String[] args = RunUtils.evaluateActionArgs(project, action, argLine, ctx);
         Set<ExecFlag> flags = mapping.isRepeatable() ? EnumSet.of(ExecFlag.REPEATABLE) : EnumSet.noneOf(ExecFlag.class);
         RunConfig cfg = RunUtils.createRunConfig(project, action, taskName(project, action, ctx), flags, args);
 
@@ -259,19 +257,25 @@ public class ActionProviderImpl implements ActionProvider {
         if (reloadOnly) {
             boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, ctx, 0, null);
             if (needReload && canReload) {
-                String[] reloadArgs = evalueteArgs(project, mapping.getName(), mapping.getReloadArgs(), ctx);
-                prj.reloadProject(true, maxQualily, reloadArgs);
+                String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), ctx);
+                final ActionProgress g = ActionProgress.start(context);
+                RequestProcessor.Task reloadTask = prj.reloadProject(true, maxQualily, reloadArgs);
+                reloadTask.addTaskListener((t) -> {
+                    g.finished(true);
+                });
             }
         } else {
             final ExecutorTask task = RunUtils.executeGradle(cfg, writer.toString());
+            final ActionProgress g = ActionProgress.start(context);
             final Lookup outerCtx = ctx;
             task.addTaskListener((Task t) -> {
                 try {
                     OutputWriter out1 = task.getInputOutput().getOut();
                     boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out1);
                     if (needReload && canReload) {
-                        String[] reloadArgs = evalueteArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
-                        prj.reloadProject(true, maxQualily, reloadArgs);
+                        String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
+                        RequestProcessor.Task reloadTask = prj.reloadProject(true, maxQualily, reloadArgs);
+                        reloadTask.waitFinished();
                     }
                     project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
                     for (AfterBuildActionHook l : context.lookupAll(AfterBuildActionHook.class)) {
@@ -280,6 +284,7 @@ public class ActionProviderImpl implements ActionProvider {
                 } finally {
                     task.getInputOutput().getOut().close();
                     task.getInputOutput().getErr().close();
+                    g.finished(task.result() == 0);
                 }
             });
         }
@@ -324,11 +329,6 @@ public class ActionProviderImpl implements ActionProvider {
             invokeProjectAction(project, mapping, context, showUI);
         }
 
-    }
-
-    private static String[] evalueteArgs(Project project, String action, String args, Lookup context) {
-        String argLine = replaceTokens(project, args, action, context);
-        return BaseUtilities.parseParameters(argLine);
     }
 
     // Copied from the Maven Plugin with minimal changes applied.
@@ -416,9 +416,9 @@ public class ActionProviderImpl implements ActionProvider {
         @ActionReference(position = 250, path = "Loaders/text/x-gradle+x-groovy/Actions"),
         @ActionReference(position = 250, path = "Loaders/text/x-gradle+x-kotlin/Actions"),
         @ActionReference(position = 1295, path = "Loaders/text/x-java/Actions"),
-        @ActionReference(position = 1821, path = "Editors/text/x-java/Popup"),
+        @ActionReference(position = 1825, path = "Editors/text/x-java/Popup"),
         @ActionReference(position = 1295, path = "Loaders/text/x-groovy/Actions"),
-        @ActionReference(position = 1821, path = "Editors/text/x-groovy/Popup")
+        @ActionReference(position = 1825, path = "Editors/text/x-groovy/Popup")
     })
     @NbBundle.Messages({"LBL_Custom_Run=Run Gradle", "LBL_Custom_Run_File=Run Gradle"})
     public static ContextAwareAction customPopupActions() {
@@ -531,36 +531,12 @@ public class ActionProviderImpl implements ActionProvider {
 
             DialogDescriptor dlg = new DialogDescriptor(panel, TIT_BuildParameters(command));
             if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(dlg)) {
-                ret = replaceTokens(argLine, kvModel.getProperties());
+                ret = ReplaceTokenProvider.replaceTokens(argLine, kvModel.getProperties());
             } else {
                 //Mark Cancel is pressed, so build shall be aborted.
                 ret = null;
             }
         }
         return ret;
-    }
-
-    private static String replaceTokens(String argLine, Map<String, String> replaceMap) {
-        StringBuilder sb = new StringBuilder(argLine);
-        int start = sb.indexOf("${");
-        while (start >= 0) {
-            int end = sb.indexOf("}", start);
-            int comma = sb.indexOf(",", start);
-            int keyEnd = comma > start && comma < end ? comma : end;
-            String key = sb.substring(start + 2, keyEnd);
-            String value = replaceMap.get(key);
-            if (value != null) {
-                sb.replace(start, end + 1, value);
-                start = sb.indexOf("${");
-            } else {
-                start = sb.indexOf("${", end);
-            }
-        }
-        return sb.toString();
-    }
-
-    private static String replaceTokens(Project project, String argLine, String action, Lookup context) {
-        ReplaceTokenProvider tokenProvider = project.getLookup().lookup(ReplaceTokenProvider.class);
-        return replaceTokens(argLine, tokenProvider.createReplacements(action, context));
     }
 }

@@ -109,12 +109,14 @@ public class CustomizerRunWeb extends BaseRunCustomizer {
         WEB_PROFILES.add(Profile.JAVA_EE_6_WEB);
         WEB_PROFILES.add(Profile.JAVA_EE_7_WEB);
         WEB_PROFILES.add(Profile.JAVA_EE_8_WEB);
+        WEB_PROFILES.add(Profile.JAKARTA_EE_8_WEB);
 
         FULL_PROFILES = new TreeSet<>(Profile.UI_COMPARATOR);
         FULL_PROFILES.add(Profile.JAVA_EE_5);
         FULL_PROFILES.add(Profile.JAVA_EE_6_FULL);
         FULL_PROFILES.add(Profile.JAVA_EE_7_FULL);
         FULL_PROFILES.add(Profile.JAVA_EE_8_FULL);
+        FULL_PROFILES.add(Profile.JAKARTA_EE_8_FULL);
     }
 
     @Messages({
@@ -199,7 +201,7 @@ public class CustomizerRunWeb extends BaseRunCustomizer {
 
         versionUpdater = createVersionUpdater(J2eeModule.Type.WAR);
     }
-    
+
     @Override
     public void applyChangesInAWT() {
         assert SwingUtilities.isEventDispatchThread();

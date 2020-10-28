@@ -44,8 +44,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 
 /**
- * Java EE server configuration API support for Payara servers before 3.1.
- * Covers Payara servers before 3.1. Old {@code sun-resources.xml} files are used.
+ * Java EE server configuration API support for Payara servers.
  * <p/>
  * @author Ludovic Champenois, Peter Williams, Tomas Kraus
  */
@@ -128,7 +127,7 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
     public MessageDestination createMessageDestination(String name, MessageDestination.Type type) throws UnsupportedOperationException, org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException {
         File resourceDir = module.getResourceDirectory();
         if (resourceDir == null) {
-            Logger.getLogger("payara-jakartaee").log(Level.WARNING, "Null Resource Folder."); // NOI18N
+            Logger.getLogger("payara-jakartaee").log(Level.WARNING,"Resource Folder {0} does not exist.", resourceDir); // NOI18N
             throw new ConfigurationException(NbBundle.getMessage(
                     ModuleConfigurationImpl.class, "ERR_NoJMSResource", name, type)); // NOI18N
         }
@@ -174,24 +173,24 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
         throw new UnsupportedOperationException("Not supported yet.");
     }
    
-    private static final String GLASSFISH_DASH = "glassfish-"; // NOI18N
+    protected static final String GLASSFISH_DASH = "glassfish-"; // NOI18N
 
     private String getResourceFileName() {
         return "glassfish-resources";
     }
 
     @Override
-    protected FileObject getPayaraDD(File sunDDFile, boolean create) throws IOException {
-        if (!sunDDFile.exists()) {
+    protected FileObject getPayaraDD(File payaraDDFile, boolean create) throws IOException {
+        if (!payaraDDFile.exists()) {
             if (create) {
-                createDefaultSunDD(sunDDFile);
+                createDefaultSunDD(payaraDDFile);
             }
         }
-        FileObject retVal = FileUtil.toFileObject(FileUtil.normalizeFile(sunDDFile));
+        FileObject retVal = FileUtil.toFileObject(FileUtil.normalizeFile(payaraDDFile));
         if (null == retVal) {
-            String fn = sunDDFile.getName();
-            if (fn.contains(GLASSFISH_DASH) && null != sunDDFile.getParentFile()) {
-                File alternate = new File(sunDDFile.getParentFile(), fn.replace(GLASSFISH_DASH, "sun-")); // NOI18N
+            String fn = payaraDDFile.getName();
+            if (fn.contains(GLASSFISH_DASH) && null != payaraDDFile.getParentFile()) {
+                File alternate = new File(payaraDDFile.getParentFile(), fn.replace(GLASSFISH_DASH, "sun-")); // NOI18N
                 retVal = FileUtil.toFileObject(FileUtil.normalizeFile(alternate));
             }
         }

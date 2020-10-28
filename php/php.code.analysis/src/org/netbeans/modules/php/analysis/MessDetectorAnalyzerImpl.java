@@ -173,7 +173,15 @@ public class MessDetectorAnalyzerImpl implements Analyzer {
 
     @CheckForNull
     private MessDetector getValidMessDetector() {
+        Preferences settings = context.getSettings();
+        String messDetectorPath = null;
+        if (settings != null) {
+            messDetectorPath = settings.get(MessDetectorCustomizerPanel.PATH, null);
+        }
         try {
+            if (StringUtils.hasText(messDetectorPath)) {
+                return MessDetector.getCustom(messDetectorPath);
+            }
             return MessDetector.getDefault();
         } catch (InvalidPhpExecutableException ex) {
             LOGGER.log(Level.INFO, null, ex);

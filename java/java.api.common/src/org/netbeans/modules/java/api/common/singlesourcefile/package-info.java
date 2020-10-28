@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-@TemplateRegistration(folder = "Other", iconBase = JavaTemplates.JAVA_ICON, displayName = "#JAVAtemplate_displayName", content = "File.java.template", requireProject = false, targetName = "newJavaFile", description = "Description.html", scriptEngine = "freemarker", category = {"java-main-class"})
+@TemplateRegistration(folder = "Other", iconBase = JavaTemplates.JAVA_ICON, displayName = "#JAVAtemplate_displayName", content = "File.java.template", requireProject = false, targetName = "newJavaFile", description = "Description.html", scriptEngine = "freemarker", category = {"java-main-class"}, position=300)
         
 @Messages(value = "JAVAtemplate_displayName=Java File")
 package org.netbeans.modules.java.api.common.singlesourcefile;

@@ -34,7 +34,6 @@ import org.netbeans.modules.editor.indent.api.Indent;
 import org.netbeans.spi.editor.completion.*;
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -400,6 +399,13 @@ public class HtmlCompletionItem implements CompletionItem {
         hash = 97 * hash + (this.helpId != null ? this.helpId.hashCode() : 0);
         return hash;
     }
+
+    @Override
+    public String toString() {
+        return getItemText();
+    }
+    
+    
 
     //------------------------------------------------------------------------------
     /**

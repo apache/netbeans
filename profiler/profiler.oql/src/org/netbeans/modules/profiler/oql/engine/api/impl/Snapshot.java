@@ -275,21 +275,20 @@ public class Snapshot {
 
     public Iterator getFinalizerObjects() {
         JavaClass clazz = findClass("java.lang.ref.Finalizer"); // NOI18N
-        Instance queue = ((ObjectFieldValue) clazz.getValueOfStaticField("queue")).getInstance(); // NOI18N
-        ObjectFieldValue headFld = (ObjectFieldValue) queue.getValueOfField("head"); // NOI18N
+        Instance queue = (Instance) clazz.getValueOfStaticField("queue"); // NOI18N
+        Instance head = (Instance) queue.getValueOfField("head"); // NOI18N
 
-        List<Instance> finalizables = new ArrayList<>();
-        if (headFld != null) {
-            Instance head = headFld.getInstance();
+        List finalizables = new ArrayList();
+        if (head != null) {
             while (true) {
-                ObjectFieldValue referentFld = (ObjectFieldValue) head.getValueOfField("referent"); // NOI18N
-                ObjectFieldValue nextFld = (ObjectFieldValue) head.getValueOfField("next"); // NOI18N
+                Instance referent = (Instance) head.getValueOfField("referent"); // NOI18N
+                Instance next = (Instance) head.getValueOfField("next"); // NOI18N
 
-                if (nextFld == null || nextFld.getInstance().equals(head)) {
+                finalizables.add(referent);
+                if (next == null || next.equals(head)) {
                     break;
                 }
-                head = nextFld.getInstance();
-                finalizables.add(referentFld.getInstance());
+                head = next;
             }
         }
         return finalizables.iterator();
@@ -339,7 +338,7 @@ public class Snapshot {
         
         List<ReferenceChain> result = new ArrayList<>();
         
-        Iterator toInspect = getRoots();
+        Iterator<Instance> toInspect = getRoots();
         ReferenceChain path = null;
         State s = new State(path, toInspect);
         

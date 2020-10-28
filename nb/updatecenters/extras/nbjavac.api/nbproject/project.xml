@@ -28,8 +28,8 @@
             <module-dependencies/>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>ext/nb-javac-13-api.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/nb-javac-13-api.jar</binary-origin>
+                <runtime-relative-path>ext/nb-javac-15-api.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/nb-javac-15-api.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

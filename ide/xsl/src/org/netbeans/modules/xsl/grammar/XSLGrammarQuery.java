@@ -76,7 +76,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
      * should contain XPath expression.  The element name keys should
      * not contain the namespace prefix.
      */
-    private static Map exprAttributes;
+    private static Map<String, String> exprAttributes;
 
     /** A set containing all functions allowed in XSLT */
     private static Set xslFunctions;
@@ -388,7 +388,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
     private static Map getExprAttributes() {
         if (exprAttributes == null) {
-            exprAttributes = new HashMap();
+            exprAttributes = new HashMap<>();
             exprAttributes.put("key", "use"); // NOI18N
             exprAttributes.put("value-of", "select"); // NOI18N
             exprAttributes.put("copy-of", "select"); // NOI18N

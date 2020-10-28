@@ -1621,16 +1621,17 @@ public class CasualDiff {
 
     protected int diffBlock(JCBlock oldT, JCBlock newT, int[] blockBounds) {
         int localPointer = blockBounds[0];
+        int startPos = getOldPos(oldT);
+        int endPos = endPos(oldT);
         if (oldT.flags != newT.flags) {
-            int sp = getOldPos(oldT);
-            copyTo(localPointer, localPointer = sp);
+            copyTo(localPointer, localPointer = startPos);
             if ((oldT.flags & STATIC) == 0 && (newT.flags & STATIC) != 0) {
                 printer.print("static");
                 if (diffContext.style.spaceBeforeStaticInitLeftBrace()) {
                     printer.print(" ");
                 }
             } else if ((oldT.flags & STATIC) != 0 && (newT.flags & STATIC) == 0) {
-                tokenSequence.move(sp);
+                tokenSequence.move(startPos);
                 if (tokenSequence.moveNext() && tokenSequence.token().id() == JavaTokenId.STATIC) {
                     localPointer = tokenSequence.offset() + tokenSequence.token().length();
                     if (tokenSequence.moveNext() && tokenSequence.token().id() == JavaTokenId.WHITESPACE) {
@@ -1651,9 +1652,23 @@ public class CasualDiff {
         JCClassDecl oldEnclosing = printer.enclClass;
         printer.enclClass = null;
         List<JCTree> oldstats = filterHidden(oldT.stats);
+        Position.LineMap lm = this.oldTopLevel.getLineMap();
+        boolean emptyToNonEmptySingleLine = oldT.stats.isEmpty() && !newT.stats.isEmpty() && lm.getLineNumber(startPos) == lm.getLineNumber(endPos);
+        if (emptyToNonEmptySingleLine) {
+            printer.newline();
+            printer.toLeftMargin();
+        }
         localPointer = diffList(oldstats, filterHidden(newT.stats), localPointer, est, Measure.MEMBER, printer);
         printer.enclClass = oldEnclosing;
-        if (localPointer < endPos(oldT)) {
+        if (emptyToNonEmptySingleLine) {
+            printer.undent(old);
+            printer.toLeftMargin();
+            tokenSequence.move(localPointer);
+            moveToSrcRelevant(tokenSequence, Direction.FORWARD);
+            localPointer = tokenSequence.offset();
+            copyTo(localPointer, localPointer = endPos);
+        } else {
+            if (localPointer < endPos) {
 /*
             JCTree tree = oldstats.get(oldstats.size() - 1);
             localPointer = adjustLocalPointer(localPointer, comments.getComments(oldT), CommentSet.RelativePosition.INNER);
@@ -1661,9 +1676,10 @@ public class CasualDiff {
             localPointer = adjustLocalPointer(localPointer, cs, CommentSet.RelativePosition.INLINE);            
             localPointer = adjustLocalPointer(localPointer, cs, CommentSet.RelativePosition.TRAILING);            
 */
-            copyTo(localPointer, localPointer = endPos(oldT));
+                copyTo(localPointer, localPointer = endPos);
+            }
+            printer.undent(old);
         }
-        printer.undent(old);
         return localPointer;
     }
 

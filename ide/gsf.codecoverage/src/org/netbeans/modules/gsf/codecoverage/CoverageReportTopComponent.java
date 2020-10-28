@@ -68,11 +68,12 @@ import org.openide.windows.TopComponent;
  * Window which displays a code coverage report.
  *
  * <p>
- * <b>NOTE</b>: You must compile this module before attempting to open this form
- * in the GUI builder! The design depends on the CoverageBar class and Matisse can
- * only load the form if the .class, not just the .java file, is available!
+ * <b>NOTE</b>: You must compile this module before attempting to open this form in the GUI builder!
+ * The design depends on the CoverageBar class and Matisse can only load the form if the .class, not
+ * just the .java file, is available!
  */
 final class CoverageReportTopComponent extends TopComponent {
+
     private CoverageTableModel model;
     private Project project;
     private static final String PREFERRED_ID = "CoverageReportTopComponent"; // NOI18N
@@ -90,11 +91,10 @@ final class CoverageReportTopComponent extends TopComponent {
         // Pad out the cells a bit more - causes clipping so we have to increase
         // the row height as well!
         table.setIntercellSpacing(new Dimension(6, 4));
-        table.setRowHeight(table.getRowHeight()+4);
+        table.setRowHeight(table.getRowHeight() + 4);
 
         //Color color = table.getBackground();
         //table.setGridColor(color.darker());
-
         //table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         resizeColumnWidth(table);
 
@@ -136,7 +136,7 @@ final class CoverageReportTopComponent extends TopComponent {
         //table.setAutoCreateRowSorter(true);
         try {
             // Try with reflection:
-            Method method = JTable.class.getMethod("setAutoCreateRowSorter", new Class[] { Boolean.TYPE }); // NOI18N
+            Method method = JTable.class.getMethod("setAutoCreateRowSorter", new Class[]{Boolean.TYPE}); // NOI18N
             if (method != null) {
                 method.invoke(table, Boolean.TRUE);
             }
@@ -166,8 +166,10 @@ final class CoverageReportTopComponent extends TopComponent {
         //    for (int i = 0; i < 4; i++) {
         //        sorter.setComparator(i, comparableComparator);
         //    }
-
         totalCoverage.setCoveragePercentage(model.getTotalCoverage());
+        FileCoverageSummary summary = model.getCoverageSummary();
+        totalCoverage.setStats(summary.getLineCount(), summary.getExecutedLineCount(),
+            summary.getPartialCount(), summary.getInferredCount());
     }
 
     public void resizeColumnWidth(JTable table) {
@@ -285,9 +287,9 @@ final class CoverageReportTopComponent extends TopComponent {
                     // JDK6 only...
                     // Try with reflection:
                     //row = table.convertRowIndexToModel(row);
-                    Method method = JTable.class.getMethod("convertRowIndexToModel", new Class[] { Integer.TYPE }); // NOI18N
+                    Method method = JTable.class.getMethod("convertRowIndexToModel", new Class[]{Integer.TYPE}); // NOI18N
                     if (method != null) {
-                        row = (Integer)method.invoke(table, Integer.valueOf(row));
+                        row = (Integer) method.invoke(table, Integer.valueOf(row));
                     }
                 } catch (InvocationTargetException ex) {
                     // No complaints - we may not be on JDK6
@@ -361,18 +363,22 @@ final class CoverageReportTopComponent extends TopComponent {
         model = new CoverageTableModel(results);
         table.setModel(model);
         totalCoverage.setCoveragePercentage(model.getTotalCoverage());
+        FileCoverageSummary summary = model.getCoverageSummary();
+        totalCoverage.setStats(summary.getLineCount(), summary.getExecutedLineCount(),
+            summary.getPartialCount(), summary.getInferredCount());
         resizeColumnWidth(table);
     }
 
     private static class CoverageTableModel implements TableModel {
+
         List<FileCoverageSummary> results;
         FileCoverageSummary total;
         //List<TableModelListener> listeners = new ArrayList<TableModelListener>();
         float totalCoverage = 0.0f;
 
         public CoverageTableModel(List<FileCoverageSummary> results) {
-            if (results == null || results.size() == 0) {
-                results = new ArrayList<FileCoverageSummary>();
+            if (results == null || results.isEmpty()) {
+                results = new ArrayList<>();
             } else {
                 Collections.sort(results);
             }
@@ -388,30 +394,38 @@ final class CoverageReportTopComponent extends TopComponent {
                 partialCount += result.getPartialCount();
             }
 
-            if (results.size() == 0) {
+            if (results.isEmpty()) {
                 results.add(new FileCoverageSummary(null, NbBundle.getMessage(CoverageReportTopComponent.class, "NoData"), 0, 0, 0, 0));
             } else {
-                total = new FileCoverageSummary(null, "<html><b>" + // NOI18N
-                        NbBundle.getMessage(CoverageReportTopComponent.class, "Total") +
-                        "</b></html>", lineCount, executedLineCount, inferredCount, partialCount); // NOI18N
+                total = new FileCoverageSummary(null, "<html><b>"
+                    + // NOI18N
+                    NbBundle.getMessage(CoverageReportTopComponent.class, "Total")
+                    + "</b></html>", lineCount, executedLineCount, inferredCount, partialCount); // NOI18N
                 totalCoverage = total.getCoveragePercentage();
                 results.add(total);
             }
             this.results = results;
         }
 
+        FileCoverageSummary getCoverageSummary() {
+            return total;
+        }
+
         float getTotalCoverage() {
             return totalCoverage;
         }
 
+        @Override
         public int getRowCount() {
             return results.size();
         }
 
+        @Override
         public int getColumnCount() {
             return 4;
         }
 
+        @Override
         public String getColumnName(int col) {
             switch (col) {
                 case 0:
@@ -427,6 +441,7 @@ final class CoverageReportTopComponent extends TopComponent {
             }
         }
 
+        @Override
         public Class<?> getColumnClass(int col) {
             switch (col) {
                 case 1:
@@ -441,10 +456,12 @@ final class CoverageReportTopComponent extends TopComponent {
             }
         }
 
+        @Override
         public boolean isCellEditable(int row, int col) {
             return false;
         }
 
+        @Override
         public Object getValueAt(int row, int col) {
             FileCoverageSummary result = results.get(row);
             switch (col) {
@@ -458,34 +475,41 @@ final class CoverageReportTopComponent extends TopComponent {
                     return result.getLineCount();
                 case 3:
                     //return result.getExecutedLineCount();
-                    return result.getLineCount()-result.getExecutedLineCount();
+                    return result.getLineCount() - result.getExecutedLineCount();
                 default:
                     return null;
             }
         }
 
+        @Override
         public void setValueAt(Object arg0, int arg1, int arg2) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public void addTableModelListener(TableModelListener listener) {
+            // nothing to do
         }
 
+        @Override
         public void removeTableModelListener(TableModelListener listener) {
+            // nothing to do
         }
     }
 
     private static class FileRenderer extends JLabel implements TableCellRenderer {
+
         @Override
         public boolean isOpaque() {
             return true;
         }
 
+        @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
+            boolean isSelected, boolean hasFocus, int row, int column) {
             if (value == null) {
                 return new DefaultTableCellRenderer().getTableCellRendererComponent(table, value,
-                        isSelected, hasFocus, row, column);
+                    isSelected, hasFocus, row, column);
             }
 
             if (isSelected) {
@@ -511,7 +535,6 @@ final class CoverageReportTopComponent extends TopComponent {
                 setBorder(new EmptyBorder(1, 1, 1, 1));
             }
 
-
             FileCoverageSummary summary = (FileCoverageSummary) table.getValueAt(row, -1);
             FileObject file = summary.getFile();
 
@@ -529,40 +552,41 @@ final class CoverageReportTopComponent extends TopComponent {
                 setIcon(null);
             }
 
-
             return this;
         }
     }
 
     private class CoverageRenderer extends CoverageBar implements TableCellRenderer {
+
         public CoverageRenderer() {
         }
 
+        @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
+            boolean isSelected, boolean hasFocus, int row, int column) {
             if (value == null) {
                 return new DefaultTableCellRenderer().getTableCellRendererComponent(table, value,
-                        isSelected, hasFocus, row, column);
+                    isSelected, hasFocus, row, column);
             }
 
             // This doesn't work in the presence of table row sorting:
             //boolean isTotalRow = row == table.getModel().getRowCount()-1;
             FileCoverageSummary summary = (FileCoverageSummary) table.getValueAt(row, -1);
-            boolean isTotalRow = summary == ((CoverageTableModel)table.getModel()).total;
+            boolean isTotalRow = summary == ((CoverageTableModel) table.getModel()).total;
             setEmphasize(isTotalRow);
             setSelected(isSelected);
 
             float coverage = (Float) value;
             setCoveragePercentage(coverage);
-
-            //setStats(summary.getLineCount(), summary.getExecutedLineCount(),
-            //        summary.getInferredCount(), summary.getPartialCount());
+            setStats(summary.getLineCount(), summary.getExecutedLineCount(),
+                summary.getInferredCount(), summary.getPartialCount());
 
             return this;
         }
     }
 
     private static class EmptyPaintingTable extends JTable {
+
         @Override
         public boolean getScrollableTracksViewportHeight() {
             return getParent() instanceof JViewport && getPreferredSize().height < getParent().getHeight();

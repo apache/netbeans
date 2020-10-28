@@ -186,7 +186,7 @@ import org.openide.util.Utilities;
  */
 public class TreeTableView extends BeanTreeView {
     // icon of column button
-    private static final String COLUMNS_ICON = "/org/netbeans/modules/openide/explorer/columns.gif"; // NOI18N
+    private static final String COLUMNS_ICON = "org/netbeans/modules/openide/explorer/columns.gif"; // NOI18N
 
     // icons of ascending/descending order in column header
     private static final String SORT_ASC_ICON = "org/netbeans/modules/openide/explorer/columnsSortedAsc.gif"; // NOI18N
@@ -256,8 +256,10 @@ public class TreeTableView extends BeanTreeView {
         scrollPane.setViewportView(treeTable);
         p.add(BorderLayout.CENTER, scrollPane);
 
-        ImageIcon ic = new ImageIcon(TreeTable.class.getResource(COLUMNS_ICON)); // NOI18N
-        colsButton = new javax.swing.JButton(ic);
+        Icon icon = ImageUtilities.image2Icon(ImageUtilities.loadImage(COLUMNS_ICON)); // NOI18N
+        colsButton = new javax.swing.JButton(icon);
+        // For HiDPI support.
+        colsButton.setDisabledIcon(ImageUtilities.createDisabledIcon(icon));
         colsButton.getAccessibleContext().setAccessibleName(NbBundle.getMessage(TreeTableView.class, "ACN_ColumnsSelector")); //NOI18N
         colsButton.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(TreeTableView.class, "ACD_ColumnsSelector")); //NOI18N
         colsButton.addActionListener(

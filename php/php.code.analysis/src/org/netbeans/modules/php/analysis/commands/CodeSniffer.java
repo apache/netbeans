@@ -75,6 +75,12 @@ public final class CodeSniffer {
     private static final String IGNORE_PARAM = "--ignore=%s"; // NOI18N
     private static final String NO_RECURSION_PARAM = "-l"; // NOI18N
 
+    // configuration files
+    public static final String CONFIG_FILE_NAME = "phpcs.xml";  // NOI18N
+    public static final String DOT_CONFIG_FILE_NAME = ".phpcs.xml";  // NOI18N
+    public static final String DIST_CONFIG_FILE_NAME = "phpcs.xml.dist";  // NOI18N
+    public static final String DIST_DOT_CONFIG_FILE_NAME = ".phpcs.xml.dist";  // NOI18N
+
     // cache
     private static final List<String> CACHED_STANDARDS = new CopyOnWriteArrayList<>();
 

@@ -25,21 +25,21 @@
     <localizing-bundle>org.netbeans.modules.junitlib.Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-        <resource>jar:nbinst://org.netbeans.libs.junit4/modules/ext/junit-4.12.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.junit4/modules/ext/junit-4.13.1.jar!/</resource>
     </volume>
     <volume>
         <type>javadoc</type>
-        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-4.12-javadoc.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-4.13.1-javadoc.jar!/</resource>
     </volume>
     <volume>
         <type>src</type>
-        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-4.12-sources.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.junitlib/docs/junit-4.13.1-sources.jar!/</resource>
     </volume>
     <properties>
         <!-- please check with mkleint@netbeans.org before/after updating this or "classpath" section -->
         <property>
             <name>maven-dependencies</name>
-            <value>junit:junit:4.12:jar</value>
+            <value>junit:junit:4.13.1:jar</value>
         </property>
     </properties>
 </library>

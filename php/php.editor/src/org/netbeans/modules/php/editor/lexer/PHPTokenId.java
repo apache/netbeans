@@ -59,6 +59,7 @@ public enum PHPTokenId implements TokenId {
     PHP_TYPE_BOOL("bool", "keyword"), //NOI18N
     PHP_TYPE_VOID("void", "keyword"), //NOI18N
     PHP_TYPE_OBJECT("object", "keyword"), //NOI18N
+    PHP_TYPE_MIXED("mixed", "keyword"), //NOI18N
     PHP_FINAL(null, "keyword"), //NOI18N
     PHP_PAAMAYIM_NEKUDOTAYIM(null, "operator"), //NOI18N
     PHP_EXTENDS(null, "keyword"), //NOI18N
@@ -117,6 +118,7 @@ public enum PHPTokenId implements TokenId {
     PHP_ENCAPSED_AND_WHITESPACE(null, "string"), //NOI18N
     WHITESPACE(null, "whitespace"), //NOI18N
     PHP_SWITCH("switch", "keyword"), //NOI18N
+    PHP_MATCH("match", "keyword"), //NOI18N
     PHP_CONST(null, "keyword"), //NOI18N
     PHP_PUBLIC(null, "keyword"), //NOI18N
     PHP_RETURN(null, "keyword"), //NOI18N
@@ -136,6 +138,7 @@ public enum PHPTokenId implements TokenId {
     PHP_IF("if", "keyword"), //NOI18N
     PHP_DECLARE(null, "keyword"), //NOI18N
     PHP_OBJECT_OPERATOR(null, "operator"), //NOI18N
+    PHP_NULLSAFE_OBJECT_OPERATOR(null, "operator"), //NOI18N NETBEANS-4443 PHP 8.0
     PHP_SELF(null, "keyword"), //NOI18N
     PHP_COMMENT(null, "comment"), //NOI18N
     PHP_COMMENT_START(null, "comment"), //NOI18N

@@ -50,8 +50,9 @@
  <answer id="arch-overall">
   <p>
     <api name="ProgressSwing" group="java" type="export" category="official" 
-         url="@org-netbeans-api-progress@/index.html"/>   
-    Part of Progress API specialized for Swing UIs.
+         url="@org-netbeans-api-progress@/index.html"/> provides part of Progress API specialized for Swing UIs.
+         <br></br>
+         Progress API was split so that parts that are directly connected to Swing types were migrated to this module. 
   </p>
  </answer>
 
@@ -133,7 +134,7 @@
 -->
  <answer id="arch-what">
   <p>
-   XXX no answer for arch-what
+   Provides part of Progress API specialized for Swing UIs.
   </p>
  </answer>
 

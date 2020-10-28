@@ -404,7 +404,7 @@ public class PrintASTVisitor implements Visitor {
 
     @Override
     public void visit(FieldAccess fieldAccess) {
-        XMLPrintNode printNode = new XMLPrintNode(fieldAccess, "FieldAccess");
+        XMLPrintNode printNode = new XMLPrintNode(fieldAccess, "FieldAccess", new String[]{"isNullsafe", fieldAccess.isNullsafe() ? "true" : "false"});
         printNode.addChild(fieldAccess.getDispatcher());
         printNode.addChild("Field", fieldAccess.getField());
         printNode.print(this);
@@ -500,6 +500,22 @@ public class PrintASTVisitor implements Visitor {
     @Override
     public void visit(Identifier identifier) {
         (new XMLPrintNode(identifier, "Identifier", new String[]{"name", identifier.getName()})).print(this);
+    }
+
+    @Override
+    public void visit(MatchArm matchArm) {
+        XMLPrintNode printNode = new XMLPrintNode(matchArm, "MatchArm", new String[]{"isDefault", matchArm.isDefault() ? "true" : "false"});
+        printNode.addChildrenGroup("Conditions", matchArm.getConditions());
+        printNode.addChild(matchArm.getExpression());
+        printNode.print(this);
+    }
+
+    @Override
+    public void visit(MatchExpression match) {
+        XMLPrintNode printNode = new XMLPrintNode(match, "MatchExpression");
+        printNode.addChild(match.getExpression());
+        printNode.addChildrenGroup("MatchArms", match.getMatchArms());
+        printNode.print(this);
     }
 
     @Override
@@ -648,7 +664,7 @@ public class PrintASTVisitor implements Visitor {
 
     @Override
     public void visit(MethodInvocation node) {
-        XMLPrintNode printNode = new XMLPrintNode(node, "MethodInvocation");
+        XMLPrintNode printNode = new XMLPrintNode(node, "MethodInvocation", new String[]{"isNullsafe", node.isNullsafe() ? "true" : "false"});
         printNode.addChild(node.getDispatcher());
         printNode.addChild("Method", node.getMethod());
         printNode.print(this);
@@ -781,8 +797,8 @@ public class PrintASTVisitor implements Visitor {
     }
 
     @Override
-    public void visit(ThrowStatement node) {
-        XMLPrintNode printNode = new XMLPrintNode(node, "ThrowStatement");
+    public void visit(ThrowExpression node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "ThrowExpression");
         printNode.addChild(node.getExpression());
         printNode.print(this);
     }
@@ -801,6 +817,13 @@ public class PrintASTVisitor implements Visitor {
         XMLPrintNode printNode = new XMLPrintNode(node, "UnaryOperation",
                 new String[]{"operator", node.getOperator().name()});
         printNode.addChild(node.getExpression());
+        printNode.print(this);
+    }
+
+    @Override
+    public void visit(UnionType node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "UnionType");
+        printNode.addChildren(node.getTypes());
         printNode.print(this);
     }
 

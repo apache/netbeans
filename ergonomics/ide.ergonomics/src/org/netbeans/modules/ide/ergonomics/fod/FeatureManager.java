@@ -382,7 +382,17 @@ implements PropertyChangeListener, LookupListener {
                     continue;
                 }
                 if (fi.isProject(d) == 0) {
-                    continue;
+                    boolean markedProject = false;
+                    try {
+                        String markerClass = fi.getExtraProjectMarkerClass();
+                        if (markerClass != null) {
+                            Class testClass = projects[i].getClass().getClassLoader().loadClass(markerClass);
+                            markedProject |= projects[i].getLookup().lookup(testClass) != null;
+                        }
+                    } catch (ClassNotFoundException ex) {}
+                    if (!markedProject) {
+                        continue;
+                    }
                 }
                 markUsed(unused, fi, cnb2Date, date2Files);
             }

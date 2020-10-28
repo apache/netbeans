@@ -29,6 +29,7 @@ import org.gradle.tooling.BuildController;
 import org.gradle.tooling.GradleConnectionException;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.OnStart;
 import org.openide.util.RequestProcessor;
@@ -61,8 +62,7 @@ public final class GradleDaemon {
         public void run() {
             GradleSettings settings = GradleSettings.getDefault();
             GradleDistributionManager dmgr = GradleDistributionManager.get(settings.getGradleUserHome());
-            if ( settings.isStartDaemonOnStart()
-                    && dmgr.defaultToolingVersion().isAvailable()) {
+            if ( settings.isStartDaemonOnStart() && dmgr.defaultDistribution().isAvailable()) {
                 GRADLE_LOADER_RP.submit(GradleDaemon::doLoadDaemon);
             }
         }

@@ -132,36 +132,42 @@ parse_args "$@"
 #
 
 if [ -z "$jdkhome" ] ; then
-    # try to find JDK
-    case "`uname`" in
-        Darwin*)
-        # read Java Preferences
-        if [ -x "/usr/libexec/java_home" ]; then
-            jdkhome=`/usr/libexec/java_home --version 1.8.0+ --failfast`
+    # Check Java installed with sdkman
+    if [ -x "$HOME/.sdkman/candidates/java/current/bin/java" ]; then
+        jdkhome=`resolve_symlink "$HOME/.sdkman/candidates/java/current"`
+    fi
+    if [ -z "$jdkhome" ] ; then
+        # try to find JDK
+        case "`uname`" in
+            Darwin*)
+            # read Java Preferences
+            if [ -x "/usr/libexec/java_home" ]; then
+                jdkhome=`/usr/libexec/java_home --version 1.8.0+ --failfast`
 
-        # JDK1.8 as a fallback
-        elif [ -f "/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/bin/java" ] ; then
-            jdkhome="/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home"
-        fi         
-   
-        # JRE fallback
-        if [ ! -x "${jdkhome}/bin/java" -a -f "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/java" ] ; then
-            jdkhome="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
-        fi
-        ;;
-        *) javac=`which javac`
-        if [ -z "$javac" ] ; then
-            java=`which java`
-            if [ ! -z "$java" ] ; then
-                java=`resolve_symlink "$java"`
-                jdkhome=`dirname $java`"/.."
+            # JDK1.8 as a fallback
+            elif [ -f "/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/bin/java" ] ; then
+                jdkhome="/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home"
             fi
-        else
-            javac=`resolve_symlink "$javac"`
-            jdkhome=`dirname $javac`"/.."
-        fi
-        ;;
-    esac
+
+            # JRE fallback
+            if [ ! -x "${jdkhome}/bin/java" -a -f "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/java" ] ; then
+                jdkhome="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
+            fi
+            ;;
+            *) javac=`which javac`
+            if [ -z "$javac" ] ; then
+                java=`which java`
+                if [ ! -z "$java" ] ; then
+                    java=`resolve_symlink "$java"`
+                    jdkhome=`dirname $java`"/.."
+                fi
+            else
+                javac=`resolve_symlink "$javac"`
+                jdkhome=`dirname $javac`"/.."
+            fi
+            ;;
+        esac
+    fi
 fi
 
 if [ ! -x "${jdkhome}/bin/java" ] ; then

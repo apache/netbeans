@@ -82,7 +82,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     private final TreeNodeFilter filter;
     
     /** */
-    private final List nodeTypesList;
+    private final List<Class> nodeTypesList;
 
     /** */
     private NodeTypesTableModel tableModel;
@@ -96,7 +96,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     /** Creates new TreeNodeFilterEditor */
     public TreeNodeFilterCustomEditor (TreeNodeFilter filter) {
         this.filter = filter;
-        this.nodeTypesList = new LinkedList (Arrays.asList (filter.getNodeTypes()));
+        this.nodeTypesList = new LinkedList<>(Arrays.asList(filter.getNodeTypes()));
         
         initComponents();
         ownInitComponents();
@@ -555,7 +555,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     
     /**
      */
-    private static void fillPublicNodeTypesInheritanceTree (Set layer, String prefix) {
+    private static void fillPublicNodeTypesInheritanceTree (Set<Item> layer, String prefix) {
         Iterator<Item> it = layer.iterator();
         while ( it.hasNext() ) {
             Item item = it.next();
@@ -593,7 +593,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
      */
     private static class Item {
         /** */
-        private static Map itemMap;
+        private static Map<Class, Item> itemMap;
 
         /** */
         private final NamedClass clazz;
@@ -651,12 +651,12 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
          */
         private static Item getItem (Class clazz) {
             if ( itemMap == null ) {
-                itemMap = new HashMap();
+                itemMap = new HashMap<>();
             }
             
-            Item item = (Item) itemMap.get (clazz);
+            Item item = itemMap.get(clazz);
             if ( item == null ) {
-                itemMap.put (clazz, item = new Item (new NamedClass (clazz)));
+                itemMap.put(clazz, item = new Item (new NamedClass (clazz)));
             }
             return item;
         }

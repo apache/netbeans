@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.86.0
+#Version 1.87.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -1602,6 +1602,7 @@ meth public org.netbeans.modules.php.editor.model.VariableScope find(org.netbean
 meth public org.netbeans.modules.php.editor.model.VariableScope findNearestVarScope(org.netbeans.modules.php.editor.model.Scope,int,org.netbeans.modules.php.editor.model.VariableScope)
 meth public static org.netbeans.modules.php.editor.model.VariableScopeFinder create()
 supr java.lang.Object
+hfds LOGGER
 hcls VariableScopeWrapperImpl
 
 CLSS public abstract interface static org.netbeans.modules.php.editor.model.VariableScopeFinder$ScopeRangeAcceptor
@@ -1614,6 +1615,7 @@ meth public abstract boolean overlaps(org.netbeans.modules.php.editor.model.Vari
 CLSS public abstract interface static org.netbeans.modules.php.editor.model.VariableScopeFinder$VariableScopeWrapper
  outer org.netbeans.modules.php.editor.model.VariableScopeFinder
 fld public final static org.netbeans.modules.php.editor.model.VariableScopeFinder$VariableScopeWrapper NONE
+meth public abstract boolean containsRange(org.netbeans.modules.php.editor.model.VariableScopeFinder$VariableScopeWrapper)
 meth public abstract boolean overlaps(org.netbeans.modules.php.editor.model.VariableScopeFinder$VariableScopeWrapper)
 meth public abstract java.util.List<? extends org.netbeans.modules.php.editor.model.ModelElement> getElements()
 meth public abstract org.netbeans.modules.csl.api.OffsetRange getBlockRange()

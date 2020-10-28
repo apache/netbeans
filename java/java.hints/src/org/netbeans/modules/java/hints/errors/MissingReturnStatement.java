@@ -41,19 +41,15 @@ import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.JavaSource.Phase;
-import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
-import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.parsing.api.Source;
-import org.netbeans.modules.parsing.api.UserTask;
-import org.netbeans.spi.editor.hints.ChangeInfo;
+import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.java.hints.JavaFix;
 import org.openide.util.NbBundle;
 
 /**
@@ -126,7 +122,7 @@ public class MissingReturnStatement implements ErrorRule<Void> {
 
         List<Fix> result = new ArrayList<Fix>(2);
 
-        result.add(new FixImpl(compilationInfo.getSnapshot().getSource(), TreePathHandle.create(tp, compilationInfo)));
+        result.add(new FixImpl(TreePathHandle.create(tp, compilationInfo)).toEditorFix());
         if (method.getLeaf().getKind() == Kind.METHOD) {
             result.add(new ChangeMethodReturnType.FixImpl(compilationInfo, tp, TypeMirrorHandle.create(compilationInfo.getTypes().getNoType(TypeKind.VOID)), "void").toEditorFix());
         }
@@ -147,14 +143,12 @@ public class MissingReturnStatement implements ErrorRule<Void> {
     @Override
     public void cancel() {}
 
-    private static final class FixImpl implements Fix {
+    private static final class FixImpl extends JavaFix {
 
-        private final Source source;
-        private final TreePathHandle methodHandle;
 
-        public FixImpl(Source source, TreePathHandle methodHandle) {
-            this.source = source;
-            this.methodHandle = methodHandle;
+        public FixImpl(TreePathHandle methodHandle) {
+            super(methodHandle);
+            JavaFixImpl.Accessor.INSTANCE.setChangeInfoConvertor(this, r -> Utilities.computeChangeInfo(methodHandle.getFileObject(), r, Utilities.TAG_SELECT));
         }
         
         @Override
@@ -163,83 +157,74 @@ public class MissingReturnStatement implements ErrorRule<Void> {
         }
 
         @Override
-        public ChangeInfo implement() throws Exception {
-            ModificationResult mr = ModificationResult.runModificationTask(Collections.singleton(source), new UserTask() {
-                @Override public void run(ResultIterator resultIterator) throws Exception {
-                    WorkingCopy wc = WorkingCopy.get(resultIterator.getParserResult());
+        protected void performRewrite(TransformationContext ctx) throws Exception {
+            WorkingCopy wc = ctx.getWorkingCopy();
+            TreePath method = ctx.getPath();
+            TypeMirror type;
+            BlockTree body;
+            TreeMaker make = wc.getTreeMaker();
 
-                    wc.toPhase(Phase.RESOLVED);
+            if (method.getLeaf().getKind() == Kind.METHOD) {
+                Element methodEl = method != null ? wc.getTrees().getElement(method) : null;
 
-                    TreePath method = methodHandle.resolve(wc);
-                    TypeMirror type;
-                    BlockTree body;
-                    TreeMaker make = wc.getTreeMaker();
-                    
-                    if (method.getLeaf().getKind() == Kind.METHOD) {
-                        Element methodEl = method != null ? wc.getTrees().getElement(method) : null;
-
-                        if (methodEl == null || methodEl.getKind() != ElementKind.METHOD) {
-                            return ;
-                        }
-                    
-                        assert method.getLeaf().getKind() == Kind.METHOD;
-
-                        body = ((MethodTree) method.getLeaf()).getBody();
-                        if (body == null) {
-                            return;
-                        }
-                        type = ((ExecutableElement) methodEl).getReturnType();
-                    } else if (method.getLeaf().getKind() == Kind.LAMBDA_EXPRESSION) {
-                        LambdaExpressionTree let = (LambdaExpressionTree)method.getLeaf();
-                        if (let.getBody() == null) {
-                            return;
-                        }
-                        if (let.getBody().getKind() == Kind.BLOCK) {
-                            body = (BlockTree)let.getBody();
-                        } else if (let.getBodyKind() == LambdaExpressionTree.BodyKind.EXPRESSION) {
-                            body = make.Block(Collections.singletonList(
-                                    make.ExpressionStatement((ExpressionTree)let.getBody())), false);
-                            wc.rewrite(let.getBody(), body);
-                        } else {
-                            // surround in braces
-                            body = make.Block(Collections.singletonList((StatementTree)let.getBody()), false);
-                            wc.rewrite(let.getBody(), body);
-                        }
-                        TypeMirror t = wc.getTrees().getTypeMirror(method);
-                        if (t == null || t.getKind() != TypeKind.DECLARED) {
-                            return;
-                        }
-                        ExecutableType et = wc.getTypeUtilities().getDescriptorType((DeclaredType)t);
-                        if (!Utilities.isValidType(et)) {
-                            return;
-                        }
-                        type = et.getReturnType();
-                    } else {
-                        return;
-                    }
-                    
-                    TypeKind kind = type.getKind();
-                    Object value;
-                    if (kind.isPrimitive()) {
-                        if (kind == TypeKind.BOOLEAN) {
-                            value = false;
-                        }
-                        else {
-                            value = 0;
-                        }
-                    }
-                    else {
-                        value = null;
-                    }
-
-                    LiteralTree nullValue = make.Literal(value);
-
-                    wc.tag(nullValue, Utilities.TAG_SELECT);
-                    wc.rewrite(body, make.addBlockStatement(body, make.Return(nullValue)));
+                if (methodEl == null || methodEl.getKind() != ElementKind.METHOD) {
+                    return ;
                 }
-            });
 
-            return Utilities.commitAndComputeChangeInfo(source.getFileObject(), mr);
+                assert method.getLeaf().getKind() == Kind.METHOD;
+
+                body = ((MethodTree) method.getLeaf()).getBody();
+                if (body == null) {
+                    return;
+                }
+                type = ((ExecutableElement) methodEl).getReturnType();
+            } else if (method.getLeaf().getKind() == Kind.LAMBDA_EXPRESSION) {
+                LambdaExpressionTree let = (LambdaExpressionTree)method.getLeaf();
+                if (let.getBody() == null) {
+                    return;
+                }
+                if (let.getBody().getKind() == Kind.BLOCK) {
+                    body = (BlockTree)let.getBody();
+                } else if (let.getBodyKind() == LambdaExpressionTree.BodyKind.EXPRESSION) {
+                    body = make.Block(Collections.singletonList(
+                            make.ExpressionStatement((ExpressionTree)let.getBody())), false);
+                    wc.rewrite(let.getBody(), body);
+                } else {
+                    // surround in braces
+                    body = make.Block(Collections.singletonList((StatementTree)let.getBody()), false);
+                    wc.rewrite(let.getBody(), body);
+                }
+                TypeMirror t = wc.getTrees().getTypeMirror(method);
+                if (t == null || t.getKind() != TypeKind.DECLARED) {
+                    return;
+                }
+                ExecutableType et = wc.getTypeUtilities().getDescriptorType((DeclaredType)t);
+                if (!Utilities.isValidType(et)) {
+                    return;
+                }
+                type = et.getReturnType();
+            } else {
+                return;
+            }
+
+            TypeKind kind = type.getKind();
+            Object value;
+            if (kind.isPrimitive()) {
+                if (kind == TypeKind.BOOLEAN) {
+                    value = false;
+                }
+                else {
+                    value = 0;
+                }
+            }
+            else {
+                value = null;
+            }
+
+            LiteralTree nullValue = make.Literal(value);
+
+            wc.tag(nullValue, Utilities.TAG_SELECT);
+            wc.rewrite(body, make.addBlockStatement(body, make.Return(nullValue)));
         }
 
     }

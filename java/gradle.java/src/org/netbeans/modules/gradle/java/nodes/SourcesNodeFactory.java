@@ -19,9 +19,11 @@
 
 package org.netbeans.modules.gradle.java.nodes;
 
+import java.util.ArrayList;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.nodes.AbstractGradleNodeList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +35,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.modules.gradle.java.classpath.GradleSourcesImpl;
 import org.netbeans.spi.java.project.support.ui.PackageView;
 import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeList;
@@ -68,11 +71,19 @@ public final class SourcesNodeFactory implements NodeFactory {
         @Override
         public List<SourceGroup> keys() {
             Sources srcs = ProjectUtils.getSources(project);
-            SourceGroup[] javagroup = srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-            return Arrays.asList(javagroup);
+            List<SourceGroup> ret = new ArrayList<>();
+            ret.addAll(Arrays.asList(srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)));
+            ret.addAll(Arrays.asList(srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES)));
+            ret.addAll(Arrays.asList(srcs.getSourceGroups(GradleSourcesImpl.SOURCE_TYPE_GENERATED)));
+            ret.addAll(Arrays.asList(srcs.getSourceGroups(GradleSourcesImpl.SOURCE_TYPE_GROOVY)));
+            ret.sort(Comparator.comparing(SourceGroup::getName));
+            return ret;
         }
         
-        @NbBundle.Messages({"# {0} - label of source group", "# {1} - project name", "ERR_WrongSG={0} is owned by project {1}, cannot be used here, see issue #138310 for details."})
+        @NbBundle.Messages({
+            "# {0} - label of source group",
+            "# {1} - project name",
+            "ERR_WrongSG={0} is owned by project {1}, cannot be used here, see issue #138310 for details."})
         @Override
         public Node node(SourceGroup group) {
             Project owner = FileOwnerQuery.getOwner(group.getRootFolder());
@@ -118,12 +129,7 @@ public final class SourcesNodeFactory implements NodeFactory {
         @Override
         public void stateChanged(ChangeEvent arg0) {
             //#167372 break the stack trace chain to prevent deadlocks.
-            RP.post(new Runnable() {
-                @Override
-                public void run() {
-                    fireChange();
-                }
-            });
+            RP.post(this::fireChange);
         }
     }
     

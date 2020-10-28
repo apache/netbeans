@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 8.41
+#Version 8.43
 
 CLSS public abstract interface java.io.Serializable
 
@@ -226,6 +226,8 @@ meth public abstract java.lang.String path()
 CLSS public org.openide.util.lookup.ProxyLookup
 cons protected init()
 cons public !varargs init(org.openide.util.Lookup[])
+cons public init(org.openide.util.lookup.ProxyLookup$Controller)
+innr public final static Controller
 meth protected !varargs final void setLookups(java.util.concurrent.Executor,org.openide.util.Lookup[])
 meth protected !varargs final void setLookups(org.openide.util.Lookup[])
 meth protected final org.openide.util.Lookup[] getLookups()
@@ -237,6 +239,14 @@ meth public java.lang.String toString()
 supr org.openide.util.Lookup
 hfds data
 hcls EmptyInternalData,ImmutableInternalData,LazyCollection,LazyList,LazySet,R,RealInternalData,SingleInternalData,WeakRef,WeakResult
+
+CLSS public final static org.openide.util.lookup.ProxyLookup$Controller
+ outer org.openide.util.lookup.ProxyLookup
+cons public init()
+meth public !varargs void setLookups(java.util.concurrent.Executor,org.openide.util.Lookup[])
+meth public !varargs void setLookups(org.openide.util.Lookup[])
+supr java.lang.Object
+hfds consumer
 
 CLSS public abstract interface !annotation org.openide.util.lookup.ServiceProvider
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=SOURCE)

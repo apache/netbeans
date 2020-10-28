@@ -50,6 +50,7 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
+import org.netbeans.modules.gradle.java.execute.JavaRunUtils;
 import org.netbeans.spi.project.ui.PathFinder;
 import org.netbeans.spi.java.project.support.ui.PackageView;
 import org.netbeans.spi.project.ui.support.NodeFactory;
@@ -182,6 +183,7 @@ public class BootCPNodeFactory implements NodeFactory {
     }
 
     @NbBundle.Messages({
+        "# {0} - Platform Display name",
         "FMT_BrokenPlatform=Broken platform ''{0}''",
         "TXT_BrokenPlatform=Broken platform",
         "TXT_UnknownPlatform=Loading..."
@@ -375,12 +377,9 @@ public class BootCPNodeFactory implements NodeFactory {
         @CheckForNull
         public Pair<String,JavaPlatform> getPlatform () {
             if (platformCache.compareAndSet(null, BUSY)) {
-                RP.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        platformCache.set(RunUtils.getActivePlatform(project));
-                        changeSupport.fireChange ();
-                    }
+                RP.execute(() -> {
+                    platformCache.set(JavaRunUtils.getActivePlatform(project));
+                    changeSupport.fireChange ();
                 });
             }
             Pair<String,JavaPlatform> res = platformCache.get();

@@ -16,7 +16,11 @@
 ~ See the License for the specific language governing permissions and
 ~ limitations under the License.
 -->
+<!--
+Modifications:
 
+- Reference web-app_3_0.xsd with a relative path
+-->
 <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
             targetNamespace="http://www.jboss.com/xml/ns/javaee"
             xmlns:javaee="http://java.sun.com/xml/ns/javaee"
@@ -68,7 +72,7 @@
          consistency with the Servlet API. </xsd:documentation>
    </xsd:annotation>
 
-   <xsd:import namespace="http://java.sun.com/xml/ns/javaee" schemaLocation="http://www.jboss.org/schema/jbossas/web-app_3_0.xsd"/>
+   <xsd:import namespace="http://java.sun.com/xml/ns/javaee" schemaLocation="web-app_3_0.xsd"/>
    <xsd:include schemaLocation="jboss-common_6_0_1.xsd"/>
 
    <xsd:element name="jboss-web" type="jboss:jboss-webType">

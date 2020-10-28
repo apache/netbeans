@@ -49,23 +49,20 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.prefs.Preferences;
-import org.netbeans.api.java.platform.JavaPlatform;
-import org.netbeans.api.java.platform.JavaPlatformManager;
-import org.netbeans.api.java.platform.Specification;
 
 import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.modules.gradle.GradleDistributionManager;
 import org.netbeans.modules.gradle.ProjectTrust;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
 import org.netbeans.modules.gradle.execute.TrustProjectPanel;
 import org.netbeans.modules.gradle.spi.GradleSettings;
+import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
+import org.openide.util.BaseUtilities;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
 
@@ -104,6 +101,9 @@ public final class RunUtils {
             SingleMethod method = methods.iterator().next();
             files.add(method.getFile());
         }
+        if (files.isEmpty()) {
+            files.addAll(lookup.lookupAll(FileObject.class));
+        }
         return files.toArray(new FileObject[files.size()]);
     }
 
@@ -120,11 +120,11 @@ public final class RunUtils {
     public static ExecutorTask executeGradle(RunConfig config, String initialOutput) {
         LifecycleManager.getDefault().saveAll();
 
-        GradleExecutor exec = new GradleDaemonExecutor(config);
+        GradleDaemonExecutor exec = new GradleDaemonExecutor(config);
         ExecutorTask task = executeGradleImpl(config.getTaskDisplayName(), exec, initialOutput);
         GRADLE_TASKS.put(config, exec);
 
-        return task;
+        return exec.createTask(task);
     }
 
     /**
@@ -203,7 +203,7 @@ public final class RunUtils {
                 new ProxyNonSelectableInputOutput(io));
         if (initialOutput != null) {
             try {
-                if (IOColorPrint.isSupported(io)) {
+                if (IOColorPrint.isSupported(io) && IOColors.isSupported(io)) {
                     IOColorPrint.print(io, initialOutput, IOColors.getColor(io, IOColors.OutputType.LOG_DEBUG));
                 } else {
                     io.getOut().println(initialOutput);
@@ -216,6 +216,16 @@ public final class RunUtils {
         return task;
     }
 
+    /**
+     * Compile on Save is a yet to be implemented feature. It's implemetation
+     * details and necessity is still a question. Most probably this method is
+     * in a wrong place here., kepping it around for binary compatibility only.
+     *
+     * @param project
+     * @return
+     * @deprecated In order to discourage the usage of this call.
+     */
+    @Deprecated
     public static boolean isCompileOnSaveEnabled(Project project) {
         return isOptionEnabled(project, PROP_COMPILE_ON_SAVE, false);
     }
@@ -269,54 +279,49 @@ public final class RunUtils {
         return args != null ? new GradleCommandLine(args) : null;
     }
 
+    @Deprecated
     public static File evaluateGradleDistribution(Project project, boolean forceCompatibility) {
-        File ret = null;
 
-        GradleSettings settings = GradleSettings.getDefault();
-        GradleDistributionManager mgr = GradleDistributionManager.get(settings.getGradleUserHome());
-
-        GradleBaseProject gbp = GradleBaseProject.get(project);
-
-        if ((gbp != null) && settings.isWrapperPreferred()) {
-            GradleDistributionManager.NbGradleVersion ngv = mgr.evaluateGradleWrapperDistribution(gbp.getRootDir());
-            if ( (ngv != null) && forceCompatibility && !ngv.isCompatibleWithSystemJava()) {
-                ngv = mgr.defaultToolingVersion();
-            }
-            if ((ngv != null) && ngv.isAvailable()) {
-                ret = ngv.distributionDir();
-            }
+        GradleDistributionProvider pvd = project != null ? project.getLookup().lookup(GradleDistributionProvider.class) : null;
+        GradleDistribution dist = pvd != null ? pvd.getGradleDistribution() : null;
+        if (dist != null && (dist.isCompatibleWithSystemJava() || !forceCompatibility)) {
+            return dist.getDistributionDir();
+        } else {
+            GradleSettings settings = GradleSettings.getDefault();
+            dist = GradleDistributionManager.get(dist != null ? dist.getGradleUserHome() : settings.getGradleUserHome()).defaultDistribution();
+            return dist.getDistributionDir();
         }
-
-        if ((ret == null) && settings.useCustomGradle() && !settings.getDistributionHome().isEmpty()) {
-            File f = FileUtil.normalizeFile(new File(settings.getDistributionHome()));
-            if (f.isDirectory()) {
-                ret = f;
-            }
-        }
-        if (ret == null) {
-            GradleDistributionManager.NbGradleVersion ngv = mgr.createVersion(settings.getGradleVersion());
-            if ( (ngv != null) && forceCompatibility && !ngv.isCompatibleWithSystemJava()) {
-                ngv = mgr.defaultToolingVersion();
-            }
-            if ((ngv != null) && ngv.isAvailable()) {
-                ret = ngv.distributionDir();
-            }
-        }
-        return ret;
     }
-
 
     private static boolean isOptionEnabled(Project project, String option, boolean defaultValue) {
         GradleBaseProject gbp = GradleBaseProject.get(project);
         if (gbp != null) {
             String value = gbp.getNetBeansProperty(option);
             if (value != null) {
-                return Boolean.getBoolean(value);
+                return Boolean.valueOf(value);
             } else {
                 return NbGradleProject.getPreferences(project, false).getBoolean(option, defaultValue);
             }
         }
         return false;
+    }
+
+    /**
+     * Replace the tokens in <code>argLine</code> provided by the <code>project</code> for
+     * the action using the given context;
+     * 
+     * @param project the that holds the {@link ReplaceTokenProvider}-s.
+     * @param argLine a string which might hold tokens to be replaced.
+     * @param action  the action name to do the replacement for. It can be <code>null</code>
+     * @param context the context of the action.
+     *
+     * @return the <code>argLine</code> where the tokens are replaced.
+     * @since 2.6
+     */
+    public static String[] evaluateActionArgs(Project project, String action, String argLine, Lookup context) {
+        ReplaceTokenProvider tokenProvider = project.getLookup().lookup(ReplaceTokenProvider.class);
+        String repLine = ReplaceTokenProvider.replaceTokens(argLine, tokenProvider.createReplacements(action, context));
+        return BaseUtilities.parseParameters(repLine);
     }
 
     /**
@@ -347,39 +352,43 @@ public final class RunUtils {
         };
     }
 
- /**
-     * Returns the active platform used by the project or null if the active
-     * project platform is broken.
+    /**
+     * Returns the active platform id, platform pair used by the project.
+     * The platform can be {@code null} if the active project platform is broken.
+     *
+     * As this module is no longer dependent on the java platform module,
+     * this method always returns {@code null} as a platform since 2.3
+     *
      * @param activePlatformId the name of platform used by Ant script or null
      * for default platform.
-     * @return active {@link JavaPlatform} or null if the project's platform
-     * is broken
+     * @return Pair of {@literal <acivePlatformId, null>}
+     *
+     * @deprecated This method has been deprecated without having a
+     * replacement in this module. The current implementation serves
+     * binary compatibility purposes only.
      */
-    public static Pair<String, JavaPlatform> getActivePlatform(final String activePlatformId) {
-        final JavaPlatformManager pm = JavaPlatformManager.getDefault();
-        if (activePlatformId == null) {
-            JavaPlatform p = pm.getDefaultPlatform();
-            return Pair.of(p.getProperties().get("platform.ant.name"), p);
-        } else {
-            JavaPlatform[] installedPlatforms = pm.getPlatforms(null, new Specification("j2se", null)); //NOI18N
-            for (JavaPlatform installedPlatform : installedPlatforms) {
-                String antName = installedPlatform.getProperties().get("platform.ant.name"); //NOI18N
-                if (antName != null && antName.equals(activePlatformId)) {
-                    return Pair.of(activePlatformId, installedPlatform);
-                }
-            }
-            return Pair.of(activePlatformId, null);
-        }
+    @Deprecated
+    public static Pair getActivePlatform(final String activePlatformId) {
+        return Pair.of(activePlatformId, null);
     }
 
-    public static Pair<String, JavaPlatform> getActivePlatform(Project project) {
-        Preferences prefs = NbGradleProject.getPreferences(project, false);
-        String platformId = prefs.get(PROP_JDK_PLATFORM, null);
-        if (platformId == null) {
-            GradleBaseProject gbp = GradleBaseProject.get(project);
-            platformId = gbp != null ? gbp.getNetBeansProperty(PROP_JDK_PLATFORM) : null;
-        }
-        return getActivePlatform(platformId);
+    /**
+     * Returns the active platform id, platform pair used by the project.
+     * The platform can be null if the active project platform is broken.
+     *
+     * As this module is no longer dependent on the java platform module,
+     * this method always returns {@code null} as a platform since 2.3
+     *
+     * @param project the project to check.
+     * @return Pair of {@literal <"deprecated", null>}
+     *
+     * @deprecated This method has been deprecated without having a
+     * replacement in this module. The current implementation serves
+     * binary compatibility purposes only.
+     */
+    @Deprecated
+    public static Pair getActivePlatform(Project project) {
+        return getActivePlatform("deprecated"); //NOI18N
     }
 
     static GradleCommandLine getIncludedOpenProjects(Project project) {

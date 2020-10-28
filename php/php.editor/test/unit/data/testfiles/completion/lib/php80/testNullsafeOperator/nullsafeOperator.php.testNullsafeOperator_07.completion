@@ -1,0 +1,5 @@
+Code completion result for source line:
+$country = $session?->user?->getAddress()::|ID;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   ID "Adress"                     [PUBLIC]   Address
+CONSTANT   class \Address                  [PUBLIC]   Magic Constant

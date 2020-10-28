@@ -27,12 +27,16 @@ import org.netbeans.modules.gradle.spi.actions.DefaultGradleActionsProvider;
 import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
 import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType.*;
 import java.io.File;
+import java.util.Set;
 import static org.netbeans.spi.project.ActionProvider.*;
 import static org.netbeans.api.java.project.JavaProjectConstants.*;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.queries.FileBuiltQuery;
+import org.netbeans.modules.gradle.api.execute.ActionMapping;
+import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
+import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import static org.netbeans.spi.project.SingleMethod.COMMAND_DEBUG_SINGLE_METHOD;
 import static org.netbeans.spi.project.SingleMethod.COMMAND_RUN_SINGLE_METHOD;
 import org.openide.filesystems.FileObject;
@@ -93,7 +97,11 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
                                 break;
                             case COMMAND_DEBUG_SINGLE:
                             case COMMAND_RUN_SINGLE:
-                                if (RunUtils.isAugmentedBuildEnabled(project)) {
+                                ProjectActionMappingProvider pamp = project.getLookup().lookup(ProjectActionMappingProvider.class);
+                                ActionMapping runSingleMapping = pamp.findMapping(COMMAND_RUN_SINGLE);
+                                GradleCommandLine cli = new GradleCommandLine(RunUtils.evaluateActionArgs(project, action, runSingleMapping.getArgs(), context));
+                                Set<String> runSingleTasks = cli.getTasks();
+                                if (gbp.getTaskNames().containsAll(runSingleTasks) || RunUtils.isAugmentedBuildEnabled(project)) {
                                     File f = FileUtil.toFile(fo);
                                     GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
                                     if ((sourceSet != null) && fo.isData()) {
@@ -105,6 +113,7 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
                                     }
                                 }
                                 break;
+
                             case COMMAND_TEST_SINGLE:
                             case COMMAND_DEBUG_TEST_SINGLE:
                             case COMMAND_RUN_SINGLE_METHOD:
@@ -129,7 +138,5 @@ public class JavaActionProvider extends DefaultGradleActionsProvider {
         }
         return ret;
     }
-
-
 
 }

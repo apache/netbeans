@@ -16,10 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.gsf.codecoverage;
 
-import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.spi.editor.highlighting.HighlightsLayer;
 import org.netbeans.spi.editor.highlighting.HighlightsLayerFactory;
@@ -30,15 +28,17 @@ import org.netbeans.spi.editor.highlighting.ZOrder;
  * @author Tor Norbye
  */
 public class CoverageHighlightsLayerFactory implements HighlightsLayerFactory {
+
     private static final String CONTAINER_PROP_NAME = "gsf-codecoverage-highlight-layer"; // NOI18N
 
+    @Override
     public HighlightsLayer[] createLayers(Context context) {
         JTextComponent component = context.getComponent();
         CoverageHighlightsContainer container = new CoverageHighlightsContainer(component);
         component.putClientProperty(CONTAINER_PROP_NAME, container);
         return new HighlightsLayer[]{HighlightsLayer.create(CONTAINER_PROP_NAME,
-                ZOrder.DEFAULT_RACK.forPosition(80),
-                true, container)}; //NOI18N
+            ZOrder.DEFAULT_RACK.forPosition(80),
+            true, container)}; //NOI18N
     }
 
     public static CoverageHighlightsContainer getContainer(JTextComponent component) {

@@ -74,6 +74,7 @@ import org.netbeans.modules.maven.configurations.M2ConfigProvider;
 import org.netbeans.modules.maven.configurations.M2Configuration;
 import org.netbeans.modules.maven.configurations.ProjectProfileHandlerImpl;
 import org.netbeans.modules.maven.cos.CopyResourcesOnSave;
+import org.netbeans.modules.maven.debug.MavenJPDAStart;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
 import org.netbeans.modules.maven.modelcache.MavenProjectCache;
@@ -466,15 +467,16 @@ public final class NbMavenProjectImpl implements Project {
 
 
 
-    public void fireProjectReload() {
+    public RequestProcessor.Task fireProjectReload() {
         //#227101 not only AWT and project read/write mutex has to be checked, there are some additional more
         //complex scenarios that can lead to deadlock. Just give up and always fire changes in separate RP.
         if (Boolean.getBoolean("test.reload.sync")) {
             reloadTask.run();
             //for tests just do sync reload, even though silly, even sillier is to attempt to sync the threads..
-            return;
+        } else {
+            reloadTask.schedule(0); //asuming here that schedule(0) will move the scheduled task in the queue if not yet executed
         }
-        reloadTask.schedule(0); //asuming here that schedule(0) will move the scheduled task in the queue if not yet executed
+        return reloadTask;
     }
 
     public static void refreshLocalRepository(NbMavenProjectImpl project) {
@@ -881,7 +883,8 @@ public final class NbMavenProjectImpl implements Project {
                     LookupMergerSupport.createClassPathModifierMerger(),
                     new UnitTestsCompilerOptionsQueryImpl(this),
                     new PomCompilerOptionsQueryImpl(this),
-                    LookupMergerSupport.createCompilerOptionsQueryMerger()
+                    LookupMergerSupport.createCompilerOptionsQueryMerger(),
+                    MavenJPDAStart.create(this)
         );
     }
 

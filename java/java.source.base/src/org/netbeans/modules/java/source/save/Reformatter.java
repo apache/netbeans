@@ -48,6 +48,7 @@ import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.ReformatTask;
@@ -954,6 +955,11 @@ public class Reformatter implements ReformatTask {
                         wrapToken(cs.wrapExtendsImplementsKeyword(), 1, id == INTERFACE ? EXTENDS : IMPLEMENTS);
                         wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, impls);
                     }
+                    List<? extends Tree> perms = TreeShims.getPermits(node);
+                    if (perms != null && !perms.isEmpty()) {
+                        wrapToken(cs.wrapExtendsImplementsKeyword(), 1, EXTENDS); 
+                        wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, perms);
+                    }
                 } finally {
                     continuationIndent = old;
                 }
@@ -1162,8 +1168,21 @@ public class Reformatter implements ReformatTask {
                             space();
                         }
                     } else if (afterAnnotation) {
+                        WrapStyle newWrapStyle = cs.wrapAnnotations();
+                        if (parent instanceof ClassTree) {
+                            for (Tree member : ((ClassTree) parent).getMembers()) {
+                                if (member.getKind().toString().equals(TreeShims.RECORD)) {
+                                    ClassTree cls = (ClassTree) member;
+                                    for (Tree recMember : cls.getMembers()) {
+                                        if (recMember.equals(getCurrentPath().getLeaf())) {
+                                            newWrapStyle = WrapStyle.WRAP_NEVER;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         if (org.netbeans.api.java.source.TreeUtilities.CLASS_TREE_KINDS.contains(parent.getKind()) || parent.getKind() == Tree.Kind.BLOCK) {
-                            switch (cs.wrapAnnotations()) {
+                            switch (newWrapStyle) {
                                 case WRAP_ALWAYS:
                                     newline();
                                     break;
@@ -3523,6 +3542,21 @@ public class Reformatter implements ReformatTask {
                         if (tokenId.fixedText() != null && tokenId.fixedText().contentEquals(tokens.token().text())) {
                             contains = true;
                             break;
+                        }
+                    }
+                    if (TokenUtilities.textEquals(tokens.token().text(), "sealed") || TokenUtilities.textEquals(tokens.token().text(), "permits")) {
+                        contains = true;
+                    }
+                    if (TokenUtilities.textEquals(tokens.token().text(), "non") && tokens.moveNext()) {
+                        if (TokenUtilities.textEquals(tokens.token().text(), "-") && tokens.moveNext()) {
+                            if (TokenUtilities.textEquals(tokens.token().text(), "sealed")) {// NOI18N
+                                contains = true;
+                            } else {
+                                tokens.movePrevious();
+                                tokens.movePrevious();
+                            }
+                        } else {
+                            tokens.movePrevious();
                         }
                     }
                 }

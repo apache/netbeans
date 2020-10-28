@@ -23,6 +23,8 @@ import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.StepRequest;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,14 +36,20 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.netbeans.api.debugger.ActionsManager;
+import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.debugger.jpda.JPDAStep;
 import org.netbeans.api.debugger.jpda.JPDAThread;
+import org.netbeans.api.debugger.jpda.MethodBreakpoint;
+import org.netbeans.api.debugger.jpda.event.JPDABreakpointEvent;
+import org.netbeans.api.debugger.jpda.event.JPDABreakpointListener;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.actions.JPDADebuggerActionProvider;
 import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InvalidRequestStateExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.request.EventRequestManagerWrapper;
+import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleStrataProvider;
@@ -64,6 +72,9 @@ public class StepActionProvider extends JPDADebuggerActionProvider {
             ActionsManager.ACTION_STEP_OVER,
             ActionsManager.ACTION_CONTINUE
     })));
+
+    private static final String STEP2JAVA_CLASS = "com.oracle.truffle.polyglot.HostMethodDesc$SingleMethod$MHBase";
+    private static final String STEP2JAVA_METHOD = "invokeHandle";
 
     public StepActionProvider (ContextProvider lookupProvider) {
         super (
@@ -108,6 +119,9 @@ public class StepActionProvider extends JPDADebuggerActionProvider {
             Exceptions.printStackTrace(ex);
         }
         killJavaStep(debugger);
+        if (ActionsManager.ACTION_STEP_INTO.equals(action)) {
+            setBreakpoint2Java(currentThread);
+        }
         if (stepCmd > 0) {
             debugger.resumeCurrentThread();
         } else {
@@ -154,5 +168,38 @@ public class StepActionProvider extends JPDADebuggerActionProvider {
     public Set getActions() {
         return ACTIONS;
     }
-    
+
+    private void setBreakpoint2Java(JPDAThread currentThread) {
+        MethodBreakpoint stepIntoJavaBreakpoint = MethodBreakpoint.create(STEP2JAVA_CLASS, STEP2JAVA_METHOD);
+        stepIntoJavaBreakpoint.setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY);
+        stepIntoJavaBreakpoint.setThreadFilters(debugger, new JPDAThread[]{currentThread});
+        stepIntoJavaBreakpoint.setHidden(true);
+        stepIntoJavaBreakpoint.addJPDABreakpointListener(new JPDABreakpointListener() {
+            @Override
+            public void breakpointReached(JPDABreakpointEvent event) {
+                stepIntoJavaBreakpoint.removeJPDABreakpointListener(this);
+                JPDAStep step2Java = debugger.createJPDAStep(JPDAStep.STEP_LINE, JPDAStep.STEP_INTO);
+                // Step through the reflection invocation onto a user Java code
+                // Need to add the standard exclusion patterns as we're stepping from an excluded location
+                step2Java.addSteppingFilters(debugger.getSmartSteppingFilter().getExclusionPatterns());
+                // Additional invocation-specific patterns:
+                step2Java.addSteppingFilters("java.lang.invoke.*", "sun.invoke.*", Class.class.getName(), System.class.getName());
+                step2Java.setStepThroughFilters(true);
+                step2Java.addStep(currentThread);
+                event.resume();
+            }
+        });
+        ((JPDAThreadImpl) currentThread).addPropertyChangeListener(JPDAThread.PROP_SUSPENDED, new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ((Boolean) evt.getNewValue()) {
+                    // Remove the step breakpoint on any suspend
+                    DebuggerManager.getDebuggerManager().removeBreakpoint(stepIntoJavaBreakpoint);
+                    ((JPDAThreadImpl) evt.getSource()).removePropertyChangeListener(JPDAThread.PROP_SUSPENDED, this);
+                }
+            }
+        });
+        DebuggerManager.getDebuggerManager().addBreakpoint(stepIntoJavaBreakpoint);
+    }
+
 }

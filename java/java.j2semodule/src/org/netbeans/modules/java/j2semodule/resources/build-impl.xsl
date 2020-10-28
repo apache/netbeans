@@ -133,10 +133,238 @@ is divided into following sections:
                 <property name="default.javac.target" value="9"/>
             </target>
             
-            <target name="-init-project">
+            <target name="-init-pre-project">
                 <xsl:attribute name="depends">-pre-init,-init-private<xsl:if test="/p:project/p:configuration/libs:libraries/libs:definitions">,-init-libraries</xsl:if>,-init-user</xsl:attribute>
                 <property file="nbproject/configs/${{config}}.properties"/>
                 <property file="nbproject/project.properties"/>
+                <property name="netbeans.modular.tasks.version" value="1" />
+                <property name="netbeans.modular.tasks.dir" location="${{build.dir}}/tasks/${{netbeans.modular.tasks.version}}" />
+            </target>
+
+            <target depends="-init-pre-project" name="-check-netbeans-tasks">
+                <condition property="netbeans.tasks.compiled">
+                    <available file="${{netbeans.modular.tasks.dir}}/out/netbeans/ModuleInfoSelector.class" />
+                </condition>
+            </target>
+            <target depends="-init-pre-project,-check-netbeans-tasks" name="-init-compile-netbeans-tasks" unless="netbeans.tasks.compiled">
+                <echo file="${{netbeans.modular.tasks.dir}}/src/netbeans/CoalesceKeyvalue.java">
+<![CDATA[
+package netbeans;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
+
+public class CoalesceKeyvalue extends Task {
+    private String property;
+
+    public void setProperty(String property) {
+        this.property = property;
+    }
+
+    private String value;
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    private String valueSep;
+
+    public void setValueSep(String valueSep) {
+        this.valueSep = valueSep;
+    }
+
+    private String entrySep;
+
+    public void setEntrySep(String entrySep) {
+        this.entrySep = entrySep;
+    }
+
+    private String multiSep;
+
+    public void setMultiSep(String multiSep) {
+        this.multiSep = multiSep;
+    }
+
+    private String outSep;
+
+    public void setOutSep(String outSep) {
+        this.outSep = outSep;
+    }
+
+    @Override
+    public void execute() throws BuildException {
+        List<String> result = new ArrayList<>();
+        Map<String, List<String>> module2Paths = new HashMap<>();
+
+        for (String entry : value.split(Pattern.quote(entrySep))) {
+            String[] keyValue = entry.split(Pattern.quote(valueSep), 2);
+            if (keyValue.length == 1) {
+                result.add(keyValue[0]);
+            } else {
+                module2Paths.computeIfAbsent(keyValue[0], s -> new ArrayList<>())
+                            .add(keyValue[1].trim());
+            }
+        }
+        module2Paths.entrySet()
+                    .stream()
+                    .forEach(e -> result.add(e.getKey() + valueSep + e.getValue().stream().collect(Collectors.joining(multiSep))));
+        getProject().setProperty(property, result.stream().collect(Collectors.joining(" " + entrySep)));
+    }
+
+}
+]]>
+                </echo>
+                <echo file="${{netbeans.modular.tasks.dir}}/src/netbeans/ModsourceRegexp.java">
+            <![CDATA[
+package netbeans;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
+
+public class ModsourceRegexp extends Task {
+    private String property;
+
+    public void setProperty(String property) {
+        this.property = property;
+    }
+
+    private String filePattern;
+
+    public void setFilePattern(String filePattern) {
+        this.filePattern = filePattern;
+    }
+
+    private String modsource;
+
+    public void setModsource(String modsource) {
+        this.modsource = modsource;
+    }
+
+    private List<String> expandGroup(String grp) {
+        List<String> exp = new ArrayList<>();
+        String item = "";
+        int depth = 0;
+
+        for (int i = 0; i < grp.length(); i++) {
+            char c = grp.charAt(i);
+            switch (c) {
+                case '{':
+                    if (depth++ == 0) {
+                        continue;
+                    }
+                    break;
+                case '}':
+                    if (--depth == 0) {
+                        exp.add(item);
+                        continue;
+                    }
+                    break;
+                case ',':
+                    if (depth == 1) {
+                        exp.add(item);
+                        item = "";
+                        continue;
+                    }
+                default:
+                    break;
+            }
+            item = item + c;
+        }
+        return exp;
+    }
+
+    private List<String> pathVariants(String spec) {
+        return pathVariants(spec, new ArrayList<>());
+    }
+
+    private List<String> pathVariants(String spec, List<String> res) {
+        int start  = spec.indexOf('{');
+        if (start == -1) {
+            res.add(spec);
+            return res;
+        }
+        int depth = 1;
+        int end;
+        for (end = start + 1; end < spec.length() && depth > 0; end++) {
+            char c = spec.charAt(end);
+            switch (c) {
+                case '{': depth++; break;
+                case '}': depth--; break;
+            }
+        }
+        String prefix = spec.substring(0, start);
+        String suffix = spec.substring(end);
+        expandGroup(spec.substring(start, end)).stream().forEach(item -> {
+            pathVariants(prefix + item + suffix, res);
+        });
+        return res;
+    }
+
+    private String toRegexp2(String spec, String filepattern, String separator) {
+        List<String> prefixes = new ArrayList<>();
+        List<String> suffixes = new ArrayList<>();
+        pathVariants(spec).forEach(item -> {
+            suffixes.add(item);
+        });
+        String tail = "";
+        String separatorString = separator;
+        if ("\\".equals(separatorString)) {
+            separatorString = "\\\\";
+        }
+        if (filepattern != null && !Objects.equals(filepattern, tail)) {
+            tail = separatorString + filepattern;
+        }
+        return "([^" + separatorString +"]+)\\Q" + separator + "\\E(" + suffixes.stream().collect(Collectors.joining("|")) + ")" + tail;
+    }
+
+    @Override
+    public void execute() throws BuildException {
+        getProject().setProperty(property, toRegexp2(modsource, filePattern, getProject().getProperty("file.separator")));
+    }
+
+}
+]]>
+                </echo>
+                <echo file="${{netbeans.modular.tasks.dir}}/src/netbeans/ModuleInfoSelector.java">
+            <![CDATA[
+package netbeans;
+
+import java.io.File;
+import java.util.Arrays;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.selectors.BaseExtendSelector;
+
+public class ModuleInfoSelector extends BaseExtendSelector {
+
+    @Override
+    public boolean isSelected(File basedir, String filename, File file) throws BuildException {
+        String extension = Arrays.stream(getParameters())
+                                 .filter(p -> "extension".equals(p.getName()))
+                                 .map(p -> p.getValue())
+                                 .findAny()
+                                 .get();
+        return !new File(file, "module-info." + extension).exists();
+    }
+
+}
+]]>
+                </echo>
+                <mkdir dir="${{netbeans.modular.tasks.dir}}/out" />
+                <javac destdir="${{netbeans.modular.tasks.dir}}/out" srcdir="${{netbeans.modular.tasks.dir}}/src" classpath="${{ant.core.lib}}" />
+            </target>
+            <target depends="-init-pre-project,-init-compile-netbeans-tasks" name="-init-project">
+                <taskdef name="coalesce_keyvalue" uri="http://www.netbeans.org/ns/j2se-modular-project/1" classname="netbeans.CoalesceKeyvalue" classpath="${{netbeans.modular.tasks.dir}}/out" />
+                <taskdef name="modsource_regexp" uri="http://www.netbeans.org/ns/j2se-modular-project/1" classname="netbeans.ModsourceRegexp" classpath="${{netbeans.modular.tasks.dir}}/out" />
             </target>
 
             <target name="-init-source-module-properties">
@@ -211,9 +439,9 @@ is divided into following sections:
                     <xsl:with-param name="propName">have.tests</xsl:with-param>
                     <xsl:with-param name="suffix">patchset</xsl:with-param>
                     <xsl:with-param name="filter">
-                        <scriptselector language="javascript">
-                            self.setSelected(!new java.io.File(file, "module-info.java").exists());
-                        </scriptselector>                    
+                        <custom classname="netbeans.ModuleInfoSelector" classpath="${{netbeans.modular.tasks.dir}}/out">
+                            <param name="extension" value="java" />
+                        </custom>
                     </xsl:with-param>
                 </xsl:call-template>
                 <xsl:call-template name="createRootAvailableTest">
@@ -1459,131 +1687,6 @@ is divided into following sections:
                 <xsl:comment> You can override this target in the ../build.xml file. </xsl:comment>
             </target>
             
-            <scriptdef language="javascript" name="coalesce_keyvalue" uri="http://www.netbeans.org/ns/j2se-modular-project/1">
-                <attribute name="property"/>
-                <attribute name="value"/>
-                <attribute name="value-sep"/>
-                <attribute name="entry-sep"/>
-                <attribute name="multi-sep"/>
-                <attribute name="out-sep"/>
-
-            <![CDATA[
-
-            function coalesce(input, keyValueSeparator, multiSeparator, entrySeparator) {
-                var result = [];
-                var values = {};
-
-                (typeof input === "string" ? input.split(entrySeparator) : input).forEach(function(entry) {
-                    var idx = entry.indexOf(keyValueSeparator);
-                    if (idx < 1) {
-                        result.push(entry);
-                    } else {
-                        var key = entry.substring(0, idx);
-                        var val = entry.substring(idx + 1);
-                        if (!values[key]) {
-                            values[key] = [];
-                        }
-                        values[key].push(val.trim());
-                    }
-                });
-                Object.keys(values).sort().forEach(function(k) {
-                    result.push(k + keyValueSeparator + values[k].join(multiSeparator));
-                });
-                return result.join(" " + entrySeparator);
-            }
-            self.project.setProperty(attributes.get("property"),
-                coalesce(attributes.get("value"), 
-                attributes.get("value-sep"), 
-                attributes.get("entry-sep"),
-                attributes.get("multi-sep")
-            ));
-            ]]>
-            </scriptdef>
-
-            <scriptdef name="modsource_regexp" language="javascript" uri="http://www.netbeans.org/ns/j2se-modular-project/1">
-                <attribute name="property"/>
-                <attribute name="filePattern"/>
-                <attribute name="modsource"/><![CDATA[
-        function expandGroup(grp) {
-            var exp = [];
-            var item = "";
-            var depth = 0;
-
-            for (i = 0; i < grp.length; i++) {
-                var c = grp[i];
-                switch (c) {
-                    case '{':
-                        if (depth++ === 0) {
-                            continue;
-                        }
-                        break;
-                    case '}':
-                        if (--depth === 0) {
-                            exp.push(item);
-                            continue;
-                        }
-                        break;
-                    case ',':
-                        if (depth === 1) {
-                            exp.push(item);
-                            item = "";
-                            continue;
-                        }
-                    default:
-                        break;
-                }
-                item = item + c;
-            }
-            return exp;
-        }
-
-        function pathVariants(spec, res) {
-            res = res || [];
-            var start  = spec.indexOf('{');
-            if (start === -1) {
-                res.push(spec);
-                return res;
-            }
-            var depth = 1;
-            var end;
-            for (end = start + 1; end < spec.length && depth > 0; end++) {
-                var c = spec[end];
-                switch (c) {
-                    case '{': depth++; break;
-                    case '}': depth--; break;
-                }
-            }
-            var prefix = spec.substring(0, start);
-            var suffix = spec.substring(end);
-            expandGroup(spec.slice(start, end)).forEach(function (item) {
-                pathVariants(prefix + item + suffix, res);
-            })
-            return res;
-        }
-
-        function toRegexp2(spec, filepattern, separator) {
-            var prefixes = [];
-            var suffixes = [];
-            pathVariants(spec).forEach(function(item) {
-                suffixes.push(item);
-            });
-            var tail = "";
-            var separatorString = separator;
-            if (separatorString == "\\") {
-                separatorString = "\\\\";
-            }
-            if (filepattern && filepattern != tail) {
-                tail = separatorString + filepattern;
-            }
-            return "([^" + separatorString +"]+)\\Q" + separator + "\\E(" + suffixes.join("|") + ")" + tail;
-        }
-                self.project.setProperty(attributes.get("property"), 
-                    toRegexp2(attributes.get("modsource"), attributes.get("filepattern"), self.project.getProperty("file.separator")));
-            
-            ]]>
-            </scriptdef>
-            
-            
             <target name="-compile-depend" if="do.depend.true">
                 <pathconvert property="build.generated.subdirs">
                     <dirset dir="${{build.generated.sources.dir}}" erroronmissingdir="false">
@@ -2309,9 +2412,9 @@ is divided into following sections:
                 </pathconvert>
                 <pathconvert property="run.test.patchmodules.list" pathsep=" ">
                     <dirset dir="${{build.test.modules.dir}}" includes="*">
-                        <scriptselector language="javascript">
-                            self.setSelected(!new java.io.File(file, "module-info.class").exists());
-                        </scriptselector>
+                        <custom classname="netbeans.ModuleInfoSelector" classpath="${{netbeans.modular.tasks.dir}}/out">
+                            <param name="extension" value="class" />
+                        </custom>
                     </dirset>
                     <chainedmapper>
                         <filtermapper>
@@ -2320,7 +2423,7 @@ is divided into following sections:
                         <regexpmapper from=".*\Q${{file.separator}}\E([^${{file.separator.string}}]+)$" to="--patch-module \1=\0"/>
                     </chainedmapper>
                 </pathconvert>
-                <j2semodularproject1:coalesce_keyvalue property="run.test.patchmodules" value="${{run.test.patchmodules.list}}" value-sep="=" entry-sep="${{path.separator}}" multi-sep="--patch-module "/>
+                <j2semodularproject1:coalesce_keyvalue property="run.test.patchmodules" value="${{run.test.patchmodules.list}}" valueSep="=" multiSep="${{path.separator}}" entrySep="--patch-module "/>
                 <condition property="run.test.addmodules.internal" value="--add-modules ${{run.test.addmodules.list}}" else="">
                     <isset property="run.test.addmodules.list"/>
                 </condition>
@@ -2353,7 +2456,7 @@ is divided into following sections:
                         </filtermapper>
                     </chainedmapper>
                 </pathconvert>
-                <j2semodularproject1:coalesce_keyvalue property="compile.test.patchmodules" value="${{compile.test.patchmodule.internal}}" value-sep="=" entry-sep="${{path.separator}}" multi-sep="--patch-module "/>
+                <j2semodularproject1:coalesce_keyvalue property="compile.test.patchmodules" value="${{compile.test.patchmodule.internal}}" valueSep="=" multiSep="${{path.separator}}" entrySep="--patch-module "/>
                 <property name="javac.test.moduleargs" value="${{compile.test.patchmodules}} ${{compile.test.addreads}}"/>
             </target>
             <target name="-init-test-module-properties" depends="-init-test-javac-module-properties">
@@ -2576,6 +2679,7 @@ is divided into following sections:
             <target name="debug-test-method">
                 <xsl:attribute name="depends">init,compile-test-single,-init-test-run-module-properties,-debug-start-debugger-test,-debug-start-debuggee-test-method</xsl:attribute>
             </target>
+            <target name="debug-single-method" depends="debug-test-method" />
             
             <target name="-do-debug-fix-test">
                 <xsl:attribute name="if">netbeans.home</xsl:attribute>
@@ -2637,8 +2741,12 @@ is divided into following sections:
                 <xsl:comment> You can override this target in the ../build.xml file. </xsl:comment>
             </target>
             
+            <target name="-recompile-netbeans-tasks-after-clean">
+                <antcall target="-init-compile-netbeans-tasks" inheritall="false"/>
+            </target>
+
             <target name="clean">
-                <xsl:attribute name="depends">init,deps-clean,-do-clean,-post-clean</xsl:attribute>
+                <xsl:attribute name="depends">init,deps-clean,-do-clean,-recompile-netbeans-tasks-after-clean,-post-clean</xsl:attribute>
                 <xsl:attribute name="description">Clean build products.</xsl:attribute>
             </target>
 

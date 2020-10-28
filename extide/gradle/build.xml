@@ -39,17 +39,9 @@
     </target>
 
     <target name="build-tooling-lib" depends="-download.release.files,-copy-gradle-wrapper,-uptodate-tooling" unless="tooling.uptodate">
-        <configureproxy connectTo="http://netbeans.apache.org" hostProperty="proxyHost" portProperty="proxyPort"/>
-        <condition property="gradle.proxy.args" value="-Dhttp.proxyHost=${proxyHost} -Dhttp.proxyPort=${proxyPort} -Dhttps.proxyHost=${proxyHost} -Dhttps.proxyPort=${proxyPort}">
-            <not>
-                <equals arg1="${proxyHost}" arg2="" />
-            </not>
-        </condition>
-        <property name="gradle.proxy.args" value=""/>
-
         <java fork="true" dir="${tooling}" classpath="${tooling}/gradle/wrapper/gradle-wrapper.jar" classname="org.gradle.wrapper.GradleWrapperMain" failonerror="true">
             <sysproperty key="org.gradle.appname" value="Gradle"/>
-            <arg line="${gradle.proxy.args}"/>
+            <arg line="--offline"/>
             <arg line="clean build -x check"/>
         </java>
         <copy file="${tooling}/build/libs/${tooling}.jar" todir="build/tooling" overwrite="true"/>

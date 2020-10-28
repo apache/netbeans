@@ -86,6 +86,10 @@ public final class CodingStandardsFixer {
             ANSI_PARAM,
             NO_INTERACTION_PARAM);
 
+    // configuration files
+    public static final String CONFIG_FILE_NAME = ".php_cs"; // NOI18N
+    public static final String DIST_CONFIG_FILE_NAME = ".php_cs.dist"; // NOI18N
+
     @org.netbeans.api.annotations.common.SuppressWarnings(value = "MS_MUTABLE_COLLECTION", justification = "It is immutable") // NOI18N
     public static final List<String> VERSIONS = Arrays.asList(
             "1", // NOI18N
@@ -117,7 +121,10 @@ public final class CodingStandardsFixer {
     }
 
     public static CodingStandardsFixer getDefault() throws InvalidPhpExecutableException {
-        String codingStandardsFixerPath = AnalysisOptions.getInstance().getCodingStandardsFixerPath();
+        return getCustom(AnalysisOptions.getInstance().getCodingStandardsFixerPath());
+    }
+
+    public static CodingStandardsFixer getCustom(String codingStandardsFixerPath) throws InvalidPhpExecutableException {
         String error = validate(codingStandardsFixerPath);
         if (error != null) {
             throw new InvalidPhpExecutableException(error);
@@ -172,15 +179,17 @@ public final class CodingStandardsFixer {
     public List<Result> analyze(CodingStandardsFixerParams params, FileObject file) {
         assert file.isValid() : "Invalid file given: " + file;
         try {
-            
-            Integer result = getExecutable(Bundle.CodingStandardsFixer_analyze(analyzeGroupCounter++), findWorkDir(file))
+            File workDir = findWorkDir(file);
+            Integer result = getExecutable(Bundle.CodingStandardsFixer_analyze(analyzeGroupCounter++), workDir)
                     .additionalParameters(getParameters(params, file))
                     .runAndWait(getDescriptor(), "Running coding standards fixer..."); // NOI18N
             if (result == null) {
                 return null;
             }
-
-            return CodingStandardsFixerReportParser.parse(XML_LOG, file);
+            // if the project for the file is not found(i.e. if the workDir is not found),
+            // the results are not shown in the inspector window
+            FileObject root = workDir != null ? FileUtil.toFileObject(workDir) : file;
+            return CodingStandardsFixerReportParser.parse(XML_LOG, root);
         } catch (CancellationException ex) {
             // cancelled
             return Collections.emptyList();

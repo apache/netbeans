@@ -42,11 +42,14 @@ public final class GradleJavaSourceSet implements Serializable {
         "LBL_JAVA=Java",
         "LBL_GROOVY=Groovy",
         "LBL_SCALA=Scala",
-        "LBL_RESOURCES=Resources"
+        "LBL_RESOURCES=Resources",
+        "LBL_GENERATED=Generated"
     })
     public static enum SourceType {
 
-        JAVA, GROOVY, SCALA, RESOURCES;
+        JAVA, GROOVY, SCALA, RESOURCES,
+        /** @since 1.8 */
+        GENERATED;
 
         @Override
         public String toString() {
@@ -54,8 +57,10 @@ public final class GradleJavaSourceSet implements Serializable {
                 case JAVA: return Bundle.LBL_JAVA();
                 case GROOVY: return Bundle.LBL_GROOVY();
                 case SCALA: return Bundle.LBL_SCALA();
-                default: return Bundle.LBL_RESOURCES();
+                case RESOURCES: return Bundle.LBL_RESOURCES();
+                case GENERATED: return Bundle.LBL_GENERATED();
             }
+            return super.toString();
         }
     }
 
@@ -72,6 +77,8 @@ public final class GradleJavaSourceSet implements Serializable {
     String name;
     String runtimeConfigurationName;
     String compileConfigurationName;
+    String annotationProcessorConfigurationName;
+
     Map<SourceType, String> sourcesCompatibility = Collections.emptyMap();
     Map<SourceType, String> targetCompatibility = Collections.emptyMap();
     Map<SourceType, List<String>> compilerArgs = Collections.emptyMap();
@@ -80,6 +87,7 @@ public final class GradleJavaSourceSet implements Serializable {
     File outputResources;
     //Add silent support for webapp docroot.
     File webApp;
+    Set<File> annotationProcessorPath;
     Set<File> compileClassPath;
     Set<File> runtimeClassPath;
     Set<GradleJavaSourceSet> sourceDependencies = Collections.emptySet();
@@ -160,6 +168,15 @@ public final class GradleJavaSourceSet implements Serializable {
         return compileConfigurationName;
     }
 
+    /**
+     * The name of the annotation processor path configuration.
+     * @return 
+     * @since 1.8
+     */
+    public String getAnnotationProcessorConfigurationName() {
+        return annotationProcessorConfigurationName;
+    }
+    
     public Set<File> getSourceDirs(SourceType type) {
         Set<File> ret = sources.get(type);
         return ret != null ? ret : Collections.<File>emptySet();
@@ -179,6 +196,17 @@ public final class GradleJavaSourceSet implements Serializable {
 
     public final Set<File> getResourcesDirs() {
         return getSourceDirs(SourceType.RESOURCES);
+    }
+
+    /**
+     * The directories where sources are generated, e.g. by annotation processors.
+     * It only works for builds with Gradle 5.2 and above.
+     * @return
+     *
+     * @since 1.8
+     */
+    public Set<File> getGeneratedSourcesDirs() {
+        return getSourceDirs(SourceType.GENERATED);
     }
 
     /**
@@ -234,6 +262,18 @@ public final class GradleJavaSourceSet implements Serializable {
     }
 
     /**
+     * The annotation processor path configured for this source set. If not
+     * defined it returns with the compile classpath.
+     *
+     * @return the annotation processor path for this sourceset.
+     * @since 1.8
+     */
+    public Set<File> getAnnotationProcessorPath() {
+        Set<File> ret = annotationProcessorPath != null ? annotationProcessorPath : Collections.<File>emptySet();
+        return ret.isEmpty() ? getCompileClassPath() : ret;
+    }
+
+    /**
      * Returns the {@link SourceType} of the given file or {@code null} if that
      * file cannot be associated with one.
      *
@@ -275,6 +315,13 @@ public final class GradleJavaSourceSet implements Serializable {
         return ret;
     }
 
+    /**
+     * Checks if a file most probably belongs to the output of this source set.
+     * It checks the  output class dirs the output resource dir.
+     *
+     * @param f a file
+     * @return true if the file is in one of the output dirs of this source set.
+     */
     public boolean outputContains(File f) {
         List<File> checkList = new LinkedList<>(getOutputClassDirs());
         if (outputResources != null) {

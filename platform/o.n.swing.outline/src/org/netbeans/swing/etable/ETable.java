@@ -64,7 +64,6 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -89,6 +88,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.*;
 import org.netbeans.swing.outline.DefaultOutlineModel;
+import org.openide.util.ImageUtilities;
 
 /**
  * Extended JTable (ETable) adds these features to JTable:
@@ -134,7 +134,7 @@ public class ETable extends JTable {
     private static final String SEARCH_COLUMN = "SearchColumn";
     
     // icon of column button
-    private static final String DEFAULT_COLUMNS_ICON = "columns.gif"; // NOI18N
+    private static final String DEFAULT_COLUMNS_ICON = "org/netbeans/swing/etable/columns.gif"; // NOI18N
     
     /**
      * Property allowing to make the table FULLY_NONEDITABLE and
@@ -1048,9 +1048,11 @@ public class ETable extends JTable {
                 if( isColumnHidingAllowed() ) {
                     Icon ii = UIManager.getIcon("Table.columnSelection");
                     if (ii == null) {
-                        ii = new ImageIcon(ETable.class.getResource(DEFAULT_COLUMNS_ICON));
+                        ii = ImageUtilities.image2Icon(ImageUtilities.loadImage(DEFAULT_COLUMNS_ICON));
                     }
                     final JButton b = new JButton(ii);
+                    // For HiDPI support.
+                    b.setDisabledIcon(ImageUtilities.createDisabledIcon(ii));
                     b.setToolTipText(selectVisibleColumnsLabel);
                     b.getAccessibleContext().setAccessibleName(selectVisibleColumnsLabel);
                     b.getAccessibleContext().setAccessibleDescription(selectVisibleColumnsLabel);

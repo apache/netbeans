@@ -28,12 +28,16 @@ import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.spi.GradleProgressListenerProvider;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StreamCorruptedException;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -46,18 +50,23 @@ import org.gradle.tooling.GradleConnectionException;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProgressEvent;
 import org.gradle.tooling.ProjectConnection;
-import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.NbGradleProjectImpl;
+import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.spi.GradleFiles;
+import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
+import org.netbeans.modules.gradle.spi.execute.GradleJavaPlatformProvider;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.awt.StatusDisplayer;
+import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.Pair;
+import org.openide.util.Utilities;
 import org.openide.util.io.ReaderInputStream;
 import org.openide.windows.IOColorPrint;
 import org.openide.windows.IOColors;
@@ -77,6 +86,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
     private OutputStream outStream;
     private OutputStream errStream;
     private boolean cancelling;
+    private GradleTask gradleTask;
 
     @SuppressWarnings("LeakingThisInConstructor")
     public GradleDaemonExecutor(RunConfig config) {
@@ -97,7 +107,12 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         "BUILD_FAILED=Building {0} failed.",
         "# {0} - Platform Key",
         "NO_PLATFORM=No valid Java Platform found for key: ''{0}''",
-        "GRADLE_IO_ERROR=Gradle internal IO problem has been detected.\nThe running build may or may not have finished succesfully."
+        "GRADLE_IO_ERROR=Gradle internal IO problem has been detected.\nThe running build may or may not have finished succesfully.",
+        "# {0} - Gradle Version",
+        "DOWNLOAD_GRADLE=Downloading Gradle {0}...",
+        "# {0} - Gradle Version",
+        "# {1} - Gradle Distribution URI",
+        "DOWNLOAD_GRADLE_FAILED=Failed Downloading Gradle {0} from {1}",
     })
     @Override
     public void run() {
@@ -111,7 +126,6 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             }
         }
 
-        ProjectConnection pconn = null;
         final InputOutput ioput = getInputOutput();
         actionStatesAtStart();
         handle.start();
@@ -121,22 +135,25 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             if (GradleSettings.getDefault().isAlwaysShowOutput()) {
                 ioput.select();
             }
-
-            GradleConnector gconn = GradleConnector.newConnector();
             cancelTokenSource = GradleConnector.newCancellationTokenSource();
-            File gradleInstall = RunUtils.evaluateGradleDistribution(config.getProject(), false);
-            if (gradleInstall != null) {
-                gconn.useInstallation(gradleInstall);
-            } else {
-                gconn.useBuildDistribution();
+
+            GradleDistributionProvider distProvider = config.getProject().getLookup().lookup(GradleDistributionProvider.class);
+            GradleDistribution dist = distProvider != null ? distProvider.getGradleDistribution() : null;
+            if ((dist != null) && !dist.isAvailable()) {
+                try {
+                    IOColorPrint.print(io, Bundle.DOWNLOAD_GRADLE(dist.getVersion()) + "\n",IOColors.getColor(io, IOColors.OutputType.LOG_WARNING));
+                    try {
+                        dist.install().get();
+                    } catch(InterruptedException | ExecutionException ex) {
+                        IOColorPrint.print(io, Bundle.DOWNLOAD_GRADLE_FAILED(dist.getVersion(), dist.getDistributionURI()),IOColors.getColor(io, IOColors.OutputType.LOG_FAILURE));
+                        throw new BuildException(Bundle.DOWNLOAD_GRADLE_FAILED(dist.getVersion(), dist.getDistributionURI()), ex);
+                    }
+                } catch (IOException ex) {}
             }
-
-            gconn.useGradleUserHomeDir(GradleSettings.getDefault().getGradleUserHome());
-
-            File projectDir = FileUtil.toFile(config.getProject().getProjectDirectory());
-            pconn = gconn.forProjectDirectory(projectDir).connect();
+            ProjectConnection pconn = config.getProject().getLookup().lookup(ProjectConnection.class);
 
             BuildLauncher buildLauncher = pconn.newBuild();
+
             GradleCommandLine cmd = config.getCommandLine();
             if (RunUtils.isAugmentedBuildEnabled(config.getProject())) {
                 cmd = new GradleCommandLine(cmd);
@@ -147,15 +164,17 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             cmd.configure(buildLauncher, gbp != null ? gbp.getRootDir() : null);
 
             printCommandLine();
-
-            Pair<String, JavaPlatform> activePlatform = RunUtils.getActivePlatform(config.getProject());
-            if (activePlatform.second() == null || !activePlatform.second().isValid()) {
-                io.getErr().println(Bundle.NO_PLATFORM(activePlatform.first()));
-                return;
-            }
-            if (!activePlatform.second().getInstallFolders().isEmpty()) {
-                File javaHome = FileUtil.toFile(activePlatform.second().getInstallFolders().iterator().next());
-                buildLauncher.setJavaHome(javaHome);
+            GradleJavaPlatformProvider platformProvider = config.getProject().getLookup().lookup(GradleJavaPlatformProvider.class);
+            if (platformProvider != null) {
+                try {
+                    buildLauncher.setJavaHome(platformProvider.getJavaHome());
+                    Map<String, String> envs = new HashMap<>(System.getenv());
+                    envs.put("JAVA_HOME", platformProvider.getJavaHome().getCanonicalPath());
+                    buildLauncher.setEnvironmentVariables(envs);
+                } catch (IOException ex) {
+                    io.getErr().println(Bundle.NO_PLATFORM(ex.getMessage()));
+                    return;
+                }
             }
 
             outStream = new EscapeProcessingOutputStream(new GradlePlainEscapeProcessor(io, config, false));
@@ -181,6 +200,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             }
             buildLauncher.run();
             StatusDisplayer.getDefault().setStatusText(Bundle.BUILD_SUCCESS(getProjectName()));
+            gradleTask.finish(0);
         } catch (BuildCancelledException ex) {
             showAbort();
         } catch (UncheckedException | BuildException ex) {
@@ -208,9 +228,6 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             if (!handled) throw ex;
         } finally {
             BuildExecutionSupport.registerFinishedItem(item);
-            if (pconn != null) {
-                pconn.close();
-            }
             closeInOutErr();
             checkForExternalModifications();
             handle.finish();
@@ -231,10 +248,12 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         if (userHome != null) {
             commandLine.append("GRADLE_USER_HOME=\"").append(userHome).append("\"\n"); //NOI18N
         }
-        JavaPlatform activePlatform = RunUtils.getActivePlatform(config.getProject()).second();
-        if ((activePlatform != null) && activePlatform.isValid() && !activePlatform.getInstallFolders().isEmpty()) {
-            File javaHome = FileUtil.toFile(activePlatform.getInstallFolders().iterator().next());
-            commandLine.append("JAVA_HOME=\"").append(javaHome.getAbsolutePath()).append("\"\n"); //NOI18N
+        GradleJavaPlatformProvider platformProvider = config.getProject().getLookup().lookup(GradleJavaPlatformProvider.class);
+        if (platformProvider != null) {
+            try {
+                File javaHome = platformProvider.getJavaHome();
+                commandLine.append("JAVA_HOME=\"").append(javaHome.getAbsolutePath()).append("\"\n"); //NOI18N
+            } catch (FileNotFoundException ex) {}
         }
         File dir = FileUtil.toFile(config.getProject().getProjectDirectory());
         if (dir != null) {
@@ -251,11 +270,12 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
                 String relRoot = projectPath.relativize(rootPath).toString();
                 relRoot = relRoot.isEmpty() ? "." : relRoot;
-                commandLine.append(relRoot).append("/gradlew"); //NOI18N
+                commandLine.append(relRoot).append(gradlewExecutable());
             } else {
-                File gradleDistribution = RunUtils.evaluateGradleDistribution(null, false);
-                if (gradleDistribution != null) {
-                    File gradle = new File(gradleDistribution, "bin/gradle"); //NOI18N
+                GradleDistributionProvider pvd = config.getProject().getLookup().lookup(GradleDistributionProvider.class);
+                GradleDistribution dist = pvd != null ? pvd.getGradleDistribution() : null;
+                if (dist != null) {
+                    File gradle = new File(dist.getDistributionDir(), gradleExecutable());
                     commandLine.append(gradle.getAbsolutePath());
                 }
             }
@@ -309,4 +329,50 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         return false;
     }
 
+    private static String gradlewExecutable() {
+        return Utilities.isWindows() ? "\\gradlew.bat" : "/gradlew"; //NOI18N
+    }
+
+    private static String gradleExecutable() {
+        return Utilities.isWindows() ? "bin\\gradle.bat" : "bin/gradle"; //NOI18N
+    }
+
+    public final ExecutorTask createTask(ExecutorTask process) {
+        assert gradleTask == null;
+        gradleTask = new GradleTask(process);
+        return gradleTask;
+    }
+
+    private static final class GradleTask extends ExecutorTask {
+        private final ExecutorTask delegate;
+        private Integer result;
+
+        GradleTask(ExecutorTask delegate) {
+            super(() -> {});
+            this.delegate = delegate;
+        }
+
+        @Override
+        public void stop() {
+            this.delegate.stop();
+        }
+
+        @Override
+        public int result() {
+            if (result != null) {
+                return result;
+            }
+            return this.delegate.result();
+        }
+
+        @Override
+        public InputOutput getInputOutput() {
+            return this.delegate.getInputOutput();
+        }
+
+        public void finish(int result) {
+            this.result = result;
+            notifyFinished();
+        }
+    }
 }

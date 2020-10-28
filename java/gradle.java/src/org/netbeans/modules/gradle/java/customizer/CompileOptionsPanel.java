@@ -42,6 +42,7 @@ import javax.swing.UIManager;
 import javax.swing.plaf.UIResource;
 import org.netbeans.api.java.platform.*;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.java.execute.JavaRunUtils;
 import org.netbeans.spi.project.AuxiliaryProperties;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.util.Lookup;
@@ -118,7 +119,7 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
                platformId = prefs.get(RunUtils.PROP_JDK_PLATFORM, null);
             }
 
-            JavaPlatform sel = RunUtils.getActivePlatform(platformId).second();
+            JavaPlatform sel = JavaRunUtils.getActivePlatform(platformId).second();
 
             PlatformsModel model = new PlatformsModel();
             model.setSelectedItem(sel != null ? sel : platformId);
@@ -266,7 +267,7 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
     private JavaPlatform getSelPlatform () {
         String platformId = project.getLookup().lookup(AuxiliaryProperties.class).
                 get(HINT_JDK_PLATFORM, true);
-        return RunUtils.getActivePlatform(platformId).second();
+        return JavaRunUtils.getActivePlatform(platformId).second();
     }
     
     

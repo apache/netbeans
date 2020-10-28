@@ -1,0 +1,16 @@
+Code completion result for source line:
+->|testSelfReturnTypeParent() // all test16
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testSelfReturnNullableTypePare  [PUBLIC]   ParentClass
+METHOD     testSelfReturnTypeParent()      [PUBLIC]   ParentClass
+METHOD     testSelfReturnUnionTypeParent(  [PUBLIC]   ParentClass
+METHOD     testStaticReturnNullableTypeCh  [PUBLIC]   ChildClass
+METHOD     testStaticReturnNullableTypePa  [PUBLIC]   ParentClass
+METHOD     testStaticReturnNullableTypeTr  [PUBLIC]   TestTrait
+METHOD     testStaticReturnTypeChild()     [PUBLIC]   ChildClass
+METHOD     testStaticReturnTypeParent()    [PUBLIC]   ParentClass
+METHOD     testStaticReturnTypeTrait()     [PUBLIC]   TestTrait
+METHOD     testStaticReturnUnionTypeChild  [PUBLIC]   ChildClass
+METHOD     testStaticReturnUnionTypeParen  [PUBLIC]   ParentClass
+METHOD     testStaticReturnUnionTypeTrait  [PUBLIC]   TestTrait
+METHOD     testStaticSelfReturnUnionTypeP  [PUBLIC]   ParentClass

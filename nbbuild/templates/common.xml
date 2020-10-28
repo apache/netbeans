@@ -82,6 +82,8 @@
             <available file="${nbplatform.active.dir}/platform/core/asm-8.0.1.jar"/>
         </condition>
         <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-8.0.1.jar"/>
+        <property name="tsaurl" value=""/>
+        <property name="tsacert" value=""/>
     </target>
 
     <target name="-release.dir">
@@ -467,7 +469,7 @@
                  locales="${nbm.locales}"
                  >
             <license file="${license.file.override}"/>
-            <signature keystore="${keystore}" storepass="${storepass}" alias="${nbm_alias}"/>
+            <signature keystore="${keystore}" storepass="${storepass}" alias="${nbm_alias}" tsaurl="${tsaurl}" tsacert="${tsacert}"/>
             <updaterjar>
                 <pathfileset>
                     <path refid="cluster.path.id"/>

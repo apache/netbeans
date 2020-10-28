@@ -1,0 +1,6 @@
+public function testParent(\TestParent1\ParentClass $parent): \TestParent1\ParentClass{
+return parent::testParent($parent);
+}
+public function testUniontypes(\TestParent1\ParentClass|Child|null $parent): \TestParent1\ParentClass|Child|null{
+return parent::testUniontypes($parent);
+}

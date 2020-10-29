@@ -60,6 +60,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.TypeDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation;
 import org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation.Operator;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 import org.netbeans.modules.php.editor.parser.astnodes.Variadic;
@@ -228,10 +229,12 @@ public final class CodeUtils {
     }
 
     /**
-     * Extract unqualified name for Identifier, NamespaceName, and NullableType.
+     * Extract unqualified name for Identifier, NamespaceName, NullableType, and
+     * UnionType.
      *
      * @param typeName The type name
-     * @return The type name. If it is a nullable type, the name is returned with "?"
+     * @return The type name. If it is a nullable type, the name is returned
+     * with "?" If it's union type, type names separated by "|" are returned
      */
     @CheckForNull
     public static String extractUnqualifiedName(Expression typeName) {
@@ -242,6 +245,16 @@ public final class CodeUtils {
             return extractUnqualifiedName((NamespaceName) typeName);
         } else if (typeName instanceof NullableType) {
             return NULLABLE_TYPE_PREFIX + extractUnqualifiedName(((NullableType) typeName).getType());
+        } else if (typeName instanceof UnionType) {
+            UnionType unionType = (UnionType) typeName;
+            StringBuilder sb = new StringBuilder();
+            for (Expression type : unionType.getTypes()) {
+                if (sb.length() > 0) {
+                    sb.append(Type.SEPARATOR);
+                }
+                sb.append(extractUnqualifiedName(type));
+            }
+            return sb.toString();
         }
 
         //TODO: php5.3 !!!
@@ -250,10 +263,12 @@ public final class CodeUtils {
     }
 
     /**
-     * Extract qualified name for Identifier, NamespaceName, and NullableType.
+     * Extract qualified name for Identifier, NamespaceName, NullableType, and
+     * UnionType.
      *
      * @param typeName The type name
-     * @return The type name. If it is a nullable type, the name is returned with "?"
+     * @return The type name. If it is a nullable type, the name is returned
+     * with "?". If it's union type, type names separated by "|" are returned
      */
     @CheckForNull
     public static String extractQualifiedName(Expression typeName) {
@@ -265,6 +280,16 @@ public final class CodeUtils {
         } else if (typeName instanceof NullableType) {
             NullableType nullableType = (NullableType) typeName;
             return NULLABLE_TYPE_PREFIX + extractQualifiedName(nullableType.getType());
+        } else if (typeName instanceof UnionType) {
+            UnionType unionType = (UnionType) typeName;
+            StringBuilder sb = new StringBuilder();
+            for (Expression type : unionType.getTypes()) {
+                if (sb.length() > 0) {
+                    sb.append(Type.SEPARATOR);
+                }
+                sb.append(extractQualifiedName(type));
+            }
+            return sb.toString();
         }
         assert false : typeName.getClass();
         return null;

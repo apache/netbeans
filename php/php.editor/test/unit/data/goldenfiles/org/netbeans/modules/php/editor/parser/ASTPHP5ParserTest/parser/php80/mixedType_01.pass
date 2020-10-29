@@ -1,0 +1,253 @@
+<testresult testFile='mixedType_01.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='815' end='823'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='824' end='837'>
+            <text>parameterType</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='837' end='838'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='838' end='843'>
+            <text>mixed</text>
+        </token>
+        <token id='T_VARIABLE' start='844' end='850'>
+            <text>$mixed</text>
+        </token>
+        <token id='T_COMMA' start='850' end='851'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='852' end='857'>
+            <text>mixed</text>
+        </token>
+        <token id='T_VARIABLE' start='858' end='865'>
+            <text>$mixed2</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='865' end='866'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='867' end='868'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='869' end='870'>
+            <text>}</text>
+        </token>
+        <token id='T_FUNCTION' start='872' end='880'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='881' end='891'>
+            <text>returnType</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='891' end='892'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='892' end='893'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='893' end='894'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='895' end='900'>
+            <text>mixed</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='901' end='902'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='907' end='913'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='914' end='918'>
+            <text>null</text>
+        </token>
+        <token id='T_SEMICOLON' start='918' end='919'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='920' end='921'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='923' end='928'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='929' end='938'>
+            <text>MixedType</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='939' end='940'>
+            <text>{</text>
+        </token>
+        <token id='T_PRIVATE' start='945' end='952'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='953' end='958'>
+            <text>mixed</text>
+        </token>
+        <token id='T_VARIABLE' start='959' end='965'>
+            <text>$mixed</text>
+        </token>
+        <token id='T_SEMICOLON' start='965' end='966'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='972' end='978'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='979' end='987'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='988' end='993'>
+            <text>mixed</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='993' end='994'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='994' end='999'>
+            <text>mixed</text>
+        </token>
+        <token id='T_VARIABLE' start='1000' end='1006'>
+            <text>$mixed</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1006' end='1007'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1007' end='1008'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1009' end='1014'>
+            <text>mixed</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1015' end='1016'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1025' end='1031'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='1032' end='1036'>
+            <text>null</text>
+        </token>
+        <token id='T_SEMICOLON' start='1036' end='1037'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1042' end='1043'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1044' end='1045'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1046' end='1046'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1046'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='815' end='870' isReference='false'>
+                <Identifier start='824' end='837' name='parameterType'/>
+                <FormalParameters>
+                    <FormalParameter start='838' end='850' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                            <NamespaceName start='838' end='843' isCurrent='false' isGlobal='false'>
+                                <Identifier start='838' end='843' name='mixed'/>
+                            </NamespaceName>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='844' end='850' isDollared='true'>
+                                <Identifier start='845' end='850' name='mixed'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='852' end='865' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                            <NamespaceName start='852' end='857' isCurrent='false' isGlobal='false'>
+                                <Identifier start='852' end='857' name='mixed'/>
+                            </NamespaceName>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='858' end='865' isDollared='true'>
+                                <Identifier start='859' end='865' name='mixed2'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <Block start='867' end='870' isCurly='true'>
+                </Block>
+            </FunctionDeclaration>
+            <FunctionDeclaration start='872' end='921' isReference='false'>
+                <Identifier start='881' end='891' name='returnType'/>
+                <FormalParameters>
+                </FormalParameters>
+                <NamespaceName start='895' end='900' isCurrent='false' isGlobal='false'>
+                    <Identifier start='895' end='900' name='mixed'/>
+                </NamespaceName>
+                <Block start='901' end='921' isCurly='true'>
+                    <ReturnStatement start='907' end='919'>
+                        <NamespaceName start='914' end='918' isCurrent='false' isGlobal='false'>
+                            <Identifier start='914' end='918' name='null'/>
+                        </NamespaceName>
+                    </ReturnStatement>
+                </Block>
+            </FunctionDeclaration>
+            <ClassDeclaration start='923' end='1045' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='929' end='938' name='MixedType'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='939' end='1045' isCurly='true'>
+                    <FieldsDeclaration start='945' end='966' modifier='private'>
+                        <FieldType>
+                            <NamespaceName start='953' end='958' isCurrent='false' isGlobal='false'>
+                                <Identifier start='953' end='958' name='mixed'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='959' end='965' isDollared='true'>
+                                <Identifier start='960' end='965' name='mixed'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <MethodDeclaration start='972' end='1043' modifiers='public'>
+                        <FunctionDeclaration start='979' end='1043' isReference='false'>
+                            <Identifier start='988' end='993' name='mixed'/>
+                            <FormalParameters>
+                                <FormalParameter start='994' end='1006' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='994' end='999' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='994' end='999' name='mixed'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1000' end='1006' isDollared='true'>
+                                            <Identifier start='1001' end='1006' name='mixed'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='1009' end='1014' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1009' end='1014' name='mixed'/>
+                            </NamespaceName>
+                            <Block start='1015' end='1043' isCurly='true'>
+                                <ReturnStatement start='1025' end='1037'>
+                                    <NamespaceName start='1032' end='1036' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1032' end='1036' name='null'/>
+                                    </NamespaceName>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+        </Statements>
+    </Program>
+</testresult>

@@ -1,0 +1,1754 @@
+<testresult testFile='nullsafeOperator_01.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='828'>
+            <text>Session</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='829' end='830'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='836' end='842'>
+            <text>public</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='843' end='844'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='844' end='848'>
+            <text>User</text>
+        </token>
+        <token id='T_VARIABLE' start='849' end='854'>
+            <text>$user</text>
+        </token>
+        <token id='T_SEMICOLON' start='854' end='855'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='861' end='867'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='868' end='876'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='877' end='888'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='888' end='889'>
+            <text>(</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='889' end='890'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='890' end='894'>
+            <text>User</text>
+        </token>
+        <token id='T_VARIABLE' start='895' end='900'>
+            <text>$user</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='900' end='901'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='902' end='903'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='912' end='917'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='917' end='919'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='919' end='923'>
+            <text>user</text>
+        </token>
+        <token id='T_EQUAL' start='924' end='925'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='926' end='931'>
+            <text>$user</text>
+        </token>
+        <token id='T_SEMICOLON' start='931' end='932'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='937' end='938'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='940' end='941'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='943' end='948'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='949' end='953'>
+            <text>User</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='954' end='955'>
+            <text>{</text>
+        </token>
+        <token id='T_PRIVATE' start='961' end='968'>
+            <text>private</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='969' end='970'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='970' end='977'>
+            <text>Address</text>
+        </token>
+        <token id='T_VARIABLE' start='978' end='986'>
+            <text>$address</text>
+        </token>
+        <token id='T_SEMICOLON' start='986' end='987'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='992' end='999'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='1000' end='1006'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1007' end='1012'>
+            <text>$name</text>
+        </token>
+        <token id='T_SEMICOLON' start='1012' end='1013'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1018' end='1024'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1025' end='1028'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1029' end='1032'>
+            <text>$id</text>
+        </token>
+        <token id='T_EQUAL' start='1033' end='1034'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1035' end='1036'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1036' end='1037'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1042' end='1048'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1049' end='1055'>
+            <text>static</text>
+        </token>
+        <token id='T_STRING' start='1056' end='1062'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1063' end='1068'>
+            <text>$test</text>
+        </token>
+        <token id='T_EQUAL' start='1069' end='1070'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1071' end='1077'>
+            <text>"test"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1077' end='1078'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1084' end='1090'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1091' end='1099'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1100' end='1111'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1111' end='1112'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1112' end='1118'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1119' end='1124'>
+            <text>$name</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1124' end='1125'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1126' end='1127'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1136' end='1141'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1141' end='1143'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1143' end='1150'>
+            <text>address</text>
+        </token>
+        <token id='T_EQUAL' start='1151' end='1152'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='1153' end='1156'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1157' end='1164'>
+            <text>Address</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1164' end='1165'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1165' end='1166'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1166' end='1167'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1176' end='1181'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1181' end='1183'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1183' end='1187'>
+            <text>name</text>
+        </token>
+        <token id='T_EQUAL' start='1188' end='1189'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1190' end='1195'>
+            <text>$name</text>
+        </token>
+        <token id='T_SEMICOLON' start='1195' end='1196'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1201' end='1202'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1208' end='1214'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1215' end='1223'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1224' end='1234'>
+            <text>getAddress</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1234' end='1235'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1235' end='1236'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1236' end='1237'>
+            <text>:</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='1238' end='1239'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='1239' end='1246'>
+            <text>Address</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1247' end='1248'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1257' end='1263'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='1264' end='1269'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1269' end='1271'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1271' end='1278'>
+            <text>address</text>
+        </token>
+        <token id='T_SEMICOLON' start='1278' end='1279'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1284' end='1285'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1291' end='1297'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1298' end='1304'>
+            <text>static</text>
+        </token>
+        <token id='T_FUNCTION' start='1305' end='1313'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1314' end='1318'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1318' end='1319'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1319' end='1320'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1320' end='1321'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1322' end='1328'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1329' end='1330'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1339' end='1345'>
+            <text>return</text>
+        </token>
+        <token id='T_STRING' start='1346' end='1350'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1350' end='1352'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='1352' end='1357'>
+            <text>$test</text>
+        </token>
+        <token id='T_SEMICOLON' start='1357' end='1358'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1363' end='1364'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1366' end='1367'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='1369' end='1374'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='1375' end='1382'>
+            <text>Address</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1383' end='1384'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='1390' end='1396'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1397' end='1402'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1403' end='1405'>
+            <text>ID</text>
+        </token>
+        <token id='T_EQUAL' start='1406' end='1407'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1408' end='1416'>
+            <text>"Adress"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1416' end='1417'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1422' end='1428'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1429' end='1436'>
+            <text>Country</text>
+        </token>
+        <token id='T_VARIABLE' start='1437' end='1445'>
+            <text>$country</text>
+        </token>
+        <token id='T_SEMICOLON' start='1445' end='1446'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1452' end='1458'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1459' end='1467'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1468' end='1479'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1479' end='1480'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1480' end='1481'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1482' end='1483'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1492' end='1497'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1497' end='1499'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1499' end='1506'>
+            <text>country</text>
+        </token>
+        <token id='T_EQUAL' start='1507' end='1508'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='1509' end='1512'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1513' end='1520'>
+            <text>Country</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1520' end='1521'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1521' end='1522'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1522' end='1523'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1528' end='1529'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1530' end='1531'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='1533' end='1538'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='1539' end='1546'>
+            <text>Country</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1547' end='1548'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1549' end='1550'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='1659' end='1667'>
+            <text>$session</text>
+        </token>
+        <token id='T_EQUAL' start='1668' end='1669'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='1670' end='1673'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1674' end='1681'>
+            <text>Session</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1681' end='1682'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='1682' end='1685'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='1686' end='1690'>
+            <text>User</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1690' end='1691'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1691' end='1697'>
+            <text>"test"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1697' end='1698'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1698' end='1699'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1699' end='1700'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1701' end='1709'>
+            <text>$country</text>
+        </token>
+        <token id='T_EQUAL' start='1710' end='1711'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1712' end='1720'>
+            <text>$session</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1720' end='1723'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1723' end='1727'>
+            <text>user</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1727' end='1730'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1730' end='1740'>
+            <text>getAddress</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1740' end='1741'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1741' end='1742'>
+            <text>)</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1742' end='1745'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1745' end='1752'>
+            <text>country</text>
+        </token>
+        <token id='T_SEMICOLON' start='1752' end='1753'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1754' end='1762'>
+            <text>$country</text>
+        </token>
+        <token id='T_EQUAL' start='1763' end='1764'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1765' end='1773'>
+            <text>$session</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1773' end='1776'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1776' end='1780'>
+            <text>user</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1780' end='1782'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='1782' end='1787'>
+            <text>$test</text>
+        </token>
+        <token id='T_SEMICOLON' start='1787' end='1788'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1789' end='1797'>
+            <text>$country</text>
+        </token>
+        <token id='T_EQUAL' start='1798' end='1799'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1800' end='1808'>
+            <text>$session</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1808' end='1811'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1811' end='1815'>
+            <text>user</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1815' end='1817'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1817' end='1821'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1821' end='1822'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1822' end='1823'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1823' end='1824'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1825' end='1833'>
+            <text>$country</text>
+        </token>
+        <token id='T_EQUAL' start='1834' end='1835'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1836' end='1844'>
+            <text>$session</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1844' end='1847'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1847' end='1851'>
+            <text>user</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1851' end='1853'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1853' end='1855'>
+            <text>id</text>
+        </token>
+        <token id='T_SEMICOLON' start='1855' end='1856'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1857' end='1865'>
+            <text>$country</text>
+        </token>
+        <token id='T_EQUAL' start='1866' end='1867'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1868' end='1876'>
+            <text>$session</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1876' end='1879'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1879' end='1883'>
+            <text>user</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1883' end='1886'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1886' end='1896'>
+            <text>getAddress</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1896' end='1897'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1897' end='1898'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1898' end='1900'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1900' end='1902'>
+            <text>ID</text>
+        </token>
+        <token id='T_SEMICOLON' start='1902' end='1903'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1904' end='1912'>
+            <text>$country</text>
+        </token>
+        <token id='T_EQUAL' start='1913' end='1914'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1915' end='1923'>
+            <text>$session</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1923' end='1926'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1926' end='1930'>
+            <text>user</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1930' end='1933'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1933' end='1943'>
+            <text>getAddress</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1943' end='1944'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1944' end='1945'>
+            <text>)</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1945' end='1948'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1948' end='1955'>
+            <text>country</text>
+        </token>
+        <token id='T_SEMICOLON' start='1955' end='1956'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='1957' end='1965'>
+            <text>$country</text>
+        </token>
+        <token id='T_EQUAL' start='1966' end='1967'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1968' end='1976'>
+            <text>$session</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1976' end='1979'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1979' end='1983'>
+            <text>user</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1983' end='1986'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1986' end='1996'>
+            <text>getAddress</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1996' end='1997'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1997' end='1998'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1998' end='1999'>
+            <text>[</text>
+        </token>
+        <token id='T_VARIABLE' start='1999' end='2004'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='2004' end='2007'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2007' end='2014'>
+            <text>getSize</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2014' end='2015'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2015' end='2016'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='2016' end='2017'>
+            <text>]</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='2017' end='2020'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2020' end='2027'>
+            <text>country</text>
+        </token>
+        <token id='T_SEMICOLON' start='2027' end='2028'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='2029' end='2037'>
+            <text>$country</text>
+        </token>
+        <token id='T_EQUAL' start='2038' end='2039'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='2040' end='2048'>
+            <text>$session</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='2048' end='2051'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2051' end='2055'>
+            <text>user</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='2055' end='2058'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2058' end='2068'>
+            <text>getAddress</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2068' end='2069'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='2069' end='2074'>
+            <text>$test</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='2074' end='2077'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2077' end='2080'>
+            <text>foo</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2080' end='2081'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2081' end='2082'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2082' end='2083'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='2083' end='2085'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2085' end='2092'>
+            <text>country</text>
+        </token>
+        <token id='T_SEMICOLON' start='2092' end='2093'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='2095' end='2101'>
+            <text>$class</text>
+        </token>
+        <token id='T_EQUAL' start='2102' end='2103'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2104' end='2105'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='2105' end='2108'>
+            <text>new</text>
+        </token>
+        <token id='T_CLASS' start='2109' end='2114'>
+            <text>class</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2115' end='2116'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2116' end='2117'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2118' end='2119'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2119' end='2120'>
+            <text>}</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2120' end='2121'>
+            <text>)</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='2121' end='2124'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2124' end='2128'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2128' end='2129'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2129' end='2130'>
+            <text>)</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='2130' end='2133'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2133' end='2142'>
+            <text>testArray</text>
+        </token>
+        <token id='T_OPEN_RECT' start='2142' end='2143'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='2143' end='2144'>
+            <text>2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='2144' end='2145'>
+            <text>]</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='2145' end='2148'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2148' end='2153'>
+            <text>test2</text>
+        </token>
+        <token id='T_SEMICOLON' start='2153' end='2154'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2155' end='2156'>
+            <text>(</text>
+        </token>
+        <token id='T_CLONE' start='2156' end='2161'>
+            <text>clone</text>
+        </token>
+        <token id='T_VARIABLE' start='2162' end='2167'>
+            <text>$test</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2167' end='2168'>
+            <text>)</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='2168' end='2171'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2171' end='2175'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2175' end='2176'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2176' end='2177'>
+            <text>)</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='2177' end='2179'>
+            <text>::</text>
+        </token>
+        <token id='T_VARIABLE' start='2179' end='2189'>
+            <text>$testClone</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='2189' end='2191'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2191' end='2196'>
+            <text>test3</text>
+        </token>
+        <token id='T_SEMICOLON' start='2196' end='2197'>
+            <text>;</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2198' end='2199'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='2199' end='2202'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='2203' end='2207'>
+            <text>Test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2207' end='2208'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2208' end='2209'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2209' end='2210'>
+            <text>)</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='2210' end='2213'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2213' end='2217'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2217' end='2218'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2218' end='2219'>
+            <text>)</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='2219' end='2222'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2222' end='2226'>
+            <text>test</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='2226' end='2228'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='2228' end='2238'>
+            <text>testMethod</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2238' end='2239'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2239' end='2240'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='2240' end='2242'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2242' end='2245'>
+            <text>foo</text>
+        </token>
+        <token id='T_SEMICOLON' start='2245' end='2246'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='2247' end='2247'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='2247'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='1551' end='1615' commentType='singleLine'/>
+            <Comment start='1615' end='1659' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='1551' end='1615' commentType='singleLine'/>
+            <Comment start='1615' end='1659' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='941' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='828' name='Session'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='829' end='941' isCurly='true'>
+                    <FieldsDeclaration start='836' end='855' modifier='public'>
+                        <FieldType>
+                            <NullableType start='843' end='848'>
+                                <NamespaceName start='844' end='848' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='844' end='848' name='User'/>
+                                </NamespaceName>
+                            </NullableType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='849' end='854' isDollared='true'>
+                                <Identifier start='850' end='854' name='user'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <MethodDeclaration start='861' end='938' modifiers='public'>
+                        <FunctionDeclaration start='868' end='938' isReference='false'>
+                            <Identifier start='877' end='888' name='__construct'/>
+                            <FormalParameters>
+                                <FormalParameter start='889' end='900' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NullableType start='889' end='894'>
+                                            <NamespaceName start='890' end='894' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='890' end='894' name='User'/>
+                                            </NamespaceName>
+                                        </NullableType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='895' end='900' isDollared='true'>
+                                            <Identifier start='896' end='900' name='user'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='902' end='938' isCurly='true'>
+                                <ExpressionStatement start='912' end='932'>
+                                    <Assignment start='912' end='931' operator='EQUAL'>
+                                        <FieldAccess start='912' end='923' isNullsafe='false'>
+                                            <Variable start='912' end='917' isDollared='true'>
+                                                <Identifier start='913' end='917' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='919' end='923' isDollared='false'>
+                                                    <Identifier start='919' end='923' name='user'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                        <Variable start='926' end='931' isDollared='true'>
+                                            <Identifier start='927' end='931' name='user'/>
+                                        </Variable>
+                                    </Assignment>
+                                </ExpressionStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ClassDeclaration start='943' end='1367' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='949' end='953' name='User'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='954' end='1367' isCurly='true'>
+                    <FieldsDeclaration start='961' end='987' modifier='private'>
+                        <FieldType>
+                            <NullableType start='969' end='977'>
+                                <NamespaceName start='970' end='977' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='970' end='977' name='Address'/>
+                                </NamespaceName>
+                            </NullableType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='978' end='986' isDollared='true'>
+                                <Identifier start='979' end='986' name='address'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='992' end='1013' modifier='private'>
+                        <FieldType>
+                            <NamespaceName start='1000' end='1006' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1000' end='1006' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1007' end='1012' isDollared='true'>
+                                <Identifier start='1008' end='1012' name='name'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1018' end='1037' modifier='public'>
+                        <FieldType>
+                            <NamespaceName start='1025' end='1028' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1025' end='1028' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1029' end='1032' isDollared='true'>
+                                <Identifier start='1030' end='1032' name='id'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Scalar start='1035' end='1036' type='INT' value='1'/>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1042' end='1078' modifier='public static'>
+                        <FieldType>
+                            <NamespaceName start='1056' end='1062' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1056' end='1062' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1063' end='1068' isDollared='true'>
+                                <Identifier start='1064' end='1068' name='test'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Scalar start='1071' end='1077' type='STRING' value='"test"'/>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <MethodDeclaration start='1084' end='1202' modifiers='public'>
+                        <FunctionDeclaration start='1091' end='1202' isReference='false'>
+                            <Identifier start='1100' end='1111' name='__construct'/>
+                            <FormalParameters>
+                                <FormalParameter start='1112' end='1124' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1112' end='1118' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1112' end='1118' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1119' end='1124' isDollared='true'>
+                                            <Identifier start='1120' end='1124' name='name'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='1126' end='1202' isCurly='true'>
+                                <ExpressionStatement start='1136' end='1167'>
+                                    <Assignment start='1136' end='1166' operator='EQUAL'>
+                                        <FieldAccess start='1136' end='1150' isNullsafe='false'>
+                                            <Variable start='1136' end='1141' isDollared='true'>
+                                                <Identifier start='1137' end='1141' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='1143' end='1150' isDollared='false'>
+                                                    <Identifier start='1143' end='1150' name='address'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                        <ClassInstanceCreation start='1153' end='1166' anonymous='false'>
+                                            <ClassName start='1157' end='1164'>
+                                                <NamespaceName start='1157' end='1164' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1157' end='1164' name='Address'/>
+                                                </NamespaceName>
+                                            </ClassName>
+                                            <Parameters>
+                                            </Parameters>
+                                        </ClassInstanceCreation>
+                                    </Assignment>
+                                </ExpressionStatement>
+                                <ExpressionStatement start='1176' end='1196'>
+                                    <Assignment start='1176' end='1195' operator='EQUAL'>
+                                        <FieldAccess start='1176' end='1187' isNullsafe='false'>
+                                            <Variable start='1176' end='1181' isDollared='true'>
+                                                <Identifier start='1177' end='1181' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='1183' end='1187' isDollared='false'>
+                                                    <Identifier start='1183' end='1187' name='name'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                        <Variable start='1190' end='1195' isDollared='true'>
+                                            <Identifier start='1191' end='1195' name='name'/>
+                                        </Variable>
+                                    </Assignment>
+                                </ExpressionStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1208' end='1285' modifiers='public'>
+                        <FunctionDeclaration start='1215' end='1285' isReference='false'>
+                            <Identifier start='1224' end='1234' name='getAddress'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NullableType start='1238' end='1246'>
+                                <NamespaceName start='1239' end='1246' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1239' end='1246' name='Address'/>
+                                </NamespaceName>
+                            </NullableType>
+                            <Block start='1247' end='1285' isCurly='true'>
+                                <ReturnStatement start='1257' end='1279'>
+                                    <FieldAccess start='1264' end='1278' isNullsafe='false'>
+                                        <Variable start='1264' end='1269' isDollared='true'>
+                                            <Identifier start='1265' end='1269' name='this'/>
+                                        </Variable>
+                                        <Field>
+                                            <Variable start='1271' end='1278' isDollared='false'>
+                                                <Identifier start='1271' end='1278' name='address'/>
+                                            </Variable>
+                                        </Field>
+                                    </FieldAccess>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1291' end='1364' modifiers='public static'>
+                        <FunctionDeclaration start='1305' end='1364' isReference='false'>
+                            <Identifier start='1314' end='1318' name='test'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='1322' end='1328' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1322' end='1328' name='string'/>
+                            </NamespaceName>
+                            <Block start='1329' end='1364' isCurly='true'>
+                                <ReturnStatement start='1339' end='1358'>
+                                    <StaticFieldAccess start='1346' end='1357'>
+                                        <NamespaceName start='1346' end='1350' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1346' end='1350' name='self'/>
+                                        </NamespaceName>
+                                        <Field>
+                                            <Variable start='1352' end='1357' isDollared='true'>
+                                                <Identifier start='1353' end='1357' name='test'/>
+                                            </Variable>
+                                        </Field>
+                                        <Member>
+                                            <Variable start='1352' end='1357' isDollared='true'>
+                                                <Identifier start='1353' end='1357' name='test'/>
+                                            </Variable>
+                                        </Member>
+                                    </StaticFieldAccess>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ClassDeclaration start='1369' end='1531' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='1375' end='1382' name='Address'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='1383' end='1531' isCurly='true'>
+                    <ClassConstantDeclaration start='1390' end='1417' modifier='public'>
+                        <Names>
+                            <Identifier start='1403' end='1405' name='ID'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1408' end='1416' type='STRING' value='"Adress"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <FieldsDeclaration start='1422' end='1446' modifier='public'>
+                        <FieldType>
+                            <NamespaceName start='1429' end='1436' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1429' end='1436' name='Country'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1437' end='1445' isDollared='true'>
+                                <Identifier start='1438' end='1445' name='country'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <MethodDeclaration start='1452' end='1529' modifiers='public'>
+                        <FunctionDeclaration start='1459' end='1529' isReference='false'>
+                            <Identifier start='1468' end='1479' name='__construct'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='1482' end='1529' isCurly='true'>
+                                <ExpressionStatement start='1492' end='1523'>
+                                    <Assignment start='1492' end='1522' operator='EQUAL'>
+                                        <FieldAccess start='1492' end='1506' isNullsafe='false'>
+                                            <Variable start='1492' end='1497' isDollared='true'>
+                                                <Identifier start='1493' end='1497' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='1499' end='1506' isDollared='false'>
+                                                    <Identifier start='1499' end='1506' name='country'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                        <ClassInstanceCreation start='1509' end='1522' anonymous='false'>
+                                            <ClassName start='1513' end='1520'>
+                                                <NamespaceName start='1513' end='1520' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1513' end='1520' name='Country'/>
+                                                </NamespaceName>
+                                            </ClassName>
+                                            <Parameters>
+                                            </Parameters>
+                                        </ClassInstanceCreation>
+                                    </Assignment>
+                                </ExpressionStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ClassDeclaration start='1533' end='1550' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='1539' end='1546' name='Country'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='1547' end='1550' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='1659' end='1700'>
+                <Assignment start='1659' end='1699' operator='EQUAL'>
+                    <Variable start='1659' end='1667' isDollared='true'>
+                        <Identifier start='1660' end='1667' name='session'/>
+                    </Variable>
+                    <ClassInstanceCreation start='1670' end='1699' anonymous='false'>
+                        <ClassName start='1674' end='1681'>
+                            <NamespaceName start='1674' end='1681' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1674' end='1681' name='Session'/>
+                            </NamespaceName>
+                        </ClassName>
+                        <Parameters>
+                            <ClassInstanceCreation start='1682' end='1698' anonymous='false'>
+                                <ClassName start='1686' end='1690'>
+                                    <NamespaceName start='1686' end='1690' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1686' end='1690' name='User'/>
+                                    </NamespaceName>
+                                </ClassName>
+                                <Parameters>
+                                    <Scalar start='1691' end='1697' type='STRING' value='"test"'/>
+                                </Parameters>
+                            </ClassInstanceCreation>
+                        </Parameters>
+                    </ClassInstanceCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1701' end='1753'>
+                <Assignment start='1701' end='1752' operator='EQUAL'>
+                    <Variable start='1701' end='1709' isDollared='true'>
+                        <Identifier start='1702' end='1709' name='country'/>
+                    </Variable>
+                    <FieldAccess start='1712' end='1752' isNullsafe='true'>
+                        <MethodInvocation start='1712' end='1742' isNullsafe='true'>
+                            <FieldAccess start='1712' end='1727' isNullsafe='true'>
+                                <Variable start='1712' end='1720' isDollared='true'>
+                                    <Identifier start='1713' end='1720' name='session'/>
+                                </Variable>
+                                <Field>
+                                    <Variable start='1723' end='1727' isDollared='false'>
+                                        <Identifier start='1723' end='1727' name='user'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <Method>
+                                <FunctionInvocation start='1730' end='1742'>
+                                    <FucntionName start='1730' end='1740'>
+                                        <Variable start='1730' end='1740' isDollared='false'>
+                                            <Identifier start='1730' end='1740' name='getAddress'/>
+                                        </Variable>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Method>
+                        </MethodInvocation>
+                        <Field>
+                            <Variable start='1745' end='1752' isDollared='false'>
+                                <Identifier start='1745' end='1752' name='country'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1754' end='1788'>
+                <Assignment start='1754' end='1787' operator='EQUAL'>
+                    <Variable start='1754' end='1762' isDollared='true'>
+                        <Identifier start='1755' end='1762' name='country'/>
+                    </Variable>
+                    <StaticFieldAccess start='1765' end='1787'>
+                        <FieldAccess start='1765' end='1780' isNullsafe='true'>
+                            <Variable start='1765' end='1773' isDollared='true'>
+                                <Identifier start='1766' end='1773' name='session'/>
+                            </Variable>
+                            <Field>
+                                <Variable start='1776' end='1780' isDollared='false'>
+                                    <Identifier start='1776' end='1780' name='user'/>
+                                </Variable>
+                            </Field>
+                        </FieldAccess>
+                        <Field>
+                            <Variable start='1782' end='1787' isDollared='true'>
+                                <Identifier start='1783' end='1787' name='test'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='1782' end='1787' isDollared='true'>
+                                <Identifier start='1783' end='1787' name='test'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1789' end='1824'>
+                <Assignment start='1789' end='1823' operator='EQUAL'>
+                    <Variable start='1789' end='1797' isDollared='true'>
+                        <Identifier start='1790' end='1797' name='country'/>
+                    </Variable>
+                    <StaticMethodInvocation start='1800' end='1823'>
+                        <FieldAccess start='1800' end='1815' isNullsafe='true'>
+                            <Variable start='1800' end='1808' isDollared='true'>
+                                <Identifier start='1801' end='1808' name='session'/>
+                            </Variable>
+                            <Field>
+                                <Variable start='1811' end='1815' isDollared='false'>
+                                    <Identifier start='1811' end='1815' name='user'/>
+                                </Variable>
+                            </Field>
+                        </FieldAccess>
+                        <Member>
+                            <FunctionInvocation start='1817' end='1823'>
+                                <FucntionName start='1817' end='1821'>
+                                    <Identifier start='1817' end='1821' name='test'/>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Member>
+                        <FunctionInvocation start='1817' end='1823'>
+                            <FucntionName start='1817' end='1821'>
+                                <Identifier start='1817' end='1821' name='test'/>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </StaticMethodInvocation>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1825' end='1856'>
+                <Assignment start='1825' end='1855' operator='EQUAL'>
+                    <Variable start='1825' end='1833' isDollared='true'>
+                        <Identifier start='1826' end='1833' name='country'/>
+                    </Variable>
+                    <FieldAccess start='1836' end='1855' isNullsafe='false'>
+                        <FieldAccess start='1836' end='1851' isNullsafe='true'>
+                            <Variable start='1836' end='1844' isDollared='true'>
+                                <Identifier start='1837' end='1844' name='session'/>
+                            </Variable>
+                            <Field>
+                                <Variable start='1847' end='1851' isDollared='false'>
+                                    <Identifier start='1847' end='1851' name='user'/>
+                                </Variable>
+                            </Field>
+                        </FieldAccess>
+                        <Field>
+                            <Variable start='1853' end='1855' isDollared='false'>
+                                <Identifier start='1853' end='1855' name='id'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1857' end='1903'>
+                <Assignment start='1857' end='1902' operator='EQUAL'>
+                    <Variable start='1857' end='1865' isDollared='true'>
+                        <Identifier start='1858' end='1865' name='country'/>
+                    </Variable>
+                    <StaticConstantAccess start='1868' end='1902'>
+                        <MethodInvocation start='1868' end='1898' isNullsafe='true'>
+                            <FieldAccess start='1868' end='1883' isNullsafe='true'>
+                                <Variable start='1868' end='1876' isDollared='true'>
+                                    <Identifier start='1869' end='1876' name='session'/>
+                                </Variable>
+                                <Field>
+                                    <Variable start='1879' end='1883' isDollared='false'>
+                                        <Identifier start='1879' end='1883' name='user'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <Method>
+                                <FunctionInvocation start='1886' end='1898'>
+                                    <FucntionName start='1886' end='1896'>
+                                        <Variable start='1886' end='1896' isDollared='false'>
+                                            <Identifier start='1886' end='1896' name='getAddress'/>
+                                        </Variable>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Method>
+                        </MethodInvocation>
+                        <Constant>
+                            <Identifier start='1900' end='1902' name='ID'/>
+                        </Constant>
+                        <Member>
+                            <Identifier start='1900' end='1902' name='ID'/>
+                        </Member>
+                    </StaticConstantAccess>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1904' end='1956'>
+                <Assignment start='1904' end='1955' operator='EQUAL'>
+                    <Variable start='1904' end='1912' isDollared='true'>
+                        <Identifier start='1905' end='1912' name='country'/>
+                    </Variable>
+                    <FieldAccess start='1915' end='1955' isNullsafe='true'>
+                        <MethodInvocation start='1915' end='1945' isNullsafe='true'>
+                            <FieldAccess start='1915' end='1930' isNullsafe='true'>
+                                <Variable start='1915' end='1923' isDollared='true'>
+                                    <Identifier start='1916' end='1923' name='session'/>
+                                </Variable>
+                                <Field>
+                                    <Variable start='1926' end='1930' isDollared='false'>
+                                        <Identifier start='1926' end='1930' name='user'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <Method>
+                                <FunctionInvocation start='1933' end='1945'>
+                                    <FucntionName start='1933' end='1943'>
+                                        <Variable start='1933' end='1943' isDollared='false'>
+                                            <Identifier start='1933' end='1943' name='getAddress'/>
+                                        </Variable>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Method>
+                        </MethodInvocation>
+                        <Field>
+                            <Variable start='1948' end='1955' isDollared='false'>
+                                <Identifier start='1948' end='1955' name='country'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='1957' end='2028'>
+                <Assignment start='1957' end='2027' operator='EQUAL'>
+                    <Variable start='1957' end='1965' isDollared='true'>
+                        <Identifier start='1958' end='1965' name='country'/>
+                    </Variable>
+                    <FieldAccess start='1968' end='2027' isNullsafe='true'>
+                        <DereferencedArrayAccess start='1968' end='2017'>
+                            <ArrayDimension start='1998' end='2017'>
+                                <Index>
+                                    <MethodInvocation start='1999' end='2016' isNullsafe='true'>
+                                        <Variable start='1999' end='2004' isDollared='true'>
+                                            <Identifier start='2000' end='2004' name='test'/>
+                                        </Variable>
+                                        <Method>
+                                            <FunctionInvocation start='2007' end='2016'>
+                                                <FucntionName start='2007' end='2014'>
+                                                    <Variable start='2007' end='2014' isDollared='false'>
+                                                        <Identifier start='2007' end='2014' name='getSize'/>
+                                                    </Variable>
+                                                </FucntionName>
+                                                <Parameters>
+                                                </Parameters>
+                                            </FunctionInvocation>
+                                        </Method>
+                                    </MethodInvocation>
+                                </Index>
+                            </ArrayDimension>
+                            <MethodInvocation start='1968' end='1998' isNullsafe='true'>
+                                <FieldAccess start='1968' end='1983' isNullsafe='true'>
+                                    <Variable start='1968' end='1976' isDollared='true'>
+                                        <Identifier start='1969' end='1976' name='session'/>
+                                    </Variable>
+                                    <Field>
+                                        <Variable start='1979' end='1983' isDollared='false'>
+                                            <Identifier start='1979' end='1983' name='user'/>
+                                        </Variable>
+                                    </Field>
+                                </FieldAccess>
+                                <Method>
+                                    <FunctionInvocation start='1986' end='1998'>
+                                        <FucntionName start='1986' end='1996'>
+                                            <Variable start='1986' end='1996' isDollared='false'>
+                                                <Identifier start='1986' end='1996' name='getAddress'/>
+                                            </Variable>
+                                        </FucntionName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </Method>
+                            </MethodInvocation>
+                        </DereferencedArrayAccess>
+                        <Field>
+                            <Variable start='2020' end='2027' isDollared='false'>
+                                <Identifier start='2020' end='2027' name='country'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='2029' end='2093'>
+                <Assignment start='2029' end='2092' operator='EQUAL'>
+                    <Variable start='2029' end='2037' isDollared='true'>
+                        <Identifier start='2030' end='2037' name='country'/>
+                    </Variable>
+                    <FieldAccess start='2040' end='2092' isNullsafe='false'>
+                        <MethodInvocation start='2040' end='2083' isNullsafe='true'>
+                            <FieldAccess start='2040' end='2055' isNullsafe='true'>
+                                <Variable start='2040' end='2048' isDollared='true'>
+                                    <Identifier start='2041' end='2048' name='session'/>
+                                </Variable>
+                                <Field>
+                                    <Variable start='2051' end='2055' isDollared='false'>
+                                        <Identifier start='2051' end='2055' name='user'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                            <Method>
+                                <FunctionInvocation start='2058' end='2083'>
+                                    <FucntionName start='2058' end='2068'>
+                                        <Variable start='2058' end='2068' isDollared='false'>
+                                            <Identifier start='2058' end='2068' name='getAddress'/>
+                                        </Variable>
+                                    </FucntionName>
+                                    <Parameters>
+                                        <MethodInvocation start='2069' end='2082' isNullsafe='true'>
+                                            <Variable start='2069' end='2074' isDollared='true'>
+                                                <Identifier start='2070' end='2074' name='test'/>
+                                            </Variable>
+                                            <Method>
+                                                <FunctionInvocation start='2077' end='2082'>
+                                                    <FucntionName start='2077' end='2080'>
+                                                        <Variable start='2077' end='2080' isDollared='false'>
+                                                            <Identifier start='2077' end='2080' name='foo'/>
+                                                        </Variable>
+                                                    </FucntionName>
+                                                    <Parameters>
+                                                    </Parameters>
+                                                </FunctionInvocation>
+                                            </Method>
+                                        </MethodInvocation>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Method>
+                        </MethodInvocation>
+                        <Field>
+                            <Variable start='2085' end='2092' isDollared='false'>
+                                <Identifier start='2085' end='2092' name='country'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='2095' end='2154'>
+                <Assignment start='2095' end='2153' operator='EQUAL'>
+                    <Variable start='2095' end='2101' isDollared='true'>
+                        <Identifier start='2096' end='2101' name='class'/>
+                    </Variable>
+                    <FieldAccess start='2104' end='2153' isNullsafe='true'>
+                        <FieldAccess start='2104' end='2145' isNullsafe='true'>
+                            <MethodInvocation start='2104' end='2130' isNullsafe='true'>
+                                <AnonymousObjectVariable start='2104' end='2121'>
+                                    <ClassInstanceCreation start='2105' end='2120' anonymous='true'>
+                                        <Parameters>
+                                        </Parameters>
+                                        <Superclass>
+                                        </Superclass>
+                                        <Interfaces>
+                                        </Interfaces>
+                                        <Block start='2118' end='2120' isCurly='true'>
+                                        </Block>
+                                    </ClassInstanceCreation>
+                                </AnonymousObjectVariable>
+                                <Method>
+                                    <FunctionInvocation start='2124' end='2130'>
+                                        <FucntionName start='2124' end='2128'>
+                                            <Variable start='2124' end='2128' isDollared='false'>
+                                                <Identifier start='2124' end='2128' name='test'/>
+                                            </Variable>
+                                        </FucntionName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </Method>
+                            </MethodInvocation>
+                            <Field>
+                                <ArrayAccess start='2133' end='2145' type='VARIABLE_ARRAY' isDollared='false'>
+                                    <ArrayDimension start='2142' end='2145'>
+                                        <Index>
+                                            <Scalar start='2143' end='2144' type='INT' value='2'/>
+                                        </Index>
+                                    </ArrayDimension>
+                                    <Name>
+                                        <Variable start='2133' end='2142' isDollared='false'>
+                                            <Identifier start='2133' end='2142' name='testArray'/>
+                                        </Variable>
+                                    </Name>
+                                </ArrayAccess>
+                            </Field>
+                        </FieldAccess>
+                        <Field>
+                            <Variable start='2148' end='2153' isDollared='false'>
+                                <Identifier start='2148' end='2153' name='test2'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='2155' end='2197'>
+                <FieldAccess start='2155' end='2196' isNullsafe='false'>
+                    <StaticFieldAccess start='2155' end='2189'>
+                        <MethodInvocation start='2155' end='2177' isNullsafe='true'>
+                            <AnonymousObjectVariable start='2155' end='2168'>
+                                <CloneExpression start='2156' end='2167'>
+                                    <Variable start='2162' end='2167' isDollared='true'>
+                                        <Identifier start='2163' end='2167' name='test'/>
+                                    </Variable>
+                                </CloneExpression>
+                            </AnonymousObjectVariable>
+                            <Method>
+                                <FunctionInvocation start='2171' end='2177'>
+                                    <FucntionName start='2171' end='2175'>
+                                        <Variable start='2171' end='2175' isDollared='false'>
+                                            <Identifier start='2171' end='2175' name='test'/>
+                                        </Variable>
+                                    </FucntionName>
+                                    <Parameters>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </Method>
+                        </MethodInvocation>
+                        <Field>
+                            <Variable start='2179' end='2189' isDollared='true'>
+                                <Identifier start='2180' end='2189' name='testClone'/>
+                            </Variable>
+                        </Field>
+                        <Member>
+                            <Variable start='2179' end='2189' isDollared='true'>
+                                <Identifier start='2180' end='2189' name='testClone'/>
+                            </Variable>
+                        </Member>
+                    </StaticFieldAccess>
+                    <Field>
+                        <Variable start='2191' end='2196' isDollared='false'>
+                            <Identifier start='2191' end='2196' name='test3'/>
+                        </Variable>
+                    </Field>
+                </FieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='2198' end='2246'>
+                <FieldAccess start='2198' end='2245' isNullsafe='false'>
+                    <StaticMethodInvocation start='2198' end='2240'>
+                        <FieldAccess start='2198' end='2226' isNullsafe='true'>
+                            <MethodInvocation start='2198' end='2219' isNullsafe='true'>
+                                <AnonymousObjectVariable start='2198' end='2210'>
+                                    <ClassInstanceCreation start='2199' end='2209' anonymous='false'>
+                                        <ClassName start='2203' end='2207'>
+                                            <NamespaceName start='2203' end='2207' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='2203' end='2207' name='Test'/>
+                                            </NamespaceName>
+                                        </ClassName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </ClassInstanceCreation>
+                                </AnonymousObjectVariable>
+                                <Method>
+                                    <FunctionInvocation start='2213' end='2219'>
+                                        <FucntionName start='2213' end='2217'>
+                                            <Variable start='2213' end='2217' isDollared='false'>
+                                                <Identifier start='2213' end='2217' name='test'/>
+                                            </Variable>
+                                        </FucntionName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </Method>
+                            </MethodInvocation>
+                            <Field>
+                                <Variable start='2222' end='2226' isDollared='false'>
+                                    <Identifier start='2222' end='2226' name='test'/>
+                                </Variable>
+                            </Field>
+                        </FieldAccess>
+                        <Member>
+                            <FunctionInvocation start='2228' end='2240'>
+                                <FucntionName start='2228' end='2238'>
+                                    <Identifier start='2228' end='2238' name='testMethod'/>
+                                </FucntionName>
+                                <Parameters>
+                                </Parameters>
+                            </FunctionInvocation>
+                        </Member>
+                        <FunctionInvocation start='2228' end='2240'>
+                            <FucntionName start='2228' end='2238'>
+                                <Identifier start='2228' end='2238' name='testMethod'/>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </StaticMethodInvocation>
+                    <Field>
+                        <Variable start='2242' end='2245' isDollared='false'>
+                            <Identifier start='2242' end='2245' name='foo'/>
+                        </Variable>
+                    </Field>
+                </FieldAccess>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

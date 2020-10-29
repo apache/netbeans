@@ -205,7 +205,6 @@ public class AutomaticRegistration {
             instanceFO.setAttribute(PayaraModule.JVM_MODE, PayaraModule.NORMAL_MODE);
             instanceFO.setAttribute(PayaraModule.HOT_DEPLOY, false);
             instanceFO.setAttribute(PayaraModule.SESSION_PRESERVATION_FLAG, true);
-            instanceFO.setAttribute(PayaraModule.START_DERBY_FLAG, false);
             instanceFO.setAttribute(PayaraModule.USE_IDE_PROXY_FLAG, true);
             instanceFO.setAttribute(PayaraModule.USE_SHARED_MEM_ATTR, false);
             

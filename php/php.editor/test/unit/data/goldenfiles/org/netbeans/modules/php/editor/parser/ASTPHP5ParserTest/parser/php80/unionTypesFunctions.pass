@@ -1,0 +1,355 @@
+<testresult testFile='unionTypesFunctions.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='815' end='823'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='824' end='835'>
+            <text>union_types</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='835' end='836'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='836' end='839'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='839' end='840'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='840' end='845'>
+            <text>float</text>
+        </token>
+        <token id='T_VARIABLE' start='846' end='853'>
+            <text>$number</text>
+        </token>
+        <token id='T_COMMA' start='853' end='854'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='855' end='858'>
+            <text>Foo</text>
+        </token>
+        <token id='T_OR' start='858' end='859'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='859' end='862'>
+            <text>Bar</text>
+        </token>
+        <token id='T_OR' start='862' end='863'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='863' end='867'>
+            <text>null</text>
+        </token>
+        <token id='T_VARIABLE' start='868' end='874'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='874' end='875'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='875' end='876'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='877' end='880'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='880' end='881'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='881' end='886'>
+            <text>float</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='887' end='888'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='893' end='899'>
+            <text>return</text>
+        </token>
+        <token id='T_LNUMBER' start='900' end='901'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='901' end='902'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='903' end='904'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='906' end='914'>
+            <text>$closure</text>
+        </token>
+        <token id='T_EQUAL' start='915' end='916'>
+            <text>=</text>
+        </token>
+        <token id='T_FUNCTION' start='917' end='925'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='925' end='926'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='926' end='929'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='929' end='930'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='930' end='935'>
+            <text>float</text>
+        </token>
+        <token id='T_OR' start='935' end='936'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='936' end='940'>
+            <text>null</text>
+        </token>
+        <token id='T_VARIABLE' start='941' end='948'>
+            <text>$number</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='948' end='949'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='949' end='950'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='951' end='954'>
+            <text>Foo</text>
+        </token>
+        <token id='T_OR' start='954' end='955'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='955' end='958'>
+            <text>Bar</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='959' end='960'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='965' end='971'>
+            <text>return</text>
+        </token>
+        <token id='T_NEW' start='972' end='975'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='976' end='979'>
+            <text>Foo</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='979' end='980'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='980' end='981'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='981' end='982'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='983' end='984'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='984' end='985'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='987' end='993'>
+            <text>$arrow</text>
+        </token>
+        <token id='T_EQUAL' start='994' end='995'>
+            <text>=</text>
+        </token>
+        <token id='T_FN' start='996' end='998'>
+            <text>fn</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='998' end='999'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='999' end='1002'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='1002' end='1003'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1003' end='1008'>
+            <text>float</text>
+        </token>
+        <token id='T_VARIABLE' start='1009' end='1015'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1015' end='1016'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1016' end='1017'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='1018' end='1024'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='1024' end='1025'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1025' end='1030'>
+            <text>false</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1031' end='1033'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1034' end='1040'>
+            <text>"test"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1040' end='1041'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1042' end='1042'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1042'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <FunctionDeclaration start='815' end='904' isReference='false'>
+                <Identifier start='824' end='835' name='union_types'/>
+                <FormalParameters>
+                    <FormalParameter start='836' end='853' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                            <UnionType start='836' end='845'>
+                                <NamespaceName start='836' end='839' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='836' end='839' name='int'/>
+                                </NamespaceName>
+                                <NamespaceName start='840' end='845' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='840' end='845' name='float'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='846' end='853' isDollared='true'>
+                                <Identifier start='847' end='853' name='number'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='855' end='874' isMandatory='true' isVariadic='false'>
+                        <ParametrType>
+                            <UnionType start='855' end='867'>
+                                <NamespaceName start='855' end='858' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='855' end='858' name='Foo'/>
+                                </NamespaceName>
+                                <NamespaceName start='859' end='862' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='859' end='862' name='Bar'/>
+                                </NamespaceName>
+                                <NamespaceName start='863' end='867' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='863' end='867' name='null'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='868' end='874' isDollared='true'>
+                                <Identifier start='869' end='874' name='param'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <UnionType start='877' end='886'>
+                    <NamespaceName start='877' end='880' isCurrent='false' isGlobal='false'>
+                        <Identifier start='877' end='880' name='int'/>
+                    </NamespaceName>
+                    <NamespaceName start='881' end='886' isCurrent='false' isGlobal='false'>
+                        <Identifier start='881' end='886' name='float'/>
+                    </NamespaceName>
+                </UnionType>
+                <Block start='887' end='904' isCurly='true'>
+                    <ReturnStatement start='893' end='902'>
+                        <Scalar start='900' end='901' type='INT' value='1'/>
+                    </ReturnStatement>
+                </Block>
+            </FunctionDeclaration>
+            <ExpressionStatement start='906' end='985'>
+                <Assignment start='906' end='984' operator='EQUAL'>
+                    <Variable start='906' end='914' isDollared='true'>
+                        <Identifier start='907' end='914' name='closure'/>
+                    </Variable>
+                    <LambdaFunctionDeclaration start='917' end='984' isReference='false'>
+                        <FormalParameter start='926' end='948' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                                <UnionType start='926' end='940'>
+                                    <NamespaceName start='926' end='929' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='926' end='929' name='int'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='930' end='935' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='930' end='935' name='float'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='936' end='940' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='936' end='940' name='null'/>
+                                    </NamespaceName>
+                                </UnionType>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='941' end='948' isDollared='true'>
+                                    <Identifier start='942' end='948' name='number'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <UnionType start='951' end='958'>
+                            <NamespaceName start='951' end='954' isCurrent='false' isGlobal='false'>
+                                <Identifier start='951' end='954' name='Foo'/>
+                            </NamespaceName>
+                            <NamespaceName start='955' end='958' isCurrent='false' isGlobal='false'>
+                                <Identifier start='955' end='958' name='Bar'/>
+                            </NamespaceName>
+                        </UnionType>
+                        <Block start='959' end='984' isCurly='true'>
+                            <ReturnStatement start='965' end='982'>
+                                <ClassInstanceCreation start='972' end='981' anonymous='false'>
+                                    <ClassName start='976' end='979'>
+                                        <NamespaceName start='976' end='979' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='976' end='979' name='Foo'/>
+                                        </NamespaceName>
+                                    </ClassName>
+                                    <Parameters>
+                                    </Parameters>
+                                </ClassInstanceCreation>
+                            </ReturnStatement>
+                        </Block>
+                    </LambdaFunctionDeclaration>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='987' end='1041'>
+                <Assignment start='987' end='1040' operator='EQUAL'>
+                    <Variable start='987' end='993' isDollared='true'>
+                        <Identifier start='988' end='993' name='arrow'/>
+                    </Variable>
+                    <ArrowFunctionDeclaration start='996' end='1040' isReference='false' isStatic='false'>
+                        <FormalParameter start='999' end='1015' isMandatory='true' isVariadic='false'>
+                            <ParametrType>
+                                <UnionType start='999' end='1008'>
+                                    <NamespaceName start='999' end='1002' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='999' end='1002' name='int'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='1003' end='1008' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1003' end='1008' name='float'/>
+                                    </NamespaceName>
+                                </UnionType>
+                            </ParametrType>
+                            <ParametrName>
+                                <Variable start='1009' end='1015' isDollared='true'>
+                                    <Identifier start='1010' end='1015' name='param'/>
+                                </Variable>
+                            </ParametrName>
+                            <DefaultValue>
+                            </DefaultValue>
+                        </FormalParameter>
+                        <UnionType start='1018' end='1030'>
+                            <NamespaceName start='1018' end='1024' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1018' end='1024' name='string'/>
+                            </NamespaceName>
+                            <NamespaceName start='1025' end='1030' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1025' end='1030' name='false'/>
+                            </NamespaceName>
+                        </UnionType>
+                        <Scalar start='1034' end='1040' type='STRING' value='"test"'/>
+                    </ArrowFunctionDeclaration>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

@@ -67,6 +67,8 @@ matrix:
         
         - name: Pristine platform build
           jdk: openjdk8
+          env:
+            - ANT_OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           script: 
             - ant -quiet build-source-config -Dcluster.config=platform
             - mkdir tmpplatform
@@ -335,6 +337,7 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f extide/o.apache.tools.ant.module test
+            - ant $OPTS -f extide/gradle test
             
         - name: Test Java modules with nb-javac on Java 8
           jdk: openjdk8
@@ -357,6 +360,7 @@ matrix:
             - hide-logs.sh ant $OPTS -f java/debugger.jpda.js test
             - hide-logs.sh ant $OPTS -f java/debugger.jpda.projects test
             - hide-logs.sh ant $OPTS -f java/debugger.jpda.projectsui test
+            - hide-logs.sh ant $OPTS -f java/gradle.java test
             #- ant $OPTS -f java/debugger.jpda.truffle test
             #- ant $OPTS -f java/debugger.jpda.ui test
             - travis_wait hide-logs.sh ant $OPTS -f java/editor.htmlui test

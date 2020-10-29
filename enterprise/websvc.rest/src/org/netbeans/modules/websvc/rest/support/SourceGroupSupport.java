@@ -167,11 +167,11 @@ public class SourceGroupSupport {
     }
 
     private static Map createFoldersToSourceGroupsMap(final SourceGroup[] sourceGroups) {
-        Map result;
+        Map<FileObject, SourceGroup> result;
         if (sourceGroups.length == 0) {
             result = Collections.EMPTY_MAP;
         } else {
-            result = new HashMap(2 * sourceGroups.length, .5f);
+            result = new HashMap<>(2 * sourceGroups.length, .5f);
             for (int i = 0; i < sourceGroups.length; i++) {
                 SourceGroup sourceGroup = sourceGroups[i];
                 result.put(sourceGroup.getRootFolder(), sourceGroup);

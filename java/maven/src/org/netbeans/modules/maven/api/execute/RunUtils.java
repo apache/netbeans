@@ -33,6 +33,7 @@ import org.netbeans.modules.maven.execute.BeanRunConfig;
 import org.netbeans.modules.maven.execute.MavenCommandLineExecutor;
 import org.netbeans.spi.project.AuxiliaryProperties;
 import org.openide.execution.ExecutorTask;
+import org.openide.util.NbBundle;
 import org.openide.windows.WindowManager;
 
 /**
@@ -119,7 +120,11 @@ public final class RunUtils {
         return new BeanRunConfig(original);
     }
 
-    
+    @NbBundle.Messages({
+        "#compile on save: all, none",
+        "#NOI18N",
+        "DEFAULT_COMPILE_ON_SAVE=all"
+    })
     public static boolean isCompileOnSaveEnabled(Project prj) {
         AuxiliaryProperties auxprops = prj.getLookup().lookup(AuxiliaryProperties.class);
         if (auxprops == null) {
@@ -128,9 +133,9 @@ public final class RunUtils {
         }
         String cos = auxprops.get(Constants.HINT_COMPILE_ON_SAVE, true);
         if (cos == null) {
-            cos = "all";
+            cos = Bundle.DEFAULT_COMPILE_ON_SAVE();
         }
-        return !"none".equalsIgnoreCase(cos) && BuildArtifactMapper.isCompileOnSaveSupported();
+        return !"none".equalsIgnoreCase(cos) && BuildArtifactMapper.isCompileOnSaveSupported(); // NOI18N
     }
     
     public static boolean isCompileOnSaveEnabled(RunConfig config) {

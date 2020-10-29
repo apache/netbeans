@@ -34,23 +34,14 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.project.FileOwnerQuery;
-import org.netbeans.api.project.Project;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.*;
 import org.netbeans.modules.csl.spi.DefaultCompletionResult;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
-import org.netbeans.modules.css.indexing.api.CssIndex;
-import org.netbeans.modules.html.editor.lib.api.HtmlVersion;
-import org.netbeans.modules.html.editor.lib.api.model.HtmlModel;
-import org.netbeans.modules.html.editor.lib.api.model.HtmlModelFactory;
-import org.netbeans.modules.html.editor.lib.api.model.HtmlTag;
-import org.netbeans.modules.html.editor.lib.api.model.HtmlTagAttribute;
 import org.netbeans.modules.javascript2.editor.spi.CompletionContext;
 import org.netbeans.modules.javascript2.editor.JsCompletionItem.CompletionRequest;
 import org.netbeans.modules.javascript2.editor.doc.JsDocumentationCodeCompletion;
-import org.netbeans.modules.javascript2.editor.doc.JsDocumentationElement;
 import org.netbeans.modules.javascript2.model.api.IndexedElement;
 import org.netbeans.modules.javascript2.lexer.api.JsDocumentationTokenId;
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
@@ -61,6 +52,9 @@ import static org.netbeans.modules.javascript2.editor.spi.CompletionContext.EXPR
 import static org.netbeans.modules.javascript2.editor.spi.CompletionContext.OBJECT_MEMBERS;
 import static org.netbeans.modules.javascript2.editor.spi.CompletionContext.OBJECT_PROPERTY;
 import org.netbeans.modules.javascript2.editor.spi.CompletionProvider;
+import org.netbeans.modules.javascript2.editor.spi.CompletionProviderEx;
+import org.netbeans.modules.javascript2.editor.spi.ElementDocumentation;
+import org.netbeans.modules.javascript2.editor.spi.ProposalRequest;
 import org.netbeans.modules.javascript2.model.api.Index;
 import org.netbeans.modules.javascript2.types.api.Identifier;
 import org.netbeans.modules.javascript2.types.api.TypeUsage;
@@ -74,7 +68,6 @@ import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -116,19 +109,19 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
         LOGGER.log(Level.FINE, String.format("CC context: %s", context.toString()));
         
         JsCompletionItem.CompletionRequest request = new JsCompletionItem.CompletionRequest();
-            String pref = ccContext.getPrefix();
-            //pref = pref == null ? "" : pref;
+        final String pref = ccContext.getPrefix();
+        //pref = pref == null ? "" : pref;
 
-            request.anchor = pref == null ? caretOffset : caretOffset
-                    // can't just use 'prefix.getLength()' here cos it might have been calculated with
-                    // the 'upToOffset' flag set to false
-                    - pref.length();
-            request.result = jsParserResult;
-            request.info = info;
-            request.prefix = pref;
-            request.completionContext = context;
-            request.addHtmlTagAttributes = false;
-            request.cancelSupport = cancelSupport;
+        request.anchor = pref == null ? caretOffset : caretOffset
+                // can't just use 'prefix.getLength()' here cos it might have been calculated with
+                // the 'upToOffset' flag set to false
+                - pref.length();
+        request.result = jsParserResult;
+        request.info = info;
+        request.prefix = pref;
+        request.completionContext = context;
+        request.addHtmlTagAttributes = false;
+        request.cancelSupport = cancelSupport;
         
         Model.getModel(jsParserResult, false).resolve();
         final List<CompletionProposal> resultList = new ArrayList<CompletionProposal>();
@@ -178,12 +171,6 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
 
                     // create code completion results
                     JsCompletionItem.Factory.create(toAdd, request, resultList);
-                    break;
-                case STRING_ELEMENTS_BY_ID:
-                    completeTagIds(request, resultList);
-                    break;
-                case STRING_ELEMENTS_BY_CLASS_NAME:
-                    completeCSSClassNames(request, resultList);
                     break;
                 case IMPORT_EXPORT_SPECIAL_TOKENS:
                     addImportExportKeywords(request, resultList);
@@ -256,14 +243,24 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
             }
         }
         JsCompletionItem.Factory.create(added, request, resultList);
-        if (request.addHtmlTagAttributes) {
-            completeTagAttributes(request, resultList);
-        }
         long end = System.currentTimeMillis();
-        LOGGER.log(Level.FINE, "Counting JS CC took {0}ms ",  (end - start));
+        ProposalRequest propReq = null;
         for (CompletionProvider interceptor : EditorExtender.getDefault().getCompletionProviders()) {
-            resultList.addAll(interceptor.complete(ccContext, context, pref));
+            List<CompletionProposal> proposals;
+            
+            if (interceptor instanceof CompletionProviderEx) {
+                if (propReq == null) {
+                    propReq = new ProposalRequest(ccContext, context, request.fqnTypes, request.anchor);
+                }
+                proposals = ((CompletionProviderEx)interceptor).complete(propReq);
+            } else {
+                proposals = interceptor.complete(ccContext, context, pref);
+            }
+            if (proposals != null) {
+                resultList.addAll(proposals);
+            }
         }
+        LOGGER.log(Level.FINE, "Counting JS CC took {0}ms ",  (end - start));
         if (!resultList.isEmpty()) {
             return new DefaultCompletionResult(resultList, false);
         }
@@ -354,14 +351,8 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
             }
         }
 
-        if (element instanceof JsDocumentationElement) {
-            String documentation = ((JsDocumentationElement) element).getDocumentation();
-            return documentation != null ? Documentation.create(documentation) : null;
-        }
-        
-        if (element instanceof JsCompletionItem.SimpleDocElement) {
-            String documentation = ((JsCompletionItem.SimpleDocElement) element).getDocumentation();
-            return documentation != null ? Documentation.create(documentation) : null;
+        if (element instanceof ElementDocumentation) {
+            return ((ElementDocumentation) element).getDocumentation();
         }
         if (OffsetRange.NONE.equals(element.getOffsetRange(info))) {
             return Documentation.create(NbBundle.getMessage(JsCodeCompletion.class, "MSG_ItemFromUsageDoc"));
@@ -380,7 +371,7 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
     public String getPrefix(ParserResult info, int caretOffset, boolean upToOffset) {
         String prefix = "";
 
-        BaseDocument doc = (BaseDocument) info.getSnapshot().getSource().getDocument(false);
+        Document doc = info.getSnapshot().getSource().getDocument(false);
         if (doc == null) {
             return null;
         }
@@ -1097,6 +1088,16 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
         }
     }
     
+    private void addFqn(CompletionRequest request, String fqn) {
+        if (fqn == null) {
+            return;
+        }
+        if (fqn.indexOf('@') >= 0 || fqn.indexOf('#') >= 0) {
+            return;
+        }
+        request.fqnTypes.add(fqn);
+    }
+    
     private void completeObjectMembers(JsObject jsObject, CompletionRequest request, Map<String, List<JsElement>> properties, boolean includePrivate) {
         if (jsObject.getJSKind() == JsElement.Kind.OBJECT || jsObject.getJSKind() == JsElement.Kind.CONSTRUCTOR
                 || jsObject.getJSKind() == JsElement.Kind.OBJECT_LITERAL) {
@@ -1224,72 +1225,7 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
             LOGGER.log(Level.INFO, ex, null);
         }
     }
-    
-    private void completeTagAttributes(CompletionRequest request,  List<CompletionProposal> resultList) {
-        
-        for(HtmlTagAttribute attribute: getAllAttributes())  {
-            if (attribute.getName().startsWith(request.prefix)) {
-                resultList.add(new JsCompletionItem.JsHtmlAttributeItem(attribute, request));
-            }
-        }
-    }
-    
-    private void completeTagIds(CompletionRequest request, List<CompletionProposal> resultList) {
-        FileObject fo = request.result.getSnapshot().getSource().getFileObject();
-        if (fo == null) {
-            return;
-        }
-        Project project = FileOwnerQuery.getOwner(fo);
-        HashSet<String> unique = new HashSet<String>();
-        try {
-            CssIndex cssIndex = CssIndex.create(project);
-            Map<FileObject, Collection<String>> findIdsByPrefix = cssIndex.findIdsByPrefix(request.prefix);
 
-            for (Collection<String> ids : findIdsByPrefix.values()) {
-                for (String id : ids) {
-                    if (!id.isEmpty()) {
-                        unique.add(id);
-                    }
-                }
-            }
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        if (!unique.isEmpty()) {
-            for (Iterator<String> iterator = unique.iterator(); iterator.hasNext();) {
-                resultList.add(new JsCompletionItem.CssCompletionItem(iterator.next(), request));
-            }
-        }
-    }
-    
-    private void completeCSSClassNames(CompletionRequest request, List<CompletionProposal> resultList) {
-        FileObject fo = request.result.getSnapshot().getSource().getFileObject();
-        if(fo == null) {
-            return;
-        }
-        Project project = FileOwnerQuery.getOwner(fo);
-        HashSet<String> unique = new HashSet<String>();
-        try {
-            CssIndex cssIndex = CssIndex.create(project);
-            Map<FileObject, Collection<String>> findIdsByPrefix = cssIndex.findClassesByPrefix(request.prefix);
-
-            for (Collection<String> ids : findIdsByPrefix.values()) {
-                for (String id : ids) {
-                    if (!id.isEmpty()) {
-                        unique.add(id);
-                    }
-                }
-            }
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        if (!unique.isEmpty()) {
-            for (Iterator<String> iterator = unique.iterator(); iterator.hasNext();) {
-                resultList.add(new JsCompletionItem.CssCompletionItem(iterator.next(), request));
-            }
-        }
-    }
-    
     private boolean startsWith(String theString, String prefix) {
         if (prefix == null || prefix.length() == 0) {
             return true;
@@ -1372,9 +1308,7 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
                 }
             }
         }
-        if (fqn.equals("Element")) {
-            request.addHtmlTagAttributes = true;
-        }
+        addFqn(request, fqn);
     }
     
     private void addPropertyToMap(CompletionRequest request, Map<String, List<JsElement>> addedProperties, JsElement property) {    
@@ -1449,21 +1383,4 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
         int slashIndex = prefix.lastIndexOf('/') + 1; //NOI18N
         return (Math.max(0, Math.max(hashIndex, Math.max(dotIndex, Math.max(parenIndex,Math.max(columnIndex, Math.max(bracketIndex, Math.max(spaceIndex, slashIndex))))))));
     }
-    
-    
-    private Collection<HtmlTagAttribute> getAllAttributes() {
-        HtmlModel htmlModel = HtmlModelFactory.getModel(HtmlVersion.HTML5);
-        Map<String, HtmlTagAttribute> result = new HashMap<String, HtmlTagAttribute>();
-        for (HtmlTag htmlTag : htmlModel.getAllTags()) {
-            for (HtmlTagAttribute htmlTagAttribute : htmlTag.getAttributes()) {
-                // attributes can probably differ per tag so we can just offer some of them,
-                // at least for the CC purposes it should be complete list of attributes for unknown tag
-                if (!result.containsKey(htmlTagAttribute.getName())) {
-                    result.put(htmlTagAttribute.getName(), htmlTagAttribute);
-                }
-            }
-        }
-        return result.values();
-    }
-
 }

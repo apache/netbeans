@@ -83,6 +83,21 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="reusetabs-cos">
+           <api name="general"/>
+           <summary>Default for reusing tabs and compile on save</summary>
+           <version major="2" minor="141"/>
+           <date day="12" month="10" year="2020"/>
+           <author login="jtulach"/>
+           <compatibility semantic="compatible"/>
+           <description>
+               <p>
+                   Introducing <a href="@TOP@architecture-summary.html#group-branding">branding APIs</a>
+                   to configure default value for <b>reusing tabs</b> and also for
+                   <b>compile on save behavior</b> in Maven projects.
+               </p>
+           </description>
+        </change>
         <change id="jpda-attach-trigger">
            <api name="general"/>
            <summary>Attach to Debugger on triggers</summary>

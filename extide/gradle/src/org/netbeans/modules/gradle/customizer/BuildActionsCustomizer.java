@@ -20,7 +20,7 @@
 package org.netbeans.modules.gradle.customizer;
 
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
-import org.netbeans.modules.gradle.actions.ProjectActionMappingProvider;
+import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.execute.GradleCliEditorKit;
 import java.awt.CardLayout;
 import java.awt.Component;

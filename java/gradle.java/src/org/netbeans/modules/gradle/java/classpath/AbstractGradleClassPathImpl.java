@@ -27,11 +27,15 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.classpath.ClassPathImplementation;
+import org.netbeans.spi.java.classpath.FlaggedClassPathImplementation;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileUtil;
@@ -41,7 +45,7 @@ import org.openide.util.WeakListeners;
  *
  * @author Laszlo Kishalmi
  */
-abstract class AbstractGradleClassPathImpl implements ClassPathImplementation {
+abstract class AbstractGradleClassPathImpl implements FlaggedClassPathImplementation {
 
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private final PropertyChangeListener listener;
@@ -49,10 +53,11 @@ abstract class AbstractGradleClassPathImpl implements ClassPathImplementation {
     private List<PathResourceImplementation> resources;
 
     protected final Project project;
+    private final NbGradleProject watcher;
 
     protected AbstractGradleClassPathImpl(Project proj) {
         this.project = proj;
-        final NbGradleProject watcher = proj.getLookup().lookup(NbGradleProject.class);
+        watcher = proj.getLookup().lookup(NbGradleProject.class);
         listener = (PropertyChangeEvent evt) -> {
             if (watcher.isUnloadable()) {
                 return;
@@ -69,8 +74,17 @@ abstract class AbstractGradleClassPathImpl implements ClassPathImplementation {
             if (hasChanged) {
                 support.firePropertyChange(ClassPathImplementation.PROP_RESOURCES, null, null);
             }
+            support.firePropertyChange(FlaggedClassPathImplementation.PROP_FLAGS, null, null);
         };
         watcher.addPropertyChangeListener(WeakListeners.propertyChange(listener, null));
+    }
+
+    @Override
+    public Set<ClassPath.Flag> getFlags() {
+        if (watcher.isUnloadable()) {
+            return Collections.singleton(ClassPath.Flag.INCOMPLETE);
+        }
+        return Collections.emptySet();
     }
 
     protected abstract List<URL> createPath();

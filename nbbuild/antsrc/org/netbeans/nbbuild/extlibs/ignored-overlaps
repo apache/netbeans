@@ -27,8 +27,9 @@ apisupport.feedreader/external/jdom-1.0.jar mobility.deployment.webdav/external/
 ide/db.sql.visualeditor/external/javacc-3.2.jar java/performance/external/javacc-3.2.jar
 
 # It happens that maven 3.3.9 uses commons-lang-2.6.jar, same as o.apache.commons.lang
+# and commons-io-2.5.jar, same as java.lsp.server
 # These are used independently, different functional goals
-ide/o.apache.commons.lang/external/commons-lang-2.6.jar java/maven.embedder/external/apache-maven-3.3.9-bin.zip
+java/java.lsp.server/external/commons-io-2.5.jar java/maven.embedder/external/apache-maven-3.6.3-bin.zip
 
 # Contains test data (badPackageFileInJar.jar is packaged twice) - this is an
 # upstream problem
@@ -56,14 +57,23 @@ enterprise/web.core.syntax/external/struts-taglib-1.3.10.jar enterprise/web.stru
 enterprise/web.core.syntax/external/struts-tiles-1.3.10.jar enterprise/web.struts/external/struts-tiles-1.3.10.jar
 
 # gradle is used at build-time, so we can ignore the duplicates
-extide/gradle/external/gradle-4.10.2-bin.zip ide/c.google.gson/external/gson-2.7.jar
-extide/gradle/external/gradle-4.10.2-bin.zip ide/c.jcraft.jsch/external/jsch-0.1.54.jar
-extide/gradle/external/gradle-4.10.2-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
-extide/gradle/external/gradle-4.10.2-bin.zip java/maven.embedder/external/apache-maven-3.6.3-bin.zip
-extide/gradle/external/gradle-4.10.2-bin.zip platform/api.annotations.common/external/jsr305-3.0.2.jar
-extide/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
-extide/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/junit-4.12.jar
-extide/gradle/external/gradle-4.10.2-bin.zip java/maven/external/aether-api-1.13.1.jar
+extide/gradle/external/gradle-6.7-bin.zip enterprise/libs.amazon/external/ion-java-1.0.2.jar
+extide/gradle/external/gradle-6.7-bin.zip extide/o.apache.tools.ant.module/external/ant-1.10.8.jar
+extide/gradle/external/gradle-6.7-bin.zip extide/o.apache.tools.ant.module/external/ant-launcher-1.10.8.jar
+extide/gradle/external/gradle-6.7-bin.zip ide/bcpg/external/bcpg-jdk15on-1.64.jar
+extide/gradle/external/gradle-6.7-bin.zip ide/bcprov/external/bcprov-jdk15on-1.64.jar
+extide/gradle/external/gradle-6.7-bin.zip ide/c.google.gson/external/gson-2.8.5.jar
+extide/gradle/external/gradle-6.7-bin.zip ide/c.jcraft.jsch/external/jsch-0.1.55.jar
+extide/gradle/external/gradle-6.7-bin.zip ide/c.jcraft.jzlib/external/jzlib-1.1.3.jar
+extide/gradle/external/gradle-6.7-bin.zip ide/libs.commons_compress/external/commons-compress-1.19.jar
+extide/gradle/external/gradle-6.7-bin.zip ide/o.apache.commons.lang/external/commons-lang-2.6.jar
+extide/gradle/external/gradle-6.7-bin.zip ide/slf4j.api/external/slf4j-api-1.7.28.jar
+extide/gradle/external/gradle-6.7-bin.zip java/maven/external/aether-api-1.13.1.jar
+extide/gradle/external/gradle-6.7-bin.zip java/maven.embedder/external/apache-maven-3.6.3-bin.zip
+extide/gradle/external/gradle-6.7-bin.zip platform/api.annotations.common/external/jsr305-3.0.2.jar
+extide/gradle/external/gradle-6.7-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
+extide/gradle/external/gradle-6.7-bin.zip platform/o.apache.commons.codec/external/commons-codec-1.13.jar
+extide/gradle/external/gradle-6.7-bin.zip platform/o.apache.commons.io/external/commons-io-2.6.jar
 
 # These are the endorsed version of the javaee apis and create libraries, so they are better kept separate
 enterprise/javaee.api/external/javax.annotation-api-1.2.jar enterprise/javaee7.api/external/javax.annotation-api-1.2.jar
@@ -75,9 +85,12 @@ enterprise/javaee7.api/external/jsr181-api-1.0-MR1.jar java/websvc.jaxws21api/ex
 ide/libs.bytelist/external/jcodings-1.0.18.jar ide/textmate.lexer/external/jcodings-1.0.18.jar
 
 # ide/lsp.client and java/java.lsp.server both use LSP libraries, but are independent:
-ide/lsp.client/external/org.eclipse.xtend.lib-2.14.0.jar java/java.lsp.server/external/org.eclipse.xtend.lib-2.14.0.jar
-ide/lsp.client/external/org.eclipse.xtend.lib.macro-2.14.0.jar java/java.lsp.server/external/org.eclipse.xtend.lib.macro-2.14.0.jar
-ide/lsp.client/external/org.eclipse.xtext.xbase.lib-2.14.0.jar java/java.lsp.server/external/org.eclipse.xtext.xbase.lib-2.14.0.jar
+ide/lsp.client/external/org.eclipse.lsp4j-0.9.0.jar java/java.lsp.server/external/org.eclipse.lsp4j-0.9.0.jar
+ide/lsp.client/external/org.eclipse.lsp4j.generator-0.9.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.generator-0.9.0.jar
+ide/lsp.client/external/org.eclipse.lsp4j.jsonrpc-0.9.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.jsonrpc-0.9.0.jar
+ide/lsp.client/external/org.eclipse.xtend.lib-2.19.0.jar java/java.lsp.server/external/org.eclipse.xtend.lib-2.19.0.jar
+ide/lsp.client/external/org.eclipse.xtend.lib.macro-2.19.0.jar java/java.lsp.server/external/org.eclipse.xtend.lib.macro-2.19.0.jar
+ide/lsp.client/external/org.eclipse.xtext.xbase.lib-2.19.0.jar java/java.lsp.server/external/org.eclipse.xtext.xbase.lib-2.19.0.jar
 
 # Derby jar is used when run tests, so we can ignore the duplicates
 ide/db/external/derby-10.14.2.0.jar ide/db.metadata.model/external/derby-10.14.2.0.jar

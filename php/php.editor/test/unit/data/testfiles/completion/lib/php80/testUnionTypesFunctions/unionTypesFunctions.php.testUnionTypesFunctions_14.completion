@@ -1,0 +1,5 @@
+Code completion result for source line:
+$arrow = fn(null|int|float $param1, string|object| $param): \Test\UnionTypes1|\Test\UnionTypes2|null {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    object                                     null

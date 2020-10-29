@@ -19,15 +19,20 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
- * Represents a field access
- * <pre>e.g.<pre> $a->$b
+ * Represents a field access.
+ *
+ * e.g.
+ * <pre>
+ * $a->$b,
+ * $a?->$b // NETBEANS-4443 PHP 8.0
+ * </pre>
  */
 public class FieldAccess extends Dispatch {
 
-    private Variable field;
+    private final Variable field;
 
-    public FieldAccess(int start, int end, VariableBase dispatcher, Variable field) {
-        super(start, end, dispatcher);
+    public FieldAccess(int start, int end, VariableBase dispatcher, Variable field, boolean isNullsafe) {
+        super(start, end, dispatcher, isNullsafe);
         this.field = field;
     }
 
@@ -43,6 +48,7 @@ public class FieldAccess extends Dispatch {
     /**
      * see {@link #getField()}
      */
+    @Override
     public VariableBase getMember() {
         return getField();
     }

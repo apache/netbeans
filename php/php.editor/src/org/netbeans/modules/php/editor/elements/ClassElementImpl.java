@@ -37,6 +37,7 @@ import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.NamespaceElement;
 import org.netbeans.modules.php.editor.index.PHPIndexer;
 import org.netbeans.modules.php.editor.index.Signature;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.model.nodes.ClassDeclarationInfo;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
@@ -165,7 +166,7 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
         QualifiedName superClassName = getSuperClassName();
         if (superClassName != null) {
             sb.append(superClassName.toString());
-            sb.append("|");
+            sb.append(Type.SEPARATOR);
             boolean first = true;
             for (QualifiedName qualifiedName : possibleFQSuperClassNames) {
                 if (!first) {

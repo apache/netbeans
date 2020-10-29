@@ -96,6 +96,12 @@ import org.openide.util.NbBundle.Messages;
             path = "Loaders/application/x-typescript/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
             position = 1400
+    ),
+    @ActionReference(
+            path = "Editors/application/x-typescript/Popup",
+            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.WhereUsedAction"),
+            position = 1400,
+            separatorAfter = 1450
     )
 })
 @GrammarRegistration(mimeType="application/x-typescript", grammar="TypeScript.tmLanguage.json")

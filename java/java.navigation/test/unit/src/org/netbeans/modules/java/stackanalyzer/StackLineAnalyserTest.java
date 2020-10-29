@@ -46,6 +46,8 @@ public class StackLineAnalyserTest extends NbTestCase {
         assertTrue(StackLineAnalyser.matches("at javaapplication8.Main$1.run(Main.java:32)"));
         assertTrue(StackLineAnalyser.matches("at javaapplication8.Main$Inner.go(Main.java:40)"));
         assertTrue(StackLineAnalyser.matches("             [exec]     at org.openide.filesystems.FileUtil.normalizeFileOnMac(FileUtil.java:1714)"));
+        assertTrue(StackLineAnalyser.matches("at java.base/java.lang.String.lastIndexOf(String.java:1627)"));
+        assertTrue(StackLineAnalyser.matches(" at java.base/java.lang.String.lastIndexOf(String.java:1627)"));
     }
 
     @Test
@@ -68,6 +70,12 @@ public class StackLineAnalyserTest extends NbTestCase {
         l = StackLineAnalyser.analyse("at java.lang.String.lastIndexOf(String.java:1627) dfasdf");
         assertEquals(3, l.getStartOffset());
         assertEquals(49, l.getEndOffset());
+        l = StackLineAnalyser.analyse("at java.base/java.lang.String.lastIndexOf(String.java:1627)");
+        assertEquals(3, l.getStartOffset());
+        assertEquals(59, l.getEndOffset());
+        l = StackLineAnalyser.analyse(" at java.base/java.lang.String.lastIndexOf(String.java:1627)");
+        assertEquals(4, l.getStartOffset());
+        assertEquals(60, l.getEndOffset());
     }
 
     @Test

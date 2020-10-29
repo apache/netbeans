@@ -39,15 +39,14 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.netbeans.modules.glassfish.javaee.ApplicationScopedResourcesUtils;
+import org.netbeans.modules.glassfish.javaee.ApplicationScopedResourcesUtils.ResourceFileDescription;
+import static org.netbeans.modules.glassfish.javaee.ApplicationScopedResourcesUtils.checkNamespaces;
+import static org.netbeans.modules.glassfish.javaee.ApplicationScopedResourcesUtils.getJndiName;
 import org.netbeans.modules.payara.common.PayaraState;
 import org.netbeans.modules.payara.common.parser.TreeParser;
 import org.netbeans.modules.payara.eecommon.api.UrlData;
 import org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration;
-import org.netbeans.modules.payara.jakartaee.ApplicationScopedResourcesUtils;
-import org.netbeans.modules.payara.jakartaee.ApplicationScopedResourcesUtils.JndiNameResolver;
-import org.netbeans.modules.payara.jakartaee.ApplicationScopedResourcesUtils.ResourceFileDescription;
-import static org.netbeans.modules.payara.jakartaee.ApplicationScopedResourcesUtils.checkNamespaces;
-import static org.netbeans.modules.payara.jakartaee.ApplicationScopedResourcesUtils.getJndiName;
 import org.netbeans.modules.payara.jakartaee.Hk2DeploymentManager;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
 import org.netbeans.modules.payara.tooling.data.PayaraVersion;
@@ -60,6 +59,11 @@ import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.modules.j2ee.deployment.plugins.spi.DatasourceManager;
 import org.netbeans.modules.j2ee.sun.dd.api.RootInterface;
 import org.netbeans.modules.javaee.specs.support.api.util.JndiNamespacesDefinition;
+import org.netbeans.modules.glassfish.javaee.db.DbUtil;
+import org.netbeans.modules.glassfish.javaee.db.DriverMaps;
+import org.netbeans.modules.glassfish.javaee.db.JndiNameResolver;
+import org.netbeans.modules.glassfish.javaee.db.SunDatasource;
+import org.netbeans.modules.glassfish.javaee.db.VendorNameMgr;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
@@ -83,6 +87,8 @@ import org.xml.sax.SAXException;
  * @author Peter Williams, Tomas Kraus
  */
 public class Hk2DatasourceManager implements DatasourceManager {
+
+    private static final Logger LOG = Logger.getLogger("payara-jakartaee");
 
     ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
@@ -249,7 +255,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
                             jndiName, url, username, password, driver));
                 }
             } catch(IllegalStateException ex) {
-                Logger.getLogger("payara-jakartaee").log(
+                LOG.log(
                         Level.INFO, ex.getLocalizedMessage(), ex);
                 throw new ConfigurationException(ex.getLocalizedMessage(), ex);
             }
@@ -292,13 +298,6 @@ public class Hk2DatasourceManager implements DatasourceManager {
             String vendorName = VendorNameMgr.vendorNameFromDbUrl(url);
             if(vendorName == null) {
                 vendorName = jndiName;
-            } else {
-                if("derby_embedded".equals(vendorName)) {
-                    // !PW FIXME display as dialog warning?
-                    Logger.getLogger("payara-jakartaee").log(Level.WARNING, 
-                            "Embedded derby not supported as a datasource");
-                    return null;
-                }
             }
 
             // Is there a connection pool we can reuse, or do we need to create one?
@@ -331,7 +330,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
             
             ds = new SunDatasource(realJndiName, url, username, password, driver, fileDesc.isIsApplicationScoped(), null);
         } catch(IOException ex) {
-            Logger.getLogger("payara-jakartaee").log(Level.INFO, ex.getLocalizedMessage(), ex);
+            LOG.log(Level.INFO, ex.getLocalizedMessage(), ex);
             throw new ConfigurationException(ex.getLocalizedMessage(), ex);
         }
         
@@ -378,12 +377,12 @@ public class Hk2DatasourceManager implements DatasourceManager {
             try {
                 TreeParser.readXml(xmlFile, pathList);
             } catch(IllegalStateException ex) {
-                Logger.getLogger("payara-jakartaee").log(Level.INFO, ex.getLocalizedMessage(), ex);
+                LOG.log(Level.INFO, ex.getLocalizedMessage(), ex);
             }
 
             ApplicationScopedResourcesUtils.ResourceFileDescription fileDesc = new ApplicationScopedResourcesUtils.ResourceFileDescription(
                     xmlFile, applicationScoped, namespaceFinder.getNamespaces());
-            JndiNameResolver resolver = applicationScoped && module != null ? new UserResolver(module, fileDesc) : null;
+            ApplicationScopedResourcesUtils.JndiNameResolver resolver = applicationScoped && module != null ? new UserResolver(module, fileDesc) : null;
             for (JdbcResource jdbc : jdbcResources) {
                 final ConnectionPool pool = connectionPoolMap.get(jdbc.getPoolName());
                 if (pool != null) {
@@ -409,7 +408,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
                                     DataSourcesReader.DEFAULT_DATA_SOURCE_EE7));
                         }
                     } catch (NullPointerException npe) {
-                        Logger.getLogger("payara-jakartaee").log(Level.INFO, pool.toString(), npe);
+                        LOG.log(Level.INFO, pool.toString(), npe);
                     }
                 }
             }
@@ -450,7 +449,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
         
         // <jdbc-resource 
         //      enabled="true" 
-        //      pool-name="DerbyPool" 
+        //      pool-name="H2Pool" 
         //      jndi-name="jdbc/__default" 
         //      object-type="user" />
         
@@ -514,15 +513,10 @@ public class Hk2DatasourceManager implements DatasourceManager {
         }
         
         //<jdbc-connection-pool 
-        //        datasource-classname="org.apache.derby.jdbc.ClientDataSource" 
-        //        name="DerbyPool" 
+        //        datasource-classname="org.h2.jdbcx.JdbcDataSource" 
+        //        name="H2Pool" 
         //        res-type="javax.sql.DataSource" 
-        //    <property name="PortNumber" value="1527" />
-        //    <property name="Password" value="APP" />
-        //    <property name="User" value="APP" />
-        //    <property name="serverName" value="localhost" />
-        //    <property name="DatabaseName" value="sun-appserv-samples" />
-        //    <property name="connectionAttributes" value=";create=true" />
+        //    <property name="URL" value="jdbc:h2:${com.sun.aas.instanceRoot}/lib/databases/embedded_default;AUTO_SERVER=TRUE" />
         //</jdbc-connection-pool>
     
         @Override
@@ -684,7 +678,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
             appendProperty(doc, newPool, PROP_URL, url, true);
             appendProperty(doc, newPool, PROP_DRIVER_CLASS, driver, true);
 
-            Logger.getLogger("payara-jakartaee").log(Level.FINER,
+            LOG.log(Level.FINER,
                     "New connection pool resource:\n{0}", newPool.getTextContent());
         } catch (SAXException ex) {
             Exceptions.printStackTrace(ex);
@@ -734,7 +728,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
     private static final String JDBC_TAG_1 = 
             "    <jdbc-resource " +
             "enabled=\"true\" ";
-        //      pool-name="DerbyPool" 
+        //      pool-name="H2Pool" 
     private static final String ATTR_POOLNAME = "pool-name";
         //      jndi-name="jdbc/__default" 
     private static final String ATTR_JNDINAME = "jndi-name";
@@ -745,7 +739,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
         
         // <jdbc-resource 
         //      enabled="true" 
-        //      pool-name="DerbyPool" 
+        //      pool-name="H2Pool" 
         //      jndi-name="jdbc/__default" 
         //      object-type="user" />
         
@@ -777,7 +771,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
             appendAttr(doc, newJdbcRes, ATTR_POOLNAME, poolName, true);
             appendAttr(doc, newJdbcRes, ATTR_JNDINAME, jndiName, true);
 
-            Logger.getLogger("payara-jakartaee").log(Level.FINER,
+            LOG.log(Level.FINER,
                     "New JDBC resource:\n{0}", newJdbcRes.getTextContent());
         } catch (SAXException ex) {
             Exceptions.printStackTrace(ex);
@@ -877,7 +871,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
         });
     }
 
-    private static class UserResolver implements JndiNameResolver {
+    private static class UserResolver implements ApplicationScopedResourcesUtils.JndiNameResolver {
 
         private final J2eeModule module;
 
@@ -914,7 +908,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
             String jndiName = attributes.getValue("jndi-name");
             if(targetJndiName.equals(jndiName)) {
                 if(duplicate) {
-                    Logger.getLogger("payara-jakartaee").log(Level.WARNING, 
+                    LOG.log(Level.WARNING, 
                             "Duplicate jndi-names defined for JDBC resources.");
                 }
                 duplicate = true;
@@ -946,7 +940,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
                 if(!pools.containsKey(poolName)) {
                     properties.put("name", poolName);
                 } else {
-                    Logger.getLogger("payara-jakartaee").log(Level.WARNING, 
+                    LOG.log(Level.WARNING, 
                             "Duplicate pool-names defined for JDBC Connection Pools.");
                 }
             }

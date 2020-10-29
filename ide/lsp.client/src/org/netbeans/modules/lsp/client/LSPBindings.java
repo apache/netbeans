@@ -44,6 +44,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.swing.event.ChangeListener;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.DocumentSymbolCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
@@ -73,11 +74,13 @@ import org.netbeans.modules.lsp.client.spi.LanguageServerProvider.LanguageServer
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.OnStop;
+import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
+import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -89,6 +92,7 @@ public class LSPBindings {
     private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
     private static final int DELAY = 500;
 
+    private static final ChangeSupport cs = new ChangeSupport(LSPBindings.class);
     private static final Map<URI, Map<String, LSPBindings>> project2MimeType2Server = new WeakHashMap<>();
     private static final Map<FileObject, Map<String, LSPBindings>> workspace2Extension2Server = new HashMap<>();
     private final Map<FileObject, Map<BackgroundTask, RequestProcessor.Task>> backgroundTasks = new WeakHashMap<>();
@@ -120,6 +124,8 @@ public class LSPBindings {
         if (mimeType == null) {
             return null;
         }
+
+        boolean[] created = new boolean[1];
 
         LSPBindings bindings =
                 project2MimeType2Server.computeIfAbsent(uri, p -> new HashMap<>())
@@ -168,6 +174,7 @@ public class LSPBindings {
                                                        lci.setBindings(b);
                                                        LanguageServerProviderAccessor.getINSTANCE().setBindings(desc, b);
                                                        TextDocumentSyncServerCapabilityHandler.refreshOpenedFilesInServers();
+                                                       created[0] = true;
                                                        return b;
                                                    } catch (InterruptedException | ExecutionException ex) {
                                                        LOG.log(Level.WARNING, null, ex);
@@ -181,8 +188,14 @@ public class LSPBindings {
             //XXX: what now
             return null;
         }
+
+        if (created[0]) {
+            WORKER.post(() -> cs.fireChange());
+        }
+
         return bindings.server != null ? bindings : null;
     }
+
     private static final Logger LOG = Logger.getLogger(LSPBindings.class.getName());
 
     @Messages("LBL_Connecting=Connecting to language server")
@@ -209,6 +222,7 @@ public class LSPBindings {
                 lc.setBindings(bindings);
 
                 workspace2Extension2Server.put(root, Arrays.stream(extensions).collect(Collectors.toMap(k -> k, v -> bindings)));
+                WORKER.post(() -> cs.fireChange());
             } catch (InterruptedException | ExecutionException | IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -293,6 +307,10 @@ public class LSPBindings {
         if (req != null) {
             req.cancel();
         }
+    }
+
+    public static void addChangeListener(ChangeListener l) {
+        cs.addChangeListener(WeakListeners.change(l, cs));
     }
 
     public void runOnBackground(Runnable r) {

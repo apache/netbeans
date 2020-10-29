@@ -84,6 +84,7 @@ public final class FmtOptions {
     public static final String FOR_BRACE_PLACEMENT = "forBracePlacement"; //NOI18N
     public static final String WHILE_BRACE_PLACEMENT = "whileBracePlacement"; //NOI18N
     public static final String SWITCH_BRACE_PLACEMENT = "switchBracePlacement"; //NOI18N
+    public static final String MATCH_BRACE_PLACEMENT = "matchBracePlacement"; //NOI18N
     public static final String CATCH_BRACE_PLACEMENT = "catchBracePlacement"; //NOI18N
     public static final String USE_TRAIT_BODY_BRACE_PLACEMENT = "useTraitBodyBracePlacement"; //NOI18N
     public static final String GROUP_USE_BRACE_PLACEMENT = "groupUseBracePlacement"; //NOI18N
@@ -119,6 +120,7 @@ public final class FmtOptions {
     public static final String SPACE_BEFORE_WHILE_PAREN = "spaceBeforeWhileParen"; //NOI18N
     public static final String SPACE_BEFORE_CATCH_PAREN = "spaceBeforeCatchParen"; //NOI18N
     public static final String SPACE_BEFORE_SWITCH_PAREN = "spaceBeforeSwitchParen"; //NOI18N
+    public static final String SPACE_BEFORE_MATCH_PAREN = "spaceBeforeMatchParen"; //NOI18N
     public static final String SPACE_BEFORE_ARRAY_DECL_PAREN = "spaceBeforeArrayDeclParen"; //NOI18N
     public static final String SPACE_AROUND_UNARY_OPS = "spaceAroundUnaryOps"; //NOI18N
     public static final String SPACE_AROUND_BINARY_OPS = "spaceAroundBinaryOps"; //NOI18N
@@ -127,7 +129,9 @@ public final class FmtOptions {
     public static final String SPACE_AROUND_ASSIGN_OPS = "spaceAroundAssignOps"; //NOI18N
     public static final String SPACE_AROUND_KEY_VALUE_OPS = "spaceAroundKeyValueOps"; //NOI18N
     public static final String SPACE_AROUND_OBJECT_OPS = "spaceAroundObjectOps"; //NOI18N
+    public static final String SPACE_AROUND_NULLSAFE_OBJECT_OPS = "spaceAroundNullsafeObjectOps"; //NOI18N
     public static final String SPACE_AROUND_DECLARE_EQUAL = "spaceAroundDeclareEqual"; //NOI18N
+    public static final String SPACE_AROUND_UNION_TYPE_SEPARATOR = "spaceAroundUnionTypeSeparator"; //NOI18N
     public static final String SPACE_BEFORE_CLASS_DECL_LEFT_BRACE = "spaceBeforeClassDeclLeftBrace"; //NOI18N
     public static final String SPACE_BEFORE_ANONYMOUS_CLASS_LEFT_BRACE = "spaceBeforeAnonymousClassLeftBrace"; //NOI18N
     public static final String SPACE_BEFORE_METHOD_DECL_LEFT_BRACE = "spaceBeforeMethodDeclLeftBrace"; //NOI18N
@@ -137,6 +141,7 @@ public final class FmtOptions {
     public static final String SPACE_BEFORE_FOR_LEFT_BRACE = "spaceBeforeForLeftBrace"; //NOI18N
     public static final String SPACE_BEFORE_DO_LEFT_BRACE = "spaceBeforeDoLeftBrace"; //NOI18N
     public static final String SPACE_BEFORE_SWITCH_LEFT_BRACE = "spaceBeforeSwitchLeftBrace"; //NOI18N
+    public static final String SPACE_BEFORE_MATCH_LEFT_BRACE = "spaceBeforeMatchLeftBrace"; //NOI18N
     public static final String SPACE_BEFORE_TRY_LEFT_BRACE = "spaceBeforeTryLeftBrace"; //NOI18N
     public static final String SPACE_BEFORE_CATCH_LEFT_BRACE = "spaceBeforeCatchLeftBrace"; //NOI18N
     public static final String SPACE_BEFORE_FINALLY_LEFT_BRACE = "spaceBeforeFinallyLeftBrace"; //NOI18N
@@ -149,6 +154,7 @@ public final class FmtOptions {
     public static final String SPACE_WITHIN_FOR_PARENS = "spaceWithinForParens"; //NOI18N
     public static final String SPACE_WITHIN_WHILE_PARENS = "spaceWithinWhileParens"; //NOI18N
     public static final String SPACE_WITHIN_SWITCH_PARENS = "spaceWithinSwitchParens"; //NOI18N
+    public static final String SPACE_WITHIN_MATCH_PARENS = "spaceWithinMatchParens"; //NOI18N
     public static final String SPACE_WITHIN_CATCH_PARENS = "spaceWithinCatchParens"; //NOI18N
     public static final String SPACE_WITHIN_TYPE_CAST_PARENS = "spaceWithinTypeCastParens"; //NOI18N
     public static final String SPACE_WITHIN_ARRAY_BRACKETS = "spaceWithinArrayBrackets"; //NOI18N
@@ -254,6 +260,7 @@ public final class FmtOptions {
             {FOR_BRACE_PLACEMENT, OBRACE_SAMELINE},
             {WHILE_BRACE_PLACEMENT, OBRACE_SAMELINE},
             {SWITCH_BRACE_PLACEMENT, OBRACE_SAMELINE},
+            {MATCH_BRACE_PLACEMENT, OBRACE_SAMELINE},
             {CATCH_BRACE_PLACEMENT, OBRACE_SAMELINE},
             {USE_TRAIT_BODY_BRACE_PLACEMENT, OBRACE_SAMELINE},
             {GROUP_USE_BRACE_PLACEMENT, OBRACE_SAMELINE},
@@ -290,6 +297,7 @@ public final class FmtOptions {
             {SPACE_BEFORE_WHILE_PAREN, TRUE},
             {SPACE_BEFORE_CATCH_PAREN, TRUE},
             {SPACE_BEFORE_SWITCH_PAREN, TRUE},
+            {SPACE_BEFORE_MATCH_PAREN, TRUE},
             {SPACE_BEFORE_ARRAY_DECL_PAREN, FALSE},
             {SPACE_AROUND_UNARY_OPS, FALSE},
             {SPACE_AROUND_BINARY_OPS, TRUE},
@@ -298,7 +306,9 @@ public final class FmtOptions {
             {SPACE_AROUND_KEY_VALUE_OPS, TRUE},
             {SPACE_AROUND_ASSIGN_OPS, TRUE},
             {SPACE_AROUND_OBJECT_OPS, FALSE},
+            {SPACE_AROUND_NULLSAFE_OBJECT_OPS, FALSE},
             {SPACE_AROUND_DECLARE_EQUAL, FALSE},
+            {SPACE_AROUND_UNION_TYPE_SEPARATOR, FALSE},
             {SPACE_BEFORE_CLASS_DECL_LEFT_BRACE, TRUE},
             {SPACE_BEFORE_METHOD_DECL_LEFT_BRACE, TRUE},
             {SPACE_BEFORE_IF_LEFT_BRACE, TRUE},
@@ -307,6 +317,7 @@ public final class FmtOptions {
             {SPACE_BEFORE_FOR_LEFT_BRACE, TRUE},
             {SPACE_BEFORE_DO_LEFT_BRACE, TRUE},
             {SPACE_BEFORE_SWITCH_LEFT_BRACE, TRUE},
+            {SPACE_BEFORE_MATCH_LEFT_BRACE, TRUE},
             {SPACE_BEFORE_TRY_LEFT_BRACE, TRUE},
             {SPACE_BEFORE_CATCH_LEFT_BRACE, TRUE},
             {SPACE_BEFORE_FINALLY_LEFT_BRACE, TRUE},
@@ -319,6 +330,7 @@ public final class FmtOptions {
             {SPACE_WITHIN_FOR_PARENS, FALSE},
             {SPACE_WITHIN_WHILE_PARENS, FALSE},
             {SPACE_WITHIN_SWITCH_PARENS, FALSE},
+            {SPACE_WITHIN_MATCH_PARENS, FALSE},
             {SPACE_WITHIN_CATCH_PARENS, FALSE},
             {SPACE_WITHIN_TYPE_CAST_PARENS, FALSE},
             {SPACE_WITHIN_ARRAY_BRACKETS, FALSE},

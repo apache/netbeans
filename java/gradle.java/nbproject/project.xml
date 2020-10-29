@@ -31,7 +31,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.3</specification-version>
+                        <specification-version>2.6</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -306,11 +306,6 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.apisupport.project</code-name-base>
-                        <compile-dependency/>
-                        <test/>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.netbeans.modules.gradle</code-name-base>
                         <compile-dependency/>
                         <test/>
@@ -340,6 +335,11 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.openide.util.lookup</code-name-base>
+                        <compile-dependency/>
+                        <test/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.openide.modules</code-name-base>
                         <compile-dependency/>
                         <test/>
                     </test-dependency>

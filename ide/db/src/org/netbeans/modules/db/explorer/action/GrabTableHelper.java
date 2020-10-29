@@ -131,10 +131,10 @@ public class GrabTableHelper {
      */
     private static void setColumnFormatToStandard(DatabaseConnector connector,
             AbstractTableColumn column) {
-        Map props = connector.getDatabaseSpecification().getProperties();
+        Map<String, Map> props = connector.getDatabaseSpecification().getProperties();
         Map cprops = connector.getDatabaseSpecification().getCommandProperties(
                 Specification.CREATE_TABLE);
-        Map bindmap = (Map) cprops.get("Binding");                     // NOI18N
+        Map<String, String> bindmap = (Map) cprops.get("Binding");                     // NOI18N
         String tname = (String) bindmap.get(TableColumn.COLUMN);
         column.setFormat((String) ((Map) props.get(tname)).get(
                 "Format"));                                             //NOI18N

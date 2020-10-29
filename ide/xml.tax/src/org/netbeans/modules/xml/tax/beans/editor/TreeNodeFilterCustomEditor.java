@@ -593,7 +593,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
      */
     private static class Item {
         /** */
-        private static Map itemMap;
+        private static Map<Class, Item> itemMap;
 
         /** */
         private final NamedClass clazz;
@@ -651,12 +651,12 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
          */
         private static Item getItem (Class clazz) {
             if ( itemMap == null ) {
-                itemMap = new HashMap();
+                itemMap = new HashMap<>();
             }
             
-            Item item = (Item) itemMap.get (clazz);
+            Item item = itemMap.get(clazz);
             if ( item == null ) {
-                itemMap.put (clazz, item = new Item (new NamedClass (clazz)));
+                itemMap.put(clazz, item = new Item (new NamedClass (clazz)));
             }
             return item;
         }

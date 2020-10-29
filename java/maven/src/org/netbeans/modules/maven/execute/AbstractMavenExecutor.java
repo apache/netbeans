@@ -21,6 +21,8 @@ package org.netbeans.modules.maven.execute;
 
 import org.netbeans.modules.maven.execute.cmd.ExecutionEventObject;
 import java.awt.Dialog;
+import java.awt.EventQueue;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +32,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.SwingUtilities;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -141,15 +142,13 @@ public abstract class AbstractMavenExecutor extends OutputTabMaintainer<Abstract
     }
 
     protected final void actionStatesAtStart() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override public void run() {
-                createNewTabActions();
-                tabContext.rerun.setEnabled(false);
-                tabContext.rerunDebug.setEnabled(false);
-                tabContext.overview.setRoot(null);
-                tabContext.resume.setFinder(null);
-                tabContext.stop.setEnabled(true);
-            }
+        updateUILater(false, () -> {
+            createNewTabActions();
+            tabContext.rerun.setEnabled(false);
+            tabContext.rerunDebug.setEnabled(false);
+            tabContext.overview.setRoot(null);
+            tabContext.resume.setFinder(null);
+            tabContext.stop.setEnabled(true);
         });
     }
 
@@ -158,15 +157,13 @@ public abstract class AbstractMavenExecutor extends OutputTabMaintainer<Abstract
     }
 
     protected final void actionStatesAtFinish(final @NullAllowed ResumeFromFinder resumeFromFinder, final @NullAllowed ExecutionEventObject.Tree root) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override public void run() {
-                createNewTabActions();
-                tabContext.rerun.setEnabled(true);
-                tabContext.rerunDebug.setEnabled(true);
-                tabContext.resume.setFinder(resumeFromFinder);
-                tabContext.overview.setRoot(root);
-                tabContext.stop.setEnabled(false);
-            }
+        updateUILater(false, () -> {
+            createNewTabActions();
+            tabContext.rerun.setEnabled(true);
+            tabContext.rerunDebug.setEnabled(true);
+            tabContext.resume.setFinder(resumeFromFinder);
+            tabContext.overview.setRoot(root);
+            tabContext.stop.setEnabled(false);
         });
     }
 
@@ -417,29 +414,19 @@ public abstract class AbstractMavenExecutor extends OutputTabMaintainer<Abstract
 
         private void setExecutor(MavenCommandLineExecutor aThis) {
             executor = aThis;
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (d != null && d.isVisible()) {
-                        d.setVisible(false);
-                        d = null;
-                    }
+            updateUILater(false, () -> {
+                if (d != null && d.isVisible()) {
+                    d.setVisible(false);
+                    d = null;
                 }
             });
         }
 
         private void setRoot(final ExecutionEventObject.Tree root) {
             this.root = root;
-            if (SwingUtilities.isEventDispatchThread()) {
+            updateUILater(true, () -> {
                 setEnabled(root != null);
-            } else {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        setEnabled(root != null);
-                    }
-                });
-            }
+            });
         }
         
     }
@@ -497,12 +484,16 @@ public abstract class AbstractMavenExecutor extends OutputTabMaintainer<Abstract
             }
             return true;
         }
-
-        
-
-        
-        
-        
     }
 
+    private static void updateUILater(boolean asap, Runnable ui) {
+        if (GraphicsEnvironment.isHeadless()) {
+            return;
+        }
+        if (asap && EventQueue.isDispatchThread()) {
+            ui.run();
+        } else {
+            EventQueue.invokeLater(ui);
+        }
+    }
 }

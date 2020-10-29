@@ -158,7 +158,7 @@ public class SourceGroupSupport {
         return null;
     }
 
-    private static Map createFoldersToSourceGroupsMap(final SourceGroup[] sourceGroups) {
+    private static Map<FileObject, SourceGroup> createFoldersToSourceGroupsMap(final SourceGroup[] sourceGroups) {
         Map<FileObject, SourceGroup> result;
         if (sourceGroups.length == 0) {
             result = Collections.emptyMap();
@@ -173,7 +173,7 @@ public class SourceGroupSupport {
     }
 
     private static Set<SourceGroup> getTestSourceGroups(SourceGroup[] sourceGroups) {
-        Map foldersToSourceGroupsMap = createFoldersToSourceGroupsMap(sourceGroups);
+        Map<FileObject, SourceGroup> foldersToSourceGroupsMap = createFoldersToSourceGroupsMap(sourceGroups);
         Set<SourceGroup> testGroups = new HashSet<>();
         for (int i = 0; i < sourceGroups.length; i++) {
             testGroups.addAll(getTestTargets(sourceGroups[i], foldersToSourceGroupsMap));

@@ -18,12 +18,12 @@
  */
 package org.netbeans.modules.gradle;
 
-import org.netbeans.junit.NbTestCase;
+import java.util.Random;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.LocalFileSystem;
 
-public class NbGradleProjectFactoryTest extends NbTestCase {
+public class NbGradleProjectFactoryTest extends AbstractGradleProjectTestCase {
     private FileObject root;
 
     public NbGradleProjectFactoryTest(String name) {
@@ -32,7 +32,7 @@ public class NbGradleProjectFactoryTest extends NbTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        clearWorkDir();
+        super.setUp();
         LocalFileSystem fs = new LocalFileSystem();
         fs.setRootDirectory(getWorkDir());
         root = fs.getRoot();
@@ -41,6 +41,44 @@ public class NbGradleProjectFactoryTest extends NbTestCase {
     public void testNull() throws Exception {
         assertFalse(NbGradleProjectFactory.isProjectCheck(null, false));
         assertFalse(NbGradleProjectFactory.isProjectCheck(null, true));
+    }
+
+    public void testNonProject() throws Exception {
+        FileObject prj = root;
+        assertFalse(NbGradleProjectFactory.isProjectCheck(prj, false));
+    }
+
+    public void testSubProject() throws Exception {
+        int rnd = new Random().nextInt(1000000);
+        FileObject a = createGradleProject("projectA-" + rnd,
+                "apply plugin: 'java'\n", "include 'projectB'\n");
+        FileObject b = createGradleProject("projectA-" + rnd + "/projectB",
+                "apply plugin: 'java'\n", null);
+        assertTrue(NbGradleProjectFactory.isProjectCheck(a, false));
+        assertTrue(NbGradleProjectFactory.isProjectCheck(b, false));
+    }
+    
+    public void testNonProjectSubDir() throws Exception {
+        int rnd = new Random().nextInt(1000000);
+        FileObject a = createGradleProject("projectA-" + rnd,
+                "apply plugin: 'java'\n", "include 'projectB'\n");
+        FileObject b = createGradleProject("projectA-" + rnd + "/projectB",
+                "apply plugin: 'java'\n", null);
+        FileObject as = a.createFolder("docs");
+        FileObject bs = b.createFolder("src");
+
+        assertFalse(NbGradleProjectFactory.isProjectCheck(as, false));
+        assertFalse(NbGradleProjectFactory.isProjectCheck(bs, false));
+    }
+
+    public void testBuildSrcProject() throws Exception {
+        int rnd = new Random().nextInt(1000000);
+        FileObject a = createGradleProject("projectA-" + rnd,
+                "apply plugin: 'java'\n", "");
+        FileObject b = createGradleProject("projectA-" + rnd + "/buildSrc",
+                null, null);
+        assertTrue(NbGradleProjectFactory.isProjectCheck(a, false));
+        assertTrue(NbGradleProjectFactory.isProjectCheck(b, false));
     }
 
     public void testPomAndGradle() throws Exception {

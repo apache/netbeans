@@ -31,7 +31,7 @@ import org.netbeans.modules.debugger.jpda.truffle.ast.TruffleNode;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackInfo;
 import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
-import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleScope;
+import org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleScope;
 
 /**
  * Container of information about the current program counter.

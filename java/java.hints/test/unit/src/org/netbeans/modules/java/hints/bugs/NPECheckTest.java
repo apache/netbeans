@@ -1760,6 +1760,44 @@ public class NPECheckTest extends NbTestCase {
                 .assertWarnings("6:29-6:37:verifier:DN");
     }
 
+    public void testRuleCases() throws Exception {
+        HintTest.create()
+                .sourceLevel("14")
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "  public void test(int i) {\n" +
+                       "    Object o;\n" +
+                       "    switch (i) {\n" +
+                       "        case 0 -> o = null;\n" +
+                       "        default -> { o = 12; }\n" +
+                       "    }\n" +
+                       "    o.toString();\n" +
+                       "  }\n" +
+                       "}")
+                .run(NPECheck.class)
+                .assertWarnings("8:6-8:14:verifier:Possibly Dereferencing null");
+    }
+
+    public void testSwitchExpression1() throws Exception {
+        HintTest.create()
+                .sourceLevel("14")
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "  public void test(int i) {\n" +
+                       "    Object o1;\n" +
+                       "    Object o2 = switch (i) {\n" +
+                       "        case 0 -> o1 = null;\n" +
+                       "        default -> { yield o1 = 12; }\n" +
+                       "    };\n" +
+                       "    o1.toString();\n" +
+                       "    o2.toString();\n" +
+                       "  }\n" +
+                       "}")
+                .run(NPECheck.class)
+                .assertWarnings("8:7-8:15:verifier:Possibly Dereferencing null",
+                                "9:7-9:15:verifier:Possibly Dereferencing null");
+    }
+
     private void performAnalysisTest(String fileName, String code, String... golden) throws Exception {
         HintTest.create()
                 .input(fileName, code)

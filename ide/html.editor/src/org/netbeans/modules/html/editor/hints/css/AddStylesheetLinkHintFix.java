@@ -21,10 +21,9 @@ package org.netbeans.modules.html.editor.hints.css;
 import java.util.Collections;
 import javax.swing.text.Document;
 import org.netbeans.modules.csl.api.HintFix;
-import org.netbeans.modules.csl.api.RuleContext;
 import org.netbeans.modules.csl.spi.support.ModificationResult;
 import org.netbeans.modules.html.editor.HtmlSourceUtils;
-import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
+import org.netbeans.modules.html.editor.lib.api.HtmlParsingResult;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -68,11 +67,11 @@ public class AddStylesheetLinkHintFix implements HintFix {
             public void run(ResultIterator resultIterator) throws Exception {
                 //html must be top level
                 Result result = resultIterator.getParserResult();
-                if(!(result instanceof HtmlParserResult)) {
+                if(!(result instanceof HtmlParsingResult)) {
                     return ;
                 }
                 ModificationResult modification = new ModificationResult();
-                if(HtmlSourceUtils.importStyleSheet(modification, (HtmlParserResult)result, externalStylesheet)) {
+                if(HtmlSourceUtils.importStyleSheet(modification, (HtmlParsingResult)result, result.getSnapshot(), externalStylesheet)) {
                     modification.commit();
 //                    if(doc != null) {
 //                        //refresh the index for the modified file

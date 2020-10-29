@@ -48,6 +48,7 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
     private static final String URL_JSF_2_3="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_3.xsd"; // NOI18N
 
     public static final String JAVAEE_NS = "http://java.sun.com/xml/ns/javaee";  // NOI18N
+    public static final String NEW_JAVAEE_NS = "http://xmlns.jcp.org/xml/ns/javaee"; //NOI18N
     private static final String JSF_1_2_XSD="web-facesconfig_1_2.xsd"; // NOI18N
     private static final String JSF_2_0_XSD="web-facesconfig_2_0.xsd"; // NOI18N
     private static final String JSF_2_1_XSD="web-facesconfig_2_1.xsd"; // NOI18N
@@ -56,8 +57,8 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
     private static final String JSF_1_2=JAVAEE_NS+"/"+JSF_1_2_XSD; // NOI18N
     private static final String JSF_2_0=JAVAEE_NS+"/"+JSF_2_0_XSD; // NOI18N
     private static final String JSF_2_1=JAVAEE_NS+"/"+JSF_2_1_XSD; // NOI18N
-    private static final String JSF_2_2=JAVAEE_NS+"/"+JSF_2_2_XSD; // NOI18N
-    private static final String JSF_2_3=JAVAEE_NS+"/"+JSF_2_3_XSD; // NOI18N
+    private static final String JSF_2_2=NEW_JAVAEE_NS+"/"+JSF_2_2_XSD; // NOI18N
+    private static final String JSF_2_3=NEW_JAVAEE_NS+"/"+JSF_2_3_XSD; // NOI18N
     public static final String JSF_ID_1_2="SCHEMA:"+JSF_1_2; // NOI18N
     public static final String JSF_ID_2_0="SCHEMA:"+JSF_2_0; // NOI18N
     public static final String JSF_ID_2_1="SCHEMA:"+JSF_2_1; // NOI18N
@@ -74,22 +75,22 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
     public static final String RES_FACES_CONFIG_2_3 = "faces-config_2_3.xml";
 
     //facelets
-    private static final String FILE_FACELETS_TAGLIB_SCHAMA_23="web-facelettaglibrary_2_3.xsd"; //NOI18N
-    private static final String FILE_FACELETS_TAGLIB_SCHAMA_22="web-facelettaglibrary_2_2.xsd"; //NOI18N
-    private static final String FILE_FACELETS_TAGLIB_SCHAMA_20="web-facelettaglibrary_2_0.xsd"; //NOI18N
+    private static final String FILE_FACELETS_TAGLIB_SCHEMA_23="web-facelettaglibrary_2_3.xsd"; //NOI18N
+    private static final String FILE_FACELETS_TAGLIB_SCHEMA_22="web-facelettaglibrary_2_2.xsd"; //NOI18N
+    private static final String FILE_FACELETS_TAGLIB_SCHEMA_20="web-facelettaglibrary_2_0.xsd"; //NOI18N
     private static final String FILE_FACELETS_TAGLIB_DTD_10="facelet-taglib_1_0.dtd"; //NOI18N
 
-    private static final String URL_FACELETS_TAGLIB_SCHEMA_23 = JAVAEE_NS + "/" + FILE_FACELETS_TAGLIB_SCHAMA_23; // NOI18N
+    private static final String URL_FACELETS_TAGLIB_SCHEMA_23 = NEW_JAVAEE_NS + "/" + FILE_FACELETS_TAGLIB_SCHEMA_23; // NOI18N
     private static final String ID_FACELETS_TAGLIB_SCHEMA_23 ="SCHEMA:" + URL_FACELETS_TAGLIB_SCHEMA_23;
-    private static final String URL_FACELETS_TAGLIB_SCHEMA_22 = JAVAEE_NS + "/" + FILE_FACELETS_TAGLIB_SCHAMA_22; // NOI18N
+    private static final String URL_FACELETS_TAGLIB_SCHEMA_22 = NEW_JAVAEE_NS + "/" + FILE_FACELETS_TAGLIB_SCHEMA_22; // NOI18N
     private static final String ID_FACELETS_TAGLIB_SCHEMA_22 ="SCHEMA:" + URL_FACELETS_TAGLIB_SCHEMA_22;
-    private static final String URL_FACELETS_TAGLIB_SCHEMA_20 = JAVAEE_NS + "/" + FILE_FACELETS_TAGLIB_SCHAMA_20; // NOI18N
+    private static final String URL_FACELETS_TAGLIB_SCHEMA_20 = JAVAEE_NS + "/" + FILE_FACELETS_TAGLIB_SCHEMA_20; // NOI18N
     private static final String ID_FACELETS_TAGLIB_SCHEMA_20 ="SCHEMA:" + URL_FACELETS_TAGLIB_SCHEMA_20;
     private static final String ID_FACELETS_TAGLIB_DTD_10 = "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"; //NOI18N
 
-    private static final String RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_23 ="nbres:/org/netbeans/modules/web/jsf/resources/" + FILE_FACELETS_TAGLIB_SCHAMA_23; // NOI18N
-    private static final String RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_22 ="nbres:/org/netbeans/modules/web/jsf/resources/" + FILE_FACELETS_TAGLIB_SCHAMA_22; // NOI18N
-    private static final String RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_20 ="nbres:/org/netbeans/modules/web/jsf/resources/" + FILE_FACELETS_TAGLIB_SCHAMA_20; // NOI18N
+    private static final String RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_23 ="nbres:/org/netbeans/modules/web/jsf/resources/" + FILE_FACELETS_TAGLIB_SCHEMA_23; // NOI18N
+    private static final String RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_22 ="nbres:/org/netbeans/modules/web/jsf/resources/" + FILE_FACELETS_TAGLIB_SCHEMA_22; // NOI18N
+    private static final String RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_20 ="nbres:/org/netbeans/modules/web/jsf/resources/" + FILE_FACELETS_TAGLIB_SCHEMA_20; // NOI18N
     private static final String RESOURCE_URL_FACELETS_TAGLIB_DTD_10 ="nbres:/org/netbeans/modules/web/jsf/resources/" + FILE_FACELETS_TAGLIB_DTD_10; // NOI18N
 
 
@@ -112,6 +113,8 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
         list.add(JSF_ID_2_3);
         list.add(ID_FACELETS_TAGLIB_DTD_10);
         list.add(ID_FACELETS_TAGLIB_SCHEMA_20);
+        list.add(ID_FACELETS_TAGLIB_SCHEMA_22);
+        list.add(ID_FACELETS_TAGLIB_SCHEMA_23);
         return list.listIterator();
     }
 
@@ -197,7 +200,7 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
     }
 
    /**
-     * Resolves schema definition file for taglib descriptor (spec.1_1, 1_2, 2_0, 2_1)
+     * Resolves schema definition file for taglib descriptor (spec.1_1, 1_2, 2_0, 2_1, 2_2, 2_3)
      * @param publicId publicId for resolved entity (null in our case)
      * @param systemId systemId for resolved entity
      * @return InputSource for publisId,
@@ -235,8 +238,12 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
             return new org.xml.sax.InputSource(URL_JSF_2_2);
         } else if (systemId!=null && systemId.endsWith(JSF_2_3_XSD)) {
             return new org.xml.sax.InputSource(URL_JSF_2_3);
-        } else if (systemId!=null && systemId.endsWith(FILE_FACELETS_TAGLIB_SCHAMA_20)) {
+        } else if (systemId!=null && systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_20)) {
             return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_20);
+        } else if (systemId!=null && systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_22)) {
+            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_22);
+        } else if (systemId!=null && systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_23)) {
+            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_23);
         } else {
             return null;
         }

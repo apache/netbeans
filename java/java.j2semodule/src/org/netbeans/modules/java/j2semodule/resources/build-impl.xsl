@@ -226,6 +226,7 @@ package netbeans;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -317,10 +318,10 @@ public class ModsourceRegexp extends Task {
         });
         String tail = "";
         String separatorString = separator;
-        if (separatorString == "\\") {
+        if ("\\".equals(separatorString)) {
             separatorString = "\\\\";
         }
-        if (filepattern != null && filepattern != tail) {
+        if (filepattern != null && !Objects.equals(filepattern, tail)) {
             tail = separatorString + filepattern;
         }
         return "([^" + separatorString +"]+)\\Q" + separator + "\\E(" + suffixes.stream().collect(Collectors.joining("|")) + ")" + tail;

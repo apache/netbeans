@@ -65,7 +65,7 @@ import org.netbeans.modules.debugger.jpda.jdi.VirtualMachineWrapper;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import static org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess.BASIC_CLASS_NAME;
-import org.netbeans.modules.debugger.jpda.truffle.breakpoints.TruffleBreakpointsHandler;
+import org.netbeans.modules.debugger.jpda.truffle.breakpoints.impl.TruffleBreakpointsHandler;
 import org.netbeans.modules.debugger.jpda.truffle.options.TruffleOptions;
 import org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint;
 import org.openide.util.Exceptions;

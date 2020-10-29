@@ -414,6 +414,16 @@ public class GradleFilesTest {
         assertTrue(gf.isRootProject());
     }
 
+    @Test
+    public void testGetBuildSrc() throws IOException {
+        root.newFile("build.gradle");
+        root.newFile("settings.gradle");
+        File buildSrc = root.newFolder("buildSrc");
+        GradleFiles gf = new GradleFiles(buildSrc);
+        assertTrue(gf.isBuildSrcProject());
+        assertEquals(null, gf.getFile(GradleFiles.Kind.BUILD_SRC));
+    }
+
     /**
      * Test of getProjectFiles method, of class GradleFiles.
      */

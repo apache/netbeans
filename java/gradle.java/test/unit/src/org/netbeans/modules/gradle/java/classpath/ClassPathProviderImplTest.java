@@ -24,7 +24,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.java.AbstractGradleJavaTestCase;
+import org.netbeans.modules.gradle.AbstractGradleProjectTestCase;
 import org.netbeans.modules.gradle.java.api.GradleJavaProject;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.openide.filesystems.FileObject;
@@ -34,7 +34,7 @@ import org.openide.filesystems.FileUtil;
  *
  * @author lkishalmi
  */
-public class ClassPathProviderImplTest extends AbstractGradleJavaTestCase {
+public class ClassPathProviderImplTest extends AbstractGradleProjectTestCase {
 
     public ClassPathProviderImplTest(String name) {
         super(name);

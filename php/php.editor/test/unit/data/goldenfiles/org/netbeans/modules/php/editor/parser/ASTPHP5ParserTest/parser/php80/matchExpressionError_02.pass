@@ -1,0 +1,42 @@
+<testresult testFile='matchExpressionError_02.php'>
+    <scanner>
+        <token id='T_FUNCTION' start='815' end='823'>
+            <text>function</text>
+        </token>
+        <token id='T_MATCH' start='824' end='829'>
+            <text>match</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='829' end='830'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='830' end='831'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='831' end='832'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='833' end='837'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='838' end='839'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='845' end='846'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='847' end='847'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='847'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='815' end='823'/>
+            <ASTError start='824' end='830'/>
+            <ASTError start='833' end='846'/>
+        </Statements>
+    </Program>
+</testresult>

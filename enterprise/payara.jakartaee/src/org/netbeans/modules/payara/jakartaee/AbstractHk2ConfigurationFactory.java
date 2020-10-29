@@ -63,7 +63,7 @@ abstract class AbstractHk2ConfigurationFactory implements ModuleConfigurationFac
         ModuleConfiguration retVal = null;
         try {
             retVal = new ModuleConfigurationImpl(
-                    module, new Hk2Configuration(module, PayaraVersion.PF_4_1_144), hk2dm);
+                    module, new Hk2Configuration(module, PayaraVersion.getLatestVersion()), hk2dm);
         } catch (ConfigurationException ce) {
             throw ce;
         } catch (Exception ex) {

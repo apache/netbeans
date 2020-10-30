@@ -1092,7 +1092,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
      */
     @Override
     public PayaraAdminInterface getAdminInterface() {
-        return PayaraAdminInterface.REST;
+        return PayaraAdminInterface.HTTP;
     }
 
     ////////////////////////////////////////////////////////////////////////////

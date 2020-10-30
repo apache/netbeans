@@ -31,12 +31,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.utils.OsUtils;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleFactory;
-import org.netbeans.modules.payara.eecommon.api.config.JavaEEModule;
-import org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Pair;
@@ -150,7 +149,7 @@ public class PayaraConfigurationTest extends NbTestCase {
     }
 
     /**
-     * Test new Payara resources file name generation depending on passed {@link PayaraVersion}.
+     * Test new Payara resources file name generation depending on passed {@link PayaraPlatformVersionAPI}.
      * Expected values are:<ul>
      * <li>PREFIX/src/conf/META_INF/sun-resources.xml for CAR, EAR, EJB and RAR
      *     on Payara older than 3.1</li\>
@@ -161,7 +160,7 @@ public class PayaraConfigurationTest extends NbTestCase {
      */
     @Test 
     public void testGetNewResourceFile() {
-        for (PayaraVersion version : PayaraVersion.getVersions()) {
+        for (PayaraPlatformVersionAPI version : PayaraPlatformVersion.getVersions()) {
             final Pair<File, Boolean> pairCar = PayaraConfiguration.getNewResourceFile(moduleCar, version);
             final Pair<File, Boolean> pairEar = PayaraConfiguration.getNewResourceFile(moduleEar, version);
             final Pair<File, Boolean> pairEjb = PayaraConfiguration.getNewResourceFile(moduleEjb, version);
@@ -255,7 +254,7 @@ File verifyPrefixCar;
             sunResource.createNewFile();
             gfResource.createNewFile();
         }
-        for (PayaraVersion version : PayaraVersion.getVersions()) {
+        for (PayaraPlatformVersionAPI version : PayaraPlatformVersion.getVersions()) {
             final Pair<File, Boolean> pairCar = PayaraConfiguration.getNewResourceFile(moduleCar, version);
             final Pair<File, Boolean> pairEar = PayaraConfiguration.getNewResourceFile(moduleEar, version);
             final Pair<File, Boolean> pairEjb = PayaraConfiguration.getNewResourceFile(moduleEjb, version);

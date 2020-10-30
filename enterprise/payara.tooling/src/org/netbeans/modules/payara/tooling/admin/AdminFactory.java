@@ -22,7 +22,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import org.netbeans.modules.payara.tooling.data.PayaraAdminInterface;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.logging.Logger;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
 
@@ -56,7 +56,7 @@ public abstract class AdminFactory {
      * @param version Payara server version.
      * @return Child factory class instance to work with given Payara server.
      */
-    static AdminFactory getInstance(final PayaraVersion version)
+    static AdminFactory getInstance(final PayaraPlatformVersionAPI version)
             throws CommandException {
         if(version.isMinimumSupportedVersion()) {
                 return AdminFactoryRest.getInstance();

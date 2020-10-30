@@ -20,8 +20,8 @@ package org.netbeans.modules.payara.tooling.admin;
 
 import org.netbeans.modules.payara.tooling.PayaraIdeException;
 import org.netbeans.modules.payara.tooling.data.PayaraAdminInterface;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
 import org.netbeans.modules.payara.tooling.data.PayaraServerEntity;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 import org.testng.annotations.Test;
@@ -46,7 +46,7 @@ public class AdminFactoryTest extends CommandTest {
     @Test
     public void testGetInstanceforVersionPF4() {
         PayaraServerEntity srv = new PayaraServerEntity();
-        srv.setVersion(PayaraVersion.getLatestVersion());
+        srv.setVersion(PayaraPlatformVersion.getLatestVersion());
         AdminFactory af = AdminFactory.getInstance(srv.getVersion());
         assertTrue(af instanceof AdminFactoryHttp);
         Command cmd = new CommandVersion();
@@ -72,7 +72,7 @@ public class AdminFactoryTest extends CommandTest {
     @Test
     public void testGetInstanceforVersionPF5() {
         PayaraServerEntity srv = new PayaraServerEntity();
-        srv.setVersion(PayaraVersion.getLatestVersion());
+        srv.setVersion(PayaraPlatformVersion.getLatestVersion());
         AdminFactory af = AdminFactory.getInstance(srv.getVersion());
         assertTrue(af instanceof AdminFactoryRest);
         Command cmd = new CommandVersion();

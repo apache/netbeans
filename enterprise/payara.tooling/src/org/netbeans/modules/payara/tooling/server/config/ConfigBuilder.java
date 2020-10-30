@@ -28,7 +28,7 @@ import org.netbeans.modules.payara.tooling.PayaraIdeException;
 import org.netbeans.modules.payara.tooling.data.PayaraJavaEEConfig;
 import org.netbeans.modules.payara.tooling.data.PayaraJavaSEConfig;
 import org.netbeans.modules.payara.tooling.data.PayaraLibrary;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.data.PayaraConfig;
 
 /**
@@ -158,7 +158,7 @@ public class ConfigBuilder {
 
     /** Version check. */
     /* GuarderBy(this)*/
-    private PayaraVersion version;
+    private PayaraPlatformVersionAPI version;
 
     ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
@@ -210,7 +210,7 @@ public class ConfigBuilder {
      * @throws ServerConfigException when builder is used with multiple
      *         Payara versions.
      */
-    private synchronized void versionCheck(final PayaraVersion version)
+    private synchronized void versionCheck(final PayaraPlatformVersionAPI version)
             throws ServerConfigException {
         if (this.version == null) {
             this.version = version;
@@ -234,7 +234,7 @@ public class ConfigBuilder {
      *         Payara versions.
      */
     public List<PayaraLibrary> getLibraries(
-            final PayaraVersion version) throws ServerConfigException {
+            final PayaraPlatformVersionAPI version) throws ServerConfigException {
         versionCheck(version);
         synchronized (this) {
             if (libraryCache != null) {
@@ -264,7 +264,7 @@ public class ConfigBuilder {
      *         Payara versions.
      */
     public PayaraJavaEEConfig getJavaEEConfig(
-            final PayaraVersion version) throws ServerConfigException {
+            final PayaraPlatformVersionAPI version) throws ServerConfigException {
         versionCheck(version);
         synchronized (this) {
             if (javaEEConfigCache != null) {
@@ -292,7 +292,7 @@ public class ConfigBuilder {
      *         Payara versions.
      */
     public PayaraJavaSEConfig getJavaSEConfig(
-            final PayaraVersion version) throws ServerConfigException {
+            final PayaraPlatformVersionAPI version) throws ServerConfigException {
         versionCheck(version);
         synchronized (this) {
             if (javaSEConfigCache != null) {

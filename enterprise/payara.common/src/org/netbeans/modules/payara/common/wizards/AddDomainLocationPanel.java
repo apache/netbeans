@@ -29,7 +29,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.server.config.ConfigBuilderProvider;
 import org.netbeans.modules.payara.tooling.server.config.PayaraConfigManager;
 import org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform;
@@ -164,7 +164,7 @@ public class AddDomainLocationPanel implements WizardDescriptor.Panel, ChangeLis
         JavaPlatform defaultJava = JavaPlatform.getDefault();
         JavaSEPlatform defaultJavaPlatform = JavaSEPlatform.toValue(
                     defaultJava.getSpecification().getVersion().toString());
-        PayaraVersion payaraVersion
+        PayaraPlatformVersionAPI payaraVersion
                 = ServerUtils.getServerVersion(gfRoot);
         PayaraConfig configAdapter = PayaraConfigManager.getConfig(
                 ConfigBuilderProvider.getBuilderConfig(payaraVersion));

@@ -21,11 +21,12 @@ package org.netbeans.modules.payara.jakartaee;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.payara.common.PayaraInstance;
 import org.netbeans.modules.payara.common.PayaraInstanceProvider;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.modules.j2ee.deployment.plugins.spi.config.ModuleConfiguration;
 import org.netbeans.modules.j2ee.deployment.plugins.spi.config.ModuleConfigurationFactory2;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
 
 /**
  * Abstract factory to construct Java EE server configuration API support object.
@@ -63,7 +64,7 @@ abstract class AbstractHk2ConfigurationFactory implements ModuleConfigurationFac
         ModuleConfiguration retVal = null;
         try {
             retVal = new ModuleConfigurationImpl(
-                    module, new Hk2Configuration(module, PayaraVersion.getLatestVersion()), hk2dm);
+                    module, new Hk2Configuration(module, PayaraPlatformVersion.getLatestVersion()), hk2dm);
         } catch (ConfigurationException ce) {
             throw ce;
         } catch (Exception ex) {
@@ -90,7 +91,7 @@ abstract class AbstractHk2ConfigurationFactory implements ModuleConfigurationFac
         final PayaraInstance instance
                 = PayaraInstanceProvider.getProvider()
                 .getPayaraInstance(instanceUrl);
-        final PayaraVersion version = instance != null
+        final PayaraPlatformVersionAPI version = instance != null
                 ? instance.getVersion() : null;
         try {
             final Hk2DeploymentManager dm = hk2dm != null

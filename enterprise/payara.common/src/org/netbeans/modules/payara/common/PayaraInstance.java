@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import org.netbeans.modules.payara.tooling.TaskState;
 import org.netbeans.modules.payara.tooling.data.PayaraAdminInterface;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.utils.ServerUtils;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
@@ -417,7 +417,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
             PayaraInstanceProvider pip, boolean updateNow) {
         String deployerUri = ip.get(PayaraModule.URL_ATTR);
         PayaraInstance instance = null;
-        PayaraVersion version = ServerUtils.getServerVersion(ip.get(PayaraModule.PAYARA_FOLDER_ATTR));
+        PayaraPlatformVersionAPI version = ServerUtils.getServerVersion(ip.get(PayaraModule.PAYARA_FOLDER_ATTR));
         try {
             instance = new PayaraInstance(ip, version, pip, updateNow);
             tagUnderConstruction(deployerUri);
@@ -704,7 +704,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
       * <p/>
       * This is always version of local Payara related to JavaEE platform,
       * even when registered domain is remote. */
-    private final PayaraVersion version;
+    private final PayaraPlatformVersionAPI version;
 
     /** Process information of local running server started from IDE.
      *  <p/>
@@ -738,7 +738,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
     ////////////////////////////////////////////////////////////////////////////
 
     @SuppressWarnings("LeakingThisInConstructor")
-    private PayaraInstance(Map<String, String> ip, PayaraVersion version,
+    private PayaraInstance(Map<String, String> ip, PayaraPlatformVersionAPI version,
             PayaraInstanceProvider instanceProvider, boolean prepareProperties) {
         this.version = version;
         this.process = null;
@@ -1081,7 +1081,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
      *         not known.
      */
     @Override
-    public PayaraVersion getVersion() {
+    public PayaraPlatformVersionAPI getVersion() {
         return version;
     }
 
@@ -1092,10 +1092,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
      */
     @Override
     public PayaraAdminInterface getAdminInterface() {
-//        if (version.ordinal() < PayaraVersion.PF_4.ordinal())
-            return PayaraAdminInterface.HTTP;
-//        else
-//            return PayaraAdminInterface.REST;
+        return PayaraAdminInterface.REST;
     }
 
     ////////////////////////////////////////////////////////////////////////////

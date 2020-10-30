@@ -24,7 +24,7 @@ import javax.enterprise.deploy.spi.DeploymentManager;
 import javax.enterprise.deploy.spi.exceptions.DeploymentManagerCreationException;
 import javax.enterprise.deploy.spi.factories.DeploymentFactory;
 import org.netbeans.modules.payara.spi.ServerUtilities;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.openide.util.NbBundle;
 
 
@@ -53,7 +53,7 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
         this.su = su;
     }
 
-    public static synchronized DeploymentFactory createEe(PayaraVersion version) {
+    public static synchronized DeploymentFactory createEe(PayaraPlatformVersionAPI version) {
         if (version.isEE8Supported()) {
             return createEe8();
         } else if (version.isEE7Supported()) {

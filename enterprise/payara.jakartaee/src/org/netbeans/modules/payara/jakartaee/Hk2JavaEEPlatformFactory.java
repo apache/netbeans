@@ -24,7 +24,7 @@ import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.modules.payara.tooling.data.PayaraJavaEEConfig;
 import org.netbeans.modules.payara.tooling.data.PayaraJavaSEConfig;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.server.config.ConfigBuilder;
 import org.netbeans.modules.payara.tooling.server.config.ConfigBuilderProvider;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
@@ -103,7 +103,7 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
      * @param version Payara server version used to pick up display name.
      * @return Payara JavaEE platform name related to given server version.
      */
-    private static String getDisplayName(final PayaraVersion version) {
+    private static String getDisplayName(final PayaraPlatformVersionAPI version) {
         final int majorVersion = version.getMajor();
         if (majorVersion >= 5) {
             return NbBundle.getMessage(
@@ -124,7 +124,7 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
      * @param version Payara server version used to pick up display name.
      * @return Payara JavaEE library name related to given server version.
      */
-    private static String getLibraryName(final PayaraVersion version) {
+    private static String getLibraryName(final PayaraPlatformVersionAPI version) {
         final int majorVersion = version.getMajor();
         if (majorVersion >= 5) {
             return NbBundle.getMessage(
@@ -145,7 +145,7 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
      * @param version Payara server version used to pick up lookup key.
      * @return Lookup key for given Payara server version.
      */
-    private static String getLookupKey(final PayaraVersion version) {
+    private static String getLookupKey(final PayaraPlatformVersionAPI version) {
         final int majorVersion = version.getMajor();
         if (majorVersion >= 5) {
             return V5_LOOKUP_KEY;
@@ -171,7 +171,7 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
         if (dm instanceof Hk2DeploymentManager) {
             final PayaraServer server = ((Hk2DeploymentManager)dm)
                     .getCommonServerSupport().getInstance();
-            final PayaraVersion version = server.getVersion();
+            final PayaraPlatformVersionAPI version = server.getVersion();
             final ConfigBuilder cb = ConfigBuilderProvider.getBuilder(server);
             final PayaraJavaSEConfig javaSEConfig = cb.getJavaSEConfig(version);
             final PayaraJavaEEConfig javaEEConfig = cb.getJavaEEConfig(version);

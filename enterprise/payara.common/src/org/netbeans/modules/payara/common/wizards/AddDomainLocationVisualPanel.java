@@ -37,10 +37,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.modules.payara.tooling.utils.NetUtils;
 import org.netbeans.modules.payara.common.PayaraInstance;
-import org.netbeans.modules.payara.common.ServerDetails;
+import org.netbeans.modules.payara.common.PayaraPlatformDetails;
 import org.netbeans.modules.payara.common.ui.IpComboBox;
 import org.netbeans.modules.payara.spi.Utils;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.openide.awt.HtmlBrowser;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -164,7 +164,7 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
         httpPortField.addKeyListener(kl);
         initPortsFields();
         // make sure the target field is ok...
-        Optional<PayaraVersion> serverDetails = ServerDetails.getVersionFromInstallDirectory(new File(gfRoot));
+        Optional<PayaraPlatformVersionAPI> serverDetails = PayaraPlatformDetails.getVersionFromInstallDirectory(new File(gfRoot));
         if (serverDetails.isPresent() && !serverDetails.get().isMinimumSupportedVersion()) {
             targetValueField.setText(""); // NOI18N
             targetValueField.setEnabled(false);

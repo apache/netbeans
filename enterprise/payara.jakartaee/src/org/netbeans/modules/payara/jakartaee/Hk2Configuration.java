@@ -33,7 +33,7 @@ import javax.enterprise.deploy.spi.exceptions.BeanNotFoundException;
 import org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration;
 import org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper;
 import org.netbeans.modules.payara.jakartaee.db.Hk2DatasourceManager;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException;
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
 import org.netbeans.modules.j2ee.deployment.common.api.DatasourceAlreadyExistsException;
@@ -60,7 +60,7 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
      *         configuration initialization.
      */
     public Hk2Configuration(
-            final J2eeModule module, final PayaraVersion version
+            final J2eeModule module, final PayaraPlatformVersionAPI version
     ) throws ConfigurationException {
         super(module, J2eeModuleHelper.getPayaraDDModuleHelper(module.getType()), version);
     }
@@ -77,7 +77,7 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
      */
     public Hk2Configuration(
             final J2eeModule module, final J2eeModuleHelper jmh,
-            final PayaraVersion version
+            final PayaraPlatformVersionAPI version
     ) throws ConfigurationException {
         super(module, jmh, version);
     }

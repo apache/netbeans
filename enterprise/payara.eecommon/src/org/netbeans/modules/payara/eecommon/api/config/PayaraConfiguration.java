@@ -33,7 +33,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.dd.api.webservices.Webservices;
 import org.netbeans.modules.payara.eecommon.api.Utils;
 import org.netbeans.modules.payara.eecommon.api.XmlFileCreator;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.utils.OsUtils;
 import org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException;
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
@@ -125,7 +125,7 @@ public abstract class PayaraConfiguration implements
      * Get existing {@code RESOURCE_FILES} array indexes for provided Payara
      * server version.
      * <br/>
-     * <i>Internal {@link #getExistingResourceFile(J2eeModule, PayaraVersion)
+     * <i>Internal {@link #getExistingResourceFile(J2eeModule, PayaraPlatformVersionAPI)
      * helper method.</i>
      * <p/>
      * @param version Payara server version.
@@ -133,7 +133,7 @@ public abstract class PayaraConfiguration implements
      *         to resource files to search for.
      */
     private static int[] versionToResourceFilesIndexes(
-            final PayaraVersion version) {
+            final PayaraPlatformVersionAPI version) {
         // All files for unknown version.
         if (version == null) {
             return new int[]{0,1};
@@ -156,7 +156,7 @@ public abstract class PayaraConfiguration implements
      *         to resource file to be created.
      */
     private static int versionToNewResourceFilesIndex(
-            final PayaraVersion version) {
+            final PayaraPlatformVersionAPI version) {
         // glassfish-resources.xml is returned for versions 3.1 and higher
         // or as default for unknown version.
         if (version == null || version.getMajor() >= 4) {
@@ -192,7 +192,7 @@ public abstract class PayaraConfiguration implements
      *         {@code null} when no resources file was found.
      */
     public static final Pair<File, Boolean> getExistingResourceFile(
-            final J2eeModule module, final PayaraVersion version) {
+            final J2eeModule module, final PayaraPlatformVersionAPI version) {
         // RESOURCE_FILES indexes to search for.
         final int[] indexes = versionToResourceFilesIndexes(version);
         for (int index : indexes) {
@@ -225,7 +225,7 @@ public abstract class PayaraConfiguration implements
      * @return Payara resources file to be created.
      */
     public static final Pair<File, Boolean> getNewResourceFile(
-            final J2eeModule module, final PayaraVersion version) {
+            final J2eeModule module, final PayaraPlatformVersionAPI version) {
         final int index = versionToNewResourceFilesIndex(version);
         if (!version.isMinimumSupportedVersion()) {
             return Pair.of(new File(module.getResourceDirectory(), RESOURCE_FILES[index]), false);
@@ -244,7 +244,7 @@ public abstract class PayaraConfiguration implements
     protected final File secondaryDD;
     protected DescriptorListener descriptorListener;
     /** Payara server version. */
-    protected PayaraVersion version;
+    protected PayaraPlatformVersionAPI version;
     private ASDDVersion appServerVersion;
     private ASDDVersion minASVersion;
     private ASDDVersion maxASVersion;
@@ -265,7 +265,7 @@ public abstract class PayaraConfiguration implements
      *         configuration initialization.
      */
     protected PayaraConfiguration(
-            final J2eeModule module, final PayaraVersion version
+            final J2eeModule module, final PayaraPlatformVersionAPI version
     ) throws ConfigurationException {
         this(module, J2eeModuleHelper.getSunDDModuleHelper(module.getType()), version);
     }
@@ -283,7 +283,7 @@ public abstract class PayaraConfiguration implements
     @SuppressWarnings("LeakingThisInConstructor")
     protected PayaraConfiguration(
             final J2eeModule module, final J2eeModuleHelper moduleHelper,
-            final PayaraVersion version
+            final PayaraPlatformVersionAPI version
     ) throws ConfigurationException {
         this.module = module;
         this.moduleHelper = moduleHelper;

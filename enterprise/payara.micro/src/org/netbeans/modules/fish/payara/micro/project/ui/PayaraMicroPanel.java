@@ -27,7 +27,8 @@ import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.openide.WizardDescriptor;
 import static org.openide.util.NbBundle.getMessage;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PROP_CONTEXT_ROOT;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 
 /**
  *
@@ -48,7 +49,7 @@ class PayaraMicroPanel extends JPanel {
     void readSettings(WizardDescriptor descriptor) {
         String microVersionText = (String) descriptor.getProperty(PROP_PAYARA_MICRO_VERSION);
         if (microVersionText != null) {
-            microVersionCombobox.setSelectedItem(PayaraVersion.toValue(microVersionText));
+            microVersionCombobox.setSelectedItem(PayaraPlatformVersion.toValue(microVersionText));
         }
 
         String autoBindHTTP = (String)descriptor.getProperty(PROP_AUTO_BIND_HTTP);
@@ -82,10 +83,10 @@ class PayaraMicroPanel extends JPanel {
         contextRootTextField = new javax.swing.JTextField();
 
         microVersionCombobox.setModel(new DefaultComboBoxModel(
-            PayaraVersion.getVersions()
+            PayaraPlatformVersion.getVersions()
             .stream()
             .sorted(Collections.reverseOrder())
-            .toArray(PayaraVersion[]::new)
+            .toArray(PayaraPlatformVersionAPI[]::new)
         ));
 
         org.openide.awt.Mnemonics.setLocalizedText(microVersionLabel, org.openide.util.NbBundle.getMessage(PayaraMicroPanel.class, "PayaraMicroPanel.microVersionLabel.text")); // NOI18N
@@ -142,7 +143,7 @@ class PayaraMicroPanel extends JPanel {
     private javax.swing.JLabel autoBindHttpLabel;
     private javax.swing.JLabel contextRootLabel;
     private javax.swing.JTextField contextRootTextField;
-    private javax.swing.JComboBox<PayaraVersion> microVersionCombobox;
+    private javax.swing.JComboBox<PayaraPlatformVersionAPI> microVersionCombobox;
     private javax.swing.JLabel microVersionLabel;
     // End of variables declaration//GEN-END:variables
 

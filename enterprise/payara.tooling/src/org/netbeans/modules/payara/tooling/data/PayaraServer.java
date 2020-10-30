@@ -113,7 +113,7 @@ public interface PayaraServer {
      * <p/>
      * @return The version
      */
-    public PayaraVersion getVersion();
+    public PayaraPlatformVersionAPI getVersion();
 
     /**
      * Get Payara server administration interface type.

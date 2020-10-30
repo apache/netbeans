@@ -22,7 +22,8 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.netbeans.modules.payara.tooling.PayaraIdeException;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.logging.Logger;
 import org.netbeans.modules.payara.tooling.utils.ServerUtils;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
@@ -79,13 +80,13 @@ public class CommandVersion extends Command {
      * Retrieve version from server.
      * <p/>
      * @param server Payara server entity.
-     * @return Payara command result containing {@link PayaraVersion}
+     * @return Payara command result containing {@link PayaraPlatformVersionAPI}
      *         object retrieved from server or <code>null</code> if no
      *         version was returned.
      * @throws PayaraIdeException When error occurred during administration
      *         command execution.
      */
-    public static PayaraVersion getPayaraVersion(
+    public static PayaraPlatformVersionAPI getPayaraVersion(
             final PayaraServer server) {
         ResultString result;
         try {
@@ -96,7 +97,7 @@ public class CommandVersion extends Command {
         String value = result != null
                 ? ServerUtils.getVersionString(result.getValue()) : null;
         if (value != null) {
-            return PayaraVersion.toValue(value);
+            return PayaraPlatformVersion.toValue(value);
         } else {
             return null;
         }
@@ -117,8 +118,8 @@ public class CommandVersion extends Command {
         boolean verifyResult = false;
         String value = ServerUtils.getVersionString(result.getValue());
         if (value != null) {
-            PayaraVersion valueVersion = PayaraVersion.toValue(value);
-            PayaraVersion serverVersion = server.getVersion();
+            PayaraPlatformVersionAPI valueVersion = PayaraPlatformVersion.toValue(value);
+            PayaraPlatformVersionAPI serverVersion = server.getVersion();
             if (valueVersion != null && serverVersion != null) {
                 verifyResult = serverVersion.equals(valueVersion);
             }

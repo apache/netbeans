@@ -29,7 +29,7 @@ import org.netbeans.modules.payara.common.PayaraSettings;
 import org.netbeans.modules.payara.common.PayaraInstance;
 import org.openide.util.NbBundle;
 import org.netbeans.modules.payara.spi.PayaraModule;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 
 /**
  * Common instance properties editor.

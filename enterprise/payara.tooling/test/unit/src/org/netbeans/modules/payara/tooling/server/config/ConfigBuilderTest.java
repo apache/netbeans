@@ -26,8 +26,8 @@ import org.netbeans.modules.payara.tooling.CommonTest;
 import org.netbeans.modules.payara.tooling.admin.CommandHttpTest;
 import org.netbeans.modules.payara.tooling.admin.CommandRestTest;
 import org.netbeans.modules.payara.tooling.data.PayaraLibrary;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.fail;
 import org.testng.annotations.Test;
@@ -69,10 +69,10 @@ public class ConfigBuilderTest extends CommonTest {
         File home = new File(server.getServerHome());
         ConfigBuilder lb = new ConfigBuilder(libraryConfig, home, home, home);
         List<PayaraLibrary> lib = lb.getLibraries(
-                PayaraVersion.getLatestVersion());
+                PayaraPlatformVersion.getLatestVersion());
         assertNotNull(lib);
         try {
-            lb.getLibraries(PayaraVersion.getVersionMap().get("4.1.1.161"));
+            lb.getLibraries(PayaraPlatformVersion.getVersionMap().get("4.1.1.161"));
             fail("Library builder could not work for more than one Payara"
                     + " version with a single server instance.");
         } catch (ServerConfigException sce) {}
@@ -87,10 +87,10 @@ public class ConfigBuilderTest extends CommonTest {
         File home = new File(server.getServerHome());
         ConfigBuilder lb = new ConfigBuilder(libraryConfig, home, home, home);
         List<PayaraLibrary> lib = lb.getLibraries(
-                PayaraVersion.getLatestVersion());
+                PayaraPlatformVersion.getLatestVersion());
         assertNotNull(lib);
         try {
-            lb.getLibraries(PayaraVersion.getVersionMap().get("4.1.1.161"));
+            lb.getLibraries(PayaraPlatformVersion.getVersionMap().get("4.1.1.161"));
             fail("Library builder could not work for more than one Payara"
                     + " version with a single server instance.");
         } catch (ServerConfigException sce) {}

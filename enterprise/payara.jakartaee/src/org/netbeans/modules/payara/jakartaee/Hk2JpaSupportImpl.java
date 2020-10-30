@@ -24,10 +24,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.javaee.specs.support.api.JpaProvider;
 import org.netbeans.modules.javaee.specs.support.spi.JpaProviderFactory;
 import org.netbeans.modules.javaee.specs.support.spi.JpaSupportImplementation;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
 
 /**
  * Payara server JPA support.
@@ -81,7 +82,7 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
 
     // Initialize Payara JPA support matrix.
     static {
-        for (PayaraVersion version : PayaraVersion.getVersions()) {
+        for (PayaraPlatformVersionAPI version : PayaraPlatformVersion.getVersions()) {
             jpaSupport.put(
                     version.toString(),
                     new JpaSupportVector(
@@ -156,7 +157,7 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
                 JpaSupportVector instanceJpaSupport
                         = jpaSupport.get(instance.getVersion() != null
                                 ? instance.getVersion().toString()
-                                : PayaraVersion.getLatestVersion().toString());
+                                : PayaraPlatformVersion.getLatestVersion().toString());
                 defaultProvider = JpaProviderFactory.createJpaProvider(
                         JPA_PROVIDER, true, instanceJpaSupport._1_0,
                         instanceJpaSupport._2_0, instanceJpaSupport._2_1);

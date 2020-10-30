@@ -21,7 +21,7 @@ package org.netbeans.modules.payara.common;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.payara.tooling.PayaraStatus;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.common.status.AuthFailureStateListener;
 import org.netbeans.modules.payara.common.status.MonitoringInitStateListener;
 import org.openide.util.NbBundle;

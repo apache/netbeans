@@ -74,7 +74,7 @@ public class PayaraServerEntity implements PayaraServer {
     private String serverRoot;
 
     /** Payara server version. */
-    private PayaraVersion version;
+    private PayaraPlatformVersionAPI version;
 
     /** Payara server administration interface type. */
     private PayaraAdminInterface adminInterface;
@@ -360,7 +360,7 @@ public class PayaraServerEntity implements PayaraServer {
      * @return The version.
      */
     @Override
-    public PayaraVersion getVersion() {
+    public PayaraPlatformVersionAPI getVersion() {
         return version;
     }
 
@@ -369,7 +369,7 @@ public class PayaraServerEntity implements PayaraServer {
      * <p/>
      * @param version The version to set.
      */
-    public void setVersion(final PayaraVersion version) {
+    public void setVersion(final PayaraPlatformVersionAPI version) {
         this.version = version;
     }
 

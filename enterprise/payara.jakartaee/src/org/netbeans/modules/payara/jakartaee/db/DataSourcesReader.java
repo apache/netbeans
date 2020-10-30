@@ -28,7 +28,7 @@ import org.netbeans.modules.payara.tooling.TaskState;
 import org.netbeans.modules.payara.tooling.admin.CommandGetProperty;
 import org.netbeans.modules.payara.tooling.admin.ResultMap;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.utils.StringPrefixTree;
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
 

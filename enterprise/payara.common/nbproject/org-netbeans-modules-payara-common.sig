@@ -527,7 +527,7 @@ meth public static void setDefaultUncaughtExceptionHandler(java.lang.Thread$Unca
 meth public static void sleep(long) throws java.lang.InterruptedException
 meth public static void sleep(long,int) throws java.lang.InterruptedException
 meth public static void yield()
-meth public void destroy()	
+meth public void destroy()
  anno 0 java.lang.Deprecated()
 meth public void interrupt()
 meth public void run()
@@ -1340,7 +1340,7 @@ meth public org.netbeans.modules.payara.common.PayaraInstanceProvider getInstanc
 meth public org.netbeans.modules.payara.common.PayaraJvmMode getJvmMode()
 meth public org.netbeans.modules.payara.common.parser.DomainXMLChangeListener getDomainXMLChangeListener()
 meth public org.netbeans.modules.payara.tooling.data.PayaraAdminInterface getAdminInterface()
-meth public org.netbeans.modules.payara.tooling.data.PayaraVersion getVersion()
+meth public org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getVersion()
 meth public org.openide.nodes.Node getBasicNode()
 meth public org.openide.nodes.Node getFullNode()
 meth public org.openide.util.Lookup getLookup()
@@ -1490,12 +1490,56 @@ meth public org.netbeans.modules.payara.tooling.TaskState call2()
 supr org.netbeans.modules.payara.common.BasicTask<org.netbeans.modules.payara.tooling.TaskState>
 hfds LOGGER,RESTART_DELAY,support
 
-CLSS public org.netbeans.modules.payara.common.ServerDetails
-meth public static boolean isInstalledInDirectory(org.netbeans.modules.payara.tooling.data.PayaraVersion,java.io.File)
+ anno 0 java.lang.Deprecated()
+CLSS public final !enum org.netbeans.modules.payara.common.ServerDetails
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_144
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_151
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_152
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_153
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_1_154
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_1_161
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_1_162
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_1_163
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_1_164
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_1_171
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_2_172
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_2_173
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_2_174
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_2_181
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_181
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_182
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_183
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_184
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_191
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_192
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_193
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_194
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_201
+fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_202
+meth public boolean isDownloadable()
+meth public boolean isInstalledInDirectory(java.io.File)
+meth public int getVersionInt()
+meth public java.lang.String getDirectUrl()
+meth public java.lang.String getIndirectUrl()
+meth public java.lang.String getLicenseUrl()
+meth public java.lang.String getUriFragment()
+meth public java.lang.String toString()
+meth public org.netbeans.modules.payara.tooling.data.PayaraVersion getVersion()
+meth public static int getVersionFromDomainXml(java.io.File)
+ anno 0 java.lang.Deprecated()
+meth public static int getVersionFromInstallDirectory(java.io.File)
+meth public static org.netbeans.modules.payara.common.ServerDetails valueOf(java.lang.String)
+meth public static org.netbeans.modules.payara.common.ServerDetails[] values()
+meth public static org.openide.WizardDescriptor$InstantiatingIterator getInstantiatingIterator()
+supr java.lang.Enum<org.netbeans.modules.payara.common.ServerDetails>
+hfds CDDL_LICENSE,DOWNLOAD_URL,directUrl,displayName,downloadable,indirectUrl,licenseUrl,uriFragment,version,versionInt
+hcls DomainParser
+
+CLSS public org.netbeans.modules.payara.common.PayaraPlatformDetails
+meth public static boolean isInstalledInDirectory(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI,java.io.File)
 meth public java.lang.String toString()
 meth public static java.util.Optional getVersionFromInstallDirectory(java.io.File)
 meth public static org.openide.WizardDescriptor$InstantiatingIterator getInstantiatingIterator()
-hcls DomainParser
 
 CLSS public org.netbeans.modules.payara.common.SimpleIO
 cons public init(java.lang.String,java.lang.Process)
@@ -2251,7 +2295,7 @@ meth public abstract java.lang.String getServerHome()
 meth public abstract java.lang.String getServerRoot()
 meth public abstract java.lang.String getUrl()
 meth public abstract org.netbeans.modules.payara.tooling.data.PayaraAdminInterface getAdminInterface()
-meth public abstract org.netbeans.modules.payara.tooling.data.PayaraVersion getVersion()
+meth public abstract org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getVersion()
 
 CLSS public abstract interface org.netbeans.spi.server.ServerInstanceImplementation
 meth public abstract boolean isRemovable()

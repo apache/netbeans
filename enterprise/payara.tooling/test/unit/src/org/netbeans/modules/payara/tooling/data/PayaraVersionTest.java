@@ -40,9 +40,9 @@ public class PayaraVersionTest {
      * and additional values array.
      */
     public static void verifyToValueFromAdditionalArray(
-            PayaraVersion version, String[] values) {
+            PayaraPlatformVersionAPI version, String[] values) {
         for (String value : values) {
-            PayaraVersion pfVersion = PayaraVersion.toValue(value);
+            PayaraPlatformVersionAPI pfVersion = PayaraPlatformVersion.toValue(value);
             assertTrue(pfVersion == version);
         }
     }
@@ -56,7 +56,7 @@ public class PayaraVersionTest {
      */
     @Test
     public void testToString() {
-        for (PayaraVersion version : PayaraVersion.getVersions()) {
+        for (PayaraPlatformVersionAPI version : PayaraPlatformVersion.getVersions()) {
             assertTrue(version.toString() != null);
         }
     }
@@ -64,13 +64,13 @@ public class PayaraVersionTest {
     /**
      * Test that <code>toValue</code> handles all <code>enum</code> values
      * and that sequence of <code>toString</code> and <code>toValue</code>
-     * calls ends up with supplied <code>PayaraVersion</code> version.
+     * calls ends up with supplied <code>PayaraPlatformVersionAPI</code> version.
      */
     @Test
     public void testToValue() {
-        for (PayaraVersion version : PayaraVersion.getVersions()) {
+        for (PayaraPlatformVersionAPI version : PayaraPlatformVersion.getVersions()) {
             String stringValue = version.toString();
-            PayaraVersion finalVersion = PayaraVersion.toValue(stringValue);
+            PayaraPlatformVersionAPI finalVersion = PayaraPlatformVersion.toValue(stringValue);
             assertTrue(version == finalVersion);
         }
     }
@@ -80,10 +80,10 @@ public class PayaraVersionTest {
      */
     @Test
     public void testToFullString() {
-        for (PayaraVersion version : PayaraVersion.getVersions()) {
+        for (PayaraPlatformVersionAPI version : PayaraPlatformVersion.getVersions()) {
             String fullVersion = version.toFullString();
             String[] numbers
-                    = fullVersion.split(PayaraVersion.SEPARATOR_PATTERN);
+                    = fullVersion.split(PayaraPlatformVersionAPI.SEPARATOR_PATTERN);
             assertTrue(numbers != null && numbers.length == 4,
                     "Invalid count of version numbers");
             short major, minor, update, build;

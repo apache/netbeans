@@ -31,7 +31,8 @@ import static org.netbeans.api.project.ProjectUtils.getPreferences;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.VERSION;
 import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import org.netbeans.modules.maven.api.customizer.support.ComboBoxUpdater;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 
 /**
  *
@@ -41,43 +42,43 @@ public class MicroPropertiesPanel extends JPanel {
 
     private final Preferences pref;
     
-    private final ComboBoxUpdater<PayaraVersion> microVersionComboBoxUpdater;
+    private final ComboBoxUpdater<PayaraPlatformVersionAPI> microVersionComboBoxUpdater;
     
-    private PayaraVersion selectedPayaraVersion;
+    private PayaraPlatformVersionAPI selectedPayaraVersion;
     
     public MicroPropertiesPanel(ModelHandle2 handle, Project project) {
         pref = getPreferences(project, MicroApplication.class, true);
         initComponents();
         String microVersionText = pref.get(VERSION, "");
-        PayaraVersion microVersion = PayaraVersion.toValue(microVersionText);
-        microVersionComboBoxUpdater = new ComboBoxUpdater<PayaraVersion>(microVersionCombobox, microVersionLabel)  {
+        PayaraPlatformVersionAPI microVersion = PayaraPlatformVersion.toValue(microVersionText);
+        microVersionComboBoxUpdater = new ComboBoxUpdater<PayaraPlatformVersionAPI>(microVersionCombobox, microVersionLabel)  {
             @Override
-            public PayaraVersion getValue() {
-                return microVersion != null ? microVersion : PayaraVersion.EMPTY;
+            public PayaraPlatformVersionAPI getValue() {
+                return microVersion != null ? microVersion : PayaraPlatformVersion.EMPTY;
             }
 
             @Override
-            public PayaraVersion getDefaultValue() {
+            public PayaraPlatformVersionAPI getDefaultValue() {
                 return null;
             }
 
             @Override
-            public void setValue(PayaraVersion microVersion) {
+            public void setValue(PayaraPlatformVersionAPI microVersion) {
                 selectedPayaraVersion = microVersion;
             }
         };
     }
     
-    private PayaraVersion[] getPayaraVersion() {
-        List<PayaraVersion> microVersions = new ArrayList<>();
-        microVersions.add(PayaraVersion.EMPTY);
+    private PayaraPlatformVersionAPI[] getPayaraVersion() {
+        List<PayaraPlatformVersionAPI> microVersions = new ArrayList<>();
+        microVersions.add(PayaraPlatformVersion.EMPTY);
         microVersions.addAll(
-                PayaraVersion.getVersions()
+                PayaraPlatformVersion.getVersions()
                         .stream()
                         .sorted(Collections.reverseOrder())
                         .collect(toList())
         );
-        return microVersions.toArray(new PayaraVersion[]{});
+        return microVersions.toArray(new PayaraPlatformVersionAPI[]{});
     }
 
     @SuppressWarnings("unchecked")

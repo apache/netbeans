@@ -21,7 +21,7 @@ package org.netbeans.modules.payara.tooling.server.config;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
 
 /**
@@ -73,7 +73,7 @@ public class ConfigBuilderProvider {
      * @param version Payara server version.
      * @return Library builder configuration for given Payara server version.
      */
-    public static URL getBuilderConfig(final PayaraVersion version) {
+    public static URL getBuilderConfig(final PayaraPlatformVersionAPI version) {
         return config.configFiles.get(version.getMajor());
     }
 

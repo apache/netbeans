@@ -35,7 +35,8 @@ import java.util.regex.Pattern;
 import javax.xml.bind.DatatypeConverter;
 import org.netbeans.modules.payara.tooling.admin.CommandException;
 import org.netbeans.modules.payara.tooling.data.PayaraContainer;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.logging.Logger;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
 
@@ -554,8 +555,8 @@ public class ServerUtils {
      * @param serverHome Payara server home directory.
      * @return Payara server version.
      */
-    public static PayaraVersion getServerVersion(final String serverHome) {
-        PayaraVersion version = null;
+    public static PayaraPlatformVersionAPI getServerVersion(final String serverHome) {
+        PayaraPlatformVersionAPI version = null;
         File commonUtilJar = getCommonUtilJarInModules(serverHome);
         if (commonUtilJar.canRead()) {
             try {
@@ -572,7 +573,7 @@ public class ServerUtils {
                     String versionString
                             = getVersionString(fullVersionString);
                     if (versionString != null) {
-                        version = PayaraVersion.toValue(versionString);
+                        version = PayaraPlatformVersion.toValue(versionString);
                     }
                 } catch (IllegalAccessException | IllegalArgumentException
                         | InvocationTargetException | NoSuchMethodException
@@ -588,7 +589,7 @@ public class ServerUtils {
                         String versionString = getVersionString(manifest
                                 .getMainAttributes().getValue(BUNDLE_VERSION));
                         if (versionString != null) {
-                            version = PayaraVersion.toValue(versionString);
+                            version = PayaraPlatformVersion.toValue(versionString);
                         }
                     } catch (IOException ioe) {
                         Logger.log(Level.WARNING, "Cannot retrieve Payara version: "

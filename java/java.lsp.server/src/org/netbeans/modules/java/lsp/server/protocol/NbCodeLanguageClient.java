@@ -46,4 +46,8 @@ public interface NbCodeLanguageClient extends LanguageClient {
      * @return code capabilities.
      */
     public NbCodeClientCapabilities getNbCodeCapabilities();
+    
+    public default boolean isRequestDispatcherThread() {
+        return Boolean.TRUE.equals(Server.DISPATCHERS.get());
+    }
 }

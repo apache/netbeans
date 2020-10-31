@@ -151,7 +151,6 @@ public final class PhpDocScript {
                 "run", // NOI18N
                 // params
                 "--ansi", // NOI18N
-                "--progressbar", // NOI18N
                 // from
                 "--directory", // NOI18N
                 sanitizePath(FileUtil.toFile(phpModule.getSourceDirectory()).getAbsolutePath()),

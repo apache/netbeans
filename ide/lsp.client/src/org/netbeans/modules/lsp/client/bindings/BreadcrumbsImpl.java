@@ -342,11 +342,13 @@ public class BreadcrumbsImpl implements BackgroundTask {
                     r = () -> {
                         setPreferredSize(sidebar.getPreferredSize());
                         setMaximumSize(sidebar.getMaximumSize());
+                        revalidate();
                     };
                 } else {
                     r = () -> {
                         setPreferredSize(new Dimension(0,0));
                         setMaximumSize(new Dimension(0,0));
+                        revalidate();
                     };
                 }
 

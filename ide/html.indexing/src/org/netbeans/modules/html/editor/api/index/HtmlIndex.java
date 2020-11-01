@@ -32,8 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.WeakHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
@@ -297,7 +295,7 @@ public class HtmlIndex {
         return filtered;
     }
 
-    public static class AllDependenciesMaps {
+    static class AllDependenciesMaps {
 
         Map<FileObject, Collection<FileReference>> source2dest, dest2source;
 

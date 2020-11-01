@@ -19,12 +19,17 @@
 package org.openide.io;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
 import java.util.Set;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JComponent;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.netbeans.api.io.Hyperlink;
@@ -34,6 +39,7 @@ import org.netbeans.spi.io.InputOutputProvider;
 import org.openide.util.Lookup;
 import org.openide.windows.IOColorPrint;
 import org.openide.windows.IOColors;
+import org.openide.windows.IOContainer;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
 import org.openide.windows.OutputWriter;
@@ -78,9 +84,37 @@ public class BridgingIOProviderTest {
         assertEquals("Null!", sb.toString());
     }
 
+    @Test
+    public void nullIOContainer() throws IOException {
+        MockIOP mock = new MockIOP();
+        IOProvider provider = BridgingIOProvider.create(mock);
+        Action testAction = new AbstractAction("test") {
+            @Override public void actionPerformed(ActionEvent e) {}
+        };
+        InputOutput io = provider.getIO("test", false, new Action[] {testAction}, null);
+        assertSame(testAction, mock.last.lookup.lookup(Action.class));
+    }
+
+    @Test
+    public void hasIOContainer() throws IOException {
+        MockIOP mock = new MockIOP();
+        IOProvider provider = BridgingIOProvider.create(mock);
+        Action testAction = new AbstractAction("test") {
+            @Override public void actionPerformed(ActionEvent e) {}
+        };
+        IOContainer ioContainer = IOContainer.create(new MockIOProvider());
+        InputOutput io = provider.getIO("test", false, new Action[] {testAction}, ioContainer);
+        assertSame(testAction, mock.last.lookup.lookup(Action.class));
+        assertSame(ioContainer, mock.last.lookup.lookup(IOContainer.class));
+    }
+
     private static class MockBuilder {
         final StringBuilder io = new StringBuilder();
         final PrintWriter out = new PrintWriter(new AppendWriter(io));
+        final Lookup lookup;
+        public MockBuilder(Lookup lookup) {
+            this.lookup = lookup;
+        }
     }
 
     private static final class MockIOP implements InputOutputProvider<MockBuilder, PrintWriter, Void, Void> {
@@ -103,7 +137,7 @@ public class BridgingIOProviderTest {
         @Override
         public MockBuilder getIO(String name, boolean newIO, Lookup lookup) {
             assertNull(last);
-            last = new MockBuilder();
+            last = new MockBuilder(lookup);
             return last;
         }
 
@@ -205,5 +239,53 @@ public class BridgingIOProviderTest {
         public void close() throws IOException {
         }
 
+    }
+
+    private static class MockIOProvider implements IOContainer.Provider {
+
+        @Override
+        public void open() {}
+
+        @Override
+        public void requestActive() {}
+
+        @Override
+        public void requestVisible() {}
+
+        @Override
+        public boolean isActivated() {
+            return false;
+        }
+
+        @Override
+        public void add(JComponent comp, IOContainer.CallBacks cb) {}
+
+        @Override
+        public void remove(JComponent comp) {}
+
+        @Override
+        public void select(JComponent comp) {}
+
+        @Override
+        public JComponent getSelected() {
+            return null;
+        }
+
+        @Override
+        public void setTitle(JComponent comp, String name) {}
+
+        @Override
+        public void setToolTipText(JComponent comp, String text) {}
+
+        @Override
+        public void setIcon(JComponent comp, Icon icon) {}
+
+        @Override
+        public void setToolbarActions(JComponent comp, Action[] toolbarActions) {}
+
+        @Override
+        public boolean isCloseable(JComponent comp) {
+            return false;
+        }
     }
 }

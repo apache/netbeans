@@ -10,7 +10,12 @@
 		"url": "https://github.com/apache/netbeans"
 	},
 	"publisher": "asf",
-	"categories": [],
+	"icon": "images/Apache_NetBeans_Logo.png",
+	"categories": [
+		"Programming Languages",
+		"Debuggers",
+		"Other"
+	],
 	"keywords": [
 		"multi-root ready"
 	],

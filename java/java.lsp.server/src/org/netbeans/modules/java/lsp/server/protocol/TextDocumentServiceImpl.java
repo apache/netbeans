@@ -1014,22 +1014,19 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             Document doc = ec.getDocument();
             // the document may be not opened yet. Clash with in-memory content can happen only if
             // the doc was opened prior to request reception.
-            if (doc != null) {
-                String text = params.getTextDocument().getText();
-                try {
-                    // could be faster with CharSequence, but requires a dependency on
-                    // org.netbeans.modules.editor.util
-                    if (!text.contentEquals(doc.getText(0, doc.getLength()))) {
-                        doc.remove(0, doc.getLength());
-                        doc.insertString(0, text, null);
-                    }
-                } catch (BadLocationException ex) {
-                    Exceptions.printStackTrace(ex);
-                    //TODO: include stack trace:
-                    client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+            String text = params.getTextDocument().getText();
+            try {
+                if (doc == null) {
+                    doc = ec.openDocument();
                 }
-            } else {
-                doc = ec.openDocument();
+                if (!text.contentEquals(doc.getText(0, doc.getLength()))) {
+                    doc.remove(0, doc.getLength());
+                    doc.insertString(0, text, null);
+                }
+            } catch (BadLocationException ex) {
+                Exceptions.printStackTrace(ex);
+                //TODO: include stack trace:
+                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
             }
             openedDocuments.put(params.getTextDocument().getUri(), doc);
             runDiagnoticTasks(params.getTextDocument().getUri());

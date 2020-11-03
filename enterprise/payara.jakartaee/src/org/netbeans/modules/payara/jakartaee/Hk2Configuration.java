@@ -92,7 +92,7 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
     // ------------------------------------------------------------------------
     @Override
     public Set<Datasource> getDatasources() throws ConfigurationException {
-        return Hk2DatasourceManager.getDatasources(module, platformVersion);
+        return Hk2DatasourceManager.getDatasources(module, getPlatformVersion());
     }
 
     @Override
@@ -105,7 +105,7 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
             final String jndiName, final String url, final String username,
             final String password, final String driver
     ) throws UnsupportedOperationException, ConfigurationException, DatasourceAlreadyExistsException {
-        return Hk2DatasourceManager.createDataSource(jndiName, url, username, password, driver, module, platformVersion);
+        return Hk2DatasourceManager.createDataSource(jndiName, url, username, password, driver, module, getPlatformVersion());
     }
 
     // ------------------------------------------------------------------------

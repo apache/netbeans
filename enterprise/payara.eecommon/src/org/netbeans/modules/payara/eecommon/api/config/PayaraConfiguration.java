@@ -260,7 +260,7 @@ public abstract class PayaraConfiguration implements
     @Deprecated
     protected PayaraVersion version;
     /** Payara Platform Version. */
-    protected PayaraPlatformVersionAPI platformVersion;
+    private PayaraPlatformVersionAPI platformVersion;
     private ASDDVersion appServerVersion;
     private ASDDVersion minASVersion;
     private ASDDVersion maxASVersion;
@@ -293,14 +293,14 @@ public abstract class PayaraConfiguration implements
      * {@link J2eeModuleHelper} instance is added depending on Java EE module type.
      * <p/>
      * @param module  Java EE module (project).
-     * @param version Payara server platformVersion.
+     * @param platformVersion Payara Platform Version.
      * @throws ConfigurationException when there is a problem with Java EE server
      *         configuration initialization.
      */
     protected PayaraConfiguration(
-            final J2eeModule module, final PayaraPlatformVersionAPI version
+            final J2eeModule module, final PayaraPlatformVersionAPI platformVersion
     ) throws ConfigurationException {
-        this(module, J2eeModuleHelper.getSunDDModuleHelper(module.getType()), version);
+        this(module, J2eeModuleHelper.getSunDDModuleHelper(module.getType()), platformVersion);
     }
 
     /**
@@ -309,18 +309,18 @@ public abstract class PayaraConfiguration implements
      * <p/>
      * @param module       Java EE module (project).
      * @param moduleHelper Already existing {@link J2eeModuleHelper} instance.
-     * @param version      Payara server platformVersion.
+     * @param platformVersion      Payara Platform Version.
      * @throws ConfigurationException when there is a problem with Java EE server
      *         configuration initialization.
      */
     @SuppressWarnings("LeakingThisInConstructor")
     protected PayaraConfiguration(
             final J2eeModule module, final J2eeModuleHelper moduleHelper,
-            final PayaraPlatformVersionAPI version
+            final PayaraPlatformVersionAPI platformVersion
     ) throws ConfigurationException {
         this.module = module;
         this.moduleHelper = moduleHelper;
-        this.platformVersion = version;
+        this.platformVersion = platformVersion;
         if(moduleHelper != null) {
             this.primaryDD = moduleHelper.getPrimaryDDFile(module);
             this.secondaryDD = moduleHelper.getSecondaryDDFile(module);
@@ -434,6 +434,10 @@ public abstract class PayaraConfiguration implements
 
     public ASDDVersion getMaxASVersion() {
         return maxASVersion;
+    }
+
+    protected PayaraPlatformVersionAPI getPlatformVersion() {
+        return platformVersion;
     }
 
     /** Get the AppServer version to be used for saving deployment descriptors.

@@ -1243,7 +1243,6 @@ fld protected final org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModu
 fld protected final org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper moduleHelper
 fld protected org.netbeans.modules.payara.eecommon.api.config.DescriptorListener descriptorListener
 fld protected org.netbeans.modules.payara.tooling.data.PayaraVersion version
-fld protected org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI platformVersion
 innr public final static !enum ChangeOperation
 intf org.netbeans.modules.j2ee.deployment.plugins.spi.config.ContextRootConfiguration
 intf org.netbeans.modules.j2ee.deployment.plugins.spi.config.DatasourceConfiguration
@@ -1259,6 +1258,7 @@ meth protected void createDefaultSunDD(java.io.File) throws java.io.IOException
 meth protected void displayError(java.lang.Exception,java.lang.String)
 meth protected void handleEventRelatedException(java.lang.Exception)
 meth protected void handleEventRelatedIOException(java.io.IOException)
+meth protected org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPlatformVersion()
 meth public <%0 extends java.lang.Object> org.netbeans.modules.j2ee.metadata.model.api.MetadataModel<{%%0}> getMetadataModel(java.lang.Class<{%%0}>)
 meth public abstract boolean supportsCreateDatasource()
 meth public abstract boolean supportsCreateMessageDestination()

@@ -65,6 +65,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.openide.LifecycleManager;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -213,10 +214,15 @@ public final class Server {
             }
         }
         
-        private void showIndexingCompleted() {
+        private JavaSource showIndexingCompleted(Project[] opened) {
             try {
-                JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY))
-                          .runWhenScanFinished(cc -> {
+                final ClasspathInfo info = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY);
+                final JavaSource source = JavaSource.create(info);
+                if (source == null) {
+                    client.showMessage(new ShowStatusMessageParams(MessageType.Error, NO_JAVA_SUPPORT, 0));
+                    return null;
+                }
+                source.runWhenScanFinished(cc -> {
                   if (client.getNbCodeCapabilities().hasStatusBarMessageSupport()) {
                         client.showStatusBarMessage(new ShowStatusMessageParams(MessageType.Info, INDEXING_COMPLETED, 0));
                   } else {
@@ -224,24 +230,27 @@ public final class Server {
                   }
                   //todo: refresh diagnostics all open editor?
                 }, true);
+                return source;
             } catch (IOException ex) {
                 throw new IllegalStateException(ex);
             }
         }
         
-        private InitializeResult constructInitResponse() {
+        private InitializeResult constructInitResponse(JavaSource src) {
             ServerCapabilities capabilities = new ServerCapabilities();
-            capabilities.setTextDocumentSync(TextDocumentSyncKind.Incremental);
-            CompletionOptions completionOptions = new CompletionOptions();
-            completionOptions.setResolveProvider(true);
-            completionOptions.setTriggerCharacters(Collections.singletonList("."));
-            capabilities.setCompletionProvider(completionOptions);
-            capabilities.setCodeActionProvider(true);
-            capabilities.setDocumentSymbolProvider(true);
-            capabilities.setDefinitionProvider(true);
-            capabilities.setDocumentHighlightProvider(true);
-            capabilities.setReferencesProvider(true);
-            capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(Arrays.asList(JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT)));
+            if (src != null) {
+                capabilities.setTextDocumentSync(TextDocumentSyncKind.Incremental);
+                CompletionOptions completionOptions = new CompletionOptions();
+                completionOptions.setResolveProvider(true);
+                completionOptions.setTriggerCharacters(Collections.singletonList("."));
+                capabilities.setCompletionProvider(completionOptions);
+                capabilities.setCodeActionProvider(true);
+                capabilities.setDocumentSymbolProvider(true);
+                capabilities.setDefinitionProvider(true);
+                capabilities.setDocumentHighlightProvider(true);
+                capabilities.setReferencesProvider(true);
+                capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(Arrays.asList(JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT)));
+            }
             return new InitializeResult(capabilities);
         }
         
@@ -276,8 +285,8 @@ public final class Server {
             SERVER_INIT_RP.post(() -> asyncOpenSelectedProjects(fProjects, projectCandidates));
             
             return fProjects.
-                    thenRun(this::showIndexingCompleted).
-                    thenApply((v) -> constructInitResponse());
+                    thenApply(this::showIndexingCompleted).
+                    thenApply(this::constructInitResponse);
         }
 
         @Override
@@ -319,6 +328,7 @@ public final class Server {
     public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
     static final String INDEXING_COMPLETED = "Indexing completed.";
+    static final String NO_JAVA_SUPPORT = "Cannot initialize Java support.";
     
     static final NbCodeLanguageClient STUB_CLIENT = new NbCodeLanguageClient() {
         private final NbCodeClientCapabilities caps = new NbCodeClientCapabilities();

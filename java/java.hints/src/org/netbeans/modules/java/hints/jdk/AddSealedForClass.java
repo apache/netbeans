@@ -121,12 +121,12 @@ public class AddSealedForClass {
                 }
             }
         }
-        for (int i = 0; i < currentSubClasses.size(); i++) {
-            Collection<Modifier> modifiers = currentSubClasses.get(i).getModifiers();
-            if (!modifiers.contains(TreeShims.getSealed()) && !modifiers.contains(TreeShims.getNonSealed()) && !modifiers.contains(Modifier.FINAL)) {
-                return null;
-            }
-        }
+//        for (int i = 0; i < currentSubClasses.size(); i++) {
+//            Collection<Modifier> modifiers = currentSubClasses.get(i).getModifiers();
+//            if (!modifiers.contains(TreeShims.getSealed()) && !modifiers.contains(TreeShims.getNonSealed()) && !modifiers.contains(Modifier.FINAL)) {
+//                return null;
+//            }
+//        }
         if (currentSubClasses.isEmpty()) {
             return null;
         }

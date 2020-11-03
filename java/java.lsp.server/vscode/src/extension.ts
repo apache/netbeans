@@ -250,6 +250,7 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
                         srv.disconnect();
                         return;
                     }
+                    debugPort = -1;
                     srv.stdout.on("data", (chunk) => {
                         if (debugPort < 0) {
                             const info = chunk.toString().match(/Debug Server Adapter listening at port (\d*)/);

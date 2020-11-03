@@ -297,31 +297,55 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
         log.append(reason);
         window.showErrorMessage('Error initializing ' + reason);
     });
-}
 
-function showStatusBarMessage(params : ShowStatusMessageParams) {
-    let decorated : string = params.message;
-    let defTimeout;
+    function showStatusBarMessage(params : ShowStatusMessageParams) {
+        let decorated : string = params.message;
+        let defTimeout;
 
-    switch (params.type) {
-        case MessageType.Error:
-            decorated = '$(error) ' + params.message;
-            defTimeout = 0;
-            break;
-        case MessageType.Warning:
-            decorated = '$(warning) ' + params.message;
-            defTimeout = 0;
-            break;
-        default:
-            defTimeout = 10000;
-            break;
+        switch (params.type) {
+            case MessageType.Error:
+                decorated = '$(error) ' + params.message;
+                defTimeout = 0;
+                checkInstallNbJavac(params.message);
+                break;
+            case MessageType.Warning:
+                decorated = '$(warning) ' + params.message;
+                defTimeout = 0;
+                break;
+            default:
+                defTimeout = 10000;
+                break;
+        }
+        // params.timeout may be defined but 0 -> should be used
+        const timeout = params.timeout != undefined ? params.timeout : defTimeout;
+        if (timeout > 0) {
+            window.setStatusBarMessage(decorated, timeout);
+        } else {
+            window.setStatusBarMessage(decorated);
+        }
     }
-    // params.timeout may be defined but 0 -> should be used
-    const timeout = params.timeout != undefined ? params.timeout : defTimeout;
-    if (timeout > 0) {
-        window.setStatusBarMessage(decorated, timeout);
-    } else {
-        window.setStatusBarMessage(decorated);
+
+    function checkInstallNbJavac(msg : string) {
+        const NO_JAVA_SUPPORT = "Cannot initialize Java support";
+        if (msg.startsWith(NO_JAVA_SUPPORT)) {
+            const yes = "Install GPLv2+CPEx code";
+            window.showErrorMessage("Additional Java Support is needed", yes).then(reply => {
+                if (yes === reply) {
+                    let installProcess = launcher.launch(info, "--modules", "--install", ".*nbjavac.*");
+                    let logData = function(d: any) {
+                        log.append(d.toString());
+                    };
+                    installProcess.stdout.on('data', logData);
+                    installProcess.stderr.on('data', logData);
+                    installProcess.on('close', function(code: number) {
+                        log.append("Additional Java Support installed with exit code " + code);
+                        if (nbProcess) {
+                            nbProcess.kill();
+                        }
+                    });
+                }
+            });
+        }
     }
 }
 

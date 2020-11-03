@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -65,7 +63,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
-import org.openide.LifecycleManager;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -219,20 +216,26 @@ public final class Server {
                 final ClasspathInfo info = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY);
                 final JavaSource source = JavaSource.create(info);
                 if (source == null) {
-                    client.showMessage(new ShowStatusMessageParams(MessageType.Error, NO_JAVA_SUPPORT, 0));
-                    return null;
+                    SERVER_INIT_RP.post(() -> {
+                        final String msg = NO_JAVA_SUPPORT + System.getProperty("java.version");
+                        showStatusBarMessage(MessageType.Error, msg, 5000);
+                    });
+                } else {
+                    source.runWhenScanFinished(cc -> {
+                        showStatusBarMessage(MessageType.Info, INDEXING_COMPLETED, 0);
+                    }, true);
                 }
-                source.runWhenScanFinished(cc -> {
-                  if (client.getNbCodeCapabilities().hasStatusBarMessageSupport()) {
-                        client.showStatusBarMessage(new ShowStatusMessageParams(MessageType.Info, INDEXING_COMPLETED, 0));
-                  } else {
-                        client.showMessage(new ShowStatusMessageParams(MessageType.Info, INDEXING_COMPLETED, 0));
-                  }
-                  //todo: refresh diagnostics all open editor?
-                }, true);
                 return source;
             } catch (IOException ex) {
                 throw new IllegalStateException(ex);
+            }
+        }
+
+        private void showStatusBarMessage(final MessageType type, final String msg, int timeout) {
+            if (client.getNbCodeCapabilities().hasStatusBarMessageSupport()) {
+                client.showStatusBarMessage(new ShowStatusMessageParams(type, msg, timeout));
+            } else {
+                client.showMessage(new ShowStatusMessageParams(type, msg, timeout));
             }
         }
         
@@ -328,7 +331,7 @@ public final class Server {
     public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
     static final String INDEXING_COMPLETED = "Indexing completed.";
-    static final String NO_JAVA_SUPPORT = "Cannot initialize Java support.";
+    static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";
     
     static final NbCodeLanguageClient STUB_CLIENT = new NbCodeLanguageClient() {
         private final NbCodeClientCapabilities caps = new NbCodeClientCapabilities();

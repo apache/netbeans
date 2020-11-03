@@ -704,7 +704,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
         PayaraPlatformVersionAPI version = null;
         try {
             version = dm
-                    .getCommonServerSupport().getInstance().getVersion();
+                    .getCommonServerSupport().getInstance().getPlatformVersion();
         } catch (NullPointerException npe) {
             Logger.getLogger("payara-jakartaee").log(Level.INFO,
                     "Caught NullPointerException in Hk2JavaEEPlatformImpl "
@@ -1010,7 +1010,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
             PayaraPlatformVersionAPI version = null;
             try {
                 version = dm
-                        .getCommonServerSupport().getInstance().getVersion();
+                        .getCommonServerSupport().getInstance().getPlatformVersion();
             } catch (NullPointerException npe) {
                 Logger.getLogger("payara-jakartaee").log(Level.INFO,
                         "Caught NullPointerException in Hk2JavaEEPlatformImpl "

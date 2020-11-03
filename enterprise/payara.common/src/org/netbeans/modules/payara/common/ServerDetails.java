@@ -265,7 +265,7 @@ public enum ServerDetails implements PayaraPlatformVersionAPI {
         }
 
         PayaraPlatformVersionAPI version
-                = ServerUtils.getServerVersion(payaraDir.getAbsolutePath());
+                = ServerUtils.getPlatformVersion(payaraDir.getAbsolutePath());
         Optional<ServerDetails> serverDetails = Optional.empty();
         if (version != null) {
             serverDetails = Arrays

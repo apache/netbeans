@@ -83,7 +83,7 @@ public class AutomaticRegistration {
         String config = "PayaraEE6/Instances";
         String deployer = "deployer:pfv3ee6";
         String defaultDisplayNamePrefix = "Payara Server ";
-        PayaraPlatformVersionAPI version = ServerUtils.getServerVersion(payaraRoot);
+        PayaraPlatformVersionAPI version = ServerUtils.getPlatformVersion(payaraRoot);
         StringBuilder sb = new StringBuilder(
                 defaultDisplayNamePrefix.length() + 12);
         if (version != null) {

@@ -155,8 +155,8 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
             if (defaultProvider == null) {
                 // Unknown version is as the worst known case.
                 JpaSupportVector instanceJpaSupport
-                        = jpaSupport.get(instance.getVersion() != null
-                                ? instance.getVersion().toString()
+                        = jpaSupport.get(instance.getPlatformVersion() != null
+                                ? instance.getPlatformVersion().toString()
                                 : PayaraPlatformVersion.getLatestVersion().toString());
                 defaultProvider = JpaProviderFactory.createJpaProvider(
                         JPA_PROVIDER, true, instanceJpaSupport._1_0,

@@ -55,7 +55,7 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
      * for Payara servers before 3.1.
      * <p/>
      * @param module Java EE module (project).
-     * @param version Payara server version.
+     * @param version Payara server platformVersion.
      * @throws ConfigurationException when there is a problem with Java EE server
      *         configuration initialization.
      */
@@ -71,7 +71,7 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
      * <p/>
      * @param module Java EE module (project).
      * @param moduleHelper Already existing {@link J2eeModuleHelper} instance.
-     * @param version Payara server version.
+     * @param version Payara server platformVersion.
      * @throws ConfigurationException when there is a problem with Java EE server
      * configuration initialization.
      */
@@ -92,7 +92,7 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
     // ------------------------------------------------------------------------
     @Override
     public Set<Datasource> getDatasources() throws ConfigurationException {
-        return Hk2DatasourceManager.getDatasources(module, version);
+        return Hk2DatasourceManager.getDatasources(module, platformVersion);
     }
 
     @Override
@@ -105,8 +105,7 @@ public class Hk2Configuration extends PayaraConfiguration implements DeploymentC
             final String jndiName, final String url, final String username,
             final String password, final String driver
     ) throws UnsupportedOperationException, ConfigurationException, DatasourceAlreadyExistsException {
-        return Hk2DatasourceManager.createDataSource(
-                jndiName, url, username, password, driver, module, version);
+        return Hk2DatasourceManager.createDataSource(jndiName, url, username, password, driver, module, platformVersion);
     }
 
     // ------------------------------------------------------------------------

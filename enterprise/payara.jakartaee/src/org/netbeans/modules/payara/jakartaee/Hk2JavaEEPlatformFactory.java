@@ -171,10 +171,10 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
         if (dm instanceof Hk2DeploymentManager) {
             final PayaraServer server = ((Hk2DeploymentManager)dm)
                     .getCommonServerSupport().getInstance();
-            final PayaraPlatformVersionAPI version = server.getVersion();
+            final PayaraPlatformVersionAPI version = server.getPlatformVersion();
             final ConfigBuilder cb = ConfigBuilderProvider.getBuilder(server);
-            final PayaraJavaSEConfig javaSEConfig = cb.getJavaSEConfig(version);
-            final PayaraJavaEEConfig javaEEConfig = cb.getJavaEEConfig(version);
+            final PayaraJavaSEConfig javaSEConfig = cb.getPlatformJavaSEConfig(version);
+            final PayaraJavaEEConfig javaEEConfig = cb.getPlatformJavaEEConfig(version);
             final String[] platforms = Hk2JavaEEPlatformImpl.nbJavaSEProfiles(
                     javaSEConfig.getPlatforms());
             final Profile[] profiles = Hk2JavaEEPlatformImpl

@@ -330,7 +330,7 @@ public abstract class CommonTest {
         if (version == null) {
             LOGGER.log(Level.WARNING, METHOD, "unknownVersion", PFPROP_ADMIN_PORT);
         }
-        server.setVersion(version);
+        server.setPlatformVersion(version);
         PayaraAdminInterface adminInterface =
                 PayaraAdminInterface.toValue(
                 getPayaraProperty(pClass, pMeth, PFPROP_ADMIN_INTERFACE));

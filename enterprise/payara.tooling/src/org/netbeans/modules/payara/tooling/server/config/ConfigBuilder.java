@@ -30,6 +30,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraJavaSEConfig;
 import org.netbeans.modules.payara.tooling.data.PayaraLibrary;
 import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.data.PayaraConfig;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 
 /**
  * Provides Payara library information from XML configuration files.
@@ -222,19 +223,9 @@ public class ConfigBuilder {
         }
     }
 
-    /**
-     * Get Payara libraries configured for provided Payara version.
-     * <p/>
-     * This method shall not be used with multiple Payara versions
-     * for the same instance of {@link ConfigBuilder} class.
-     * <p/>
-     * @param version Payara version.
-     * @return List of libraries configured for Payara of given version.
-     * @throws ServerConfigException when builder instance is used with multiple
-     *         Payara versions.
-     */
+    @Deprecated
     public List<PayaraLibrary> getLibraries(
-            final PayaraPlatformVersionAPI version) throws ServerConfigException {
+            final PayaraVersion version) throws ServerConfigException {
         versionCheck(version);
         synchronized (this) {
             if (libraryCache != null) {
@@ -243,6 +234,69 @@ public class ConfigBuilder {
             PayaraConfig configAdapter
                     = PayaraConfigManager.getConfig(
                             ConfigBuilderProvider.getBuilderConfig(version));
+            List<LibraryNode> libConfigs
+                    = configAdapter.getLibrary();
+            libraryCache = getLibraries(
+                    libConfigs, classpathHome, javadocsHome, srcHome);
+            return libraryCache;
+        }
+    }
+
+    @Deprecated
+    public PayaraJavaEEConfig getJavaEEConfig(
+            final PayaraVersion version) throws ServerConfigException {
+        versionCheck(version);
+        synchronized (this) {
+            if (javaEEConfigCache != null) {
+                return javaEEConfigCache;
+            }
+            PayaraConfig configAdapter
+                    = PayaraConfigManager.getConfig(
+                            ConfigBuilderProvider.getBuilderConfig(version));
+            javaEEConfigCache = new PayaraJavaEEConfig(
+                    configAdapter.getJavaEE(), classpathHome);
+            return javaEEConfigCache;
+        }
+    }
+
+    @Deprecated
+    public PayaraJavaSEConfig getJavaSEConfig(
+            final PayaraVersion version) throws ServerConfigException {
+        versionCheck(version);
+        synchronized (this) {
+            if (javaSEConfigCache != null) {
+                return javaSEConfigCache;
+            }
+            PayaraConfig configAdapter
+                    = PayaraConfigManager.getConfig(
+                            ConfigBuilderProvider.getBuilderConfig(version));
+            javaSEConfigCache = new PayaraJavaSEConfig(
+                    configAdapter.getJavaSE());
+            return javaSEConfigCache;
+        }
+    }
+
+    /**
+     * Get Payara libraries configured for provided Payara version.
+     * <p/>
+     * This method shall not be used with multiple Payara versions
+     * for the same instance of {@link ConfigBuilder} class.
+     * <p/>
+     * @param version Payara Platform version.
+     * @return List of libraries configured for Payara of given version.
+     * @throws ServerConfigException when builder instance is used with multiple
+     *         Payara versions.
+     */
+    public List<PayaraLibrary> getPlatformLibraries(
+            final PayaraPlatformVersionAPI version) throws ServerConfigException {
+        versionCheck(version);
+        synchronized (this) {
+            if (libraryCache != null) {
+                return libraryCache;
+            }
+            PayaraConfig configAdapter
+                    = PayaraConfigManager.getConfig(
+                            ConfigBuilderProvider.getPlatformBuilderConfig(version));
             List<LibraryNode> libConfigs
                     = configAdapter.getLibrary();
             libraryCache = getLibraries(
@@ -263,7 +317,7 @@ public class ConfigBuilder {
      * @throws ServerConfigException when builder instance is used with multiple
      *         Payara versions.
      */
-    public PayaraJavaEEConfig getJavaEEConfig(
+    public PayaraJavaEEConfig getPlatformJavaEEConfig(
             final PayaraPlatformVersionAPI version) throws ServerConfigException {
         versionCheck(version);
         synchronized (this) {
@@ -272,7 +326,7 @@ public class ConfigBuilder {
             }
             PayaraConfig configAdapter
                     = PayaraConfigManager.getConfig(
-                            ConfigBuilderProvider.getBuilderConfig(version));
+                            ConfigBuilderProvider.getPlatformBuilderConfig(version));
             javaEEConfigCache = new PayaraJavaEEConfig(
                     configAdapter.getJavaEE(), classpathHome);
             return javaEEConfigCache;
@@ -291,7 +345,7 @@ public class ConfigBuilder {
      * @throws ServerConfigException when builder instance is used with multiple
      *         Payara versions.
      */
-    public PayaraJavaSEConfig getJavaSEConfig(
+    public PayaraJavaSEConfig getPlatformJavaSEConfig(
             final PayaraPlatformVersionAPI version) throws ServerConfigException {
         versionCheck(version);
         synchronized (this) {
@@ -300,7 +354,7 @@ public class ConfigBuilder {
             }
             PayaraConfig configAdapter
                     = PayaraConfigManager.getConfig(
-                            ConfigBuilderProvider.getBuilderConfig(version));
+                            ConfigBuilderProvider.getPlatformBuilderConfig(version));
             javaSEConfigCache = new PayaraJavaSEConfig(
                     configAdapter.getJavaSE());
             return javaSEConfigCache;

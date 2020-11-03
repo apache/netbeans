@@ -153,7 +153,7 @@ public class Hk2DatasourceManager implements DatasourceManager {
             // XXX This won't read app scoped DS. This does not seem to be a problem.
             File domainXml = new File(domainsDir, domainName + File.separatorChar + DOMAIN_XML_PATH);
             return readDatasources(
-                    domainXml, "/domain/", null, server.getVersion(), false);
+                    domainXml, "/domain/", null, server.getPlatformVersion(), false);
         } else {
             return Collections.emptySet();
         }

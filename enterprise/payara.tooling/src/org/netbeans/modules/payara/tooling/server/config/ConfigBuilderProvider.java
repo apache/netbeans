@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 
 /**
  * Configuration builder provider.
@@ -73,7 +74,18 @@ public class ConfigBuilderProvider {
      * @param version Payara server version.
      * @return Library builder configuration for given Payara server version.
      */
-    public static URL getBuilderConfig(final PayaraPlatformVersionAPI version) {
+    @Deprecated
+    public static URL getBuilderConfig(final PayaraVersion version) {
+        return config.configFiles.get(version.getMajor());
+    }
+
+    /**
+     * Get library builder configuration for given Payara Platform version.
+     * <p/>
+     * @param version Payara Platform version.
+     * @return Library builder configuration for given Payara Platform version.
+     */
+    public static URL getPlatformBuilderConfig(final PayaraPlatformVersionAPI version) {
         return config.configFiles.get(version.getMajor());
     }
 

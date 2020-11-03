@@ -154,7 +154,7 @@ public class ServerUtils {
      * @return Domains folder.
      */
     public static String getDomainsFolder(@NonNull PayaraInstance instance) {
-        PayaraPlatformVersionAPI version = instance.getVersion();
+        PayaraPlatformVersionAPI version = instance.getPlatformVersion();
         if (version == null) {
             throw new IllegalStateException(NbBundle.getMessage(PayaraInstance.class,
                     "PayaraInstance.getDomainsFolder.versionIsNull",

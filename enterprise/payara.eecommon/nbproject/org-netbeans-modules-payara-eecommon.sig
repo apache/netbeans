@@ -1231,6 +1231,8 @@ supr java.lang.Enum<org.netbeans.modules.payara.eecommon.api.config.JavaEEModule
 hfds LOGGER,j2eeModuleTypeToValue,moduleType
 
 CLSS public abstract org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration
+cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper,org.netbeans.modules.payara.tooling.data.PayaraVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 cons public init()
@@ -1240,7 +1242,8 @@ fld protected final java.io.File secondaryDD
 fld protected final org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule module
 fld protected final org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper moduleHelper
 fld protected org.netbeans.modules.payara.eecommon.api.config.DescriptorListener descriptorListener
-fld protected org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI version
+fld protected org.netbeans.modules.payara.tooling.data.PayaraVersion version
+fld protected org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI platformVersion
 innr public final static !enum ChangeOperation
 intf org.netbeans.modules.j2ee.deployment.plugins.spi.config.ContextRootConfiguration
 intf org.netbeans.modules.j2ee.deployment.plugins.spi.config.DatasourceConfiguration
@@ -1265,6 +1268,8 @@ meth public abstract org.netbeans.modules.j2ee.deployment.common.api.Datasource 
 meth public abstract org.netbeans.modules.j2ee.deployment.common.api.MessageDestination createMessageDestination(java.lang.String,org.netbeans.modules.j2ee.deployment.common.api.MessageDestination$Type) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 meth public final org.netbeans.modules.j2ee.dd.api.common.RootInterface getStandardRootDD()
 meth public final org.netbeans.modules.j2ee.dd.api.webservices.Webservices getWebServicesRootDD()
+meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getExistingResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion)
+meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getNewResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion)
 meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getExistingResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getNewResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public java.lang.String findDatasourceJndiName(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException

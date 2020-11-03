@@ -92,7 +92,7 @@ abstract class AbstractHk2ConfigurationFactory implements ModuleConfigurationFac
                 = PayaraInstanceProvider.getProvider()
                 .getPayaraInstance(instanceUrl);
         final PayaraPlatformVersionAPI version = instance != null
-                ? instance.getVersion() : null;
+                ? instance.getPlatformVersion() : null;
         try {
             final Hk2DeploymentManager dm = hk2dm != null
                     ? hk2dm

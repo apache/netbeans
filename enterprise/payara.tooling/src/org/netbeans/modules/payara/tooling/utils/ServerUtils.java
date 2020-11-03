@@ -39,6 +39,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
 import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.logging.Logger;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 
 /**
  * Common utilities.
@@ -543,8 +544,63 @@ public class ServerUtils {
         return null;
     }
 
+    @Deprecated
+    public static PayaraVersion getServerVersion(final String serverHome) {
+        PayaraVersion version = null;
+        File commonUtilJar = getCommonUtilJarInModules(serverHome);
+        if (commonUtilJar.canRead()) {
+            try {
+                ClassLoader cl = new URLClassLoader(new URL[]{commonUtilJar.
+                    toURI().toURL()});
+                Class c = cl.loadClass(VERSION_CLASS);
+                // Try to get version from com.sun.appserv.server.util.Version.
+                try {
+                    Method mGetFullVersion = c.getMethod(FULL_VERSION_METHOD);
+                    System.getProperties().put(PF_HOME_PROPERTY, serverHome);
+                    String fullVersionString
+                            = (String) mGetFullVersion.invoke(c);
+                    System.getProperties().remove(PF_HOME_PROPERTY);
+                    String versionString
+                            = getVersionString(fullVersionString);
+                    if (versionString != null) {
+                        version = PayaraVersion.toValue(versionString);
+                    }
+                } catch (IllegalAccessException | IllegalArgumentException
+                        | InvocationTargetException | NoSuchMethodException
+                        | SecurityException | NoClassDefFoundError ex) {
+                    Logger.log(Level.WARNING, "Cannot retrieve Payara version: "
+                            + commonUtilJar.getAbsolutePath() + ": ", ex);
+                }
+                // Use Manifest Bundle-Version as fallback option.
+                if (version == null) {
+                    try {
+                        JarFile jar = new JarFile(commonUtilJar);
+                        Manifest manifest = jar.getManifest();
+                        String versionString = getVersionString(manifest
+                                .getMainAttributes().getValue(BUNDLE_VERSION));
+                        if (versionString != null) {
+                            version = PayaraVersion.toValue(versionString);
+                        }
+                    } catch (IOException ioe) {
+                        Logger.log(Level.WARNING, "Cannot retrieve Payara version: "
+                                + commonUtilJar.getAbsolutePath() + ": ", ioe);
+                    }
+                }
+            } catch (MalformedURLException | ClassNotFoundException ex) {
+                Logger.log(Level.WARNING, "Cannot retrieve Payara version: "
+                        + commonUtilJar.getAbsolutePath() + ": ", ex);
+            }
+        } else {
+            Logger.log(Level.WARNING, "Cannot retrieve Payara version: "
+                    + commonUtilJar.getAbsolutePath() + " is not readable:"
+                    + " Exists: " + commonUtilJar.exists()
+                    + " Can read: " + commonUtilJar.canRead(), (Throwable) null);
+        }
+        return version;
+    }
+
     /**
-     * Retrieve Payara version from local installation using file access.
+     * Retrieve Payara Platform version from local installation using file access.
      * <p/>
      * Payara version is read from modules <code>common-util.jar</code>
      * archive and <code>com.sun.appserv.server.util.Version</code> class.
@@ -555,7 +611,7 @@ public class ServerUtils {
      * @param serverHome Payara server home directory.
      * @return Payara server version.
      */
-    public static PayaraPlatformVersionAPI getServerVersion(final String serverHome) {
+    public static PayaraPlatformVersionAPI getPlatformVersion(final String serverHome) {
         PayaraPlatformVersionAPI version = null;
         File commonUtilJar = getCommonUtilJarInModules(serverHome);
         if (commonUtilJar.canRead()) {

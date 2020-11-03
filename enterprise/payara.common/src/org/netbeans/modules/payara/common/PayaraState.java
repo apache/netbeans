@@ -120,9 +120,9 @@ public class PayaraState {
                     PayaraStatus.OFFLINE, PayaraStatus.STARTUP,
                     PayaraStatus.ONLINE, PayaraStatus.SHUTDOWN);
             if (added) {
-                if (instance.getVersion() != null) {
+                if (instance.getPlatformVersion() != null) {
                    AuthFailureStateListener authListener
-                            = new AuthFailureStateListener(instance.getVersion().isMinimumSupportedVersion());
+                            = new AuthFailureStateListener(instance.getPlatformVersion().isMinimumSupportedVersion());
                     PayaraStatus.addChangeListener(instance, authListener, PayaraStatus.STARTUP);
                     PayaraStatus.addErrorListener(instance, authListener);
                 }

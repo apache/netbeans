@@ -69,7 +69,7 @@ public class PayaraPlatformDetails {
         if (payaraDir == null) {
             return serverDetails;
         }
-        return Optional.ofNullable(ServerUtils.getServerVersion(payaraDir.getAbsolutePath()));
+        return Optional.ofNullable(ServerUtils.getPlatformVersion(payaraDir.getAbsolutePath()));
     }
 
 }

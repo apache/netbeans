@@ -68,11 +68,11 @@ public class ConfigBuilderTest extends CommonTest {
         PayaraServer server = CommandHttpTest.payaraServer();
         File home = new File(server.getServerHome());
         ConfigBuilder lb = new ConfigBuilder(libraryConfig, home, home, home);
-        List<PayaraLibrary> lib = lb.getLibraries(
+        List<PayaraLibrary> lib = lb.getPlatformLibraries(
                 PayaraPlatformVersion.getLatestVersion());
         assertNotNull(lib);
         try {
-            lb.getLibraries(PayaraPlatformVersion.getVersionMap().get("4.1.1.161"));
+            lb.getPlatformLibraries(PayaraPlatformVersion.getVersionMap().get("4.1.1.161"));
             fail("Library builder could not work for more than one Payara"
                     + " version with a single server instance.");
         } catch (ServerConfigException sce) {}
@@ -86,11 +86,11 @@ public class ConfigBuilderTest extends CommonTest {
         PayaraServer server = CommandRestTest.payaraServer();
         File home = new File(server.getServerHome());
         ConfigBuilder lb = new ConfigBuilder(libraryConfig, home, home, home);
-        List<PayaraLibrary> lib = lb.getLibraries(
+        List<PayaraLibrary> lib = lb.getPlatformLibraries(
                 PayaraPlatformVersion.getLatestVersion());
         assertNotNull(lib);
         try {
-            lb.getLibraries(PayaraPlatformVersion.getVersionMap().get("4.1.1.161"));
+            lb.getPlatformLibraries(PayaraPlatformVersion.getVersionMap().get("4.1.1.161"));
             fail("Library builder could not work for more than one Payara"
                     + " version with a single server instance.");
         } catch (ServerConfigException sce) {}

@@ -93,7 +93,47 @@ public class Config {
     /**
      * Configuration files.
      */
-    final Map<Short, URL> configFiles = new HashMap<>();
+    final Map<Short, URL> libraryConfigFiles = new HashMap<>();
+    
+    
+    /** Configuration files. */
+    @Deprecated
+    final URL[] configFiles;
+
+    /** Version to configuration file mapping table. */
+    @Deprecated
+    final int[] index;
+    
+    /**
+     * Creates an instance of library builder configuration.
+     * <p/>
+     * @param defaultConfig Default libraries configuration file.
+     * @param nextConfig    Next libraries configuration file(s) starting from
+     *                      provided version. Versions must be passed
+     *                      in ascending order.
+     */
+    @Deprecated
+    public Config(URL defaultConfig,
+            Next... nextConfig) {
+        int indexSize
+                = nextConfig == null ? 1 : nextConfig.length + 1;        
+        index = new int[PayaraVersion.length];        
+        configFiles = new URL[indexSize];
+        int i = 0;
+        configFiles[i] = defaultConfig;
+        Next config = nextConfig != null && i < nextConfig.length
+                ? nextConfig[i] : null;
+        for (PayaraVersion version : PayaraVersion.values()) {
+            int versionIndex = version.ordinal();
+            if (config != null
+                    && config.majorVersion <= version.getMajor()) {
+                configFiles[++i] = config.configFile;
+                config = i < nextConfig.length
+                        ? nextConfig[i] : null;
+            }
+            index[versionIndex] = i;
+        }
+    }
 
     /**
      * Creates an instance of library builder configuration.
@@ -102,9 +142,10 @@ public class Config {
      * provided version. Major versions must be passed in ascending order.
      */
     public Config(Next... nextConfig) {
+        configFiles = null;
+        index = null;
         for (Next next : nextConfig) {
-            configFiles.put(next.majorVersion, next.configFile);
-
+            libraryConfigFiles.put(next.majorVersion, next.configFile);
         }
     }
 

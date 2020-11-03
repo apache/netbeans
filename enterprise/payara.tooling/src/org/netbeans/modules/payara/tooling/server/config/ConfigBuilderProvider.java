@@ -76,7 +76,7 @@ public class ConfigBuilderProvider {
      */
     @Deprecated
     public static URL getBuilderConfig(final PayaraVersion version) {
-        return config.configFiles.get(version.getMajor());
+        return config.configFiles[config.index[version.ordinal()]];
     }
 
     /**
@@ -86,7 +86,7 @@ public class ConfigBuilderProvider {
      * @return Library builder configuration for given Payara Platform version.
      */
     public static URL getPlatformBuilderConfig(final PayaraPlatformVersionAPI version) {
-        return config.configFiles.get(version.getMajor());
+        return config.libraryConfigFiles.get(version.getMajor());
     }
 
     /**

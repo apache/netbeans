@@ -1641,6 +1641,23 @@ CLSS public org.netbeans.modules.payara.tooling.server.FetchLogSimple
 cons public init(java.io.InputStream)
 supr org.netbeans.modules.payara.tooling.server.FetchLog
 
+ anno 0 java.lang.Deprecated()
+CLSS public org.netbeans.modules.payara.tooling.server.JpaSupport
+cons public init()
+innr public static ApiVersion
+meth public static org.netbeans.modules.payara.tooling.server.JpaSupport$ApiVersion getApiVersion(org.netbeans.modules.payara.tooling.data.PayaraVersion)
+supr java.lang.Object
+hfds JPA_PROVIDER_SINCE_V1,JPA_PROVIDER_SINCE_V3,jpaSupport
+
+CLSS public static org.netbeans.modules.payara.tooling.server.JpaSupport$ApiVersion
+ outer org.netbeans.modules.payara.tooling.server.JpaSupport
+meth public boolean is10()
+meth public boolean is20()
+meth public boolean is21()
+meth public java.lang.String getProvider()
+supr java.lang.Object
+hfds _1_0,_2_0,_2_1,provider
+
 CLSS public org.netbeans.modules.payara.tooling.server.ServerStatus
 cons public init(org.netbeans.modules.payara.tooling.data.PayaraServer,boolean)
 innr public final static !enum Status
@@ -1716,10 +1733,11 @@ supr org.netbeans.modules.payara.tooling.server.config.PayaraTool
 hfds jar
 
 CLSS public org.netbeans.modules.payara.tooling.server.config.Config
+cons public !varargs init(java.net.URL,org.netbeans.modules.payara.tooling.server.config.Config$Next[])
 cons public !varargs init(org.netbeans.modules.payara.tooling.server.config.Config$Next[])
 innr public static Next
 supr java.lang.Object
-hfds configFiles
+hfds configFiles,index,libraryConfigFiles 
 
 CLSS public static org.netbeans.modules.payara.tooling.server.config.Config$Next
  outer org.netbeans.modules.payara.tooling.server.config.Config
@@ -1729,12 +1747,12 @@ supr java.lang.Object
 hfds configFile,version
 
 CLSS public org.netbeans.modules.payara.tooling.server.config.ConfigBuilder
+meth public java.util.List<org.netbeans.modules.payara.tooling.data.PayaraLibrary> getLibraries(org.netbeans.modules.payara.tooling.data.PayaraVersion)
 meth public org.netbeans.modules.payara.tooling.data.PayaraJavaEEConfig getJavaEEConfig(org.netbeans.modules.payara.tooling.data.PayaraVersion)
 meth public org.netbeans.modules.payara.tooling.data.PayaraJavaSEConfig getJavaSEConfig(org.netbeans.modules.payara.tooling.data.PayaraVersion)
-meth public java.util.List<org.netbeans.modules.payara.tooling.data.PayaraLibrary> getLibraries(org.netbeans.modules.payara.tooling.data.PayaraVersion)
+meth public java.util.List<org.netbeans.modules.payara.tooling.data.PayaraLibrary> getPlatformLibraries(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public org.netbeans.modules.payara.tooling.data.PayaraJavaEEConfig getPlatformJavaEEConfig(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public org.netbeans.modules.payara.tooling.data.PayaraJavaSEConfig getPlatformJavaSEConfig(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
-meth public java.util.List<org.netbeans.modules.payara.tooling.data.PayaraLibrary> getPlatformLibraries(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 supr java.lang.Object
 hfds classpathHome,config,javaEEConfigCache,javaSEConfigCache,javadocsHome,libraryCache,srcHome,version
 

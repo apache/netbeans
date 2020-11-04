@@ -65,8 +65,8 @@
 		],
 		"debuggers": [
 			{
-				"type": "java-polyglot",
-				"label": "Java (Polyglot)",
+				"type": "java8+",
+				"label": "Java 8+",
 				"runtime": "node",
 				"languages": [
 					"java"
@@ -103,10 +103,22 @@
 				},
 				"initialConfigurations": [
 					{
-						"type": "java-polyglot",
+						"type": "java8+",
 						"request": "launch",
-						"name": "Java (Polyglot)",
+						"name": "Launch Java 8+ App",
 						"mainClass": "${file}"
+					}
+				],
+				"configurationSnippets": [
+					{
+						"label": "Java 8+: Launch Java 8+ Application",
+						"description": "Launch a Java 8+ Application in debug mode",
+						"body": {
+							"type": "java8+",
+							"request": "launch",
+							"name": "Launch Java 8+ App",
+							"mainClass": "^\"${1:\\${file\\}}\""
+						}
 					}
 				]
 			}

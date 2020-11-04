@@ -114,7 +114,7 @@ public final class GitUtils {
     public static final String PREFIX_R_TAGS = "refs/tags/"; //NOI18N
     public static final String PREFIX_R_REMOTES = "refs/remotes/"; //NOI18N
     public static final ProgressMonitor NULL_PROGRESS_MONITOR = new NullProgressMonitor();
-    public static final String MASTER = "master"; //NOI18N
+    public static final String MASTER = "main"; //NOI18N
     private static final Set<File> loggedRepositories = new HashSet<File>();
     public static final String REMOTE_ORIGIN = "origin"; //NOI18N
     public static final String ORIGIN = "origin"; //NOI18N

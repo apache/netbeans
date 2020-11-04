@@ -172,7 +172,6 @@ import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.LazyFixList;
 import org.netbeans.spi.java.hints.JavaFix;
-import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;

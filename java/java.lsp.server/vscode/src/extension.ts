@@ -23,7 +23,10 @@ import { commands, window, workspace, ExtensionContext, ProgressLocation } from 
 import {
     LanguageClient,
     LanguageClientOptions,
+    CloseAction,
+    ErrorAction,
     StreamInfo,
+    Message,
     MessageType,
 } from 'vscode-languageclient';
 
@@ -121,8 +124,8 @@ export function activate(context: ExtensionContext) {
 
     // find acceptable JDK and launch the Java part
     findJDK((specifiedJDK) => {
-        activateWithJDK(specifiedJDK, context, log);
-    })
+        activateWithJDK(specifiedJDK, context, log, true);
+    });
 
     //register debugger:
     let configProvider = new NetBeansConfigurationProvider();
@@ -138,7 +141,9 @@ export function activate(context: ExtensionContext) {
                 const commands = await vscode.commands.getCommands();
                 if (commands.includes('java.build.workspace')) {
                     p.report({ message: 'Compiling workspace...' });
-                    client.outputChannel.show(true);
+                    if (client != null) {
+                        client.outputChannel.show(true);
+                    }
                     const start = new Date().getTime();
                     const res = await vscode.commands.executeCommand('java.build.workspace');
                     const elapsed = new Date().getTime() - start;
@@ -158,9 +163,11 @@ export function activate(context: ExtensionContext) {
     }));
 }
 
-function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel): void {
+function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean): void {
     if (nbProcess) {
-        vscode.window.setStatusBarMessage("Restarting Apache NetBeans Language Server.", 2000);
+        if (notifyKill) {
+            vscode.window.setStatusBarMessage("Restarting Apache NetBeans Language Server.", 2000);
+        }
         nbProcess.kill();
     }
 
@@ -243,6 +250,7 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
                         srv.disconnect();
                         return;
                     }
+                    debugPort = -1;
                     srv.stdout.on("data", (chunk) => {
                         if (debugPort < 0) {
                             const info = chunk.toString().match(/Debug Server Adapter listening at port (\d*)/);
@@ -274,54 +282,82 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
                 'nbcodeCapabilities' : {
                     'statusBarMessageSupport' : true
                 }
+            },
+            errorHandler: {
+                error : function(_error: Error, _message: Message, count: number): ErrorAction {
+                    return ErrorAction.Continue;
+                },
+                closed : function(): CloseAction {
+                    activateWithJDK(specifiedJDK, context, log, false);
+                    return CloseAction.DoNotRestart;
+                }
             }
         }
 
-        if (!client) {
-            // Create the language client and start the client.
-            client = new LanguageClient(
-                    'java',
-                    'NetBeans Java',
-                    connection,
-                    clientOptions
-            );
-
-            // Start the client. This will also launch the server
-            client.start();
-            client.onReady().then(() => {
-                commands.executeCommand('setContext', 'nbJavaLSReady', true);
-                client.onNotification(StatusMessageRequest.type, showStatusBarMessage);
-            });
+        if (client) {
+            client.stop();
         }
+        client = new LanguageClient(
+                'java',
+                'NetBeans Java',
+                connection,
+                clientOptions
+        );
+        client.start();
+        client.onReady().then(() => {
+            commands.executeCommand('setContext', 'nbJavaLSReady', true);
+            client.onNotification(StatusMessageRequest.type, showStatusBarMessage);
+        });
     }).catch((reason) => {
         log.append(reason);
         window.showErrorMessage('Error initializing ' + reason);
     });
-}
 
-function showStatusBarMessage(params : ShowStatusMessageParams) {
-    let decorated : string = params.message;
-    let defTimeout;
+    function showStatusBarMessage(params : ShowStatusMessageParams) {
+        let decorated : string = params.message;
+        let defTimeout;
 
-    switch (params.type) {
-        case MessageType.Error:
-            decorated = '$(error) ' + params.message;
-            defTimeout = 0;
-            break;
-        case MessageType.Warning:
-            decorated = '$(warning) ' + params.message;
-            defTimeout = 0;
-            break;
-        default:
-            defTimeout = 10000;
-            break;
+        switch (params.type) {
+            case MessageType.Error:
+                decorated = '$(error) ' + params.message;
+                defTimeout = 0;
+                checkInstallNbJavac(params.message);
+                break;
+            case MessageType.Warning:
+                decorated = '$(warning) ' + params.message;
+                defTimeout = 0;
+                break;
+            default:
+                defTimeout = 10000;
+                break;
+        }
+        // params.timeout may be defined but 0 -> should be used
+        const timeout = params.timeout != undefined ? params.timeout : defTimeout;
+        if (timeout > 0) {
+            window.setStatusBarMessage(decorated, timeout);
+        } else {
+            window.setStatusBarMessage(decorated);
+        }
     }
-    // params.timeout may be defined but 0 -> should be used
-    const timeout = params.timeout != undefined ? params.timeout : defTimeout;
-    if (timeout > 0) {
-        window.setStatusBarMessage(decorated, timeout);
-    } else {
-        window.setStatusBarMessage(decorated);
+
+    function checkInstallNbJavac(msg : string) {
+        const NO_JAVA_SUPPORT = "Cannot initialize Java support";
+        if (msg.startsWith(NO_JAVA_SUPPORT)) {
+            const yes = "Install GPLv2+CPEx code";
+            window.showErrorMessage("Additional Java Support is needed", yes).then(reply => {
+                if (yes === reply) {
+                    let installProcess = launcher.launch(info, "--modules", "--install", ".*nbjavac.*");
+                    let logData = function(d: any) {
+                        log.append(d.toString());
+                    };
+                    installProcess.stdout.on('data', logData);
+                    installProcess.stderr.on('data', logData);
+                    installProcess.on('close', function(code: number) {
+                        log.append("Additional Java Support installed with exit code " + code);
+                    });
+                }
+            });
+        }
     }
 }
 

@@ -24,6 +24,8 @@
 #include "platformlauncher.h"
 #include "argnames.h"
 
+volatile extern int exitStatus;
+
 using namespace std;
 
 const char *PlatformLauncher::HELP_MSG =
@@ -662,6 +664,10 @@ bool PlatformLauncher::restartRequested() {
 
 void PlatformLauncher::onExit() {
     logMsg("onExit()");
+    if (exitStatus == -252) {
+        logMsg("Exiting from CLI client, will not restart.");
+        return;
+    }
     
     if (exiting) {
         logMsg("Already exiting, no need to schedule restart");

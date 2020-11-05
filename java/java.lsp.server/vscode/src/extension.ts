@@ -163,14 +163,45 @@ export function activate(context: ExtensionContext) {
     }));
 }
 
+/**
+ * Pending maintenance (install) task, activations should be chained after it.
+ */
+let maintenance : Promise<void> | null;
+
+/**
+ * Pending activation flag. Will be cleared when the process produces some message or fails.
+ */
+let activationPending : boolean = false;
+
 function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean): void {
-    if (nbProcess) {
+    const a : Promise<void> | null = maintenance;
+    if (activationPending) {
+        // do not activate more than once in parallel.
+        return;
+    }
+    activationPending = true;
+    if (a != null) {
+        a.then(() => doActivateWithJDK(specifiedJDK, context, log, notifyKill));
+    } else {
+        doActivateWithJDK(specifiedJDK, context, log, notifyKill);
+    }
+}
+
+function killNbProcess(notifyKill : boolean, specProcess?: ChildProcess) {
+    let p = nbProcess;
+    if (p && (!specProcess || specProcess == p)) {
         if (notifyKill) {
             vscode.window.setStatusBarMessage("Restarting Apache NetBeans Language Server.", 2000);
         }
-        nbProcess.kill();
+        p.kill();
+        // PENDING: possible race
+        nbProcess = null;
     }
+}
 
+function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean): void {
+    killNbProcess(notifyKill);
+    maintenance = null;
     const beVerbose : boolean = workspace.getConfiguration('netbeans').get('verbose', false);
     let info = {
         clusters : findClusters(context.extensionPath),
@@ -187,6 +218,7 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
     let ideRunning = new Promise((resolve, reject) => {
         let collectedText : string | null = '';
         function logAndWaitForEnabled(text: string) {
+            activationPending = false;
             log.append(text);
             if (collectedText == null) {
                 return;
@@ -205,7 +237,7 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
             logAndWaitForEnabled(d.toString());
         });
         nbProcess = p;
-        nbProcess.on('close', function(code: number) {
+        p.on('close', function(code: number) {
             if (p == nbProcess && code != 0) {
                 vscode.window.showWarningMessage("Apache NetBeans Language Server exited with " + code);
             }
@@ -217,6 +249,7 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
                     log.appendLine("Cannot find org.netbeans.modules.java.lsp.server in the log!");
                 }
                 log.show(false);
+                killNbProcess(false, p);
                 reject("Apache NetBeans Language Server not enabled!");
             } else {
                 log.appendLine("Exit code " + code);
@@ -309,6 +342,7 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
             client.onNotification(StatusMessageRequest.type, showStatusBarMessage);
         });
     }).catch((reason) => {
+        activationPending = false;
         log.append(reason);
         window.showErrorMessage('Error initializing ' + reason);
     });
@@ -346,7 +380,9 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
             const yes = "Install GPLv2+CPEx code";
             window.showErrorMessage("Additional Java Support is needed", yes).then(reply => {
                 if (yes === reply) {
-                    let installProcess = launcher.launch(info, "--modules", "--install", ".*nbjavac.*");
+                    vscode.window.setStatusBarMessage("Preparing Apache NetBeans Language Server for additional installation", 2000);
+                    killNbProcess(false);
+                    let installProcess = launcher.launch(info, "-J-Dnetbeans.close=true", "--modules", "--install", ".*nbjavac.*");
                     let logData = function(d: any) {
                         log.append(d.toString());
                     };
@@ -354,6 +390,13 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
                     installProcess.stderr.on('data', logData);
                     installProcess.on('close', function(code: number) {
                         log.append("Additional Java Support installed with exit code " + code);
+                        // let the updater to settle down.
+                        activateWithJDK(specifiedJDK, context, log, notifyKill);
+                    });
+            
+                    maintenance = new Promise((resolve, reject) => {
+                        installProcess.addListener("error", reject);
+                        installProcess.addListener("exit", resolve);
                     });
                 }
             });

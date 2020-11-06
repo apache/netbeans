@@ -91,14 +91,19 @@ function findJDK(onChange: (path : string | null) => void): void {
     }
 
     let currentJdk = find();
+    let timeout: NodeJS.Timeout | undefined = undefined;
     workspace.onDidChangeConfiguration(params => {
-        if (!params.affectsConfiguration('java') && !params.affectsConfiguration('netbeans')) {
+        if (timeout || (!params.affectsConfiguration('java') && !params.affectsConfiguration('netbeans'))) {
             return;
         }
-        let newJdk = find();
-        if (newJdk !== currentJdk) {
-            onChange(newJdk);
-        }
+        timeout = setTimeout(() => {
+            timeout = undefined;
+            let newJdk = find();
+            if (newJdk !== currentJdk) {
+                currentJdk = newJdk;
+                onChange(currentJdk);
+            }
+        }, 0);
     });
     onChange(currentJdk);
 }

@@ -51,11 +51,11 @@
 					"default" : true,
 					"description": "Avoid conflicts with other Java extensions"
 				},
-                                "java.test.editor.enableShortcuts": {
-                                    "type": "boolean",
-                                    "default": false,
-                                    "description": "Enable Run/Debug test in editor"
-                                }
+				"java.test.editor.enableShortcuts": {
+					"type": "boolean",
+					"default": false,
+					"description": "Enable Run/Debug test in editor"
+				}
 			}
 		},
 		"breakpoints": [

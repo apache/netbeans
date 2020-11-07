@@ -417,7 +417,21 @@ export function deactivate(): Thenable<void> {
 class NetBeansDebugAdapterDescriptionFactory implements vscode.DebugAdapterDescriptorFactory {
 
     createDebugAdapterDescriptor(_session: vscode.DebugSession, _executable: vscode.DebugAdapterExecutable | undefined): vscode.ProviderResult<vscode.DebugAdapterDescriptor> {
-        return new vscode.DebugAdapterServer(debugPort);
+        return new Promise<vscode.DebugAdapterDescriptor>((resolve, reject) => {
+            let cnt = 10;
+            const fnc = () => {
+                if (debugPort < 0) {
+                    if (cnt-- > 0) {
+                        setTimeout(fnc, 1000);
+                    } else {
+                        reject(new Error('Apache NetBeans Debug Server Adapter not yet initialized. Please wait for a while and try again.'));
+                    }
+                } else {
+                    resolve(new vscode.DebugAdapterServer(debugPort));
+                }
+            }
+            fnc();
+        });
     }
 }
 

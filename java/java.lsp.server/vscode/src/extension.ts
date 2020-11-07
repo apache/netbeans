@@ -202,6 +202,13 @@ function killNbProcess(notifyKill : boolean, specProcess?: ChildProcess) {
 function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean): void {
     killNbProcess(notifyKill);
     maintenance = null;
+    let restartWithJDKLater : ((time: number, n: boolean) => void) = function restartLater(time: number, n : boolean) {
+        log.appendLine(`Restart of Apache Language Server requested in ${(time / 1000)} s.`);
+        setTimeout(() => {
+            activateWithJDK(specifiedJDK, context, log, n);
+        }, time);
+    };
+
     const beVerbose : boolean = workspace.getConfiguration('netbeans').get('verbose', false);
     let info = {
         clusters : findClusters(context.extensionPath),
@@ -321,7 +328,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                     return ErrorAction.Continue;
                 },
                 closed : function(): CloseAction {
-                    activateWithJDK(specifiedJDK, context, log, false);
+                    log.appendLine("Connection to Apache NetBeans Language Server closed.");
+                    restartWithJDKLater(10000, false);
                     return CloseAction.DoNotRestart;
                 }
             }
@@ -381,6 +389,9 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             window.showErrorMessage("Additional Java Support is needed", yes).then(reply => {
                 if (yes === reply) {
                     vscode.window.setStatusBarMessage("Preparing Apache NetBeans Language Server for additional installation", 2000);
+                    restartWithJDKLater = function() {
+                        log.appendLine("Ignoring request for restart of Apache NetBeans Language Server");
+                    };
                     killNbProcess(false);
                     let installProcess = launcher.launch(info, "-J-Dnetbeans.close=true", "--modules", "--install", ".*nbjavac.*");
                     let logData = function(d: any) {

@@ -177,30 +177,52 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
     const a : Promise<void> | null = maintenance;
     if (activationPending) {
         // do not activate more than once in parallel.
+        console.log("Server activation requested repeatedly, ignoring...");
         return;
     }
     activationPending = true;
+    // chain the restart after termination of the former process.
     if (a != null) {
-        a.then(() => doActivateWithJDK(specifiedJDK, context, log, notifyKill));
+        console.log("Server activation initiated while in maintenance mode, scheduling after maintenance");
+        a.then(() => killNbProcess(notifyKill, log)).
+            then(() => doActivateWithJDK(specifiedJDK, context, log, notifyKill));
     } else {
-        doActivateWithJDK(specifiedJDK, context, log, notifyKill);
+        console.log("Initiating server activation");
+        killNbProcess(notifyKill, log).then(
+            () => doActivateWithJDK(specifiedJDK, context, log, notifyKill)
+        );
     }
 }
 
-function killNbProcess(notifyKill : boolean, specProcess?: ChildProcess) {
-    let p = nbProcess;
+function killNbProcess(notifyKill : boolean, log : vscode.OutputChannel, specProcess?: ChildProcess) : Promise<void> {
+    const p = nbProcess;
+    console.log("Request to kill LSP server.");
     if (p && (!specProcess || specProcess == p)) {
         if (notifyKill) {
             vscode.window.setStatusBarMessage("Restarting Apache NetBeans Language Server.", 2000);
         }
-        p.kill();
-        // PENDING: possible race
-        nbProcess = null;
+        return new Promise((resolve, reject) => {
+            nbProcess = null;
+            p.on('close', function(code: number) {
+                console.log("LSP server closed: " + p.pid)
+                resolve();
+            });
+            console.log("Killing LSP server " + p.pid);
+            if (!p.kill()) {
+                reject("Cannot kill");
+            }
+        });
+    } else {
+        let msg = "Cannot kill: ";
+        if (specProcess) {
+            msg += "Requested kill on " + specProcess.pid + ", ";
+        }
+        console.log(msg + "current process is " + (p ? p.pid : "None"));
+        return new Promise((res, rej) => { res(); });
     }
 }
 
 function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean): void {
-    killNbProcess(notifyKill);
     maintenance = null;
     let restartWithJDKLater : ((time: number, n: boolean) => void) = function restartLater(time: number, n : boolean) {
         log.appendLine(`Restart of Apache Language Server requested in ${(time / 1000)} s.`);
@@ -217,7 +239,6 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         jdkHome : specifiedJDK,
         verbose: beVerbose
     };
-
     let launchMsg = `Launching Apache NetBeans Language Server with ${specifiedJDK ? specifiedJDK : 'default system JDK'}`;
     log.appendLine(launchMsg);
     vscode.window.setStatusBarMessage(launchMsg, 2000);
@@ -237,6 +258,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             }
         }
         let p = launcher.launch(info, "--modules", "--list");
+        console.log("LSP server launching: " + p.pid);
         p.stdout.on('data', function(d: any) {
             logAndWaitForEnabled(d.toString());
         });
@@ -245,7 +267,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         });
         nbProcess = p;
         p.on('close', function(code: number) {
-            if (p == nbProcess && code != 0) {
+            if (p == nbProcess && code != 0 && code) {
                 vscode.window.showWarningMessage("Apache NetBeans Language Server exited with " + code);
             }
             if (collectedText != null) {
@@ -256,9 +278,10 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                     log.appendLine("Cannot find org.netbeans.modules.java.lsp.server in the log!");
                 }
                 log.show(false);
-                killNbProcess(false, p);
+                killNbProcess(false, log, p);
                 reject("Apache NetBeans Language Server not enabled!");
             } else {
+                console.log("LSP server " + p.pid + " terminated with " + code);
                 log.appendLine("Exit code " + code);
             }
         });
@@ -390,24 +413,30 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 if (yes === reply) {
                     vscode.window.setStatusBarMessage("Preparing Apache NetBeans Language Server for additional installation", 2000);
                     restartWithJDKLater = function() {
-                        log.appendLine("Ignoring request for restart of Apache NetBeans Language Server");
+                        console.log("Ignoring request for restart of Apache NetBeans Language Server");
                     };
-                    killNbProcess(false);
-                    let installProcess = launcher.launch(info, "-J-Dnetbeans.close=true", "--modules", "--install", ".*nbjavac.*");
-                    let logData = function(d: any) {
-                        log.append(d.toString());
-                    };
-                    installProcess.stdout.on('data', logData);
-                    installProcess.stderr.on('data', logData);
-                    installProcess.on('close', function(code: number) {
-                        log.append("Additional Java Support installed with exit code " + code);
-                        // let the updater to settle down.
-                        activateWithJDK(specifiedJDK, context, log, notifyKill);
-                    });
-            
                     maintenance = new Promise((resolve, reject) => {
-                        installProcess.addListener("error", reject);
-                        installProcess.addListener("exit", resolve);
+                        const kill : Promise<void> = killNbProcess(false, log);
+                        kill.then(() => {
+                            let installProcess = launcher.launch(info, "-J-Dnetbeans.close=true", "--modules", "--install", ".*nbjavac.*");
+                            console.log("Launching installation process: " + installProcess.pid);
+                            let logData = function(d: any) {
+                                log.append(d.toString());
+                            };
+                            installProcess.stdout.on('data', logData);
+                            installProcess.stderr.on('data', logData);
+                            installProcess.addListener("error", reject);
+                            // MUST wait on 'close', since stdout is inherited by children. The installProcess dies but
+                            // the inherited stream will be closed by the last child dying.
+                            installProcess.on('close', function(code: number) {
+                                console.log("Installation completed: " + installProcess.pid);
+                                log.appendLine("Additional Java Support installed with exit code " + code);
+                                // will be actually run after maintenance is resolve()d.
+                                activateWithJDK(specifiedJDK, context, log, notifyKill)
+                                resolve();
+                            });
+                            return installProcess;
+                        });
                     });
                 }
             });

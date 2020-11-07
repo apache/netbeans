@@ -720,7 +720,8 @@ void PlatformLauncher::onExit() {
         STARTUPINFO si = {0};
         PROCESS_INFORMATION pi = {0};
         si.cb = sizeof(STARTUPINFO);
-        if (!CreateProcess(NULL, cmdLineStr, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+
+        if (!CreateProcess(NULL, cmdLineStr, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi)) {
             logErr(true, true, "Failed to create process.");
             return;
         }

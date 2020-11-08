@@ -288,7 +288,7 @@ public final class NbProtocolServer implements IDebugProtocolServer {
                     URI sourceURI = frame.getSourceURI();
                     if (sourceURI != null && sourceURI.getPath() != null) {
                         Source source = new Source();
-                        source.setName(Paths.get(sourceURI.getPath()).getFileName().toString());
+                        source.setName(Paths.get(sourceURI).getFileName().toString());
                         source.setPath(sourceURI.getPath());
                         source.setSourceReference(0);
                         stackFrame.setSource(source);

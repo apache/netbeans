@@ -95,6 +95,10 @@ public class InvocationExceptionTranslated extends Exception {
         this.createdAt = new Throwable().fillInStackTrace();
     }
     
+    public void resetInvocationMessage() {
+        this.invocationMessage = null;
+    }
+
     public void setPreferredThread(JPDAThreadImpl preferredThread) {
         this.preferredThread = preferredThread;
     }

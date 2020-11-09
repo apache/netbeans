@@ -181,6 +181,8 @@ import org.openide.modules.Places;
 import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle.Messages;
+import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 
@@ -841,17 +843,20 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
+    @Messages({
+        "DN_GenerateGetters=Generate getter(s).",
+        "DN_GenerateSetters=Generate setter(s).",
+        "DN_GenerateGettersSetters=Generate getter(s) and setter(s).",
+    })
     public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
         Document doc = openedDocuments.get(params.getTextDocument().getUri());
         if (doc == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
         Map<String, ErrorDescription> id2Errors = (Map<String, ErrorDescription>) doc.getProperty("lsp-errors");
-        if (id2Errors == null) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
         JavaSource js = JavaSource.forDocument(doc);
         List<Either<Command, CodeAction>> result = new ArrayList<>();
+        if (id2Errors != null) {
         for (Diagnostic diag : params.getContext().getDiagnostics()) {
             ErrorDescription err = id2Errors.get(diag.getCode().getLeft());
 
@@ -935,9 +940,46 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
             }
         }
+        }
+
+        //code generators:
+        try {
+            js.runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+
+                Pair<Set<VariableElement>, Set<VariableElement>> pair = GetterSetterGenerator.findMissingGettersSetters(cc, params.getRange(), false);
+                boolean missingGetters = !pair.first().isEmpty();
+                boolean missingSetters = !pair.second().isEmpty();
+                String uri = toUri(cc.getFileObject());
+
+                if (missingGetters) {
+                    result.add(Either.forRight(createCodeGeneratorAction(Bundle.DN_GenerateGetters(), Server.GENERATE_GETTERS, uri, params.getRange())));
+                }
+                if (missingSetters) {
+                    result.add(Either.forRight(createCodeGeneratorAction(Bundle.DN_GenerateSetters(), Server.GENERATE_SETTERS, uri, params.getRange())));
+                }
+                if (missingGetters && missingSetters) {
+                    result.add(Either.forRight(createCodeGeneratorAction(Bundle.DN_GenerateGettersSetters(), Server.GENERATE_GETTERS_SETTERS, uri, params.getRange())));
+                }
+            }, true);
+        } catch (IOException ex) {
+            //TODO: include stack trace:
+            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+        }
 
         return CompletableFuture.completedFuture(result);
     }
+
+    private CodeAction createCodeGeneratorAction(String name, String command, String uri, Range range) {
+        CodeAction action = new CodeAction(name);
+        List<Object> arguments = new ArrayList<>();
+
+        arguments.add(uri);
+        arguments.add(range);
+        action.setCommand(new Command(name, command, arguments));
+        return action;
+    }
+
 
     //TODO: copied from spi.editor.hints/.../FixData:
     private List<Fix> sortFixes(Collection<Fix> fixes) {
@@ -1274,7 +1316,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return URLMapper.findFileObject(URI.create(uri).toURL());
     }
 
-    private static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {
+    /*private*/ static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {
         FileObject[] file = new FileObject[1];
         LineMap[] lm = new LineMap[1];
         ModificationResult changes = js.runModificationTask(wc -> {

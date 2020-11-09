@@ -241,7 +241,7 @@ public final class Server {
             capabilities.setDefinitionProvider(true);
             capabilities.setDocumentHighlightProvider(true);
             capabilities.setReferencesProvider(true);
-            capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(Arrays.asList(JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT)));
+            capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(Arrays.asList(JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT, GENERATE_GETTERS, GENERATE_SETTERS, GENERATE_GETTERS_SETTERS)));
             return new InitializeResult(capabilities);
         }
         
@@ -318,6 +318,9 @@ public final class Server {
     
     public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
+    public static final String GENERATE_GETTERS =  "java.generate.getters";
+    public static final String GENERATE_SETTERS =  "java.generate.setters";
+    public static final String GENERATE_GETTERS_SETTERS =  "java.generate.getters.setters";
     static final String INDEXING_COMPLETED = "Indexing completed.";
     
     static final NbCodeLanguageClient STUB_CLIENT = new NbCodeLanguageClient() {

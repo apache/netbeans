@@ -18,11 +18,16 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import com.google.gson.Gson;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -32,6 +37,7 @@ import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.lsp.server.protocol.GetterSetterGenerator.GenKind;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.util.lookup.Lookups;
 
@@ -42,13 +48,15 @@ import org.openide.util.lookup.Lookups;
 public final class WorkspaceServiceImpl implements WorkspaceService, LanguageClientAware {
 
     private NbCodeLanguageClient client;
+    private final Gson gson = new Gson();
 
     public WorkspaceServiceImpl() {
     }
 
     @Override
     public CompletableFuture<Object> executeCommand(ExecuteCommandParams params) {
-        switch (params.getCommand()) {
+        String command = params.getCommand();
+        switch (command) {
             case Server.GRAALVM_PAUSE_SCRIPT:
                 ActionsManager am = DebuggerManager.getDebuggerManager().getCurrentEngine().getActionsManager();
                 am.doAction("pauseInGraalScript");
@@ -58,6 +66,26 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
                     if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_BUILD, Lookups.fixed())) {
                         ap.invokeAction(ActionProvider.COMMAND_REBUILD, Lookups.fixed());
+                    }
+                }
+                return CompletableFuture.completedFuture(true);
+            case Server.GENERATE_GETTERS:
+            case Server.GENERATE_SETTERS:
+            case Server.GENERATE_GETTERS_SETTERS:
+                if (params.getArguments().size() >= 2) {
+                    String uri = gson.fromJson(gson.toJson(params.getArguments().get(0)), String.class);
+                    Range sel = gson.fromJson(gson.toJson(params.getArguments().get(1)), Range.class);
+                    boolean all = params.getArguments().size() == 3;
+                    try {
+                        GenKind kind;
+                        switch (command) {
+                            case Server.GENERATE_GETTERS: kind = GenKind.GETTERS; break;
+                            case Server.GENERATE_SETTERS: kind = GenKind.SETTERS; break;
+                            default: kind = GenKind.GETTERS_SETTERS; break;
+                        }
+                        GetterSetterGenerator.generateGettersSetters(client, uri, kind, sel, all);
+                    } catch (IOException ex) {
+                        client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
                     }
                 }
                 return CompletableFuture.completedFuture(true);

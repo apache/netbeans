@@ -251,7 +251,9 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     let ideRunning = new Promise((resolve, reject) => {
         let collectedText : string | null = '';
         function logAndWaitForEnabled(text: string) {
-            activationPending = false;
+            if (p == nbProcess) {
+                activationPending = false;
+            }
             log.append(text);
             if (collectedText == null) {
                 return;
@@ -357,7 +359,9 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 },
                 closed : function(): CloseAction {
                     log.appendLine("Connection to Apache NetBeans Language Server closed.");
-                    restartWithJDKLater(10000, false);
+                    if (!activationPending) {
+                        restartWithJDKLater(10000, false);
+                    }
                     return CloseAction.DoNotRestart;
                 }
             }

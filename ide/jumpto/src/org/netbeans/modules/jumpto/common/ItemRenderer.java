@@ -77,6 +77,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
         private final Convertor<T> convertor;
         private String separatorPattern;
         private ButtonModel colorPrefered;
+        private ButtonModel searchFolders;
 
         private Builder(
             @NonNull final JList<T> list,
@@ -93,6 +94,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
                     list,
                     caseSensitive,
                     colorPrefered,
+                    searchFolders,
                     convertor,
                     separatorPattern);
         }
@@ -106,6 +108,12 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
         @NonNull
         public Builder setColorPreferedProject(@NullAllowed final ButtonModel colorPrefered) {
             this.colorPrefered = colorPrefered;
+            return this;
+        }
+
+        @NonNull
+        public Builder setSearchFolders(@NullAllowed final ButtonModel searchFolders) {
+            this.searchFolders = searchFolders;
             return this;
         }
 
@@ -141,6 +149,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
     private final JList jList;
     private final ButtonModel caseSensitive;
     private final ButtonModel colorPrefered;
+    private final ButtonModel searchFolders;
 
     private Class<T> clzCache;
 
@@ -148,6 +157,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
             @NonNull final JList<T> list,
             @NonNull final ButtonModel caseSensitive,
             @NullAllowed final ButtonModel colorPrefered,
+            @NullAllowed final ButtonModel searchFolders,
             @NonNull final Convertor<T> convertor,
             @NullAllowed final String separatorPattern) {
         Parameters.notNull("list", list);   //NOI18N
@@ -156,6 +166,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
         jList = list;
         this.caseSensitive = caseSensitive;
         this.colorPrefered = colorPrefered;
+        this.searchFolders = searchFolders;
         this.convertor = convertor;
         final GoToSettings hs = GoToSettings.getDefault();
         highlightMode = hs.getHighlightingMode();
@@ -270,18 +281,25 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
             final T item = dynamic_cast(value);
             if (item != null) {
                 jlName.setIcon(convertor.getItemIcon(item));
-                final String formattedName;
+                jlName.setText(convertor.getName(item));
+                jlOwner.setText(convertor.getOwnerName(item));
                 if (shouldHighlight(isSelected)) {
-                    formattedName = highlight(
-                            convertor.getName(item),
+                    JLabel highlightedTarget;
+                    String textToFormat;
+                    if(searchFolders.isSelected()) {
+                        highlightedTarget = jlOwner;
+                        textToFormat = convertor.getOwnerName(item);
+                    } else {
+                        highlightedTarget = jlName;
+                        textToFormat = convertor.getName(item);
+                    }
+                    String formattedName = highlight(
+                            textToFormat,
                             convertor.getHighlightText(item),
                             caseSensitive.isSelected(),
                             isSelected? fgSelectionColor : fgColor);
-                } else {
-                    formattedName = convertor.getName(item);
+                    highlightedTarget.setText(formattedName);
                 }
-                jlName.setText(formattedName);
-                jlOwner.setText(convertor.getOwnerName(item));
                 setProjectName(jlPrj, convertor.getProjectName(item));
                 jlPrj.setIcon(convertor.getProjectIcon(item));
                 if (!isSelected) {

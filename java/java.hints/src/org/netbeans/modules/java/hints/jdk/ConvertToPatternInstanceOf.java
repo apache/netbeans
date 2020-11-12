@@ -43,6 +43,7 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.errors.Utilities;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
@@ -89,7 +90,9 @@ public class ConvertToPatternInstanceOf {
                 TypeMirror typeITM = ctx.getInfo().getTrees().getTypeMirror(typeI);
                 List<String> varNameCandidates = org.netbeans.modules.editor.java.Utilities.varNamesSuggestions(typeITM, ElementKind.LOCAL_VARIABLE, EnumSet.noneOf(Modifier.class), null, null, ctx.getInfo().getTypes(), ctx.getInfo().getElements(), Collections.emptyList(), CodeStyle.getDefault(ctx.getInfo().getFileObject()));
                 String varName = Utilities.makeNameUnique(ctx.getInfo(), ctx.getInfo().getTrees().getScope(ctx.getPath()), varNameCandidates.get(0));
-                Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), varName, false, convertPath).toEditorFix();
+                IfTree it = (IfTree) ctx.getPath().getLeaf();
+                BlockTree bt = (BlockTree) it.getThenStatement();
+                Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), varName, false, convertPath, (VariableTree) bt.getStatements().get(0)).toEditorFix();
 
                 return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertToPatternInstanceOf(), fix);
             }
@@ -107,7 +110,7 @@ public class ConvertToPatternInstanceOf {
         IfTree it = (IfTree) ctx.getPath().getLeaf();
         BlockTree bt = (BlockTree) it.getThenStatement();
         VariableTree var = (VariableTree) bt.getStatements().get(0);
-        Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), var.getName().toString(), true, Collections.emptySet()).toEditorFix();
+        Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), var.getName().toString(), true, Collections.emptySet(), var).toEditorFix();
         
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertToPatternInstanceOf(), fix);
     }
@@ -117,12 +120,14 @@ public class ConvertToPatternInstanceOf {
         private final String varName;
         private final boolean removeFirst;
         private final Set<TreePathHandle> replaceOccurrences;
+        private final VariableTree vt;
 
-        public FixImpl(CompilationInfo info, TreePath main, String varName, boolean removeFirst, Set<TreePath> replaceOccurrences) {
+        public FixImpl(CompilationInfo info, TreePath main, String varName, boolean removeFirst, Set<TreePath> replaceOccurrences, VariableTree vt) {
             super(info, main);
             this.varName = varName;
             this.removeFirst = removeFirst;
             this.replaceOccurrences = replaceOccurrences.stream().map(tp -> TreePathHandle.create(tp, info)).collect(Collectors.toSet());
+            this.vt = vt;
         }
 
 
@@ -140,7 +145,8 @@ public class ConvertToPatternInstanceOf {
             StatementTree bt = it.getThenStatement();
 //            wc.rewrite(iot.getType(), wc.getTreeMaker().BindingPattern(var.getName(), iot.getType()));
 //            wc.rewrite(bt, wc.getTreeMaker().removeBlockStatement(bt, 0));
-            InstanceOfTree cond = wc.getTreeMaker().InstanceOf(iot.getExpression(), wc.getTreeMaker().BindingPattern(varName, iot.getType()));
+            InstanceOfTree cond = wc.getTreeMaker().InstanceOf(iot.getExpression(), TreeShims.isJDKVersionSupportEnablePreview() ? 
+                     wc.getTreeMaker().BindingPattern(varName, iot.getType()) : wc.getTreeMaker().BindingPattern(vt));
             StatementTree thenBlock = removeFirst ? wc.getTreeMaker().removeBlockStatement((BlockTree) bt, 0) : bt;
             wc.rewrite(it, wc.getTreeMaker().If(wc.getTreeMaker().Parenthesized(cond), thenBlock, it.getElseStatement()));
             replaceOccurrences.stream().map(tph -> tph.resolve(wc)).forEach(tp -> {

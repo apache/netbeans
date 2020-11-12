@@ -921,6 +921,14 @@ public class TreeFactory {
             throw throwAny(t);
         }
     }
+    
+    public Tree BindingPattern(VariableTree vt) {
+        try {
+            return (Tree) make.getClass().getMethod("BindingPattern",JCVariableDecl.class).invoke(make.at(NOPOS), vt);
+        } catch (Throwable t) {
+            throw throwAny(t);
+        }
+    }
 
     public VariableTree Variable(VariableElement variable, ExpressionTree initializer) {
         return make.at(NOPOS).VarDef((Symbol.VarSymbol)variable, (JCExpression)initializer);

@@ -1224,6 +1224,10 @@ public final class TreeMaker {
                                Tree type) {
         return delegate.BindingPattern(name, type);
     }
+    
+    public Tree BindingPattern(VariableTree vt) {
+        return delegate.BindingPattern(vt);
+    }
 
     /**
      * Creates a new VariableTree from a VariableElement.

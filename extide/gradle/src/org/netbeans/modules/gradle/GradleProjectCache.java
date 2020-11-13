@@ -88,6 +88,8 @@ public final class GradleProjectCache {
     private static AtomicLong timeInLoad = new AtomicLong();
     private static AtomicInteger loadedProjects = new AtomicInteger();
 
+    private static final boolean DEBUG_GRADLE_INFO_ACTION = Boolean.getBoolean("netbeans.debug.gradle.info.action"); //NOI18N
+
     private GradleProjectCache() {
     }
 
@@ -245,7 +247,10 @@ public final class GradleProjectCache {
     private static BuildActionExecuter<NbProjectInfo> createInfoAction(ProjectConnection pconn, GradleCommandLine cmd, CancellationToken token, ProgressListener pl) {
         BuildActionExecuter<NbProjectInfo> ret = pconn.action(new NbProjectInfoAction());
         cmd.configure(ret);
-
+        if (DEBUG_GRADLE_INFO_ACTION) {
+            // This would start the Gradle Daemon in Debug Mode, so the Tooling API can be debugged as well
+            ret.addJvmArguments("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5006");
+        }
         if (token != null) {
             ret.withCancellationToken(token);
         }

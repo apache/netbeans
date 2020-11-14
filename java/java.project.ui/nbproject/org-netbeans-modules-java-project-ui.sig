@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.84
+#Version 1.85
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
@@ -268,6 +268,13 @@ CLSS public abstract interface static org.netbeans.spi.java.project.support.ui.B
 meth public abstract void platformPropertyUpdated(org.netbeans.api.java.platform.JavaPlatform)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 
+CLSS public org.netbeans.spi.java.project.support.ui.CreateJavaClassFileFromClipboard
+cons public init(org.openide.loaders.DataFolder,java.awt.datatransfer.Transferable)
+meth public java.awt.datatransfer.Transferable paste() throws java.io.IOException
+supr org.openide.util.datatransfer.PasteType
+hfds PUBLIC_MODIFIER,context,t
+hcls ClassContent,MyFileObject
+
 CLSS public final org.netbeans.spi.java.project.support.ui.EditJarSupport
 cons public init()
 innr public final static Item
@@ -337,5 +344,38 @@ meth public static org.openide.WizardDescriptor$InstantiatingIterator<org.openid
 meth public static org.openide.WizardDescriptor$Panel<org.openide.WizardDescriptor> createPackageChooser(org.netbeans.api.project.Project,org.netbeans.api.project.SourceGroup[])
 meth public static org.openide.WizardDescriptor$Panel<org.openide.WizardDescriptor> createPackageChooser(org.netbeans.api.project.Project,org.netbeans.api.project.SourceGroup[],org.openide.WizardDescriptor$Panel<org.openide.WizardDescriptor>)
 meth public static org.openide.WizardDescriptor$Panel<org.openide.WizardDescriptor> createPackageChooser(org.netbeans.api.project.Project,org.netbeans.api.project.SourceGroup[],org.openide.WizardDescriptor$Panel<org.openide.WizardDescriptor>,boolean)
+supr java.lang.Object
+
+CLSS public final org.openide.util.HelpCtx
+cons public init(java.lang.Class<?>)
+ anno 0 java.lang.Deprecated()
+cons public init(java.lang.String)
+cons public init(java.net.URL)
+ anno 0 java.lang.Deprecated()
+fld public final static org.openide.util.HelpCtx DEFAULT_HELP
+innr public abstract interface static Displayer
+innr public abstract interface static Provider
+meth public boolean display()
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String getHelpID()
+meth public java.lang.String toString()
+meth public java.net.URL getHelp()
+meth public static org.openide.util.HelpCtx findHelp(java.awt.Component)
+meth public static org.openide.util.HelpCtx findHelp(java.lang.Object)
+meth public static void setHelpIDString(javax.swing.JComponent,java.lang.String)
+supr java.lang.Object
+hfds err,helpCtx,helpID
+
+CLSS public abstract interface static org.openide.util.HelpCtx$Provider
+ outer org.openide.util.HelpCtx
+meth public abstract org.openide.util.HelpCtx getHelpCtx()
+
+CLSS public abstract org.openide.util.datatransfer.PasteType
+cons public init()
+intf org.openide.util.HelpCtx$Provider
+meth public abstract java.awt.datatransfer.Transferable paste() throws java.io.IOException
+meth public java.lang.String getName()
+meth public org.openide.util.HelpCtx getHelpCtx()
 supr java.lang.Object
 

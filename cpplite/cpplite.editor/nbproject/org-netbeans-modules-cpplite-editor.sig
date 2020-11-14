@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.0
+#Version 1.1
 
 CLSS public java.lang.Object
 cons public init()
@@ -24,7 +24,9 @@ meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
 CLSS public static org.netbeans.modules.cpplite.editor.spi.CProjectConfigurationProvider$ProjectConfiguration
  outer org.netbeans.modules.cpplite.editor.spi.CProjectConfigurationProvider
 cons public init(java.lang.String)
+cons public init(java.lang.String,boolean)
 cons public init(java.util.List<java.lang.String>)
+fld public final java.lang.String commandJsonContent
 fld public final java.lang.String commandJsonPath
 fld public final java.util.List<java.lang.String> commandJsonCommand
 supr java.lang.Object

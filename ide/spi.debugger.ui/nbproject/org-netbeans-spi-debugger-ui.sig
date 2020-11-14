@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.63
+#Version 2.65
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -292,6 +292,7 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 
 CLSS public final org.netbeans.spi.debugger.ui.DebuggingView
+innr public abstract interface static DVFrame
 innr public abstract interface static DVThread
 innr public abstract interface static DVThreadGroup
 innr public abstract static DVSupport
@@ -342,6 +343,15 @@ meth public java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVFilter> 
 supr java.lang.Object
 hfds items
 
+CLSS public abstract interface static org.netbeans.spi.debugger.ui.DebuggingView$DVFrame
+ outer org.netbeans.spi.debugger.ui.DebuggingView
+meth public abstract int getColumn()
+meth public abstract int getLine()
+meth public abstract java.lang.String getName()
+meth public abstract java.net.URI getSourceURI()
+meth public abstract org.netbeans.spi.debugger.ui.DebuggingView$DVThread getThread()
+meth public abstract void makeCurrent()
+
 CLSS public abstract static org.netbeans.spi.debugger.ui.DebuggingView$DVSupport
  outer org.netbeans.spi.debugger.ui.DebuggingView
 cons protected init()
@@ -370,6 +380,7 @@ meth public abstract void resume()
 meth public final javax.swing.Action[] getFilterActions()
 meth public final void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
+meth public java.lang.String getDisplayName(org.netbeans.spi.debugger.ui.DebuggingView$DVFrame)
 supr java.lang.Object
 hfds pcs
 
@@ -406,6 +417,9 @@ meth public abstract void removePropertyChangeListener(java.beans.PropertyChange
 meth public abstract void resume()
 meth public abstract void resumeBlockingThreads()
 meth public abstract void suspend()
+meth public int getFrameCount()
+meth public java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVFrame> getFrames()
+meth public java.util.List<org.netbeans.spi.debugger.ui.DebuggingView$DVFrame> getFrames(int,int)
 
 CLSS public abstract interface static org.netbeans.spi.debugger.ui.DebuggingView$DVThreadGroup
  outer org.netbeans.spi.debugger.ui.DebuggingView

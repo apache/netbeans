@@ -212,24 +212,28 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
 
     public void testGetterWithType_01() throws Exception {
         CGSInfo cgsInfo = getCgsInfo("class Foo {^", PhpVersion.PHP_70);
+        cgsInfo.setPublicModifier(false);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
     }
 
     public void testGetterWithType_02() throws Exception {
         CGSInfo cgsInfo = getCgsInfo("class Foo {^", PhpVersion.PHP_55);
+        cgsInfo.setPublicModifier(false);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
     }
 
     public void testGetterWithMoreTypes_01() throws Exception {
         CGSInfo cgsInfo = getCgsInfo("class Foo {^", PhpVersion.PHP_70);
+        cgsInfo.setPublicModifier(false);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
     }
 
     public void testGetterWithMoreTypes_02() throws Exception {
         CGSInfo cgsInfo = getCgsInfo("class Foo {^", PhpVersion.PHP_56);
+        cgsInfo.setPublicModifier(false);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
     }

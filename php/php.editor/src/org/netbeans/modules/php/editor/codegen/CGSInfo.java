@@ -116,7 +116,7 @@ public final class CGSInfo {
         hasConstructor = false;
         this.generateDoc = true;
         fluentSetter = false;
-        isPublicModifier = false;
+        isPublicModifier = true;
         this.howToGenerate = CGSGenerator.GenWay.AS_JAVA;
         this.phpVersion = phpVersion != null ? phpVersion : PhpVersion.getDefault();
     }

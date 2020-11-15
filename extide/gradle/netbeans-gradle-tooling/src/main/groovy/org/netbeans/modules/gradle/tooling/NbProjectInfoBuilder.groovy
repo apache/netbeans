@@ -207,12 +207,15 @@ class NbProjectInfoBuilder {
         boolean hasJava = project.plugins.hasPlugin('java-base')
         boolean hasGroovy = project.plugins.hasPlugin('groovy-base')
         boolean hasScala = project.plugins.hasPlugin('scala-base')
+        boolean hasKotlin = project.plugins.hasPlugin('org.jetbrains.kotlin.android') ||
+                            project.plugins.hasPlugin('org.jetbrains.kotlin.js') ||
+                            project.plugins.hasPlugin('org.jetbrains.kotlin.jvm');
 
         if (hasJava) {
             if (project.sourceSets != null) {
                 model.info.sourcesets = storeSet(project.sourceSets.names);
                 project.sourceSets.each() { sourceSet ->
-                    ['JAVA', 'GROOVY', 'SCALA'].each() { lang ->
+                    ['JAVA', 'GROOVY', 'SCALA', 'KOTLIN'].each() { lang ->
                         def compileTask = project.tasks.findByName(sourceSet.getCompileTaskName(lang.toLowerCase()))
                         if (compileTask != null) {
                             model.info["sourceset_${sourceSet.name}_${lang}_source_compatibility"] = compileTask.sourceCompatibility
@@ -221,7 +224,11 @@ class NbProjectInfoBuilder {
                             try {
                                 compilerArgs = compileTask.options.allCompilerArgs
                             } catch (Throwable ex) {
-                                compilerArgs = compileTask.options.compilerArgs
+                                try {
+                                    compilerArgs = compileTask.options.compilerArgs
+                                } catch (Throwable ex2) {
+                                    compilerArgs = compileTask.kotlinOptions.freeCompilerArgs
+                                }
                             }
                             model.info["sourceset_${sourceSet.name}_${lang}_compiler_args"] = new ArrayList<String>(compilerArgs)
                         }
@@ -232,6 +239,8 @@ class NbProjectInfoBuilder {
                     model.info["sourceset_${sourceSet.name}_GROOVY"] = storeSet(sourceSet.groovy.srcDirs);
                     if (hasScala)
                     model.info["sourceset_${sourceSet.name}_SCALA"] = storeSet(sourceSet.scala.srcDirs);
+                    if (hasKotlin)
+                        model.info["sourceset_${sourceSet.name}_KOTLIN"] = storeSet(sourceSet.kotlin.srcDirs);
                     sinceGradle('4.0') {
                         def dirs = new LinkedHashSet<File>();
                         // classesDirs is just an iterable

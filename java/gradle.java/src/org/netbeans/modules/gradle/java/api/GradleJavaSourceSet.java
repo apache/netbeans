@@ -42,12 +42,13 @@ public final class GradleJavaSourceSet implements Serializable {
         "LBL_JAVA=Java",
         "LBL_GROOVY=Groovy",
         "LBL_SCALA=Scala",
+        "LBL_KOTLIN=Kotlin",
         "LBL_RESOURCES=Resources",
         "LBL_GENERATED=Generated"
     })
     public static enum SourceType {
 
-        JAVA, GROOVY, SCALA, RESOURCES,
+        JAVA, GROOVY, SCALA, KOTLIN, RESOURCES,
         /** @since 1.8 */
         GENERATED;
 
@@ -57,6 +58,7 @@ public final class GradleJavaSourceSet implements Serializable {
                 case JAVA: return Bundle.LBL_JAVA();
                 case GROOVY: return Bundle.LBL_GROOVY();
                 case SCALA: return Bundle.LBL_SCALA();
+                case KOTLIN: return Bundle.LBL_KOTLIN();
                 case RESOURCES: return Bundle.LBL_RESOURCES();
                 case GENERATED: return Bundle.LBL_GENERATED();
             }
@@ -208,6 +210,10 @@ public final class GradleJavaSourceSet implements Serializable {
 
     public final Set<File> getScalaDirs() {
         return getSourceDirs(SourceType.SCALA);
+    }
+
+    public final Set<File> getKotlinDirs() {
+        return getSourceDirs(SourceType.KOTLIN);
     }
 
     public final Set<File> getResourcesDirs() {
@@ -529,6 +535,8 @@ public final class GradleJavaSourceSet implements Serializable {
                 return getCompileTaskName("Groovy"); //NOI18N
             case SCALA:
                 return getCompileTaskName("Scala"); //NOI18N
+            case KOTLIN:
+                return getCompileTaskName("Kotlin"); //NOI18N
         }
         return null;
     }

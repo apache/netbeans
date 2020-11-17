@@ -176,7 +176,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
                                                               if (path != null) {
                                                                   final Pair<String,String> name = JavaSymbolProvider.getDisplayName(ne, te);
-                                                                  final String symbolName = name.first() + name.second() != null ? name.second() : "";
+                                                                  final String symbolName = name.first() + (name.second() != null ? name.second() : "");
                                                                   final ElementKind kind = ne.getKind();
                                                                   SymbolInformation symbol = new SymbolInformation(symbolName, Utils.elementKind2SymbolKind(kind), tree2Location(cc, path), te.getQualifiedName().toString());
 

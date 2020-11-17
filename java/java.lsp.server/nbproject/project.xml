@@ -61,12 +61,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>com.google.guava</code-name-base>
-                    <run-dependency>
-                        <specification-version>27.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.api.annotations.common</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>

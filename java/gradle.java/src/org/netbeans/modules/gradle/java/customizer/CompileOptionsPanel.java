@@ -78,7 +78,6 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
     private CompileOptionsPanel(Project project) {
         this.project = project;
         initComponents();
-        setupCheckBox(cbCompileOnSave, RunUtils.PROP_COMPILE_ON_SAVE, false);
         setupCheckBox(cbAugmentedBuild, RunUtils.PROP_AUGMENTED_BUILD, true);
         setupCheckBox(cbIncludeOpenProjects, RunUtils.PROP_INCLUDE_OPEN_PROJECTS, false);
         setupPlatform();
@@ -150,7 +149,6 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
     }
     
     private void save() {
-        saveCheckBox(cbCompileOnSave, RunUtils.PROP_COMPILE_ON_SAVE);
         saveCheckBox(cbAugmentedBuild, RunUtils.PROP_AUGMENTED_BUILD);
         saveCheckBox(cbIncludeOpenProjects, RunUtils.PROP_INCLUDE_OPEN_PROJECTS);
         savePlatform();
@@ -168,8 +166,6 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        cbCompileOnSave = new javax.swing.JCheckBox();
-        lbCompileOnSave = new javax.swing.JLabel();
         cbAugmentedBuild = new javax.swing.JCheckBox();
         lbPlatform = new javax.swing.JLabel();
         cbPlatform = new javax.swing.JComboBox<>();
@@ -177,12 +173,6 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         cbIncludeOpenProjects = new javax.swing.JCheckBox();
         lbIncludeOpenProjects = new javax.swing.JLabel();
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbCompileOnSave, org.openide.util.NbBundle.getMessage(CompileOptionsPanel.class, "CompileOptionsPanel.cbCompileOnSave.text")); // NOI18N
-        cbCompileOnSave.setEnabled(false);
-
-        org.openide.awt.Mnemonics.setLocalizedText(lbCompileOnSave, org.openide.util.NbBundle.getMessage(CompileOptionsPanel.class, "CompileOptionsPanel.lbCompileOnSave.text")); // NOI18N
-        lbCompileOnSave.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         org.openide.awt.Mnemonics.setLocalizedText(cbAugmentedBuild, org.openide.util.NbBundle.getMessage(CompileOptionsPanel.class, "CompileOptionsPanel.cbAugmentedBuild.text")); // NOI18N
 
@@ -214,18 +204,12 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(cbCompileOnSave)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(lbPlatform)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbPlatform, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cbPlatform, 0, 222, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btManagePlatforms))
-                            .addComponent(cbAugmentedBuild, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(19, 19, 19)
-                                .addComponent(lbCompileOnSave, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE))))
+                            .addComponent(cbAugmentedBuild, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
@@ -249,18 +233,14 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
                     .addComponent(cbPlatform, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btManagePlatforms))
                 .addGap(18, 18, 18)
-                .addComponent(cbCompileOnSave)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbCompileOnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbAugmentedBuild)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbIncludeOpenProjects)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbIncludeOpenProjects, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addContainerGap(156, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -301,11 +281,9 @@ public class CompileOptionsPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btManagePlatforms;
     private javax.swing.JCheckBox cbAugmentedBuild;
-    private javax.swing.JCheckBox cbCompileOnSave;
     private javax.swing.JCheckBox cbIncludeOpenProjects;
     private javax.swing.JComboBox<JavaPlatform> cbPlatform;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel lbCompileOnSave;
     private javax.swing.JLabel lbIncludeOpenProjects;
     private javax.swing.JLabel lbPlatform;
     // End of variables declaration//GEN-END:variables

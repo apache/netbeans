@@ -45,6 +45,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
@@ -280,6 +281,7 @@ public class ServerTest extends NbTestCase {
     private class OpenCloseHook {
         private Semaphore didOpenCompleted = new Semaphore(0);
         private Semaphore didCloseCompleted = new Semaphore(0);
+        private Semaphore didChangeCompleted = new Semaphore(0);
         
         public void accept(String n, Object params){
             switch (n) {
@@ -289,9 +291,23 @@ public class ServerTest extends NbTestCase {
                 case "didClose":
                     didCloseCompleted.release();
                     break;
+                case "didChange":
+                    didChangeCompleted.release();
+                    break;
             }
         }
     }
+    
+    private static final String SAMPLE_CODE = 
+                "public class Test \n"
+                + "{ \n"
+                + "  int i = \"\".hashCode();\n"
+                + "  public void run() {\n"
+                + "    this.test(); \n"
+                + "  }\n\n"
+                + "  /**Test.*/public void test() {\n"
+                + "  }\n"
+                + "}";
     
     /**
      * Checks that opening the document preserves lines. This is necessary for breakpoints
@@ -309,16 +325,7 @@ public class ServerTest extends NbTestCase {
         File src2 = new File(getWorkDir(), "Test2.java");
         File src3 = new File(getWorkDir(), "Test3.java");
         src.getParentFile().mkdirs();
-        String code = 
-                "public class Test \n"
-                + "{ \n"
-                + "  int i = \"\".hashCode();\n"
-                + "  public void run() {\n"
-                + "    this.test(); \n"
-                + "  }\n\n"
-                + "  /**Test.*/public void test() {\n"
-                + "  }\n"
-                + "}";
+        String code = SAMPLE_CODE;
         String code2 = code.replace("Test", "Test2");
         String code3 = code.replace("Test", "Test3");
         try (Writer w = new FileWriter(src)) {
@@ -411,6 +418,53 @@ public class ServerTest extends NbTestCase {
         nl3 = NbDocument.findLineNumber(d, p3.getOffset());
         assertEquals(line3, lineObject3.getLineNumber());
         assertEquals(line3, nl3);
+    }
+    
+    /**
+     * Simulates Ctrl-N ve VScode plus paste of initial content, then save. According to the
+     * report, DidOpen will come with an empty forced initial content. The DidChange comes that will
+     * inject the pasted content. 
+     * @throws Exception 
+     */
+    public void testSimulateNewUnnamedFile() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        
+        String code = SAMPLE_CODE;
+        // write in an initial code on the disk
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        
+        FileObject f1 = FileUtil.toFileObject(src);
+        OpenCloseHook hook = new OpenCloseHook();
+        TextDocumentServiceImpl.HOOK_NOTIFICATION = hook::accept;
+
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient(), client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        
+        // open with empty initial content.
+        String uriString = src.toURI().toString();
+        server.getTextDocumentService().didOpen(
+                new DidOpenTextDocumentParams(new TextDocumentItem(uriString, "java", 0, ""))
+        );
+        
+        EditorCookie cake = f1.getLookup().lookup(EditorCookie.class);
+        assertTrue(hook.didOpenCompleted.tryAcquire(400, TimeUnit.MILLISECONDS));
+        
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(uriString, 1);
+        server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(
+                id, Arrays.asList(
+                    new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, code)
+                )
+        ));
+        
+        assertTrue(hook.didChangeCompleted.tryAcquire(400, TimeUnit.MILLISECONDS));
+        
+        Document doc = cake.openDocument();
+        assertEquals(code, doc.getText(0, doc.getLength()));
+        
     }
     
     public void testCodeActionWithRemoval() throws Exception {

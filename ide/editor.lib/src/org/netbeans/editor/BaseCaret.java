@@ -54,11 +54,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.function.IntUnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
+
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JScrollBar;
@@ -80,6 +82,7 @@ import javax.swing.event.EventListenerList;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Position;
 import javax.swing.text.StyleConstants;
+
 import org.netbeans.api.editor.fold.FoldHierarchyEvent;
 import org.netbeans.api.editor.fold.FoldHierarchyListener;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
@@ -401,9 +404,14 @@ AtomicLockListener, FoldHierarchyListener {
                                 c, offset, Position.Bias.Forward);
                         // [TODO] Temporary fix - impl should remember real bounds computed by paintCustomCaret()
                         if (newCaretBounds != null) {
-                            newCaretBounds.width = Math.max(newCaretBounds.width, 2);
+                            int minwidth = 2;
+                            // [NETBEANS-4940] Caret drawing problems over a TAB
+                            Object o = component.getClientProperty("CARET_MIN_WIDTH");
+                            if(o instanceof IntUnaryOperator) {
+                                minwidth = ((IntUnaryOperator)o).applyAsInt(offset);
+                            }
+                            newCaretBounds.width = Math.max(newCaretBounds.width, minwidth);
                         }
-
                     } catch (BadLocationException e) {
                         newCaretBounds = null;
                         Utilities.annotateLoggable(e);

@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.gradle.GradleModuleFileCache21;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 
 /**
@@ -45,7 +46,10 @@ public final class GradleProjects {
      * not available.
      */
     public static File getSources(File binary) {
-        return GradleArtifactStore.getDefault().getSources(binary);
+        GradleModuleFileCache21 cache = GradleModuleFileCache21.getGradleFileCache();
+        GradleModuleFileCache21.CachedArtifactVersion av = cache.resolveCachedArtifactVersion(binary.toPath());
+        GradleModuleFileCache21.CachedArtifactVersion.Entry sources = av != null ? av.getSources() : null;
+        return sources != null ? sources.getPath().toFile() : GradleArtifactStore.getDefault().getSources(binary);
     }
 
     /**
@@ -55,7 +59,10 @@ public final class GradleProjects {
      * not available.
      */
     public static File getJavadoc(File binary) {
-        return GradleArtifactStore.getDefault().getJavadoc(binary);
+        GradleModuleFileCache21 cache = GradleModuleFileCache21.getGradleFileCache();
+        GradleModuleFileCache21.CachedArtifactVersion av = cache.resolveCachedArtifactVersion(binary.toPath());
+        GradleModuleFileCache21.CachedArtifactVersion.Entry javadoc = av != null ? av.getJavaDoc() : null;
+        return javadoc != null ? javadoc.getPath().toFile() : GradleArtifactStore.getDefault().getJavadoc(binary);
     }
 
     /**
@@ -146,4 +153,5 @@ public final class GradleProjects {
             }
         }
     }
+
 }

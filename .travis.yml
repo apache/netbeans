@@ -305,7 +305,7 @@ matrix:
             - ant $OPTS -f ide/xml.lexer test
             - ant $OPTS -f ide/xml.multiview test
             - ant $OPTS -f ide/xml.retriever test
-            - ant $OPTS -f ide/xml.schema.completion test -Dtest.config=stableBTD
+            - ant $OPTS -f ide/xml.schema.completion test
             - ant $OPTS -f ide/xml.schema.model test
             - ant $OPTS -f ide/xml.text test
             - ant $OPTS -f ide/xml.text.obsolete90 test

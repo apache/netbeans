@@ -1,7 +1,7 @@
 {
 	"name": "apache-netbeans-java",
-	"displayName": "Apache Netbeans Java for VSCode",
-	"description": "An Apache NetBeans Java plugin for Visual Studio Code",
+	"displayName": "Apache NetBeans Language Server",
+	"description": "An Apache NetBeans Language Server plugin for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
 	"version": "0.1.0",
@@ -9,8 +9,13 @@
 		"type": "git",
 		"url": "https://github.com/apache/netbeans"
 	},
-	"publisher": "jlahoda",
-	"categories": [],
+	"publisher": "asf",
+	"icon": "images/Apache_NetBeans_Logo.png",
+	"categories": [
+		"Programming Languages",
+		"Debuggers",
+		"Other"
+	],
 	"keywords": [
 		"multi-root ready"
 	],
@@ -35,13 +40,23 @@
 						"null"
 					],
 					"default": null,
-					"description": "Specifies the JDK on which the Java language server should be run"
+					"description": "Specifies JDK for the Apache NetBeans Language Server"
 				},
-                                "netbeans.verbose": {
-                                        "type": "boolean",
-                                        "default": false,
-                                        "description": "Enables verbose messages from the Java Language Server"
-                                }
+				"netbeans.verbose": {
+					"type": "boolean",
+					"default": false,
+					"description": "Enables verbose messages from the Apache NetBeans Language Server"
+				},
+				"netbeans.conflict.check": {
+					"type": "boolean",
+					"default": true,
+					"description": "Avoid conflicts with other Java extensions"
+				},
+				"java.test.editor.enableShortcuts": {
+					"type": "boolean",
+					"default": false,
+					"description": "Enable Run/Debug test in editor"
+				}
 			}
 		},
 		"breakpoints": [
@@ -51,8 +66,8 @@
 		],
 		"debuggers": [
 			{
-				"type": "java-polyglot",
-				"label": "Java (Polyglot)",
+				"type": "java8+",
+				"label": "Java 8+",
 				"runtime": "node",
 				"languages": [
 					"java"
@@ -89,10 +104,22 @@
 				},
 				"initialConfigurations": [
 					{
-						"type": "java-polyglot",
+						"type": "java8+",
 						"request": "launch",
-						"name": "Java (Polyglot)",
+						"name": "Launch Java 8+ App",
 						"mainClass": "${file}"
+					}
+				],
+				"configurationSnippets": [
+					{
+						"label": "Java 8+: Launch Java 8+ Application",
+						"description": "Launch a Java 8+ Application in debug mode",
+						"body": {
+							"type": "java8+",
+							"request": "launch",
+							"name": "Launch Java 8+ App",
+							"mainClass": "^\"${1:\\${file\\}}\""
+						}
 					}
 				]
 			}

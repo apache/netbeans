@@ -83,6 +83,19 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="Superclass-Interfaces-FreeMarker-Variables">
+            <api name="JavaProjectUI"/>
+            <summary>Added the <code>superclass</code> and <code>interfaces</code> variables for FreeMarker file templates</summary>
+            <version major="1" minor="1.86"/>
+            <date day="8" month="10" year="2020"/>
+            <author login="isarthur"/>
+            <compatibility addition="yes"/>
+            <description>
+                Added the <code>superclass</code> and <code>interfaces</code> variables for use in FreeMarker 
+                templates used by the New Java File Wizard.
+            </description>
+            <class name="NewJavaFileWizardIterator" package="org.netbeans.modules.java.project.ui"/>
+        </change>
         <change id="BrokenReferencesSupport.createPlatformVersionProblemProvider">
             <api name="JavaProjectUI"/>
             <summary>Extended the <code>BrokenReferencesSupport.createPlatformVersionProblemProvider</code> by the mininal source level supported by the project</summary>

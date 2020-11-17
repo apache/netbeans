@@ -63,6 +63,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -253,6 +254,7 @@ public final class Server {
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
                 capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(Arrays.asList(JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT)));
+                capabilities.setWorkspaceSymbolProvider(true);
             }
             return new InitializeResult(capabilities);
         }
@@ -266,7 +268,7 @@ public final class Server {
             if (folders != null) {
                 for (WorkspaceFolder w : folders) {
                     try {
-                        projectCandidates.add(TextDocumentServiceImpl.fromUri(w.getUri()));
+                        projectCandidates.add(Utils.fromUri(w.getUri()));
                     } catch (MalformedURLException ex) {
                         LOG.log(Level.FINE, null, ex);
                     }
@@ -276,7 +278,7 @@ public final class Server {
 
                 if (root != null) {
                     try {
-                        projectCandidates.add(TextDocumentServiceImpl.fromUri(root));
+                        projectCandidates.add(Utils.fromUri(root));
                     } catch (MalformedURLException ex) {
                         LOG.log(Level.FINE, null, ex);
                     }

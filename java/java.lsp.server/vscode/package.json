@@ -24,6 +24,7 @@
 	},
 	"activationEvents": [
 		"onLanguage:java",
+		"workspaceContains:**/*.java",
 		"workspaceContains:pom.xml",
 		"workspaceContains:build.gradle",
 		"onDebug"

@@ -23,9 +23,9 @@
 
 This is a technology preview of [Apache NetBeans](http://netbeans.org)
 based extension for VS Code. Use it to get all the _goodies of NetBeans_
-via the VS Code user interface! Run on __JDK8__[1], __JDK11__, __JDK15__, etc.
+via the VS Code user interface! Run on __JDK8__[*], __JDK11__, __JDK15__, etc.
 
-[1]: <http://github.com/oracle/nb-javac> "Running on JDK8 requires additional download of GPLv2 with ClassPath Exception code"
+[*]: <http://github.com/oracle/nb-javac> "Running on JDK8 requires additional download of GPLv2 with ClassPath Exception code"
 
 Invoke "Open Folder" action to open project directories with `pom.xml` or `build.gradle`
 build scripts. Edit, compile and debug (with the __Java 8+__ debugger configuration)

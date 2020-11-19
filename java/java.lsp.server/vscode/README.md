@@ -53,7 +53,8 @@ to set your environment up to support
 
 ## Selecting the JDK
 
-The VSNetBeans Java part needs to run on a JDK. The JDK is being searched in
+The user projects are built, run and debugged using the same JDK which runs the
+Apache NetBeans Language Server. The JDK is being searched in
 following locations:
 
 - `netbeans.jdkhome` setting (workspace then user settings)

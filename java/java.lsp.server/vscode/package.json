@@ -1,10 +1,11 @@
 {
 	"name": "apache-netbeans-java",
 	"displayName": "Apache NetBeans Language Server",
-	"description": "An Apache NetBeans Language Server plugin for Visual Studio Code",
+	"description": "Apache NetBeans Language Server Extension for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
 	"version": "0.1.0",
+	"preview": true,
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/apache/netbeans"

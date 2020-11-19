@@ -63,11 +63,11 @@ following locations:
 - `JAVA_HOME` environment variable
 - current system path
 
-As soon as one of the settings is changed, the VSNetBeans Java part is restarted.
+As soon as one of the settings is changed, the Language Server is restarted.
 
 ## Conflicts with other Java Extensions
 
-VSNetBeans extension isn't the only Java supporting
+Apache NetBeans Language Server extension isn't the only Java supporting
 extension. To avoid duplicated code completion and other misleading clashes
 the extension disables certain functionality known to cause problems. This
 behavior can be disabled by setting `netbeans.conflict.check` setting to `false`.

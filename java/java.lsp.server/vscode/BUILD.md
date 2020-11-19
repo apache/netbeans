@@ -1,4 +1,4 @@
-# VSNetBeans: A NetBeans based Extension for VS Code
+# Developing NetBeans based Extension for VS Code
 
 <!--
 

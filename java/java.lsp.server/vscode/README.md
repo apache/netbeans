@@ -1,4 +1,4 @@
-# VSNetBeans
+# Apache NetBeans Language Server Extension for VS Code
 
 <!--
 

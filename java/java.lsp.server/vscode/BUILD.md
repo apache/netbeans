@@ -1,4 +1,4 @@
-# VSNetBeans: A NetBeans based Extension for VSCode
+# VSNetBeans: A NetBeans based Extension for VS Code
 
 <!--
 
@@ -72,7 +72,7 @@ netbeans$ ant clean
 Have a sample Maven project, open it in NetBeans first and select the main file for both
 the Run and Debug actions.
 
-To use the extension created for developement you can run VSCode with
+To use the extension created for developement you can run VS Code with
 following parameter:
 
 ```bash
@@ -82,7 +82,7 @@ vscode$ code --extensionDevelopmentPath=`pwd` path_to_the_maven_project
 Or you can open the `vscode` folder in `code` directly and use **F5** to
 debug the extension's *typescript code*.
 
-To debug the *Java code*, launch the NetBeans part of the VSCode system first
+To debug the *Java code*, launch the NetBeans part of the VS Code system first
 and specify suitable debug arguments:
 
 ```bash
@@ -90,7 +90,7 @@ vscode$ npm run nbcode -- --jdkhome /jdk-14/ -J-agentlib:jdwp=transport=dt_socke
 ```
 
 Connect to the process with Java debugger, setup all breakpoints. Then launch 
-and connect from the VSCode extension:
+and connect from the VS Code extension:
 
 ```bash
 vscode$ code --extensionDevelopmentPath=`pwd` path_to_the_maven_project

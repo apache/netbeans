@@ -22,8 +22,8 @@
 -->
 
 This is a technology preview of [Apache NetBeans](http://netbeans.org)
-based extension for VSCode. Use it to get all the _goodies of NetBeans_
-via the VSCode user interface! Run on __JDK8__[1], __JDK11__, __JDK15__, etc. 
+based extension for VS Code. Use it to get all the _goodies of NetBeans_
+via the VS Code user interface! Run on __JDK8__[1], __JDK11__, __JDK15__, etc.
 
 [1]: <http://github.com/oracle/nb-javac> "Running on JDK8 requires additional download of GPLv2 with ClassPath Exception code"
 

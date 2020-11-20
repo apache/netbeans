@@ -12,14 +12,14 @@ VARIABLE   array $array2                   [PUBLIC]   spreadOperatorInArrayExpre
 VARIABLE   array $array2_a                 [PUBLIC]   spreadOperatorInArrayExpression.php
 VARIABLE   array $array3                   [PUBLIC]   spreadOperatorInArrayExpression.php
 VARIABLE   array $array3_a                 [PUBLIC]   spreadOperatorInArrayExpression.php
-CONSTANT   BAR_CONSTANT ?                  [PUBLIC]   Bar
-CONSTANT   CONSTANT ?                      [PUBLIC]   Foo
-CONSTANT   CONSTANT1 ?                     [PUBLIC]   Foo
-CONSTANT   CONSTANT1a ?                    [PUBLIC]   Foo
-CONSTANT   CONSTANT2 ?                     [PUBLIC]   Foo
-CONSTANT   CONSTANT3 ?                     [PUBLIC]   Foo
-CONSTANT   CONSTANT4 ?                     [PUBLIC]   Foo
-CONSTANT   CONSTANT5 ?                     [PUBLIC]   Foo
+CONSTANT   BAR_CONSTANT []                 [PUBLIC]   Bar
+CONSTANT   CONSTANT [0,...]                [PUBLIC]   Foo
+CONSTANT   CONSTANT1 [...]                 [PUBLIC]   Foo
+CONSTANT   CONSTANT1a [[0,...]]            [PUBLIC]   Foo
+CONSTANT   CONSTANT2 [100,...]             [PUBLIC]   Foo
+CONSTANT   CONSTANT3 [...]                 [PUBLIC]   Foo
+CONSTANT   CONSTANT4 [...]                 [PUBLIC]   Foo
+CONSTANT   CONSTANT5 [...]                 [PUBLIC]   Foo
 ------------------------------------
 VARIABLE   $GLOBALS                                   PHP Platform
 VARIABLE   $HTTP_RAW_POST_DATA                        PHP Platform

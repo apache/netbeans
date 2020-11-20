@@ -16,12 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.editor.model.nodes;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.php.editor.model.nodes.ASTNodeInfo.Kind;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
@@ -32,6 +34,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation;
  * @author Radek Matous
  */
 public class ConstantDeclarationInfo extends ClassConstantDeclarationInfo {
+
     ConstantDeclarationInfo(final Identifier node, final String value, final ConstantDeclaration constantDeclaration) {
         super(node, value, constantDeclaration);
     }
@@ -42,6 +45,11 @@ public class ConstantDeclarationInfo extends ClassConstantDeclarationInfo {
         for (Identifier identifier : names) {
             String value = null;
             for (final Expression expression : constantDeclaration.getInitializers()) {
+                value = getConstantValue(expression);
+                if (value != null) {
+                    break;
+                }
+                /*
                 if (expression instanceof Scalar) {
                     value = ((Scalar) expression).getStringValue();
                     break;
@@ -54,6 +62,7 @@ public class ConstantDeclarationInfo extends ClassConstantDeclarationInfo {
                         break;
                     }
                 }
+                 */
             }
             retval.add(new ConstantDeclarationInfo(identifier, value, constantDeclaration));
         }
@@ -64,4 +73,53 @@ public class ConstantDeclarationInfo extends ClassConstantDeclarationInfo {
     public Kind getKind() {
         return Kind.CONSTANT;
     }
+
+    @CheckForNull
+    private static String getConstantValue(Expression expr) {
+        if (expr instanceof Scalar) {
+            return ((Scalar) expr).getStringValue();
+        }
+        if (expr instanceof UnaryOperation) {
+            UnaryOperation up = (UnaryOperation) expr;
+            if (up.getOperator() == UnaryOperation.Operator.MINUS
+                    && up.getExpression() instanceof Scalar) {
+                return "-" + ((Scalar) up.getExpression()).getStringValue();
+            }
+        }
+        if (expr instanceof ArrayCreation) {
+            return getConstantValue((ArrayCreation) expr);
+        }
+        return null;
+    }
+
+    private static String getConstantValue(ArrayCreation expr) {
+        StringBuilder sb = new StringBuilder("["); //NOI18N
+        boolean itemAdded = false;
+        List<ArrayElement> elements = expr.getElements();
+        if (elements.size() > 0) {
+            ArrayElement firstElement = elements.get(0);
+            Expression key = firstElement.getKey();
+            if (key != null) {
+                String convertedKey = getConstantValue(key);
+                if (convertedKey != null) {
+                    sb.append(convertedKey);
+                    sb.append(" => "); //NOI18N
+                }
+            }
+            String convertedValue = getConstantValue(firstElement.getValue());
+            if (convertedValue != null) {
+                sb.append(convertedValue);
+                itemAdded = true;
+            } else {
+                // Case when element exist but value was not converted to output.
+                sb.append("..."); //NOI18N
+            }
+        }
+        if (itemAdded && elements.size() > 1) {
+            sb.append(",..."); //NOI18N
+        }
+        sb.append("]"); //NOI18N
+        return sb.toString();
+    }
+
 }

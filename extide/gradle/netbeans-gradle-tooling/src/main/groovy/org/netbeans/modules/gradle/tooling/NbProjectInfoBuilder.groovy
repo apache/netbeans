@@ -156,7 +156,9 @@ class NbProjectInfoBuilder {
             'org.springframework.boot', \
             'com.github.lkishalmi.gatling', \
             'com.android.library', 'com.android.application',
-            "io.micronaut.application"]) {
+            'org.jetbrains.kotlin.android', 'org.jetbrains.kotlin.js',
+            'org.jetbrains.kotlin.jvm',
+            'io.micronaut.application']) {
             if (project.plugins.hasPlugin(plugin)) {
                 plugins.add(plugin);
             }

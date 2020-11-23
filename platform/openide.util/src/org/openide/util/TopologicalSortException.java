@@ -189,15 +189,15 @@ public final class TopologicalSortException extends Exception {
         // now connect vertexes that cannot be sorted into own
         // sets
         // map from the original objects to 
-        Map<Object,Set> objectsToSets = new HashMap<Object,Set>();
+        Map<Object, Set<Object>> objectsToSets = new HashMap<>();
 
-        ArrayList<Set> sets = new ArrayList<Set>();
+        List<Set<Object>> sets = new ArrayList<>();
 
         while (!dualGraph.isEmpty()) {
             Vertex v = dualGraph.pop();
 
             if (!v.visited) {
-                Set<Object> set = new HashSet<Object>();
+                Set<Object> set = new HashSet<>();
                 visitDualGraph(v, set);
 
                 if ((set.size() == 1) && v.edgesFrom.contains(v)) {
@@ -223,7 +223,7 @@ public final class TopologicalSortException extends Exception {
 
         // now topologically sort the sets
         // 1. prepare the map
-        HashMap<Set,Collection<Set>> edgesBetweenSets = new HashMap<Set,Collection<Set>>();
+        Map<Set, Collection<Set>> edgesBetweenSets = new HashMap<>();
         it = edges.entrySet().iterator();
 
         while (it.hasNext()) {

@@ -232,7 +232,7 @@ public class Hk2OptionalFactory extends OptionalDeploymentManagerFactory {
 
         @Override
         public Set instantiate() throws IOException {
-            Set set = delegate.instantiate();
+            Set<?> set = delegate.instantiate();
             if(!set.isEmpty()) {
                 Object obj = set.iterator().next();
                 if(obj instanceof ServerInstance) {

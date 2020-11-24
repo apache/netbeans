@@ -62,7 +62,7 @@ public class WebServiceListModel {
     private List<WebServiceData> webServices = Collections.synchronizedList(new ArrayList<WebServiceData>());
     private List<WebServiceGroup> webServiceGroups = Collections.synchronizedList(new ArrayList<WebServiceGroup>());
     // To maintain the display names for the webservice/port
-    private Set uniqueDisplayNames = Collections.synchronizedSet(new HashSet());
+    private Set<String> uniqueDisplayNames = Collections.synchronizedSet(new HashSet());
     private List<String> partnerServices = new ArrayList<String>();
     private static WebServiceListModel websvcNodeModel = new WebServiceListModel();
     private boolean initialized = false;

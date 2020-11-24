@@ -59,8 +59,10 @@ import org.netbeans.modules.java.source.ui.JavaSymbolProvider.ResultHandler.Exec
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.parsing.lucene.support.Queries;
 import org.netbeans.spi.jumpto.type.SearchType;
+import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Lookup;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
@@ -85,14 +87,46 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 ActionsManager am = DebuggerManager.getDebuggerManager().getCurrentEngine().getActionsManager();
                 am.doAction("pauseInGraalScript");
                 return CompletableFuture.completedFuture(true);
-            case Server.JAVA_BUILD_WORKSPACE:
-                for (Project prj : OpenProjects.getDefault().getOpenProjects()) {
-                    ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
-                    if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_BUILD, Lookups.fixed())) {
-                        ap.invokeAction(ActionProvider.COMMAND_REBUILD, Lookups.fixed());
+            case Server.JAVA_BUILD_WORKSPACE: {
+                CompletableFuture<Object> compileFinished = new CompletableFuture<>();
+                class CompileAllProjects extends ActionProgress {
+                    private int running;
+                    private int success;
+                    private int failure;
+
+                    @Override
+                    protected synchronized void started() {
+                        running++;
+                    }
+
+                    @Override
+                    public synchronized void finished(boolean ok) {
+                        if (ok) {
+                            success++;
+                        } else {
+                            failure++;
+                        }
+                        checkStatus();
+                    }
+
+                    synchronized final void checkStatus() {
+                        if (running <= success + failure) {
+                            compileFinished.complete(failure == 0);
+                        }
                     }
                 }
-                return CompletableFuture.completedFuture(true);
+                final CompileAllProjects progressOfCompilation = new CompileAllProjects();
+                final Lookup ctx = Lookups.singleton(progressOfCompilation);
+                for (Project prj : OpenProjects.getDefault().getOpenProjects()) {
+                    ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
+                    if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_BUILD, Lookup.EMPTY)) {
+                        ap.invokeAction(ActionProvider.COMMAND_REBUILD, ctx);
+                    }
+                }
+                progressOfCompilation.checkStatus();
+                return compileFinished;
+            }
+
             default:
                 throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
         }

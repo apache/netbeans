@@ -260,6 +260,11 @@ public class JsfCompletionItem {
             sb.append("<h1>"); //NOI18N
             sb.append(attr.getName());
             sb.append("</h1>"); //NOI18N
+            if (attr.getType() != null) {
+                sb.append("<div><b>Type:</b> "); //NOI18N
+                sb.append(attr.getType());
+                sb.append("</div>"); //NOI18N
+            }
             if(attr.isRequired()) {
                 sb.append("<p>");
                 sb.append(NbBundle.getMessage(JsfCompletionItem.class, "MSG_RequiredAttribute"));
@@ -278,7 +283,8 @@ public class JsfCompletionItem {
 
         @Override
         public boolean hasHelp() {
-            return attr.getDescription() != null;
+            // show the type info anyway
+            return true;
         }
 
          @Override

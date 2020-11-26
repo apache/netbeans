@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.72
+#Version 2.74
 
 CLSS public abstract interface java.io.Serializable
 
@@ -117,6 +117,8 @@ fld public final static org.netbeans.modules.php.api.PhpVersion PHP_71
 fld public final static org.netbeans.modules.php.api.PhpVersion PHP_72
 fld public final static org.netbeans.modules.php.api.PhpVersion PHP_73
 fld public final static org.netbeans.modules.php.api.PhpVersion PHP_74
+fld public final static org.netbeans.modules.php.api.PhpVersion PHP_80
+meth public boolean hasMixedType()
 meth public boolean hasNamespaces()
 meth public boolean hasNullableTypes()
 meth public boolean hasPropertyTypes()

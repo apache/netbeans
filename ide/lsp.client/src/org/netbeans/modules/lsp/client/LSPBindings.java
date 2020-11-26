@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -47,6 +48,7 @@ import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.DocumentSymbolCapabilities;
+import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.ResourceOperationKind;
@@ -73,6 +75,7 @@ import org.netbeans.modules.lsp.client.options.MimeTypeInfo;
 import org.netbeans.modules.lsp.client.spi.ServerRestarter;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider.LanguageServerDescription;
+import org.netbeans.modules.lsp.client.spi.UsesLspWorkspaceService;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.OnStop;
@@ -186,6 +189,10 @@ public class LSPBindings {
                                                        InitializeResult result = initServer(p, server, dir); //XXX: what if a different root is expected????
                                                        b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
                                                        lci.setBindings(b);
+                                                       UsesLspWorkspaceService workspaceServiceUser = prj != null
+                                                               ? prj.getLookup().lookup(UsesLspWorkspaceService.class)
+                                                               : null;
+                                                       if (workspaceServiceUser != null) workspaceServiceUser.setWorkspaceService(b.workspaceServiceProxy);
                                                        LanguageServerProviderAccessor.getINSTANCE().setBindings(desc, b);
                                                        TextDocumentSyncServerCapabilityHandler.refreshOpenedFilesInServers();
                                                        created[0] = true;
@@ -298,11 +305,14 @@ public class LSPBindings {
     private final LanguageServer server;
     private final InitializeResult initResult;
     private final Process process;
+    private final UsesLspWorkspaceService.WorkspaceService workspaceServiceProxy;
 
     private LSPBindings(LanguageServer server, InitializeResult initResult, Process process) {
         this.server = server;
         this.initResult = initResult;
         this.process = process;
+
+        workspaceServiceProxy = (String cmd, List<Object> args) -> getWorkspaceService().executeCommand(new ExecuteCommandParams(cmd, args));
     }
 
     public TextDocumentService getTextDocumentService() {

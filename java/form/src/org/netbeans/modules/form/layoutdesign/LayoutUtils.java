@@ -257,7 +257,7 @@ public class LayoutUtils implements LayoutConstants {
 
         // Calculate size of gap from sources and targets and their positions
         return getSizesOfDefaultGap(sources, targets, gapType,
-                                    visualMapper, null, Collections.EMPTY_MAP);
+                                    visualMapper, null, Collections.<String,LayoutRegion>emptyMap());
     }
 
     /**

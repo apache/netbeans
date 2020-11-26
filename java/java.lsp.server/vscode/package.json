@@ -1,10 +1,11 @@
 {
 	"name": "apache-netbeans-java",
 	"displayName": "Apache NetBeans Language Server",
-	"description": "An Apache NetBeans Language Server plugin for Visual Studio Code",
+	"description": "Apache NetBeans Language Server Extension for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
 	"version": "0.1.0",
+	"preview": true,
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/apache/netbeans"
@@ -24,6 +25,7 @@
 	},
 	"activationEvents": [
 		"onLanguage:java",
+		"workspaceContains:**/*.java",
 		"workspaceContains:pom.xml",
 		"workspaceContains:build.gradle",
 		"onDebug"
@@ -158,11 +160,10 @@
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
-		"lint": "eslint src --ext ts",
 		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile && npm run lint",
 		"test": "node ./out/test/runTest.js",
-		"nbcode": "node ./out/nbcode.js"
+		"nbcode": "node ./out/nbcode.js",
+		"nbjavac" : "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*"
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.47.0",

@@ -920,6 +920,13 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     }
                     completionResult.add(new PHPCompletionItem.InterfaceItem(iface, request, QualifiedNameKind.FULLYQUALIFIED, false));
                 }
+                // NETBEANS-4650
+                for (TraitElement trait : request.index.getTraits(nameQuery)) {
+                    if (CancelSupport.getDefault().isCancelled()) {
+                        return;
+                    }
+                    completionResult.add(new PHPCompletionItem.TraitItem(trait, request));
+                }
                 break;
             case CONST:
                 for (ConstantElement constant : request.index.getConstants(nameQuery)) {
@@ -974,6 +981,13 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         return;
                     }
                     completionResult.add(new PHPCompletionItem.InterfaceItem(iface, request, kind, false));
+                }
+                // NETBEANS-4650
+                for (TraitElement trait : request.index.getTraits(nameQuery)) {
+                    if (CancelSupport.getDefault().isCancelled()) {
+                        return;
+                    }
+                    completionResult.add(new PHPCompletionItem.TraitItem(trait, request));
                 }
                 break;
             case CONST:

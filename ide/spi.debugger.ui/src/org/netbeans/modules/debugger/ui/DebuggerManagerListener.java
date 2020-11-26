@@ -332,7 +332,7 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
             @Override
             public void run() {
                 List<? extends ActionsProvider> actionsProviderList = engine.lookup(null, ActionsProvider.class);
-                final Set engineActions = new HashSet();
+                final Set<?> engineActions = new HashSet<>();
                 for (ActionsProvider ap : actionsProviderList) {
                     engineActions.addAll(ap.getActions());
                 }

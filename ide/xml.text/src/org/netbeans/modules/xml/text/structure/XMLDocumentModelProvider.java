@@ -306,7 +306,7 @@ public class XMLDocumentModelProvider implements DocumentModelProvider {
                     if(from == to) {
                         to++;
                     }
-                    addedElements.add(dtm.addDocumentElement(errorText, XML_ERROR, Collections.EMPTY_MAP,
+                    addedElements.add(dtm.addDocumentElement(errorText, XML_ERROR, Collections.emptyMap(),
                             from, to));
                 }
                 
@@ -391,7 +391,7 @@ public class XMLDocumentModelProvider implements DocumentModelProvider {
                 } else {
                     switch (sel.getType()) {
                         case Node.CDATA_SECTION_NODE:
-                            addedElements.add(dtm.addDocumentElement("cdata", XML_CDATA, Collections.EMPTY_MAP,
+                            addedElements.add(dtm.addDocumentElement("cdata", XML_CDATA, Collections.emptyMap(),
                                     sel.getElementOffset(), getSyntaxElementEndOffset(sel)));
                             break;
                         case Node.PROCESSING_INSTRUCTION_NODE: {
@@ -399,7 +399,7 @@ public class XMLDocumentModelProvider implements DocumentModelProvider {
                             String nodeName = ((ProcessingInstruction)sel.getNode()).getNodeName();
                             //if the nodename is not parsed, then the element is somehow broken => do not show it.
                             if(nodeName != null) {
-                                addedElements.add(dtm.addDocumentElement(nodeName, XML_PI, Collections.EMPTY_MAP,
+                                addedElements.add(dtm.addDocumentElement(nodeName, XML_PI, Collections.emptyMap(),
                                         sel.getElementOffset(), getSyntaxElementEndOffset(sel)));
                             }
                             break;
@@ -409,7 +409,7 @@ public class XMLDocumentModelProvider implements DocumentModelProvider {
                             String nodeName = ((DocumentType)sel.getNode()).getName();
                             //if the nodename is not parsed, then the element is somehow broken => do not show it.
                             if(nodeName != null) {
-                                addedElements.add(dtm.addDocumentElement(nodeName, XML_DOCTYPE, Collections.EMPTY_MAP,
+                                addedElements.add(dtm.addDocumentElement(nodeName, XML_DOCTYPE, Collections.emptyMap(),
                                         sel.getElementOffset(), getSyntaxElementEndOffset(sel)));
                             }
                             break;
@@ -417,7 +417,7 @@ public class XMLDocumentModelProvider implements DocumentModelProvider {
                         case Node.COMMENT_NODE:
                             //comment element <!-- xxx -->
                             //DO NOT CREATE ELEMENT FOR COMMENTS
-                            addedElements.add(dtm.addDocumentElement("comment", XML_COMMENT, Collections.EMPTY_MAP,
+                            addedElements.add(dtm.addDocumentElement("comment", XML_COMMENT, Collections.emptyMap(),
                                     sel.getElementOffset(), getSyntaxElementEndOffset(sel)));
                             break;
                         default:
@@ -433,7 +433,7 @@ public class XMLDocumentModelProvider implements DocumentModelProvider {
                                 //required is distinguishing elements after text deletion) and subsequently
                                 //the empty elements are added and removed all over again after each model
                                 //update which causes performance problems.
-                                addedElements.add(dtm.addDocumentElement("...", XML_CONTENT, Collections.EMPTY_MAP, from, to));
+                                addedElements.add(dtm.addDocumentElement("...", XML_CONTENT, Collections.emptyMap(), from, to));
                             }
                     }
                 }
@@ -508,7 +508,7 @@ public class XMLDocumentModelProvider implements DocumentModelProvider {
     
     private Map createAttributesMap(Node tag) {
         if(tag.getAttributes().getLength() == 0) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         } else {
             HashMap map = new LinkedHashMap(tag.getAttributes().getLength());
             for(int i = 0; i < tag.getAttributes().getLength(); i++) {

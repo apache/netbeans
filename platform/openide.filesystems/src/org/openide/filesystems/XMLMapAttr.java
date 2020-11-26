@@ -1035,7 +1035,7 @@ final class XMLMapAttr implements Map {
         }
 
         static final Map wrapToMap(FileObject fo) {
-            return fo == null ? Collections.EMPTY_MAP : new FileMap(fo);
+            return fo == null ? Collections.emptyMap() : new FileMap(fo);
         }
 
         /**

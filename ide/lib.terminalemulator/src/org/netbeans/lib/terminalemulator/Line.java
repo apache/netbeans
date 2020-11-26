@@ -32,16 +32,16 @@ final class Line {
 
     private char buf[];		// actual characters
     private int attr[];		// attributes (allocated on demand)
-    
+
     // SHOULD use shorts?
     private int capacity;	// == buf.length == attr.length
     private int length;		// how much of buf and attr is filled
-    
-    
+
+
     public Line() {
         reset();
     }
-    
+
     public void reset() {
         length = 0;
         capacity = 32;
@@ -57,11 +57,11 @@ final class Line {
         reset();
         clearToEndFrom(term, 0, end, eraseAttr);
     }
-    
+
     public int capacity() {
         return capacity;
     }
-    
+
     /**
      * Number of characters in the line.
      * charArray()[length()] is where the cursor or newline would be.
@@ -70,11 +70,11 @@ final class Line {
     public int length() {
         return length;
     }
-    
+
     public boolean hasAttributes() {
         return attr != null;
     }
-    
+
     private int glyphId;
     public void setGlyphId(int glyphId) {
         this.glyphId = glyphId;
@@ -82,7 +82,7 @@ final class Line {
     public int getGlyphId() {
         return glyphId;
     }
-    
+
     private int backgroundColor;// Background color for the whole line
     // This is independent of per-character
     // rendition.
@@ -92,7 +92,7 @@ final class Line {
     public int getBackgroundColor() {
         return backgroundColor;
     }
-    
+
     public void setWrapped(boolean wrapped) {
         this.wrapped = wrapped;
     }
@@ -101,9 +101,9 @@ final class Line {
     }
     // SHOULD collapse wrapped with about_to_wrap into a bitfield
     private boolean wrapped;
-    
-    
-    
+
+
+
     public boolean setAboutToWrap(boolean about_to_wrap) {
         boolean old_about_to_wrap = about_to_wrap;
         this.about_to_wrap = about_to_wrap;
@@ -114,8 +114,8 @@ final class Line {
     }
     // Perhaps SHOULD have a state: normal, about-to-wrap, wrapped.
     private boolean about_to_wrap;
-    
-    
+
+
     /**
      * Return true if we've already seen attributes for this line
      * or 'a' is the first one, in which case we allocate the 'attr' array.
@@ -126,54 +126,54 @@ final class Line {
         }
         return attr != null;
     }
-    
-    
+
+
     public void accumulateInto(int bcol, int ecol, StringBuffer buf) {
         buf.append(this.buf, bcol, ecol-bcol+1);
     }
-    
+
     public char charAt(int col) {
         return buf[col];
     }
-    
+
     private void charAtPut(int col, char c) {
         buf[col] = c;
     }
-    
+
     @Override
     public String toString() {
         assert false;
         return new String(buf);
     }
-    
+
     public char[] getChars(char[] array) {
         System.arraycopy(buf, 0, array, 0, length);
         return array;
     }
-    
+
     public int [] attrArray() {
         return attr;
     }
-    
-    
+
+    public int stringWidth(MyFontMetrics metrics, int at) {
+        return metrics.getFm().charsWidth(buf, 0, at);
+    }
+
     public byte width(MyFontMetrics metrics, int at) {
         if (at >= capacity)
             return 1;
         return (byte) metrics.wcwidth(charAt(at));
     }
-    
+
     /*
      * Convert a cell column to a buffer column.
      */
     public int cellToBuf(MyFontMetrics metrics, int target_col) {
         if (metrics.isMultiCell()) {
             int bc = 0;
-            int vc = 0;
             for(;;) {
-                int w = width(metrics, bc);
-                if (vc + w - 1 >= target_col)
-                    break;
-                vc += w;
+                int w = stringWidth(metrics, bc);
+                if (w - 1 >= target_col) break;
                 bc++;
             }
             return bc;
@@ -181,24 +181,20 @@ final class Line {
             return target_col;
         }
     }
-    
+
     /*
      * Convert a buffer column to a cell column.
      */
     public int bufToCell(MyFontMetrics metrics, int target_col) {
         if (metrics.isMultiCell()) {
-            int vc = 0;
-            for (int bc = 0; bc < target_col; bc++) {
-                vc += width(metrics, bc);
-            }
-            return vc;
+            return stringWidth(metrics, target_col);
         } else {
             return target_col;
         }
     }
-    
-    
-    
+
+
+
     public StringBuffer stringBuffer() {
         // only used for word finding
         // Grrr, why don't we have: new StringBuffer(buf, 0, length);
@@ -209,35 +205,35 @@ final class Line {
         StringBuffer sb = new StringBuffer(length);
         return sb.append(buf, 0, length);
     }
-    
+
     /*
      * Ensure that we have at least 'min_capacity'.
      */
     private void ensureCapacity(Term term, int min_capacity) {
-        
+
         term.noteColumn(this, min_capacity);
-        
+
         if (min_capacity <= capacity)
             return;	// nothing to do
-        
+
         // doubling
         int new_capacity = (length+1) * 2;
         if (new_capacity < 0)
             new_capacity = Integer.MAX_VALUE;
         else if (min_capacity > new_capacity)
             new_capacity = min_capacity;
-        
-        
+
+
         char new_buf[] = new char[new_capacity];
         System.arraycopy(buf, 0, new_buf, 0, length);
         buf = new_buf;
-        
+
         if (attr != null) {
             int new_attr[] = new int[new_capacity];
             System.arraycopy(attr, 0, new_attr, 0, length);
             attr = new_attr;
         }
-        
+
         capacity = new_capacity;
     }
 
@@ -250,14 +246,14 @@ final class Line {
                 attr[col] = eraseAttr;
         }
     }
-    
+
     /**
      * Insert character and attribute at 'column' and shift everything
      * past 'column' right.
      */
     public void insertCharAt(Term term, char c, int column, int a) {
         int new_length = length + 1;
-        
+
         if (column >= length) {
             new_length = column+1;
             ensureCapacity(term, new_length);
@@ -268,16 +264,16 @@ final class Line {
             if (haveAttributes(a))
                 System.arraycopy(attr, column, attr, column + 1, length - column);
         }
-        
+
         term.checkForMultiCell(c);
-        
+
         charAtPut(column, c);
         if (haveAttributes(a))
             attr[column] = a;
-        
+
         length = new_length;
     }
-    
+
     /*
      * Generic addition and modification.
      * Line will grow to accomodate column.
@@ -297,7 +293,7 @@ final class Line {
             attr[column] = a;
         }
     }
-    
+
     public void deleteCharAt(int column) {
         if (column < 0 || column >= length)
             return;
@@ -310,7 +306,7 @@ final class Line {
         // SHOULD move this up
         length--;
     }
-    
+
     public void clearToEndFrom(Term term, int from, int end, int eraseAttr) {
         ensureCapacity(term, end+1);
         fillGap(end, eraseAttr);
@@ -354,7 +350,7 @@ final class Line {
         if (length < to+1)
             length = to+1;
     }
-    
+
     /*
      * Used for selections
      * If the ecol is past the actual line length a "\n" is appended.
@@ -365,10 +361,10 @@ final class Line {
         System.out.println("Line.text(bcol " + bcol + " ecol " + ecol + ")");	// NOI18N
         System.out.println("\tlength " + length);	// NOI18N
          */
-        
-        
+
+
         String newline = "";	// NOI18N
-        
+
         // This only happens for 'empty' lines below the cursor.
         // Actually it also happens for 'empty' lines in the middle.
         // See issue 31951 for example.
@@ -377,15 +373,15 @@ final class Line {
         // This is in fact what xterm does.
         // DtTerm doesn't allow selection of the 'empty' lines below the
         // cursor, but that is issue 21577 and is not easy to solve.
-        
+
         if (length == 0)
 	    return "\n"; // NOI18N
-        
+
         if (ecol >= length) {
             // The -1 snuffs out the newline.
             ecol = length-1;
             newline = "\n";	// NOI18N
-            
+
             if (bcol >= length)
                 bcol = length-1;
         }
@@ -395,14 +391,14 @@ final class Line {
         }
         return new String(buf, bcol, count) + newline;
     }
-    
+
     public void setCharacterAttribute(int bcol, int ecol,
             int value, boolean on) {
         // HACK: value is the ANSI code, haveAttributes takes out own
         // compact encoding, but it only checks for 0 so it's OK.
         if (!haveAttributes(value))
             return;
-        
+
 	try {
 	    if (on) {
 		for (int c = bcol; c <= ecol; c++)

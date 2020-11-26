@@ -98,17 +98,17 @@ class Sel implements ClipboardOwner {
 
     // properties:
     private Color color = new Color(204, 204, 255);  // swing color
-    void setColor(Color color) { this.color = color; } 
-    Color getColor() { return color; } 
-    
+    void setColor(Color color) { this.color = color; }
+    Color getColor() { return color; }
+
     private Color xor_color = Color.white;
-    void setXORColor(Color color) { xor_color = color; } 
+    void setXORColor(Color color) { xor_color = color; }
     Color getXORColor() { return xor_color; }
 
     Sel(Term term, State state) {
 	this.term = term;
 	this.state = state;
-    } 
+    }
 
     /**
      * Adjust the selection against 'afirstline'.
@@ -210,7 +210,7 @@ class Sel implements ClipboardOwner {
 	sel_tracking = Sel.SEL_LINE;
 	old_sel_tracking = Sel.SEL_NONE;
     }
-    
+
     public void select_line(Extent range) {
 	sel_origin = new Coord(range.begin);
 	sel_extent = new Coord(range.end);
@@ -321,7 +321,7 @@ class Sel implements ClipboardOwner {
 	*/
 	if (cancelHelp(true))
 	    term.repaint(false);
-    } 
+    }
 
     public String getSelection() {
 
@@ -344,7 +344,7 @@ class Sel implements ClipboardOwner {
     }
 
     /*
-     * Helps decide what to do with the selection when a line is 
+     * Helps decide what to do with the selection when a line is
      * added, removed or cleared.
      */
     int intersection(int line) {
@@ -393,20 +393,18 @@ class Sel implements ClipboardOwner {
 
 	begin = term.toViewCoord(begin);
 	end = term.toViewCoord(end);
-        
+
         //Hotfix for issue 40189
         if (begin == null || end == null) {
             return;
         }
 
-	int lw;		// width of last character in selection
 	Line l = term.buf().lineAt(row);
-	lw = l.width(term.metrics(), ecol);
 
 	Point pbegin = term.toPixel(begin);
 	Point pend = term.toPixel(end);
 	pend.y += term.metrics().height;
-	pend.x += term.metrics().width * lw;	// xterm actually doesn't do this
+	pend.x += l.stringWidth(term.metrics(), ecol);	// xterm actually doesn't do this
 
 	Dimension dim = new Dimension(pend.x - pbegin.x,
 				      pend.y - pbegin.y);

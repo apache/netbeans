@@ -379,13 +379,13 @@ public final class NbProtocolServer implements IDebugProtocolServer {
             String expression = args.getExpression();
             if (StringUtils.isBlank(expression)) {
                 throw ErrorUtilities.createResponseErrorException(
-                    "Failed to evaluate. Reason: Empty expression cannot be evaluated.",
+                    "Empty expression cannot be evaluated.",
                     ResponseErrorCode.InvalidParams);
             }
             NbFrame stackFrame = (NbFrame) context.getThreadsProvider().getThreadObjects().getObject(args.getFrameId());
             if (stackFrame == null) {
                 throw ErrorUtilities.createResponseErrorException(
-                    "Failed to evaluate. Reason: Unknown frame " + args.getFrameId(),
+                    "Unknown frame " + args.getFrameId(),
                     ResponseErrorCode.InvalidParams);
             }
             stackFrame.getDVFrame().makeCurrent(); // The evaluation is always performed with respect to the current frame
@@ -397,7 +397,7 @@ public final class NbProtocolServer implements IDebugProtocolServer {
                 variable = debugger.evaluate(expression);
             } catch (InvalidExpressionException ex) {
                 throw ErrorUtilities.createResponseErrorException(
-                    "Failed to evaluate. Reason: " + ex.getLocalizedMessage(),
+                    ex.getLocalizedMessage(),
                     ResponseErrorCode.ParseError);
             }
             EvaluateResponse response = new EvaluateResponse();

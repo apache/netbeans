@@ -169,7 +169,7 @@ public class SourceGroupSupport {
     private static Map createFoldersToSourceGroupsMap(final SourceGroup[] sourceGroups) {
         Map<FileObject, SourceGroup> result;
         if (sourceGroups.length == 0) {
-            result = Collections.EMPTY_MAP;
+            result = Collections.<FileObject, SourceGroup>emptyMap();
         } else {
             result = new HashMap<>(2 * sourceGroups.length, .5f);
             for (int i = 0; i < sourceGroups.length; i++) {

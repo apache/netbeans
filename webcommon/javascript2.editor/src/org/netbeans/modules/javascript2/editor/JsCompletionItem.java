@@ -254,7 +254,7 @@ public class JsCompletionItem implements CompletionProposal {
         JsFunctionCompletionItem(ElementHandle element, CompletionRequest request, Set<String> resolvedReturnTypes, Map<String, Set<String>> parametersTypes) {
             super(element, request);
             this.returnTypes = resolvedReturnTypes != null ? resolvedReturnTypes : Collections.EMPTY_SET;
-            this.parametersTypes = parametersTypes != null ? parametersTypes : Collections.EMPTY_MAP;
+            this.parametersTypes = parametersTypes != null ? parametersTypes : Collections.<String, Set<String>>emptyMap();
         }
 
         @Override

@@ -69,11 +69,14 @@
         <echo message="Copying the icon into the correct place" />
         <copy file="${appdir}/Contents/Resources/NetBeans/netbeans/${nbClusterDir}/netbeans.icns" todir="${appdir}/Contents/Resources"/>
         
-        <echo message="Creating launch script symlink ${appdir}/Contents/MacOS/netbeans"/>
-        <exec executable="sh" failonerror="yes">
+        <echo message="Creating native macOS NetBeans launcher ${appdir}/Contents/MacOS/netbeans"/>
+        <exec executable="swift" failonerror="yes" dir="../../../../../../nb/ide.launcher/macosx">
+          <arg value="build"/>
             <arg value="-c"/>
-            <arg value="ln -s '../Resources/NetBeans/netbeans/bin/netbeans' '${appdir}/Contents/MacOS/netbeans'"/>
+          <arg value="release"/>
         </exec>
+        <copy file="../../../../../../nb/ide.launcher/macosx/.build/release/NetBeansLauncher" tofile="${appdir}/Contents/MacOS/netbeans"/>
+        <chmod file="${appdir}/Contents/MacOS/netbeans" perm="755"/>
     </target>
     
     <target name="build-pkg" depends="init, build-app">

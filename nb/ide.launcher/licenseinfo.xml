@@ -21,7 +21,6 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>macosx/README.md</file>
         <file>windows/netbeans.ico</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />

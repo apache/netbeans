@@ -352,27 +352,27 @@ class IndexedPropertyEditor extends Object implements ExPropertyEditor {
             }
 
             if (getConvertedType().equals(Byte.class)) {
-                value = new Byte((byte) 0);
+                value = Byte.valueOf((byte) 0);
             }
 
             if (getConvertedType().equals(Character.class)) {
-                value = new Character('\u0000');
+                value = Character.valueOf('\u0000');
             }
 
             if (getConvertedType().equals(Double.class)) {
-                value = new Double(0d);
+                value = Double.valueOf(0d);
             }
 
             if (getConvertedType().equals(Float.class)) {
-                value = new Float(0f);
+                value = Float.valueOf(0f);
             }
 
             if (getConvertedType().equals(Long.class)) {
-                value = new Long(0L);
+                value = Long.valueOf(0L);
             }
 
             if (getConvertedType().equals(Short.class)) {
-                value = new Short((short) 0);
+                value = Short.valueOf((short) 0);
             }
         } else {
             try {

@@ -208,7 +208,7 @@ public final class PrintSettings extends ContextSystemOption {
     */
     public void setLineAscentCorrection(float correction) {
         PrintPreferences.setLineAscentCorrection(correction);
-        firePropertyChange(PROP_LINE_ASCENT_CORRECTION, null, new Float(correction));
+        firePropertyChange(PROP_LINE_ASCENT_CORRECTION, null, correction);
     }
 
     public void writeExternal(ObjectOutput obtos) throws IOException {

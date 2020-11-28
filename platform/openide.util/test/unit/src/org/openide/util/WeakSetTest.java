@@ -246,13 +246,13 @@ public class WeakSetTest extends NbTestCase {
         set.addAll(Arrays.asList(arr));
 
         for (Object object : set) {
-            set.remove(new Boolean(true));
+            set.remove(Boolean.TRUE);
         }
 
         boolean gotException = false;
         try {
             for (Object object : set) {
-                set.remove(new Long(2));
+                set.remove(Long.valueOf(2L));
             }
             fail("concurrent exception is expected");
         } catch (ConcurrentModificationException ex) {

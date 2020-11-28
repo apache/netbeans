@@ -242,7 +242,7 @@ public class AbstractLookupTest extends AbstractLookupBaseHid implements Abstrac
         newLookup.lookup(Number.class);
 
 
-        newLookup.addPair(new ICP(new Long(20)));
+        newLookup.addPair(new ICP(Long.valueOf(20L)));
 
         {
 

@@ -56,8 +56,7 @@ public class WeakSet <E> extends AbstractSet<E> implements Cloneable, Serializab
     private transient SharedKeyWeakHashMap<E, Boolean> m;  // The backing map
     private transient Set<E> s;       // Its keySet
     // Dummy value to associate with an Object in the backing Map
-    @SuppressWarnings("BooleanConstructorCall")
-    private static final Object PRESENT = new Boolean(true);
+    private static final Object PRESENT = Boolean.TRUE;
     
     /** load factor */
     private final float loadFactor;

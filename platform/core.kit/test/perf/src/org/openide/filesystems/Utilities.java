@@ -204,7 +204,7 @@ public abstract class Utilities {
             HashMap map = new HashMap();
 
             for (int i = 0; i < patterns.length; i++) {
-                Character divider = new Character(patterns[i].charAt(level));
+                Character divider = patterns[i].charAt(level);
                 StringGroup grp = (StringGroup) map.get(divider);
                 if (grp == null) {
                     grp = new StringGroup(level);
@@ -392,7 +392,7 @@ out:            for (; i < minIdx; i++) {
 
             /** @return next State for the given char */
             public State getNext(char c) {
-                Transition t = (Transition) transitions.get(new Character(c));
+                Transition t = (Transition) transitions.get(c);
                 if (t != null) {
                     return t.getState();
                 } else {
@@ -402,7 +402,7 @@ out:            for (; i < minIdx; i++) {
 
             /** @return true iff there exists a Transition for given char */
             boolean isDefined(char c) {
-                return (transitions.get(new Character(c)) != null);
+                return (transitions.get(c) != null);
             }
 
             /** This is a match */
@@ -445,7 +445,7 @@ out:            for (; i < minIdx; i++) {
 
             /** Hash key for this Transition */
             public Object getHashKey() {
-                return new Character(c);
+                return Character.valueOf(c);
             }
 
             /** @return char */

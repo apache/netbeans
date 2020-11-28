@@ -197,7 +197,7 @@ public class IndexedPropertyTest extends ExtTestCase {
         }
         
         public Object getIndexedValue(int index) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-            return new Character(value.charAt(index));
+            return Character.valueOf(value.charAt(index));
         }
         
         public Object getValue() throws IllegalAccessException, InvocationTargetException {

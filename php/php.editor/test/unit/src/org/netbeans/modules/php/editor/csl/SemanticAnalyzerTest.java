@@ -47,6 +47,10 @@ public class SemanticAnalyzerTest extends SemanticAnalysisTestBase {
         checkSemantic("testfiles/semantic/class002.php");
     }
 
+    public void testAnalysisUnusedPrivateConstant() throws Exception {
+        checkSemantic("testfiles/semantic/unusedPrivateConst.php");
+    }
+
     public void testAnalysisUnusedPrivateField() throws Exception {
         checkSemantic("testfiles/semantic/class003.php");
     }

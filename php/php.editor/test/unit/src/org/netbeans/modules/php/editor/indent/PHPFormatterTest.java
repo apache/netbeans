@@ -888,4 +888,9 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/netbeans4970.php", options);
     }
 
+    public void testSpaceAfterType() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/spaceAfterType.php", options);
+    }
+
 }

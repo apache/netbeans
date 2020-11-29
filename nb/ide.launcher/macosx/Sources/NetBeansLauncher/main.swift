@@ -170,6 +170,10 @@ for argument in Array(CommandLine.arguments.dropFirst()) {
 
 
 let launchNbexec = Process()
+var env = ProcessInfo.processInfo.environment
+env["DEFAULT_USERDIR_ROOT"] = getDefaultDir(for: .applicationSupportDirectory)
+env["DEFAULT_CACHEDIR_ROOT"] = getDefaultDir(for: .cachesDirectory)
+launchNbexec.environment = env
 launchNbexec.arguments = args
 launchNbexec.executableURL = nbexecURL
 try launchNbexec.run()

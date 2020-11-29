@@ -43,7 +43,7 @@ public final class PhpOptions {
     private static final String PREFERENCES_PATH = "general"; // NOI18N
 
     // these constants are used in API javadoc so therefore public modifier
-    public static final int DEFAULT_DEBUGGER_PORT = 9000;
+    public static final int DEFAULT_DEBUGGER_PORT = 9003;
     public static final String DEFAULT_DEBUGGER_SESSION_ID = "netbeans-xdebug"; // NOI18N
     public static final int DEFAULT_DEBUGGER_MAX_DATA_LENGTH = 2048;
     public static final int DEFAULT_DEBUGGER_MAX_STRUCTURES_DEPTH = 3;

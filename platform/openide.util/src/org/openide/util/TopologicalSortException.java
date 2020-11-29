@@ -85,7 +85,7 @@ public final class TopologicalSortException extends Exception {
     public final Set[] unsortableSets() {
         Set[] all = topologicalSets();
 
-        ArrayList<Set> unsort = new ArrayList<Set>();
+        List<Set> unsort = new ArrayList<>();
 
         for (int i = 0; i < all.length; i++) {
             if ((all[i].size() > 1) || !(all[i] instanceof HashSet)) {

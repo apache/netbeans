@@ -231,7 +231,7 @@ public class JPDATruffleAccessor extends Object {
                 System.err.println("frameInfos = "+frameInfos);
                 *//*
             }*/
-            SourcePosition position = new SourcePosition(sf.getSourceSection());
+            SourcePosition position = new SourcePosition(sf.getSourceSection(), sf.getLanguage());
             frameInfos.append(createPositionIdentificationString(position));
             if (includeInternal) {
                 frameInfos.append('\n');

@@ -41,6 +41,7 @@ final class SourcePosition {
     final String sourceSection;
     final String code;
     final URI uri;
+    final String mimeType;
 
     public SourcePosition(SourceSection sourceSection) {
         Source source = sourceSection.getSource();
@@ -54,6 +55,7 @@ final class SourcePosition {
         this.sourceSection = sourceSection.getStartLine() + "," + sourceSection.getStartColumn() + "," + sourceSection.getEndLine() + "," + sourceSection.getEndColumn();
         this.code = source.getCharacters().toString();
         this.uri = source.getURI();
+        this.mimeType = source.getMimeType();
     }
 
     private static synchronized long getId(Source s) {

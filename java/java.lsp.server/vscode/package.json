@@ -163,7 +163,7 @@
 		"watch": "tsc -watch -p ./",
 		"test": "node ./out/test/runTest.js",
 		"nbcode": "node ./out/nbcode.js",
-		"nbjavac" : "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*"
+		"nbjavac": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*"
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.47.0",

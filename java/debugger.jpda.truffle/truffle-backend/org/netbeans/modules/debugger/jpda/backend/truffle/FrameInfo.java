@@ -41,7 +41,7 @@ final class FrameInfo {
 
     FrameInfo(DebugStackFrame topStackFrame, Iterable<DebugStackFrame> stackFrames) {
         SourceSection topSS = topStackFrame.getSourceSection();
-        SourcePosition position = new SourcePosition(topSS);
+        SourcePosition position = new SourcePosition(topSS, topStackFrame.getLanguage());
         ArrayList<DebugStackFrame> stackFramesArray = new ArrayList<>();
         for (DebugStackFrame sf : stackFrames) {
             if (sf == topStackFrame) {

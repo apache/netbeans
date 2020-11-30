@@ -220,7 +220,7 @@ public class NbClipboardNativeTest extends NbTestCase implements ClipboardListen
                         protected Object getData() throws IOException, UnsupportedFlavorException {
                             String s = (String)t2.getTransferData(DataFlavor.stringFlavor);
                             try {
-                                return s;
+                                return Integer.valueOf(s);
                             } catch (NumberFormatException nfe) {
                                 throw new IOException(nfe.toString());
                             }

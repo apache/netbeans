@@ -3137,7 +3137,8 @@ public class Utilities {
                             }
                             break;
                         } else {
-                            if (leftTreeName != null && leftTreeName.contentEquals(getLeftTreeName(statements.get(0)))) {
+                            Name exprTree = getLeftTreeName(statements.get(0));
+                            if (leftTreeName != null && exprTree != null && leftTreeName.contentEquals(exprTree)) {
                                 break;
                             } else {
                                 return false;
@@ -3155,7 +3156,8 @@ public class Utilities {
                             }
                             firstCase = false;
                         }
-                        if (leftTreeName != null && leftTreeName.contentEquals(getLeftTreeName(statements.get(0)))) {
+                        Name exprTree = getLeftTreeName(statements.get(0));
+                        if (leftTreeName != null && exprTree != null && leftTreeName.contentEquals(exprTree)) {
                             break;
                         } else {
                             return false;

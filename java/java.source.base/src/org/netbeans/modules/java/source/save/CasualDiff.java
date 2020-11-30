@@ -1900,6 +1900,13 @@ public class CasualDiff {
         PositionEstimator est = EstimatorFactory.cases(oldT.getCases(), newT.getCases(), diffContext);
         localPointer = diffList(oldT.cases, newT.cases, localPointer, est, Measure.MEMBER, printer);
 
+        List<JCCase> cases = newT.cases;
+        if (cases.size() != 0) {
+            String caseKind = String.valueOf(CasualDiff.getCaseKind(cases.get(0)));
+            if (caseKind.equals("RULE")) { // NOI18N
+                printer.newline();
+            }
+        }
         copyTo(localPointer, bounds[1]);
         return bounds[1];
     }

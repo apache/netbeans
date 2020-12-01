@@ -20,7 +20,6 @@ package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sun.xml.internal.ws.util.CompletedFuture;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

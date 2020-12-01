@@ -26,6 +26,7 @@ import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
+import org.netbeans.modules.debugger.jpda.expr.InvocationExceptionTranslated;
 import org.netbeans.modules.debugger.jpda.truffle.TruffleDebugManager;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -58,6 +59,13 @@ public class TruffleEval {
                     new Variable[] { stackFrameInstance,
                                      mirrorExpression });
             return valueVar;
+        } catch (InvalidExpressionException ex) {
+            Throwable targetException = ex.getTargetException();
+            if (targetException instanceof InvocationExceptionTranslated) {
+                // We do not want to prepend Java exception message:
+                ((InvocationExceptionTranslated) targetException).resetInvocationMessage();
+            }
+            throw ex;
         } catch (InvalidObjectException | NoSuchMethodException ex) {
             try {
                 return debugger.createMirrorVar(ex.getLocalizedMessage());

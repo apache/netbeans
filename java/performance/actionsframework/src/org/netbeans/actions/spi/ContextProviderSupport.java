@@ -72,7 +72,7 @@ public final class ContextProviderSupport implements ContextProvider {
     /** Get a map composed of the contributions of each contributor */
     public final Map getContext() {
         if (contributors == null || contributors.length == 0) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         } else {
             Map[] m = new Map[contributors.length];
             for (int i=0; i < contributors.length; i++) {

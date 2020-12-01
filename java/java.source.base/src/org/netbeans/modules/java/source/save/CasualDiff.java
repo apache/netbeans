@@ -5895,7 +5895,7 @@ public class CasualDiff {
     }
 
     private boolean matchTypeTest(JCInstanceOf t1, JCInstanceOf t2) {
-        return treesMatch(t1.clazz, t2.clazz) && treesMatch(t1.expr, t2.expr);
+        return treesMatch(getPattern(t1), getPattern(t2)) && treesMatch(t1.expr, t2.expr);
     }
 
     private boolean matchIndexed(JCArrayAccess t1, JCArrayAccess t2) {

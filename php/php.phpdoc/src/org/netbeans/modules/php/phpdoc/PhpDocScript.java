@@ -151,7 +151,7 @@ public final class PhpDocScript {
                 "run", // NOI18N
                 // params
                 "--ansi", // NOI18N
-                "--progressbar", // NOI18N
+                // "--progressbar" doesn't exist since PHPDocumentor 3
                 // from
                 "--directory", // NOI18N
                 sanitizePath(FileUtil.toFile(phpModule.getSourceDirectory()).getAbsolutePath()),

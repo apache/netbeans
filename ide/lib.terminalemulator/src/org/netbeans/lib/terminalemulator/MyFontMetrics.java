@@ -77,7 +77,7 @@ class MyFontMetrics {
      *
      * CacheFactory doles out WidthCaches.
      *
-     * These caches are 64Kb (Character.MAX_VALUE+1) and we don't really want 
+     * These caches are 64Kb (Character.MAX_VALUE+1) and we don't really want
      * Each interp to have it's own. So we share them in a map using FontMetrics
      * as a key. Unfortunately stuff will accumulate in the map. A WeakHashMap
      * is no good because the keys (FontMetrics) are usually alive. For all I
@@ -91,7 +91,7 @@ class MyFontMetrics {
      * it's reference. To make the reference count go down CacheFactory.disposeBy()
      * is used. And that is called from MyFontMetrics.finalize().
      *
-     * NOTE: The actual WidthCache's instances _will_ accumulate, but they are small and 
+     * NOTE: The actual WidthCache's instances _will_ accumulate, but they are small and
      * there are only so many font variations an app can go through. As I
      * mentioned above using a WeakHashMap doesn't help much because WidthCache's
      * are keyed by relatively persistent FontMetrics.
@@ -121,12 +121,12 @@ class MyFontMetrics {
 
     }
 
-    public MyFontMetrics(Component component, Font font) {
-        fm = component.getFontMetrics(font);
-        width = fm.charWidth('a');
-        height = fm.getHeight();
-        ascent = fm.getAscent();
-        leading = fm.getLeading();
+    public MyFontMetrics(Component component) {
+        this.cmp = component;
+        width = getFm().charWidth('a');
+        height = getFm().getHeight();
+        ascent = getFm().getAscent();
+        leading = getFm().getLeading();
 
         // HACK
         // From all I can tell both xterm and DtTerm ignore the leading.
@@ -142,18 +142,22 @@ class MyFontMetrics {
         height -= leading;
         leading = 0;
 
-        cwidth_cache = CacheFactory.cacheForFontMetrics(fm);
+        cwidth_cache = CacheFactory.cacheForFontMetrics(getFm());
+    }
+
+    public FontMetrics getFm() {
+        return this.cmp.getFontMetrics(cmp.getFont());
     }
 
     @Override
     protected void finalize() {
-        CacheFactory.disposeBy(fm);
+        CacheFactory.disposeBy(getFm());
     }
     public int width;
     public int height;
     public int ascent;
     public int leading;
-    public FontMetrics fm;
+    public Component cmp;
     private WidthCache cwidth_cache;
 
     public boolean isMultiCell() {
@@ -169,7 +173,7 @@ class MyFontMetrics {
 
         if (cell_width == 0) {
             // width not cached yet so figure it out
-            int pixel_width = fm.charWidth(c);
+            int pixel_width = getFm().charWidth(c);
 
             if (pixel_width == width) {
                 cell_width = 1;

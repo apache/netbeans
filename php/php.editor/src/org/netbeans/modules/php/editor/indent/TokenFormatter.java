@@ -1718,6 +1718,9 @@ public class TokenFormatter {
                                     case WHITESPACE_AFTER_MULTI_CATCH_SEPARATOR:
                                         countSpaces = 1;
                                         break;
+                                    case WHITESPACE_AFTER_TYPE:
+                                        countSpaces = 1;
+                                        break;
                                     default:
                                     //no-op
                                 }

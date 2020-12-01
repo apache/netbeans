@@ -482,14 +482,22 @@ public class ModuleOptions extends OptionProcessor {
         public CLIProgressUIWorker(Env env) {
             this.env = env;
         }
+
         @Override
         public void processProgressEvent(ProgressEvent event) {
-            env.getOutputStream().println(event.getMessage());
+            printEvent(event);
         }
+
         @Override
         public void processSelectedProgressEvent(ProgressEvent event) {
-            env.getOutputStream().println(event.getMessage());
+            printEvent(event);
+        }
+
+        private void printEvent(ProgressEvent event) {
+            final String msg = event.getMessage();
+            if (msg != null && msg.length() > 0) {
+                env.getOutputStream().println(msg);
+            }
         }
     }
-    
 }

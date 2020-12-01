@@ -26,6 +26,6 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author sdedic
  */
-//@ServiceProvider(service = DialogDisplayer.class, position = 1000)
+@ServiceProvider(service = DialogDisplayer.class, position = 1000)
 public class LspDialogDisplayer extends AbstractDialogDisplayer {
 }

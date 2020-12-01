@@ -22,6 +22,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
+import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
+import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 
 public class CodeUtilsTest extends NbTestCase {
 
@@ -177,6 +181,45 @@ public class CodeUtilsTest extends NbTestCase {
                 "\\C\\MyClass");
         List<String> prefixes = CodeUtils.getCommonNamespacePrefixes(strings);
         assertEquals(0, prefixes.size());
+    }
+
+    public void testGetParamDefaultValueEmptyArray() {
+        List<ArrayElement> emptyArray = Collections.emptyList();
+        FormalParameter param = createFormalParameterWithDefaultArray(emptyArray);
+        assertEquals("[]", CodeUtils.getParamDefaultValue(param));
+    }
+
+    public void testGetParamDefaultValueArrayOneItem() {
+        Scalar value = new Scalar(1, 1, "'a'", Scalar.Type.STRING);
+        ArrayElement item = new ArrayElement(1, 1, null, value);
+        List<ArrayElement> array = Arrays.asList(item);
+        FormalParameter param = createFormalParameterWithDefaultArray(array);
+        assertEquals("['a']", CodeUtils.getParamDefaultValue(param));
+    }
+
+    public void testGetParamDefaultValueArrayTwoItems() {
+        Scalar value1 = new Scalar(1, 1, "'a'", Scalar.Type.STRING);
+        ArrayElement item1 = new ArrayElement(1, 1, null, value1);
+        Scalar value2 = new Scalar(1, 1, "'b'", Scalar.Type.STRING);
+        ArrayElement item2 = new ArrayElement(1, 1, null, value2);
+        List<ArrayElement> array = Arrays.asList(item1, item2);
+        FormalParameter param = createFormalParameterWithDefaultArray(array);
+        assertEquals("['a',...]", CodeUtils.getParamDefaultValue(param));
+    }
+
+    public void testGetParamDefaultValueArrayItemWithKey() {
+        Scalar key = new Scalar(1, 1, "3", Scalar.Type.INT);
+        Scalar value = new Scalar(1, 1, "'a'", Scalar.Type.STRING);
+        ArrayElement item = new ArrayElement(1, 1, key, value);
+        List<ArrayElement> array = Arrays.asList(item);
+        FormalParameter param = createFormalParameterWithDefaultArray(array);
+        assertEquals("[3 => 'a']", CodeUtils.getParamDefaultValue(param));
+    }
+
+    private FormalParameter createFormalParameterWithDefaultArray(List<ArrayElement> arrayContent) {
+        ArrayCreation defaultValue = new ArrayCreation(1, 1, arrayContent, ArrayCreation.Type.NEW);
+        FormalParameter param = new FormalParameter(1, 1, null, null, defaultValue);
+        return param;
     }
 
 }

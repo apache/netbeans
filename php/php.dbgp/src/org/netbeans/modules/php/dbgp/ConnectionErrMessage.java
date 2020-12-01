@@ -18,27 +18,35 @@
  */
 package org.netbeans.modules.php.dbgp;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.Cursor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.swing.GroupLayout;
 import javax.swing.Icon;
-import javax.swing.JEditorPane;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.LayoutStyle;
 import javax.swing.UIManager;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
+import org.netbeans.modules.php.dbgp.breakpoints.Utils;
 import org.netbeans.modules.php.project.api.PhpOptions;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.HtmlBrowser;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
  *
  * @author  Radek Matous
  */
-public class ConnectionErrMessage extends javax.swing.JPanel {
+public class ConnectionErrMessage extends JPanel {
+
+    private static final long serialVersionUID = -2227584113811663220L;
     private final String message;
+
     public static void showMe(int seconds) {
         ConnectionErrMessage panel = new ConnectionErrMessage(seconds);
 
@@ -52,17 +60,34 @@ public class ConnectionErrMessage extends javax.swing.JPanel {
     private ConnectionErrMessage(int seconds) {
         message = createMessage(seconds);
         initComponents();
+        emptyLabel.setText(" "); // NOI18N to avoid hiding the bottom components
     }
 
+    @NbBundle.Messages({
+        "ConnectionErrMessage.xdebug.remote_host=xdebug.remote_host=localhost (or hostname)", // xdebug2
+        "# {0} - port",
+        "ConnectionErrMessage.xdebug.remote_port=xdebug.remote_port={0} (default port: 9000)", // xdebug2
+        "ConnectionErrMessage.xdebug.client_host=xdebug.client_host=localhost (or hostname)", // xdebug3
+        "# {0} - port",
+        "ConnectionErrMessage.xdebug.client_port=xdebug.client_port={0} (default port: 9003)", // xdebug3
+    })
     private static String createMessage(int seconds) {
-        int debuggerPort = PhpOptions.getInstance().getDebuggerPort();
-        final String entry1 = "<li>"+NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSessionEntry1")+"</li>";//NOI18N
-        final String entry2 = "<li>"+NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSessionEntry2")+"</li>";//NOI18N
-        final String entry3 = "<li>"+NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSessionEntry3")+"</li>";//NOI18N
-        final String entry4 = "<li>"+NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSessionEntry4",
-                String.valueOf(debuggerPort))+"</li>";//NOI18N
-        final String entries = "<ul>"+entry1+entry2+entry3+entry4+"</ul>";
-        return "<html>"+NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSession", seconds,entries)+"</html>";//NOI18N
+        String debuggerPort = String.valueOf(PhpOptions.getInstance().getDebuggerPort());
+        StringBuilder sb = new StringBuilder();
+        sb.append("<h4>Xdebug 2</h4>"); // NOI18N
+        sb.append("<ul>"); // NOI18N
+        sb.append("<li>").append("xdebug.remote_enable=on").append("</li>"); // NOI18N
+        sb.append("<li>").append("xdebug.remote_handler=dbgp").append("</li>"); // NOI18N
+        sb.append("<li>").append(Bundle.ConnectionErrMessage_xdebug_remote_host()).append("</li>"); // NOI18N
+        sb.append("<li>").append(Bundle.ConnectionErrMessage_xdebug_remote_port(debuggerPort)).append("</li>"); // NOI18N
+        sb.append("</ul>"); // NOI18N
+        sb.append("<h4>Xdebug 3</h4>"); // NOI18N
+        sb.append("<ul>"); // NOI18N
+        sb.append("<li>").append("xdebug.mode=debug").append("</li>"); // NOI18N
+        sb.append("<li>").append(Bundle.ConnectionErrMessage_xdebug_client_host()).append("</li>"); // NOI18N
+        sb.append("<li>").append(Bundle.ConnectionErrMessage_xdebug_client_port(debuggerPort)).append("</li>"); // NOI18N
+        sb.append("</ul>"); // NOI18N
+        return "<html>" + NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSession", seconds, sb.toString()) + "</html>";//NOI18N
     }
 
     private static JLabel createIconLabel() {
@@ -80,89 +105,147 @@ public class ConnectionErrMessage extends javax.swing.JPanel {
     private void initComponents() {
 
         messageIconLabel = createIconLabel();
-        messageTextLabel = new javax.swing.JLabel();
-        link = HyperlinkPane.create();
+        messageTextLabel = new JLabel();
+        noteLabel = new JLabel();
+        debuggerPortOptionLabel = new JLabel();
+        optionsLabel = new JLabel();
+        informationLabel = new JLabel();
+        learnMoreLabel = new JLabel();
+        emptyLabel = new JLabel();
 
         messageTextLabel.setText(message);
 
-        link.setEditable(false);
+        noteLabel.setText("<html><i>Note:</i></html>");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        debuggerPortOptionLabel.setText("<html>If you use Xdebug 2 with default port, please set 9000 to the Debugger Port option.</html>");
+
+        optionsLabel.setText("<html><a href=\"#\">Options...</a></html>");
+        optionsLabel.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent evt) {
+                optionsLabelMousePressed(evt);
+            }
+            public void mouseEntered(MouseEvent evt) {
+                optionsLabelMouseEntered(evt);
+            }
+        });
+
+        informationLabel.setText("<html><a href=\"#\">More information about Xdebug2 installation/configuration</a>");
+        informationLabel.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent evt) {
+                informationLabelMousePressed(evt);
+            }
+            public void mouseEntered(MouseEvent evt) {
+                informationLabelMouseEntered(evt);
+            }
+        });
+
+        learnMoreLabel.setText("<html><a href=\"#\">Learn more about Xdebug</a>");
+        learnMoreLabel.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent evt) {
+                learnMoreLabelMousePressed(evt);
+            }
+            public void mouseEntered(MouseEvent evt) {
+                learnMoreLabelMouseEntered(evt);
+            }
+        });
+
+        emptyLabel.setText("EMPTY"); // NOI18N
+
+        GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(messageIconLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(link)
-                    .addComponent(messageTextLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(optionsLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(messageIconLabel)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(messageTextLabel, GroupLayout.PREFERRED_SIZE, 550, GroupLayout.PREFERRED_SIZE))
+                            .addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(informationLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(learnMoreLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(emptyLabel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(debuggerPortOptionLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(messageTextLabel)
-                    .addComponent(messageIconLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(link, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                .addComponent(messageTextLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(messageIconLabel)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
+                .addComponent(debuggerPortOptionLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(optionsLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(informationLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(learnMoreLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(emptyLabel)
                 .addContainerGap())
         );
 
         messageTextLabel.getAccessibleContext().setAccessibleDescription("Error Message");
-        link.getAccessibleContext().setAccessibleName("Error Message");
 
         getAccessibleContext().setAccessibleName("Error Message Form");
         getAccessibleContext().setAccessibleDescription("Error Message Form");
     }// </editor-fold>//GEN-END:initComponents
 
-    private static class HyperlinkPane extends JEditorPane implements HyperlinkListener {
-        static HyperlinkPane create() {
-            String url = NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSessionLinkURL");//NOI18N
-            String descr = NbBundle.getMessage(ConnectionErrMessage.class, "MSG_ErrDebugSessionLinkDescription");//NOI18N
-            String text = "<a href=\""+url+"\">"+descr+"</a>";//NOI18N
-            Font font = UIManager.getFont("Label.font");//NOI18N
-            Color color = UIManager.getColor("Label.background");
-            if (font == null || color == null ) {
-                JLabel lbl = new JLabel();
-                font = lbl.getFont();
-                color = lbl.getBackground();
-            }
-            HyperlinkPane retval = new HyperlinkPane("<html><body style=\"font-size: " +//NOI18N
-                    font.getSize() + "pt; font-family: " + font.getName() + ";\">" + text + "</body></html>");//NOI18N
-            retval.setBackground(color);//NOI18N
-            retval.setEditable(false);
-            retval.setFocusable(false);
-            return retval;
-        }
+    private void learnMoreLabelMouseEntered(MouseEvent evt) {//GEN-FIRST:event_learnMoreLabelMouseEntered
+        setHandCursor(evt);
+    }//GEN-LAST:event_learnMoreLabelMouseEntered
 
-        private HyperlinkPane(String text) {
-            super("text/html", text);//NOI18N
-            addHyperlinkListener(this);
-        }
+    private void learnMoreLabelMousePressed(MouseEvent evt) {//GEN-FIRST:event_learnMoreLabelMousePressed
+        showUrl("https://xdebug.org/docs"); // NOI18N
+    }//GEN-LAST:event_learnMoreLabelMousePressed
 
-        @Override
-        public synchronized void addHyperlinkListener(HyperlinkListener listener) {
-            super.addHyperlinkListener(listener);
-        }
+    private void informationLabelMouseEntered(MouseEvent evt) {//GEN-FIRST:event_informationLabelMouseEntered
+        setHandCursor(evt);
+    }//GEN-LAST:event_informationLabelMouseEntered
 
-        @Override
-        public void hyperlinkUpdate(HyperlinkEvent hlevt) {
-            if (HyperlinkEvent.EventType.ACTIVATED == hlevt.getEventType()) {
-                assert hlevt.getURL() != null;
-                HtmlBrowser.URLDisplayer displayer = HtmlBrowser.URLDisplayer.getDefault();
-                assert displayer != null : "HtmlBrowser.URLDisplayer found.";
-                displayer.showURL(hlevt.getURL());
-            }
+    private void informationLabelMousePressed(MouseEvent evt) {//GEN-FIRST:event_informationLabelMousePressed
+        showUrl("http://wiki.netbeans.org/HowToConfigureXDebug"); // NOI18N
+    }//GEN-LAST:event_informationLabelMousePressed
+
+    private void optionsLabelMouseEntered(MouseEvent evt) {//GEN-FIRST:event_optionsLabelMouseEntered
+        setHandCursor(evt);
+    }//GEN-LAST:event_optionsLabelMouseEntered
+
+    private void optionsLabelMousePressed(MouseEvent evt) {//GEN-FIRST:event_optionsLabelMousePressed
+        Utils.openPhpOptionsDialog();
+    }//GEN-LAST:event_optionsLabelMousePressed
+
+    private void showUrl(String url) {
+        try {
+            HtmlBrowser.URLDisplayer.getDefault().showURL(new URL(url));
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
         }
     }
 
+    private void setHandCursor(MouseEvent evt) {
+        evt.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JEditorPane link;
-    private javax.swing.JLabel messageIconLabel;
-    private javax.swing.JLabel messageTextLabel;
+    private JLabel debuggerPortOptionLabel;
+    private JLabel emptyLabel;
+    private JLabel informationLabel;
+    private JLabel learnMoreLabel;
+    private JLabel messageIconLabel;
+    private JLabel messageTextLabel;
+    private JLabel noteLabel;
+    private JLabel optionsLabel;
     // End of variables declaration//GEN-END:variables
 }

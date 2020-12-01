@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.23
+#Version 1.24
 
 CLSS public abstract interface java.io.Serializable
 
@@ -7,6 +7,12 @@ CLSS public abstract interface java.lang.Cloneable
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
@@ -67,74 +73,6 @@ cons public init(java.lang.Throwable)
 supr java.lang.Exception
 hfds serialVersionUID
 
-CLSS public java.lang.Thread
-cons public init()
-cons public init(java.lang.Runnable)
-cons public init(java.lang.Runnable,java.lang.String)
-cons public init(java.lang.String)
-cons public init(java.lang.ThreadGroup,java.lang.Runnable)
-cons public init(java.lang.ThreadGroup,java.lang.Runnable,java.lang.String)
-cons public init(java.lang.ThreadGroup,java.lang.Runnable,java.lang.String,long)
-cons public init(java.lang.ThreadGroup,java.lang.String)
-fld public final static int MAX_PRIORITY = 10
-fld public final static int MIN_PRIORITY = 1
-fld public final static int NORM_PRIORITY = 5
-innr public abstract interface static UncaughtExceptionHandler
-innr public final static !enum State
-intf java.lang.Runnable
-meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
-meth public boolean isInterrupted()
-meth public final boolean isAlive()
-meth public final boolean isDaemon()
-meth public final int getPriority()
-meth public final java.lang.String getName()
-meth public final java.lang.ThreadGroup getThreadGroup()
-meth public final void checkAccess()
-meth public final void join() throws java.lang.InterruptedException
-meth public final void join(long) throws java.lang.InterruptedException
-meth public final void join(long,int) throws java.lang.InterruptedException
-meth public final void resume()
- anno 0 java.lang.Deprecated()
-meth public final void setDaemon(boolean)
-meth public final void setName(java.lang.String)
-meth public final void setPriority(int)
-meth public final void stop()
- anno 0 java.lang.Deprecated()
-meth public final void stop(java.lang.Throwable)
- anno 0 java.lang.Deprecated()
-meth public final void suspend()
- anno 0 java.lang.Deprecated()
-meth public int countStackFrames()
- anno 0 java.lang.Deprecated()
-meth public java.lang.ClassLoader getContextClassLoader()
-meth public java.lang.StackTraceElement[] getStackTrace()
-meth public java.lang.String toString()
-meth public java.lang.Thread$State getState()
-meth public java.lang.Thread$UncaughtExceptionHandler getUncaughtExceptionHandler()
-meth public long getId()
-meth public static boolean holdsLock(java.lang.Object)
-meth public static boolean interrupted()
-meth public static int activeCount()
-meth public static int enumerate(java.lang.Thread[])
-meth public static java.lang.Thread currentThread()
-meth public static java.lang.Thread$UncaughtExceptionHandler getDefaultUncaughtExceptionHandler()
-meth public static java.util.Map<java.lang.Thread,java.lang.StackTraceElement[]> getAllStackTraces()
-meth public static void dumpStack()
-meth public static void setDefaultUncaughtExceptionHandler(java.lang.Thread$UncaughtExceptionHandler)
-meth public static void sleep(long) throws java.lang.InterruptedException
-meth public static void sleep(long,int) throws java.lang.InterruptedException
-meth public static void yield()
-meth public void destroy()
- anno 0 java.lang.Deprecated()
-meth public void interrupt()
-meth public void run()
-meth public void setContextClassLoader(java.lang.ClassLoader)
-meth public void setUncaughtExceptionHandler(java.lang.Thread$UncaughtExceptionHandler)
-meth public void start()
-supr java.lang.Object
-hfds EMPTY_STACK_TRACE,SUBCLASS_IMPLEMENTATION_PERMISSION,blocker,blockerLock,contextClassLoader,daemon,defaultUncaughtExceptionHandler,eetop,group,inheritableThreadLocals,inheritedAccessControlContext,name,nativeParkEventPointer,parkBlocker,priority,single_step,stackSize,stillborn,target,threadInitNumber,threadLocalRandomProbe,threadLocalRandomSecondarySeed,threadLocalRandomSeed,threadLocals,threadQ,threadSeqNumber,threadStatus,tid,uncaughtExceptionHandler
-hcls Caches,WeakClassKey
-
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
 cons public init()
@@ -187,20 +125,34 @@ meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public org.testng.Assert
 cons protected init()
+fld public final static java.lang.String ARRAY_MISMATCH_TEMPLATE = "arrays differ firstly at element [%d]; expected value is <%s> but was <%s>. %s"
+innr public abstract interface static ThrowingRunnable
+meth public static <%0 extends java.lang.Throwable> void assertThrows(java.lang.Class<{%%0}>,org.testng.Assert$ThrowingRunnable)
+meth public static <%0 extends java.lang.Throwable> {%%0} expectThrows(java.lang.Class<{%%0}>,org.testng.Assert$ThrowingRunnable)
 meth public static void assertEquals(boolean,boolean)
 meth public static void assertEquals(boolean,boolean,java.lang.String)
+meth public static void assertEquals(boolean[],boolean[])
+meth public static void assertEquals(boolean[],boolean[],java.lang.String)
 meth public static void assertEquals(byte,byte)
 meth public static void assertEquals(byte,byte,java.lang.String)
 meth public static void assertEquals(byte[],byte[])
 meth public static void assertEquals(byte[],byte[],java.lang.String)
 meth public static void assertEquals(char,char)
 meth public static void assertEquals(char,char,java.lang.String)
+meth public static void assertEquals(char[],char[])
+meth public static void assertEquals(char[],char[],java.lang.String)
 meth public static void assertEquals(double,double,double)
 meth public static void assertEquals(double,double,double,java.lang.String)
+meth public static void assertEquals(double[],double[])
+meth public static void assertEquals(double[],double[],java.lang.String)
 meth public static void assertEquals(float,float,float)
 meth public static void assertEquals(float,float,float,java.lang.String)
+meth public static void assertEquals(float[],float[])
+meth public static void assertEquals(float[],float[],java.lang.String)
 meth public static void assertEquals(int,int)
 meth public static void assertEquals(int,int,java.lang.String)
+meth public static void assertEquals(int[],int[])
+meth public static void assertEquals(int[],int[],java.lang.String)
 meth public static void assertEquals(java.lang.Iterable<?>,java.lang.Iterable<?>)
 meth public static void assertEquals(java.lang.Iterable<?>,java.lang.Iterable<?>,java.lang.String)
 meth public static void assertEquals(java.lang.Object,java.lang.Object)
@@ -213,13 +165,20 @@ meth public static void assertEquals(java.util.Collection<?>,java.util.Collectio
 meth public static void assertEquals(java.util.Collection<?>,java.util.Collection<?>,java.lang.String)
 meth public static void assertEquals(java.util.Iterator<?>,java.util.Iterator<?>)
 meth public static void assertEquals(java.util.Iterator<?>,java.util.Iterator<?>,java.lang.String)
-meth public static void assertEquals(java.util.Map<?,?>,java.util.Map<?,?>)
+meth public static void assertEquals(java.util.Map<?,?>,java.util.Map<?,?>,java.lang.String)
 meth public static void assertEquals(java.util.Set<?>,java.util.Set<?>)
 meth public static void assertEquals(java.util.Set<?>,java.util.Set<?>,java.lang.String)
 meth public static void assertEquals(long,long)
 meth public static void assertEquals(long,long,java.lang.String)
+meth public static void assertEquals(long[],long[])
+meth public static void assertEquals(long[],long[],java.lang.String)
 meth public static void assertEquals(short,short)
 meth public static void assertEquals(short,short,java.lang.String)
+meth public static void assertEquals(short[],short[])
+meth public static void assertEquals(short[],short[],java.lang.String)
+meth public static void assertEqualsDeep(java.util.Map<?,?>,java.util.Map<?,?>)
+meth public static void assertEqualsDeep(java.util.Map<?,?>,java.util.Map<?,?>,java.lang.String)
+meth public static void assertEqualsDeep(java.util.Set<?>,java.util.Set<?>,java.lang.String)
 meth public static void assertEqualsNoOrder(java.lang.Object[],java.lang.Object[])
 meth public static void assertEqualsNoOrder(java.lang.Object[],java.lang.Object[],java.lang.String)
 meth public static void assertFalse(boolean)
@@ -230,6 +189,14 @@ meth public static void assertNotEquals(float,float,float)
 meth public static void assertNotEquals(float,float,float,java.lang.String)
 meth public static void assertNotEquals(java.lang.Object,java.lang.Object)
 meth public static void assertNotEquals(java.lang.Object,java.lang.Object,java.lang.String)
+meth public static void assertNotEquals(java.util.Map<?,?>,java.util.Map<?,?>)
+meth public static void assertNotEquals(java.util.Map<?,?>,java.util.Map<?,?>,java.lang.String)
+meth public static void assertNotEquals(java.util.Set<?>,java.util.Set<?>)
+meth public static void assertNotEquals(java.util.Set<?>,java.util.Set<?>,java.lang.String)
+meth public static void assertNotEqualsDeep(java.util.Map<?,?>,java.util.Map<?,?>)
+meth public static void assertNotEqualsDeep(java.util.Map<?,?>,java.util.Map<?,?>,java.lang.String)
+meth public static void assertNotEqualsDeep(java.util.Set<?>,java.util.Set<?>)
+meth public static void assertNotEqualsDeep(java.util.Set<?>,java.util.Set<?>,java.lang.String)
 meth public static void assertNotNull(java.lang.Object)
 meth public static void assertNotNull(java.lang.Object,java.lang.String)
 meth public static void assertNotSame(java.lang.Object,java.lang.Object)
@@ -238,12 +205,17 @@ meth public static void assertNull(java.lang.Object)
 meth public static void assertNull(java.lang.Object,java.lang.String)
 meth public static void assertSame(java.lang.Object,java.lang.Object)
 meth public static void assertSame(java.lang.Object,java.lang.Object,java.lang.String)
+meth public static void assertThrows(org.testng.Assert$ThrowingRunnable)
 meth public static void assertTrue(boolean)
 meth public static void assertTrue(boolean,java.lang.String)
 meth public static void fail()
 meth public static void fail(java.lang.String)
 meth public static void fail(java.lang.String,java.lang.Throwable)
 supr java.lang.Object
+
+CLSS public abstract interface static org.testng.Assert$ThrowingRunnable
+ outer org.testng.Assert
+meth public abstract void run() throws java.lang.Throwable
 
 CLSS public org.testng.AssertJUnit
 cons protected init()
@@ -292,7 +264,7 @@ meth public java.util.Map<org.testng.ITestClass,java.util.Set<java.lang.Object>>
 meth public java.util.Map<org.testng.ITestClass,java.util.Set<java.lang.Object>> getInvokedBeforeClassMethods()
 meth public void clear()
 supr java.lang.Object
-hfds m_afterClassMethods,m_beforeClassMethods,m_classMap
+hfds afterClassMethods,beforeClassMethods,classMap
 
 CLSS public org.testng.CommandLineArgs
 cons public init()
@@ -306,7 +278,6 @@ fld public final static java.lang.String HOST = "-host"
 fld public final static java.lang.String JUNIT = "-junit"
 fld public final static java.lang.String LISTENER = "-listener"
 fld public final static java.lang.String LOG = "-log"
-fld public final static java.lang.String MASTER = "-master"
 fld public final static java.lang.String METHODS = "-methods"
 fld public final static java.lang.String METHOD_SELECTORS = "-methodselectors"
 fld public final static java.lang.String MIXED = "-mixed"
@@ -317,7 +288,6 @@ fld public final static java.lang.String PORT = "-port"
 fld public final static java.lang.String RANDOMIZE_SUITES = "-randomizesuites"
 fld public final static java.lang.String REPORTER = "-reporter"
 fld public final static java.lang.String SKIP_FAILED_INVOCATION_COUNTS = "-skipfailedinvocationcounts"
-fld public final static java.lang.String SLAVE = "-slave"
 fld public final static java.lang.String SUITE_NAME = "-suitename"
 fld public final static java.lang.String SUITE_THREAD_POOL_SIZE = "-suitethreadpoolsize"
 fld public final static java.lang.String TEST_CLASS = "-testclass"
@@ -345,13 +315,10 @@ fld public java.lang.String excludedGroups
 fld public java.lang.String groups
 fld public java.lang.String host
 fld public java.lang.String listener
-fld public java.lang.String master
 fld public java.lang.String methodSelectors
 fld public java.lang.String objectFactory
 fld public java.lang.String outputDirectory
-fld public java.lang.String parallelMode
 fld public java.lang.String reporter
-fld public java.lang.String slave
 fld public java.lang.String suiteName
 fld public java.lang.String testClass
 fld public java.lang.String testJar
@@ -362,6 +329,7 @@ fld public java.lang.String useDefaultListeners
 fld public java.lang.String xmlPathInJar
 fld public java.util.List<java.lang.String> commandLineMethods
 fld public java.util.List<java.lang.String> suiteFiles
+fld public org.testng.xml.XmlSuite$ParallelMode parallelMode
 supr java.lang.Object
 
 CLSS public org.testng.ConversionUtils
@@ -404,6 +372,13 @@ meth public static void fail(java.lang.String)
 meth public static void fail(java.lang.String,java.lang.Throwable)
 supr java.lang.Object
 
+CLSS public abstract interface org.testng.IAlterSuiteListener
+intf org.testng.ITestNGListener
+meth public abstract void alter(java.util.List<org.testng.xml.XmlSuite>)
+
+CLSS public abstract interface org.testng.IAlterTestName
+meth public abstract void setTestName(java.lang.String)
+
 CLSS public abstract interface org.testng.IAnnotationTransformer
 intf org.testng.ITestNGListener
 meth public abstract void transform(org.testng.annotations.ITestAnnotation,java.lang.Class,java.lang.reflect.Constructor,java.lang.reflect.Method)
@@ -414,17 +389,20 @@ meth public abstract void transform(org.testng.annotations.IConfigurationAnnotat
 meth public abstract void transform(org.testng.annotations.IDataProviderAnnotation,java.lang.reflect.Method)
 meth public abstract void transform(org.testng.annotations.IFactoryAnnotation,java.lang.reflect.Method)
 
+CLSS public abstract interface org.testng.IAnnotationTransformer3
+intf org.testng.IAnnotationTransformer2
+meth public abstract void transform(org.testng.annotations.IListenersAnnotation,java.lang.Class)
+
 CLSS public abstract interface org.testng.IAttributes
-intf java.io.Serializable
 meth public abstract java.lang.Object getAttribute(java.lang.String)
 meth public abstract java.lang.Object removeAttribute(java.lang.String)
 meth public abstract java.util.Set<java.lang.String> getAttributeNames()
 meth public abstract void setAttribute(java.lang.String,java.lang.Object)
 
 CLSS public abstract interface org.testng.IClass
-intf java.io.Serializable
 meth public abstract int getInstanceCount()
-meth public abstract java.lang.Class getRealClass()
+ anno 0 java.lang.Deprecated()
+meth public abstract java.lang.Class<?> getRealClass()
 meth public abstract java.lang.Object[] getInstances(boolean)
 meth public abstract java.lang.String getName()
 meth public abstract java.lang.String getTestName()
@@ -432,6 +410,11 @@ meth public abstract long[] getInstanceHashCodes()
 meth public abstract org.testng.xml.XmlClass getXmlClass()
 meth public abstract org.testng.xml.XmlTest getXmlTest()
 meth public abstract void addInstance(java.lang.Object)
+
+CLSS public abstract interface org.testng.IClassListener
+intf org.testng.ITestNGListener
+meth public abstract void onAfterClass(org.testng.ITestClass)
+meth public abstract void onBeforeClass(org.testng.ITestClass)
 
 CLSS public abstract interface org.testng.IConfigurable
 intf org.testng.ITestNGListener
@@ -451,13 +434,29 @@ CLSS public abstract interface org.testng.IConfigureCallBack
 meth public abstract java.lang.Object[] getParameters()
 meth public abstract void runConfigurationMethod(org.testng.ITestResult)
 
+CLSS public abstract interface org.testng.IDataProviderListener
+intf org.testng.ITestNGListener
+meth public abstract void afterDataProviderExecution(org.testng.IDataProviderMethod,org.testng.ITestNGMethod,org.testng.ITestContext)
+meth public abstract void beforeDataProviderExecution(org.testng.IDataProviderMethod,org.testng.ITestNGMethod,org.testng.ITestContext)
+
+CLSS public abstract interface org.testng.IDataProviderMethod
+meth public abstract boolean isParallel()
+meth public abstract java.lang.Object getInstance()
+meth public abstract java.lang.String getName()
+meth public abstract java.lang.reflect.Method getMethod()
+meth public abstract java.util.List<java.lang.Integer> getIndices()
+
 CLSS public abstract interface org.testng.IExecutionListener
 intf org.testng.ITestNGListener
 meth public abstract void onExecutionFinish()
 meth public abstract void onExecutionStart()
 
+CLSS public abstract interface org.testng.IExpectedExceptionsHolder
+meth public abstract boolean isThrowableMatching(java.lang.Throwable)
+meth public abstract java.lang.String getWrongExceptionMessage(java.lang.Throwable)
+
 CLSS public abstract interface org.testng.IExtraOutput
-intf java.io.Serializable
+ anno 0 java.lang.Deprecated()
 meth public abstract java.util.List<java.lang.String> getParameterOutput()
 
 CLSS public abstract interface org.testng.IHookCallBack
@@ -468,9 +467,9 @@ CLSS public abstract interface org.testng.IHookable
 intf org.testng.ITestNGListener
 meth public abstract void run(org.testng.IHookCallBack,org.testng.ITestResult)
 
-CLSS public abstract interface org.testng.IInstanceInfo
-meth public abstract java.lang.Class getInstanceClass()
-meth public abstract java.lang.Object getInstance()
+CLSS public abstract interface org.testng.IInstanceInfo<%0 extends java.lang.Object>
+meth public abstract java.lang.Class<{org.testng.IInstanceInfo%0}> getInstanceClass()
+meth public abstract {org.testng.IInstanceInfo%0} getInstance()
 
 CLSS public abstract interface org.testng.IInvokedMethod
 meth public abstract boolean isConfigurationMethod()
@@ -492,6 +491,7 @@ meth public abstract void beforeInvocation(org.testng.IInvokedMethod,org.testng.
 CLSS public abstract interface org.testng.IMethodInstance
 meth public abstract java.lang.Object getInstance()
 meth public abstract java.lang.Object[] getInstances()
+ anno 0 java.lang.Deprecated()
 meth public abstract org.testng.ITestNGMethod getMethod()
 
 CLSS public abstract interface org.testng.IMethodInterceptor
@@ -499,7 +499,6 @@ intf org.testng.ITestNGListener
 meth public abstract java.util.List<org.testng.IMethodInstance> intercept(java.util.List<org.testng.IMethodInstance>,org.testng.ITestContext)
 
 CLSS public abstract interface org.testng.IMethodSelector
-intf java.io.Serializable
 meth public abstract boolean includeMethod(org.testng.IMethodSelectorContext,org.testng.ITestNGMethod,boolean)
 meth public abstract void setTestMethods(java.util.List<org.testng.ITestNGMethod>)
 
@@ -524,24 +523,27 @@ intf org.testng.ITestNGListener
 meth public abstract void generateReport(java.util.List<org.testng.xml.XmlSuite>,java.util.List<org.testng.ISuite>,java.lang.String)
 
 CLSS public abstract interface org.testng.IResultMap
-intf java.io.Serializable
 meth public abstract int size()
 meth public abstract java.util.Collection<org.testng.ITestNGMethod> getAllMethods()
 meth public abstract java.util.Set<org.testng.ITestResult> getAllResults()
 meth public abstract java.util.Set<org.testng.ITestResult> getResults(org.testng.ITestNGMethod)
 meth public abstract void addResult(org.testng.ITestResult,org.testng.ITestNGMethod)
 meth public abstract void removeResult(org.testng.ITestNGMethod)
+meth public abstract void removeResult(org.testng.ITestResult)
 
 CLSS public abstract interface org.testng.IRetryAnalyzer
 meth public abstract boolean retry(org.testng.ITestResult)
 
 CLSS public abstract interface org.testng.ISuite
 intf org.testng.IAttributes
+meth public abstract com.google.inject.Injector getParentInjector()
+meth public abstract java.lang.String getGuiceStage()
 meth public abstract java.lang.String getHost()
 meth public abstract java.lang.String getName()
 meth public abstract java.lang.String getOutputDirectory()
 meth public abstract java.lang.String getParallel()
 meth public abstract java.lang.String getParameter(java.lang.String)
+meth public abstract java.lang.String getParentModule()
 meth public abstract java.util.Collection<org.testng.ITestNGMethod> getExcludedMethods()
 meth public abstract java.util.Collection<org.testng.ITestNGMethod> getInvokedMethods()
  anno 0 java.lang.Deprecated()
@@ -556,6 +558,7 @@ meth public abstract org.testng.internal.annotations.IAnnotationFinder getAnnota
 meth public abstract org.testng.xml.XmlSuite getXmlSuite()
 meth public abstract void addListener(org.testng.ITestNGListener)
 meth public abstract void run()
+meth public abstract void setParentInjector(com.google.inject.Injector)
 
 CLSS public abstract interface org.testng.ISuiteListener
 intf org.testng.ITestNGListener
@@ -563,7 +566,6 @@ meth public abstract void onFinish(org.testng.ISuite)
 meth public abstract void onStart(org.testng.ISuite)
 
 CLSS public abstract interface org.testng.ISuiteResult
-intf java.io.Serializable
 meth public abstract java.lang.String getPropertyFileName()
 meth public abstract org.testng.ITestContext getTestContext()
 
@@ -571,11 +573,7 @@ CLSS public abstract interface org.testng.ITest
 meth public abstract java.lang.String getTestName()
 
 CLSS public abstract interface org.testng.ITestClass
-intf java.io.Serializable
 intf org.testng.IClass
-meth public abstract int getInstanceCount()
-meth public abstract java.lang.Object[] getInstances(boolean)
-meth public abstract long[] getInstanceHashCodes()
 meth public abstract org.testng.ITestNGMethod[] getAfterClassMethods()
 meth public abstract org.testng.ITestNGMethod[] getAfterGroupsMethods()
 meth public abstract org.testng.ITestNGMethod[] getAfterSuiteMethods()
@@ -589,12 +587,13 @@ meth public abstract org.testng.ITestNGMethod[] getBeforeTestMethods()
 meth public abstract org.testng.ITestNGMethod[] getTestMethods()
 
 CLSS public abstract interface org.testng.ITestClassFinder
-meth public abstract org.testng.IClass getIClass(java.lang.Class)
+meth public abstract org.testng.IClass getIClass(java.lang.Class<?>)
 meth public abstract org.testng.IClass[] findTestClasses()
 
 CLSS public abstract interface org.testng.ITestContext
 intf org.testng.IAttributes
 meth public abstract com.google.inject.Injector getInjector(java.util.List<com.google.inject.Module>)
+meth public abstract com.google.inject.Injector getInjector(org.testng.IClass)
 meth public abstract java.lang.String getHost()
 meth public abstract java.lang.String getName()
 meth public abstract java.lang.String getOutputDirectory()
@@ -614,7 +613,6 @@ meth public abstract org.testng.IResultMap getSkippedTests()
 meth public abstract org.testng.ISuite getSuite()
 meth public abstract org.testng.ITestNGMethod[] getAllTestMethods()
 meth public abstract org.testng.xml.XmlTest getCurrentXmlTest()
-meth public abstract void addGuiceModule(java.lang.Class<? extends com.google.inject.Module>,com.google.inject.Module)
 meth public abstract void addInjector(java.util.List<com.google.inject.Module>,com.google.inject.Injector)
 
 CLSS public abstract interface org.testng.ITestListener
@@ -628,17 +626,17 @@ meth public abstract void onTestStart(org.testng.ITestResult)
 meth public abstract void onTestSuccess(org.testng.ITestResult)
 
 CLSS public abstract interface org.testng.ITestMethodFinder
-meth public abstract org.testng.ITestNGMethod[] getAfterClassMethods(java.lang.Class)
-meth public abstract org.testng.ITestNGMethod[] getAfterGroupsConfigurationMethods(java.lang.Class)
-meth public abstract org.testng.ITestNGMethod[] getAfterSuiteMethods(java.lang.Class)
-meth public abstract org.testng.ITestNGMethod[] getAfterTestConfigurationMethods(java.lang.Class)
-meth public abstract org.testng.ITestNGMethod[] getAfterTestMethods(java.lang.Class)
-meth public abstract org.testng.ITestNGMethod[] getBeforeClassMethods(java.lang.Class)
-meth public abstract org.testng.ITestNGMethod[] getBeforeGroupsConfigurationMethods(java.lang.Class)
-meth public abstract org.testng.ITestNGMethod[] getBeforeSuiteMethods(java.lang.Class)
-meth public abstract org.testng.ITestNGMethod[] getBeforeTestConfigurationMethods(java.lang.Class)
-meth public abstract org.testng.ITestNGMethod[] getBeforeTestMethods(java.lang.Class)
-meth public abstract org.testng.ITestNGMethod[] getTestMethods(java.lang.Class,org.testng.xml.XmlTest)
+meth public abstract org.testng.ITestNGMethod[] getAfterClassMethods(java.lang.Class<?>)
+meth public abstract org.testng.ITestNGMethod[] getAfterGroupsConfigurationMethods(java.lang.Class<?>)
+meth public abstract org.testng.ITestNGMethod[] getAfterSuiteMethods(java.lang.Class<?>)
+meth public abstract org.testng.ITestNGMethod[] getAfterTestConfigurationMethods(java.lang.Class<?>)
+meth public abstract org.testng.ITestNGMethod[] getAfterTestMethods(java.lang.Class<?>)
+meth public abstract org.testng.ITestNGMethod[] getBeforeClassMethods(java.lang.Class<?>)
+meth public abstract org.testng.ITestNGMethod[] getBeforeGroupsConfigurationMethods(java.lang.Class<?>)
+meth public abstract org.testng.ITestNGMethod[] getBeforeSuiteMethods(java.lang.Class<?>)
+meth public abstract org.testng.ITestNGMethod[] getBeforeTestConfigurationMethods(java.lang.Class<?>)
+meth public abstract org.testng.ITestNGMethod[] getBeforeTestMethods(java.lang.Class<?>)
+meth public abstract org.testng.ITestNGMethod[] getTestMethods(java.lang.Class<?>,org.testng.xml.XmlTest)
 
 CLSS public abstract interface org.testng.ITestNGListener
 
@@ -646,11 +644,10 @@ CLSS public abstract interface org.testng.ITestNGListenerFactory
 meth public abstract org.testng.ITestNGListener createListener(java.lang.Class<? extends org.testng.ITestNGListener>)
 
 CLSS public abstract interface org.testng.ITestNGMethod
-intf java.io.Serializable
 intf java.lang.Cloneable
-intf java.lang.Comparable
 meth public abstract boolean canRunFromClass(org.testng.IClass)
 meth public abstract boolean getEnabled()
+meth public abstract boolean hasMoreInvocation()
 meth public abstract boolean ignoreMissingDependencies()
 meth public abstract boolean isAfterClassConfiguration()
 meth public abstract boolean isAfterGroupsConfiguration()
@@ -671,6 +668,8 @@ meth public abstract int getParameterInvocationCount()
 meth public abstract int getPriority()
 meth public abstract int getSuccessPercentage()
 meth public abstract int getThreadPoolSize()
+meth public abstract int getTotalInvocationCount()
+ anno 0 java.lang.Deprecated()
 meth public abstract java.lang.Class getRealClass()
 meth public abstract java.lang.Object getInstance()
 meth public abstract java.lang.Object[] getInstances()
@@ -679,6 +678,7 @@ meth public abstract java.lang.String getDescription()
 meth public abstract java.lang.String getId()
 meth public abstract java.lang.String getMethodName()
 meth public abstract java.lang.String getMissingGroup()
+meth public abstract java.lang.String getQualifiedName()
 meth public abstract java.lang.String[] getAfterGroups()
 meth public abstract java.lang.String[] getBeforeGroups()
 meth public abstract java.lang.String[] getGroups()
@@ -702,11 +702,13 @@ meth public abstract void addFailedInvocationNumber(int)
 meth public abstract void addMethodDependedUpon(java.lang.String)
 meth public abstract void incrementCurrentInvocationCount()
 meth public abstract void setDate(long)
+meth public abstract void setDescription(java.lang.String)
 meth public abstract void setId(java.lang.String)
 meth public abstract void setIgnoreMissingDependencies(boolean)
 meth public abstract void setInvocationCount(int)
 meth public abstract void setInvocationNumbers(java.util.List<java.lang.Integer>)
 meth public abstract void setMissingGroup(java.lang.String)
+meth public abstract void setMoreInvocationChecker(java.util.concurrent.Callable<java.lang.Boolean>)
 meth public abstract void setParameterInvocationCount(int)
 meth public abstract void setPriority(int)
 meth public abstract void setRetryAnalyzer(org.testng.IRetryAnalyzer)
@@ -716,9 +718,9 @@ meth public abstract void setThreadPoolSize(int)
 meth public abstract void setTimeOut(long)
 
 CLSS public abstract interface org.testng.ITestObjectFactory
-intf java.io.Serializable
 
 CLSS public abstract interface org.testng.ITestResult
+fld public final static int CREATED = -1
 fld public final static int FAILURE = 2
 fld public final static int SKIP = 3
 fld public final static int STARTED = 16
@@ -746,10 +748,15 @@ meth public abstract void setStatus(int)
 meth public abstract void setThrowable(java.lang.Throwable)
 
 CLSS public abstract interface org.testng.ITestRunnerFactory
-meth public abstract org.testng.TestRunner newTestRunner(org.testng.ISuite,org.testng.xml.XmlTest,java.util.List<org.testng.IInvokedMethodListener>)
+meth public abstract org.testng.TestRunner newTestRunner(org.testng.ISuite,org.testng.xml.XmlTest,java.util.Collection<org.testng.IInvokedMethodListener>,java.util.List<org.testng.IClassListener>)
+
+CLSS public abstract interface org.testng.ITestRunnerFactory2
+intf org.testng.ITestRunnerFactory
+meth public abstract org.testng.TestRunner newTestRunner(org.testng.ISuite,org.testng.xml.XmlTest,java.util.Collection<org.testng.IInvokedMethodListener>,java.util.List<org.testng.IClassListener>,java.util.Map<java.lang.Class<? extends org.testng.IDataProviderListener>,org.testng.IDataProviderListener>)
 
 CLSS public org.testng.Reporter
 cons public init()
+meth public static boolean getEscapeHtml()
 meth public static java.util.List<java.lang.String> getOutput()
 meth public static java.util.List<java.lang.String> getOutput(org.testng.ITestResult)
 meth public static org.testng.ITestResult getCurrentTestResult()
@@ -761,16 +768,16 @@ meth public static void log(java.lang.String,int,boolean)
 meth public static void setCurrentTestResult(org.testng.ITestResult)
 meth public static void setEscapeHtml(boolean)
 supr java.lang.Object
-hfds m_currentTestResult,m_escapeHtml,m_methodOutputMap,m_output
+hfds m_currentTestResult,m_escapeHtml,m_methodOutputMap,m_orphanedOutput,m_output
 
 CLSS public org.testng.ReporterConfig
 cons public init()
 innr public static Property
-meth public java.lang.Object newReporterInstance()
 meth public java.lang.String getClassName()
 meth public java.lang.String serialize()
 meth public java.lang.String toString()
 meth public java.util.List<org.testng.ReporterConfig$Property> getProperties()
+meth public org.testng.IReporter newReporterInstance()
 meth public static org.testng.ReporterConfig deserialize(java.lang.String)
 meth public void addProperty(org.testng.ReporterConfig$Property)
 meth public void setClassName(java.lang.String)
@@ -779,11 +786,7 @@ hfds m_className,m_properties
 
 CLSS public static org.testng.ReporterConfig$Property
  outer org.testng.ReporterConfig
-cons public init()
-meth public java.lang.String getName()
-meth public java.lang.String getValue()
-meth public void setName(java.lang.String)
-meth public void setValue(java.lang.String)
+cons public init(java.lang.String,java.lang.String)
 supr java.lang.Object
 hfds name,value
 
@@ -798,28 +801,41 @@ hfds m_stackReduced,m_stackTrace,serialVersionUID
 
 CLSS public org.testng.SuiteRunState
 cons public init()
-intf java.io.Serializable
 meth public boolean isFailed()
 meth public void failed()
 supr java.lang.Object
-hfds m_hasFailures,serialVersionUID
+hfds m_hasFailures
 
 CLSS public org.testng.SuiteRunner
-cons protected init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory,boolean,org.testng.IMethodInterceptor,java.util.List<org.testng.IInvokedMethodListener>,java.util.List<org.testng.ITestListener>)
+cons protected init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory,boolean,java.util.List<org.testng.IMethodInterceptor>,java.util.Collection<org.testng.IInvokedMethodListener>,java.util.Collection<org.testng.ITestListener>,java.util.Collection<org.testng.IClassListener>)
+ anno 0 java.lang.Deprecated()
+cons protected init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory,boolean,java.util.List<org.testng.IMethodInterceptor>,java.util.Collection<org.testng.IInvokedMethodListener>,java.util.Collection<org.testng.ITestListener>,java.util.Collection<org.testng.IClassListener>,java.util.Comparator<org.testng.ITestNGMethod>)
+ anno 0 java.lang.Deprecated()
+cons protected init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory,boolean,java.util.List<org.testng.IMethodInterceptor>,java.util.Collection<org.testng.IInvokedMethodListener>,java.util.Collection<org.testng.ITestListener>,java.util.Collection<org.testng.IClassListener>,java.util.Map<java.lang.Class<? extends org.testng.IDataProviderListener>,org.testng.IDataProviderListener>,java.util.Comparator<org.testng.ITestNGMethod>)
+cons protected init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory,boolean,java.util.List<org.testng.IMethodInterceptor>,java.util.List<org.testng.IInvokedMethodListener>,java.util.List<org.testng.ITestListener>,java.util.List<org.testng.IClassListener>)
+ anno 0 java.lang.Deprecated()
 cons public init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String)
+ anno 0 java.lang.Deprecated()
+cons public init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,java.util.Comparator<org.testng.ITestNGMethod>)
 cons public init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory)
+ anno 0 java.lang.Deprecated()
 cons public init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory,boolean)
-intf java.io.Serializable
+ anno 0 java.lang.Deprecated()
+cons public init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory,boolean,java.util.Comparator<org.testng.ITestNGMethod>)
+cons public init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory,java.util.Comparator<org.testng.ITestNGMethod>)
 intf org.testng.IInvokedMethodListener
 intf org.testng.ISuite
 meth protected void addListener(org.testng.ISuiteListener)
+meth public com.google.inject.Injector getParentInjector()
 meth public java.lang.Object getAttribute(java.lang.String)
 meth public java.lang.Object removeAttribute(java.lang.String)
+meth public java.lang.String getGuiceStage()
 meth public java.lang.String getHost()
 meth public java.lang.String getName()
 meth public java.lang.String getOutputDirectory()
 meth public java.lang.String getParallel()
 meth public java.lang.String getParameter(java.lang.String)
+meth public java.lang.String getParentModule()
 meth public java.util.Collection<org.testng.ITestNGMethod> getExcludedMethods()
 meth public java.util.Collection<org.testng.ITestNGMethod> getInvokedMethods()
 meth public java.util.List<org.testng.IInvokedMethod> getAllInvokedMethods()
@@ -841,10 +857,11 @@ meth public void run()
 meth public void setAttribute(java.lang.String,java.lang.Object)
 meth public void setHost(java.lang.String)
 meth public void setObjectFactory(org.testng.ITestObjectFactory)
+meth public void setParentInjector(com.google.inject.Injector)
 meth public void setReportResults(boolean)
 meth public void setSkipFailedInvocationCounts(java.lang.Boolean)
 supr java.lang.Object
-hfds DEFAULT_OUTPUT_DIR,m_allTestMethods,m_attributes,m_configuration,m_host,m_invokedMethodListeners,m_invokedMethods,m_listeners,m_methodInterceptor,m_objectFactory,m_outputDir,m_reporters,m_runnerFactory,m_skipFailedInvocationCounts,m_suite,m_suiteResults,m_suiteState,m_testListeners,m_testRunners,m_textReporter,m_tmpRunnerFactory,m_useDefaultListeners,serialVersionUID
+hfds DEFAULT_OUTPUT_DIR,allTestMethods,attributes,classListeners,configuration,dataProviderListeners,invokedMethodListeners,invokedMethods,listeners,objectFactory,outputDir,parentInjector,remoteHost,reporters,skipFailedInvocationCounts,suiteResults,suiteState,testListeners,testRunners,textReporter,tmpRunnerFactory,useDefaultListeners,xmlSuite
 hcls DefaultTestRunnerFactory,ProxyTestRunnerFactory,SuiteWorker
 
 CLSS public org.testng.SuiteRunnerWorker
@@ -901,10 +918,6 @@ CLSS public org.testng.TestNG
 cons public init()
 cons public init(boolean)
 fld protected boolean m_useDefaultListeners
-fld protected final static int HAS_FAILURE = 1
-fld protected final static int HAS_FSP = 4
-fld protected final static int HAS_NO_TEST = 8
-fld protected final static int HAS_SKIPPED = 2
 fld protected java.util.List<org.testng.xml.XmlSuite> m_suites
 fld protected long m_end
 fld protected long m_start
@@ -915,6 +928,7 @@ fld public final static java.lang.String DEFAULT_OUTPUTDIR = "test-output"
 fld public final static java.lang.String SHOW_TESTNG_STACK_FRAMES = "testng.show.stack.frames"
 fld public final static java.lang.String TEST_CLASSPATH = "testng.test.classpath"
 innr public static ExitCodeListener
+meth protected java.util.List<org.testng.ISuite> runSuites()
 meth protected long getEnd()
 meth protected long getStart()
 meth protected org.testng.internal.IConfiguration getConfiguration()
@@ -926,7 +940,6 @@ meth public boolean hasFailureWithinSuccessPercentage()
 meth public boolean hasSkip()
 meth public int getStatus()
 meth public java.lang.Integer getSuiteThreadPoolSize()
-meth public java.lang.String getConfigFailurePolicy()
 meth public java.lang.String getDefaultSuiteName()
 meth public java.lang.String getDefaultTestName()
 meth public java.lang.String getOutputDirectory()
@@ -936,6 +949,7 @@ meth public java.util.List<org.testng.ITestListener> getTestListeners()
 meth public java.util.List<org.testng.ITestNGListener> getServiceLoaderListeners()
 meth public java.util.Set<org.testng.IReporter> getReporters()
 meth public org.testng.IAnnotationTransformer getAnnotationTransformer()
+meth public org.testng.xml.XmlSuite$FailurePolicy getConfigFailurePolicy()
 meth public static boolean isJdk14()
  anno 0 java.lang.Deprecated()
 meth public static org.testng.TestNG getDefault()
@@ -944,48 +958,59 @@ meth public static org.testng.TestNG privateMain(java.lang.String[],org.testng.I
 meth public static void main(java.lang.String[])
 meth public static void setTestNGVersion()
  anno 0 java.lang.Deprecated()
+meth public void addAlterSuiteListener(org.testng.IAlterSuiteListener)
+ anno 0 java.lang.Deprecated()
 meth public void addClassLoader(java.lang.ClassLoader)
 meth public void addExecutionListener(org.testng.IExecutionListener)
+ anno 0 java.lang.Deprecated()
 meth public void addInvokedMethodListener(org.testng.IInvokedMethodListener)
+ anno 0 java.lang.Deprecated()
 meth public void addListener(java.lang.Object)
+ anno 0 java.lang.Deprecated()
+meth public void addListener(org.testng.IClassListener)
+ anno 0 java.lang.Deprecated()
 meth public void addListener(org.testng.IInvokedMethodListener)
+ anno 0 java.lang.Deprecated()
 meth public void addListener(org.testng.IReporter)
+ anno 0 java.lang.Deprecated()
 meth public void addListener(org.testng.ISuiteListener)
+ anno 0 java.lang.Deprecated()
 meth public void addListener(org.testng.ITestListener)
+ anno 0 java.lang.Deprecated()
+meth public void addListener(org.testng.ITestNGListener)
 meth public void addMethodSelector(java.lang.String,int)
+meth public void addMethodSelector(org.testng.xml.XmlMethodSelector)
 meth public void configure(java.util.Map)
  anno 0 java.lang.Deprecated()
+meth public void initializeEverything()
 meth public void initializeSuitesAndJarFile()
 meth public void run()
 meth public void setAnnotationTransformer(org.testng.IAnnotationTransformer)
+ anno 0 java.lang.Deprecated()
 meth public void setCommandLineSuite(org.testng.xml.XmlSuite)
 meth public void setConfigFailurePolicy(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public void setConfigFailurePolicy(org.testng.xml.XmlSuite$FailurePolicy)
 meth public void setDataProviderThreadCount(int)
 meth public void setDefaultSuiteName(java.lang.String)
 meth public void setDefaultTestName(java.lang.String)
 meth public void setExcludedGroups(java.lang.String)
 meth public void setGroupByInstances(boolean)
 meth public void setGroups(java.lang.String)
-meth public void setHasFailure(boolean)
- anno 0 java.lang.Deprecated()
-meth public void setHasFailureWithinSuccessPercentage(boolean)
- anno 0 java.lang.Deprecated()
-meth public void setHasSkip(boolean)
- anno 0 java.lang.Deprecated()
 meth public void setJUnit(java.lang.Boolean)
-meth public void setListenerClasses(java.util.List<java.lang.Class>)
-meth public void setMaster(java.lang.String)
+meth public void setListenerClasses(java.util.List<java.lang.Class<? extends org.testng.ITestNGListener>>)
 meth public void setMethodInterceptor(org.testng.IMethodInterceptor)
 meth public void setMixed(java.lang.Boolean)
 meth public void setObjectFactory(java.lang.Class)
 meth public void setObjectFactory(org.testng.ITestObjectFactory)
 meth public void setOutputDirectory(java.lang.String)
 meth public void setParallel(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public void setParallel(org.testng.xml.XmlSuite$ParallelMode)
 meth public void setPreserveOrder(boolean)
 meth public void setRandomizeSuites(boolean)
 meth public void setServiceLoaderClassLoader(java.net.URLClassLoader)
 meth public void setSkipFailedInvocationCounts(java.lang.Boolean)
-meth public void setSlave(java.lang.String)
 meth public void setSourcePath(java.lang.String)
 meth public void setSuiteThreadPoolSize(java.lang.Integer)
 meth public void setTestClasses(java.lang.Class[])
@@ -998,10 +1023,11 @@ meth public void setVerbose(int)
 meth public void setXmlPathInJar(java.lang.String)
 meth public void setXmlSuites(java.util.List<org.testng.xml.XmlSuite>)
 supr java.lang.Object
-hfds LOGGER,m_annotationTransformer,m_cmdlineSuites,m_commandLineMethods,m_commandLineTestClasses,m_configFailurePolicy,m_configurable,m_configuration,m_dataProviderThreadCount,m_defaultAnnoProcessor,m_defaultSuiteName,m_defaultTestName,m_excludedGroups,m_executionListeners,m_groupByInstances,m_hasTests,m_hookable,m_includedGroups,m_instance,m_invokedMethodListeners,m_isInitialized,m_isJUnit,m_isMixed,m_jCommander,m_jarPath,m_masterfileName,m_methodDescriptors,m_methodInterceptor,m_objectFactory,m_outputDir,m_parallelMode,m_preserveOrder,m_randomizeSuites,m_reporters,m_serviceLoaderClassLoader,m_serviceLoaderListeners,m_skipFailedInvocationCounts,m_slavefileName,m_status,m_stringSuites,m_suiteListeners,m_suiteThreadPoolSize,m_testListeners,m_testNames,m_testRunnerFactory,m_threadCount,m_useParallelMode,m_useThreadCount,m_verbose,m_xmlPathInJar
+hfds LOGGER,exitCode,exitCodeListener,isSuiteInitialized,m_alterSuiteListeners,m_annotationTransformer,m_classListeners,m_cmdlineSuites,m_commandLineMethods,m_commandLineTestClasses,m_configFailurePolicy,m_configurable,m_configuration,m_dataProviderListeners,m_dataProviderThreadCount,m_defaultAnnoProcessor,m_defaultSuiteName,m_defaultTestName,m_excludedGroups,m_groupByInstances,m_hookable,m_includedGroups,m_instance,m_invokedMethodListeners,m_isInitialized,m_isJUnit,m_isMixed,m_jCommander,m_jarPath,m_methodDescriptors,m_methodInterceptors,m_objectFactory,m_outputDir,m_parallelMode,m_preserveOrder,m_randomizeSuites,m_reporters,m_selectors,m_serviceLoaderClassLoader,m_skipFailedInvocationCounts,m_stringSuites,m_suiteListeners,m_suiteThreadPoolSize,m_testListeners,m_testNames,m_testRunnerFactory,m_threadCount,m_verbose,m_xmlPathInJar,serviceLoaderListeners
 
 CLSS public static org.testng.TestNG$ExitCodeListener
  outer org.testng.TestNG
+ anno 0 java.lang.Deprecated()
 cons public init()
 cons public init(org.testng.TestNG)
 intf org.testng.internal.IResultListener2
@@ -1048,12 +1074,15 @@ meth public static org.testng.ITestNGMethod createITestNGMethod(org.testng.ITest
 supr java.lang.Object
 
 CLSS public org.testng.TestRunner
-cons protected init(org.testng.internal.IConfiguration,org.testng.ISuite,org.testng.xml.XmlTest,java.lang.String,org.testng.internal.annotations.IAnnotationFinder,boolean,java.util.List<org.testng.IInvokedMethodListener>)
-cons public init(org.testng.internal.IConfiguration,org.testng.ISuite,org.testng.xml.XmlTest,boolean,java.util.List<org.testng.IInvokedMethodListener>)
+cons protected init(org.testng.internal.IConfiguration,org.testng.ISuite,org.testng.xml.XmlTest,java.lang.String,org.testng.internal.annotations.IAnnotationFinder,boolean,java.util.Collection<org.testng.IInvokedMethodListener>,java.util.List<org.testng.IClassListener>,java.util.Comparator<org.testng.ITestNGMethod>,java.util.Map<java.lang.Class<? extends org.testng.IDataProviderListener>,org.testng.IDataProviderListener>)
+cons public init(org.testng.internal.IConfiguration,org.testng.ISuite,org.testng.xml.XmlTest,boolean,java.util.Collection<org.testng.IInvokedMethodListener>,java.util.List<org.testng.IClassListener>)
+cons public init(org.testng.internal.IConfiguration,org.testng.ISuite,org.testng.xml.XmlTest,boolean,java.util.Collection<org.testng.IInvokedMethodListener>,java.util.List<org.testng.IClassListener>,java.util.Comparator<org.testng.ITestNGMethod>)
+innr public final static !enum PriorityWeight
 intf org.testng.ITestContext
 intf org.testng.internal.ITestResultNotifier
 intf org.testng.internal.thread.graph.IThreadWorkerFactory<org.testng.ITestNGMethod>
 meth public com.google.inject.Injector getInjector(java.util.List<com.google.inject.Module>)
+meth public com.google.inject.Injector getInjector(org.testng.IClass)
 meth public java.lang.Object getAttribute(java.lang.String)
 meth public java.lang.Object removeAttribute(java.lang.String)
 meth public java.lang.String getHost()
@@ -1093,22 +1122,30 @@ meth public org.testng.xml.XmlTest getTest()
 meth public static int getVerbose()
 meth public void addFailedButWithinSuccessPercentageTest(org.testng.ITestNGMethod,org.testng.ITestResult)
 meth public void addFailedTest(org.testng.ITestNGMethod,org.testng.ITestResult)
-meth public void addGuiceModule(java.lang.Class<? extends com.google.inject.Module>,com.google.inject.Module)
 meth public void addInjector(java.util.List<com.google.inject.Module>,com.google.inject.Injector)
 meth public void addInvokedMethod(org.testng.internal.InvokedMethod)
-meth public void addListener(java.lang.Object)
+meth public void addListener(org.testng.ITestNGListener)
 meth public void addPassedTest(org.testng.ITestNGMethod,org.testng.ITestResult)
 meth public void addSkippedTest(org.testng.ITestNGMethod,org.testng.ITestResult)
-meth public void addTestListener(org.testng.ITestListener)
 meth public void run()
 meth public void setAttribute(java.lang.String,java.lang.Object)
-meth public void setMethodInterceptor(org.testng.IMethodInterceptor)
 meth public void setOutputDirectory(java.lang.String)
 meth public void setTestName(java.lang.String)
 meth public void setVerbose(int)
 supr java.lang.Object
-hfds m_afterSuiteMethods,m_afterXmlTestMethods,m_allTestMethods,m_annotationFinder,m_attributes,m_beforeSuiteMethods,m_beforeXmlTestMethods,m_classMap,m_classMethodMap,m_confListener,m_configuration,m_configurationListeners,m_endDate,m_excludedMethods,m_failedButWithinSuccessPercentageTests,m_failedConfigurations,m_failedTests,m_groupMethods,m_guiceModules,m_host,m_injectors,m_invokedMethodListeners,m_invokedMethods,m_invoker,m_metaGroups,m_methodInterceptor,m_outputDirectory,m_packageNamesFromXml,m_passedConfigurations,m_passedTests,m_runInfo,m_skipFailedInvocationCounts,m_skippedConfigurations,m_skippedTests,m_startDate,m_suite,m_testClassFinder,m_testClassesFromXml,m_testListeners,m_testName,m_verbose,m_xmlMethodSelector,m_xmlTest,serialVersionUID
-hcls ConfigurationListener,ListenerHolder
+hfds DEFAULT_PROP_OUTPUT_DIR,builtinInterceptor,comparator,guiceHelper,m_afterSuiteMethods,m_afterXmlTestMethods,m_allTestMethods,m_annotationFinder,m_attributes,m_beforeSuiteMethods,m_beforeXmlTestMethods,m_classListeners,m_classMap,m_classMethodMap,m_confListener,m_configuration,m_configurationListeners,m_dataProviderListeners,m_endDate,m_excludedMethods,m_failedButWithinSuccessPercentageTests,m_failedConfigurations,m_failedTests,m_groupMethods,m_guiceModules,m_host,m_injectors,m_invokedMethodListeners,m_invokedMethods,m_invoker,m_metaGroups,m_methodInterceptors,m_outputDirectory,m_passedConfigurations,m_passedTests,m_runInfo,m_skippedConfigurations,m_skippedTests,m_startDate,m_suite,m_testClassFinder,m_testClassesFromXml,m_testListeners,m_testName,m_verbose,m_xmlMethodSelector,m_xmlTest
+hcls ConfigurationListener
+
+CLSS public final static !enum org.testng.TestRunner$PriorityWeight
+ outer org.testng.TestRunner
+fld public final static org.testng.TestRunner$PriorityWeight dependsOnGroups
+fld public final static org.testng.TestRunner$PriorityWeight dependsOnMethods
+fld public final static org.testng.TestRunner$PriorityWeight groupByInstance
+fld public final static org.testng.TestRunner$PriorityWeight preserveOrder
+fld public final static org.testng.TestRunner$PriorityWeight priority
+meth public static org.testng.TestRunner$PriorityWeight valueOf(java.lang.String)
+meth public static org.testng.TestRunner$PriorityWeight[] values()
+supr java.lang.Enum<org.testng.TestRunner$PriorityWeight>
 
 CLSS public org.testng.TimeBombSkipException
 cons public init(java.lang.String,java.lang.String)
@@ -1126,9 +1163,10 @@ meth public java.lang.String getMessage()
 meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 supr org.testng.SkipException
-hfds SDF,m_expireDate,m_inFormat,m_outFormat,serialVersionUID
+hfds FORMAT,m_expireDate,m_inFormat,m_outFormat,sdf,serialVersionUID
 
 CLSS public abstract interface !annotation org.testng.annotations.AfterClass
+ anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
 intf java.lang.annotation.Annotation
@@ -1142,6 +1180,7 @@ meth public abstract !hasdefault java.lang.String[] groups()
 meth public abstract !hasdefault long timeOut()
 
 CLSS public abstract interface !annotation org.testng.annotations.AfterGroups
+ anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
 intf java.lang.annotation.Annotation
@@ -1156,6 +1195,7 @@ meth public abstract !hasdefault java.lang.String[] value()
 meth public abstract !hasdefault long timeOut()
 
 CLSS public abstract interface !annotation org.testng.annotations.AfterMethod
+ anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
 intf java.lang.annotation.Annotation
@@ -1170,6 +1210,7 @@ meth public abstract !hasdefault java.lang.String[] groups()
 meth public abstract !hasdefault long timeOut()
 
 CLSS public abstract interface !annotation org.testng.annotations.AfterSuite
+ anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
 intf java.lang.annotation.Annotation
@@ -1183,6 +1224,7 @@ meth public abstract !hasdefault java.lang.String[] groups()
 meth public abstract !hasdefault long timeOut()
 
 CLSS public abstract interface !annotation org.testng.annotations.AfterTest
+ anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
 intf java.lang.annotation.Annotation
@@ -1196,6 +1238,7 @@ meth public abstract !hasdefault java.lang.String[] groups()
 meth public abstract !hasdefault long timeOut()
 
 CLSS public abstract interface !annotation org.testng.annotations.BeforeClass
+ anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
 intf java.lang.annotation.Annotation
@@ -1209,6 +1252,7 @@ meth public abstract !hasdefault java.lang.String[] groups()
 meth public abstract !hasdefault long timeOut()
 
 CLSS public abstract interface !annotation org.testng.annotations.BeforeGroups
+ anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
 intf java.lang.annotation.Annotation
@@ -1223,6 +1267,7 @@ meth public abstract !hasdefault java.lang.String[] value()
 meth public abstract !hasdefault long timeOut()
 
 CLSS public abstract interface !annotation org.testng.annotations.BeforeMethod
+ anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
 intf java.lang.annotation.Annotation
@@ -1237,6 +1282,7 @@ meth public abstract !hasdefault java.lang.String[] groups()
 meth public abstract !hasdefault long timeOut()
 
 CLSS public abstract interface !annotation org.testng.annotations.BeforeSuite
+ anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
 intf java.lang.annotation.Annotation
@@ -1250,6 +1296,7 @@ meth public abstract !hasdefault java.lang.String[] groups()
 meth public abstract !hasdefault long timeOut()
 
 CLSS public abstract interface !annotation org.testng.annotations.BeforeTest
+ anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
 intf java.lang.annotation.Annotation
@@ -1262,31 +1309,8 @@ meth public abstract !hasdefault java.lang.String[] dependsOnMethods()
 meth public abstract !hasdefault java.lang.String[] groups()
 meth public abstract !hasdefault long timeOut()
 
-CLSS public abstract interface !annotation org.testng.annotations.Configuration
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
-intf java.lang.annotation.Annotation
-meth public abstract !hasdefault boolean afterSuite()
-meth public abstract !hasdefault boolean afterTest()
-meth public abstract !hasdefault boolean afterTestClass()
-meth public abstract !hasdefault boolean afterTestMethod()
-meth public abstract !hasdefault boolean alwaysRun()
-meth public abstract !hasdefault boolean beforeSuite()
-meth public abstract !hasdefault boolean beforeTest()
-meth public abstract !hasdefault boolean beforeTestClass()
-meth public abstract !hasdefault boolean beforeTestMethod()
-meth public abstract !hasdefault boolean enabled()
-meth public abstract !hasdefault boolean inheritGroups()
-meth public abstract !hasdefault java.lang.String description()
-meth public abstract !hasdefault java.lang.String[] afterGroups()
-meth public abstract !hasdefault java.lang.String[] beforeGroups()
-meth public abstract !hasdefault java.lang.String[] dependsOnGroups()
-meth public abstract !hasdefault java.lang.String[] dependsOnMethods()
-meth public abstract !hasdefault java.lang.String[] groups()
-meth public abstract !hasdefault java.lang.String[] parameters()
- anno 0 java.lang.Deprecated()
-
 CLSS public abstract interface !annotation org.testng.annotations.DataProvider
+ anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
 intf java.lang.annotation.Annotation
@@ -1294,23 +1318,20 @@ meth public abstract !hasdefault boolean parallel()
 meth public abstract !hasdefault int[] indices()
 meth public abstract !hasdefault java.lang.String name()
 
-CLSS public abstract interface !annotation org.testng.annotations.ExpectedExceptions
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD])
-intf java.lang.annotation.Annotation
-meth public abstract java.lang.Class[] value()
-
 CLSS public abstract interface !annotation org.testng.annotations.Factory
+ anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, CONSTRUCTOR])
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault boolean enabled()
+meth public abstract !hasdefault int[] indices()
 meth public abstract !hasdefault java.lang.Class<?> dataProviderClass()
 meth public abstract !hasdefault java.lang.String dataProvider()
 meth public abstract !hasdefault java.lang.String[] parameters()
  anno 0 java.lang.Deprecated()
 
 CLSS public abstract interface !annotation org.testng.annotations.Guice
+ anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
 intf java.lang.annotation.Annotation
@@ -1339,16 +1360,21 @@ CLSS public abstract interface org.testng.annotations.IDataProviderAnnotation
 intf org.testng.annotations.IAnnotation
 meth public abstract boolean isParallel()
 meth public abstract java.lang.String getName()
+meth public abstract java.util.List<java.lang.Integer> getIndices()
+meth public abstract void setIndices(java.util.List<java.lang.Integer>)
 meth public abstract void setName(java.lang.String)
 meth public abstract void setParallel(boolean)
-
-CLSS public abstract interface org.testng.annotations.IExpectedExceptionsAnnotation
-intf org.testng.annotations.IAnnotation
-meth public abstract java.lang.Class[] getValue()
 
 CLSS public abstract interface org.testng.annotations.IFactoryAnnotation
 intf org.testng.annotations.IParameterizable
 intf org.testng.internal.annotations.IDataProvidable
+meth public abstract java.util.List<java.lang.Integer> getIndices()
+meth public abstract void setIndices(java.util.List<java.lang.Integer>)
+
+CLSS public abstract interface org.testng.annotations.IListenersAnnotation
+intf org.testng.annotations.IAnnotation
+meth public abstract java.lang.Class<? extends org.testng.ITestNGListener>[] getValue()
+meth public abstract void setValue(java.lang.Class<? extends org.testng.ITestNGListener>[])
 
 CLSS public abstract interface org.testng.annotations.IObjectFactoryAnnotation
 intf org.testng.annotations.IAnnotation
@@ -1415,6 +1441,12 @@ meth public abstract void setDescription(java.lang.String)
 meth public abstract void setGroups(java.lang.String[])
 meth public abstract void setTimeOut(long)
 
+CLSS public abstract interface !annotation org.testng.annotations.Ignore
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, TYPE, PACKAGE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String value()
+
 CLSS public abstract interface !annotation org.testng.annotations.Listeners
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
@@ -1445,7 +1477,7 @@ meth public abstract !hasdefault java.lang.String[] value()
 
 CLSS public abstract interface !annotation org.testng.annotations.Test
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, TYPE, CONSTRUCTOR])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault boolean alwaysRun()
 meth public abstract !hasdefault boolean enabled()
@@ -1507,12 +1539,14 @@ meth public abstract void setDataProviderClass(java.lang.Class<?>)
 
 CLSS public org.testng.internal.junit.ArrayAsserts
 cons public init()
+meth public static void assertArrayEquals(boolean[],boolean[])
 meth public static void assertArrayEquals(byte[],byte[])
 meth public static void assertArrayEquals(char[],char[])
 meth public static void assertArrayEquals(double[],double[],double)
 meth public static void assertArrayEquals(float[],float[],float)
 meth public static void assertArrayEquals(int[],int[])
 meth public static void assertArrayEquals(java.lang.Object[],java.lang.Object[])
+meth public static void assertArrayEquals(java.lang.String,boolean[],boolean[])
 meth public static void assertArrayEquals(java.lang.String,byte[],byte[])
 meth public static void assertArrayEquals(java.lang.String,char[],char[])
 meth public static void assertArrayEquals(java.lang.String,double[],double[],double)
@@ -1534,356 +1568,6 @@ intf java.lang.Runnable
 meth public abstract int getPriority()
 meth public abstract java.util.List<{org.testng.internal.thread.graph.IWorker%0}> getTasks()
 meth public abstract long getTimeOut()
-
-CLSS public org.testng.remote.ConnectionInfo
-cons public init()
-meth public java.io.ObjectInputStream getOis() throws java.io.IOException
-meth public java.io.ObjectOutputStream getOos() throws java.io.IOException
-meth public java.net.Socket getSocket()
-meth public void setSocket(java.net.Socket)
-supr java.lang.Object
-hfds m_ois,m_oos,m_socket
-
-CLSS public org.testng.remote.RemoteArgs
-cons public init()
-fld public boolean ack
-fld public boolean dontExit
-fld public final static java.lang.String ACK = "-ack"
-fld public final static java.lang.String DONT_EXIT = "-dontexit"
-fld public final static java.lang.String PORT = "-serport"
-fld public java.lang.Integer serPort
-supr java.lang.Object
-
-CLSS public org.testng.remote.RemoteSuiteWorker
-cons public init(org.testng.xml.XmlSuite,org.testng.internal.remote.SlavePool,org.testng.remote.adapter.RemoteResultListener)
-intf java.lang.Runnable
-meth public void run()
-supr org.testng.remote.RemoteWorker
-hfds m_suite
-
-CLSS public org.testng.remote.RemoteTestNG
-cons public init()
-fld public final static java.lang.String DEBUG_PORT = "12345"
-fld public final static java.lang.String DEBUG_SUITE_DIRECTORY
-fld public final static java.lang.String DEBUG_SUITE_FILE = "testng-customsuite.xml"
-fld public final static java.lang.String PROPERTY_DEBUG = "testng.eclipse.debug"
-fld public final static java.lang.String PROPERTY_VERBOSE = "testng.eclipse.verbose"
-meth protected org.testng.ITestRunnerFactory buildTestRunnerFactory()
-meth public static boolean isDebug()
-meth public static boolean isVerbose()
-meth public static void main(java.lang.String[])
-meth public void run()
-meth public void setHost(java.lang.String)
-supr org.testng.TestNG
-hfds LOCALHOST,m_ack,m_customTestRunnerFactory,m_debug,m_dontExit,m_host,m_port,m_serPort
-hcls DelegatingTestRunnerFactory,RemoteSuiteListener
-
-CLSS public org.testng.remote.RemoteWorker
-cons public init(org.testng.remote.adapter.RemoteResultListener,org.testng.internal.remote.SlavePool)
-fld protected org.testng.remote.adapter.RemoteResultListener m_listener
-meth protected org.testng.SuiteRunner sendSuite(org.testng.remote.ConnectionInfo,org.testng.xml.XmlSuite) throws java.io.IOException,java.lang.ClassNotFoundException
-meth protected org.testng.internal.remote.SlavePool getSlavePool()
-supr java.lang.Object
-hfds m_slavePool
-
-CLSS public org.testng.remote.SuiteDispatcher
-cons public init(java.lang.String)
-fld public final static java.lang.String MASTER_ADPATER = "testng.master.adpter"
-fld public final static java.lang.String MASTER_STRATEGY = "testng.master.strategy"
-fld public final static java.lang.String STRATEGY_SUITE = "suite"
-fld public final static java.lang.String STRATEGY_TEST = "test"
-fld public final static java.lang.String VERBOSE = "testng.verbose"
-meth public java.util.List<org.testng.ISuite> dispatch(org.testng.internal.IConfiguration,java.util.List<org.testng.xml.XmlSuite>,java.lang.String,java.util.List<org.testng.ITestListener>)
-supr java.lang.Object
-hfds m_isStrategyTest,m_masterAdpter,m_verbose
-
-CLSS public org.testng.remote.SuiteSlave
-cons public init(java.lang.String,org.testng.TestNG)
-fld public final static java.lang.String SLAVE_ADPATER = "testng.slave.adpter"
-fld public final static java.lang.String VERBOSE = "testng.verbose"
-meth public void waitForSuites()
-supr java.lang.Object
-hfds m_slaveAdpter,m_testng,m_verbose
-
-CLSS public org.testng.remote.adapter.DefaultMastertAdapter
-cons public init()
-fld public final static java.lang.String HOSTS = "testng.hosts"
-intf org.testng.remote.adapter.IMasterAdapter
-meth public void awaitTermination(long) throws java.lang.InterruptedException
-meth public void init(java.util.Properties)
-meth public void runSuitesRemotely(org.testng.xml.XmlSuite,org.testng.remote.adapter.RemoteResultListener) throws java.io.IOException
-supr java.lang.Object
-hfds m_hosts,m_slavePool,m_workers
-
-CLSS public org.testng.remote.adapter.DefaultWorkerAdapter
-cons public init()
-fld public final static java.lang.String SLAVE_PORT = "slave.port"
-intf org.testng.remote.adapter.IWorkerAdapter
-meth public org.testng.xml.XmlSuite getSuite(long) throws java.io.IOException,java.lang.InterruptedException
-meth public void init(java.util.Properties) throws java.lang.Exception
-meth public void returnResult(org.testng.ISuite) throws java.io.IOException
-supr java.lang.Object
-hfds m_clientPort,m_connectionInfo
-
-CLSS public abstract interface org.testng.remote.adapter.IMasterAdapter
-meth public abstract void awaitTermination(long) throws java.lang.InterruptedException
-meth public abstract void init(java.util.Properties) throws java.lang.Exception
-meth public abstract void runSuitesRemotely(org.testng.xml.XmlSuite,org.testng.remote.adapter.RemoteResultListener) throws java.io.IOException
-
-CLSS public abstract interface org.testng.remote.adapter.IWorkerAdapter
-meth public abstract org.testng.xml.XmlSuite getSuite(long) throws java.io.IOException,java.lang.InterruptedException
-meth public abstract void init(java.util.Properties) throws java.lang.Exception
-meth public abstract void returnResult(org.testng.ISuite) throws java.io.IOException
-
-CLSS public org.testng.remote.adapter.RemoteResultListener
-cons public init(org.testng.SuiteRunner)
-meth public void onResult(org.testng.ISuite)
-supr java.lang.Object
-hfds m_runner
-
-CLSS public abstract org.testng.remote.strprotocol.AbstractRemoteTestRunnerClient
-cons public init()
-fld protected org.testng.remote.strprotocol.IRemoteSuiteListener[] m_suiteListeners
-fld protected org.testng.remote.strprotocol.IRemoteTestListener[] m_testListeners
-innr public abstract ServerConnection
-meth protected abstract void notifyResultEvents(org.testng.remote.strprotocol.TestResultMessage)
-meth protected abstract void notifyStart(org.testng.remote.strprotocol.GenericMessage)
-meth protected abstract void notifySuiteEvents(org.testng.remote.strprotocol.SuiteMessage)
-meth protected abstract void notifyTestEvents(org.testng.remote.strprotocol.TestMessage)
-meth public boolean isRunning()
-meth public org.testng.remote.strprotocol.IRemoteSuiteListener[] getSuiteListeners()
-meth public org.testng.remote.strprotocol.IRemoteTestListener[] getTestListeners()
-meth public void startListening(org.testng.remote.strprotocol.IRemoteSuiteListener[],org.testng.remote.strprotocol.IRemoteTestListener[],org.testng.remote.strprotocol.AbstractRemoteTestRunnerClient$ServerConnection)
-meth public void stopTest()
-supr java.lang.Object
-hfds fServerSocket,fSocket,m_serverConnection
-
-CLSS public abstract org.testng.remote.strprotocol.AbstractRemoteTestRunnerClient$ServerConnection
- outer org.testng.remote.strprotocol.AbstractRemoteTestRunnerClient
-cons public init(org.testng.remote.strprotocol.AbstractRemoteTestRunnerClient,org.testng.remote.strprotocol.IMessageSender)
-meth protected abstract void handleThrowable(java.lang.Throwable)
-meth public void run()
-supr java.lang.Thread
-hfds m_messageHub
-
-CLSS public abstract org.testng.remote.strprotocol.BaseMessageSender
-cons public init(java.lang.String,int,boolean)
-fld protected java.io.OutputStream m_outStream
-fld protected java.lang.Object m_ackLock
-fld protected java.net.Socket m_clientSocket
-fld protected volatile java.io.BufferedReader m_inReader
-fld protected volatile java.io.InputStream m_inStream
-intf org.testng.remote.strprotocol.IMessageSender
-meth protected void waitForAck()
-meth public void connect() throws java.io.IOException
-meth public void initReceiver() throws java.net.SocketTimeoutException
-meth public void sendAck()
-meth public void sendStop()
-meth public void shutDown()
-supr java.lang.Object
-hfds m_ack,m_debug,m_host,m_latestAck,m_outWriter,m_port,m_readerThread,m_serial
-hcls ReaderThread
-
-CLSS public org.testng.remote.strprotocol.GenericMessage
-cons public init(int)
-fld protected final int m_messageType
-intf org.testng.remote.strprotocol.IStringMessage
-meth public int getSuiteCount()
-meth public int getTestCount()
-meth public java.lang.String getMessageAsString()
-meth public java.lang.String toString()
-meth public org.testng.remote.strprotocol.GenericMessage addProperty(java.lang.String,int)
-meth public void setSuiteCount(int)
-meth public void setTestCount(int)
-supr java.lang.Object
-hfds m_suiteCount,m_testCount
-
-CLSS public abstract interface org.testng.remote.strprotocol.IMessage
-intf java.io.Serializable
-
-CLSS public abstract interface org.testng.remote.strprotocol.IMessageSender
-meth public abstract org.testng.remote.strprotocol.IMessage receiveMessage() throws java.lang.Exception
-meth public abstract void connect() throws java.io.IOException
-meth public abstract void initReceiver() throws java.net.SocketTimeoutException
-meth public abstract void sendAck()
-meth public abstract void sendMessage(org.testng.remote.strprotocol.IMessage) throws java.lang.Exception
-meth public abstract void sendStop()
-meth public abstract void shutDown()
-
-CLSS public abstract interface org.testng.remote.strprotocol.IRemoteSuiteListener
-meth public abstract void onFinish(org.testng.remote.strprotocol.SuiteMessage)
-meth public abstract void onInitialization(org.testng.remote.strprotocol.GenericMessage)
-meth public abstract void onStart(org.testng.remote.strprotocol.SuiteMessage)
-
-CLSS public abstract interface org.testng.remote.strprotocol.IRemoteTestListener
-meth public abstract void onFinish(org.testng.remote.strprotocol.TestMessage)
-meth public abstract void onStart(org.testng.remote.strprotocol.TestMessage)
-meth public abstract void onTestFailedButWithinSuccessPercentage(org.testng.remote.strprotocol.TestResultMessage)
-meth public abstract void onTestFailure(org.testng.remote.strprotocol.TestResultMessage)
-meth public abstract void onTestSkipped(org.testng.remote.strprotocol.TestResultMessage)
-meth public abstract void onTestStart(org.testng.remote.strprotocol.TestResultMessage)
-meth public abstract void onTestSuccess(org.testng.remote.strprotocol.TestResultMessage)
-
-CLSS public abstract interface org.testng.remote.strprotocol.IStringMessage
-intf org.testng.remote.strprotocol.IMessage
-meth public abstract java.lang.String getMessageAsString()
-
-CLSS public org.testng.remote.strprotocol.MessageHelper
-cons public init()
-fld public final static char DELIMITER = '\u0001'
-fld public final static char PARAM_DELIMITER = '\u0004'
-fld public final static int FAILED_ON_PERCENTAGE_TEST = 1004
-fld public final static int FAILED_TEST = 1002
-fld public final static int GENERIC_SUITE_COUNT = 1
-fld public final static int PASSED_TEST = 1001
-fld public final static int SKIPPED_TEST = 1003
-fld public final static int SUITE = 10
-fld public final static int SUITE_FINISH = 12
-fld public final static int SUITE_START = 11
-fld public final static int TEST = 100
-fld public final static int TEST_FINISH = 102
-fld public final static int TEST_RESULT = 1000
-fld public final static int TEST_START = 101
-fld public final static int TEST_STARTED = 1016
-fld public final static java.lang.String ACK_MSG = ">ACK"
-fld public final static java.lang.String STOP_MSG = ">STOP"
-meth public static int getMessageType(java.lang.String)
-meth public static java.lang.String replaceAsciiCharactersWithUnicode(java.lang.String)
-meth public static java.lang.String replaceNewLine(java.lang.String)
-meth public static java.lang.String replaceNewLineReplacer(java.lang.String)
-meth public static java.lang.String replaceUnicodeCharactersWithAscii(java.lang.String)
-meth public static org.testng.remote.strprotocol.GenericMessage unmarshallGenericMessage(java.lang.String)
-meth public static org.testng.remote.strprotocol.SuiteMessage createSuiteMessage(java.lang.String)
-meth public static org.testng.remote.strprotocol.TestMessage createTestMessage(java.lang.String)
-meth public static org.testng.remote.strprotocol.TestResultMessage unmarshallTestResultMessage(java.lang.String)
-supr java.lang.Object
-hfds LINE_SEP_DELIMITER_1,LINE_SEP_DELIMITER_2
-
-CLSS public org.testng.remote.strprotocol.MessageHub
-cons public init(org.testng.remote.strprotocol.IMessageSender)
-meth public org.testng.remote.strprotocol.IMessage receiveMessage()
-meth public org.testng.remote.strprotocol.IMessageSender getMessageSender()
-meth public void connect() throws java.io.IOException
-meth public void initReceiver() throws java.net.SocketTimeoutException
-meth public void sendMessage(org.testng.remote.strprotocol.IMessage)
-meth public void setDebug(boolean)
-meth public void shutDown()
-supr java.lang.Object
-hfds m_debug,m_messageSender
-
-CLSS public org.testng.remote.strprotocol.RemoteTestListener
-cons public init(org.testng.ISuite,org.testng.xml.XmlTest,org.testng.remote.strprotocol.MessageHub)
-intf org.testng.internal.IResultListener2
-meth public void beforeConfiguration(org.testng.ITestResult)
-meth public void onConfigurationFailure(org.testng.ITestResult)
-meth public void onConfigurationSkip(org.testng.ITestResult)
-meth public void onConfigurationSuccess(org.testng.ITestResult)
-meth public void onFinish(org.testng.ITestContext)
-meth public void onStart(org.testng.ITestContext)
-meth public void onTestFailedButWithinSuccessPercentage(org.testng.ITestResult)
-meth public void onTestFailure(org.testng.ITestResult)
-meth public void onTestSkipped(org.testng.ITestResult)
-meth public void onTestStart(org.testng.ITestResult)
-meth public void onTestSuccess(org.testng.ITestResult)
-supr java.lang.Object
-hfds m_currentTestContext,m_sender,m_suite,m_xmlTest
-
-CLSS public org.testng.remote.strprotocol.SerializedMessageSender
-cons public init(java.lang.String,int)
-cons public init(java.lang.String,int,boolean)
-meth public org.testng.remote.strprotocol.IMessage receiveMessage() throws java.io.IOException,java.lang.ClassNotFoundException
-meth public void sendMessage(org.testng.remote.strprotocol.IMessage) throws java.io.IOException
-supr org.testng.remote.strprotocol.BaseMessageSender
-
-CLSS public org.testng.remote.strprotocol.StringMessageSender
-cons public init(java.lang.String,int)
-cons public init(java.lang.String,int,boolean)
-meth protected void handleThrowable(java.lang.Throwable)
-meth public org.testng.remote.strprotocol.IMessage receiveMessage()
-meth public void sendMessage(org.testng.remote.strprotocol.IMessage)
-supr org.testng.remote.strprotocol.BaseMessageSender
-hfds writer
-
-CLSS public org.testng.remote.strprotocol.SuiteMessage
-cons public init(java.lang.String,boolean,int)
-cons public init(org.testng.ISuite,boolean)
-fld protected final boolean m_startSuite
-fld protected final int m_testMethodCount
-fld protected final java.lang.String m_suiteName
-intf org.testng.remote.strprotocol.IStringMessage
-meth public boolean isMessageOnStart()
-meth public int getTestMethodCount()
-meth public java.lang.String getDescriptionForMethod(java.lang.String)
-meth public java.lang.String getMessageAsString()
-meth public java.lang.String getSuiteName()
-meth public java.lang.String toString()
-meth public java.util.List<java.lang.String> getExcludedMethods()
-meth public void setExcludedMethods(java.util.List<java.lang.String>)
-supr java.lang.Object
-hfds m_descriptions,m_excludedMethods
-
-CLSS public org.testng.remote.strprotocol.TestMessage
-cons public init(boolean,java.lang.String,java.lang.String,int,int,int,int,int)
-cons public init(org.testng.ITestContext,boolean)
-fld protected final boolean m_testStart
-fld protected final int m_failedTestCount
-fld protected final int m_passedTestCount
-fld protected final int m_skippedTestCount
-fld protected final int m_successPercentageFailedTestCount
-fld protected final int m_testMethodCount
-fld protected final java.lang.String m_suiteName
-fld protected final java.lang.String m_testName
-intf org.testng.remote.strprotocol.IStringMessage
-meth public boolean isMessageOnStart()
-meth public boolean isTestStart()
-meth public int getFailedTestCount()
-meth public int getPassedTestCount()
-meth public int getSkippedTestCount()
-meth public int getSuccessPercentageFailedTestCount()
-meth public int getTestMethodCount()
-meth public java.lang.String getMessageAsString()
-meth public java.lang.String getSuiteName()
-meth public java.lang.String getTestName()
-meth public java.lang.String toString()
-supr java.lang.Object
-
-CLSS public org.testng.remote.strprotocol.TestResultMessage
-cons public init(int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String[],long,long,java.lang.String,int,int)
-cons public init(java.lang.String,java.lang.String,org.testng.ITestResult)
-cons public init(org.testng.ITestContext,org.testng.ITestResult)
-fld protected int m_messageType
-fld protected java.lang.String m_stackTrace
-fld protected java.lang.String m_suiteName
-fld protected java.lang.String m_testClassName
-fld protected java.lang.String m_testMethodName
-fld protected java.lang.String m_testName
-fld protected java.lang.String[] m_paramTypes
-fld protected java.lang.String[] m_parameters
-fld protected long m_endMillis
-fld protected long m_startMillis
-intf org.testng.remote.strprotocol.IStringMessage
-meth public boolean equals(java.lang.Object)
-meth public int getCurrentInvocationCount()
-meth public int getInvocationCount()
-meth public int getResult()
-meth public int hashCode()
-meth public java.lang.String getInstanceName()
-meth public java.lang.String getMessageAsString()
-meth public java.lang.String getMethod()
-meth public java.lang.String getName()
-meth public java.lang.String getStackTrace()
-meth public java.lang.String getSuiteName()
-meth public java.lang.String getTestClass()
-meth public java.lang.String getTestDescription()
-meth public java.lang.String toDisplayString()
-meth public java.lang.String toString()
-meth public java.lang.String[] getParameterTypes()
-meth public java.lang.String[] getParameters()
-meth public long getEndMillis()
-meth public long getStartMillis()
-meth public void setParameters(java.lang.String[])
-supr java.lang.Object
-hfds m_currentInvocationCount,m_instanceName,m_invocationCount,m_testDescription
 
 CLSS public org.testng.reporters.Buffer
 cons public init()
@@ -1907,16 +1591,18 @@ meth protected void generateExceptionReport(java.lang.Throwable,org.testng.ITest
 meth protected void generateMethodDetailReport(java.util.List<org.testng.ISuite>)
 meth protected void generateMethodSummaryReport(java.util.List<org.testng.ISuite>)
 meth protected void startHtml(java.io.PrintWriter)
+meth public java.lang.String getFileName()
 meth public void generateReport(java.util.List<org.testng.xml.XmlSuite>,java.util.List<org.testng.ISuite>,java.lang.String)
 meth public void generateSuiteSummaryReport(java.util.List<org.testng.ISuite>)
+meth public void setFileName(java.lang.String)
 supr java.lang.Object
-hfds L,m_methodIndex,m_out,m_row,m_testIndex
+hfds JVM_ARG,L,fileName,m_methodIndex,m_out,m_row,m_testIndex
 hcls TestSorter
 
 CLSS public org.testng.reporters.EmailableReporter2
 cons public init()
+fld protected final java.util.List<org.testng.reporters.EmailableReporter2$SuiteResult> suiteResults
 fld protected java.io.PrintWriter writer
-fld protected java.util.List<org.testng.reporters.EmailableReporter2$SuiteResult> suiteResults
 innr protected static ClassResult
 innr protected static MethodResult
 innr protected static SuiteResult
@@ -1937,9 +1623,11 @@ meth protected void writeTableData(java.lang.String)
 meth protected void writeTableData(java.lang.String,java.lang.String)
 meth protected void writeTableHeader(java.lang.String,java.lang.String)
 meth protected void writeTag(java.lang.String,java.lang.String,java.lang.String)
+meth public java.lang.String getFileName()
 meth public void generateReport(java.util.List<org.testng.xml.XmlSuite>,java.util.List<org.testng.ISuite>,java.lang.String)
+meth public void setFileName(java.lang.String)
 supr java.lang.Object
-hfds LOG,buffer
+hfds JVM_ARG,LOG,buffer,fileName
 
 CLSS protected static org.testng.reporters.EmailableReporter2$ClassResult
  outer org.testng.reporters.EmailableReporter2
@@ -1997,8 +1685,6 @@ fld public final static java.lang.String TESTNG_FAILED_XML = "testng-failed.xml"
 intf org.testng.IReporter
 meth protected void generateFailureSuite(org.testng.xml.XmlSuite,org.testng.ISuite,java.lang.String)
 meth public void generateReport(java.util.List<org.testng.xml.XmlSuite>,java.util.List<org.testng.ISuite>,java.lang.String)
-meth public void onFinish(org.testng.ITestContext)
- anno 0 java.lang.Deprecated()
 supr org.testng.TestListenerAdapter
 hfds m_xmlSuite
 
@@ -2059,9 +1745,10 @@ meth public void onTestSkipped(org.testng.ITestResult)
 meth public void onTestStart(org.testng.ITestResult)
 meth public void onTestSuccess(org.testng.ITestResult)
 supr java.lang.Object
-hfds ATTR_ESCAPES,ENTITY,GREATER,LESS,QUOTE,SINGLE_QUOTE,m_allTests,m_configIssues,m_fileNameIncrementer,m_fileNameMap,m_numFailed,m_numFailedButIgnored,m_numPassed,m_numSkipped
+hfds ATTR_ESCAPES,ENTITY,GREATER,LESS,QUOTE,SINGLE_QUOTE,m_allTests,m_configIssues,m_fileNameIncrementer,m_fileNameMap,m_numFailed
 
 CLSS public org.testng.reporters.JqReporter
+ anno 0 java.lang.Deprecated()
 cons public init()
 intf org.testng.IReporter
 meth protected java.lang.String generateOutputDirectoryName(java.lang.String)
@@ -2084,12 +1771,12 @@ intf org.testng.IReporter
 meth protected java.lang.String generateOutputDirectoryName(java.lang.String)
 meth public void generateReport(java.util.List<org.testng.xml.XmlSuite>,java.util.List<org.testng.ISuite>,java.lang.String)
 supr java.lang.Object
-hfds SP,SP2,SP3,SP4,m_classes,m_outputDirectory
+hfds CLOSE_TD,SP,SP2,TD_A_TARGET_MAIN_FRAME_HREF,m_classes,m_outputDirectory
 
 CLSS public org.testng.reporters.TestHTMLReporter
 cons public init()
 meth public static void generateLog(org.testng.ITestContext,java.lang.String,java.lang.String,java.util.Collection<org.testng.ITestResult>,java.util.Collection<org.testng.ITestResult>,java.util.Collection<org.testng.ITestResult>,java.util.Collection<org.testng.ITestResult>,java.util.Collection<org.testng.ITestResult>,java.util.Collection<org.testng.ITestResult>)
-meth public static void generateTable(java.lang.StringBuffer,java.lang.String,java.util.Collection<org.testng.ITestResult>,java.lang.String,java.util.Comparator<org.testng.ITestResult>)
+meth public static void generateTable(java.io.PrintWriter,java.lang.String,java.util.Collection<org.testng.ITestResult>,java.lang.String,java.util.Comparator<org.testng.ITestResult>)
 meth public void onFinish(org.testng.ITestContext)
 meth public void onStart(org.testng.ITestContext)
 supr org.testng.TestListenerAdapter
@@ -2099,12 +1786,12 @@ hcls ConfigurationComparator,NameComparator
 CLSS public org.testng.reporters.TextReporter
 cons public init(java.lang.String,int)
 meth public void onFinish(org.testng.ITestContext)
-meth public void ppp(java.lang.String)
 supr org.testng.TestListenerAdapter
 hfds m_testName,m_verbose
 
 CLSS public org.testng.reporters.VerboseReporter
 cons public init()
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String)
 fld public final static java.lang.String LISTENER_PREFIX = "[VerboseTestNG] "
 meth protected void log(java.lang.String)
@@ -2129,6 +1816,7 @@ fld public final static java.lang.String ATTR_CLASSNAME = "classname"
 fld public final static java.lang.String ATTR_ERRORS = "errors"
 fld public final static java.lang.String ATTR_FAILURES = "failures"
 fld public final static java.lang.String ATTR_HOSTNAME = "hostname"
+fld public final static java.lang.String ATTR_IGNORED = "ignored"
 fld public final static java.lang.String ATTR_MESSAGE = "message"
 fld public final static java.lang.String ATTR_NAME = "name"
 fld public final static java.lang.String ATTR_PACKAGE = "package"
@@ -2141,6 +1829,7 @@ fld public final static java.lang.String ERROR = "error"
 fld public final static java.lang.String FAILURE = "failure"
 fld public final static java.lang.String PROPERTIES = "properties"
 fld public final static java.lang.String PROPERTY = "property"
+fld public final static java.lang.String SKIPPED = "skipped"
 fld public final static java.lang.String SYSTEM_ERR = "system-err"
 fld public final static java.lang.String SYSTEM_OUT = "system-out"
 fld public final static java.lang.String TESTCASE = "testcase"
@@ -2152,37 +1841,52 @@ cons public init()
 fld public final static java.lang.String FILE_NAME = "testng-results.xml"
 intf org.testng.IReporter
 meth public boolean isGenerateDependsOnGroups()
+ anno 0 java.lang.Deprecated()
 meth public boolean isGenerateDependsOnMethods()
+ anno 0 java.lang.Deprecated()
 meth public boolean isGenerateGroupsAttribute()
+ anno 0 java.lang.Deprecated()
 meth public boolean isGenerateTestResultAttributes()
+ anno 0 java.lang.Deprecated()
 meth public boolean isSplitClassAndPackageNames()
+ anno 0 java.lang.Deprecated()
 meth public int getFileFragmentationLevel()
+ anno 0 java.lang.Deprecated()
 meth public int getStackTraceOutputMethod()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getOutputDirectory()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getTimestampFormat()
+ anno 0 java.lang.Deprecated()
+meth public org.testng.reporters.XMLReporterConfig getConfig()
 meth public static void addDurationAttributes(org.testng.reporters.XMLReporterConfig,java.util.Properties,java.util.Date,java.util.Date)
 meth public void generateReport(java.util.List<org.testng.xml.XmlSuite>,java.util.List<org.testng.ISuite>,java.lang.String)
 meth public void setFileFragmentationLevel(int)
+ anno 0 java.lang.Deprecated()
 meth public void setGenerateDependsOnGroups(boolean)
+ anno 0 java.lang.Deprecated()
 meth public void setGenerateDependsOnMethods(boolean)
+ anno 0 java.lang.Deprecated()
 meth public void setGenerateGroupsAttribute(boolean)
+ anno 0 java.lang.Deprecated()
 meth public void setGenerateTestResultAttributes(boolean)
+ anno 0 java.lang.Deprecated()
 meth public void setOutputDirectory(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public void setSplitClassAndPackageNames(boolean)
+ anno 0 java.lang.Deprecated()
 meth public void setStackTraceOutputMethod(int)
+ anno 0 java.lang.Deprecated()
 meth public void setTimestampFormat(java.lang.String)
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
-hfds config,rootBuffer
+hfds JVM_ARG,config,rootBuffer
 
 CLSS public org.testng.reporters.XMLReporterConfig
 cons public init()
 fld public final static int FF_LEVEL_NONE = 1
 fld public final static int FF_LEVEL_SUITE = 2
 fld public final static int FF_LEVEL_SUITE_RESULT = 3
-fld public final static int STACKTRACE_BOTH = 3
-fld public final static int STACKTRACE_FULL = 2
-fld public final static int STACKTRACE_NONE = 0
-fld public final static int STACKTRACE_SHORT = 1
 fld public final static java.lang.String ATTR_CLASS = "class"
 fld public final static java.lang.String ATTR_DATA_PROVIDER = "data-provider"
 fld public final static java.lang.String ATTR_DEPENDS_ON_GROUPS = "depends-on-groups"
@@ -2223,6 +1927,7 @@ fld public final static java.lang.String TAG_TEST_METHOD = "test-method"
 fld public final static java.lang.String TEST_FAILED = "FAIL"
 fld public final static java.lang.String TEST_PASSED = "PASS"
 fld public final static java.lang.String TEST_SKIPPED = "SKIP"
+innr public final static !enum StackTraceLevels
 meth public boolean isGenerateDependsOnGroups()
 meth public boolean isGenerateDependsOnMethods()
 meth public boolean isGenerateGroupsAttribute()
@@ -2230,10 +1935,12 @@ meth public boolean isGenerateTestResultAttributes()
 meth public boolean isSplitClassAndPackageNames()
 meth public int getFileFragmentationLevel()
 meth public int getStackTraceOutputMethod()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getOutputDirectory()
+meth public java.lang.String getTimestampFormat()
+meth public org.testng.reporters.XMLReporterConfig$StackTraceLevels getStackTraceOutput()
+meth public org.testng.reporters.XMLReporterConfig$StackTraceLevels getStackTraceOutputLevelForPassedTests()
 meth public static java.lang.Integer getStatus(java.lang.String)
-meth public static java.lang.String getTimestampFormat()
-meth public static long convertDate(java.lang.String)
 meth public void setFileFragmentationLevel(int)
 meth public void setGenerateDependsOnGroups(boolean)
 meth public void setGenerateDependsOnMethods(boolean)
@@ -2241,45 +1948,79 @@ meth public void setGenerateGroupsAttribute(boolean)
 meth public void setGenerateTestResultAttributes(boolean)
 meth public void setOutputDirectory(java.lang.String)
 meth public void setSplitClassAndPackageNames(boolean)
+meth public void setStackTraceOutput(org.testng.reporters.XMLReporterConfig$StackTraceLevels)
 meth public void setStackTraceOutputMethod(int)
+ anno 0 java.lang.Deprecated()
 meth public void setTimestampFormat(java.lang.String)
 supr java.lang.Object
-hfds FMT_DEFAULT,STATUSES,fileFragmentationLevel,generateDependsOnGroups,generateDependsOnMethods,generateGroupsAttribute,generateTestResultAttributes,outputDirectory,splitClassAndPackageNames,stackTraceOutputMethod,timestampFormat
+hfds FMT_DEFAULT,STATUSES,fileFragmentationLevel,generateDependsOnGroups,generateDependsOnMethods,generateGroupsAttribute,generateTestResultAttributes,outputDirectory,splitClassAndPackageNames,stackTraceOutputLevel,stackTraceOutputMethod,timestampFormat
+
+CLSS public final static !enum org.testng.reporters.XMLReporterConfig$StackTraceLevels
+ outer org.testng.reporters.XMLReporterConfig
+fld public final static org.testng.reporters.XMLReporterConfig$StackTraceLevels BOTH
+fld public final static org.testng.reporters.XMLReporterConfig$StackTraceLevels FULL
+fld public final static org.testng.reporters.XMLReporterConfig$StackTraceLevels NONE
+fld public final static org.testng.reporters.XMLReporterConfig$StackTraceLevels SHORT
+meth public int getLevel()
+meth public java.lang.String toString()
+meth public static org.testng.reporters.XMLReporterConfig$StackTraceLevels parse(int)
+meth public static org.testng.reporters.XMLReporterConfig$StackTraceLevels parse(java.lang.String)
+meth public static org.testng.reporters.XMLReporterConfig$StackTraceLevels valueOf(java.lang.String)
+meth public static org.testng.reporters.XMLReporterConfig$StackTraceLevels[] values()
+supr java.lang.Enum<org.testng.reporters.XMLReporterConfig$StackTraceLevels>
+hfds level
 
 CLSS public org.testng.reporters.XMLStringBuffer
 cons public init()
 cons public init(java.lang.String)
 cons public init(org.testng.reporters.IBuffer,java.lang.String)
+fld public final static java.lang.String EOL
 meth public !varargs void addEmptyElement(java.lang.String,java.lang.String[])
 meth public !varargs void addOptional(java.lang.String,java.lang.String,java.lang.String[])
+ anno 2 javax.annotation.Nullable()
 meth public !varargs void addRequired(java.lang.String,java.lang.String,java.lang.String[])
+ anno 2 javax.annotation.Nullable()
 meth public !varargs void push(java.lang.String,java.lang.String[])
 meth public java.lang.String getCurrentIndent()
 meth public java.lang.String toXML()
 meth public org.testng.reporters.IBuffer getStringBuffer()
-meth public static void main(java.lang.String[])
 meth public void addCDATA(java.lang.String)
 meth public void addComment(java.lang.String)
 meth public void addEmptyElement(java.lang.String)
 meth public void addEmptyElement(java.lang.String,java.util.Properties)
+ anno 2 javax.annotation.Nullable()
 meth public void addOptional(java.lang.String,java.lang.Boolean)
+ anno 2 javax.annotation.Nullable()
 meth public void addOptional(java.lang.String,java.lang.Boolean,java.util.Properties)
+ anno 2 javax.annotation.Nullable()
+ anno 3 javax.annotation.Nullable()
 meth public void addOptional(java.lang.String,java.lang.String)
+ anno 2 javax.annotation.Nullable()
 meth public void addOptional(java.lang.String,java.lang.String,java.util.Properties)
+ anno 2 javax.annotation.Nullable()
+ anno 3 javax.annotation.Nullable()
 meth public void addRequired(java.lang.String,java.lang.String)
+ anno 2 javax.annotation.Nullable()
 meth public void addRequired(java.lang.String,java.lang.String,java.util.Properties)
+ anno 2 javax.annotation.Nullable()
+ anno 3 javax.annotation.Nullable()
 meth public void addString(java.lang.String)
 meth public void pop()
 meth public void pop(java.lang.String)
 meth public void push(java.lang.String)
 meth public void push(java.lang.String,java.lang.String)
+ anno 2 javax.annotation.Nullable()
 meth public void push(java.lang.String,java.lang.String,java.util.Properties)
+ anno 2 javax.annotation.Nullable()
+ anno 3 javax.annotation.Nullable()
 meth public void push(java.lang.String,java.util.Properties)
+ anno 2 javax.annotation.Nullable()
+meth public void setDefaultComment(java.lang.String)
 meth public void setDocType(java.lang.String)
 meth public void setXmlDetails(java.lang.String,java.lang.String)
 meth public void toWriter(java.io.Writer)
 supr java.lang.Object
-hfds DEFAULT_INDENT_INCREMENT,EOL,INVALID_XML_CHARS,m_buffer,m_currentIndent,m_tagStack
+hfds DEFAULT_INDENT_INCREMENT,INVALID_XML_CHARS,defaultComment,m_buffer,m_currentIndent,m_tagStack
 
 CLSS public org.testng.reporters.XMLSuiteResultWriter
 cons public init(org.testng.reporters.XMLReporterConfig)
@@ -2292,13 +2033,18 @@ CLSS public final org.testng.reporters.XMLUtils
 meth public static java.lang.String escape(java.lang.String)
 meth public static java.lang.String extractComment(java.lang.String,java.util.Properties)
 meth public static java.lang.String xml(java.lang.String,java.lang.String,java.lang.String,java.util.Properties)
+ anno 3 javax.annotation.Nullable()
+ anno 4 javax.annotation.Nullable()
 meth public static void appendAttributes(org.testng.reporters.IBuffer,java.util.Properties)
 meth public static void xmlClose(org.testng.reporters.IBuffer,java.lang.String,java.lang.String,java.lang.String)
 meth public static void xmlOpen(org.testng.reporters.IBuffer,java.lang.String,java.lang.String,java.util.Properties)
 meth public static void xmlOpen(org.testng.reporters.IBuffer,java.lang.String,java.lang.String,java.util.Properties,boolean)
 meth public static void xmlOptional(org.testng.reporters.IBuffer,java.lang.String,java.lang.String,java.lang.Boolean,java.util.Properties)
 meth public static void xmlOptional(org.testng.reporters.IBuffer,java.lang.String,java.lang.String,java.lang.String,java.util.Properties)
+ anno 4 javax.annotation.Nullable()
 meth public static void xmlRequired(org.testng.reporters.IBuffer,java.lang.String,java.lang.String,java.lang.String,java.util.Properties)
+ anno 4 javax.annotation.Nullable()
+ anno 5 javax.annotation.Nullable()
 supr java.lang.Object
 hfds EOL
 
@@ -2318,19 +2064,33 @@ meth public boolean retry(org.testng.ITestResult)
 supr java.lang.Object
 hfds count
 
-CLSS public org.testng.util.Strings
-cons public init()
+CLSS public final org.testng.util.Strings
+meth public static boolean isNotNullAndNotEmpty(java.lang.String)
 meth public static boolean isNullOrEmpty(java.lang.String)
 meth public static java.lang.String escapeHtml(java.lang.String)
-meth public static void main(java.lang.String[])
+meth public static java.lang.String getValueOrEmpty(java.lang.String)
+meth public static java.lang.String join(java.lang.String,java.lang.String[])
+meth public static java.lang.String valueOf(java.util.Map<?,?>)
 supr java.lang.Object
-hfds ESCAPE_HTML_LIST,ESCAPE_HTML_MAP
+hfds ESCAPE_HTML_MAP
+
+CLSS public final org.testng.util.TimeUtils
+meth public static java.lang.String timeInUTC(long,java.lang.String)
+supr java.lang.Object
 
 CLSS public abstract interface org.testng.xml.IFileParser<%0 extends java.lang.Object>
 meth public abstract {org.testng.xml.IFileParser%0} parse(java.lang.String,java.io.InputStream,boolean)
 
 CLSS public abstract interface org.testng.xml.IPostProcessor
 meth public abstract java.util.Collection<org.testng.xml.XmlSuite> process(java.util.Collection<org.testng.xml.XmlSuite>)
+
+CLSS public abstract interface org.testng.xml.ISuiteParser
+intf org.testng.xml.IFileParser<org.testng.xml.XmlSuite>
+meth public abstract boolean accept(java.lang.String)
+
+CLSS public abstract interface org.testng.xml.IWeaveXml
+meth public abstract java.lang.String asXml(org.testng.xml.XmlSuite)
+meth public abstract java.lang.String asXml(org.testng.xml.XmlTest,java.lang.String)
 
 CLSS public abstract org.testng.xml.LaunchSuite
 cons protected init(boolean)
@@ -2369,28 +2129,16 @@ fld public final static java.lang.String DEFAULT_FILENAME = "testng.xml"
 fld public final static java.lang.String DEPRECATED_TESTNG_DTD_URL = "http://beust.com/testng/testng-1.0.dtd"
 fld public final static java.lang.String TESTNG_DTD = "testng-1.0.dtd"
 fld public final static java.lang.String TESTNG_DTD_URL = "http://testng.org/testng-1.0.dtd"
-meth public java.util.Collection<org.testng.xml.XmlSuite> parse() throws java.io.IOException,javax.xml.parsers.ParserConfigurationException,org.xml.sax.SAXException
-meth public java.util.List<org.testng.xml.XmlSuite> parseToList() throws java.io.IOException,javax.xml.parsers.ParserConfigurationException,org.xml.sax.SAXException
+meth public java.util.Collection<org.testng.xml.XmlSuite> parse() throws java.io.IOException
+meth public java.util.List<org.testng.xml.XmlSuite> parseToList() throws java.io.IOException
+meth public static boolean canParse(java.lang.String)
+meth public static boolean hasFileScheme(java.lang.String)
+meth public static java.util.Collection<org.testng.xml.XmlSuite> parse(java.io.InputStream,org.testng.xml.IPostProcessor) throws java.io.IOException
+meth public static java.util.Collection<org.testng.xml.XmlSuite> parse(java.lang.String,org.testng.xml.IPostProcessor) throws java.io.IOException
 meth public void setLoadClasses(boolean)
 meth public void setPostProcessor(org.testng.xml.IPostProcessor)
 supr java.lang.Object
-hfds DEFAULT_FILE_PARSER,XML_PARSER,YAML_PARSER,m_fileName,m_inputStream,m_loadClasses,m_postProcessor
-
-CLSS public org.testng.xml.ResultContentHandler
-cons public init(org.testng.remote.strprotocol.IRemoteSuiteListener,org.testng.remote.strprotocol.IRemoteTestListener,boolean)
-meth public void characters(char[],int,int)
-meth public void endElement(java.lang.String,java.lang.String,java.lang.String)
-meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes)
-supr org.xml.sax.helpers.DefaultHandler
-hfds m_className,m_currentInvocationCount,m_currentSuite,m_currentTest,m_currentTestResult,m_failed,m_invocationCount,m_params,m_passed,m_skipped,m_suiteListener,m_suiteMethodCount,m_testListener,m_testMethodCount
-
-CLSS public org.testng.xml.ResultXMLParser
-cons public init(org.testng.remote.strprotocol.IRemoteSuiteListener,org.testng.remote.strprotocol.IRemoteTestListener)
-meth public java.lang.Object parse(java.lang.String,java.io.InputStream,boolean)
-meth public static void main(java.lang.String[]) throws java.io.FileNotFoundException
-meth public void parse()
-supr org.testng.xml.XMLParser<java.lang.Object>
-hfds m_suiteListener,m_testListener
+hfds DEFAULT_FILE_PARSER,PARSERS,m_fileName,m_inputStream,m_loadClasses,m_postProcessor
 
 CLSS public org.testng.xml.SuiteGenerator
 cons public init()
@@ -2403,6 +2151,8 @@ hfds EMPTY_CLASS_LIST
 
 CLSS public org.testng.xml.SuiteXmlParser
 cons public init()
+intf org.testng.xml.ISuiteParser
+meth public boolean accept(java.lang.String)
 meth public org.testng.xml.XmlSuite parse(java.lang.String,java.io.InputStream,boolean)
 supr org.testng.xml.XMLParser<org.testng.xml.XmlSuite>
 
@@ -2416,6 +2166,7 @@ meth public void error(org.xml.sax.SAXParseException) throws org.xml.sax.SAXExce
 meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
 meth public void xmlClasses(boolean,org.xml.sax.Attributes)
 meth public void xmlGroup(boolean,org.xml.sax.Attributes) throws org.xml.sax.SAXException
+meth public void xmlGroups(boolean,org.xml.sax.Attributes) throws org.xml.sax.SAXException
 meth public void xmlListener(boolean,org.xml.sax.Attributes)
 meth public void xmlListeners(boolean,org.xml.sax.Attributes)
 meth public void xmlMethodSelector(boolean,org.xml.sax.Attributes)
@@ -2424,14 +2175,15 @@ meth public void xmlPackages(boolean,org.xml.sax.Attributes)
 meth public void xmlRun(boolean,org.xml.sax.Attributes) throws org.xml.sax.SAXException
 meth public void xmlSelectorClass(boolean,org.xml.sax.Attributes)
 supr org.xml.sax.helpers.DefaultHandler
-hfds m_currentClass,m_currentClassIndex,m_currentClassParameters,m_currentClasses,m_currentDefines,m_currentExcludedGroups,m_currentExcludedMethods,m_currentExpression,m_currentInclude,m_currentIncludeIndex,m_currentIncludedGroups,m_currentIncludedMethods,m_currentLanguage,m_currentMetaGroup,m_currentMetaGroupName,m_currentPackage,m_currentPackages,m_currentRuns,m_currentSelector,m_currentSelectors,m_currentSuite,m_currentSuiteParameters,m_currentTest,m_currentTestIndex,m_currentTestParameters,m_enabledTest,m_fileName,m_listeners,m_loadClasses,m_locations,m_suiteFiles,m_suites
+hfds m_currentClass,m_currentClassIndex,m_currentClassParameters,m_currentClasses,m_currentDefines,m_currentExcludedGroups,m_currentExcludedMethods,m_currentExpression,m_currentGroups,m_currentInclude,m_currentIncludeIndex,m_currentIncludedGroups,m_currentIncludedMethods,m_currentLanguage,m_currentMetaGroup,m_currentMetaGroupName,m_currentPackage,m_currentPackages,m_currentRuns,m_currentSelector,m_currentSelectors,m_currentSuite,m_currentSuiteParameters,m_currentTest,m_currentTestIndex,m_currentTestParameters,m_enabledTest,m_fileName,m_hasWarn,m_listeners,m_loadClasses,m_locations,m_suiteFiles,m_suites,m_validate
 hcls Include,Location
 
 CLSS public abstract org.testng.xml.XMLParser<%0 extends java.lang.Object>
 cons public init()
-fld protected static javax.xml.parsers.SAXParser m_saxParser
 intf org.testng.xml.IFileParser<{org.testng.xml.XMLParser%0}>
+meth public void parse(java.io.InputStream,org.xml.sax.helpers.DefaultHandler) throws java.io.IOException,org.xml.sax.SAXException
 supr java.lang.Object
+hfds m_saxParser
 
 CLSS public org.testng.xml.XmlClass
 cons public init()
@@ -2441,13 +2193,12 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,boolean)
 cons public init(java.lang.String,int)
 cons public init(java.lang.String,int,boolean)
-intf java.io.Serializable
 intf java.lang.Cloneable
 meth public boolean equals(java.lang.Object)
 meth public boolean loadClasses()
 meth public int getIndex()
 meth public int hashCode()
-meth public java.lang.Class getSupportClass()
+meth public java.lang.Class<?> getSupportClass()
 meth public java.lang.Object clone()
 meth public java.lang.String getName()
 meth public java.lang.String toString()
@@ -2467,10 +2218,12 @@ meth public void setName(java.lang.String)
 meth public void setParameters(java.util.Map<java.lang.String,java.lang.String>)
 meth public void setXmlTest(org.testng.xml.XmlTest)
 supr java.lang.Object
-hfds m_class,m_excludedMethods,m_includedMethods,m_index,m_loadClasses,m_name,m_parameters,m_xmlTest,serialVersionUID
+hfds m_class,m_excludedMethods,m_includedMethods,m_index,m_loadClasses,m_name,m_parameters,m_xmlTest
 
 CLSS public org.testng.xml.XmlDefine
 cons public init()
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
 meth public java.lang.String getName()
 meth public java.lang.String toXml(java.lang.String)
 meth public java.util.List<java.lang.String> getIncludes()
@@ -2501,11 +2254,9 @@ supr java.lang.Object
 hfds m_defines,m_dependencies,m_run
 
 CLSS public org.testng.xml.XmlInclude
-cons public init()
 cons public init(java.lang.String)
 cons public init(java.lang.String,int)
 cons public init(java.lang.String,java.util.List<java.lang.Integer>,int)
-intf java.io.Serializable
 meth public boolean equals(java.lang.Object)
 meth public int getIndex()
 meth public int hashCode()
@@ -2519,9 +2270,10 @@ meth public java.util.Map<java.lang.String,java.lang.String> getParameters()
  anno 0 java.lang.Deprecated()
 meth public void addParameter(java.lang.String,java.lang.String)
 meth public void setDescription(java.lang.String)
+meth public void setParameters(java.util.Map<java.lang.String,java.lang.String>)
 meth public void setXmlClass(org.testng.xml.XmlClass)
 supr java.lang.Object
-hfds m_description,m_index,m_invocationNumbers,m_name,m_parameters,m_xmlClass,serialVersionUID
+hfds m_description,m_index,m_invocationNumbers,m_name,m_parameters,m_xmlClass
 
 CLSS public org.testng.xml.XmlMethodSelector
 cons public init()
@@ -2553,7 +2305,6 @@ hfds m_methodSelectors
 CLSS public org.testng.xml.XmlPackage
 cons public init()
 cons public init(java.lang.String)
-intf java.io.Serializable
 meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 meth public java.lang.String getName()
@@ -2565,7 +2316,7 @@ meth public void setExclude(java.util.List<java.lang.String>)
 meth public void setInclude(java.util.List<java.lang.String>)
 meth public void setName(java.lang.String)
 supr java.lang.Object
-hfds m_exclude,m_include,m_name,m_xmlClasses,serialVersionUID
+hfds m_exclude,m_include,m_name,m_xmlClasses
 
 CLSS public org.testng.xml.XmlRun
 cons public init()
@@ -2588,43 +2339,37 @@ hfds m_language,m_script
 
 CLSS public org.testng.xml.XmlSuite
 cons public init()
+fld public final static java.lang.Boolean DEFAULT_ALLOW_RETURN_VALUES
 fld public final static java.lang.Boolean DEFAULT_GROUP_BY_INSTANCES
+fld public final static java.lang.Boolean DEFAULT_JUNIT
+fld public final static java.lang.Boolean DEFAULT_MIXED
+fld public final static java.lang.Boolean DEFAULT_PRESERVE_ORDER
+fld public final static java.lang.Boolean DEFAULT_SKIP_FAILED_INVOCATION_COUNTS
 fld public final static java.lang.Integer DEFAULT_DATA_PROVIDER_THREAD_COUNT
-fld public final static java.lang.String CONTINUE = "continue"
-fld public final static java.lang.String PARALLEL_CLASSES = "classes"
-fld public final static java.lang.String PARALLEL_INSTANCES = "instances"
-fld public final static java.lang.String PARALLEL_METHODS = "methods"
-fld public final static java.lang.String PARALLEL_NONE = "none"
-fld public final static java.lang.String PARALLEL_TESTS = "tests"
-fld public final static java.lang.String SKIP = "skip"
-fld public static java.lang.Boolean DEFAULT_ALLOW_RETURN_VALUES
-fld public static java.lang.Boolean DEFAULT_JUNIT
-fld public static java.lang.Boolean DEFAULT_MIXED
-fld public static java.lang.Boolean DEFAULT_SKIP_FAILED_INVOCATION_COUNTS
-fld public static java.lang.Integer DEFAULT_THREAD_COUNT
-fld public static java.lang.Integer DEFAULT_VERBOSE
-fld public static java.lang.String DEFAULT_CONFIG_FAILURE_POLICY
-fld public static java.lang.String DEFAULT_PARALLEL
-fld public static java.lang.String DEFAULT_PRESERVE_ORDER
-fld public static java.util.Set<java.lang.String> PARALLEL_MODES
-intf java.io.Serializable
+fld public final static java.lang.Integer DEFAULT_THREAD_COUNT
+fld public final static java.lang.Integer DEFAULT_VERBOSE
+fld public final static org.testng.xml.XmlSuite$FailurePolicy DEFAULT_CONFIG_FAILURE_POLICY
+fld public final static org.testng.xml.XmlSuite$ParallelMode DEFAULT_PARALLEL
+innr public final static !enum FailurePolicy
+innr public final static !enum ParallelMode
 intf java.lang.Cloneable
 meth public boolean equals(java.lang.Object)
+meth public boolean isParsed()
 meth public int getDataProviderThreadCount()
 meth public int getThreadCount()
 meth public int hashCode()
 meth public java.lang.Boolean getAllowReturnValues()
 meth public java.lang.Boolean getGroupByInstances()
+meth public java.lang.Boolean getPreserveOrder()
 meth public java.lang.Boolean isJUnit()
 meth public java.lang.Boolean skipFailedInvocationCounts()
 meth public java.lang.Integer getVerbose()
 meth public java.lang.Object clone()
-meth public java.lang.String getConfigFailurePolicy()
 meth public java.lang.String getFileName()
+meth public java.lang.String getGuiceStage()
 meth public java.lang.String getName()
-meth public java.lang.String getParallel()
 meth public java.lang.String getParameter(java.lang.String)
-meth public java.lang.String getPreserveOrder()
+meth public java.lang.String getParentModule()
 meth public java.lang.String getTest()
 meth public java.lang.String getTimeOut()
 meth public java.lang.String toString()
@@ -2633,6 +2378,7 @@ meth public java.util.Collection<java.lang.String> getPackageNames()
 meth public java.util.List<java.lang.String> getExcludedGroups()
 meth public java.util.List<java.lang.String> getIncludedGroups()
 meth public java.util.List<java.lang.String> getListeners()
+meth public java.util.List<java.lang.String> getLocalListeners()
 meth public java.util.List<java.lang.String> getSuiteFiles()
 meth public java.util.List<org.testng.xml.XmlMethodSelector> getMethodSelectors()
 meth public java.util.List<org.testng.xml.XmlPackage> getPackages()
@@ -2644,8 +2390,11 @@ meth public java.util.Map<java.lang.String,java.lang.String> getParameters()
 meth public long getTimeOut(long)
 meth public org.testng.ITestObjectFactory getObjectFactory()
 meth public org.testng.xml.XmlGroups getGroups()
+meth public org.testng.xml.XmlMethodSelectors getXmlMethodSelectors()
 meth public org.testng.xml.XmlSuite getParentSuite()
-meth public static boolean isParallel(java.lang.String)
+meth public org.testng.xml.XmlSuite shallowCopy()
+meth public org.testng.xml.XmlSuite$FailurePolicy getConfigFailurePolicy()
+meth public org.testng.xml.XmlSuite$ParallelMode getParallel()
 meth public void addExcludedGroup(java.lang.String)
 meth public void addIncludedGroup(java.lang.String)
 meth public void addListener(java.lang.String)
@@ -2656,12 +2405,13 @@ meth public void onPackagesElement(java.lang.String)
 meth public void onParameterElement(java.lang.String,java.lang.String)
 meth public void onSuiteFilesElement(java.lang.String)
 meth public void setAllowReturnValues(java.lang.Boolean)
-meth public void setConfigFailurePolicy(java.lang.String)
+meth public void setConfigFailurePolicy(org.testng.xml.XmlSuite$FailurePolicy)
 meth public void setDataProviderThreadCount(int)
 meth public void setExcludedGroups(java.util.List<java.lang.String>)
 meth public void setFileName(java.lang.String)
 meth public void setGroupByInstances(boolean)
 meth public void setGroups(org.testng.xml.XmlGroups)
+meth public void setGuiceStage(java.lang.String)
 meth public void setIncludedGroups(java.util.List<java.lang.String>)
 meth public void setJUnit(java.lang.Boolean)
 meth public void setJunit(java.lang.Boolean)
@@ -2672,9 +2422,15 @@ meth public void setName(java.lang.String)
 meth public void setObjectFactory(org.testng.ITestObjectFactory)
 meth public void setPackages(java.util.List<org.testng.xml.XmlPackage>)
 meth public void setParallel(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public void setParallel(org.testng.xml.XmlSuite$ParallelMode)
 meth public void setParameters(java.util.Map<java.lang.String,java.lang.String>)
+meth public void setParentModule(java.lang.String)
 meth public void setParentSuite(org.testng.xml.XmlSuite)
+meth public void setParsed(boolean)
+meth public void setPreserveOrder(java.lang.Boolean)
 meth public void setPreserveOrder(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public void setSkipFailedInvocationCounts(boolean)
 meth public void setSuiteFiles(java.util.List<java.lang.String>)
 meth public void setTests(java.util.List<org.testng.xml.XmlTest>)
@@ -2684,32 +2440,62 @@ meth public void setVerbose(java.lang.Integer)
 meth public void setXmlMethodSelectors(org.testng.xml.XmlMethodSelectors)
 meth public void setXmlPackages(java.util.List<org.testng.xml.XmlPackage>)
 supr java.lang.Object
-hfds DEFAULT_SUITE_NAME,m_allowReturnValues,m_childSuites,m_configFailurePolicy,m_dataProviderThreadCount,m_excludedGroups,m_expression,m_fileName,m_groupByInstances,m_includedGroups,m_isJUnit,m_isMixed,m_listeners,m_methodSelectors,m_name,m_objectFactory,m_parallel,m_parameters,m_parentSuite,m_preserveOrder,m_skipFailedInvocationCounts,m_suiteFiles,m_test,m_tests,m_threadCount,m_timeOut,m_verbose,m_xmlGroups,m_xmlMethodSelectors,m_xmlPackages,serialVersionUID
+hfds DEFAULT_SUITE_NAME,m_allowReturnValues,m_childSuites,m_configFailurePolicy,m_dataProviderThreadCount,m_excludedGroups,m_expression,m_fileName,m_groupByInstances,m_guiceStage,m_includedGroups,m_isJUnit,m_listeners,m_methodSelectors,m_name,m_objectFactory,m_parallel,m_parameters,m_parentModule,m_parentSuite,m_preserveOrder,m_skipFailedInvocationCounts,m_suiteFiles,m_test,m_tests,m_threadCount,m_timeOut,m_verbose,m_xmlGroups,m_xmlMethodSelectors,m_xmlPackages,parsed
+
+CLSS public final static !enum org.testng.xml.XmlSuite$FailurePolicy
+ outer org.testng.xml.XmlSuite
+fld public final static org.testng.xml.XmlSuite$FailurePolicy CONTINUE
+fld public final static org.testng.xml.XmlSuite$FailurePolicy SKIP
+meth public java.lang.String toString()
+meth public static org.testng.xml.XmlSuite$FailurePolicy getValidPolicy(java.lang.String)
+meth public static org.testng.xml.XmlSuite$FailurePolicy valueOf(java.lang.String)
+meth public static org.testng.xml.XmlSuite$FailurePolicy[] values()
+supr java.lang.Enum<org.testng.xml.XmlSuite$FailurePolicy>
+hfds name
+
+CLSS public final static !enum org.testng.xml.XmlSuite$ParallelMode
+ outer org.testng.xml.XmlSuite
+fld public final static org.testng.xml.XmlSuite$ParallelMode CLASSES
+fld public final static org.testng.xml.XmlSuite$ParallelMode FALSE
+ anno 0 java.lang.Deprecated()
+fld public final static org.testng.xml.XmlSuite$ParallelMode INSTANCES
+fld public final static org.testng.xml.XmlSuite$ParallelMode METHODS
+fld public final static org.testng.xml.XmlSuite$ParallelMode NONE
+fld public final static org.testng.xml.XmlSuite$ParallelMode TESTS
+fld public final static org.testng.xml.XmlSuite$ParallelMode TRUE
+ anno 0 java.lang.Deprecated()
+meth public boolean isParallel()
+meth public java.lang.String toString()
+meth public static org.testng.xml.XmlSuite$ParallelMode getValidParallel(java.lang.String)
+meth public static org.testng.xml.XmlSuite$ParallelMode skipDeprecatedValues(org.testng.xml.XmlSuite$ParallelMode)
+meth public static org.testng.xml.XmlSuite$ParallelMode valueOf(java.lang.String)
+meth public static org.testng.xml.XmlSuite$ParallelMode[] values()
+supr java.lang.Enum<org.testng.xml.XmlSuite$ParallelMode>
+hfds isParallel,name
 
 CLSS public org.testng.xml.XmlTest
 cons public init()
 cons public init(org.testng.xml.XmlSuite)
 cons public init(org.testng.xml.XmlSuite,int)
-fld public static int DEFAULT_TIMEOUT_MS
-intf java.io.Serializable
+fld public final static int DEFAULT_TIMEOUT_MS = 2147483647
 intf java.lang.Cloneable
+meth public !varargs void addMetaGroup(java.lang.String,java.lang.String[])
 meth public boolean equals(java.lang.Object)
 meth public boolean getGroupByInstances()
 meth public boolean isJUnit()
+meth public boolean nameMatchesAny(java.util.List<java.lang.String>)
 meth public boolean skipFailedInvocationCounts()
 meth public int getIndex()
 meth public int getThreadCount()
 meth public int getVerbose()
 meth public int hashCode()
 meth public java.lang.Boolean getAllowReturnValues()
+meth public java.lang.Boolean getPreserveOrder()
 meth public java.lang.Object clone()
 meth public java.lang.String getExpression()
 meth public java.lang.String getName()
-meth public java.lang.String getParallel()
 meth public java.lang.String getParameter(java.lang.String)
-meth public java.lang.String getPreserveOrder()
 meth public java.lang.String getTimeOut()
-meth public java.lang.String toString()
 meth public java.lang.String toXml(java.lang.String)
 meth public java.util.List<java.lang.Integer> getInvocationNumbers(java.lang.String)
 meth public java.util.List<java.lang.String> getExcludedGroups()
@@ -2724,10 +2510,13 @@ meth public java.util.Map<java.lang.String,java.lang.String> getLocalParameters(
 meth public java.util.Map<java.lang.String,java.lang.String> getParameters()
  anno 0 java.lang.Deprecated()
 meth public java.util.Map<java.lang.String,java.lang.String> getTestParameters()
+ anno 0 java.lang.Deprecated()
 meth public java.util.Map<java.lang.String,java.lang.String> getXmlDependencyGroups()
 meth public java.util.Map<java.lang.String,java.util.List<java.lang.String>> getMetaGroups()
 meth public long getTimeOut(long)
+meth public org.testng.xml.XmlGroups getXmlGroups()
 meth public org.testng.xml.XmlSuite getSuite()
+meth public org.testng.xml.XmlSuite$ParallelMode getParallel()
 meth public void addExcludedGroup(java.lang.String)
 meth public void addIncludedGroup(java.lang.String)
 meth public void addMetaGroup(java.lang.String,java.util.List<java.lang.String>)
@@ -2749,9 +2538,11 @@ meth public void setMetaGroups(java.util.Map<java.lang.String,java.util.List<jav
 meth public void setMethodSelectors(java.util.List<org.testng.xml.XmlMethodSelector>)
 meth public void setName(java.lang.String)
 meth public void setPackages(java.util.List<org.testng.xml.XmlPackage>)
-meth public void setParallel(java.lang.String)
+meth public void setParallel(org.testng.xml.XmlSuite$ParallelMode)
 meth public void setParameters(java.util.Map<java.lang.String,java.lang.String>)
+meth public void setPreserveOrder(java.lang.Boolean)
 meth public void setPreserveOrder(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public void setSkipFailedInvocationCounts(boolean)
 meth public void setSuite(org.testng.xml.XmlSuite)
 meth public void setThreadCount(int)
@@ -2761,7 +2552,7 @@ meth public void setXmlClasses(java.util.List<org.testng.xml.XmlClass>)
 meth public void setXmlPackages(java.util.List<org.testng.xml.XmlPackage>)
 meth public void setXmlSuite(org.testng.xml.XmlSuite)
 supr java.lang.Object
-hfds m_allowReturnValues,m_excludedGroups,m_failedInvocationNumbers,m_groupByInstances,m_includedGroups,m_index,m_isJUnit,m_metaGroups,m_methodSelectors,m_name,m_parallel,m_parameters,m_preserveOrder,m_skipFailedInvocationCounts,m_suite,m_threadCount,m_timeOut,m_verbose,m_xmlClasses,m_xmlDependencyGroups,m_xmlGroups,m_xmlPackages,serialVersionUID
+hfds m_allowReturnValues,m_failedInvocationNumbers,m_groupByInstances,m_index,m_isJUnit,m_methodSelectors,m_name,m_parallel,m_parameters,m_preserveOrder,m_skipFailedInvocationCounts,m_suite,m_threadCount,m_timeOut,m_verbose,m_xmlClasses,m_xmlDependencyGroups,m_xmlGroups,m_xmlPackages
 
 CLSS public org.testng.xml.XmlUtils
 cons public init()

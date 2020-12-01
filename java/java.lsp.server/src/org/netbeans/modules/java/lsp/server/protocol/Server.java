@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -65,6 +63,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -213,35 +212,50 @@ public final class Server {
             }
         }
         
-        private void showIndexingCompleted() {
+        private JavaSource showIndexingCompleted(Project[] opened) {
             try {
-                JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY))
-                          .runWhenScanFinished(cc -> {
-                  if (client.getNbCodeCapabilities().hasStatusBarMessageSupport()) {
-                        client.showStatusBarMessage(new ShowStatusMessageParams(MessageType.Info, INDEXING_COMPLETED, 0));
-                  } else {
-                        client.showMessage(new ShowStatusMessageParams(MessageType.Info, INDEXING_COMPLETED, 0));
-                  }
-                  //todo: refresh diagnostics all open editor?
-                }, true);
+                final ClasspathInfo info = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY);
+                final JavaSource source = JavaSource.create(info);
+                if (source == null) {
+                    SERVER_INIT_RP.post(() -> {
+                        final String msg = NO_JAVA_SUPPORT + System.getProperty("java.version");
+                        showStatusBarMessage(MessageType.Error, msg, 5000);
+                    });
+                } else {
+                    source.runWhenScanFinished(cc -> {
+                        showStatusBarMessage(MessageType.Info, INDEXING_COMPLETED, 0);
+                    }, true);
+                }
+                return source;
             } catch (IOException ex) {
                 throw new IllegalStateException(ex);
             }
         }
+
+        private void showStatusBarMessage(final MessageType type, final String msg, int timeout) {
+            if (client.getNbCodeCapabilities().hasStatusBarMessageSupport()) {
+                client.showStatusBarMessage(new ShowStatusMessageParams(type, msg, timeout));
+            } else {
+                client.showMessage(new ShowStatusMessageParams(type, msg, timeout));
+            }
+        }
         
-        private InitializeResult constructInitResponse() {
+        private InitializeResult constructInitResponse(JavaSource src) {
             ServerCapabilities capabilities = new ServerCapabilities();
-            capabilities.setTextDocumentSync(TextDocumentSyncKind.Incremental);
-            CompletionOptions completionOptions = new CompletionOptions();
-            completionOptions.setResolveProvider(true);
-            completionOptions.setTriggerCharacters(Collections.singletonList("."));
-            capabilities.setCompletionProvider(completionOptions);
-            capabilities.setCodeActionProvider(true);
-            capabilities.setDocumentSymbolProvider(true);
-            capabilities.setDefinitionProvider(true);
-            capabilities.setDocumentHighlightProvider(true);
-            capabilities.setReferencesProvider(true);
-            capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(Arrays.asList(JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT, GENERATE_GETTERS, GENERATE_SETTERS, GENERATE_GETTERS_SETTERS)));
+            if (src != null) {
+                capabilities.setTextDocumentSync(TextDocumentSyncKind.Incremental);
+                CompletionOptions completionOptions = new CompletionOptions();
+                completionOptions.setResolveProvider(true);
+                completionOptions.setTriggerCharacters(Collections.singletonList("."));
+                capabilities.setCompletionProvider(completionOptions);
+                capabilities.setCodeActionProvider(true);
+                capabilities.setDocumentSymbolProvider(true);
+                capabilities.setDefinitionProvider(true);
+                capabilities.setDocumentHighlightProvider(true);
+                capabilities.setReferencesProvider(true);
+                capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(Arrays.asList(JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT, GENERATE_GETTERS, GENERATE_SETTERS, GENERATE_GETTERS_SETTERS)));
+                capabilities.setWorkspaceSymbolProvider(true);
+            }
             return new InitializeResult(capabilities);
         }
         
@@ -254,7 +268,7 @@ public final class Server {
             if (folders != null) {
                 for (WorkspaceFolder w : folders) {
                     try {
-                        projectCandidates.add(TextDocumentServiceImpl.fromUri(w.getUri()));
+                        projectCandidates.add(Utils.fromUri(w.getUri()));
                     } catch (MalformedURLException ex) {
                         LOG.log(Level.FINE, null, ex);
                     }
@@ -264,7 +278,7 @@ public final class Server {
 
                 if (root != null) {
                     try {
-                        projectCandidates.add(TextDocumentServiceImpl.fromUri(root));
+                        projectCandidates.add(Utils.fromUri(root));
                     } catch (MalformedURLException ex) {
                         LOG.log(Level.FINE, null, ex);
                     }
@@ -276,8 +290,8 @@ public final class Server {
             SERVER_INIT_RP.post(() -> asyncOpenSelectedProjects(fProjects, projectCandidates));
             
             return fProjects.
-                    thenRun(this::showIndexingCompleted).
-                    thenApply((v) -> constructInitResponse());
+                    thenApply(this::showIndexingCompleted).
+                    thenApply(this::constructInitResponse);
         }
 
         @Override
@@ -322,6 +336,7 @@ public final class Server {
     public static final String GENERATE_SETTERS =  "java.generate.setters";
     public static final String GENERATE_GETTERS_SETTERS =  "java.generate.getters.setters";
     static final String INDEXING_COMPLETED = "Indexing completed.";
+    static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";
     
     static final NbCodeLanguageClient STUB_CLIENT = new NbCodeLanguageClient() {
         private final NbCodeClientCapabilities caps = new NbCodeClientCapabilities();

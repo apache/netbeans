@@ -138,7 +138,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
         
         NamedNodeMap existingAttributes = el.getAttributes();        
         
-        Set possibleAttributes = (Set) attrDecls.get(el.getTagName());
+        Set<String> possibleAttributes = (Set<String>) attrDecls.get(el.getTagName());
         if (possibleAttributes == null) return org.openide.util.Enumerations.empty();
         
         String prefix = ctx.getCurrentPrefix();
@@ -171,7 +171,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
         if (elementDecls == null) return org.openide.util.Enumerations.empty();;
         
         Node node = ((Node)ctx).getParentNode();        
-        Set elements = null;
+        Set<String> elements = null;
         
         if (node instanceof Element) {
             Element el = (Element) node;
@@ -195,7 +195,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
                 Enumeration en = ((ContentModel)model).whatCanFollow(new PreviousEnumeration(el, ctx));
                 if (en == null) return org.openide.util.Enumerations.empty();
                 String prefix = ctx.getCurrentPrefix();
-                elements = new TreeSet();
+                elements = new TreeSet<>();
                 while (en.hasMoreElements()) {
                     String next = (String) en.nextElement();
                     if (next.startsWith(prefix)) {

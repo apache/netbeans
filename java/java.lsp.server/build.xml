@@ -30,7 +30,9 @@
     </target>
     <target name="build-lsp-server" depends="-set-use-jdk-javac,build,test-init,proxy-setup" description="Prepares NetBeans bits for vscode extensions">
         <ant dir="nbcode" target="build-zip" inheritall="false" inheritrefs="false" />
-        <unzip src="nbcode/dist/nbcode.zip" dest="${lsp.build.dir}/../" />
+        <unzip src="nbcode/dist/nbcode.zip" dest="${lsp.build.dir}/../">
+            <globmapper from="nbcode/nb/*" to="nbcode/nbcode/*"/>
+        </unzip>
         <mkdir dir="${lsp.build.dir}/bin" />
         <copy todir="${lsp.build.dir}/bin" file="script/bin/nbcode" overwrite="true" />
         <mkdir dir="${lsp.build.dir}/etc" />
@@ -126,5 +128,17 @@
         />
 
         <zip destfile="${build.dir}/apache-netbeans-java-${vsix.version}.vsix" basedir="${build.dir}/vscode-mandatory/" update="true" />
+    </target>
+    <target name="test-vscode-ext" description="Tests the Visual Studio Code extension built by 'build-vscode-ext' target.">
+        <exec executable="npm" failonerror="true" dir="vscode">
+            <arg value="--allow-same-version"/>
+            <arg value="run" />
+            <arg value="nbjavac" />
+        </exec>
+        <exec executable="npm" failonerror="true" dir="vscode">
+            <arg value="--allow-same-version"/>
+            <arg value="run" />
+            <arg value="test" />
+        </exec>
     </target>
 </project>

@@ -305,7 +305,7 @@ matrix:
             - ant $OPTS -f ide/xml.lexer test
             - ant $OPTS -f ide/xml.multiview test
             - ant $OPTS -f ide/xml.retriever test
-            - ant $OPTS -f ide/xml.schema.completion test -Dtest.config=stableBTD
+            - ant $OPTS -f ide/xml.schema.completion test
             - ant $OPTS -f ide/xml.schema.model test
             - ant $OPTS -f ide/xml.text test
             - ant $OPTS -f ide/xml.text.obsolete90 test
@@ -747,7 +747,7 @@ matrix:
         - name: Build the Visual Studio Code extension for Java
           jdk: openjdk8
           before_install:
-            - nvm install 8
+            - nvm install 12.14.1
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
@@ -755,6 +755,7 @@ matrix:
             - ant $OPTS build
           script:
             - (cd java/java.lsp.server; ant build-vscode-ext)
+            - (cd java/java.lsp.server; ant test-vscode-ext)
 
         - name: "GraalVM Tests (latest)"
           jdk: openjdk8

@@ -30,6 +30,7 @@ import org.netbeans.modules.parsing.spi.indexing.CustomIndexerFactory;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
 /**
@@ -43,10 +44,14 @@ public final class FileIndexer extends CustomIndexer {
     // -----------------------------------------------------------------------
 
     public static final String ID = "org-netbeans-modules-jumpto-file-FileIndexer"; //NOI18N
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
 
     public static final String FIELD_NAME = "file-name"; //NOI18N
     public static final String FIELD_CASE_INSENSITIVE_NAME = "ci-file-name"; //NOI18N
+    public static final String FIELD_RELATIVE_PATH = "relative-path"; //NOI18N
+    public static final String FIELD_CASE_INSENSITIVE_RELATIVE_PATH = "ci-relative-path"; //NOI18N
+    public static final String FIELD_FULL_PATH = "full-path"; //NOI18N
+    public static final String FIELD_CASE_INSENSITIVE_FULL_PATH = "ci-full-path"; //NOI18N
 
     // used from the XML layer
     public static final class Factory extends CustomIndexerFactory {
@@ -125,10 +130,23 @@ public final class FileIndexer extends CustomIndexer {
                 }
                 cnt++;
                 String nameExt = getNameExt(i);
+                FileObject root = context.getRoot();
+                final String rootPath = root != null ? root.getPath() : null;
                 if (nameExt.length() > 0) {
                     IndexDocument d = is.createDocument(i);
                     d.addPair(FIELD_NAME, nameExt, true, true);
                     d.addPair(FIELD_CASE_INSENSITIVE_NAME, nameExt.toLowerCase(Locale.ENGLISH), true, true);
+
+                    final String relativePath = i.getRelativePath();
+
+                    d.addPair(FIELD_RELATIVE_PATH, relativePath, true, true);
+                    d.addPair(FIELD_CASE_INSENSITIVE_RELATIVE_PATH, relativePath.toLowerCase(Locale.ENGLISH), true, true);
+
+                    if (rootPath != null) {
+                        String fullPath = rootPath + "/" + i.getRelativePath();
+                        d.addPair(FIELD_FULL_PATH, fullPath, true, true);
+                        d.addPair(FIELD_CASE_INSENSITIVE_FULL_PATH, fullPath.toLowerCase(Locale.ENGLISH), true, true);
+                    }
                     is.addDocument(d);
                     if (LOG.isLoggable(Level.FINEST)) {
                         LOG.log(Level.FINEST, "added {0}/{1}", new Object[]{i.getURL(), i.getRelativePath()});

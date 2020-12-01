@@ -108,6 +108,7 @@ public final class FmtOptions {
     public static final String BLANK_LINES_AFTER_OPEN_PHP_TAG = "blankLinesAfterOpenPHPTag"; //NOI18N
     public static final String BLANK_LINES_AFTER_OPEN_PHP_TAG_IN_HTML = "blankLinesAfterOpenPHPTagInHTML"; //NOI18N
     public static final String BLANK_LINES_BEFORE_CLOSE_PHP_TAG = "blankLinesBeforeClosePHPTag"; //NOI18N
+    public static final String BLANK_LINES_MAX_PRESERVED = "blankLinesMaxPreserved"; //NOI18N
     public static final String SPACE_BEFORE_WHILE = "spaceBeforeWhile"; //NOI18N
     public static final String SPACE_BEFORE_ELSE = "spaceBeforeElse"; //NOI18N
     public static final String SPACE_BEFORE_CATCH = "spaceBeforeCatch"; //NOI18N
@@ -284,6 +285,7 @@ public final class FmtOptions {
             {BLANK_LINES_AFTER_OPEN_PHP_TAG, "1"}, //NOI18N
             {BLANK_LINES_AFTER_OPEN_PHP_TAG_IN_HTML, "0"}, //NOI18N
             {BLANK_LINES_BEFORE_CLOSE_PHP_TAG, "0"}, //NOI18N
+            {BLANK_LINES_MAX_PRESERVED, "1"}, //NOI18N
 
             {SPACE_BEFORE_WHILE, TRUE},
             {SPACE_BEFORE_ELSE, TRUE},

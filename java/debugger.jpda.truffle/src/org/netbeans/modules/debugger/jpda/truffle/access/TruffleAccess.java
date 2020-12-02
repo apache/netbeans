@@ -89,6 +89,7 @@ public class TruffleAccess implements JPDABreakpointListener {
     private static final String VAR_FRAME = "frame";                            // NOI18N
     private static final String VAR_SRC_ID = "id";                              // NOI18N
     private static final String VAR_SRC_URI = "uri";                            // NOI18N
+    private static final String VAR_SRC_MIMETYPE = "mimeType";                  // NOI18N
     private static final String VAR_SRC_NAME = "name";                          // NOI18N
     private static final String VAR_SRC_PATH = "path";                          // NOI18N
     private static final String VAR_SRC_SOURCESECTION = "sourceSection";        // NOI18N
@@ -308,8 +309,9 @@ public class TruffleAccess implements JPDABreakpointListener {
             String name = (String) sourcePositionVar.getField(VAR_SRC_NAME).createMirrorObject();
             String path = (String) sourcePositionVar.getField(VAR_SRC_PATH).createMirrorObject();
             URI uri = (URI) sourcePositionVar.getField(VAR_SRC_URI).createMirrorObject();
+            String mimeType = (String) sourcePositionVar.getField(VAR_SRC_MIMETYPE).createMirrorObject();
             StringReference codeRef = (StringReference) ((JDIVariable) sourcePositionVar.getField(VAR_SRC_CODE)).getJDIValue();
-            src = Source.getSource(debugger, id, name, path, uri, codeRef);
+            src = Source.getSource(debugger, id, name, path, uri, mimeType, codeRef);
         }
         return new SourcePosition(debugger, id, src, sourceSection);
     }
@@ -408,6 +410,7 @@ public class TruffleAccess implements JPDABreakpointListener {
         String sourceName;
         String sourcePath;
         URI sourceURI;
+        String mimeType;
         String sourceSection;
         try {
             int i1 = 0;
@@ -428,6 +431,9 @@ public class TruffleAccess implements JPDABreakpointListener {
             }
             i1 = i2 + 1;
             i2 = sourceDef.indexOf('\n', i1);
+            mimeType = sourceDef.substring(i1, i2);
+            i1 = i2 + 1;
+            i2 = sourceDef.indexOf('\n', i1);
             if (i2 < 0) {
                 i2 = sourceDef.length();
             }
@@ -435,7 +441,7 @@ public class TruffleAccess implements JPDABreakpointListener {
         } catch (IndexOutOfBoundsException ioob) {
             throw new IllegalStateException("var source definition='"+sourceDef+"'", ioob);
         }
-        Source src = Source.getSource(debugger, sourceId, sourceName, sourcePath, sourceURI, codeRef);
+        Source src = Source.getSource(debugger, sourceId, sourceName, sourcePath, sourceURI, mimeType, codeRef);
         return new SourcePosition(debugger, sourceId, src, sourceSection);
     }
     

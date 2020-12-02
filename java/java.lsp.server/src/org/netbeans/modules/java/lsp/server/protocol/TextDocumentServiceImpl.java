@@ -204,10 +204,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 public void run(ResultIterator resultIterator) throws Exception {
                     TokenSequence<JavaTokenId> ts = resultIterator.getSnapshot().getTokenHierarchy().tokenSequence(JavaTokenId.language());
                     if (ts.move(caret) == 0 || !ts.moveNext()) {
-                        ts.movePrevious();
+                        if (!ts.movePrevious()) {
+                            ts.moveNext();
+                        }
                     }
                     int len = caret - ts.offset();
-                    boolean allCompletion = params.getContext().getTriggerKind() == CompletionTriggerKind.TriggerForIncompleteCompletions
+                    boolean allCompletion = params.getContext() != null && params.getContext().getTriggerKind() == CompletionTriggerKind.TriggerForIncompleteCompletions
                             || len > 0 && ts.token().length() >= len && ts.token().id() == JavaTokenId.IDENTIFIER;
                     CompilationController controller = CompilationController.get(resultIterator.getParserResult(ts.offset()));
                     controller.toPhase(JavaSource.Phase.RESOLVED);

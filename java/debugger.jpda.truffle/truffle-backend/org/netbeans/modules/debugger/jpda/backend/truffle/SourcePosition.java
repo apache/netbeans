@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.debugger.jpda.backend.truffle;
 
+import com.oracle.truffle.api.nodes.LanguageInfo;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.source.SourceSection;
 
@@ -41,8 +42,9 @@ final class SourcePosition {
     final String sourceSection;
     final String code;
     final URI uri;
+    final String mimeType;
 
-    public SourcePosition(SourceSection sourceSection) {
+    public SourcePosition(SourceSection sourceSection, LanguageInfo languageInfo) {
         Source source = sourceSection.getSource();
         this.id = getId(source);
         this.name = source.getName();
@@ -54,6 +56,15 @@ final class SourcePosition {
         this.sourceSection = sourceSection.getStartLine() + "," + sourceSection.getStartColumn() + "," + sourceSection.getEndLine() + "," + sourceSection.getEndColumn();
         this.code = source.getCharacters().toString();
         this.uri = source.getURI();
+        this.mimeType = findMIMEType(source, languageInfo);
+    }
+
+    private String findMIMEType(Source source, LanguageInfo languageInfo) {
+        String mimeType = source.getMimeType();
+        if (mimeType == null && languageInfo != null) {
+            mimeType = languageInfo.getDefaultMimeType();
+        }
+        return mimeType;
     }
 
     private static synchronized long getId(Source s) {

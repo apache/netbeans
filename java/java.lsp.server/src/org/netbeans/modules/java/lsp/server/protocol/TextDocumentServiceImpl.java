@@ -171,6 +171,8 @@ import org.openide.filesystems.FileObject;
 import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle.Messages;
+import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 
@@ -944,17 +946,20 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
+    @Messages({
+        "DN_GenerateGetters=Generate getter(s).",
+        "DN_GenerateSetters=Generate setter(s).",
+        "DN_GenerateGettersSetters=Generate getter(s) and setter(s).",
+    })
     public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
         Document doc = openedDocuments.get(params.getTextDocument().getUri());
         if (doc == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
         Map<String, ErrorDescription> id2Errors = (Map<String, ErrorDescription>) doc.getProperty("lsp-errors");
-        if (id2Errors == null) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
         JavaSource js = JavaSource.forDocument(doc);
         List<Either<Command, CodeAction>> result = new ArrayList<>();
+        if (id2Errors != null) {
         for (Diagnostic diag : params.getContext().getDiagnostics()) {
             ErrorDescription err = id2Errors.get(diag.getCode().getLeft());
 
@@ -1038,9 +1043,46 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
             }
         }
+        }
+
+        //code generators:
+        try {
+            js.runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+
+                Pair<Set<VariableElement>, Set<VariableElement>> pair = GetterSetterGenerator.findMissingGettersSetters(cc, params.getRange(), false);
+                boolean missingGetters = !pair.first().isEmpty();
+                boolean missingSetters = !pair.second().isEmpty();
+                String uri = toUri(cc.getFileObject());
+
+                if (missingGetters) {
+                    result.add(Either.forRight(createCodeGeneratorAction(Bundle.DN_GenerateGetters(), Server.GENERATE_GETTERS, uri, params.getRange())));
+                }
+                if (missingSetters) {
+                    result.add(Either.forRight(createCodeGeneratorAction(Bundle.DN_GenerateSetters(), Server.GENERATE_SETTERS, uri, params.getRange())));
+                }
+                if (missingGetters && missingSetters) {
+                    result.add(Either.forRight(createCodeGeneratorAction(Bundle.DN_GenerateGettersSetters(), Server.GENERATE_GETTERS_SETTERS, uri, params.getRange())));
+                }
+            }, true);
+        } catch (IOException ex) {
+            //TODO: include stack trace:
+            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+        }
 
         return CompletableFuture.completedFuture(result);
     }
+
+    private CodeAction createCodeGeneratorAction(String name, String command, String uri, Range range) {
+        CodeAction action = new CodeAction(name);
+        List<Object> arguments = new ArrayList<>();
+
+        arguments.add(uri);
+        arguments.add(range);
+        action.setCommand(new Command(name, command, arguments));
+        return action;
+    }
+
 
     //TODO: copied from spi.editor.hints/.../FixData:
     private List<Fix> sortFixes(Collection<Fix> fixes) {
@@ -1266,7 +1308,115 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
     }
 
-    private static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {
+    public static Position createPosition(CompilationUnitTree cut, int offset) {
+        return createPosition(cut.getLineMap(), offset);
+    }
+
+    public static Position createPosition(LineMap lm, int offset) {
+        return new Position((int) lm.getLineNumber(offset) - 1,
+                            (int) lm.getColumnNumber(offset) - 1);
+    }
+
+    public static Position createPosition(FileObject file, int offset) {
+        try {
+            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+            StyledDocument doc = ec.openDocument();
+            int line = NbDocument.findLineNumber(doc, offset);
+            int column = NbDocument.findLineColumn(doc, offset);
+
+            return new Position(line, column);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    public static int getOffset(Document doc, Position pos) {
+        return LineDocumentUtils.getLineStartFromIndex((LineDocument) doc, pos.getLine()) + pos.getCharacter();
+    }
+
+    private static String toUri(FileObject file) {
+        if (FileUtil.isArchiveArtifact(file)) {
+            //VS code cannot open jar:file: URLs, workaround:
+            //another workaround, should be:
+            //File cacheDir = Places.getCacheSubfile("java-server");
+            //but that locks up VS Code, using a temp directory:
+            File cacheDir;
+            try {
+                cacheDir = Files.createTempDirectory("nbcode").toFile();
+            } catch (IOException ex) {
+                throw new UncheckedIOException(ex);
+            }
+            File segments = new File(cacheDir, "segments");
+            Properties props = new Properties();
+
+            try (InputStream in = new FileInputStream(segments)) {
+                props.load(in);
+            } catch (IOException ex) {
+                //OK, may not exist yet
+            }
+            FileObject archive = FileUtil.getArchiveFile(file);
+            String archiveString = archive.toURL().toString();
+            File foundSegment = null;
+            for (String segment : props.stringPropertyNames()) {
+                if (archiveString.equals(props.getProperty(segment))) {
+                    foundSegment = new File(cacheDir, segment);
+                    break;
+                }
+            }
+            if (foundSegment == null) {
+                int i = 0;
+                while (props.getProperty("s" + i) != null)
+                    i++;
+                foundSegment = new File(cacheDir, "s" + i);
+                props.put("s" + i, archiveString);
+                try (OutputStream in = new FileOutputStream(segments)) {
+                    props.store(in, "");
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+            File cache = new File(foundSegment, FileUtil.getRelativePath(FileUtil.getArchiveRoot(archive), file));
+            cache.getParentFile().mkdirs();
+            try (OutputStream out = new FileOutputStream(cache)) {
+                out.write(file.asBytes());
+                return cache.toURI().toString();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        return file.toURI().toString();
+    }
+
+    //TODO: move to a separate Utils class:
+    public static FileObject fromUri(String uri) throws MalformedURLException {
+        File cacheDir = Places.getCacheSubfile("java-server");
+        URI uriUri = URI.create(uri);
+        URI relative = cacheDir.toURI().relativize(uriUri);
+        if (relative != null && new File(cacheDir, relative.toString()).canRead()) {
+            String segmentAndPath = relative.toString();
+            int slash = segmentAndPath.indexOf('/');
+            String segment = segmentAndPath.substring(0, slash);
+            String path = segmentAndPath.substring(slash + 1);
+            File segments = new File(cacheDir, "segments");
+            Properties props = new Properties();
+
+            try (InputStream in = new FileInputStream(segments)) {
+                props.load(in);
+                String archiveUri = props.getProperty(segment);
+                FileObject archive = URLMapper.findFileObject(URI.create(archiveUri).toURL());
+                archive = archive != null ? FileUtil.getArchiveRoot(archive) : null;
+                FileObject file = archive != null ? archive.getFileObject(path) : null;
+                if (file != null) {
+                    return file;
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        return URLMapper.findFileObject(URI.create(uri).toURL());
+    }
+
+    public static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {
         FileObject[] file = new FileObject[1];
         LineMap[] lm = new LineMap[1];
         ModificationResult changes = js.runModificationTask(wc -> {

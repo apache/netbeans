@@ -132,6 +132,21 @@
 				"category": "Java"
 			},
 			{
+				"command": "java.generate.getters.menu",
+				"title": "Generate all getters",
+				"category": "Java"
+			},
+			{
+				"command": "java.generate.setters.menu",
+				"title": "Generate all setters",
+				"category": "Java"
+			},
+			{
+				"command": "java.generate.getters.setters.menu",
+				"title": "Generate all getters and setters",
+				"category": "Java"
+			},
+			{
 				"command": "graalvm.pause.script",
 				"title": "Pause in Script",
 				"category": "GraalVM"
@@ -154,8 +169,37 @@
 					"command": "graalvm.pause.script",
 					"when": "nbJavaLSReady"
 				}
+			],
+			"editor/context": [
+				{
+                                        "submenu": "java.generate",
+                                        "group": "1_modification"
+				}
+			],
+			"java.generate": [
+				{
+                                        "command": "java.generate.getters.menu",
+					"when": "nbJavaLSReady",
+                                        "group": "1_getters_setters"
+				},
+				{
+                                        "command": "java.generate.setters.menu",
+					"when": "nbJavaLSReady",
+                                        "group": "1_getters_setters"
+				},
+				{
+                                        "command": "java.generate.getters.setters.menu",
+					"when": "nbJavaLSReady",
+                                        "group": "1_getters_setters"
+				}
 			]
-		}
+		},
+                "submenus": [
+                    {
+                        "id": "java.generate",
+                        "label": "Generate"
+                    }
+                ]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
@@ -163,7 +207,7 @@
 		"watch": "tsc -watch -p ./",
 		"test": "node ./out/test/runTest.js",
 		"nbcode": "node ./out/nbcode.js",
-		"nbjavac" : "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*"
+		"nbjavac": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*"
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.47.0",

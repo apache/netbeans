@@ -19,9 +19,11 @@
 package org.netbeans.modules.debugger.jpda.truffle.frames.models;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
+import org.netbeans.modules.debugger.jpda.truffle.source.Source;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
 
@@ -63,7 +65,22 @@ public final class TruffleDVFrame implements DVFrame {
 
     @Override
     public URI getSourceURI() {
-        return truffleFrame.getSourcePosition().getSource().getURI();
+        Source source = truffleFrame.getSourcePosition().getSource();
+        URI uri = source.getURI();
+        if (uri != null && "file".equalsIgnoreCase(uri.getScheme())) {
+            return uri;
+        }
+        try {
+            return source.getUrl().toURI();
+        } catch (URISyntaxException ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public String getSourceMimeType() {
+        Source source = truffleFrame.getSourcePosition().getSource();
+        return source.getMimeType();
     }
 
     @Override

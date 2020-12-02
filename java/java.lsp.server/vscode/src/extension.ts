@@ -193,6 +193,30 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             });
         });
     }));
+    for (let generator of ['java.generate.getters', 'java.generate.setters', 'java.generate.getters.setters']) {
+        context.subscriptions.push(commands.registerCommand(generator + '.menu', () => {
+            return window.withProgress({ location: ProgressLocation.Window }, p => {
+                return new Promise(async (resolve, reject) => {
+                    const commands = await vscode.commands.getCommands();
+                    const editor = vscode.window.activeTextEditor;
+                    if (commands.includes(generator + '.menu') && editor != null) {
+                        const uri = editor.document.uri;
+                        const res = await vscode.commands.executeCommand(generator,
+                                                                         uri.scheme + "://" + uri.path,
+                                                                         editor.selection,
+                                                                         "all");
+                        if (res) {
+                            resolve();
+                        } else {
+                            reject();
+                        }
+                    } else {
+                        reject();
+                    }
+                });
+            });
+        }));
+    }
     return Object.freeze({
         version : API_VERSION
     });

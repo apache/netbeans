@@ -50,11 +50,6 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="messageIconLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="messageTextLabel" min="-2" pref="550" max="-2" attributes="0"/>
-                          </Group>
                           <Component id="noteLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="informationLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="learnMoreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -64,6 +59,18 @@
                               <Component id="debuggerPortOptionLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="messageTextLabel" min="-2" pref="550" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="copySettingsLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="copySettingsXdebug2Button" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="copySettingsXdebug3Button" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
@@ -76,8 +83,12 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="messageTextLabel" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="messageIconLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="copySettingsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="copySettingsXdebug2Button" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="copySettingsXdebug3Button" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="32767" attributes="0"/>
               <Component id="noteLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
               <Component id="debuggerPortOptionLabel" min="-2" max="-2" attributes="0"/>
@@ -95,11 +106,6 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="messageIconLabel">
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="createIconLabel()"/>
-      </AuxValues>
-    </Component>
     <Component class="javax.swing.JLabel" name="messageTextLabel">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
@@ -151,6 +157,27 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="EMPTY" noResource="true"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="copySettingsLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Copy example settings to clipboard:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="copySettingsXdebug2Button">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Xdebug 2"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="copySettingsXdebug2ButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="copySettingsXdebug3Button">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Xdebug 3"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="copySettingsXdebug3ButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

@@ -28,7 +28,8 @@ import {
     StreamInfo,
     Message,
     MessageType,
-    LogMessageNotification
+    LogMessageNotification,
+    HandlerResult
 } from 'vscode-languageclient';
 
 import * as net from 'net';
@@ -309,36 +310,38 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     vscode.window.setStatusBarMessage(launchMsg, 2000);
 
     let ideRunning = new Promise((resolve, reject) => {
-        let collectedText : string | null = '';
-        function logAndWaitForEnabled(text: string) {
+        let stdOut : string | null = '';
+        function logAndWaitForEnabled(text: string, isOut: boolean) {
             if (p == nbProcess) {
                 activationPending = false;
             }
             handleLogNoNL(log, text);
-            if (collectedText == null) {
+            if (stdOut == null) {
                 return;
             }
-            collectedText += text;
-            if (collectedText.match(/org.netbeans.modules.java.lsp.server.*Enabled/)) {
+            if (isOut) {
+                stdOut += text;
+            }
+            if (stdOut.match(/org.netbeans.modules.java.lsp.server.*Enabled/)) {
                 resolve(text);
-                collectedText = null;
+                stdOut = null;
             }
         }
         let p = launcher.launch(info, "--modules", "--list");
         handleLog(log, "LSP server launching: " + p.pid);
         p.stdout.on('data', function(d: any) {
-            logAndWaitForEnabled(d.toString());
+            logAndWaitForEnabled(d.toString(), true);
         });
         p.stderr.on('data', function(d: any) {
-            logAndWaitForEnabled(d.toString());
+            logAndWaitForEnabled(d.toString(), false);
         });
         nbProcess = p;
         p.on('close', function(code: number) {
             if (p == nbProcess && code != 0 && code) {
                 vscode.window.showWarningMessage("Apache NetBeans Language Server exited with " + code);
             }
-            if (collectedText != null) {
-                let match = collectedText.match(/org.netbeans.modules.java.lsp.server[^\n]*/)
+            if (stdOut != null) {
+                let match = stdOut.match(/org.netbeans.modules.java.lsp.server[^\n]*/)
                 if (match?.length == 1) {
                     handleLog(log, match[0]);
                 } else {

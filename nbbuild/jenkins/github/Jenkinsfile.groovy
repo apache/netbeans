@@ -28,10 +28,6 @@ pipeline {
       jdk 'jdk_1.8_latest'
       ant 'ant_latest'
     }
-
-    triggers {
-        issueCommentTrigger('.*test this please.*')
-    }
  
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))

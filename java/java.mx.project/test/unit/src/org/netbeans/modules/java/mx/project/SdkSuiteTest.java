@@ -50,7 +50,7 @@ public class SdkSuiteTest extends SuiteCheck {
     }
 
     public void testRootsForAnSdkJar() throws Exception {
-        File sdkSibling = findSiblingSuite("sdk");
+        File sdkSibling = findSuite("sdk");
 
         FileObject fo = FileUtil.toFileObject(sdkSibling);
         assertNotNull("project directory found", fo);

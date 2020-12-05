@@ -104,7 +104,7 @@ abstract class SuiteCheck extends NbTestCase {
 
     protected final void verifyNoErrorsInSuite(final String suiteName, String... onlySourceGroups) throws IllegalArgumentException, IOException, URISyntaxException {
         long begin = System.currentTimeMillis();
-        File sibling = findSiblingSuite(suiteName);
+        File sibling = findSuite(suiteName);
 
         FileObject fo = FileUtil.toFileObject(sibling);
         assertNotNull("project directory found", fo);
@@ -147,18 +147,17 @@ abstract class SuiteCheck extends NbTestCase {
         assertEquals("Exactly as many source groups tested as requested", onlySourceGroups.length, cnt);
     }
 
-    protected final File findSiblingSuite(String sibling) throws URISyntaxException {
-        URL url = SuiteCheck.class.getProtectionDomain().getCodeSource().getLocation();
-        File location = Utilities.toFile(url.toURI());
+    protected final File findSuite(String suite) throws URISyntaxException {
+        File location = getDataDir();
         while (location != null) {
             File graal = new File(location, "graal");
-            File truffle = new File(graal, sibling);
-            if (truffle.isDirectory()) {
-                return truffle;
+            File suiteDir = new File(graal, suite);
+            if (suiteDir.isDirectory()) {
+                return suiteDir;
             }
             location = location.getParentFile();
         }
-        fail("Cannot find truffle next to " + url);
+        fail("Cannot find truffle next to " + getDataDir());
         return null;
     }
 

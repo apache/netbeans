@@ -6,7 +6,7 @@
  */
 
 /*
- * Load 
+ * Todo: Convert to plugin 
  */
 ant.importBuild('nbbuild/build.xml') { antTargetName ->
     'ant-' + antTargetName
@@ -15,18 +15,3 @@ ant.importBuild('nbbuild/build.xml') { antTargetName ->
 tasks.matching { task ->
     task.name.startsWith('ant-')
 }*.group = 'Ant'
-
-task clean(type: Delete) {
-    group = 'Clean'
-    dependsOn = ['ant-clean']
-    delete rootProject.buildDir
-}
-
-task build() {
-    group = 'Build'
-    dependsOn = ['ant-build']
-    mustRunAfter = ['clean']
-    doLast {
-        println 'Hello world!'
-    }
-}

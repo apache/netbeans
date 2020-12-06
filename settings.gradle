@@ -8,3 +8,5 @@
  */
 
 rootProject.name = 'Apache NetBeans'
+
+include 'platform:api.io'

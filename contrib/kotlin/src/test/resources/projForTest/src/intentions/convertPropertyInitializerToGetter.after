@@ -1,0 +1,8 @@
+package intentions
+
+class ConvertPropertyInitToGetter {
+
+    val property: Int
+        get() = 42
+
+}

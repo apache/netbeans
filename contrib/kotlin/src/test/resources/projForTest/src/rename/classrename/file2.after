@@ -1,0 +1,3 @@
+package rename.classrename
+
+fun someFunc() = NewName().hashCode()

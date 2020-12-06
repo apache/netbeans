@@ -1,0 +1,3 @@
+package semantic
+
+fun useDeprecated() = <caret>deprecatedFun<caret>()

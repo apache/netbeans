@@ -1,0 +1,7 @@
+package j2k
+
+object WithStaticClass {
+    fun hello() {
+        System.out.println("hello")
+    }
+}

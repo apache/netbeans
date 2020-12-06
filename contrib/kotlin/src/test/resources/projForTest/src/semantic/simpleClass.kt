@@ -1,0 +1,5 @@
+package semantic
+
+class SemClass {
+
+}

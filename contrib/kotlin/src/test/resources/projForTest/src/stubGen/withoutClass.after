@@ -1,0 +1,5 @@
+package stubGen;
+public final class WithoutClassKt extends java.lang.Object {
+  public final static void hello() {}
+
+}

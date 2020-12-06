@@ -1,0 +1,7 @@
+package quickfixes
+
+fun removeUselessCast(integer: Int) {
+    println((integer).toString())
+}
+
+fun useRemoveUselessCast() = removeUselessCast(1)

@@ -1,0 +1,3 @@
+package rename.methodrename
+
+fun someFunc() = ClassWithMethod().notSoCoolFun()

@@ -1,0 +1,9 @@
+package intentions
+
+fun mergeIfs() {
+    val integer = 5
+    if (<caret>integer > 3) {
+        if (integer < 7) {
+        }
+    }
+}

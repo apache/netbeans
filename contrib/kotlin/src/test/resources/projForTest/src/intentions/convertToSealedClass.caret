@@ -1,0 +1,13 @@
+package intentions
+
+enum class Protoco<caret>lState {
+    WAITING {
+        override fun signal() = TALKING
+    },
+
+    TALKING {
+        override fun signal() = WAITING
+    };
+
+    abstract fun signal(): ProtocolState
+}

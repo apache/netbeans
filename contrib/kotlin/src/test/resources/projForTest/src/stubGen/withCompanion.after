@@ -1,0 +1,9 @@
+package stubGen;
+public final class WithCompanion extends java.lang.Object {
+public final static stubGen.WithCompanion.Companion Companion;
+public WithCompanion(){}
+public final static class Companion extends java.lang.Object {
+	public final java.lang.String hello(){}
+	private Companion(){}
+}
+}

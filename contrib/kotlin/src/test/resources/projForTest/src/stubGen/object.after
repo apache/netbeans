@@ -1,0 +1,5 @@
+package stubGen;
+public final class SimpleObject extends java.lang.Object {
+  public final static stubGen.SimpleObject INSTANCE;
+  private SimpleObject(){}
+}

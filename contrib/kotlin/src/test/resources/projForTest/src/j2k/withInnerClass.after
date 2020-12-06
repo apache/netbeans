@@ -1,0 +1,7 @@
+package j2k
+
+class SimpleClass {
+    internal inner class InnerClass {
+        fun doNothing() {}
+    }
+}

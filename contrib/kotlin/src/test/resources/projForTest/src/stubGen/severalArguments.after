@@ -1,0 +1,5 @@
+package stubGen;
+public final class SeveralArguments extends java.lang.Object {
+public final void func(java.lang.String a0, java.lang.String a1){}
+public SeveralArguments(){}
+}

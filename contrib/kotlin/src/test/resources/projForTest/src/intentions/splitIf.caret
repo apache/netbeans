@@ -1,0 +1,6 @@
+package intentions
+
+fun splitIf() {
+    val integer = 5
+    <caret>if (integer > 3 && integer != 5) {}
+}

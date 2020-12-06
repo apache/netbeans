@@ -1,0 +1,43 @@
+<!DOCTYPE fontscolors PUBLIC
+    "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN"
+    "https://netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+<fontscolors>
+    <fontcolor name="IDENTIFIER" default="identifier"/>
+    <fontcolor name="KEYWORD" default="keyword" foreColor="blue">
+        <font style="bold"/>
+    </fontcolor>
+    <fontcolor name="SINGLE_LINE_COMMENT" default="comment"/>
+    <fontcolor name="MULTI_LINE_COMMENT" default="comment"/>
+    <fontcolor name="STRING" default="string"/>
+    <fontcolor name="WHITESPACE" default="whitespace"/>
+    <fontcolor name="ANNOTATION" default="annotation" foreColor="red"/>
+    <fontcolor name="KDOC_TAG_NAME" default="comment" underline="gray">
+        <font style="bold, italic"/>
+    </fontcolor>
+    <fontcolor name="KDOC_LINK" default="comment" underline="black">
+        <font style="bold, italic"/>
+    </fontcolor>
+    
+    <!--"semantic" highlighting:-->
+    <fontcolor name="mod-field" default="field"/>
+    <fontcolor name="mod-local-variable"/>
+    <fontcolor name="mod-parameter"/> 
+    <fontcolor name="mod-static" >
+        <font style="bold+italic" />
+    </fontcolor>
+    <fontcolor name="mod-type-parameter-use" foreColor="20999D" />
+    <fontcolor name="mod-annotation-type" foreColor="blue"/>
+    <fontcolor name="mod-enum">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="mod-interface"/>
+    <fontcolor name="mod-class" default="class"/>
+    <fontcolor name="mod-declaration">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="mod-deprecated" strikeThrough="404040" />
+    <fontcolor name="mark-occurrences" bgColor="ECEBA3"/>
+    <fontcolor name="mod-custom1" bgColor="CCFFCC"/>
+    <fontcolor name="mod-custom2" underline="black"/>
+    
+</fontscolors>

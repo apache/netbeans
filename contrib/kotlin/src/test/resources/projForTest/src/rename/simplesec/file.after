@@ -1,0 +1,11 @@
+package rename.simplesec
+
+val someValue = 5
+
+fun main(args : Array<String>) {
+     println(someValue)
+}
+
+fun anotherFun() = println(someValue)
+
+fun anotherFun2(someVal: Int) = println(someVal)

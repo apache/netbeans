@@ -1,0 +1,11 @@
+package navigation
+
+class SomeKotlinClass {
+    
+    val <caret>str = "String"
+    
+    fun navigate(){
+        str
+    }
+    
+}

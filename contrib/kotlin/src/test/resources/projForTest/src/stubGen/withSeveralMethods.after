@@ -1,0 +1,7 @@
+package stubGen;
+public final class ClassWithSeveralMethods extends java.lang.Object {
+public final void firstMethod(){}
+public final void secondMethod(){}
+public final void thirdMethod(){}
+public ClassWithSeveralMethods(){}
+}

@@ -1,0 +1,6 @@
+package stubGen;
+public final class ClassWithVal extends java.lang.Object {
+  private final java.lang.String prop;
+  public final java.lang.String getProp(){}
+  public ClassWithVal(){}
+}

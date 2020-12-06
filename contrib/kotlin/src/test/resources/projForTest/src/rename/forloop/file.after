@@ -1,0 +1,7 @@
+package rename.forloop
+
+fun main(args: Array<String>) {
+    for (arg1 in args) {
+        println(arg1)
+    }
+}

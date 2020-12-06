@@ -1,0 +1,7 @@
+package intentions
+
+fun replaceSizeCheckWithIsNotEmpty(strs: Array<String>) {
+    if (<caret>strs.size > 0) {
+
+    }
+}

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <!-- Projects extensions -->
+    <folder name="Projects">
+        <folder name="org-netbeans-modules-java-j2seproject">
+            <folder name="Lookup">
+                <file name="org.jetbrains.kotlin.projectsextensions.j2se.lookup.J2SEProjectLookupProviderExtension.instance"/>
+            </folder>
+        </folder>
+        <folder name="org-netbeans-modules-maven">
+            <folder name="Lookup">
+                <file name="org.jetbrains.kotlin.projectsextensions.maven.lookup.MavenProjectLookupProviderExtension.instance"/>
+            </folder>
+        </folder>
+        <folder name="org.netbeans.gradle.project">
+            <folder name="Lookup">
+                <file name="org.jetbrains.kotlin.projectsextensions.gradle.lookup.GradleProjectLookupProviderExtension.instance"/>
+            </folder>
+        </folder>
+    </folder>
+    
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="x-kt">
+                <folder name="Actions">
+                    <file name="RunFile.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunSingle.instance"/>
+                        <attr name="position" intvalue="1265"/>
+                    </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-DebugFileAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugFileAction.instance"/>
+                        <attr name="position" intvalue="1266"/>
+                    </file>
+                    <file name="TestFile.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestSingle.instance"/>
+                        <attr name="position" intvalue="1267"/>
+                    </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-DebugTestFileAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugTestFileAction.instance"/>
+                        <attr name="position" intvalue="1268"/>
+                    </file>
+                </folder>
+                <file name="RefactoringAll.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.refactoring.api.ui.RefactoringActionsFactory.popupSubmenuAction"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    
+    <folder name="Editors">
+            <folder name="text">
+                <folder name="x-kt">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.jetbrains.kotlin.Bundle"/>
+                    <folder name="FontsColors">
+                        <folder name="NetBeans">
+                            <folder name="Defaults">
+                                <file name="FontAndColors.xml" url="FontAndColors.xml">
+                                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.jetbrains.kotlin.Bundle"/>
+                                </file>
+                            </folder>
+                        </folder>
+                    </folder>
+                    <folder name="GlyphGutterActions">
+                        <file name="org-jetbrains-kotlin-debugger-KotlinToggleBreakpointAction.instance">
+                            <!--<attr name="originalFile" stringValue="Actions/Debug/org-jetbrains-kotlin-debugger-KotlinToggleBreakpointAction.instance"/>-->
+                            <attr name="position" intvalue="2500"/>
+                        </file>
+                    </folder>
+                    <folder name="Popup">
+                        <file name="RunFile.shadow">
+                            <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunSingle.instance"/>
+                            <attr name="position" intvalue="1790"/>
+                        </file>
+                        <file name="org-netbeans-modules-debugger-ui-actions-DebugFileAction.shadow">
+                            <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugFileAction.instance"/>
+                            <attr name="position" intvalue="1791"/>
+                        </file>
+                        <file name="TestFile.shadow">
+                            <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestSingle.instance"/>
+                            <attr name="position" intvalue="1792"/>
+                        </file>
+                        <file name="org-netbeans-modules-debugger-ui-actions-DebugTestFileAction.shadow">
+                            <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugTestFileAction.instance"/>
+                            <attr name="position" intvalue="1793"/>
+                        </file>
+                        <file name="RefactoringAll.instance">
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.refactoring.api.ui.RefactoringActionsFactory.editorSubmenuAction"/>
+                            <attr name="position" intvalue="1794"/>
+                        </file>
+                    </folder>
+                    <file name="JavaIndexer.shadow">
+                        <attr name="originalFile" stringvalue="Editors/text/x-java/JavaIndexer.instance"/>
+                    </file>
+                </folder>
+            </folder>
+    </folder>
+
+    <folder name="OptionsDialog">
+        <folder name="PreviewExamples">
+            <folder name="text">
+                <file name="x-kt" url="KtTemplate.kt"/>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="QuickSearch">
+        <folder name="GoToKotlinDeclaration">
+            <attr name="command" stringvalue="kt"/>
+            <attr name="position" intvalue="0"/>
+            <file name="org-jetbrains-kotlin-search-GoToKotlinTypeProvider.instance">
+                <attr name="displayName" bundlevalue="org.jetbrains.kotlin.Bundle#QuickSearch/GoToKotlinType/org-jetbrains-kotlin-search-GoToKotlinTypeProvider.instance"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="Debugger">
+        <file name="org-jetbrains-kotlin-debugger-KotlinToggleBreakpointActionProvider.instance">
+            <attr name="serviceName" stringvalue="org.jetbrains.kotlin.debugger.KotlinToggleBreakpointActionProvider"/>
+            <attr name="serviceClass" stringvalue="org.netbeans.spi.debugger.ActionsProvider"/>
+            <attr name="debugger_actions" stringvalue="[toggleBreakpoint]"/>
+            <attr name="debugger_activateForMIMETypes" stringvalue="[text/x-kt]"/>
+            <attr name="instanceOf" stringvalue="org.netbeans.spi.debugger.ActionsProvider"/>
+            <attr methodvalue="org.netbeans.spi.debugger.ActionsProvider$ContextAware.createService" name="instanceCreate"/>
+        </file>
+        
+        <folder name="netbeans-JPDASession">
+            <file name="org-jetbrains-kotlin-debugger-KotlinSourcePathProvider.instance">
+                <attr name="serviceName" stringvalue="org.jetbrains.kotlin.debugger.KotlinSourcePathProvider"/>
+                <attr name="serviceClass" stringvalue="org.netbeans.spi.debugger.jpda.SourcePathProvider"/>
+                <attr name="instanceOf" stringvalue="org.netbeans.spi.debugger.jpda.SourcePathProvider"/>
+                <attr methodvalue="org.netbeans.spi.debugger.jpda.SourcePathProvider$ContextAware.createService" name="instanceCreate"/>
+            </file>
+        </folder>
+        
+    </folder>
+
+</filesystem>

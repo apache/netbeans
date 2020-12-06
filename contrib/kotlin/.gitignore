@@ -1,0 +1,5 @@
+/target/
+/src/test/resources/projForTest/nbproject/private/
+nb-configuration.xml
+nbactions.xml
+.DS_Store

@@ -1,0 +1,7 @@
+package rename.classbyconstructor
+
+class KotlinRules
+
+fun main(args: Array<String>) {
+    KotlinRules()
+}

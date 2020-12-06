@@ -4,3 +4,29 @@
  * This is a general purpose Gradle build.
  * Learn more about Gradle by exploring our samples at https://docs.gradle.org/6.7.1/samples
  */
+
+/*
+ * Load 
+ */
+ant.importBuild('nbbuild/build.xml') { antTargetName ->
+    'ant-' + antTargetName
+}
+
+tasks.matching { task ->
+    task.name.startsWith('ant-')
+}*.group = 'Ant'
+
+task clean(type: Delete) {
+    group = 'Clean'
+    dependsOn = ['ant-clean']
+    delete rootProject.buildDir
+}
+
+task build() {
+    group = 'Build'
+    dependsOn = ['ant-build']
+    mustRunAfter = ['clean']
+    doLast {
+        println 'Hello world!'
+    }
+}

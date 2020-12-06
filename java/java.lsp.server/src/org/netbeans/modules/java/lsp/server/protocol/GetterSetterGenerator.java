@@ -45,7 +45,7 @@ import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
-import static org.netbeans.modules.java.lsp.server.protocol.TextDocumentServiceImpl.fromUri;
+import static org.netbeans.modules.java.lsp.server.Utils.fromUri;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Pair;
 

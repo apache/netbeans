@@ -721,10 +721,8 @@ public class CompletionContextImpl extends CompletionContext {
         if(se == null)
             return;
         Stack<SyntaxElement> stack = new Stack<>();
-        boolean insideEmpty = false;
         if(support.isEmptyTag(se)) {
             stack.push(se);
-            insideEmpty = true;
         }
         
         while( se != null) {
@@ -735,11 +733,7 @@ public class CompletionContextImpl extends CompletionContext {
                 se = se.getPrevious();
                 continue;
             }
-            if (support.isEmptyTag(se)) {
-                if (insideEmpty) {
-                    stack.pop();
-                }
-            } else if (support.isStartTag(se)) {
+            if (support.isStartTag(se)) {
                 SyntaxElement end = stack.isEmpty() ? null : stack.peek();
                 if (support.isEndTag(end)) {
                     if(end.getNode().getNodeName().equals(se.getNode().getNodeName())) {
@@ -749,7 +743,6 @@ public class CompletionContextImpl extends CompletionContext {
                     stack.push(se);
                 }
             }
-            insideEmpty = false;
             se = se.getPrevious();
         }
         

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.63.0
+#Version 2.65.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -807,7 +807,9 @@ hfds ADDED,MAX_KEEP,REMOVED,delta,editedEnd,edits,originalEnd,previous,start,tok
 hcls Edit
 
 CLSS public org.netbeans.modules.csl.api.EditList
+cons public init(javax.swing.text.Document)
 cons public init(org.netbeans.editor.BaseDocument)
+meth public int firstEditLine(javax.swing.text.Document)
 meth public int firstLine(org.netbeans.editor.BaseDocument)
 meth public java.lang.String toString()
 meth public javax.swing.text.Position createPosition(int)
@@ -815,6 +817,7 @@ meth public javax.swing.text.Position createPosition(int,javax.swing.text.Positi
 meth public org.netbeans.modules.csl.api.EditList replace(int,int,java.lang.String,boolean,int)
 meth public org.netbeans.modules.csl.api.OffsetRange getRange()
 meth public void apply()
+meth public void applyTo(javax.swing.text.Document)
 meth public void applyToDocument(org.netbeans.editor.BaseDocument)
 meth public void setFormatAll(boolean)
 supr java.lang.Object
@@ -1562,13 +1565,17 @@ meth public static boolean isRowEmpty(java.lang.CharSequence,int) throws javax.s
 meth public static boolean isRowWhite(java.lang.CharSequence,int) throws javax.swing.text.BadLocationException
 meth public static boolean open(org.openide.filesystems.FileObject,int,java.lang.String)
 meth public static int getLastKnownCaretOffset(org.netbeans.modules.parsing.api.Snapshot,java.util.EventObject)
+meth public static int getLineIndent(javax.swing.text.Document,int)
 meth public static int getLineIndent(org.netbeans.editor.BaseDocument,int)
 meth public static int getRowEnd(java.lang.CharSequence,int) throws javax.swing.text.BadLocationException
 meth public static int getRowFirstNonWhite(java.lang.CharSequence,int) throws javax.swing.text.BadLocationException
 meth public static int getRowLastNonWhite(java.lang.CharSequence,int) throws javax.swing.text.BadLocationException
 meth public static int getRowStart(java.lang.CharSequence,int) throws javax.swing.text.BadLocationException
+meth public static int setLineIndentation(javax.swing.text.Document,int,int) throws javax.swing.text.BadLocationException
 meth public static int setLineIndentation(org.netbeans.editor.BaseDocument,int,int) throws javax.swing.text.BadLocationException
 meth public static java.lang.String truncate(java.lang.String,int)
+meth public static javax.swing.text.Document getADocument(org.openide.filesystems.FileObject,boolean)
+meth public static javax.swing.text.Document getADocument(org.openide.filesystems.FileObject,boolean,boolean)
 meth public static javax.swing.text.JTextComponent getOpenPane()
 meth public static javax.swing.text.JTextComponent getPaneFor(org.openide.filesystems.FileObject)
 meth public static org.netbeans.editor.BaseDocument getBaseDocument(org.openide.filesystems.FileObject,boolean)

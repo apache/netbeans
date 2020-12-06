@@ -268,9 +268,9 @@ public class Term extends JComponent implements Accessible {
     private Clipboard systemSelection = getToolkit().getSystemSelection();
     private static final Color TRANSPARENT = new Color(0, 0, 0, 0);
 
-    // 
+    //
     // The palette maps color indexes into actual Color's.
-    // 
+    //
     // Attr's FGCOLOR and BGCOLOR store either 0 to imply "default" or
     // the palette index + 1. So use methods Attr.foregroundColor() and
     // backgroudnColor() to convert Attr values to the indexes into the palette.
@@ -665,25 +665,25 @@ public class Term extends JComponent implements Accessible {
              l.sizeChanged(cells, pixels);
          }
     }
-    
+
     private void fireTitleChanged(String title) {
         for (TermListener l : listeners) {
             l.titleChanged(title);
         }
     }
-    
+
     private void fireCwdChanged(String cwd) {
         for (TermListener l : listeners) {
             l.cwdChanged(cwd);
         }
     }
-    
+
     private void fireExternalCommand(String command) {
         for (TermListener l : listeners) {
             l.externalToolCalled(command);
         }
     }
-    
+
     private final java.util.List<TermListener> listeners = new CopyOnWriteArrayList<>();
 
     /**
@@ -807,10 +807,10 @@ public class Term extends JComponent implements Accessible {
         }
         return line.stringBuffer().toString();
     }
-    
+
     private Keymap keymap;
     private Set<String> allowedActions;
-            
+
     /**
      * Set keymap and allowed actions
      * @param keymap - use this to check if a keystroke is used outside the terminal
@@ -889,7 +889,7 @@ public class Term extends JComponent implements Accessible {
 	    System.out.println("\tKS = " + ks);	// NOI18N
 	    System.out.println("\tcontained = " + keystroke_set.contains(ks));	// NOI18N
 	}
-        
+
 
         if (keystroke_set == null || !keystroke_set.contains(ks)) {
             e.consume();
@@ -1089,7 +1089,7 @@ public class Term extends JComponent implements Accessible {
      * @param begin
      * @param offset
      * @param length
-     * @return 
+     * @return
      */
     @SuppressWarnings({"AssignmentToMethodParameter", "ValueOfIncrementOrDecrementUsed"})
     public Extent extentInLogicalLine(Coord begin, int offset, int length) {
@@ -1728,9 +1728,9 @@ public class Term extends JComponent implements Accessible {
         }
 
         if (f != null) {
-            setFont(new Font("Monospaced", Font.PLAIN, f.getSize() + 1)); // NOI18N
+            setFont(new Font(Font.MONOSPACED, Font.PLAIN, f.getSize() + 1)); // NOI18N
         } else {
-            setFont(new Font("Monospaced", Font.PLAIN, 12)); // NOI18N
+            setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12)); // NOI18N
         }
 
         BorderLayout layout = new BorderLayout();
@@ -2082,7 +2082,7 @@ public class Term extends JComponent implements Accessible {
                     System.out.println("Selection: '" + sel.sel_get() + "'"); // NOI18N
                      */
                     pasteFromSelection();
-                    
+
                     // See IZ 193527
                     if (click_to_type) {
                         requestFocus();
@@ -2355,7 +2355,7 @@ public class Term extends JComponent implements Accessible {
         try {
             String string;
             string = (String) contents.getTransferData(DataFlavor.stringFlavor);
-            
+
             // bug #237034
             if (string == null) {
                 return;
@@ -2635,7 +2635,7 @@ public class Term extends JComponent implements Accessible {
      * coordinate system.
      * It returns the pixel of the upper left corner of the target cell.
      * @param target
-     * @return 
+     * @return
      */
     public Point toPixel(Coord target) {
         BCoord btarget = target.toBCoord(firsta);
@@ -2678,7 +2678,7 @@ public class Term extends JComponent implements Accessible {
      * <p>
      * In the returned Point, x represents the column, y the row.
      * @param p
-     * @return 
+     * @return
      */
     public Point mapToViewRowCol(Point p) {
         BCoord c = toViewCoord(p);
@@ -2691,7 +2691,7 @@ public class Term extends JComponent implements Accessible {
      * <p>
      * In the returned Point, x represents the column, y the row.
      * @param p
-     * @return 
+     * @return
      */
     public Point mapToBufRowCol(Point p) {
         BCoord c = toBufCoords(toViewCoord(p));
@@ -2808,7 +2808,7 @@ public class Term extends JComponent implements Accessible {
         for (int gx = 0; gx < n; gx++) {
             newp.x = col;
             gv.setGlyphPosition(gx, newp);
-            col += l.width(metrics, start + gx) * metrics.width;
+            col += l.stringWidth(metrics, start + gx);
         }
     }
     /**
@@ -3271,7 +3271,7 @@ public class Term extends JComponent implements Accessible {
         }
 
         g.setXORMode(actual_background);
-        int rect_x = cursor_col * metrics.width +
+        int rect_x = cursor_line().stringWidth(metrics, cursor_col) +
                 glyph_gutter_width +
                 debug_gutter_width;
         int rect_y = cursor_row * metrics.height;
@@ -3564,7 +3564,7 @@ public class Term extends JComponent implements Accessible {
             }
             cht();
         }
-        
+
         private boolean cht() {
             // SHOULD do something better with tabs near the end of the line
             // On the other hand, that's how ANSI terminals are supposed
@@ -4189,7 +4189,7 @@ public class Term extends JComponent implements Accessible {
                 System.out.println("op_cwd(" + currentWorkingDirectory + ")"); // NOI18N
             }
         }
-        
+
         @Override
         public void op_ext(String command) {
             fireExternalCommand(command);
@@ -5073,7 +5073,7 @@ public class Term extends JComponent implements Accessible {
     /**
      * Returns the actual drawing area so events can be interposed upon,
      * like context menus.
-     * @return 
+     * @return
      * @deprecated Replaced by{@link #getScreen()}.
      */
     @Deprecated
@@ -5084,7 +5084,7 @@ public class Term extends JComponent implements Accessible {
     /**
      * Returns the actual drawing area so events can be interposed upon,
      * like context menus.
-     * @return 
+     * @return
      */
     public JComponent getScreen() {
         return screen;
@@ -5093,7 +5093,7 @@ public class Term extends JComponent implements Accessible {
     /**
      * Return the terminal operations implementation.
      * <b>WARNING! This is temporary</b>
-     * @return 
+     * @return
      */
     public Ops ops() {
         return ops;
@@ -5472,7 +5472,7 @@ public class Term extends JComponent implements Accessible {
         return tab_size;
     }
     private int tab_size = 8;
-    
+
     /**
      * Set select-by-word delimiters.
      * <p>
@@ -5636,7 +5636,7 @@ public class Term extends JComponent implements Accessible {
     public final void setRenderingHints(Map<?, ?> hints) {
         renderingHints = hints;
     }
-    
+
     /**
      * Clear everything and assign new text.
      * <p>
@@ -5800,7 +5800,7 @@ public class Term extends JComponent implements Accessible {
     /**
      * Return the cell width of the given character.
      * @param c
-     * @return 
+     * @return
      */
     public int charWidth(char c) {
         return metrics.wcwidth(c);
@@ -5840,11 +5840,11 @@ public class Term extends JComponent implements Accessible {
         if (isFixedFont()) {
             font = new_font;
         } else {
-            font = new Font("Monospaced",	// NOI18N
+            font = new Font(Font.MONOSPACED,	// NOI18N
                             new_font.getStyle(),
                             new_font.getSize());
         }
-        
+
         super.setFont(font);	// This should invalidate us, which
         // ultimately will cause a repaint
 
@@ -5856,7 +5856,7 @@ public class Term extends JComponent implements Accessible {
          */
 
         // cache the metrics
-        metrics = new MyFontMetrics(this, font);
+        metrics = new MyFontMetrics(this);
         updateScreenSize();
     }
 
@@ -5999,7 +5999,7 @@ public class Term extends JComponent implements Accessible {
      * This function really should be private but I need it to be public for
      * unit-testing purposes.
      * @param c
-     * @return 
+     * @return
      */
     public int CoordToPosition(Coord c) {
         BCoord b = c.toBCoord(firsta);
@@ -6023,7 +6023,7 @@ public class Term extends JComponent implements Accessible {
      * This function really should be private but I need it to be public for
      * unit-testing purposes.
      * @param position
-     * @return 
+     * @return
      */
     public Coord PositionToCoord(int position) {
         int nchars = charsInPrehistory;

@@ -45,8 +45,11 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
+import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
+import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -65,6 +68,7 @@ import org.eclipse.lsp4j.DocumentHighlightKind;
 import org.eclipse.lsp4j.DocumentHighlightParams;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
+import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.InsertTextFormat;
@@ -83,7 +87,9 @@ import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
+import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.launch.LSPLauncher;
@@ -93,6 +99,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.sendopts.CommandLine;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.BootClassPathUtil;
@@ -150,7 +157,7 @@ public class ServerTest extends NbTestCase {
                 Class jsClass = JavaSource.class;
                 File javaCluster = Utilities.toFile(jsClass.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getParentFile();
                 System.setProperty("netbeans.dirs", javaCluster.getAbsolutePath());
-                CacheFolderProvider.getCacheFolderForRoot(Places.getUserDirectory().toURI().toURL(), EnumSet.noneOf(CacheFolderProvider.Kind.class), CacheFolderProvider.Mode.EXISTENT);
+                CacheFolderProvider.getCacheFolderForRoot(Utilities.toURI(Places.getUserDirectory()).toURL(), EnumSet.noneOf(CacheFolderProvider.Kind.class), CacheFolderProvider.Mode.EXISTENT);
 
                 Lookup.getDefault().lookup(ModuleInfo.class); //start the module system
 
@@ -168,6 +175,7 @@ public class ServerTest extends NbTestCase {
         super.tearDown();
         TextDocumentServiceImpl.HOOK_NOTIFICATION = null;
         serverThread.stop();
+        OpenProjects.getDefault().close(OpenProjects.getDefault().getOpenProjects());
     }
     
     List<Diagnostic>[] diags = new List[1];
@@ -214,26 +222,26 @@ public class ServerTest extends NbTestCase {
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
-        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         assertDiags(diags);//errors
         assertDiags(diags);//hints
         int hashCodeStart = code.indexOf("hashCode");
-        Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(0, hashCodeStart + 2))).get();
+        Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, hashCodeStart + 2))).get();
         assertTrue(completion.isRight());
         List<String> actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
         assertEquals(Arrays.asList("Method:hashCode() : int"), actualItems);
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(1);
-        id.setUri(src.toURI().toString());
+        id.setUri(toURI(src));
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, hashCodeStart), new Position(0, hashCodeStart + "hashCode".length())), "hashCode".length(), "equ"))));
         assertDiags(diags, "Error:0:31-0:34");//errors
         assertDiags(diags, "Error:0:31-0:34");//hints
-        completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(0, hashCodeStart + 2))).get();
+        completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, hashCodeStart + 2))).get();
         actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
         if (jdk9Plus()) {
             assertEquals(Arrays.asList("Method:equals(Object anObject) : boolean", "Method:equalsIgnoreCase(String anotherString) : boolean"), actualItems);
         }
         int testStart = code.indexOf("test") + "equ".length() - "hashCode".length();
-        completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(0, testStart + 3))).get();
+        completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, testStart + 3))).get();
         List<CompletionItem> actualCompletionItem = completion.getRight().getItems();
         actualItems = actualCompletionItem.stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
         assertEquals(Arrays.asList("Method:test() : void"), actualItems);
@@ -248,7 +256,7 @@ public class ServerTest extends NbTestCase {
                      "Test.\n" +
                      "\n",
                      resolvedItem.getDocumentation().getRight().getValue());
-        completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(0, 0))).get();
+        completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, 0))).get();
         actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
         assertTrue(actualItems.contains("Keyword:interface"));
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, hashCodeStart), new Position(0, hashCodeStart + "equ".length())), "equ".length(), "hashCode"))));
@@ -503,11 +511,11 @@ public class ServerTest extends NbTestCase {
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
-        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         assertDiags(diags); //errors
         List<Diagnostic> diagnostics = assertDiags(diags, "Warning:1:7-1:19");//hints
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(1);
-        id.setUri(src.toURI().toString());
+        id.setUri(toURI(src));
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 7), new Position(1, 19)), new CodeActionContext(Arrays.asList(diagnostics.get(0))))).get();
         String log = codeActions.toString();
         assertEquals(log, 1, codeActions.size());
@@ -597,8 +605,8 @@ public class ServerTest extends NbTestCase {
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
-        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
-        List<Either<SymbolInformation, DocumentSymbol>> symbols = server.getTextDocumentService().documentSymbol(new DocumentSymbolParams(new TextDocumentIdentifier(src.toURI().toString()))).get();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        List<Either<SymbolInformation, DocumentSymbol>> symbols = server.getTextDocumentService().documentSymbol(new DocumentSymbolParams(new TextDocumentIdentifier(toURI(src)))).get();
         String textualSymbols = "";
         String sep = "";
         for (Either<SymbolInformation, DocumentSymbol> sym : symbols) {
@@ -625,7 +633,16 @@ public class ServerTest extends NbTestCase {
                           "    line = 7\n" +
                           "    character = 5\n" +
                           "  ]\n" +
-                          "]:(Method:innerMethod:Range [\n" +
+                          "]:(Constructor:Inner:Range [\n" +
+                          "  start = Position [\n" +
+                          "    line = 4\n" +
+                          "    character = 4\n" +
+                          "  ]\n" +
+                          "  end = Position [\n" +
+                          "    line = 4\n" +
+                          "    character = 4\n" +
+                          "  ]\n" +
+                          "]:(), Method:innerMethod:Range [\n" +
                           "  start = Position [\n" +
                           "    line = 5\n" +
                           "    character = 8\n" +
@@ -634,7 +651,16 @@ public class ServerTest extends NbTestCase {
                           "    line = 6\n" +
                           "    character = 9\n" +
                           "  ]\n" +
-                          "]:()), Field:field:Range [\n" +
+                          "]:()), Constructor:Test:Range [\n" +
+                          "  start = Position [\n" +
+                          "    line = 0\n" +
+                          "    character = 7\n" +
+                          "  ]\n" +
+                          "  end = Position [\n" +
+                          "    line = 0\n" +
+                          "    character = 7\n" +
+                          "  ]\n" +
+                          "]:(), Field:field:Range [\n" +
                           "  start = Position [\n" +
                           "    line = 1\n" +
                           "    character = 4\n" +
@@ -715,27 +741,27 @@ public class ServerTest extends NbTestCase {
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
-        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         Position pos = new Position(3, 30);
-        List<? extends Location> definition = server.getTextDocumentService().definition(new DefinitionParams(new TextDocumentIdentifier(src.toURI().toString()), pos)).get().getLeft();
+        List<? extends Location> definition = server.getTextDocumentService().definition(new DefinitionParams(new TextDocumentIdentifier(toURI(src)), pos)).get().getLeft();
         assertEquals(1, definition.size());
-        assertEquals(src.toURI().toString(), definition.get(0).getUri());
+        assertEquals(toURI(src), definition.get(0).getUri());
         assertEquals(1, definition.get(0).getRange().getStart().getLine());
         assertEquals(4, definition.get(0).getRange().getStart().getCharacter());
         assertEquals(1, definition.get(0).getRange().getEnd().getLine());
         assertEquals(22, definition.get(0).getRange().getEnd().getCharacter());
         pos = new Position(4, 30);
-        definition = server.getTextDocumentService().definition(new DefinitionParams(new TextDocumentIdentifier(src.toURI().toString()), pos)).get().getLeft();
+        definition = server.getTextDocumentService().definition(new DefinitionParams(new TextDocumentIdentifier(toURI(src)), pos)).get().getLeft();
         assertEquals(1, definition.size());
-        assertEquals(src.toURI().toString(), definition.get(0).getUri());
+        assertEquals(toURI(src), definition.get(0).getUri());
         assertEquals(2, definition.get(0).getRange().getStart().getLine());
         assertEquals(23, definition.get(0).getRange().getStart().getCharacter());
         assertEquals(2, definition.get(0).getRange().getEnd().getLine());
         assertEquals(30, definition.get(0).getRange().getEnd().getCharacter());
         pos = new Position(5, 22);
-        definition = server.getTextDocumentService().definition(new DefinitionParams(new TextDocumentIdentifier(src.toURI().toString()), pos)).get().getLeft();
+        definition = server.getTextDocumentService().definition(new DefinitionParams(new TextDocumentIdentifier(toURI(src)), pos)).get().getLeft();
         assertEquals(1, definition.size());
-        assertEquals(otherSrc.toURI().toString(), definition.get(0).getUri());
+        assertEquals(toURI(otherSrc), definition.get(0).getUri());
         assertEquals(2, definition.get(0).getRange().getStart().getLine());
         assertEquals(4, definition.get(0).getRange().getStart().getCharacter());
         assertEquals(2, definition.get(0).getRange().getEnd().getLine());
@@ -856,10 +882,10 @@ public class ServerTest extends NbTestCase {
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
         assertTrue(result.getCapabilities().getDocumentHighlightProvider());
-        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
-        assertHighlights(server.getTextDocumentService().documentHighlight(new DocumentHighlightParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(1, 13))).get(),
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        assertHighlights(server.getTextDocumentService().documentHighlight(new DocumentHighlightParams(new TextDocumentIdentifier(toURI(src)), new Position(1, 13))).get(),
                          "<none>:2:21-2:31", "<none>:3:26-3:35", "<none>:4:13-4:22");
-        assertHighlights(server.getTextDocumentService().documentHighlight(new DocumentHighlightParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(1, 27))).get(),
+        assertHighlights(server.getTextDocumentService().documentHighlight(new DocumentHighlightParams(new TextDocumentIdentifier(toURI(src)), new Position(1, 27))).get(),
                          "<none>:1:26-1:29", "<none>:2:12-2:15", "<none>:3:17-3:20");
     }
 
@@ -913,16 +939,16 @@ public class ServerTest extends NbTestCase {
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeParams initParams = new InitializeParams();
-        initParams.setRootUri(getWorkDir().toURI().toString());
+        initParams.setRootUri(toURI(getWorkDir()));
         InitializeResult result = server.initialize(initParams).get();
         indexingComplete.await();
-        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
 
         {
-            VersionedTextDocumentIdentifier id1 = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+            VersionedTextDocumentIdentifier id1 = new VersionedTextDocumentIdentifier(toURI(src), 1);
             server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id1, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 8), new Position(2, 8)), 0, "s."))));
 
-            Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), new Position(2, 8 + "s.".length()))).get();
+            Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(2, 8 + "s.".length()))).get();
             assertTrue(completion.isRight());
             Optional<CompletionItem> lengthItem = completion.getRight().getItems().stream().filter(ci -> "length() : int".equals(ci.getLabel())).findAny();
             assertTrue(lengthItem.isPresent());
@@ -935,13 +961,13 @@ public class ServerTest extends NbTestCase {
         }
 
         {
-            VersionedTextDocumentIdentifier id2 = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+            VersionedTextDocumentIdentifier id2 = new VersionedTextDocumentIdentifier(toURI(src), 1);
             server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(1, 1), new Position(1, 1)), 0, "@java.lang."))));
 
             Position afterJavaLang = new Position(1, 1 + "@java.lang.".length());
 
             {
-                Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), afterJavaLang)).get();
+                Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), afterJavaLang)).get();
                 assertTrue(completion.isRight());
                 Optional<CompletionItem> annotationItem = completion.getRight().getItems().stream().filter(ci -> "annotation".equals(ci.getLabel())).findAny();
                 assertTrue(annotationItem.isPresent());
@@ -954,7 +980,7 @@ public class ServerTest extends NbTestCase {
             Position afterJavaLangAnnotation = new Position(1, afterJavaLang.getCharacter() + "annotation.".length());
 
             {
-                Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), afterJavaLangAnnotation)).get();
+                Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), afterJavaLangAnnotation)).get();
                 assertTrue(completion.isRight());
                 completion.getRight().getItems().stream().forEach(ci -> System.err.println(ci.getLabel()));
                 Optional<CompletionItem> targetItem = completion.getRight().getItems().stream().filter(ci -> "Target".equals(ci.getLabel())).findAny();
@@ -968,7 +994,7 @@ public class ServerTest extends NbTestCase {
             Position afterTarget = new Position(1, afterJavaLangAnnotation.getCharacter() + "Target(".length());
 
             {
-                Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), afterTarget)).get();
+                Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), afterTarget)).get();
                 assertTrue(completion.isRight());
                 completion.getRight().getItems().stream().forEach(ci -> System.err.println(ci.getLabel()));
                 Optional<CompletionItem> methodItem = completion.getRight().getItems().stream().filter(ci -> "ElementType.METHOD".equals(ci.getLabel())).findAny();
@@ -987,7 +1013,7 @@ public class ServerTest extends NbTestCase {
 
             {
                 //import already exists:
-                Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(src.toURI().toString()), afterTarget)).get();
+                Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), afterTarget)).get();
                 assertTrue(completion.isRight());
                 completion.getRight().getItems().stream().forEach(ci -> System.err.println(ci.getLabel()));
                 Optional<CompletionItem> methodItem = completion.getRight().getItems().stream().filter(ci -> "ElementType.METHOD".equals(ci.getLabel())).findAny();
@@ -996,6 +1022,94 @@ public class ServerTest extends NbTestCase {
                 assertEquals("ElementType.METHOD", methodItem.get().getInsertText());
                 assertEquals(0, methodItem.get().getAdditionalTextEdits().size());
             }
+        }
+    }
+
+    public void testAutoImportOnCompletion() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(new File(src.getParentFile(), ".test-project"))) {}
+        String code = "public class Test {\n" +
+                      "    private void t(String s) {\n" +
+                      "        \n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        List<Diagnostic>[] diags = new List[1];
+        CountDownLatch indexingComplete = new CountDownLatch(1);
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setRootUri(toURI(getWorkDir()));
+        server.initialize(initParams).get();
+        indexingComplete.await();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+
+        {
+            VersionedTextDocumentIdentifier id1 = new VersionedTextDocumentIdentifier(toURI(src), 1);
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id1, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 8), new Position(2, 8)), 0, "ArrayL"))));
+
+            Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(2, 8 + "ArrayL".length()))).get();
+            assertTrue(completion.isRight());
+            Optional<CompletionItem> arrayListItem = completion.getRight().getItems().stream().filter(ci -> "ArrayList".equals(ci.getLabel())).findAny();
+            assertTrue(arrayListItem.isPresent());
+            assertNull(arrayListItem.get().getAdditionalTextEdits());
+            CompletableFuture<CompletionItem> resolvedItem = server.getTextDocumentService().resolveCompletionItem(arrayListItem.get());
+            assertEquals(1, resolvedItem.get().getAdditionalTextEdits().size());
+            assertEquals(0, resolvedItem.get().getAdditionalTextEdits().get(0).getRange().getStart().getLine());
+            assertEquals(0, resolvedItem.get().getAdditionalTextEdits().get(0).getRange().getStart().getCharacter());
+            assertEquals(0, resolvedItem.get().getAdditionalTextEdits().get(0).getRange().getEnd().getLine());
+            assertEquals(0, resolvedItem.get().getAdditionalTextEdits().get(0).getRange().getEnd().getCharacter());
+            assertEquals("\nimport java.util.ArrayList;\n\n", resolvedItem.get().getAdditionalTextEdits().get(0).getNewText());
+        }
+
+        {
+            VersionedTextDocumentIdentifier id2 = new VersionedTextDocumentIdentifier(toURI(src), 1);
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, "import java.util.ArrayList;\n"))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(3, 8), new Position(3, 8)), 0, "ArrayL"))));
+
+            Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(3, 8 + "ArrayL".length()))).get();
+            assertTrue(completion.isRight());
+            Optional<CompletionItem> arrayListItem = completion.getRight().getItems().stream().filter(ci -> "ArrayList".equals(ci.getLabel())).findAny();
+            assertTrue(arrayListItem.isPresent());
+            assertNull(arrayListItem.get().getAdditionalTextEdits());
+            CompletableFuture<CompletionItem> resolvedItem = server.getTextDocumentService().resolveCompletionItem(arrayListItem.get());
+            assertNull(resolvedItem.get().getAdditionalTextEdits());
         }
     }
 
@@ -1059,13 +1173,13 @@ public class ServerTest extends NbTestCase {
         InitializeParams initParams = new InitializeParams();
         initParams.setInitializationOptions(new JsonParser().parse(
                 "{ nbcodeCapabilities: { statusBarMessageSupport : true } }").getAsJsonObject());
-        initParams.setRootUri(getWorkDir().toURI().toString());
+        initParams.setRootUri(toURI(getWorkDir()));
         InitializeResult result = server.initialize(initParams).get();
         indexingComplete.await();
-        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
 
         Diagnostic unresolvable = assertDiags(diags, "Error:2:8-2:12").get(0);
-        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(src.toURI().toString()), unresolvable.getRange(), new CodeActionContext(Arrays.asList(unresolvable)))).get();
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(toURI(src)), unresolvable.getRange(), new CodeActionContext(Arrays.asList(unresolvable)))).get();
         if (jdk9Plus()) {
             assertEquals(2, codeActions.size());
         }
@@ -1130,10 +1244,10 @@ public class ServerTest extends NbTestCase {
         initParams.setRootUri(getWorkDir().toURI().toString());
         InitializeResult result = server.initialize(initParams).get();
         indexingComplete.await();
-        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(src.toURI().toString(), "java", 0, code)));
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
 
         {
-            ReferenceParams params = new ReferenceParams(new TextDocumentIdentifier(src.toURI().toString()),
+            ReferenceParams params = new ReferenceParams(new TextDocumentIdentifier(toURI(src)),
                                                          new Position(0, 15),
                                                          new ReferenceContext(false));
 
@@ -1144,7 +1258,7 @@ public class ServerTest extends NbTestCase {
         }
 
         {
-            ReferenceParams params = new ReferenceParams(new TextDocumentIdentifier(src.toURI().toString()),
+            ReferenceParams params = new ReferenceParams(new TextDocumentIdentifier(toURI(src)),
                                                          new Position(0, 15),
                                                          new ReferenceContext(true));
 
@@ -1188,6 +1302,151 @@ public class ServerTest extends NbTestCase {
         }
     }
 
+    public void testWorkspaceSymbols() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(new File(src.getParentFile(), ".test-project"))) {}
+        String code = "public class Test {\n" +
+                      "    public static class TestNested {}\n" +
+                      "    public static void testMethod() {}\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        CountDownLatch indexingComplete = new CountDownLatch(1);
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setRootUri(toURI(getWorkDir()));
+        InitializeResult result = server.initialize(initParams).get();
+        indexingComplete.await();
+        List<? extends SymbolInformation> symbols = server.getWorkspaceService().symbol(new WorkspaceSymbolParams("Tes")).get();
+        List<String> actual = symbols.stream().map(si -> si.getKind() + ":" + si.getName() + ":" + si.getContainerName() + ":" + si.getDeprecated() + ":" + toString(si.getLocation())).collect(Collectors.toList());
+        assertEquals(Arrays.asList("Class:Test:Test:false:Test.java:0:0-3:1",
+                                   "Constructor:Test():Test:false:Test.java:0:7-0:7",
+                                   "Method:testMethod():Test:false:Test.java:2:4-2:38",
+                                   "Class:TestNested:Test.TestNested:false:Test.java:1:4-1:37",
+                                   "Constructor:TestNested():Test.TestNested:false:Test.java:1:18-1:18"),
+                     actual);
+    }
+
+    public void testCodeActionGetterSetting() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    private final String f1;\n" +
+                      "    private String f2;\n" +
+                      "    private final String f3;\n" +
+                      "    private final String f4;\n" +
+                      "    public String getF4() { return f4; }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        WorkspaceEdit[] edit = new WorkspaceEdit[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                edit[0] = params.getEdit();
+                return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 6), new Position(3, 7)), new CodeActionContext(Arrays.asList()))).get();
+        assertEquals(3, codeActions.size());
+        Optional<CodeAction> generateGettersSetters =
+                codeActions.stream()
+                           .filter(Either::isRight)
+                           .map(Either::getRight)
+                           .filter(a -> Bundle.DN_GenerateGettersSetters().equals(a.getTitle()))
+                           .findAny();
+        assertTrue(generateGettersSetters.isPresent());
+        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(generateGettersSetters.get().getCommand().getCommand(), generateGettersSetters.get().getCommand().getArguments())).get();
+        assertEquals(1, edit[0].getChanges().size());
+        List<TextEdit> fileChanges = edit[0].getChanges().get(uri);
+        assertNotNull(fileChanges);
+        assertEquals(1, fileChanges.size());
+        assertEquals(new Range(new Position(3, 0),
+                               new Position(3, 0)),
+                     fileChanges.get(0).getRange());
+        assertEquals("\n" +
+                     "    public String getF2() {\n" +
+                     "        return f2;\n" +
+                     "    }\n" +
+                     "\n" +
+                     "    public void setF2(String f2) {\n" +
+                     "        this.f2 = f2;\n" +
+                     "    }\n" +
+                     "\n" +
+                     "    public String getF3() {\n" +
+                     "        return f3;\n" +
+                     "    }\n" +
+                     "\n" +
+                     "    public void setF3(String f3) {\n" +
+                     "        this.f3 = f3;\n" +
+                     "    }\n",
+                     fileChanges.get(0).getNewText());
+    }
+
     private String toString(Location location) {
         String path = location.getUri();
         String simpleName = path.substring(path.lastIndexOf('/') + 1);
@@ -1205,6 +1464,10 @@ public class ServerTest extends NbTestCase {
         }
         assertEquals(new HashSet<>(Arrays.asList(expected)),
                      stringHighlights);
+    }
+
+    private String toURI(File f) {
+        return Utilities.toURI(f).toString();
     }
 
     private static boolean jdk9Plus() {

@@ -593,12 +593,12 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
      */
     private static class Item {
         /** */
-        private static Map itemMap;
+        private static Map<Class, Item> itemMap;
 
         /** */
         private final NamedClass clazz;
         /** */
-        private final Set        layer;
+        private final Set<Item>  layer;
         /** */
         private final String     prefix;
 
@@ -651,19 +651,19 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
          */
         private static Item getItem (Class clazz) {
             if ( itemMap == null ) {
-                itemMap = new HashMap();
+                itemMap = new HashMap<>();
             }
             
-            Item item = (Item) itemMap.get (clazz);
+            Item item = itemMap.get(clazz);
             if ( item == null ) {
-                itemMap.put (clazz, item = new Item (new NamedClass (clazz)));
+                itemMap.put(clazz, item = new Item (new NamedClass (clazz)));
             }
             return item;
         }
 
         /**
          */
-        private static void insertItemIntoLayer (Set layer, Item newItem) {
+        private static void insertItemIntoLayer (Set<Item> layer, Item newItem) {
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("\n\nInsert newItem : " + newItem); // NOI18N
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("       Item : set = " + layer); // NOI18N
 

@@ -340,16 +340,15 @@ class ModelItem implements PropertyChangeListener {
             StyledDocument doc, Style boldStyle, Style defaultStyle) throws BadLocationException {
 
         assert headers != null;
-        Set keys = new TreeSet(new Comparator<Object>() {
+        Set<String> keys = new TreeSet<>(new Comparator<String>() {
             @Override
-            public int compare(Object o1, Object o2) {
-                return ((String)o1).compareToIgnoreCase((String)o2);
+            public int compare(String o1, String o2) {
+                return o1.compareToIgnoreCase(o2);
             }
 
         });
         keys.addAll(headers.keySet());
-        for (Object oo : keys) {
-            String key = (String)oo;
+        for (String key : keys) {
             doc.insertString(doc.getLength(), key+": ", boldStyle);
             String value = (String)headers.get(key);
             doc.insertString(doc.getLength(), value+"\n", defaultStyle);

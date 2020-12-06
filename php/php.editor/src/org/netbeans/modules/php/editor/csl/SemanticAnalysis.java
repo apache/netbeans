@@ -213,6 +213,8 @@ public class SemanticAnalysis extends SemanticAnalyzer {
         }
 
         Map<OffsetRange, Set<ColoringAttributes>> highlights;
+        // for unsed private constant: name, identifier
+        private final Map<UnusedIdentifier, ASTNodeColoring> privateUnusedConstants;
         // for unused private fields: name, varible
         // if isused, then it's deleted from the list and marked as the field
         private final Map<UnusedIdentifier, ASTNodeColoring> privateFieldsUnused;
@@ -241,6 +243,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
 
         public SemanticHighlightVisitor(Map<OffsetRange, Set<ColoringAttributes>> highlights, Snapshot snapshot, Model model) {
             this.highlights = highlights;
+            privateUnusedConstants = new HashMap<>();
             privateFieldsUnused = new HashMap<>();
             privateUnusedMethods = new HashMap<>();
             this.snapshot = snapshot;
@@ -325,6 +328,16 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             }
         }
 
+        private void addColoringForUnusedPrivateConstants() {
+            for (ASTNodeColoring item : privateUnusedConstants.values()) {
+                if (item.coloring.contains(ColoringAttributes.DEPRECATED)) {
+                    addColoringForNode(item.identifier, DEPRECATED_UNUSED_STATIC_FIELD_SET);
+                } else {
+                    addColoringForNode(item.identifier, UNUSED_STATIC_FIELD_SET);
+                }
+            }
+        }
+        
         @Override
         public void scan(ASTNode node) {
             if (!isCancelled()) {
@@ -377,6 +390,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                     Block block = needToScan.remove(0);
                     block.accept(this);
                 }
+                addColoringForUnusedPrivateConstants();
                 addColoringForUnusedPrivateFields();
             }
             removeFromPath();
@@ -550,6 +564,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                         Block block = needToScan.remove(0);
                         block.accept(this);
                     }
+                    addColoringForUnusedPrivateConstants();
                     addColoringForUnusedPrivateFields();
                 }
                 removeFromPath();
@@ -727,11 +742,15 @@ public class SemanticAnalysis extends SemanticAnalyzer {
                 parentNode = path.get(1);
             }
             if (parentNode instanceof ClassDeclaration || parentNode instanceof InterfaceDeclaration
-                    || parentNode instanceof TraitDeclaration) {
+                    || parentNode instanceof ClassInstanceCreation) {
+                boolean isPrivate = Modifier.isPrivate(node.getModifier());
                 List<Identifier> names = node.getNames();
-                if (!names.isEmpty()) {
-                    for (Identifier identifier : names) {
-                        addColoringForNode(identifier, createConstantDeclarationColoring(identifier));
+                for (Identifier identifier : names) {
+                    Set<ColoringAttributes> coloring = createConstantDeclarationColoring(identifier);
+                    if (!isPrivate) {
+                        addColoringForNode(identifier, coloring);
+                    } else {
+                        privateUnusedConstants.put(new UnusedIdentifier(identifier.getName(), typeInfo), new ASTNodeColoring(identifier, coloring));
                     }
                 }
             }
@@ -770,6 +789,10 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             }
             Identifier constant = node.getConstantName();
             if (constant != null) {
+                ASTNodeColoring item = privateUnusedConstants.remove(new UnusedIdentifier(constant.getName(), typeInfo));
+                if (item != null) {
+                    addColoringForNode(item.identifier, item.coloring);
+                }
                 addColoringForNode(constant, ColoringAttributes.STATIC_FIELD_SET);
             }
             super.visit(node);

@@ -233,7 +233,7 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
         return spec.compareTo(new SpecificationVersion(sourceLevel)) >= 0;
     }
 
-    private static boolean isAcceptableSourceLevel(String minSourceLevel, String sourceLevel, Set acceptableSourceLevels) {
+    private static boolean isAcceptableSourceLevel(String minSourceLevel, String sourceLevel, Set<String> acceptableSourceLevels) {
         if (minSourceLevel.equals(sourceLevel)) {
             return true;
         }

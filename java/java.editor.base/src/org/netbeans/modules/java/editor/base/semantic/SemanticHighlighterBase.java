@@ -745,7 +745,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 tl.moveToOffset(end);
                 Token t = tl.currentToken();
                 int pos;
-                if (t.id() == JavaTokenId.WHITESPACE && (pos = t.text().toString().indexOf("\n")) != -1) {
+                if (t != null && t.id() == JavaTokenId.WHITESPACE && (pos = t.text().toString().indexOf("\n")) != -1) {
                     TypeMirror type = info.getTrees().getTypeMirror(tp);
                     String typeName = info.getTypeUtilities().getTypeName(type).toString();
                     if (typeToPosition.isEmpty() || !typeName.equals(typeToPosition.get(typeToPosition.size() - 1).first())) {

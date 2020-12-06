@@ -142,7 +142,7 @@ public class EarDataObject extends DD2beansDataObject
     }
 
     private void refreshSourceFolders () {
-        ArrayList srcRootList = new ArrayList ();
+        List<FileObject> srcRootList = new ArrayList<>();
         
         Project project = FileOwnerQuery.getOwner (getPrimaryFile ());
         if (project != null) {

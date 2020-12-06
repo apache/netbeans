@@ -41,7 +41,7 @@ final class FrameInfo {
 
     FrameInfo(DebugStackFrame topStackFrame, Iterable<DebugStackFrame> stackFrames) {
         SourceSection topSS = topStackFrame.getSourceSection();
-        SourcePosition position = new SourcePosition(topSS);
+        SourcePosition position = new SourcePosition(topSS, topStackFrame.getLanguage());
         ArrayList<DebugStackFrame> stackFramesArray = new ArrayList<>();
         for (DebugStackFrame sf : stackFrames) {
             if (sf == topStackFrame) {
@@ -61,7 +61,7 @@ final class FrameInfo {
                    ((sfLang != null) ? sfLang.getId() + " " + sfLang.getName() : "") + "\n" +
                    DebuggerVisualizer.getSourceLocation(topSS) + "\n" +
                    position.id + "\n" + position.name + "\n" + position.path + "\n" +
-                   position.uri.toString() + "\n" + position.sourceSection +/* "," + position.startColumn + "," +
+                   position.uri.toString() + "\n" + position.mimeType + "\n" + position.sourceSection +/* "," + position.startColumn + "," +
                    position.endLine + "," + position.endColumn +*/ "\n" + isInternal(topStackFrame);
         topVariables = JPDATruffleAccessor.getVariables(topStackFrame);
     }

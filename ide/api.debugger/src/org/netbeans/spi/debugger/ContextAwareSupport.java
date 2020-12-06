@@ -177,7 +177,7 @@ public final class ContextAwareSupport {
                 Proxy.newProxyInstance(
                     cl,
                     classes,
-                    new ContextAwareServiceHandler(serviceName, classes, Collections.EMPTY_MAP));
+                    new ContextAwareServiceHandler(serviceName, classes, Collections.emptyMap()));
     }
 
     private static String[] splitClasses(String classes) {

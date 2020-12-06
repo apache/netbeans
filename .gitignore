@@ -106,3 +106,9 @@ derby.log
 /extide/gradle/netbeans-gradle-tooling/gradle/wrapper/gradle-wrapper.jar
 /extide/gradle/release/modules/gradle/daemon-loader/.gradle/
 /nbbuild/misc/prepare-bundles/target/
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build

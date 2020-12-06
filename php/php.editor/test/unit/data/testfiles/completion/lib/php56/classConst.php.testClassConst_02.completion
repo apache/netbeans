@@ -1,0 +1,4 @@
+Code completion result for source line:
+echo self::ALICE|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   ALICE 'Alice'                   [PUBLIC]   Constants

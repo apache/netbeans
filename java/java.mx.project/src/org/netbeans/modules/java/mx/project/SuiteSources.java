@@ -82,12 +82,7 @@ final class SuiteSources implements Sources,
     private static final SuiteSources CORE;
 
     static {
-        MxSuite coreSuite;
-        try {
-            coreSuite = MxSuite.parse(SuiteSources.class.getResource("mx-suite.py"));
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+        MxSuite coreSuite = CoreSuite.CORE_5_279_0;
         CORE = new SuiteSources(null, null, coreSuite);
     }
 

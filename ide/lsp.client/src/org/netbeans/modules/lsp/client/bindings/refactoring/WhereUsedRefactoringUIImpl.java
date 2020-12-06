@@ -36,13 +36,13 @@ import org.openide.util.lookup.Lookups;
  *
  * @author lahvac
  */
-public class RefactoringUIImpl implements RefactoringUI {
+public class WhereUsedRefactoringUIImpl implements RefactoringUI {
 
     private final LSPBindings bindings;
     private final ReferenceParams params;
     private final String name;
 
-    public RefactoringUIImpl(LSPBindings binding, ReferenceParams params, String name) {
+    public WhereUsedRefactoringUIImpl(LSPBindings binding, ReferenceParams params, String name) {
         this.bindings = binding;
         this.params = params;
         this.name = name;

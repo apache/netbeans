@@ -27,7 +27,9 @@ import javax.swing.text.Document;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.ReferenceContext;
 import org.eclipse.lsp4j.ReferenceParams;
+import org.eclipse.lsp4j.RenameOptions;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.editor.NbEditorUtilities;
@@ -81,7 +83,39 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
                         }
                     }
 
-                    UI.openRefactoringUI(new RefactoringUIImpl(bindings, params, name),
+                    UI.openRefactoringUI(new WhereUsedRefactoringUIImpl(bindings, params, name),
+                                         TopComponent.getRegistry().getActivated());
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        };
+        SwingUtilities.invokeLater(start);
+    }
+
+    @Override
+    public void doRename(Lookup lookup) {
+        Runnable start = () -> {
+            EditorCookie ec = lookup.lookup(EditorCookie.class);
+
+            if (isFromEditor(ec)) {
+                try {
+                    JEditorPane c = ec.getOpenedPanes()[0];
+                    Document doc = c.getDocument();
+                    FileObject file = NbEditorUtilities.getFileObject(doc);
+                    LSPBindings bindings = LSPBindings.getBindings(file);
+                    int caretPos = c.getCaretPosition();
+                    Position pos = Utils.createPosition(doc, caretPos);
+                    TokenSequence<?> ts = TokenHierarchy.get(doc).tokenSequence();
+                    String name = "";
+                    if (ts != null) {
+                        ts.move(caretPos);
+                        if (ts.moveNext()) {
+                            name = ts.token().text().toString();
+                        }
+                    }
+
+                    UI.openRefactoringUI(new RenameRefactoringUIImpl(bindings, file, pos, name),
                                          TopComponent.getRegistry().getActivated());
                 } catch (BadLocationException ex) {
                     Exceptions.printStackTrace(ex);
@@ -104,7 +138,17 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
             return false;
         }
         Boolean hasReferences = bindings.getInitResult().getCapabilities().getReferencesProvider();
-        return hasReferences != null && hasReferences;
+        return Utils.isTrue(hasReferences);
+    }
+
+    @Override
+    public boolean canRename(Lookup lookup) {
+        LSPBindings bindings = getBindings(lookup);
+        if (bindings == null) {
+            return false;
+        }
+        Either<Boolean, RenameOptions> hasRename = bindings.getInitResult().getCapabilities().getRenameProvider();
+        return hasRename != null && ((hasRename.isLeft() && Utils.isTrue(hasRename.getLeft())) || hasRename.isRight());
     }
 
     private LSPBindings getBindings(Lookup lookup) {

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.refactoring.java.spi;
 
+import org.netbeans.modules.refactoring.java.spi.hooks.JavaModificationResult;
 import com.sun.source.tree.CompilationUnitTree;
 import java.io.IOException;
 import java.net.URL;

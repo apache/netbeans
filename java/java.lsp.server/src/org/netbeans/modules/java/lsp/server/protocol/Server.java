@@ -40,10 +40,12 @@ import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
+import org.eclipse.lsp4j.RenameOptions;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.WorkspaceServerCapabilities;
 import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
@@ -116,6 +118,7 @@ public final class Server {
             .setInput(in)
             .setOutput(out)
             .wrapMessages(processor)
+//                .traceMessages(new java.io.PrintWriter(System.err))
             .create();
     }
     
@@ -255,6 +258,9 @@ public final class Server {
                 capabilities.setReferencesProvider(true);
                 capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(Arrays.asList(JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT)));
                 capabilities.setWorkspaceSymbolProvider(true);
+                RenameOptions renOpt = new RenameOptions();
+                renOpt.setPrepareProvider(true);
+                capabilities.setRenameProvider(renOpt);
             }
             return new InitializeResult(capabilities);
         }

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import com.google.gson.Gson;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +36,9 @@ import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.Location;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -52,6 +56,7 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.lsp.server.protocol.GetterSetterGenerator.GenKind;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider.ResultHandler;
@@ -59,8 +64,10 @@ import org.netbeans.modules.java.source.ui.JavaSymbolProvider.ResultHandler.Exec
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.parsing.lucene.support.Queries;
 import org.netbeans.spi.jumpto.type.SearchType;
+import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Lookup;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
@@ -74,22 +81,75 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     private static final RequestProcessor WORKER = new RequestProcessor(WorkspaceServiceImpl.class.getName(), 1, false, false);
 
     private NbCodeLanguageClient client;
+    private final Gson gson = new Gson();
 
     public WorkspaceServiceImpl() {
     }
 
     @Override
     public CompletableFuture<Object> executeCommand(ExecuteCommandParams params) {
-        switch (params.getCommand()) {
+        String command = params.getCommand();
+        switch (command) {
             case Server.GRAALVM_PAUSE_SCRIPT:
                 ActionsManager am = DebuggerManager.getDebuggerManager().getCurrentEngine().getActionsManager();
                 am.doAction("pauseInGraalScript");
                 return CompletableFuture.completedFuture(true);
-            case Server.JAVA_BUILD_WORKSPACE:
+            case Server.JAVA_BUILD_WORKSPACE: {
+                CompletableFuture<Object> compileFinished = new CompletableFuture<>();
+                class CompileAllProjects extends ActionProgress {
+                    private int running;
+                    private int success;
+                    private int failure;
+
+                    @Override
+                    protected synchronized void started() {
+                        running++;
+                    }
+
+                    @Override
+                    public synchronized void finished(boolean ok) {
+                        if (ok) {
+                            success++;
+                        } else {
+                            failure++;
+                        }
+                        checkStatus();
+                    }
+
+                    synchronized final void checkStatus() {
+                        if (running <= success + failure) {
+                            compileFinished.complete(failure == 0);
+                        }
+                    }
+                }
+                final CompileAllProjects progressOfCompilation = new CompileAllProjects();
+                final Lookup ctx = Lookups.singleton(progressOfCompilation);
                 for (Project prj : OpenProjects.getDefault().getOpenProjects()) {
                     ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
-                    if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_BUILD, Lookups.fixed())) {
-                        ap.invokeAction(ActionProvider.COMMAND_REBUILD, Lookups.fixed());
+                    if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_BUILD, Lookup.EMPTY)) {
+                        ap.invokeAction(ActionProvider.COMMAND_REBUILD, ctx);
+                    }
+                }
+                progressOfCompilation.checkStatus();
+                return compileFinished;
+            }
+            case Server.GENERATE_GETTERS:
+            case Server.GENERATE_SETTERS:
+            case Server.GENERATE_GETTERS_SETTERS:
+                if (params.getArguments().size() >= 2) {
+                    String uri = gson.fromJson(gson.toJson(params.getArguments().get(0)), String.class);
+                    Range sel = gson.fromJson(gson.toJson(params.getArguments().get(1)), Range.class);
+                    boolean all = params.getArguments().size() == 3;
+                    try {
+                        GenKind kind;
+                        switch (command) {
+                            case Server.GENERATE_GETTERS: kind = GenKind.GETTERS; break;
+                            case Server.GENERATE_SETTERS: kind = GenKind.SETTERS; break;
+                            default: kind = GenKind.GETTERS_SETTERS; break;
+                        }
+                        GetterSetterGenerator.generateGettersSetters(client, uri, kind, sel, all);
+                    } catch (IOException ex) {
+                        client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
                     }
                 }
                 return CompletableFuture.completedFuture(true);
@@ -201,6 +261,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     }
                 };
                 JavaSymbolProvider.doComputeSymbols(getSearchType(queryFin, exactFin, false, null, null), queryFin, handler, true, cancel);
+                Collections.sort(symbols, (i1, i2) -> i1.getName().compareToIgnoreCase(i2.getName()));
                 result.complete(symbols);
             } catch (Throwable t) {
                 result.completeExceptionally(t);

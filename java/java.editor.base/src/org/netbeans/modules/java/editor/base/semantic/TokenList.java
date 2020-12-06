@@ -357,14 +357,18 @@ public class TokenList {
     }
 
     public int offset() {
-        return ts.offset();
+        return ts != null ? ts.offset() : -1;
     }
 
     public int index() {
-        return ts.index();
+        return ts != null ? ts.index() : -1;
     }
 
     public void resetToIndex(int index) {
+        if (ts == null) {
+            return ;
+        }
+
         ts.moveIndex(index);
         ts.moveNext();
     }

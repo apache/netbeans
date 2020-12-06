@@ -46,8 +46,11 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
+import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
+import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
@@ -67,6 +70,7 @@ import org.eclipse.lsp4j.DocumentHighlightKind;
 import org.eclipse.lsp4j.DocumentHighlightParams;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
+import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.InsertTextFormat;
@@ -1029,6 +1033,94 @@ public class ServerTest extends NbTestCase {
         }
     }
 
+    public void testAutoImportOnCompletion() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(new File(src.getParentFile(), ".test-project"))) {}
+        String code = "public class Test {\n" +
+                      "    private void t(String s) {\n" +
+                      "        \n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        List<Diagnostic>[] diags = new List[1];
+        CountDownLatch indexingComplete = new CountDownLatch(1);
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setRootUri(toURI(getWorkDir()));
+        server.initialize(initParams).get();
+        indexingComplete.await();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+
+        {
+            VersionedTextDocumentIdentifier id1 = new VersionedTextDocumentIdentifier(toURI(src), 1);
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id1, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(2, 8), new Position(2, 8)), 0, "ArrayL"))));
+
+            Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(2, 8 + "ArrayL".length()))).get();
+            assertTrue(completion.isRight());
+            Optional<CompletionItem> arrayListItem = completion.getRight().getItems().stream().filter(ci -> "ArrayList".equals(ci.getLabel())).findAny();
+            assertTrue(arrayListItem.isPresent());
+            assertNull(arrayListItem.get().getAdditionalTextEdits());
+            CompletableFuture<CompletionItem> resolvedItem = server.getTextDocumentService().resolveCompletionItem(arrayListItem.get());
+            assertEquals(1, resolvedItem.get().getAdditionalTextEdits().size());
+            assertEquals(0, resolvedItem.get().getAdditionalTextEdits().get(0).getRange().getStart().getLine());
+            assertEquals(0, resolvedItem.get().getAdditionalTextEdits().get(0).getRange().getStart().getCharacter());
+            assertEquals(0, resolvedItem.get().getAdditionalTextEdits().get(0).getRange().getEnd().getLine());
+            assertEquals(0, resolvedItem.get().getAdditionalTextEdits().get(0).getRange().getEnd().getCharacter());
+            assertEquals("\nimport java.util.ArrayList;\n\n", resolvedItem.get().getAdditionalTextEdits().get(0).getNewText());
+        }
+
+        {
+            VersionedTextDocumentIdentifier id2 = new VersionedTextDocumentIdentifier(toURI(src), 1);
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 0), new Position(0, 0)), 0, "import java.util.ArrayList;\n"))));
+            server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id2, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(3, 8), new Position(3, 8)), 0, "ArrayL"))));
+
+            Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(3, 8 + "ArrayL".length()))).get();
+            assertTrue(completion.isRight());
+            Optional<CompletionItem> arrayListItem = completion.getRight().getItems().stream().filter(ci -> "ArrayList".equals(ci.getLabel())).findAny();
+            assertTrue(arrayListItem.isPresent());
+            assertNull(arrayListItem.get().getAdditionalTextEdits());
+            CompletableFuture<CompletionItem> resolvedItem = server.getTextDocumentService().resolveCompletionItem(arrayListItem.get());
+            assertNull(resolvedItem.get().getAdditionalTextEdits());
+        }
+    }
+
     public void testFixImports() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
@@ -1274,6 +1366,93 @@ public class ServerTest extends NbTestCase {
                                    "Class:TestNested:Test.TestNested:false:Test.java:1:4-1:37",
                                    "Constructor:TestNested():Test.TestNested:false:Test.java:1:18-1:18"),
                      actual);
+    }
+
+    public void testCodeActionGetterSetting() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    private final String f1;\n" +
+                      "    private String f2;\n" +
+                      "    private final String f3;\n" +
+                      "    private final String f4;\n" +
+                      "    public String getF4() { return f4; }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        WorkspaceEdit[] edit = new WorkspaceEdit[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                edit[0] = params.getEdit();
+                return CompletableFuture.completedFuture(new ApplyWorkspaceEditResponse(false));
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 6), new Position(3, 7)), new CodeActionContext(Arrays.asList()))).get();
+        assertEquals(3, codeActions.size());
+        Optional<CodeAction> generateGettersSetters =
+                codeActions.stream()
+                           .filter(Either::isRight)
+                           .map(Either::getRight)
+                           .filter(a -> Bundle.DN_GenerateGettersSetters().equals(a.getTitle()))
+                           .findAny();
+        assertTrue(generateGettersSetters.isPresent());
+        server.getWorkspaceService().executeCommand(new ExecuteCommandParams(generateGettersSetters.get().getCommand().getCommand(), generateGettersSetters.get().getCommand().getArguments())).get();
+        assertEquals(1, edit[0].getChanges().size());
+        List<TextEdit> fileChanges = edit[0].getChanges().get(uri);
+        assertNotNull(fileChanges);
+        assertEquals(1, fileChanges.size());
+        assertEquals(new Range(new Position(3, 0),
+                               new Position(3, 0)),
+                     fileChanges.get(0).getRange());
+        assertEquals("\n" +
+                     "    public String getF2() {\n" +
+                     "        return f2;\n" +
+                     "    }\n" +
+                     "\n" +
+                     "    public void setF2(String f2) {\n" +
+                     "        this.f2 = f2;\n" +
+                     "    }\n" +
+                     "\n" +
+                     "    public String getF3() {\n" +
+                     "        return f3;\n" +
+                     "    }\n" +
+                     "\n" +
+                     "    public void setF3(String f3) {\n" +
+                     "        this.f3 = f3;\n" +
+                     "    }\n",
+                     fileChanges.get(0).getNewText());
     }
 
     public void testRenameDocumentChangesCapabilitiesRenameOp() throws Exception {

@@ -161,6 +161,7 @@ public class TokenFormatter {
         public int blankLinesAfterOpenPHPTag;
         public int blankLinesAfterOpenPHPTagInHTML;
         public int blankLinesBeforeClosePHPTag;
+        public int blankLinesMaxPreserved;
         public CodeStyle.WrapStyle wrapGroupUseList;
         public CodeStyle.WrapStyle wrapExtendsImplementsKeyword;
         public CodeStyle.WrapStyle wrapExtendsImplementsList;
@@ -312,6 +313,7 @@ public class TokenFormatter {
             blankLinesAfterOpenPHPTag = codeStyle.getBlankLinesAfterOpenPHPTag();
             blankLinesAfterOpenPHPTagInHTML = codeStyle.getBlankLinesAfterOpenPHPTagInHTML();
             blankLinesBeforeClosePHPTag = codeStyle.getBlankLinesBeforeClosePHPTag();
+            blankLinesMaxPreserved = codeStyle.getBlankLinesMaxPreserved();
 
             wrapGroupUseList = codeStyle.wrapGroupUseList();
             wrapExtendsImplementsKeyword = codeStyle.wrapExtendsImplementsKeyword();
@@ -1718,6 +1720,9 @@ public class TokenFormatter {
                                     case WHITESPACE_AFTER_MULTI_CATCH_SEPARATOR:
                                         countSpaces = 1;
                                         break;
+                                    case WHITESPACE_AFTER_TYPE:
+                                        countSpaces = 1;
+                                        break;
                                     default:
                                     //no-op
                                 }
@@ -1826,6 +1831,7 @@ public class TokenFormatter {
                                     } else {
                                         if (!indentRule) {
                                             newLines = countOfNewLines(oldText);
+                                            newLines = docOptions.blankLinesMaxPreserved + 1 < newLines ? docOptions.blankLinesMaxPreserved + 1 : newLines;
                                         }
                                     }
                                 }

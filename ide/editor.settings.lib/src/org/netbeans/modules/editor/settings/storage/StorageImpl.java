@@ -484,7 +484,7 @@ public final class StorageImpl <K extends Object, V extends Object> {
         private static boolean rebuilding = false;
         
         private final String storageDescriptionId;
-        private final List<StorageFilter> filtersForId = new ArrayList<StorageFilter>();
+        private final List<StorageFilter> filtersForId = new ArrayList<>();
         
         private static Set<String> rebuild() {
             filters.clear();

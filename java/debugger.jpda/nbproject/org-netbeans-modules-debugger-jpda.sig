@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.116.0
+#Version 1.117.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -570,6 +570,7 @@ meth public boolean getBreakpointsActive()
 meth public java.util.List<org.netbeans.api.debugger.jpda.JPDAClassType> getAllClasses()
 meth public java.util.List<org.netbeans.api.debugger.jpda.JPDAClassType> getClassesByName(java.lang.String)
 meth public long[] getInstanceCounts(java.util.List<org.netbeans.api.debugger.jpda.JPDAClassType>)
+meth public org.netbeans.api.debugger.Session getSession()
 meth public org.netbeans.api.debugger.jpda.JPDAStep createJPDAStep(int,int)
 meth public org.netbeans.api.debugger.jpda.ThreadsCollector getThreadsCollector()
 meth public org.netbeans.api.debugger.jpda.Variable createMirrorVar(java.lang.Object) throws java.io.InvalidObjectException
@@ -595,10 +596,13 @@ fld public final static int STEP_OUT = 3
 fld public final static int STEP_OVER = 2
 fld public final static java.lang.String PROP_STATE_EXEC = "exec"
 meth protected void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
+meth public !varargs void addSteppingFilters(java.lang.String[])
 meth public abstract void addStep(org.netbeans.api.debugger.jpda.JPDAThread)
 meth public boolean getHidden()
+meth public boolean isStepThroughFilters()
 meth public int getDepth()
 meth public int getSize()
+meth public java.lang.String[] getSteppingFilters()
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void addPropertyChangeListener(java.lang.String,java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
@@ -606,8 +610,9 @@ meth public void removePropertyChangeListener(java.lang.String,java.beans.Proper
 meth public void setDepth(int)
 meth public void setHidden(boolean)
 meth public void setSize(int)
+meth public void setStepThroughFilters(boolean)
 supr java.lang.Object
-hfds depth,hidden,pcs,size
+hfds classFilters,depth,hidden,pcs,size,stepThroughFilters
 
 CLSS public abstract interface org.netbeans.api.debugger.jpda.JPDAThread
 fld public final static int STATE_MONITOR = 3

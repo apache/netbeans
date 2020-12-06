@@ -107,7 +107,7 @@ class JPDATruffleDebugManager implements SuspendedCallback {
         }
         suspendedEvents.set(event);
         try {
-            SourcePosition position = new SourcePosition(event.getSourceSection());
+            SourcePosition position = new SourcePosition(event.getSourceSection(), event.getTopStackFrame().getLanguage());
             int stepCmd = JPDATruffleAccessor.executionHalted(
                     this, position,
                     event.getSuspendAnchor() == SuspendAnchor.BEFORE,

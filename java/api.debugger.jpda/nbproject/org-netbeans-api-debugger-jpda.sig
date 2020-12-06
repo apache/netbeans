@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.16
+#Version 3.19
 
 CLSS public abstract interface java.io.Serializable
 
@@ -217,8 +217,14 @@ hfds throwable
 
 CLSS public org.netbeans.api.debugger.jpda.ExceptionBreakpoint
 fld public final static int TYPE_EXCEPTION_CATCHED = 1
+ anno 0 java.lang.Deprecated()
 fld public final static int TYPE_EXCEPTION_CATCHED_UNCATCHED = 3
+ anno 0 java.lang.Deprecated()
+fld public final static int TYPE_EXCEPTION_CAUGHT = 1
+fld public final static int TYPE_EXCEPTION_CAUGHT_UNCAUGHT = 3
 fld public final static int TYPE_EXCEPTION_UNCATCHED = 2
+ anno 0 java.lang.Deprecated()
+fld public final static int TYPE_EXCEPTION_UNCAUGHT = 2
 fld public final static java.lang.String PROP_CATCH_TYPE = "catchType"
 fld public final static java.lang.String PROP_CLASS_EXCLUSION_FILTERS = "classExclusionFilters"
 fld public final static java.lang.String PROP_CLASS_FILTERS = "classFilters"
@@ -374,6 +380,7 @@ meth public boolean getBreakpointsActive()
 meth public java.util.List<org.netbeans.api.debugger.jpda.JPDAClassType> getAllClasses()
 meth public java.util.List<org.netbeans.api.debugger.jpda.JPDAClassType> getClassesByName(java.lang.String)
 meth public long[] getInstanceCounts(java.util.List<org.netbeans.api.debugger.jpda.JPDAClassType>)
+meth public org.netbeans.api.debugger.Session getSession()
 meth public org.netbeans.api.debugger.jpda.JPDAStep createJPDAStep(int,int)
 meth public org.netbeans.api.debugger.jpda.ThreadsCollector getThreadsCollector()
 meth public org.netbeans.api.debugger.jpda.Variable createMirrorVar(java.lang.Object) throws java.io.InvalidObjectException
@@ -406,10 +413,13 @@ fld public final static int STEP_OUT = 3
 fld public final static int STEP_OVER = 2
 fld public final static java.lang.String PROP_STATE_EXEC = "exec"
 meth protected void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
+meth public !varargs void addSteppingFilters(java.lang.String[])
 meth public abstract void addStep(org.netbeans.api.debugger.jpda.JPDAThread)
 meth public boolean getHidden()
+meth public boolean isStepThroughFilters()
 meth public int getDepth()
 meth public int getSize()
+meth public java.lang.String[] getSteppingFilters()
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void addPropertyChangeListener(java.lang.String,java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
@@ -417,8 +427,9 @@ meth public void removePropertyChangeListener(java.lang.String,java.beans.Proper
 meth public void setDepth(int)
 meth public void setHidden(boolean)
 meth public void setSize(int)
+meth public void setStepThroughFilters(boolean)
 supr java.lang.Object
-hfds depth,hidden,pcs,size
+hfds classFilters,depth,hidden,pcs,size,stepThroughFilters
 
 CLSS public abstract interface org.netbeans.api.debugger.jpda.JPDAThread
 fld public final static int STATE_MONITOR = 3

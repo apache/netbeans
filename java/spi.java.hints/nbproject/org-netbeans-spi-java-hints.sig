@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.40.0
+#Version 1.41.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -193,7 +193,7 @@ meth protected abstract void performRewrite(org.netbeans.spi.java.hints.JavaFix$
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public final org.netbeans.spi.editor.hints.Fix toEditorFix()
 supr java.lang.Object
-hfds handle,options,sortText
+hfds handle,modResult2ChangeInfo,options,sortText
 
 CLSS public final static org.netbeans.spi.java.hints.JavaFix$TransformationContext
  outer org.netbeans.spi.java.hints.JavaFix

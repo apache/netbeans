@@ -236,6 +236,10 @@ public final class CodeStyle {
         return preferences.getInt(BLANK_LINES_BEFORE_CLOSE_PHP_TAG, getDefaultAsInt(BLANK_LINES_BEFORE_CLOSE_PHP_TAG));
     }
 
+    public int getBlankLinesMaxPreserved() {
+        return preferences.getInt(BLANK_LINES_MAX_PRESERVED, getDefaultAsInt(BLANK_LINES_MAX_PRESERVED));
+    }
+
     // Spaces ------------------------------------------------------------------
 
     public boolean spaceBeforeWhile() {

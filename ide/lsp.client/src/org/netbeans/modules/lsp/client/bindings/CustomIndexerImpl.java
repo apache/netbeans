@@ -58,7 +58,6 @@ public class CustomIndexerImpl extends CustomIndexer {
             }
 
             Set<String> mimeTypes = new HashSet<>(props.values());
-            System.err.println("mimeTypes=" + mimeTypes);
             Project prj = FileOwnerQuery.getOwner(root);
 
             if (prj != null) {

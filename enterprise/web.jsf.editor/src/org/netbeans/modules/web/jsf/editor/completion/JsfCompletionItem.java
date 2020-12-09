@@ -269,6 +269,20 @@ public class JsfCompletionItem {
                 sb.append(attr.getType());
                 sb.append("</div>"); //NOI18N
             }
+            if (attr.getMethodSignature() != null) {
+                sb.append("<div><b>"); //NOI18N
+                sb.append(NbBundle.getMessage(JsfCompletionItem.class, "MSG_MethodSignature"));
+                sb.append(":</b> "); //NOI18N
+                sb.append(attr.getMethodSignature());
+                sb.append("</div>"); //NOI18N
+            }
+            if (attr.getDefaultValue() != null) {
+                sb.append("<div><b>"); //NOI18N
+                sb.append(NbBundle.getMessage(JsfCompletionItem.class, "MSG_DefaultValue"));
+                sb.append(":</b> "); //NOI18N
+                sb.append(attr.getDefaultValue());
+                sb.append("</div>"); //NOI18N
+            }
             if(attr.isRequired()) {
                 sb.append("<p>");
                 sb.append(NbBundle.getMessage(JsfCompletionItem.class, "MSG_RequiredAttribute"));
@@ -307,7 +321,7 @@ public class JsfCompletionItem {
         if (library.getLegacyNamespace() != null) {
             sb.append(", ").append(library.getLegacyNamespace()); //NOI18N
         }
-        if(library.getDisplayName() != null) {
+        if (library.getDisplayName() != null && !library.getDisplayName().equals(library.getNamespace())) {
             sb.append(" ("); //NOI18N
             sb.append(library.getDisplayName());
             sb.append(")"); //NOI18N

@@ -386,6 +386,14 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     return createFullSymbol(ASTPHP5Symbols.T_RETURN);
 }
 
+// NETBEANS-4443 PHP 8.0: Attribute Syntax
+// https://wiki.php.net/rfc/attributes_v2
+// https://wiki.php.net/rfc/shorter_attribute_syntax
+// https://wiki.php.net/rfc/shorter_attribute_syntax_change
+<ST_IN_SCRIPTING>"#[" {
+    return createSymbol(ASTPHP5Symbols.T_ATTRIBUTE);
+}
+
 <ST_IN_SCRIPTING>"yield"{WHITESPACE}+"from" {
     return createSymbol(ASTPHP5Symbols.T_YIELD_FROM);
 }

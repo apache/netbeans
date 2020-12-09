@@ -57,6 +57,9 @@ public final class Utils {
             case ASTPHP5Symbols.T_AT:
                 name = "T_AT"; //NOI18N
                 break;
+            case ASTPHP5Symbols.T_ATTRIBUTE:
+                name = "T_ATTRIBUTE"; //NOI18N
+                break;
             case ASTPHP5Symbols.T_BACKQUATE:
                 name = "T_BACKQUATE"; //NOI18N
                 break;

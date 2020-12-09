@@ -29,6 +29,8 @@ import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
+import org.netbeans.modules.php.editor.parser.astnodes.Attribute;
+import org.netbeans.modules.php.editor.parser.astnodes.AttributeDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.BackTickExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.BreakStatement;
@@ -201,6 +203,20 @@ public class DefaultTreePathVisitor extends DefaultVisitor {
     @Override
     public void visit(ASTErrorExpression astErrorExpression) {
         super.visit(astErrorExpression);
+    }
+
+    @Override
+    public void visit(Attribute node) {
+        addToPath(node);
+        super.visit(node);
+        removeFromPath();
+    }
+
+    @Override
+    public void visit(AttributeDeclaration node) {
+        addToPath(node);
+        super.visit(node);
+        removeFromPath();
     }
 
     @Override

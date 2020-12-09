@@ -39,6 +39,12 @@ public class FieldsDeclaration extends BodyDeclaration {
     private final List<SingleFieldDeclaration> fields = new ArrayList<>();
     private final Expression fieldType;
 
+    private FieldsDeclaration(int start, int end, int modifier, Expression fieldType, List<SingleFieldDeclaration> fields, List<Attribute> attributes) {
+        super(start, end, modifier, false, attributes);
+        this.fieldType = fieldType;
+        this.fields.addAll(fields);
+    }
+
     public FieldsDeclaration(int start, int end, int modifier, Expression fieldType, List variablesAndDefaults) {
         super(start, end, modifier);
 
@@ -57,6 +63,19 @@ public class FieldsDeclaration extends BodyDeclaration {
             }
         }
         this.fieldType = fieldType;
+    }
+
+    public static FieldsDeclaration create(FieldsDeclaration declaration, List<Attribute> attributes) {
+        assert attributes != null;
+        int start = attributes.isEmpty() ? declaration.getStartOffset() : attributes.get(0).getStartOffset();
+        return new FieldsDeclaration(
+                start,
+                declaration.getEndOffset(),
+                declaration.getModifier(),
+                declaration.getFieldType(),
+                declaration.getFields(),
+                attributes
+        );
     }
 
     private SingleFieldDeclaration createField(Variable name, Expression value, Expression fieldType) {
@@ -105,11 +124,13 @@ public class FieldsDeclaration extends BodyDeclaration {
 
     @Override
     public String toString() {
+        StringBuilder sbAttributes = new StringBuilder();
+        getAttributes().forEach(attribute -> sbAttributes.append(attribute).append(" ")); // NOI18N
         StringBuilder sb = new StringBuilder();
         for (SingleFieldDeclaration singleFieldDeclaration : getFields()) {
             sb.append(singleFieldDeclaration).append(" "); //NOI18N
         }
-        return sb.toString();
+        return sbAttributes.toString() + getModifierString() + sb.toString();
     }
 
 }

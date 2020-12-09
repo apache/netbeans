@@ -406,7 +406,7 @@ public class NbValidationTransaction extends ValidationTransaction {
 
         int lineOffset = 0;
 
-        errorHandler = new MessageEmitterAdapter(sourceCode,
+        errorHandler = new MessageEmitterAdapter(null, sourceCode,
                 showSource, null,  lineOffset, false,
                 new NbMessageEmitter(problemsHandler, linesMapper, true));
 
@@ -429,9 +429,7 @@ public class NbValidationTransaction extends ValidationTransaction {
         } else {
             switch (version) {
                 case HTML41_STRICT:
-                    return ParserMode.HTML401_STRICT;
                 case HTML41_TRANSATIONAL:
-                    return ParserMode.HTML401_TRANSITIONAL;
                 case HTML41_FRAMESET:
                     return ParserMode.AUTO; //???
                 case HTML5:
@@ -585,7 +583,7 @@ public class NbValidationTransaction extends ValidationTransaction {
                     e,
                     INTERNAL_ERROR_MSG_SEE_LOG);
         } finally {
-            errorHandler.end(successMessage(), failureMessage());
+            errorHandler.end(successMessage(), failureMessage(), null);
         }
     }
 
@@ -697,10 +695,7 @@ public class NbValidationTransaction extends ValidationTransaction {
             IncorrectSchemaException, SAXNotRecognizedException,
             SAXNotSupportedException, ParserConfigurationException {
         switch (parser) {
-            case HTML_AUTO:
             case HTML:
-            case HTML401_STRICT:
-            case HTML401_TRANSITIONAL:
                 if (isHtmlUnsafePreset()) {
                     String message = "The chosen preset schema is not appropriate for HTML.";
                     SAXException se = new SAXException(message);
@@ -719,14 +714,6 @@ public class NbValidationTransaction extends ValidationTransaction {
                     case HTML:
                         doctypeExpectation = DoctypeExpectation.HTML;
                         schemaId = HTML5_SCHEMA;
-                        break;
-                    case HTML401_STRICT:
-                        doctypeExpectation = DoctypeExpectation.HTML401_STRICT;
-                        schemaId = XHTML1STRICT_SCHEMA;
-                        break;
-                    case HTML401_TRANSITIONAL:
-                        doctypeExpectation = DoctypeExpectation.HTML401_TRANSITIONAL;
-                        schemaId = XHTML1TRANSITIONAL_SCHEMA;
                         break;
                     default:
                         doctypeExpectation = DoctypeExpectation.AUTO;

@@ -25,6 +25,7 @@ import java.util.prefs.Preferences;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.errors.ErrorFixesFakeHint.FixKind;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
+import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.spi.editor.hints.Fix;
 
 /**
@@ -126,9 +127,10 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 "package test;\n" +
                 "public class Test {\n" +
                 "     public void test() {\n" +
-                "         for (|ttt : java.util.Collections.emptyList()) {}\n" +
+                "         for (ttt : java.util.Collections.emptyList()) {}\n" +
                 "     }\n" +
                 "}\n",
+                -1,
                 "AddParameterOrLocalFix:ttt:java.lang.Object:LOCAL_VARIABLE",
                 ("package test;\n" +
                 "public class Test {\n" +
@@ -144,9 +146,10 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 "public class Test {\n" +
                 "     public void test() {\n" +
                 "         java.util.List<? extends Number> l = null;\n" +
-                "         for (|ttt : l) {}\n" +
+                "         for (ttt : l) {}\n" +
                 "     }\n" +
                 "}\n",
+                -1,
                 "AddParameterOrLocalFix:ttt:java.lang.Number:LOCAL_VARIABLE",
                 ("package test;\n" +
                 "public class Test {\n" +
@@ -163,9 +166,10 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 "public class Test {\n" +
                 "     public void test() {\n" +
                 "         String[] a = null;\n" +
-                "         for (|ttt : a) {}\n" +
+                "         for (ttt : a) {}\n" +
                 "     }\n" +
                 "}\n",
+                -1,
                 "AddParameterOrLocalFix:ttt:java.lang.String:LOCAL_VARIABLE",
                 ("package test;\n" +
                 "public class Test {\n" +
@@ -182,9 +186,10 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 "public class Test {\n" +
                 "     public void test() {\n" +
                 "         int[] a = null;\n" +
-                "         for (|ttt : a) {}\n" +
+                "         for (ttt : a) {}\n" +
                 "     }\n" +
                 "}\n",
+                -1,
                 "AddParameterOrLocalFix:ttt:int:LOCAL_VARIABLE",
                 ("package test;\n" +
                 "public class Test {\n" +
@@ -200,13 +205,14 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 "package test;\n" +
                 "public class Test {\n" +
                 "     public void test() {\n" +
-                "         for (|date : someMethod()) {\n" +
+                "         for (date : someMethod()) {\n" +
                 "         }\n" +
                 "     }\n" +
                 "     private Iterable<java.util.Date> someMethod() {\n" +
                 "         return null;\n" +
                 "     }\n" +
                 "}\n",
+                -1,
                 "AddParameterOrLocalFix:date:java.util.Date:LOCAL_VARIABLE",
                 ("package test;\n" +
                 "import java.util.Date;\n" +
@@ -434,11 +440,10 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 "import java.io.*;\n" +
                 "public class Test {\n" +
                 "    private void t(File f) {\n" +
-                "        try (in = new FileInputStream(f)) {\n" +
+                "        try (|in = new FileInputStream(f)) {\n" +
                 "        }\n" +
                 "    }\n" +
                 "}\n",
-                -1,
                 "AddParameterOrLocalFix:in:java.io.FileInputStream:RESOURCE_VARIABLE",
                 ("package test;\n" +
                  "import java.io.*;\n" +
@@ -456,11 +461,10 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 "import java.io.*;\n" +
                 "public class Test {\n" +
                 "    private void t(File f) {\n" +
-                "        try (in = new FileInputStream(f)) {\n" +
+                "        try (|in = new FileInputStream(f)) {\n" +
                 "        }\n" +
                 "    }\n" +
                 "}\n",
-                -1,
                 "AddParameterOrLocalFix:in:java.io.FileInputStream:RESOURCE_VARIABLE");
     }
 
@@ -470,7 +474,7 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
         List<Fix> result=  new LinkedList<Fix>();
 
         for (Fix f : fixes) {
-            if (f instanceof AddParameterOrLocalFix) {
+            if (f instanceof JavaFixImpl && ((JavaFixImpl) f).jf instanceof AddParameterOrLocalFix) {
                 result.add(f);
             }
         }
@@ -480,6 +484,6 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
 
     @Override
     protected String toDebugString(CompilationInfo info, Fix f) {
-        return ((AddParameterOrLocalFix) f).toDebugString(info);
+        return ((AddParameterOrLocalFix) ((JavaFixImpl) f).jf).toDebugString(info);
     }
 }

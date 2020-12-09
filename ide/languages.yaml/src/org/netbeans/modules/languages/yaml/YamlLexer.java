@@ -468,6 +468,12 @@ public final class YamlLexer implements Lexer<YamlTokenId> {
             case ISA_CURLY:
                 state = ISI_WHITESPACE;
                 return token(YamlTokenId.TEXT);
+            case ISI_MUSTACHE:
+                state = ISI_WHITESPACE;
+                return token(YamlTokenId.MUSTACHE);
+            case ISI_MUSTACHE_QUOTE:
+                state = ISI_WHITESPACE;
+                return token(YamlTokenId.MUSTACHE);
             case ISI_PHP:
                 state = ISI_WHITESPACE;
                 return token(YamlTokenId.PHP);

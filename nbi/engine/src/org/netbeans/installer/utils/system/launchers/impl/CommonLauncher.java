@@ -294,6 +294,13 @@ public abstract class CommonLauncher extends Launcher {
                 case 49: return 5;
                 case 50: return 6;
                 case 51: return 7;
+                case 52: return 8;
+                case 53: return 9;
+                case 54: return 10;
+                case 55: return 11;
+                case 56: return 12;
+                case 57: return 13;
+                case 58: return 14;
                 default : return -1;
             }
         } else {            

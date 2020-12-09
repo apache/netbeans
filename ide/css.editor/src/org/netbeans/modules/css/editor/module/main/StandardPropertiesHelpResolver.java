@@ -49,9 +49,6 @@ public class StandardPropertiesHelpResolver extends HelpResolver {
     private static final Map<String, String> propertyNamesTranslationTable = 
             new HashMap<>();
     static {
-//        propertyNamesTranslationTable.put("transform", "effects"); //NOI18N
-        propertyNamesTranslationTable.put("line-break", "line-break0");
-        
     }
     
     private static final Logger LOGGER = Logger.getLogger(HelpResolver.class.getName());
@@ -167,8 +164,8 @@ public class StandardPropertiesHelpResolver extends HelpResolver {
                         Matcher findSectionEnd = sectionEndFinder.matcher(urlContent.subSequence(from, urlContent.length()));
                         if (findSectionEnd.find()) {
                             String help = urlContent.substring(sectionStart, from + findSectionEnd.start());
-                            help = help.replaceAll("[A-Za-z-]+\\.(png|jpg)\"",getSpecURL() + MODULE_ARCHIVE_PATH + moduleFolderName + "/" + "$0");
-                            return help;                      
+                            help = "<base href=\"" + propertyHelpURL.toExternalForm() +"\">" + help;
+                            return help;
                         }
                     }
 

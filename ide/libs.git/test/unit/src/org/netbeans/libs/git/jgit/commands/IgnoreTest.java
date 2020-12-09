@@ -589,4 +589,13 @@ public class IgnoreTest extends AbstractGitTestCase {
         statuses = client.getStatus(new File[0], NULL_PROGRESS_MONITOR);
         assertEquals(Status.STATUS_IGNORED, statuses.get(f).getStatusIndexWC());
     }
+
+    public void testGitIgnoreEndsWithNewLine () throws Exception {
+        File f = new File(workDir, "file");
+        f.createNewFile();
+        File gitIgnore = new File(workDir, Constants.DOT_GIT_IGNORE);
+        File[] ignores = getClient(workDir).ignore(new File[] { f }, NULL_PROGRESS_MONITOR);
+        assertTrue(gitIgnore.exists());
+        assertTrue("The .gitignore file should ends with an empty new line.",containsCRorLF(gitIgnore));
+    }
 }

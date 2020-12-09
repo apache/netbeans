@@ -258,7 +258,7 @@ public final class ASDDVersion {
         "GlassFish Server 3.1" // NOI18N
     );
     
-     /** Represents GF Server 5.1
+     /** Represents GF Server 5.0
      */
     public static final ASDDVersion GLASSFISH_5_0 = new ASDDVersion(
         "5.0", 100,	// NOI18N

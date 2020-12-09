@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.2
+#Version 2.5.1
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,8 +159,6 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
-meth public java.awt.peer.ComponentPeer getPeer()
- anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -1485,13 +1483,6 @@ meth public java.lang.String getLocalizedMessage()
 supr java.lang.Exception
 hfds args,messageName
 
-CLSS public org.netbeans.modules.payara.common.RegisteredDerbyServerImpl
-cons public init()
-intf org.netbeans.modules.payara.spi.RegisteredDerbyServer
-meth public void initialize(java.lang.String)
-meth public void start()
-supr java.lang.Object
-
 CLSS public org.netbeans.modules.payara.common.RestartTask
 cons public !varargs init(org.netbeans.modules.payara.common.CommonServerSupport,org.netbeans.modules.payara.tooling.TaskStateListener[])
 meth public org.netbeans.modules.payara.tooling.TaskState call()
@@ -1524,13 +1515,15 @@ fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_194
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_201
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_5_202
+meth public boolean isDownloadable()
 meth public boolean isInstalledInDirectory(java.io.File)
-meth public int getVersion()
+meth public int getVersionInt()
 meth public java.lang.String getDirectUrl()
 meth public java.lang.String getIndirectUrl()
 meth public java.lang.String getLicenseUrl()
 meth public java.lang.String getUriFragment()
 meth public java.lang.String toString()
+meth public org.netbeans.modules.payara.tooling.data.PayaraVersion getVersion()
 meth public static int getVersionFromDomainXml(java.io.File)
  anno 0 java.lang.Deprecated()
 meth public static int getVersionFromInstallDirectory(java.io.File)
@@ -1538,7 +1531,7 @@ meth public static org.netbeans.modules.payara.common.ServerDetails valueOf(java
 meth public static org.netbeans.modules.payara.common.ServerDetails[] values()
 meth public static org.openide.WizardDescriptor$InstantiatingIterator getInstantiatingIterator()
 supr java.lang.Enum<org.netbeans.modules.payara.common.ServerDetails>
-hfds directUrl,displayName,indirectUrl,licenseUrl,uriFragment,versionInt
+hfds CDDL_LICENSE,DOWNLOAD_URL,directUrl,displayName,downloadable,indirectUrl,licenseUrl,uriFragment,version,versionInt
 hcls DomainParser
 
 CLSS public org.netbeans.modules.payara.common.SimpleIO
@@ -1745,7 +1738,6 @@ fld protected boolean jdbcDriverDeploymentFlag
 fld protected boolean loopbackFlag
 fld protected boolean preserverSessionsFlag
 fld protected boolean showPasswordFlag
-fld protected boolean startDerbyFlag
 fld protected final org.netbeans.modules.payara.common.PayaraInstance instance
 fld protected java.util.Set<? extends java.net.InetAddress> ips
 fld protected javax.swing.JCheckBox commetSupport
@@ -1754,7 +1746,6 @@ fld protected javax.swing.JCheckBox httpMonitor
 fld protected javax.swing.JCheckBox jdbcDriverDeployment
 fld protected javax.swing.JCheckBox localIpCB
 fld protected javax.swing.JCheckBox preserveSessions
-fld protected javax.swing.JCheckBox startDerby
 fld protected javax.swing.JComboBox hostLocalField
 fld protected javax.swing.JLabel dasPortLabel
 fld protected javax.swing.JLabel domainLabel
@@ -1809,11 +1800,10 @@ meth protected boolean getHttpMonitorProperty()
 meth protected boolean getJdbcDriverDeploymentProperty()
 meth protected boolean getLoopbackProperty()
 meth protected boolean getPreserveSessionsProperty()
-meth protected boolean getStartDerbyProperty()
-meth protected void store(boolean,boolean,boolean,boolean,boolean,boolean,boolean,org.netbeans.modules.payara.common.PayaraInstance)
+meth protected void store(boolean,boolean,boolean,boolean,boolean,boolean,org.netbeans.modules.payara.common.PayaraInstance)
 meth protected void storeBooleanProperty(java.lang.String,boolean,org.netbeans.modules.payara.common.PayaraInstance)
 supr java.lang.Object
-hfds cometSupportProperty,hotDeployProperty,httpMonitorProperty,jdbcDriverDeploymentProperty,loopbackProperty,preserveSessionsProperty,startDerbyProperty
+hfds cometSupportProperty,hotDeployProperty,httpMonitorProperty,jdbcDriverDeploymentProperty,loopbackProperty,preserveSessionsProperty
 
 CLSS public org.netbeans.modules.payara.common.ui.InstanceRemotePanel
 cons public init(org.netbeans.modules.payara.common.PayaraInstance)
@@ -2123,7 +2113,6 @@ fld public final static java.lang.String PASSWORD_CONVERTED_FLAG = "this really 
 fld public final static java.lang.String PAYARA_FOLDER_ATTR = "homefolder"
 fld public final static java.lang.String PROFILE_MODE
 fld public final static java.lang.String SESSION_PRESERVATION_FLAG = "preserveSessionsOn"
-fld public final static java.lang.String START_DERBY_FLAG = "derbyStartOn"
 fld public final static java.lang.String TARGET_ATTR = "target"
 fld public final static java.lang.String URL_ATTR = "url"
 fld public final static java.lang.String USERNAME_ATTR = "username"
@@ -2197,22 +2186,9 @@ meth public abstract org.openide.windows.OutputListener processLine(java.lang.St
 CLSS public abstract interface org.netbeans.modules.payara.spi.RecognizerCookie
 meth public abstract java.util.Collection<? extends org.netbeans.modules.payara.spi.Recognizer> getRecognizers()
 
-CLSS public org.netbeans.modules.payara.spi.RegisterDatabase
-cons public init()
-meth public static org.netbeans.modules.payara.spi.RegisterDatabase getDefault()
-meth public void configureDatabase()
-meth public void setupDerby(java.lang.String)
-supr java.lang.Object
-hfds reg
-hcls DerbyLibraryRegistrar
-
 CLSS public abstract interface org.netbeans.modules.payara.spi.RegisteredDDCatalog
 meth public abstract void refreshRunTimeDDCatalog(org.netbeans.spi.server.ServerInstanceProvider,java.lang.String)
 meth public abstract void registerRunTimeDDCatalog(org.netbeans.spi.server.ServerInstanceProvider)
-
-CLSS public abstract interface org.netbeans.modules.payara.spi.RegisteredDerbyServer
-meth public abstract void initialize(java.lang.String)
-meth public abstract void start()
 
 CLSS public abstract interface org.netbeans.modules.payara.spi.RemoveCookie
 meth public abstract void removeInstance(java.lang.String)

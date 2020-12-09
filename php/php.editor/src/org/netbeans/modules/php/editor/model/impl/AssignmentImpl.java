@@ -19,12 +19,15 @@
 
 package org.netbeans.modules.php.editor.model.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.model.ModelUtils;
@@ -41,8 +44,8 @@ import org.openide.util.Union2;
  */
 class  AssignmentImpl<Container extends ModelElementImpl>  extends ScopeImpl {
     private Container container;
-    //TODO: typeName should be list or array to keep mixed types
-    private Union2<String, Collection<? extends TypeScope>> typeNameScopes;
+    @NullAllowed
+    private Union2<List<String>, Collection<? extends TypeScope>> typeNameScopes;
     private OffsetRange scopeRange;
     private boolean arrayAccess;
     private boolean conditionalBlock;
@@ -62,25 +65,32 @@ class  AssignmentImpl<Container extends ModelElementImpl>  extends ScopeImpl {
         }
     }
 
-    AssignmentImpl(Container container, Scope scope, OffsetRange scopeRange, OffsetRange nameRange, String typeName, boolean isDeprecated) {
+    AssignmentImpl(Container container, Scope scope, OffsetRange scopeRange, OffsetRange nameRange, @NullAllowed String typeName, boolean isDeprecated) {
         super(scope, container.getName(), container.getFile(), nameRange, container.getPhpElementKind(), isDeprecated);
         this.container = container;
-        String modifiedTypeName = typeName;
-        boolean isNullableType = CodeUtils.isNullableType(modifiedTypeName);
-        if (isNullableType) {
-            modifiedTypeName = modifiedTypeName.substring(1);
+        List<String> types = new ArrayList<>();
+        if (typeName != null) {
+            List<String> typeNames = StringUtils.explode(typeName, Type.SEPARATOR);
+            typeNames.forEach(type -> {
+                String modifiedTypeName = type != null ? type.trim() : null;
+                boolean isNullableType = CodeUtils.isNullableType(modifiedTypeName);
+                if (isNullableType) {
+                    modifiedTypeName = modifiedTypeName.substring(1);
+                }
+                if (modifiedTypeName != null && !VariousUtils.isSemiType(type)) {
+                    QualifiedName qualifiedName = QualifiedName.create(modifiedTypeName);
+                    QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(qualifiedName, nameRange.getStart(), scope);
+                    if (qualifiedName.getSegments().size() != fullyQualifiedName.getSegments().size()) {
+                        modifiedTypeName = fullyQualifiedName.toString();
+                    }
+                }
+                if (isNullableType) {
+                    modifiedTypeName = CodeUtils.NULLABLE_TYPE_PREFIX + modifiedTypeName;
+                }
+                types.add(modifiedTypeName);
+            });
         }
-        if (modifiedTypeName != null && !VariousUtils.isSemiType(modifiedTypeName)) {
-            QualifiedName qualifiedName = QualifiedName.create(modifiedTypeName);
-            QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(qualifiedName, nameRange.getStart(), scope);
-            if (qualifiedName.getSegments().size() != fullyQualifiedName.getSegments().size()) {
-                modifiedTypeName = fullyQualifiedName.toString();
-            }
-        }
-        if (isNullableType) {
-            modifiedTypeName = CodeUtils.NULLABLE_TYPE_PREFIX + modifiedTypeName;
-        }
-        this.typeNameScopes = Union2.<String, Collection<? extends TypeScope>>createFirst(modifiedTypeName);
+        this.typeNameScopes = Union2.<List<String>, Collection<? extends TypeScope>>createFirst(types);
         this.scopeRange = scopeRange;
     }
 
@@ -113,24 +123,31 @@ class  AssignmentImpl<Container extends ModelElementImpl>  extends ScopeImpl {
     }
 
     /**
-     * Get the type name from Union.
-     * <b>Note:</b> If a type is a nullable type, it has "?" as a prefix. e.g.
-     * ?\Foo, ?string
+     * Get the type name(s) from Union.
      *
-     * @return the type name
+     * <b>Note:</b> If a type is a nullable type, it has "?" as a prefix. e.g.
+     * ?\Foo, ?string. in the case of the union type, type names separated with
+     * "|".
+     *
+     * @return the type name(s)
      */
+    @CheckForNull
     String typeNameFromUnion() {
+        List<String> typeNames = typeNamesFromUnion();
+        return !typeNames.isEmpty() ? Type.asUnionType(typeNames) : null;
+    }
+
+    private List<String> typeNamesFromUnion() {
         if (typeNameScopes != null) {
-            if (typeNameScopes.hasFirst() && typeNameScopes.first() != null) {
+            if (typeNameScopes.hasFirst() && !typeNameScopes.first().isEmpty()) {
                 return typeNameScopes.first();
             } else if (typeNameScopes.hasSecond() && typeNameScopes.second() != null) {
                 TypeScope type = ModelUtils.getFirst(typeNameScopes.second());
-                return type != null ? type.getName() : null;
+                return type != null ? Collections.singletonList(type.getName()) : Collections.emptyList();
             }
         }
-        return null;
+        return Collections.emptyList();
     }
-
     /**
      * Get the type name from Union.
      *
@@ -154,11 +171,7 @@ class  AssignmentImpl<Container extends ModelElementImpl>  extends ScopeImpl {
     }
 
     public Collection<? extends String> getTypeNames() {
-        final String tName = typeNameFromUnion();
-        if (tName != null) {
-            return Collections.singleton(tName);
-        }
-        return Collections.emptyList();
+        return typeNamesFromUnion();
     }
 
     public Collection<? extends TypeScope> getTypes() {
@@ -178,7 +191,7 @@ class  AssignmentImpl<Container extends ModelElementImpl>  extends ScopeImpl {
             if (types.isEmpty() && tName != null && !VariousUtils.isSemiType(tName)) {
                 return empty;
             }
-            typeNameScopes = Union2.<String, Collection<? extends TypeScope>>createSecond(types);
+            typeNameScopes = Union2.<List<String>, Collection<? extends TypeScope>>createSecond(types);
             return types;
         } else {
             typeNameScopes = null;

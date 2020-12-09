@@ -1,0 +1,4 @@
+Name: testMixed
+public function testMixed(mixed $mixed): mixed {
+${cursor}return parent::testMixed($mixed);
+}

@@ -36,10 +36,10 @@ import org.netbeans.modules.web.api.webmodule.WebModule;
  *
  */
 public class InterceptorPanel implements Panel<WizardDescriptor> {
-    
+
     static final String WRITER = "writer.interceptor";  // NOI18N
     static final String READER = "reader.interceptor";  // NOI18N
-    
+
     InterceptorPanel( WizardDescriptor wizard ) {
         myDescriptor = wizard;
     }
@@ -80,17 +80,19 @@ public class InterceptorPanel implements Panel<WizardDescriptor> {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
             Profile profile = webModule.getJ2eeProfile();
-            if ( !Profile.JAVA_EE_7_FULL.equals(profile) && 
+            if ( !Profile.JAVA_EE_7_FULL.equals(profile) &&
                     !Profile.JAVA_EE_7_WEB.equals(profile) &&
-                    !Profile.JAVA_EE_8_FULL.equals(profile) && 
-                            !Profile.JAVA_EE_8_WEB.equals(profile))
+                    !Profile.JAVA_EE_8_FULL.equals(profile) &&
+                            !Profile.JAVA_EE_8_WEB.equals(profile) &&
+                            !Profile.JAKARTA_EE_8_FULL.equals(profile) &&
+                                    !Profile.JAKARTA_EE_8_WEB.equals(profile))
             {
-                setErrorMessage(NbBundle.getMessage(InterceptorPanel.class, 
+                setErrorMessage(NbBundle.getMessage(InterceptorPanel.class,
                         "MSG_NoJEE7Profile"));          // NOI18N
                 return false;
             }
         }
-        
+
         String msg = getComponent().getError();
         setErrorMessage(msg);
         return msg==null;
@@ -119,11 +121,11 @@ public class InterceptorPanel implements Panel<WizardDescriptor> {
     public void storeSettings( WizardDescriptor descriptor ) {
         getComponent().storeSettings(descriptor);
     }
-    
+
     private void setErrorMessage(String message) {
         myDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, message);
     }
-    
+
     private InterceptorPanelVisual myComponent;
     private WizardDescriptor myDescriptor;
 

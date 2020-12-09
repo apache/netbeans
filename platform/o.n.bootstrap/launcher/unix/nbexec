@@ -132,36 +132,45 @@ parse_args "$@"
 #
 
 if [ -z "$jdkhome" ] ; then
-    # try to find JDK
-    case "`uname`" in
-        Darwin*)
-        # read Java Preferences
-        if [ -x "/usr/libexec/java_home" ]; then
-            jdkhome=`/usr/libexec/java_home --version 1.8.0+ --failfast`
-
-        # JDK1.8 as a fallback
-        elif [ -f "/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/bin/java" ] ; then
-            jdkhome="/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home"
-        fi         
-   
-        # JRE fallback
-        if [ ! -x "${jdkhome}/bin/java" -a -f "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/java" ] ; then
-            jdkhome="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
-        fi
-        ;;
-        *) javac=`which javac`
-        if [ -z "$javac" ] ; then
-            java=`which java`
-            if [ ! -z "$java" ] ; then
-                java=`resolve_symlink "$java"`
-                jdkhome=`dirname $java`"/.."
+    # Check Java installed with sdkman
+    if [ -x "$HOME/.sdkman/candidates/java/current/bin/java" ]; then
+        jdkhome=`resolve_symlink "$HOME/.sdkman/candidates/java/current"`
+    fi
+    if [ -z "$jdkhome" ] ; then
+        # try to find JDK
+        case "`uname`" in
+            Darwin*)
+            # check if JAVA_HOME is empty string since java_home will return the value of JAVA_HOME
+            if [ -z "$JAVA_HOME" ]; then
+                unset JAVA_HOME
             fi
-        else
-            javac=`resolve_symlink "$javac"`
-            jdkhome=`dirname $javac`"/.."
-        fi
-        ;;
-    esac
+            # read Java Preferences
+            if [ -x "/usr/libexec/java_home" ]; then
+                jdkhome=`/usr/libexec/java_home --version 1.8+`
+            # JDK1.8 as a fallback
+            elif [ -f "/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/bin/java" ] ; then
+                jdkhome="/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home"
+            fi
+
+            # JRE fallback
+            if [ ! -x "${jdkhome}/bin/java" -a -f "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/java" ] ; then
+                jdkhome="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
+            fi
+            ;;
+            *) javac=`which javac`
+            if [ -z "$javac" ] ; then
+                java=`which java`
+                if [ ! -z "$java" ] ; then
+                    java=`resolve_symlink "$java"`
+                    jdkhome=`dirname $java`"/.."
+                fi
+            else
+                javac=`resolve_symlink "$javac"`
+                jdkhome=`dirname $javac`"/.."
+            fi
+            ;;
+        esac
+    fi
 fi
 
 if [ ! -x "${jdkhome}/bin/java" ] ; then
@@ -427,6 +436,11 @@ while [ "$restart" ] ; do
     trap '' EXIT
     look_for_new_clusters
     # If we should update anything, do it and restart IDE.
+    if [ $exitcode -eq 4 ] ; then
+        # Just connected to CLI, not in charge of running Updater or whatever.
+        exitcode=0
+        break
+    fi
     run_updater=""
     look_for_post_runs "$plathome"
 
@@ -448,6 +462,5 @@ while [ "$restart" ] ; do
     fi
 
 done
-
 # and we exit.
 exit $exitcode

@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
  * Created on February 7, 2006, 11:09 AM
  */
 public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
-    
+
     private static final String[] DEFAULT_WSIMPORT_OPTIONS = {"extension", "verbose", "fork"};  //NOI18N
     private static final String[] DEFAULT_WSIMPORT_VALUES = {"true", "true", "false"};  //NOI18N
     private static final String XNOCOMPILE_OPTION = "xnocompile";  //NOI18N
@@ -78,17 +78,18 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
     protected static final String JAVA_EE_VERSION_16="java-ee-version-16"; //NOI18N
     protected static final String JAVA_EE_VERSION_17="java-ee-version-17"; //NOI18N
     protected static final String JAVA_EE_VERSION_18="java-ee-version-18"; //NOI18N
-    
+    protected static final String JAKARTA_EE_VERSION_8="jakarta-ee-version-8"; //NOI18N
+
     private Project project;
     private AntProjectHelper antProjectHelper;
     private FileObject serviceArtifactsFolder;
-    
+
     /** Creates a new instance of JAXWSSupport */
     public ProjectJAXWSSupport(Project project, AntProjectHelper antProjectHelper) {
         this.project = project;
         this.antProjectHelper = antProjectHelper;
     }
-    
+
     public void removeService(String serviceName) {
         assert serviceName != null;
         JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
@@ -109,14 +110,14 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
      * Default implementation does nothing.
      */
     public void serviceFromJavaRemoved(String serviceName) {}
-    
+
     public boolean isFromWSDL(String serviceName) {
         JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
         Service service = jaxWsModel.findServiceByName(serviceName);
         if (service!=null && service.getWsdlUrl()!=null) return true;
         else return false;
     }
-    
+
     /**
      * Returns the name of the implementation class
      * given the service (ide) name
@@ -129,12 +130,12 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
         }
         return null;
     }
-    
+
     public AntProjectHelper getAntProjectHelper() {
         return antProjectHelper;
     }
-    
-    public void addService(String serviceName, String serviceImpl, boolean isJsr109) {  
+
+    public void addService(String serviceName, String serviceImpl, boolean isJsr109) {
         if(!isJsr109 ){
             try {
                 addJaxwsArtifacts(project, serviceName, serviceImpl);
@@ -149,26 +150,26 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
             }
         }
     }
-    
+
     protected abstract void addJaxwsArtifacts(Project project, String wsName,
             String serviceImpl) throws Exception;
-    
-    protected void addServletElement(Project project, String wsName, String serviceImpl) throws IOException {        
+
+    protected void addServletElement(Project project, String wsName, String serviceImpl) throws IOException {
     }
-    
+
     /*
      * Add web service to jax-ws.xml
      * intended for web services from wsdl
      * @return returns the unique IDE service name
      */
-    
+
     public String addService(String name, String serviceImpl, String wsdlUrl, String serviceName,
             String portName, String packageName, boolean isJsr109, boolean useProvider) {
         JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
         if (jaxWsModel!=null) {
             String finalServiceName = WSUtils.findProperServiceName(name, jaxWsModel);
             boolean serviceAdded=false;
-            
+
             FileObject localWsdl=null;
             try {
                 // download resources to xml-resources
@@ -177,7 +178,7 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
                         xmlResorcesFo,
                         new URI(wsdlUrl));
                 if (localWsdl!=null) {
-                    
+
                     WsdlWrapperHandler handler = null;
                     try {
                         handler = WsdlWrapperGenerator.parse(localWsdl.toURL().toExternalForm());
@@ -228,7 +229,7 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
                     service.setLocalWsdlFile(localWsdlUrl);
                     FileObject catalog = getCatalogFileObject();
                     if (catalog!=null) service.setCatalogFile(CATALOG_FILE);
-                    
+
                     WsimportOptions wsimportOptions = service.getWsImportOptions();
                     if (wsimportOptions != null) {
                         int i=0;
@@ -257,11 +258,11 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
                             wsimportOptions.addWsimportOption(wsimportOption);
                         }
                     }
-                    
+
                     writeJaxWsModel(jaxWsModel);
                     serviceAdded=true;
                 }
-                
+
             } catch (URISyntaxException ex) {
                 ErrorManager.getDefault().notify(ErrorManager.EXCEPTION,ex);
             } catch (UnknownHostException ex) {
@@ -269,7 +270,7 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
             } catch (IOException ex) {
                 ErrorManager.getDefault().notify(ErrorManager.EXCEPTION,ex);
             }
-            
+
             if (serviceAdded) {
                 if(!isJsr109 ){
                     try{
@@ -290,7 +291,7 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
                     ExecutorTask wsimportTask =
                             ActionUtils.runTarget(buildImplFo,
                                     new String[]{"wsimport-service-"+finalServiceName}, //NOI18N
-                                    props); 
+                                    props);
                     wsimportTask.waitFinished();
                 } catch (IOException ex) {
                     ErrorManager.getDefault().log(ex.getLocalizedMessage());
@@ -302,7 +303,7 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
         }
         return null;
     }
-    
+
     /**
      * Returns the list of web services in the project
      */
@@ -351,7 +352,7 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
             ErrorManager.getDefault().notify(ex);
         }
     }
-    
+
     /**
      *  return folder for local wsdl artifacts
      */
@@ -364,7 +365,7 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
     public FileObject getBindingsFolderForService(String serviceName, boolean createFolder) {
         return getArtifactsFolder(serviceName, createFolder, false);
     }
-    
+
     private FileObject getArtifactsFolder(String serviceName, boolean createFolder, boolean forWsdl) {
         String folderName = forWsdl?"wsdl":"bindings"; //NOI18N
         FileObject root = getXmlArtifactsRoot();
@@ -390,17 +391,17 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
         }
         return wsdlLocalFolder;
     }
-    
+
     /** return root folder for xml artifacts
      */
     protected FileObject getXmlArtifactsRoot() {
         return project.getProjectDirectory();
     }
-    
+
     private FileObject getCatalogFileObject() {
         return project.getProjectDirectory().getFileObject(CATALOG_FILE);
     }
-    
+
     public URL getCatalog() {
         try {
             FileObject catalog = getCatalogFileObject();
@@ -408,9 +409,9 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
         } catch (FileStateInvalidException ex) {
             return null;
         }
-        
+
     }
-    
+
     private FileObject getWsdlFolderForService(String name) throws IOException {
         FileObject globalWsdlFolder = getWsdlFolder(true);
         FileObject oldWsdlFolder = globalWsdlFolder.getFileObject(name);
@@ -424,7 +425,7 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
         }
         return globalWsdlFolder.createFolder(name);
     }
-    
+
     private static boolean isXnocompile(Project project){
         JAXWSVersionProvider jvp = project.getLookup().lookup(JAXWSVersionProvider.class);
         if (jvp != null) {
@@ -436,7 +437,7 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
         // Defaultly return true
         return true;
     }
-    
+
     private static boolean isXendorsed(Project project){
         JAXWSVersionProvider jvp = project.getLookup().lookup(JAXWSVersionProvider.class);
         if (jvp != null) {
@@ -448,7 +449,7 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
         // Defaultly return false
         return false;
     }
-    
+
     private static boolean isVersionSatisfied(String version, String requiredVersion) {
         int len1 = version.length();
         int len2 = requiredVersion.length();
@@ -463,9 +464,9 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
         else if (len1 < len2) return false;
         return true;
     }
-    
+
     public abstract FileObject getWsdlFolder(boolean create) throws java.io.IOException;
-    
+
     /** Get wsdlLocation information
      * Useful for web service from wsdl
      * @param name service "display" name

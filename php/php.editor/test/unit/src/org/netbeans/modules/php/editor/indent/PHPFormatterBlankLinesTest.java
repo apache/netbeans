@@ -147,6 +147,7 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
 
     public void testAlternativeSyntaxPlacement01() throws Exception {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_MAX_PRESERVED, 2);
         reformatFileContents("testfiles/formatting/blankLines/AlternativeSyntaxPlacement01.php", options);
     }
 
@@ -166,6 +167,7 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
     public void testBLAnonymousClass01() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.INITIAL_INDENT, 0);
+        options.put(FmtOptions.BLANK_LINES_MAX_PRESERVED, 6);
         reformatFileContents("testfiles/formatting/blankLines/AnonymousClass01.php", options);
     }
 
@@ -1029,6 +1031,29 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
         options.put(FmtOptions.INITIAL_INDENT, 4);
         reformatFileContents("testfiles/formatting/blankLines/OpenClosePHPTag05.php", options);
+    }
+
+    public void testOpenClosePHPTag06() throws Exception {
+        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/blankLines/OpenClosePHPTag06.php", options);
+    }
+
+    public void testMaxPreservedBlankLines01() throws Exception {
+        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_MAX_PRESERVED, 0);
+        reformatFileContents("testfiles/formatting/blankLines/MaxPreservedLines01.php", options);
+    }
+
+    public void testMaxPreservedBlankLines02() throws Exception {
+        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_MAX_PRESERVED, 1);
+        reformatFileContents("testfiles/formatting/blankLines/MaxPreservedLines02.php", options);
+    }
+
+    public void testMaxPreservedBlankLines03() throws Exception {
+        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_MAX_PRESERVED, 2);
+        reformatFileContents("testfiles/formatting/blankLines/MaxPreservedLines03.php", options);
     }
 
     public void testIssue229703() throws Exception {

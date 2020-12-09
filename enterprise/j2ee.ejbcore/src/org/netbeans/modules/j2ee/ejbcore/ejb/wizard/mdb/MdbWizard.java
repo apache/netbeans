@@ -177,7 +177,9 @@ public final class MdbWizard implements WizardDescriptor.InstantiatingIterator {
     private Profile getTargetFullProfile() {
         Profile profile = JavaEEProjectSettings.getProfile(Templates.getProject(wiz));
         if (profile != null) {
-            if (profile.isAtLeast(Profile.JAVA_EE_8_WEB)) {
+            if (profile.isAtLeast(Profile.JAKARTA_EE_8_WEB)) {
+              return Profile.JAKARTA_EE_8_FULL;
+            } else if (profile.isAtLeast(Profile.JAVA_EE_8_WEB)) {
                 return Profile.JAVA_EE_8_FULL;
             } else if (profile.isAtLeast(Profile.JAVA_EE_7_WEB)) {
                 return Profile.JAVA_EE_7_FULL;

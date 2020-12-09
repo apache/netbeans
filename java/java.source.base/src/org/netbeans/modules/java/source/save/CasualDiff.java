@@ -535,8 +535,18 @@ public class CasualDiff {
             VariableTree vt = fgt.getVariables().get(fgt.getVariables().size() - 1);
             return TreeInfo.getEndPos((JCTree)vt, oldTopLevel.endPositions);
         }
-        return TreeInfo.getEndPos(t, oldTopLevel.endPositions);
+        int endPos = TreeInfo.getEndPos(t, oldTopLevel.endPositions);
+
+        if (endPos == Position.NOPOS) {
+            if (t instanceof JCAssign) {
+                // [NETBEANS-4299], might be a synthetic annotation attribute, try rhs
+                endPos = TreeInfo.getEndPos(((JCAssign)t).rhs, oldTopLevel.endPositions);
+            } else {
+                endPos = getOldPos(t);
+            }
         }
+        return endPos;
+    }
 
     private int endPos(com.sun.tools.javac.util.List<? extends JCTree> trees) {
         int result = -1;
@@ -1448,21 +1458,21 @@ public class CasualDiff {
         int addDimensions = 0;
         if (diffContext.syntheticTrees.contains(oldT.vartype)) {
             if (!diffContext.syntheticTrees.contains(newT.vartype)) {
-                int varOffset = skipExtraVarKeywordIfPresent(localPointer, oldT.pos);
+                int varOffset = findVar(localPointer, oldT.pos);
 
-                if (varOffset == -1) {
-                    copyTo(localPointer, oldT.pos);
+                if (varOffset != (-1)) {
+                    copyTo(localPointer, localPointer = varOffset);
+
+                    localPointer += 3; //"var" length
                 }
-                localPointer = oldT.pos;
-                printer.suppressVariableType = suppressParameterTypes;
-                int l = printer.out.length();
+
                 if (!suppressParameterTypes) {
+                    int l = printer.out.length();
                     printer.print(newT.vartype);
-                    if (l < printer.out.length()) {
+                    if (l < printer.out.length() && varOffset == (-1)) {
                         printer.print(" ");
                     }
                 }
-                printer.suppressVariableType = false;
             }
         } else {
             if (suppressParameterTypes) {
@@ -1611,16 +1621,17 @@ public class CasualDiff {
 
     protected int diffBlock(JCBlock oldT, JCBlock newT, int[] blockBounds) {
         int localPointer = blockBounds[0];
+        int startPos = getOldPos(oldT);
+        int endPos = endPos(oldT);
         if (oldT.flags != newT.flags) {
-            int sp = getOldPos(oldT);
-            copyTo(localPointer, localPointer = sp);
+            copyTo(localPointer, localPointer = startPos);
             if ((oldT.flags & STATIC) == 0 && (newT.flags & STATIC) != 0) {
                 printer.print("static");
                 if (diffContext.style.spaceBeforeStaticInitLeftBrace()) {
                     printer.print(" ");
                 }
             } else if ((oldT.flags & STATIC) != 0 && (newT.flags & STATIC) == 0) {
-                tokenSequence.move(sp);
+                tokenSequence.move(startPos);
                 if (tokenSequence.moveNext() && tokenSequence.token().id() == JavaTokenId.STATIC) {
                     localPointer = tokenSequence.offset() + tokenSequence.token().length();
                     if (tokenSequence.moveNext() && tokenSequence.token().id() == JavaTokenId.WHITESPACE) {
@@ -1641,9 +1652,23 @@ public class CasualDiff {
         JCClassDecl oldEnclosing = printer.enclClass;
         printer.enclClass = null;
         List<JCTree> oldstats = filterHidden(oldT.stats);
+        Position.LineMap lm = this.oldTopLevel.getLineMap();
+        boolean emptyToNonEmptySingleLine = oldT.stats.isEmpty() && !newT.stats.isEmpty() && lm.getLineNumber(startPos) == lm.getLineNumber(endPos);
+        if (emptyToNonEmptySingleLine) {
+            printer.newline();
+            printer.toLeftMargin();
+        }
         localPointer = diffList(oldstats, filterHidden(newT.stats), localPointer, est, Measure.MEMBER, printer);
         printer.enclClass = oldEnclosing;
-        if (localPointer < endPos(oldT)) {
+        if (emptyToNonEmptySingleLine) {
+            printer.undent(old);
+            printer.toLeftMargin();
+            tokenSequence.move(localPointer);
+            moveToSrcRelevant(tokenSequence, Direction.FORWARD);
+            localPointer = tokenSequence.offset();
+            copyTo(localPointer, localPointer = endPos);
+        } else {
+            if (localPointer < endPos) {
 /*
             JCTree tree = oldstats.get(oldstats.size() - 1);
             localPointer = adjustLocalPointer(localPointer, comments.getComments(oldT), CommentSet.RelativePosition.INNER);
@@ -1651,9 +1676,10 @@ public class CasualDiff {
             localPointer = adjustLocalPointer(localPointer, cs, CommentSet.RelativePosition.INLINE);            
             localPointer = adjustLocalPointer(localPointer, cs, CommentSet.RelativePosition.TRAILING);            
 */
-            copyTo(localPointer, localPointer = endPos(oldT));
+                copyTo(localPointer, localPointer = endPos);
+            }
+            printer.undent(old);
         }
-        printer.undent(old);
         return localPointer;
     }
 
@@ -2053,12 +2079,13 @@ public class CasualDiff {
                 }  
                 localPointer = diffParameterList(oldT.resources,
                         newT.resources,
+                        null,
                         parens ? new JavaTokenId[] { JavaTokenId.LPAREN, JavaTokenId.RPAREN } : null,
                         pos,
                         Measure.ARGUMENT,
                         diffContext.style.spaceBeforeSemi(),
                         diffContext.style.spaceAfterSemi(),
-                        false,
+                        ListType.RESOURCE,
                         ";" //NOI18N
                 );
                 printer.setPrec(oldPrec);
@@ -2799,7 +2826,7 @@ public class CasualDiff {
                     Measure.ARGUMENT,
                     true, //TODO: should read the code style configuration
                     false,
-                    false,
+                    ListType.NORMAL,
                     ""
             );
         }
@@ -3056,7 +3083,7 @@ public class CasualDiff {
                 localpointer = bounds[0];
             }
             if (oldT.isEnum()) {
-                int pos = diffParameterList(oldT.getVariables(), newT.getVariables(), oldT, null, localpointer, Measure.ARGUMENT, diffContext.style.spaceBeforeComma(), diffContext.style.spaceAfterComma(), true, ",");  //NOI18N
+                int pos = diffParameterList(oldT.getVariables(), newT.getVariables(), oldT, null, localpointer, Measure.ARGUMENT, diffContext.style.spaceBeforeComma(), diffContext.style.spaceAfterComma(), ListType.ENUM, ",");  //NOI18N
                 copyTo(pos, bounds[1]);
                 return bounds[1];
             } else {
@@ -3499,7 +3526,7 @@ public class CasualDiff {
             int pos,
             Comparator<JCTree> measure)
     {
-        return diffParameterList(oldList, newList, parent, makeAround, pos, measure, diffContext.style.spaceBeforeComma(), diffContext.style.spaceAfterComma(), false, ",");   //NOI18N
+        return diffParameterList(oldList, newList, parent, makeAround, pos, measure, diffContext.style.spaceBeforeComma(), diffContext.style.spaceAfterComma(), ListType.NORMAL, ",");   //NOI18N
     }
     private int diffParameterList(
             List<? extends JCTree> oldList,
@@ -3509,10 +3536,10 @@ public class CasualDiff {
             Comparator<JCTree> measure,
             boolean spaceBefore,
             boolean spaceAfter,
-            boolean isEnum,
+            ListType listType,
             String separator)
     {
-        return diffParameterList(oldList, newList, null, makeAround, pos, measure, spaceBefore, spaceAfter, isEnum, separator);
+        return diffParameterList(oldList, newList, null, makeAround, pos, measure, spaceBefore, spaceAfter, listType, separator);
     }
     
     /**
@@ -3529,7 +3556,7 @@ public class CasualDiff {
             Comparator<JCTree> measure,
             boolean spaceBefore,
             boolean spaceAfter,
-            boolean isEnum,
+            ListType listType,
             String separator)
     {
         assert oldList != null && newList != null;
@@ -3588,14 +3615,28 @@ public class CasualDiff {
                         bounds[0] = Math.max(start, bounds[0]);
                     }
                     diffTree(tree, item.element, parent, bounds);
-                    tokenSequence.move(bounds[1]);
-                    moveToSrcRelevant(tokenSequence, Direction.FORWARD);
+                    int end;
+                    switch (listType) {
+                        case RESOURCE:
+                            tokenSequence.move(bounds[1]);
+                            tokenSequence.movePrevious();
+                            if (tokenSequence.token().id() == JavaTokenId.SEMICOLON) {
+                                end = tokenSequence.offset();
+                                break;
+                            }
+                            //intentional fall-through:
+                        default:
+                            tokenSequence.move(bounds[1]);
+                            moveToSrcRelevant(tokenSequence, Direction.FORWARD);
+                            end = Math.max(tokenSequence.offset(), bounds[1]);
+                            break;
+                    }
                     if (!commaNeeded(result, item) &&
-                        isEnum &&
+                        listType == ListType.ENUM &&
                         tokenSequence.token().id() == JavaTokenId.RBRACKET) {
                         printer.print(";");
                     }
-                    copyTo(bounds[1], pos = Math.max(tokenSequence.offset(), bounds[1]), printer);
+                    copyTo(bounds[1], pos = end, printer);
                     wasLeadingDelete = false;
                     break;
                 }
@@ -3645,16 +3686,29 @@ public class CasualDiff {
                         tokenSequence.moveNext();
                         start = tokenSequence.offset();
                     }
-                    tokenSequence.move(bounds[1]);
-                    moveToSrcRelevant(tokenSequence, Direction.FORWARD);
+                    boolean forceUseOfTokenOffset = false;
+                    switch (listType) {
+                        case RESOURCE:
+                            tokenSequence.move(bounds[1]);
+                            tokenSequence.movePrevious();
+                            if (tokenSequence.token().id() == JavaTokenId.SEMICOLON) {
+                                forceUseOfTokenOffset = true;
+                                break;
+                            }
+                            //intentional fall-through:
+                        default:
+                            tokenSequence.move(bounds[1]);
+                            moveToSrcRelevant(tokenSequence, Direction.FORWARD);
+                            break;
+                    }
                     int end;
-                    if (isEnum) {
+                    if (listType == ListType.ENUM) {
                         if ((tokenSequence.token().id() == JavaTokenId.SEMICOLON || tokenSequence.token().id() == JavaTokenId.COMMA)) {
                             end = tokenSequence.offset();
                         } else {
                             end = bounds[1];
                         }
-                    } else if (oldIndex < oldList.size()) {
+                    } else if (oldIndex < oldList.size() || forceUseOfTokenOffset) {
                         end = tokenSequence.offset();
                     } else {
                         end = bounds[1];
@@ -3688,12 +3742,18 @@ public class CasualDiff {
             int endPos2 = endPos(oldList);
             tokenSequence.move(endPos2);
             moveToSrcRelevant(tokenSequence, Direction.FORWARD);
-            if (isEnum &&
+            if (listType == ListType.ENUM &&
                 (tokenSequence.token().id() == JavaTokenId.SEMICOLON || tokenSequence.token().id() == JavaTokenId.COMMA)) {
                 return tokenSequence.offset();
             }
             return pos;
         }
+    }
+
+    enum ListType {
+        NORMAL,
+        ENUM,
+        RESOURCE;
     }
 
     /**
@@ -3878,7 +3938,7 @@ public class CasualDiff {
 
     protected int diffUnionType(JCTypeUnion oldT, JCTypeUnion newT, int[] bounds) {
         int localPointer = bounds[0];
-        int pos = diffParameterList(oldT.alternatives, newT.alternatives, null, localPointer, Measure.MEMBER, diffContext.style.spaceAroundBinaryOps(), diffContext.style.spaceAroundBinaryOps(), false, "|");
+        int pos = diffParameterList(oldT.alternatives, newT.alternatives, null, localPointer, Measure.MEMBER, diffContext.style.spaceAroundBinaryOps(), diffContext.style.spaceAroundBinaryOps(), ListType.NORMAL, "|");
         return Math.min(pos, bounds[1]);
     }
 
@@ -5835,7 +5895,7 @@ public class CasualDiff {
     }
 
     private boolean matchTypeTest(JCInstanceOf t1, JCInstanceOf t2) {
-        return treesMatch(t1.clazz, t2.clazz) && treesMatch(t1.expr, t2.expr);
+        return treesMatch(getPattern(t1), getPattern(t2)) && treesMatch(t1.expr, t2.expr);
     }
 
     private boolean matchIndexed(JCArrayAccess t1, JCArrayAccess t2) {
@@ -6245,25 +6305,14 @@ public class CasualDiff {
         return sb.toString();
     }
     
-    private int skipExtraVarKeywordIfPresent(int start, int end) {
-        int varoffset = -1;
-        int newStart = -1;
-        tokenSequence.move(start);
-        tokenSequence.moveNext();
-        while (tokenSequence.offset() < end) {
+    private int findVar(int start, int end) {
+        tokenSequence.move(end);
+        while (tokenSequence.movePrevious() && tokenSequence.offset() >= start) {
             JavaTokenId token = tokenSequence.token().id();
             if (token == JavaTokenId.VAR) {
-                varoffset = tokenSequence.offset();
-                copyTo(start, varoffset);
-            } else if (varoffset > -1) {
-                if (token != JavaTokenId.WHITESPACE) {
-                    newStart = tokenSequence.offset();
-                    copyTo(newStart, end);
-                    break;
-                }
+                return tokenSequence.offset();
             }
-            tokenSequence.moveNext();
         }
-        return varoffset;
+        return -1;
     }
 }

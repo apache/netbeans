@@ -18,24 +18,20 @@
  */
 package org.netbeans.modules.lsp.client.bindings;
 
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
-import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
@@ -46,20 +42,14 @@ import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
 import org.netbeans.modules.textmate.lexer.TextmateTokenId;
-import org.netbeans.spi.lexer.LanguageHierarchy;
-import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.URLMapper;
-import org.openide.text.Line;
-import org.openide.text.Line.ShowOpenType;
-import org.openide.text.Line.ShowVisibilityType;
 import org.openide.util.Exceptions;
 
 /**
  *
  * @author lahvac
  */
-@MimeRegistration(mimeType="", service=HyperlinkProviderExt.class)
+@MimeRegistration(mimeType="", service=HyperlinkProviderExt.class, position = 1600)
 public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
     @Override
@@ -82,14 +72,16 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         try {
             //XXX: not really using the server, are we?
             int[] ident = Utilities.getIdentifierBlock((BaseDocument) doc, offset);
+            if (ident == null) {
+                return null;
+            }
             TokenSequence<?> ts = TokenHierarchy.get(doc).tokenSequence();
+            if (ts == null) {
+                return ident;
+            }
             ts.move(offset);
             if (ts.moveNext() && ts.token().id() == TextmateTokenId.TEXTMATE) {
-                if (ident != null) {
-                    return new int[] {ts.offset(), ts.offset() + ts.token().length()};
-                } else {
-                    return null;
-                }
+                return new int[]{ts.offset(), ts.offset() + ts.token().length()};
             }
             return ident;
         } catch (BadLocationException ex) {
@@ -110,9 +102,9 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         }
         String uri = Utils.toURI(file);
         try {
-            TextDocumentPositionParams params;
-            params = new TextDocumentPositionParams(new TextDocumentIdentifier(uri),
-                                                    Utils.createPosition(doc, offset));
+            DefinitionParams params;
+            params = new DefinitionParams(new TextDocumentIdentifier(uri),
+                                          Utils.createPosition(doc, offset));
             //TODO: Location or Location[]
             CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> def = server.getTextDocumentService().definition(params);
             def.handleAsync((locations, exception) -> {

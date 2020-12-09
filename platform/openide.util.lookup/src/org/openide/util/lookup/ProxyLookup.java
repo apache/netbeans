@@ -57,6 +57,25 @@ public class ProxyLookup extends Lookup {
     public ProxyLookup(Lookup... lookups) {
         data = ImmutableInternalData.EMPTY.setLookupsNoFire(lookups, true);
     }
+    /**
+     * Create a {@code ProxyLookup} whose contents can be set dynamically 
+     * subclassing. The passed
+     * {@link Controller} can be later be used to call
+     * {@link Controller#setLookups} which then 
+     * {@link ProxyLookup#setLookups changes} the lookups this {@code ProxyLookup} 
+     * delegates to. The passed controller may
+     * only be used for <i>one</i> ProxyLookup.
+     *
+     * @param controller A {@link Controller} which can be used to set the lookups
+     * @throws IllegalStateException if the passed controller has already
+     * been attached to another ProxyLookup 
+     * @since 8.43
+     */
+    @SuppressWarnings("LeakingThisInConstructor")
+    public ProxyLookup(Controller controller) {
+        this();
+        controller.setProxyLookup(this);
+    }
 
     /**
      * Create a lookup initially proxying to no others.
@@ -89,7 +108,72 @@ public class ProxyLookup extends Lookup {
         }
         return map.keySet();
     }
-    
+
+    /**
+     * A controller which allows the set of lookups being proxied to be
+     * set dynamically for those who create the instance of
+     * {@link ProxyLookup}.
+     *
+     * @since 8.43
+     */
+    public static final class Controller {
+
+        private ProxyLookup consumer;
+
+        /**
+         * Creates a new controller to be attached to a {@link ProxyLookup}.
+         * @since 8.43
+         */
+        public Controller() {
+        }
+
+        /**
+         * Set the lookups on the {@link ProxyLookup} this controller controls.
+         * If called before a {@link ProxyLookup} has been attached to this
+         * controller, an IllegalStateException will be thrown.
+         *
+         * @param notifyIn an executor to notify changes in
+         * @param lookups an array of Lookups to be proxied
+         * @throws IllegalStateException if called before this instance
+         * has been passed to the constructor of (exactly one) {@link ProxyLookup}
+         * @since 8.43
+         */
+        public void setLookups(Executor notifyIn, Lookup... lookups) {
+            if (consumer == null) {
+                throw new IllegalStateException("Cannot use Controller until "
+                        + "a ProxyLookup has been created with it.");
+            }
+            consumer.setLookups(notifyIn, lookups);
+        }
+
+        /**
+         * Set the lookups on the {@link ProxyLookup} this controller controls.
+         * If called before a {@link ProxyLookup} has been attached to this
+         * controller, an IllegalStateException will be thrown.
+         *
+         * @param exe An executor to notify in
+         * @param lookups An array of Lookups to be proxied
+         * @throws IllegalStateException if called before this instance
+         * has been passed to the constructor of (exactly one) {@link ProxyLookup}
+         * @since 8.43
+         */
+        public void setLookups(Lookup... lookups) {
+            if (consumer == null) {
+                throw new IllegalStateException("Cannot use Controller until "
+                        + "a ProxyLookup has been created with it.");
+            }
+            setLookups(null, lookups);
+        }
+
+        void setProxyLookup(ProxyLookup lkp) {
+            if (consumer != null) {
+                throw new IllegalStateException("Controller cannot be used "
+                        + "with more than one ProxyLookup.");
+            }
+            consumer = lkp;
+        }
+    }
+
     /**
      * Changes the delegates.
      *
@@ -99,7 +183,7 @@ public class ProxyLookup extends Lookup {
     protected final void setLookups(Lookup... lookups) {
         setLookups(null, lookups);
     }
-    
+
     /**
      * Changes the delegates immediatelly, notifies the listeners in provided
      * executor, potentially later.
@@ -113,10 +197,10 @@ public class ProxyLookup extends Lookup {
         Set<Lookup> newL;
         Set<Lookup> current;
         Lookup[] old;
-        
+
         Map<Result,LookupListener> toRemove = new IdentityHashMap<Lookup.Result, LookupListener>();
         Map<Result,LookupListener> toAdd = new IdentityHashMap<Lookup.Result, LookupListener>();
-        
+
         ImmutableInternalData orig;
         synchronized (ProxyLookup.this) {
             orig = getData();
@@ -126,7 +210,7 @@ public class ProxyLookup extends Lookup {
             }
             arr = setData(newData, lookups, toAdd, toRemove);
         }
-        
+
         // better to do this later than in synchronized block
         for (Map.Entry<Result, LookupListener> e : toRemove.entrySet()) {
             e.getKey().removeLookupListener(e.getValue());
@@ -144,7 +228,7 @@ public class ProxyLookup extends Lookup {
                 r.collectFires(evAndListeners);
             }
         }
-        
+
         class Notify implements Runnable {
             public void run() {
                 Iterator it = evAndListeners.iterator();
@@ -208,7 +292,7 @@ public class ProxyLookup extends Lookup {
     public final <T> Item<T> lookupItem(Template<T> template) {
         beforeLookup(template);
 
-        Lookup[] tmpLkps; 
+        Lookup[] tmpLkps;
         synchronized (ProxyLookup.this) {
             tmpLkps = getData().getLookups(false);
         }
@@ -256,14 +340,14 @@ public class ProxyLookup extends Lookup {
     }
 
     private Collection<Reference<R>> setData(
-        ImmutableInternalData newData, Lookup[] current, 
+        ImmutableInternalData newData, Lookup[] current,
         Map<Result,LookupListener> toAdd, Map<Result,LookupListener> toRemove
     ) {
         assert Thread.holdsLock(ProxyLookup.this);
         assert newData != null;
-        
+
         ImmutableInternalData previous = this.getData();
-        
+
         if (previous == newData) {
             return Collections.emptyList();
         }
@@ -314,14 +398,14 @@ public class ProxyLookup extends Lookup {
     private static final class R<T> extends WaitableResult<T> {
         /** weak listener & result */
         private final WeakResult<T> weakL;
-        
+
         /** list of listeners added */
         private LookupListenerList listeners;
 
         /** collection of Objects */
         private Collection[] cache;
 
-        
+
         /** associated lookup */
         private ImmutableInternalData data;
 
@@ -330,7 +414,7 @@ public class ProxyLookup extends Lookup {
         public R(ProxyLookup proxy, Lookup.Template<T> t) {
             this.weakL = new WeakResult<T>(proxy, this, t);
         }
-        
+
         private ProxyLookup proxy() {
             return weakL.result.proxy;
         }
@@ -339,7 +423,7 @@ public class ProxyLookup extends Lookup {
         private Result<T>[] newResults(int len) {
             return new Result[len];
         }
-        
+
         @Override
         protected void finalize() {
             weakL.result.run();
@@ -369,7 +453,7 @@ public class ProxyLookup extends Lookup {
                     if (current != data) {
                         continue;
                     }
-                    
+
                     Lookup[] currentLkps = data.getLookups(false);
                     if (currentLkps.length != myLkps.length) {
                         continue BIG_LOOP;
@@ -379,8 +463,8 @@ public class ProxyLookup extends Lookup {
                             continue BIG_LOOP;
                         }
                     }
-                    
-                    // some other thread might compute the result mean while. 
+
+                    // some other thread might compute the result mean while.
                     // if not finish the computation yourself
                     if (weakL.getResults() != null) {
                         return weakL.getResults();
@@ -548,7 +632,7 @@ public class ProxyLookup extends Lookup {
         public void resultChanged(LookupEvent ev) {
             collectFires(null);
         }
-        
+
         private static ThreadLocal<R<?>> IN = new ThreadLocal<>();
         protected void collectFires(Collection<Object> evAndListeners) {
             R<?> prev = IN.get();
@@ -563,7 +647,7 @@ public class ProxyLookup extends Lookup {
                 IN.set(prev);
             }
         }
-        
+
         private void collImpl(Collection<Object> evAndListeners) {
             boolean modified = true;
 
@@ -589,7 +673,7 @@ public class ProxyLookup extends Lookup {
                     }
                     ll = listeners.getListenerList();
                     assert ll != null;
-                    
+
 
                     // ignore events if they arrive as a result of call to allItems
                     // or allInstances, bellow...
@@ -632,7 +716,7 @@ public class ProxyLookup extends Lookup {
                     }
                 }
             }
-            
+
             if (modified) {
                 LookupEvent ev = new LookupEvent(this);
                 AbstractLookup.notifyListeners(ll, ev, evAndListeners);
@@ -646,7 +730,7 @@ public class ProxyLookup extends Lookup {
             boolean callBeforeLookup, boolean callBeforeOnWait
         ) {
             Template<T> template = template();
-            
+
             proxy().beforeLookup(callBeforeLookup, template);
 
             Lookup.Result<T>[] arr = initResults();
@@ -691,11 +775,11 @@ public class ProxyLookup extends Lookup {
             synchronized (proxy()) {
                 Collection[] cc = getCache();
                 if (cc != oldCC) {
-                    // don't change the cache when it is based on 
+                    // don't change the cache when it is based on
                     // outdated results
                     return;
                 }
-                
+
                 if (cc == null || cc == R.NO_CACHE) {
                     // initialize the cache to indicate this result is in use
                     setCache(cc = new Collection[3]);
@@ -707,14 +791,14 @@ public class ProxyLookup extends Lookup {
                     cc[indexToCache] = ret;
                 }
             }
-            
+
         }
     }
     private static final class WeakRef<T> extends WeakReference<R> implements Runnable {
         final WeakResult<T> result;
         final ProxyLookup proxy;
         final Template<T> template;
-        
+
         public WeakRef(R r, WeakResult<T> result, ProxyLookup proxy, Template<T> template) {
             super(r);
             this.result = result;
@@ -727,17 +811,17 @@ public class ProxyLookup extends Lookup {
             proxy.unregisterTemplate(template);
         }
     }
-    
-    
+
+
     private static final class WeakResult<T> extends WaitableResult<T> implements LookupListener, Runnable {
         /** all results */
         private Lookup.Result<T>[] results;
         private final WeakRef<T> result;
-        
+
         public WeakResult(ProxyLookup proxy, R r, Template<T> t) {
             this.result = new WeakRef<T>(r, this, proxy, t);
         }
-        
+
         final void removeListeners() {
             Lookup.Result<T>[] arr = this.getResults();
             if (arr == null) {
@@ -822,15 +906,15 @@ public class ProxyLookup extends Lookup {
             return allItems();
         }
     } // end of WeakResult
-    
+
     static abstract class ImmutableInternalData extends Object {
         static final ImmutableInternalData EMPTY = new EmptyInternalData();
         static final Lookup[] EMPTY_ARR = new Lookup[0];
 
-        
+
         protected ImmutableInternalData() {
         }
-        
+
         public static ImmutableInternalData create(Object lkp, Map<Template, Reference<R>> results) {
             if (results.size() == 0 && lkp == EMPTY_ARR) {
                 return EMPTY;
@@ -839,7 +923,7 @@ public class ProxyLookup extends Lookup {
                 Entry<Template,Reference<R>> e = results.entrySet().iterator().next();
                 return new SingleInternalData(lkp, e.getKey(), e.getValue());
             }
-            
+
             return new RealInternalData(lkp, results);
         }
 
@@ -850,7 +934,7 @@ public class ProxyLookup extends Lookup {
         final Collection<Reference<R>> references() {
             return getResults().values();
         }
-        
+
         final <T> ImmutableInternalData removeTemplate(ProxyLookup proxy, Template<T> template) {
             if (getResults().containsKey(template)) {
                 HashMap<Template,Reference<R>> c = new HashMap<Template, Reference<ProxyLookup.R>>(getResults());
@@ -865,12 +949,12 @@ public class ProxyLookup extends Lookup {
                 return this;
             }
         }
-        
+
         <T> R<T> findResult(ProxyLookup proxy, ImmutableInternalData[] newData, Template<T> template) {
             assert Thread.holdsLock(proxy);
-            
+
             Map<Template,Reference<R>> map = getResults();
-            
+
             Reference<R> ref = map.get(template);
             R r = (ref == null) ? null : ref.get();
 
@@ -878,7 +962,7 @@ public class ProxyLookup extends Lookup {
                 newData[0] = this;
                 return convertResult(r);
             }
-            
+
             HashMap<Template, Reference<R>> res = new HashMap<Template, Reference<R>>(map);
             R<T> newR = new R<T>(proxy, template);
             res.put(template, new java.lang.ref.SoftReference<R>(newR));
@@ -887,13 +971,13 @@ public class ProxyLookup extends Lookup {
         }
         final ImmutableInternalData setLookupsNoFire(Lookup[] lookups, boolean skipCheck) {
             Object l;
-            
+
             if (!skipCheck) {
                 Lookup[] previous = getLookups(false);
                 if (previous == lookups) {
                     return this;
                 }
-            
+
                 if (previous.length == lookups.length) {
                     int same = 0;
                     for (int i = 0; i < previous.length; i++) {
@@ -907,7 +991,7 @@ public class ProxyLookup extends Lookup {
                     }
                 }
             }
-            
+
             if (lookups.length == 1) {
                 l = lookups[0];
                 assert l != null : "Cannot assign null delegate";
@@ -918,11 +1002,11 @@ public class ProxyLookup extends Lookup {
                     l = lookups.clone();
                 }
             }
-            
+
             if (isEmpty() && l == EMPTY_ARR) {
                 return this;
             }
-            
+
             return create(l, getResults());
         }
         final Lookup[] getLookups(boolean clone) {
@@ -938,17 +1022,17 @@ public class ProxyLookup extends Lookup {
             }
         }
         final List<Lookup> getLookupsList() {
-            return Arrays.asList(getLookups(false));            
+            return Arrays.asList(getLookups(false));
         }
 
     } // end of ImmutableInternalData
-    
+
     private static final class SingleInternalData extends ImmutableInternalData {
         /** lookups to delegate to (either Lookup or array of Lookups) */
         private final Object lookups;
         private final Template template;
         private final Reference<ProxyLookup.R> result;
-                
+
         public SingleInternalData(Object lookups, Template<?> template, Reference<ProxyLookup.R> result) {
             this.lookups = lookups;
             this.template = template;
@@ -962,7 +1046,7 @@ public class ProxyLookup extends Lookup {
         protected Map<Template, Reference<R>> getResults() {
             return Collections.singletonMap(template, result);
         }
-        
+
         protected Object getRawLookups() {
             return lookups;
         }
@@ -990,7 +1074,7 @@ public class ProxyLookup extends Lookup {
             assert needsStrict = true;
             return needsStrict && !isUnmodifiable(results) ? unmodifiableMap(results) : results;
         }
-        
+
         @Override
         protected Object getRawLookups() {
             return lookups;
@@ -1008,7 +1092,7 @@ public class ProxyLookup extends Lookup {
             return res;
         }
     }
-    
+
     private static final class EmptyInternalData extends ImmutableInternalData {
         EmptyInternalData() {
         }

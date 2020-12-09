@@ -142,10 +142,6 @@ public class ServerUtils {
     public static final String PF_DOMAIN_ROOT_PROPERTY
             = "com.sun.aas.instanceRoot";
 
-    /** Payara server Derby root property name. */
-    public static final String PF_DERBY_ROOT_PROPERTY
-            = "com.sun.aas.derbyRoot";
-
     /** Payara server home subdirectory filter instance. */
     public static final PayaraFilter PF_HOME_DIR_FILTER
             = new PayaraFilter();
@@ -162,8 +158,8 @@ public class ServerUtils {
     /** Payara server modules subdirectory. */
     public static final String PF_MODULES_DIR_NAME = "modules";
 
-    /** Payara server Derby subdirectory. */
-    public static final String PF_DERBY_DIR_NAME = "javadb";
+    /** Payara server H2 subdirectory. */
+    public static final String PF_H2_DIR_NAME = "h2db";
 
     /** Payara server libraries subdirectory. */
     public static final String PF_LIB_DIR_NAME = "lib";
@@ -882,22 +878,22 @@ public class ServerUtils {
     }
 
     /**
-     * Get Payara server derby root full path.
+     * Get Payara server h2 db root full path.
      * <p/>
      * @param server Payara server entity
-     * @return Payara server derby root full path or <code>null</code>
+     * @return Payara server h2 root full path or <code>null</code>
      *         when server server installation directory is not set.
      */
-    public static String getDerbyRoot(final PayaraServer server) {
+    public static String getH2Root(final PayaraServer server) {
         String serverRoot = server.getServerRoot();
         if (serverRoot == null) {
             return null;
         }
         StringBuilder sb = new StringBuilder(serverRoot.length()
-                + File.separator.length() + PF_DERBY_DIR_NAME.length());
+                + File.separator.length() + PF_H2_DIR_NAME.length());
         sb.append(serverRoot);
         sb.append(File.separator);
-        sb.append(PF_DERBY_DIR_NAME);
+        sb.append(PF_H2_DIR_NAME);
         return sb.toString();
     }
 

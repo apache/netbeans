@@ -32,10 +32,10 @@ Searchable Keys:
   field : staticiterable;staticIterable;1681;10;iterable;iterable;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
   field : staticmyclass2;staticMyClass2;1860;9;\Foo\Bar\MyClass;\Foo\Bar\MyClass;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
   field : staticmyclass;staticMyClass;1809;12;MyClass;\MyClass;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
-  field : staticobject;staticObject;1631;10;object;object;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : staticobject;staticObject;1631;10;?object;?object;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
   field : staticparent;staticParent;1765;12;parent;\parent;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
   field : staticself;staticSelf;1724;12;self;\self;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
-  field : staticstring;staticString;1527;10;string;string;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
+  field : staticstring;staticString;1527;10;?string;?string;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
   field : staticwithouttype;staticWithoutType;1339;9;;;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
   field : string;string;1098;2;string;string;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;
   field : varint;varInt;1890;1;int;int;0;<TESTURL>/testPHP74TypedPropertiesTrait.php;0;

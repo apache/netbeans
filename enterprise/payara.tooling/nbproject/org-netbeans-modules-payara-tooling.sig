@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.2
+#Version 2.5.1
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1753,6 +1753,8 @@ fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEE
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_7_web
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_8
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_8_web
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v8_0_0
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v8_0_0_web
 innr public final static !enum Type
 innr public final static !enum Version
 meth public java.lang.String toString()
@@ -1783,6 +1785,7 @@ fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEE
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_6
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_7
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_8
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v8_0_0
 meth public java.lang.String toString()
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version valueOf(java.lang.String)
 meth public static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version[] values()
@@ -2355,14 +2358,13 @@ fld public final static java.lang.String MANIFEST_COMPONENTS_SEPARATOR = ";"
 fld public final static java.lang.String MANIFEST_EOL = "%%%EOL%%%"
 fld public final static java.lang.String MANIFEST_RESOURCES_SEPARATOR = "[,;]"
 fld public final static java.lang.String PF_COMMON_UTIL_JAR = "common-util.jar"
-fld public final static java.lang.String PF_DERBY_DIR_NAME = "javadb"
-fld public final static java.lang.String PF_DERBY_ROOT_PROPERTY = "com.sun.aas.derbyRoot"
 fld public final static java.lang.String PF_DOMAINS_DIR_NAME = "domains"
 fld public final static java.lang.String PF_DOMAIN_CONFIG_DIR_NAME = "config"
 fld public final static java.lang.String PF_DOMAIN_CONFIG_FILE_NAME = "domain.xml"
 fld public final static java.lang.String PF_DOMAIN_ROOT_PROPERTY = "com.sun.aas.instanceRoot"
 fld public final static java.lang.String PF_EMBEDDED_DIR_NAME = "embedded"
 fld public final static java.lang.String PF_EMBEDDED_STATIC_SHELL_JAR = "glassfish-embedded-static-shell.jar"
+fld public final static java.lang.String PF_H2_DIR_NAME = "h2db"
 fld public final static java.lang.String PF_HOME_PROPERTY = "com.sun.aas.installRoot"
 fld public final static java.lang.String PF_JAVAHELP_JAR = "javahelp.jar"
 fld public final static java.lang.String PF_JAVA_ROOT_PROPERTY = "com.sun.aas.javaRoot"
@@ -2394,11 +2396,11 @@ meth public static java.io.File getJerseyCommonJarInModules(java.lang.String)
 meth public static java.io.File getServerLogFile(org.netbeans.modules.payara.tooling.data.PayaraServer)
 meth public static java.lang.String basicAuthCredentials(java.lang.String,java.lang.String)
 meth public static java.lang.String cmdLineArgument(java.lang.String,java.lang.String)
-meth public static java.lang.String getDerbyRoot(org.netbeans.modules.payara.tooling.data.PayaraServer)
 meth public static java.lang.String getDomainConfigFile(java.lang.String,java.lang.String)
 meth public static java.lang.String getDomainConfigPath(java.lang.String)
 meth public static java.lang.String getDomainPath(org.netbeans.modules.payara.tooling.data.PayaraServer)
 meth public static java.lang.String getEmbeddedStaticShellJar(java.lang.String)
+meth public static java.lang.String getH2Root(org.netbeans.modules.payara.tooling.data.PayaraServer)
 meth public static java.lang.String getJavaHelpJar(java.lang.String)
 meth public static java.lang.String getJerseyVersion(java.lang.String)
 meth public static java.lang.String getVerifierJar(java.lang.String)

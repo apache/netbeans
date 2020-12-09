@@ -64,7 +64,8 @@ import org.openide.util.NbBundle;
     "ERR_ConvertToPatternInstanceOf=instanceof <pattern> can be used here",
     "FIX_ConvertToPatternInstanceOf=Use instanceof <pattern>"
 })
-@Hint(displayName="#DN_ConvertToPatternInstanceOf", description="#DESC_ConvertToPatternInstanceOf", category="rules15")
+@Hint(displayName="#DN_ConvertToPatternInstanceOf", description="#DESC_ConvertToPatternInstanceOf", category="rules15",
+        minSourceVersion = "14")
 public class ConvertToPatternInstanceOf {
     
     @TriggerPatterns({

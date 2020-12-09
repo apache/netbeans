@@ -250,7 +250,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
         // java platform updater
         ComboBoxUpdater<Union2<JavaPlatform,String>> compleComboBoxUpdater = new ComboBoxUpdater<Union2<JavaPlatform,String>>(comJavaPlatform, lblJavaPlatform) {
             private String modifiedValue;
-            private String DEFAULT_PLATFORM_VALUE = "@@DEFAU:T@@";
+            private String DEFAULT_PLATFORM_VALUE = "@@DEFAULT@@";
             private ModelOperation<POMModel> operation = new ModelOperation<POMModel>() {
 
             @Override

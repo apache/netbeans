@@ -73,6 +73,8 @@ import org.netbeans.modules.php.editor.parser.astnodes.InstanceOfExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ListVariable;
+import org.netbeans.modules.php.editor.parser.astnodes.MatchArm;
+import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
@@ -104,12 +106,13 @@ import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.SwitchCase;
 import org.netbeans.modules.php.editor.parser.astnodes.SwitchStatement;
-import org.netbeans.modules.php.editor.parser.astnodes.ThrowStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.ThrowExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitConflictResolutionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TryStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.UnpackableArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement;
@@ -407,6 +410,18 @@ public class DefaultVisitor implements Visitor {
     }
 
     @Override
+    public void visit(MatchArm node) {
+        scan(node.getConditions());
+        scan(node.getExpression());
+    }
+
+    @Override
+    public void visit(MatchExpression node) {
+        scan(node.getExpression());
+        scan(node.getMatchArms());
+    }
+
+    @Override
     public void visit(MethodDeclaration node) {
         scan(node.getFunction());
     }
@@ -503,7 +518,7 @@ public class DefaultVisitor implements Visitor {
     }
 
     @Override
-    public void visit(ThrowStatement node) {
+    public void visit(ThrowExpression node) {
         scan(node.getExpression());
     }
 
@@ -517,6 +532,11 @@ public class DefaultVisitor implements Visitor {
     @Override
     public void visit(UnaryOperation node) {
         scan(node.getExpression());
+    }
+
+    @Override
+    public void visit(UnionType node) {
+        scan(node.getTypes());
     }
 
     @Override

@@ -1,0 +1,5 @@
+Code completion result for source line:
+$result = match|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    match                                      null

@@ -1722,7 +1722,7 @@
                                             <Scalar start='779' end='780' type='INT' value='0'/>
                                         </Index>
                                     </ArrayDimension>
-                                    <MethodInvocation start='758' end='778'>
+                                    <MethodInvocation start='758' end='778' isNullsafe='false'>
                                         <Variable start='758' end='766' isDollared='true'>
                                             <Identifier start='759' end='766' name='myClass'/>
                                         </Variable>

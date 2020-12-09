@@ -1,0 +1,4 @@
+Code completion result for source line:
+My|Trait
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      MyTrait                         [PUBLIC]   Test

@@ -170,7 +170,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                 String colName, colNull, colSize, colDec;
                 String strAutoIncrement = null;
                 if (rs != null) {
-                    Map rset = new HashMap();
+                    Map<Integer, String> rset = new HashMap<>();
                     while (rs.next()) {
                         if (bridge != null) {
                             rset = bridge.getDriverSpecification().getRow();

@@ -24,11 +24,13 @@
 Apache NetBeans is an open source development environment, tooling platform, and application framework.
 
 ### Build status
+   * GitHub actions
+     * [![Apache Netbeans Continuous Integration](https://github.com/apache/netbeans/workflows/Apache%20Netbeans%20Continuous%20Integration/badge.svg)](https://github.com/apache/netbeans/actions)
    * TravisCI:
      * [![Build Status](https://travis-ci.org/apache/netbeans.svg?branch=master)](https://travis-ci.org/apache/netbeans)
    * Apache Jenkins: 
-     * Linux: [![Build Status](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-linux/badge/icon)](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-linux/)
-     * Windows: [![Build Status](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-windows/badge/icon)](https://builds.apache.org/view/M-R/view/NetBeans/job/netbeans-windows/)
+     * Linux: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/)
+     * Windows: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows)
 
 ### Requirements
 
@@ -82,6 +84,15 @@ $ ant -Ddo.build.windows.launchers=true
 ```
 sudo apt install make mingw-w64
 ```
+
+#### Generating Javadoc 
+
+Build javadoc:
+```
+$ ant build javadoc
+```
+
+**Note** Run `javadoc-nb` task in Netbeans to run the javadoc build and display it in a web browser.
 
 ### Running NetBeans
 

@@ -1,0 +1,4 @@
+Code completion result for source line:
+"match test" => matchT|est(),
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     matchTest()                     [PUBLIC]   matchExpressionSimple05.php

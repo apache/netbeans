@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.php.latte.indent;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import javax.swing.text.Document;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.fail;
@@ -33,9 +35,11 @@ import org.netbeans.modules.html.editor.indent.HtmlIndentTaskFactory;
 import org.netbeans.modules.php.latte.LatteTestBase;
 import org.netbeans.modules.php.latte.lexer.LatteTopTokenId;
 import org.netbeans.modules.web.indent.api.support.AbstractIndenter;
+import org.netbeans.spi.queries.FileEncodingQueryImplementation;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
+import org.openide.util.test.MockLookup;
 
 /**
  *
@@ -55,6 +59,12 @@ public abstract class LatteIndenterTestBase extends LatteTestBase {
         MockMimeLookup.setInstances(MimePath.parse("text/x-latte"), factory, LatteTopTokenId.language());
         HtmlIndentTaskFactory htmlReformatFactory = new HtmlIndentTaskFactory();
         MockMimeLookup.setInstances(MimePath.parse("text/html"), htmlReformatFactory, new HtmlKit("text/x-latte"), HTMLTokenId.language());
+        MockLookup.setInstances(new FileEncodingQueryImplementation() {
+            @Override
+            public Charset getEncoding(FileObject file) {
+                return StandardCharsets.UTF_8;
+            }
+        });
     }
 
     @Override

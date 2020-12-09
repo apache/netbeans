@@ -18,6 +18,11 @@
  */
 package org.netbeans.modules.php.editor.verification;
 
+import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.openide.filesystems.FileObject;
 
@@ -31,6 +36,13 @@ public class HintsTest extends PHPHintsTestBase {
         super(testName);
     }
 
+    @Override
+    protected File getDataFile(String relFilePath) {
+        // Overriden because CslTestBase loads file from different location.
+        File inputFile = new File(getDataDir(), relFilePath);
+        return inputFile;
+    }
+
     public void testModifiersCheckHint() throws Exception {
         checkHints(new ModifiersCheckHintError(), "testModifiersCheckHint.php");
     }
@@ -41,54 +53,6 @@ public class HintsTest extends PHPHintsTestBase {
 
     public void testAbstractClassInstantiationHint_02() throws Exception {
         checkHints(new AbstractClassInstantiationHintError(), "testAbstractClassInstantiationHint_02.php");
-    }
-
-    public void testImplementAbstractMethodsHint() throws Exception {
-        checkHints(new ImplementAbstractMethodsHintError(), "testImplementAbstractMethodsHint.php");
-    }
-
-    public void testIssue257898() throws Exception {
-        checkHints(new ImplementAbstractMethodsHintError(), "testIssue257898.php");
-    }
-
-    public void testImplementAbstractMethodsHintFix_01() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintError(), "testImplementAbstractMethodsHintFix.php", "Extendin^gClass1", "Implement");
-    }
-
-    public void testImplementAbstractMethodsHintFix_02() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintError(), "testImplementAbstractMethodsHintFix.php", "Extendin^gClass2", "Implement");
-    }
-
-    public void testImplementAbstractMethodsHintFix_03() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintError(), "testImplementAbstractMethodsHintFix.php", "Extendin^gClass3", "Implement");
-    }
-
-    public void testImplementAbstractMethodsHintFix_04() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintError(), "testImplementAbstractMethodsHintFix.php", "Extendin^gClass4", "Implement");
-    }
-
-    public void testImplementAbstractMethodsHintFix_05() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintError(), "testImplementAbstractMethodsHintFix.php", "Extendin^gClass5", "Implement");
-    }
-
-    public void testImplementAbstractMethodsHintFix_06() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintError(), "testImplementAbstractMethodsHintFix.php", "Implementi^ngClass", "Implement");
-    }
-
-    public void testImplementAbstractMethodsHintFix_07() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintError(), "testImplementAbstractMethodsHintFix.php", "Extendin^gClass1", "Declare");
-    }
-
-    public void testImplementAbstractMethodsHintFix_08() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintError(), "testImplementAbstractMethodsHintFix.php", "Implementi^ngClass", "Declare");
-    }
-
-    public void testImplementAbstractMethodsHintFix02_01() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintError(), "testImplementAbstractMethodsHintFix02.php", "$a = new cl^ass implements Iface {", "Implement");
-    }
-
-    public void testImplementAbstractMethodsHintFix02_02() throws Exception {
-        checkHints(new ImplementAbstractMethodsHintError(), "testImplementAbstractMethodsHintFix02.php");
     }
 
     public void testMethodRedeclarationHint() throws Exception {
@@ -149,6 +113,8 @@ public class HintsTest extends PHPHintsTestBase {
     }
 
     public void testIntroduceSuggestion_01() throws Exception {
+        // Needs to replace directory separators in expected result.
+        fixContent(new File(getDataDir(), getTestDirectory() + "testIntroduceSuggestion.php.testIntroduceSuggestion_01.hints"));
         checkHints(new IntroduceSuggestion(), "testIntroduceSuggestion.php", "new MyClass();^");
     }
 
@@ -174,6 +140,18 @@ public class HintsTest extends PHPHintsTestBase {
 
     public void testIntroduceSuggestion_07() throws Exception {
         checkHints(new IntroduceSuggestion(), "testIntroduceSuggestion.php", "new class {};^");
+    }
+
+    public void testIntroduceSuggestionSpecialTypes_01() throws Exception {
+        checkHints(new IntroduceSuggestion(), "testIntroduceSuggestionSpecialTypes.php", "        return new static;^");
+    }
+
+    public void testIntroduceSuggestionSpecialTypes_02() throws Exception {
+        checkHints(new IntroduceSuggestion(), "testIntroduceSuggestionSpecialTypes.php", "        return new self;^");
+    }
+
+    public void testIntroduceSuggestionSpecialTypes_03() throws Exception {
+        checkHints(new IntroduceSuggestion(), "testIntroduceSuggestionSpecialTypes.php", "        return new parent;^");
     }
 
     // #257264
@@ -396,44 +374,8 @@ public class HintsTest extends PHPHintsTestBase {
         checkHints(new ParentConstructorCallHint(), "testIssue234983.php");
     }
 
-    public void testInitializeFieldSuggestion_01() throws Exception {
-        checkHints(new InitializeFieldSuggestion(), "testInitializeFieldSuggestion_01.php", "function __construct(\\Bar\\Baz $f^oo) {");
-    }
-
-    public void testInitializeFieldSuggestion_02() throws Exception {
-        checkHints(new InitializeFieldSuggestion(), "testInitializeFieldSuggestion_02.php", "function __construct(\\Bar\\Baz $f^oo) {");
-    }
-
-    public void testInitializeFieldSuggestion_03() throws Exception {
-        checkHints(new InitializeFieldSuggestion(), "testInitializeFieldSuggestion_03.php", "function __construct(\\Bar\\Baz $f^oo) {");
-    }
-
-    public void testInitializeFieldSuggestion_04() throws Exception {
-        checkHints(new InitializeFieldSuggestion(), "testInitializeFieldSuggestion_04.php", "function __construct(\\Bar\\Baz $f^oo) {");
-    }
-
-    public void testInitializeFieldSuggestion_05() throws Exception {
-        checkHints(new InitializeFieldSuggestion(), "testInitializeFieldSuggestion_05.php", "    function __construct(\\Bar\\Baz $^foo) {");
-    }
-
-    public void testInitializeFieldSuggestion_06() throws Exception {
-        checkHints(new InitializeFieldSuggestion(), "testInitializeFieldSuggestion_06.php", "    function __construct(\\Bar\\Baz $^foo) {");
-    }
-
-    public void testInitializeFieldSuggestion_07() throws Exception {
-        checkHints(new InitializeFieldSuggestion(), "testInitializeFieldSuggestion_07.php", "    function __construct(\\Bar\\Baz $^foo) {");
-    }
-
-    public void testInitializeFieldSuggestion_08() throws Exception {
-        checkHints(new InitializeFieldSuggestion(), "testInitializeFieldSuggestion_08.php", "    function __construct(\\Bar\\Baz $^foo) {");
-    }
-
     public void testTooManyReturnStatements() throws Exception {
         checkHints(new TooManyReturnStatementsHint(), "testTooManyReturnStatements.php");
-    }
-
-    public void testIssue229522() throws Exception {
-        checkHints(new InitializeFieldSuggestion(), "testIssue229522.php", "function __construct($par^am) {");
     }
 
     public void testIssue237726_01() throws Exception {
@@ -458,14 +400,6 @@ public class HintsTest extends PHPHintsTestBase {
 
     public void testIssue239277_02() throws Exception {
         checkHints(new IntroduceSuggestion(), "testIssue239277.php", "Bat::$bar^z;");
-    }
-
-    public void testIssue239640() throws Exception {
-        checkHints(new InitializeFieldSuggestion(), "testIssue239640.php", "public function __construct(array $get = array(), array $post = array()^);");
-    }
-
-    public void testIssue239640_01() throws Exception {
-        checkHints(new InitializeFieldSuggestion(), "testIssue239640.php", "public function __construct(array $get = array(), array $post2 = array()^);");
     }
 
     public void testIssue241824_01() throws Exception {
@@ -524,14 +458,6 @@ public class HintsTest extends PHPHintsTestBase {
         checkHints(new ArraySyntaxSuggestionStub(PhpVersion.PHP_53), "testArraySyntaxSuggestion.php", ")^; //huhu");
     }
 
-    public void testIssue248213() throws Exception {
-        checkHints(new InitializeFieldSuggestion(), "testIssue248213.php", "function __construct(&...$f^oo) {");
-    }
-
-    public void testIssue249306() throws Exception {
-        checkHints(new InitializeFieldSuggestion(), "testIssue249306.php", "function __construct(...$f^oo) {");
-    }
-
     public void testIssue259026_01() throws Exception {
         checkHints(new EmptyStatementHint(), "testIssue259026_01.php");
     }
@@ -550,46 +476,6 @@ public class HintsTest extends PHPHintsTestBase {
 
     public void testIssue259026Fix_03() throws Exception {
         applyHint(new EmptyStatementHint(), "testIssue259026_03.php", "$test1 = 1;;^", "Empty Statement");
-    }
-
-    public void testIssue262838Fix01a() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_70), "testIssue262838Fix01.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue262838Fix01b() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_55), "testIssue262838Fix01.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue262838Fix02a() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_70), "testIssue262838Fix02.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue262838Fix02b() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_55), "testIssue262838Fix02.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue262838Fix03a() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_70), "testIssue262838Fix03.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue262838Fix03b() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_55), "testIssue262838Fix03.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue267563Fix01a() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_70), "testIssue267563Fix01.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue267563Fix01b() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_55), "testIssue267563Fix01.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue267563Fix02a() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_70), "testIssue267563Fix02.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue267563Fix02b() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_55), "testIssue267563Fix02.php", "class Fo^o implements FooInterface", "Implement");
     }
 
     public void testIssue268557() throws Exception {
@@ -614,38 +500,6 @@ public class HintsTest extends PHPHintsTestBase {
 
     public void testVoidReturnTypeHint_02() throws Exception {
         checkHints(new ReturnTypeHintErrorStub(PhpVersion.PHP_71), "testVoidReturnTypeHint.php");
-    }
-
-    public void testIssue270237Fix01a() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_71), "testIssue270237Fix01.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue270237Fix01b() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_56), "testIssue270237Fix01.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue270237Fix02a() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_71), "testIssue270237Fix02.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue270237Fix02b() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_56), "testIssue270237Fix02.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue270237Fix03a() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_71), "testIssue270237Fix03.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue270237Fix03b() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_56), "testIssue270237Fix03.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue270237Fix04a() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_71), "testIssue270237Fix04.php", "class Fo^o implements FooInterface", "Implement");
-    }
-
-    public void testIssue270237Fix04b() throws Exception {
-        applyHint(new ImplementAbstractMethodsHintErrorStub(PhpVersion.PHP_56), "testIssue270237Fix04.php", "class Fo^o implements FooInterface", "Implement");
     }
 
     public void testDeclareStrictTypes_01a() throws Exception {
@@ -696,30 +550,6 @@ public class HintsTest extends PHPHintsTestBase {
         applyHint(new DeclareStrictTypesSuggestionStub(PhpVersion.PHP_71), "testDeclareStrictTypesSuggestion_03.php", "<?p^hp", "Add declare(strict_types=1)");
     }
 
-    public void testIssue270368_01() throws Exception {
-        checkHints(new InitializeFieldSuggestion(), "testIssue270368_01.php", "function __construct(?string $tes^t) {");
-    }
-
-    public void testIssue270368_02() throws Exception {
-        checkHints(new InitializeFieldSuggestion(), "testIssue270368_02.php", "function __construct(?\\Foo\\Bar $^test) {");
-    }
-
-    public void testIssue270368Fix_01() throws Exception {
-        applyHint(new InitializeFieldSuggestion(), "testIssue270368_01.php", "function __construct(?string $tes^t) {", "Initialize Field");
-    }
-
-    public void testIssue270368Fix_02() throws Exception {
-        applyHint(new InitializeFieldSuggestion(), "testIssue270368_02.php", "function __construct(?\\Foo\\Bar $^test) {", "Initialize Field");
-    }
-
-    public void testIssue270368Fix_03() throws Exception {
-        applyHint(new InitializeFieldSuggestion(), "testIssue270368_03.php", "function __construct($^test) {", "Initialize Field");
-    }
-
-    public void testIssue270368Fix_04() throws Exception {
-        applyHint(new InitializeFieldSuggestion(), "testIssue270368_04.php", "function __construct(\\Foo\\Bar $^test) {", "Initialize Field");
-    }
-
     public void testFieldRedeclarationTypedProperties20Hint_01() throws Exception {
         // PHP 7.4
         checkHints(new FieldRedeclarationHintError(), "testFieldRedeclarationTypedProperties20Hint_01.php");
@@ -730,24 +560,15 @@ public class HintsTest extends PHPHintsTestBase {
         checkHints(new FieldRedeclarationHintError(), "testFieldRedeclarationTypedProperties20Hint_02.php");
     }
 
-    //~ Inner classes
-    private static final class ImplementAbstractMethodsHintErrorStub extends ImplementAbstractMethodsHintError {
-
-        private final PhpVersion phpVersion;
-
-
-        ImplementAbstractMethodsHintErrorStub(PhpVersion phpVersion) {
-            assert phpVersion != null;
-            this.phpVersion = phpVersion;
-        }
-
-        @Override
-        protected PhpVersion getPhpVersion(FileObject file) {
-            return phpVersion;
-        }
-
+    private void fixContent(File file) throws Exception {
+        Path path = file.toPath();
+        Charset charset = StandardCharsets.UTF_8;
+        String content = new String(Files.readAllBytes(path), charset);
+        content = content.replace("%SEP%", File.separator);
+        Files.write(path, content.getBytes(charset));
     }
 
+    //~ Inner classes
     private static final class ArraySyntaxSuggestionStub extends ArraySyntaxSuggestion {
 
         private final PhpVersion phpVersion;

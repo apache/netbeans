@@ -387,7 +387,7 @@ public class ConvertTextBlockToStringTest {
                 .sourceLevel(SourceVersion.latest().name())
                 .options("--enable-preview")
                 .run(ConvertTextBlockToString.class)
-                .findWarning("3:18-3:21:verifier:" + Bundle.ERR_ConvertTextBlockToString())
+                .findWarning("4:27-4:30:verifier:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
                 .assertCompilable()
                 .assertOutput("package test;\n"
@@ -419,7 +419,7 @@ public class ConvertTextBlockToStringTest {
                 .sourceLevel(SourceVersion.latest().name())
                 .options("--enable-preview")
                 .run(ConvertTextBlockToString.class)
-                .findWarning("3:18-3:21:verifier:" + Bundle.ERR_ConvertTextBlockToString())
+                .findWarning("2:27-2:30:verifier:" + Bundle.ERR_ConvertTextBlockToString())
                 .applyFix()
                 .assertCompilable()
                 .assertOutput("class myClass{\n"

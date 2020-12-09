@@ -60,6 +60,11 @@ public class ElementUtils {
         for (ModuleElement me : allModules) {
             TypeElement found = getTypeElementByBinaryName(task, me, name);
 
+            if (result == found) {
+                // avoid returning null, partial fix for [NETBEANS-4832]
+                continue;
+            }
+
             if (found != null) {
                 if ((ModuleSymbol) me == syms.unnamedModule) {
                     foundInUnamedModule = true;
@@ -67,7 +72,7 @@ public class ElementUtils {
                 if (result != null) {
                     if (foundInUnamedModule == true) {
                         for (TypeElement elem : new TypeElement[]{result, found}) {
-                            if ((elem.getKind() == ElementKind.CLASS || elem.getKind() == ElementKind.INTERFACE)
+                            if ((elem.getKind().isClass() || elem.getKind().isInterface())
                                     && (((ClassSymbol) elem).packge().modle != syms.unnamedModule)) {
                                 return elem;
                             }

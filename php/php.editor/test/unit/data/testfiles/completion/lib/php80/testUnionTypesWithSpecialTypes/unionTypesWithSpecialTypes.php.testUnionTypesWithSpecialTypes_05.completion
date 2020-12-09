@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->childMethodParent(null)->|parentMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     parentMethod()                  [PUBLIC]   \UnionTypes1\UnionParent
+VARIABLE   object parentField              [PROTECTE  \UnionTypes1\UnionParent

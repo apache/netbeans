@@ -469,8 +469,8 @@ public final class ModuleList {
                 continue;
             }
             String name = kid.getName();
-            if (EXCLUDED_DIR_NAMES.contains(name)) {
-                // #61579: known to not be project dirs, so skip to save time.
+            if (name.startsWith(".") || EXCLUDED_DIR_NAMES.contains(name)) { // NOI18N
+                // #61579/[NETBEANS-3898]: known to not be project dirs, so skip to save time.
                 continue;
             }
             String newPathPrefix = (pathPrefix != null) ? pathPrefix + "/" + name : name; // NOI18N

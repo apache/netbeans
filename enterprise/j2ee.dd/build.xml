@@ -685,7 +685,22 @@
             <replacetoken>setVersion("7");</replacetoken>
             <replacevalue>setVersionString("7");</replacevalue>
         </replace>
-
+        <replace file="${s2b_root_app_8}/Application.java" summary="true">
+            <replacetoken>public java.lang.String getVersion() {</replacetoken>
+            <replacevalue>public java.lang.String getVersionString() {</replacevalue>
+        </replace>
+        <replace file="${s2b_root_app_8}/Application.java" summary="true">
+            <replacetoken>public void setVersion(java.lang.String value) {</replacetoken>
+            <replacevalue>public void setVersionString(java.lang.String value) {</replacevalue>
+        </replace>
+        <replace file="${s2b_root_app_8}/Application.java" summary="true">
+            <replacetoken>(getVersion()</replacetoken>
+            <replacevalue>(getVersionString()</replacevalue>
+        </replace>
+        <replace file="${s2b_root_app_8}/Application.java" summary="true">
+            <replacetoken>setVersion("8");</replacetoken>
+            <replacevalue>setVersionString("8");</replacevalue>
+        </replace>
 
         <schema2beans schema="${s2b_res_root}/application-client_1_4.xsd"
         mddFile="${s2b_res_root}/application-client_1_4.mdd"
@@ -731,6 +746,17 @@
         rootDir="src"
         java5="true"/>
         <echo file="${s2b_root_client_7_0}/package-info.java">@org.netbeans.api.annotations.common.SuppressWarnings("NM_SAME_SIMPLE_NAME_AS_INTERFACE") // justification="Generated implementation classes"${line.separator}package org.netbeans.modules.j2ee.dd.impl.client.model_7_0;</echo>
+        <schema2beans schema="${s2b_res_root}/application-client_8.xsd"
+        mddFile="${s2b_res_root}/application-client_8.mdd"
+        package="org.netbeans.modules.j2ee.dd.impl.client.model_8_0"
+        schemaType="xmlschema"
+        useInterfaces="true"
+        validate="true"
+        attrProp="true"
+        removeUnreferencedNodes="true"
+        rootDir="src"
+        java5="true"/>
+        <echo file="${s2b_root_client_8_0}/package-info.java">@org.netbeans.api.annotations.common.SuppressWarnings("NM_SAME_SIMPLE_NAME_AS_INTERFACE") // justification="Generated implementation classes"${line.separator}package org.netbeans.modules.j2ee.dd.impl.client.model_8_0;</echo>
         <replace file="${s2b_root_client_6_0}/ApplicationClient.java" summary="true">
             <replacetoken>public java.lang.String getVersion() {</replacetoken>
             <replacevalue>public java.lang.String getVersionString() {</replacevalue>
@@ -762,6 +788,22 @@
         <replace file="${s2b_root_client_7_0}/ApplicationClient.java" summary="true">
             <replacetoken>setVersion("7");</replacetoken>
             <replacevalue>setVersionString("7");</replacevalue>
+        </replace>
+        <replace file="${s2b_root_client_8_0}/ApplicationClient.java" summary="true">
+            <replacetoken>public java.lang.String getVersion() {</replacetoken>
+            <replacevalue>public java.lang.String getVersionString() {</replacevalue>
+        </replace>
+        <replace file="${s2b_root_client_8_0}/ApplicationClient.java" summary="true">
+            <replacetoken>public void setVersion(java.lang.String value) {</replacetoken>
+            <replacevalue>public void setVersionString(java.lang.String value) {</replacevalue>
+        </replace>
+        <replace file="${s2b_root_client_8_0}/ApplicationClient.java" summary="true">
+            <replacetoken>(getVersion()</replacetoken>
+            <replacevalue>(getVersionString()</replacevalue>
+        </replace>
+        <replace file="${s2b_root_client_8_0}/ApplicationClient.java" summary="true">
+            <replacetoken>setVersion("8");</replacetoken>
+            <replacevalue>setVersionString("8");</replacevalue>
         </replace>
     </target>
 

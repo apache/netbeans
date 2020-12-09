@@ -1006,7 +1006,7 @@
                             </NamespaceName>
                             <Block start='278' end='316' isCurly='true'>
                                 <ReturnStatement start='289' end='310'>
-                                    <FieldAccess start='296' end='309'>
+                                    <FieldAccess start='296' end='309' isNullsafe='false'>
                                         <Variable start='296' end='301' isDollared='true'>
                                             <Identifier start='297' end='301' name='this'/>
                                         </Variable>
@@ -1042,7 +1042,7 @@
                             <Block start='364' end='405' isCurly='true'>
                                 <ExpressionStatement start='375' end='399'>
                                     <Assignment start='375' end='398' operator='EQUAL'>
-                                        <FieldAccess start='375' end='388'>
+                                        <FieldAccess start='375' end='388' isNullsafe='false'>
                                             <Variable start='375' end='380' isDollared='true'>
                                                 <Identifier start='376' end='380' name='this'/>
                                             </Variable>
@@ -1079,7 +1079,7 @@
                 </Assignment>
             </ExpressionStatement>
             <ExpressionStatement start='435' end='548'>
-                <MethodInvocation start='435' end='547'>
+                <MethodInvocation start='435' end='547' isNullsafe='false'>
                     <Variable start='435' end='439' isDollared='true'>
                         <Identifier start='436' end='439' name='app'/>
                     </Variable>
@@ -1145,7 +1145,7 @@
                         </NamespaceName>
                     </FucntionName>
                     <Parameters>
-                        <MethodInvocation start='559' end='576'>
+                        <MethodInvocation start='559' end='576' isNullsafe='false'>
                             <Variable start='559' end='563' isDollared='true'>
                                 <Identifier start='560' end='563' name='app'/>
                             </Variable>
@@ -1252,7 +1252,7 @@
                                         <Block start='897' end='931' isCurly='true'>
                                             <ExpressionStatement start='907' end='925'>
                                                 <Assignment start='907' end='924' operator='EQUAL'>
-                                                    <FieldAccess start='907' end='917'>
+                                                    <FieldAccess start='907' end='917' isNullsafe='false'>
                                                         <Variable start='907' end='912' isDollared='true'>
                                                             <Identifier start='908' end='912' name='this'/>
                                                         </Variable>
@@ -1342,7 +1342,7 @@
                                 <ReturnStatement start='1201' end='1533'>
                                     <ClassInstanceCreation start='1208' end='1532' anonymous='true'>
                                         <Parameters>
-                                            <FieldAccess start='1218' end='1229'>
+                                            <FieldAccess start='1218' end='1229' isNullsafe='false'>
                                                 <Variable start='1218' end='1223' isDollared='true'>
                                                     <Identifier start='1219' end='1223' name='this'/>
                                                 </Variable>
@@ -1391,7 +1391,7 @@
                                                     <Block start='1335' end='1388' isCurly='true'>
                                                         <ExpressionStatement start='1353' end='1374'>
                                                             <Assignment start='1353' end='1373' operator='EQUAL'>
-                                                                <FieldAccess start='1353' end='1365'>
+                                                                <FieldAccess start='1353' end='1365' isNullsafe='false'>
                                                                     <Variable start='1353' end='1358' isDollared='true'>
                                                                         <Identifier start='1354' end='1358' name='this'/>
                                                                     </Variable>
@@ -1418,7 +1418,7 @@
                                                         <ReturnStatement start='1456' end='1508'>
                                                             <InfixExpression start='1463' end='1507' operator='PLUS'>
                                                                 <InfixExpression start='1463' end='1490' operator='PLUS'>
-                                                                    <FieldAccess start='1463' end='1475'>
+                                                                    <FieldAccess start='1463' end='1475' isNullsafe='false'>
                                                                         <Variable start='1463' end='1468' isDollared='true'>
                                                                             <Identifier start='1464' end='1468' name='this'/>
                                                                         </Variable>
@@ -1428,7 +1428,7 @@
                                                                             </Variable>
                                                                         </Field>
                                                                     </FieldAccess>
-                                                                    <FieldAccess start='1478' end='1490'>
+                                                                    <FieldAccess start='1478' end='1490' isNullsafe='false'>
                                                                         <Variable start='1478' end='1483' isDollared='true'>
                                                                             <Identifier start='1479' end='1483' name='this'/>
                                                                         </Variable>
@@ -1439,7 +1439,7 @@
                                                                         </Field>
                                                                     </FieldAccess>
                                                                 </InfixExpression>
-                                                                <MethodInvocation start='1493' end='1507'>
+                                                                <MethodInvocation start='1493' end='1507' isNullsafe='false'>
                                                                     <Variable start='1493' end='1498' isDollared='true'>
                                                                         <Identifier start='1494' end='1498' name='this'/>
                                                                     </Variable>
@@ -1469,8 +1469,8 @@
                 </Block>
             </ClassDeclaration>
             <EchoStatement start='1543' end='1578'>
-                <MethodInvocation start='1548' end='1577'>
-                    <MethodInvocation start='1548' end='1568'>
+                <MethodInvocation start='1548' end='1577' isNullsafe='false'>
+                    <MethodInvocation start='1548' end='1568' isNullsafe='false'>
                         <AnonymousObjectVariable start='1548' end='1559'>
                             <ClassInstanceCreation start='1549' end='1558' anonymous='false'>
                                 <ClassName start='1553' end='1558'>
@@ -1508,7 +1508,7 @@
                 </MethodInvocation>
             </EchoStatement>
             <ExpressionStatement start='1655' end='1773'>
-                <MethodInvocation start='1655' end='1772'>
+                <MethodInvocation start='1655' end='1772' isNullsafe='false'>
                     <AnonymousObjectVariable start='1655' end='1752'>
                         <ClassInstanceCreation start='1656' end='1751' anonymous='true'>
                             <Parameters>

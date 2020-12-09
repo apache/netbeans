@@ -210,15 +210,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.java.editor.lib</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.29</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.modules.java.lexer</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -530,11 +521,6 @@
                         <test/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.java.editor</code-name-base>
-                        <recursive/>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.netbeans.modules.java.editor.base</code-name-base>
                         <compile-dependency/>
                         <test/>
@@ -612,7 +598,7 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.java.editor</code-name-base>
+                        <code-name-base>org.netbeans.modules.java.editor.base</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>

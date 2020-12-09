@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.gsf.codecoverage.api;
 
 import org.openide.filesystems.FileObject;
@@ -26,6 +25,7 @@ import org.openide.filesystems.FileObject;
  * @author Tor Norbye
  */
 public class FileCoverageSummary implements Comparable<FileCoverageSummary> {
+
     private final FileObject file;
     private final String displayName;
     private final int lineCount;
@@ -40,13 +40,15 @@ public class FileCoverageSummary implements Comparable<FileCoverageSummary> {
      * @param file The file we collected data from
      * @param displayName A display name for the file (often the path itself)
      * @param lineCount The total number of lines in the file
-     * @param executedLineCount The total number of lines that were executed (including inferred and partial)
-     * @param inferredCount The lines not recorded but inferred to be executed (such as comments and whitespace
-     *   between executed statements) Return 0 for "unknown/not recorded".
-     * @param partialCount The lines that were partially executed. Return 0 for "unknown/not recorded".
+     * @param executedLineCount The total number of lines that were executed (including inferred and
+     * partial)
+     * @param inferredCount The lines not recorded but inferred to be executed (such as comments and
+     * whitespace between executed statements) Return 0 for "unknown/not recorded".
+     * @param partialCount The lines that were partially executed. Return 0 for "unknown/not
+     * recorded".
      */
     public FileCoverageSummary(FileObject file, String displayName, int lineCount, int executedLineCount,
-            int inferredCount, int partialCount) {
+        int inferredCount, int partialCount) {
         this.file = file;
         this.displayName = displayName;
         this.lineCount = lineCount;
@@ -60,16 +62,19 @@ public class FileCoverageSummary implements Comparable<FileCoverageSummary> {
             //return 100.0f;
             return 0f;
         } else {
-            return (100.0f*executedLineCount)/lineCount;
+            return (100.0f * executedLineCount) / lineCount;
         }
     }
 
+    @Override
     public int compareTo(FileCoverageSummary other) {
         float cov = getCoveragePercentage();
         float otherCov = other.getCoveragePercentage();
         if (cov == otherCov) {
             return 0;
-        } else return cov < otherCov ? -1 : 1;
+        } else {
+            return cov < otherCov ? -1 : 1;
+        }
     }
 
     public FileObject getFile() {

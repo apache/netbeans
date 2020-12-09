@@ -38,7 +38,9 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -178,7 +180,9 @@ import org.openide.filesystems.XMLFileSystem;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Pair;
+import org.openide.util.lookup.Lookups;
 import org.openide.util.test.MockLookup;
+import static org.openide.util.test.MockLookup.setLookup;
 
 /**
  * @author Tor Norbye
@@ -190,7 +194,7 @@ public abstract class CslTestBase extends NbTestCase {
     }
 
     private Map<String, ClassPath> classPathsForTest;
-    private static Object[] extraLookupContent = null;
+    private Object[] extraLookupContent = null;
 
     @Override
     protected void setUp() throws Exception {
@@ -209,7 +213,10 @@ public abstract class CslTestBase extends NbTestCase {
 
         List<URL> layers = new LinkedList<URL>();
         String[] additionalLayers = new String[]{"META-INF/generated-layer.xml"};
-        Object[] additionalLookupContent = new Object[0];
+        Object[] additionalLookupContent = createExtraMockLookupContent();
+        if (additionalLookupContent == null) {
+            additionalLookupContent = new Object[0];
+        }
 
         for (int cntr = 0; cntr < additionalLayers.length; cntr++) {
             boolean found = false;
@@ -229,13 +236,19 @@ public abstract class CslTestBase extends NbTestCase {
 
         Repository repository = new Repository(system);
         // This has to be before touching ClassPath cla
+        
+        extraLookupContent = new Object[additionalLookupContent.length + 2];
+        int at = 0;
+        System.arraycopy(additionalLookupContent, 0, extraLookupContent, at, additionalLookupContent.length);
+        at += additionalLookupContent.length;
+        // act as a fallback: if no other Repository is found.
+        extraLookupContent[at++] = new TestClassPathProvider();
+        extraLookupContent[at++] = new TestPathRecognizer();
 
-        extraLookupContent = new Object[additionalLookupContent.length + 1];
-
-        System.arraycopy(additionalLookupContent, 0, extraLookupContent, 1, additionalLookupContent.length);
-
-        extraLookupContent[0] = repository;
-        MockLookup.setInstances(extraLookupContent, new TestClassPathProvider(), new TestPathRecognizer());
+        // copied from MockLookup; but add 'repository' last, after META-INFs, so any potential 'system' definition takes precedence over 
+        // the clumsy one here.
+        ClassLoader l = MockLookup.class.getClassLoader();
+        setLookup(Lookups.fixed(extraLookupContent), Lookups.metaInfServices(l), Lookups.singleton(l), Lookups.singleton(repository));
 
         classPathsForTest = createClassPathsForTest();
         if (classPathsForTest != null) {
@@ -255,6 +268,15 @@ public abstract class CslTestBase extends NbTestCase {
             w.waitForScanToFinish();
             logger.removeHandler(w);
         }
+    }
+    
+    /**
+     * Injects specific services into MockLookup, in preference to the standard ones.
+     * @return instances to inject into the Lookup; {@code null} if none.
+     * @since 2.65
+     */
+    protected Object[] createExtraMockLookupContent() {
+        return new Object[0];
     }
 
     @Override
@@ -421,7 +443,7 @@ public abstract class CslTestBase extends NbTestCase {
                     }
 
                     InputStream is = fo.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 
                     while (true) {
                         String line = reader.readLine();
@@ -541,12 +563,9 @@ public abstract class CslTestBase extends NbTestCase {
     }
 
     public static String readFile(File f) throws IOException {
-        FileReader r = new FileReader(f);
-        int fileLen = (int)f.length();
-        CharBuffer cb = CharBuffer.allocate(fileLen);
-        r.read(cb);
-        cb.rewind();
-        return cb.toString();
+        Charset charset = StandardCharsets.UTF_8;
+        String content = new String(Files.readAllBytes(f.toPath()), charset);
+        return content;
     }
 
     protected File getDataSourceDir() {

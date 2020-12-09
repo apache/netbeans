@@ -134,7 +134,7 @@ public class ModuleOptions extends OptionProcessor {
         "MSG_ListHeader_Version=Version",
         "MSG_ListHeader_State=State"
     })
-    private void listAllModules(PrintStream out) {
+    private void listAllModules(PrintStream out) throws IOException {
         List<UpdateUnit> modules = UpdateManager.getDefault().getUpdateUnits();
         
         PrintTable table = new PrintTable(
@@ -144,7 +144,9 @@ public class ModuleOptions extends OptionProcessor {
         for (UpdateUnit uu : modules) {
             table.addRow(Status.toArray(uu));
         }
-        table.write(out);
+        StringBuilder sb = new StringBuilder();
+        table.write(sb);
+        out.print(sb.toString());
         out.flush();
     }
 
@@ -156,22 +158,21 @@ public class ModuleOptions extends OptionProcessor {
     @Override
     protected void process(Env env, Map<Option, String[]> optionValues) throws CommandException {
         try {
-            if (optionValues.containsKey(extraUC)) {
-                extraUC(env, optionValues.get(extraUC));
-            }
-            if (optionValues.containsKey(refresh)) {
-                refresh(env);
-            }
-
-            if (optionValues.containsKey(list)) {
-                listAllModules(env.getOutputStream());
-            }
-
-            if (optionValues.containsKey(install)) {
-                install(env, optionValues.get(install));
-            }
-
             try {
+                if (optionValues.containsKey(extraUC)) {
+                    extraUC(env, optionValues.get(extraUC));
+                }
+                if (optionValues.containsKey(refresh)) {
+                    refresh(env);
+                }
+
+                if (optionValues.containsKey(list)) {
+                    listAllModules(env.getOutputStream());
+                }
+
+                if (optionValues.containsKey(install)) {
+                    install(env, optionValues.get(install));
+                }
 
                 if (optionValues.containsKey(disable)) {
                     changeModuleState(optionValues.get(disable), false);
@@ -482,14 +483,22 @@ public class ModuleOptions extends OptionProcessor {
         public CLIProgressUIWorker(Env env) {
             this.env = env;
         }
+
         @Override
         public void processProgressEvent(ProgressEvent event) {
-            env.getOutputStream().println(event.getMessage());
+            printEvent(event);
         }
+
         @Override
         public void processSelectedProgressEvent(ProgressEvent event) {
-            env.getOutputStream().println(event.getMessage());
+            printEvent(event);
+        }
+
+        private void printEvent(ProgressEvent event) {
+            final String msg = event.getMessage();
+            if (msg != null && msg.length() > 0) {
+                env.getOutputStream().println(msg);
+            }
         }
     }
-    
 }

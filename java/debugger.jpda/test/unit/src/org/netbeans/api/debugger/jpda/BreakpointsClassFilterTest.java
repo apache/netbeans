@@ -79,8 +79,8 @@ public class BreakpointsClassFilterTest extends NbTestCase {
         FieldBreakpoint fb2 = FieldBreakpoint.create(APP_CLASS_NAME, "field2", FieldBreakpoint.TYPE_ACCESS);
         fb2.setGroupName(FILTER_GROUP_NAME);
         
-        ExceptionBreakpoint eb1 = ExceptionBreakpoint.create(NegativeArraySizeException.class.getName(), ExceptionBreakpoint.TYPE_EXCEPTION_CATCHED_UNCATCHED);
-        ExceptionBreakpoint eb2 = ExceptionBreakpoint.create(ArithmeticException.class.getName(), ExceptionBreakpoint.TYPE_EXCEPTION_CATCHED_UNCATCHED);
+        ExceptionBreakpoint eb1 = ExceptionBreakpoint.create(NegativeArraySizeException.class.getName(), ExceptionBreakpoint.TYPE_EXCEPTION_CAUGHT_UNCAUGHT);
+        ExceptionBreakpoint eb2 = ExceptionBreakpoint.create(ArithmeticException.class.getName(), ExceptionBreakpoint.TYPE_EXCEPTION_CAUGHT_UNCAUGHT);
         eb2.setGroupName(FILTER_GROUP_NAME);
         
         MethodBreakpoint mb2 = MethodBreakpoint.create(APP_CLASS_NAME, "test");

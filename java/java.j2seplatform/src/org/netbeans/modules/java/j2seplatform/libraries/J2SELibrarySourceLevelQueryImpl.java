@@ -137,7 +137,7 @@ public class J2SELibrarySourceLevelQueryImpl implements SourceLevelQueryImplemen
         }
     }
     
-    private FileObject getClassFile (List cpRoots) {
+    private FileObject getClassFile (List<URL> cpRoots) {
         for (Iterator<URL> it = cpRoots.iterator(); it.hasNext();) {
             FileObject root = URLMapper.findFileObject(it.next());
             if (root == null) {

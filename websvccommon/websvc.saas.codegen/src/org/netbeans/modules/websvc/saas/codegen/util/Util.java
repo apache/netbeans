@@ -186,7 +186,7 @@ public class Util {
      *  Recursively finds a JLabel that has labelText in comp
      */
     public static JLabel findLabel(JComponent comp, String labelText) {
-        Vector allComponents = new Vector();
+        Vector<Component> allComponents = new Vector<>();
         getAllComponents(comp.getComponents(), allComponents);
         Iterator<Component> iterator = allComponents.iterator();
         while (iterator.hasNext()) {
@@ -457,7 +457,7 @@ public class Util {
         try {
             return loader.loadClass(raw);
         } catch (ClassNotFoundException ex) {
-            Logger.global.log(Level.INFO, "", ex);
+            Logger.getGlobal().log(Level.INFO, "", ex);
             return null;
         }
     }

@@ -22,6 +22,7 @@ import com.sun.source.util.TreePath;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import javax.lang.model.SourceVersion;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
@@ -47,9 +48,16 @@ public class DifferentCaseKindsFixTest extends ErrorHintsTestBase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        sourceLevel = "13";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
-        EXTRA_OPTIONS.add("--enable-preview");
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip test
+            sourceLevel = "13";
+            EXTRA_OPTIONS.add("--enable-preview");
+            return;
+        }
+        sourceLevel = "14";
     }
 
     @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)

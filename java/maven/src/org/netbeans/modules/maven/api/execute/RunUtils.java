@@ -20,10 +20,11 @@
 package org.netbeans.modules.maven.api.execute;
 
 import java.awt.Cursor;
+import java.awt.EventQueue;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.util.List;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.java.source.BuildArtifactMapper;
 import org.netbeans.api.project.Project;
@@ -32,6 +33,7 @@ import org.netbeans.modules.maven.execute.BeanRunConfig;
 import org.netbeans.modules.maven.execute.MavenCommandLineExecutor;
 import org.netbeans.spi.project.AuxiliaryProperties;
 import org.openide.execution.ExecutorTask;
+import org.openide.util.NbBundle;
 import org.openide.windows.WindowManager;
 
 /**
@@ -52,7 +54,7 @@ public final class RunUtils {
      * @since 2.18
      */
     public static @CheckForNull ExecutorTask run(RunConfig config) {
-        SwingUtilities.invokeLater(new Runnable() { //#233275
+        invokeLaterWithUI(new Runnable() { //#233275
             @Override
             public void run() {
                 JFrame frm = (JFrame) WindowManager.getDefault().getMainWindow();
@@ -62,27 +64,27 @@ public final class RunUtils {
             }
         });
         try {
-        for (PrerequisitesChecker elem : config.getProject().getLookup().lookupAll(PrerequisitesChecker.class)) {
-            if (!elem.checkRunConfig(config)) {
-                return null;
-            }
-            if (config.getPreExecution() != null) {
-                if (!elem.checkRunConfig(config.getPreExecution())) {
+            for (PrerequisitesChecker elem : config.getProject().getLookup().lookupAll(PrerequisitesChecker.class)) {
+                if (!elem.checkRunConfig(config)) {
                     return null;
                 }
+                if (config.getPreExecution() != null) {
+                    if (!elem.checkRunConfig(config.getPreExecution())) {
+                        return null;
+                    }
+                }
             }
-        }
-        return executeMaven(config);
+            return executeMaven(config);
         } finally {
-            SwingUtilities.invokeLater(new Runnable() { //#233275
-            @Override
-            public void run() {
-                JFrame frm = (JFrame) WindowManager.getDefault().getMainWindow();
-                frm.getGlassPane().setVisible(false);
-                frm.getGlassPane().setCursor(null);
-                frm.setCursor(null);
-            }
-        });
+            invokeLaterWithUI(new Runnable() { //#233275
+                @Override
+                public void run() {
+                    JFrame frm = (JFrame) WindowManager.getDefault().getMainWindow();
+                    frm.getGlassPane().setVisible(false);
+                    frm.getGlassPane().setCursor(null);
+                    frm.setCursor(null);
+                }
+            });
         }
     }
     
@@ -118,7 +120,11 @@ public final class RunUtils {
         return new BeanRunConfig(original);
     }
 
-    
+    @NbBundle.Messages({
+        "#compile on save: all, none",
+        "#NOI18N",
+        "DEFAULT_COMPILE_ON_SAVE=all"
+    })
     public static boolean isCompileOnSaveEnabled(Project prj) {
         AuxiliaryProperties auxprops = prj.getLookup().lookup(AuxiliaryProperties.class);
         if (auxprops == null) {
@@ -127,9 +133,9 @@ public final class RunUtils {
         }
         String cos = auxprops.get(Constants.HINT_COMPILE_ON_SAVE, true);
         if (cos == null) {
-            cos = "all";
+            cos = Bundle.DEFAULT_COMPILE_ON_SAVE();
         }
-        return !"none".equalsIgnoreCase(cos) && BuildArtifactMapper.isCompileOnSaveSupported();
+        return !"none".equalsIgnoreCase(cos) && BuildArtifactMapper.isCompileOnSaveSupported(); // NOI18N
     }
     
     public static boolean isCompileOnSaveEnabled(RunConfig config) {
@@ -218,4 +224,10 @@ public final class RunUtils {
         return false;
     }
 
+    private static void invokeLaterWithUI(Runnable runnable) {
+        if (GraphicsEnvironment.isHeadless()) {
+            return;
+        }
+        EventQueue.invokeLater(runnable);
+    }
 }

@@ -33,6 +33,22 @@
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="unpack200">
+            <api name="general"/>
+            <summary>Allow alternative unpack200 implementation</summary>
+            <version major="1" minor="65"/>
+            <date day="23" month="8" year="2020"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" semantic="compatible" source="compatible"/>
+            <description>
+                <p>
+                    <code>OperationContainer</code> has a new <code>setUnpack200</code>
+                    method. There is also a preference also used by
+                    upgrader - <a href="@TOP@/architecture-summary.html#preferences-unpack200">read more</a>.
+                </p>
+            </description>
+            <class package="org.netbeans.api.autoupdate" name="OperationContainer"/>
+        </change>
         <change id="enable-trusted-update-centers">
             <api name="general"/>
             <summary>KeyStoreProviders can now report which trustlevel they intent to supply</summary>
@@ -151,7 +167,7 @@
                 </p>
                 <p>
                     This ID could be stored somewhere once an user approves the license and
-                    will not be asked for approval again the same license ID.                
+                    will not be asked for approval again the same license ID.
                 </p>
             </description>
             <class package="org.netbeans.api.autoupdate" name="UpdateElement"/>
@@ -170,11 +186,11 @@
                 <p>
                     <code>InstallSupport</code> find out the right directory where a plugin
                     should be installed. After that it checks if an user has privilege to write there.
-                    In the case a lack of write permission, throws 
+                    In the case a lack of write permission, throws
                     {@link org.netbeans.api.autoupdate.OperationException.WRITE_PERMISSION}.
                 </p>
                 <p>
-                    Beside this it allows to write into 
+                    Beside this it allows to write into
                     <code>userdir</code> as a fallback in the case of insufficient privilege.
                 </p>
             </description>
@@ -268,7 +284,7 @@
             <class package="org.netbeans.spi.autoupdate" name="UpdateItem"/>
             <issue number="162673"/>
         </change>
-        
+
         <change id="new-operation-container">
             <api name="general"/>
             <summary>New operation type introduced together with method for create appropriate container</summary>

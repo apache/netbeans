@@ -76,7 +76,7 @@ class TypingCompletion {
         int caretOffset = context.isBackwardDelete() ? context.getOffset() - 1 : context.getOffset();
         if (removedChar == '\"') {
             if ((ts.token().id() == JavaTokenId.STRING_LITERAL && ts.offset() == caretOffset) ||
-                (ts.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL && ts.offset() <= caretOffset - 2)) {
+                (ts.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL && ts.offset() == caretOffset - 2)) {
                 context.getDocument().remove(caretOffset, 1);
             }
         } else if (removedChar == '\'') {

@@ -132,6 +132,10 @@ public interface Visitor {
     //public void endVisit(GlobalStatement globalStatement);
     public void visit(Identifier identifier);
 
+    public void visit(MatchArm matchArm);
+
+    public void visit(MatchExpression matchExpression);
+
     //public void endVisit(Identifier identifier);
     public void visit(NamespaceName namespaceName);
 
@@ -247,7 +251,7 @@ public interface Visitor {
     public void visit(SwitchStatement switchStatement);
 
     //public void endVisit(SwitchStatement switchStatement);
-    public void visit(ThrowStatement throwStatement);
+    public void visit(ThrowExpression throwStatement);
 
     public void visit(TraitDeclaration traitDeclaration);
 
@@ -260,6 +264,8 @@ public interface Visitor {
 
     //public void endVisit(TryStatement tryStatement);
     public void visit(UnaryOperation unaryOperation);
+
+    public void visit(UnionType unionType);
 
     public void visit(UnpackableArrayElement unpackableArrayElement);
 

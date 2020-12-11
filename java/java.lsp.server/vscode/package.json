@@ -141,21 +141,6 @@
 				"category": "Java"
 			},
 			{
-				"command": "java.generate.getters.menu",
-				"title": "Generate all getters",
-				"category": "Java"
-			},
-			{
-				"command": "java.generate.setters.menu",
-				"title": "Generate all setters",
-				"category": "Java"
-			},
-			{
-				"command": "java.generate.getters.setters.menu",
-				"title": "Generate all getters and setters",
-				"category": "Java"
-			},
-			{
 				"command": "graalvm.pause.script",
 				"title": "Pause in Script",
 				"category": "GraalVM"
@@ -178,37 +163,8 @@
 					"command": "graalvm.pause.script",
 					"when": "nbJavaLSReady"
 				}
-			],
-			"editor/context": [
-				{
-                                        "submenu": "java.generate",
-                                        "group": "1_modification"
-				}
-			],
-			"java.generate": [
-				{
-                                        "command": "java.generate.getters.menu",
-					"when": "nbJavaLSReady",
-                                        "group": "1_getters_setters"
-				},
-				{
-                                        "command": "java.generate.setters.menu",
-					"when": "nbJavaLSReady",
-                                        "group": "1_getters_setters"
-				},
-				{
-                                        "command": "java.generate.getters.setters.menu",
-					"when": "nbJavaLSReady",
-                                        "group": "1_getters_setters"
-				}
 			]
-		},
-                "submenus": [
-                    {
-                        "id": "java.generate",
-                        "label": "Generate"
-                    }
-                ]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
@@ -229,7 +185,7 @@
 		"vscode-test": "^1.3.0"
 	},
 	"dependencies": {
-		"vscode-languageclient": "4.4.2",
-		"vscode-debugadapter": "1.33.0"
+		"vscode-languageclient": "6.1.3",
+		"vscode-debugadapter": "1.42.1"
 	}
 }

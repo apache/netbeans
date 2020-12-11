@@ -32,6 +32,8 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.eclipse.lsp4j.CodeActionKind;
+import org.eclipse.lsp4j.CodeActionOptions;
 import org.eclipse.lsp4j.CompletionOptions;
 import org.eclipse.lsp4j.ExecuteCommandOptions;
 import org.eclipse.lsp4j.InitializeParams;
@@ -248,12 +250,16 @@ public final class Server {
                 completionOptions.setResolveProvider(true);
                 completionOptions.setTriggerCharacters(Collections.singletonList("."));
                 capabilities.setCompletionProvider(completionOptions);
-                capabilities.setCodeActionProvider(true);
+                capabilities.setCodeActionProvider(new CodeActionOptions(Arrays.asList(CodeActionKind.QuickFix, CodeActionKind.Source)));
                 capabilities.setDocumentSymbolProvider(true);
                 capabilities.setDefinitionProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
-                capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(Arrays.asList(JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT, GENERATE_GETTERS, GENERATE_SETTERS, GENERATE_GETTERS_SETTERS)));
+                List<String> commands = new ArrayList<>(Arrays.asList(JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT));
+                for (CodeGenerator codeGenerator : CODE_GENERATORS) {
+                    commands.addAll(codeGenerator.getCommands());
+                }
+                capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(commands));
                 capabilities.setWorkspaceSymbolProvider(true);
             }
             return new InitializeResult(capabilities);
@@ -332,12 +338,19 @@ public final class Server {
     
     public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
-    public static final String GENERATE_GETTERS =  "java.generate.getters";
-    public static final String GENERATE_SETTERS =  "java.generate.setters";
-    public static final String GENERATE_GETTERS_SETTERS =  "java.generate.getters.setters";
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";
-    
+
+    static final CodeGenerator[] CODE_GENERATORS = new CodeGenerator[] {
+        new ConstructorGenerator(),
+        new LoggerGenerator(),
+        new GetterSetterGenerator(),
+        new EqualsHashCodeGenerator(),
+        new ToStringGenerator(),
+        new DelegateMethodGenerator(),
+        new ImplementOverrideMethodGenerator()
+    };
+
     static final NbCodeLanguageClient STUB_CLIENT = new NbCodeLanguageClient() {
         private final NbCodeClientCapabilities caps = new NbCodeClientCapabilities();
         
@@ -349,6 +362,18 @@ public final class Server {
         @Override
         public void showStatusBarMessage(ShowStatusMessageParams params) {
             logWarning(params);
+        }
+
+        @Override
+        public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+            logWarning(params);
+            return CompletableFuture.completedFuture(params.getCanPickMany() || params.getItems().isEmpty() ? params.getItems() : Collections.singletonList(params.getItems().get(0)));
+        }
+
+        @Override
+        public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+            logWarning(params);
+            return CompletableFuture.completedFuture(params.getValue());
         }
 
         @Override

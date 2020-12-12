@@ -1,7 +1,0 @@
-ant.importBuild('build.xml') { antTargetName ->
-    'ant-' + antTargetName
-}
-
-tasks.matching { task ->
-    task.name.startsWith('ant-')
-}*.group = 'Ant'

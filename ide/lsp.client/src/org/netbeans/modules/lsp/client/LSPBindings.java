@@ -83,6 +83,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
+import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 
@@ -97,7 +98,6 @@ public class LSPBindings {
     private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
     private static final ChangeSupport cs = new ChangeSupport(LSPBindings.class);
     private static final Map<LSPBindings,Long> lspKeepAlive = new IdentityHashMap<>();
-    private static final ReferenceQueue<LSPBindings> lspReferenceQueue = new ReferenceQueue<>();
     private static final Map<URI, Map<String, WeakReference<LSPBindings>>> project2MimeType2Server = new HashMap<>();
     private static final Map<FileObject, Map<String, LSPBindings>> workspace2Extension2Server = new HashMap<>();
 
@@ -123,23 +123,6 @@ public class LSPBindings {
             Math.max(LSP_KEEP_ALIVE_MINUTES / 2, 1),
             Math.max(LSP_KEEP_ALIVE_MINUTES / 2, 1),
             TimeUnit.MINUTES);
-
-        // If bindings are GCed, shutdown the backing server
-        WORKER.scheduleAtFixedRate(
-            () -> {
-                while(true) {
-                    LSPReference lspRef = (LSPReference) lspReferenceQueue.poll();
-                    if(lspRef != null) {
-                        lspRef.shutdown();
-                    } else {
-                        break;
-                    }
-                }
-            },
-            1,
-            1,
-            TimeUnit.MINUTES
-        );
     }
 
     private final Map<FileObject, Map<BackgroundTask, RequestProcessor.Task>> backgroundTasks = new WeakHashMap<>();
@@ -255,7 +238,8 @@ public class LSPBindings {
                     LanguageServer server = launcher.getRemoteProxy();
                     InitializeResult result = initServer(p, server, dir); //XXX: what if a different root is expected????
                     b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
-                    new LSPReference(b, lspReferenceQueue);
+                    // Register cleanup via LSPReference#run
+                    new LSPReference(b, Utilities.activeReferenceQueue());
                     lci.setBindings(b);
                     LanguageServerProviderAccessor.getINSTANCE().setBindings(desc, b);
                     TextDocumentSyncServerCapabilityHandler.refreshOpenedFilesInServers();
@@ -470,7 +454,12 @@ public class LSPBindings {
 
     }
 
-    private static class LSPReference extends WeakReference<LSPBindings> {
+    /**
+     * The {@code LSPReference} adds cleanup actions to LSP Bindings after the
+     * bindings are GCed. The backing process is shutdown and the process
+     * terminated.
+     */
+    private static class LSPReference extends WeakReference<LSPBindings> implements Runnable {
         private final LanguageServer server;
         private final Process process;
 
@@ -481,7 +470,8 @@ public class LSPBindings {
             this.process = t.process;
         }
 
-        public void shutdown() {
+        @Override
+        public void run() {
             if(! process.isAlive()) {
                 return;
             }

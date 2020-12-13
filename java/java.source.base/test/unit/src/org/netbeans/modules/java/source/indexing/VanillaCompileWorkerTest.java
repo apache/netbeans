@@ -1761,6 +1761,78 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertEquals(expected, file2Fixed);
     }
 
+    public void testSuperCall() throws Exception {
+        Map<String, String> file2Fixed = new HashMap<>();
+        VanillaCompileWorker.fixedListener = (file, cut) -> {
+            try {
+                FileObject source = URLMapper.findFileObject(file.toUri().toURL());
+                file2Fixed.put(FileUtil.getRelativePath(getRoot(), source), cut.toString());
+            } catch (MalformedURLException ex) {
+                throw new IllegalStateException(ex);
+            }
+        };
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java",
+                                                                      "package test;\n" +
+                                                                      "public class Test extends SuperClass implements SuperIntf {\n" +
+                                                                      "    public void test(int p) {\n" +
+                                                                      "        super.test1();\n" +
+                                                                      "        SuperIntf.super.test2();\n" +
+                                                                      "    }\n" +
+                                                                      "}\n" +
+                                                                      "class SuperClass {\n" +
+                                                                      "    public void test1() {\n" +
+                                                                      "    }\n" +
+                                                                      "}\n" +
+                                                                      "interface SuperIntf {\n" +
+                                                                      "    public default void test2() {\n" +
+                                                                      "    }\n" +
+                                                                      "}\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/SuperIntf.sig",
+                                                       "cache/s1/java/15/classes/test/SuperClass.sig",
+                                                       "cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+        Map<String, String> expected = Collections.singletonMap("test/Test.java",
+                "package test;\n" +
+                "\n" +
+                "public class Test extends SuperClass implements SuperIntf {\n" +
+                "    \n" +
+                "    public Test() {\n" +
+                "        super();\n" +
+                "    }\n" +
+                "    \n" +
+                "    public void test(int p) {\n" +
+                "        super.test1();\n" +
+                "        SuperIntf.super.test2();\n" +
+                "    }\n" +
+                "}\n" +
+                "class SuperClass {\n" +
+                "    \n" +
+                "    SuperClass() {\n" +
+                "        super();\n" +
+                "    }\n" +
+                "    \n" +
+                "    public void test1() {\n" +
+                "    }\n" +
+                "}\n" +
+                "interface SuperIntf {\n" +
+                "    \n" +
+                "    public default void test2() {\n" +
+                "    }\n" +
+                "}");
+        assertEquals(expected, file2Fixed);
+    }
+
     public static void noop() {}
 
     @Override

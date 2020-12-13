@@ -680,7 +680,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     //likely a duplicate of another class, don't touch:
                     return null;
                 }
-                prevCurrentClass = csym;
+                currentClass = csym;
                 Type.ClassType ct = (Type.ClassType) csym.type;
                 if (csym == syms.objectType.tsym) {
                     ct.all_interfaces_field = com.sun.tools.javac.util.List.nil();
@@ -848,10 +848,11 @@ final class VanillaCompileWorker extends CompileWorker {
             @Override
             public Void visitMemberSelect(MemberSelectTree node, Void p) {
                 errorFound |= isErroneous(trees.getTypeMirror(getCurrentPath())); //isErroneous - enough?
-                if (node.getExpression().toString().equals("super")) {
+                if (node.getExpression().getKind() == Tree.Kind.IDENTIFIER &&
+                    ((IdentifierTree) node.getExpression()).getName().contentEquals("super")) {
                     TreePath selected = new TreePath(getCurrentPath(), node.getExpression());
-                    if (trees.getElement(selected) != currentClass) {
-                        //TODO: positive tests (tests that we don't remove what should not be removed)
+                    Element selectedEl = trees.getElement(selected);
+                    if (selectedEl != null && !Objects.equals(selectedEl.getEnclosingElement(), currentClass)) {
                         errorFound = true;
                     }
                 }

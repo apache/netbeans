@@ -22,8 +22,10 @@ package org.netbeans.modules.java.source.indexing;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.PackageTree;
@@ -37,16 +39,17 @@ import com.sun.tools.javac.api.BasicJavacTask;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Kinds.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
-import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.SymbolMetadata;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.ForAll;
+import com.sun.tools.javac.code.Type.MethodType;
 import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
@@ -61,10 +64,13 @@ import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCModuleDecl;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.TreeMaker;
 import org.netbeans.lib.nbjavac.services.CancelAbort;
@@ -72,7 +78,6 @@ import org.netbeans.lib.nbjavac.services.CancelService;
 import com.sun.tools.javac.util.FatalError;
 import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Log;
-import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Pair;
 import java.io.File;
 import java.io.IOException;
@@ -94,6 +99,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
@@ -111,7 +117,6 @@ import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.OutputFileManager;
-import org.netbeans.modules.java.source.usages.BinaryAnalyser;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.java.source.usages.ExecutableFilesIndex;
 import org.netbeans.modules.parsing.spi.indexing.Context;
@@ -188,7 +193,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 javaContext.getFQNs(),
                 new CancelService() {
                     public @Override boolean isCanceled() {
-                        return context.isCancelled() || isLowMemory(null);
+                        return context.isCancelled() || isLowMemory(new boolean[] {true});
                     }
                 },
                 fileObjects.values().iterator().next().aptGenerated ? null : APTUtils.get(context.getRoot()),
@@ -234,7 +239,7 @@ final class VanillaCompileWorker extends CompileWorker {
         if (context.isCancelled()) {
             return null;
         }
-        if (isLowMemory(null)) {
+        if (isLowMemory(new boolean[] {true})) {
             fallbackCopyExistingClassFiles(context, javaContext, files);
             return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
         }
@@ -246,7 +251,7 @@ final class VanillaCompileWorker extends CompileWorker {
             if (context.isCancelled()) {
                 return null;
             }
-            if (isLowMemory(null)) {
+            if (isLowMemory(new boolean[] {true})) {
                 fallbackCopyExistingClassFiles(context, javaContext, files);
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             }
@@ -266,7 +271,7 @@ final class VanillaCompileWorker extends CompileWorker {
             if (context.isCancelled()) {
                 return null;
             }
-            if (isLowMemory(null)) {
+            if (isLowMemory(new boolean[] {true})) {
                 fallbackCopyExistingClassFiles(context, javaContext, files);
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             }
@@ -322,7 +327,7 @@ final class VanillaCompileWorker extends CompileWorker {
             if (context.isCancelled()) {
                 return null;
             }
-            if (isLowMemory(null)) {
+            if (isLowMemory(new boolean[] {true})) {
                 fallbackCopyExistingClassFiles(context, javaContext, files);
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             }
@@ -392,7 +397,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 JavaIndex.LOG.log(Level.FINEST, message, isp);
             }
         } catch (CancelAbort ca) {
-            if (isLowMemory(null)) {
+            if (isLowMemory(new boolean[] {true})) {
                 fallbackCopyExistingClassFiles(context, javaContext, files);
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             } else if (JavaIndex.LOG.isLoggable(Level.FINEST)) {
@@ -526,6 +531,7 @@ final class VanillaCompileWorker extends CompileWorker {
         //TODO: should preserve error types!!!
         new TreePathScanner<Void, Void>() {
             private Set<JCNewClass> anonymousClasses = Collections.newSetFromMap(new IdentityHashMap<>());
+            private ClassSymbol currentClass = null;
             private TreeMap<Long, List<Diagnostic<? extends JavaFileObject>>> diags;
 
             @Override
@@ -555,10 +561,16 @@ final class VanillaCompileWorker extends CompileWorker {
                     scan(node.getInitializer(), null);
                     SortedMap<Long, List<Diagnostic<? extends JavaFileObject>>> blockDiags = treeDiags(node.getInitializer());
                     if (errorFound || !blockDiags.isEmpty()) {
+                        JCClassDecl clazz = (JCClassDecl) getCurrentPath().getParentPath().getLeaf();
                         if ((decl.mods.flags & Flags.ENUM) == 0) {
                             decl.init = null;
+                        } else {
+                            Symbol sym = clazz.sym.members().findFirst(clazz.sym.name.table.names.init);
+                            JCNewClass nct = make.NewClass(null, com.sun.tools.javac.util.List.nil(), make.Ident(sym), sym.asType().getParameterTypes().map(this::nullExpression), null);
+                            nct.constructor = sym;
+                            nct.constructorType = sym.type;
+                            decl.init = nct.setType(clazz.type);
                         }
-                        JCClassDecl clazz = (JCClassDecl) getCurrentPath().getParentPath().getLeaf();
                         clazz.defs = clazz.defs.prepend(make.Block(node.getModifiers().getFlags().contains(Modifier.STATIC) ? Flags.STATIC : 0, com.sun.tools.javac.util.List.of(throwTree(blockDiags))));
                         blockDiags.clear();
                     }
@@ -569,6 +581,14 @@ final class VanillaCompileWorker extends CompileWorker {
                 decl.sym.type = decl.type = error2Object(decl.type);
                 clearAnnotations(decl.sym.getMetadata());
                 return null;
+            }
+
+            private JCExpression nullExpression(Type type) {
+                if (type.isPrimitive()) {
+                    return make.Literal(type.getTag(), 0).setType(syms.booleanType);
+                } else {
+                    return make.Literal(TypeTag.BOT, null).setType(syms.botType);
+                }
             }
 
             @Override
@@ -649,6 +669,7 @@ final class VanillaCompileWorker extends CompileWorker {
             @Override
             public Void visitClass(ClassTree node, Void p) {
                 Set<JCNewClass> oldAnonymousClasses = anonymousClasses;
+                ClassSymbol prevCurrentClass = currentClass;
                 boolean prevErrorFound = errorFound;
                 errorFound = false;
                 try {
@@ -659,6 +680,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     //likely a duplicate of another class, don't touch:
                     return null;
                 }
+                prevCurrentClass = csym;
                 Type.ClassType ct = (Type.ClassType) csym.type;
                 if (csym == syms.objectType.tsym) {
                     ct.all_interfaces_field = com.sun.tools.javac.util.List.nil();
@@ -704,7 +726,7 @@ final class VanillaCompileWorker extends CompileWorker {
                         }
                 }.scan(node, null);
                 if (!anonymousClasses.isEmpty()) {
-                    clazz.defs = clazz.defs.prepend(make.Block(0, anonymousClasses.stream().map(nc -> make.Exec(nc)).collect(com.sun.tools.javac.util.List.collector())));
+                    anonymousClasses.forEach(a -> addAnonymousClass(clazz, a));
                 }
                 SortedMap<Long, List<Diagnostic<? extends JavaFileObject>>> classDiags = treeDiags(node);
                 if (errorFound || !classDiags.isEmpty()) {
@@ -713,9 +735,81 @@ final class VanillaCompileWorker extends CompileWorker {
                 }
                 } finally {
                     errorFound = prevErrorFound;
+                    currentClass = prevCurrentClass;
                     anonymousClasses = oldAnonymousClasses;
                 }
                 return null;
+            }
+
+            private JCStatement clearAndWrapAnonymous(JCNewClass nc) {
+                new TreeScanner<Void, Void>() {
+                    @Override
+                    public Void visitClass(ClassTree node, Void p) {
+                        //no nested classes
+                        return null;
+                    }
+                    @Override
+                    public Void visitNewClass(NewClassTree node, Void p) {
+                        if (node.getClassBody() != null) {
+                            addAnonymousClass(nc.def, (JCNewClass) node);
+                        }
+                        return super.visitNewClass(node, p);
+                    }
+                    @Override
+                    public Void visitMethod(MethodTree node, Void p) {
+                        if (!node.getName().contentEquals(ANONYMOUS_CLASSES_METHOD)) {
+                            return super.visitMethod(node, p);
+                        }
+                        return null;
+                    }
+                }.scan(nc.def.defs, null);
+                for (JCTree t : nc.def.defs) {
+                    switch (t.getTag()) {
+                        case METHODDEF:
+                            JCMethodDecl m = (JCMethodDecl) t;
+                            if (!m.name.contentEquals(ANONYMOUS_CLASSES_METHOD)) {
+                                m.body = make.Block(0, com.sun.tools.javac.util.List.of(throwTree(Collections.emptySortedMap())));
+                            }
+                            break;
+                        case VARDEF:
+                            ((JCVariableDecl) t).init = nullExpression(((JCVariableDecl) t).type);
+                            break;
+                    }
+                }
+                nc.type = nc.def.type;
+                MethodSymbol constructor = (MethodSymbol) nc.constructor;
+                ListBuffer<JCExpression> args = new ListBuffer<>();
+                int startIdx = 0;
+                if (nc.getEnclosingExpression() != null) {
+                    startIdx = 1;
+                }
+                if (nc.clazz.type.tsym.isEnum()) {
+                    args.add(nullExpression(syms.stringType));
+                    args.add(nullExpression(syms.intType));
+                }
+                //XXX: should not touch constructor.params, as it can be null - but there is not test for that:
+                com.sun.tools.javac.util.List<Type> paramTypes = constructor.type.getParameterTypes();
+                for (Type paramType : paramTypes.subList(startIdx, paramTypes.size())) {
+                    args.add(nullExpression(paramType));
+                }
+                nc.args = args.toList();
+                return make.Exec(nc);
+            }
+
+            private static final String ANONYMOUS_CLASSES_METHOD = "$$anonymousClasses";
+
+            private void addAnonymousClass(JCClassDecl current, JCNewClass anonymous) {
+                Optional<JCMethodDecl> anonymousClassesMethodCandidate = current.defs.stream().filter(d -> d.hasTag(Tag.METHODDEF)).map(d -> (JCMethodDecl) d).filter(m -> m.name.contentEquals(ANONYMOUS_CLASSES_METHOD)).findAny();
+                JCMethodDecl anonymousClassesMethodTree;
+                if (!anonymousClassesMethodCandidate.isPresent()) {
+                    MethodSymbol anonymousClassesMethod = new MethodSymbol(0, current.name.table.fromString(ANONYMOUS_CLASSES_METHOD), new MethodType(com.sun.tools.javac.util.List.nil(), syms.voidType, com.sun.tools.javac.util.List.nil(), syms.methodClass), current.sym);
+                    current.sym.members_field.enter(anonymousClassesMethod);
+                    anonymousClassesMethodTree = make.MethodDef(anonymousClassesMethod, make.Block(0, com.sun.tools.javac.util.List.nil()));
+                    current.defs = current.defs.prepend(anonymousClassesMethodTree);
+                } else {
+                    anonymousClassesMethodTree = anonymousClassesMethodCandidate.get();
+                }
+                anonymousClassesMethodTree.body.stats = anonymousClassesMethodTree.body.stats.prepend(clearAndWrapAnonymous(anonymous));
             }
 
             private SortedMap<Long, List<Diagnostic<? extends JavaFileObject>>> treeDiags(Tree node) {
@@ -730,21 +824,18 @@ final class VanillaCompileWorker extends CompileWorker {
                 //TODO: fix constructors:
                 JCNewClass nc = (JCNewClass) node;
                 if (node.getClassBody() != null && !nc.clazz.type.hasTag(TypeTag.ERROR)) {
-                    MethodSymbol constructor = (MethodSymbol) nc.constructor;
-                    ListBuffer<JCExpression> args = new ListBuffer<>();
-                    int startIdx = 0;
-                    if (node.getEnclosingExpression() != null) {
-                        startIdx = 1;
+                    if (nc.constructor.kind == Kind.MTH) {
+                        //make sure this class is generated even if the code is erroneous:
+                        anonymousClasses.add(nc);
+                    } else {
+                        //TODO: if there is no constructor, skip for now - is there a better solution? See testNewClass
+                        errorFound = true;
                     }
-                    for (VarSymbol param : constructor.params.subList(startIdx, constructor.params.size())) {
-                        args.add(make.TypeCast(param.type, make.Literal(TypeTag.BOT, null).setType(syms.botType)));
-                    }
-                    nc.args = args.toList();
-                    anonymousClasses.add(nc);
                 }
 //                    nct.constructor = constructor;
 //                    nct.constructorType = constructor.type;
 //                    nct.def = null;
+                errorFound |= isErroneous(trees.getTypeMirror(getCurrentPath())); //isErroneous - enough?
                 return super.visitNewClass(node, p);
             }
 
@@ -757,7 +848,31 @@ final class VanillaCompileWorker extends CompileWorker {
             @Override
             public Void visitMemberSelect(MemberSelectTree node, Void p) {
                 errorFound |= isErroneous(trees.getTypeMirror(getCurrentPath())); //isErroneous - enough?
+                if (node.getExpression().toString().equals("super")) {
+                    TreePath selected = new TreePath(getCurrentPath(), node.getExpression());
+                    if (trees.getElement(selected) != currentClass) {
+                        //TODO: positive tests (tests that we don't remove what should not be removed)
+                        errorFound = true;
+                    }
+                }
                 return super.visitMemberSelect(node, p);
+            }
+
+            @Override
+            public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
+                Type varArgs = ((JCMethodInvocation) node).varargsElement;
+                if (varArgs != null) {
+                    errorFound |= isErroneous(varArgs);
+                }
+                return super.visitMethodInvocation(node, p);
+            }
+
+            @Override
+            public Void scan(Tree tree, Void p) {
+                if (tree != null && ExpressionTree.class.isAssignableFrom(tree.getClass())) {
+                    errorFound |= isErroneous(trees.getTypeMirror(new TreePath(getCurrentPath(), tree))); //isErroneous - enough?
+                }
+                return super.scan(tree, p);
             }
 
             private void clearAnnotations(SymbolMetadata metadata) {
@@ -817,7 +932,7 @@ final class VanillaCompileWorker extends CompileWorker {
             }
 
             private boolean isErroneous(TypeMirror type) {
-                return type == null || type.getKind() == TypeKind.ERROR || type.getKind() == TypeKind.NONE || type.getKind() == TypeKind.OTHER;
+                return type == null || type.getKind() == TypeKind.ERROR || type.getKind() == TypeKind.NONE || type.getKind() == TypeKind.OTHER || (type.getKind() == TypeKind.ARRAY && isErroneous(((ArrayType) type).getComponentType()));
             }
 
             private boolean errorFound;

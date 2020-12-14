@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.ref.Reference;
+import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -82,6 +83,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
+import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 
@@ -91,17 +93,38 @@ import org.openide.util.lookup.Lookups;
  */
 public class LSPBindings {
 
+    private static final int DELAY = 500;
+    private static final int LSP_KEEP_ALIVE_MINUTES = 10;
+    private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
+    private static final ChangeSupport cs = new ChangeSupport(LSPBindings.class);
+    private static final Map<LSPBindings,Long> lspKeepAlive = new IdentityHashMap<>();
+    private static final Map<URI, Map<String, WeakReference<LSPBindings>>> project2MimeType2Server = new HashMap<>();
+    private static final Map<FileObject, Map<String, LSPBindings>> workspace2Extension2Server = new HashMap<>();
+
     static {
         //Don't perform null checks. The servers may not adhere to the specification, and send illegal nulls.
         Preconditions.enableNullChecks(false);
+
+        // Remove LSP Servers from strong reference tracking, that have not
+        // been accessed more than LSP_KEEP_ALIVE_MINUTES minutes
+        WORKER.scheduleAtFixedRate(
+            () -> {
+                synchronized (LSPBindings.class) {
+                    long tooOld = System.currentTimeMillis() - (LSP_KEEP_ALIVE_MINUTES * 60L * 1000L);
+                    Iterator<Entry<LSPBindings, Long>> iterator = lspKeepAlive.entrySet().iterator();
+                    while (iterator.hasNext()) {
+                        Entry<LSPBindings, Long> entry = iterator.next();
+                        if (entry.getValue() < tooOld) {
+                            iterator.remove();
+                        }
+                    }
+                }
+            },
+            Math.max(LSP_KEEP_ALIVE_MINUTES / 2, 1),
+            Math.max(LSP_KEEP_ALIVE_MINUTES / 2, 1),
+            TimeUnit.MINUTES);
     }
 
-    private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
-    private static final int DELAY = 500;
-
-    private static final ChangeSupport cs = new ChangeSupport(LSPBindings.class);
-    private static final Map<URI, Map<String, LSPBindings>> project2MimeType2Server = new WeakHashMap<>();
-    private static final Map<FileObject, Map<String, LSPBindings>> workspace2Extension2Server = new HashMap<>();
     private final Map<FileObject, Map<BackgroundTask, RequestProcessor.Task>> backgroundTasks = new WeakHashMap<>();
     private final Set<FileObject> openedFiles = new HashSet<>();
 
@@ -125,14 +148,15 @@ public class LSPBindings {
             return null;
         }
 
-        return getBindingsImpl(prj, file, mimeType, true);
+        return getBindingsImpl(prj, file, mimeType);
     }
 
     public static void ensureServerRunning(Project prj, String mimeType) {
-        getBindingsImpl(prj, prj.getProjectDirectory(), mimeType, false);
+        getBindingsImpl(prj, prj.getProjectDirectory(), mimeType);
     }
 
-    public static synchronized LSPBindings getBindingsImpl(Project prj, FileObject file, String mimeType, boolean forceBindings) {
+    @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
+    public static synchronized LSPBindings getBindingsImpl(Project prj, FileObject file, String mimeType) {
         FileObject dir;
 
         if (prj == null) {
@@ -143,74 +167,89 @@ public class LSPBindings {
 
         URI uri = dir.toURI();
 
-        boolean[] created = new boolean[1];
-
-        LSPBindings bindings =
+        LSPBindings bindings = null;
+        WeakReference<LSPBindings> bindingsReference =
                 project2MimeType2Server.computeIfAbsent(uri, p -> new HashMap<>())
-                                       .computeIfAbsent(mimeType, mt -> {
-                                           MimeTypeInfo mimeTypeInfo = new MimeTypeInfo(mt);
-                                           ServerRestarter restarter = () -> {
-                                               synchronized (LSPBindings.class) {
-                                                   LSPBindings b = project2MimeType2Server.getOrDefault(uri, Collections.emptyMap()).remove(mimeType);
+                                       .get(mimeType);
 
-                                                   if (b != null) {
-                                                       try {
-                                                           b.server.shutdown().get();
-                                                       } catch (InterruptedException | ExecutionException ex) {
-                                                           LOG.log(Level.FINE, null, ex);
-                                                       }
-                                                       if (b.process != null) {
-                                                           b.process.destroy();
-                                                       }
-                                                   }
-                                               }
-                                           };
+        if(bindingsReference != null) {
+            bindings = bindingsReference.get();
+        }
 
-                                           for (LanguageServerProvider provider : MimeLookup.getLookup(mimeType).lookupAll(LanguageServerProvider.class)) {
-                                               final Lookup lkp = prj != null ? Lookups.fixed(prj, mimeTypeInfo, restarter) : Lookups.fixed(mimeTypeInfo, restarter);
-                                               LanguageServerDescription desc = provider.startServer(lkp);
-
-                                               if (desc != null) {
-                                                   LSPBindings b = LanguageServerProviderAccessor.getINSTANCE().getBindings(desc);
-                                                   if (b != null) {
-                                                       return b;
-                                                   }
-                                                   try {
-                                                       LanguageClientImpl lci = new LanguageClientImpl();
-                                                       InputStream in = LanguageServerProviderAccessor.getINSTANCE().getInputStream(desc);
-                                                       OutputStream out = LanguageServerProviderAccessor.getINSTANCE().getOutputStream(desc);
-                                                       Process p = LanguageServerProviderAccessor.getINSTANCE().getProcess(desc);
-                                                       Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(lci, in, out);
-                                                       launcher.startListening();
-                                                       LanguageServer server = launcher.getRemoteProxy();
-                                                       InitializeResult result = initServer(p, server, dir); //XXX: what if a different root is expected????
-                                                       b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
-                                                       lci.setBindings(b);
-                                                       LanguageServerProviderAccessor.getINSTANCE().setBindings(desc, b);
-                                                       TextDocumentSyncServerCapabilityHandler.refreshOpenedFilesInServers();
-                                                       created[0] = true;
-                                                       return b;
-                                                   } catch (InterruptedException | ExecutionException ex) {
-                                                       LOG.log(Level.WARNING, null, ex);
-                                                   }
-                                               }
-                                           }
-                                           return forceBindings ? new LSPBindings(null, null, null) : null;
-                                       });
+        if (bindings != null && bindings.process != null && !bindings.process.isAlive()) {
+            bindings = null;
+        }
 
         if (bindings == null) {
-            return null;
-        }
-        if (bindings.process != null && !bindings.process.isAlive()) {
-            //XXX: what now
-            return null;
-        }
-
-        if (created[0]) {
-            WORKER.post(() -> cs.fireChange());
+            bindings = buildBindings(prj, mimeType, dir, uri);
+            if (bindings != null) {
+                project2MimeType2Server.computeIfAbsent(uri, p -> new HashMap<>())
+                    .put(mimeType, new WeakReference<>(bindings));
+                WORKER.post(() -> cs.fireChange());
+            }
         }
 
-        return bindings.server != null ? bindings : null;
+        if(bindings != null) {
+            lspKeepAlive.put(bindings, System.currentTimeMillis());
+        }
+
+        return bindings != null ? bindings : null;
+    }
+
+    @SuppressWarnings({"AccessingNonPublicFieldOfAnotherObject", "ResultOfObjectAllocationIgnored"})
+    private static LSPBindings buildBindings(Project prj, String mt, FileObject dir, URI baseUri) {
+        MimeTypeInfo mimeTypeInfo = new MimeTypeInfo(mt);
+        ServerRestarter restarter = () -> {
+            synchronized (LSPBindings.class) {
+                WeakReference<LSPBindings> bRef = project2MimeType2Server.getOrDefault(baseUri, Collections.emptyMap()).remove(mt);
+                LSPBindings b = bRef != null ? bRef.get() : null;
+
+                if (b != null) {
+                    lspKeepAlive.remove(b);
+
+                    try {
+                        b.server.shutdown().get();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        LOG.log(Level.FINE, null, ex);
+                    }
+                    if (b.process != null) {
+                        b.process.destroy();
+                    }
+                }
+            }
+        };
+
+        for (LanguageServerProvider provider : MimeLookup.getLookup(mt).lookupAll(LanguageServerProvider.class)) {
+            final Lookup lkp = prj != null ? Lookups.fixed(prj, mimeTypeInfo, restarter) : Lookups.fixed(mimeTypeInfo, restarter);
+            LanguageServerDescription desc = provider.startServer(lkp);
+
+            if (desc != null) {
+                LSPBindings b = LanguageServerProviderAccessor.getINSTANCE().getBindings(desc);
+                if (b != null) {
+                    return b;
+                }
+                try {
+                    LanguageClientImpl lci = new LanguageClientImpl();
+                    InputStream in = LanguageServerProviderAccessor.getINSTANCE().getInputStream(desc);
+                    OutputStream out = LanguageServerProviderAccessor.getINSTANCE().getOutputStream(desc);
+                    Process p = LanguageServerProviderAccessor.getINSTANCE().getProcess(desc);
+                    Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(lci, in, out);
+                    launcher.startListening();
+                    LanguageServer server = launcher.getRemoteProxy();
+                    InitializeResult result = initServer(p, server, dir); //XXX: what if a different root is expected????
+                    b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
+                    // Register cleanup via LSPReference#run
+                    new LSPReference(b, Utilities.activeReferenceQueue());
+                    lci.setBindings(b);
+                    LanguageServerProviderAccessor.getINSTANCE().setBindings(desc, b);
+                    TextDocumentSyncServerCapabilityHandler.refreshOpenedFilesInServers();
+                    return b;
+                } catch (InterruptedException | ExecutionException ex) {
+                    LOG.log(Level.WARNING, null, ex);
+                }
+            }
+        }
+        return null;
     }
 
     private static final Logger LOG = Logger.getLogger(LSPBindings.class.getName());
@@ -238,7 +277,9 @@ public class LSPBindings {
 
                 lc.setBindings(bindings);
 
-                workspace2Extension2Server.put(root, Arrays.stream(extensions).collect(Collectors.toMap(k -> k, v -> bindings)));
+                workspace2Extension2Server.put(root, 
+                    Arrays.stream(extensions)
+                    .collect(Collectors.toMap(k -> k, v -> bindings)));
                 WORKER.post(() -> cs.fireChange());
             } catch (InterruptedException | ExecutionException | IOException ex) {
                 Exceptions.printStackTrace(ex);
@@ -246,6 +287,7 @@ public class LSPBindings {
         }, Bundle.LBL_Connecting());
     }
 
+    @SuppressWarnings("deprecation")
     private static InitializeResult initServer(Process p, LanguageServer server, FileObject root) throws InterruptedException, ExecutionException {
        InitializeParams initParams = new InitializeParams();
        initParams.setRootUri(Utils.toURI(root));
@@ -280,12 +322,14 @@ public class LSPBindings {
        }
     }
 
-    public static Set<LSPBindings> getAllBindings() {
+    public static synchronized Set<LSPBindings> getAllBindings() {
         Set<LSPBindings> allBindings = Collections.newSetFromMap(new IdentityHashMap<>());
 
         project2MimeType2Server.values()
                                .stream()
                                .flatMap(n -> n.values().stream())
+                               .map(bindingRef -> bindingRef.get())
+                               .filter(binding -> binding != null)
                                .forEach(allBindings::add);
         workspace2Extension2Server.values()
                                   .stream()
@@ -318,6 +362,7 @@ public class LSPBindings {
         return initResult;
     }
 
+    @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
     public static void addBackgroundTask(FileObject file, BackgroundTask task) {
         LSPBindings bindings = getBindings(file);
 
@@ -388,9 +433,11 @@ public class LSPBindings {
     public static class Cleanup implements Runnable {
 
         @Override
+        @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
         public void run() {
-            for (Map<String, LSPBindings> mime2Bindings : project2MimeType2Server.values()) {
-                for (LSPBindings b : mime2Bindings.values()) {
+            for (Map<String, WeakReference<LSPBindings>> mime2Bindings : project2MimeType2Server.values()) {
+                for (WeakReference<LSPBindings> bRef : mime2Bindings.values()) {
+                    LSPBindings b = bRef != null ? bRef.get() : null;
                     if (b != null && b.process != null) {
                         b.process.destroy();
                     }
@@ -405,5 +452,48 @@ public class LSPBindings {
             }
         }
 
+    }
+
+    /**
+     * The {@code LSPReference} adds cleanup actions to LSP Bindings after the
+     * bindings are GCed. The backing process is shutdown and the process
+     * terminated.
+     */
+    private static class LSPReference extends WeakReference<LSPBindings> implements Runnable {
+        private final LanguageServer server;
+        private final Process process;
+
+        @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
+        public LSPReference(LSPBindings t, ReferenceQueue<? super LSPBindings> rq) {
+            super(t, rq);
+            this.server = t.server;
+            this.process = t.process;
+        }
+
+        @Override
+        public void run() {
+            if(! process.isAlive()) {
+                return;
+            }
+            CompletableFuture<Object> shutdownResult = server.shutdown();
+            for (int i = 0; i < 300; i--) {
+                try {
+                    shutdownResult.get(100, TimeUnit.MILLISECONDS);
+                    break;
+                } catch (TimeoutException ex) {
+                } catch (InterruptedException | ExecutionException ex) {
+                    break;
+                }
+            }
+            this.server.exit();
+            try {
+                if(! process.waitFor(30, TimeUnit.SECONDS)) {
+                    process.destroy();
+                }
+            } catch (InterruptedException ex) {
+                process.destroy();
+            }
+
+        }
     }
 }

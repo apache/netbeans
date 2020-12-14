@@ -1189,6 +1189,8 @@ PKGINST=${pkg.svr4.pkginst}</echo>
           description="Try running the IDE interactively.
 It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in debug mode" 
    >
+    <taskdef name="mergetrymeargs" classname="org.netbeans.nbbuild.MergeTrymeArgs" classpath="${nbantext.jar}" />
+    <mergetrymeargs />
     <property name="tryme.jdkhome" value="${nbjdk.home}"/>
     <property name="tryme.debug.args" value="" />
     <property name="tryme.args" value="" />

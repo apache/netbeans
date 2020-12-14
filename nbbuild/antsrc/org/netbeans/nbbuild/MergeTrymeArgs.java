@@ -19,6 +19,7 @@
 package org.netbeans.nbbuild;
 
 import java.util.Map.Entry;
+import java.util.TreeMap;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
@@ -29,7 +30,7 @@ import org.apache.tools.ant.Task;
 public class MergeTrymeArgs extends Task {
     public @Override void execute() throws BuildException {
         StringBuilder tryMeArgs = new StringBuilder();
-        for(Entry<String,Object> e: getProject().getProperties().entrySet()) {
+        for(Entry<String,Object> e: new TreeMap<>(getProject().getProperties()).entrySet()) {
             if(e.getKey().startsWith("tryme.arg.")) {
                 tryMeArgs.append(" ");
                 tryMeArgs.append(e.getValue());

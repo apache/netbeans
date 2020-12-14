@@ -1193,7 +1193,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <mergetrymeargs />
     <property name="tryme.jdkhome" value="${nbjdk.home}"/>
     <property name="tryme.debug.args" value="" />
-    <property name="tryme.args" value="" />
     <property environment="env"/>
     <condition property="run.env.display" value="${env.NBDISPLAY}" else="${env.DISPLAY}">
 	<isset property="env.NBDISPLAY"/>

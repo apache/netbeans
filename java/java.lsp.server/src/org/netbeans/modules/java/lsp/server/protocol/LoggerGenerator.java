@@ -50,12 +50,15 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
+import org.openide.util.BaseUtilities;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Dusan Balek
  */
+@ServiceProvider(service = CodeGenerator.class, position = 20)
 public final class LoggerGenerator extends CodeGenerator {
 
     public static final String GENERATE_LOGGER =  "java.generate.logger";
@@ -63,7 +66,7 @@ public final class LoggerGenerator extends CodeGenerator {
     private final Set<String> commands = Collections.singleton(GENERATE_LOGGER);
     private final Gson gson = new Gson();
 
-    LoggerGenerator() {
+    public LoggerGenerator() {
     }
 
     @Override
@@ -87,7 +90,8 @@ public final class LoggerGenerator extends CodeGenerator {
         }
         for (VariableElement ve : ElementFilter.fieldsIn(typeElement.getEnclosedElements())) {
             TypeMirror type = ve.asType();
-            if (type.getKind() == TypeKind.DECLARED && ((TypeElement)((DeclaredType)type).asElement()).getQualifiedName().contentEquals(Logger.class.getName())) {
+            if (type.getKind() == TypeKind.DECLARED && ((TypeElement)((DeclaredType)type).asElement()).getQualifiedName().contentEquals(Logger.class.getName())
+                    || type.getKind() == TypeKind.ERROR && ((TypeElement)((DeclaredType)type).asElement()).getSimpleName().contentEquals(Logger.class.getSimpleName())) {
                 return Collections.emptyList();
             }
         }
@@ -109,10 +113,13 @@ public final class LoggerGenerator extends CodeGenerator {
             String uri = gson.fromJson(gson.toJson(arguments.get(0)), String.class);
             int offset = gson.fromJson(gson.toJson(arguments.get(1)), Integer.class);
             client.showInputBox(new ShowInputBoxParams(Bundle.DN_SelectLoggerName(), "LOG")).thenAccept(value -> {
-                if (value != null) {
+                if (value != null && BaseUtilities.isJavaIdentifier(value)) {
                     try {
                         FileObject file = Utils.fromUri(uri);
                         JavaSource js = JavaSource.forFileObject(file);
+                        if (js == null) {
+                            throw new IOException("Cannot get JavaSource for: " + uri);
+                        }
                         List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                             wc.toPhase(JavaSource.Phase.RESOLVED);
                             TreePath tp = wc.getTreeUtilities().pathFor(offset);
@@ -129,6 +136,8 @@ public final class LoggerGenerator extends CodeGenerator {
                     }
                 }
             });
+        } else {
+            client.logMessage(new MessageParams(MessageType.Error, String.format("Illegal number of arguments received for command: %s", command)));
         }
         return CompletableFuture.completedFuture(true);
     }

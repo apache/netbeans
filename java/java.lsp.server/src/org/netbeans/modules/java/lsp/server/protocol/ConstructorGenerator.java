@@ -55,11 +55,13 @@ import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Dusan Balek
  */
+@ServiceProvider(service = CodeGenerator.class, position = 10)
 public final class ConstructorGenerator extends CodeGenerator {
 
     public static final String GENERATE_CONSTRUCTOR =  "java.generate.constructor";
@@ -67,7 +69,7 @@ public final class ConstructorGenerator extends CodeGenerator {
     private final Set<String> commands = Collections.singleton(GENERATE_CONSTRUCTOR);
     private final Gson gson = new Gson();
 
-    ConstructorGenerator() {
+    public ConstructorGenerator() {
     }
 
     @Override
@@ -163,6 +165,8 @@ public final class ConstructorGenerator extends CodeGenerator {
                     selectFields(client, uri, offset, constructors, fields);
                 }
             }
+        } else {
+            client.logMessage(new MessageParams(MessageType.Error, String.format("Illegal number of arguments received for command: %s", command)));
         }
         return CompletableFuture.completedFuture(true);
     }
@@ -186,6 +190,9 @@ public final class ConstructorGenerator extends CodeGenerator {
         try {
             FileObject file = Utils.fromUri(uri);
             JavaSource js = JavaSource.forFileObject(file);
+            if (js == null) {
+                throw new IOException("Cannot get JavaSource for: " + uri);
+            }
             List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 TreePath tp = wc.getTreeUtilities().pathFor(offset);

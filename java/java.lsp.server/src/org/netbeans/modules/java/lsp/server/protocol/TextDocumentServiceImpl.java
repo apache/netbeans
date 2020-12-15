@@ -173,6 +173,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 
@@ -1044,7 +1045,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         try {
             js.runUserActionTask(cc -> {
                 cc.toPhase(JavaSource.Phase.RESOLVED);
-                for (CodeGenerator codeGenerator : Server.CODE_GENERATORS) {
+                for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     for (CodeAction codeAction : codeGenerator.getCodeActions(cc, params)) {
                         result.add(Either.forRight(codeAction));
                     }

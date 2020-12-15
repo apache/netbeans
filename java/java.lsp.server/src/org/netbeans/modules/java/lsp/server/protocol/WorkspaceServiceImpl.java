@@ -128,7 +128,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return compileFinished;
             }
             default:
-                for (CodeGenerator codeGenerator : Server.CODE_GENERATORS) {
+                for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     if (codeGenerator.getCommands().contains(command)) {
                         return codeGenerator.processCommand(client, command, params.getArguments());
                     }

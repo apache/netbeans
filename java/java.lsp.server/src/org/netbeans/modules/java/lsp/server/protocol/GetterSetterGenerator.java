@@ -55,11 +55,13 @@ import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author lahvac
  */
+@ServiceProvider(service = CodeGenerator.class, position = 30)
 public final class GetterSetterGenerator extends CodeGenerator {
 
     public static final String GENERATE_GETTERS =  "java.generate.getters";
@@ -69,7 +71,7 @@ public final class GetterSetterGenerator extends CodeGenerator {
     private final Set<String> commands = Collections.unmodifiableSet(new HashSet(Arrays.asList(GENERATE_GETTERS, GENERATE_SETTERS, GENERATE_GETTERS_SETTERS)));
     private final Gson gson = new Gson();
 
-    GetterSetterGenerator() {
+    public GetterSetterGenerator() {
     }
 
     @Override
@@ -144,13 +146,15 @@ public final class GetterSetterGenerator extends CodeGenerator {
             }
             if (all && fields.size() > 1) {
                 client.showQuickPick(new ShowQuickPickParams(text, true, fields)).thenAccept(selected -> {
-                    if (selected != null) {
+                    if (selected != null && !selected.isEmpty()) {
                         generate(client, kind, uri, offset, selected);
                     }
                 });
-            } else {
+            } else if (fields.size() == 1) {
                 generate(client, kind, uri, offset, fields);
             }
+        } else {
+            client.logMessage(new MessageParams(MessageType.Error, String.format("Illegal number of arguments received for command: %s", command)));
         }
         return CompletableFuture.completedFuture(true);
     }
@@ -159,18 +163,19 @@ public final class GetterSetterGenerator extends CodeGenerator {
         try {
             FileObject file = Utils.fromUri(uri);
             JavaSource js = JavaSource.forFileObject(file);
+            if (js == null) {
+                throw new IOException("Cannot get JavaSource for: " + uri);
+            }
             List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
-                if (!fields.isEmpty()) {
-                    TreePath tp = wc.getTreeUtilities().pathFor(offset);
-                    tp = wc.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, tp);
-                    if (tp != null) {
-                        List<VariableElement> variableElements = fields.stream().map(item -> {
-                            ElementData data = gson.fromJson(gson.toJson(item.getUserData()), ElementData.class);
-                            return (VariableElement) data.resolve(wc);
-                        }).collect(Collectors.toList());
-                        GeneratorUtils.generateGettersAndSetters(wc, tp, variableElements, kind, -1);
-                    }
+                TreePath tp = wc.getTreeUtilities().pathFor(offset);
+                tp = wc.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, tp);
+                if (tp != null) {
+                    List<VariableElement> variableElements = fields.stream().map(item -> {
+                        ElementData data = gson.fromJson(gson.toJson(item.getUserData()), ElementData.class);
+                        return (VariableElement) data.resolve(wc);
+                    }).collect(Collectors.toList());
+                    GeneratorUtils.generateGettersAndSetters(wc, tp, variableElements, kind, -1);
                 }
             });
             client.applyEdit(new ApplyWorkspaceEditParams(new WorkspaceEdit(Collections.singletonMap(uri, edits))));

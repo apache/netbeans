@@ -56,11 +56,13 @@ import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Dusan Balek
  */
+@ServiceProvider(service = CodeGenerator.class, position = 60)
 public final class DelegateMethodGenerator extends CodeGenerator {
 
     public static final String GENERATE_DELEGATE_METHOD =  "java.generate.delegateMethod";
@@ -68,7 +70,7 @@ public final class DelegateMethodGenerator extends CodeGenerator {
     private final Set<String> commands = Collections.singleton(GENERATE_DELEGATE_METHOD);
     private final Gson gson = new Gson();
 
-    DelegateMethodGenerator() {
+    public DelegateMethodGenerator() {
     }
 
     @Override
@@ -141,6 +143,8 @@ public final class DelegateMethodGenerator extends CodeGenerator {
                     }
                 });
             }
+        } else {
+            client.logMessage(new MessageParams(MessageType.Error, String.format("Illegal number of arguments received for command: %s", command)));
         }
         return CompletableFuture.completedFuture(true);
     }
@@ -152,33 +156,39 @@ public final class DelegateMethodGenerator extends CodeGenerator {
         try {
             FileObject file = Utils.fromUri(uri);
             JavaSource js = JavaSource.forFileObject(file);
+            if (js == null) {
+                throw new IOException("Cannot get JavaSource for: " + uri);
+            }
             js.runUserActionTask(info -> {
                 info.toPhase(JavaSource.Phase.RESOLVED);
                 TypeElement origin = (TypeElement) gson.fromJson(gson.toJson(type.getUserData()), ElementData.class).resolve(info);
                 VariableElement field = (VariableElement) gson.fromJson(gson.toJson(selectedField.getUserData()), ElementData.class).resolve(info);
-                final ElementUtilities eu = info.getElementUtilities();
-                final Trees trees = info.getTrees();
-                final Scope scope = info.getTreeUtilities().scopeFor(offset);
-                ElementUtilities.ElementAcceptor acceptor = new ElementUtilities.ElementAcceptor() {
-                    @Override
-                    public boolean accept(Element e, TypeMirror type) {
-                        if (e.getKind() == ElementKind.METHOD && trees.isAccessible(scope, e, (DeclaredType)type)) {
-                            Element impl = eu.getImplementationOf((ExecutableElement)e, origin);
-                            return impl == null || (!impl.getModifiers().contains(Modifier.FINAL) && impl.getEnclosingElement() != origin);
+                if (origin != null && field != null) {
+                    final ElementUtilities eu = info.getElementUtilities();
+                    final Trees trees = info.getTrees();
+                    final Scope scope = info.getTreeUtilities().scopeFor(offset);
+                    ElementUtilities.ElementAcceptor acceptor = new ElementUtilities.ElementAcceptor() {
+                        @Override
+                        public boolean accept(Element e, TypeMirror type) {
+                            if (e.getKind() == ElementKind.METHOD && trees.isAccessible(scope, e, (DeclaredType)type)) {
+                                Element impl = eu.getImplementationOf((ExecutableElement)e, origin);
+                                return impl == null || (!impl.getModifiers().contains(Modifier.FINAL) && impl.getEnclosingElement() != origin);
+                            }
+                            return false;
                         }
-                        return false;
+                    };
+                    List<QuickPickItem> methods = new ArrayList<>();
+                    for (ExecutableElement method : ElementFilter.methodsIn(eu.getMembers(field.asType(), acceptor))) {
+                        QuickPickItem item = new QuickPickItem(String.format("%s.%s", field.getSimpleName().toString(), createLabel(info, method)));
+                        item.setUserData(new ElementData(method));
+                        methods.add(item);
                     }
-                };
-                List<QuickPickItem> methods = new ArrayList<>();
-                for (ExecutableElement method : ElementFilter.methodsIn(eu.getMembers(field.asType(), acceptor))) {
-                    QuickPickItem item = new QuickPickItem(String.format("%s.%s", field.getSimpleName().toString(), createLabel(info, method)));
-                    item.setUserData(new ElementData(method));
-                    methods.add(item);
+                    client.showQuickPick(new ShowQuickPickParams(Bundle.DN_SelectDelegateMethods(), true, methods)).thenAccept(selected -> {
+                        if (selected != null && !selected.isEmpty()) {
+                            generate(client, uri, offset, selectedField, selected);
+                        }
+                    });
                 }
-                client.showQuickPick(new ShowQuickPickParams(Bundle.DN_SelectDelegateMethods(), true, methods)).thenAccept(selected -> {
-                    if (selected != null && !selected.isEmpty())
-                    generate(client, uri, offset, selectedField, selected);
-                });
             }, true);
         } catch (IOException | IllegalArgumentException ex) {
             client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
@@ -189,6 +199,9 @@ public final class DelegateMethodGenerator extends CodeGenerator {
         try {
             FileObject file = Utils.fromUri(uri);
             JavaSource js = JavaSource.forFileObject(file);
+            if (js == null) {
+                throw new IOException("Cannot get JavaSource for: " + uri);
+            }
             List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 TreePath tp = wc.getTreeUtilities().pathFor(offset);

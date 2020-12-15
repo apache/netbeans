@@ -51,11 +51,13 @@ import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Dusan Balek
  */
+@ServiceProvider(service = CodeGenerator.class, position = 70)
 public final class ImplementOverrideMethodGenerator extends CodeGenerator {
 
     public static final String GENERATE_IMPLEMENT_METHOD =  "java.generate.implementMethod";
@@ -64,7 +66,7 @@ public final class ImplementOverrideMethodGenerator extends CodeGenerator {
     private final Set<String> commands = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(GENERATE_IMPLEMENT_METHOD, GENERATE_OVERRIDE_METHOD)));
     private final Gson gson = new Gson();
 
-    ImplementOverrideMethodGenerator() {
+    public ImplementOverrideMethodGenerator() {
     }
 
     @Override
@@ -140,10 +142,12 @@ public final class ImplementOverrideMethodGenerator extends CodeGenerator {
             String text = command == GENERATE_IMPLEMENT_METHOD ? Bundle.DN_SelectImplementMethod() : Bundle.DN_SelectOverrideMethod();
             boolean isImplement = command == GENERATE_IMPLEMENT_METHOD;
             client.showQuickPick(new ShowQuickPickParams(text, true, methods)).thenAccept(selected -> {
-                if (selected != null) {
+                if (selected != null && !selected.isEmpty()) {
                     generate(client, uri, offset, isImplement, selected);
                 }
             });
+        } else {
+            client.logMessage(new MessageParams(MessageType.Error, String.format("Illegal number of arguments received for command: %s", command)));
         }
         return CompletableFuture.completedFuture(true);
     }
@@ -152,6 +156,9 @@ public final class ImplementOverrideMethodGenerator extends CodeGenerator {
         try {
             FileObject file = Utils.fromUri(uri);
             JavaSource js = JavaSource.forFileObject(file);
+            if (js == null) {
+                throw new IOException("Cannot get JavaSource for: " + uri);
+            }
             List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 TreePath tp = wc.getTreeUtilities().pathFor(offset);
@@ -161,12 +168,10 @@ public final class ImplementOverrideMethodGenerator extends CodeGenerator {
                         ElementData data = gson.fromJson(gson.toJson(item.getUserData()), ElementData.class);
                         return (ExecutableElement)data.resolve(wc);
                     }).collect(Collectors.toList());
-                    if (!selectedMethods.isEmpty()) {
-                        if (isImplement) {
-                            GeneratorUtils.generateAbstractMethodImplementations(wc, tp, selectedMethods, -1);
-                        } else {
-                            GeneratorUtils.generateMethodOverrides(wc, tp, selectedMethods, -1);
-                        }
+                    if (isImplement) {
+                        GeneratorUtils.generateAbstractMethodImplementations(wc, tp, selectedMethods, -1);
+                    } else {
+                        GeneratorUtils.generateMethodOverrides(wc, tp, selectedMethods, -1);
                     }
                 }
             });

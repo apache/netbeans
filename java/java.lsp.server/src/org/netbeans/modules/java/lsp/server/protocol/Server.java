@@ -256,7 +256,7 @@ public final class Server {
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
                 List<String> commands = new ArrayList<>(Arrays.asList(JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT));
-                for (CodeGenerator codeGenerator : CODE_GENERATORS) {
+                for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     commands.addAll(codeGenerator.getCommands());
                 }
                 capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(commands));
@@ -340,16 +340,6 @@ public final class Server {
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";
-
-    static final CodeGenerator[] CODE_GENERATORS = new CodeGenerator[] {
-        new ConstructorGenerator(),
-        new LoggerGenerator(),
-        new GetterSetterGenerator(),
-        new EqualsHashCodeGenerator(),
-        new ToStringGenerator(),
-        new DelegateMethodGenerator(),
-        new ImplementOverrideMethodGenerator()
-    };
 
     static final NbCodeLanguageClient STUB_CLIENT = new NbCodeLanguageClient() {
         private final NbCodeClientCapabilities caps = new NbCodeClientCapabilities();

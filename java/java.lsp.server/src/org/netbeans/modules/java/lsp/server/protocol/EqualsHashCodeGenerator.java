@@ -49,11 +49,13 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Dusan Balek
  */
+@ServiceProvider(service = CodeGenerator.class, position = 40)
 public final class EqualsHashCodeGenerator extends CodeGenerator {
 
     public static final String GENERATE_EQUALS =  "java.generate.equals";
@@ -63,7 +65,7 @@ public final class EqualsHashCodeGenerator extends CodeGenerator {
     private final Set<String> commands = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(GENERATE_EQUALS_HASH_CODE, GENERATE_EQUALS, GENERATE_HASH_CODE)));
     private final Gson gson = new Gson();
 
-    EqualsHashCodeGenerator() {
+    public EqualsHashCodeGenerator() {
     }
 
     @Override
@@ -141,6 +143,9 @@ public final class EqualsHashCodeGenerator extends CodeGenerator {
                     try {
                         FileObject file = Utils.fromUri(uri);
                         JavaSource js = JavaSource.forFileObject(file);
+                        if (js == null) {
+                            throw new IOException("Cannot get JavaSource for: " + uri);
+                        }
                         List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                             wc.toPhase(JavaSource.Phase.RESOLVED);
                             TreePath tp = wc.getTreeUtilities().pathFor(offset);
@@ -159,6 +164,8 @@ public final class EqualsHashCodeGenerator extends CodeGenerator {
                     }
                 }
             });
+        } else {
+            client.logMessage(new MessageParams(MessageType.Error, String.format("Illegal number of arguments received for command: %s", command)));
         }
         return CompletableFuture.completedFuture(true);
     }

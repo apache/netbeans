@@ -209,7 +209,7 @@ public class ToStringGenerator implements CodeGenerator {
         }
     }
 
-    private static MethodTree createToStringMethod(WorkingCopy wc, Iterable<? extends VariableElement> fields, String typeName, boolean useStringBuilder) {
+    public static MethodTree createToStringMethod(WorkingCopy wc, Iterable<? extends VariableElement> fields, String typeName, boolean useStringBuilder) {
         TreeMaker make = wc.getTreeMaker();
         Set<Modifier> mods = EnumSet.of(Modifier.PUBLIC);
         List<AnnotationTree> annotations = new LinkedList<>();

@@ -19,21 +19,10 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.sun.source.tree.LineMap;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UncheckedIOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import javax.lang.model.element.Element;
@@ -54,11 +43,6 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.URLMapper;
-import org.openide.modules.Places;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -85,87 +69,6 @@ public abstract class CodeGenerator {
         action.setKind(kind);
         action.setCommand(new Command(name, command, Arrays.asList(args)));
         return action;
-    }
-
-    protected static String toUri(FileObject file) {
-        if (FileUtil.isArchiveArtifact(file)) {
-            //VS code cannot open jar:file: URLs, workaround:
-            //another workaround, should be:
-            //File cacheDir = Places.getCacheSubfile("java-server");
-            //but that locks up VS Code, using a temp directory:
-            File cacheDir;
-            try {
-                cacheDir = Files.createTempDirectory("nbcode").toFile();
-            } catch (IOException ex) {
-                throw new UncheckedIOException(ex);
-            }
-            File segments = new File(cacheDir, "segments");
-            Properties props = new Properties();
-
-            try (InputStream in = new FileInputStream(segments)) {
-                props.load(in);
-            } catch (IOException ex) {
-                //OK, may not exist yet
-            }
-            FileObject archive = FileUtil.getArchiveFile(file);
-            String archiveString = archive.toURL().toString();
-            File foundSegment = null;
-            for (String segment : props.stringPropertyNames()) {
-                if (archiveString.equals(props.getProperty(segment))) {
-                    foundSegment = new File(cacheDir, segment);
-                    break;
-                }
-            }
-            if (foundSegment == null) {
-                int i = 0;
-                while (props.getProperty("s" + i) != null)
-                    i++;
-                foundSegment = new File(cacheDir, "s" + i);
-                props.put("s" + i, archiveString);
-                try (OutputStream in = new FileOutputStream(segments)) {
-                    props.store(in, "");
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-            File cache = new File(foundSegment, FileUtil.getRelativePath(FileUtil.getArchiveRoot(archive), file));
-            cache.getParentFile().mkdirs();
-            try (OutputStream out = new FileOutputStream(cache)) {
-                out.write(file.asBytes());
-                return cache.toURI().toString();
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-        return file.toURI().toString();
-    }
-
-    protected static FileObject fromUri(String uri) throws MalformedURLException {
-        File cacheDir = Places.getCacheSubfile("java-server");
-        URI uriUri = URI.create(uri);
-        URI relative = cacheDir.toURI().relativize(uriUri);
-        if (relative != null && new File(cacheDir, relative.toString()).canRead()) {
-            String segmentAndPath = relative.toString();
-            int slash = segmentAndPath.indexOf('/');
-            String segment = segmentAndPath.substring(0, slash);
-            String path = segmentAndPath.substring(slash + 1);
-            File segments = new File(cacheDir, "segments");
-            Properties props = new Properties();
-
-            try (InputStream in = new FileInputStream(segments)) {
-                props.load(in);
-                String archiveUri = props.getProperty(segment);
-                FileObject archive = URLMapper.findFileObject(URI.create(archiveUri).toURL());
-                archive = archive != null ? FileUtil.getArchiveRoot(archive) : null;
-                FileObject file = archive != null ? archive.getFileObject(path) : null;
-                if (file != null) {
-                    return file;
-                }
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-        return URLMapper.findFileObject(URI.create(uri).toURL());
     }
 
     protected static String createLabel(CompilationInfo info, TypeElement e) {

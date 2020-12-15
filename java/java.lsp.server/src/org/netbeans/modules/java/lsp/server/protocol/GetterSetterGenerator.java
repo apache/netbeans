@@ -51,6 +51,7 @@ import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -86,7 +87,7 @@ public final class GetterSetterGenerator extends CodeGenerator {
         Pair<Set<VariableElement>, Set<VariableElement>> pair = findMissingGettersSetters(info, params.getRange(), all);
         boolean missingGetters = !pair.first().isEmpty();
         boolean missingSetters = !pair.second().isEmpty();
-        String uri = toUri(info.getFileObject());
+        String uri = Utils.toUri(info.getFileObject());
         int offset = getOffset(info, params.getRange().getStart());
         List<CodeAction> result = new ArrayList<>();
         if (missingGetters) {
@@ -156,7 +157,7 @@ public final class GetterSetterGenerator extends CodeGenerator {
 
     private void generate(NbCodeLanguageClient client, int kind, String uri, int offset, List<QuickPickItem> fields) throws IllegalArgumentException {
         try {
-            FileObject file = fromUri(uri);
+            FileObject file = Utils.fromUri(uri);
             JavaSource js = JavaSource.forFileObject(file);
             List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                 wc.toPhase(JavaSource.Phase.RESOLVED);

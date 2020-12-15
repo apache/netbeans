@@ -53,6 +53,7 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
@@ -110,7 +111,7 @@ public final class DelegateMethodGenerator extends CodeGenerator {
         if (fields.isEmpty()) {
             return Collections.emptyList();
         }
-        String uri = toUri(info.getFileObject());
+        String uri = Utils.toUri(info.getFileObject());
         QuickPickItem typeItem = new QuickPickItem(createLabel(info, typeElement));
         typeItem.setUserData(new ElementData(typeElement));
         return Collections.singletonList(createCodeAction(Bundle.DN_GenerateDelegateMethod(), CODE_GENERATOR_KIND, GENERATE_DELEGATE_METHOD, uri, offset, typeItem, fields));
@@ -149,7 +150,7 @@ public final class DelegateMethodGenerator extends CodeGenerator {
     })
     private void selectMethods(NbCodeLanguageClient client, String uri, int offset, QuickPickItem type, QuickPickItem selectedField) {
         try {
-            FileObject file = fromUri(uri);
+            FileObject file = Utils.fromUri(uri);
             JavaSource js = JavaSource.forFileObject(file);
             js.runUserActionTask(info -> {
                 info.toPhase(JavaSource.Phase.RESOLVED);
@@ -186,7 +187,7 @@ public final class DelegateMethodGenerator extends CodeGenerator {
 
     private void generate(NbCodeLanguageClient client, String uri, int offset, QuickPickItem selectedField, List<QuickPickItem> selectedMethods) {
         try {
-            FileObject file = fromUri(uri);
+            FileObject file = Utils.fromUri(uri);
             JavaSource js = JavaSource.forFileObject(file);
             List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                 wc.toPhase(JavaSource.Phase.RESOLVED);

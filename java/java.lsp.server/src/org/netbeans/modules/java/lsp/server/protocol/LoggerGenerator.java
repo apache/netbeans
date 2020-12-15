@@ -48,6 +48,7 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
@@ -90,7 +91,7 @@ public final class LoggerGenerator extends CodeGenerator {
                 return Collections.emptyList();
             }
         }
-        String uri = toUri(info.getFileObject());
+        String uri = Utils.toUri(info.getFileObject());
         return Collections.singletonList(createCodeAction(Bundle.DN_GenerateLogger(), CODE_GENERATOR_KIND, GENERATE_LOGGER, uri, offset));
     }
 
@@ -110,7 +111,7 @@ public final class LoggerGenerator extends CodeGenerator {
             client.showInputBox(new ShowInputBoxParams(Bundle.DN_SelectLoggerName(), "LOG")).thenAccept(value -> {
                 if (value != null) {
                     try {
-                        FileObject file = fromUri(uri);
+                        FileObject file = Utils.fromUri(uri);
                         JavaSource js = JavaSource.forFileObject(file);
                         List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                             wc.toPhase(JavaSource.Phase.RESOLVED);

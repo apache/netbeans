@@ -46,6 +46,7 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
@@ -101,7 +102,7 @@ public final class EqualsHashCodeGenerator extends CodeGenerator {
         if (fields.isEmpty()) {
             return Collections.emptyList();
         }
-        String uri = toUri(info.getFileObject());
+        String uri = Utils.toUri(info.getFileObject());
         if (equalsHashCode[0] == null) {
             if (equalsHashCode[1] == null) {
                 return Collections.singletonList(createCodeAction(Bundle.DN_GenerateEqualsHashCode(), CODE_GENERATOR_KIND, GENERATE_EQUALS_HASH_CODE, uri, offset, fields));
@@ -138,7 +139,7 @@ public final class EqualsHashCodeGenerator extends CodeGenerator {
             client.showQuickPick(new ShowQuickPickParams(text, true, fields)).thenAccept(selected -> {
                 if (selected != null) {
                     try {
-                        FileObject file = fromUri(uri);
+                        FileObject file = Utils.fromUri(uri);
                         JavaSource js = JavaSource.forFileObject(file);
                         List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                             wc.toPhase(JavaSource.Phase.RESOLVED);

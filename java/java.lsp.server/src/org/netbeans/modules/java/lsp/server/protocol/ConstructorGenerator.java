@@ -19,8 +19,6 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,10 +49,10 @@ import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
@@ -133,7 +131,7 @@ public final class ConstructorGenerator extends CodeGenerator {
         if (constructors == null && fields == null) {
             return Collections.emptyList();
         }
-        String uri = toUri(info.getFileObject());
+        String uri = Utils.toUri(info.getFileObject());
         return Collections.singletonList(createCodeAction(Bundle.DN_GenerateConstructor(), CODE_GENERATOR_KIND, GENERATE_CONSTRUCTOR, uri, offset, constructors, fields));
     }
 
@@ -186,7 +184,7 @@ public final class ConstructorGenerator extends CodeGenerator {
 
     private void generate(NbCodeLanguageClient client, String uri, int offset, List<QuickPickItem> constructors, List<QuickPickItem> fields) {
         try {
-            FileObject file = fromUri(uri);
+            FileObject file = Utils.fromUri(uri);
             JavaSource js = JavaSource.forFileObject(file);
             List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                 wc.toPhase(JavaSource.Phase.RESOLVED);

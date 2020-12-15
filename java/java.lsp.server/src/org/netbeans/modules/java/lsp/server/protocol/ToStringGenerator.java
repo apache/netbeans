@@ -47,6 +47,7 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
@@ -100,7 +101,7 @@ public final class ToStringGenerator extends CodeGenerator {
                     break;
             }
         }
-        String uri = toUri(info.getFileObject());
+        String uri = Utils.toUri(info.getFileObject());
         return Collections.singletonList(createCodeAction(Bundle.DN_GenerateToString(), CODE_GENERATOR_KIND, GENERATE_TO_STRING, uri, offset, fields));
     }
 
@@ -133,7 +134,7 @@ public final class ToStringGenerator extends CodeGenerator {
 
     private void generate(NbCodeLanguageClient client, String uri, int offset, List<QuickPickItem> fields) {
         try {
-            FileObject file = fromUri(uri);
+            FileObject file = Utils.fromUri(uri);
             JavaSource js = JavaSource.forFileObject(file);
             List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                 wc.toPhase(JavaSource.Phase.RESOLVED);

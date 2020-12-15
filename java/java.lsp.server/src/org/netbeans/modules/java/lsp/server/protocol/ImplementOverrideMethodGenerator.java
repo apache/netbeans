@@ -48,6 +48,7 @@ import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
@@ -88,7 +89,7 @@ public final class ImplementOverrideMethodGenerator extends CodeGenerator {
             return Collections.emptyList();
         }
         List<CodeAction> result = new ArrayList<>();
-        String uri = toUri(info.getFileObject());
+        String uri = Utils.toUri(info.getFileObject());
         ElementUtilities eu = info.getElementUtilities();
         if (typeElement.getKind().isClass() || typeElement.getKind().isInterface() && SourceVersion.RELEASE_8.compareTo(info.getSourceVersion()) <= 0) {
             List<QuickPickItem> implementMethods = new ArrayList<>();
@@ -149,7 +150,7 @@ public final class ImplementOverrideMethodGenerator extends CodeGenerator {
 
     private void generate(NbCodeLanguageClient client, String uri, int offset, boolean isImplement, List<QuickPickItem> methods) {
         try {
-            FileObject file = fromUri(uri);
+            FileObject file = Utils.fromUri(uri);
             JavaSource js = JavaSource.forFileObject(file);
             List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                 wc.toPhase(JavaSource.Phase.RESOLVED);

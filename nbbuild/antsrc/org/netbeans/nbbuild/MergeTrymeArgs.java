@@ -24,8 +24,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 /**
- * Merge the arguments supplied via the tryme.arg.* properties into the
- * property tryme.args.
+ * Merge the arguments supplied via any {@code tryme.arg.*} properties into the
+ * property {@code tryme.args}.
  */
 public class MergeTrymeArgs extends Task {
     public @Override void execute() throws BuildException {

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/*
+ /*
  * "MyFontMetrics"
  * MyFontMetrics.java 1.5 01/07/10
  */
@@ -123,10 +123,11 @@ class MyFontMetrics {
 
     public MyFontMetrics(Component component) {
         this.cmp = component;
-        width = getFm().charWidth('a');
-        height = getFm().getHeight();
-        ascent = getFm().getAscent();
-        leading = getFm().getLeading();
+        this.fm = this.cmp.getFontMetrics(cmp.getFont());
+        width = fm.charWidth('a');
+        height = fm.getHeight();
+        ascent = fm.getAscent();
+        leading = fm.getLeading();
 
         // HACK
         // From all I can tell both xterm and DtTerm ignore the leading.
@@ -138,25 +139,25 @@ class MyFontMetrics {
         // the following makes things match up, but if we ever undo this
         // we'll have to go and adjust how everything is drawn (cursor,
         // reverse-video attribute, underscore, bg stripe, selection etc.
-
         height -= leading;
         leading = 0;
-
-        cwidth_cache = CacheFactory.cacheForFontMetrics(getFm());
+        cwidth_cache = CacheFactory.cacheForFontMetrics(fm);
     }
 
     public FontMetrics getFm() {
-        return this.cmp.getFontMetrics(cmp.getFont());
+//        if (fm == null) fm = this.cmp.getFontMetrics(cmp.getFont()); // this does not work very well
+        return this.cmp.getFontMetrics(cmp.getFont()); // this seems not very optimal
     }
 
     @Override
     protected void finalize() {
-        CacheFactory.disposeBy(getFm());
+        CacheFactory.disposeBy(fm);
     }
     public int width;
     public int height;
     public int ascent;
     public int leading;
+    public FontMetrics fm;
     public Component cmp;
     private WidthCache cwidth_cache;
 

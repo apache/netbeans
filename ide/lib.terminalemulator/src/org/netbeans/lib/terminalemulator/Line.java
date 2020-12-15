@@ -156,13 +156,13 @@ final class Line {
     }
 
     public int stringWidth(MyFontMetrics metrics, int at) {
+        if (at > buf.length - 1) return 0;
         return metrics.getFm().charsWidth(buf, 0, at);
     }
 
-    public byte width(MyFontMetrics metrics, int at) {
-        if (at >= capacity)
-            return 1;
-        return (byte) metrics.wcwidth(charAt(at));
+    public int charWidth(MyFontMetrics metrics, int at) {
+        if (at > buf.length - 1) return 0;
+        return metrics.getFm().charsWidth(buf, at, 0);
     }
 
     /*

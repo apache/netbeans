@@ -36,6 +36,6 @@ public class MergeTrymeArgs extends Task {
                 tryMeArgs.append(e.getValue());
             }
         }
-        getProject().setProperty("tryme.args", tryMeArgs.toString());
+        getProject().setNewProperty("tryme.args", tryMeArgs.toString());
     }
 }

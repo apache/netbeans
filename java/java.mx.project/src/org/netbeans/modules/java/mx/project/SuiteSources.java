@@ -71,6 +71,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.Utilities;
 import java.util.stream.Collectors;
 import org.netbeans.api.java.queries.SourceLevelQuery;
+import static org.netbeans.spi.java.classpath.FlaggedClassPathImplementation.PROP_FLAGS;
 import org.netbeans.spi.java.queries.MultipleRootsUnitTestForSourceQueryImplementation;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
 import org.netbeans.spi.project.SubprojectProvider;
@@ -553,12 +554,43 @@ final class SuiteSources implements Sources,
         SuiteSources owner();
     }
 
-    final class Dist implements Dep, FlaggedClassPathImplementation {
+    abstract class SharedSupport {
+        private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+        private Boolean exists;
+
+        public final Set<ClassPath.Flag> getFlags() {
+            return Boolean.TRUE.equals(exists) ? Collections.emptySet() : Collections.singleton(ClassPath.Flag.INCOMPLETE);
+        }
+
+        public void addPropertyChangeListener(PropertyChangeListener pl) {
+            support.addPropertyChangeListener(pl);
+        }
+
+        public void removePropertyChangeListener(PropertyChangeListener pl) {
+            support.removePropertyChangeListener(pl);
+        }
+
+        final boolean isInitialized() {
+            return exists != null;
+        }
+
+        final void updateExists(boolean existsNow) {
+            if (exists == null) {
+                exists = existsNow;
+            } else {
+                if (exists != existsNow) {
+                    exists = existsNow;
+                    support.firePropertyChange(PROP_FLAGS, !exists, (boolean) exists);
+                }
+            }
+        }
+
+    }
+
+    final class Dist extends SharedSupport implements Dep, FlaggedClassPathImplementation {
         final String name;
         final MxDistribution dist;
         Collection<Dep> allDeps;
-        private final PropertyChangeSupport support = new PropertyChangeSupport(this);
-        private Boolean exists;
         private Collection<Group> groups;
 
         public Dist(String name, MxDistribution dist) {
@@ -589,11 +621,6 @@ final class SuiteSources implements Sources,
             return this.name;
         }
 
-        @Override
-        public Set<ClassPath.Flag> getFlags() {
-            return Boolean.TRUE.equals(exists) ? Collections.emptySet() : Collections.singleton(ClassPath.Flag.INCOMPLETE);
-        }
-
         private FileObject getJar() {
             if (SuiteSources.this.dir == null) {
                 return null;
@@ -621,15 +648,7 @@ final class SuiteSources implements Sources,
         public List<? extends PathResourceImplementation> getResources() {
             ensureTransitiveDependenciesAreComputed();
             FileObject jar = getJar();
-            final boolean existsNow = jar != null && jar.isData();
-            if (exists == null) {
-                exists = existsNow;
-            } else {
-                if (exists != existsNow) {
-                    exists = existsNow;
-                    support.firePropertyChange(PROP_FLAGS, !exists, (boolean) exists);
-                }
-            }
+            updateExists(jar != null && jar.isData());
             if (jar != null) {
                 PathResourceImplementation res;
                 try {
@@ -649,16 +668,6 @@ final class SuiteSources implements Sources,
             } else {
                 return null;
             }
-        }
-
-        @Override
-        public void addPropertyChangeListener(PropertyChangeListener pl) {
-            support.addPropertyChangeListener(pl);
-        }
-
-        @Override
-        public void removePropertyChangeListener(PropertyChangeListener pl) {
-            support.removePropertyChangeListener(pl);
         }
 
         @Override
@@ -914,12 +923,10 @@ final class SuiteSources implements Sources,
         }
     }
 
-    private class Library implements FlaggedClassPathImplementation, Dep {
+    private class Library extends SharedSupport implements FlaggedClassPathImplementation, Dep {
         final MxLibrary lib;
-        final PropertyChangeSupport support = new PropertyChangeSupport(this);
         final String libName;
         Collection<Dep> allDeps;
-        Boolean exists;
 
         Library(String libName, MxLibrary lib) {
             this.libName = libName;
@@ -999,21 +1006,9 @@ final class SuiteSources implements Sources,
         }
 
         @Override
-        public Set<ClassPath.Flag> getFlags() {
-            return exists ? Collections.emptySet() : Collections.singleton(ClassPath.Flag.INCOMPLETE);
-        }
-
-        @Override
         public List<? extends PathResourceImplementation> getResources() {
-            File jar = getJar(exists == null);
-            if (exists == null) {
-                exists = jar.exists();
-            } else {
-                if (exists != jar.exists()) {
-                    exists = jar.exists();
-                    support.firePropertyChange(PROP_FLAGS, !exists, (boolean) exists);
-                }
-            }
+            File jar = getJar(!isInitialized());
+            updateExists(jar.exists());
             PathResourceImplementation res;
             try {
                 res = ClassPathSupport.createResource(new URL("jar:" + Utilities.toURI(jar).toURL() + "!/"));
@@ -1021,16 +1016,6 @@ final class SuiteSources implements Sources,
             } catch (MalformedURLException ex) {
                 return Collections.emptyList();
             }
-        }
-
-        @Override
-        public void addPropertyChangeListener(PropertyChangeListener pl) {
-            support.addPropertyChangeListener(pl);
-        }
-
-        @Override
-        public void removePropertyChangeListener(PropertyChangeListener pl) {
-            support.removePropertyChangeListener(pl);
         }
 
         @Override
@@ -1109,21 +1094,9 @@ final class SuiteSources implements Sources,
         }
 
         @Override
-        public Set<ClassPath.Flag> getFlags() {
-            return exists ? Collections.emptySet() : Collections.singleton(ClassPath.Flag.INCOMPLETE);
-        }
-
-        @Override
         public List<? extends PathResourceImplementation> getResources() {
-            File jar = getJar(exists == null);
-            if (exists == null) {
-                exists = jar.exists();
-            } else {
-                if (exists != jar.exists()) {
-                    exists = jar.exists();
-                    support.firePropertyChange(PROP_FLAGS, !exists, (boolean) exists);
-                }
-            }
+            File jar = getJar(isInitialized());
+            updateExists(jar.exists());
             PathResourceImplementation res;
             try {
                 res = ClassPathSupport.createResource(new URL("jar:" + Utilities.toURI(jar).toURL() + "!/"));
@@ -1131,16 +1104,6 @@ final class SuiteSources implements Sources,
             } catch (MalformedURLException ex) {
                 return Collections.emptyList();
             }
-        }
-
-        @Override
-        public void addPropertyChangeListener(PropertyChangeListener pl) {
-            support.addPropertyChangeListener(pl);
-        }
-
-        @Override
-        public void removePropertyChangeListener(PropertyChangeListener pl) {
-            support.removePropertyChangeListener(pl);
         }
 
         @Override

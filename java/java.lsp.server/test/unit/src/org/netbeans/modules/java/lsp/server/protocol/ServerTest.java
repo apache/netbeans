@@ -68,10 +68,13 @@ import org.eclipse.lsp4j.DocumentHighlightParams;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
+import org.eclipse.lsp4j.Hover;
+import org.eclipse.lsp4j.HoverParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.InsertTextFormat;
 import org.eclipse.lsp4j.Location;
+import org.eclipse.lsp4j.MarkupContent;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.Position;
@@ -886,6 +889,73 @@ public class ServerTest extends NbTestCase {
                          "<none>:2:21-2:31", "<none>:3:26-3:35", "<none>:4:13-4:22");
         assertHighlights(server.getTextDocumentService().documentHighlight(new DocumentHighlightParams(new TextDocumentIdentifier(toURI(src)), new Position(1, 27))).get(),
                          "<none>:1:26-1:29", "<none>:2:12-2:15", "<none>:3:17-3:20");
+    }
+
+    public void testHover() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    public static void main(String[] args) {\n" +
+                      "        System.out.println(\"Hello World!\");\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        FileUtil.refreshFor(getWorkDir());
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        assertTrue(result.getCapabilities().getHoverProvider());
+        Hover hover = server.getTextDocumentService().hover(new HoverParams(new TextDocumentIdentifier(toURI(src)), new Position(2, 10))).get();
+        assertNotNull(hover);
+        assertTrue(hover.getContents().isRight());
+        MarkupContent content = hover.getContents().getRight();
+        assertNotNull(content);
+        assertEquals(content.getKind(), "markdown");
+        assertEquals(content.getValue(), "**[java.​lang](*0)**\n" +
+                "\n" +
+                "```\n" +
+                "public final class System\n" +
+                "extends Object\n" +
+                "```\n" +
+                "\n" +
+                "<br />\n" +
+                "\n" +
+                "The `System` class contains several useful class fields and methods. It cannot be instantiated.\n" +
+                "\n" +
+                "Among the facilities provided by the `System` class\n" +
+                "are standard input, standard output, and error output streams;\n" +
+                "access to externally defined properties and environment\n" +
+                "variables; a means of loading files and libraries; and a utility\n" +
+                "method for quickly copying a portion of an array.\n" +
+                "\n" +
+                "Since:\n" +
+                ":   JDK1.0\n");
     }
 
     public void testAdvancedCompletion1() throws Exception {

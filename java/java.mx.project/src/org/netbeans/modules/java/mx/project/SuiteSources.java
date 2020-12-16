@@ -226,7 +226,7 @@ final class SuiteSources implements Sources,
         return dists;
     }
 
-    final synchronized void computeTransitiveDeps() {
+    final synchronized void ensureTransitiveDependenciesAreComputed() {
         Map<String, Dep> collectedDeps = this.transitiveDeps;
         if (collectedDeps == null) {
             return;
@@ -327,7 +327,7 @@ final class SuiteSources implements Sources,
     }
 
     private Collection<Dep> transitiveDeps(Dep current, Map<String, Dep> fill) {
-        current.owner().computeTransitiveDeps();
+        current.owner().ensureTransitiveDependenciesAreComputed();
         final Collection<Dep> currentAllDeps = current.allDeps();
         if (currentAllDeps == Collections.<Dep>emptySet()) {
             throw new IllegalStateException("Cyclic dep on " + current.getName());
@@ -409,7 +409,7 @@ final class SuiteSources implements Sources,
 
     @Override
     public SourceForBinaryQueryImplementation2.Result findSourceRoots2(URL url) {
-        this.computeTransitiveDeps();
+        this.ensureTransitiveDependenciesAreComputed();
         for (Dist dist : this.distributions) {
             URL jar;
             try {
@@ -619,7 +619,7 @@ final class SuiteSources implements Sources,
 
         @Override
         public List<? extends PathResourceImplementation> getResources() {
-            computeTransitiveDeps();
+            ensureTransitiveDependenciesAreComputed();
             FileObject jar = getJar();
             final boolean existsNow = jar != null && jar.isData();
             if (exists == null) {
@@ -776,12 +776,12 @@ final class SuiteSources implements Sources,
         }
 
         ClassPath getSourceCP() {
-            computeTransitiveDeps();
+            ensureTransitiveDependenciesAreComputed();
             return sourceCP;
         }
 
         ClassPath getCP() {
-            computeTransitiveDeps();
+            ensureTransitiveDependenciesAreComputed();
             return cp;
         }
 
@@ -802,7 +802,7 @@ final class SuiteSources implements Sources,
 
         private void computeClassPath(Map<String, Dep> transDeps) {
             for (Dep d : transDeps.values()) {
-                d.owner().computeTransitiveDeps();
+                d.owner().ensureTransitiveDependenciesAreComputed();
             }
 
             List<Group> arr = new ArrayList<>();
@@ -832,12 +832,12 @@ final class SuiteSources implements Sources,
 
         private void processTransDep(Dep dep, List<Group> addGroups, List<ClassPathImplementation> addJars) {
             if (dep != null) {
-                dep.owner().computeTransitiveDeps();
+                dep.owner().ensureTransitiveDependenciesAreComputed();
                 for (Dep d : dep.allDeps()) {
                     if (d == this) {
                         continue;
                     }
-                    d.owner().computeTransitiveDeps();
+                    d.owner().ensureTransitiveDependenciesAreComputed();
                     if (d instanceof Group) {
                         addGroups.add((Group) d);
                     } else if (d instanceof ClassPathImplementation) {
@@ -876,7 +876,7 @@ final class SuiteSources implements Sources,
         }
 
         ClassPath getProcessorCP() {
-            computeTransitiveDeps();
+            ensureTransitiveDependenciesAreComputed();
             return processorPath;
         }
 

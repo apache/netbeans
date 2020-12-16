@@ -707,12 +707,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             CompletableFuture<Hover> result = new CompletableFuture<Hover>() {
                 @Override
                 public boolean cancel(boolean mayInterruptIfRunning) {
-                    return futureJavadoc.cancel(mayInterruptIfRunning) && super.cancel(mayInterruptIfRunning);
+                    return futureJavadoc != null && futureJavadoc.cancel(mayInterruptIfRunning) && super.cancel(mayInterruptIfRunning);
                 }
             };
             JAVADOC_WORKER.post(() -> {
                 try {
-                    String javadoc = futureJavadoc.get();
+                    String javadoc = futureJavadoc != null ? futureJavadoc.get() : null;
                     if (javadoc != null) {
                         MarkupContent markup = new MarkupContent();
                         markup.setKind("markdown");

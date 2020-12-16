@@ -894,9 +894,12 @@ public class ServerTest extends NbTestCase {
     public void testHover() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
-        String code = "public class Test {\n" +
+        String code = "/**\n" +
+                      " * This is a test class with Javadoc.\n" +
+                      " */\n" +
+                      "public class Test {\n" +
                       "    public static void main(String[] args) {\n" +
-                      "        System.out.println(\"Hello World!\");\n" +
+                      "        Test t = new Test();\n" +
                       "    }\n" +
                       "}\n";
         try (Writer w = new FileWriter(src)) {
@@ -931,31 +934,21 @@ public class ServerTest extends NbTestCase {
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeResult result = server.initialize(new InitializeParams()).get();
         assertTrue(result.getCapabilities().getHoverProvider());
-        Hover hover = server.getTextDocumentService().hover(new HoverParams(new TextDocumentIdentifier(toURI(src)), new Position(2, 10))).get();
+        Hover hover = server.getTextDocumentService().hover(new HoverParams(new TextDocumentIdentifier(toURI(src)), new Position(5, 10))).get();
         assertNotNull(hover);
         assertTrue(hover.getContents().isRight());
         MarkupContent content = hover.getContents().getRight();
         assertNotNull(content);
         assertEquals(content.getKind(), "markdown");
-        assertEquals(content.getValue(), "**[java.​lang](*0)**\n" +
+        assertEquals(content.getValue(), "**[](*0)**\n" +
                 "\n" +
                 "```\n" +
-                "public final class System\n" +
+                "public class Test\n" +
                 "extends Object\n" +
                 "```\n" +
                 "\n" +
-                "<br />\n" +
-                "\n" +
-                "The `System` class contains several useful class fields and methods. It cannot be instantiated.\n" +
-                "\n" +
-                "Among the facilities provided by the `System` class\n" +
-                "are standard input, standard output, and error output streams;\n" +
-                "access to externally defined properties and environment\n" +
-                "variables; a means of loading files and libraries; and a utility\n" +
-                "method for quickly copying a portion of an array.\n" +
-                "\n" +
-                "Since:\n" +
-                ":   JDK1.0\n");
+                "This is a test class with Javadoc.\n" +
+                "\n");
     }
 
     public void testAdvancedCompletion1() throws Exception {

@@ -74,6 +74,7 @@ extide/gradle/external/gradle-6.7-bin.zip platform/api.annotations.common/extern
 extide/gradle/external/gradle-6.7-bin.zip platform/libs.junit4/external/hamcrest-core-1.3.jar
 extide/gradle/external/gradle-6.7-bin.zip platform/o.apache.commons.codec/external/commons-codec-1.13.jar
 extide/gradle/external/gradle-6.7-bin.zip platform/o.apache.commons.io/external/commons-io-2.6.jar
+extide/gradle/external/gradle-6.7-bin.zip ide/o.eclipse.jgit/external/org.eclipse.jgit-5.7.0.202003110725-r.jar
 
 # These are the endorsed version of the javaee apis and create libraries, so they are better kept separate
 enterprise/javaee.api/external/javax.annotation-api-1.2.jar enterprise/javaee7.api/external/javax.annotation-api-1.2.jar

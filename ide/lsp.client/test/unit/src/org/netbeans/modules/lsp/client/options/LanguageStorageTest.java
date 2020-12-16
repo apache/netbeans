@@ -103,7 +103,7 @@ public class LanguageStorageTest extends NbTestCase {
         Image icon = recognized.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16);
         String url = ((URL) icon.getProperty("url", null)).getFile();
         assertTrue(url.contains("/org/openide/nodes/defaultNode.png"));
-        Language l = MimeLookup.getLookup("text/x-ext-t").lookup(Language.class);
+        Language<?> l = MimeLookup.getLookup("text/x-ext-t").lookup(Language.class);
         assertNotNull(l);
 
         LanguageStorage.store(Arrays.asList(new LanguageDescription("t", "txt", FileUtil.toFile(grammar).getAbsolutePath(), null, "txt", null)));

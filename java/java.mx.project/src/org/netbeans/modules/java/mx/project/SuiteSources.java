@@ -591,7 +591,7 @@ final class SuiteSources implements Sources,
 
         @Override
         public Set<ClassPath.Flag> getFlags() {
-            return exists ? Collections.emptySet() : Collections.singleton(ClassPath.Flag.INCOMPLETE);
+            return Boolean.TRUE.equals(exists) ? Collections.emptySet() : Collections.singleton(ClassPath.Flag.INCOMPLETE);
         }
 
         private FileObject getJar() {

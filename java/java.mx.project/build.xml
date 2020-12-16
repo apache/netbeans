@@ -21,6 +21,7 @@
     <description>Builds, tests, and runs the project org.netbeans.modules.java.mx.project</description>
 
     <property name="graal.dir" value="${basedir}/test/unit/data/graal"/>
+    <property name="mx.dir" value="${graal.dir}/../mx"/>
     <available property="graal.dir.available" file="${graal.dir}/LICENSE"/>
 
     <target name="test-preinit" unless="graal.dir.available">
@@ -34,7 +35,21 @@
             <arg value="--single-branch"/>
             <arg value="https://github.com/oracle/graal"/>
         </exec>
+        <delete dir="${mx.dir}"/>
+        <mkdir dir="${mx.dir}/.."/>
+        <exec dir="${mx.dir}/.." executable="git" failonerror="true">
+            <arg value="clone"/>
+            <arg value="--depth=1"/>
+            <arg value="--branch"/>
+            <arg value="5.279.0"/>
+            <arg value="--single-branch"/>
+            <arg value="https://github.com/graalvm/mx"/>
+        </exec>
+        <exec dir="${graal.dir}/truffle" executable="${mx.dir}/mx" failonerror="true">
+            <arg value="build"/>
+        </exec>
     </target>
+    <target name="test-unit-build-datajar"/>
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

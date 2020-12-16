@@ -1,0 +1,4 @@
+Code completion result for source line:
+echo self::CONST_REF|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONST_REF [1 => ?, ? => 'Bob']  [PUBLIC]   Constants

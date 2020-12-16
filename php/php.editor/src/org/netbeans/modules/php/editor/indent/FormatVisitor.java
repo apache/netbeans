@@ -2292,7 +2292,7 @@ public class FormatVisitor extends DefaultVisitor {
                 break;
             case T_INLINE_HTML:
                 FormatToken.InitToken token = (FormatToken.InitToken) formatTokens.get(0);
-                if (!token.hasHTML() && !isWhitespace(ts.token().text())) {
+                if (!token.hasHTML() && !isWhitespace(ts.token().text()) && !isShebang(ts.token().text())) {
                     token.setHasHTML(true);
                 }
                 int tokenStartOffset = ts.offset();
@@ -2716,6 +2716,10 @@ public class FormatVisitor extends DefaultVisitor {
             index++;
         }
         return index == text.length();
+    }
+
+    private boolean isShebang(final CharSequence text) {
+        return TokenUtilities.startsWith(text, "#!"); //NOI18N
     }
 
     private static boolean isAnonymousClass(ASTNode astNode) {

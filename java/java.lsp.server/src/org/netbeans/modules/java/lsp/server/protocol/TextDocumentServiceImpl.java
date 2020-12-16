@@ -187,8 +187,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
-import org.openide.util.NbBundle.Messages;
-import org.openide.util.Pair;
+import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 
@@ -964,11 +963,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    @Messages({
-        "DN_GenerateGetters=Generate getter(s).",
-        "DN_GenerateSetters=Generate setter(s).",
-        "DN_GenerateGettersSetters=Generate getter(s) and setter(s).",
-    })
     public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
         Document doc = openedDocuments.get(params.getTextDocument().getUri());
         if (doc == null) {
@@ -1067,20 +1061,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         try {
             js.runUserActionTask(cc -> {
                 cc.toPhase(JavaSource.Phase.RESOLVED);
-
-                Pair<Set<VariableElement>, Set<VariableElement>> pair = GetterSetterGenerator.findMissingGettersSetters(cc, params.getRange(), false);
-                boolean missingGetters = !pair.first().isEmpty();
-                boolean missingSetters = !pair.second().isEmpty();
-                String uri = Utils.toUri(cc.getFileObject());
-
-                if (missingGetters) {
-                    result.add(Either.forRight(createCodeGeneratorAction(Bundle.DN_GenerateGetters(), Server.GENERATE_GETTERS, uri, params.getRange())));
-                }
-                if (missingSetters) {
-                    result.add(Either.forRight(createCodeGeneratorAction(Bundle.DN_GenerateSetters(), Server.GENERATE_SETTERS, uri, params.getRange())));
-                }
-                if (missingGetters && missingSetters) {
-                    result.add(Either.forRight(createCodeGeneratorAction(Bundle.DN_GenerateGettersSetters(), Server.GENERATE_GETTERS_SETTERS, uri, params.getRange())));
+                for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
+                    for (CodeAction codeAction : codeGenerator.getCodeActions(cc, params)) {
+                        result.add(Either.forRight(codeAction));
+                    }
                 }
             }, true);
         } catch (IOException ex) {
@@ -1090,17 +1074,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         return CompletableFuture.completedFuture(result);
     }
-
-    private CodeAction createCodeGeneratorAction(String name, String command, String uri, Range range) {
-        CodeAction action = new CodeAction(name);
-        List<Object> arguments = new ArrayList<>();
-
-        arguments.add(uri);
-        arguments.add(range);
-        action.setCommand(new Command(name, command, arguments));
-        return action;
-    }
-
 
     //TODO: copied from spi.editor.hints/.../FixData:
     private List<Fix> sortFixes(Collection<Fix> fixes) {

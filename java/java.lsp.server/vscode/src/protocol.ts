@@ -18,8 +18,10 @@
  */
 'use strict';
 
+import {QuickPickItem} from 'vscode';
 import {
     NotificationType,
+    RequestType,
     ShowMessageParams
 } from 'vscode-languageclient';
 
@@ -33,3 +35,37 @@ export interface ShowStatusMessageParams extends ShowMessageParams {
 export namespace StatusMessageRequest {
     export const type = new NotificationType<ShowStatusMessageParams, void>('window/showStatusBarMessage');
 };
+
+export interface ShowQuickPickParams {
+    /**
+     * A string to show as placeholder in the input box to guide the user what to pick on.
+     */
+    placeHolder: string;
+    /**
+     * An optional flag to make the picker accept multiple selections.
+     */
+    canPickMany?: boolean;
+    /**
+     * A list of items.
+     */
+    items: QuickPickItem[];
+}
+
+export namespace QuickPickRequest {
+    export const type = new RequestType<ShowQuickPickParams, QuickPickItem[], void, void>('window/showQuickPick');
+}
+
+export interface ShowInputBoxParams {
+    /**
+     * The text to display underneath the input box.
+     */
+    prompt: string;
+    /**
+     * The value to prefill in the input box.
+     */
+    value: string;
+}
+
+export namespace InputBoxRequest {
+    export const type = new RequestType<ShowInputBoxParams, string | undefined, void, void>('window/showInputBox');
+}

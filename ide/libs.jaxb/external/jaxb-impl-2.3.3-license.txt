@@ -1,10 +1,10 @@
 Name: JAXB
 Description: JAXB Reference Implementation
-Version: 2.2.5-2
+Version: 2.3.3
 Origin: Oracle
-URL: https://jaxb.java.net/
+URL: https://github.com/javaee/jaxb-v2
 License: CDDL-1.1
-Files: jaxb-impl-2.2.5-2.jar
+Files: jaxb-impl-2.3.3.jar
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

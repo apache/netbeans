@@ -1033,6 +1033,11 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/blankLines/OpenClosePHPTag05.php", options);
     }
 
+    public void testOpenClosePHPTag06() throws Exception {
+        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/blankLines/OpenClosePHPTag06.php", options);
+    }
+
     public void testMaxPreservedBlankLines01() throws Exception {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
         options.put(FmtOptions.BLANK_LINES_MAX_PRESERVED, 0);

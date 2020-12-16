@@ -67,13 +67,20 @@ final class SuiteActionProvider implements ActionProvider {
     }
 
     @NbBundle.Messages({
+        "# {0} - name of mx suite",
         "MSG_Clean=mx clean {0}",
+        "# {0} - name of mx suite",
         "MSG_Build=mx build {0}",
+        "# {0} - name of mx suite",
+        "# {1} - name of source group",
         "MSG_BuildOnly=mx build {0} --only {1}",
+        "# {0} - name of mx suite",
         "MSG_Rebuild=mx rebuild {0}",
+        "# {0} - name of mx suite",
         "MSG_Unittest=mx unittest {0}",
     })
     @Override
+    @SuppressWarnings("fallthrough")
     public void invokeAction(String action, Lookup context) throws IllegalArgumentException {
         FileObject fo = context.lookup(FileObject.class);
         String testSuffix = "";
@@ -222,6 +229,7 @@ final class SuiteActionProvider implements ActionProvider {
     }
 
     @Override
+    @SuppressWarnings("fallthrough")
     public boolean isActionEnabled(String action, Lookup context) throws IllegalArgumentException {
         FileObject fo = context.lookup(FileObject.class);
         switch (action) {

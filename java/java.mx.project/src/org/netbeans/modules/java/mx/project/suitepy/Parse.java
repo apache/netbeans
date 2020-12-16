@@ -202,7 +202,9 @@ final class Parse {
             } else if (clazz.isInterface()) {
                 val = Proxy.newProxyInstance(clazz.getClassLoader(), new Class<?>[]{clazz}, new Handler(result));
             } else if (clazz == boolean.class) {
-                return (T) Boolean.valueOf(result.asString());
+                @SuppressWarnings("unchecked")
+                final T asBoolean = (T) Boolean.valueOf(result.asString());
+                return asBoolean;
             } else {
                 val = result.asString();
             }

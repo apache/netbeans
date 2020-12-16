@@ -594,7 +594,7 @@ final class SuiteSources implements Sources,
             return exists ? Collections.emptySet() : Collections.singleton(ClassPath.Flag.INCOMPLETE);
         }
 
-        private FileObject getJar(boolean ignore) {
+        private FileObject getJar() {
             if (SuiteSources.this.dir == null) {
                 return null;
             }
@@ -620,7 +620,7 @@ final class SuiteSources implements Sources,
         @Override
         public List<? extends PathResourceImplementation> getResources() {
             computeTransitiveDeps();
-            FileObject jar = getJar(exists == null);
+            FileObject jar = getJar();
             final boolean existsNow = jar != null && jar.isData();
             if (exists == null) {
                 exists = existsNow;
@@ -643,7 +643,7 @@ final class SuiteSources implements Sources,
         }
 
         private URL getJarRoot() throws MalformedURLException {
-            FileObject jar = getJar(true);
+            FileObject jar = getJar();
             if (jar != null) {
                 return new URL("jar:" + jar.toURL() + "!/");
             } else {

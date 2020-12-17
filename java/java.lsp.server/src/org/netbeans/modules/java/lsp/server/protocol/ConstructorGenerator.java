@@ -108,7 +108,7 @@ public final class ConstructorGenerator extends CodeGenerator {
                 inheritedConstructors.add(executableElement);
             }
         }
-        List<QuickPickItem> constructors = null;
+        List<QuickPickItem> constructors;
         if (typeElement.getKind() != ElementKind.ENUM && inheritedConstructors.size() == 1) {
             QuickPickItem item = new QuickPickItem(createLabel(info, inheritedConstructors.get(0)));
             item.setUserData(new ElementData(inheritedConstructors.get(0)));
@@ -120,9 +120,13 @@ public final class ConstructorGenerator extends CodeGenerator {
                 item.setUserData(new ElementData(constructorElement));
                 constructors.add(item);
             }
+        } else {
+            constructors = Collections.emptyList();
         }
-        List<QuickPickItem> fields = null;
-        if (!uninitializedFields.isEmpty()) {
+        List<QuickPickItem> fields;
+        if (uninitializedFields.isEmpty()) {
+            fields = Collections.emptyList();
+        } else {
             fields = new ArrayList<>();
             for (VariableElement variableElement : uninitializedFields) {
                 QuickPickItem item = new QuickPickItem(createLabel(info, variableElement));
@@ -130,7 +134,7 @@ public final class ConstructorGenerator extends CodeGenerator {
                 fields.add(item);
             }
         }
-        if (constructors == null && fields == null) {
+        if (constructors.isEmpty() && fields.isEmpty()) {
             return Collections.emptyList();
         }
         String uri = Utils.toUri(info.getFileObject());

@@ -115,18 +115,18 @@ NB_ID="${nb.id}"
 
         <echo message="Building ide.pkg into ${basedir}/../../build/nbide.pkg"/>
         
-        <loadfile property="sign_iden_name" srcFile="${mac.sign.idname}">
+        <loadfile property="sign_iden_name" srcFile="${mac.sign.idname}" quiet="true">
             <filterchain>
                <striplinebreaks/>
             </filterchain>
         </loadfile>
+        <condition property="sign_iden_name_arg" value="" else="--sign '${sign_iden_name}'">
+            <equals arg1="${mac.sign.idname}" arg2="0"/>
+        </condition>        
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>
-            <arg value="pkgbuild --root ${builddir}/app --scripts ${scriptsdir} --identifier org.netbeans.ide.nbide.${nb.id} --install-location ${install.dir} --sign '${sign_iden_name}' ${basedir}/../../build/nbide-${nb.id}.pkg"/>
+            <arg value="pkgbuild --root ${builddir}/app --scripts ${scriptsdir} --identifier org.netbeans.ide.nbide.${nb.id} --install-location ${install.dir} ${sign_iden_name_arg} ${basedir}/../../build/nbide-${nb.id}.pkg"/>
         </exec>
-        <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
-            <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign ${basedir}/../../build/nbide-${nb.id}.pkg -signed_location /${basedir}/../../build/ -sign_method mac_pkg -server UK" />
-        </java-->
     </target>
     
     

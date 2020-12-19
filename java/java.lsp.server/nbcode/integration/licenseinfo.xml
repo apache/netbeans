@@ -23,7 +23,7 @@
     <fileset>
         <file>src/org/netbeans/modules/nbcode/integration/resources/GeneratedMethodBody.template</file>
         <file>src/org/netbeans/modules/nbcode/integration/resources/LambdaBody.template</file>
-        <file>src/org/netbeans/modules/nbcode/integration/resources/OverridenMethodBody.template</file>
+        <file>src/org/netbeans/modules/nbcode/integration/resources/OverriddenMethodBody.template</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="TEMPLATE_MINIMAL_IP"/>
     </fileset>

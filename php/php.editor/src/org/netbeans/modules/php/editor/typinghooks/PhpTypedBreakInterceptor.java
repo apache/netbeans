@@ -172,6 +172,8 @@ public class PhpTypedBreakInterceptor implements TypedBreakInterceptor {
                             sb.append("\n"); // NOI18N
                         }
                     }
+                } else if (helpToken.id() == PHPTokenId.PHP_ATTRIBUTE) {
+                    sb.append("\n"); // NOI18N
                 }
                 sb.append(IndentUtils.createIndentString(doc, indent));
             } else {

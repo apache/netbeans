@@ -33,7 +33,7 @@ export interface ShowStatusMessageParams extends ShowMessageParams {
 }
 
 export namespace StatusMessageRequest {
-    export const type = new NotificationType<ShowStatusMessageParams, void>('window/showStatusBarMessage');
+    export const type = new NotificationType<ShowStatusMessageParams>('window/showStatusBarMessage');
 };
 
 export interface ShowQuickPickParams {
@@ -52,7 +52,7 @@ export interface ShowQuickPickParams {
 }
 
 export namespace QuickPickRequest {
-    export const type = new RequestType<ShowQuickPickParams, QuickPickItem[], void, void>('window/showQuickPick');
+    export const type = new RequestType<ShowQuickPickParams, QuickPickItem[], void>('window/showQuickPick');
 }
 
 export interface ShowInputBoxParams {
@@ -67,5 +67,5 @@ export interface ShowInputBoxParams {
 }
 
 export namespace InputBoxRequest {
-    export const type = new RequestType<ShowInputBoxParams, string | undefined, void, void>('window/showInputBox');
+    export const type = new RequestType<ShowInputBoxParams, string | undefined, void>('window/showInputBox');
 }

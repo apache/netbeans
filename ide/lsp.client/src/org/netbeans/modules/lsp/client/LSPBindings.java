@@ -18,12 +18,14 @@
  */
 package org.netbeans.modules.lsp.client;
 
+import com.google.gson.InstanceCreator;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
@@ -51,6 +53,8 @@ import org.eclipse.lsp4j.DocumentSymbolCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.ResourceOperationKind;
+import org.eclipse.lsp4j.SemanticTokens;
+import org.eclipse.lsp4j.SemanticTokensLegend;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SymbolCapabilities;
 import org.eclipse.lsp4j.SymbolKind;
@@ -233,7 +237,23 @@ public class LSPBindings {
                     InputStream in = LanguageServerProviderAccessor.getINSTANCE().getInputStream(desc);
                     OutputStream out = LanguageServerProviderAccessor.getINSTANCE().getOutputStream(desc);
                     Process p = LanguageServerProviderAccessor.getINSTANCE().getProcess(desc);
-                    Launcher<LanguageServer> launcher = LSPLauncher.createClientLauncher(lci, in, out);
+                    Launcher<LanguageServer> launcher = new LSPLauncher.Builder<LanguageServer>()
+                                                                       .setLocalService(lci)
+                                                                       .setRemoteInterface(LanguageServer.class)
+                                                                       .setInput(in)
+                                                                       .setOutput(out)
+                                                                       .configureGson(gson -> {
+                       gson.registerTypeAdapter(SemanticTokensLegend.class, new InstanceCreator<SemanticTokensLegend>() {
+                           @Override public SemanticTokensLegend createInstance(Type type) {
+                               return new SemanticTokensLegend(Collections.emptyList(), Collections.emptyList());
+                           }
+                       });
+                       gson.registerTypeAdapter(SemanticTokens.class, new InstanceCreator<SemanticTokens>() {
+                           @Override public SemanticTokens createInstance(Type type) {
+                               return new SemanticTokens(Collections.emptyList());
+                           }
+                       });
+                    }).create();
                     launcher.startListening();
                     LanguageServer server = launcher.getRemoteProxy();
                     InitializeResult result = initServer(p, server, dir); //XXX: what if a different root is expected????

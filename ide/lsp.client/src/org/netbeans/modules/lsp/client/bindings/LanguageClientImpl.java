@@ -27,6 +27,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -35,6 +36,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
@@ -52,14 +54,20 @@ import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextEdit;
+import org.eclipse.lsp4j.WorkDoneProgressBegin;
+import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
+import org.eclipse.lsp4j.WorkDoneProgressEnd;
+import org.eclipse.lsp4j.WorkDoneProgressReport;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.LanguageClient;
+import org.netbeans.api.progress.*;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
 import org.netbeans.spi.editor.hints.ChangeInfo;
@@ -74,6 +82,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -98,6 +107,48 @@ public class LanguageClientImpl implements LanguageClient {
     @Override
     public void telemetryEvent(Object arg0) {
         System.err.println("telemetry: " + arg0);
+    }
+
+    @Override
+    public CompletableFuture<Void> createProgress(WorkDoneProgressCreateParams params) {
+        return CompletableFuture.completedFuture(null);
+    }
+
+    private final Map<Object, ProgressHandle> key2Progress = new HashMap<>();
+
+    public void notifyProgress(ProgressParams params) {
+        SwingUtilities.invokeLater(() -> {
+            switch (params.getValue().getKind()) {
+                case begin: {
+                    WorkDoneProgressBegin progress = (WorkDoneProgressBegin) params.getValue();
+                    ProgressHandle handle = ProgressHandle.createHandle(progress.getTitle());
+                    key2Progress.put(params.getToken().get(), handle);
+                    handle.start();
+                    handle.progress(progress.getMessage());
+                    break;
+                }
+                case report: {
+                    WorkDoneProgressReport progress = (WorkDoneProgressReport) params.getValue();
+                    ProgressHandle handle = key2Progress.get(params.getToken().get());
+                    if (progress.getPercentage() != null) {
+                        handle.switchToDeterminate(100);
+                        handle.progress(progress.getPercentage());
+                    } else {
+                        handle.switchToIndeterminate();
+                    }
+                    if (progress.getMessage() != null) {
+                        handle.progress(progress.getMessage());
+                    }
+                    break;
+                }
+                case end: {
+                    WorkDoneProgressEnd progress = (WorkDoneProgressEnd) params.getValue();
+                    ProgressHandle handle = key2Progress.get(params.getToken().get());
+                    handle.finish();
+                    break;
+                }
+            }
+        });
     }
 
     @Override

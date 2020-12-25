@@ -21,16 +21,19 @@
 import { commands, window, workspace, ExtensionContext, ProgressLocation } from 'vscode';
 
 import {
-    LanguageClient,
     LanguageClientOptions,
     CloseAction,
     ErrorAction,
-    StreamInfo,
     Message,
     MessageType,
     LogMessageNotification,
     HandlerResult
 } from 'vscode-languageclient';
+
+import {
+    LanguageClient,
+    StreamInfo,
+} from 'vscode-languageclient/node';
 
 import * as net from 'net';
 import * as fs from 'fs';

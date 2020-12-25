@@ -41,9 +41,13 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -51,6 +55,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -65,6 +70,7 @@ import javax.lang.model.util.Elements;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
+import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -103,6 +109,13 @@ import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ReferenceParams;
 import org.eclipse.lsp4j.RenameParams;
+import org.eclipse.lsp4j.SemanticTokens;
+import org.eclipse.lsp4j.SemanticTokensCapabilities;
+import org.eclipse.lsp4j.SemanticTokensLegend;
+import org.eclipse.lsp4j.SemanticTokensParams;
+import org.eclipse.lsp4j.SemanticTokensServerFull;
+import org.eclipse.lsp4j.SemanticTokensWithRegistrationOptions;
+import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SymbolInformation;
@@ -133,6 +146,7 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.java.source.ui.ElementJavadoc;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lexer.Token;
 import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.editor.java.GoToSupport.Context;
 import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
@@ -140,8 +154,11 @@ import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.completion.JavaCompletionTask;
 import org.netbeans.modules.java.completion.JavaCompletionTask.Options;
 import org.netbeans.modules.java.completion.JavaDocumentationTask;
+import org.netbeans.modules.java.editor.base.semantic.ColoringAttributes;
 import org.netbeans.modules.java.editor.base.semantic.MarkOccurrencesHighlighterBase;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
+import org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase;
+import org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase.ErrorDescriptionSetter;
 import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
 import org.netbeans.modules.java.hints.errors.ImportClass;
 import org.netbeans.modules.java.hints.infrastructure.CreatorBasedLazyFixList;
@@ -174,6 +191,7 @@ import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 
@@ -261,6 +279,47 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public void connect(LanguageClient client) {
         this.client = (NbCodeLanguageClient)client;
+    }
+
+    private int[] coloring2TokenType;
+    private int[] coloring2TokenModifier;
+
+    {
+        coloring2TokenType = new int[ColoringAttributes.values().length];
+        Arrays.fill(coloring2TokenType, -1);
+        coloring2TokenModifier = new int[ColoringAttributes.values().length];
+        Arrays.fill(coloring2TokenModifier, -1);
+    }
+
+    public void init(ClientCapabilities clientCapabilities, ServerCapabilities severCapabilities) {
+        SemanticTokensCapabilities semanticTokens = clientCapabilities != null && clientCapabilities.getTextDocument() != null ? clientCapabilities.getTextDocument().getSemanticTokens() : null;
+        if (semanticTokens != null) {
+            SemanticTokensWithRegistrationOptions cap = new SemanticTokensWithRegistrationOptions();
+            cap.setFull(new SemanticTokensServerFull(false));
+            Set<String> knownTokenTypes = semanticTokens.getTokenTypes() != null ? new HashSet<>(semanticTokens.getTokenTypes()) : Collections.emptySet();
+            Map<String, Integer> tokenLegend = new LinkedHashMap<>();
+            for (Entry<ColoringAttributes, List<String>> e : COLORING_TO_TOKEN_TYPE_CANDIDATES.entrySet()) {
+                for (String candidate : e.getValue()) {
+                    if (knownTokenTypes.contains(candidate)) {
+                        coloring2TokenType[e.getKey().ordinal()] = tokenLegend.computeIfAbsent(candidate, c -> tokenLegend.size());
+                        break;
+                    }
+                }
+            }
+            Set<String> knownTokenModifiers = semanticTokens.getTokenModifiers() != null ? new HashSet<>(semanticTokens.getTokenModifiers()) : Collections.emptySet();
+            Map<String, Integer> modifiersLegend = new LinkedHashMap<>();
+            for (Entry<ColoringAttributes, List<String>> e : COLORING_TO_TOKEN_MODIFIERS_CANDIDATES.entrySet()) {
+                for (String candidate : e.getValue()) {
+                    if (knownTokenModifiers.contains(candidate)) {
+                        coloring2TokenModifier[e.getKey().ordinal()] = modifiersLegend.computeIfAbsent(candidate, c -> 1 << modifiersLegend.size());
+                        break;
+                    }
+                }
+            }
+            SemanticTokensLegend legend = new SemanticTokensLegend(new ArrayList<>(tokenLegend.keySet()), new ArrayList<>(modifiersLegend.keySet()));
+            cap.setLegend(legend);
+            severCapabilities.setSemanticTokensProvider(cap);
+        }
     }
 
     private static class ItemFactoryImpl implements JavaCompletionTask.ItemFactory<CompletionItem> {
@@ -1386,4 +1445,93 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
      * this hook, if defined, with the method name and parameter.
      */
     static BiConsumer<String, Object> HOOK_NOTIFICATION = null;
+
+    private static final Map<ColoringAttributes, List<String>> COLORING_TO_TOKEN_TYPE_CANDIDATES = new HashMap<ColoringAttributes, List<String>>() {{
+        put(ColoringAttributes.FIELD, Arrays.asList("member"));
+        put(ColoringAttributes.RECORD_COMPONENT, Arrays.asList("member"));
+        put(ColoringAttributes.LOCAL_VARIABLE, Arrays.asList("variable"));
+        put(ColoringAttributes.PARAMETER, Arrays.asList("parameter"));
+        put(ColoringAttributes.METHOD, Arrays.asList("method", "function"));
+        put(ColoringAttributes.CONSTRUCTOR, Arrays.asList("method", "function"));
+        put(ColoringAttributes.CLASS, Arrays.asList("class"));
+        put(ColoringAttributes.RECORD, Arrays.asList("class"));
+        put(ColoringAttributes.INTERFACE, Arrays.asList("interface"));
+        put(ColoringAttributes.ANNOTATION_TYPE, Arrays.asList("interface"));
+        put(ColoringAttributes.ENUM, Arrays.asList("enum"));
+        put(ColoringAttributes.TYPE_PARAMETER_DECLARATION, Arrays.asList("typeParameter"));
+    }};
+
+    private static final Map<ColoringAttributes, List<String>> COLORING_TO_TOKEN_MODIFIERS_CANDIDATES = new HashMap<ColoringAttributes, List<String>>() {{
+        put(ColoringAttributes.ABSTRACT, Arrays.asList("abstract"));
+        put(ColoringAttributes.DECLARATION, Arrays.asList("declaration"));
+        put(ColoringAttributes.DEPRECATED, Arrays.asList("deprecated"));
+        put(ColoringAttributes.STATIC, Arrays.asList("static"));
+    }};
+
+    @Override
+    public CompletableFuture<SemanticTokens> semanticTokensFull(SemanticTokensParams params) {
+        JavaSource js = getSource(params.getTextDocument().getUri());
+        List<Integer> result = new ArrayList<>();
+        try {
+            js.runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+                Document doc = cc.getSnapshot().getSource().getDocument(true);
+                new SemanticHighlighterBase() {
+                    @Override
+                    protected boolean process(CompilationInfo info, Document doc) {
+                        process(info, doc, new ErrorDescriptionSetter() {
+                            @Override
+                            public void setHighlights(Document doc, Collection<Pair<int[], ColoringAttributes.Coloring>> highlights, Map<int[], String> preText) {
+                                //...nothing
+                            }
+
+                            @Override
+                            public void setColorings(Document doc, Map<Token, ColoringAttributes.Coloring> colorings) {
+                                int line = 0;
+                                long column = 0;
+                                int lastLine = 0;
+                                long currentLineStart = 0;
+                                long nextLineStart = info.getCompilationUnit().getLineMap().getStartPosition(line + 2);
+                                Map<Token, ColoringAttributes.Coloring> ordered = new TreeMap<>((t1, t2) -> t1.offset(null) - t2.offset(null));
+                                ordered.putAll(colorings);
+                                for (Entry<Token, ColoringAttributes.Coloring> e : ordered.entrySet()) {
+                                    int currentOffset = e.getKey().offset(null);
+                                    while (nextLineStart < currentOffset) {
+                                        line++;
+                                        currentLineStart = nextLineStart;
+                                        nextLineStart = info.getCompilationUnit().getLineMap().getStartPosition(line + 2);
+                                        column = 0;
+                                    }
+                                    Optional<Integer> tokenType = e.getValue().stream().map(c -> coloring2TokenType[c.ordinal()]).collect(Collectors.maxBy((v1, v2) -> v1.intValue() - v2.intValue()));
+                                    int modifiers = 0;
+                                    for (ColoringAttributes c : e.getValue()) {
+                                        int mod = coloring2TokenModifier[c.ordinal()];
+                                        if (mod != (-1)) {
+                                            modifiers |= mod;
+                                        }
+                                    }
+                                    if (tokenType.isPresent()) {
+                                        result.add(line - lastLine);
+                                        result.add((int) (currentOffset - currentLineStart - column));
+                                        result.add(e.getKey().length());
+                                        result.add(tokenType.get());
+                                        result.add(modifiers);
+                                        lastLine = line;
+                                        column = currentOffset - currentLineStart;
+                                    }
+                                }
+                            }
+                        });
+                        return true;
+                    }
+                }.process(cc, doc);
+            }, true);
+        } catch (IOException ex) {
+            //TODO: include stack trace:
+            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+        }
+        SemanticTokens tokens = new SemanticTokens(result);
+        return CompletableFuture.completedFuture(tokens);
+    }
+
 }

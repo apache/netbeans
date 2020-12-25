@@ -39,6 +39,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
@@ -48,6 +49,7 @@ import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
+import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
 import org.eclipse.lsp4j.CodeActionKind;
@@ -82,8 +84,13 @@ import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ReferenceContext;
 import org.eclipse.lsp4j.ReferenceParams;
+import org.eclipse.lsp4j.SemanticTokens;
+import org.eclipse.lsp4j.SemanticTokensCapabilities;
+import org.eclipse.lsp4j.SemanticTokensLegend;
+import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
@@ -2233,6 +2240,95 @@ public class ServerTest extends NbTestCase {
         assertEquals("\n" +
                      "    private static final Logger LOGGER = Logger.getLogger(Test.class.getName());\n",
                      fileChanges.get(1).getNewText());
+    }
+
+    public void testSemanticHighlighting() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    private static final int C = 0;\n" +
+                      "    public int method(int p) {\n" +
+                      "        int l = p + method(0);\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        FileUtil.refreshFor(getWorkDir());
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        ClientCapabilities clientCaps = new ClientCapabilities();
+        TextDocumentClientCapabilities textCaps = new TextDocumentClientCapabilities();
+        clientCaps.setTextDocument(textCaps);
+        SemanticTokensCapabilities sematicTokensCapabilities = new SemanticTokensCapabilities(true);
+        sematicTokensCapabilities.setTokenTypes(Arrays.asList("member", "variable", "parameter", "method", "function", "class", "interface", "enum","typeParameter"));
+        sematicTokensCapabilities.setTokenModifiers(Arrays.asList("declaration", "static"));
+        textCaps.setSemanticTokens(sematicTokensCapabilities);
+        InitializeParams initParams = new InitializeParams();
+        initParams.setCapabilities(clientCaps);
+        InitializeResult result = server.initialize(initParams).get();
+        assertNotNull(result.getCapabilities().getSemanticTokensProvider());
+        SemanticTokensLegend legend = result.getCapabilities().getSemanticTokensProvider().getLegend();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        assertColoring(legend,
+                       server.getTextDocumentService().semanticTokensFull(new SemanticTokensParams(new TextDocumentIdentifier(toURI(src)))).get(),
+                       "0:13-17:class:[declaration]",
+                       "1:29-30:member:[declaration, static]",
+                       "2:15-21:method:[declaration]",
+                       "2:26-27:parameter:[declaration]",
+                       "3:12-13:variable:[declaration]",
+                       "3:16-17:parameter:[]",
+                       "3:20-26:method:[]");
+    }
+
+    private void assertColoring(SemanticTokensLegend legend, SemanticTokens tokens, String... expected) {
+        List<String> coloring = new ArrayList<>();
+        int line = 0;
+        int column = 0;
+
+        for (int i = 0; i < tokens.getData().size(); i += 5) {
+            line += tokens.getData().get(i);
+            if (tokens.getData().get(i) != 0) {
+                column = 0;
+            }
+            column += tokens.getData().get(i + 1);
+            int endColumn = column + tokens.getData().get(i + 2);
+            String tokenType = legend.getTokenTypes().get(tokens.getData().get(i + 3));
+            Set<String> modifiers = new TreeSet<>();
+            int mods = tokens.getData().get(i + 4);
+            int pos;
+            while ((pos = Integer.highestOneBit(mods)) != 0) {
+                mods &= ~pos;
+                modifiers.add(legend.getTokenModifiers().get(Integer.numberOfTrailingZeros(pos)));
+            }
+            coloring.add("" + line + ":" + column + "-" + endColumn + ":" + tokenType + ":" + modifiers);
+        }
+
+        assertEquals(Arrays.asList(expected), coloring);
     }
 
     private String toString(Location location) {

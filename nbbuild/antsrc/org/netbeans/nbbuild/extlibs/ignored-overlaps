@@ -86,9 +86,9 @@ enterprise/javaee7.api/external/jsr181-api-1.0-MR1.jar java/websvc.jaxws21api/ex
 ide/libs.bytelist/external/jcodings-1.0.18.jar ide/textmate.lexer/external/jcodings-1.0.18.jar
 
 # ide/lsp.client and java/java.lsp.server both use LSP libraries, but are independent:
-ide/lsp.client/external/org.eclipse.lsp4j-0.9.0.jar java/java.lsp.server/external/org.eclipse.lsp4j-0.9.0.jar
-ide/lsp.client/external/org.eclipse.lsp4j.generator-0.9.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.generator-0.9.0.jar
-ide/lsp.client/external/org.eclipse.lsp4j.jsonrpc-0.9.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.jsonrpc-0.9.0.jar
+ide/lsp.client/external/org.eclipse.lsp4j-0.10.0.jar java/java.lsp.server/external/org.eclipse.lsp4j-0.10.0.jar
+ide/lsp.client/external/org.eclipse.lsp4j.generator-0.10.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.generator-0.10.0.jar
+ide/lsp.client/external/org.eclipse.lsp4j.jsonrpc-0.10.0.jar java/java.lsp.server/external/org.eclipse.lsp4j.jsonrpc-0.10.0.jar
 ide/lsp.client/external/org.eclipse.xtend.lib-2.19.0.jar java/java.lsp.server/external/org.eclipse.xtend.lib-2.19.0.jar
 ide/lsp.client/external/org.eclipse.xtend.lib.macro-2.19.0.jar java/java.lsp.server/external/org.eclipse.xtend.lib.macro-2.19.0.jar
 ide/lsp.client/external/org.eclipse.xtext.xbase.lib-2.19.0.jar java/java.lsp.server/external/org.eclipse.xtext.xbase.lib-2.19.0.jar

@@ -215,13 +215,16 @@ public class JShellTool implements MessageHandler {
 
     static final String DEFAULT_STARTUP =
             "\n" +
-            "import java.util.*;\n" +
             "import java.io.*;\n" +
             "import java.math.*;\n" +
             "import java.net.*;\n" +
+            "import java.nio.file.*;\n" +
+            "import java.util.*;\n" +
             "import java.util.concurrent.*;\n" +
+            "import java.util.function.*;\n" +
             "import java.util.prefs.*;\n" +
             "import java.util.regex.*;\n" +
+            "import java.util.stream.*;\n" +
             "void printf(String format, Object... args) { System.out.printf(format, args); }\n";
 
     // Tool id (tid) mapping: the three name spaces

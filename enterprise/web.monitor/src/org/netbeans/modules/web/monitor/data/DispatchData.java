@@ -19,13 +19,15 @@
 
 package org.netbeans.modules.web.monitor.data;
 
-import org.w3c.dom.*;
-import org.xml.sax.InputSource;
-import org.netbeans.modules.schema2beans.*;
-import java.beans.*;
-import java.util.*;
-import java.io.*;
-import org.netbeans.modules.web.monitor.client.TransactionNode;
+import java.beans.PropertyChangeListener;
+import java.util.Vector;
+
+import org.netbeans.modules.schema2beans.AttrProp;
+import org.netbeans.modules.schema2beans.BaseBean;
+import org.netbeans.modules.schema2beans.BeanComparator;
+import org.netbeans.modules.schema2beans.BeanProp;
+import org.netbeans.modules.schema2beans.Common;
+import org.netbeans.modules.schema2beans.Version;
 
 public class DispatchData extends BaseBean implements DataRecord {
 
@@ -47,7 +49,7 @@ public class DispatchData extends BaseBean implements DataRecord {
     }
     
     public DispatchData(int options) {
-	super(comparators, new org.netbeans.modules.schema2beans.Version(1, 0, 6));
+	super(comparators, new Version(1, 0, 6));
 	this.createProperty("ClientData", CLIENTDATA,  // NOI18N
 			    Common.TYPE_1 | Common.TYPE_BEAN | Common.TYPE_KEY, 
 			    ClientData.class);

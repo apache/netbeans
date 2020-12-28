@@ -43,7 +43,7 @@ import org.netbeans.modules.schema2beans.Version;
 
 public class ContextAttributes extends BaseBean {
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
     static public final String PARAM = "Param"; // NOI18N
 

@@ -49,7 +49,7 @@ final class CatalogMounterModel extends Object {
     /** Creates new CatalogMounterModel */
     public CatalogMounterModel(Iterator providers) {        
         
-        Vector providersList = new Vector();
+        Vector<Entry> providersList = new Vector<>();
         while (providers.hasNext()) {
             providersList.add(new Entry((Class)providers.next()));
         }

@@ -44,7 +44,7 @@ public class MonitorData extends BaseBean implements DataRecord {
 
     private final static boolean debug = false;
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
     static public final String CLIENTDATA = "ClientData";   // NOI18N
     static public final String SESSIONDATA = "SessionData"; // NOI18N

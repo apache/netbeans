@@ -41,7 +41,7 @@ import org.netbeans.modules.schema2beans.Version;
 
 public class ContextData extends BaseBean {
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
     static public final String PARAM = "Param"; //NOI18N
     static public final String CONTEXTATTRIBUTES =

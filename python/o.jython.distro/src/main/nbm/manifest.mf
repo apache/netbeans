@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.jython.distro/1
+OpenIDE-Module-Localizing-Bundle: org/jython/distro/Bundle.properties

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Services">
+        <folder name="JavaHelp">
+            <file name="help-helpset.xml" url="help-helpset.xml">
+                <attr name="position" intvalue="3913"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

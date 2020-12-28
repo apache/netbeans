@@ -1,0 +1,141 @@
+<html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!--
+*     Copyright  2009 Sun Microsystems, Inc. All rights reserved.
+*     Use is subject to license terms.
+-->
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Python Project Tasks: Quick Reference</title>
+<link rel="StyleSheet" href="nbdocs:/org/netbeans/modules/usersguide/ide.css" type="text/css">
+</head>
+
+<body>
+<h2>Python Project Tasks: Quick Reference</h2>
+<p>This topic describes common tasks you can perform with Python projects.</p>
+
+<table border="1" cellpadding="5" cellspacing="0" summary="The left column lists the
+   task name. The right column lists the steps to perform.">
+  <tr valign="top"> 
+    <th width="10%" align="left" scope="col">To perform this task</th>
+    <th width="85%" align="left" scope="col">Follow these steps</th>
+  </tr>
+  <tr valign="top"> 
+    <td>Create New Project</td>
+    <td> <ol>
+             <li>In the IDE go to File > New Project > Python Project</li>
+             <li>Under Categories select Python, under Projects select Python Project</li>
+             <li>For Name and Location you must do the following:
+                <ul>
+                   <li><b>Project Name.</b> Specify the name of the project. This name is also used to create the project directory.</li>
+                   <li><b>Project Location.</b> Specify the location of the directory where you want to store the project metadata and source code. </li>
+                   <li><b>Set as Main Project.</b> Set the newly created project as the main project if desired.</li>
+                   <li><b>Create Main File.</b> Specify the name of the main file if needed. </li>
+                   <li><b>Python Platform</b>. Select the Python platform to use for your project.</li>
+                </ul>
+              <li>Click Finish and the project is created and opened in both the Projects and Files windows.
+    </ol></td>
+  </tr>
+  <tr valign="top"> 
+    <td>Create New Project from Existing Sources</td>
+    <td>
+      <ol>
+       <li>In the IDE go to File > New Project > Python Project with Existing Sources</li>
+       <li>In the Name and Location page, you have to set the following properties:
+           <ul>
+            <li><b>Project Name.</b> Specifies the display name of the project. This name is also used to create the project folder.</li>
+            <li><b>Project Location.</b> Specifies the folder where you want to store the project metadata and source code. </li>
+            <li><b>Set as Main Project.</b> Sets the newly created project as the main project.</li>
+            <li><b>Python Platform</b>. You can select the Python platform to use for your project. </li>
+           </ul>
+           </li>
+        <li>In the Existing Sources page, you have to set the following properties:
+          <ul>
+           <li><b>Source Root Folders</b>. Specify the root directory of the existing sources.</li>
+           <li><b>Test Root Folders</b>. Specify the root directory of the existing tests.</li>
+          </ul>
+               </li>
+          <li>When you click Finish, the project is created on your computer and opened in both the Projects and Files windows.</li>
+       </ol>   
+    </td>
+  </tr>
+  <tr valign="top"> 
+    <td>Running Python Applications</td>
+    <td><ol>
+        <li>To run a project, right-click the project node in the Projects window and choose Run. (or F6 to run the Main Project).</li>
+        <li>To Run a file, click on the file name in the Projects window and choose Run > Run File.</li>
+     </ol></td>
+  </tr>
+  <tr valign="top"> 
+    <td>Debugging Python Applications</td>
+    <td><ol>
+    <li>Go to Tools > Options, click Python, then the Debugger tab.</li>
+    <li>Set the Debugger listening starting port.</li>
+    <li>Use the default Debugging shell colors and fonts, or modify as you prefer.</li>
+    <li>Leave Stop at First Line checked to stop the debugger script after one line, or uncheck the box and the debugger 
+         will stop at the first found breakpoint in script.</li>
+    <li>Set breakpoints in the Source Editor by clicking in the left margin next to the line of code where you want to set a breakpoint.</li>
+      </ol>
+      <p>For additional details please see <a href="help-pydebug.html"> Debugging Python Applications</a>.</p>
+      </td>
+  </tr>
+  <tr valign="top"> 
+    <td>Adding New Python Modules</td>
+      <td><ol>
+        <li>Right-click on the project node and choose New > Empty Module.</li>
+         <li>In the Name and Location page, set the following properties:</li>
+            <ul>
+                <li><b>File Name</b>. Name of the new module</li>
+                <li><b>Project</b>. The project that this module will be added to.</li>
+                <li><b>Folder</b>. The directory which you want the module to be created.</li>
+            </ul>
+        <li>Click Finish and the new module is added to the project with a default code template.</li>
+      </ol></td>
+  </tr>
+  <tr valign="top"> 
+    <td>Adding New Python Packages</td>
+    <td>
+    <ol>
+        <li>Right-click the Project node and choose New > Python Package</li>
+        <li>In the Name and Location page, you have to set the following properties:</li>
+            <ul>
+                <li><b>File Name</b>. Name of the package.</li>
+                <li><b>Project</b>. The project that this module will be added to.</li>
+                <li><b>Folder</b>. The directory which you want the module to be created.</li>
+            </ul>
+           <li>When you click Finish, the package is added to the project with a default file already added.</li>
+    </td>
+  </tr>
+  <tr valign="top"> 
+    <td>Using the Python Interactive Console</td>
+    <td>
+      <ol>
+        <li> Go to Window > PythonConsole.</li>
+         <li>Add the Python script you wish to run to the Python Interactive Console window.</li>
+         <li>Click the green Run button on the left border of the output window to Run the script.</li>
+      </ol>
+    </td>
+  </tr>
+  <tr valign="top"> 
+    <td>Managing Python Platforms</td>
+    <td><p>In the IDE go to Tools > Python Platforms. The Python Platform Manager enables you to do the following:</p>
+         <ul>
+          <li>Add and Remove Platforms.</li>
+          <li>Specify which Python runtime, CPython or Jython, to use as a default.</li>
+          <li>Choose which CPython is used.</li>
+          <li>Specify values for command line arguments.</li>
+          <li>Set, Add and Remove Global Python Path variables.</li>
+          <li>Set, Add and Remove Java Classpath variables.</li>
+         </ul>
+    </td>
+  </tr>
+</table>
+<hr>
+<small><a href="credits.html">Legal Notices</a></small>
+<table cellpadding="50" border="0">
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+</table> 
+</body>
+</html>

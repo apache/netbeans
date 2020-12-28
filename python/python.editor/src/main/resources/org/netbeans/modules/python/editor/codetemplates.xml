@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE codetemplates PUBLIC "-//NetBeans//DTD Editor Code Templates settings 1.0//EN" "http://www.netbeans.org/dtds/EditorCodeTemplates-1_0.dtd">
+<codetemplates>
+    <!-- TODO - import from TextMate -->
+<!-- TODO  __magic__ -->
+
+
+    <codetemplate abbreviation="wh" descriptionId="ct_wh" uuid="python-1" xml:space="preserve">
+        <code>while ${EXP}:
+${initialindent editable="false"}${indent editable="false"}${cursor}</code>
+    </codetemplate>
+
+    <codetemplate abbreviation="cls" descriptionId="ct_cls" uuid="python-2" xml:space="preserve">
+        <code>class ${name}${1 default="(Extends)"}:
+${initialindent editable="false"}${indent editable="false"}"""
+${initialindent editable="false"}${indent editable="false"}${Documentation}
+${initialindent editable="false"}${indent editable="false"}"""
+${initialindent editable="false"}${indent editable="false"}${cursor}</code>
+    </codetemplate>
+
+    <codetemplate abbreviation="def" descriptionId="ct_def" uuid="python-3" xml:space="preserve">
+        <code>def ${name}(${1 default="parameters"}):
+${initialindent editable="false"}${indent editable="false"}"""${Documentation}"""
+${initialindent editable="false"}${indent editable="false"}${cursor}</code>
+    </codetemplate>
+
+    <codetemplate abbreviation="init" descriptionId="ct_init" uuid="python-4" xml:space="preserve">
+        <code>def __init__(self${1 default=", parameters"}):
+${initialindent editable="false"}${indent editable="false"}"""${Documentation}"""
+${initialindent editable="false"}${indent editable="false"}${cursor}</code>
+    </codetemplate>
+
+    <codetemplate abbreviation="bre" descriptionId="ct_bre" uuid="python-5" xml:space="preserve">
+        <code>break
+${initialindent editable="false"}${cursor}</code>
+    </codetemplate>
+
+    <codetemplate abbreviation="cont" descriptionId="ct_cont" uuid="python-6" xml:space="preserve">
+        <code>continue
+${initialindent editable="false"}${cursor}</code>
+    </codetemplate>
+
+    <codetemplate abbreviation="asse" descriptionId="ct_asse" uuid="python-7" xml:space="preserve">
+        <code>assert ${condition}, "${assertmessage}"
+${initialindent editable="false"}${cursor}</code>
+    </codetemplate>
+
+    <codetemplate abbreviation="forin" descriptionId="ct_forin" uuid="python-8" xml:space="preserve">
+        <code>for ${i} in range(${10}):
+${initialindent editable="false"}${indent editable="false"}print ${i}
+${initialindent editable="false"}${cursor}</code>
+    </codetemplate>
+    <codetemplate abbreviation="imp" descriptionId="ct_imp" uuid="python-9" xml:space="preserve">
+        <code>import ${libraryName}
+${initialindent editable="false"}${cursor}</code>
+    </codetemplate>
+
+    <codetemplate abbreviation="trye" descriptionId="ct_trye" uuid="python-10" xml:space="preserve">
+        <code>try:
+${initialindent editable="false"}${indent editable="false"}${dangerousCode}
+${initialindent editable="false"}except Exception:
+${initialindent editable="false"}${indent editable="false"}print "${errorMessage}"
+${initialindent editable="false"}else:
+${initialindent editable="false"}${indent editable="false"}${runBlockIfNoExceptionThrown}
+${initialindent editable="false"}${cursor}</code>
+    </codetemplate>
+
+    <codetemplate abbreviation="tryf" descriptionId="ct_tryf" uuid="python-11" xml:space="preserve">
+
+        <code>try:
+${initialindent editable="false"}${indent editable="false"}${dangerousCode}
+${initialindent editable="false"}except Exception, e:
+${initialindent editable="false"}${indent editable="false"}print "Exception: ", e
+${initialindent editable="false"}finally:
+${initialindent editable="false"}${codeWillRunRegardlessOfException}
+${cursor}</code>
+    </codetemplate>
+
+    <codetemplate abbreviation="ife" descriptionId="ct_ife" uuid="python-12" xml:space="preserve">
+        <code>if ${condition}:
+${initialindent editable="false"}${indent editable="false"}${statement}
+${initialindent editable="false"}else:
+${initialindent editable="false"}${indent editable="false"}${cursor}</code>
+    </codetemplate>
+
+    <codetemplate abbreviation="rai" descriptionId="ct_rai" uuid="python-13" xml:space="preserve">
+        <code>raise ${Exception}
+${initialindent editable="false"}${cursor}</code>
+    </codetemplate>
+
+    <codetemplate abbreviation="if" descriptionId="ct_if" uuid="python-14" xml:space="preserve">
+        <code>if ${condition}:
+${initialindent editable="false"}${indent editable="false"}${cursor}</code>
+    </codetemplate>
+
+    <codetemplate abbreviation="prn" descriptionId="ct_prn" uuid="python-15" xml:space="preserve">
+        <code>print "${cursor}"</code>
+    </codetemplate>
+
+    <codetemplate abbreviation="try" descriptionId="ct_try" uuid="python-16" xml:space="preserve">
+
+        <code>try:
+${initialindent editable="false"}${indent editable="false"}${dangerousCode}
+${initialindent editable="false"}except Exception, e:
+${initialindent editable="false"}${indent editable="false"}print "Exception: ", e
+${initialindent editable="false"}${cursor}</code>
+    </codetemplate>
+
+    <codetemplate abbreviation="vdoc" descriptionId="ct_vdoc" uuid="python-17" xml:space="preserve">
+        <code># @type ${varname} ${type}${cursor}</code>
+    </codetemplate>
+
+</codetemplates>

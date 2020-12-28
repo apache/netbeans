@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.jython/2
+OpenIDE-Module-Localizing-Bundle: org/jython/Bundle.properties
+AutoUpdate-Show-In-Client: false
+

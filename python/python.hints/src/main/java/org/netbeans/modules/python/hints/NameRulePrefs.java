@@ -1,0 +1,292 @@
+/*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright 2010 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ * Other names may be trademarks of their respective owners.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common
+ * Development and Distribution License("CDDL") (collectively, the
+ * "License"). You may not use this file except in compliance with the
+ * License. You can obtain a copy of the License at
+ * http://www.netbeans.org/cddl-gplv2.html
+ * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ * specific language governing permissions and limitations under the
+ * License.  When distributing the software, include this License Header
+ * Notice in each file and include the License file at
+ * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the GPL Version 2 section of the License file that
+ * accompanied this code. If applicable, add the following below the
+ * License Header, with the fields enclosed by brackets [] replaced by
+ * your own identifying information:
+ * "Portions Copyrighted [year] [name of copyright owner]"
+ *
+ * If you wish your version of this file to be governed by only the CDDL
+ * or only the GPL Version 2, indicate your decision by adding
+ * "[Contributor] elects to include this software in this distribution
+ * under the [CDDL or GPL Version 2] license." If you do not indicate a
+ * single choice of license, a recipient has the option to distribute
+ * your version of this file under either the CDDL, the GPL Version 2 or
+ * to extend the choice of license to its licensees as provided above.
+ * However, if you add GPL Version 2 code and therefore, elected the GPL
+ * Version 2 license, then the option applies only if the new code is
+ * made subject to such option by the copyright holder.
+ *
+ * Contributor(s):
+ *
+ * Portions Copyrighted 2008 Sun Microsystems, Inc.
+ */
+package org.netbeans.modules.python.hints;
+
+import org.netbeans.modules.python.source.NameStyle;
+import java.awt.Component;
+import java.util.prefs.Preferences;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+
+/**
+ *
+ * @author Tor Norbye
+ */
+public class NameRulePrefs extends javax.swing.JPanel {
+    private NameRule rule;
+    private Preferences prefs;
+
+    /** Creates new form NameRulePrefs */
+    public NameRulePrefs(NameRule rule, Preferences prefs) {
+        this.rule = rule;
+        this.prefs = prefs;
+
+        initComponents();
+
+        ListCellRenderer renderer = new NameStyleRenderer();
+        moduleCombo.setRenderer(renderer);
+        functionCombo.setRenderer(renderer);
+        classCombo.setRenderer(renderer);
+        variableCombo.setRenderer(renderer);
+
+        moduleCombo.setSelectedItem(NameRule.getModuleNameStyle(prefs));
+        functionCombo.setSelectedItem(NameRule.getFunctionNameStyle(prefs));
+        classCombo.setSelectedItem(NameRule.getClassNameStyle(prefs));
+        variableCombo.setSelectedItem(NameRule.getVariableNameStyle(prefs));
+
+        selfCb.setSelected(NameRule.isSelfRequired(prefs));
+        ignoredText.setText(NameRule.getIgnoredNames(prefs));
+    }
+
+    private ComboBoxModel getNameStyleModel() {
+        return new DefaultComboBoxModel(NameStyle.values());
+    }
+
+    private static class NameStyleRenderer extends JLabel implements ListCellRenderer/*, UIResource*/ {
+        public NameStyleRenderer() {
+            setOpaque(true);
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value,
+                int index, boolean isSelected, boolean cellHasFocus) {
+            // #93658: GTK needs name to render cell renderer "natively"
+            setName("ComboBox.listRenderer"); // NOI18N
+
+            if (isSelected) {
+                setBackground(list.getSelectionBackground());
+                setForeground(list.getSelectionForeground());
+            } else {
+                setBackground(list.getBackground());
+                setForeground(list.getForeground());
+            }
+
+            if (value instanceof NameStyle) {
+                setText(((NameStyle)value).getDisplayName());
+            }
+
+            return this;
+        }
+
+        // #93658: GTK needs name to render cell renderer "natively"
+        public 
+        @Override
+        String getName() {
+            String name = super.getName();
+            return name == null ? "ComboBox.renderer" : name;  // NOI18N
+        }
+    }
+
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        classLabel = new javax.swing.JLabel();
+        functionLabel = new javax.swing.JLabel();
+        moduleLabel = new javax.swing.JLabel();
+        parameterLabel = new javax.swing.JLabel();
+        selfCb = new javax.swing.JCheckBox();
+        moduleCombo = new javax.swing.JComboBox();
+        classCombo = new javax.swing.JComboBox();
+        functionCombo = new javax.swing.JComboBox();
+        variableLabel = new javax.swing.JLabel();
+        variableCombo = new javax.swing.JComboBox();
+        ignoreLabel = new javax.swing.JLabel();
+        ignoredText = new javax.swing.JTextField();
+
+        classLabel.setText(org.openide.util.NbBundle.getMessage(NameRulePrefs.class, "NameRulePrefs.classLabel.text")); // NOI18N
+
+        functionLabel.setText(org.openide.util.NbBundle.getMessage(NameRulePrefs.class, "NameRulePrefs.functionLabel.text")); // NOI18N
+
+        moduleLabel.setText(org.openide.util.NbBundle.getMessage(NameRulePrefs.class, "NameRulePrefs.moduleLabel.text")); // NOI18N
+
+        parameterLabel.setText(org.openide.util.NbBundle.getMessage(NameRulePrefs.class, "NameRulePrefs.parameterLabel.text")); // NOI18N
+
+        selfCb.setText(org.openide.util.NbBundle.getMessage(NameRulePrefs.class, "NameRulePrefs.selfCb.text")); // NOI18N
+        selfCb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changed(evt);
+            }
+        });
+
+        moduleCombo.setModel(getNameStyleModel());
+        moduleCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changed(evt);
+            }
+        });
+
+        classCombo.setModel(getNameStyleModel());
+        classCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changed(evt);
+            }
+        });
+
+        functionCombo.setModel(getNameStyleModel());
+        functionCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changed(evt);
+            }
+        });
+
+        variableLabel.setText(org.openide.util.NbBundle.getMessage(NameRulePrefs.class, "NameRulePrefs.variableLabel.text")); // NOI18N
+        variableLabel.setEnabled(false);
+
+        variableCombo.setModel(getNameStyleModel());
+        variableCombo.setEnabled(false);
+        variableCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changed(evt);
+            }
+        });
+
+        ignoreLabel.setText(org.openide.util.NbBundle.getMessage(NameRulePrefs.class, "NameRulePrefs.ignoreLabel.text")); // NOI18N
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(moduleLabel)
+                            .addComponent(classLabel)
+                            .addComponent(functionLabel)
+                            .addComponent(variableLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(variableCombo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(classCombo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(moduleCombo, javax.swing.GroupLayout.Alignment.LEADING, 0, 234, Short.MAX_VALUE)
+                            .addComponent(functionCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(parameterLabel)
+                    .addComponent(selfCb)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(ignoreLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ignoredText)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(moduleLabel)
+                    .addComponent(moduleCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(classLabel)
+                    .addComponent(classCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(functionLabel)
+                    .addComponent(functionCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(variableLabel)
+                    .addComponent(variableCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(parameterLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(selfCb)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ignoreLabel)
+                    .addComponent(ignoredText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void changed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changed
+        Object source = evt.getSource();
+
+        if (source == moduleCombo) {
+            NameStyle style = (NameStyle)moduleCombo.getSelectedItem();
+            if (style != null) {
+                rule.setModuleNameStyle(prefs, style);
+            }
+        } else if (source == functionCombo) {
+            NameStyle style = (NameStyle)functionCombo.getSelectedItem();
+            if (style != null) {
+                rule.setFunctionNameStyle(prefs, style);
+            }
+        } else if (source == classCombo) {
+            NameStyle style = (NameStyle)classCombo.getSelectedItem();
+            if (style != null) {
+                rule.setClassNameStyle(prefs, style);
+            }
+        } else if (source == variableCombo) {
+            NameStyle style = (NameStyle)variableCombo.getSelectedItem();
+            if (style != null) {
+                rule.setVariableNameStyle(prefs, style);
+            }
+        } else if (source == ignoredText) {
+            rule.setIgnoredNames(prefs, ignoredText.getText().trim());
+        } else if (source == selfCb) {
+            rule.setSelfRequired(prefs, selfCb.isSelected());
+        }
+    }//GEN-LAST:event_changed
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox classCombo;
+    private javax.swing.JLabel classLabel;
+    private javax.swing.JComboBox functionCombo;
+    private javax.swing.JLabel functionLabel;
+    private javax.swing.JLabel ignoreLabel;
+    private javax.swing.JTextField ignoredText;
+    private javax.swing.JComboBox moduleCombo;
+    private javax.swing.JLabel moduleLabel;
+    private javax.swing.JLabel parameterLabel;
+    private javax.swing.JCheckBox selfCb;
+    private javax.swing.JComboBox variableCombo;
+    private javax.swing.JLabel variableLabel;
+    // End of variables declaration//GEN-END:variables
+}

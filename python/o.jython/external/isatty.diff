@@ -1,0 +1,18 @@
+Index: src/org/python/core/util/FileUtil.java
+===================================================================
+--- src/org/python/core/util/FileUtil.java	(revision 6493)
++++ src/org/python/core/util/FileUtil.java	(working copy)
+@@ -66,12 +66,7 @@
+     }
+ 
+     public static boolean isatty(FileDescriptor fd) {
+-        try {
+-            return imp.load("os").__getattr__("isatty").__call__(Py.java2py(fd)).__nonzero__();
+-        } catch (PyException e) {
+-            // Weak isatty check copied from jna-posix JavaPOSIX class
+-            return fd == FileDescriptor.in || fd == FileDescriptor.out || fd == FileDescriptor.err;
+-        }
++        return fd == FileDescriptor.in || fd == FileDescriptor.out || fd == FileDescriptor.err;
+     }
+ 
+ }

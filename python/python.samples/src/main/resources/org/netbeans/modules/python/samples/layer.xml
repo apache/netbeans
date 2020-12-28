@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Templates">
+        <folder name="Project">
+            <folder name="Samples">
+                <folder name="Python">
+                    <attr name="position" intvalue="617"/>
+                    <file name="JySwingProject.zip" url="JySwingProject.zip">
+                        <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/python/samples/resources/sample_py_25_16.png"/>
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.samples.Bundle"/>
+                        <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.python.samples.projects.JySwingWizardIterator.createIterator"/>
+                        <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/python/samples/projects/JySwingDescription.html"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="PLYDemoProject.zip" url="PLYDemoProject.zip">
+                        <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/python/samples/resources/sample_py_25_16.png"/>
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.samples.Bundle"/>
+                        <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.python.samples.projects.PLYDemoWizardIterator.createIterator"/>
+                        <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/python/samples/projects/PLYDemoDescription.html"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                    <file name="PyThreadsProject.zip" url="PyThreadsProject.zip">
+                        <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/python/samples/resources/sample_py_25_16.png"/>
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.samples.Bundle"/>
+                        <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.python.samples.projects.PyThreadsWizardIterator.createIterator"/>
+                        <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/python/samples/projects/PyThreadsDescription.html"/>
+                        <attr name="template" boolvalue="true"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

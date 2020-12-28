@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Other">
+            <file name="org-netbeans-modules-python-qshell-RunQShellAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.qshell.Bundle"/>
+                <attr name="delegate" newvalue="org.netbeans.modules.python.qshell.RunQShellAction"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.python.qshell.Bundle#CTL_RunQShellAction"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/python/qshell/resources/qshell.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="BuildProject">
+            <file name="org-netbeans-modules-python-qshell-RunQShellAction-separatorBefore.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="1150"/>
+            </file>
+            <file name="org-netbeans-modules-python-qshell-RunQShellAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Other/org-netbeans-modules-python-qshell-RunQShellAction.instance"/>
+                <attr name="position" intvalue="1200"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="QShellTopComponent.settings" url="QShellTopComponentSettings.xml"/>
+        </folder>
+        <folder name="Modes">
+            <folder name="output">
+                <file name="QShellTopComponent.wstcref" url="QShellTopComponentWstcref.xml"/>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

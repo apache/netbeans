@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.4" maxVersion="1.4" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <Properties>
+    <Property name="name" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+      <ResourceString bundle="org/netbeans/modules/python/editor/options/Bundle.properties" key="LBL_BlankLines" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+    </Property>
+    <Property name="opaque" type="boolean" value="false"/>
+  </Properties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="bPackageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="aPackageLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="bImportsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="aImports" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="bClassLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="aClassLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="aClassHeaderLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="bFieldsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="aFieldsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="bMethodsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="aMethodsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="aMethodsField" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="bMethodsField" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="aFieldsField" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="bFieldsField" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="aClassHeaderField" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="aClassField" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="bClassField" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="aImportsField" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="bImportsField" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="aPackageField" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="bPackageField" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="bPackageField" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="bPackageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="4" pref="4" max="4" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="aPackageField" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="aPackageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="4" pref="4" max="4" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="bImportsField" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="bImportsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="4" pref="4" max="4" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="aImportsField" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="aImports" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="4" pref="4" max="4" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="bClassField" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="bClassLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="4" pref="4" max="4" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="aClassField" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="aClassLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="4" pref="4" max="4" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="aClassHeaderField" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="aClassHeaderLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="4" pref="4" max="4" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="bFieldsField" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="bFieldsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="4" pref="4" max="4" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="aFieldsField" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="aFieldsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="4" pref="4" max="4" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="bMethodsField" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="bMethodsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="4" pref="4" max="4" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="aMethodsField" linkSize="2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="aMethodsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="bPackageLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="bPackageField"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/python/editor/options/Bundle.properties" key="LBL_blBeforePackage" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="bPackageField">
+      <Properties>
+        <Property name="columns" type="int" value="5"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="aPackageLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="aPackageField"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/python/editor/options/Bundle.properties" key="LBL_blAfterPackage" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="aPackageField">
+      <Properties>
+        <Property name="columns" type="int" value="5"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="bImportsLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="bImportsField"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/python/editor/options/Bundle.properties" key="LBL_blBeforeImports" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="bImportsField">
+      <Properties>
+        <Property name="columns" type="int" value="5"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="aImports">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="aImportsField"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/python/editor/options/Bundle.properties" key="LBL_blAfterImports" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="aImportsField">
+      <Properties>
+        <Property name="columns" type="int" value="5"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="bClassLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="bClassField"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/python/editor/options/Bundle.properties" key="LBL_blBeforeClass" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="bClassField">
+      <Properties>
+        <Property name="columns" type="int" value="5"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="aClassLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="aClassField"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/python/editor/options/Bundle.properties" key="LBL_blAfterClass" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="aClassField">
+      <Properties>
+        <Property name="columns" type="int" value="5"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="aClassHeaderLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="aClassHeaderField"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/python/editor/options/Bundle.properties" key="LBL_blAfterClassHeader" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="aClassHeaderField">
+      <Properties>
+        <Property name="columns" type="int" value="5"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="bFieldsLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="bFieldsField"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/python/editor/options/Bundle.properties" key="LBL_blBeforeFields" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="bFieldsField">
+      <Properties>
+        <Property name="columns" type="int" value="5"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="aFieldsLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="aFieldsField"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/python/editor/options/Bundle.properties" key="LBL_blAfterFields" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="aFieldsField">
+      <Properties>
+        <Property name="columns" type="int" value="5"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="bMethodsLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="bMethodsField"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/python/editor/options/Bundle.properties" key="LBL_blBeforeMethods" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="bMethodsField">
+      <Properties>
+        <Property name="columns" type="int" value="5"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="aMethodsLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="aMethodsField"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/python/editor/options/Bundle.properties" key="LBL_blAfterMethods" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="aMethodsField">
+      <Properties>
+        <Property name="columns" type="int" value="5"/>
+      </Properties>
+    </Component>
+  </SubComponents>
+</Form>

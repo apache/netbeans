@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE MIME-Resolver PUBLIC "-//NetBeans//DTD MIME Resolver 1.0//EN"
+		    "http://www.netbeans.org/dtds/mime-resolver-1_0.dtd">
+
+<MIME-resolver >
+    <file>
+	<!-- Mac Power PC peff executable -->
+	<!--          J o y ! p e f f     -->
+	<magic   hex="4a6f792170656666"
+	        mask="ffffffffffffffff"/>
+	<!-- Next 4 bytes contains architecture type:
+             "pwpc" for the PowerPC CFM
+             "m68k" for CFM-68K
+             Ignore architecture. -->
+        <resolver mime="application/x-exe"/>
+    </file>
+    
+    <file>
+	<!-- Mach-O executable ppc -->
+	<!--                  v       v       v       v-->
+	<magic   hex="feedface0000000000000000000000020000"
+	        mask="ffffffff0000000000000000000000ff0000"/>
+        <resolver mime="application/x-exe"/>
+    </file>
+
+    <file>
+	<!-- Mach-O core ppc -->
+	<!--                  v       v       v       v-->
+	<magic   hex="feedface0000000000000000000000040000"
+	        mask="ffffffff0000000000000000000000ff0000"/>
+        <resolver mime="application/x-core+elf"/>
+    </file>
+
+<!--
+/* Constant for the magic field of the mach_header (32-bit architectures) */
+MH_MAGIC	0xfeedface	/* the mach magic number */
+MH_CIGAM	0xcefaedfe	/* NXSwapInt(MH_MAGIC) */
+/* Constant for the magic field of the mach_header_64 (64-bit architectures) */
+MH_MAGIC_64	0xfeedfacf	/* the 64-bit mach magic number */
+MH_CIGAM_64	0xcffaedfe	/* NXSwapInt(MH_MAGIC_64) */
+/* Constants for the filetype field of the mach_header */
+MH_OBJECT	0x1		/* relocatable object file */
+MH_EXECUTE	0x2		/* demand paged executable file */
+MH_FVMLIB	0x3		/* fixed VM shared library file */
+MH_CORE		0x4		/* core file */
+MH_PRELOAD	0x5		/* preloaded executable file */
+MH_DYLIB	0x6		/* dynamically bound shared library */
+MH_DYLINKER	0x7		/* dynamic link editor */
+MH_BUNDLE	0x8		/* dynamically bound bundle file */
+MH_DYLIB_STUB	0x9		/* shared library stub for static */
+				/*  linking only, no section contents */
+MH_DSYM		0xa		/* companion file with only debug */
+				/*  sections */
+MH_KEXT_BUNDLE	0xb		/* x86_64 kexts */
+-->    
+
+    <file>
+	<!-- Mach-O executable i386 -->
+	<!--                  v       v       v       v-->
+	<magic   hex="cefaedfe0000000000000000020000000000"
+	        mask="ffffffff0000000000000000ff0000000000"/>
+        <resolver mime="application/x-exe"/>
+    </file>
+
+    <file>
+	<!-- Mach-O dsym -->
+	<!--                  v       v       v       v-->
+	<magic   hex="cefaedfe00000000000000000A0000000000"
+	        mask="ffffffff0000000000000000ff0000000000"/>
+        <resolver mime="application/x-object+elf"/>
+    </file>
+
+    <file>
+	<!-- Mach-O executable x86-64 -->
+	<!--                  v       v       v       v-->
+	<magic   hex="cffaedfe0000000000000000020000000000"
+	        mask="ffffffff0000000000000000ff0000000000"/>
+        <resolver mime="application/x-exe"/>
+    </file>
+    
+    <file>
+	<!-- Mach-O universal binary with 2 architectures-->
+	<!--                  v       v       v       v-->
+	<magic   hex="cafebabe0000000000000000020000000000"
+	        mask="ffffffff0000000000000000000000000000"/>
+        <resolver mime="application/x-exe"/>
+    </file>
+    
+    <file>
+	<!-- Mach-O core i386 -->
+	<!--                  v       v       v       v-->
+	<magic   hex="cefaedfe0000000000000000040000000000"
+	        mask="ffffffff0000000000000000ff0000000000"/>
+        <resolver mime="application/x-core+elf"/>
+    </file>
+
+    <file>
+	<!-- Mach-O core i386-64 -->
+	<!--                  v       v       v       v-->
+	<magic   hex="cffaedfe0000000000000000040000000000"
+	        mask="ffffffff0000000000000000ff0000000000"/>
+        <resolver mime="application/x-core+elf"/>
+    </file>
+
+    <file>
+	<!-- MSB Executable   v       v       v       v-->
+	<magic   hex="7f454C460002000000000000000000000002"
+	        mask="ffffffff00ff00000000000000000000ffff"/>
+        <resolver mime="application/x-executable+elf"/>
+    </file>
+
+    <file>
+	<!-- LSB Executable   v       v       v       v-->
+	<magic   hex="7f454C460001000000000000000000000200"
+	        mask="ffffffff00ff00000000000000000000ffff"/>
+        <resolver mime="application/x-executable+elf"/>
+    </file>
+
+    <file>
+	<!-- MSB Object file  v       v       v       v-->
+	<magic   hex="7f454C460002000000000000000000000001"
+	        mask="ffffffff00ff00000000000000000000ffff"/>
+        <resolver mime="application/x-object+elf"/>
+    </file>
+
+    <file>
+	<!-- LSB Object file  v       v       v       v-->
+	<magic   hex="7f454C460001000000000000000000000100"
+	        mask="ffffffff00ff00000000000000000000ffff"/>
+        <resolver mime="application/x-object+elf"/>
+    </file>
+
+    <file>
+	<!-- MSB core file    v       v       v       v-->
+	<magic   hex="7f454C460002000000000000000000000004"
+	        mask="ffffffff00ff00000000000000000000ffff"/>
+        <resolver mime="application/x-core+elf"/>
+    </file>
+
+    <file>
+	<!-- LSB core file    v       v       v       v-->
+	<magic   hex="7f454C460001000000000000000000000400"
+	        mask="ffffffff00ff00000000000000000000ffff"/>
+        <resolver mime="application/x-core+elf"/>
+    </file>
+
+    <file>
+	<!-- MSB Shared Obj   v       v       v       v-->
+	<magic   hex="7f454C460002000000000000000000000003"
+	        mask="ffffffff00ff00000000000000000000ffff"/>
+        <resolver mime="application/x-shobj+elf"/>
+    </file>
+
+    <file>
+	<!-- LSB Shared Obj   v       v       v       v-->
+	<magic   hex="7f454C460001000000000000000000000300"
+	        mask="ffffffff00ff00000000000000000000ffff"/>
+        <resolver mime="application/x-shobj+elf"/>
+    </file>
+    <file>
+	<!--          ! < a r c h >     -->
+	<magic   hex="213c617263683e"
+	        mask="ffffffffffffff"/>
+        <resolver mime="application/x-stobj+elf"/>
+    </file>
+
+    <file>
+	<!-- Uset this shortened hex string to test. It should indescriminately
+	     recognize all elf files as executable -->
+	<magic hex="7f454c46"/>
+        <resolver mime="application/x-elf"/>
+    </file>
+
+</MIME-resolver>

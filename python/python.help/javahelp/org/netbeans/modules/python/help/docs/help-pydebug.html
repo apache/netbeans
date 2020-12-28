@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!--
+*     Copyright � 2009 Sun Microsystems, Inc. All rights reserved.
+*     Use is subject to license terms.
+-->
+<html>
+    <head>
+        <title>Debugging Python Applications</title>
+        <link rel="stylesheet" href="nbdocs:/org/netbeans/modules/usersguide/ide.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Debugging Python Applications</h2>
+        <p>Debugging is the process of examining your application for errors.
+            The process of debugging is accomplished by setting breakpoints and
+            watches in your code and running it in the debugger.
+            This enables you to execute your code one line at a time and examine
+        the state of your application in order to discover any problems.</p>
+
+        <h3>Setting Up Python Projects for Debugging</h3>
+        <ol>
+            <li>Check Debugger options: Go to Tools > Options > Python and
+            click on the Debugger tab :</li>
+            <ul>
+                <li><b>Debugger listening starting port:</b> For better
+                    isolation when debugging, the debugger is automatically started in a separate
+                    process and communicates with the IDE over an IP socket.
+                    This field specifies the port number where the debugger process
+                is listening for incoming Python debugging solicitations. </li>
+                <li><b>Debugging shell colors and fonts:</b>This group of buttons customizes
+                the debugging shell colors.</li>
+                <li><b>Stop at first line: </b> When checked, the debugger will stop at the
+                    first line of the debugger script. When unchecked the debugger will stop at
+                the first breakpoint found in the script.</li>
+            </ul>
+           <li><b>Setting the breakpoints:</b> In the Source Editor, click in the left
+            margin next to the desired line of code where you want to set a breakpoint.</li>
+        </ol>
+        <h3>Starting the Debugger</h3>
+        <p>After the breakpoints have been set, click on Debug and select the appropriate option to start the debugging session.</p>
+        <ul>
+            <li>If there is more than one project open, <b>Ctrl + F5</b> will start the debugging session on the main project.</li>
+            <li>To start a debugging session on a particular Python file, select the file and type <tt>Ctrl + Shift + F5</tt>.</li>
+        </ul>
+        <h3>Debugger Windows</h3>
+        <p>In addition to the Default Shell window, there are windows which display
+        other runtime configurations of the application currently being debugged:</p>
+        <ul>
+            <li><b>Call Stack Window</b></li>
+            <li><b>Local Variables Window</b></li>
+            <li><b>Threads Window</b></li>
+        </ul>
+<dl><dt><a name="seealso">See also</a></dt>
+<dd><dd><a href="help-quickref.html">Python Project Tasks: Quick Reference</a></dd>
+</dl>
+<hr>
+<small><a href="credits.html">Legal Notices</a></small> 
+    </body>
+</html>

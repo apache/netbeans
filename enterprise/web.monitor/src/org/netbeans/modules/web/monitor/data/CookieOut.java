@@ -31,7 +31,7 @@ import org.netbeans.modules.schema2beans.Common;
 public class CookieOut extends BaseBean
 {
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
     public CookieOut()
     {

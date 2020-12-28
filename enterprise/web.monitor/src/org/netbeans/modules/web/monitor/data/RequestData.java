@@ -36,7 +36,7 @@ import org.w3c.dom.Node;
 
 public class RequestData extends BaseBean {
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
     static public final String PARAM = "Param"; //NOI18N
     static public final String HEADERS = "Headers"; //NOI18N
@@ -272,7 +272,7 @@ public class RequestData extends BaseBean {
 	if(cookieStr == null || cookieStr.equals(""))  //NOI18N
 	    return new Param[0];
 		
-	Vector cookies = new Vector();
+	Vector<Param> cookies = new Vector<>();
 	    
 	StringTokenizer tok = new StringTokenizer(cookieStr,
 						  ";", false); // NOI18N

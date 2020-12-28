@@ -30,7 +30,7 @@ import org.netbeans.modules.schema2beans.Version;
 
 public class Param extends BaseBean {
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
 
     public Param() {

@@ -39,7 +39,7 @@ import org.netbeans.modules.schema2beans.Version;
 
 public class Headers extends BaseBean {
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
     static public final String PARAM = "Param";  // NOI18N
 
@@ -111,7 +111,7 @@ public class Headers extends BaseBean {
     //
     public Enumeration getHeaders(String name) {
 	int len = this.size(PARAM);
-	Vector v = new Vector();
+	Vector<String> v = new Vector<>();
 	for(int i=0; i<len; ++i) { 
 	    if(getParam(i).getName().equalsIgnoreCase(name))
 		v.add(getParam(i).getValue());

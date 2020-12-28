@@ -31,7 +31,7 @@ import org.netbeans.modules.schema2beans.Version;
 
 public class CookiesData extends BaseBean {
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
     static public final String COOKIEIN = "CookieIn"; // NOI18N
     static public final String COOKIEOUT = "CookieOut"; // NOI18N

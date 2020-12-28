@@ -31,7 +31,7 @@ import org.netbeans.modules.schema2beans.Version;
 
 public class SessionData extends BaseBean {
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
     static public final String SESSIONIN = "SessionIn"; //NOI18N
     static public final String SESSIONOUT = "SessionOut"; //NOI18N

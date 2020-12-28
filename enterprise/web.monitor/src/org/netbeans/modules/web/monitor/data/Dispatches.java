@@ -28,7 +28,7 @@ import org.netbeans.modules.schema2beans.Common;
 
 public class Dispatches extends BaseBean {
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
     static public final String DISPATCHDATA = "DispatchData"; // NOI18N
 

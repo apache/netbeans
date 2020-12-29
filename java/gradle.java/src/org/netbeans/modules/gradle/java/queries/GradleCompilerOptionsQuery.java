@@ -122,7 +122,7 @@ public final class GradleCompilerOptionsQuery implements CompilerOptionsQueryImp
 
         private List<String> checkArgs() {
             GradleJavaProject gjp = GradleJavaProject.get(project);
-            GradleJavaSourceSet ss = gjp.getSourceSets().get(sourceSetName);
+            GradleJavaSourceSet ss = gjp != null ? gjp.getSourceSets().get(sourceSetName) : null;
             return ss != null ? ss.getCompilerArgs(type) : Collections.emptyList();
         }
 

@@ -19,10 +19,8 @@
 package org.netbeans.modules.lsp.client.bindings.refactoring;
 
 import java.awt.Component;
-import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 import org.eclipse.lsp4j.Position;
-import org.eclipse.lsp4j.ReferenceParams;
 import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.netbeans.modules.lsp.client.LSPBindings;
@@ -30,7 +28,6 @@ import org.netbeans.modules.lsp.client.Utils;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RenameRefactoring;
-import org.netbeans.modules.refactoring.api.WhereUsedQuery;
 import org.netbeans.modules.refactoring.spi.ui.CustomRefactoringPanel;
 import org.netbeans.modules.refactoring.spi.ui.RefactoringUI;
 import org.openide.filesystems.FileObject;

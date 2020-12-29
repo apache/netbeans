@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.gradle.execute.navigator;
 
 import org.netbeans.modules.gradle.GradleDataObject;
@@ -35,10 +34,11 @@ import org.openide.util.NbBundle;
  */
 @NbBundle.Messages("TASKS_NAME=Related Tasks")
 @NavigatorPanel.Registrations({
+    @NavigatorPanel.Registration(mimeType = GradleDataObject.KOTLIN_MIME_TYPE, position = 250, displayName = "#TASKS_NAME"),
     @NavigatorPanel.Registration(mimeType = GradleDataObject.MIME_TYPE, position = 250, displayName = "#TASKS_NAME"),
     @NavigatorPanel.Registration(mimeType = "application/gradle-project", position = 250, displayName = "#TASKS_NAME")
 })
-public class TasksNavigationPanel implements NavigatorPanel {
+public class TasksNavigatorPanel implements NavigatorPanel {
 
     private TasksPanel component;
 
@@ -79,7 +79,6 @@ public class TasksNavigationPanel implements NavigatorPanel {
 
     @Override
     public void panelActivated(Lookup context) {
-        getNavigatorUI().showWaitNode();
         selection = context.lookupResult(DataObject.class);
         selection.addLookupListener(selectionListener);
         selectionListener.resultChanged(null);
@@ -87,7 +86,6 @@ public class TasksNavigationPanel implements NavigatorPanel {
 
     @Override
     public void panelDeactivated() {
-        getNavigatorUI().showWaitNode();
         if (selection != null) {
             selection.removeLookupListener(selectionListener);
             selection = null;
@@ -97,7 +95,7 @@ public class TasksNavigationPanel implements NavigatorPanel {
 
     @Override
     public Lookup getLookup() {
-        return Lookup.EMPTY;
+        return null;
     }
 
     /**
@@ -112,4 +110,5 @@ public class TasksNavigationPanel implements NavigatorPanel {
             getNavigatorUI().release();
         }
     }
+
 }

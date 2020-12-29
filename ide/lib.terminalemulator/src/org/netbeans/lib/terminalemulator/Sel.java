@@ -403,8 +403,8 @@ class Sel implements ClipboardOwner {
 
 	Point pbegin = term.toPixel(begin);
 	Point pend = term.toPixel(end);
-	pend.y += term.metrics().height;
-	pend.x += l.stringWidth(term.metrics(), ecol);	// xterm actually doesn't do this
+	pend.y += term.metrics().fm.getHeight();
+	pend.x += l.charWidth(term.metrics(), ecol);	// xterm actually doesn't do this
 
 	Dimension dim = new Dimension(pend.x - pbegin.x,
 				      pend.y - pbegin.y);

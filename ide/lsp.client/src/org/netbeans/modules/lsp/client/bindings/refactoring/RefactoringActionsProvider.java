@@ -22,6 +22,7 @@ package org.netbeans.modules.lsp.client.bindings.refactoring;
 import javax.swing.Action;
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.eclipse.lsp4j.Position;
@@ -66,6 +67,7 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
                 try {
                     JEditorPane c = ec.getOpenedPanes()[0];
                     Document doc = c.getDocument();
+                    AbstractDocument abstractDoc = (doc instanceof AbstractDocument) ? ((AbstractDocument) doc) : null;
                     FileObject file = NbEditorUtilities.getFileObject(doc);
                     LSPBindings bindings = LSPBindings.getBindings(file);
                     int caretPos = c.getCaretPosition();
@@ -74,12 +76,23 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
                     params.setTextDocument(new TextDocumentIdentifier(Utils.toURI(file)));
                     params.setPosition(pos);
                     params.setContext(new ReferenceContext(false)); //(could be an option?)
-                    TokenSequence<?> ts = TokenHierarchy.get(doc).tokenSequence();
+
                     String name = Bundle.NM_Unknown();
-                    if (ts != null) {
-                        ts.move(caretPos);
-                        if (ts.moveNext()) {
-                            name = ts.token().text().toString();
+
+                    if (abstractDoc != null) {
+                        abstractDoc.readLock();
+                    }
+                    try {
+                        TokenSequence<?> ts = TokenHierarchy.get(doc).tokenSequence();
+                        if (ts != null) {
+                            ts.move(caretPos);
+                            if (ts.moveNext()) {
+                                name = ts.token().text().toString();
+                            }
+                        }
+                    } finally {
+                        if (abstractDoc != null) {
+                            abstractDoc.readUnlock();
                         }
                     }
 
@@ -102,16 +115,27 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
                 try {
                     JEditorPane c = ec.getOpenedPanes()[0];
                     Document doc = c.getDocument();
+                    AbstractDocument abstractDoc = (doc instanceof AbstractDocument) ? ((AbstractDocument) doc) : null;
                     FileObject file = NbEditorUtilities.getFileObject(doc);
                     LSPBindings bindings = LSPBindings.getBindings(file);
                     int caretPos = c.getCaretPosition();
                     Position pos = Utils.createPosition(doc, caretPos);
-                    TokenSequence<?> ts = TokenHierarchy.get(doc).tokenSequence();
-                    String name = "";
-                    if (ts != null) {
-                        ts.move(caretPos);
-                        if (ts.moveNext()) {
-                            name = ts.token().text().toString();
+                    String name;
+                    if(abstractDoc != null) {
+                        abstractDoc.readLock();
+                    }
+                    try {
+                        TokenSequence<?> ts = TokenHierarchy.get(doc).tokenSequence();
+                        name = "";
+                        if (ts != null) {
+                            ts.move(caretPos);
+                            if (ts.moveNext()) {
+                                name = ts.token().text().toString();
+                            }
+                        }
+                    } finally {
+                        if (abstractDoc != null) {
+                            abstractDoc.readUnlock();
                         }
                     }
 

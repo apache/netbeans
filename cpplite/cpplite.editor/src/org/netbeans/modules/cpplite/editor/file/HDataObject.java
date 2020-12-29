@@ -100,8 +100,13 @@ import org.openide.util.NbBundle.Messages;
     @ActionReference(
             path = "Editors/" + MIMETypes.CPP + "/Popup",
             id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.WhereUsedAction"),
-            position = 1400,
-            separatorAfter = 1450
+            position = 1400
+    ),
+    @ActionReference(
+            path = "Editors/" + MIMETypes.CPP + "/Popup",
+            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.RenameAction"),
+            position = 1500,
+            separatorAfter = 1550
     )
 })
 @GrammarRegistration(grammar="resources/c.tmLanguage.json", mimeType=MIMETypes.H)

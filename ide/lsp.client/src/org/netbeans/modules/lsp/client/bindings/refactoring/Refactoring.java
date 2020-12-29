@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.lsp.client.bindings.refactoring;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -33,8 +32,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
@@ -50,7 +51,6 @@ import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
-import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
@@ -61,7 +61,6 @@ import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RenameRefactoring;
 import org.netbeans.modules.refactoring.api.WhereUsedQuery;
 import org.netbeans.modules.refactoring.spi.BackupFacility;
-//import org.netbeans.modules.refactoring.api.impl.CannotUndoRefactoring;
 import org.netbeans.modules.refactoring.spi.RefactoringCommit;
 import org.netbeans.modules.refactoring.spi.RefactoringElementsBag;
 import org.netbeans.modules.refactoring.spi.RefactoringPlugin;
@@ -82,13 +81,13 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
-import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author lahvac
  */
+@NbBundle.Messages("TXT_Canceled=Canceled")
 public class Refactoring {
 
     private static final class WhereUsedRefactoringPlugin implements RefactoringPlugin {
@@ -96,6 +95,8 @@ public class Refactoring {
         private final WhereUsedQuery query;
         private final LSPBindings bindings;
         private final ReferenceParams params;
+        private final AtomicBoolean cancel = new AtomicBoolean();
+        private volatile CompletableFuture<List<? extends Location>> runningRequest;
 
         public WhereUsedRefactoringPlugin(WhereUsedQuery query, LSPBindings bindings, ReferenceParams params) {
             this.query = query;
@@ -120,28 +121,35 @@ public class Refactoring {
 
         @Override
         public void cancelRequest() {
-            throw new UnsupportedOperationException("Not supported yet.");
+            cancel.set(true);
+            CompletableFuture localRunningRequest = runningRequest;
+            if(localRunningRequest != null) {
+                localRunningRequest.cancel(true);
+            }
         }
 
         @Override
         public Problem prepare(RefactoringElementsBag refactoringElements) {
             try {
-                for (Location l : bindings.getTextDocumentService().references(params).get()) {
+                runningRequest = bindings.getTextDocumentService().references(params);
+                for (Location l : runningRequest.get()) {
+                    if(cancel.get()) {
+                        break;
+                    }
                     FileObject file = Utils.fromURI(l.getUri());
-                    PositionBounds boundsTemp = null;
                     if (file != null) {
+                        PositionBounds bounds;
                         try {
                             CloneableEditorSupport es = file.getLookup().lookup(CloneableEditorSupport.class);
                             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
                             StyledDocument doc = ec.openDocument();
 
-                            boundsTemp = new PositionBounds(es.createPositionRef(Utils.getOffset(doc, l.getRange().getStart()), Position.Bias.Forward),
+                            bounds = new PositionBounds(es.createPositionRef(Utils.getOffset(doc, l.getRange().getStart()), Position.Bias.Forward),
                                                             es.createPositionRef(Utils.getOffset(doc, l.getRange().getEnd()), Position.Bias.Forward));
                         } catch (IOException ex) {
                             Exceptions.printStackTrace(ex);
-                            boundsTemp = null;
+                            bounds = null;
                         }
-                        PositionBounds bounds = boundsTemp;
                         LineCookie lc = file.getLookup().lookup(LineCookie.class);
                         Line startLine = lc.getLineSet().getCurrent(l.getRange().getStart().getLine());
                         String lineText = startLine.getText();
@@ -152,9 +160,12 @@ public class Refactoring {
                         refactoringElements.add(query, new LSPRefactoringElementImpl(annotatedLine, file, bounds));
                     }
                 }
+                runningRequest = null;
                 return null;
+            } catch (CancellationException ex) {
+                return new Problem(false, Bundle.TXT_Canceled());
             } catch (InterruptedException | ExecutionException ex) {
-                ex.printStackTrace();
+                Exceptions.printStackTrace(ex);
                 return new Problem(true, ex.getLocalizedMessage());
             }
         }
@@ -166,6 +177,8 @@ public class Refactoring {
         private final RenameRefactoring refactoring;
         private final LSPBindings bindings;
         private final RenameParams params;
+        private final AtomicBoolean cancel = new AtomicBoolean();
+        private volatile CompletableFuture<WorkspaceEdit> runningRequest;
 
         public RenameRefactoringPlugin(RenameRefactoring refactoring, LSPBindings bindings, RenameParams params) {
             this.refactoring = refactoring;
@@ -190,14 +203,22 @@ public class Refactoring {
 
         @Override
         public void cancelRequest() {
-            throw new UnsupportedOperationException("Not supported yet.");
+            cancel.set(true);
+            CompletableFuture localRunningRequest = runningRequest;
+            if(localRunningRequest != null) {
+                localRunningRequest.cancel(true);
+            }
         }
 
         @Override
         public Problem prepare(RefactoringElementsBag refactoringElements) {
+            if (cancel.get()) {
+                return new Problem(false, Bundle.TXT_Canceled());
+            }
             Problem p = null;
             try {
-                WorkspaceEdit edit = bindings.getTextDocumentService().rename(params).get();
+                runningRequest = bindings.getTextDocumentService().rename(params);
+                WorkspaceEdit edit = runningRequest.get();
                 List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = edit.getDocumentChanges();
                 ModificationResult result = new ModificationResult();
                 Map<FileObject, List<Difference>> file2Diffs = new HashMap<>();
@@ -206,6 +227,9 @@ public class Refactoring {
 
                 if (documentChanges != null) {
                     for (Either<TextDocumentEdit, ResourceOperation> part : documentChanges) {
+                        if(cancel.get()) {
+                            break;
+                        }
                         if (part.isLeft()) {
                             String uri = part.getLeft().getTextDocument().getUri();
                             uri = newURI2Old.getOrDefault(uri, uri);
@@ -261,6 +285,9 @@ public class Refactoring {
                     }
                 } else {
                     for (Entry<String, List<TextEdit>> fileAndChanges : edit.getChanges().entrySet()) {
+                        if(cancel.get()) {
+                            break;
+                        }
                         //TODO: errors:
                         FileObject file = Utils.fromURI(fileAndChanges.getKey());
 
@@ -272,21 +299,35 @@ public class Refactoring {
                     }
                 }
 
-                file2Diffs.entrySet()
-                          .forEach(e -> {
-                              e.getValue()
-                               .forEach(diff -> refactoringElements.add(refactoring, DiffElement.create(diff, e.getKey(), result)));
-                              result.addDifferences(e.getKey(), e.getValue());
-                          });
+                if (cancel.get()) {
+                    p = chain(new Problem(false, Bundle.TXT_Canceled()), p);
+                } else {
 
-                newFileURI2Content.entrySet()
-                                  .forEach(e -> {
-                                      refactoringElements.add(refactoring, new LSPCreateFile(e.getKey(), e.getValue()));
-                                  });
-                refactoringElements.registerTransaction(new RefactoringCommit(Collections.singletonList(result)));
+                    file2Diffs.entrySet()
+                        .forEach(e -> {
+                            e.getValue()
+                                .forEach(diff -> refactoringElements.add(refactoring, DiffElement.create(diff, e.getKey(), result)));
+                            result.addDifferences(e.getKey(), e.getValue());
+                        });
+
+                    newFileURI2Content.entrySet()
+                        .forEach(e -> {
+                            refactoringElements.add(refactoring, new LSPCreateFile(e.getKey(), e.getValue()));
+                        });
+                    refactoringElements.registerTransaction(new RefactoringCommit(Collections.singletonList(result)));
+
+                    if (cancel.get()) {
+                        p = chain(new Problem(false, Bundle.TXT_Canceled()), p);
+                    }
+                }
+
                 return p;
+            } catch (CancellationException ex) {
+                return chain(new Problem(false, Bundle.TXT_Canceled()), p);
             } catch (InterruptedException | ExecutionException | IOException ex) {
                 return chain(new Problem(true, ex.getLocalizedMessage()), p);
+            } finally {
+                runningRequest = null;
             }
         }
 
@@ -347,6 +388,8 @@ public class Refactoring {
 
         @Override
         public void performChange() {
+            // Currently the LSPRefactoringElementImpl is only used for the
+            // WhereUsedRefactoring, which is not doing changes
             throw new UnsupportedOperationException();
         }
 
@@ -367,18 +410,22 @@ public class Refactoring {
     }
 
     public static class LSPRenameFile extends SimpleRefactoringElementImplementation {
-        
-        private FileObject fo;
+
+        private final FileObject fo;
         private final String newUri;
         public LSPRenameFile(FileObject fo, String newUri) {
             this.fo = fo;
             this.oldUri = fo.toURI().toString();
             this.newUri = newUri;
         }
-        
+
         @Override
-        @NbBundle.Messages({"TXT_RenameFile=Rename file {0}",
-                            "TXT_RenameFolder=Rename folder {0}"})
+        @NbBundle.Messages({
+            "# {0} - current name of the file",
+            "TXT_RenameFile=Rename file {0}",
+            "# {0} - current name of the folders",
+            "TXT_RenameFolder=Rename folder {0}"
+        })
         public String getText() {
             return fo.isFolder()? Bundle.TXT_RenameFolder(fo.getNameExt()) :
                                   Bundle.TXT_RenameFile(fo.getNameExt());
@@ -446,7 +493,7 @@ public class Refactoring {
         private BackupFacility.Handle id;
 
         /**
-         * 
+         *
          * @param fo
          * @param session
          */
@@ -456,7 +503,10 @@ public class Refactoring {
         }
 
         @Override
-        @NbBundle.Messages("TXT_DeleteFile=Delete file {0}")
+        @NbBundle.Messages({
+            "# {0} - name of the file to be deleted",
+            "TXT_DeleteFile=Delete file {0}"
+        })
         public String getText() {
             return Bundle.TXT_DeleteFile(filename);
         }
@@ -532,7 +582,10 @@ public class Refactoring {
         }
 
         @Override
-        @NbBundle.Messages("TXT_CreateFile=Create file {0}")
+        @NbBundle.Messages({
+            "# {0} - name of the newly created file",
+            "TXT_CreateFile=Create file {0}"
+        })
         public String getText() {
             return Bundle.TXT_CreateFile(uri2SimpleName(uri));
         }
@@ -582,6 +635,7 @@ public class Refactoring {
             }
         }
 
+        @SuppressWarnings({"NestedAssignment", "AssignmentToMethodParameter"})
         private static Pair<FileObject, String> fileAndRemainingPath(String uri) throws URISyntaxException, MalformedURLException {
             StringBuilder path = new StringBuilder();
             FileObject existing;
@@ -603,7 +657,7 @@ public class Refactoring {
 
         @Override
         public String toString() {
-            return "=>" + uri2SimpleName(uri.toString()) + "(" + content + ")";
+            return "=>" + uri2SimpleName(uri) + "(" + content + ")";
         }
 
     }

@@ -376,6 +376,7 @@ matrix:
             - ant $OPTS -f java/java.module.graph test
             - ant $OPTS -f java/java.navigation test
             #- ant $OPTS -f java/java.openjdk.project test
+            - ant $OPTS -f java/java.mx.project test
             - ant $OPTS -f java/java.platform test
             - ant $OPTS -f java/java.platform.ui test
             - ant $OPTS -f java/java.preprocessorbridge test

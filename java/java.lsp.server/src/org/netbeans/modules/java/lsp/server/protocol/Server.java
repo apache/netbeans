@@ -253,6 +253,7 @@ public final class Server {
                 completionOptions.setResolveProvider(true);
                 completionOptions.setTriggerCharacters(Collections.singletonList("."));
                 capabilities.setCompletionProvider(completionOptions);
+                capabilities.setHoverProvider(true);
                 capabilities.setCodeActionProvider(new CodeActionOptions(Arrays.asList(CodeActionKind.QuickFix, CodeActionKind.Source)));
                 capabilities.setDocumentSymbolProvider(true);
                 capabilities.setDefinitionProvider(true);

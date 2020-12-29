@@ -114,6 +114,7 @@ public final class FmtOptions {
     public static final String SPACE_BEFORE_CATCH = "spaceBeforeCatch"; //NOI18N
     public static final String SPACE_BEFORE_FINALLY = "spaceBeforeFinally"; //NOI18N
     public static final String SPACE_BEFORE_ANONYMOUS_CLASS_PAREN = "spaceBeforeAnonymousClassParen"; //NOI18N
+    public static final String SPACE_BEFORE_ANONYMOUS_FUNCTION_PAREN = "spaceBeforeAnonymousFunctionParen"; //NOI18N
     public static final String SPACE_BEFORE_METHOD_DECL_PAREN = "spaceBeforeMethodDeclParen"; //NOI18N
     public static final String SPACE_BEFORE_METHOD_CALL_PAREN = "spaceBeforeMethodCallParen"; //NOI18N
     public static final String SPACE_BEFORE_IF_PAREN = "spaceBeforeIfParen"; //NOI18N
@@ -292,6 +293,7 @@ public final class FmtOptions {
             {SPACE_BEFORE_CATCH, TRUE},
             {SPACE_BEFORE_FINALLY, TRUE},
             {SPACE_BEFORE_ANONYMOUS_CLASS_PAREN, FALSE},
+            {SPACE_BEFORE_ANONYMOUS_FUNCTION_PAREN, TRUE},
             {SPACE_BEFORE_METHOD_DECL_PAREN, FALSE},
             {SPACE_BEFORE_METHOD_CALL_PAREN, FALSE},
             {SPACE_BEFORE_IF_PAREN, TRUE},

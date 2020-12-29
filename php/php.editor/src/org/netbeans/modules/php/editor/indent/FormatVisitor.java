@@ -2080,6 +2080,7 @@ public class FormatVisitor extends DefaultVisitor {
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS, ts.offset() + ts.token().length()));
                     } else if (parent instanceof LambdaFunctionDeclaration) {
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_ANONYMOUS_FUNCTION_PAREN, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS, ts.offset() + ts.token().length()));
                     } else if (parent instanceof FunctionInvocation || parent instanceof MethodInvocation || parent instanceof ClassInstanceCreation) {

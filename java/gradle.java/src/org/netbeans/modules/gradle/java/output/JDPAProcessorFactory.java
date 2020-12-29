@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.java.output;
 
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.RunConfig;
 import org.netbeans.modules.gradle.api.output.OutputDisplayer;
 import org.netbeans.modules.gradle.api.output.OutputProcessor;
@@ -29,7 +28,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.windows.IOColors;
 import org.netbeans.modules.gradle.java.spi.debug.GradleJavaDebugger;
 
@@ -37,7 +35,6 @@ import org.netbeans.modules.gradle.java.spi.debug.GradleJavaDebugger;
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = OutputProcessorFactory.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public class JDPAProcessorFactory implements OutputProcessorFactory {
 
     @Override

@@ -21,7 +21,6 @@ package org.netbeans.modules.gradle.java.queries;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,7 +40,6 @@ import org.netbeans.modules.gradle.java.api.GradleJavaProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
 import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType.JAVA;
 import org.netbeans.spi.java.queries.AnnotationProcessingQueryImplementation;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.SpecificationVersion;
@@ -50,7 +48,6 @@ import org.openide.modules.SpecificationVersion;
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = AnnotationProcessingQueryImplementation.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public class GradleAnnotationProcessorQueryImpl implements AnnotationProcessingQueryImplementation {
 
     private static final SpecificationVersion VER16 = new SpecificationVersion("1.6");

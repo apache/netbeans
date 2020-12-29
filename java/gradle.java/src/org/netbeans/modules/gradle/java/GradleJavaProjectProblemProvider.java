@@ -27,7 +27,6 @@ import java.util.List;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.java.execute.JavaRunUtils;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 import static org.netbeans.spi.project.ui.ProjectProblemsProvider.PROP_PROBLEMS;
 import org.openide.util.NbBundle;
@@ -36,7 +35,6 @@ import org.openide.util.NbBundle;
  *
  * @author lkishalmi
  */
-@ProjectServiceProvider(service = ProjectProblemsProvider.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public class GradleJavaProjectProblemProvider implements ProjectProblemsProvider {
     private final Project project;
     private final PropertyChangeListener listener;

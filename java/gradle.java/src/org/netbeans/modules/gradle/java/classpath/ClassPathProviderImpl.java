@@ -41,7 +41,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.classpath.ClassPathFactory;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -53,8 +52,6 @@ import static org.netbeans.api.java.classpath.JavaClassPathConstants.*;
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = {ClassPathProvider.class, ProjectOpenedHook.class},
-        projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public final class ClassPathProviderImpl extends ProjectOpenedHook implements ClassPathProvider {
 
     public static final String MODULE_INFO_JAVA = "module-info.java"; // NOI18N

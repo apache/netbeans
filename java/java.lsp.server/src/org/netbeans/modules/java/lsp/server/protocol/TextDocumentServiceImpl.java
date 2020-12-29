@@ -30,6 +30,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -82,6 +84,7 @@ import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
 import org.eclipse.lsp4j.CompletionTriggerKind;
+import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
@@ -109,6 +112,7 @@ import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ReferenceParams;
 import org.eclipse.lsp4j.RenameParams;
+import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.SemanticTokens;
 import org.eclipse.lsp4j.SemanticTokensCapabilities;
 import org.eclipse.lsp4j.SemanticTokensLegend;
@@ -160,9 +164,12 @@ import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase;
 import org.netbeans.modules.java.editor.base.semantic.SemanticHighlighterBase.ErrorDescriptionSetter;
 import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
+import org.netbeans.modules.java.hints.errors.CreateFixBase;
 import org.netbeans.modules.java.hints.errors.ImportClass;
 import org.netbeans.modules.java.hints.infrastructure.CreatorBasedLazyFixList;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
+import org.netbeans.modules.java.hints.introduce.IntroduceHint;
+import org.netbeans.modules.java.hints.introduce.IntroduceKind;
 import org.netbeans.modules.java.hints.project.IncompleteClassPath;
 import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
@@ -1051,11 +1058,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
         Document doc = openedDocuments.get(params.getTextDocument().getUri());
-        if (doc == null) {
+        JavaSource js = JavaSource.forDocument(doc);
+        if (doc == null || js == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
         Map<String, ErrorDescription> id2Errors = (Map<String, ErrorDescription>) doc.getProperty("lsp-errors");
-        JavaSource js = JavaSource.forDocument(doc);
         List<Either<Command, CodeAction>> result = new ArrayList<>();
         if (id2Errors != null) {
         for (Diagnostic diag : params.getContext().getDiagnostics()) {
@@ -1136,6 +1143,49 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         result.add(Either.forRight(action));
                     } catch (IOException ex) {
                         //TODO: include stack trace:
+                        client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                    }
+                }
+                if (f instanceof CreateFixBase) {
+                    try {
+                        CreateFixBase cf = (CreateFixBase) f;
+                        ModificationResult changes = cf.getModificationResult();
+                        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
+                        Set<File> newFiles = changes.getNewFiles();
+                        if (newFiles.size() > 1) {
+                            throw new IllegalStateException();
+                        }
+                        String newFilePath = null;
+                        for (File newFile : newFiles) {
+                            newFilePath = newFile.getPath();
+                            documentChanges.add(Either.forRight(new CreateFile(newFilePath)));
+                        }
+                        for (FileObject fileObject : changes.getModifiedFileObjects()) {
+                            List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
+                            if (diffs != null) {
+                                List<TextEdit> edits = new ArrayList<>();
+                                for (ModificationResult.Difference diff : diffs) {
+                                    String newText = diff.getNewText();
+                                    if (diff.getKind() == ModificationResult.Difference.Kind.CREATE) {
+                                        if (newFilePath != null) {
+                                            documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(newFilePath, -1),
+                                                    Collections.singletonList(new TextEdit(new Range(Utils.createPosition(fileObject, 0), Utils.createPosition(fileObject, 0)),
+                                                            newText != null ? newText : "")))));
+                                        }
+                                    } else {
+                                        edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
+                                                                         Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
+                                                               newText != null ? newText : ""));
+                                    }
+                                }
+                                documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
+                            }
+                        }
+                        CodeAction codeAction = new CodeAction(f.getText());
+                        codeAction.setKind(CodeActionKind.QuickFix);
+                        codeAction.setEdit(new WorkspaceEdit(documentChanges));
+                        result.add(Either.forRight(codeAction));
+                    } catch (IOException ex) {
                         client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
                     }
                 }
@@ -1336,7 +1386,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             case HINT: diag.setSeverity(DiagnosticSeverity.Hint); break;
                             default: diag.setSeverity(DiagnosticSeverity.Information); break;
                         }
-                        String id = keyPrefix + ":" + idx + "-" + err.getId();
+                        String id = keyPrefix + ":" + idx++ + "-" + err.getId();
                         diag.setCode(id);
                         id2Errors.put(id, err);
                         diags.add(diag);
@@ -1433,13 +1483,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         return edits;
     }
-    
+
     private static void reportNotificationDone(String s, Object parameter) {
         if (HOOK_NOTIFICATION != null) {
             HOOK_NOTIFICATION.accept(s, parameter);
         }
     }
-    
+
     /**
      * For testing only; calls that do not return a result should call
      * this hook, if defined, with the method name and parameter.

@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.python.debugger
-OpenIDE-Module-Layer: org/netbeans/modules/python/debugger/layer.xml
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/python/debugger/Bundle.properties
-AutoUpdate-Show-In-Client: false
-

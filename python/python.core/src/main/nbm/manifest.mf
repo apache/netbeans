@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.modules.python.core
-OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/python/core/Bundle.properties
-AutoUpdate-Show-In-Client: false
-
-

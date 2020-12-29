@@ -968,9 +968,12 @@ public class HtmlBrowser extends JPanel {
         
         /**
          * resets the caches used
-         * If the default browser is changed this clears the instantiated objects for the old one
+         * If the default browser is changed this clears
+         * the instantiated objects for the old one
+         *
+         * @since 7.80
          */
-        public void clearCache(){
+        public void clearCache() {
             
         }
     }

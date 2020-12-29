@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+
+<fontscolors>
+    <fontcolor name="STRING_INVALID" waveUnderlined="CE7B00" default="string">
+        <font style="bold"/>
+    </fontcolor>
+    <fontcolor name="STRING_TEXT" default="string"/>
+    <fontcolor name="STRING_ESCAPE" default="string">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="EMBEDDED_PYTHON" default="string" bgColor="ffe3f2e1">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="URL" underline="blue" foreColor="blue" default="default"/>
+</fontscolors>
+

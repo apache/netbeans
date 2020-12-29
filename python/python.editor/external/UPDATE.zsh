@@ -8,8 +8,8 @@
 # To try debugging this, set up the properties in GsfModuleInstaller.java's restored method, for example like this:
 # System.setProperty("gsf.preindexing", "true");
 # System.setProperty("netbeans.full.hack=true", "true");
-# System.setProperty("python.interpreter", "/Users/tor/dev/python/install/bin/python");
-# System.setProperty("gsf.preindexing.projectpath", "/Users/tor/NetBeansProjects/PythonPreindexProject");
+# System.setProperty("python.interpreter", "/Users/user/dev/python/install/bin/python");
+# System.setProperty("gsf.preindexing.projectpath", "/Users/user/NetBeansProjects/PythonPreindexProject");
 #
 
 
@@ -19,7 +19,7 @@
 NBHGHOME=~/netbeans/hg/main-silver
 NATIVEPYTHONHOME=/usr
 VMFLAGS=-J-Xmx1024m
-INDEXING_PROJECT=/Users/tor/NetBeansProjects/NewPythonProject
+INDEXING_PROJECT=/Users/user/NetBeansProjects/NewPythonProject
 
 # You probably don't want to change these:
 NB=$NBHGHOME/nbbuild/netbeans/bin/netbeans

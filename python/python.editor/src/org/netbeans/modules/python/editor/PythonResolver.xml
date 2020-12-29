@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE MIME-resolver PUBLIC "-//NetBeans//DTD MIME Resolver 1.0//EN" "http://www.netbeans.org/dtds/mime-resolver-1_0.dtd">
+<MIME-resolver>
+    <file>
+        <ext name="py"/>
+        <ext name="pyw"/>
+
+        <!-- a rst file isn't really a python file, but is used primarily
+             with python, so my lexer and parser hacks around it a bit such
+             that you can use these -->
+        <ext name="rst"/>
+
+        <resolver mime="text/x-python"/>
+    </file>
+    <file>
+        <ext name="pyc"/>
+        <resolver mime="text/x-python-compiled"/>
+    </file>
+    <file>
+        <ext name="egg"/>
+        <resolver mime="application/x-python-egg"/>
+    </file>
+    
+    <!-- These files are common extensions of templating language used by python
+         web framework. We currently only open these files as HTML -->
+    <file>
+        <ext name="jinja2" />
+        <ext name="mako" />
+        <ext name="pt" /> <!-- Chameleon -->
+        <resolver mime="text/html" />
+    </file>
+</MIME-resolver>

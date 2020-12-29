@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
+<!-- for some information on what you could do (e.g. targets to override). -->
+<!-- If you delete this file and reopen the project it will be recreated. -->
+<project name="python/o.jython.distro" default="netbeans" basedir=".">
+    <description>Builds, tests, and runs the project org.jython.distro</description>
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <target name="files-init" depends="projectized-common.files-init">
+        <!-- Override module.files definition performed by parent, used for NBMs etc. -->
+        <patternset id="module.files" includes="${release.files},${extra.module.files}">
+            <!-- Standard includes (from common definition) -->
+            <include name="${module.jar}"/>
+            <include name="${javahelp.jar}" if="has.javahelp"/>
+            <include name="config/Modules/${code.name.base.dashes}.xml"/>
+            <include name="config/ModuleAutoDeps/${code.name.base.dashes}.xml" if="has.module.auto.deps"/>
+            <include name="ant/nblib/${code.name.base.dashes}.jar"/>
+            <!-- Jython+Rails stuff -->
+            <include name="jython-${jython_src_version}/**"/>
+            <exclude name="jython-${jython_src_version}/**/netbeans-index-*.zip"/>
+        </patternset>
+    </target>    
+
+    <target name="release" depends="init">
+        <property name="jython_dir" location="${cluster}/jython-${jython_src_version}"/>
+    
+        <unzip dest="${cluster}" src="external/jython-2.7.0.zip"/>
+
+        <chmod perm="ugo+x">
+          <fileset dir="${jython_dir}/">
+            <include name="bin/*"/>
+          </fileset>
+        </chmod>
+    </target>
+
+    <target name="clean" depends="projectized-common.clean">
+        <delete dir="${jython_build}"/>
+        <!-- HACK: For some reason the clean target doesn't get expansions for the logical dirs... -->
+        <delete dir="jython_build"/>
+    </target>
+
+</project>

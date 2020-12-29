@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>org.jython</code-name-base>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>org.netbeans.libs.xerces</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
+            <friend-packages>
+                <friend>org.netbeans.modules.python.editor</friend>
+                <friend>org.netbeans.modules.python.hints</friend>
+                <friend>org.netbeans.modules.python.source</friend>
+                <package>org.python.antlr</package>
+                <package>org.python.antlr.ast</package>
+                <package>org.python.antlr.base</package>
+                <package>org.python.antlr.runtime</package>
+                <package>org.python.antlr.runtime.tree</package>
+                <package>org.python.core</package>
+                <package>org.python.expose</package>
+            </friend-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/jython-parser.jar</runtime-relative-path>
+                <binary-origin>external/jython-parser.jar</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>

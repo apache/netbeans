@@ -4,7 +4,6 @@
 # be manually added into the pythonstubs egg to provide defs for the
 # missing APIs.
 #
-# Tor Norbye <tor@netbeans.org> Jan 8, 2009
 ##############################################################################
 
 import sys

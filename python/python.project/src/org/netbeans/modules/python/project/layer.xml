@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Tools">
+            <file name="org-netbeans-modules-python-project-ui-ChangePackageViewTypeAction.instance"/>
+        </folder>
+    </folder>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-python">
+                <folder name="Popup">
+                    <folder name="goto">
+                        <file name="org-netbeans-modules-gototest-GotoOppositeAction.shadow">
+                            <attr name="originalFile" stringvalue="Actions/UnitTests/org-netbeans-modules-gototest-GotoOppositeAction.instance"/>
+                            <attr name="position" intvalue="200"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+       
+    <folder name="Projects">
+        <folder name="Actions"/>
+        
+        <folder name="org-netbeans-modules-python-project">                        
+            <folder name="Nodes">
+                <file name="org-netbeans-modules-python-project-ui-SourceNodeFactory.instance">
+                    <attr name="position" intvalue="200"/>
+                </file>                
+            </folder>            
+            
+            <folder name="Customizer">
+                <file name="Sources.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.python.project.ui.customizer.CompositePanelProviderImpl.createSources"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="PythonPath.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.python.project.ui.customizer.CompositePanelProviderImpl.createPythonPath"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="Run.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.python.project.ui.customizer.CompositePanelProviderImpl.createRunConfig"/>
+                    <attr name="position" intvalue="300"/>
+                </file>                
+                <file name="Formatting.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.project.ui.support.ProjectCustomizer$CompositeCategoryProvider"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.options.indentation.FormattingCustomizerPanel.createCategoryProvider"/>
+                    <attr name="allowedMimeTypes" stringvalue="text/x-python"/>
+                    <attr name="position" intvalue="1000"/>
+                </file>
+            </folder>
+            
+            <folder name="Lookup"/>            
+        </folder>
+
+    </folder>
+
+    <folder name="ProjectsTabActions">
+        <file name="org-netbeans-modules-python-project-ui-ChangePackageViewTypeAction.shadow">
+            <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-python-project-ui-ChangePackageViewTypeAction.instance"/>
+            <attr name="position" intvalue="1603"/>
+        </file>
+    </folder>
+
+
+    <folder name="Templates">
+        <folder name="Project">
+            <folder name="Python">
+                <attr name="position" intvalue="1412"/>
+                <file name="PythonProject.xml">
+                    <attr name="position" intvalue="150"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.project.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/python/project/resources/py_25_16.png"/>
+                    <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.python.project.templates.NewPythonProjectWizardIterator.createApplication"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/python/project/templates/EmptyPythonProjectDescription.html"/>
+                </file>
+                <file name="ExistingPythonProject.xml">
+                    <attr name="position" intvalue="160"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.project.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/python/project/resources/py_25_16.png"/>
+                    <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.python.project.templates.NewPythonProjectWizardIterator.createExistingProject"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/python/project/templates/ExistingPythonProjectDescription.html"/>
+                </file>
+            </folder>
+        </folder>        
+    </folder>
+</filesystem>

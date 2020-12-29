@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-python">
+                <folder name="GlyphGutterActions">
+                    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+
+    <folder name="Actions">
+        <folder name="Python">
+            <file name="org-netbeans-modules-python-debugger-actions-PythonDebugConsoleAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.debugger.actions.Bundle"/>
+               <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/python/debugger/actions/bugicon.gif"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <file name="org-netbeans-modules-python-debugger-actions-PythonDebugConsoleAction.instance"/>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="RunProject"/>
+        <folder name="Window">
+            <file name="PythonDebugConsoleAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-modules-python-debugger-actions-PythonDebugConsoleAction.instance"/>
+                <attr name="position" intvalue="191"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="Toolbars">
+        <folder name="Debug">
+            <attr name="position" intvalue="500"/>
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.debugger.Bundle"/>
+            <file name="org-netbeans-modules-debugger-ui-actions-KillAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-KillAction.instance"/>
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-ContinueAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ContinueAction.instance"/>
+                <attr name="position" intvalue="300"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-StepOverAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOverAction.instance"/>
+                <attr name="position" intvalue="400"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-StepIntoAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepIntoAction.instance"/>
+                <attr name="position" intvalue="600"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-StepOutAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOutAction.instance"/>
+                <attr name="position" intvalue="700"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-RunToCursorAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-RunToCursorAction.instance"/>
+                <attr name="position" intvalue="800"/>
+            </file>
+        </folder>
+    </folder>
+
+</filesystem>

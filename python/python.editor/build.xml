@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
+<!-- for some information on what you could do (e.g. targets to override). -->
+<!-- If you delete this file and reopen the project it will be recreated. -->
+<project name="python/python.editor" default="netbeans" basedir=".">
+    <description>Builds, tests, and runs the project org.netbeans.modules.python.editor.</description>
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
+<!--    <target name="jar" depends="init,compile,jar-prep" unless="is.jar.uptodate">
+        <taskdef name="gsfjar" classname="org.netbeans.modules.gsf.GsfJar" classpath="${nb_all}/contrib/gsf.api/anttask/gsfanttask.jar:${nbantext.jar}"/>
+        <gsfjar jarfile="${cluster}/${module.jar}" compress="${build.package.compress}" index="${build.package.index}" manifest="${manifest.mf}" stamp="${cluster}/.lastModified">
+            <fileset dir="${build.classes.dir}"/>
+        </gsfjar>
+    </target>-->
+
+    <target name="files-init" depends="projectized-common.files-init">
+        <!-- Override module.files definition performed by parent, used for NBMs etc. -->
+        <patternset id="module.files" includes="${release.files},${extra.module.files}">
+            <!-- Standard includes (from common definition) -->
+            <include name="${module.jar}"/>
+            <include name="${javahelp.jar}" if="has.javahelp"/>
+            <include name="config/Modules/${code.name.base.dashes}.xml"/>
+            <include name="config/ModuleAutoDeps/${code.name.base.dashes}.xml" if="has.module.auto.deps"/>
+            <include name="ant/nblib/${code.name.base.dashes}.jar"/>
+            <!-- Python module additions -->
+            <include name="pythonstubs/"/>
+            <include name="jython-2.5.1/**/netbeans-index-*.zip"/>
+        </patternset>
+        <property name="locales" value=""/>
+        <locfiles
+            cluster="${cluster.dir}" locales="${locales}" src="${nb_all}/l10n/src"
+            codenamebase="${code.name.base}"
+            patternset="module.l10n.files"
+            basefilesref="module.files"
+        />
+    </target>   
+
+    <target name="release" depends="init">
+        <chmod perm="ugo+w">
+          <fileset dir="${cluster}/">
+            <include name="pythonstubs/*"/>
+          </fileset>
+        </chmod>
+        <copy todir="${cluster}/pythonstubs" file="external/pythonstubs-2_6_1.egg" overwrite="true"/>
+        <unzip dest="${cluster}" src="external/preindexed.zip"/>
+        <copy todir="${cluster}/coverage" file="scripts/coverage.py" overwrite="true"/>
+        <copy todir="${cluster}/coverage" file="scripts/coverage_wrapper.py" overwrite="true"/>
+    </target>
+</project>

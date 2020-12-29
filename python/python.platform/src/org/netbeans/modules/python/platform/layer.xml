@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Python">
+            <file name="org-netbeans-modules-python-platform-PythonManagerAction.instance"/>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Tools">
+            <file name="org-netbeans-modules-python-platform-PythonManagerAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Python/org-netbeans-modules-python-platform-PythonManagerAction.instance"/>
+                <attr name="position" intvalue="350"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

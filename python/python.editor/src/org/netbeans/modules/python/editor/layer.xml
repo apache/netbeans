@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-python">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.editor.Bundle"/>
+
+                <folder name="Actions">
+                    <file name="org-netbeans-modules-python-editor-imports-FixImportsAction.instance"/>
+                    <file name="org-netbeans-modules-python-editor-imports-FastImportAction.instance"/>
+                    <file name="org-netbeans-modules-python-editor-IndentAction.instance"/>
+                    <file name="org-netbeans-modules-python-editor-DedentAction.instance"/>
+                    <file name="org-netbeans-modules-python-editor-GoToSuperTypeAction.instance"/>
+                </folder>
+
+                <folder name="Popup">
+                    <file name="generate-code">
+                        <attr name="position" intvalue="1178"/>
+                    </file>
+
+                    <folder name="goto">
+                        <attr name="position" intvalue="500"/>
+                        <file name="goto-super-implementation">
+                            <attr name="position" intvalue="550"/>
+                        </file>
+                    </folder>
+
+                    <file name="fast-import">
+                        <attr name="position" intvalue="1181"/>
+                    </file>
+                    <file name="fix-imports">
+                        <attr name="position" intvalue="1182"/>
+                    </file>
+                    <file name="org-netbeans-modules-refactoring-api-ui-RSMEditorAction.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.refactoring.api.ui.RefactoringActionsFactory.editorSubmenuAction"/>
+                        <attr name="position" intvalue="700"/>
+                    </file>
+                    <file name="org-netbeans-modules-refactoring-api-ui-WhereUsedAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Refactoring/org-netbeans-modules-refactoring-api-ui-WhereUsedAction.instance"/>
+                        <attr name="position" intvalue="600"/>
+                    </file>
+                </folder>
+
+                <folder name="CodeTemplates">
+                    <folder name="Defaults">
+                        <file name="codetemplates.xml" url="codetemplates.xml">
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.editor.Bundle"/>
+                        </file>
+                    </folder>
+                </folder>
+                <folder name="Keybindings">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-python-editor-keybindings.xml" url="keybindings.xml"/>
+                        </folder>
+                    </folder>
+                </folder>
+                <folder name="CodeGenerators">
+                    <file name="org-netbeans-modules-python-editor-codegen-PropertyCodeGenerator$Factory.instance">
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    <file name="org-netbeans-modules-python-editor-codegen-ConstructorGenerator$Factory.instance">
+                        <attr name="position" intvalue="200"/>
+                    </file>
+                    <file name="org-netbeans-modules-python-editor-codegen-MethodCodeGenerator$Factory.instance">
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                    <file name="org-netbeans-modules-python-editor-codegen-ClassCodeGenerator$Factory.instance">
+                        <attr name="position" intvalue="400"/>
+                    </file>
+                </folder>
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="coloring.xml" url="resources/fontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.editor.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                    <folder name="BlueTheme">
+                        <folder name="Defaults">
+                            <file name="python-colorings.xml" url="resources/BlueTheme-Python-fontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.editor.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                    <folder name="CityLights">
+                        <folder name="Defaults">
+                            <!-- This is just the bluetheme again - not right, but it's better
+                                 to use a dark theme than the light theme a a backup. -->
+                            <file name="python-colorings.xml" url="resources/BlueTheme-Python-fontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.editor.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+
+
+            </folder>
+<!--
+             Embedded double-quoted strings 
+            <folder name="x-python-string">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.editor.Bundle"/>
+                <file name="language.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.python.editor.lexer.PythonStringTokenId.language"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="coloring.xml" url="stringColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.editor.Bundle.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                    <folder name="BlueTheme">
+                        <folder name="Defaults">
+                            <file name="python-colorings.xml" url="resources/BlueTheme-Python-Strings.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.editor.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                    <folder name="CityLights">
+                        <folder name="Defaults">
+                             This is just the bluetheme again - not right, but it's better
+                                 to use a dark theme than the light theme a a backup. 
+                            <file name="python-colorings.xml" url="resources/BlueTheme-Python-Strings.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.editor.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>-->
+
+        </folder>
+    </folder>
+    
+    <folder name="CslPlugins">
+        <folder name="text">
+            <folder name="x-python">
+                <file name="language.instance">
+<!--                    <attr name="instanceOf" stringvalue="org.netbeans.modules.gsf.api.GsfLanguage"/>-->
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.python.editor.PythonLanguage"/>
+                </file>
+                <file name="codecoverage"/>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="x-python">
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/python/editor/resources/pyNode25.png"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/python/editor/resources/pyNode25.png"/>
+            </folder>
+            <folder name="x-python-compiled">
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/python/editor/resources/pyc_16.png"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/python/editor/resources/pyc_16.png"/>
+                <folder name="Actions">
+                    <file name="org-openide-actions-CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                    <file name="org-openide-actions-CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="400"/>
+                    </file>
+                    <file name="org-openide-actions-DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="700"/>
+                    </file>
+                    <file name="org-openide-actions-FileSystemAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
+                        <attr name="position" intvalue="200"/>
+                    </file>
+                    <file name="org-openide-actions-OpenAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    <file name="org-openide-actions-PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="1300"/>
+                    </file>
+                    <file name="org-openide-actions-RenameAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
+                        <attr name="position" intvalue="800"/>
+                    </file>
+                    <file name="org-openide-actions-SaveAsTemplateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="org-openide-actions-ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                    <file name="sep-1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                    <file name="sep-2.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="600"/>
+                    </file>
+                    <file name="sep-3.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+                    <file name="sep-4.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1100"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="application">
+            <folder name="x-python-egg">
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/python/editor/resources/pyNode25.png"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/python/editor/resources/pyNode25.png"/>
+            </folder>
+        </folder>
+    </folder>
+    
+    <folder name="Templates">
+        <folder name="Python">
+            <attr name="position" intvalue="1403"/>
+            <file name="_main.py" url="templates/executable_module.py.ftl">
+                <attr name="position" intvalue="888"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/python/editor/resources/pyNode25.png"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.editor.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/python/editor/templates/ExecutableModule.html"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+            <file name="_module.py" url="templates/module.py.ftl">
+                <attr name="position" intvalue="900"/>
+                <attr name="templateCategory" stringvalue="python"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/python/editor/templates/Module.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/python/editor/resources/pyNode25.png"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.editor.Bundle"/>
+            </file>
+            <file name="_empty_module.py" url="templates/emptymodule.py.ftl">
+                <attr name="position" intvalue="905"/>
+                <attr name="templateCategory" stringvalue="python"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/python/editor/templates/EmptyModule.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/python/editor/resources/pyNode25.png"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.editor.Bundle"/>
+            </file>
+            <file name="_test.py" url="templates/unittest.py.ftl">
+                <attr name="position" intvalue="920"/>
+                <attr name="templateCategory" stringvalue="python"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/python/editor/templates/UnitTest.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/python/editor/resources/pyNode25.png"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.editor.Bundle"/>
+                <attr name="templateNamePrefix" stringvalue="New"/>
+            </file>
+            <file name="_init.py" url="templates/init.py.ftl">
+                <attr name="position" intvalue="901"/>
+                <attr name="templateCategory" stringvalue="python"/>
+                <attr name="template" boolvalue="false"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/python/editor/templates/init.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/python/editor/resources/pyNode25.png"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.editor.Bundle"/>
+            </file>
+            <file name="_package">
+                <attr name="position" intvalue="908"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/python/editor/wizards/pypackage/package.gif"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.editor.Bundle"/>
+                <attr name="instantiatingIterator" newvalue="org.netbeans.modules.python.editor.wizards.pypackage.PythonPackageWizardIterator"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/python/editor/wizards/pypackage/pythonPackage.html"/>
+            </file>
+
+            <file name="_setup.py" url="templates/setup.py.ftl">
+                <attr name="position" intvalue="0"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="template" boolvalue="false"></attr>
+            </file>
+                
+
+            
+        </folder>
+    </folder>
+</filesystem>

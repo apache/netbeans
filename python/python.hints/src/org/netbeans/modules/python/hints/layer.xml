@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    
+    <folder name="csl-hints">
+        <folder name="text">
+            <folder name="x-python">
+                <folder name="hints">
+                    <folder name="general">
+                        <attr name="position" intvalue="100"/>
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.python.hints.Bundle"/>
+                        <file name="org-netbeans-modules-python-hints-NameRule.instance"/>
+                        <file name="org-netbeans-modules-python-hints-CreateDocString.instance"/>
+                        <file name="org-netbeans-modules-python-hints-AssignToVariable.instance"/>
+                        <file name="org-netbeans-modules-python-hints-SplitImports.instance"/>
+                        <file name="org-netbeans-modules-python-hints-RelativeImports.instance"/>
+                        <file name="org-netbeans-modules-python-hints-Deprecations.instance"/>
+                        <file name="org-netbeans-modules-python-hints-UnusedImports.instance"/>
+                        <file name="org-netbeans-modules-python-hints-UnusedDetector.instance"/>
+                        <file name="org-netbeans-modules-python-hints-UnresolvedDetector.instance"/>
+                        <file name="org-netbeans-modules-python-hints-UnresolvedClassComponents.instance"/>
+                        <file name="org-netbeans-modules-python-hints-AllAssignExists.instance"/>
+                        <file name="org-netbeans-modules-python-hints-AccessToProtected.instance"/>
+                        <file name="org-netbeans-modules-python-hints-AttributeDefinedOutsideInit.instance"/>
+                        <file name="org-netbeans-modules-python-hints-ClassCircularRedundancy.instance"/>
+                    </folder>
+                </folder>
+                <folder name="selection">
+                    <file name="org-netbeans-modules-python-hints-SurroundWith.instance"/>
+                    <file name="org-netbeans-modules-python-hints-ExtractCode.instance"/>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    
+    <folder name="CslPlugins">
+        <folder name="text">
+            <folder name="x-python">
+                <file name="hints.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.python.hints.PythonHintsProvider"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    
+    <folder name="OptionsDialog">
+        <folder name="Editor">
+            <folder name="Hints">
+                <attr name="position" intvalue="0"/>
+                <folder name="text">
+                    <folder name="x-python">
+                        <file name="PythonHints.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.python.hints.PythonHintOptions.createStatic"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

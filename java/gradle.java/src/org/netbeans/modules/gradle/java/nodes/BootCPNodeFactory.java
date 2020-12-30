@@ -50,6 +50,7 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
 import org.netbeans.modules.gradle.java.execute.JavaRunUtils;
 import org.netbeans.spi.project.ui.PathFinder;
 import org.netbeans.spi.java.project.support.ui.PackageView;
@@ -89,6 +90,8 @@ public class BootCPNodeFactory implements NodeFactory {
     @Override
     public NodeList<?> createNodes(final Project p) {
         return new AbstractGradleNodeList<Void>() {
+            ChangeListener listener = (evt) -> fireChange();
+
             @Override
             public List<Void> keys() {
                 return ProjectUtils.getSources(p).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA).length == 0
@@ -100,6 +103,19 @@ public class BootCPNodeFactory implements NodeFactory {
             public Node node(Void key) {
                 return new BootCPNode(new PlatformProvider(p, null));
             }
+
+            @Override
+            public void addNotify() {
+                Sources srcs = ProjectUtils.getSources(p);
+                srcs.addChangeListener(listener);
+            }
+
+            @Override
+            public void removeNotify() {
+                Sources srcs = ProjectUtils.getSources(p);
+                srcs.removeChangeListener(listener);
+            }
+            
         };
     }
 
@@ -139,7 +155,8 @@ public class BootCPNodeFactory implements NodeFactory {
         @Override
         protected void addNotify() {
             pp.addChangeListener(this);
-            endorsed = pp.project.getLookup().lookup(ProjectSourcesClassPathProvider.class).getProjectClassPath(ENDORSED);
+            ProjectSourcesClassPathProvider pvd = pp.project.getLookup().lookup(ProjectSourcesClassPathProvider.class);
+            endorsed = pvd != null ? pvd.getProjectClassPath(ENDORSED) : new ClassPath[0];
             for (ClassPath cp : endorsed) {
                 cp.addPropertyChangeListener(this);
             }

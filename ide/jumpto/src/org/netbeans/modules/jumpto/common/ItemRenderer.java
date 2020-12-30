@@ -286,7 +286,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
                 if (shouldHighlight(isSelected)) {
                     JLabel highlightedTarget;
                     String textToFormat;
-                    if(searchFolders.isSelected()) {
+                    if ((searchFolders != null)  && searchFolders.isSelected()) {
                         highlightedTarget = jlOwner;
                         textToFormat = convertor.getOwnerName(item);
                     } else {
@@ -433,7 +433,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
     
     private static HighlightingNameFormatter createNameFormatter(
             @NonNull final GoToSettings.HighlightingType type,
-            @NonNull final String separatorPattern) {
+            @NullAllowed final String separatorPattern) {
         switch (type) {
             case BACKGROUND:
                 Color back = new Color(236,235,163);

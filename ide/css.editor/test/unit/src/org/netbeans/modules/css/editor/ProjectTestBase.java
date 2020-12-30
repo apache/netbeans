@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.css.prep.editor;
+package org.netbeans.modules.css.editor;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,8 +40,6 @@ import org.netbeans.junit.MockServices;
 import org.netbeans.lib.lexer.test.TestLanguageProvider;
 import org.netbeans.modules.css.lib.CssTestBase;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
-import org.netbeans.modules.parsing.impl.indexing.PathRecognizerRegistry;
-import org.netbeans.modules.parsing.impl.indexing.PathRegistry;
 import org.netbeans.modules.parsing.spi.indexing.PathRecognizer;
 import org.netbeans.modules.projectapi.SimpleFileOwnerQueryImplementation;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
@@ -59,14 +56,14 @@ import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.test.MockLookup;
 
 /**
- * Base class for all CP preprocessor tests which needs a working static html project.
+ * Base class for all tests which needs a working static html project.
  *
  * @author marekfukala
  */
 public class ProjectTestBase extends CssTestBase {
 
     private String projectFolder;
-    
+
     private FileObject srcFo, projectFo;
 //    private FileObject javaLibSrc, javaLibProjectFo;
 
@@ -92,7 +89,7 @@ public class ProjectTestBase extends CssTestBase {
         Map<String, ClassPath> cps = new HashMap<>();
 
         ClassPath sourceClassPath = ClassPathSupport.createClassPath(new FileObject[]{srcFo});
-        
+
         cps.put(ClassPath.SOURCE, sourceClassPath);
         cps.put(ClassPath.COMPILE, ClassPathSupport.createClassPath(new FileObject[]{srcFo}));
         cps.put(ClassPath.BOOT, createBootClassPath());
@@ -102,10 +99,10 @@ public class ProjectTestBase extends CssTestBase {
         projects.put(projectFo, new ProjectInfo(classpathProvider, sources));
 
         MockLookup.setInstances(
-                new TestMultiProjectFactory(projects),
-                new SimpleFileOwnerQueryImplementation(),
-                classpathProvider,
-                new TestLanguageProvider());
+            new TestMultiProjectFactory(projects),
+            new SimpleFileOwnerQueryImplementation(),
+            classpathProvider,
+            new TestLanguageProvider());
 
         //provides the ClassPath.SOURCE as source path id so it is returned by
         //PathRecognizerRegistry.getDefault().getSourceIds()
@@ -113,20 +110,20 @@ public class ProjectTestBase extends CssTestBase {
 
         //register the source classpath so PathRegistry.getDefault().getRootsMarkedAs(classpathId) in QuerySupport works
         GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, new ClassPath[]{sourceClassPath});
-        
+
         IndexingManager.getDefault().refreshIndexAndWait(srcFo.toURL(), null);
     }
-    
+
     protected String getTestProjectFolderName() {
         return projectFolder;
     }
-    
+
     protected String getSourcesFolderName() {
         return projectFolder + "/public_html";
     }
-    
+
     @ServiceProvider(service = PathRecognizer.class)
-    public static class TestPathRecognizer extends  PathRecognizer {
+    public static class TestPathRecognizer extends PathRecognizer {
 
         @Override
         public Set<String> getSourcePathIds() {
@@ -150,9 +147,9 @@ public class ProjectTestBase extends CssTestBase {
             mimes.add("text/scss");
             return mimes;
         }
-        
+
     }
-    
+
     protected final class TestSources implements Sources {
 
         private FileObject[] roots;
@@ -220,33 +217,38 @@ public class ProjectTestBase extends CssTestBase {
         public void removePropertyChangeListener(PropertyChangeListener listener) {
         }
     }
-    
+
     /**
-     * Creates boot {@link ClassPath} for platform the test is running on,
-     * it uses the sun.boot.class.path property to find out the boot path roots.
+     * Creates boot {@link ClassPath} for platform the test is running on, it
+     * uses the sun.boot.class.path property to find out the boot path roots.
+     *
      * @return ClassPath
-     * @throws java.io.IOException when boot path property contains non valid path
+     *
+     * @throws java.io.IOException when boot path property contains non valid
+     *                             path
      */
     public static ClassPath createBootClassPath() throws IOException {
         String bootPath = System.getProperty("sun.boot.class.path");
-        String[] paths = bootPath.split(File.pathSeparator);
-        List<URL> roots = new ArrayList<>(paths.length);
-        for (String path : paths) {
-            File f = new File(path);
-            if (!f.exists()) {
-                continue;
+        List<URL> roots;
+        if (bootPath != null) {
+            String[] paths = bootPath.split(File.pathSeparator);
+            roots = new ArrayList<>(paths.length);
+            for (String path : paths) {
+                File f = new File(path);
+                if (!f.exists()) {
+                    continue;
+                }
+                URL url = Utilities.toURI(f).toURL();
+                if (FileUtil.isArchiveFile(url)) {
+                    url = FileUtil.getArchiveRoot(url);
+                }
+                roots.add(url);
             }
-            URL url = Utilities.toURI(f).toURL();
-            if (FileUtil.isArchiveFile(url)) {
-                url = FileUtil.getArchiveRoot(url);
-            }
-            roots.add(url);
-//            System.out.println(url);
+        } else {
+            roots = Collections.EMPTY_LIST;
         }
-//        System.out.println("-----------");
         return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
     }
-
 
     protected FileObject getSourcesFolder() {
         return srcFo;
@@ -257,7 +259,7 @@ public class ProjectTestBase extends CssTestBase {
     }
 
     private static class ProjectInfo {
-        
+
         private ClassPathProvider cpp;
         private Sources sources;
 
@@ -286,8 +288,8 @@ public class ProjectTestBase extends CssTestBase {
 
         @Override
         public ClassPath findClassPath(FileObject file, String type) {
-            for(FileObject fo : projects.keySet()) {
-                if(FileUtil.isParentOf(fo, file)) {
+            for (FileObject fo : projects.keySet()) {
+                if (FileUtil.isParentOf(fo, file)) {
                     return projects.get(fo).getCpp().findClassPath(file, type);
                 }
             }
@@ -300,14 +302,14 @@ public class ProjectTestBase extends CssTestBase {
 
         private Map<FileObject, ProjectInfo> projects;
 
-        public  TestMultiProjectFactory(Map<FileObject, ProjectInfo> projects) {
+        public TestMultiProjectFactory(Map<FileObject, ProjectInfo> projects) {
             this.projects = projects;
         }
 
         @Override
         public Project loadProject(FileObject projectDirectory, ProjectState state) throws IOException {
             ProjectInfo pi = projects.get(projectDirectory);
-            return pi != null ? new TestProject(projectDirectory, state, pi.getCpp(), pi.getSources() ) : null;
+            return pi != null ? new TestProject(projectDirectory, state, pi.getCpp(), pi.getSources()) : null;
         }
 
         @Override
@@ -320,7 +322,7 @@ public class ProjectTestBase extends CssTestBase {
         }
     }
 
-     protected static class TestProject implements Project {
+    protected static class TestProject implements Project {
 
         private final FileObject dir;
         final ProjectState state;
@@ -355,7 +357,7 @@ public class ProjectTestBase extends CssTestBase {
             return "testproject:" + getProjectDirectory().getNameExt();
         }
     }
-    
+
     private static class TestMultiClassPathProvider implements ClassPathProvider {
 
         private Map<String, ClassPath> map;

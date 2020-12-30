@@ -481,7 +481,7 @@ public final class GradleDistributionManager {
 
         @Override
         public String toString() {
-            return "GradleDistribution{" + "distributionDir=" + distributionDir + ", distributionURI=" + distributionURI + ", version=" + version + '}';
+            return "GradleDistribution{" + "gradleUserHome=" + gradleUserHome + ", distributionDir=" + distributionDir + ", distributionURI=" + distributionURI + ", version=" + version + '}';
         }
 
     }

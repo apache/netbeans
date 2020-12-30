@@ -48,17 +48,17 @@ public final class FavoriteTaskManager {
 
     ChangeSupport support;
     PropertyChangeListener listener;
+    private boolean loaded;
     final Project project;
 
     public FavoriteTaskManager(Project p) {
         project = p;
         listener = (e) -> updateFavorites(p);
         NbGradleProject.addPropertyChangeListener(p, WeakListeners.propertyChange(listener, NbGradleProject.get(p)));
-        updateFavorites(p);
     }
 
     public boolean isFavorite(GradleTask task) {
-        return favorites != null ? favorites.contains(task) : false;
+        return favorites() != null ? favorites().contains(task) : false;
     }
 
     public void setFavorite(GradleTask task, boolean favorite) {
@@ -82,7 +82,7 @@ public final class FavoriteTaskManager {
     }
 
     public Set<GradleTask> getFavoriteTasks() {
-        return favorites != null ? new LinkedHashSet<>(favorites) : Collections.emptySet();
+        return favorites() != null ? new LinkedHashSet<>(favorites) : Collections.emptySet();
     }
 
     public void addChangeListener(ChangeListener l) {
@@ -132,4 +132,11 @@ public final class FavoriteTaskManager {
 
     }
 
+    private Set<GradleTask> favorites() {
+        if (!loaded) {
+            updateFavorites(project);
+            loaded = true;
+        }
+        return favorites;
+    }
 }

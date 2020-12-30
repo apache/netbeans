@@ -102,15 +102,33 @@ public class CssIndexTest extends ProjectTestBase {
     }
 
     public void testFindAll() throws IOException {
-        assertEquals(
-            getTestCssIndex().findAll(RefactoringElementType.CLASS),
-            getTestCssIndex().findAllClassDeclarations()
-        );
+        FileObject test1Css = getTestFile(getSourcesFolderName() + "/test1.css");
+        FileObject test2Css = getTestFile(getSourcesFolderName() + "/test2.css");
+        FileObject testHtml = getTestFile(getSourcesFolderName() + "/test.html");
+
+        Map<FileObject,Collection<String>> classIndex = getTestCssIndex().findAll(RefactoringElementType.CLASS);
 
         assertEquals(
-            getTestCssIndex().findAll(RefactoringElementType.ID),
-            getTestCssIndex().findAllIdDeclarations()
-        );
+            new HashSet<>(asList("classSelector1", "classSelector2")),
+            new HashSet<>(classIndex.get(test1Css)));
+        assertEquals(
+            new HashSet<>(asList("anotherClassSelector", "classSelector3")),
+            new HashSet<>(classIndex.get(test2Css)));
+        assertEquals(
+            new HashSet<>(asList("classSelector1", "classSelector3")),
+            new HashSet<>(classIndex.get(testHtml)));
+
+        Map<FileObject,Collection<String>> idIndex = getTestCssIndex().findAll(RefactoringElementType.ID);
+
+        assertEquals(
+            new HashSet<>(asList("anotherId", "dummyId")),
+            new HashSet<>(idIndex.get(test1Css)));
+        assertEquals(
+            new HashSet<>(asList("dummyId2", "dummyId3", "yetAnotherId")),
+            new HashSet<>(idIndex.get(test2Css)));
+        assertEquals(
+            new HashSet<>(asList("yetAnotherId")),
+            new HashSet<>(idIndex.get(testHtml)));
     }
 
     public void testFindAllClassDeclarations() throws IOException {
@@ -144,7 +162,8 @@ public class CssIndexTest extends ProjectTestBase {
     public void testFindByPrefix() throws IOException {
         FileObject test1Css = getTestFile(getSourcesFolderName() + "/test1.css");
         FileObject test2Css = getTestFile(getSourcesFolderName() + "/test2.css");
-        Set<FileObject> testCssFiles = new HashSet<>(asList(test1Css, test2Css));
+        FileObject testHtml = getTestFile(getSourcesFolderName() + "/test.html");
+        Set<FileObject> testCssFiles = new HashSet<>(asList(test1Css, test2Css, testHtml));
 
         Map<FileObject,Collection<String>> idPrefixResult = getTestCssIndex().findByPrefix(RefactoringElementType.ID, "another");
         assertNotNull(idPrefixResult);
@@ -155,7 +174,7 @@ public class CssIndexTest extends ProjectTestBase {
 
         Map<FileObject,Collection<String>> classPrefixResult = getTestCssIndex().findByPrefix(RefactoringElementType.CLASS, "classSelector");
         assertNotNull(classPrefixResult);
-        assertEquals(2, classPrefixResult.size());
+        assertEquals(3, classPrefixResult.size());
         assertEquals(testCssFiles, classPrefixResult.keySet());
 
         assertEquals(new HashSet<>(asList("classSelector1", "classSelector2")), classPrefixResult.get(test1Css));
@@ -218,9 +237,12 @@ public class CssIndexTest extends ProjectTestBase {
 
     public void testFindIdsByPrefix() throws IOException {
         FileObject test2Css = getTestFile(getSourcesFolderName() + "/test2.css");
+        FileObject testHtml = getTestFile(getSourcesFolderName() + "/test.html");
+        Set<FileObject> testCssFiles = new HashSet<>(asList(test2Css, testHtml));
         Map<FileObject,Collection<String>> result = getTestCssIndex().findIdsByPrefix("yetAnother");
         assertNotNull(result);
-        assertEquals(singleton(test2Css), result.keySet());
+        assertEquals(testCssFiles, result.keySet());
         assertEquals(asList("yetAnotherId"), new ArrayList<>(result.get(test2Css)));
+        assertEquals(asList("yetAnotherId"), new ArrayList<>(result.get(testHtml)));
     }
 }

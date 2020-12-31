@@ -162,7 +162,7 @@ final class Line {
 
     public int charWidth(MyFontMetrics metrics, int at) {
         if (at > buf.length - 1) return 0;
-        return metrics.getFm().charsWidth(buf, at, 1);
+        return metrics.getFm().charsWidth(buf, at, 0);
     }
 
     /*

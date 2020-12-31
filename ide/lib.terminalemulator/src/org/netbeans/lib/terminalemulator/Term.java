@@ -2875,24 +2875,19 @@ public class Term extends JComponent implements Accessible {
             ((Graphics2D) g).setRenderingHints(hints);
         }
 
-        if (metrics.isMultiCell()) {
-            // slow way
-            // This looks expensive but it is in fact a whole lot faster
-            // than issuing a g.drawChars() _per_ character
-
-            Graphics2D g2 = (Graphics2D) g;
-            FontRenderContext frc = g2.getFontRenderContext();
-            // Gaaah, why doesn't createGlyphVector() take a (char[],offset,len)
-            // triple?
-            char[] tmp = new char[howmany];
-            System.arraycopy(xferBuf, start, tmp, 0, howmany);
-            GlyphVector gv = getFont().createGlyphVector(frc, tmp);
-            massage_glyphs(gv, start, howmany, l);
-            g2.drawGlyphVector(gv, xoff, baseline);
-        } else {
-            // fast way
-            g.drawChars(xferBuf, start, howmany, xoff, baseline);
-        }
+        // This looks expensive but it is in fact a whole lot faster than
+        // issuing a g.drawChars() _per_ character. drawChars can not be used
+        // directly, as it was observed, that characters are not placed
+        // correctly (observed on HiDPI displays)
+        Graphics2D g2 = (Graphics2D) g;
+        FontRenderContext frc = g2.getFontRenderContext();
+        // Gaaah, why doesn't createGlyphVector() take a (char[],offset,len)
+        // triple?
+        char[] tmp = new char[howmany];
+        System.arraycopy(xferBuf, start, tmp, 0, howmany);
+        GlyphVector gv = getFont().createGlyphVector(frc, tmp);
+        massage_glyphs(gv, start, howmany, l);
+        g2.drawGlyphVector(gv, xoff, baseline);
     }
 
     /*

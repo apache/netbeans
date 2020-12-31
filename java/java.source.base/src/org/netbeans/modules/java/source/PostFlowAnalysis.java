@@ -44,6 +44,7 @@ import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Pair;
+import java.lang.reflect.Method;
 import javax.lang.model.element.Element;
 import javax.tools.JavaFileObject;
 
@@ -123,7 +124,7 @@ public class PostFlowAnalysis extends TreeScanner {
     @Override
     public void visitMethodDef(JCMethodDecl tree) {
         if (tree.name == names.init &&
-            (currentClass.isInner() || currentClass.isLocal())) {
+            (currentClass.isInner() || isLocal(currentClass))) {
             List<Pair<TypeSymbol, Symbol>> prevOuterThisStack = outerThisStack;
             try {
                 if (currentClass.hasOuterInstance())
@@ -162,7 +163,7 @@ public class PostFlowAnalysis extends TreeScanner {
         super.visitNewClass(tree);
         Symbol c = tree.constructor != null ? tree.constructor.owner : null;
         if (c != null && c != syms.noSymbol && c.hasOuterInstance()) {
-            if (tree.encl == null && c.isLocal()) {
+            if (tree.encl == null && isLocal(c)) {
                 checkThis(tree.pos(), c.type.getEnclosingType().tsym);
             }
         }
@@ -178,7 +179,7 @@ public class PostFlowAnalysis extends TreeScanner {
                 Symbol c = meth.owner;
                 if (c.hasOuterInstance()) {
                     checkThis = false;
-                    if (tree.meth.getTag() != JCTree.Tag.SELECT && (c.isLocal() || methName == names._this)) {
+                    if (tree.meth.getTag() != JCTree.Tag.SELECT && (isLocal(c) || methName == names._this)) {
                         checkThis(tree.meth.pos(), c.type.getEnclosingType().tsym);
                     }
                 }
@@ -232,5 +233,22 @@ public class PostFlowAnalysis extends TreeScanner {
     private void checkStringConstant(DiagnosticPosition pos, Object constValue) {
         if (constValue instanceof String && ((String)constValue).length() >= Pool.MAX_STRING_LENGTH)
             log.error(pos, new Error("compiler", "limit.string")); //NOI18N
+    }
+
+    private Method isLocal;
+
+    private boolean isLocal(Symbol sym) {
+        try {
+            if (isLocal == null) {
+                try {
+                    isLocal = Symbol.class.getDeclaredMethod("isLocal");
+                } catch (NoSuchMethodException ex) {
+                    isLocal = Symbol.class.getDeclaredMethod("isDirectlyOrIndirectlyLocal");
+                }
+            }
+            return (boolean) isLocal.invoke(sym);
+        } catch (Throwable t) {
+            return false;
+        }
     }
 }

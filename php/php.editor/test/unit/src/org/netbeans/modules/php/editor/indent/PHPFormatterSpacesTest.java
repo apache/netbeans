@@ -204,16 +204,27 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spaces/spaceBeforeAfterSemi04.php", options);
     }
 
-    public void xxxtestSpacesCheckAfterKeywords01() throws Exception {
+    public void testSpacesCheckAfterKeywords01() throws Exception {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
         options.put(FmtOptions.SPACE_CHECK_AFTER_KEYWORDS, true);
         reformatFileContents("testfiles/formatting/spaces/spaceCheckAfterKeywords01.php", options);
     }
 
-    public void xxxtestSpacesCheckAfterKeywords02() throws Exception {
+    public void testSpacesCheckAfterKeywords02() throws Exception {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
         options.put(FmtOptions.SPACE_CHECK_AFTER_KEYWORDS, true);
         reformatFileContents("testfiles/formatting/spaces/spaceCheckAfterKeywords02.php", options);
+    }
+
+    public void testSpacesBeforeAnonymousFunctionParen01() throws Exception {
+        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/spaces/spaceBeforeAnonymousFunction01.php", options);
+    }
+
+    public void testSpacesBeforeAnonymousFunctionParen02() throws Exception {
+        HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_ANONYMOUS_FUNCTION_PAREN, false);
+        reformatFileContents("testfiles/formatting/spaces/spaceBeforeAnonymousFunction02.php", options);
     }
 
     public void testIssue210617() throws Exception {

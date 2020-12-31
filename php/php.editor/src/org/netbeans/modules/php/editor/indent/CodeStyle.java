@@ -262,6 +262,10 @@ public final class CodeStyle {
         return preferences.getBoolean(SPACE_BEFORE_ANONYMOUS_CLASS_PAREN, getDefaultAsBoolean(SPACE_BEFORE_ANONYMOUS_CLASS_PAREN));
     }
 
+    public boolean spaceBeforeAnonymousFunctionParen() {
+        return preferences.getBoolean(SPACE_BEFORE_ANONYMOUS_FUNCTION_PAREN, getDefaultAsBoolean(SPACE_BEFORE_ANONYMOUS_FUNCTION_PAREN));
+    }
+
     public boolean spaceBeforeMethodDeclParen() {
         return preferences.getBoolean(SPACE_BEFORE_METHOD_DECL_PAREN, getDefaultAsBoolean(SPACE_BEFORE_METHOD_DECL_PAREN));
     }

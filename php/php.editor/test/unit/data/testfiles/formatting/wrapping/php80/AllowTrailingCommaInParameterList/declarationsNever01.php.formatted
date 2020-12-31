@@ -62,7 +62,7 @@ class Test {
 
 }
 
-$closure = function(
+$closure = function (
         $param1,
         $param2,
         $param3,
@@ -71,28 +71,28 @@ $closure = function(
     echo "Trailing Comma in Parameter List" . PHP_EOL;
 };
 
-$closureWithLexical = function(
+$closureWithLexical = function (
         $param1,
         $param2,
 ) use ($lexical) {
     echo "Trailing Comma in Parameter List" . PHP_EOL;
 };
 
-$closureWithReturnType = function(
+$closureWithReturnType = function (
         int $param1,
         $param2,
 ): void {
     echo "Trailing Comma in Parameter List" . PHP_EOL;
 };
 
-$closureWithLexixalAndReturnType = function(
+$closureWithLexixalAndReturnType = function (
         $param1,
         $param2,
 ) use ($lexical): void {
     echo "Trailing Comma in Parameter List" . PHP_EOL;
 };
 
-$closureWithLexixalAndReturnType = function(
+$closureWithLexixalAndReturnType = function (
         $param1,
         $param2,
 ) use (

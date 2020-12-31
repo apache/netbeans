@@ -106,6 +106,10 @@ public function nullsafeOperatorExample(object $object){
 }
 }
 
+$anonymousFunc = function ($arg) use ($param):int {
+    return 1;
+};
+
 // Wrapping: Method Call Arguments must be set
 (new Example())->alignParamsExample('one',
         'two', 'three',

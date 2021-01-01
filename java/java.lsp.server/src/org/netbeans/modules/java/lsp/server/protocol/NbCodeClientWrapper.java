@@ -52,7 +52,7 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
             this.clientCaps = clientCaps;
         }
     }
-    
+
     @Override
     public NbCodeClientCapabilities getNbCodeCapabilities() {
         return clientCaps;
@@ -61,6 +61,16 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     @Override
     public void showStatusBarMessage(ShowStatusMessageParams params) {
         remote.showStatusBarMessage(params);
+    }
+
+    @Override
+    public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+        return remote.showQuickPick(params);
+    }
+
+    @Override
+    public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+        return remote.showInputBox(params);
     }
 
     @Override

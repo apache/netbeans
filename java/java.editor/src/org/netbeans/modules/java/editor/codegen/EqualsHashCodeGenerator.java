@@ -393,8 +393,8 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
 
         generateEqualsAndHashCode(wc, path, e, h, -1);
     }
-    
-    static void generateEqualsAndHashCode(WorkingCopy wc, TreePath path, Iterable<? extends VariableElement> equalsFields, Iterable<? extends VariableElement> hashCodeFields, int offset) {
+
+    public static void generateEqualsAndHashCode(WorkingCopy wc, TreePath path, Iterable<? extends VariableElement> equalsFields, Iterable<? extends VariableElement> hashCodeFields, int offset) {
         assert TreeUtilities.CLASS_TREE_KINDS.contains(path.getLeaf().getKind());
         TypeElement te = (TypeElement)wc.getTrees().getElement(path);
         if (te != null) {
@@ -419,7 +419,7 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
                 members.add(createEqualsMethod(wc, equalsFields, dt, scope));
             }
             wc.rewrite(nue, GeneratorUtils.insertClassMembers(wc, nue, members, offset));
-        }        
+        }
     }
 
     private static MethodTree createEqualsMethod(WorkingCopy wc, Iterable<? extends VariableElement> equalsFields, DeclaredType type, Scope scope) {

@@ -21,7 +21,6 @@ package org.netbeans.modules.gradle.cache;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -39,7 +38,7 @@ import org.netbeans.modules.gradle.spi.GradleFiles;
 public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, QualifiedProjectInfo> {
 
     // Increase this number if new info is gathered from the projects.
-    private static final int COMPATIBLE_CACHE_VERSION = 17;
+    private static final int COMPATIBLE_CACHE_VERSION = 18;
     private static final String INFO_CACHE_FILE_NAME = "project-info.ser"; //NOI18N
 
     public ProjectInfoDiskCache(GradleFiles gf) {

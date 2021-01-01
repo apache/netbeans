@@ -28,6 +28,7 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLINE;
+import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.modules.project.uiapi.ProjectOpenedTrampoline;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
@@ -58,6 +59,7 @@ public class AbstractGradleProjectTestCase extends NbTestCase {
         clearWorkDir();
         destDirF = getTestNBDestDir();
         DummyInstalledFileLocator.registerDestDir(destDirF);
+        GradleExperimentalSettings.getDefault().setOpenLazy(false);
     }
 
     @Override

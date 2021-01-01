@@ -32,6 +32,15 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"languages": [
+			{
+				"id": "javascript",
+				"mimetypes": [
+					"text/javascript",
+					"application/javascript"
+				]
+			}
+		],
 		"configuration": {
 			"title": "Java",
 			"properties": {

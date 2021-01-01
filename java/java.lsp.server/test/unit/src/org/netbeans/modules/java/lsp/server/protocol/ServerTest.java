@@ -1260,10 +1260,10 @@ public class ServerTest extends NbTestCase {
         List<? extends SymbolInformation> symbols = server.getWorkspaceService().symbol(new WorkspaceSymbolParams("Tes")).get();
         List<String> actual = symbols.stream().map(si -> si.getKind() + ":" + si.getName() + ":" + si.getContainerName() + ":" + si.getDeprecated() + ":" + toString(si.getLocation())).collect(Collectors.toList());
         assertEquals(Arrays.asList("Class:Test:Test:false:Test.java:0:0-3:1",
-                                   "Constructor:():Test:false:Test.java:0:7-0:7",
-                                   "Method:():Test:false:Test.java:2:4-2:38",
+                                   "Constructor:Test():Test:false:Test.java:0:7-0:7",
+                                   "Method:testMethod():Test:false:Test.java:2:4-2:38",
                                    "Class:TestNested:Test.TestNested:false:Test.java:1:4-1:37",
-                                   "Constructor:():Test.TestNested:false:Test.java:1:18-1:18"),
+                                   "Constructor:TestNested():Test.TestNested:false:Test.java:1:18-1:18"),
                      actual);
     }
 

@@ -201,6 +201,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     }
                 };
                 JavaSymbolProvider.doComputeSymbols(getSearchType(queryFin, exactFin, false, null, null), queryFin, handler, true, cancel);
+                Collections.sort(symbols, (i1, i2) -> i1.getName().compareToIgnoreCase(i2.getName()));
                 result.complete(symbols);
             } catch (Throwable t) {
                 result.completeExceptionally(t);

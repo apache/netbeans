@@ -680,12 +680,55 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     public static String html2MD(String html) {
-        return FlexmarkHtmlConverter.builder().build().convert(html).replaceAll("<br />[ \n]*$", "");
+        int idx = html.indexOf("<p id=\"not-found\">"); // strip "No Javadoc found" message
+        return FlexmarkHtmlConverter.builder().build().convert(idx >= 0 ? html.substring(0, idx) : html).replaceAll("<br />[ \n]*$", "");
     }
 
     @Override
     public CompletableFuture<Hover> hover(HoverParams params) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            String uri = params.getTextDocument().getUri();
+            FileObject file = Utils.fromUri(uri);
+            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+            Document doc = ec.openDocument();
+            final JavaDocumentationTask<Future<String>> task = JavaDocumentationTask.create(Utils.getOffset(doc, params.getPosition()), null, new JavaDocumentationTask.DocumentationFactory<Future<String>>() {
+                @Override
+                public Future<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
+                    return ElementJavadoc.create(compilationInfo, element, cancel).getTextAsync();
+                }
+            }, () -> false);
+            ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
+                @Override
+                public void run(ResultIterator resultIterator) throws Exception {
+                    task.run(resultIterator);
+                }
+            });
+            Future<String> futureJavadoc = task.getDocumentation();
+            CompletableFuture<Hover> result = new CompletableFuture<Hover>() {
+                @Override
+                public boolean cancel(boolean mayInterruptIfRunning) {
+                    return futureJavadoc != null && futureJavadoc.cancel(mayInterruptIfRunning) && super.cancel(mayInterruptIfRunning);
+                }
+            };
+            JAVADOC_WORKER.post(() -> {
+                try {
+                    String javadoc = futureJavadoc != null ? futureJavadoc.get() : null;
+                    if (javadoc != null) {
+                        MarkupContent markup = new MarkupContent();
+                        markup.setKind("markdown");
+                        markup.setValue(html2MD(javadoc));
+                        result.complete(new Hover(markup));
+                    } else {
+                        result.complete(null);
+                    }
+                } catch (ExecutionException | InterruptedException ex) {
+                    result.completeExceptionally(ex);
+                }
+            });
+            return result;
+        } catch (IOException | ParseException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override

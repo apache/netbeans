@@ -62,10 +62,32 @@ for running and debugging below.
 Often it is also important to properly clean everything. Use:
 
 ```bash
-java.lsp.server$ ant clean-vscode-server
+java.lsp.server$ ant clean-vscode-ext
 java.lsp.server$ cd ../..
 netbeans$ ant clean
 ```
+
+### Testing
+
+The `java.lsp.server` module has classical (as other NetBeans modules) tests.
+The most important one is [ServerTest](https://github.com/apache/netbeans/blob/master/java/java.lsp.server/test/unit/src/org/netbeans/modules/java/lsp/server/protocol/ServerTest.java)
+which simulates LSP communication and checks expected replies. In addition to
+that there are VS Code integration tests - those launch VS Code with the
+VSNetBeans extension and check behavior of the TypeScript integration code:
+
+```bash
+java.lsp.server$ ant build-vscode-ext # first and then
+java.lsp.server$ ant test-vscode-ext
+```
+
+In case you are behind a proxy, you may want to run the tests with
+
+```bash
+java.lsp.server$ npm_config_https_proxy=http://your.proxy.com:port ant test-vscode-ext
+```
+
+when executing the tests for the first time. That shall overcome the proxy
+and download an instance of `code` execute the tests on.
 
 ## Running and Debugging
 

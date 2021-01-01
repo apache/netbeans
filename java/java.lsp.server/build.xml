@@ -129,4 +129,16 @@
 
         <zip destfile="${build.dir}/apache-netbeans-java-${vsix.version}.vsix" basedir="${build.dir}/vscode-mandatory/" update="true" />
     </target>
+    <target name="test-vscode-ext" description="Tests the Visual Studio Code extension built by 'build-vscode-ext' target.">
+        <exec executable="npm" failonerror="true" dir="vscode">
+            <arg value="--allow-same-version"/>
+            <arg value="run" />
+            <arg value="nbjavac" />
+        </exec>
+        <exec executable="npm" failonerror="true" dir="vscode">
+            <arg value="--allow-same-version"/>
+            <arg value="run" />
+            <arg value="test" />
+        </exec>
+    </target>
 </project>

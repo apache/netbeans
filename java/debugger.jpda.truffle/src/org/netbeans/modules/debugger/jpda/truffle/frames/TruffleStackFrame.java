@@ -58,6 +58,7 @@ public final class TruffleStackFrame {
     private final String sourceName;
     private final String sourcePath;
     private final URI    sourceURI;
+    private final String mimeType;
     private final String sourceSection;
     private final StringReference codeRef;
     private TruffleScope[] scopes;
@@ -111,6 +112,9 @@ public final class TruffleStackFrame {
                 throw new IllegalStateException("Bad URI: "+frameDefinition.substring(i1, i2), usex);
             }
             i1 = i2 + 1;
+            i2 = frameDefinition.indexOf('\n', i1);
+            mimeType = frameDefinition.substring(i1, i2);
+            i1 = i2 + 1;
             if (includeInternal) {
                 i2 = frameDefinition.indexOf('\n', i1);
                 sourceSection = frameDefinition.substring(i1, i2);
@@ -163,7 +167,7 @@ public final class TruffleStackFrame {
     public SourcePosition getSourcePosition() {
         Source src = Source.getExistingSource(debugger, sourceId);
         if (src == null) {
-            src = Source.getSource(debugger, sourceId, sourceName, sourcePath, sourceURI, codeRef);
+            src = Source.getSource(debugger, sourceId, sourceName, sourcePath, sourceURI, mimeType, codeRef);
         }
         SourcePosition sp = new SourcePosition(debugger, sourceId, src, sourceSection);
         return sp;

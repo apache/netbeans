@@ -19,7 +19,13 @@
 package org.netbeans.modules.java.lsp.server.debugging;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -67,9 +73,25 @@ public final class NbSourceProvider {
         });
     }
 
-    public String getSourceContents(String arg0) {
-        LOG.log(Level.INFO, "SourceContent {0}", arg0);
-        throw new UnsupportedOperationException("Not supported yet.");
+    public String getSourceContents(URI uri) {
+        LOG.log(Level.INFO, "SourceContent {0}", uri);
+        URL url;
+        try {
+            url = uri.toURL();
+        } catch (MalformedURLException ex) {
+            return ex.getLocalizedMessage();
+        }
+        StringBuilder content = new StringBuilder();
+        char[] buffer = new char[8192];
+        try (Reader r = new InputStreamReader(url.openConnection().getInputStream())) {
+            int l;
+            while ((l = r.read(buffer)) > 0) {
+                content.append(buffer, 0, l);
+            }
+        } catch (IOException ex) {
+            return ex.getLocalizedMessage();
+        }
+        return content.toString();
     }
     
     public Source getSource(String sourceName, String debuggerURI) {

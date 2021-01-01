@@ -61,7 +61,7 @@ final class FrameInfo {
                    ((sfLang != null) ? sfLang.getId() + " " + sfLang.getName() : "") + "\n" +
                    DebuggerVisualizer.getSourceLocation(topSS) + "\n" +
                    position.id + "\n" + position.name + "\n" + position.path + "\n" +
-                   position.uri.toString() + "\n" + position.sourceSection +/* "," + position.startColumn + "," +
+                   position.uri.toString() + "\n" + position.mimeType + "\n" + position.sourceSection +/* "," + position.startColumn + "," +
                    position.endLine + "," + position.endColumn +*/ "\n" + isInternal(topStackFrame);
         topVariables = JPDATruffleAccessor.getVariables(topStackFrame);
     }

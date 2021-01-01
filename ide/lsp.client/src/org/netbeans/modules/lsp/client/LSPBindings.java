@@ -51,6 +51,7 @@ import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.ResourceOperationKind;
 import org.eclipse.lsp4j.ServerCapabilities;
+import org.eclipse.lsp4j.SymbolCapabilities;
 import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.SymbolKindCapabilities;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
@@ -61,6 +62,7 @@ import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
+import org.eclipse.lsp4j.util.Preconditions;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.progress.*;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -89,6 +91,11 @@ import org.openide.util.lookup.Lookups;
  */
 public class LSPBindings {
 
+    static {
+        //Don't perform null checks. The servers may not adhere to the specification, and send illegal nulls.
+        Preconditions.enableNullChecks(false);
+    }
+
     private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
     private static final int DELAY = 500;
 
@@ -110,20 +117,31 @@ public class LSPBindings {
                 break;
             }
         }
+
+        String mimeType = FileUtil.getMIMEType(file);
         Project prj = FileOwnerQuery.getOwner(file);
+
+        if (mimeType == null) {
+            return null;
+        }
+
+        return getBindingsImpl(prj, file, mimeType, true);
+    }
+
+    public static void ensureServerRunning(Project prj, String mimeType) {
+        getBindingsImpl(prj, prj.getProjectDirectory(), mimeType, false);
+    }
+
+    public static synchronized LSPBindings getBindingsImpl(Project prj, FileObject file, String mimeType, boolean forceBindings) {
         FileObject dir;
+
         if (prj == null) {
             dir = file.getParent();
         } else {
             dir = prj.getProjectDirectory();
         }
+
         URI uri = dir.toURI();
-
-        String mimeType = FileUtil.getMIMEType(file);
-
-        if (mimeType == null) {
-            return null;
-        }
 
         boolean[] created = new boolean[1];
 
@@ -131,22 +149,18 @@ public class LSPBindings {
                 project2MimeType2Server.computeIfAbsent(uri, p -> new HashMap<>())
                                        .computeIfAbsent(mimeType, mt -> {
                                            MimeTypeInfo mimeTypeInfo = new MimeTypeInfo(mt);
-                                           Reference<Project> prjRef = new WeakReference<>(prj);
                                            ServerRestarter restarter = () -> {
                                                synchronized (LSPBindings.class) {
-                                                   Project p = prjRef.get();
-                                                   if (p != null) {
-                                                       LSPBindings b = project2MimeType2Server.getOrDefault(uri, Collections.emptyMap()).remove(mimeType);
+                                                   LSPBindings b = project2MimeType2Server.getOrDefault(uri, Collections.emptyMap()).remove(mimeType);
 
-                                                       if (b != null) {
-                                                           try {
-                                                               b.server.shutdown().get();
-                                                           } catch (InterruptedException | ExecutionException ex) {
-                                                               LOG.log(Level.FINE, null, ex);
-                                                           }
-                                                           if (b.process != null) {
-                                                               b.process.destroy();
-                                                           }
+                                                   if (b != null) {
+                                                       try {
+                                                           b.server.shutdown().get();
+                                                       } catch (InterruptedException | ExecutionException ex) {
+                                                           LOG.log(Level.FINE, null, ex);
+                                                       }
+                                                       if (b.process != null) {
+                                                           b.process.destroy();
                                                        }
                                                    }
                                                }
@@ -181,9 +195,12 @@ public class LSPBindings {
                                                    }
                                                }
                                            }
-                                           return new LSPBindings(null, null, null);
+                                           return forceBindings ? new LSPBindings(null, null, null) : null;
                                        });
 
+        if (bindings == null) {
+            return null;
+        }
         if (bindings.process != null && !bindings.process.isAlive()) {
             //XXX: what now
             return null;
@@ -246,6 +263,8 @@ public class LSPBindings {
        wcc.setWorkspaceEdit(new WorkspaceEditCapabilities());
        wcc.getWorkspaceEdit().setDocumentChanges(true);
        wcc.getWorkspaceEdit().setResourceOperations(Arrays.asList(ResourceOperationKind.Create, ResourceOperationKind.Delete, ResourceOperationKind.Rename));
+       SymbolCapabilities sc = new SymbolCapabilities(new SymbolKindCapabilities(Arrays.asList(SymbolKind.values())));
+       wcc.setSymbol(sc);
        initParams.setCapabilities(new ClientCapabilities(wcc, tdcc, null));
        CompletableFuture<InitializeResult> initResult = server.initialize(initParams);
        while (true) {
@@ -259,6 +278,21 @@ public class LSPBindings {
                }
            }
        }
+    }
+
+    public static Set<LSPBindings> getAllBindings() {
+        Set<LSPBindings> allBindings = Collections.newSetFromMap(new IdentityHashMap<>());
+
+        project2MimeType2Server.values()
+                               .stream()
+                               .flatMap(n -> n.values().stream())
+                               .forEach(allBindings::add);
+        workspace2Extension2Server.values()
+                                  .stream()
+                                  .flatMap(n -> n.values().stream())
+                                  .forEach(allBindings::add);
+
+        return allBindings;
     }
 
     private final LanguageServer server;

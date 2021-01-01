@@ -22,7 +22,6 @@ package org.netbeans.modules.gradle;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
-import org.netbeans.modules.gradle.spi.GradleSettings;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -56,6 +55,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.SuppressWarnings;
 import org.netbeans.api.project.ui.ProjectProblems;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.spi.project.CacheDirectoryProvider;
 import org.netbeans.spi.project.support.LookupProviderSupport;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
@@ -298,7 +298,7 @@ public final class NbGradleProjectImpl implements Project {
                     ProjectProblems.showAlert(NbGradleProjectImpl.this);
                 }
             };
-            if (GradleSettings.getDefault().isOpenLazy()) {
+            if (GradleExperimentalSettings.getDefault().isOpenLazy()) {
                 RELOAD_RP.post(open, 100);
             } else {
                 open.run();

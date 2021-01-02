@@ -17,7 +17,7 @@
  * under the License.
  */
 
- /*
+/*
  * "MyFontMetrics"
  * MyFontMetrics.java 1.5 01/07/10
  */
@@ -77,7 +77,7 @@ class MyFontMetrics {
      *
      * CacheFactory doles out WidthCaches.
      *
-     * These caches are 64Kb (Character.MAX_VALUE+1) and we don't really want
+     * These caches are 64Kb (Character.MAX_VALUE+1) and we don't really want 
      * Each interp to have it's own. So we share them in a map using FontMetrics
      * as a key. Unfortunately stuff will accumulate in the map. A WeakHashMap
      * is no good because the keys (FontMetrics) are usually alive. For all I
@@ -91,7 +91,7 @@ class MyFontMetrics {
      * it's reference. To make the reference count go down CacheFactory.disposeBy()
      * is used. And that is called from MyFontMetrics.finalize().
      *
-     * NOTE: The actual WidthCache's instances _will_ accumulate, but they are small and
+     * NOTE: The actual WidthCache's instances _will_ accumulate, but they are small and 
      * there are only so many font variations an app can go through. As I
      * mentioned above using a WeakHashMap doesn't help much because WidthCache's
      * are keyed by relatively persistent FontMetrics.
@@ -121,9 +121,8 @@ class MyFontMetrics {
 
     }
 
-    public MyFontMetrics(Component component) {
-        this.cmp = component;
-        this.fm = this.cmp.getFontMetrics(cmp.getFont());
+    public MyFontMetrics(Component component, Font font) {
+        fm = component.getFontMetrics(font);
         width = fm.charWidth('a');
         height = fm.getHeight();
         ascent = fm.getAscent();
@@ -139,14 +138,11 @@ class MyFontMetrics {
         // the following makes things match up, but if we ever undo this
         // we'll have to go and adjust how everything is drawn (cursor,
         // reverse-video attribute, underscore, bg stripe, selection etc.
+
         height -= leading;
         leading = 0;
-        cwidth_cache = CacheFactory.cacheForFontMetrics(fm);
-    }
 
-    public FontMetrics getFm() {
-//        if (fm == null) fm = this.cmp.getFontMetrics(cmp.getFont()); // this does not work very well
-        return this.cmp.getFontMetrics(cmp.getFont()); // this seems not very optimal
+        cwidth_cache = CacheFactory.cacheForFontMetrics(fm);
     }
 
     @Override
@@ -158,7 +154,6 @@ class MyFontMetrics {
     public int ascent;
     public int leading;
     public FontMetrics fm;
-    public Component cmp;
     private WidthCache cwidth_cache;
 
     public boolean isMultiCell() {
@@ -174,7 +169,7 @@ class MyFontMetrics {
 
         if (cell_width == 0) {
             // width not cached yet so figure it out
-            int pixel_width = getFm().charWidth(c);
+            int pixel_width = fm.charWidth(c);
 
             if (pixel_width == width) {
                 cell_width = 1;

@@ -261,6 +261,8 @@ public class JPDATruffleAccessor extends Object {
         str.append('\n');
         str.append(position.uri.toString());
         str.append('\n');
+        str.append(position.mimeType);
+        str.append('\n');
         str.append(position.sourceSection);
         return str.toString();
     }

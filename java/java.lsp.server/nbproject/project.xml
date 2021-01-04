@@ -26,12 +26,20 @@
             <code-name-base>org.netbeans.modules.java.lsp.server</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>com.google.gson</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>2.7</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.api.annotations.common</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.34</specification-version>
+                        <specification-version>1.36</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -130,6 +138,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.editor.lib2</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>2.30.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.editor.mimelookup</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -173,6 +190,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.java.lexer</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.45.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.java.source.base</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -196,6 +222,15 @@
                     <run-dependency>
                         <release-version>1</release-version>
                         <specification-version>1.28</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.jumpto</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.64</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -225,6 +260,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.parsing.lucene</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.45.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.projectapi</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -240,6 +284,15 @@
                     <run-dependency>
                         <release-version>1</release-version>
                         <specification-version>1.89</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.queries</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.52</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -265,7 +318,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>2.63</specification-version>
+                        <specification-version>2.65.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -372,14 +425,6 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>9.14</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>com.google.gson</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>2.7</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>

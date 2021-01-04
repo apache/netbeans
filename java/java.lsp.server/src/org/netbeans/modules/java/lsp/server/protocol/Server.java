@@ -32,6 +32,8 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.eclipse.lsp4j.CodeActionKind;
+import org.eclipse.lsp4j.CodeActionOptions;
 import org.eclipse.lsp4j.CompletionOptions;
 import org.eclipse.lsp4j.ExecuteCommandOptions;
 import org.eclipse.lsp4j.InitializeParams;
@@ -63,6 +65,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -247,12 +250,18 @@ public final class Server {
                 completionOptions.setResolveProvider(true);
                 completionOptions.setTriggerCharacters(Collections.singletonList("."));
                 capabilities.setCompletionProvider(completionOptions);
-                capabilities.setCodeActionProvider(true);
+                capabilities.setHoverProvider(true);
+                capabilities.setCodeActionProvider(new CodeActionOptions(Arrays.asList(CodeActionKind.QuickFix, CodeActionKind.Source)));
                 capabilities.setDocumentSymbolProvider(true);
                 capabilities.setDefinitionProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
-                capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(Arrays.asList(JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT)));
+                List<String> commands = new ArrayList<>(Arrays.asList(JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT));
+                for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
+                    commands.addAll(codeGenerator.getCommands());
+                }
+                capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(commands));
+                capabilities.setWorkspaceSymbolProvider(true);
             }
             return new InitializeResult(capabilities);
         }
@@ -266,7 +275,7 @@ public final class Server {
             if (folders != null) {
                 for (WorkspaceFolder w : folders) {
                     try {
-                        projectCandidates.add(TextDocumentServiceImpl.fromUri(w.getUri()));
+                        projectCandidates.add(Utils.fromUri(w.getUri()));
                     } catch (MalformedURLException ex) {
                         LOG.log(Level.FINE, null, ex);
                     }
@@ -276,7 +285,7 @@ public final class Server {
 
                 if (root != null) {
                     try {
-                        projectCandidates.add(TextDocumentServiceImpl.fromUri(root));
+                        projectCandidates.add(Utils.fromUri(root));
                     } catch (MalformedURLException ex) {
                         LOG.log(Level.FINE, null, ex);
                     }
@@ -332,7 +341,7 @@ public final class Server {
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";
-    
+
     static final NbCodeLanguageClient STUB_CLIENT = new NbCodeLanguageClient() {
         private final NbCodeClientCapabilities caps = new NbCodeClientCapabilities();
         
@@ -344,6 +353,18 @@ public final class Server {
         @Override
         public void showStatusBarMessage(ShowStatusMessageParams params) {
             logWarning(params);
+        }
+
+        @Override
+        public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+            logWarning(params);
+            return CompletableFuture.completedFuture(params.getCanPickMany() || params.getItems().isEmpty() ? params.getItems() : Collections.singletonList(params.getItems().get(0)));
+        }
+
+        @Override
+        public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+            logWarning(params);
+            return CompletableFuture.completedFuture(params.getValue());
         }
 
         @Override

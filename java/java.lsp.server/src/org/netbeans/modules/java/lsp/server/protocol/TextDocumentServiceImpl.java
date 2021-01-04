@@ -24,33 +24,27 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
@@ -83,6 +77,8 @@ import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.CompletionTriggerKind;
+import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
@@ -110,10 +106,10 @@ import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ReferenceParams;
 import org.eclipse.lsp4j.RenameParams;
+import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SymbolInformation;
-import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextEdit;
@@ -125,6 +121,7 @@ import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
+import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy;
@@ -139,6 +136,7 @@ import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.java.source.ui.ElementJavadoc;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.editor.java.GoToSupport.Context;
 import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
@@ -147,14 +145,19 @@ import org.netbeans.modules.java.completion.JavaCompletionTask;
 import org.netbeans.modules.java.completion.JavaCompletionTask.Options;
 import org.netbeans.modules.java.completion.JavaDocumentationTask;
 import org.netbeans.modules.java.editor.base.semantic.MarkOccurrencesHighlighterBase;
+import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
+import org.netbeans.modules.java.hints.errors.CreateFixBase;
 import org.netbeans.modules.java.hints.errors.ImportClass;
 import org.netbeans.modules.java.hints.infrastructure.CreatorBasedLazyFixList;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
+import org.netbeans.modules.java.hints.introduce.IntroduceHint;
+import org.netbeans.modules.java.hints.introduce.IntroduceKind;
 import org.netbeans.modules.java.hints.project.IncompleteClassPath;
 import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ui.ElementOpenAccessor;
 import org.netbeans.modules.parsing.api.ParserManager;
@@ -174,12 +177,10 @@ import org.netbeans.spi.editor.hints.LazyFixList;
 import org.netbeans.spi.java.hints.JavaFix;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.URLMapper;
-import org.openide.modules.Places;
 import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 
@@ -203,20 +204,39 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
         try {
             String uri = params.getTextDocument().getUri();
-            FileObject file = fromUri(uri);
+            FileObject file = Utils.fromUri(uri);
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
-            int caret = getOffset(doc, params.getPosition());
-            JavaCompletionTask<CompletionItem> task = JavaCompletionTask.create(caret, new ItemFactoryImpl(client, uri), EnumSet.noneOf(Options.class), () -> false);
-            ParserManager.parse(Collections.singletonList(Source.create(doc)), task);
-            List<CompletionItem> result = task.getResults();
-            for (Iterator<CompletionItem> it = result.iterator(); it.hasNext();) {
-                CompletionItem item = it.next();
-                if (item == null) {
-                    it.remove();
+            final int caret = Utils.getOffset(doc, params.getPosition());
+            final CompletionList completionList = new CompletionList();
+            ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
+                @Override
+                public void run(ResultIterator resultIterator) throws Exception {
+                    TokenSequence<JavaTokenId> ts = resultIterator.getSnapshot().getTokenHierarchy().tokenSequence(JavaTokenId.language());
+                    if (ts.move(caret) == 0 || !ts.moveNext()) {
+                        if (!ts.movePrevious()) {
+                            ts.moveNext();
+                        }
+                    }
+                    int len = caret - ts.offset();
+                    boolean allCompletion = params.getContext() != null && params.getContext().getTriggerKind() == CompletionTriggerKind.TriggerForIncompleteCompletions
+                            || len > 0 && ts.token().length() >= len && ts.token().id() == JavaTokenId.IDENTIFIER;
+                    CompilationController controller = CompilationController.get(resultIterator.getParserResult(ts.offset()));
+                    controller.toPhase(JavaSource.Phase.RESOLVED);
+                    JavaCompletionTask<CompletionItem> task = JavaCompletionTask.create(caret, new ItemFactoryImpl(client, controller, uri, ts.offset()), allCompletion ? EnumSet.of(Options.ALL_COMPLETION) : EnumSet.noneOf(Options.class), () -> false);
+                    task.run(resultIterator);
+                    List<CompletionItem> results = task.getResults();
+                    for (Iterator<CompletionItem> it = results.iterator(); it.hasNext();) {
+                        CompletionItem item = it.next();
+                        if (item == null) {
+                            it.remove();
+                        }
+                    }
+                    completionList.setItems(results);
+                    completionList.setIsIncomplete(task.hasAdditionalClasses());
                 }
-            }
-            return CompletableFuture.completedFuture(Either.<List<CompletionItem>, CompletionList>forRight(new CompletionList(result)));
+            });
+            return CompletableFuture.completedFuture(Either.<List<CompletionItem>, CompletionList>forRight(completionList));
         } catch (IOException | ParseException ex) {
             throw new IllegalStateException(ex);
             }
@@ -224,14 +244,16 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     public static final class CompletionData {
         public String uri;
+        public int offset;
         public String kind;
         public String[] elementHandle;
 
         public CompletionData() {
         }
 
-        public CompletionData(String uri, String kind, String[] elementHandle) {
+        public CompletionData(String uri, int offset, String kind, String[] elementHandle) {
             this.uri = uri;
+            this.offset = offset;
             this.kind = kind;
             this.elementHandle = elementHandle;
         }
@@ -252,30 +274,44 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         private final LanguageClient client;
         private final String uri;
+        private final int offset;
+        private final CompilationInfo info;
+        private final Scope scope;
 
-        public ItemFactoryImpl(LanguageClient client, String uri) {
+        public ItemFactoryImpl(LanguageClient client, CompilationInfo info, String uri, int offset) {
             this.client = client;
             this.uri = uri;
+            this.offset = offset;
+            this.info = info;
+            this.scope = info.getTrees().getScope(info.getTreeUtilities().pathFor(offset));
         }
 
         private static final Set<String> SUPPORTED_ELEMENT_KINDS = new HashSet<>(Arrays.asList("PACKAGE", "CLASS", "INTERFACE", "ENUM", "ANNOTATION_TYPE", "METHOD", "CONSTRUCTOR", "INSTANCE_INIT", "STATIC_INIT", "FIELD", "ENUM_CONSTANT", "TYPE_PARAMETER", "MODULE"));
+
         private void setCompletionData(CompletionItem ci, Element el) {
             if (SUPPORTED_ELEMENT_KINDS.contains(el.getKind().name())) {
-                ci.setData(new CompletionData(uri, el.getKind().name(), SourceUtils.getJVMSignature(ElementHandle.create(el))));
+                setCompletionData(ci, ElementHandle.create(el));
             }
+        }
+
+        private void setCompletionData(CompletionItem ci, ElementHandle handle) {
+            ci.setData(new CompletionData(uri, offset, handle.getKind().name(), SourceUtils.getJVMSignature(handle)));
         }
 
         @Override
         public CompletionItem createKeywordItem(String kwd, String postfix, int substitutionOffset, boolean smartType) {
             CompletionItem item = new CompletionItem(kwd);
             item.setKind(CompletionItemKind.Keyword);
+            item.setSortText(String.format("%4d%s", smartType ? 670 : 1670, kwd)); //NOI18N
             return item;
         }
 
         @Override
         public CompletionItem createPackageItem(String pkgFQN, int substitutionOffset, boolean inPackageStatement) {
-            CompletionItem item = new CompletionItem(pkgFQN.substring(pkgFQN.lastIndexOf('.') + 1));
+            final String simpleName = pkgFQN.substring(pkgFQN.lastIndexOf('.') + 1);
+            CompletionItem item = new CompletionItem(simpleName);
             item.setKind(CompletionItemKind.Folder);
+            item.setSortText(String.format("%4d%s#%s", 1900, simpleName, pkgFQN)); //NOI18N
             return item;
         }
 
@@ -283,13 +319,34 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         public CompletionItem createTypeItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars, boolean addSimpleName, boolean smartType, boolean autoImportEnclosingType) {
             CompletionItem item = new CompletionItem(elem.getSimpleName().toString());
             item.setKind(elementKind2CompletionItemKind(elem.getKind()));
+            String name = elem.getQualifiedName().toString();
+            int idx = name.lastIndexOf('.');
+            String pkgName = idx < 0 ? "" : name.substring(0, idx);
+            if (!pkgName.isEmpty()) {
+                item.setDetail(name.substring(0, idx));
+            }
+            item.setSortText(String.format("%4d%s#%2d#%s", smartType ? 800 : 1800, elem.getSimpleName().toString(), Utilities.getImportanceLevel(name), pkgName)); //NOI18N
             setCompletionData(item, elem);
             return item;
         }
 
         @Override
         public CompletionItem createTypeItem(ElementHandle<TypeElement> handle, EnumSet<ElementKind> kinds, int substitutionOffset, ReferencesCount referencesCount, Source source, boolean insideNew, boolean addTypeVars, boolean afterExtends) {
-            return null; //TODO: fill
+            TypeElement te = handle.resolve(info);
+            if (te != null && info.getTrees().isAccessible(scope, te)) {
+                CompletionItem item = new CompletionItem(te.getSimpleName().toString());
+                String name = handle.getQualifiedName();
+                int idx = name.lastIndexOf('.');
+                String pkgName = idx < 0 ? "" : name.substring(0, idx);
+                if (!pkgName.isEmpty()) {
+                    item.setDetail(pkgName);
+                }
+                item.setKind(elementKind2CompletionItemKind(handle.getKind()));
+                item.setSortText(String.format("%4d%s#%2d#%s", 1800, te.getSimpleName().toString(), Utilities.getImportanceLevel(name), pkgName)); //NOI18N
+                setCompletionData(item, handle);
+                return item;
+            }
+            return null;
         }
 
         @Override
@@ -301,6 +358,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         public CompletionItem createTypeParameterItem(TypeParameterElement elem, int substitutionOffset) {
             CompletionItem item = new CompletionItem(elem.getSimpleName().toString());
             item.setKind(elementKind2CompletionItemKind(elem.getKind()));
+            item.setSortText(String.format("%4d%s", 1700, elem.getSimpleName().toString())); //NOI18N
             return item;
         }
 
@@ -308,6 +366,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         public CompletionItem createVariableItem(CompilationInfo info, VariableElement elem, TypeMirror type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean smartType, int assignToVarOffset) {
             CompletionItem item = new CompletionItem(elem.getSimpleName().toString());
             item.setKind(elementKind2CompletionItemKind(elem.getKind()));
+            int priority = elem.getKind() == ElementKind.ENUM_CONSTANT || elem.getKind() == ElementKind.FIELD ? smartType ? 300 : 1300 : smartType ? 200 : 1200;
+            item.setSortText(String.format("%4d%s", priority, elem.getSimpleName().toString())); //NOI18N
             setCompletionData(item, elem);
             return item;
         }
@@ -316,6 +376,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         public CompletionItem createVariableItem(CompilationInfo info, String varName, int substitutionOffset, boolean newVarName, boolean smartType) {
             CompletionItem item = new CompletionItem(varName);
             item.setKind(CompletionItemKind.Variable);
+            item.setSortText(String.format("%4d%s", smartType ? 200 : 1200, varName)); //NOI18N
             return item;
         }
 
@@ -327,18 +388,28 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             String sep = "";
             label.append(elem.getSimpleName().toString());
             label.append("(");
+            StringBuilder sortParams = new StringBuilder();
+            sortParams.append('(');
+            int cnt = 0;
             while(it.hasNext() && tIt.hasNext()) {
                 TypeMirror tm = tIt.next();
                 if (tm == null) {
                     break;
                 }
                 label.append(sep);
-                label.append(Utilities.getTypeName(info, tm, false, elem.isVarArgs() && !tIt.hasNext()).toString());
+                String paramTypeName = Utilities.getTypeName(info, tm, false, elem.isVarArgs() && !tIt.hasNext()).toString();
+                label.append(paramTypeName);
                 label.append(' ');
                 label.append(it.next().getSimpleName().toString());
                 sep = ", ";
+                sortParams.append(paramTypeName);
+                if (tIt.hasNext()) {
+                    sortParams.append(',');
+                }
+                cnt++;
             }
             label.append(") : ");
+            sortParams.append(')');
             TypeMirror retType = type.getReturnType();
             label.append(Utilities.getTypeName(info, retType, false).toString());
             CompletionItem item = new CompletionItem(label.toString());
@@ -351,22 +422,52 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
             item.setInsertText(insertText.toString());
             item.setInsertTextFormat(InsertTextFormat.PlainText);
+            int priority = elem.getKind() == ElementKind.METHOD ? smartType ? 500 : 1500 : smartType ? 650 : 1650;
+            item.setSortText(String.format("%4d%s#%2d%s", priority, elem.getSimpleName().toString(), cnt, sortParams)); //NOI18N
             setCompletionData(item, elem);
             return item;
         }
 
         @Override
         public CompletionItem createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name) {
-            CompletionItem item = new CompletionItem(name);
-            item.setKind(CompletionItemKind.Field);
+            CompletionItem item = createExecutableItem(info, elem, type, substitutionOffset, null, false, isDeprecated, false, false, false, -1, false);
+            item.setLabel(name != null ? name : elem.getEnclosingElement().getSimpleName().toString());
+            StringBuilder insertText = new StringBuilder();
+            insertText.append(item.getLabel());
+            insertText.append("(");
+            if (elem.getParameters().isEmpty()) {
+                insertText.append(")");
+            }
+            item.setInsertText(insertText.toString());
+            item.setKind(CompletionItemKind.Constructor);
+            item.setSortText(String.format("%4d%s", name != null ? 1550 : 1650, item.getSortText().substring(4))); //NOI18N
             setCompletionData(item, elem);
             return item;
         }
 
         @Override
         public CompletionItem createOverrideMethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean implement) {
-            CompletionItem item = new CompletionItem(elem.getSimpleName().toString() + " - override");
+            CompletionItem item = createExecutableItem(info, elem, type, substitutionOffset, null, false, false, false, false, false, -1, false);
+            item.setLabel(String.format("%s - %s", item.getLabel(), implement ? "implement" : "override"));
+            item.setInsertText(null);
             item.setKind(elementKind2CompletionItemKind(elem.getKind()));
+            try {
+                List<TextEdit> textEdits = modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), wc -> {
+                    wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                    TreePath tp = wc.getTreeUtilities().pathFor(offset);
+                    if (implement) {
+                        GeneratorUtils.generateAbstractMethodImplementation(wc, tp, elem, offset);
+                    } else {
+                        GeneratorUtils.generateMethodOverride(wc, tp, elem, offset);
+                    }
+                });
+                if (!textEdits.isEmpty()) {
+                    item.setTextEdit(textEdits.get(0));
+                }
+            } catch (IOException ex) {
+                //TODO: include stack trace:
+                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+            }
             setCompletionData(item, elem);
             return item;
         }
@@ -429,6 +530,29 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             item.setInsertText(label);
             item.setInsertTextFormat(InsertTextFormat.PlainText);
             item.setAdditionalTextEdits(currentClassImport);
+            String sortText = memberElem.getSimpleName().toString();
+            if (memberElem.getKind().isField()) {
+                sortText += String.format("#%s", Utilities.getTypeName(info, type, false)); //NOI18N
+            } else {
+                StringBuilder sortParams = new StringBuilder();
+                sortParams.append('(');
+                int cnt = 0;
+                Iterator<? extends TypeMirror> tIt = ((ExecutableType)memberType).getParameterTypes().iterator();
+                while(tIt.hasNext()) {
+                    TypeMirror tm = tIt.next();
+                    if (tm == null) {
+                        break;
+                    }
+                    sortParams.append(Utilities.getTypeName(info, tm, false, ((ExecutableElement)memberElem).isVarArgs() && !tIt.hasNext()).toString());
+                    if (tIt.hasNext()) {
+                        sortParams.append(',');
+                    }
+                    cnt++;
+                }
+                sortParams.append(')');
+                sortText += String.format("#%2d#%s#s", cnt, sortParams.toString(), Utilities.getTypeName(info, type, false)); //NOI18N
+            }
+            item.setSortText(String.format("%4d%s", memberElem.getKind().isField() ? 720 : 750, sortText)); //NOI18N
             setCompletionData(item, memberElem);
             return item;
         }
@@ -499,17 +623,41 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         CompletionData data = new Gson().fromJson(rawData, CompletionData.class);
         try {
-            FileObject file = fromUri(data.uri);
+            FileObject file = Utils.fromUri(data.uri);
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
-            ElementHandle<Element> handle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(data.kind), data.elementHandle);
-            JavaDocumentationTask<Future<String>> task = JavaDocumentationTask.create(-1, handle, new JavaDocumentationTask.DocumentationFactory<Future<String>>() {
+            final ElementHandle<Element> handle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(data.kind), data.elementHandle);
+            final JavaDocumentationTask<Future<String>> task = JavaDocumentationTask.create(-1, handle, new JavaDocumentationTask.DocumentationFactory<Future<String>>() {
                 @Override
                 public Future<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
                     return ElementJavadoc.create(compilationInfo, element, cancel).getTextAsync();
                 }
             }, () -> false);
-            ParserManager.parse(Collections.singletonList(Source.create(doc)), task);
+            LineMap[] lm = new LineMap[1];
+            ModificationResult mr = ModificationResult.runModificationTask(Collections.singletonList(Source.create(doc)), new UserTask() {
+                @Override
+                public void run(ResultIterator resultIterator) throws Exception {
+                    task.run(resultIterator);
+                    if (ci.getDetail() != null) {
+                        final WorkingCopy copy = WorkingCopy.get(resultIterator.getParserResult(data.offset));
+                        copy.toPhase(JavaSource.Phase.RESOLVED);
+                        Element e = handle.resolve(copy);
+                        if (e != null) {
+                            copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), Collections.singleton(e)));
+                        }
+                        lm[0] = copy.getCompilationUnit().getLineMap();
+                    }
+                }
+            });
+            List<? extends ModificationResult.Difference> diffs = mr.getDifferences(file);
+            if (diffs != null && !diffs.isEmpty()) {
+                List<TextEdit> edits = new ArrayList<>();
+                for (ModificationResult.Difference diff : diffs) {
+                    edits.add(new TextEdit(new Range(Utils.createPosition(lm[0], diff.getStartPosition().getOffset()),
+                            Utils.createPosition(lm[0], diff.getEndPosition().getOffset())), diff.getNewText()));
+                }
+                ci.setAdditionalTextEdits(edits);
+            }
             Future<String> futureJavadoc = task.getDocumentation();
             CompletableFuture<CompletionItem> result = new CompletableFuture<CompletionItem>() {
                 @Override
@@ -539,12 +687,55 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     public static String html2MD(String html) {
-        return FlexmarkHtmlConverter.builder().build().convert(html).replaceAll("<br />[ \n]*$", "");
+        int idx = html.indexOf("<p id=\"not-found\">"); // strip "No Javadoc found" message
+        return FlexmarkHtmlConverter.builder().build().convert(idx >= 0 ? html.substring(0, idx) : html).replaceAll("<br />[ \n]*$", "");
     }
 
     @Override
     public CompletableFuture<Hover> hover(HoverParams params) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            String uri = params.getTextDocument().getUri();
+            FileObject file = Utils.fromUri(uri);
+            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+            Document doc = ec.openDocument();
+            final JavaDocumentationTask<Future<String>> task = JavaDocumentationTask.create(Utils.getOffset(doc, params.getPosition()), null, new JavaDocumentationTask.DocumentationFactory<Future<String>>() {
+                @Override
+                public Future<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
+                    return ElementJavadoc.create(compilationInfo, element, cancel).getTextAsync();
+                }
+            }, () -> false);
+            ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
+                @Override
+                public void run(ResultIterator resultIterator) throws Exception {
+                    task.run(resultIterator);
+                }
+            });
+            Future<String> futureJavadoc = task.getDocumentation();
+            CompletableFuture<Hover> result = new CompletableFuture<Hover>() {
+                @Override
+                public boolean cancel(boolean mayInterruptIfRunning) {
+                    return futureJavadoc != null && futureJavadoc.cancel(mayInterruptIfRunning) && super.cancel(mayInterruptIfRunning);
+                }
+            };
+            JAVADOC_WORKER.post(() -> {
+                try {
+                    String javadoc = futureJavadoc != null ? futureJavadoc.get() : null;
+                    if (javadoc != null) {
+                        MarkupContent markup = new MarkupContent();
+                        markup.setKind("markdown");
+                        markup.setValue(html2MD(javadoc));
+                        result.complete(new Hover(markup));
+                    } else {
+                        result.complete(null);
+                    }
+                } catch (ExecutionException | InterruptedException ex) {
+                    result.completeExceptionally(ex);
+                }
+            });
+            return result;
+        } catch (IOException | ParseException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     @Override
@@ -561,7 +752,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             js.runUserActionTask(cc -> {
                 cc.toPhase(JavaSource.Phase.RESOLVED);
                 Document doc = cc.getSnapshot().getSource().getDocument(true);
-                int offset = getOffset(doc, params.getPosition());
+                int offset = Utils.getOffset(doc, params.getPosition());
                 Context context = GoToSupport.resolveContext(cc, doc, offset, false, false);
                 if (context == null) {
                     return ;
@@ -584,16 +775,16 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     int start = (int) openInfo[1];
                     int end = (int) openInfo[2];
                     LineMap lm = (LineMap) openInfo[3];
-                    result.add(new Location(toUri(file),
-                                            new Range(createPosition(lm, start),
-                                                      createPosition(lm, end))));
+                    result.add(new Location(Utils.toUri(file),
+                                            new Range(Utils.createPosition(lm, start),
+                                                      Utils.createPosition(lm, end))));
                 }
             } else {
                 int start = target[0].offsetToOpen;
                 int end = target[0].endPos;
                 result.add(new Location(params.getTextDocument().getUri(),
-                                        new Range(createPosition(thisFileLineMap[0], start),
-                                                  createPosition(thisFileLineMap[0], end))));
+                                        new Range(Utils.createPosition(thisFileLineMap[0], start),
+                                                  Utils.createPosition(thisFileLineMap[0], end))));
             }
         }
         return CompletableFuture.completedFuture(Either.forLeft(result));
@@ -622,7 +813,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     cc.toPhase(JavaSource.Phase.RESOLVED);
                     if (cancel.get()) return ;
                     Document doc = cc.getSnapshot().getSource().getDocument(true);
-                    TreePath path = cc.getTreeUtilities().pathFor(getOffset(doc, params.getPosition()));
+                    TreePath path = cc.getTreeUtilities().pathFor(Utils.getOffset(doc, params.getPosition()));
                     if (params.getContext().isIncludeDeclaration()) {
                         Element decl = cc.getTrees().getElement(path);
                         if (decl != null) {
@@ -630,7 +821,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             if (declPath != null && cc.getCompilationUnit() == declPath.getCompilationUnit()) {
                                 Range range = declarationRange(cc, declPath);
                                 if (range != null) {
-                                    locations.add(new Location(toUri(cc.getFileObject()),
+                                    locations.add(new Location(Utils.toUri(cc.getFileObject()),
                                                                range));
                                 }
                             } else {
@@ -645,7 +836,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                         if (declPath2 != null) {
                                             Range range = declarationRange(nestedCC, declPath2);
                                             if (range != null) {
-                                                locations.add(new Location(toUri(nestedCC.getFileObject()),
+                                                locations.add(new Location(Utils.toUri(nestedCC.getFileObject()),
                                                                            range));
                                             }
                                         }
@@ -679,7 +870,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
                 for (RefactoringElement re : refactoring.getRefactoringElements()) {
                     if (cancel.get()) return ;
-                    locations.add(new Location(toUri(re.getParentFile()), toRange(re.getPosition())));
+                    locations.add(new Location(Utils.toUri(re.getParentFile()), toRange(re.getPosition())));
                 }
 
                 refactoring.finished();
@@ -710,8 +901,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         if (span == null) {
             return null;
         }
-        return new Range(createPosition(info.getCompilationUnit().getLineMap(), span[0]),
-                         createPosition(info.getCompilationUnit().getLineMap(), span[1]));
+        return new Range(Utils.createPosition(info.getCompilationUnit().getLineMap(), span[0]),
+                         Utils.createPosition(info.getCompilationUnit().getLineMap(), span[1]));
     }
 
     private static Range toRange(PositionBounds bounds) throws IOException {
@@ -742,12 +933,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             js.runUserActionTask(cc -> {
                 cc.toPhase(JavaSource.Phase.RESOLVED);
                 Document doc = cc.getSnapshot().getSource().getDocument(true);
-                int offset = getOffset(doc, params.getPosition());
+                int offset = Utils.getOffset(doc, params.getPosition());
                 List<int[]> spans = new MOHighligther().processImpl(cc, node, doc, offset);
                 if (spans != null) {
                     for (int[] span : spans) {
-                        result.add(new DocumentHighlight(new Range(createPosition(cc.getCompilationUnit(), span[0]),
-                                                                   createPosition(cc.getCompilationUnit(), span[1]))));
+                        result.add(new DocumentHighlight(new Range(Utils.createPosition(cc.getCompilationUnit(), span[0]),
+                                                                   Utils.createPosition(cc.getCompilationUnit(), span[1]))));
                     }
                 }
             }, true);
@@ -783,12 +974,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         TreePath path = info.getTrees().getPath(el);
         if (path == null)
             return null;
-        long start = info.getTrees().getSourcePositions().getStartPosition(path.getCompilationUnit(), path.getLeaf());
-        long end   = info.getTrees().getSourcePositions().getEndPosition(path.getCompilationUnit(), path.getLeaf());
-        if (end == (-1))
+        Range range = Utils.treeRange(info, path.getLeaf());
+        if (range == null)
             return null;
-        Range range = new Range(createPosition(info.getCompilationUnit(), (int) start),
-                                createPosition(info.getCompilationUnit(), (int) end));
         List<DocumentSymbol> children = new ArrayList<>();
         for (Element c : el.getEnclosedElements()) {
             DocumentSymbol ds = element2DocumentSymbol(info, c);
@@ -796,61 +984,28 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 children.add(ds);
             }
         }
-        return new DocumentSymbol(el.getSimpleName().toString(), elementKind2SymbolKind(el.getKind()), range, range, null, children);
-    }
 
-    private static SymbolKind elementKind2SymbolKind(ElementKind kind) {
-        switch (kind) {
-            case PACKAGE:
-                return SymbolKind.Package;
-            case ENUM:
-                return SymbolKind.Enum;
-            case CLASS:
-                return SymbolKind.Class;
-            case ANNOTATION_TYPE:
-                return SymbolKind.Interface;
-            case INTERFACE:
-                return SymbolKind.Interface;
-            case ENUM_CONSTANT:
-                return SymbolKind.EnumMember;
-            case FIELD:
-                return SymbolKind.Field; //TODO: constant
-            case PARAMETER:
-                return SymbolKind.Variable;
-            case LOCAL_VARIABLE:
-                return SymbolKind.Variable;
-            case EXCEPTION_PARAMETER:
-                return SymbolKind.Variable;
-            case METHOD:
-                return SymbolKind.Method;
-            case CONSTRUCTOR:
-                return SymbolKind.Constructor;
-            case TYPE_PARAMETER:
-                return SymbolKind.TypeParameter;
-            case RESOURCE_VARIABLE:
-                return SymbolKind.Variable;
-            case MODULE:
-                return SymbolKind.Module;
-            case STATIC_INIT:
-            case INSTANCE_INIT:
-            case OTHER:
-            default:
-                return SymbolKind.File; //XXX: what here?
+        String simpleName;
+
+        if (el.getKind() == ElementKind.CONSTRUCTOR) {
+            simpleName = el.getEnclosingElement().getSimpleName().toString();
+        } else {
+            simpleName = el.getSimpleName().toString();
         }
+
+        return new DocumentSymbol(simpleName, Utils.elementKind2SymbolKind(el.getKind()), range, range, null, children);
     }
 
     @Override
     public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
         Document doc = openedDocuments.get(params.getTextDocument().getUri());
-        if (doc == null) {
+        JavaSource js = JavaSource.forDocument(doc);
+        if (doc == null || js == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
         Map<String, ErrorDescription> id2Errors = (Map<String, ErrorDescription>) doc.getProperty("lsp-errors");
-        if (id2Errors == null) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
-        JavaSource js = JavaSource.forDocument(doc);
         List<Either<Command, CodeAction>> result = new ArrayList<>();
+        if (id2Errors != null) {
         for (Diagnostic diag : params.getContext().getDiagnostics()) {
             ErrorDescription err = id2Errors.get(diag.getCode().getLeft());
 
@@ -932,7 +1087,66 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
                     }
                 }
+                if (f instanceof CreateFixBase) {
+                    try {
+                        CreateFixBase cf = (CreateFixBase) f;
+                        ModificationResult changes = cf.getModificationResult();
+                        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
+                        Set<File> newFiles = changes.getNewFiles();
+                        if (newFiles.size() > 1) {
+                            throw new IllegalStateException();
+                        }
+                        String newFilePath = null;
+                        for (File newFile : newFiles) {
+                            newFilePath = newFile.getPath();
+                            documentChanges.add(Either.forRight(new CreateFile(newFilePath)));
+                        }
+                        for (FileObject fileObject : changes.getModifiedFileObjects()) {
+                            List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
+                            if (diffs != null) {
+                                List<TextEdit> edits = new ArrayList<>();
+                                for (ModificationResult.Difference diff : diffs) {
+                                    String newText = diff.getNewText();
+                                    if (diff.getKind() == ModificationResult.Difference.Kind.CREATE) {
+                                        if (newFilePath != null) {
+                                            documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(newFilePath, -1),
+                                                    Collections.singletonList(new TextEdit(new Range(Utils.createPosition(fileObject, 0), Utils.createPosition(fileObject, 0)),
+                                                            newText != null ? newText : "")))));
+                                        }
+                                    } else {
+                                        edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
+                                                                         Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
+                                                               newText != null ? newText : ""));
+                                    }
+                                }
+                                documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
+                            }
+                        }
+                        CodeAction codeAction = new CodeAction(f.getText());
+                        codeAction.setKind(CodeActionKind.QuickFix);
+                        codeAction.setEdit(new WorkspaceEdit(documentChanges));
+                        result.add(Either.forRight(codeAction));
+                    } catch (IOException ex) {
+                        client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                    }
+                }
             }
+        }
+        }
+
+        //code generators:
+        try {
+            js.runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+                for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
+                    for (CodeAction codeAction : codeGenerator.getCodeActions(cc, params)) {
+                        result.add(Either.forRight(codeAction));
+                    }
+                }
+            }, true);
+        } catch (IOException ex) {
+            //TODO: include stack trace:
+            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
         }
 
         return CompletableFuture.completedFuture(result);
@@ -1008,7 +1222,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public void didOpen(DidOpenTextDocumentParams params) {
         try {
-            FileObject file = fromUri(params.getTextDocument().getUri());
+            FileObject file = Utils.fromUri(params.getTextDocument().getUri());
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.getDocument();
             // the document may be not opened yet. Clash with in-memory content can happen only if
@@ -1042,8 +1256,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         NbDocument.runAtomic((StyledDocument) doc, () -> {
             for (TextDocumentContentChangeEvent change : params.getContentChanges()) {
                 try {
-                    int start = getOffset(doc, change.getRange().getStart());
-                    int end   = getOffset(doc, change.getRange().getEnd());
+                    int start = Utils.getOffset(doc, change.getRange().getStart());
+                    int end   = Utils.getOffset(doc, change.getRange().getEnd());
                     doc.remove(start, end - start);
                     doc.insertString(start, change.getText(), null);
                 } catch (BadLocationException ex) {
@@ -1087,7 +1301,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private void computeDiags(String uri, ProduceErrors produceErrors, String keyPrefix, boolean update) {
         try {
-            FileObject file = fromUri(uri);
+            FileObject file = Utils.fromUri(uri);
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
@@ -1103,8 +1317,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         errors = Collections.emptyList();
                     }
                     for (ErrorDescription err : errors) {
-                        Diagnostic diag = new Diagnostic(new Range(createPosition(cc.getCompilationUnit(), err.getRange().getBegin().getOffset()),
-                                                                   createPosition(cc.getCompilationUnit(), err.getRange().getEnd().getOffset())),
+                        Diagnostic diag = new Diagnostic(new Range(Utils.createPosition(cc.getCompilationUnit(), err.getRange().getBegin().getOffset()),
+                                                                   Utils.createPosition(cc.getCompilationUnit(), err.getRange().getEnd().getOffset())),
                                                          err.getDescription());
                         switch (err.getSeverity()) {
                             case ERROR: diag.setSeverity(DiagnosticSeverity.Error); break;
@@ -1113,7 +1327,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             case HINT: diag.setSeverity(DiagnosticSeverity.Hint); break;
                             default: diag.setSeverity(DiagnosticSeverity.Information); break;
                         }
-                        String id = keyPrefix + ":" + idx + "-" + err.getId();
+                        String id = keyPrefix + ":" + idx++ + "-" + err.getId();
                         diag.setCode(id);
                         id2Errors.put(id, err);
                         diags.add(diag);
@@ -1152,7 +1366,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         Document doc = openedDocuments.get(fileUri);
         if (doc == null) {
             try {
-                FileObject file = fromUri(fileUri);
+                FileObject file = Utils.fromUri(fileUri);
                 return JavaSource.forFileObject(file);
             } catch (MalformedURLException ex) {
                 return null;
@@ -1188,89 +1402,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return LineDocumentUtils.getLineStartFromIndex((LineDocument) doc, pos.getLine()) + pos.getCharacter();
     }
 
-    private static String toUri(FileObject file) {
-        if (FileUtil.isArchiveArtifact(file)) {
-            //VS code cannot open jar:file: URLs, workaround:
-            //another workaround, should be:
-            //File cacheDir = Places.getCacheSubfile("java-server");
-            //but that locks up VS Code, using a temp directory:
-            File cacheDir;
-            try {
-                cacheDir = Files.createTempDirectory("nbcode").toFile();
-            } catch (IOException ex) {
-                throw new UncheckedIOException(ex);
-            }
-            File segments = new File(cacheDir, "segments");
-            Properties props = new Properties();
-
-            try (InputStream in = new FileInputStream(segments)) {
-                props.load(in);
-            } catch (IOException ex) {
-                //OK, may not exist yet
-            }
-            FileObject archive = FileUtil.getArchiveFile(file);
-            String archiveString = archive.toURL().toString();
-            File foundSegment = null;
-            for (String segment : props.stringPropertyNames()) {
-                if (archiveString.equals(props.getProperty(segment))) {
-                    foundSegment = new File(cacheDir, segment);
-                    break;
-                }
-            }
-            if (foundSegment == null) {
-                int i = 0;
-                while (props.getProperty("s" + i) != null)
-                    i++;
-                foundSegment = new File(cacheDir, "s" + i);
-                props.put("s" + i, archiveString);
-                try (OutputStream in = new FileOutputStream(segments)) {
-                    props.store(in, "");
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-            File cache = new File(foundSegment, FileUtil.getRelativePath(FileUtil.getArchiveRoot(archive), file));
-            cache.getParentFile().mkdirs();
-            try (OutputStream out = new FileOutputStream(cache)) {
-                out.write(file.asBytes());
-                return cache.toURI().toString();
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-        return file.toURI().toString();
-    }
-
-    //TODO: move to a separate Utils class:
-    public static FileObject fromUri(String uri) throws MalformedURLException {
-        File cacheDir = Places.getCacheSubfile("java-server");
-        URI uriUri = URI.create(uri);
-        URI relative = cacheDir.toURI().relativize(uriUri);
-        if (relative != null && new File(cacheDir, relative.toString()).canRead()) {
-            String segmentAndPath = relative.toString();
-            int slash = segmentAndPath.indexOf('/');
-            String segment = segmentAndPath.substring(0, slash);
-            String path = segmentAndPath.substring(slash + 1);
-            File segments = new File(cacheDir, "segments");
-            Properties props = new Properties();
-
-            try (InputStream in = new FileInputStream(segments)) {
-                props.load(in);
-                String archiveUri = props.getProperty(segment);
-                FileObject archive = URLMapper.findFileObject(URI.create(archiveUri).toURL());
-                archive = archive != null ? FileUtil.getArchiveRoot(archive) : null;
-                FileObject file = archive != null ? archive.getFileObject(path) : null;
-                if (file != null) {
-                    return file;
-                }
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-        return URLMapper.findFileObject(URI.create(uri).toURL());
-    }
-
-    private static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {
+    public static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {
         FileObject[] file = new FileObject[1];
         LineMap[] lm = new LineMap[1];
         ModificationResult changes = js.runModificationTask(wc -> {
@@ -1286,19 +1418,19 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         List<TextEdit> edits = new ArrayList<>();
         for (ModificationResult.Difference diff : diffs) {
             String newText = diff.getNewText();
-            edits.add(new TextEdit(new Range(createPosition(lm[0], diff.getStartPosition().getOffset()),
-                                             createPosition(lm[0], diff.getEndPosition().getOffset())),
+            edits.add(new TextEdit(new Range(Utils.createPosition(lm[0], diff.getStartPosition().getOffset()),
+                                             Utils.createPosition(lm[0], diff.getEndPosition().getOffset())),
                                    newText != null ? newText : ""));
         }
         return edits;
     }
-    
+
     private static void reportNotificationDone(String s, Object parameter) {
         if (HOOK_NOTIFICATION != null) {
             HOOK_NOTIFICATION.accept(s, parameter);
         }
     }
-    
+
     /**
      * For testing only; calls that do not return a result should call
      * this hook, if defined, with the method name and parameter.

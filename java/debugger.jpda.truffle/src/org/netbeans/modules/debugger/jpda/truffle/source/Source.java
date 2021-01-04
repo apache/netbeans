@@ -51,10 +51,11 @@ public final class Source {
     private final String name;
     private final URI uri;          // The original source URI
     private final URL url;          // The source
+    private final String mimeType;
     private final long hash;
     private String content;
     
-    private Source(JPDADebugger jpda, String name, URI uri, long hash, StringReference codeRef) {
+    private Source(JPDADebugger jpda, String name, URI uri, String mimeType, long hash, StringReference codeRef) {
         this.name = name;
         this.codeRef = codeRef;
         URL url = null;
@@ -76,6 +77,7 @@ public final class Source {
         }
         this.url = url;
         this.uri = uri;
+        this.mimeType = mimeType;
         this.hash = hash;
     }
     
@@ -119,6 +121,15 @@ public final class Source {
                                    String path,
                                    URI uri,
                                    StringReference codeRef) {
+        return getSource(debugger, id, name, path, uri, null, codeRef);
+    }
+
+    public static Source getSource(JPDADebugger debugger, long id,
+                                   String name,
+                                   String path,
+                                   URI uri,
+                                   String mimeType,
+                                   StringReference codeRef) {
         synchronized (KNOWN_SOURCES) {
             Map<Long, Source> dbgSources = KNOWN_SOURCES.get(debugger);
             if (dbgSources != null) {
@@ -128,16 +139,17 @@ public final class Source {
                 }
             }
         }
-        return getTheSource(debugger, id, name, path, uri, codeRef);
+        return getTheSource(debugger, id, name, path, uri, mimeType, codeRef);
     }
     
     private static Source getTheSource(JPDADebugger debugger, long id,
                                        String name,
                                        String path,
                                        URI uri,
+                                       String mimeType,
                                        StringReference codeRef) {
         
-        Source src = new Source(debugger, name, uri, id, codeRef);
+        Source src = new Source(debugger, name, uri, mimeType, id, codeRef);
         synchronized (KNOWN_SOURCES) {
             Map<Long, Source> dbgSources = KNOWN_SOURCES.get(debugger);
             if (dbgSources == null) {
@@ -159,6 +171,10 @@ public final class Source {
     
     public URI getURI() {
         return uri;
+    }
+    
+    public String getMimeType() {
+        return mimeType;
     }
     
     public long getHash() {

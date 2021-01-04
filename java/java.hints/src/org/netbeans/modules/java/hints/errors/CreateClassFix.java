@@ -21,6 +21,7 @@ package org.netbeans.modules.java.hints.errors;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
@@ -57,7 +58,6 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
 import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.EnhancedFix;
-import org.netbeans.spi.editor.hints.Fix;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
@@ -68,8 +68,9 @@ import org.openide.util.NbBundle;
  *
  * @author Jan lahoda
  */
-public abstract class CreateClassFix implements EnhancedFix {
+public abstract class CreateClassFix extends CreateFixBase implements EnhancedFix {
     
+    protected ClasspathInfo cpInfo;
     protected Set<Modifier> modifiers;
     protected List<TypeMirrorHandle> argumentTypes; //if a specific constructor should be created
     protected List<String> argumentNames; //dtto.
@@ -80,6 +81,7 @@ public abstract class CreateClassFix implements EnhancedFix {
     protected List<? extends TypeMirror> argumentTypeMirrors;
     
     public CreateClassFix(CompilationInfo info, Set<Modifier> modifiers, List<? extends TypeMirror> argumentTypes, List<String> argumentNames, TypeMirror superType, ElementKind kind, int numTypeParameters) {
+        this.cpInfo = info.getClasspathInfo();
         this.modifiers = modifiers;
         
         if (argumentTypes != null && argumentNames != null) {
@@ -267,6 +269,7 @@ public abstract class CreateClassFix implements EnhancedFix {
             this.rootName = rootName;
         }
 
+        @Override
         public String getText() {
             if (argumentNames == null || argumentNames.isEmpty()) {
                 return NbBundle.getMessage(CreateClassFix.class, "FIX_CreateClassInPackage", simpleName, packageName, valueForBundle(kind), rootName);
@@ -292,6 +295,39 @@ public abstract class CreateClassFix implements EnhancedFix {
             }
         }
 
+        @Override
+        public ModificationResult getModificationResult() throws IOException {
+            //use the original cp-info so it is "sure" that the target can be resolved:
+            JavaSource js = JavaSource.create(cpInfo);
+            return js.runModificationTask(new Task<WorkingCopy>() {
+                public void run(final WorkingCopy working) throws IOException {
+                    working.toPhase(Phase.RESOLVED);
+                    TreeMaker make = working.getTreeMaker();
+                    ClassTree source;
+                    switch (kind) {
+                        case CLASS:
+                            source = make.Class(make.Modifiers(EnumSet.of(Modifier.PUBLIC)), simpleName, Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList(), Collections.<Tree>emptyList());
+                            break;
+                        case INTERFACE:
+                            source = make.Interface(make.Modifiers(EnumSet.of(Modifier.PUBLIC)), simpleName, Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList());
+                            break;
+                        case ANNOTATION_TYPE:
+                            source = make.AnnotationType(make.Modifiers(EnumSet.of(Modifier.PUBLIC)), simpleName, Collections.<Tree>emptyList());
+                            break;
+                        case ENUM:
+                            source = make.Enum(make.Modifiers(EnumSet.of(Modifier.PUBLIC)), simpleName, Collections.<Tree>emptyList(), Collections.<Tree>emptyList());
+                            break;
+                        default: throw new IllegalStateException();
+                    }
+                    CompilationUnitTree cut = make.CompilationUnit(targetSourceRoot, packageName.replace('.', '/') + '/' + simpleName + ".java", Collections.<ImportTree>emptyList(), Collections.singletonList(source));
+                    ClassTree nue = createConstructor(working, new TreePath(new TreePath(cut), source));
+                    working.rewrite(null, cut);
+                    working.rewrite(source, nue);
+                }
+            });
+        }
+
+        @Override
         public ChangeInfo implement() throws IOException {
             FileObject pack = FileUtil.createFolder(targetSourceRoot, packageName.replace('.', '/')); // NOI18N
             FileObject classTemplate/*???*/ = FileUtil.getConfigFile(template(kind));
@@ -383,7 +419,6 @@ public abstract class CreateClassFix implements EnhancedFix {
 
         private FileObject targetFile;
         private ElementHandle<TypeElement> target;
-        private ClasspathInfo cpInfo;
         private String name;
         private String inFQN;
         
@@ -396,15 +431,23 @@ public abstract class CreateClassFix implements EnhancedFix {
             this.targetFile = targetFile;
         }
             
+        @Override
         public String getText() {
             return NbBundle.getMessage(CreateClassFix.class, "FIX_CreateInnerClass", name, inFQN, valueForBundle(kind));
         }
 
+        @Override
         public ChangeInfo implement() throws Exception {
+            ModificationResult diff = getModificationResult();
+            return Utilities.commitAndComputeChangeInfo(targetFile, diff, null);
+        }
+
+        @Override
+        public ModificationResult getModificationResult() throws IOException {
             //use the original cp-info so it is "sure" that the target can be resolved:
             JavaSource js = JavaSource.create(cpInfo, targetFile);
             
-            ModificationResult diff = js.runModificationTask(new Task<WorkingCopy>() {
+            return js.runModificationTask(new Task<WorkingCopy>() {
 
                 public void run(final WorkingCopy working) throws IOException {
                     working.toPhase(Phase.RESOLVED);
@@ -431,8 +474,6 @@ public abstract class CreateClassFix implements EnhancedFix {
                     working.rewrite(targetTree.getLeaf(), GeneratorUtilities.get(working).insertClassMember((ClassTree)targetTree.getLeaf(), innerClass));
                 }
             });
-            
-            return Utilities.commitAndComputeChangeInfo(targetFile, diff, null);
         }
         
         public String toDebugString(CompilationInfo info) {

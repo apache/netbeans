@@ -1,0 +1,206 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.netbeans.modules.java.lsp.server.progress;
+
+import java.lang.reflect.Field;
+import java.text.MessageFormat;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.eclipse.lsp4j.ProgressParams;
+import org.eclipse.lsp4j.WorkDoneProgressBegin;
+import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
+import org.eclipse.lsp4j.WorkDoneProgressEnd;
+import org.eclipse.lsp4j.WorkDoneProgressNotification;
+import org.eclipse.lsp4j.WorkDoneProgressReport;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import org.netbeans.modules.progress.spi.Controller;
+import org.netbeans.modules.progress.spi.InternalHandle;
+import org.netbeans.modules.progress.spi.ProgressEvent;
+import org.openide.util.Cancellable;
+import org.openide.util.Exceptions;
+
+/**
+ *
+ * @author sdedic
+ */
+public class LspInternalHandle extends InternalHandle {
+    private static final Logger LOG = Logger.getLogger(LspInternalHandle.class.getName());
+    
+    private final NbCodeLanguageClient  lspClient;
+    private final OperationContext opContext;
+    private final Function<InternalHandle, Controller> controllerProvider;
+    
+    private CompletableFuture<Either<String, Number>> tokenPromise;
+    private int reportedPercentage;
+    
+    /**
+     * Set from the START event handler. Workaround for NETBEANS-5167 if start event is skipped.
+     */
+    private boolean started;
+    
+    private static Field controllerField;
+
+    public LspInternalHandle(OperationContext opContext, 
+            NbCodeLanguageClient  lspClient, Function<InternalHandle, Controller> controllerProvider,
+            String displayName, Cancellable cancel, boolean userInitiated) {
+        super(displayName, cancel, userInitiated);
+        this.lspClient = lspClient;
+        this.opContext = opContext;
+        this.controllerProvider = controllerProvider;
+    }
+
+    public OperationContext getContext() {
+        return opContext;
+    }
+    
+    private synchronized Controller findController() {
+        if (controllerField == null) {
+            try {
+                controllerField = InternalHandle.class.getDeclaredField("controller");
+                controllerField.setAccessible(true);
+            } catch (NoSuchFieldException | SecurityException ex) {
+                throw new IllegalStateException();
+            }
+        }
+        try {
+            return (Controller)controllerField.get(this);
+        } catch (IllegalArgumentException | IllegalAccessException ex) {
+            Exceptions.printStackTrace(ex);
+            return null;
+        }
+    }
+
+    @Override
+    public synchronized void start(String message, int workunits, long estimate) {
+        Controller attached = findController();
+        if (attached == null) {
+            setController(controllerProvider.apply(this));
+        }
+        super.start(message, workunits, estimate);
+    }
+
+    @Override
+    public void requestView() {
+        // no op
+    }
+
+    @Override
+    public boolean isCustomPlaced() {
+        return false;
+    }
+
+    @Override
+    public boolean isAllowView() {
+        // by default not supported.
+        return false;
+    }
+    
+    String id() {
+        return Integer.toHexString(System.identityHashCode(this));
+    }
+    
+    void sendStartMessage(ProgressEvent e) {
+        WorkDoneProgressBegin start  = new WorkDoneProgressBegin();
+        boolean determinate = getTotalUnits() > 0;
+        start.setCancellable(isAllowCancel());
+        start.setTitle(getDisplayName());
+        if (determinate) {
+            double percent = e.getPercentageDone();
+            if (percent != -1) {
+                start.setPercentage(cleverFloor(percent));
+            } else {
+                start.setPercentage(0);
+            }
+        }
+        LOG.log(Level.FINE, "Starting progress: {0}", this);
+        started = true;
+        notify(start);
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("LspProgress@").append(id()).append("[");
+        sb.append("display: ").append(getDisplayName()).
+            append(", total: ").append(getTotalUnits()).
+            append(", percent: ").append(String.format("%3.2f", getPercentageDone())).
+            append(", state: ").append(getState());
+        sb.append("]");
+        return sb.toString();
+    }
+    
+    static int cleverFloor(double percent) {
+        return (int)(percent > 90.0 ? Math.floor(percent) : Math.round(percent));
+    }
+    
+    void sendProgress(ProgressEvent e) {
+        if (!started) {
+            sendStartMessage(e);
+            return;
+        }
+        WorkDoneProgressReport report = new WorkDoneProgressReport();
+
+        double percent = e.getPercentageDone();
+        if (percent != -1) {
+            report.setPercentage(cleverFloor(percent));
+        }
+        report.setMessage(e.getMessage());
+        report.setCancellable(isAllowCancel());
+        notify(report);
+    }
+    
+    void sendFinish(ProgressEvent e) {
+        WorkDoneProgressEnd end = new WorkDoneProgressEnd();
+        end.setMessage(e.getMessage());
+        notify(end);
+    }
+    
+    CompletableFuture<Either<String, Number>> findProgressToken() {
+        if (tokenPromise != null) {
+            return tokenPromise;
+        }
+        Either<String, Number> acquired = opContext.acquireProgressToken();
+        if (acquired != null) {
+            return tokenPromise = CompletableFuture.completedFuture(acquired);
+        }
+        WorkDoneProgressCreateParams params = new WorkDoneProgressCreateParams(
+            Either.forLeft(UUID.randomUUID().toString())
+        );
+        tokenPromise = lspClient.createProgress(params).thenApply(v -> params.getToken());
+        return tokenPromise;
+    }
+
+    void notify(WorkDoneProgressNotification msg) {
+        findProgressToken().thenAccept(token -> {
+            LOG.log(Level.FINER, () -> 
+                    MessageFormat.format("Sending progress {0}, msg: {1}", 
+                        id(), msg
+                    )
+            );
+            ProgressParams param = new ProgressParams(token, msg);
+            lspClient.notifyProgress(param);
+        });
+    }
+    
+}

@@ -1722,7 +1722,7 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
             } else {
                 can = null;
             }
-            ProgressHandle ph = ProgressHandleFactory.createHandle(name, can);
+            ProgressHandle ph = ProgressHandle.createHandle(name, can);
             ph.setInitialDelay(500);
             ph.start();
             this.progressHandle = ph;

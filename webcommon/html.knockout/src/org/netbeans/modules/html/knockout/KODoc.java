@@ -36,7 +36,6 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.html.knockout.model.Binding;
 import org.openide.modules.Places;
 import org.openide.util.NbBundle;
@@ -86,7 +85,7 @@ public class KODoc {
         items.addAll(Arrays.asList(Binding.values()));
         
         bindings = items.iterator();        
-        progress = ProgressHandleFactory.createHandle(Bundle.doc_building());
+        progress = ProgressHandle.createHandle(Bundle.doc_building());
         progress.start(items.size());
 
         buildDoc();

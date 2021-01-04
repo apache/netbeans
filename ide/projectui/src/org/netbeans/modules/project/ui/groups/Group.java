@@ -46,7 +46,6 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -563,7 +562,7 @@ public abstract class Group {
         } else {
             handleLabel = Group_open_handle(NONE_GROUP);
         }
-        final ProgressHandle h = ProgressHandleFactory.createHandle(handleLabel);
+        final ProgressHandle h = ProgressHandle.createHandle(handleLabel);
         try {
             h.start(200);
             ProjectUtilities.WaitCursor.show();

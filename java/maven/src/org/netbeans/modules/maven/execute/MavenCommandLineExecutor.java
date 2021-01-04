@@ -57,7 +57,6 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.netbeans.api.extexecution.base.Processes;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.Constants;
@@ -203,8 +202,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         int executionresult = -10;
         final InputOutput ioput = getInputOutput();
         
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(clonedConfig.getTaskDisplayName(), this, new AbstractAction() {
-
+        final ProgressHandle handle = ProgressHandle.createHandle(clonedConfig.getTaskDisplayName(), this, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ioput.select();

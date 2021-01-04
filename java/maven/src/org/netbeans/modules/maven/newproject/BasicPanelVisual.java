@@ -43,8 +43,8 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.netbeans.api.options.OptionsDisplayer;
-import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.modules.maven.api.MavenValidators;
 import org.netbeans.modules.maven.api.archetype.Archetype;
@@ -713,9 +713,9 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
     @Messages("Handle_Download=Downloading Archetype")
     private Artifact downloadArchetype(Archetype arch) throws ArtifactResolutionException, ArtifactNotFoundException {
         
-        AggregateProgressHandle hndl = AggregateProgressFactory.createHandle(Handle_Download(),
+        AggregateProgressHandle hndl = BasicAggregateProgressFactory.createHandle(Handle_Download(),
                 new ProgressContributor[] {
-                    AggregateProgressFactory.createProgressContributor("zaloha") },  //NOI18N
+                    BasicAggregateProgressFactory.createProgressContributor("zaloha") },  //NOI18N
                 ProgressTransferListener.cancellable(), null);
         synchronized (HANDLE_LOCK) {
            handle = hndl;

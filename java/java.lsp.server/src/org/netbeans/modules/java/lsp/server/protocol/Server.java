@@ -46,13 +46,14 @@ import org.eclipse.lsp4j.RenameOptions;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
+import org.eclipse.lsp4j.WorkDoneProgressParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
-import org.eclipse.lsp4j.WorkspaceServerCapabilities;
 import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
 import org.eclipse.lsp4j.jsonrpc.messages.Message;
+import org.eclipse.lsp4j.jsonrpc.messages.RequestMessage;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
@@ -68,6 +69,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -133,6 +135,7 @@ public final class Server {
     private static class ConsumeWithLookup {
         private final Lookup sessionLookup;
         private NbCodeLanguageClient client;
+        private OperationContext initialContext;
         
         public ConsumeWithLookup(Lookup sessionLookup) {
             this.sessionLookup = sessionLookup;
@@ -146,12 +149,40 @@ public final class Server {
             return new MessageConsumer() {
                 @Override
                 public void consume(Message msg) throws MessageIssueException, JsonRpcException {
+                    InstanceContent ic = new InstanceContent();
+                    ProxyLookup ll = new ProxyLookup(new AbstractLookup(ic), sessionLookup);
+                    OperationContext ctx = null;
+                    
+                    // Intercept client REQUESTS; take the progress token from them, if it is
+                    // attached.
+                    if (msg instanceof RequestMessage) {
+                        RequestMessage rq = (RequestMessage)msg;
+                        Object p = rq.getParams();
+                        boolean init = initialContext == null;
+                        ctx = OperationContext.create(sessionLookup, init);
+                        if (init) {
+                            // keep reference
+                            initialContext = ctx;
+                        }
+                        // PENDING: this ought to be somehow registered, so different services
+                        // may enrich lookup/pre/postprocess the processing, not just the progress support.
+                        if (p instanceof WorkDoneProgressParams) {
+                            ctx.setProgressToken(((WorkDoneProgressParams)p).getWorkDoneToken());
+                        }
+                        ic.add(ctx);
+                    }
                     try {
                         DISPATCHERS.set(client);
-                        Lookups.executeWith(sessionLookup, () -> {
+                        Lookups.executeWith(ll, () -> {
                             delegate.consume(msg);
                         });
                     } finally {
+                        if (ctx != null) {
+                            // if initialized (for requests only), discards the token,
+                            // as it becomes invalid at the end of this message. Further progresses
+                            // must do their own processing.
+                            ctx.acquireProgressToken();
+                        }
                         DISPATCHERS.remove();
                     }
                 }
@@ -304,9 +335,18 @@ public final class Server {
             
             return fProjects.
                     thenApply(this::showIndexingCompleted).
-                    thenApply(this::constructInitResponse);
+                    thenApply(this::constructInitResponse).
+                    thenApply(this::finishInitialization);
         }
-
+        
+        public InitializeResult finishInitialization(InitializeResult res) {
+            OperationContext c = OperationContext.find(sessionLookup);
+            // discard the progress token as it is going to be invalid anyway. Further pending
+            // initializations need to create its own tokens.
+            c.acquireProgressToken();
+            return res;
+        }
+        
         @Override
         public CompletableFuture<Object> shutdown() {
             return CompletableFuture.completedFuture(null);

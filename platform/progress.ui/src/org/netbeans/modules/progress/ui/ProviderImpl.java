@@ -19,7 +19,10 @@
 
 package org.netbeans.modules.progress.ui;
 
+import java.util.Map;
+import java.util.WeakHashMap;
 import org.netbeans.modules.progress.spi.ExtractedProgressUIWorker;
+import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.modules.progress.spi.ProgressUIWorkerProvider;
 import org.netbeans.modules.progress.spi.ProgressUIWorkerWithModel;
 
@@ -30,16 +33,26 @@ import org.netbeans.modules.progress.spi.ProgressUIWorkerWithModel;
 @org.openide.util.lookup.ServiceProvider(service=org.netbeans.modules.progress.spi.ProgressUIWorkerProvider.class)
 public class ProviderImpl implements ProgressUIWorkerProvider {
     
+    private final Map<InternalHandle, NbProgressBar>  progresses = new WeakHashMap<>();
+    
     /** Creates a new instance of ProviderImpl */
     public ProviderImpl() {
     }
 
+    @Override
     public ProgressUIWorkerWithModel getDefaultWorker() {
         return new StatusLineComponent();
     }
 
+    @Override
     public ExtractedProgressUIWorker getExtractedComponentWorker() {
         return new NbProgressBar();
     }
-    
+
+    @Override
+    public ExtractedProgressUIWorker extractProgressWorker(InternalHandle handle) {
+        synchronized (this) {
+            return progresses.computeIfAbsent(handle, (h) -> new NbProgressBar());
+        }
+    }
 }

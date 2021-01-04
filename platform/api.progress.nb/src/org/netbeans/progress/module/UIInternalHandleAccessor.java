@@ -16,35 +16,36 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.progress.ui;
+package org.netbeans.progress.module;
 
-import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.progress.spi.Controller;
-import org.netbeans.modules.progress.spi.ProgressEnvironment;
-import org.netbeans.modules.progress.spi.SwingController;
-import org.openide.util.Cancellable;
-import org.openide.util.lookup.ServiceProvider;
+import org.netbeans.modules.progress.spi.InternalHandle;
+import org.netbeans.modules.progress.spi.UIInternalHandle;
 
 /**
  *
  * @author sdedic
  */
-@ServiceProvider(service = ProgressEnvironment.class)
-public class ProgressUI implements ProgressEnvironment {
-
-    @Override
-    public ProgressHandle createHandle(String displayname, Cancellable c, boolean userInit) {
-        if (userInit) {
-            return ProgressHandleFactory.createUIHandle(displayname, c, null);
-        } else {
-            return ProgressHandleFactory.createSystemUIHandle(displayname, c, null);
+public abstract class UIInternalHandleAccessor {
+    private static UIInternalHandleAccessor INSTANCE;
+    
+    public static void setInstance(UIInternalHandleAccessor acc) {
+        if (INSTANCE != null) {
+            throw new IllegalStateException();
         }
-    }
-
-    @Override
-    public Controller getController() {
-        return SwingController.getDefault();
+        INSTANCE = acc;
     }
     
+    public static UIInternalHandleAccessor instance() {
+        return INSTANCE;
+    }
+    
+    public abstract void setController(InternalHandle h, Controller c);
+    
+    public abstract void markCustomPlaced(InternalHandle h);
+    
+    static {
+        // force creation -> accessor is registered.
+        new UIInternalHandle("", null, false, null);
+    }
 }

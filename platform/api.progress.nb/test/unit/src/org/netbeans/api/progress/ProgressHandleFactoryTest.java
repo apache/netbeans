@@ -20,6 +20,7 @@
 package org.netbeans.api.progress;
 
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -28,11 +29,14 @@ import javax.swing.UIManager;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.progress.spi.Controller;
+import org.netbeans.modules.progress.spi.InternalHandle;
+import org.netbeans.modules.progress.spi.ProgressEnvironment;
 import org.netbeans.modules.progress.spi.UIInternalHandle;
 import org.netbeans.modules.progress.spi.ProgressEvent;
 import org.netbeans.modules.progress.spi.ProgressUIWorker;
 import org.netbeans.modules.progress.spi.SwingController;
 import org.openide.util.Cancellable;
+import org.openide.util.test.MockLookup;
 
 /**
  *
@@ -179,5 +183,60 @@ public class ProgressHandleFactoryTest extends NbTestCase {
 
     }
      
+
+    /**
+     * Checks that handles produced by other env than org.netbeans.modules.progress.ui module
+     * can still get some +- suitable Progress components.
+     */
+    public void testUnexpectedInternalHandleExtraction() throws Exception {
+        MockLookup.setLayersAndInstances(new StrangeEnvironment());
+        
+        ProgressHandle handle = ProgressHandle.createHandle("task 1");
+        assertFalse(handle.getInternalHandle() instanceof UIInternalHandle);
+        
+        InternalHandle ih = handle.getInternalHandle();
+        assertFalse(ih.isCustomPlaced());
+        
+        // now attempt to extract a component from it:
+        JLabel l = ProgressHandleFactory.createMainLabelComponent(handle);
+        assertNotNull(l);
+        // the handle changed its placement:
+        assertTrue(ih.isCustomPlaced());
+    }
+
+    /**
+     * Checks semantics of the InternalHandle + extraction after the progress starts.
+     */
+    public void testUnexpectedInternalHandleExtractFailsAfterStart() throws Exception {
+        MockLookup.setLayersAndInstances(new StrangeEnvironment());
+        ProgressHandle handle = ProgressHandle.createHandle("task 1");
+        handle.start(100);
+        
+        // should throw an exception:
+        try {
+            JLabel l = ProgressHandleFactory.createMainLabelComponent(handle);
+            fail("Exppected ISE.");
+        } catch (IllegalStateException ex) {
+            // OK
+        }
+    }
     
+    public class StrangeHandle extends InternalHandle {
+        public StrangeHandle(String displayName, Cancellable cancel, boolean userInitiated) {
+            super(displayName, cancel, userInitiated);
+        }
+    }
+    
+    public class StrangeEnvironment implements ProgressEnvironment {
+
+        @Override
+        public ProgressHandle createHandle(String displayname, Cancellable c, boolean userInit) {
+            return new StrangeHandle(displayname, c, userInit).createProgressHandle();
+        }
+
+        @Override
+        public Controller getController() {
+            return SwingController.getDefault();
+        }
+    }
 }

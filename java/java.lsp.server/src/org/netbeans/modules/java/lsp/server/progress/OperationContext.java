@@ -20,8 +20,19 @@ package org.netbeans.modules.java.lsp.server.progress;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import org.netbeans.modules.progress.spi.Controller;
+import org.netbeans.modules.progress.spi.InternalHandle;
+import org.netbeans.modules.progress.spi.TaskModel;
 import org.openide.util.Lookup;
 
 /**
@@ -56,8 +67,28 @@ public final class OperationContext {
      */
     private String partialResultsToken;
     
-    OperationContext(NbCodeLanguageClient client) {
+    /**
+     * The controller that collects tasks in progress.
+     */
+    private final Controller  progressController;
+    
+    /**
+     * Handles created during the operation.
+     */
+    private final List<InternalHandle>  createdHandles = new ArrayList<>();
+    
+    private boolean finished;
+    
+    private final OperationContext top;
+    
+    OperationContext(OperationContext top, NbCodeLanguageClient client, Controller controller) {
         this.client = client;
+        this.progressController = controller;
+        this.top = top == null ? this : top;
+    }
+    
+    private TaskModel getTaskModel() {
+        return progressController.getModel();
     }
     
     /**
@@ -85,13 +116,17 @@ public final class OperationContext {
         progressToken = s;
     }
     
-    public static synchronized OperationContext create(Lookup lkp, boolean initial) {
-        NbCodeLanguageClient client = lkp.lookup(NbCodeLanguageClient.class);
-        OperationContext ctx = new OperationContext(client);
+    public OperationContext operationContext() {
+        OperationContext ctx = new OperationContext(this, client, progressController);
         lastCtx = new WeakReference<>(ctx);
-        if (initial) {
-            ctx.registerInitialContext();
-        }
+        return ctx;
+    }
+    
+    public static synchronized OperationContext create(NbCodeLanguageClient client) {
+        OperationContext ctx = new OperationContext(null, client, 
+            new Controller(new LspProgressUIWorker()));
+        lastCtx = new WeakReference<>(ctx);
+        ctx.registerInitialContext();
         return ctx;
     }
     
@@ -117,10 +152,106 @@ public final class OperationContext {
         if (ctx == null)  {
             ctx = initialCtx.get();
             if (ctx == null) {
-                ctx = new OperationContext(lkp.lookup(NbCodeLanguageClient.class));
+                ctx = create(lkp.lookup(NbCodeLanguageClient.class));
             }
         }
         lastCtx = new WeakReference<>(ctx);
         return ctx;
+    }
+    
+    public void stop() {
+        acquireProgressToken();
+        if (!isActive()) {
+            return;
+        }
+        if (this != top) {
+            finished = true;
+        }
+    }
+    
+    public boolean isActive() {
+        return Lookup.getDefault().lookup(OperationContext.class) == this;
+    }
+    
+    /**
+     * Finds an active handle identified by client's progress token.
+     * @param token token
+     * @return handle instance or {@code null}
+     */
+    public InternalHandle  findActiveHandle(Either<String, Number> token) {
+        if (top != this) {
+            return top.findActiveHandle(token);
+        }
+        synchronized (this) {
+            return handles.get(token);
+        }
+    }
+    
+    private Either<String, Number> addHandle(Either<String, Number> token, InternalHandle h) {
+        synchronized (this) {
+            createdHandles.add(h);
+        }
+        top.registerHandle(token, h);
+        return token;
+    }
+    
+    void removeHandle(Either<String, Number> token, InternalHandle h) {
+        if (top != this) {
+            top.unregisterHandle(token, h);
+        } else {
+            unregisterHandle(token, h);
+        }
+    }
+    
+    private Map<Either<String, Number>, InternalHandle> handles = new HashMap<>();
+    
+    private synchronized void unregisterHandle(Either<String, Number> token, InternalHandle h) {
+        if (token == null) {
+            handles.values().remove(h);
+        } else {
+            handles.remove(token);
+        }
+    }
+    
+    private synchronized void registerHandle(Either<String, Number> token, InternalHandle h) {
+        handles.put(token, h);
+    }
+    
+    CompletableFuture<Either<String, Number>> acquireOrObtainToken(InternalHandle h) {
+        Either<String, Number> t = acquireProgressToken();
+        if (t != null) {
+            return CompletableFuture.completedFuture(addHandle(t, h));
+        } else {
+            WorkDoneProgressCreateParams params = new WorkDoneProgressCreateParams(
+                Either.forLeft(UUID.randomUUID().toString())
+            );
+            CompletableFuture<Either<String, Number>> tokenPromise = client.
+                    createProgress(params).thenApply(v -> params.getToken());
+            return tokenPromise.thenApply((p) -> {
+               synchronized (this) {
+                   return addHandle(p, h);
+               } 
+            });
+        }
+    }
+    
+    public static OperationContext getHandleContext(InternalHandle h) {
+        if (!(h instanceof LspInternalHandle)) {
+            return null;
+        }
+        return ((LspInternalHandle)h).getContext();
+    }
+    
+    public Collection<InternalHandle> getAllActiveHandles() {
+        if (top != this) {
+            return top.getAllActiveHandles();
+        }
+        synchronized (this) {
+            return new ArrayList<>(handles.values());
+        }
+    }
+    
+    public synchronized List<InternalHandle> getOperationHandles() {
+        return new ArrayList<>(createdHandles);
     }
 }

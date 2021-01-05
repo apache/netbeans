@@ -81,6 +81,8 @@ public final class OperationContext {
     
     private final OperationContext top;
     
+    private boolean disableCancels;
+    
     OperationContext(OperationContext top, NbCodeLanguageClient client, Controller controller) {
         this.client = client;
         this.progressController = controller;
@@ -233,6 +235,16 @@ public final class OperationContext {
                } 
             });
         }
+    }
+    
+    public void disableCancels() {
+        if (top != this) {
+            disableCancels = true;
+        }
+    }
+
+    public boolean isDisableCancels() {
+        return disableCancels;
     }
     
     public static OperationContext getHandleContext(InternalHandle h) {

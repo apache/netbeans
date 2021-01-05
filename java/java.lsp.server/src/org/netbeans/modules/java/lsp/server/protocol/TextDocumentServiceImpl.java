@@ -46,7 +46,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -205,14 +204,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private static final RequestProcessor BACKGROUND_TASKS = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
     private static final RequestProcessor WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
-    private static final Set<TextDocumentServiceImpl> ALL_INSTANCES = Collections.newSetFromMap(new WeakHashMap<>());
 
     private final Map<String, Document> openedDocuments = new HashMap<>();
     private final Map<String, RequestProcessor.Task> diagnosticTasks = new HashMap<>();
     private NbCodeLanguageClient client;
 
     public TextDocumentServiceImpl() {
-        ALL_INSTANCES.add(this);
     }
 
     @Override
@@ -1576,16 +1573,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                    newText != null ? newText : ""));
         }
         return edits;
-    }
-    
-    static void refreshAllEditors() {
-        for (TextDocumentServiceImpl impl : ALL_INSTANCES) {
-            System.err.println("impl: " + impl);
-            for (String uri : impl.openedDocuments.keySet()) {
-                System.err.println("uri=" + uri);
-                impl.runDiagnoticTasks(uri);
-            }
-        }
     }
 
     private static void reportNotificationDone(String s, Object parameter) {

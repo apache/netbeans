@@ -530,7 +530,9 @@ public class MiscUtilities {
                                     Profile.JAVA_EE_8_WEB == profile ||
                                             Profile.JAVA_EE_8_FULL == profile ||
                                                 Profile.JAKARTA_EE_8_WEB == profile ||
-                                                    Profile.JAKARTA_EE_8_FULL == profile )
+                                                    Profile.JAKARTA_EE_8_FULL == profile ||
+                                                    Profile.JAKARTA_EE_9_WEB == profile ||
+                                                        Profile.JAKARTA_EE_9_FULL == profile )
             {
                 return true;
             }

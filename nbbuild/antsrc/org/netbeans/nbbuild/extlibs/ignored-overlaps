@@ -47,6 +47,7 @@ enterprise/javaee.api/external/javax.annotation-api-1.2.jar java/maven.indexer/e
 enterprise/javaee7.api/external/javax.annotation-api-1.2.jar enterprise/javaee8.api/external/javax.annotation-api-1.2.jar
 enterprise/javaee8.api/external/javax.annotation-api-1.2.jar enterprise/websvc.restlib/external/javax.annotation-api-1.2.jar
 enterprise/jakartaee8.api/external/javax.annotation-api-1.3.5.jar
+enterprise/jakartaee9.api/external/javax.annotation-api-1.3.5.jar
 
 # jaxb-api-osgi is used by multiple modules.
 enterprise/javaee.api/external/jaxb-api-osgi-2.2.7.jar enterprise/javaee7.api/external/jaxb-api-osgi-2.2.7.jar

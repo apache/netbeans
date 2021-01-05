@@ -139,12 +139,12 @@ meth public abstract org.netbeans.modules.websvc.jaxws.api.JAXWSView findJAXWSVi
 
 CLSS public abstract org.netbeans.modules.websvc.jaxws.spi.ProjectJAXWSSupport
 cons public init(org.netbeans.api.project.Project,org.netbeans.spi.project.support.ant.AntProjectHelper)
-fld protected final static java.lang.String JAKARTA_EE_VERSION_8 = "jakarta-ee-version-8"
 fld protected final static java.lang.String JAVA_EE_VERSION_15 = "java-ee-version-15"
 fld protected final static java.lang.String JAVA_EE_VERSION_16 = "java-ee-version-16"
 fld protected final static java.lang.String JAVA_EE_VERSION_17 = "java-ee-version-17"
 fld protected final static java.lang.String JAVA_EE_VERSION_18 = "java-ee-version-18"
-fld protected final static java.lang.String JAKARTA_EE_VERSION_8="jakarta-ee-version-8"
+fld protected final static java.lang.String JAKARTA_EE_VERSION_8 = "jakarta-ee-version-8"
+fld protected final static java.lang.String JAKARTA_EE_VERSION_9 = "jakarta-ee-version-9"
 fld protected final static java.lang.String JAVA_EE_VERSION_NONE = "java-ee-version-none"
 intf org.netbeans.modules.websvc.jaxws.spi.JAXWSSupportImpl
 meth protected abstract void addJaxwsArtifacts(org.netbeans.api.project.Project,java.lang.String,java.lang.String) throws java.lang.Exception

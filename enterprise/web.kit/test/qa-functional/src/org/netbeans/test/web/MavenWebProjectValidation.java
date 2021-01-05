@@ -99,7 +99,9 @@ public class MavenWebProjectValidation extends WebProjectValidation {
         } else if (JAVA_EE_8.equals(getEEVersion())) {
             serverStep.cboJavaEEVersion().selectItem("1.8-web");
         } else if (JAKARTA_EE_8.equals(getEEVersion())) {
-            serverStep.cboJavaEEVersion().selectItem("1.8.0-web");
+            serverStep.cboJavaEEVersion().selectItem("8.0-web");
+        } else if (JAKARTA_EE_9.equals(getEEVersion())) {
+            serverStep.cboJavaEEVersion().selectItem("9.0-web");
         }
         serverStep.finish();
         // need to increase time to wait for project node

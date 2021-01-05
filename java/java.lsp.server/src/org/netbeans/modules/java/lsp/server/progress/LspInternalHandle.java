@@ -20,15 +20,12 @@ package org.netbeans.modules.java.lsp.server.progress;
 
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.WorkDoneProgressBegin;
-import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
 import org.eclipse.lsp4j.WorkDoneProgressEnd;
 import org.eclipse.lsp4j.WorkDoneProgressNotification;
 import org.eclipse.lsp4j.WorkDoneProgressReport;
@@ -170,25 +167,26 @@ public class LspInternalHandle extends InternalHandle {
         notify(report);
     }
     
+    Either<String, Number> token() {
+        if (tokenPromise == null || tokenPromise.isCompletedExceptionally()) {
+            return null;
+        } else {
+            return tokenPromise.getNow(null);
+        }
+    }
+    
     void sendFinish(ProgressEvent e) {
         WorkDoneProgressEnd end = new WorkDoneProgressEnd();
         end.setMessage(e.getMessage());
         notify(end);
+        opContext.removeHandle(token(), this);
     }
     
     CompletableFuture<Either<String, Number>> findProgressToken() {
         if (tokenPromise != null) {
             return tokenPromise;
         }
-        Either<String, Number> acquired = opContext.acquireProgressToken();
-        if (acquired != null) {
-            return tokenPromise = CompletableFuture.completedFuture(acquired);
-        }
-        WorkDoneProgressCreateParams params = new WorkDoneProgressCreateParams(
-            Either.forLeft(UUID.randomUUID().toString())
-        );
-        tokenPromise = lspClient.createProgress(params).thenApply(v -> params.getToken());
-        return tokenPromise;
+        return tokenPromise = opContext.acquireOrObtainToken(this);
     }
 
     void notify(WorkDoneProgressNotification msg) {

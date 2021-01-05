@@ -46,6 +46,7 @@ import org.eclipse.lsp4j.RenameOptions;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
+import org.eclipse.lsp4j.WorkDoneProgressCancelParams;
 import org.eclipse.lsp4j.WorkDoneProgressParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
@@ -53,6 +54,7 @@ import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
 import org.eclipse.lsp4j.jsonrpc.messages.Message;
+import org.eclipse.lsp4j.jsonrpc.messages.NotificationMessage;
 import org.eclipse.lsp4j.jsonrpc.messages.RequestMessage;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -70,6 +72,7 @@ import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
+import org.netbeans.modules.progress.spi.InternalHandle;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -146,43 +149,69 @@ public final class Server {
         }
         
         public MessageConsumer attachLookup(MessageConsumer delegate) {
+            // PENDING: allow for message consumer wrappers to be registered to add pre/post processing for
+            // the request plus build the request's default Lookup contents.
             return new MessageConsumer() {
                 @Override
                 public void consume(Message msg) throws MessageIssueException, JsonRpcException {
                     InstanceContent ic = new InstanceContent();
                     ProxyLookup ll = new ProxyLookup(new AbstractLookup(ic), sessionLookup);
-                    OperationContext ctx = null;
+                    final OperationContext ctx;
                     
                     // Intercept client REQUESTS; take the progress token from them, if it is
                     // attached.
+                    Runnable r;
+                    InternalHandle toCancel = null;
                     if (msg instanceof RequestMessage) {
                         RequestMessage rq = (RequestMessage)msg;
                         Object p = rq.getParams();
-                        boolean init = initialContext == null;
-                        ctx = OperationContext.create(sessionLookup, init);
-                        if (init) {
-                            // keep reference
-                            initialContext = ctx;
+                        if (initialContext == null) {
+                            initialContext = OperationContext.create(client);
+                            ctx = initialContext;
+                        } else {
+                            ctx = initialContext.operationContext();
                         }
                         // PENDING: this ought to be somehow registered, so different services
                         // may enrich lookup/pre/postprocess the processing, not just the progress support.
                         if (p instanceof WorkDoneProgressParams) {
                             ctx.setProgressToken(((WorkDoneProgressParams)p).getWorkDoneToken());
                         }
+                    } else if (msg instanceof NotificationMessage) {
+                        NotificationMessage not = (NotificationMessage)msg;
+                        Object p = not.getParams();
+                        OperationContext selected = null;
+                        if (p instanceof WorkDoneProgressCancelParams && initialContext != null) {
+                            WorkDoneProgressCancelParams wdc = (WorkDoneProgressCancelParams)p;
+                            toCancel = initialContext.findActiveHandle(wdc.getToken());
+                            selected = OperationContext.getHandleContext(toCancel);
+                        }
+                        ctx = selected;
+                    } else {
+                        ctx = null;
+                    }
+                    if (ctx != null) {
                         ic.add(ctx);
                     }
+                    final InternalHandle ftoCancel = toCancel;
                     try {
                         DISPATCHERS.set(client);
                         Lookups.executeWith(ll, () -> {
-                            delegate.consume(msg);
+                            try {
+                                delegate.consume(msg);
+                            } finally {
+                                // cancel while the OperationContext is still active.
+                                if (ftoCancel != null) {
+                                    ftoCancel.requestCancel();
+                                }
+                                if (ctx != null) {
+                                    // if initialized (for requests only), discards the token,
+                                    // as it becomes invalid at the end of this message. Further progresses
+                                    // must do their own processing.
+                                    ctx.stop();
+                                }
+                            }
                         });
                     } finally {
-                        if (ctx != null) {
-                            // if initialized (for requests only), discards the token,
-                            // as it becomes invalid at the end of this message. Further progresses
-                            // must do their own processing.
-                            ctx.acquireProgressToken();
-                        }
                         DISPATCHERS.remove();
                     }
                 }
@@ -377,7 +406,6 @@ public final class Server {
                 }
             });
             sessionServices.add(new WorkspaceUIContext(client));
-            
             ((LanguageClientAware) getTextDocumentService()).connect(aClient);
             ((LanguageClientAware) getWorkspaceService()).connect(aClient);
         }

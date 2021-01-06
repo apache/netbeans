@@ -52,6 +52,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
+import java.util.function.IntFunction;
 import java.util.prefs.Preferences;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -102,9 +103,12 @@ import org.eclipse.lsp4j.MarkupContent;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.PrepareRenameParams;
+import org.eclipse.lsp4j.PrepareRenameResult;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ReferenceParams;
+import org.eclipse.lsp4j.RenameFile;
 import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.SignatureHelp;
@@ -169,7 +173,15 @@ import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RefactoringElement;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
+import org.netbeans.modules.refactoring.api.RenameRefactoring;
 import org.netbeans.modules.refactoring.api.WhereUsedQuery;
+import org.netbeans.modules.refactoring.api.impl.APIAccessor;
+import org.netbeans.modules.refactoring.api.impl.SPIAccessor;
+import org.netbeans.modules.refactoring.java.spi.hooks.JavaModificationResult;
+import org.netbeans.modules.refactoring.plugins.FileRenamePlugin;
+import org.netbeans.modules.refactoring.spi.RefactoringCommit;
+import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
+import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.spi.editor.hints.EnhancedFix;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
@@ -1215,8 +1227,157 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public CompletableFuture<WorkspaceEdit> rename(RenameParams arg0) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(PrepareRenameParams params) {
+        JavaSource source = getSource(params.getTextDocument().getUri());
+        if (source == null) {
+            return CompletableFuture.completedFuture(Either.forLeft(null));
+        }
+        CompletableFuture<Either<Range, PrepareRenameResult>> result = new CompletableFuture<>();
+        try {
+            source.runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+                Document doc = cc.getSnapshot().getSource().getDocument(true);
+                int pos = Utils.getOffset(doc, params.getPosition());
+                TreePath path = cc.getTreeUtilities().pathFor(pos);
+                RenameRefactoring ref = new RenameRefactoring(Lookups.singleton(TreePathHandle.create(path, cc)));
+                ref.setNewName("any");
+                Problem p = ref.fastCheckParameters();
+                boolean hasFatalProblem = false;
+                while (p != null) {
+                    hasFatalProblem |= p.isFatal();
+                    p = p.getNext();
+                }
+                if (hasFatalProblem) {
+                    result.complete(null);
+                } else {
+                    //XXX: better range computation
+                    TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+                    ts.move(pos);
+                    if (ts.moveNext()) {
+                        Range r = new Range(Utils.createPosition(cc.getCompilationUnit(), ts.offset()),
+                                            Utils.createPosition(cc.getCompilationUnit(), ts.offset() + ts.token().length()));
+                        result.complete(Either.forRight(new PrepareRenameResult(r, ts.token().text().toString())));
+                    } else {
+                        result.complete(null);
+                    }
+                }
+            }, true);
+        } catch (IOException ex) {
+            result.completeExceptionally(ex);
+        }
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<WorkspaceEdit> rename(RenameParams params) {
+        AtomicBoolean cancel = new AtomicBoolean();
+        Runnable[] cancelCallback = new Runnable[1];
+        CompletableFuture<WorkspaceEdit> result = new CompletableFuture<WorkspaceEdit>() {
+            @Override
+            public boolean cancel(boolean mayInterruptIfRunning) {
+                cancel.set(mayInterruptIfRunning);
+                if (cancelCallback[0] != null) {
+                    cancelCallback[0].run();
+                }
+                return super.cancel(mayInterruptIfRunning);
+            }
+        };
+        WORKER.post(() -> {
+            JavaSource js = getSource(params.getTextDocument().getUri());
+            try {
+                RenameRefactoring[] refactoring = new RenameRefactoring[1];
+                js.runUserActionTask(cc -> {
+                    cc.toPhase(JavaSource.Phase.RESOLVED);
+                    if (cancel.get()) return ;
+                    Document doc = cc.getSnapshot().getSource().getDocument(true);
+                    TreePath path = cc.getTreeUtilities().pathFor(Utils.getOffset(doc, params.getPosition()));
+                    List<Object> lookupContent = new ArrayList<>();
+
+                    lookupContent.add(TreePathHandle.create(path, cc));
+
+                    //from RenameRefactoringUI:
+                    Element selected = cc.getTrees().getElement(path);
+                    if (selected instanceof TypeElement && !((TypeElement) selected).getNestingKind().isNested()) {
+                        ElementHandle<TypeElement> handle = ElementHandle.create((TypeElement) selected);
+                        FileObject f = SourceUtils.getFile(handle, cc.getClasspathInfo());
+                        if (f != null && selected.getSimpleName().toString().equals(f.getName())) {
+                            lookupContent.add(f);
+                        }
+                    }
+
+                    refactoring[0] = new RenameRefactoring(Lookups.fixed(lookupContent.toArray(new Object[0])));
+                    refactoring[0].setNewName(params.getNewName());
+                    refactoring[0].setSearchInComments(true); //TODO?
+                }, true);
+                if (cancel.get()) return ;
+                cancelCallback[0] = () -> refactoring[0].cancelRequest();
+                RefactoringSession session = RefactoringSession.create("Rename");
+                Problem p;
+                p = refactoring[0].checkParameters();
+                if (cancel.get()) return ;
+                if (p != null && p.isFatal()) {
+                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    return ;
+                }
+                p = refactoring[0].preCheck();
+                if (p != null && p.isFatal()) {
+                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    return ;
+                }
+                if (cancel.get()) return ;
+                p = refactoring[0].prepare(session);
+                if (p != null && p.isFatal()) {
+                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    return ;
+                }
+                //TODO: check client capabilities!
+                List<Either<TextDocumentEdit, ResourceOperation>> resultChanges = new ArrayList<>();
+                List<Transaction> transactions = APIAccessor.DEFAULT.getCommits(session);
+                List<ModificationResult> results = new ArrayList<>();
+                for (Transaction t : transactions) {
+                    if (t instanceof RefactoringCommit) {
+                        RefactoringCommit c = (RefactoringCommit) t;
+                        for (org.netbeans.modules.refactoring.spi.ModificationResult refResult : SPIAccessor.DEFAULT.getTransactions(c)) {
+                            if (refResult instanceof JavaModificationResult) {
+                                results.add(((JavaModificationResult) refResult).delegate);
+                            } else {
+                                throw new IllegalStateException(refResult.getClass().toString());
+                            }
+                        }
+                    } else {
+                        throw new IllegalStateException(t.getClass().toString());
+                    }
+                }
+                for (ModificationResult mr : results) {
+                    for (FileObject modified : mr.getModifiedFileObjects()) {
+                        resultChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(params.getTextDocument().getUri(), /*XXX*/-1), fileModifications(mr, modified, null))));
+                    }
+                }
+                List<RefactoringElementImplementation> fileChanges = APIAccessor.DEFAULT.getFileChanges(session);
+                for (RefactoringElementImplementation rei : fileChanges) {
+                    if (rei instanceof FileRenamePlugin.RenameFile) {
+                        String oldURI = params.getTextDocument().getUri();
+                        int dot = oldURI.lastIndexOf('.');
+                        int slash = oldURI.lastIndexOf('/');
+                        String newURI = oldURI.substring(0, slash + 1) + params.getNewName() + oldURI.substring(dot);
+                        ResourceOperation op = new RenameFile(oldURI, newURI);
+                        resultChanges.add(Either.forRight(op));
+                    } else {
+                        throw new IllegalStateException(rei.getClass().toString());
+                    }
+                }
+                for (RefactoringElement re : session.getRefactoringElements()) {
+                    //TODO: verify no unknown elements!
+                }
+
+                session.finished();
+
+                result.complete(new WorkspaceEdit(resultChanges));
+            } catch (Throwable ex) {
+                result.completeExceptionally(ex);
+            }
+        });
+        return result;
     }
 
     @Override
@@ -1271,8 +1432,16 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public void didClose(DidCloseTextDocumentParams params) {
-        openedDocuments.remove(params.getTextDocument().getUri());
-        reportNotificationDone("didClose", params);
+        try {
+            FileObject file = Utils.fromUri(params.getTextDocument().getUri());
+            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+            ec.close();
+            openedDocuments.remove(params.getTextDocument().getUri());
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        } finally {
+            reportNotificationDone("didClose", params);
+        }
     }
 
     @Override
@@ -1376,32 +1545,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
     }
 
-    public static Position createPosition(CompilationUnitTree cut, int offset) {
-        return createPosition(cut.getLineMap(), offset);
-    }
-
-    public static Position createPosition(LineMap lm, int offset) {
-        return new Position((int) lm.getLineNumber(offset) - 1,
-                            (int) lm.getColumnNumber(offset) - 1);
-    }
-
-    public static Position createPosition(FileObject file, int offset) {
-        try {
-            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
-            StyledDocument doc = ec.openDocument();
-            int line = NbDocument.findLineNumber(doc, offset);
-            int column = NbDocument.findLineColumn(doc, offset);
-
-            return new Position(line, column);
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    public static int getOffset(Document doc, Position pos) {
-        return LineDocumentUtils.getLineStartFromIndex((LineDocument) doc, pos.getLine()) + pos.getCharacter();
-    }
-
     public static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {
         FileObject[] file = new FileObject[1];
         LineMap[] lm = new LineMap[1];
@@ -1410,16 +1553,23 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             file[0] = wc.getFileObject();
             lm[0] = wc.getCompilationUnit().getLineMap();
         });
+        return fileModifications(changes, file[0], lm[0]);
+    }
+    
+    private static List<TextEdit> fileModifications(ModificationResult changes, FileObject file, LineMap lm) {
         //TODO: full, correct and safe edit production:
-        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(file[0]);
+        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(file);
         if (diffs == null) {
             return Collections.emptyList();
         }
         List<TextEdit> edits = new ArrayList<>();
+        IntFunction<Position> offset2Position = lm != null ? pos -> Utils.createPosition(lm, pos)
+                                                           : pos -> Utils.createPosition(file, pos);
+                                            
         for (ModificationResult.Difference diff : diffs) {
             String newText = diff.getNewText();
-            edits.add(new TextEdit(new Range(Utils.createPosition(lm[0], diff.getStartPosition().getOffset()),
-                                             Utils.createPosition(lm[0], diff.getEndPosition().getOffset())),
+            edits.add(new TextEdit(new Range(offset2Position.apply(diff.getStartPosition().getOffset()),
+                                             offset2Position.apply(diff.getEndPosition().getOffset())),
                                    newText != null ? newText : ""));
         }
         return edits;

@@ -43,11 +43,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
+import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
 import org.eclipse.lsp4j.CodeActionKind;
@@ -82,6 +84,8 @@ import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ReferenceContext;
 import org.eclipse.lsp4j.ReferenceParams;
+import org.eclipse.lsp4j.RenameFile;
+import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.SymbolInformation;
@@ -91,7 +95,9 @@ import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
+import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.lsp4j.WorkspaceEditCapabilities;
 import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
@@ -2544,11 +2550,179 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(1).getNewText());
     }
 
+    public void testRenameDocumentChangesCapabilitiesRenameOp() throws Exception {
+        doTestRename(init -> {
+                        WorkspaceEditCapabilities wec = new WorkspaceEditCapabilities();
+                        wec.setDocumentChanges(true);
+                        wec.setResourceOperations(Arrays.asList("rename"));
+                        WorkspaceClientCapabilities wcc = new WorkspaceClientCapabilities();
+                        wcc.setWorkspaceEdit(wec);
+                        init.setCapabilities(new ClientCapabilities(wcc, null, null));
+                     },
+                     cf -> {
+                         WorkspaceEdit edit = cf.get();
+                         assertTrue(edit.getChanges().isEmpty());
+                         Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
+                         Set<String> expected = new HashSet<>(Arrays.asList("Test2.java:[3:25-3:28=>nue]", "Test2.java:[1:8-1:11=>nue]"));
+                         assertEquals(expected, actual);
+                     },
+                     cf -> {
+                         WorkspaceEdit edit = cf.get();
+                         assertTrue(edit.getChanges().isEmpty());
+                         Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
+                         Set<String> expected = new HashSet<>(Arrays.asList("Test.java:[0:27-0:31=>TestNew, 1:4-1:8=>TestNew, 2:11-2:15=>TestNew]", "Test.java:[0:13-0:17=>TestNew]", "Test.java=>TestNew.java"));
+                         assertEquals(expected, actual);
+                     });
+    }
+    
+    public void testRenameDocumentChangesCapabilitiesNoRenameOp() throws Exception {
+        doTestRename(init -> {
+                        WorkspaceEditCapabilities wec = new WorkspaceEditCapabilities();
+                        wec.setDocumentChanges(true);
+                        WorkspaceClientCapabilities wcc = new WorkspaceClientCapabilities();
+                        wcc.setWorkspaceEdit(wec);
+                        init.setCapabilities(new ClientCapabilities(wcc, null, null));
+                     },
+                     cf -> {
+                         WorkspaceEdit edit = cf.get();
+                         assertTrue(edit.getChanges().isEmpty());
+                         Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
+                         Set<String> expected = new HashSet<>(Arrays.asList("Test2.java:[3:25-3:28=>nue]", "Test2.java:[1:8-1:11=>nue]"));
+                         assertEquals(expected, actual);
+                     },
+                     cf -> {
+                         WorkspaceEdit edit = cf.get();
+                         assertTrue(edit.getChanges().isEmpty());
+                         Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
+                         Set<String> expected = new HashSet<>(Arrays.asList("Test.java:[0:27-0:31=>TestNew, 1:4-1:8=>TestNew, 2:11-2:15=>TestNew]", "Test.java:[0:13-0:17=>TestNew]", "Test.java=>TestNew.java"));
+                         assertEquals(expected, actual);
+                     });
+    }
+    
+    private void doTestRename(Consumer<InitializeParams> settings,
+                              Validator<CompletableFuture<WorkspaceEdit>> validateFieldRename,
+                              Validator<CompletableFuture<WorkspaceEdit>> validateClassRename) throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(new File(src.getParentFile(), ".test-project"))) {}
+        String code = "public class Test {\n" +
+                      "    int val = new Test2().get();\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        File src2 = new File(getWorkDir(), "Test2.java");
+        try (Writer w = new FileWriter(src2)) {
+            w.write("public class Test2 extends Test {\n" +
+                    "    Test t;\n" +
+                    "    void m(Test p) {};\n" +
+                    "    int get() { return t.val; };\n" +
+                    "}\n");
+        }
+        List<Diagnostic>[] diags = new List[1];
+        CountDownLatch indexingComplete = new CountDownLatch(1);
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setRootUri(getWorkDir().toURI().toString());
+        settings.accept(initParams);
+        InitializeResult result = server.initialize(initParams).get();
+        indexingComplete.await();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+
+        {
+            RenameParams params = new RenameParams(new TextDocumentIdentifier(src2.toURI().toString()),
+                                                   new Position(3, 27),
+                                                   "nue");
+
+            validateFieldRename.validate(server.getTextDocumentService().rename(params));
+        }
+
+        {
+            RenameParams params = new RenameParams(new TextDocumentIdentifier(src.toURI().toString()),
+                                                   new Position(0, 15),
+                                                   "TestNew");
+
+            validateClassRename.validate(server.getTextDocumentService().rename(params));
+        }
+
+    }
+
+    interface Validator<T> {
+        public void validate(T t) throws Exception;
+    }
+
+    private String toString(Either<TextDocumentEdit, ResourceOperation> e) {
+        if (e.isLeft()) {
+            TextDocumentEdit ted = e.getLeft();
+            VersionedTextDocumentIdentifier td = ted.getTextDocument();
+
+            return toString(td) + ":" + ted.getEdits().stream().map(this::toString).collect(Collectors.joining(", ", "[", "]"));
+        } else {
+            switch (e.getRight().getKind()) {
+                case "rename":
+                    RenameFile rf = (RenameFile) e.getRight();
+                    return uriToString(rf.getOldUri()) + "=>" + uriToString(rf.getNewUri());
+                default:
+                    throw new IllegalStateException(e.getRight().getKind());
+            }
+        }
+    }
+
+    private String toString(VersionedTextDocumentIdentifier td) {
+        return uriToString(td.getUri())/* + "(" + td.getVersion() + ")"*/;
+    }
+
+    private String toString(TextEdit edit) {
+        return toString(edit.getRange()) + "=>" + edit.getNewText();
+    }
+
     private String toString(Location location) {
         String path = location.getUri();
         String simpleName = path.substring(path.lastIndexOf('/') + 1);
-        return simpleName + ":" + location.getRange().getStart().getLine() + ":" + location.getRange().getStart().getCharacter() +
-                            "-" + location.getRange().getEnd().getLine() + ":" + location.getRange().getEnd().getCharacter();
+        return simpleName + ":" + toString(location.getRange());
+    }
+
+    private String uriToString(String uri) {
+        return uri.substring(uri.lastIndexOf('/') + 1);
+    }
+
+    private String toString(Range range) {
+        return       range.getStart().getLine() + ":" + range.getStart().getCharacter() +
+               "-" + range.getEnd().getLine() + ":" + range.getEnd().getCharacter();
     }
 
     private void assertHighlights(List<? extends DocumentHighlight> highlights, String... expected) {

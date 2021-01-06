@@ -11,6 +11,7 @@ METHOD     collect(Collection, Closure)               Collection
 METHOD     compareTo(File)                 [PUBLIC]   int
 METHOD     createNewFile()                 [PUBLIC]   boolean
 METHOD     createTempDir()                            File
+METHOD     createTempDir(String)                      File
 METHOD     createTempDir(String, String)              File
 METHOD     createTempFile(String, String)  [STATIC,   File
 METHOD     createTempFile(String, String,  [STATIC,   File

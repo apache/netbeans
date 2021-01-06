@@ -31,7 +31,8 @@ import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
-import org.netbeans.modules.debugger.jpda.truffle.access.TruffleStrataProvider;
+import static org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess.BASIC_CLASS_NAME;
+import org.netbeans.modules.debugger.jpda.truffle.actions.StepActionProvider;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
 import org.netbeans.modules.debugger.jpda.truffle.options.TruffleOptions;
 import org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVFrame;
@@ -47,15 +48,15 @@ import org.netbeans.spi.viewmodel.TreeModel;
 import org.netbeans.spi.viewmodel.TreeModelFilter;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
 
-@DebuggerServiceRegistration(path="netbeans-JPDASession/"+TruffleStrataProvider.TRUFFLE_STRATUM+"/DebuggingView",
-                             types={ TreeModelFilter.class })
+@DebuggerServiceRegistration(path="netbeans-JPDASession/DebuggingView",
+                             types={ TreeModelFilter.class }, position=25000)
 public class DebuggingTruffleTreeModel implements TreeModelFilter {
     
     private static final Predicate<String> PREDICATE1 = Pattern.compile("^((com|org)\\.\\p{Alpha}*\\.truffle|(com|org)(\\.graalvm|\\.truffleruby))\\..*$").asPredicate();
     private static final String FILTER1 = "com.[A-z]*.truffle.";                     // NOI18N
     private static final String FILTER2 = "com.oracle.graal.";                  // NOI18N
     private static final String FILTER3 = "org.netbeans.modules.debugger.jpda.backend.";    // NOI18N
-    
+
     private final JPDADebugger debugger;
     private final List<ModelListener> listeners = new ArrayList<>();
     private final PropertyChangeListener propListenerHolder;    // Not to have the listener collected
@@ -73,6 +74,7 @@ public class DebuggingTruffleTreeModel implements TreeModelFilter {
             }
         };
         TruffleOptions.onLanguageDeveloperModeChange(propListenerHolder);
+        DebuggingTruffleActionsProvider.onShowAllHostFramesChange(propListenerHolder);
     }
 
     @Override
@@ -83,12 +85,25 @@ public class DebuggingTruffleTreeModel implements TreeModelFilter {
     @Override
     public Object[] getChildren(TreeModel original, Object parent, int from, int to) throws UnknownTypeException {
         Object[] children = original.getChildren(parent, from, to);
-        if (parent instanceof DebuggingView.DVThread && children.length > 0) {
-            CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(((WeakCacheMap.KeyedValue<JPDAThread>) parent).getKey());
+        if (parent instanceof DebuggingView.DVThread && children.length > 0 &&
+                !DebuggingTruffleActionsProvider.isShowAllHostFrames((DebuggingView.DVThread) parent)) {
+
+            JPDAThread thread = ((WeakCacheMap.KeyedValue<JPDAThread>) parent).getKey();
+            CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentGuestPCInfo(thread);
+            boolean inGuest = isInGuest(children[0]);
+            boolean haveTopHostFrames = false;
+            if (currentPCInfo == null) {
+                currentPCInfo = inGuest ? TruffleAccess.getCurrentSuspendHereInfo(thread) : TruffleAccess.getSuspendHere(thread);
+                haveTopHostFrames = true;
+            }
             if (currentPCInfo != null) {
                 boolean showInternalFrames = TruffleOptions.isLanguageDeveloperMode();
                 TruffleStackFrame[] stackFrames = currentPCInfo.getStack().getStackFrames(showInternalFrames);
-                children = filterAndAppend(children, stackFrames, currentPCInfo.getTopFrame());
+                if (inGuest && !currentPCInfo.getStack().hasJavaFrames()) {
+                    children = filterAndAppend(children, stackFrames, currentPCInfo.getTopFrame());
+                } else {
+                    children = mergeFrames(children, stackFrames, currentPCInfo.getTopFrame(), haveTopHostFrames);
+                }
             }
         }
         return children;
@@ -122,18 +137,27 @@ public class DebuggingTruffleTreeModel implements TreeModelFilter {
         }
     }
 
+    private static boolean isInGuest(Object child) {
+        if (child instanceof CallStackFrame) {
+            CallStackFrame csf = (CallStackFrame) child;
+            return BASIC_CLASS_NAME.equals(csf.getClassName());
+        } else {
+            return false;
+        }
+    }
+
     private static Object[] filterAndAppend(Object[] children, TruffleStackFrame[] stackFrames,
-                                     TruffleStackFrame topFrame) {
+                                    TruffleStackFrame topFrame) {
         List<Object> newChildren = new ArrayList<>(children.length);
         //newChildren.addAll(Arrays.asList(children));
         for (Object ch : children) {
-            if (ch instanceof CallStackFrame) {
+                    if (ch instanceof CallStackFrame) {
                 String className = ((CallStackFrame) ch).getClassName();
                 if (PREDICATE1.test(className) ||
                     className.startsWith(FILTER2) ||
                     className.startsWith(FILTER3)) {
                     
-                    continue;
+                        continue;
                 }
             }
             newChildren.add(ch);
@@ -142,6 +166,61 @@ public class DebuggingTruffleTreeModel implements TreeModelFilter {
         newChildren.add(i++, topFrame);
         for (TruffleStackFrame tsf : stackFrames) {
             newChildren.add(i++, tsf);
+        }
+        return newChildren.toArray();
+    }
+
+    private static TruffleStackFrame[] join(TruffleStackFrame[] stackFrames,
+                                            TruffleStackFrame topFrame) {
+        TruffleStackFrame[] joined = new TruffleStackFrame[stackFrames.length + 1];
+        joined[0] = topFrame;
+        System.arraycopy(stackFrames, 0, joined, 1, stackFrames.length);
+        return joined;
+    }
+
+    static Object[] mergeFrames(Object[] children, TruffleStackFrame[] stackFrames,
+                                TruffleStackFrame topFrame, boolean haveTopHostFrames) {
+        List<Object> newChildren = new ArrayList<>(children.length);
+        stackFrames = join(stackFrames, topFrame);
+        int chi = 0;
+        if (haveTopHostFrames) {
+            for (; chi < children.length; chi++) {
+                Object ch = children[chi];
+                if (ch instanceof CallStackFrame) {
+                    CallStackFrame csf = (CallStackFrame) ch;
+                    if (StepActionProvider.STEP2JAVA_CLASS.equals(csf.getClassName()) &&
+                            StepActionProvider.STEP2JAVA_METHOD.equals(csf.getMethodName())) {
+                        break;
+                    }
+                }
+                newChildren.add(ch);
+            }
+        }
+        for (TruffleStackFrame tframe : stackFrames) {
+            if (tframe.isHost()) {
+                for (; chi < children.length; chi++) {
+                    Object ch = children[chi];
+                    if (ch instanceof CallStackFrame) {
+                        CallStackFrame csf = (CallStackFrame) ch;
+                        String className = csf.getClassName();
+                        if (className.startsWith(FILTER3)) {
+                            continue;
+                        }
+                        if (equalFrames(csf, tframe)) {
+                            newChildren.add(csf);
+                            chi++;
+                            break;
+                        }
+                    } else {
+                        newChildren.add(ch);
+                    }
+                }
+            } else {
+                newChildren.add(tframe);
+            }
+        }
+        for (; chi < children.length; chi++) {
+            newChildren.add(children[chi]);
         }
         return newChildren.toArray();
     }
@@ -157,8 +236,8 @@ public class DebuggingTruffleTreeModel implements TreeModelFilter {
                     className.startsWith(FILTER2) ||
                     className.startsWith(FILTER3)) {
                     
-                    continue;
-                }
+                        continue;
+                    }
             }
             newChildren.add(ch);
         }
@@ -170,4 +249,58 @@ public class DebuggingTruffleTreeModel implements TreeModelFilter {
         return Collections.unmodifiableList(newChildren);
     }
 
+    static List<DVFrame> mergeFrames(JPDADVThread thread, List<DVFrame> children,
+                                     TruffleStackFrame[] stackFrames,
+                                     TruffleStackFrame topFrame, boolean haveTopHostFrames) {
+        List<DVFrame> newChildren = new ArrayList<>(children.size());
+        stackFrames = join(stackFrames, topFrame);
+        int chi = 0;
+        if (haveTopHostFrames) {
+            for (; chi < children.size(); chi++) {
+                DVFrame ch = children.get(chi);
+                CallStackFrame csf = ((JPDADVFrame) ch).getCallStackFrame();
+                if (StepActionProvider.STEP2JAVA_CLASS.equals(csf.getClassName()) &&
+                        StepActionProvider.STEP2JAVA_METHOD.equals(csf.getMethodName())) {
+                    break;
+                }
+                newChildren.add(ch);
+            }
+        }
+        for (TruffleStackFrame tframe : stackFrames) {
+            if (tframe.isHost()) {
+                for (; chi < children.size(); chi++) {
+                    DVFrame ch = children.get(chi);
+                    CallStackFrame csf = ((JPDADVFrame) ch).getCallStackFrame();
+                    String className = csf.getClassName();
+                    if (className.startsWith(FILTER3)) {
+                        continue;
+                    }
+                    if (equalFrames(csf, tframe)) {
+                        newChildren.add(ch);
+                        chi++;
+                        break;
+                    }
+                }
+            } else {
+                newChildren.add(new TruffleDVFrame(thread, tframe));
+            }
+        }
+        for (; chi < children.size(); chi++) {
+            newChildren.add(children.get(chi));
+        }
+        return Collections.unmodifiableList(newChildren);
+    }
+
+    private static boolean equalFrames(CallStackFrame csf, TruffleStackFrame tframe) {
+        if (!csf.getClassName().equals(tframe.getHostClassName())) {
+            return false;
+        }
+        if (!csf.getMethodName().equals(tframe.getHostMethodName())) {
+            return false;
+        }
+        int linej = csf.getLineNumber(null);
+        int linet = tframe.getSourcePosition().getStartLine();
+        return (linej == linet || linej == 0);
+    }
+    
 }

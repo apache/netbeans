@@ -41,19 +41,25 @@ import org.openide.util.Exceptions;
 public final class TruffleStackInfo {
     
     private static final String METHOD_GET_FRAMES_INFO = "getFramesInfo";       // NOI18N
-    private static final String METHOD_GET_FRAMES_INFO_SIG = "([Lcom/oracle/truffle/api/debug/DebugStackFrame;Z)[Ljava/lang/Object;";   // NOI18N
+    private static final String METHOD_GET_FRAMES_INFO_SIG = "([Lcom/oracle/truffle/api/debug/DebugStackFrame;ZZ)[Ljava/lang/Object;";   // NOI18N
     
     private final JPDADebugger debugger;
     private final JPDAThread thread;
     private final ObjectVariable stackTrace;
+    private final boolean supportsJavaFrames;
     private TruffleStackFrame[] stackFrames;
     private boolean includedInternalFrames;
     private boolean areInternalFrames;
 
     public TruffleStackInfo(JPDADebugger debugger, JPDAThread thread, ObjectVariable stackTrace) {
+        this(debugger, thread, stackTrace, false);
+    }
+
+    public TruffleStackInfo(JPDADebugger debugger, JPDAThread thread, ObjectVariable stackTrace, boolean supportsJavaFrames) {
         this.debugger = debugger;
         this.thread = thread;
         this.stackTrace = stackTrace;
+        this.supportsJavaFrames = supportsJavaFrames;
     }
 
     public TruffleStackFrame[] getStackFrames(boolean includeInternal) {
@@ -67,15 +73,21 @@ public final class TruffleStackInfo {
     public boolean hasInternalFrames() {
         return areInternalFrames;
     }
-        
+
+    public boolean hasJavaFrames() {
+        return supportsJavaFrames;
+    }
+
     private TruffleStackFrame[] loadStackFrames(boolean includeInternal) {
         JPDAClassType debugAccessor = TruffleDebugManager.getDebugAccessorJPDAClass(debugger);
         try {
             Variable internalVar = debugger.createMirrorVar(includeInternal, true);
+            Variable javaFramesVar = debugger.createMirrorVar(supportsJavaFrames, true);
             Variable framesVar = debugAccessor.invokeMethod(METHOD_GET_FRAMES_INFO,
                                                             METHOD_GET_FRAMES_INFO_SIG,
                                                             new Variable[] { stackTrace,
-                                                                             internalVar });
+                                                                             internalVar,
+                                                                             javaFramesVar });
             Field[] framesInfos = ((ObjectVariable) framesVar).getFields(0, Integer.MAX_VALUE);
             String framesDesc = (String) framesInfos[0].createMirrorObject();
             Field[] codes = ((ObjectVariable) framesInfos[1]).getFields(0, Integer.MAX_VALUE);
@@ -88,7 +100,8 @@ public final class TruffleStackInfo {
             int i2;
             int depth = 1;
             List<TruffleStackFrame> truffleFrames = new ArrayList<>();
-            while ((i2 = framesDesc.indexOf("\n\n", i1)) > 0) {
+            String frameSeparator = "\n\t\n";
+            while ((i2 = framesDesc.indexOf(frameSeparator, i1)) > 0) {
                 StringReference codeRef = (StringReference) ((JDIVariable) codes[depth-1]).getJDIValue();
                 ObjectVariable frameInstance = (ObjectVariable) stackTrace.getFields(0, Integer.MAX_VALUE)[depth - 1];
                 TruffleStackFrame tsf = new TruffleStackFrame(
@@ -98,7 +111,7 @@ public final class TruffleStackInfo {
                 if (includeInternal && tsf.isInternal()) {
                     areInternalFrames = true;
                 }
-                i1 = i2 + 2;
+                i1 = i2 + frameSeparator.length();
                 depth++;
             }
             return truffleFrames.toArray(new TruffleStackFrame[truffleFrames.size()]);

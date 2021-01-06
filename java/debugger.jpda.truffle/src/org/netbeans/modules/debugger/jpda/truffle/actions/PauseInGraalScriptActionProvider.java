@@ -95,7 +95,7 @@ public class PauseInGraalScriptActionProvider extends JPDADebuggerActionProvider
         setEnabled(NAME, hasServiceClass);
         if (hasServiceClass) {
             JPDAThread currentThread = debugger.getCurrentThread();
-            if (currentThread != null && TruffleAccess.getCurrentPCInfo(currentThread) != null) {
+            if (currentThread != null && TruffleAccess.getCurrentGuestPCInfo(currentThread) != null) {
                 suspendState = false;
             }
             updateActionState(true, suspendState);

@@ -1559,4 +1559,76 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         options.put(FmtOptions.SPACE_AROUND_NULLSAFE_OBJECT_OPS, false);
         reformatFileContents("testfiles/formatting/spaces/php80/spaceAroundNullsafeOperator_01b.php", options);
     }
+
+    public void testSpacesBeforeAttributeDeclParens_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_ATTRIBUTE_DECL_PAREN, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeAttributeDeclParen_01a.php", options);
+    }
+
+    public void testSpacesBeforeAttributeDeclParens_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_ATTRIBUTE_DECL_PAREN, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeAttributeDeclParen_01b.php", options);
+    }
+
+    public void testSpacesBeforeAttributeDeclParens_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_ATTRIBUTE_DECL_PAREN, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeAttributeDeclParen_02a.php", options);
+    }
+
+    public void testSpacesBeforeAttributeDeclParens_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_ATTRIBUTE_DECL_PAREN, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceBeforeAttributeDeclParen_02b.php", options);
+    }
+
+    public void testSpacesWithinAttributeBrackets_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_BRACKETS, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeBrackets_01a.php", options);
+    }
+
+    public void testSpacesWithinAttributeBrackets_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_BRACKETS, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeBrackets_01b.php", options);
+    }
+
+    public void testSpacesWithinAttributeBrackets_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_BRACKETS, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeBrackets_02a.php", options);
+    }
+
+    public void testSpacesWithinAttributeBrackets_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_BRACKETS, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeBrackets_02b.php", options);
+    }
+
+    public void testSpacesWithinAttributeDeclParens_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_DECL_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeDeclParens_01a.php", options);
+    }
+
+    public void testSpacesWithinAttributeDeclParens_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_DECL_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeDeclParens_01b.php", options);
+    }
+
+    public void testSpacesWithinAttributeDeclParens_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_DECL_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeDeclParens_02a.php", options);
+    }
+
+    public void testSpacesWithinAttributeDeclParens_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_ATTRIBUTE_DECL_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/php80/spaceWithinAttributeDeclParens_02b.php", options);
+    }
 }

@@ -921,6 +921,21 @@ public class PhpTypedBreakInterceptorTest extends PhpTypinghooksTestBase {
         );
     }
 
+    public void testAttributeSyntax_01() throws Exception {
+        insertBreak(
+                "" // original
+                + "#[^]\n"
+                + "class Test {\n"
+                + "}",
+                "" // expected
+                + "#[\n"
+                + "    ^\n"
+                + "]\n"
+                + "class Test {\n"
+                + "}"
+        );
+    }
+
     // #230814
     public void testDoNotInsertCommentAsterisk_01() throws Exception {
         insertBreakMultiLineComment(

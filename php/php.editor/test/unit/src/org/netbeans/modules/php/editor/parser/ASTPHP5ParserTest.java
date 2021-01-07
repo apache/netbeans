@@ -1257,6 +1257,22 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php80/nullsafeOperator_03");
     }
 
+    public void testAttributeSyntax_01() throws Exception {
+        performTest("parser/php80/attributeSyntax_01");
+    }
+
+    public void testAttributeSyntax_02() throws Exception {
+        performTest("parser/php80/attributeSyntax_02");
+    }
+
+    public void testAttributeSyntaxError_01() throws Exception {
+        performTest("parser/php80/attributeSyntaxError_01");
+    }
+
+    public void testAttributeSyntaxError_02() throws Exception {
+        performTest("parser/php80/attributeSyntaxError_02");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

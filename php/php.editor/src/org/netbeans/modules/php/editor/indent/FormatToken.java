@@ -61,6 +61,7 @@ public class FormatToken {
         WHITESPACE_AROUND_KEY_VALUE_OP,
         WHITESPACE_BEFORE_ANONYMOUS_CLASS_PAREN,
         WHITESPACE_BEFORE_ANONYMOUS_FUNCTION_PAREN,
+        WHITESPACE_BEFORE_ATTRIBUTE_DEC_PAREN,
         WHITESPACE_BEFORE_METHOD_DEC_PAREN,
         WHITESPACE_BEFORE_METHOD_CALL_PAREN,
         WHITESPACE_BEFORE_IF_PAREN,
@@ -116,6 +117,8 @@ public class FormatToken {
         WHITESPACE_WITHIN_CATCH_PARENS,
         WHITESPACE_WITHIN_MATCH_PARENS,
         WHITESPACE_WITHIN_ARRAY_BRACKETS_PARENS,
+        WHITESPACE_WITHIN_ATTRIBUTE_BRACKETS,
+        WHITESPACE_WITHIN_ATTRIBUTE_DECL_PARENS,
         WHITESPACE_WITHIN_TYPE_CAST_PARENS,
         WHITESPACE_BEFORE_COMMA,
         WHITESPACE_AFTER_COMMA,
@@ -160,13 +163,15 @@ public class FormatToken {
         WHITESPACE_BEFORE_MULTI_CATCH_SEPARATOR,
         WHITESPACE_AFTER_MULTI_CATCH_SEPARATOR,
         WHITESPACE_AFTER_TYPE,
+        WHITESPACE_AFTER_ATTRIBUTE,
         LINE_COMMENT,
         COMMENT,
         COMMENT_START,
         COMMENT_END,
         DOC_COMMENT,
         DOC_COMMENT_START,
-        DOC_COMMENT_END;
+        DOC_COMMENT_END,
+        ATTRIBUTE_START;
     }
     private int offset;
     private Kind id;
@@ -217,6 +222,7 @@ public class FormatToken {
                 && kind != Kind.DOC_COMMENT
                 && kind != Kind.DOC_COMMENT_START
                 && kind != Kind.DOC_COMMENT_END
+                && kind != Kind.ATTRIBUTE_START
                 && kind != Kind.OPEN_TAG
                 && kind != Kind.CLOSE_TAG
                 && kind != Kind.INIT_TAG

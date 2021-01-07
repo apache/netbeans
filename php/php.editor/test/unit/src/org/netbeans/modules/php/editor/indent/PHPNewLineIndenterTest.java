@@ -1146,6 +1146,38 @@ public class PHPNewLineIndenterTest extends PHPTestBase {
         testIndentInFile("testfiles/indent/php80/matchExpression_12.php");
     }
 
+    public void testAttributeSyntax_01() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_01.php");
+    }
+
+    public void testAttributeSyntax_02() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_02.php");
+    }
+
+    public void testAttributeSyntax_03() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_03.php");
+    }
+
+    public void testAttributeSyntax_04() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_04.php");
+    }
+
+    public void testAttributeSyntax_05() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_05.php");
+    }
+
+    public void testAttributeSyntax_06() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_06.php");
+    }
+
+    public void testAttributeSyntax_07() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_07.php");
+    }
+
+    public void testAttributeSyntax_08() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_08.php");
+    }
+
     @Override
     protected boolean runInEQ() {
         return true;

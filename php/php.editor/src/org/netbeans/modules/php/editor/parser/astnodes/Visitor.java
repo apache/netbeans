@@ -42,6 +42,10 @@ public interface Visitor {
 
     public void visit(ASTErrorExpression astErrorExpression);
 
+    public void visit(Attribute attribute);
+
+    public void visit(AttributeDeclaration attributeDeclaration);
+
     //public void endVisit(ASTError astError);
     public void visit(BackTickExpression backTickExpression);
 

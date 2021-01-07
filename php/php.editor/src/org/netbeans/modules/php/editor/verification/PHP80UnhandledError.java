@@ -39,6 +39,7 @@ import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.Attribute;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.Dispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
@@ -227,6 +228,15 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
+        @Override
+        public void visit(Attribute attribute) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkAttributeSyntax(attribute);
+            super.visit(attribute);
+        }
+
         private void addLastParam(List<FormalParameter> parameters) {
             if (!parameters.isEmpty()) {
                 lastParams.add(parameters.get(parameters.size() - 1));
@@ -344,6 +354,10 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             if (dispatch.isNullsafe()) {
                 createError(dispatch);
             }
+        }
+
+        private void checkAttributeSyntax(Attribute attribute) {
+            createError(attribute);
         }
 
         private void createError(ASTNode node) {

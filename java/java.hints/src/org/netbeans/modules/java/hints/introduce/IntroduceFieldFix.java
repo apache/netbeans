@@ -48,6 +48,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.swing.JButton;
 import javax.swing.text.BadLocationException;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
@@ -157,7 +158,12 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
                 panel.isRefactorExisting())).commit();
         return null;
     }
-    
+
+    @Override
+    public ModificationResult getModificationResult() throws IOException {
+        return js.runModificationTask(new Worker(guessedName, permitDuplicates, false, EnumSet.of(Modifier.PRIVATE), IntroduceFieldPanel.INIT_FIELD, null, false));
+    }
+
     /**
      * The actual modification. Some javac related data are recorded in fields, inner class prevents
      * unintentional leak if someone keeps a reference to the Fix
@@ -317,7 +323,9 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
             VariableTree field;
             expressionStatementRewrite = parentTree.getKind() == Tree.Kind.EXPRESSION_STATEMENT;
             if (!variableRewrite) {
-                field = make.Variable(modsTree, name, make.Type(tm), initializeIn == IntroduceFieldPanel.INIT_FIELD ? expression : null);
+                Tree varType = make.Type(tm);
+                field = make.Variable(modsTree, name, varType, initializeIn == IntroduceFieldPanel.INIT_FIELD ? expression : null);
+                parameter.tag(varType, TYPE_TAG);
                 if (!expressionStatementRewrite) {
                     Tree nueParent = parameter.getTreeUtilities().translate(parentTree, Collections.singletonMap(resolved.getLeaf(), make.Identifier(name)));
                     parameter.rewrite(parentTree, nueParent);
@@ -326,8 +334,9 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
                     toRemoveFromParent = resolved.getParentPath();
                 }
             } else {
-                VariableTree originalVar = (VariableTree) original;
-                field = make.Variable(modsTree, name, originalVar.getType(), initializeIn == IntroduceFieldPanel.INIT_FIELD ? expression : null);
+                Tree originalVarType = ((VariableTree) original).getType();
+                field = make.Variable(modsTree, name, originalVarType, initializeIn == IntroduceFieldPanel.INIT_FIELD ? expression : null);
+                parameter.tag(originalVarType, TYPE_TAG);
                 toRemoveFromParent = resolved;
             }
             nueClass = IntroduceHint.insertField(parameter, (ClassTree) pathToClass.getLeaf(), field, allNewUses, offset);

@@ -29,7 +29,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ReturnTree;
-import com.sun.source.tree.Scope;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
@@ -59,18 +58,14 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.swing.JButton;
 import javax.swing.text.Document;
-import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
@@ -440,7 +435,12 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
         js.runModificationTask(new TaskImpl(access, name, target, replaceOther, val.getResult(), redoReferences)).commit();
         return null;
     }
-    
+
+    @Override
+    public ModificationResult getModificationResult() throws IOException {
+        return js.runModificationTask(new TaskImpl(EnumSet.of(Modifier.PRIVATE), "method", targets.iterator().next(), true, null, false));
+    }
+
     static class OccurrencePositionComparator implements Comparator<Occurrence> {
         final CompilationUnitTree cut;
         final SourcePositions positions;
@@ -569,7 +569,8 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
             }
             ModifiersTree mods = make.Modifiers(modifiers);
             MethodTree method = make.Method(mods, name, returnTypeTree, typeVars, formalArguments, thrown, make.Block(methodStatements, false), null);
-            
+            copy.tag(returnTypeTree, TYPE_TAG);
+
             return method;
         }
         /**

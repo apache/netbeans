@@ -157,6 +157,7 @@ import org.netbeans.modules.java.hints.errors.CreateFixBase;
 import org.netbeans.modules.java.hints.errors.ImportClass;
 import org.netbeans.modules.java.hints.infrastructure.CreatorBasedLazyFixList;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
+import org.netbeans.modules.java.hints.introduce.IntroduceFixBase;
 import org.netbeans.modules.java.hints.introduce.IntroduceHint;
 import org.netbeans.modules.java.hints.introduce.IntroduceKind;
 import org.netbeans.modules.java.hints.project.IncompleteClassPath;
@@ -274,13 +275,15 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     JavaCompletionTask<CompletionItem> task = JavaCompletionTask.create(caret, new ItemFactoryImpl(client, controller, uri, ts.offset()), allCompletion ? EnumSet.of(Options.ALL_COMPLETION) : EnumSet.noneOf(Options.class), () -> false);
                     task.run(resultIterator);
                     List<CompletionItem> results = task.getResults();
-                    for (Iterator<CompletionItem> it = results.iterator(); it.hasNext();) {
-                        CompletionItem item = it.next();
-                        if (item == null) {
-                            it.remove();
+                    if (results != null) {
+                        for (Iterator<CompletionItem> it = results.iterator(); it.hasNext();) {
+                            CompletionItem item = it.next();
+                            if (item == null) {
+                                it.remove();
+                            }
                         }
+                        completionList.setItems(results);
                     }
-                    completionList.setItems(results);
                     completionList.setIsIncomplete(task.hasAdditionalClasses());
                 }
             });
@@ -1182,13 +1185,50 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         }
 
-        //code generators:
         try {
             js.runUserActionTask(cc -> {
                 cc.toPhase(JavaSource.Phase.RESOLVED);
+                //code generators:
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     for (CodeAction codeAction : codeGenerator.getCodeActions(cc, params)) {
                         result.add(Either.forRight(codeAction));
+                    }
+                }
+                //introduce hints
+                Range range = params.getRange();
+                if (!range.getStart().equals(range.getEnd())) {
+                    for (ErrorDescription err : IntroduceHint.computeError(cc, Utils.getOffset(doc, range.getStart()), Utils.getOffset(doc, range.getEnd()), new EnumMap<IntroduceKind, Fix>(IntroduceKind.class), new EnumMap<IntroduceKind, String>(IntroduceKind.class), new AtomicBoolean())) {
+                        for (Fix fix : err.getFixes().getFixes()) {
+                            if (fix instanceof IntroduceFixBase) {
+                                ModificationResult changes = ((IntroduceFixBase) fix).getModificationResult();
+                                if (changes != null) {
+                                    List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
+                                    Set<? extends FileObject> fos = changes.getModifiedFileObjects();
+                                    if (fos.size() == 1) {
+                                        FileObject fileObject = fos.iterator().next();
+                                        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
+                                        if (diffs != null) {
+                                            List<TextEdit> edits = new ArrayList<>();
+                                            for (ModificationResult.Difference diff : diffs) {
+                                                String newText = diff.getNewText();
+                                                edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
+                                                                                 Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
+                                                                       newText != null ? newText : ""));
+                                            }
+                                            documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
+                                        }
+                                        CodeAction codeAction = new CodeAction(fix.getText());
+                                        codeAction.setKind(CodeActionKind.RefactorExtract);
+                                        codeAction.setEdit(new WorkspaceEdit(documentChanges));
+                                        int renameOffset = ((IntroduceFixBase) fix).getNameOffset(changes);
+                                        if (renameOffset >= 0) {
+                                            codeAction.setCommand(new Command("Rename", "java.rename.element.at", Collections.singletonList(renameOffset)));
+                                        }
+                                        result.add(Either.forRight(codeAction));
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }, true);
@@ -1288,8 +1328,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 } else {
                     //XXX: better range computation
                     TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
-                    ts.move(pos);
+                    int d = ts.move(pos);
                     if (ts.moveNext()) {
+                        if (d == 0 && ts.token().id() != JavaTokenId.IDENTIFIER) {
+                            ts.movePrevious();
+                        }
                         Range r = new Range(Utils.createPosition(cc.getCompilationUnit(), ts.offset()),
                                             Utils.createPosition(cc.getCompilationUnit(), ts.offset() + ts.token().length()));
                         result.complete(Either.forRight(new PrepareRenameResult(r, ts.token().text().toString())));

@@ -237,6 +237,15 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             super.visit(attribute);
         }
 
+        @Override
+        public void visit(FormalParameter node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkConstructorPropertyPromotion(node);
+            super.visit(node);
+        }
+
         private void addLastParam(List<FormalParameter> parameters) {
             if (!parameters.isEmpty()) {
                 lastParams.add(parameters.get(parameters.size() - 1));
@@ -358,6 +367,12 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
 
         private void checkAttributeSyntax(Attribute attribute) {
             createError(attribute);
+        }
+
+        private void checkConstructorPropertyPromotion(FormalParameter parameter) {
+            if (parameter.getModifier() != 0) {
+                createError(parameter);
+            }
         }
 
         private void createError(ASTNode node) {

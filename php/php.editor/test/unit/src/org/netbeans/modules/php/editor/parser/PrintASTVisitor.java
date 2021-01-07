@@ -469,8 +469,12 @@ public class PrintASTVisitor implements Visitor {
 
     @Override
     public void visit(FormalParameter node) {
-        XMLPrintNode printNode = new XMLPrintNode(node, "FormalParameter",
-                new String[]{"isMandatory", (node.isMandatory()?"true":"false"), "isVariadic", (node.isVariadic() ? "true" : "false")});
+        String modifier = node.getModifierString();
+        String[] attributes = new String[]{"isMandatory", (node.isMandatory() ? "true" : "false"), "isVariadic", (node.isVariadic() ? "true" : "false")};
+        if (modifier != null && !modifier.isEmpty()) {
+            attributes = new String[]{"modifier", node.getModifierString(), "isMandatory", (node.isMandatory() ? "true" : "false"), "isVariadic", (node.isVariadic() ? "true" : "false")};
+        }
+        XMLPrintNode printNode = new XMLPrintNode(node, "FormalParameter", attributes);
         if (node.isAttributed()) {
             printNode.addChildrenGroup("Attributes", node.getAttributes());
         }

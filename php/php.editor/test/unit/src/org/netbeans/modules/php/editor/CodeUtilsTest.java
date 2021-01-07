@@ -218,7 +218,7 @@ public class CodeUtilsTest extends NbTestCase {
 
     private FormalParameter createFormalParameterWithDefaultArray(List<ArrayElement> arrayContent) {
         ArrayCreation defaultValue = new ArrayCreation(1, 1, arrayContent, ArrayCreation.Type.NEW);
-        FormalParameter param = new FormalParameter(1, 1, null, null, defaultValue);
+        FormalParameter param = new FormalParameter(1, 1, null, null, null, defaultValue);
         return param;
     }
 

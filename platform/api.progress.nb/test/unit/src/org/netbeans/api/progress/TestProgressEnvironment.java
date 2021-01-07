@@ -16,35 +16,53 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.progress.ui;
+package org.netbeans.api.progress;
 
-import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
+import java.util.concurrent.Callable;
+import junit.framework.AssertionFailedError;
 import org.netbeans.modules.progress.spi.Controller;
 import org.netbeans.modules.progress.spi.ProgressEnvironment;
-import org.netbeans.modules.progress.spi.SwingController;
 import org.openide.util.Cancellable;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author sdedic
  */
-@ServiceProvider(service = ProgressEnvironment.class)
-public class ProgressUI implements ProgressEnvironment {
+@ServiceProvider(service = ProgressEnvironment.class, position = 0)
+public class TestProgressEnvironment implements ProgressEnvironment {
+    public volatile ProgressEnvironment delegate;
+
+    public TestProgressEnvironment() {
+    }
+    
+    public ProgressEnvironment delegate() {
+        if (delegate != null) {
+            return delegate;
+        }
+        return Lookup.getDefault().lookupAll(ProgressEnvironment.class).stream().
+                filter(i -> i != this).findFirst().orElseThrow(() -> new AssertionFailedError());
+    }
 
     @Override
     public ProgressHandle createHandle(String displayname, Cancellable c, boolean userInit) {
-        if (userInit) {
-            return ProgressHandleFactory.createUIHandle(displayname, c, null);
-        } else {
-            return ProgressHandleFactory.createSystemUIHandle(displayname, c, null);
-        }
+        return delegate().createHandle(displayname, c, userInit);
     }
 
     @Override
     public Controller getController() {
-        return SwingController.getDefault();
+        return delegate().getController();
     }
     
+    public static void withEnvironment(ProgressEnvironment instance, Callable<Void> c) throws Exception {
+        // will fail on CCE if this is not the 1st.
+        TestProgressEnvironment e = (TestProgressEnvironment)Lookup.getDefault().lookup(TestProgressEnvironment.class);
+        try {
+            e.delegate = instance;
+            c.call();
+        } finally {
+            e.delegate = null;
+        }
+    }
 }

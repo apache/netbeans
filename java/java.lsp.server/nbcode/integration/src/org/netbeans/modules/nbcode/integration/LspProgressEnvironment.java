@@ -16,35 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.progress.ui;
+package org.netbeans.modules.nbcode.integration;
 
-import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
-import org.netbeans.modules.progress.spi.Controller;
+import org.netbeans.modules.java.lsp.server.ui.AbstractProgressEnvironment;
 import org.netbeans.modules.progress.spi.ProgressEnvironment;
-import org.netbeans.modules.progress.spi.SwingController;
-import org.openide.util.Cancellable;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author sdedic
  */
-@ServiceProvider(service = ProgressEnvironment.class)
-public class ProgressUI implements ProgressEnvironment {
-
-    @Override
-    public ProgressHandle createHandle(String displayname, Cancellable c, boolean userInit) {
-        if (userInit) {
-            return ProgressHandleFactory.createUIHandle(displayname, c, null);
-        } else {
-            return ProgressHandleFactory.createSystemUIHandle(displayname, c, null);
-        }
-    }
-
-    @Override
-    public Controller getController() {
-        return SwingController.getDefault();
-    }
+@ServiceProvider(service = ProgressEnvironment.class, position = 10000)
+public class LspProgressEnvironment extends AbstractProgressEnvironment {
     
 }

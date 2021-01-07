@@ -387,6 +387,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             },
             outputChannel: log,
             revealOutputChannelOn: 3, // error
+            progressOnInitialization: true,
             initializationOptions : {
                 'nbcodeCapabilities' : {
                     'statusBarMessageSupport' : true
@@ -406,6 +407,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             }
         }
 
+        
         let c = new LanguageClient(
                 'java',
                 'NetBeans Java',

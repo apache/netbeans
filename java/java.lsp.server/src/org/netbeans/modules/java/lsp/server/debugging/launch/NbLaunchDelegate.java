@@ -57,6 +57,10 @@ public abstract class NbLaunchDelegate {
     public abstract void preLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
 
     public abstract void postLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
+    
+    protected void notifyFinished(DebugAdapterContext ctx, boolean success) {
+        // no op.
+    }
 
     public final CompletableFuture<Void> nbLaunch(FileObject toRun, DebugAdapterContext context, boolean debug, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
         CompletableFuture<Void> launchFuture = new CompletableFuture<>();
@@ -100,6 +104,7 @@ public abstract class NbLaunchDelegate {
                 @Override
                 public void finished(boolean success) {
                     ioContext.stop();
+                    notifyFinished(context, success);
                 }
             };
             Lookup launchCtx = new ProxyLookup(

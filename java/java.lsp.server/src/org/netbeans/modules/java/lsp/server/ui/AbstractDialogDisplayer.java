@@ -46,6 +46,22 @@ public class AbstractDialogDisplayer extends DialogDisplayer {
     @Override
     public Object notify(NotifyDescriptor descriptor) {
         LspServerUtils.avoidClientMessageThread(context);
+
+        // XXX: Subject to better fix
+        // XXX: Possibly use 3.16 protocol's willRename/didRename
+        // XXX: when available
+        StackTraceElement[] stack = new Exception().getStackTrace();
+        if (stack.length > 2 && stack[1] != null) {
+            if (
+                "org.openide.text.DataEditorSupport".equals(stack[1].getClassName()) &&
+                "canClose".equals(stack[1].getMethodName())
+            ) {
+                // when VSCode renames modified file, don't try to save the
+                // original
+                return NotifyDescriptor.CLOSED_OPTION;
+            }
+        }
+
         UIContext ctx = UIContext.find(context);
         NotifyDescriptorAdapter adapter = new NotifyDescriptorAdapter(descriptor, ctx);
         return adapter.clientNotify();

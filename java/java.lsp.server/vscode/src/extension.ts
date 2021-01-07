@@ -194,6 +194,15 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             });
         });
     }));
+    context.subscriptions.push(commands.registerCommand('java.rename.element.at', async (offset) => {
+        const editor = window.activeTextEditor;
+        if (editor) {
+            await commands.executeCommand('editor.action.rename', [
+                editor.document.uri,
+                editor.document.positionAt(offset),
+            ]);
+        }
+    }));
     return Object.freeze({
         version : API_VERSION
     });

@@ -33,12 +33,12 @@ import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -146,7 +146,6 @@ import org.netbeans.modules.editor.java.GoToSupport.Context;
 import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
 import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.completion.JavaCompletionTask;
-import org.netbeans.modules.java.completion.JavaCompletionTask.Options;
 import org.netbeans.modules.java.completion.JavaDocumentationTask;
 import org.netbeans.modules.java.editor.base.semantic.MarkOccurrencesHighlighterBase;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
@@ -155,8 +154,6 @@ import org.netbeans.modules.java.hints.errors.CreateFixBase;
 import org.netbeans.modules.java.hints.errors.ImportClass;
 import org.netbeans.modules.java.hints.infrastructure.CreatorBasedLazyFixList;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
-import org.netbeans.modules.java.hints.introduce.IntroduceHint;
-import org.netbeans.modules.java.hints.introduce.IntroduceKind;
 import org.netbeans.modules.java.hints.project.IncompleteClassPath;
 import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
@@ -168,6 +165,7 @@ import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.impl.indexing.implspi.ActiveDocumentProvider.IndexingAware;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.refactoring.api.Problem;
@@ -194,7 +192,10 @@ import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
+import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ServiceProvider;
+import org.openide.util.lookup.ServiceProviders;
 
 /**
  *
@@ -205,11 +206,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private static final RequestProcessor BACKGROUND_TASKS = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
     private static final RequestProcessor WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
 
-    private final Map<String, Document> openedDocuments = new HashMap<>();
+    private final Map<String, Document> openedDocuments = Collections.synchronizedMap(new HashMap<>());
     private final Map<String, RequestProcessor.Task> diagnosticTasks = new HashMap<>();
     private NbCodeLanguageClient client;
 
     public TextDocumentServiceImpl() {
+        Lookup.getDefault().lookup(RefreshDocument.class).register(this);
     }
 
     @Override
@@ -1586,4 +1588,42 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
      * this hook, if defined, with the method name and parameter.
      */
     static BiConsumer<String, Object> HOOK_NOTIFICATION = null;
+
+    private void reRunDiagnostics() {
+        Set<String> documents;
+
+        synchronized (openedDocuments) {
+            documents = new HashSet<>(openedDocuments.keySet());
+        }
+
+        for (String doc : documents) {
+            runDiagnoticTasks(doc);
+        }
+    }
+
+    @ServiceProviders({
+        @ServiceProvider(service=IndexingAware.class, position=1000),
+        @ServiceProvider(service=RefreshDocument.class, position=1000),
+    })
+    public static final class RefreshDocument implements IndexingAware {
+
+        private final Set<TextDocumentServiceImpl> delegates = new WeakSet<>();
+
+        public synchronized void register(TextDocumentServiceImpl delegate) {
+            delegates.add(delegate);
+        }
+
+        @Override
+        public void indexingComplete(Set<URL> indexedRoots) {
+            Set<TextDocumentServiceImpl> delegates;
+            synchronized (this) {
+                delegates = new HashSet<>(this.delegates);
+            }
+            for (TextDocumentServiceImpl delegate : delegates) {
+                delegate.reRunDiagnostics();
+            }
+        }
+
+    }
+
 }

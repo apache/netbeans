@@ -1184,4 +1184,20 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php80/nullsafeOperator_03.php");
     }
 
+    public void testAttributeSyntax_01() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntax_01.php");
+    }
+
+    public void testAttributeSyntax_02() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntax_02.php");
+    }
+
+    public void testAttributeSyntaxError_01() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntaxError_01.php");
+    }
+
+    public void testAttributeSyntaxError_02() throws Exception {
+        checkErrors("testfiles/parser/php80/attributeSyntaxError_02.php");
+    }
+
 }

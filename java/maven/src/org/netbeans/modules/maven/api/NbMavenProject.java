@@ -40,8 +40,8 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
@@ -63,7 +63,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
-import org.openide.util.Task;
 import org.openide.util.Utilities;
 
 /**
@@ -206,9 +205,9 @@ public final class NbMavenProject {
                         return;
                     }
                     MavenEmbedder online = EmbedderFactory.getOnlineEmbedder();
-                    AggregateProgressHandle hndl = AggregateProgressFactory.createHandle(Progress_Download(),
+                    AggregateProgressHandle hndl = BasicAggregateProgressFactory.createHandle(Progress_Download(),
                             new ProgressContributor[] {
-                                AggregateProgressFactory.createProgressContributor("zaloha") },  //NOI18N
+                                BasicAggregateProgressFactory.createProgressContributor("zaloha") },  //NOI18N
                             ProgressTransferListener.cancellable(), null);
 
                     boolean ok = true;
@@ -440,10 +439,10 @@ public final class NbMavenProject {
                 Set<Artifact> arts = project.getOriginalMavenProject().getArtifacts();
                 ProgressContributor[] contribs = new ProgressContributor[arts.size()];
                 for (int i = 0; i < arts.size(); i++) {
-                    contribs[i] = AggregateProgressFactory.createProgressContributor("multi-" + i); //NOI18N
+                    contribs[i] = BasicAggregateProgressFactory.createProgressContributor("multi-" + i); //NOI18N
                 }
                 String label = javadoc ? Progress_Javadoc() : Progress_Source();
-                AggregateProgressHandle handle = AggregateProgressFactory.createHandle(label,
+                AggregateProgressHandle handle = BasicAggregateProgressFactory.createHandle(label,
                         contribs, ProgressTransferListener.cancellable(), null);
                 handle.start();
                 try {

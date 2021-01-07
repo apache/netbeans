@@ -883,6 +883,33 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/php80/matchExpression_SameLine_02.php", options);
     }
 
+    public void testAttributeSyntax_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php80/attributeSyntax_01.php", options);
+    }
+
+    public void testAttributeSyntax_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php80/attributeSyntax_02a.php", options);
+    }
+
+    public void testAttributeSyntax_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        reformatFileContents("testfiles/formatting/php80/attributeSyntax_02b.php", options);
+    }
+
+    public void testAttributeSyntax_03a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php80/attributeSyntax_03a.php", options);
+    }
+
+    public void testAttributeSyntax_03b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        reformatFileContents("testfiles/formatting/php80/attributeSyntax_03b.php", options);
+    }
+
     public void testNetBeans4970() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/netbeans4970.php", options);

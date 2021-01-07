@@ -24,8 +24,18 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.eclipse.lsp4j.debug.launch.DSPLauncher;
 import org.eclipse.lsp4j.debug.services.IDebugProtocolClient;
+import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
+import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
+import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
+import org.eclipse.lsp4j.jsonrpc.messages.Message;
+import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -39,13 +49,52 @@ public final class Debugger {
     public static void startDebugger(InputStream in, OutputStream out) {
         final DebugAdapterContext context = new DebugAdapterContext();
         NbProtocolServer server = new NbProtocolServer(context);
-        Launcher<IDebugProtocolClient> serverLauncher = DSPLauncher.createServerLauncher(server, in, out);
+        
+        Launcher<IDebugProtocolClient> serverLauncher = DSPLauncher.createServerLauncher(
+                server, in, out, null, ConsumeWithLookup::new);
         context.setClient(serverLauncher.getRemoteProxy());
         Future<Void> runningServer = serverLauncher.startListening();
         try {
             runningServer.get();
         } catch (InterruptedException | ExecutionException ex) {
             Exceptions.printStackTrace(ex);
+        }
+    }
+    
+    private static class ConsumeWithLookup implements MessageConsumer {
+        private final MessageConsumer delegate;
+        private OperationContext topContext;
+
+        public ConsumeWithLookup(MessageConsumer delegate) {
+            this.delegate = delegate;
+        }
+        
+        @Override
+        public void consume(Message message) throws MessageIssueException, JsonRpcException {
+            InstanceContent ic = new InstanceContent();
+            ProxyLookup ll = new ProxyLookup(new AbstractLookup(ic), Lookup.getDefault());
+            // HACK: piggyback on LSP's client.
+            if (topContext == null) {
+                topContext = OperationContext.find(null);
+            }
+            final OperationContext ctx;
+            
+            if (topContext != null) {
+                ctx = topContext.operationContext();
+                ctx.disableCancels();
+                ic.add(ctx);
+            } else {
+                ctx = null;
+            }
+            Lookups.executeWith(ll, () -> {
+                try {
+                    delegate.consume(message);
+                } finally {
+                    if (ctx != null) {
+                        ctx.stop();
+                    }
+                }
+            });
         }
     }
 }

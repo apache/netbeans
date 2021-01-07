@@ -34,7 +34,6 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.extexecution.ExecutionDescriptor.InputProcessorFactory;
 import org.netbeans.api.extexecution.ExecutionDescriptor.InputProcessorFactory2;
 import org.netbeans.api.extexecution.ExecutionDescriptor.LineConvertorFactory;
@@ -379,7 +378,7 @@ public final class ExecutionService {
             return null;
         }
 
-        ProgressHandle handle = ProgressHandleFactory.createHandle(displayName,
+        ProgressHandle handle = ProgressHandle.createHandle(displayName,
                 cancellable, new ProgressAction(inputOutput));
 
         handle.setInitialDelay(0);

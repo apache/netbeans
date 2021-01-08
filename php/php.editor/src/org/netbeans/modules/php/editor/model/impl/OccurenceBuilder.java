@@ -2020,10 +2020,13 @@ class OccurenceBuilder {
                         return;
                     }
                     SingleFieldDeclarationInfo nodeInfo = entry.getKey();
-                    TypeScope typeScope = (TypeScope) entry.getValue().getInScope();
-                    if (typeName.matchesName(typeScope)) {
-                        if (fieldName.matchesName(PhpElementKind.FIELD, nodeInfo.getName())) {
-                            occurences.add(new OccurenceImpl(phpElement, nodeInfo.getRange()));
+                    Scope inScope = entry.getValue().getInScope();
+                    if (inScope instanceof TypeScope) {
+                        TypeScope typeScope = (TypeScope) inScope;
+                        if (typeName.matchesName(typeScope)) {
+                            if (fieldName.matchesName(PhpElementKind.FIELD, nodeInfo.getName())) {
+                                occurences.add(new OccurenceImpl(phpElement, nodeInfo.getRange()));
+                            }
                         }
                     }
                 }

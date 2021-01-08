@@ -31,6 +31,7 @@ import org.netbeans.modules.php.editor.api.elements.TypeNameResolver;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
 import org.netbeans.modules.php.editor.elements.PhpElementImpl.Separator;
 import org.netbeans.modules.php.editor.model.impl.Type;
+import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration;
 import org.openide.util.Exceptions;
 
 /**
@@ -46,6 +47,7 @@ public final class ParameterElementImpl implements ParameterElement {
     private final boolean isReference;
     private final boolean isVariadic;
     private final boolean isUnionType;
+    private final int modifier;
 
     public ParameterElementImpl(
             final String name,
@@ -56,7 +58,8 @@ public final class ParameterElementImpl implements ParameterElement {
             final boolean isRawType,
             final boolean isReference,
             final boolean isVariadic,
-            final boolean isUnionType) {
+            final boolean isUnionType,
+            final int modifier) {
         this.name = name;
         this.isMandatory = isMandatory;
         this.defaultValue = (!isMandatory && defaultValue != null) ? decode(defaultValue) : ""; //NOI18N
@@ -66,6 +69,7 @@ public final class ParameterElementImpl implements ParameterElement {
         this.isReference = isReference;
         this.isVariadic = isVariadic;
         this.isUnionType = isUnionType;
+        this.modifier = modifier;
     }
 
     static List<ParameterElement> parseParameters(final String signature) {
@@ -101,9 +105,10 @@ public final class ParameterElementImpl implements ParameterElement {
             boolean isReference = Integer.parseInt(parts[5]) > 0;
             boolean isVariadic = Integer.parseInt(parts[6]) > 0;
             boolean isUnionType = Integer.parseInt(parts[7]) > 0;
+            int modifier = Integer.parseInt(parts[8]);
             String defValue = parts.length > 3 ? parts[3] : null;
             retval = new ParameterElementImpl(
-                    paramName, defValue, -1, types, isMandatory, isRawType, isReference, isVariadic, isUnionType);
+                    paramName, defValue, -1, types, isMandatory, isRawType, isReference, isVariadic, isUnionType, modifier);
         }
         return retval;
     }
@@ -139,6 +144,8 @@ public final class ParameterElementImpl implements ParameterElement {
         sb.append(isVariadic ? 1 : 0);
         sb.append(Separator.COLON);
         sb.append(isUnionType ? 1 : 0);
+        sb.append(Separator.COLON);
+        sb.append(modifier);
         checkSignature(sb);
         return sb.toString();
     }
@@ -266,6 +273,7 @@ public final class ParameterElementImpl implements ParameterElement {
                 assert isReference() == parsedParameter.isReference() : signature;
                 assert isVariadic() == parsedParameter.isVariadic() : signature;
                 assert isUnionType() == parsedParameter.isUnionType() : signature;
+                assert getModifier() == parsedParameter.getModifier() : signature;
             } catch (NumberFormatException originalException) {
                 final String message = String.format("%s [for signature: %s]", originalException.getMessage(), signature); //NOI18N
                 final NumberFormatException formatException = new NumberFormatException(message);
@@ -290,12 +298,27 @@ public final class ParameterElementImpl implements ParameterElement {
     public String asString(OutputType outputType, TypeNameResolver typeNameResolver) {
         StringBuilder sb = new StringBuilder();
         Set<TypeResolver> typesResolvers = getTypes();
-        boolean forDeclaration = outputType.equals(OutputType.SHORTEN_DECLARATION) || outputType.equals(OutputType.COMPLETE_DECLARATION);
+        boolean forDeclaration = outputType == OutputType.COMPLETE_DECLARATION
+                || outputType == OutputType.COMPLETE_DECLARATION_WITH_MODIFIER
+                || outputType == OutputType.SHORTEN_DECLARATION
+                || outputType == OutputType.SHORTEN_DECLARATION_WITH_MODIFIER;
+
+        if (outputType == OutputType.COMPLETE_DECLARATION_WITH_MODIFIER
+                || outputType == OutputType.SHORTEN_DECLARATION_WITH_MODIFIER) {
+            String modifierString = BodyDeclaration.Modifier.toString(modifier);
+            if (modifierString != null && !modifierString.isEmpty()) {
+                // [NETBEANS-4443] PHP 8.0 Constructor Property Promotion
+                sb.append(modifierString).append(" "); // NOI18N
+            }
+        }
         if (forDeclaration && hasDeclaredType()) {
             if (isUnionType) {
+                boolean firstType = true;
                 for (TypeResolver typeResolver : typesResolvers) {
                     if (typeResolver.isResolved()) {
-                        if (sb.length() > 0) {
+                        if (firstType) {
+                            firstType = false;
+                        } else {
                             sb.append(Type.SEPARATOR);
                         }
                         sb.append(typeNameResolver.resolve(typeResolver.getTypeName(false)));
@@ -329,7 +352,8 @@ public final class ParameterElementImpl implements ParameterElement {
             String defVal = getDefaultValue();
             if (!isMandatory() && StringUtils.hasText(defVal)) {
                 sb.append(" = "); //NOI18N
-                if (outputType.equals(OutputType.COMPLETE_DECLARATION)) {
+                if (outputType == OutputType.COMPLETE_DECLARATION
+                        || outputType == OutputType.COMPLETE_DECLARATION_WITH_MODIFIER) {
                     sb.append(defVal);
                 } else {
                     sb.append(defVal.length() > 20 ? "..." : defVal); //NOI18N
@@ -354,4 +378,8 @@ public final class ParameterElementImpl implements ParameterElement {
         return isUnionType;
     }
 
+    @Override
+    public int getModifier() {
+        return modifier;
+    }
 }

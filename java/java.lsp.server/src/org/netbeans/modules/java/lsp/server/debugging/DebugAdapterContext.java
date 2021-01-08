@@ -33,6 +33,8 @@ import org.eclipse.lsp4j.debug.services.IDebugProtocolClient;
 
 import org.netbeans.modules.java.lsp.server.debugging.breakpoints.BreakpointsManager;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
+import org.netbeans.modules.java.lsp.server.progress.LspInternalHandle;
+import org.netbeans.modules.progress.spi.InternalHandle;
 import org.openide.util.Pair;
 
 public final class DebugAdapterContext {
@@ -50,6 +52,7 @@ public final class DebugAdapterContext {
     private Charset debuggeeEncoding;
     private boolean isVmStopOnEntry = false;
     private boolean isDebugMode = true;
+    private InternalHandle processExecutorHandle;
 
     private final AtomicInteger lastSourceReferenceId = new AtomicInteger(0);
     private final Map<Integer, Pair<URI, String>> sourcesById = new ConcurrentHashMap<>();
@@ -115,6 +118,19 @@ public final class DebugAdapterContext {
 
     void setClientPathsAreUri(boolean clientPathsAreUri) {
         this.clientPathsAreUri = clientPathsAreUri;
+    }
+    
+    public boolean requestProcessTermination() {
+        if (processExecutorHandle != null) {
+            ((LspInternalHandle)processExecutorHandle).forceRequestCancel();
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public void setProcessExecutorHandle(InternalHandle h) {
+        this.processExecutorHandle = h;
     }
 
     public String getClientPath(String debuggerPath) {

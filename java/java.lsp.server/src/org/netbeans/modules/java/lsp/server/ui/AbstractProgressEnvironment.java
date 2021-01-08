@@ -82,7 +82,7 @@ public abstract class AbstractProgressEnvironment implements ProgressEnvironment
             }
             client = ctx.getClient();
         }
-        if (c != null && (ctx.isDisableCancels() || maskCancellablesPattern().matcher(c.getClass().getName()).matches())) {
+        if (c != null && maskCancellablesPattern().matcher(c.getClass().getName()).matches()) {
             c = null;
         }
         return new LspInternalHandle(

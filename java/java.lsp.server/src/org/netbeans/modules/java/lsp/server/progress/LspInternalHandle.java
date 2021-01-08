@@ -56,6 +56,8 @@ public class LspInternalHandle extends InternalHandle {
      */
     private boolean started;
     
+    private boolean explicitCancelRequest;
+    
     private static Field controllerField;
 
     public LspInternalHandle(OperationContext opContext, 
@@ -65,6 +67,19 @@ public class LspInternalHandle extends InternalHandle {
         this.lspClient = lspClient;
         this.opContext = opContext;
         this.controllerProvider = controllerProvider;
+        if (opContext != null) {
+            opContext.internalHandleCreated(this);
+        }
+    }
+
+    public void forceRequestCancel() {
+        explicitCancelRequest = true;
+        requestCancel();
+    }
+
+    @Override
+    public boolean isAllowCancel() {
+        return super.isAllowCancel() && (explicitCancelRequest || !opContext.isDisableCancels());
     }
 
     public OperationContext getContext() {

@@ -28,10 +28,12 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.codehaus.groovy.ast.ClassHelper;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ConstructorNode;
@@ -476,7 +478,12 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             ClassNode superType = type.getSuperClass();
 
             boolean hadPrivateConstructor = false;
-            for (ConstructorNode c : superType.getDeclaredConstructors()) {
+            
+            List<ConstructorNode> constructorNodes = superType
+                    .getDeclaredConstructors().stream()
+                    .sorted(Comparator.comparing(ConstructorNode::getTypeDescriptor))
+                    .collect(Collectors.toList());
+            for (ConstructorNode c : constructorNodes) {
                 // Only look at things we can actually call
                 if (c.isPublic() || c.isProtected()) {
                     return c.getParameters();

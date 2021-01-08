@@ -121,8 +121,12 @@ public final class DebugAdapterContext {
     }
     
     public boolean requestProcessTermination() {
-        if (processExecutorHandle != null) {
-            ((LspInternalHandle)processExecutorHandle).forceRequestCancel();
+        InternalHandle ih;
+        synchronized (this) {
+            ih = processExecutorHandle;
+        }
+        if (ih != null) {
+            ((LspInternalHandle)ih).forceRequestCancel();
             return true;
         } else {
             return false;
@@ -130,7 +134,9 @@ public final class DebugAdapterContext {
     }
     
     public void setProcessExecutorHandle(InternalHandle h) {
-        this.processExecutorHandle = h;
+        synchronized (this) {
+            this.processExecutorHandle = h;
+        }
     }
 
     public String getClientPath(String debuggerPath) {

@@ -173,7 +173,6 @@ public class JPDADebuggerImpl extends JPDADebugger {
     private AbstractDICookie            attachingCookie;
     private JavaEngineProvider          javaEngineProvider;
     private Set<String>                 languages;
-    private String                      lastStratumn;
     private ContextProvider             lookupProvider;
     private ObjectTranslation           threadsTranslation;
     private ObjectTranslation           localsTranslation;
@@ -2387,12 +2386,9 @@ public class JPDADebuggerImpl extends JPDADebugger {
                 languages.add (language);
             }
         } // for
-        if ( (stratum != null) &&
-             (!stratum.equals (lastStratumn))
-        ) {
+        if (stratum != null) {
             javaEngineProvider.getSession ().setCurrentLanguage (stratum);
         }
-        lastStratumn = stratum;
     }
 
     private Set<JSR45DebuggerEngineProvider> jsr45EngineProviders;

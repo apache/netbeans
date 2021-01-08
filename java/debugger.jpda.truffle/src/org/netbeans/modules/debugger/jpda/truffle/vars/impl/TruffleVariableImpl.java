@@ -29,6 +29,7 @@ import org.netbeans.modules.debugger.jpda.models.AbstractVariable;
 import org.netbeans.modules.debugger.jpda.truffle.LanguageName;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
+import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
 import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
 import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariable;
 import org.openide.util.Exceptions;
@@ -209,8 +210,9 @@ public class TruffleVariableImpl implements TruffleVariable {
 
     static ObjectVariable setValue(JPDADebugger debugger, ObjectVariable guestObject, String newExpression) {
         CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(debugger.getCurrentThread());
-        if (currentPCInfo != null) {
-            ObjectVariable selectedFrame = currentPCInfo.getSelectedStackFrame().getStackFrameInstance();
+        TruffleStackFrame selectedStackFrame;
+        if (currentPCInfo != null && (selectedStackFrame = currentPCInfo.getSelectedStackFrame()) != null) {
+            ObjectVariable selectedFrame = selectedStackFrame.getStackFrameInstance();
             try {
                 Variable retVar = guestObject.invokeMethod(METHOD_SET_VALUE, METHOD_SET_VALUE_SIG,
                                                              new Variable[] { selectedFrame, debugger.createMirrorVar(newExpression) });

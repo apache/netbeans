@@ -124,7 +124,10 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.TextDocumentService;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
+import org.netbeans.api.java.queries.SourceJavadocAttacher;
+import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy;
@@ -187,6 +190,7 @@ import org.netbeans.spi.editor.hints.EnhancedFix;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.LazyFixList;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.hints.JavaFix;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -817,6 +821,64 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         if (target[0] != null && target[0].success) {
             if (target[0].offsetToOpen < 0) {
                 Object[] openInfo = ElementOpenAccessor.getInstance().getOpenInfo(target[0].cpInfo, target[0].elementToOpen, new AtomicBoolean());
+                if (openInfo == null && target[0].resourceName != null) {
+                    // try to attach sources
+                    final ClassPath cp = ClassPathSupport.createProxyClassPath(
+                            target[0].cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT),
+                            target[0].cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE),
+                            target[0].cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE));
+                    final FileObject resource = cp.findResource(target[0].resourceName);
+                    if (resource != null) {
+                        final FileObject root = cp.findOwnerRoot(resource);
+                        if (root != null) {
+                            final CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> future = new CompletableFuture<>();
+                            SourceJavadocAttacher.attachSources(root.toURL(), new SourceJavadocAttacher.AttachmentListener() {
+                                @Override
+                                public void attachmentSucceeded() {
+                                    Object[] openInfo = ElementOpenAccessor.getInstance().getOpenInfo(target[0].cpInfo, target[0].elementToOpen, new AtomicBoolean());
+                                    if (openInfo != null && (int) openInfo[1] != (-1) && (int) openInfo[2] != (-1) && openInfo[3] != null) {
+                                        FileObject file = (FileObject) openInfo[0];
+                                        int start = (int) openInfo[1];
+                                        int end = (int) openInfo[2];
+                                        LineMap lm = (LineMap) openInfo[3];
+                                        future.complete(Either.forLeft(Collections.singletonList(new Location(Utils.toUri(file),
+                                                new Range(Utils.createPosition(lm, start), Utils.createPosition(lm, end))))));
+                                    }
+                                }
+                                @Override
+                                public void attachmentFailed() {
+                                    try {
+                                        FileObject generated = org.netbeans.modules.java.classfile.CodeGenerator.generateCode(target[0].cpInfo, target[0].elementToOpen);
+                                        if (generated != null) {
+                                            final int[] pos = new int[] {-1};
+                                            try {
+                                                JavaSource.create(target[0].cpInfo, generated).runUserActionTask(new Task<CompilationController>() {
+                                                    @Override public void run(CompilationController parameter) throws Exception {
+                                                        parameter.toPhase(JavaSource.Phase.RESOLVED);
+                                                        Element el = target[0].elementToOpen.resolve(parameter);
+                                                        if (el != null) {
+                                                            TreePath p = parameter.getTrees().getPath(el);
+                                                            if (p != null) {
+                                                                pos[0] = (int) parameter.getTrees().getSourcePositions().getStartPosition(p.getCompilationUnit(), p.getLeaf());
+                                                            }
+                                                        }
+                                                    }
+                                                }, true);
+                                            } catch (IOException ex) {
+                                            }
+                                            int offset = pos[0] != -1 ? pos[0] : 0;
+                                            future.complete(Either.forLeft(Collections.singletonList(new Location(Utils.toUri(generated), new Range(Utils.createPosition(generated, offset), Utils.createPosition(generated, offset))))));
+                                            return;
+                                        }
+                                    } catch (Exception e) {
+                                    }
+                                    future.complete(Either.forLeft((Collections.emptyList())));
+                                }
+                            });
+                            return future;
+                        }
+                    }
+                }
                 if (openInfo != null && (int) openInfo[1] != (-1) && (int) openInfo[2] != (-1) && openInfo[3] != null) {
                     FileObject file = (FileObject) openInfo[0];
                     int start = (int) openInfo[1];

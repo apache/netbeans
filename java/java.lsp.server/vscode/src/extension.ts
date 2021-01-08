@@ -29,7 +29,7 @@ import {
     Message,
     MessageType,
     LogMessageNotification,
-    HandlerResult
+    RevealOutputChannelOn
 } from 'vscode-languageclient';
 
 import * as net from 'net';
@@ -395,7 +395,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 ]
             },
             outputChannel: log,
-            revealOutputChannelOn: 3, // error
+            revealOutputChannelOn: RevealOutputChannelOn.Never,
             progressOnInitialization: true,
             initializationOptions : {
                 'nbcodeCapabilities' : {

@@ -121,6 +121,7 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.TextDocumentService;
@@ -162,6 +163,7 @@ import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ui.ElementOpenAccessor;
 import org.netbeans.modules.parsing.api.ParserManager;
@@ -901,18 +903,18 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 p = query[0].checkParameters();
                 if (cancel.get()) return ;
                 if (p != null && p.isFatal()) {
-                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    ErrorUtilities.completeExceptionally(result, p.getMessage(), ResponseErrorCode.UnknownErrorCode);
                     return ;
                 }
                 p = query[0].preCheck();
                 if (p != null && p.isFatal()) {
-                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    ErrorUtilities.completeExceptionally(result, p.getMessage(), ResponseErrorCode.UnknownErrorCode);
                     return ;
                 }
                 if (cancel.get()) return ;
                 p = query[0].prepare(refactoring);
                 if (p != null && p.isFatal()) {
-                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    ErrorUtilities.completeExceptionally(result, p.getMessage(), ResponseErrorCode.UnknownErrorCode);
                     return ;
                 }
                 for (RefactoringElement re : refactoring.getRefactoringElements()) {
@@ -1391,18 +1393,18 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 p = refactoring[0].checkParameters();
                 if (cancel.get()) return ;
                 if (p != null && p.isFatal()) {
-                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    ErrorUtilities.completeExceptionally(result, p.getMessage(), ResponseErrorCode.UnknownErrorCode);
                     return ;
                 }
                 p = refactoring[0].preCheck();
                 if (p != null && p.isFatal()) {
-                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    ErrorUtilities.completeExceptionally(result, p.getMessage(), ResponseErrorCode.UnknownErrorCode);
                     return ;
                 }
                 if (cancel.get()) return ;
                 p = refactoring[0].prepare(session);
                 if (p != null && p.isFatal()) {
-                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    ErrorUtilities.completeExceptionally(result, p.getMessage(), ResponseErrorCode.UnknownErrorCode);
                     return ;
                 }
                 //TODO: check client capabilities!

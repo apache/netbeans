@@ -18,14 +18,17 @@
  */
 package org.netbeans.modules.java.j2seplatform.queries;
 
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -34,7 +37,6 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.queries.SourceJavadocAttacher.AttachmentListener;
 import org.netbeans.spi.java.project.support.JavadocAndSourceRootDetection;
 import org.netbeans.spi.java.queries.SourceJavadocAttacherImplementation;
-import org.netbeans.spi.java.queries.SourceJavadocAttacherImplementation.Definer;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -111,23 +113,36 @@ public final class SourceJavadocAttacherUtil {
         assert root != null;
         assert browseCall != null;
         assert convertor != null;
-        final SelectRootsPanel selectSources = new SelectRootsPanel(
-                SelectRootsPanel.SOURCES,
-                root,
-                attachedRoots,
-                browseCall,
-                convertor,
-                plugin);
-        final DialogDescriptor dd = new DialogDescriptor(selectSources, Bundle.TXT_SelectSources());
-        dd.setButtonListener(selectSources);
-        if (DialogDisplayer.getDefault().notify(dd) == DialogDescriptor.OK_OPTION) {
-            try {
-                return selectSources.getRoots();
-            } catch (Exception e) {
-                DialogDisplayer.getDefault().notify(
-                        new NotifyDescriptor.Message(
-                            Bundle.TXT_InvalidSourceRoot(),
-                            NotifyDescriptor.ERROR_MESSAGE));
+        if (GraphicsEnvironment.isHeadless()) {
+            List<? extends URI> sources = plugin.getSources(root, () -> false).stream().map(url -> {
+                try {
+                    return url.toURI();
+                } catch (URISyntaxException ex) {
+                }
+                return null;
+            }).filter(uri -> uri != null).collect(Collectors.toList());
+            if (!sources.isEmpty()) {
+                return sources;
+            }
+        } else {
+            final SelectRootsPanel selectSources = new SelectRootsPanel(
+                    SelectRootsPanel.SOURCES,
+                    root,
+                    attachedRoots,
+                    browseCall,
+                    convertor,
+                    plugin);
+            final DialogDescriptor dd = new DialogDescriptor(selectSources, Bundle.TXT_SelectSources());
+            dd.setButtonListener(selectSources);
+            if (DialogDisplayer.getDefault().notify(dd) == DialogDescriptor.OK_OPTION) {
+                try {
+                    return selectSources.getRoots();
+                } catch (Exception e) {
+                    DialogDisplayer.getDefault().notify(
+                            new NotifyDescriptor.Message(
+                                Bundle.TXT_InvalidSourceRoot(),
+                                NotifyDescriptor.ERROR_MESSAGE));
+                }
             }
         }
         return null;

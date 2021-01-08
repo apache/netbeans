@@ -35,6 +35,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -863,7 +864,7 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
                     int startOff = (int) copy.getTrees().getSourcePositions().getStartPosition(copy.getCompilationUnit(), firstSt);
                     int endOff = (int) copy.getTrees().getSourcePositions().getEndPosition(copy.getCompilationUnit(), lastSt);
                     
-                    if (usedAfter || !IntroduceHint.shouldReplaceDuplicate(doc, startOff, endOff)) {
+                    if (usedAfter || !GraphicsEnvironment.isHeadless() && !IntroduceHint.shouldReplaceDuplicate(doc, startOff, endOff)) {
                         continue;
                     }
                     List<StatementTree> newStatements = new LinkedList<StatementTree>();

@@ -386,7 +386,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <implementation-version/>
+                        <specification-version>9.13</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

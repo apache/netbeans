@@ -33,6 +33,7 @@ import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -170,6 +171,7 @@ import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.impl.indexing.implspi.ActiveDocumentProvider.IndexingAware;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.refactoring.api.Problem;
@@ -197,7 +199,9 @@ import org.openide.text.PositionBounds;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
+import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -213,6 +217,36 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private NbCodeLanguageClient client;
 
     public TextDocumentServiceImpl() {
+        Lookup.getDefault().lookup(RefreshDocument.class).register(this);
+    }
+
+    private void reRunDiagnostics() {
+        Set<String> documents = new HashSet<>(openedDocuments.keySet());
+
+        for (String doc : documents) {
+            runDiagnoticTasks(doc);
+        }
+    }
+
+    @ServiceProvider(service=IndexingAware.class, position=0)
+    public static final class RefreshDocument implements IndexingAware {
+
+        private final Set<TextDocumentServiceImpl> delegates = new WeakSet<>();
+
+        public synchronized void register(TextDocumentServiceImpl delegate) {
+            delegates.add(delegate);
+        }
+
+        @Override
+        public void indexingComplete(Set<URL> indexedRoots) {
+            TextDocumentServiceImpl[] delegates;
+            synchronized (this) {
+                delegates = this.delegates.toArray(new TextDocumentServiceImpl[this.delegates.size()]);
+            }
+            for (TextDocumentServiceImpl delegate : delegates) {
+                delegate.reRunDiagnostics();
+            }
+        }
     }
 
     @Override
@@ -256,8 +290,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             return CompletableFuture.completedFuture(Either.<List<CompletionItem>, CompletionList>forRight(completionList));
         } catch (IOException | ParseException ex) {
             throw new IllegalStateException(ex);
-            }
         }
+    }
 
     public static final class CompletionData {
         public String uri;

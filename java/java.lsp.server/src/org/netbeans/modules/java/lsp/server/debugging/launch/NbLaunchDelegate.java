@@ -22,6 +22,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -41,6 +42,8 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.NbSourceProvider;
+import org.netbeans.modules.java.lsp.server.progress.OperationContext;
+import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
@@ -114,6 +117,12 @@ public abstract class NbLaunchDelegate {
             );
             Lookups.executeWith(launchCtx, () -> {
                 providerAndCommand.first().invokeAction(providerAndCommand.second(), Lookups.fixed(toRun, ioContext, progress));
+                
+                OperationContext ctx = OperationContext.find(Lookup.getDefault());
+                List<InternalHandle> created = ctx.getOperationHandles();
+                if (!created.isEmpty()) {
+                    context.setProcessExecutorHandle(created.get(0));
+                }
             });
         }).exceptionally((t) -> {
             launchFuture.completeExceptionally(t);

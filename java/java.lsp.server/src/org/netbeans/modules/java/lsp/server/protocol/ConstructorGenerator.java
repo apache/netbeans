@@ -110,9 +110,14 @@ public final class ConstructorGenerator extends CodeGenerator {
         }
         List<QuickPickItem> constructors;
         if (typeElement.getKind() != ElementKind.ENUM && inheritedConstructors.size() == 1) {
-            QuickPickItem item = new QuickPickItem(createLabel(info, inheritedConstructors.get(0)));
-            item.setUserData(new ElementData(inheritedConstructors.get(0)));
-            constructors = Collections.singletonList(item);
+            if (uninitializedFields.isEmpty() && inheritedConstructors.get(0).getParameters().isEmpty()
+                    && ElementFilter.constructorsIn(typeElement.getEnclosedElements()).stream().filter(ctor -> ctor.getParameters().isEmpty() && !info.getElementUtilities().isSynthetic(ctor)).count() > 0) {
+                constructors = Collections.emptyList();
+            } else {
+                QuickPickItem item = new QuickPickItem(createLabel(info, inheritedConstructors.get(0)));
+                item.setUserData(new ElementData(inheritedConstructors.get(0)));
+                constructors = Collections.singletonList(item);
+            }
         } else if (inheritedConstructors.size() > 1) {
             constructors = new ArrayList<>(inheritedConstructors.size());
             for (ExecutableElement constructorElement : inheritedConstructors) {
@@ -190,6 +195,9 @@ public final class ConstructorGenerator extends CodeGenerator {
         }
     }
 
+    @NbBundle.Messages({
+        "DN_ConstructorAlreadyExists=Given constructor already exists",
+    })
     private void generate(NbCodeLanguageClient client, String uri, int offset, List<QuickPickItem> constructors, List<QuickPickItem> fields) {
         try {
             FileObject file = Utils.fromUri(uri);
@@ -214,6 +222,8 @@ public final class ConstructorGenerator extends CodeGenerator {
                 }
             });
             client.applyEdit(new ApplyWorkspaceEditParams(new WorkspaceEdit(Collections.singletonMap(uri, edits))));
+        } catch (GeneratorUtils.DuplicateMemberException dme) {
+            client.showMessage(new MessageParams(MessageType.Info, Bundle.DN_ConstructorAlreadyExists()));
         } catch (IOException | IllegalArgumentException ex) {
             client.logMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }

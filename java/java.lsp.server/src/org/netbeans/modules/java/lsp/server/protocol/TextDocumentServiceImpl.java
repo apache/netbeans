@@ -122,6 +122,7 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.TextDocumentService;
@@ -168,6 +169,7 @@ import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ui.ElementOpenAccessor;
 import org.netbeans.modules.parsing.api.ParserManager;
@@ -967,18 +969,18 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 p = query[0].checkParameters();
                 if (cancel.get()) return ;
                 if (p != null && p.isFatal()) {
-                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    ErrorUtilities.completeExceptionally(result, p.getMessage(), ResponseErrorCode.UnknownErrorCode);
                     return ;
                 }
                 p = query[0].preCheck();
                 if (p != null && p.isFatal()) {
-                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    ErrorUtilities.completeExceptionally(result, p.getMessage(), ResponseErrorCode.UnknownErrorCode);
                     return ;
                 }
                 if (cancel.get()) return ;
                 p = query[0].prepare(refactoring);
                 if (p != null && p.isFatal()) {
-                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    ErrorUtilities.completeExceptionally(result, p.getMessage(), ResponseErrorCode.UnknownErrorCode);
                     return ;
                 }
                 for (RefactoringElement re : refactoring.getRefactoringElements()) {
@@ -1262,32 +1264,35 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     for (ErrorDescription err : IntroduceHint.computeError(cc, Utils.getOffset(doc, range.getStart()), Utils.getOffset(doc, range.getEnd()), new EnumMap<IntroduceKind, Fix>(IntroduceKind.class), new EnumMap<IntroduceKind, String>(IntroduceKind.class), new AtomicBoolean())) {
                         for (Fix fix : err.getFixes().getFixes()) {
                             if (fix instanceof IntroduceFixBase) {
-                                ModificationResult changes = ((IntroduceFixBase) fix).getModificationResult();
-                                if (changes != null) {
-                                    List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-                                    Set<? extends FileObject> fos = changes.getModifiedFileObjects();
-                                    if (fos.size() == 1) {
-                                        FileObject fileObject = fos.iterator().next();
-                                        List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
-                                        if (diffs != null) {
-                                            List<TextEdit> edits = new ArrayList<>();
-                                            for (ModificationResult.Difference diff : diffs) {
-                                                String newText = diff.getNewText();
-                                                edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
-                                                                                 Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
-                                                                       newText != null ? newText : ""));
+                                try {
+                                    ModificationResult changes = ((IntroduceFixBase) fix).getModificationResult();
+                                    if (changes != null) {
+                                        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
+                                        Set<? extends FileObject> fos = changes.getModifiedFileObjects();
+                                        if (fos.size() == 1) {
+                                            FileObject fileObject = fos.iterator().next();
+                                            List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
+                                            if (diffs != null) {
+                                                List<TextEdit> edits = new ArrayList<>();
+                                                for (ModificationResult.Difference diff : diffs) {
+                                                    String newText = diff.getNewText();
+                                                    edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
+                                                                                     Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),
+                                                                           newText != null ? newText : ""));
+                                                }
+                                                documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
                                             }
-                                            documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
+                                            CodeAction codeAction = new CodeAction(fix.getText());
+                                            codeAction.setKind(CodeActionKind.RefactorExtract);
+                                            codeAction.setEdit(new WorkspaceEdit(documentChanges));
+                                            int renameOffset = ((IntroduceFixBase) fix).getNameOffset(changes);
+                                            if (renameOffset >= 0) {
+                                                codeAction.setCommand(new Command("Rename", "java.rename.element.at", Collections.singletonList(renameOffset)));
+                                            }
+                                            result.add(Either.forRight(codeAction));
                                         }
-                                        CodeAction codeAction = new CodeAction(fix.getText());
-                                        codeAction.setKind(CodeActionKind.RefactorExtract);
-                                        codeAction.setEdit(new WorkspaceEdit(documentChanges));
-                                        int renameOffset = ((IntroduceFixBase) fix).getNameOffset(changes);
-                                        if (renameOffset >= 0) {
-                                            codeAction.setCommand(new Command("Rename", "java.rename.element.at", Collections.singletonList(renameOffset)));
-                                        }
-                                        result.add(Either.forRight(codeAction));
                                     }
+                                } catch (GeneratorUtils.DuplicateMemberException dme) {
                                 }
                             }
                         }
@@ -1457,18 +1462,18 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 p = refactoring[0].checkParameters();
                 if (cancel.get()) return ;
                 if (p != null && p.isFatal()) {
-                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    ErrorUtilities.completeExceptionally(result, p.getMessage(), ResponseErrorCode.UnknownErrorCode);
                     return ;
                 }
                 p = refactoring[0].preCheck();
                 if (p != null && p.isFatal()) {
-                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    ErrorUtilities.completeExceptionally(result, p.getMessage(), ResponseErrorCode.UnknownErrorCode);
                     return ;
                 }
                 if (cancel.get()) return ;
                 p = refactoring[0].prepare(session);
                 if (p != null && p.isFatal()) {
-                    result.completeExceptionally(new IllegalStateException(p.getMessage()));
+                    ErrorUtilities.completeExceptionally(result, p.getMessage(), ResponseErrorCode.UnknownErrorCode);
                     return ;
                 }
                 //TODO: check client capabilities!

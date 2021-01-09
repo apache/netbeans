@@ -190,9 +190,6 @@ public final class OperationContext {
     }
     
     private Either<String, Number> addHandle(Either<String, Number> token, InternalHandle h) {
-        synchronized (this) {
-            createdHandles.add(h);
-        }
         top.registerHandle(token, h);
         return token;
     }
@@ -265,5 +262,11 @@ public final class OperationContext {
     
     public synchronized List<InternalHandle> getOperationHandles() {
         return new ArrayList<>(createdHandles);
+    }
+    
+    void internalHandleCreated(InternalHandle h) {
+        synchronized (this) {
+            createdHandles.add(h);
+        }
     }
 }

@@ -49,6 +49,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
+import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.CastExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
@@ -736,7 +737,12 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            if (checkUnusedFormalParameters(preferences) && !isInInheritedMethod) {
+            if (BodyDeclaration.Modifier.isVisibilityModifier(node.getModifier())) {
+                // [NETBEANS-4443] PHP 8.0 Construcotr Property Promotion
+                forceVariableAsUsed = true;
+                scan(node.getParameterName());
+                forceVariableAsUsed = false;
+            } else if (checkUnusedFormalParameters(preferences) && !isInInheritedMethod) {
                 scan(node.getParameterName());
             } else {
                 forceVariableAsUsed = true;

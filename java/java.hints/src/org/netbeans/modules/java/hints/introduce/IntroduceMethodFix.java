@@ -439,7 +439,16 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
 
     @Override
     public ModificationResult getModificationResult() throws IOException {
-        return js.runModificationTask(new TaskImpl(EnumSet.of(Modifier.PRIVATE), "method", targets.iterator().next(), true, null, false));
+        ModificationResult result = null;
+        int counter = 0;
+        do {
+            try {
+                result = js.runModificationTask(new TaskImpl(EnumSet.of(Modifier.PRIVATE), "method" + (counter != 0 ? String.valueOf(counter) : ""), targets.iterator().next(), true, null, false));
+            } catch (Exception e) {
+                counter++;
+            }
+        } while (result == null && counter < 10);
+        return result;
     }
 
     static class OccurrencePositionComparator implements Comparator<Occurrence> {

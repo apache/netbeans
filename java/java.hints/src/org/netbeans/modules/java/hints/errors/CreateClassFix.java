@@ -320,9 +320,7 @@ public abstract class CreateClassFix extends CreateFixBase implements EnhancedFi
                         default: throw new IllegalStateException();
                     }
                     CompilationUnitTree cut = make.CompilationUnit(targetSourceRoot, packageName.replace('.', '/') + '/' + simpleName + ".java", Collections.<ImportTree>emptyList(), Collections.singletonList(source));
-                    ClassTree nue = createConstructor(working, new TreePath(new TreePath(cut), source));
                     working.rewrite(null, cut);
-                    working.rewrite(source, nue);
                 }
             });
         }

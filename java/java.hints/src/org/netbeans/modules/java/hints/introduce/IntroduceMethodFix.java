@@ -35,6 +35,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -438,7 +439,16 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
 
     @Override
     public ModificationResult getModificationResult() throws IOException {
-        return js.runModificationTask(new TaskImpl(EnumSet.of(Modifier.PRIVATE), "method", targets.iterator().next(), true, null, false));
+        ModificationResult result = null;
+        int counter = 0;
+        do {
+            try {
+                result = js.runModificationTask(new TaskImpl(EnumSet.of(Modifier.PRIVATE), "method" + (counter != 0 ? String.valueOf(counter) : ""), targets.iterator().next(), true, null, false));
+            } catch (Exception e) {
+                counter++;
+            }
+        } while (result == null && counter < 10);
+        return result;
     }
 
     static class OccurrencePositionComparator implements Comparator<Occurrence> {
@@ -863,7 +873,7 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
                     int startOff = (int) copy.getTrees().getSourcePositions().getStartPosition(copy.getCompilationUnit(), firstSt);
                     int endOff = (int) copy.getTrees().getSourcePositions().getEndPosition(copy.getCompilationUnit(), lastSt);
                     
-                    if (usedAfter || !IntroduceHint.shouldReplaceDuplicate(doc, startOff, endOff)) {
+                    if (usedAfter || !GraphicsEnvironment.isHeadless() && !IntroduceHint.shouldReplaceDuplicate(doc, startOff, endOff)) {
                         continue;
                     }
                     List<StatementTree> newStatements = new LinkedList<StatementTree>();

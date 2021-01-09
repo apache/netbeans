@@ -27,6 +27,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -199,7 +200,16 @@ final class IntroduceExpressionBasedMethodFix extends IntroduceFixBase implement
 
     @Override
     public ModificationResult getModificationResult() throws IOException {
-        return getModificationResult("method", targets.iterator().next(), true, EnumSet.of(Modifier.PRIVATE), false, null);
+        ModificationResult result = null;
+        int counter = 0;
+        do {
+            try {
+                result = getModificationResult("method" + (counter != 0 ? String.valueOf(counter) : ""), targets.iterator().next(), true, EnumSet.of(Modifier.PRIVATE), false, null);
+            } catch (Exception e) {
+                counter++;
+            }
+        } while (result == null && counter < 10);
+        return result;
     }
 
     private ModificationResult getModificationResult(final String name, final TargetDescription target, final boolean replaceOther, final Set<Modifier> access, final boolean redoReferences, final MemberSearchResult searchResult) throws IOException {
@@ -259,7 +269,7 @@ final class IntroduceExpressionBasedMethodFix extends IntroduceFixBase implement
                         TreePath firstLeaf = desc.getOccurrenceRoot();
                         int startOff = (int) copy.getTrees().getSourcePositions().getStartPosition(copy.getCompilationUnit(), firstLeaf.getLeaf());
                         int endOff = (int) copy.getTrees().getSourcePositions().getEndPosition(copy.getCompilationUnit(), firstLeaf.getLeaf());
-                        if (!IntroduceHint.shouldReplaceDuplicate(doc, startOff, endOff)) {
+                        if (!GraphicsEnvironment.isHeadless() && !IntroduceHint.shouldReplaceDuplicate(doc, startOff, endOff)) {
                             continue;
                         }
                         //XXX:

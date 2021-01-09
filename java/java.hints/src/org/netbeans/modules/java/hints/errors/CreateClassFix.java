@@ -309,7 +309,7 @@ public abstract class CreateClassFix extends CreateFixBase implements EnhancedFi
                             source = make.Class(make.Modifiers(EnumSet.of(Modifier.PUBLIC)), simpleName, Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList(), Collections.<Tree>emptyList());
                             break;
                         case INTERFACE:
-                            source = make.Interface(make.Modifiers(EnumSet.of(Modifier.PUBLIC)), simpleName, Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList());
+                            source = make.Interface(make.Modifiers(EnumSet.of(Modifier.PUBLIC)), simpleName, Collections.<TypeParameterTree>emptyList(), Collections.<Tree>emptyList(), Collections.<Tree>emptyList());
                             break;
                         case ANNOTATION_TYPE:
                             source = make.AnnotationType(make.Modifiers(EnumSet.of(Modifier.PUBLIC)), simpleName, Collections.<Tree>emptyList());

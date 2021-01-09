@@ -171,9 +171,11 @@ public class BrokenReferencesImpl implements BrokenReferencesImplementation {
             }
             BrokenReferencesCustomizer.performProblemFix(or, (result) -> {
                 seen.add(or);
-                int importance = result.isResolved() ? 0 : StatusDisplayer.IMPORTANCE_ERROR_HIGHLIGHT;
-                StatusDisplayer.getDefault().setStatusText(result.getMessage(), importance);
-                
+                final String msg = result.getMessage();
+                if (msg != null) {
+                    int importance = result.isResolved() ? 0 : StatusDisplayer.IMPORTANCE_ERROR_HIGHLIGHT;
+                    StatusDisplayer.getDefault().setStatusText(msg, importance);
+                }
                 // next round:
                 fixAllProblems(model, seen);
             });

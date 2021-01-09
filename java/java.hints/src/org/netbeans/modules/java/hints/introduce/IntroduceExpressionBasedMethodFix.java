@@ -265,7 +265,7 @@ final class IntroduceExpressionBasedMethodFix extends IntroduceFixBase implement
                     //handle duplicates
                     Document doc = copy.getDocument();
                     Pattern p = Pattern.createPatternWithRemappableVariables(expression, parameters, true);
-                    for (Occurrence desc : Matcher.create(copy).setCancel(new AtomicBoolean()).match(p)) {
+                    for (Occurrence desc : Matcher.create(copy).setSearchRoot(pathToClass).setCancel(new AtomicBoolean()).match(p)) {
                         TreePath firstLeaf = desc.getOccurrenceRoot();
                         int startOff = (int) copy.getTrees().getSourcePositions().getStartPosition(copy.getCompilationUnit(), firstLeaf.getLeaf());
                         int endOff = (int) copy.getTrees().getSourcePositions().getEndPosition(copy.getCompilationUnit(), firstLeaf.getLeaf());

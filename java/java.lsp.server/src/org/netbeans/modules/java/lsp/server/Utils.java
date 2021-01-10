@@ -27,10 +27,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.nio.file.Files;
 import java.util.Properties;
 import javax.lang.model.element.ElementKind;
 import javax.swing.text.Document;
@@ -131,18 +129,11 @@ public class Utils {
         return LineDocumentUtils.getLineStartFromIndex((LineDocument) doc, pos.getLine()) + pos.getCharacter();
     }
 
-    public static String toUri(FileObject file) {
+    public static synchronized String toUri(FileObject file) {
         if (FileUtil.isArchiveArtifact(file)) {
             //VS code cannot open jar:file: URLs, workaround:
-            //another workaround, should be:
-            //File cacheDir = Places.getCacheSubfile("java-server");
-            //but that locks up VS Code, using a temp directory:
-            File cacheDir;
-            try {
-                cacheDir = Files.createTempDirectory("nbcode").toFile();
-            } catch (IOException ex) {
-                throw new UncheckedIOException(ex);
-            }
+            File cacheDir = getCacheDir();
+            cacheDir.mkdirs();
             File segments = new File(cacheDir, "segments");
             Properties props = new Properties();
 
@@ -184,8 +175,8 @@ public class Utils {
         return file.toURI().toString();
     }
 
-    public static FileObject fromUri(String uri) throws MalformedURLException {
-        File cacheDir = Places.getCacheSubfile("java-server");
+    public static synchronized FileObject fromUri(String uri) throws MalformedURLException {
+        File cacheDir = getCacheDir();
         URI uriUri = URI.create(uri);
         URI relative = cacheDir.toURI().relativize(uriUri);
         if (relative != null && new File(cacheDir, relative.toString()).canRead()) {
@@ -210,5 +201,9 @@ public class Utils {
             }
         }
         return URLMapper.findFileObject(URI.create(uri).toURL());
+    }
+
+    private static File getCacheDir() {
+        return Places.getCacheSubfile("java-server");
     }
 }

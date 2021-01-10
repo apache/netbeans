@@ -44,6 +44,7 @@ public final class PhpOptions {
     public static final String PROP_PHP_DEBUGGER_MAX_CHILDREN = "propPhpDebuggerMaxChildren"; // NOI18N
     public static final String PROP_PHP_DEBUGGER_SHOW_URLS = "propPhpDebuggerShowUrls"; // NOI18N
     public static final String PROP_PHP_DEBUGGER_SHOW_CONSOLE = "propPhpDebuggerShowConsole"; // NOI18N
+    public static final String PROP_PHP_DEBUGGER_RESOLVE_BREAKPOINTS = "propPhpDebuggerResolveBreakpoints"; // NOI18N
     public static final String PROP_PHP_GLOBAL_INCLUDE_PATH = "propPhpGlobalIncludePath"; // NOI18N
 
     private static final PhpOptions INSTANCE = new PhpOptions();
@@ -75,6 +76,8 @@ public final class PhpOptions {
                     propertyChangeSupport.firePropertyChange(PROP_PHP_DEBUGGER_SHOW_URLS, null, Boolean.valueOf(newValue));
                 } else if (PHP_DEBUGGER_SHOW_CONSOLE.equals(key)) {
                     propertyChangeSupport.firePropertyChange(PROP_PHP_DEBUGGER_SHOW_CONSOLE, null, Boolean.valueOf(newValue));
+                } else if (PHP_DEBUGGER_RESOLVE_BREAKPOINTS.equals(key)) {
+                    propertyChangeSupport.firePropertyChange(PROP_PHP_DEBUGGER_RESOLVE_BREAKPOINTS, null, Boolean.valueOf(newValue));
                 } else if (PHP_GLOBAL_INCLUDE_PATH.equals(key)) {
                     propertyChangeSupport.firePropertyChange(PROP_PHP_GLOBAL_INCLUDE_PATH, null, newValue);
                 }
@@ -183,6 +186,16 @@ public final class PhpOptions {
      */
     public boolean isDebuggerShowDebuggerConsole() {
         return getPhpOptions().isDebuggerShowConsole();
+    }
+
+    /**
+     * Check whether debugger requests breakpoint resolution. The default value is
+     * <code>{@value org.netbeans.modules.php.project.ui.options.PhpOptions#DEFAULT_DEBUGGER_RESOLVE_BREAKPOINTS}</code>.
+     * @return <code>true</code> if the debugger requests breakpoint resolution, <code>false</code> otherwise.
+     * @since 2.149
+     */
+    public boolean isDebuggerResolveBreakpoints() {
+        return getPhpOptions().isDebuggerResolveBreakpoints();
     }
 
     /**

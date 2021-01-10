@@ -29,14 +29,17 @@ import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -117,6 +120,7 @@ import org.openide.cookies.EditorCookie;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
 import org.openide.modules.ModuleInfo;
 import org.openide.modules.Places;
 import org.openide.text.Line;
@@ -2542,6 +2546,72 @@ public class ServerTest extends NbTestCase {
         assertEquals("\n" +
                      "    private static final Logger LOGGER = Logger.getLogger(Test.class.getName());\n",
                      fileChanges.get(1).getNewText());
+    }
+
+    public void testNoErrorAndHintsFor() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    private String field;\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        File otherSrc = new File(getWorkDir(), "Other.java");
+        try (Writer w = new FileWriter(otherSrc)) {
+            w.write("/**Some source*/\n" +
+                    "public class Other {\n" +
+                    "    public void test() { }\n" +
+                    "}");
+        }
+        Map<String, List<Integer>> publishedDiagnostics = new HashMap<>();
+        FileUtil.refreshFor(getWorkDir());
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (publishedDiagnostics) {
+                    publishedDiagnostics.computeIfAbsent(params.getUri(), uri -> new ArrayList<>())
+                                        .add(params.getDiagnostics().size());
+                    publishedDiagnostics.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        Position pos = new Position(1, 14);
+        List<? extends Location> definition = server.getTextDocumentService().definition(new DefinitionParams(new TextDocumentIdentifier(toURI(src)), pos)).get().getLeft();
+        assertEquals(1, definition.size());
+        String jlStringURI = definition.get(0).getUri();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(jlStringURI, "java", 0, URLMapper.findFileObject(new URL(jlStringURI)).asText())));
+        String otherSrcURI = toURI(otherSrc);
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(otherSrcURI, "java", 0, FileUtil.toFileObject(otherSrc).asText())));
+        synchronized (publishedDiagnostics) {
+            while (publishedDiagnostics.get(otherSrcURI) == null || publishedDiagnostics.get(otherSrcURI).size() != 2) {
+                publishedDiagnostics.wait();
+            }
+        }
+        assertEquals(Arrays.asList(0, 0), publishedDiagnostics.get(jlStringURI));
     }
 
     private String toString(Location location) {

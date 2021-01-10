@@ -3356,6 +3356,10 @@ public final class TreeMaker {
     }
     
     private void mapComments(BlockTree block, String inputText, WorkingCopy copy, CommentHandler comments, SourcePositions positions) {
+        if (copy.getFileObject() == null) {
+            // prevent IllegalStateException thrown form AssignComments constructor below
+            return;
+        }
         TokenSequence<JavaTokenId> seq = TokenHierarchy.create(inputText, JavaTokenId.language()).tokenSequence(JavaTokenId.language());
         AssignComments ti = new AssignComments(copy, block, seq, positions);
         ti.scan(block, null);

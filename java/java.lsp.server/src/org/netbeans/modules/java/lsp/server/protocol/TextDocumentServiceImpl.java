@@ -1214,7 +1214,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             newFilePath = newFile.getPath();
                             documentChanges.add(Either.forRight(new CreateFile(newFilePath)));
                         }
-                        for (FileObject fileObject : changes.getModifiedFileObjects()) {
+                        outer: for (FileObject fileObject : changes.getModifiedFileObjects()) {
                             List<? extends ModificationResult.Difference> diffs = changes.getDifferences(fileObject);
                             if (diffs != null) {
                                 List<TextEdit> edits = new ArrayList<>();
@@ -1226,6 +1226,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                                     Collections.singletonList(new TextEdit(new Range(Utils.createPosition(fileObject, 0), Utils.createPosition(fileObject, 0)),
                                                             newText != null ? newText : "")))));
                                         }
+                                        continue outer;
                                     } else {
                                         edits.add(new TextEdit(new Range(Utils.createPosition(fileObject, diff.getStartPosition().getOffset()),
                                                                          Utils.createPosition(fileObject, diff.getEndPosition().getOffset())),

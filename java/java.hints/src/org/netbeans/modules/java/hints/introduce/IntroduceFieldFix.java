@@ -133,6 +133,14 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
         return pathToClass;
     }
 
+    private TreePath findOutermostClass(WorkingCopy copy, TreePath resolved) {
+        TreePath pathToClass = resolved;
+        while (pathToClass != null && (!TreeUtilities.CLASS_TREE_KINDS.contains(pathToClass.getLeaf().getKind()) || pathToClass.getParentPath().getLeaf().getKind() != Tree.Kind.COMPILATION_UNIT)) {
+            pathToClass = pathToClass.getParentPath();
+        }
+        return pathToClass;
+    }
+
     @Override
     public ChangeInfo implement() throws IOException, BadLocationException {
         JButton btnOk = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Ok"));
@@ -300,7 +308,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
             allNewUses.add(resolved.getLeaf());
             Collection<TreePath> duplicates = new ArrayList<>();
             if (replaceAll) {
-                for (TreePath p : SourceUtils.computeDuplicates(parameter, resolved, new TreePath(parameter.getCompilationUnit()), new AtomicBoolean())) {
+                for (TreePath p : SourceUtils.computeDuplicates(parameter, resolved, findOutermostClass(parameter, resolved), new AtomicBoolean())) {
                     if (variableRewrite) {
                         IntroduceHint.removeFromParent(parameter, p);
                     } else {

@@ -75,9 +75,9 @@ public abstract class CreateClassFix extends CreateFixBase implements EnhancedFi
     protected List<TypeMirrorHandle> argumentTypes; //if a specific constructor should be created
     protected List<String> argumentNames; //dtto.
     private Integer prio;
-    private List<TypeMirrorHandle> superTypes;
+    protected List<TypeMirrorHandle> superTypes;
     protected ElementKind kind;
-    private int numTypeParameters;
+    protected int numTypeParameters;
     protected List<? extends TypeMirror> argumentTypeMirrors;
     
     public CreateClassFix(CompilationInfo info, Set<Modifier> modifiers, List<? extends TypeMirror> argumentTypes, List<String> argumentNames, TypeMirror superType, ElementKind kind, int numTypeParameters) {
@@ -303,26 +303,72 @@ public abstract class CreateClassFix extends CreateFixBase implements EnhancedFi
                 public void run(final WorkingCopy working) throws IOException {
                     working.toPhase(Phase.RESOLVED);
                     TreeMaker make = working.getTreeMaker();
+                    List<Tree> members = new ArrayList<>();
+                    if (argumentNames != null) {
+                        List<VariableTree>         argTypes = new ArrayList<VariableTree>();
+                        Iterator<TypeMirrorHandle> typeIt   = argumentTypes.iterator();
+                        Iterator<String>           nameIt   = argumentNames.iterator();
+                        while (typeIt.hasNext() && nameIt.hasNext()) {
+                            TypeMirrorHandle tmh = typeIt.next();
+                            String           argName = nameIt.next();
+                            argTypes.add(make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), argName, make.Type(tmh.resolve(working)), null));
+                        }
+                        members.add(make.Method(make.Modifiers(EnumSet.of(Modifier.PUBLIC/*!!!*/)), "<init>", null, Collections.<TypeParameterTree>emptyList(), argTypes, Collections.<ExpressionTree>emptyList(), "{}" /*XXX*/, null)); // NOI18N
+                    }
+                    Tree extendsClause = null;
+                    List<Tree> implementsClause = Collections.<Tree>emptyList();
+                    if (superTypes != null) {
+                        DeclaredType extendsType = null;
+                        List<DeclaredType> implementsTypes = new LinkedList<DeclaredType>();
+                        for (TypeMirrorHandle h : superTypes) {
+                            TypeMirror tm = h.resolve(working);
+                            if (tm == null) {
+                                continue;
+                            }
+                            if (tm.getKind() != TypeKind.DECLARED) {
+                                continue;
+                            }
+                            DeclaredType dt = (DeclaredType) tm;
+                            if (dt.asElement().getKind().isClass()) {
+                                extendsType = dt;
+                            } else {
+                                implementsTypes.add(dt);
+                            }
+                        }
+                        if (extendsType != null && !"java.lang.Object".equals(((TypeElement) extendsType.asElement()).getQualifiedName().toString())) { // NOI18N
+                            extendsClause = make.Type(extendsType);
+                        }
+                        if (!implementsTypes.isEmpty()) {
+                            implementsClause = new LinkedList<Tree>();
+                            for (DeclaredType dt : implementsTypes) {
+                                implementsClause.add(make.Type(dt));
+                            }
+                        }
+                    }
+                    ModifiersTree nueModifiers = make.Modifiers(modifiers);
+                    List<TypeParameterTree> typeParameters = new LinkedList<TypeParameterTree>();
+                    for (int cntr = 0; cntr < numTypeParameters; cntr++) {
+                        typeParameters.add(make.TypeParameter(numTypeParameters == 1 ? "T" : "T" + cntr, Collections.<ExpressionTree>emptyList())); // NOI18N
+                    }
                     ClassTree source;
                     switch (kind) {
                         case CLASS:
-                            source = make.Class(make.Modifiers(EnumSet.of(Modifier.PUBLIC)), simpleName, Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList(), Collections.<Tree>emptyList());
+                            source = make.Class(nueModifiers, simpleName, typeParameters, extendsClause, implementsClause, members);
                             break;
                         case INTERFACE:
-                            source = make.Interface(make.Modifiers(EnumSet.of(Modifier.PUBLIC)), simpleName, Collections.<TypeParameterTree>emptyList(), null, Collections.<Tree>emptyList());
+                            source = make.Interface(nueModifiers, simpleName, typeParameters, implementsClause, members);
                             break;
                         case ANNOTATION_TYPE:
-                            source = make.AnnotationType(make.Modifiers(EnumSet.of(Modifier.PUBLIC)), simpleName, Collections.<Tree>emptyList());
+                            source = make.AnnotationType(nueModifiers, simpleName, members);
                             break;
                         case ENUM:
-                            source = make.Enum(make.Modifiers(EnumSet.of(Modifier.PUBLIC)), simpleName, Collections.<Tree>emptyList(), Collections.<Tree>emptyList());
+                            source = make.Enum(nueModifiers, simpleName, implementsClause, members);
                             break;
-                        default: throw new IllegalStateException();
+                        default:
+                            throw new IllegalStateException();
                     }
                     CompilationUnitTree cut = make.CompilationUnit(targetSourceRoot, packageName.replace('.', '/') + '/' + simpleName + ".java", Collections.<ImportTree>emptyList(), Collections.singletonList(source));
-                    ClassTree nue = createConstructor(working, new TreePath(new TreePath(cut), source));
                     working.rewrite(null, cut);
-                    working.rewrite(source, nue);
                 }
             });
         }

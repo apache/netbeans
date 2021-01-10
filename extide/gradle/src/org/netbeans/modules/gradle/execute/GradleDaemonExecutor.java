@@ -51,7 +51,6 @@ import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProgressEvent;
 import org.gradle.tooling.ProjectConnection;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
@@ -91,7 +90,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
     @SuppressWarnings("LeakingThisInConstructor")
     public GradleDaemonExecutor(RunConfig config) {
         super(config);
-        handle = ProgressHandleFactory.createHandle(config.getTaskDisplayName(), this, new AbstractAction() {
+        handle = ProgressHandle.createHandle(config.getTaskDisplayName(), this, new AbstractAction() {
 
             @Override
             public void actionPerformed(ActionEvent e) {

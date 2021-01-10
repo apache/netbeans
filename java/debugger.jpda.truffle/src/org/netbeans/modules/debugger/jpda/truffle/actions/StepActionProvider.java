@@ -73,8 +73,8 @@ public class StepActionProvider extends JPDADebuggerActionProvider {
             ActionsManager.ACTION_CONTINUE
     })));
 
-    private static final String STEP2JAVA_CLASS = "com.oracle.truffle.polyglot.HostMethodDesc$SingleMethod$MHBase";
-    private static final String STEP2JAVA_METHOD = "invokeHandle";
+    public static final String STEP2JAVA_CLASS = "com.oracle.truffle.polyglot.HostMethodDesc$SingleMethod$MHBase";
+    public static final String STEP2JAVA_METHOD = "invokeHandle";
 
     public StepActionProvider (ContextProvider lookupProvider) {
         super (
@@ -92,7 +92,7 @@ public class StepActionProvider extends JPDADebuggerActionProvider {
                 i.next (),
                 (debuggerState == JPDADebugger.STATE_STOPPED) &&
                 (currentThread != null) &&
-                (TruffleAccess.getCurrentPCInfo(currentThread) != null)
+                (TruffleAccess.getCurrentGuestPCInfo(currentThread) != null)
             );
         }
     }
@@ -102,7 +102,7 @@ public class StepActionProvider extends JPDADebuggerActionProvider {
         LOG.fine("doAction("+action+")");
         JPDADebuggerImpl debugger = getDebuggerImpl();
         JPDAThread currentThread = debugger.getCurrentThread();
-        CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(currentThread);
+        CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentGuestPCInfo(currentThread);
         int stepCmd = 0;
         if (ActionsManager.ACTION_CONTINUE.equals(action)) {
             stepCmd = 0;

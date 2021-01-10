@@ -58,7 +58,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>1.98</specification-version>
+                        <specification-version>1.117.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

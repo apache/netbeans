@@ -24,6 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Action;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.progress.module.*;
 import org.openide.modules.PatchedPublic;
@@ -53,6 +54,8 @@ public class InternalHandle {
     private final boolean userInitiated;
     private int initialDelay = Controller.INITIAL_DELAY;
     private Controller controller;
+    private ProgressHandle handle;
+    private boolean customPlaced;
     
     public static final int STATE_INITIALIZED = 0;
     public static final int STATE_RUNNING = 1;
@@ -85,10 +88,23 @@ public class InternalHandle {
      * @since 1.40
      */
     public final ProgressHandle createProgressHandle() {
-        if (del != null) {
-            return ProgressApiAccessor.getInstance().create(del);
+        synchronized (this) {
+            if (handle != null) {
+                return handle;
+            }
         }
-        return ProgressApiAccessor.getInstance().create(this);
+        ProgressHandle h;
+        if (del != null) {
+            h = ProgressApiAccessor.getInstance().create(del);
+        } else {
+            h = ProgressApiAccessor.getInstance().create(this);
+        }
+        synchronized (this) {
+            if (handle == null) {
+                handle = h;
+            }
+            return handle;
+        }
     }
     
     public String getDisplayName() {
@@ -126,7 +142,7 @@ public class InternalHandle {
         if (del != null) {
             return del.isCustomPlaced();
         }
-        return false;
+        return customPlaced;
     }
     
     public final boolean isUserInitialized() {
@@ -182,7 +198,7 @@ public class InternalHandle {
     
     public boolean isInSleepMode() {
         if (del != null) {
-            return isInSleepMode();
+            return del.isInSleepMode();
         }
         return timeSleepy == timeLastProgress;
     }
@@ -369,6 +385,21 @@ public class InternalHandle {
         }
         controller.explicitSelection(this);
     }
+
+    /**
+     * Request a interaction callback to be attached to the Handle. The 
+     * implementation decides if the callback is permitted and desirable. One command,
+     * {@link ProgressHandle#ACTION_VIEW} is defined as a default command (action) for
+     * the progress handle presentation. Implementations are free to ignore request
+     * for adding actions.
+     * @param actionCommand command to bind the action for.
+     * @param action action instance
+     * @return true, if the handle agrees to support the action.
+     * @since 1.59
+     */
+    public boolean requestAction(String actionCommand, Action action) {
+        return false;
+    }
     
     public synchronized void requestDisplayNameChange(String newDisplayName) {
         if (del != null) {
@@ -478,5 +509,23 @@ public class InternalHandle {
             Exceptions.printStackTrace(ex);
         }
         compatInit = m;
+    }
+    
+    /**
+     * Marks this handle as custom-placed. Handle should be marked as custom-placed
+     * if some controller overtakes (part of) handle's presentation.
+     * @since 1.59
+     */
+    protected final void markCustomPlaced() {
+        if (getState() != STATE_INITIALIZED) {
+            throw new IllegalStateException();
+        }
+        customPlaced = true;
+    }
+    
+    @Override
+    public String toString() {
+        return "H@" + Integer.toHexString(System.identityHashCode(this)) + 
+                "[\"" + getDisplayName() + "\", state: " + state + "]";
     }
 }

@@ -19,15 +19,18 @@
 package org.netbeans.modules.lsp.client.bindings.refactoring;
 
 import java.awt.Component;
-import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
-import org.eclipse.lsp4j.ReferenceParams;
+import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.RenameParams;
+import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.netbeans.modules.lsp.client.LSPBindings;
+import org.netbeans.modules.lsp.client.Utils;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
-import org.netbeans.modules.refactoring.api.WhereUsedQuery;
+import org.netbeans.modules.refactoring.api.RenameRefactoring;
 import org.netbeans.modules.refactoring.spi.ui.CustomRefactoringPanel;
 import org.netbeans.modules.refactoring.spi.ui.RefactoringUI;
+import org.openide.filesystems.FileObject;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.Lookups;
@@ -36,16 +39,21 @@ import org.openide.util.lookup.Lookups;
  *
  * @author lahvac
  */
-public class RefactoringUIImpl implements RefactoringUI {
+public class RenameRefactoringUIImpl implements RefactoringUI {
 
     private final LSPBindings bindings;
-    private final ReferenceParams params;
+    private final FileObject file;
+    private final Position position;
     private final String name;
+    private final RenameParams params;
+    private RenamePanel panel;
 
-    public RefactoringUIImpl(LSPBindings binding, ReferenceParams params, String name) {
+    public RenameRefactoringUIImpl(LSPBindings binding, FileObject file, Position position, String name) {
         this.bindings = binding;
-        this.params = params;
+        this.file = file;
+        this.position = position;
         this.name = name;
+        this.params = new RenameParams();
     }
 
     @Override
@@ -56,19 +64,23 @@ public class RefactoringUIImpl implements RefactoringUI {
     @Override
     @Messages({
         "# {0} - identifier",
-        "DESC_Usages=Usages of {0}"
+        "DESC_Rename=Renaming {0}"
     })
     public String getDescription() {
-        return Bundle.DESC_Usages(name);
+        return Bundle.DESC_Rename(name);
     }
 
     @Override
     public boolean isQuery() {
-        return true;
+        return false;
     }
 
     @Override
     public CustomRefactoringPanel getPanel(ChangeListener parent) {
+        if (panel == null) {
+            panel = new RenamePanel();
+        }
+        panel.setName(name);
         return new CustomRefactoringPanel() {
             @Override
             public void initialize() {
@@ -76,13 +88,16 @@ public class RefactoringUIImpl implements RefactoringUI {
 
             @Override
             public Component getComponent() {
-                return new JPanel();
+                return panel;
             }
         };
     }
 
     @Override
     public Problem setParameters() {
+        params.setTextDocument(new TextDocumentIdentifier(Utils.toURI(file)));
+        params.setPosition(position);
+        params.setNewName(panel.getName());
         return null;
     }
 
@@ -93,12 +108,12 @@ public class RefactoringUIImpl implements RefactoringUI {
 
     @Override
     public boolean hasParameters() {
-        return false;
+        return true;
     }
 
     @Override
     public AbstractRefactoring getRefactoring() {
-        return new WhereUsedQuery(Lookups.fixed(bindings, params));
+        return new RenameRefactoring(Lookups.fixed(bindings, params));
     }
 
     @Override

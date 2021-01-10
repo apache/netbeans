@@ -46,11 +46,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
+import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
 import org.eclipse.lsp4j.CodeActionKind;
@@ -85,6 +87,8 @@ import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ReferenceContext;
 import org.eclipse.lsp4j.ReferenceParams;
+import org.eclipse.lsp4j.RenameFile;
+import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.SymbolInformation;
@@ -94,7 +98,9 @@ import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
+import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceEdit;
+import org.eclipse.lsp4j.WorkspaceEditCapabilities;
 import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
@@ -274,7 +280,7 @@ public class ServerTest extends NbTestCase {
         assertDiags(diags, "Error:1:0-1:9");//hints
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 0), new Position(1, 9)), new CodeActionContext(Arrays.asList(diagnostics.get(0))))).get();
         String log = codeActions.toString();
-        assertEquals(log, 2, codeActions.size());
+        assertTrue(log, codeActions.size() >= 2);
         assertTrue(log, codeActions.get(0).isRight());
         CodeAction action = codeActions.get(0).getRight();
         assertEquals("Cast ...o to String", action.getTitle());
@@ -526,7 +532,7 @@ public class ServerTest extends NbTestCase {
         id.setUri(toURI(src));
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 7), new Position(1, 19)), new CodeActionContext(Arrays.asList(diagnostics.get(0))))).get();
         String log = codeActions.toString();
-        assertEquals(log, 1, codeActions.size());
+        assertTrue(log, codeActions.size() >= 1);
         assertTrue(log, codeActions.get(0).isRight());
         CodeAction action = codeActions.get(0).getRight();
         assertEquals("Remove .toString()", action.getTitle());
@@ -1500,7 +1506,7 @@ public class ServerTest extends NbTestCase {
         }
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 17), new Position(2, 17)), new CodeActionContext(diags[0]))).get();
-        assertEquals(3, codeActions.size());
+        assertTrue(codeActions.size() >= 3);
         Optional<CodeAction> generateVariable =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -1629,7 +1635,7 @@ public class ServerTest extends NbTestCase {
         }
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 17), new Position(2, 17)), new CodeActionContext(diags[0]))).get();
-        assertEquals(1, codeActions.size());
+        assertTrue(codeActions.size() >= 1);
         Optional<CodeAction> generateMehtod =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -1716,7 +1722,7 @@ public class ServerTest extends NbTestCase {
         }
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
         List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(1, 14), new Position(2, 14)), new CodeActionContext(diags[0]))).get();
-        assertEquals(5, codeActions.size());
+        assertTrue(codeActions.size() >= 2);
         Optional<CodeAction> generateClass =
                 codeActions.stream()
                            .filter(Either::isRight)
@@ -1743,6 +1749,434 @@ public class ServerTest extends NbTestCase {
                      "        }\n" +
                      "    }\n",
                      fileChanges.get(0).getNewText());
+    }
+
+    public void testCodeActionIntroduceVariable() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    public static void main(String[] args) {\n" +
+                      "        System.out.println(\"Hello World\");\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+
+        List<Diagnostic>[] diags = new List[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        server.initialize(new InitializeParams()).get();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        synchronized (diags) {
+            while (diags[0] == null) {
+                try {
+                    diags.wait();
+                } catch (InterruptedException ex) {
+                }
+            }
+        }
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 8), new Position(2, 18)), new CodeActionContext(diags[0]))).get();
+        assertTrue(codeActions.size() >= 4);
+        Optional<CodeAction> introduceVariable =
+                codeActions.stream()
+                           .filter(Either::isRight)
+                           .map(Either::getRight)
+                           .filter(a -> "Introduce Variable...".equals(a.getTitle()))
+                           .findAny();
+        assertTrue(introduceVariable.isPresent());
+        assertEquals(introduceVariable.get().getKind(), CodeActionKind.RefactorExtract);
+        List<Either<TextDocumentEdit, ResourceOperation>> changes = introduceVariable.get().getEdit().getDocumentChanges();
+        assertEquals(1, changes.size());
+        assertTrue(changes.get(0).isLeft());
+        TextDocumentEdit edit = changes.get(0).getLeft();
+        assertEquals(edit.getTextDocument().getUri(), uri);
+        List<TextEdit> fileChanges = edit.getEdits();
+        assertNotNull(fileChanges);
+        assertEquals(4, fileChanges.size());
+        assertEquals(new Range(new Position(0, 0),
+                               new Position(0, 0)),
+                     fileChanges.get(0).getRange());
+        assertEquals("\n" +
+                     "import java.io.PrintStream;\n" +
+                     "\n",
+                     fileChanges.get(0).getNewText());
+        assertEquals(new Range(new Position(2, 8),
+                               new Position(2, 8)),
+                     fileChanges.get(1).getRange());
+        assertEquals("PrintStream out = ",
+                     fileChanges.get(1).getNewText());
+        assertEquals(new Range(new Position(2, 18),
+                               new Position(2, 41)),
+                     fileChanges.get(2).getRange());
+        assertEquals("",
+                     fileChanges.get(2).getNewText());
+        assertEquals(new Range(new Position(3, 0),
+                               new Position(3, 0)),
+                     fileChanges.get(3).getRange());
+        assertEquals("        out.println(\"Hello World\");\n",
+                     fileChanges.get(3).getNewText());
+        Command command = introduceVariable.get().getCommand();
+        assertNotNull(command);
+        assertEquals("java.rename.element.at", command.getCommand());
+        List<Object> arguments = command.getArguments();
+        assertNotNull(arguments);
+        assertEquals(1, arguments.size());
+        assertEquals("115", arguments.get(0).toString());
+    }
+
+    public void testCodeActionIntroduceConstant() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    public static void main(String[] args) {\n" +
+                      "        System.out.println(\"Hello World\");\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+
+        List<Diagnostic>[] diags = new List[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        server.initialize(new InitializeParams()).get();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        synchronized (diags) {
+            while (diags[0] == null) {
+                try {
+                    diags.wait();
+                } catch (InterruptedException ex) {
+                }
+            }
+        }
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 8), new Position(2, 18)), new CodeActionContext(diags[0]))).get();
+        assertTrue(codeActions.size() >= 4);
+        Optional<CodeAction> introduceConstant =
+                codeActions.stream()
+                           .filter(Either::isRight)
+                           .map(Either::getRight)
+                           .filter(a -> "Introduce Constant...".equals(a.getTitle()))
+                           .findAny();
+        assertTrue(introduceConstant.isPresent());
+        assertEquals(introduceConstant.get().getKind(), CodeActionKind.RefactorExtract);
+        List<Either<TextDocumentEdit, ResourceOperation>> changes = introduceConstant.get().getEdit().getDocumentChanges();
+        assertEquals(1, changes.size());
+        assertTrue(changes.get(0).isLeft());
+        TextDocumentEdit edit = changes.get(0).getLeft();
+        assertEquals(edit.getTextDocument().getUri(), uri);
+        List<TextEdit> fileChanges = edit.getEdits();
+        assertNotNull(fileChanges);
+        assertEquals(3, fileChanges.size());
+        assertEquals(new Range(new Position(0, 0),
+                               new Position(0, 0)),
+                     fileChanges.get(0).getRange());
+        assertEquals("\n" +
+                     "import java.io.PrintStream;\n" +
+                     "\n",
+                     fileChanges.get(0).getNewText());
+        assertEquals(new Range(new Position(2, 8),
+                               new Position(2, 18)),
+                     fileChanges.get(1).getRange());
+        assertEquals("OUT",
+                     fileChanges.get(1).getNewText());
+        assertEquals(new Range(new Position(4, 0),
+                               new Position(4, 0)),
+                     fileChanges.get(2).getRange());
+        assertEquals("    private static PrintStream OUT = System.out;\n",
+                     fileChanges.get(2).getNewText());
+        Command command = introduceConstant.get().getCommand();
+        assertNotNull(command);
+        assertEquals("java.rename.element.at", command.getCommand());
+        List<Object> arguments = command.getArguments();
+        assertNotNull(arguments);
+        assertEquals(1, arguments.size());
+        assertEquals("168", arguments.get(0).toString());
+    }
+
+    public void testCodeActionIntroduceField() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    public static void main(String[] args) {\n" +
+                      "        System.out.println(\"Hello World\");\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+
+        List<Diagnostic>[] diags = new List[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        server.initialize(new InitializeParams()).get();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        synchronized (diags) {
+            while (diags[0] == null) {
+                try {
+                    diags.wait();
+                } catch (InterruptedException ex) {
+                }
+            }
+        }
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 8), new Position(2, 18)), new CodeActionContext(diags[0]))).get();
+        assertTrue(codeActions.size() >= 4);
+        Optional<CodeAction> introduceField =
+                codeActions.stream()
+                           .filter(Either::isRight)
+                           .map(Either::getRight)
+                           .filter(a -> "Introduce Field...".equals(a.getTitle()))
+                           .findAny();
+        assertTrue(introduceField.isPresent());
+        assertEquals(introduceField.get().getKind(), CodeActionKind.RefactorExtract);
+        List<Either<TextDocumentEdit, ResourceOperation>> changes = introduceField.get().getEdit().getDocumentChanges();
+        assertEquals(1, changes.size());
+        assertTrue(changes.get(0).isLeft());
+        TextDocumentEdit edit = changes.get(0).getLeft();
+        assertEquals(edit.getTextDocument().getUri(), uri);
+        List<TextEdit> fileChanges = edit.getEdits();
+        assertNotNull(fileChanges);
+        assertEquals(3, fileChanges.size());
+        assertEquals(new Range(new Position(0, 0),
+                               new Position(0, 0)),
+                     fileChanges.get(0).getRange());
+        assertEquals("\n" +
+                     "import java.io.PrintStream;\n" +
+                     "\n",
+                     fileChanges.get(0).getNewText());
+        assertEquals(new Range(new Position(2, 8),
+                               new Position(2, 15)),
+                     fileChanges.get(1).getRange());
+        assertEquals("",
+                     fileChanges.get(1).getNewText());
+        assertEquals(new Range(new Position(4, 0),
+                               new Position(4, 0)),
+                     fileChanges.get(2).getRange());
+        assertEquals("    private static PrintStream out = System.out;\n",
+                     fileChanges.get(2).getNewText());
+        Command command = introduceField.get().getCommand();
+        assertNotNull(command);
+        assertEquals("java.rename.element.at", command.getCommand());
+        List<Object> arguments = command.getArguments();
+        assertNotNull(arguments);
+        assertEquals(1, arguments.size());
+        assertEquals("168", arguments.get(0).toString());
+    }
+
+    public void testCodeActionIntroduceMethod() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test {\n" +
+                      "    public static void main(String[] args) {\n" +
+                      "        System.out.println(\"Hello World\");\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+
+        List<Diagnostic>[] diags = new List[1];
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        server.initialize(new InitializeParams()).get();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        synchronized (diags) {
+            while (diags[0] == null) {
+                try {
+                    diags.wait();
+                } catch (InterruptedException ex) {
+                }
+            }
+        }
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService().codeAction(new CodeActionParams(id, new Range(new Position(2, 8), new Position(2, 18)), new CodeActionContext(diags[0]))).get();
+        assertTrue(codeActions.size() >= 4);
+        Optional<CodeAction> introduceMethod =
+                codeActions.stream()
+                           .filter(Either::isRight)
+                           .map(Either::getRight)
+                           .filter(a -> "Introduce Method...".equals(a.getTitle()))
+                           .findAny();
+        assertTrue(introduceMethod.isPresent());
+        assertEquals(introduceMethod.get().getKind(), CodeActionKind.RefactorExtract);
+        List<Either<TextDocumentEdit, ResourceOperation>> changes = introduceMethod.get().getEdit().getDocumentChanges();
+        assertEquals(1, changes.size());
+        assertTrue(changes.get(0).isLeft());
+        TextDocumentEdit edit = changes.get(0).getLeft();
+        assertEquals(edit.getTextDocument().getUri(), uri);
+        List<TextEdit> fileChanges = edit.getEdits();
+        assertNotNull(fileChanges);
+        assertEquals(3, fileChanges.size());
+        assertEquals(new Range(new Position(0, 0),
+                               new Position(0, 0)),
+                     fileChanges.get(0).getRange());
+        assertEquals("\n" +
+                     "import java.io.PrintStream;\n" +
+                     "\n",
+                     fileChanges.get(0).getNewText());
+        assertEquals(new Range(new Position(2, 8),
+                               new Position(2, 18)),
+                     fileChanges.get(1).getRange());
+        assertEquals("method()",
+                     fileChanges.get(1).getNewText());
+        assertEquals(new Range(new Position(3, 0),
+                               new Position(3, 0)),
+                     fileChanges.get(2).getRange());
+        assertEquals("    }\n" +
+                     "\n" +
+                     "    private static PrintStream method() {\n" +
+                     "        return System.out;\n",
+                     fileChanges.get(2).getNewText());
+        Command command = introduceMethod.get().getCommand();
+        assertNotNull(command);
+        assertEquals("java.rename.element.at", command.getCommand());
+        List<Object> arguments = command.getArguments();
+        assertNotNull(arguments);
+        assertEquals(1, arguments.size());
+        assertEquals("174", arguments.get(0).toString());
     }
 
     public void testCodeActionGetterSetter() throws Exception {
@@ -2614,11 +3048,179 @@ public class ServerTest extends NbTestCase {
         assertEquals(Arrays.asList(0, 0), publishedDiagnostics.get(jlStringURI));
     }
 
+    public void testRenameDocumentChangesCapabilitiesRenameOp() throws Exception {
+        doTestRename(init -> {
+                        WorkspaceEditCapabilities wec = new WorkspaceEditCapabilities();
+                        wec.setDocumentChanges(true);
+                        wec.setResourceOperations(Arrays.asList("rename"));
+                        WorkspaceClientCapabilities wcc = new WorkspaceClientCapabilities();
+                        wcc.setWorkspaceEdit(wec);
+                        init.setCapabilities(new ClientCapabilities(wcc, null, null));
+                     },
+                     cf -> {
+                         WorkspaceEdit edit = cf.get();
+                         assertTrue(edit.getChanges().isEmpty());
+                         Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
+                         Set<String> expected = new HashSet<>(Arrays.asList("Test2.java:[3:25-3:28=>nue]", "Test2.java:[1:8-1:11=>nue]"));
+                         assertEquals(expected, actual);
+                     },
+                     cf -> {
+                         WorkspaceEdit edit = cf.get();
+                         assertTrue(edit.getChanges().isEmpty());
+                         Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
+                         Set<String> expected = new HashSet<>(Arrays.asList("Test.java:[0:27-0:31=>TestNew, 1:4-1:8=>TestNew, 2:11-2:15=>TestNew]", "Test.java:[0:13-0:17=>TestNew]", "Test.java=>TestNew.java"));
+                         assertEquals(expected, actual);
+                     });
+    }
+    
+    public void testRenameDocumentChangesCapabilitiesNoRenameOp() throws Exception {
+        doTestRename(init -> {
+                        WorkspaceEditCapabilities wec = new WorkspaceEditCapabilities();
+                        wec.setDocumentChanges(true);
+                        WorkspaceClientCapabilities wcc = new WorkspaceClientCapabilities();
+                        wcc.setWorkspaceEdit(wec);
+                        init.setCapabilities(new ClientCapabilities(wcc, null, null));
+                     },
+                     cf -> {
+                         WorkspaceEdit edit = cf.get();
+                         assertTrue(edit.getChanges().isEmpty());
+                         Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
+                         Set<String> expected = new HashSet<>(Arrays.asList("Test2.java:[3:25-3:28=>nue]", "Test2.java:[1:8-1:11=>nue]"));
+                         assertEquals(expected, actual);
+                     },
+                     cf -> {
+                         WorkspaceEdit edit = cf.get();
+                         assertTrue(edit.getChanges().isEmpty());
+                         Set<String> actual = edit.getDocumentChanges().stream().map(this::toString).collect(Collectors.toSet());
+                         Set<String> expected = new HashSet<>(Arrays.asList("Test.java:[0:27-0:31=>TestNew, 1:4-1:8=>TestNew, 2:11-2:15=>TestNew]", "Test.java:[0:13-0:17=>TestNew]", "Test.java=>TestNew.java"));
+                         assertEquals(expected, actual);
+                     });
+    }
+    
+    private void doTestRename(Consumer<InitializeParams> settings,
+                              Validator<CompletableFuture<WorkspaceEdit>> validateFieldRename,
+                              Validator<CompletableFuture<WorkspaceEdit>> validateClassRename) throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(new File(src.getParentFile(), ".test-project"))) {}
+        String code = "public class Test {\n" +
+                      "    int val = new Test2().get();\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        File src2 = new File(getWorkDir(), "Test2.java");
+        try (Writer w = new FileWriter(src2)) {
+            w.write("public class Test2 extends Test {\n" +
+                    "    Test t;\n" +
+                    "    void m(Test p) {};\n" +
+                    "    int get() { return t.val; };\n" +
+                    "}\n");
+        }
+        List<Diagnostic>[] diags = new List[1];
+        CountDownLatch indexingComplete = new CountDownLatch(1);
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+                synchronized (diags) {
+                    diags[0] = params.getDiagnostics();
+                    diags.notifyAll();
+                }
+            }
+
+            @Override
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setRootUri(getWorkDir().toURI().toString());
+        settings.accept(initParams);
+        InitializeResult result = server.initialize(initParams).get();
+        indexingComplete.await();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+
+        {
+            RenameParams params = new RenameParams(new TextDocumentIdentifier(src2.toURI().toString()),
+                                                   new Position(3, 27),
+                                                   "nue");
+
+            validateFieldRename.validate(server.getTextDocumentService().rename(params));
+        }
+
+        {
+            RenameParams params = new RenameParams(new TextDocumentIdentifier(src.toURI().toString()),
+                                                   new Position(0, 15),
+                                                   "TestNew");
+
+            validateClassRename.validate(server.getTextDocumentService().rename(params));
+        }
+
+    }
+
+    interface Validator<T> {
+        public void validate(T t) throws Exception;
+    }
+
+    private String toString(Either<TextDocumentEdit, ResourceOperation> e) {
+        if (e.isLeft()) {
+            TextDocumentEdit ted = e.getLeft();
+            VersionedTextDocumentIdentifier td = ted.getTextDocument();
+
+            return toString(td) + ":" + ted.getEdits().stream().map(this::toString).collect(Collectors.joining(", ", "[", "]"));
+        } else {
+            switch (e.getRight().getKind()) {
+                case "rename":
+                    RenameFile rf = (RenameFile) e.getRight();
+                    return uriToString(rf.getOldUri()) + "=>" + uriToString(rf.getNewUri());
+                default:
+                    throw new IllegalStateException(e.getRight().getKind());
+            }
+        }
+    }
+
+    private String toString(VersionedTextDocumentIdentifier td) {
+        return uriToString(td.getUri())/* + "(" + td.getVersion() + ")"*/;
+    }
+
+    private String toString(TextEdit edit) {
+        return toString(edit.getRange()) + "=>" + edit.getNewText();
+    }
+
     private String toString(Location location) {
         String path = location.getUri();
         String simpleName = path.substring(path.lastIndexOf('/') + 1);
-        return simpleName + ":" + location.getRange().getStart().getLine() + ":" + location.getRange().getStart().getCharacter() +
-                            "-" + location.getRange().getEnd().getLine() + ":" + location.getRange().getEnd().getCharacter();
+        return simpleName + ":" + toString(location.getRange());
+    }
+
+    private String uriToString(String uri) {
+        return uri.substring(uri.lastIndexOf('/') + 1);
+    }
+
+    private String toString(Range range) {
+        return       range.getStart().getLine() + ":" + range.getStart().getCharacter() +
+               "-" + range.getEnd().getLine() + ":" + range.getEnd().getCharacter();
     }
 
     private void assertHighlights(List<? extends DocumentHighlight> highlights, String... expected) {

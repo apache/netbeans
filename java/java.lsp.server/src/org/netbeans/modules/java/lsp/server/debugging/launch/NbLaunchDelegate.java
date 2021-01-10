@@ -22,6 +22,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -41,6 +42,8 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.NbSourceProvider;
+import org.netbeans.modules.java.lsp.server.progress.OperationContext;
+import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
@@ -57,6 +60,10 @@ public abstract class NbLaunchDelegate {
     public abstract void preLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
 
     public abstract void postLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
+    
+    protected void notifyFinished(DebugAdapterContext ctx, boolean success) {
+        // no op.
+    }
 
     public final CompletableFuture<Void> nbLaunch(FileObject toRun, DebugAdapterContext context, boolean debug, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
         CompletableFuture<Void> launchFuture = new CompletableFuture<>();
@@ -100,6 +107,7 @@ public abstract class NbLaunchDelegate {
                 @Override
                 public void finished(boolean success) {
                     ioContext.stop();
+                    notifyFinished(context, success);
                 }
             };
             Lookup launchCtx = new ProxyLookup(
@@ -109,6 +117,12 @@ public abstract class NbLaunchDelegate {
             );
             Lookups.executeWith(launchCtx, () -> {
                 providerAndCommand.first().invokeAction(providerAndCommand.second(), Lookups.fixed(toRun, ioContext, progress));
+                
+                OperationContext ctx = OperationContext.find(Lookup.getDefault());
+                List<InternalHandle> created = ctx.getOperationHandles();
+                if (!created.isEmpty()) {
+                    context.setProcessExecutorHandle(created.get(0));
+                }
             });
         }).exceptionally((t) -> {
             launchFuture.completeExceptionally(t);

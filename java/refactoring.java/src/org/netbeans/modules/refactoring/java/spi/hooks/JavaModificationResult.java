@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.refactoring.java.spi;
+package org.netbeans.modules.refactoring.java.spi.hooks;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,11 +28,11 @@ import org.openide.filesystems.FileObject;
  *
  * @author Jan Becicka
  */
-class JavaModificationResult implements ModificationResult {
+public class JavaModificationResult implements ModificationResult {
 
-    private org.netbeans.api.java.source.ModificationResult delegate;
+    public final org.netbeans.api.java.source.ModificationResult delegate;
     
-    JavaModificationResult(org.netbeans.api.java.source.ModificationResult r) {
+    public JavaModificationResult(org.netbeans.api.java.source.ModificationResult r) {
         this.delegate = r;
     }
 

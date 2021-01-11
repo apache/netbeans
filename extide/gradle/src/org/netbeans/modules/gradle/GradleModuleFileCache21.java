@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 
 /**
@@ -192,19 +193,22 @@ public final class GradleModuleFileCache21 {
         }
 
         private void readEntries() throws IOException {
-            if (entries.size() != Files.list(getPath()).count()) {
-                entries.clear();
-                Files.walkFileTree(getPath(), new SimpleFileVisitor<Path>() {
-                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                        try {
-                            Entry entry = new Entry(file);
-                            entries.put(entry.getName(), entry);
-                        } catch(IllegalArgumentException ex) {
-                            // Ignore non-artifact files, highly unlikely to happen
+            try (Stream<Path> stream = Files.list(getPath())) {
+                if (entries.size() != stream.count()) {
+                    entries.clear();
+                    Files.walkFileTree(getPath(), new SimpleFileVisitor<Path>() {
+                        @Override
+                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                            try {
+                                Entry entry = new Entry(file);
+                                entries.put(entry.getName(), entry);
+                            } catch(IllegalArgumentException ex) {
+                                // Ignore non-artifact files, highly unlikely to happen
+                            }
+                            return FileVisitResult.CONTINUE;
                         }
-                        return FileVisitResult.CONTINUE;
-                    }
-                });
+                    });
+                }
             }
         }
     }

@@ -75,6 +75,7 @@ public class SubProjectDiskCache extends AbstractDiskCache<File, SubProjectInfo>
         String rootProjectName;
         Map<String, String> path2Name;
         Map<File, String> file2Path;
+        Map<String, String> path2Description;
 
         protected SubProjectInfo() {}
 
@@ -83,8 +84,12 @@ public class SubProjectDiskCache extends AbstractDiskCache<File, SubProjectInfo>
             rootProjectName = prj.getName();
             path2Name = new HashMap<>();
             file2Path = new HashMap<>();
+            path2Description = new HashMap<>();
             for (GradleProject child : prj.getChildren()) {
                 path2Name.put(child.getPath(), child.getName());
+                if (child.getDescription() != null) {
+                    path2Description.put(child.getPath(), child.getDescription());
+                }
                 File dir = child.getProjectDirectory();
                 if (!dir.isAbsolute()) {
                     dir = new File(prj.getProjectDirectory(), dir.toString());
@@ -98,6 +103,7 @@ public class SubProjectDiskCache extends AbstractDiskCache<File, SubProjectInfo>
             rootProjectName = gbp.getName();
             path2Name = new HashMap<>();
             file2Path = new HashMap<>();
+            path2Description = Collections.emptyMap();
             for (Map.Entry<String, File> sprj : gbp.getSubProjects().entrySet()) {
                 file2Path.put(sprj.getValue(), sprj.getKey());
                 path2Name.put(sprj.getKey(), sprj.getKey());
@@ -115,6 +121,15 @@ public class SubProjectDiskCache extends AbstractDiskCache<File, SubProjectInfo>
         public String getProjectName(File dir) {
             String path = file2Path.get(dir);
             return path != null ? path2Name.get(path) : null;
+        }
+
+        public String getProjectDescription(String path) {
+            return path2Description.get(path);
+        }
+
+        public String getProjectDescription(File dir) {
+            String path = file2Path.get(dir);
+            return path != null ? path2Description.get(path) : null;
         }
 
         public String getProjectPath(File dir) {

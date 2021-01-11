@@ -84,14 +84,13 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
                 URI uri = (URI) evt.getNewValue();
                 if ((uri != null) && (uri.getPath() != null) && uri.getPath().endsWith(GradleFiles.WRAPPER_PROPERTIES)) {
                     URI newDistURI = getWrapperDistributionURI();
-                    if (GradleSettings.getDefault().isWrapperPreferred() && ! Objects.equal(distributionURI, newDistURI)) {
+                    if (GradleSettings.getDefault().isWrapperPreferred() && (distributionURI != null) && !Objects.equal(distributionURI, newDistURI)) {
                         distributionURI = newDistURI;
                         distributionChanged();
                     }
                 }
             }
         };
-        distributionURI = getWrapperDistributionURI();
         NbGradleProject.addPropertyChangeListener(project, WeakListeners.propertyChange(pcl, project));
     }
 

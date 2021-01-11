@@ -25,7 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import org.netbeans.modules.gradle.GradleProjectCache;
+import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache.QualifiedProjectInfo;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
@@ -52,7 +52,7 @@ public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Q
 
     @Override
     protected File cacheFile() {
-        return new File(GradleProjectCache.getCacheDir(key), INFO_CACHE_FILE_NAME);
+        return new File(NbGradleProjectImpl.getCacheDir(key), INFO_CACHE_FILE_NAME);
     }
 
     @Override

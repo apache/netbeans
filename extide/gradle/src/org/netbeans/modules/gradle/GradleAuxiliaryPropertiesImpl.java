@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.gradle;
 
+import org.netbeans.modules.gradle.loaders.LegacyProjectLoader;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import java.io.File;
 import java.io.FileInputStream;
@@ -124,6 +125,6 @@ public class GradleAuxiliaryPropertiesImpl implements AuxiliaryProperties {
 
     private File getPropFile(boolean shared) {
         GradleFiles gf = project.getGradleFiles();
-        return new File(shared ? gf.getProjectDir() : GradleProjectCache.getCacheDir(gf), GradleFiles.GRADLE_PROPERTIES_NAME);
+        return new File(shared ? gf.getProjectDir() : LegacyProjectLoader.getCacheDir(gf), GradleFiles.GRADLE_PROPERTIES_NAME);
     }
 }

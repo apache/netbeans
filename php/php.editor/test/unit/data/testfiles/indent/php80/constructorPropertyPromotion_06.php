@@ -18,11 +18,10 @@
  * under the License.
  */
 
-#[
-    A("param"),
-    A(
-            ^
-    )
-]
-class AttributeSyntax {
+class ConstructorPropertyPromotion {
+    public function __construct(
+            int $param1,
+            private int|string $filed1,^
+            private ?string $filed2 = "default value",
+    ) {}
 }

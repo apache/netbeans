@@ -18,11 +18,8 @@
  * under the License.
  */
 
-#[
-    A("param"),
-    A(
+class ConstructorPropertyPromotion {
+    public function __construct(
             ^
-    )
-]
-class AttributeSyntax {
+    ) {}
 }

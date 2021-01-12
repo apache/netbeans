@@ -1280,7 +1280,8 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                             appendSpace = codeStyle.spaceBeforeSwitchParen();
                             break;
                         case "array": //NOI18N
-                            if (request.context == CompletionContext.TYPE_NAME) {
+                            if (request.context == CompletionContext.TYPE_NAME
+                                    || request.context == CompletionContext.VISIBILITY_MODIFIER_OR_TYPE_NAME) {
                                 // e.g. return type
                                 appendBrackets = false;
                                 appendSpace = false;

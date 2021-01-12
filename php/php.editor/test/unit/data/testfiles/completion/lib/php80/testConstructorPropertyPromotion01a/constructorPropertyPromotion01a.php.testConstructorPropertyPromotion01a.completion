@@ -1,11 +1,7 @@
 Code completion result for source line:
-|
-        /* comment */
+public function __construct(|) {
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-PACKAGE    Froo                            [PUBLIC]   null
-PACKAGE    Trest                           [PUBLIC]   null
-CLASS      Bar                             [PUBLIC]   Froo
-CLASS      TestClass                       [PUBLIC]   Trest
+CLASS      ConstructorPropertyPromotion    [PUBLIC]   constructorPropertyPromotion01a.php
 ------------------------------------
 KEYWORD    array                                      null
 KEYWORD    bool                                       null

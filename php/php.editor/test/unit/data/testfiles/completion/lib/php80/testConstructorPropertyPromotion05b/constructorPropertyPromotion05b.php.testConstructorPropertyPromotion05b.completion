@@ -1,11 +1,7 @@
 Code completion result for source line:
-|
-        /* comment */
+private string||
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-PACKAGE    Froo                            [PUBLIC]   null
-PACKAGE    Trest                           [PUBLIC]   null
-CLASS      Bar                             [PUBLIC]   Froo
-CLASS      TestClass                       [PUBLIC]   Trest
+CLASS      ConstructorPropertyPromotion    [PUBLIC]   constructorPropertyPromotion05b.php
 ------------------------------------
 KEYWORD    array                                      null
 KEYWORD    bool                                       null
@@ -14,12 +10,8 @@ KEYWORD    false                                      null
 KEYWORD    float                                      null
 KEYWORD    int                                        null
 KEYWORD    iterable                                   null
-KEYWORD    mixed                                      null
 KEYWORD    null                                       null
 KEYWORD    object                                     null
 KEYWORD    parent                                     null
-KEYWORD    private                                    null
-KEYWORD    protected                                  null
-KEYWORD    public                                     null
 KEYWORD    self                                       null
 KEYWORD    string                                     null

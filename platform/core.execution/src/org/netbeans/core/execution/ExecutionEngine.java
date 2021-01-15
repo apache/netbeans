@@ -137,7 +137,7 @@ public final class
         ExecutorTaskImpl task = new ExecutorTaskImpl();
         synchronized (task.lock) {
             try {
-                new RunClassThread(g, name, number++, inout, this, task, run);
+                new RunClassThread(g, name, number++, inout, this, task, Lookup.getDefault(), run);
                 task.lock.wait();
             } catch (InterruptedException e) { // #171795
                 inout.closeInputOutput();

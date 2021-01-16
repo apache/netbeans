@@ -89,7 +89,9 @@ class JaxRsFilterPanel implements Panel<WizardDescriptor> {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
             Profile profile = webModule.getJ2eeProfile();
-            if ( !Profile.JAKARTA_EE_8_FULL.equals(profile) && 
+            if ( !Profile.JAKARTA_EE_9_FULL.equals(profile) &&
+                    !Profile.JAKARTA_EE_9_WEB.equals(profile) &&
+                    !Profile.JAKARTA_EE_8_FULL.equals(profile) &&
                     !Profile.JAKARTA_EE_8_WEB.equals(profile) &&
                     !Profile.JAVA_EE_8_FULL.equals(profile) &&
                     !Profile.JAVA_EE_8_WEB.equals(profile) &&

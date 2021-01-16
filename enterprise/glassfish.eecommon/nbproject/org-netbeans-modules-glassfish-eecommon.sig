@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.47.0
+#Version 1.46.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1193,6 +1193,7 @@ CLSS public final org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion J2EE_1_3
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion J2EE_1_4
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_8_0
+fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAKARTAEE_9_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_5_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_6_0
 fld public final static org.netbeans.modules.glassfish.eecommon.api.config.J2EEVersion JAVAEE_7_0
@@ -1523,4 +1524,3 @@ meth public void writeExternal(java.io.ObjectOutput) throws java.io.IOException
 supr javax.swing.JComponent
 hfds LOG,MODE_ID_PREFERENCES_KEY_INFIX,UILOG,activatedNodes,attentionGetter,closeOperation,defaultLookupLock,defaultLookupRef,displayName,htmlDisplayName,icon,modeName,nodeName,serialVersion,serialVersionUID,warnedClasses,warnedTCPIClasses
 hcls AttentionGetter,CloneWindowAction,CloseWindowAction,Replacer,SynchronizeNodes
-

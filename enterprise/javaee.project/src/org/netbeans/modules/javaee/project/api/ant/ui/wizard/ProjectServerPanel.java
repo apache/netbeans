@@ -430,12 +430,12 @@ final class ProjectServerPanel extends javax.swing.JPanel implements DocumentLis
                     continue;
                 }
                 if (j2eeModuleType ==J2eeModule.Type.WAR) {
-                    if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_7_FULL.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_FULL.equals(profile)) {
+                    if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_7_FULL.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_9_FULL.equals(profile)) {
                         // for web apps always offer only JAVA_EE_6_WEB profile and skip full one
                         continue;
                     }
                 } else {
-                    if (Profile.JAVA_EE_6_WEB.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile) || Profile.JAVA_EE_8_WEB.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile)) {
+                    if (Profile.JAVA_EE_6_WEB.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile) || Profile.JAVA_EE_8_WEB.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile) || Profile.JAKARTA_EE_9_WEB.equals(profile)) {
                         // for EE apps always skip web profile
                         continue;
                     }

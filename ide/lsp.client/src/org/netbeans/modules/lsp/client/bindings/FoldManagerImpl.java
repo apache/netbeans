@@ -154,7 +154,7 @@ public class FoldManagerImpl implements FoldManager, BackgroundTask {
 
     private static final Logger LOG = Logger.getLogger(FoldManagerImpl.class.getName());
 
-    @MimeRegistration(mimeType="", service=FoldManagerFactory.class)
+    @MimeRegistration(mimeType="", service=FoldManagerFactory.class, position = 1950)
     public static final class FactoryImpl implements FoldManagerFactory {
 
         @Override

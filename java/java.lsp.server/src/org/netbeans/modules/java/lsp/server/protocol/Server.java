@@ -36,6 +36,7 @@ import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionOptions;
 import org.eclipse.lsp4j.CompletionOptions;
 import org.eclipse.lsp4j.ExecuteCommandOptions;
+import org.eclipse.lsp4j.FoldingRangeProviderOptions;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.MessageActionItem;
@@ -328,6 +329,8 @@ public final class Server {
                 RenameOptions renOpt = new RenameOptions();
                 renOpt.setPrepareProvider(true);
                 capabilities.setRenameProvider(renOpt);
+                FoldingRangeProviderOptions foldingOptions = new FoldingRangeProviderOptions();
+                capabilities.setFoldingRangeProvider(foldingOptions);
             }
             return new InitializeResult(capabilities);
         }

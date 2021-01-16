@@ -73,6 +73,8 @@ import org.eclipse.lsp4j.DocumentHighlightParams;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
+import org.eclipse.lsp4j.FoldingRange;
+import org.eclipse.lsp4j.FoldingRangeRequestParams;
 import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.HoverParams;
 import org.eclipse.lsp4j.InitializeParams;
@@ -3177,6 +3179,92 @@ public class ServerTest extends NbTestCase {
             }
         }
         assertEquals(Arrays.asList(0, 0), publishedDiagnostics.get(jlStringURI));
+    }
+
+    public void testCodeFolding() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "/*\n" +
+                      " * comment\n" +
+                      " */\n" +
+                      "import java.util.List;\n" +
+                      "import java.util.Set;\n" +
+                      "public class Test {\n" +
+                      "    /**\n" +
+                      "     * javadoc\n" +
+                      "     */\n" +
+                      "    public void test() {\n" +
+                      "        return s.toString();\n" +
+                      "    }\n" +
+                      "    public static class Test {\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        assertNotNull(result.getCapabilities().getFoldingRangeProvider());
+        assertTrue(result.getCapabilities().getFoldingRangeProvider().isRight());
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        List<FoldingRange> folds = server.getTextDocumentService().foldingRange(new FoldingRangeRequestParams(new TextDocumentIdentifier(toURI(src)))).get();
+        System.err.println("folds=" + folds);
+        assertEquals(5, folds.size());
+
+        assertEquals(0, folds.get(0).getStartLine());
+        assertEquals(0, (int) folds.get(0).getStartCharacter());
+        assertEquals(2, folds.get(0).getEndLine());
+        assertEquals(3, (int) folds.get(0).getEndCharacter());
+        assertEquals("comment", folds.get(0).getKind());
+
+        assertEquals(3, folds.get(1).getStartLine());
+        assertEquals(7, (int) folds.get(1).getStartCharacter());
+        assertEquals(4, folds.get(1).getEndLine());
+        assertEquals(21, (int) folds.get(1).getEndCharacter());
+        assertEquals("imports", folds.get(1).getKind());
+
+        assertEquals(9, folds.get(2).getStartLine());
+        assertEquals(23, (int) folds.get(2).getStartCharacter());
+        assertEquals(11, folds.get(2).getEndLine());
+        assertEquals(5, (int) folds.get(2).getEndCharacter());
+        assertEquals("region", folds.get(2).getKind());
+
+        assertEquals(6, folds.get(3).getStartLine());
+        assertEquals(4, (int) folds.get(3).getStartCharacter());
+        assertEquals(8, folds.get(3).getEndLine());
+        assertEquals(7, (int) folds.get(3).getEndCharacter());
+        assertEquals("comment", folds.get(3).getKind());
+
+        assertEquals(12, folds.get(4).getStartLine());
+        assertEquals(29, (int) folds.get(4).getStartCharacter());
+        assertEquals(13, folds.get(4).getEndLine());
+        assertEquals(5, (int) folds.get(4).getEndCharacter());
+        assertEquals("region", folds.get(4).getKind());
     }
 
     interface Validator<T> {

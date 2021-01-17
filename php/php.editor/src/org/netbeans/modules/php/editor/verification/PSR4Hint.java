@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -92,7 +93,7 @@ public abstract class PSR4Hint extends HintRule {
                     return;
                 }
                 NamespaceName namespaceName = node.getName();
-                if (namespaceName != null) {
+                if (namespaceName != null && getFile() != null) {
                     int endOffset = namespaceName.getEndOffset();
                     File currentDir = getFile().getParentFile();
                     ListIterator<Identifier> segmentsIterator = namespaceName.getSegments().listIterator(namespaceName.getSegments().size());
@@ -179,8 +180,12 @@ public abstract class PSR4Hint extends HintRule {
 
             @NbBundle.Messages("PSR4WrongTypeNameHintText=Type declaration name doesn't correspond to current file name.")
             private void processTypeDeclaration(TypeDeclaration node) {
+                File file = getFile();
+                if (file == null) {
+                    return;
+                }
+                String filename = file.getName();
                 String currentTypeName = CodeUtils.extractTypeName(node);
-                String filename = getFile().getName();
                 if (!filename.equals(currentTypeName + PHP_FILE_EXTENSION)) {
                     Identifier name = node.getName();
                     createHint(name, Bundle.PSR4WrongTypeNameHintText());
@@ -249,6 +254,7 @@ public abstract class PSR4Hint extends HintRule {
             }
         }
 
+        @CheckForNull
         protected File getFile() {
             return file;
         }

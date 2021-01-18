@@ -44,6 +44,13 @@ public final class AskEditorQuestions {
     }
 
     public static boolean askUserQuestionExceptionOnSave(String localizedMessage) {
+        String ask = NbBundle.getMessage(AskEditorQuestions.class, "ASK_OnSaving"); // NOI18N
+        if ("yes".equals(ask)) { // NOI18N
+            return true;
+        }
+        if ("no".equals(ask)) { // NOI18N
+            return false;
+        }
         NotifyDescriptor nd = new NotifyDescriptor.Confirmation(localizedMessage, NotifyDescriptor.YES_NO_OPTION);
         Object res = DialogDisplayer.getDefault().notify(nd);
         if (NotifyDescriptor.OK_OPTION.equals(res)) {
@@ -54,6 +61,13 @@ public final class AskEditorQuestions {
     }
 
     public static boolean askFileReadOnlyOnClose(String fileName) {
+        String ask = NbBundle.getMessage(AskEditorQuestions.class, "ASK_OnClosing"); // NOI18N
+        if ("yes".equals(ask)) { // NOI18N
+            return true;
+        }
+        if ("no".equals(ask)) { // NOI18N
+            return false;
+        }
         Object result = DialogDisplayer.getDefault().notify(new NotifyDescriptor.Confirmation(
             NbBundle.getMessage(AskEditorQuestions.class, "MSG_FileReadOnlyClosing", 
             new Object[]{fileName}), 

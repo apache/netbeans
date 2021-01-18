@@ -28,6 +28,14 @@ public class EncodedActionTable12 {
     }
     protected EncodedActionTable12() {
         sb = new StringBuilder();
+        sb.append("\062");
+        sb.append("\uff65");
+        sb.append("\063");
+        sb.append("\uff65");
+        sb.append("\064");
+        sb.append("\uff65");
+        sb.append("\065");
+        sb.append("\uff65");
         sb.append("\066");
         sb.append("\uff65");
         sb.append("\074");
@@ -385,7 +393,7 @@ public class EncodedActionTable12 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\151");
-        sb.append("\u04ca");
+        sb.append("\u04cb");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -1419,7 +1427,7 @@ public class EncodedActionTable12 {
         sb.append("\111");
         sb.append("\101");
         sb.append("\112");
-        sb.append("\u04d3");
+        sb.append("\u04d4");
         sb.append("\114");
         sb.append("\226");
         sb.append("\115");
@@ -1785,7 +1793,7 @@ public class EncodedActionTable12 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\230");
-        sb.append("\u04d6");
+        sb.append("\u04d7");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -1825,7 +1833,7 @@ public class EncodedActionTable12 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\231");
-        sb.append("\u04d8");
+        sb.append("\u04d9");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -1839,13 +1847,13 @@ public class EncodedActionTable12 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\073");
-        sb.append("\u04da");
+        sb.append("\u04db");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
         sb.append("\174");
         sb.append("\003");
-        sb.append("\u031e");
+        sb.append("\u031f");
         sb.append("\004");
         sb.append("\204");
         sb.append("\006");
@@ -2387,13 +2395,13 @@ public class EncodedActionTable12 {
         sb.append("\012");
         sb.append("\075");
         sb.append("\015");
-        sb.append("\u0475");
+        sb.append("\u0476");
         sb.append("\107");
-        sb.append("\u0474");
+        sb.append("\u0475");
         sb.append("\110");
-        sb.append("\u0473");
+        sb.append("\u0474");
         sb.append("\235");
-        sb.append("\u04e1");
+        sb.append("\u04e2");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -2691,7 +2699,7 @@ public class EncodedActionTable12 {
         sb.append("\150");
         sb.append("\252");
         sb.append("\151");
-        sb.append("\u04e4");
+        sb.append("\u04e5");
         sb.append("\152");
         sb.append("\247");
         sb.append("\153");
@@ -3027,7 +3035,7 @@ public class EncodedActionTable12 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\215");
-        sb.append("\u04e7");
+        sb.append("\u04e8");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -3051,7 +3059,7 @@ public class EncodedActionTable12 {
         sb.append("\132");
         sb.append("\ufd66");
         sb.append("\134");
-        sb.append("\u04e8");
+        sb.append("\u04e9");
         sb.append("\150");
         sb.append("\ufd66");
         sb.append("\151");
@@ -4520,13 +4528,5 @@ public class EncodedActionTable12 {
         sb.append("\031");
         sb.append("\205");
         sb.append("\173");
-        sb.append("\206");
-        sb.append("\044");
-        sb.append("\207");
-        sb.append("\163");
-        sb.append("\210");
-        sb.append("\114");
-        sb.append("\211");
-        sb.append("\174");
     }
 }

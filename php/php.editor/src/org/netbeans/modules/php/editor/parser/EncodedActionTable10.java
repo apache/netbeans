@@ -28,6 +28,14 @@ public class EncodedActionTable10 {
     }
     protected EncodedActionTable10() {
         sb = new StringBuilder();
+        sb.append("\116");
+        sb.append("\uff69");
+        sb.append("\117");
+        sb.append("\uff69");
+        sb.append("\120");
+        sb.append("\uff69");
+        sb.append("\121");
+        sb.append("\uff69");
         sb.append("\122");
         sb.append("\uff69");
         sb.append("\123");
@@ -385,7 +393,7 @@ public class EncodedActionTable10 {
         sb.append("\150");
         sb.append("\252");
         sb.append("\151");
-        sb.append("\u042c");
+        sb.append("\u042d");
         sb.append("\152");
         sb.append("\247");
         sb.append("\153");
@@ -643,13 +651,13 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\021");
-        sb.append("\u042e");
+        sb.append("\u042f");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
         sb.append("\004");
         sb.append("\230");
-        sb.append("\u042f");
+        sb.append("\u0430");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -829,7 +837,7 @@ public class EncodedActionTable10 {
         sb.append("\201");
         sb.append("\251");
         sb.append("\231");
-        sb.append("\u0431");
+        sb.append("\u0432");
         sb.append("\242");
         sb.append("\253");
         sb.append("\245");
@@ -839,7 +847,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\151");
-        sb.append("\u0432");
+        sb.append("\u0433");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -1049,7 +1057,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\111");
-        sb.append("\u0434");
+        sb.append("\u0435");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -1085,13 +1093,13 @@ public class EncodedActionTable10 {
         sb.append("\045");
         sb.append("\ufeaf");
         sb.append("\056");
-        sb.append("\u043d");
+        sb.append("\u043e");
         sb.append("\060");
         sb.append("\u0289");
         sb.append("\112");
-        sb.append("\u043c");
+        sb.append("\u043d");
         sb.append("\120");
-        sb.append("\u043b");
+        sb.append("\u043c");
         sb.append("\222");
         sb.append("\u0287");
         sb.append("\223");
@@ -1139,7 +1147,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\045");
-        sb.append("\u0445");
+        sb.append("\u0446");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -1493,7 +1501,7 @@ public class EncodedActionTable10 {
         sb.append("\127");
         sb.append("\u0297");
         sb.append("\151");
-        sb.append("\u0441");
+        sb.append("\u0442");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -1911,7 +1919,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\230");
-        sb.append("\u0448");
+        sb.append("\u0449");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -1951,7 +1959,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\231");
-        sb.append("\u044a");
+        sb.append("\u044b");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -2265,7 +2273,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\237");
-        sb.append("\u0450");
+        sb.append("\u0451");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -2541,7 +2549,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\134");
-        sb.append("\u0454");
+        sb.append("\u0455");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -2667,7 +2675,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\006");
         sb.append("\067");
-        sb.append("\u0458");
+        sb.append("\u0459");
         sb.append("\111");
         sb.append("\uff2c");
         sb.append("\001");
@@ -2675,7 +2683,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\111");
-        sb.append("\u045a");
+        sb.append("\u045b");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -2729,9 +2737,9 @@ public class EncodedActionTable10 {
         sb.append("\046");
         sb.append("\ufeb6");
         sb.append("\112");
-        sb.append("\u045f");
+        sb.append("\u0460");
         sb.append("\120");
-        sb.append("\u0462");
+        sb.append("\u0463");
         sb.append("\222");
         sb.append("\u0287");
         sb.append("\223");
@@ -3013,7 +3021,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\045");
-        sb.append("\u0463");
+        sb.append("\u0464");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -3361,7 +3369,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\230");
-        sb.append("\u0466");
+        sb.append("\u0467");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -3401,7 +3409,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\231");
-        sb.append("\u0468");
+        sb.append("\u0469");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -3415,7 +3423,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\151");
-        sb.append("\u046a");
+        sb.append("\u046b");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -3457,7 +3465,7 @@ public class EncodedActionTable10 {
         sb.append("\127");
         sb.append("\u02db");
         sb.append("\151");
-        sb.append("\u046d");
+        sb.append("\u046e");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -3499,13 +3507,13 @@ public class EncodedActionTable10 {
         sb.append("\012");
         sb.append("\075");
         sb.append("\015");
-        sb.append("\u0475");
+        sb.append("\u0476");
         sb.append("\107");
-        sb.append("\u0474");
+        sb.append("\u0475");
         sb.append("\110");
-        sb.append("\u0473");
+        sb.append("\u0474");
         sb.append("\234");
-        sb.append("\u0472");
+        sb.append("\u0473");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -3515,9 +3523,9 @@ public class EncodedActionTable10 {
         sb.append("\015");
         sb.append("\ufd3a");
         sb.append("\071");
-        sb.append("\u0481");
+        sb.append("\u0482");
         sb.append("\072");
-        sb.append("\u047f");
+        sb.append("\u0480");
         sb.append("\106");
         sb.append("\ufd3a");
         sb.append("\107");
@@ -3525,7 +3533,7 @@ public class EncodedActionTable10 {
         sb.append("\110");
         sb.append("\ufd3a");
         sb.append("\214");
-        sb.append("\u0480");
+        sb.append("\u0481");
         sb.append("\234");
         sb.append("\ufd3a");
         sb.append("\235");
@@ -3665,7 +3673,7 @@ public class EncodedActionTable10 {
         sb.append("\010");
         sb.append("\224");
         sb.append("\011");
-        sb.append("\u0477");
+        sb.append("\u0478");
         sb.append("\012");
         sb.append("\075");
         sb.append("\015");
@@ -3797,7 +3805,7 @@ public class EncodedActionTable10 {
         sb.append("\031");
         sb.append("\270");
         sb.append("\112");
-        sb.append("\u047c");
+        sb.append("\u047d");
         sb.append("\130");
         sb.append("\257");
         sb.append("\131");
@@ -3915,7 +3923,7 @@ public class EncodedActionTable10 {
         sb.append("\201");
         sb.append("\ufdb7");
         sb.append("\214");
-        sb.append("\u0478");
+        sb.append("\u0479");
         sb.append("\242");
         sb.append("\ufdb7");
         sb.append("\245");
@@ -4099,7 +4107,7 @@ public class EncodedActionTable10 {
         sb.append("\201");
         sb.append("\251");
         sb.append("\215");
-        sb.append("\u047a");
+        sb.append("\u047b");
         sb.append("\242");
         sb.append("\253");
         sb.append("\245");
@@ -4109,7 +4117,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\112");
-        sb.append("\u047b");
+        sb.append("\u047c");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -4151,7 +4159,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\112");
-        sb.append("\u047e");
+        sb.append("\u047f");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -4187,7 +4195,7 @@ public class EncodedActionTable10 {
         sb.append("\012");
         sb.append("\075");
         sb.append("\013");
-        sb.append("\u0486");
+        sb.append("\u0487");
         sb.append("\121");
         sb.append("\u0129");
         sb.append("\001");
@@ -4227,7 +4235,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\215");
-        sb.append("\u0487");
+        sb.append("\u0488");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -4285,13 +4293,13 @@ public class EncodedActionTable10 {
         sb.append("\121");
         sb.append("\u0129");
         sb.append("\230");
-        sb.append("\u038e");
+        sb.append("\u038f");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
         sb.append("\004");
         sb.append("\230");
-        sb.append("\u048b");
+        sb.append("\u048c");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -4331,7 +4339,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\231");
-        sb.append("\u048d");
+        sb.append("\u048e");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -4345,7 +4353,7 @@ public class EncodedActionTable10 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\111");
-        sb.append("\u048f");
+        sb.append("\u0490");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -4520,13 +4528,5 @@ public class EncodedActionTable10 {
         sb.append("\uff80");
         sb.append("\236");
         sb.append("\uff80");
-        sb.append("\240");
-        sb.append("\uff80");
-        sb.append("\247");
-        sb.append("\uff80");
-        sb.append("\001");
-        sb.append("\002");
-        sb.append("\000");
-        sb.append("\260");
     }
 }

@@ -3750,7 +3750,7 @@ lexical_vars ::=
     RESULT = null;
 :}
 
-| T_USE:s T_OPEN_PARENTHESE lexical_var_list:list T_CLOSE_PARENTHESE:e
+| T_USE:s T_OPEN_PARENTHESE lexical_var_list:list possible_comma T_CLOSE_PARENTHESE:e
 {:
     RESULT = list;
 :}

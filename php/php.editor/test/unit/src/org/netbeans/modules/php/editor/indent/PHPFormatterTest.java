@@ -921,6 +921,17 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/php80/constructorPropertyPromotion_01b.php", options);
     }
 
+    public void testAllowTrailingCommaInClosureUseLists_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php80/allowTrailingCommaInClosureUseLists_01a.php", options);
+    }
+
+    public void testAllowTrailingCommaInClosureUseLists_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        reformatFileContents("testfiles/formatting/php80/allowTrailingCommaInClosureUseLists_01b.php", options);
+    }
+
     public void testNetBeans4970() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/netbeans4970.php", options);

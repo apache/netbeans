@@ -209,6 +209,20 @@ public abstract class BodyDeclaration extends Statement implements Attributed {
             return (mod & ABSTRACT) != 0;
         }
 
+        /**
+         * Check whether the modifier is a visibility modifier(public,
+         * protected, or private).
+         *
+         * @param modifier the modifier
+         * @return {@code true} it's a visibility modifier, otherwise
+         * {@code false}
+         */
+        public static boolean isVisibilityModifier(int modifier) {
+            return isPublic(modifier)
+                    || isProtected(modifier)
+                    || isPrivate(modifier);
+        }
+
         public static String toString(int mod) {
             StringBuilder sb = new StringBuilder();
 

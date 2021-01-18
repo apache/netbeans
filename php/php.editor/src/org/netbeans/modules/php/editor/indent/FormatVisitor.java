@@ -1207,7 +1207,15 @@ public class FormatVisitor extends DefaultVisitor {
         scan(node.getFunctionName());
 
         // #270903 add indent
-        formatTokens.add(new FormatToken.IndentToken(node.getFunctionName().getEndOffset(), options.continualIndentSize));
+        while (ts.moveNext() && (ts.token().id() == PHPTokenId.WHITESPACE
+                || isComment(ts.token())
+                || isOpenParen(ts.token()))) {
+            addFormatToken(formatTokens);
+            if (isOpenParen(ts.token())) {
+                formatTokens.add(new FormatToken.IndentToken(ts.offset() + ts.token().length(), options.continualIndentSize));
+            }
+        }
+        ts.movePrevious();
 
         addParameters(node.getFormalParameters());
 
@@ -1222,7 +1230,20 @@ public class FormatVisitor extends DefaultVisitor {
         } else {
             indentEndOffset = node.getEndOffset();
         }
-        formatTokens.add(new FormatToken.IndentToken(indentEndOffset, -1 * options.continualIndentSize));
+
+        // e.g. the following case doesn't have FormalParameters because of a parser error
+        // so, add tokens until ")"
+        // function __construct(
+        //     public
+        // ) {}
+        while (moveNext() && ts.offset() < indentEndOffset
+                && (ts.offset() + ts.token().length()) <= indentEndOffset) {
+            if (isCloseParen(ts.token())) {
+                formatTokens.add(new FormatToken.IndentToken(ts.offset(), -1 * options.continualIndentSize));
+            }
+            addFormatToken(formatTokens);
+        }
+        ts.movePrevious();
 
         addReturnType(node.getReturnType());
         scan(node.getBody());
@@ -2798,6 +2819,14 @@ public class FormatVisitor extends DefaultVisitor {
 
     private boolean isShebang(final CharSequence text) {
         return TokenUtilities.startsWith(text, "#!"); //NOI18N
+    }
+
+    private static boolean isOpenParen(Token<? extends PHPTokenId> token) {
+        return TokenUtilities.textEquals("(", token.text()); // NOI18N
+    }
+
+    private static boolean isCloseParen(Token<? extends PHPTokenId> token) {
+        return TokenUtilities.textEquals(")", token.text()); // NOI18N
     }
 
     private static boolean isAnonymousClass(ASTNode astNode) {

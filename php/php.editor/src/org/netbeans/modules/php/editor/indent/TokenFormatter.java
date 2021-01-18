@@ -1323,7 +1323,9 @@ public class TokenFormatter {
                                         helpIndex = index - 1;
                                         while (helpIndex > 0
                                                 && formatTokens.get(helpIndex).getId() != FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS
-                                                && (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE /*
+                                                && (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE
+                                                || formatTokens.get(helpIndex).getId() == FormatToken.Kind.INDENT
+                                                /*
                                                  * ||
                                                  * formatTokens.get(helpIndex).getId()
                                                  * == FormatToken.Kind.WHITESPACE_INDENT

@@ -1273,6 +1273,18 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php80/attributeSyntaxError_02");
     }
 
+    public void testConstructorPropertyPromotion_01() throws Exception {
+        performTest("parser/php80/constructorPropertyPromotion_01");
+    }
+
+    public void testConstructorPropertyPromotion_02() throws Exception {
+        performTest("parser/php80/constructorPropertyPromotion_02");
+    }
+
+    public void testConstructorPropertyPromotionErrorWithStatic() throws Exception {
+        performTest("parser/php80/constructorPropertyPromotionErrorWithStatic");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

@@ -1200,4 +1200,16 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php80/attributeSyntaxError_02.php");
     }
 
+    public void testConstructorPropertyPromotion_01() throws Exception {
+        checkErrors("testfiles/parser/php80/constructorPropertyPromotion_01.php");
+    }
+
+    public void testConstructorPropertyPromotion_02() throws Exception {
+        checkErrors("testfiles/parser/php80/constructorPropertyPromotion_02.php");
+    }
+
+    public void testConstructorPropertyPromotionErrorWithStatic() throws Exception {
+        checkErrors("testfiles/parser/php80/constructorPropertyPromotionErrorWithStatic.php");
+    }
+
 }

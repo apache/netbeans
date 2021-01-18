@@ -542,6 +542,7 @@ non terminal Identifier identifier_without_class;
 non terminal Identifier identifier;
 non terminal List class_constant_declaration;
 non terminal List constant_declaration;
+non terminal Integer optional_visibility_modifier;
 non terminal Integer constant_modifiers;
 non terminal Integer method_modifiers;
 non terminal Block method_body;
@@ -2328,56 +2329,73 @@ attributes:attributes parameter:param
 :}
 ;
 
+optional_visibility_modifier ::=
+constant_modifiers:modifier
+{:
+    RESULT = modifier;
+:}
+;
+
 parameter ::=
-optional_class_type_without_static:classType is_variadic:isVariadic T_VARIABLE:var
+optional_visibility_modifier:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var
 {:
-    int start = classType == null ? (isVariadic ? isVariadicleft : varleft) : classTypeleft;
+    int start = varleft;
+    if (isVariadic) {
+        start = isVariadicleft;
+    }
+    if (isReference) {
+        start = isReferenceleft;
+    }
+    if (classType != null) {
+        start = classTypeleft;
+    }
+    if (modifier != null) {
+        start = modifierleft;
+    }
     Variable v = new Variable(varleft, varright, var);
-        Expression argument = v;
+    Expression argument = v;
+    if (isVariadic) {
+        argument = new Variadic(isVariadicleft, varright, v);
+    }
+    if (isReference) {
         if (isVariadic) {
-            argument = new Variadic(isVariadicleft, varright, v);
+            argument = new Reference(isReferenceleft, varright, (Variadic) argument);
+        } else {
+            argument = new Reference(isReferenceleft, varright, v);
         }
-    FormalParameter parameter = new FormalParameter(start, varright, classType, argument);
+    }
+    FormalParameter parameter = new FormalParameter(start, varright, modifier, classType, argument);
     RESULT = parameter;
 :}
 
-| optional_class_type_without_static:classType T_REFERENCE:ref T_VARIABLE:var
+| optional_visibility_modifier:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var T_EQUAL static_scalar:scalar
 {:
-    int start = classType == null ? refleft : classTypeleft;
+    int start = varleft;
+    if (isVariadic) {
+        start = isVariadicleft;
+    }
+    if (isReference) {
+        start = isReferenceleft;
+    }
+    if (classType != null) {
+        start = classTypeleft;
+    }
+    if (modifier != null) {
+        start = modifierleft;
+    }
     Variable v = new Variable(varleft, varright, var);
-    Reference ref_var = new Reference (refleft, varright, v);
-    FormalParameter parameter = new FormalParameter(start, varright, classType, ref_var);
-    RESULT = parameter;
-:}
-
-| optional_class_type_without_static:classType T_REFERENCE:ref T_ELLIPSIS:ell T_VARIABLE:var
-{:
-    int start = classType == null ? refleft : classTypeleft;
-    Variable v = new Variable(varleft, varright, var);
-    Variadic variadic = new Variadic(ellleft, varright, v);
-    Reference ref_var = new Reference (refleft, varright, variadic);
-    FormalParameter parameter = new FormalParameter(start, varright, classType, ref_var);
-    RESULT = parameter;
-:}
-
-| optional_class_type_without_static:classType is_variadic:isVariadic T_VARIABLE:var T_EQUAL static_scalar:scalar
-{:
-    int start = classType == null ? (isVariadic ? isVariadicleft : varleft) : classTypeleft;
-    Variable v = new Variable(varleft, varright, var);
-        Expression argument = v;
+    Expression argument = v;
+    if (isVariadic) {
+        argument = new Variadic(isVariadicleft, varright, v);
+    }
+    if (isReference) {
         if (isVariadic) {
-            argument = new Variadic(isVariadicleft, varright, v);
+            argument = new Reference(isReferenceleft, varright, (Variadic) argument);
+        } else {
+            argument = new Reference(isReferenceleft, varright, v);
         }
-    FormalParameter parameter = new FormalParameter(start, scalarright, classType, argument, scalar);
-    RESULT = parameter;
-:}
-
-| optional_class_type_without_static:classType T_REFERENCE:ref T_VARIABLE:var T_EQUAL static_scalar:scalar
-{:
-    int start = classType == null ? refleft : classTypeleft;
-    Variable v = new Variable(varleft, varright, var);
-    Reference ref_var = new Reference (refleft, varright, v);
-    FormalParameter parameter = new FormalParameter(start, scalarright, classType, ref_var, scalar);
+    }
+    FormalParameter parameter = new FormalParameter(start, scalarright, modifier, classType, argument, scalar);
     RESULT = parameter;
 :}
 ;

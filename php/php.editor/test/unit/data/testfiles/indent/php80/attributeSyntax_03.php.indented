@@ -21,7 +21,8 @@
 #[
     A("param"),
     A(
-            ^)
+            ^
+    )
 ]
 class AttributeSyntax {
 }

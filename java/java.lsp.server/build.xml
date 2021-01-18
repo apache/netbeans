@@ -96,6 +96,8 @@
         </exec>
         <exec executable="${build.dir}/vsce/node_modules/vsce/out/vsce" failonerror="true" dir="${basedir}/vscode">
             <arg value="package" />
+            <arg value="--baseImagesUrl" />
+            <arg value="https://github.com/apache/netbeans/raw/master/java/java.lsp.server/vscode" />
             <arg value="--out" />
             <arg value="${build.dir}/apache-netbeans-java-${vsix.version}.vsix" />
         </exec>

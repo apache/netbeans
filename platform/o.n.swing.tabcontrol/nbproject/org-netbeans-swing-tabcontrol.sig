@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.66
+#Version 1.67
 
 CLSS public abstract java.awt.AWTEvent
 cons public init(java.awt.Event)

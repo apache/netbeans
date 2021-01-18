@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.42
+#Version 1.43
 
 CLSS public abstract com.sun.codemodel.CodeWriter
 cons public init()
@@ -6083,7 +6083,7 @@ meth public static void setDataContentHandlerFactory(javax.activation.DataConten
 meth public void setCommandMap(javax.activation.CommandMap)
 meth public void writeTo(java.io.OutputStream) throws java.io.IOException
 supr java.lang.Object
-hfds class$javax$activation$DataHandler,currentCommandMap,dataContentHandler,dataSource,emptyFlavors,factory,factoryDCH,objDataSource,object,objectMimeType,oldFactory,shortType,transferFlavors
+hfds currentCommandMap,dataContentHandler,dataSource,emptyFlavors,factory,factoryDCH,objDataSource,object,objectMimeType,oldFactory,shortType,transferFlavors
 
 CLSS public abstract interface javax.activation.DataSource
 meth public abstract java.io.InputStream getInputStream() throws java.io.IOException

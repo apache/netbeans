@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.47
+#Version 1.48
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1235,7 +1235,7 @@ meth public void setTrackCursor(boolean)
 meth public void setWordDelineator(org.netbeans.lib.terminalemulator.WordDelineator)
 meth public void visitLogicalLines(org.netbeans.lib.terminalemulator.Coord,org.netbeans.lib.terminalemulator.Coord,org.netbeans.lib.terminalemulator.LogicalLineVisitor)
 supr javax.swing.JComponent
-hfds CULL_FREQUENCY,DO_MARGINS,ESC,MODULO,TRANSPARENT,accessible_context,active_color,actual_background,actual_foreground,allowedActions,altSendsEscape,anchored,base_stream,bot_margin,buf,charsInPrehistory,check_selection,click_to_type,completedSequences,cull_count,cursor_visible,dce_end,debug,debug_gutter_width,default_word_delineator,delimiters,drag_point,dte_end,firsta,fixedFont,glyph_gutter_width,glyph_images,has_focus,history_size,horizontally_scrollable,hscroll_bar,hscroll_count,hscroll_wrapper,input_listeners,interp,keymap,keystroke_set,lastMemUse,left_down_point,listeners,metrics,n_linefeeds,n_paint,n_putchar,n_putchars,n_repaint,newp,old_extent,old_rows,onMac,ops,palette,passOn,read_only,refresh_enabled,region_manager,renderingHints,reverse_video,screen,scroll_on_input,scroll_on_output,scroller,scrolling_direction,sel,selection_xor,sequenceLogging,size_rounded,st,systemClipboard,systemSelection,tab_size,top_margin,totcols,track_cursor,unrecognizedSequences,vscroll_bar,word_delineator,xferBuf
+hfds CULL_FREQUENCY,DEFAULT_DEBUG,DO_MARGINS,ESC,MODULO,TRANSPARENT,accessible_context,active_color,actual_background,actual_foreground,allowedActions,altSendsEscape,anchored,base_stream,bot_margin,buf,charsInPrehistory,check_selection,click_to_type,completedSequences,cull_count,cursor_visible,dce_end,debug,debug_gutter_width,default_word_delineator,delimiters,drag_point,dte_end,firsta,fixedFont,glyph_gutter_width,glyph_images,has_focus,history_size,horizontally_scrollable,hscroll_bar,hscroll_count,hscroll_wrapper,input_listeners,interp,keymap,keystroke_set,lastMemUse,left_down_point,listeners,metrics,n_linefeeds,n_paint,n_putchar,n_putchars,n_repaint,newp,old_extent,old_rows,onMac,ops,palette,passOn,read_only,refresh_enabled,region_manager,renderingHints,reverse_video,screen,scroll_on_input,scroll_on_output,scroller,scrolling_direction,sel,selection_xor,sequenceLogging,size_rounded,st,systemClipboard,systemSelection,tab_size,top_margin,totcols,track_cursor,unrecognizedSequences,vscroll_bar,word_delineator,xferBuf
 hcls BaseTermStream,MemUse,MouseWheelHandler,OpsImpl,ScrollWrapper,Scroller
 
 CLSS protected org.netbeans.lib.terminalemulator.Term$AccessibleTerm

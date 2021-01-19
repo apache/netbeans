@@ -1,7 +1,7 @@
 Name: FlatLaf Look and Feel
 Description: FlatLaf Look and Feel
-Version: 0.31
-Files: flatlaf-0.31.jar
+Version: 1.0-rc1
+Files: flatlaf-1.0-rc1.jar
 License: Apache-2.0
 Origin: FormDev Software GmbH.
 URL: https://www.formdev.com/flatlaf/

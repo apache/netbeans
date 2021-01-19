@@ -1285,6 +1285,10 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php80/constructorPropertyPromotionErrorWithStatic");
     }
 
+    public void testAllowTrailingCommaInClosureUseLists_01() throws Exception {
+        performTest("parser/php80/allowTrailingCommaInClosureUseLists_01");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

@@ -1212,4 +1212,7 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php80/constructorPropertyPromotionErrorWithStatic.php");
     }
 
+    public void testAllowTrailingCommaInClosureUseLists_01() throws Exception {
+        checkErrors("testfiles/parser/php80/allowTrailingCommaInClosureUseLists_01.php");
+    }
 }

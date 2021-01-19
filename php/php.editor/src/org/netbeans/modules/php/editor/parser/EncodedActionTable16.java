@@ -29,6 +29,14 @@ public class EncodedActionTable16 {
     protected EncodedActionTable16() {
         sb = new StringBuilder();
         sb.append("\000");
+        sb.append("\006");
+        sb.append("\127");
+        sb.append("\ufedd");
+        sb.append("\151");
+        sb.append("\ufedd");
+        sb.append("\001");
+        sb.append("\002");
+        sb.append("\000");
         sb.append("\032");
         sb.append("\010");
         sb.append("\325");
@@ -39,7 +47,7 @@ public class EncodedActionTable16 {
         sb.append("\075");
         sb.append("\015");
         sb.append("\111");
-        sb.append("\u05c1");
+        sb.append("\u05c2");
         sb.append("\114");
         sb.append("\u0113");
         sb.append("\117");
@@ -205,7 +213,7 @@ public class EncodedActionTable16 {
         sb.append("\031");
         sb.append("\270");
         sb.append("\112");
-        sb.append("\u05c3");
+        sb.append("\u05c4");
         sb.append("\130");
         sb.append("\257");
         sb.append("\131");
@@ -275,9 +283,9 @@ public class EncodedActionTable16 {
         sb.append("\000");
         sb.append("\006");
         sb.append("\012");
-        sb.append("\u05bc");
-        sb.append("\233");
         sb.append("\u05bd");
+        sb.append("\233");
+        sb.append("\u05be");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -623,7 +631,7 @@ public class EncodedActionTable16 {
         sb.append("\000");
         sb.append("\004");
         sb.append("\231");
-        sb.append("\u05c9");
+        sb.append("\u05ca");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");

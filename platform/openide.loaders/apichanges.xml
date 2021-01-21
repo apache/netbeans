@@ -92,7 +92,7 @@ is the proper place.
           <date day="20" month="1" year="2021"/>
           <author login="jtulach"/>
           <compatibility addition="yes" binary="compatible" source="compatible"
-                         semantic="compatible" deprecation="no" deletion="no"
+                         semantic="incompatible" deletion="no"
                          modification="no"/>
           <description>
               A branding API to disable showing on close and on save editor dialogs

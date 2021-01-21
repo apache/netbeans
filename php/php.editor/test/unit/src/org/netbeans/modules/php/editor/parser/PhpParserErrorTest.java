@@ -1215,4 +1215,12 @@ public class PhpParserErrorTest extends PHPTestBase {
     public void testAllowTrailingCommaInClosureUseLists_01() throws Exception {
         checkErrors("testfiles/parser/php80/allowTrailingCommaInClosureUseLists_01.php");
     }
+
+    public void testNamedArguments_01() throws Exception {
+        checkErrors("testfiles/parser/php80/namedArguments_01.php");
+    }
+
+    public void testNamedArgumentsWithAttribute_01() throws Exception {
+        checkErrors("testfiles/parser/php80/namedArgumentsWithAttribute_01.php");
+    }
 }

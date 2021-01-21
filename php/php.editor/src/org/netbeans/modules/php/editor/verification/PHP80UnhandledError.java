@@ -50,6 +50,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration
 import org.netbeans.modules.php.editor.parser.astnodes.MatchArm;
 import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
+import org.netbeans.modules.php.editor.parser.astnodes.NamedArgument;
 import org.netbeans.modules.php.editor.parser.astnodes.ThrowExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
@@ -249,6 +250,15 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
+        @Override
+        public void visit(NamedArgument node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkNamedArgument(node);
+            super.visit(node);
+        }
+
         private void addLastParam(List<FormalParameter> parameters) {
             if (!parameters.isEmpty()) {
                 lastParams.add(parameters.get(parameters.size() - 1));
@@ -368,6 +378,10 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             if (parameter.getModifier() != 0) {
                 createError(parameter);
             }
+        }
+
+        private void checkNamedArgument(NamedArgument namedArgument) {
+            createError(namedArgument);
         }
 
         private void createError(ASTNode node) {

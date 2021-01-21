@@ -151,6 +151,7 @@ public class ServerTest extends NbTestCase {
 
     @Override
     protected void setUp() throws Exception {
+        System.setProperty("java.awt.headless", Boolean.TRUE.toString());
         super.setUp();
         clearWorkDir();
         ServerSocket srv = new ServerSocket(0, 1, InetAddress.getLoopbackAddress());

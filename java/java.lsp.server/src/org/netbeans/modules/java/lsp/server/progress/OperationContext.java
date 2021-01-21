@@ -23,12 +23,19 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.progress.spi.Controller;
 import org.netbeans.modules.progress.spi.InternalHandle;
@@ -82,6 +89,11 @@ public final class OperationContext {
     private final OperationContext top;
     
     private boolean disableCancels;
+    
+    /**
+     * Listeners of InternalHandle operations. 
+     */
+    private final List<LR> operationListeners = new ArrayList<>();
     
     OperationContext(OperationContext top, NbCodeLanguageClient client, Controller controller) {
         this.client = client;
@@ -194,12 +206,13 @@ public final class OperationContext {
         return token;
     }
     
-    void removeHandle(Either<String, Number> token, InternalHandle h) {
+    void removeHandle(Either<String, Number> token, LspInternalHandle h) {
         if (top != this) {
             top.unregisterHandle(token, h);
         } else {
             unregisterHandle(token, h);
         }
+        notifyHandleFinished(h);
     }
     
     private Map<Either<String, Number>, InternalHandle> handles = new HashMap<>();
@@ -264,9 +277,104 @@ public final class OperationContext {
         return new ArrayList<>(createdHandles);
     }
     
-    void internalHandleCreated(InternalHandle h) {
+    void internalHandleCreated(LspInternalHandle h) {
         synchronized (this) {
             createdHandles.add(h);
+        }
+        dispatchProgressEvent(h, ProgressOperationListener::progressHandleCreated);
+    }
+    
+    void notifyHandleFinished(LspInternalHandle h) {
+        dispatchProgressEvent(h, ProgressOperationListener::progressHandleFinished);
+    }
+
+    private static class LR implements Predicate<String> {
+        private final String regexp;
+        private final ProgressOperationListener listener;
+        private final Pattern compiled;
+
+        public LR(String regexp, ProgressOperationListener listener) {
+            this.compiled = regexp == null ? null : Pattern.compile(regexp);
+            this.regexp = regexp;
+            this.listener = listener;
+        }
+
+        @Override
+        public boolean test(String t) {
+            if (compiled == null) {
+                return false;
+            }
+            return compiled.matcher(t).matches();
+        }
+    }
+    
+    /**
+     * Adds a listener that will be informed about {@link ProgressHandle}s created
+     * on behalf of the server call represented by this instance.
+     * The called code may fork a thread, that will produce a {@link ProgressHandle} later,
+     * after the server call completes and returns. If the forked thread preserves the Lookup
+     * for the forked thread, this OperationContext will be looked up and the listener will
+     * be informed when a handle is created, or finishes.
+     * <p>
+     * The caller may optionally specify a class filter; the listener will be called only if
+     * the creation call stack contains a class that satisfies the filter. The filter string
+     * is interpreted as a regular expression matched against class FQNs. {@code null} means
+     * to accept all progresses.
+     * 
+     * @param originClassFilter 
+     * @param ol listener instance
+     */
+    public void addProgressOperationListener(String originClassFilter, ProgressOperationListener ol) {
+        synchronized (this) {
+            operationListeners.add(new LR(originClassFilter, ol));
+        }
+    }
+    
+    public void removeProgressOperationListener(ProgressOperationListener ol) {
+        synchronized (this) {
+            for (Iterator<LR> it = operationListeners.iterator(); it.hasNext();) {
+                LR r = it.next();
+                if (r.listener == ol) {
+                    it.remove();
+                }
+            }
+        }
+    }
+    
+    public void removeProgressOperationListener(String originClassFilter, ProgressOperationListener ol) {
+        synchronized (this) {
+            for (LR r : operationListeners) {
+                if (Objects.equals(r.regexp, originClassFilter) && r.listener == ol) {
+                    operationListeners.remove(r);
+                    return;
+                }
+            }
+        }
+    }
+    
+    private void dispatchProgressEvent(LspInternalHandle h, BiConsumer<ProgressOperationListener, ProgressOperationEvent> m) {
+        Collection<ProgressOperationListener> ll = new LinkedHashSet<>();
+        synchronized (this) {
+            FRAME: for (StackTraceElement ste : h.getCreatorTrace()) {
+                String cn = ste.getClassName();
+                for (LR reg : operationListeners) {
+                    if (reg.test(cn)) {
+                        ll.add(reg.listener);
+                    }
+                }
+                for (LR reg : operationListeners) {
+                    if (reg.regexp == null) {
+                        ll.add(reg.listener);
+                    }
+                }
+            }
+        }
+        if (ll.isEmpty()) {
+            return;
+        }
+        ProgressOperationEvent ev = new ProgressOperationEvent(h, this);
+        for (ProgressOperationListener l : ll) {
+            m.accept(l, ev);
         }
     }
 }

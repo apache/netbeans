@@ -43,6 +43,8 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.NbSourceProvider;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
+import org.netbeans.modules.java.lsp.server.progress.ProgressOperationEvent;
+import org.netbeans.modules.java.lsp.server.progress.ProgressOperationListener;
 import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -115,14 +117,17 @@ public abstract class NbLaunchDelegate {
                             toRun, ioContext, progress
                     ), Lookup.getDefault()
             );
+            OperationContext ctx = OperationContext.find(Lookup.getDefault());
+            ctx.addProgressOperationListener(null, new ProgressOperationListener() {
+                @Override
+                public void progressHandleCreated(ProgressOperationEvent e) {
+                    context.setProcessExecutorHandle(e.getProgressHandle());
+                }
+            });
+            
             Lookups.executeWith(launchCtx, () -> {
                 providerAndCommand.first().invokeAction(providerAndCommand.second(), Lookups.fixed(toRun, ioContext, progress));
                 
-                OperationContext ctx = OperationContext.find(Lookup.getDefault());
-                List<InternalHandle> created = ctx.getOperationHandles();
-                if (!created.isEmpty()) {
-                    context.setProcessExecutorHandle(created.get(0));
-                }
             });
         }).exceptionally((t) -> {
             launchFuture.completeExceptionally(t);

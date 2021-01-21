@@ -30,6 +30,10 @@ SOURCES="../src-jdk15/class_file_cache.c \
 	../src-jdk15/Stacks.c \
 	../src-jdk15/common_functions.c"
 DEST="../../release/lib/deployed/jdk16/linux/"
-cc $CPPFLAGS -o ../build/config ../src-jdk15/config.c && ../build/config > ../build/config.h
+cc $CPPFLAGS -m32 -o ../build/config ../src-jdk15/config.c && ../build/config > ../build/config.h
+
+echo "Content of config.h :"
+cat ../build/config.h
+
 cc $CFLAGS -o $DEST/libprofilerinterface.so \
    $SOURCES

@@ -29,24 +29,38 @@ SET BUILD_SRC_15=..\src-jdk15
 SET BUILD_SRC=..\src
 SET BUILD_DEPLOY=..\..\release\lib
 
-mkdir %BUILD_DEPLOY%\deployed\%JDK_DEPLOY%\%PLATFORM%
+if not exist "%BUILD_DEPLOY%\deployed\%JDK_DEPLOY%\%PLATFORM%" mkdir "%BUILD_DEPLOY%\deployed\%JDK_DEPLOY%\%PLATFORM%"
 
-rc /Fo .\version.res %BUILD_SRC_15%\windows\version.rc
+echo on
 
-cl /I%BUILD_JDK%\include /I%BUILD_JDK%\include\win32 ^
-%BUILD_SRC_15%\class_file_cache.c ^
-%BUILD_SRC_15%\attach.c ^
-%BUILD_SRC_15%\Classes.c ^
-%BUILD_SRC_15%\HeapDump.c ^
-%BUILD_SRC_15%\Timers.c ^
-%BUILD_SRC_15%\GC.c ^
-%BUILD_SRC_15%\Threads.c ^
-%BUILD_SRC_15%\Stacks.c ^
-%BUILD_SRC_15%\common_functions.c ^
-version.res ^
-/D WIN32 /D NDEBUG /LD /MD /O2 ^
-/Fe:%BUILD_DEPLOY%\deployed\%JDK_DEPLOY%\%PLATFORM%\profilerinterface.dll ^
-/Fm:%BUILD_DEPLOY%\deployed\%JDK_DEPLOY%\%PLATFORM%\profilerinterface.map ^
-/link /DYNAMICBASE
+rem Generate 'config.h' file
+cl /I"%BUILD_JDK%\include" /I"%BUILD_JDK%\include\win32" ^
+  ..\src-jdk15\config.c /link /out:..\build\config.exe && ^
+..\build\config.exe > ..\build\config.h || ^
+exit /b 1
+
+echo Content of config.h :
+type ..\build\config.h
+
+
+
+rc /Fo .\version.res "%BUILD_SRC_15%\windows\version.rc"
+
+cl /I"%BUILD_JDK%\include" /I"%BUILD_JDK%\include\win32" /I..\build  ^
+  "%BUILD_SRC_15%\class_file_cache.c" ^
+  "%BUILD_SRC_15%\attach.c" ^
+  "%BUILD_SRC_15%\Classes.c" ^
+  "%BUILD_SRC_15%\HeapDump.c" ^
+  "%BUILD_SRC_15%\Timers.c" ^
+  "%BUILD_SRC_15%\GC.c" ^
+  "%BUILD_SRC_15%\Threads.c" ^
+  "%BUILD_SRC_15%\Stacks.c" ^
+  "%BUILD_SRC_15%\common_functions.c" ^
+  version.res ^
+  /D WIN32 /D NDEBUG /LD /MD /O2 ^
+  /Fe:"%BUILD_DEPLOY%\deployed\%JDK_DEPLOY%\%PLATFORM%\profilerinterface.dll" ^
+  /Fm:"%BUILD_DEPLOY%\deployed\%JDK_DEPLOY%\%PLATFORM%\profilerinterface.map" ^
+  /link /DYNAMICBASE || ^
+exit /b 1
 
 del version.res

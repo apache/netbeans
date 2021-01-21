@@ -45,6 +45,7 @@ let client: Promise<LanguageClient>;
 let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
 let consoleLog: boolean = !!process.env['ENABLE_CONSOLE_LOG'];
+let currentClusters: string[] = [];
 
 function handleLog(log: vscode.OutputChannel, msg: string): void {
     log.appendLine(msg);
@@ -66,7 +67,7 @@ export function enableConsoleLog() {
 }
 
 export function findClusters(myPath : string): string[] {
-    let clusters = [];
+    currentClusters = [];
     for (let e of vscode.extensions.all) {
         if (e.extensionPath === myPath) {
             continue;
@@ -84,11 +85,11 @@ export function findClusters(myPath : string): string[] {
             }
             let perm = fs.statSync(clusterModules);
             if (perm.isDirectory()) {
-                clusters.push(clusterPath);
+                currentClusters.push(clusterPath);
             }
         }
     }
-    return clusters;
+    return currentClusters;
 }
 
 function findJDK(onChange: (path : string | null) => void): void {
@@ -156,6 +157,13 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
     // find acceptable JDK and launch the Java part
     findJDK((specifiedJDK) => {
+        context.subscriptions.push(vscode.extensions.onDidChange(() => {
+            const currentClustersSorted = currentClusters.slice().sort();
+            const newClusters = findClusters(context.extensionPath);
+            if (newClusters.length !== currentClustersSorted.length || newClusters.sort().find((value, index) => value !== currentClustersSorted[index])) {
+                activateWithJDK(specifiedJDK, context, log, true);
+            }
+        }));
         activateWithJDK(specifiedJDK, context, log, true);
     });
 

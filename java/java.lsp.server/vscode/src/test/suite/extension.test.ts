@@ -35,10 +35,14 @@ suite('Extension Test Suite', () => {
     });
 
     test('Find clusters', async () => {
-        let clusters = myExtension.findClusters('non-existent');
-        assert.strictEqual(clusters.length, 7, 'seven clusters found: ' + clusters);
-        let nbcode = vscode.extensions.getExtension('asf.apache-netbeans-java');
+        const nbcode = vscode.extensions.getExtension('asf.apache-netbeans-java');
         assert.ok(nbcode);
+
+        const extraCluster = path.join(nbcode.extensionPath, "nbcode", "extra");
+        let clusters = myExtension.findClusters('non-existent').
+            // ignore 'extra' cluster in the extension path, since nbjavac is there during development:
+            filter(s => !s.startsWith(extraCluster));
+        assert.strictEqual(clusters.length, 6, 'six required clusters found: ' + clusters);
         for (let c of clusters) {
             assert.ok(c.startsWith(nbcode.extensionPath), `All extensions are below ${nbcode.extensionPath}, but: ${c}`);
         }
@@ -154,7 +158,7 @@ class Main {
                             cb();
                         } else {
                             if (cnt == 0) {
-                                reject("Timeout waiting for user application");
+                                reject(new Error("Timeout waiting for user application"));
                                 return;
                             }
                             setTimeout(() => waitUserApplication(cnt - 1, running, cb), 100);

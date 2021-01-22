@@ -341,7 +341,7 @@
    </li>
   </ul>
   
-  <api name="API_Ask_attachSourcesQuestion" group="branding" type="export" category="stable">
+  <api name="org.netbeans.modules.java.j2seplatform.api.API_Ask_attachSourcesQuestion" group="branding" type="export" category="stable">
       <p>
         Controls interaction when <b>sources</b> are about to be attached to a Classpath root, in
         <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceJavadocAttacherImplementation.html">SourceJavadocAttacherImplementation</a>
@@ -364,7 +364,7 @@
           The key can be set by a branding file in your application build.
       </p>
   </api>
-  <api name="API_Ask_attachJavadocQuestion" group="branding" type="export" category="stable">
+  <api name="org.netbeans.modules.java.j2seplatform.api.API_Ask_attachJavadocQuestion" group="branding" type="export" category="stable">
       <p>
         Controls interaction when <b>javadocs</b> are about to be attached to a Classpath root, in
         <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceJavadocAttacherImplementation.html">SourceJavadocAttacherImplementation</a>

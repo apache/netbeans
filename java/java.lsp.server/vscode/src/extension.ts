@@ -156,6 +156,14 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
     // find acceptable JDK and launch the Java part
     findJDK((specifiedJDK) => {
+        let currentClusters = findClusters(context.extensionPath).sort();
+        context.subscriptions.push(vscode.extensions.onDidChange(() => {
+            const newClusters = findClusters(context.extensionPath).sort();
+            if (newClusters.length !== currentClusters.length || newClusters.find((value, index) => value !== currentClusters[index])) {
+                currentClusters = newClusters;
+                activateWithJDK(specifiedJDK, context, log, true);
+            }
+        }));
         activateWithJDK(specifiedJDK, context, log, true);
     });
 

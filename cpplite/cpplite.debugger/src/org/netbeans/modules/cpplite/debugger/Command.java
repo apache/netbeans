@@ -16,41 +16,47 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.cpplite.debugger;
 
-import org.netbeans.api.debugger.DebuggerEngine;
-import org.netbeans.spi.debugger.DebuggerEngineProvider;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.netbeans.modules.cnd.debugger.gdb2.mi.MICommand;
+import org.netbeans.modules.cnd.debugger.gdb2.mi.MIRecord;
+import org.netbeans.modules.cnd.debugger.gdb2.mi.MIUserInteraction;
 
+class Command extends MICommand {
 
-public class CPPLiteDebuggerEngineProvider extends DebuggerEngineProvider {
+    private static final AtomicInteger LAST_TOKEN = new AtomicInteger(1);
 
-    private DebuggerEngine.Destructor desctuctor;
-
-
-    @Override
-    public String[] getLanguages () {
-        return new String[] {"C"};
+    public Command(String command) {
+        super(LAST_TOKEN.incrementAndGet(), command);
     }
 
     @Override
-    public String getEngineTypeID () {
-        return "CPPLiteDebuggerEngine";
+    protected void onDone(MIRecord record) {
     }
 
     @Override
-    public Object[] getServices () {
-        return new Object[] {};
+    protected void onRunning(MIRecord record) {
     }
 
     @Override
-    public void setDestructor (DebuggerEngine.Destructor desctuctor) {
-        this.desctuctor = desctuctor;
+    protected void onError(MIRecord record) {
     }
 
-    public DebuggerEngine.Destructor getDestructor () {
-        return desctuctor;
+    @Override
+    protected void onExit(MIRecord record) {
     }
+
+    @Override
+    protected void onStopped(MIRecord record) {
+    }
+
+    @Override
+    protected void onOther(MIRecord record) {
+    }
+
+    @Override
+    protected void onUserInteraction(MIUserInteraction ui) {
+    }
+
 }
-
-

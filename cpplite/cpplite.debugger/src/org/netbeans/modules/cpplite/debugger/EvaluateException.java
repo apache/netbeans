@@ -16,41 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.cpplite.debugger;
 
-import org.netbeans.api.debugger.DebuggerEngine;
-import org.netbeans.spi.debugger.DebuggerEngineProvider;
+public final class EvaluateException extends Exception {
 
-
-public class CPPLiteDebuggerEngineProvider extends DebuggerEngineProvider {
-
-    private DebuggerEngine.Destructor desctuctor;
-
-
-    @Override
-    public String[] getLanguages () {
-        return new String[] {"C"};
-    }
-
-    @Override
-    public String getEngineTypeID () {
-        return "CPPLiteDebuggerEngine";
-    }
-
-    @Override
-    public Object[] getServices () {
-        return new Object[] {};
-    }
-
-    @Override
-    public void setDestructor (DebuggerEngine.Destructor desctuctor) {
-        this.desctuctor = desctuctor;
-    }
-
-    public DebuggerEngine.Destructor getDestructor () {
-        return desctuctor;
+    /**
+     * Constructs an instance of <code>EvaluateException</code> with the
+     * specified detail message.
+     *
+     * @param msg the detail message.
+     */
+    EvaluateException(String msg) {
+        super(msg);
     }
 }
-
-

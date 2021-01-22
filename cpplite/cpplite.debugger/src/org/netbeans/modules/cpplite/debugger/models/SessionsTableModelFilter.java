@@ -16,15 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cpplite.debugger;
+package org.netbeans.modules.cpplite.debugger.models;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.Session;
+import org.netbeans.modules.cpplite.debugger.CPPFrame;
+import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
+import org.netbeans.modules.cpplite.debugger.CPPThread;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.debugger.ui.Constants;
 import org.netbeans.spi.viewmodel.ModelEvent;
@@ -40,15 +41,15 @@ import org.openide.util.NbBundle;
  */
 @DebuggerServiceRegistration(path="SessionsView", types=TableModelFilter.class)
 public class SessionsTableModelFilter implements TableModelFilter, Constants {
-    
-    private final List<Session> sessionListeners = new ArrayList<Session>();
-    private final List<ModelListener> modelListeners = new CopyOnWriteArrayList<ModelListener>();
-    
+
+    private final List<Session> sessionListeners = new ArrayList<>();
+    private final List<ModelListener> modelListeners = new CopyOnWriteArrayList<>();
+
     public SessionsTableModelFilter() {}
 
     @Override
     public Object getValueAt(TableModel original, Object node, String columnID) throws UnknownTypeException {
-        if (node instanceof Session && isANTSession((Session) node)) {
+        if (node instanceof Session && isCPPSession((Session) node)) {
             if (SESSION_STATE_COLUMN_ID.equals (columnID)) {
                 return getSessionState ((Session) node);
             } else
@@ -66,7 +67,7 @@ public class SessionsTableModelFilter implements TableModelFilter, Constants {
 
     @Override
     public boolean isReadOnly(TableModel original, Object node, String columnID) throws UnknownTypeException {
-        if (node instanceof Session && isANTSession((Session) node)) {
+        if (node instanceof Session && isCPPSession((Session) node)) {
             if (SESSION_STATE_COLUMN_ID.equals (columnID)) {
                 return true;
             } else
@@ -87,7 +88,7 @@ public class SessionsTableModelFilter implements TableModelFilter, Constants {
         original.setValueAt(node, columnID, value);
     }
 
-    private static boolean isANTSession(Session s) {
+    private static boolean isCPPSession(Session s) {
         DebuggerEngine e = s.getCurrentEngine ();
         if (e == null) {
             return false;
@@ -95,7 +96,7 @@ public class SessionsTableModelFilter implements TableModelFilter, Constants {
         CPPLiteDebugger d = e.lookupFirst(null, CPPLiteDebugger.class);
         return d != null;
     }
-    
+
     @NbBundle.Messages({"MSG_Session_State_Starting=Starting",
                         "MSG_Session_State_Finished=Finished",
                         "MSG_Session_State_Running=Running",
@@ -111,7 +112,7 @@ public class SessionsTableModelFilter implements TableModelFilter, Constants {
         }
         synchronized (sessionListeners) {
             if (!sessionListeners.contains(s)) {
-                CPPLiteDebugger.StateListener asl = new ANTSessionStateListener(s, d);
+                CPPLiteDebugger.StateListener asl = new SessionStateListener(s, d);
                 d.addStateListener(asl);
                 sessionListeners.add(s);
             }
@@ -122,14 +123,14 @@ public class SessionsTableModelFilter implements TableModelFilter, Constants {
             return Bundle.MSG_Session_State_Running();
         }
     }
-    
+
     private void fireModelChanged(Object node) {
         ModelEvent me = new ModelEvent.TableValueChanged(this, node, SESSION_STATE_COLUMN_ID);
         for (ModelListener ml : modelListeners) {
             ml.modelChanged(me);
         }
     }
-    
+
     @Override
     public void addModelListener(ModelListener l) {
         modelListeners.add(l);
@@ -139,13 +140,13 @@ public class SessionsTableModelFilter implements TableModelFilter, Constants {
     public void removeModelListener(ModelListener l) {
         modelListeners.remove(l);
     }
-    
-    private class ANTSessionStateListener implements CPPLiteDebugger.StateListener {
-        
+
+    private class SessionStateListener implements CPPLiteDebugger.StateListener {
+
         private final Session s;
         private final CPPLiteDebugger d;
-        
-        ANTSessionStateListener(Session s, CPPLiteDebugger d) {
+
+        SessionStateListener(Session s, CPPLiteDebugger d) {
             this.s = s;
             this.d = d;
         }
@@ -163,7 +164,15 @@ public class SessionsTableModelFilter implements TableModelFilter, Constants {
                 sessionListeners.remove(s);
             }
         }
-        
+
+        @Override
+        public void currentThread(CPPThread thread) {
+        }
+
+        @Override
+        public void currentFrame(CPPFrame frame) {
+        }
+
     }
-    
+
 }

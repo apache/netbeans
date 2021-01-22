@@ -1,0 +1,45 @@
+    public function test1(private $incorrect1): void {
+                          -------------------
+HINT:Can't declare a promoted property in a function/method other than a constructor.
+    public static function test2(int $param1, public int $incorrect) {
+                                              ---------------------
+HINT:Can't declare a promoted property in a function/method other than a constructor.
+    abstract public function test1(private ?int $incorrect = 1);
+                                   ---------------------------
+HINT:Can't declare a promoted property in a function/method other than a constructor.
+            public $incorrect1,
+            ------------------
+HINT:Can't declare a promoted property in a function/method other than a constructor.
+            private ?int $incorrect2 = 1
+            ----------------------------
+HINT:Can't declare a promoted property in a function/method other than a constructor.
+    public function test(public int|string $incorrect1): void;
+                         -----------------------------
+HINT:Can't declare a promoted property in a function/method other than a constructor.
+            public int|string $incorrect1,
+            -----------------------------
+HINT:Can't declare a promoted property in a function/method other than a constructor.
+            protected $incorrect2 = "",
+            --------------------------
+HINT:Can't declare a promoted property in a function/method other than a constructor.
+$lambda1 = function (private $incorrect1) {};
+                     -------------------
+HINT:Can't declare a promoted property in a function/method other than a constructor.
+        private $incorrect1,
+        -------------------
+HINT:Can't declare a promoted property in a function/method other than a constructor.
+        protected int $incorrect2 = 1,
+        -----------------------------
+HINT:Can't declare a promoted property in a function/method other than a constructor.
+$lambda3 = static function (public ?string $incorrect1 = "test"){};
+                            -----------------------------------
+HINT:Can't declare a promoted property in a function/method other than a constructor.
+$arrow1 = fn(int $test, private ?int $incorrect1,): int => 1;
+                        ------------------------
+HINT:Can't declare a promoted property in a function/method other than a constructor.
+        private ?int $incorrect1,
+        ------------------------
+HINT:Can't declare a promoted property in a function/method other than a constructor.
+        private string|int $incorrect2
+        ------------------------------
+HINT:Can't declare a promoted property in a function/method other than a constructor.

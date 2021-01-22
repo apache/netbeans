@@ -318,36 +318,37 @@ class NbProjectInfoBuilder {
             model.info["configuration_${it.name}_extendsFrom"] = storeSet(it.extendsFrom.collect {it.name})
             model.info["configuration_${it.name}_description"] = it.description
         }
-        visibleConfigurations = visibleConfigurations.findAll() { resolvable(it) }
+        //visibleConfigurations = visibleConfigurations.findAll() { resolvable(it) }
         visibleConfigurations.each() {
-            long time_inspect_conf = System.currentTimeMillis()
             def componentIds = []
             def unresolvedIds = []
             def projectNames = []
-            try {
-                it.incoming.resolutionResult.allDependencies.each {
-                    if (it instanceof ResolvedDependencyResult) {
-                        if (it.requested instanceof ModuleComponentSelector) {
-                            componentIds.add(it.selected.id)
+            long time_inspect_conf = System.currentTimeMillis()
+            if (resolvable(it)) {
+                try {
+                    it.incoming.resolutionResult.allDependencies.each {
+                        if (it instanceof ResolvedDependencyResult) {
+                            if (it.requested instanceof ModuleComponentSelector) {
+                                componentIds.add(it.selected.id)
+                            }
+                        }
+                        if (it instanceof UnresolvedDependencyResult) {
+                            def id = it.requested.displayName
+                            unresolvedIds.add(id)
+                            unresolvedProblems.put(id, it.failure.message)
                         }
                     }
-                    if (it instanceof UnresolvedDependencyResult) {
-                        def id = it.requested.displayName
-                        unresolvedIds.add(id)
-                        unresolvedProblems.put(id, it.failure.message)
-                    }
+                } catch (ResolveException ex) {
+                    model.noteProblem(ex)
                 }
-            } catch (ResolveException ex) {
-                model.noteProblem(ex)
+                ids.addAll(componentIds)
             }
-            ids.addAll(componentIds)
             long time_project_deps = System.currentTimeMillis()
             model.ext.perf["dependency_inspect_${it.name}_module"] = time_project_deps - time_inspect_conf
-
             it.dependencies.withType(ProjectDependency) {
                 def prj = it.dependencyProject
-                projects.put(prj.name.toString(), prj.projectDir)
-                projectNames += prj.name.toString()
+                projects.put(prj.path.toString(), prj.projectDir)
+                projectNames += prj.path.toString()
             }
             long time_file_deps = System.currentTimeMillis()
             model.ext.perf["dependency_inspect_${it.name}_project"] = time_file_deps - time_project_deps
@@ -358,12 +359,14 @@ class NbProjectInfoBuilder {
             long time_collect = System.currentTimeMillis()
             model.ext.perf["dependency_inspect_${it.name}_file"] = time_collect - time_file_deps
 
-            try {
-                it.resolvedConfiguration.lenientConfiguration.getFirstLevelModuleDependencies(Specs.SATISFIES_ALL).each {
-                    collectArtifacts(it, resolvedJvmArtifacts)
+            if (resolvable(it)) {
+                try {
+                    it.resolvedConfiguration.lenientConfiguration.getFirstLevelModuleDependencies(Specs.SATISFIES_ALL).each {
+                        collectArtifacts(it, resolvedJvmArtifacts)
+                    }
+                } catch (NullPointerException ex) {
+                    //This can happen if the configuration resolution had issues
                 }
-            } catch (NullPointerException ex) {
-                //This can happen if the configuration resolution had issues
             }
             long time_report = System.currentTimeMillis()
             model.ext.perf["dependency_inspect_${it.name}_collect"] = time_report - time_collect
@@ -480,7 +483,7 @@ class NbProjectInfoBuilder {
         def start = project.configurations.findAll() {conf ->
             !CONFIG_EXCLUDES.contains(conf.name)
         }
-        Set<Configuration> ret = new LinkedHashSet<>()
+        Set<Configuration> ret = new LinkedHashSet<>(start)
         start.each() {conf ->
             ret.addAll(conf.hierarchy)
         }

@@ -84,7 +84,7 @@
             <packaging>*</packaging>
         </packagings>
         <goals>
-            <goal>test-compile</goal>
+            <goal>process-test-classes</goal>
             <goal>surefire:test</goal>
         </goals>
         <properties>
@@ -158,7 +158,7 @@
             <packaging>*</packaging>
         </packagings>
         <goals>
-            <goal>process-classes</goal>
+            <goal>process-test-classes</goal>
             <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
         </goals>
         <properties>
@@ -175,7 +175,7 @@
             <packaging>*</packaging>
         </packagings>
         <goals>
-            <goal>test-compile</goal>
+            <goal>process-test-classes</goal>
             <goal>surefire:test</goal>
         </goals>
         <properties>
@@ -254,7 +254,7 @@
             <packaging>*</packaging>
         </packagings>
         <goals>
-            <goal>test-compile</goal>
+            <goal>process-test-classes</goal>
             <goal>surefire:test</goal>
         </goals>
         <properties>

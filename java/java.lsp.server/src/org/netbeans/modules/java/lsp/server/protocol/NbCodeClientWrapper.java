@@ -25,11 +25,13 @@ import org.eclipse.lsp4j.ApplyWorkspaceEditResponse;
 import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.RegistrationParams;
 import org.eclipse.lsp4j.SemanticHighlightingParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.UnregistrationParams;
+import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
 
 /**
@@ -52,7 +54,7 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
             this.clientCaps = clientCaps;
         }
     }
-    
+
     @Override
     public NbCodeClientCapabilities getNbCodeCapabilities() {
         return clientCaps;
@@ -61,6 +63,16 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     @Override
     public void showStatusBarMessage(ShowStatusMessageParams params) {
         remote.showStatusBarMessage(params);
+    }
+
+    @Override
+    public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+        return remote.showQuickPick(params);
+    }
+
+    @Override
+    public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+        return remote.showInputBox(params);
     }
 
     @Override
@@ -116,5 +128,15 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     @Override
     public void semanticHighlighting(SemanticHighlightingParams params) {
         remote.semanticHighlighting(params);
+    }
+
+    @Override
+    public CompletableFuture<Void> createProgress(WorkDoneProgressCreateParams params) {
+        return remote.createProgress(params);
+    }
+
+    @Override
+    public void notifyProgress(ProgressParams params) {
+        remote.notifyProgress(params);
     }
 }

@@ -58,6 +58,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
  * @author Radek Matous
  */
 class ModelBuilder {
+
     private final FileScopeImpl fileScope;
     private final NamespaceScopeImpl defaultNamespaceScope;
     private final Object currentScopeLock = new Object();

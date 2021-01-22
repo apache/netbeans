@@ -94,6 +94,8 @@ public class TokenFormatter {
         public boolean spaceBeforeFinallyLeftBrace;
         public boolean spaceBeforeUseTraitBodyLeftBrace;
         public boolean spaceBeforeAnonymousClassParen;
+        public boolean spaceBeforeAnonymousFunctionParen;
+        public boolean spaceBeforeAttributeDeclParen;
         public boolean spaceBeforeMethodDeclParen;
         public boolean spaceBeforeMethodCallParen;
         public boolean spaceBeforeIfParen;
@@ -128,6 +130,8 @@ public class TokenFormatter {
         public boolean spaceWithinMatchParens;
         public boolean spaceWithinCatchParens;
         public boolean spaceWithinArrayBrackets;
+        public boolean spaceWithinAttributeBrackets;
+        public boolean spaceWithinAttributeDeclParens;
         public boolean spaceWithinTypeCastParens;
         public boolean spaceBeforeComma;
         public boolean spaceAfterComma;
@@ -240,6 +244,8 @@ public class TokenFormatter {
             spaceBeforeUseTraitBodyLeftBrace = codeStyle.spaceBeforeUseTraitBodyLeftBrace();
 
             spaceBeforeAnonymousClassParen = codeStyle.spaceBeforeAnonymousClassParen();
+            spaceBeforeAnonymousFunctionParen = codeStyle.spaceBeforeAnonymousFunctionParen();
+            spaceBeforeAttributeDeclParen = codeStyle.spaceBeforeAttributeDeclParen();
             spaceBeforeMethodDeclParen = codeStyle.spaceBeforeMethodDeclParen();
             spaceBeforeMethodCallParen = codeStyle.spaceBeforeMethodCallParen();
             spaceBeforeIfParen = codeStyle.spaceBeforeIfParen();
@@ -277,6 +283,8 @@ public class TokenFormatter {
             spaceWithinMatchParens = codeStyle.spaceWithinMatchParens();
             spaceWithinCatchParens = codeStyle.spaceWithinCatchParens();
             spaceWithinArrayBrackets = codeStyle.spaceWithinArrayBrackets();
+            spaceWithinAttributeBrackets = codeStyle.spaceWithinAttributeBrackets();
+            spaceWithinAttributeDeclParens = codeStyle.spaceWithinAttributeDeclParens();
             spaceWithinTypeCastParens = codeStyle.spaceWithinTypeCastParens();
 
             spaceBeforeComma = codeStyle.spaceBeforeComma();
@@ -772,7 +780,7 @@ public class TokenFormatter {
                                         break;
                                     case WHITESPACE_BETWEEN_FIELDS:
                                         indentRule = true;
-                                        if (docOptions.blankLinesGroupFields && !isBeforePHPDoc(formatTokens, index)) {
+                                        if (docOptions.blankLinesGroupFields && !isBeforePHPDocOrAttribute(formatTokens, index)) {
                                             newLines = 1;
                                         } else {
                                             newLines = docOptions.blankLinesBetweenFields + 1 > newLines ? docOptions.blankLinesBetweenFields + 1 : newLines;
@@ -1201,6 +1209,12 @@ public class TokenFormatter {
                                     case WHITESPACE_BEFORE_ANONYMOUS_CLASS_PAREN:
                                         countSpaces = docOptions.spaceBeforeAnonymousClassParen ? 1 : 0;
                                         break;
+                                    case WHITESPACE_BEFORE_ANONYMOUS_FUNCTION_PAREN:
+                                        countSpaces = docOptions.spaceBeforeAnonymousFunctionParen ? 1 : 0;
+                                        break;
+                                    case WHITESPACE_BEFORE_ATTRIBUTE_DEC_PAREN:
+                                        countSpaces = docOptions.spaceBeforeAttributeDeclParen ? 1 : 0;
+                                        break;
                                     case WHITESPACE_BEFORE_METHOD_DEC_PAREN:
                                         countSpaces = docOptions.spaceBeforeMethodDeclParen ? 1 : 0;
                                         break;
@@ -1309,7 +1323,9 @@ public class TokenFormatter {
                                         helpIndex = index - 1;
                                         while (helpIndex > 0
                                                 && formatTokens.get(helpIndex).getId() != FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS
-                                                && (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE /*
+                                                && (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE
+                                                || formatTokens.get(helpIndex).getId() == FormatToken.Kind.INDENT
+                                                /*
                                                  * ||
                                                  * formatTokens.get(helpIndex).getId()
                                                  * == FormatToken.Kind.WHITESPACE_INDENT
@@ -1365,6 +1381,45 @@ public class TokenFormatter {
                                             countSpaces = 0;
                                         } else {
                                             countSpaces = docOptions.spaceWithinArrayBrackets ? 1 : 0;
+                                        }
+                                        break;
+                                    case WHITESPACE_WITHIN_ATTRIBUTE_BRACKETS:
+                                        // countSpace 0
+                                        // #[
+                                        //     A(1)
+                                        // ]
+                                        // ^
+                                        // class MyClass {}
+                                        //
+                                        // or
+                                        // countSpace 1
+                                        // #[A(1)] class MyClass{}
+                                        helpIndex = index - 1;
+                                        while (helpIndex > 0
+                                                && (formatTokens.get(helpIndex).getId() == FormatToken.Kind.INDENT
+                                                || formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE)) {
+                                            helpIndex--;
+                                        }
+                                        if (index > 0 && formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE_INDENT) {
+                                            countSpaces = 0;
+                                        } else {
+                                            countSpaces = docOptions.spaceWithinAttributeBrackets ? 1 : 0;
+                                        }
+                                        break;
+                                    case WHITESPACE_WITHIN_ATTRIBUTE_DECL_PARENS:
+                                        // countSpace 0 if it's an empty parameter
+                                        // #[A()]
+                                        helpIndex = index - 1;
+                                        while (helpIndex > 0
+                                                && formatTokens.get(helpIndex).getId() != FormatToken.Kind.WHITESPACE_WITHIN_ATTRIBUTE_DECL_PARENS
+                                                && (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE
+                                                || formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE_INDENT)) {
+                                            helpIndex--;
+                                        }
+                                        if (index > 0 && formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE_WITHIN_ATTRIBUTE_DECL_PARENS) {
+                                            countSpaces = 0;
+                                        } else {
+                                            countSpaces = docOptions.spaceWithinAttributeDeclParens ? 1 : 0;
                                         }
                                         break;
                                     case WHITESPACE_WITHIN_TYPE_CAST_PARENS:
@@ -1722,6 +1777,18 @@ public class TokenFormatter {
                                         break;
                                     case WHITESPACE_AFTER_TYPE:
                                         countSpaces = 1;
+                                        break;
+                                    case WHITESPACE_AFTER_ATTRIBUTE:
+                                        if (index + 1 < formatTokens.size()) {
+                                            // countSpace 0
+                                            // #[A(1)]
+                                            // class MyClass {}
+                                            //
+                                            // or
+                                            // countSpace 1
+                                            // #[A(1)] class MyClass{}
+                                            countSpaces = formatTokens.get(index + 1).getId() == FormatToken.Kind.WHITESPACE_INDENT ? 0 : 1;
+                                        }
                                         break;
                                     default:
                                     //no-op
@@ -2722,13 +2789,32 @@ public class TokenFormatter {
         return token.getId() == FormatToken.Kind.LINE_COMMENT;
     }
 
-    private boolean isBeforePHPDoc(List<FormatToken> tokens, int index) {
-        FormatToken token = tokens.get(index);
-        while (index > 0 && (token.isWhitespace() || token.getId() == FormatToken.Kind.INDENT
+    private boolean isBeforePHPDocOrAttribute(List<FormatToken> tokens, int index) {
+        int i = index;
+        FormatToken token = tokens.get(i);
+        while (i > 0 && (token.isWhitespace() || token.getId() == FormatToken.Kind.INDENT
                 || token.getId() == FormatToken.Kind.UNBREAKABLE_SEQUENCE_END)) {
-            token = tokens.get(++index);
+            i++;
+            if (i < tokens.size()) {
+                token = tokens.get(i);
+            }
         }
-        return token.getId() == FormatToken.Kind.DOC_COMMENT_START;
+        if (token.getId() == FormatToken.Kind.LINE_COMMENT) {
+            // e.g.
+            // // comment
+            // #[A]
+            while (0 < i && i < tokens.size()
+                    && (token.getId() == FormatToken.Kind.LINE_COMMENT
+                    || token.getId() == FormatToken.Kind.WHITESPACE_BETWEEN_LINE_COMMENTS
+                    || token.getId() == FormatToken.Kind.WHITESPACE_INDENT)) {
+                i++;
+                if (i < tokens.size()) {
+                    token = tokens.get(i);
+                }
+            }
+        }
+        return token.getId() == FormatToken.Kind.DOC_COMMENT_START
+                || token.getId() == FormatToken.Kind.ATTRIBUTE_START;
     }
 
     private boolean isBeginLine(List<FormatToken> tokens, int index) {

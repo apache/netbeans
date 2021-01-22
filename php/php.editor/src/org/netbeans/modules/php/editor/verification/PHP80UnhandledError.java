@@ -27,9 +27,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lexer.TokenUtilities;
-import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.Error;
-import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
@@ -39,6 +37,7 @@ import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.Attribute;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.Dispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
@@ -89,7 +88,9 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            errors.addAll(checkVisitor.getErrors());
+            TokenSequence<PHPTokenId> ts = phpParseResult.getSnapshot().getTokenHierarchy().tokenSequence(PHPTokenId.language());
+            assert ts != null;
+            errors.addAll(checkVisitor.getErrors(ts));
         }
     }
 
@@ -102,15 +103,17 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
 
         private final List<VerificationError> errors = new ArrayList<>();
         private final FileObject fileObject;
-        private final List<FormalParameter> lastParams = new ArrayList<>();
+        private final List<ASTNode> lastParams = new ArrayList<>();
+        private final List<ASTNode> lastLexicalVariables = new ArrayList<>();
         private boolean isSameAsThrowStatement = false;
 
         public CheckVisitor(FileObject fileObject) {
             this.fileObject = fileObject;
         }
 
-        public Collection<VerificationError> getErrors() {
-            checkTrailingCommasInParameterList();
+        public Collection<VerificationError> getErrors(TokenSequence<PHPTokenId> ts) {
+            checkTrailingCommas(ts, lastParams);
+            checkTrailingCommas(ts, lastLexicalVariables);
             return Collections.unmodifiableCollection(errors);
         }
 
@@ -140,6 +143,7 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             }
             addLastParam(node.getFormalParameters());
             checkStaticReturnType(node.getReturnType());
+            addLastLexicalVariable(node.getLexicalVariables());
             super.visit(node);
         }
 
@@ -227,9 +231,33 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
+        @Override
+        public void visit(Attribute attribute) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkAttributeSyntax(attribute);
+            super.visit(attribute);
+        }
+
+        @Override
+        public void visit(FormalParameter node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkConstructorPropertyPromotion(node);
+            super.visit(node);
+        }
+
         private void addLastParam(List<FormalParameter> parameters) {
             if (!parameters.isEmpty()) {
                 lastParams.add(parameters.get(parameters.size() - 1));
+            }
+        }
+
+        private void addLastLexicalVariable(List<Expression> lexicalVariables) {
+            if (!lexicalVariables.isEmpty()) {
+                lastLexicalVariables.add(lexicalVariables.get(lexicalVariables.size() - 1));
             }
         }
 
@@ -239,45 +267,31 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
             }
         }
 
-        private void checkTrailingCommasInParameterList() {
-            if (!lastParams.isEmpty()) {
-                BaseDocument document = GsfUtilities.getDocument(fileObject, true);
-                if (document == null) {
-                    return;
-                }
-                document.readLock();
+        private void checkTrailingCommas(TokenSequence<PHPTokenId> ts, List<ASTNode> nodes) {
+            if (!nodes.isEmpty()) {
                 try {
-                    TokenSequence<PHPTokenId> ts = LexUtilities.getPHPTokenSequence(document, 0);
-                    if (ts == null) {
-                        return;
-                    }
-                    checkTrailingCommasInParameterList(ts);
+                    nodes.forEach((node) -> {
+                        if (CancelSupport.getDefault().isCancelled()) {
+                            return;
+                        }
+
+                        // find a comma ","
+                        Token<? extends PHPTokenId> token = findNextToken(ts, node.getEndOffset());
+                        if (token != null
+                                && token.id() == PHPTokenId.PHP_TOKEN
+                                && TokenUtilities.textEquals(token.text(), ",")) { // NOI18N
+                            createError(node);
+                        }
+                    });
                 } finally {
-                    document.readUnlock();
-                    lastParams.clear();
+                    nodes.clear();
                 }
             }
         }
 
-        private void checkTrailingCommasInParameterList(TokenSequence<PHPTokenId> ts) {
-            lastParams.forEach((param) -> {
-                if (CancelSupport.getDefault().isCancelled()) {
-                    return;
-                }
-
-                // find a comma ","
-                Token<? extends PHPTokenId> token = findNextToken(ts, param);
-                if (token != null
-                        && token.id() == PHPTokenId.PHP_TOKEN
-                        && TokenUtilities.textEquals(token.text(), ",")) { // NOI18N
-                    createError(param);
-                }
-            });
-        }
-
         @CheckForNull
-        private Token<? extends PHPTokenId> findNextToken(TokenSequence<PHPTokenId> ts, FormalParameter parameter) {
-            ts.move(parameter.getEndOffset());
+        private Token<? extends PHPTokenId> findNextToken(TokenSequence<PHPTokenId> ts, int startOffset) {
+            ts.move(startOffset);
             if (!ts.moveNext()) {
                 return null;
             }
@@ -343,6 +357,16 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
         private void checkNullsafeOperator(Dispatch dispatch) {
             if (dispatch.isNullsafe()) {
                 createError(dispatch);
+            }
+        }
+
+        private void checkAttributeSyntax(Attribute attribute) {
+            createError(attribute);
+        }
+
+        private void checkConstructorPropertyPromotion(FormalParameter parameter) {
+            if (parameter.getModifier() != 0) {
+                createError(parameter);
             }
         }
 

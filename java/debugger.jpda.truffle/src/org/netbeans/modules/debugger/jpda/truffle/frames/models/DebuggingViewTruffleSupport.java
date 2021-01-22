@@ -21,11 +21,15 @@ package org.netbeans.modules.debugger.jpda.truffle.frames.models;
 import java.util.Collections;
 import java.util.List;
 
+import org.netbeans.api.debugger.jpda.CallStackFrame;
+import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
+import static org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess.BASIC_CLASS_NAME;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
 import org.netbeans.modules.debugger.jpda.truffle.options.TruffleOptions;
 import org.netbeans.modules.debugger.jpda.ui.debugging.DebuggingViewSupportImpl;
+import org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVFrame;
 import org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThread;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.ui.DebuggingView;
@@ -55,17 +59,37 @@ public class DebuggingViewTruffleSupport extends DebuggingViewSupportImpl {
     @Override
     protected List<DVFrame> getFrames(JPDADVThread thread, int from, int to) {
         List<DVFrame> frames = super.getFrames(thread, 0, Integer.MAX_VALUE);
-        CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(thread.getKey());
+        if (frames.isEmpty()) {
+            return frames;
+        }
+        JPDAThread jt = thread.getKey();
+        CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentGuestPCInfo(jt);
+        boolean inGuest = isInGuest(frames.get(0));
+        boolean haveTopHostFrames = false;
+        if (currentPCInfo == null) {
+            currentPCInfo = inGuest ? TruffleAccess.getCurrentSuspendHereInfo(jt) : TruffleAccess.getSuspendHere(jt);
+            haveTopHostFrames = true;
+        }
         if (currentPCInfo != null) {
             boolean showInternalFrames = TruffleOptions.isLanguageDeveloperMode();
             TruffleStackFrame[] stackFrames = currentPCInfo.getStack().getStackFrames(showInternalFrames);
-            frames = DebuggingTruffleTreeModel.filterAndAppend(thread, frames, stackFrames, currentPCInfo.getTopFrame());
+            
+            if (inGuest && !currentPCInfo.getStack().hasJavaFrames()) {
+                frames = DebuggingTruffleTreeModel.filterAndAppend(thread, frames, stackFrames, currentPCInfo.getTopFrame());
+            } else {
+                frames = DebuggingTruffleTreeModel.mergeFrames(thread, frames, stackFrames, currentPCInfo.getTopFrame(), haveTopHostFrames);
+            }
         }
         if (from >= frames.size()) {
             return Collections.emptyList();
         }
         to = Math.min(to, frames.size());
         return frames.subList(from, to);
+    }
+
+    private static boolean isInGuest(DVFrame child) {
+        CallStackFrame csf = ((JPDADVFrame) child).getCallStackFrame();
+        return BASIC_CLASS_NAME.equals(csf.getClassName());
     }
 
     @Override

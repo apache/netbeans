@@ -44,6 +44,17 @@ to set your environment up to support
 * __Java: Compile Workspace__ - invoke Maven or Gradle build
 * __GraalVM: Pause in Script__ - place a breakpoint into first executed polyglot script
 * debugger __Java 8+__ - start test or main class on JDK8+ in polyglot mode
+* Progress shown for long running operations with cancel support for selected types
+  
+## Supported Refactorings
+
+Class level refactorings as well as variable refactorings are supported in VSCode via Apache NetBeans extension. See following screenshots:
+
+![Class Source Actions](images/Source_actions.png) ![Introduce ... refactoring](images/Introduce_refactoring.png)
+
+Some refactorings are two steps with like Override method ... where method to be overriden is selected in 2nd step:
+
+![Override refactoring](images/Override_refactoring.png)
 
 ## Supported Options
 

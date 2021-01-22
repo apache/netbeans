@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.cpplite.debugger;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -28,20 +29,22 @@ import java.util.List;
 public class CPPLiteDebuggerConfig {
 
     private final List<String> executable;
+    private final File directory;
 
-    public CPPLiteDebuggerConfig(List<String> executable) {
+    public CPPLiteDebuggerConfig(List<String> executable, File directory) {
         this.executable = executable;
-    }
-    
-    public String getDisplayName() {
-        return "XXX: displayName";
+        this.directory = directory;
     }
 
-    public String getDebuggingName() {
-        return "XXX: debugging name (debug)";
+    public String getDisplayName() {
+        return (!executable.isEmpty()) ? executable.get(0) : "<empty>";
     }
-    
+
     public List<String> getExecutable() {
         return executable;
+    }
+
+    public File getDirectory() {
+        return directory;
     }
 }

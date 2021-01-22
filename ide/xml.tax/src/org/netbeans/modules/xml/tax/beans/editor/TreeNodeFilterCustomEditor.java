@@ -520,12 +520,12 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
     //
 
     /** */
-    private static Vector publicNodeTypesInheritanceTree;
+    private static Vector<Item> publicNodeTypesInheritanceTree;
 
 
     /**
      */
-    private static Vector getPublicNodeTypesInheritanceTree () {
+    private static Vector<Item> getPublicNodeTypesInheritanceTree () {
         if ( publicNodeTypesInheritanceTree == null ) {
             if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("Init Set"); // NOI18N
             
@@ -542,7 +542,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
                 }
             }
             
-            publicNodeTypesInheritanceTree = new Vector();
+            publicNodeTypesInheritanceTree = new Vector<>();
             fillPublicNodeTypesInheritanceTree (rootItem.layer, ""); // NOI18N
 
             Item.itemMap.clear();
@@ -728,7 +728,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 
     // debug
     public static final void main (String[] args) throws Exception {
-        Vector vector = getPublicNodeTypesInheritanceTree();
+//          Vector vector = getPublicNodeTypesInheritanceTree();
 
 //          Iterator it = vector.iterator();
 //          System.out.println ("+==================================="); // NOI18N

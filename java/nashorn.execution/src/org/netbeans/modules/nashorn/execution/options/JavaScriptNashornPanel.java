@@ -224,7 +224,7 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     ComboBoxModel<String> initEngineSelector() {
-        Vector<String> names = new Vector();
+        Vector<String> names = new Vector<>();
         JavaPlatform p = getSelectedPlatform();
         if (NashornPlatform.isNashornSupported(p)) {
             names.add(nashorn);

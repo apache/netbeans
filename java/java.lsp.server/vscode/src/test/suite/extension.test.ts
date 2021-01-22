@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as ps from 'ps-node';
 import { spawn, ChildProcessByStdio, spawnSync, SpawnSyncReturns } from 'child_process';
 import { Readable } from 'stream';
 
@@ -8,6 +9,7 @@ import { Readable } from 'stream';
 // as well as import your extension to test it
 import * as vscode from 'vscode';
 import * as myExtension from '../../extension';
+import { TextDocument, TextEditor, Uri } from 'vscode';
 
 suite('Extension Test Suite', () => {
     vscode.window.showInformationMessage('Cleaning up workspace.');
@@ -33,10 +35,14 @@ suite('Extension Test Suite', () => {
     });
 
     test('Find clusters', async () => {
-        let clusters = myExtension.findClusters('non-existent');
-        assert.strictEqual(clusters.length, 6, 'six clusters found: ' + clusters);
-        let nbcode = vscode.extensions.getExtension('asf.apache-netbeans-java');
+        const nbcode = vscode.extensions.getExtension('asf.apache-netbeans-java');
         assert.ok(nbcode);
+
+        const extraCluster = path.join(nbcode.extensionPath, "nbcode", "extra");
+        let clusters = myExtension.findClusters('non-existent').
+            // ignore 'extra' cluster in the extension path, since nbjavac is there during development:
+            filter(s => !s.startsWith(extraCluster));
+        assert.strictEqual(clusters.length, 6, 'six required clusters found: ' + clusters);
         for (let c of clusters) {
             assert.ok(c.startsWith(nbcode.extensionPath), `All extensions are below ${nbcode.extensionPath}, but: ${c}`);
         }
@@ -97,6 +103,88 @@ class Main {
     test("Compile workspace6", async() => demo(6));
     test("Compile workspace7", async() => demo(7));
     test("Compile workspace8", async() => demo(8));
+
+    /**
+     * Checks that maven-managed process can be started, and forcefully terminated by vscode
+     * although it does not run in debugging mode.
+     */
+    async function mavenTerminateWithoutDebugger() {
+        let folder: string = assertWorkspace();
+
+        await fs.promises.writeFile(path.join(folder, 'pom.xml'), `
+    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.netbeans.demo.vscode.t1</groupId>
+    <artifactId>basicapp</artifactId>
+    <version>1.0</version>
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+    </project>
+        `);
+
+        let pkg = path.join(folder, 'src', 'main', 'java', 'pkg');
+        let mainJava = path.join(pkg, 'Main.java');
+
+        await fs.promises.mkdir(pkg, { recursive: true });
+
+        await fs.promises.writeFile(mainJava, `
+    package pkg;
+    class Main {
+    public static void main(String... args) throws Exception {
+        System.out.println("Endless wait...");
+        while (true) {
+            Thread.sleep(1000);
+        }
+    }
+    }
+        `);
+        vscode.workspace.saveAll();
+        let u : Uri = vscode.Uri.file(mainJava);
+        let doc : TextDocument = await vscode.workspace.openTextDocument(u);
+        let e : TextEditor = await vscode.window.showTextDocument(doc);
+
+        try {
+            let terminated = false;
+            let r = new Promise((resolve, reject) => {
+                function waitUserApplication(cnt : number, running: boolean, cb : () => void) {
+                    ps.lookup({
+                        command: "^.*[/\\\\]java",
+                        arguments: "pkg.Main"
+                    }, (err, list ) => {
+                        let success : boolean = (list && list.length > 0) == running;
+                        if (success) {
+                            cb();
+                        } else {
+                            if (cnt == 0) {
+                                reject(new Error("Timeout waiting for user application"));
+                                return;
+                            }
+                            setTimeout(() => waitUserApplication(cnt - 1, running, cb), 100);
+                            return;
+                        }
+                    });
+                }
+                
+                function onProcessStarted() {
+                    console.log("Test: invoking debug.stop");
+                    // attempt to terminate:
+                    vscode.commands.executeCommand("workbench.action.debug.stop").
+                        then(() => waitUserApplication(5, false, () => resolve(true)));
+                }
+                console.log("Test: invoking debug debug.run");
+                vscode.commands.executeCommand("workbench.action.debug.run").then(
+                    () => waitUserApplication(5, true, onProcessStarted));
+            });
+            return r;
+        } catch (error) {
+            dumpJava();
+            throw error;
+        }
+    }
+
+    test("Maven run termination", async() => mavenTerminateWithoutDebugger());
 });
 
 function assertWorkspace(): string {

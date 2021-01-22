@@ -27,6 +27,7 @@ import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.request.StepRequest;
 import com.sun.jdi.ThreadReference;
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,6 +38,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.debugger.DebuggerManager;
@@ -107,6 +109,7 @@ public class Operator {
     private final List<EventSet> parallelEvents = new LinkedList<EventSet>();
     private boolean           haveParallelEventsToProcess = false;
     private final Map<EventSet, Set<ThreadReference>> threadsResumedForEvents = new WeakHashMap<EventSet, Set<ThreadReference>>();
+    private final List<Function<EventSet, Boolean>> eventsInterceptors = new LinkedList<>();
     private final LoopControl loopControl;
 
     /**
@@ -262,7 +265,22 @@ public class Operator {
     }
 
     private boolean processEvents(EventSet eventSet, Executor starter,
-                                  SuspendControllersSupport scs, SuspendCount suspendCount) throws InternalExceptionWrapper, VMDisconnectedExceptionWrapper, ObjectCollectedExceptionWrapper, IllegalThreadStateExceptionWrapper {                 
+                                  SuspendControllersSupport scs, SuspendCount suspendCount) throws InternalExceptionWrapper, VMDisconnectedExceptionWrapper, ObjectCollectedExceptionWrapper, IllegalThreadStateExceptionWrapper {
+        List<Function<EventSet, Boolean>> interceptors;
+        synchronized (eventsInterceptors) {
+            if (eventsInterceptors.isEmpty()) {
+                interceptors = null;
+            } else {
+                interceptors = new ArrayList<>(eventsInterceptors);
+            }
+        }
+        if (interceptors != null) {
+            for (Function<EventSet, Boolean> interceptor : interceptors) {
+                if (interceptor.apply(eventSet)) {
+                    return true;
+                }
+            }
+        }
         boolean silent = eventSet.size() > 0;
         for (Event e: eventSet) {
             EventRequest r = EventWrapper.request(e);
@@ -747,6 +765,28 @@ public class Operator {
         if (req instanceof StepRequest) {
             ThreadReference tr = StepRequestWrapper.thread((StepRequest) req);
             debugger.getThread(tr).setInStep(false, null);
+        }
+    }
+
+    /**
+     * Add an interceptor for JDWP events. Use when absolutely necessary only,
+     * for instance when events that are crucial to process come during an ongoing
+     * method invocation.
+     * @param eventsInterceptor a function that gets the event and returns <code>true</code>
+     * when it intercepted and processed the event.
+     */
+    public void addEventInterceptor(Function<EventSet, Boolean> eventsInterceptor) {
+        synchronized (eventsInterceptors) {
+            eventsInterceptors.add(eventsInterceptor);
+        }
+    }
+
+    /**
+     * Remove an interceptor for JDWP events.
+     */
+    public void removeEventInterceptor(Function<EventSet, Boolean> eventsInterceptor) {
+        synchronized (eventsInterceptors) {
+            eventsInterceptors.remove(eventsInterceptor);
         }
     }
 

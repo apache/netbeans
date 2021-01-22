@@ -21,26 +21,26 @@
 
 // no parameters
 $array = [
-    "test", function() use ($var1, $var2) {
+    "test", function () use ($var1, $var2) {
         echo "test";
     },
 ];
 
 $array = [
-    "test", function()
+    "test", function ()
     use ($var1, $var2) {
         echo "test";
     },
 ];
 
 $array = [
-    "test", function() use ($var1, $var2): void {
+    "test", function () use ($var1, $var2): void {
         echo "test";
     },
 ];
 
 $array = [
-    "test", function()
+    "test", function ()
     use ($var1, $var2): void {
         echo "test";
     },
@@ -48,14 +48,14 @@ $array = [
 
 $array = [
     "test",
-    function() use ($var1, $var2) {
+    function () use ($var1, $var2) {
         echo "test";
     },
 ];
 
 $array = [
     "test",
-    function()
+    function ()
     use ($var1, $var2) {
         echo "test";
     },
@@ -63,14 +63,14 @@ $array = [
 
 $array = [
     "test",
-    function() use ($var1, $var2): void {
+    function () use ($var1, $var2): void {
         echo "test";
     },
 ];
 
 $array = [
     "test",
-    function()
+    function ()
     use ($var1, $var2): void {
         echo "test";
     },
@@ -78,19 +78,19 @@ $array = [
 
 // has parameters
 $array = [
-    "test", function($param1, $param2,) {
+    "test", function ($param1, $param2,) {
         echo "test";
     }, $test,
 ];
 
 $array = [
-    "test", function($param1, $param2,) use ($var1, $var2) {
+    "test", function ($param1, $param2,) use ($var1, $var2) {
         echo "test";
     },
 ];
 
 $array = [
-    "test", function($param1, $param2,) use (
+    "test", function ($param1, $param2,) use (
             $var1,
             $var2
     ) {
@@ -99,14 +99,14 @@ $array = [
 ];
 
 $array = [
-    "test", function($param1, $param2,) use ($var1, $var2): void {
+    "test", function ($param1, $param2,) use ($var1, $var2): void {
         echo "test";
     },
     $test
 ];
 
 $array = [
-    "test", function($param1, $param2,) use (
+    "test", function ($param1, $param2,) use (
             $var1,
             $var2
     ): void {
@@ -117,21 +117,21 @@ $array = [
 
 $array = [
     "test",
-    function($param1, $param2,) {
+    function ($param1, $param2,) {
         echo "test";
     },
 ];
 
 $array = [
     "test",
-    function($param1, $param2,) use ($var1, $var2) {
+    function ($param1, $param2,) use ($var1, $var2) {
         echo "test";
     },
 ];
 
 $array = [
     "test",
-    function($param1, $param2,) use (
+    function ($param1, $param2,) use (
             $var1,
             $var2
     ) {
@@ -141,14 +141,14 @@ $array = [
 
 $array = [
     "test",
-    function($param1, $param2,) use ($var1, $var2): void {
+    function ($param1, $param2,) use ($var1, $var2): void {
         echo "test";
     },
 ];
 
 $array = [
     "test",
-    function($param1, $param2,) use (
+    function ($param1, $param2,) use (
             $var1,
             $var2
     ): void {
@@ -159,26 +159,26 @@ $array = [
 // key => value
 // no parameters
 $array = [
-    "test", "key" => function() use ($var1, $var2) {
+    "test", "key" => function () use ($var1, $var2) {
         echo "test";
     },
 ];
 
 $array = [
-    "test", "key" => function()
+    "test", "key" => function ()
     use ($var1, $var2) {
         echo "test";
     },
 ];
 
 $array = [
-    "test", "key" => function() use ($var1, $var2): void {
+    "test", "key" => function () use ($var1, $var2): void {
         echo "test";
     },
 ];
 
 $array = [
-    "test", "key" => function()
+    "test", "key" => function ()
     use ($var1, $var2): void {
         echo "test";
     },
@@ -186,14 +186,14 @@ $array = [
 
 $array = [
     "test",
-    "key" => function() use ($var1, $var2) {
+    "key" => function () use ($var1, $var2) {
         echo "test";
     },
 ];
 
 $array = [
     "test",
-    "key" => function()
+    "key" => function ()
     use ($var1, $var2) {
         echo "test";
     },
@@ -201,14 +201,14 @@ $array = [
 
 $array = [
     "test",
-    "key" => function() use ($var1, $var2): void {
+    "key" => function () use ($var1, $var2): void {
         echo "test";
     },
 ];
 
 $array = [
     "test",
-    "key" => function()
+    "key" => function ()
     use ($var1, $var2): void {
         echo "test";
     },
@@ -216,19 +216,19 @@ $array = [
 
 // has parameters
 $array = [
-    "test", "key" => function($param1, $param2,) {
+    "test", "key" => function ($param1, $param2,) {
         echo "test";
     }, $test,
 ];
 
 $array = [
-    "test", "key" => function($param1, $param2,) use ($var1, $var2) {
+    "test", "key" => function ($param1, $param2,) use ($var1, $var2) {
         echo "test";
     },
 ];
 
 $array = [
-    "test", "key" => function($param1, $param2,) use (
+    "test", "key" => function ($param1, $param2,) use (
             $var1,
             $var2
     ) {
@@ -237,14 +237,14 @@ $array = [
 ];
 
 $array = [
-    "test", "key" => function($param1, $param2,) use ($var1, $var2): void {
+    "test", "key" => function ($param1, $param2,) use ($var1, $var2): void {
         echo "test";
     },
     $test
 ];
 
 $array = [
-    "test", "key" => function($param1, $param2,) use (
+    "test", "key" => function ($param1, $param2,) use (
             $var1,
             $var2
     ): void {
@@ -255,14 +255,14 @@ $array = [
 
 $array = [
     "test",
-    "key" => function($param1, $param2,) {
+    "key" => function ($param1, $param2,) {
         echo "test";
     },
 ];
 
 $array = [
     "test",
-    "key" => function($param1, $param2,) use ($var1, $var2) {
+    "key" => function ($param1, $param2,) use ($var1, $var2) {
         echo "test";
     },
     "key2" => "value2"
@@ -270,7 +270,7 @@ $array = [
 
 $array = [
     "test",
-    "key" => function($param1, $param2,) use (
+    "key" => function ($param1, $param2,) use (
             $var1,
             $var2
     ) {
@@ -281,14 +281,14 @@ $array = [
 
 $array = [
     "test",
-    "key" => function($param1, $param2,) use ($var1, $var2): void {
+    "key" => function ($param1, $param2,) use ($var1, $var2): void {
         echo "test";
     }, $test => "value",
 ];
 
 $array = [
     "test",
-    "key" => function($param1, $param2,) use (
+    "key" => function ($param1, $param2,) use (
             $var1,
             $var2
     ): void {

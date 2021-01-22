@@ -22,9 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.execute.GradleJavaPlatformProvider;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Pair;
 
@@ -32,7 +30,6 @@ import org.openide.util.Pair;
  *
  * @author lkishalmi
  */
-@ProjectServiceProvider(service = GradleJavaPlatformProvider.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public final class GradleJavaPlatformProviderImpl implements GradleJavaPlatformProvider {
 
     final Project project;

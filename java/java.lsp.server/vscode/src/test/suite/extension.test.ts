@@ -101,8 +101,8 @@ class Main {
     }
 
     test("Compile workspace6", async() => demo(6));
-//    test("Compile workspace7", async() => demo(7));
-//    test("Compile workspace8", async() => demo(8));
+    test("Compile workspace7", async() => demo(7));
+    test("Compile workspace8", async() => demo(8));
 
     /**
      * Checks that maven-managed process can be started, and forcefully terminated by vscode

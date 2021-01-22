@@ -812,11 +812,11 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 //constructor:
                 TreePath tp = getCurrentPath();
                 
-                while (tp != null && !TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
+                while (tp != null && !TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind()) && !"RECORD".equals(tp.getLeaf().getKind().name())) {
                     tp = tp.getParentPath();
                 }
                 
-                if (tp != null && TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
+                if (tp != null && (TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind()) || "RECORD".equals(tp.getLeaf().getKind().name()))) {
                     name = ((ClassTree) tp.getLeaf()).getSimpleName().toString();
                 } else {
                     name = null;

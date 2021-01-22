@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,16 +18,14 @@
     under the License.
 
 -->
-<licenseinfo>
-    <fileset>
-        <file>windows/netbeans.ico</file>
-        <license ref="Apache-2.0-ASF" />
-        <comment type="COMMENT_UNSUPPORTED" />
-    </fileset>
-    <fileset>
-        <file>windows/netbeans.exe.manifest</file>
-        <file>windows/netbeans64.exe.manifest</file>
-        <license ref="Apache-2.0-ASF" />
-        <comment>RAT recognises files as binary</comment>
-    </fileset>
-</licenseinfo>
+# macOS NetBeans Platform Launcher
+
+Native macOS NetBeans Platform launcher for app bundle. It wraps a call to [platform/lib/nbexec](../../../platform/o.n.bootstrap/launcher/unix/nbexec)
+
+* Requires macOS with swift to build
+
+
+Manually build with the following command:
+```shell
+% swift build -c release
+```

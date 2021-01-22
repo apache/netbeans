@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,24 +18,16 @@
     under the License.
 
 -->
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>IBDocumentLocation</key>
-	<string>755 80 586 606 0 0 1600 1178 </string>
-	<key>IBEditorPositions</key>
-	<dict>
-		<key>29</key>
-		<string>47 443 318 44 0 0 1600 1178 </string>
-	</dict>
-	<key>IBFramework Version</key>
-	<string>291.0</string>
-	<key>IBOpenObjects</key>
-	<array>
-		<integer>29</integer>
-		<integer>21</integer>
-	</array>
-	<key>IBSystem Version</key>
-	<string>6I32</string>
-</dict>
-</plist>
+# macOS NetBeansLauncher
+
+Native macOS launcher for Apache NetBeans app bundle. It wraps a call to [platform/lib/nbexec](../../../platform/o.n.bootstrap/launcher/unix/nbexec)
+
+
+* Requires macOS with swift installed
+* Automatically built when building macOS installer package
+
+
+Manually build with the following command:
+```shell
+% swift build -c release
+```

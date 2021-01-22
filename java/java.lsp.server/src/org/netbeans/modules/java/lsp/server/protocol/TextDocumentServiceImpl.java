@@ -96,6 +96,9 @@ import org.eclipse.lsp4j.DocumentOnTypeFormattingParams;
 import org.eclipse.lsp4j.DocumentRangeFormattingParams;
 import org.eclipse.lsp4j.DocumentSymbol;
 import org.eclipse.lsp4j.DocumentSymbolParams;
+import org.eclipse.lsp4j.FoldingRange;
+import org.eclipse.lsp4j.FoldingRangeKind;
+import org.eclipse.lsp4j.FoldingRangeRequestParams;
 import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.HoverParams;
 import org.eclipse.lsp4j.InsertTextFormat;
@@ -152,6 +155,8 @@ import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.completion.JavaCompletionTask;
 import org.netbeans.modules.java.completion.JavaCompletionTask.Options;
 import org.netbeans.modules.java.completion.JavaDocumentationTask;
+import org.netbeans.modules.java.editor.base.fold.JavaElementFoldVisitor;
+import org.netbeans.modules.java.editor.base.fold.JavaElementFoldVisitor.FoldCreator;
 import org.netbeans.modules.java.editor.base.semantic.MarkOccurrencesHighlighterBase;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
@@ -1522,6 +1527,65 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 result.completeExceptionally(ex);
             }
         });
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<List<FoldingRange>> foldingRange(FoldingRangeRequestParams params) {
+        JavaSource source = getSource(params.getTextDocument().getUri());
+        if (source == null) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
+        CompletableFuture<List<FoldingRange>> result = new CompletableFuture<>();
+        try {
+            source.runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+                Document doc = cc.getSnapshot().getSource().getDocument(true);
+                JavaElementFoldVisitor v = new JavaElementFoldVisitor(cc, cc.getCompilationUnit(), cc.getTrees().getSourcePositions(), doc, new FoldCreator<FoldingRange>() {
+                    @Override
+                    public FoldingRange createImportsFold(int start, int end) {
+                        return createFold(start, end, FoldingRangeKind.Imports);
+                    }
+
+                    @Override
+                    public FoldingRange createInnerClassFold(int start, int end) {
+                        return createFold(start, end, FoldingRangeKind.Region);
+                    }
+
+                    @Override
+                    public FoldingRange createCodeBlockFold(int start, int end) {
+                        return createFold(start, end, FoldingRangeKind.Region);
+                    }
+
+                    @Override
+                    public FoldingRange createJavadocFold(int start, int end) {
+                        return createFold(start, end, FoldingRangeKind.Comment);
+                    }
+
+                    @Override
+                    public FoldingRange createInitialCommentFold(int start, int end) {
+                        return createFold(start, end, FoldingRangeKind.Comment);
+                    }
+
+                    private FoldingRange createFold(int start, int end, String kind) {
+                        Position startPos = Utils.createPosition(cc.getCompilationUnit(), start);
+                        Position endPos = Utils.createPosition(cc.getCompilationUnit(), end);
+                        FoldingRange range = new FoldingRange(startPos.getLine(), endPos.getLine());
+
+                        range.setStartCharacter(startPos.getCharacter());
+                        range.setEndCharacter(endPos.getCharacter());
+                        range.setKind(kind);
+
+                        return range;
+                    }
+                });
+                v.checkInitialFold();
+                v.scan(cc.getCompilationUnit(), null);
+                result.complete(v.getFolds());
+            }, true);
+        } catch (IOException ex) {
+            result.completeExceptionally(ex);
+        }
         return result;
     }
 

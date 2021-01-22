@@ -1366,9 +1366,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     List<TestMethod> methods = methodsFactory.create().computeTestMethods(cc);
                     if (methods != null) {
                         for (TestMethod method : methods) {
-                            lens.add(new CodeLens(new Range(Utils.createPosition(cc.getCompilationUnit(), method.start().getOffset()),
-                                                            Utils.createPosition(cc.getCompilationUnit(), method.end().getOffset())),
-                                                  new Command("Run test", Server.JAVA_TEST_SINGLE_METHOD),
+                            Range range = new Range(Utils.createPosition(cc.getCompilationUnit(), method.start().getOffset()),
+                                                    Utils.createPosition(cc.getCompilationUnit(), method.end().getOffset()));
+                            List<Object> arguments = Arrays.asList(new Object[]{method.method().getFile().toURI(), method.method().getMethodName()});
+                            lens.add(new CodeLens(range,
+                                                  new Command("Run test", Server.JAVA_TEST_SINGLE_METHOD, arguments),
+                                                  null));
+                            lens.add(new CodeLens(range,
+                                                  new Command("Debug test", "java.debug.codelens", arguments),
                                                   null));
                         }
                     }
@@ -1378,8 +1383,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     public Void visitMethod(MethodTree tree, Void p) {
                         Element el = cc.getTrees().getElement(getCurrentPath());
                         if (el != null && el.getKind() == ElementKind.METHOD && SourceUtils.isMainMethod((ExecutableElement) el)) {
-                            lens.add(new CodeLens(Utils.treeRange(cc, tree),
-                                                  new Command("Run main", Server.JAVA_RUN_MAIN_METHOD),
+                            Range range = Utils.treeRange(cc, tree);
+                            List<Object> arguments = Collections.singletonList(params.getTextDocument().getUri());
+                            lens.add(new CodeLens(range,
+                                                  new Command("Run main", Server.JAVA_RUN_MAIN_METHOD, arguments),
+                                                  null));
+                            lens.add(new CodeLens(range,
+                                                  new Command("Debug main", "java.debug.codelens", arguments),
                                                   null));
                         }
                         return null;

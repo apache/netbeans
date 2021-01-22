@@ -320,7 +320,9 @@ public final class Server {
                 capabilities.setDefinitionProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
-                List<String> commands = new ArrayList<>(Arrays.asList(JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT, JAVA_TEST_SINGLE_METHOD, JAVA_RUN_MAIN_METHOD));
+                List<String> commands = new ArrayList<>(Arrays.asList(
+                        JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT,
+                        JAVA_TEST_SINGLE_METHOD, JAVA_RUN_MAIN_METHOD));
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     commands.addAll(codeGenerator.getCommands());
                 }

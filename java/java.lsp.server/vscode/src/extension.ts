@@ -203,6 +203,21 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             ]);
         }
     }));
+    context.subscriptions.push(commands.registerCommand('java.debug.codelens', async (uri, methodName) => {
+        const editor = window.activeTextEditor;
+        if (editor) {
+            const docUri = editor.document.uri;
+            const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
+            const debugConfig = {
+                type: "java8+",
+                name: "CodeLens Debug",
+                request: "launch",
+                mainClass: uri,
+                singleMethod: methodName,
+            };
+            await vscode.debug.startDebugging(workspaceFolder, debugConfig).then();
+        }
+    }));
     return Object.freeze({
         version : API_VERSION
     });

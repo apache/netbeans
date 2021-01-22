@@ -18,9 +18,13 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import com.google.gson.JsonPrimitive;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +54,7 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.java.lsp.server.Utils;
@@ -61,8 +66,15 @@ import org.netbeans.modules.parsing.lucene.support.Queries;
 import org.netbeans.spi.jumpto.type.SearchType;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.SingleMethod;
+import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.Mutex;
+import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
@@ -89,34 +101,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 am.doAction("pauseInGraalScript");
                 return CompletableFuture.completedFuture(true);
             case Server.JAVA_BUILD_WORKSPACE: {
-                CompletableFuture<Object> compileFinished = new CompletableFuture<>();
-                class CompileAllProjects extends ActionProgress {
-                    private int running;
-                    private int success;
-                    private int failure;
-
-                    @Override
-                    protected synchronized void started() {
-                        running++;
-                    }
-
-                    @Override
-                    public synchronized void finished(boolean ok) {
-                        if (ok) {
-                            success++;
-                        } else {
-                            failure++;
-                        }
-                        checkStatus();
-                    }
-
-                    synchronized final void checkStatus() {
-                        if (running <= success + failure) {
-                            compileFinished.complete(failure == 0);
-                        }
-                    }
-                }
-                final CompileAllProjects progressOfCompilation = new CompileAllProjects();
+                final CommandProgress progressOfCompilation = new CommandProgress();
                 final Lookup ctx = Lookups.singleton(progressOfCompilation);
                 for (Project prj : OpenProjects.getDefault().getOpenProjects()) {
                     ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
@@ -125,8 +110,35 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     }
                 }
                 progressOfCompilation.checkStatus();
-                return compileFinished;
+                return progressOfCompilation.getFinishFuture();
             }
+            case Server.JAVA_TEST_SINGLE_METHOD:
+                CommandProgress progressOfCommand = new CommandProgress();
+                String uriStr = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                FileObject file;
+                try {
+                    file = URLMapper.findFileObject(new URL(uriStr));
+                } catch (MalformedURLException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return CompletableFuture.completedFuture(true);
+                }
+                String methodName = ((JsonPrimitive) params.getArguments().get(1)).getAsString();
+                SingleMethod method = new SingleMethod(file, methodName);
+                runSingleMethodCommand(method, SingleMethod.COMMAND_RUN_SINGLE_METHOD, progressOfCommand);
+                progressOfCommand.checkStatus();
+                return progressOfCommand.getFinishFuture();
+            case Server.JAVA_RUN_MAIN_METHOD:
+                progressOfCommand = new CommandProgress();
+                uriStr = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                try {
+                    file = URLMapper.findFileObject(new URL(uriStr));
+                } catch (MalformedURLException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return CompletableFuture.completedFuture(true);
+                }
+                runSingleFile(file, ActionProvider.COMMAND_RUN_SINGLE, progressOfCommand);
+                progressOfCommand.checkStatus();
+                return progressOfCommand.getFinishFuture();
             default:
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     if (codeGenerator.getCommands().contains(command)) {
@@ -135,6 +147,46 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
+    }
+
+    @NbBundle.Messages("No_Method_Found=No method found")
+    private void runSingleMethodCommand(SingleMethod singleMethod, String command, CommandProgress progressOfCommand) {
+        if (singleMethod == null) {
+            StatusDisplayer.getDefault().setStatusText(Bundle.No_Method_Found());
+            progressOfCommand.getFinishFuture().complete(true);
+        } else {
+            Mutex.EVENT.readAccess(new Runnable() {
+                @Override
+                public void run() {
+                    Project owner = FileOwnerQuery.getOwner(singleMethod.getFile());
+                    if (owner != null) {
+                        ActionProvider ap = owner.getLookup().lookup(ActionProvider.class);
+                        if (ap != null) {
+                            if (Arrays.asList(ap.getSupportedActions()).contains(command) && ap.isActionEnabled(command, Lookups.singleton(singleMethod))) {
+                                ap.invokeAction(command, Lookups.fixed(singleMethod, progressOfCommand));
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    private void runSingleFile(FileObject file, String command, CommandProgress progressOfCommand) {
+        Mutex.EVENT.readAccess(new Runnable() {
+            @Override
+            public void run() {
+                Project owner = FileOwnerQuery.getOwner(file);
+                if (owner != null) {
+                    ActionProvider ap = owner.getLookup().lookup(ActionProvider.class);
+                    if (ap != null) {
+                        if (Arrays.asList(ap.getSupportedActions()).contains(command) && ap.isActionEnabled(command, Lookups.singleton(file))) {
+                            ap.invokeAction(command, Lookups.fixed(file, progressOfCommand));
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -323,5 +375,38 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     @Override
     public void connect(LanguageClient client) {
         this.client = (NbCodeLanguageClient)client;
+    }
+
+    private static final class CommandProgress extends ActionProgress {
+
+        private final CompletableFuture<Object> commandFinished = new CompletableFuture<>();;
+        private int running;
+        private int success;
+        private int failure;
+
+        @Override
+        protected synchronized void started() {
+            running++;
+        }
+
+        @Override
+        public synchronized void finished(boolean ok) {
+            if (ok) {
+                success++;
+            } else {
+                failure++;
+            }
+            checkStatus();
+        }
+
+        synchronized final void checkStatus() {
+            if (running <= success + failure) {
+                commandFinished.complete(failure == 0);
+            }
+        }
+
+        CompletableFuture<Object> getFinishFuture() {
+            return commandFinished;
+        }
     }
 }

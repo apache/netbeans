@@ -799,7 +799,7 @@ matrix:
         - name: "GraalVM Tests (latest)"
           jdk: openjdk8
           env: 
-            - GRAAL_VERSION="20.2.0"
+            - GRAAL_VERSION="21.0.0"
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           before_script:
             - ant $OPTS clean
@@ -810,7 +810,7 @@ matrix:
         - name: "GraalVM Tests (LTS)"
           jdk: openjdk8
           env: 
-            - GRAAL_VERSION="19.3.3"
+            - GRAAL_VERSION="20.3.0"
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           before_script:
             - ant $OPTS clean

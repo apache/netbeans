@@ -559,6 +559,14 @@ public class PrintASTVisitor implements Visitor {
     }
 
     @Override
+    public void visit(NamedArgument namedArgument) {
+        XMLPrintNode printNode = new XMLPrintNode(namedArgument, "NamedArgument");
+        printNode.addChild(namedArgument.getParameterName());
+        printNode.addChild(namedArgument.getExpression());
+        printNode.print(this);
+    }
+
+    @Override
     public void visit(NamespaceName namespaceName) {
         XMLPrintNode printNode = new XMLPrintNode(namespaceName, "NamespaceName",
                 new String[] {"isCurrent", namespaceName.isCurrent() ? "true" : "false",

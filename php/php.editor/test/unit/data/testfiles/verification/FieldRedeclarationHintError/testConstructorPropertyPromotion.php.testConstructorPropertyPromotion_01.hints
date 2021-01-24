@@ -1,0 +1,45 @@
+        public string $param = "default value", // C1
+                       -----
+HINT:Field "$param" has already been declared
+        private string|null $param = "default value", // C1
+                             -----
+HINT:Field "$param" has already been declared
+        public int $param, // C2
+                    -----
+HINT:Field "$param" has already been declared
+        public string $param = "default value", // C2
+                       -----
+HINT:Field "$param" has already been declared
+        private string|null $param = "default value", // C2
+                             -----
+HINT:Field "$param" has already been declared
+        public string $param = "default value", // T1
+                       -----
+HINT:Field "$param" has already been declared
+        private string|null $param = "default value", // T1
+                             -----
+HINT:Field "$param" has already been declared
+        public int $param, // T2
+                    -----
+HINT:Field "$param" has already been declared
+        public string $param = "default value", // T2
+                       -----
+HINT:Field "$param" has already been declared
+        private string|null $param = "default value", // T2
+                             -----
+HINT:Field "$param" has already been declared
+        public string $param = "default value", // anon1
+                       -----
+HINT:Field "$param" has already been declared
+        private string|null $param = "default value", // anon1
+                             -----
+HINT:Field "$param" has already been declared
+        protected int $param, // anon2
+                       -----
+HINT:Field "$param" has already been declared
+        public string $param = "default value", // anon2
+                       -----
+HINT:Field "$param" has already been declared
+        private string|null $param = "default value", // anon2
+                             -----
+HINT:Field "$param" has already been declared

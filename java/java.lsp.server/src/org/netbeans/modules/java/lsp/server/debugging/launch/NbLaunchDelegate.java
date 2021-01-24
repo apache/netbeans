@@ -22,6 +22,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -41,8 +42,13 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.NbSourceProvider;
+import org.netbeans.modules.java.lsp.server.progress.OperationContext;
+import org.netbeans.modules.java.lsp.server.progress.ProgressOperationEvent;
+import org.netbeans.modules.java.lsp.server.progress.ProgressOperationListener;
+import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.Pair;
@@ -57,11 +63,21 @@ public abstract class NbLaunchDelegate {
     public abstract void preLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
 
     public abstract void postLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
+    
+    protected void notifyFinished(DebugAdapterContext ctx, boolean success) {
+        // no op.
+    }
 
-    public final CompletableFuture<Void> nbLaunch(FileObject toRun, DebugAdapterContext context, boolean debug, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
+    public final CompletableFuture<Void> nbLaunch(FileObject toRun, String method, DebugAdapterContext context, boolean debug, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
         CompletableFuture<Void> launchFuture = new CompletableFuture<>();
         NbProcessConsole ioContext = new NbProcessConsole(consoleMessages);
-        CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(toRun, debug, ioContext);
+        SingleMethod singleMethod;
+        if (method != null) {
+            singleMethod = new SingleMethod(toRun, method);
+        } else {
+            singleMethod = null;
+        }
+        CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(toRun, singleMethod, debug, ioContext);
         commandFuture.thenAccept((providerAndCommand) -> {
             if (debug) {
                 DebuggerManager.getDebuggerManager().addDebuggerListener(new DebuggerManagerAdapter() {
@@ -100,6 +116,7 @@ public abstract class NbLaunchDelegate {
                 @Override
                 public void finished(boolean success) {
                     ioContext.stop();
+                    notifyFinished(context, success);
                 }
             };
             Lookup launchCtx = new ProxyLookup(
@@ -107,8 +124,23 @@ public abstract class NbLaunchDelegate {
                             toRun, ioContext, progress
                     ), Lookup.getDefault()
             );
+            OperationContext ctx = OperationContext.find(Lookup.getDefault());
+            ctx.addProgressOperationListener(null, new ProgressOperationListener() {
+                @Override
+                public void progressHandleCreated(ProgressOperationEvent e) {
+                    context.setProcessExecutorHandle(e.getProgressHandle());
+                }
+            });
+
+            Lookup lookup;
+            if (singleMethod != null) {
+                lookup = Lookups.fixed(toRun, singleMethod, ioContext, progress);
+            } else {
+                lookup = Lookups.fixed(toRun, ioContext, progress);
+            }
             Lookups.executeWith(launchCtx, () -> {
-                providerAndCommand.first().invokeAction(providerAndCommand.second(), Lookups.fixed(toRun, ioContext, progress));
+                providerAndCommand.first().invokeAction(providerAndCommand.second(), lookup);
+
             });
         }).exceptionally((t) -> {
             launchFuture.completeExceptionally(t);
@@ -117,8 +149,8 @@ public abstract class NbLaunchDelegate {
         return launchFuture;
     }
 
-    private CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(FileObject toRun, boolean debug, NbProcessConsole ioContext) throws IllegalArgumentException {
-        Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, debug);
+    private CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(FileObject toRun, SingleMethod singleMethod, boolean debug, NbProcessConsole ioContext) throws IllegalArgumentException {
+        Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, singleMethod, debug);
         if (providerAndCommand != null) {
             return CompletableFuture.completedFuture(providerAndCommand);
         }
@@ -134,7 +166,7 @@ public abstract class NbLaunchDelegate {
             @Override
             public void finished(boolean success) {
                 if (success) {
-                    Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, debug);
+                    Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, singleMethod, debug);
                     if (providerAndCommand != null) {
                         afterBuild.complete(providerAndCommand);
                         return;
@@ -167,7 +199,7 @@ public abstract class NbLaunchDelegate {
         return afterBuild;
     }
 
-    protected static @CheckForNull Pair<ActionProvider, String> findTarget(FileObject toRun, boolean debug) {
+    protected static @CheckForNull Pair<ActionProvider, String> findTarget(FileObject toRun, SingleMethod singleMethod, boolean debug) {
         ClassPath sourceCP = ClassPath.getClassPath(toRun, ClassPath.SOURCE);
         FileObject fileRoot = sourceCP != null ? sourceCP.findOwnerRoot(toRun) : null;
         boolean mainSource;
@@ -180,10 +212,16 @@ public abstract class NbLaunchDelegate {
         String command = null;
         Collection<ActionProvider> actionProviders = findActionProviders(toRun);
         Lookup testLookup = Lookups.singleton(toRun);
-        String[] actions = debug ? mainSource ? new String[] {ActionProvider.COMMAND_DEBUG_SINGLE}
-                                              : new String[] {ActionProvider.COMMAND_DEBUG_TEST_SINGLE, ActionProvider.COMMAND_DEBUG_SINGLE}
-                                 : mainSource ? new String[] {ActionProvider.COMMAND_RUN_SINGLE}
-                                              : new String[] {ActionProvider.COMMAND_TEST_SINGLE, ActionProvider.COMMAND_RUN_SINGLE};
+        String[] actions;
+        if (mainSource && singleMethod != null) {
+            actions = debug ? new String[] {SingleMethod.COMMAND_DEBUG_SINGLE_METHOD}
+                            : new String[] {SingleMethod.COMMAND_RUN_SINGLE_METHOD};
+        } else {
+            actions = debug ? mainSource ? new String[] {ActionProvider.COMMAND_DEBUG_SINGLE}
+                                         : new String[] {ActionProvider.COMMAND_DEBUG_TEST_SINGLE, ActionProvider.COMMAND_DEBUG_SINGLE}
+                            : mainSource ? new String[] {ActionProvider.COMMAND_RUN_SINGLE}
+                                         : new String[] {ActionProvider.COMMAND_TEST_SINGLE, ActionProvider.COMMAND_RUN_SINGLE};
+        }
 
         for (String commandCandidate : actions) {
             provider = findActionProvider(commandCandidate, actionProviders, testLookup);

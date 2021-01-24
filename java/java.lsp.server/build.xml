@@ -60,6 +60,13 @@
         <ant dir="nbcode" target="clean" inheritall="false" inheritrefs="false"/>
     </target>
     <target name="build-vscode-ext" depends="build-lsp-server" description="Build the Visual Studio Code extension.">
+        <taskdef name="gitbranchhash" classname="org.netbeans.nbbuild.GitBranchHash" classpath="${nbantext.jar}" />
+        <gitbranchhash file="." branchproperty="metabuild.branch" hashproperty="metabuild.hash" />
+        <condition property="metabuild.hash" value="master" >
+            <not>
+                <isset property="metabuild.hash" />
+            </not>
+        </condition>
         <property name="vsix.version" value="0.1.0"/>
 
         <exec executable="npm" failonerror="true" dir="vscode">
@@ -96,6 +103,8 @@
         </exec>
         <exec executable="${build.dir}/vsce/node_modules/vsce/out/vsce" failonerror="true" dir="${basedir}/vscode">
             <arg value="package" />
+            <arg value="--baseImagesUrl" />
+            <arg value="https://github.com/apache/netbeans/raw/${metabuild.hash}/java/java.lsp.server/vscode" />
             <arg value="--out" />
             <arg value="${build.dir}/apache-netbeans-java-${vsix.version}.vsix" />
         </exec>

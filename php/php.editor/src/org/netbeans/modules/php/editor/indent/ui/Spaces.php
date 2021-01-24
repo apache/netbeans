@@ -6,7 +6,7 @@ namespace ExampleNamespace;
 use Some\Classes\{ClassA, ClassB, ClassC as C};
 
 class Example implements Iface1, Iface2, Iface3 {
-
+#[A1("param")]
 private ClassA|ClassB|null $unionType;
 
     public function ifExample ($a, $b) {
@@ -105,6 +105,10 @@ public function nullsafeOperatorExample(object $object){
     $object?->nullsafe();
 }
 }
+
+$anonymousFunc = function ($arg) use ($param):int {
+    return 1;
+};
 
 // Wrapping: Method Call Arguments must be set
 (new Example())->alignParamsExample('one',

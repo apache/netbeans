@@ -34,6 +34,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import org.netbeans.modules.gradle.GradleModuleFileCache21;
 import org.netbeans.modules.gradle.spi.GradleSettings;
@@ -68,7 +69,7 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
     final GradleArtifactStore artifactSore = GradleArtifactStore.getDefault();
 
     GradleBaseProjectBuilder(Map<String, Object> info) {
-        this.info = info;
+        this.info = new TreeMap<>(info);
     }
 
     void build() {
@@ -187,8 +188,8 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                 conf.modules = new HashSet<>();
                 Boolean nonResolvingConf = (Boolean)info.get("configuration_" + name + "_non_resolving");
                 conf.canBeResolved = nonResolvingConf != null ? !nonResolvingConf : true;
-                if (conf.isCanBeResolved()) {
-                    Set<String> requiredComponents = (Set<String>) info.get("configuration_" + name + "_components");
+                Set<String> requiredComponents = (Set<String>) info.get("configuration_" + name + "_components");
+                if (requiredComponents != null) {
                     for (String c : requiredComponents) {
                         ModuleDependency dep = components.get(c);
                         if (dep != null) {
@@ -199,23 +200,27 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                             conf.modules.add(dep);
                         }
                     }
-                    conf.projects = new HashSet<>();
-                    Set<String> requiredProjects = (Set<String>) info.get("configuration_" + name + "_projects");
+                }
+                conf.projects = new HashSet<>();
+                Set<String> requiredProjects = (Set<String>) info.get("configuration_" + name + "_projects");
+                if (requiredProjects != null) {
                     for (String p : requiredProjects) {
                         conf.projects.add(projects.get(p));
                     }
-                    conf.unresolved = new HashSet<>();
-                    Set<String> unresolvedComp = (Set<String>) info.get("configuration_" + name + "_unresolved");
+                }
+                conf.unresolved = new HashSet<>();
+                Set<String> unresolvedComp = (Set<String>) info.get("configuration_" + name + "_unresolved");
+                if (unresolvedComp != null) {
                     for (String u : unresolvedComp) {
                         conf.unresolved.add(unresolved.get(u));
                     }
-                    Set<File> files = (Set<File>) info.get("configuration_" + name + "_files");
-                    if (files != null) {
-                        files = new HashSet<>(files);
-                        files.removeAll(sourceSetOutputs);
-                    }
-                    conf.files = new FileCollectionDependency(createSet(files));
                 }
+                Set<File> files = (Set<File>) info.get("configuration_" + name + "_files");
+                if (files != null) {
+                    files = new HashSet<>(files);
+                    files.removeAll(sourceSetOutputs);
+                }
+                conf.files = new FileCollectionDependency(createSet(files));
                 Boolean transitive = (Boolean) info.get("configuration_" + name + "_transitive");
                 conf.transitive = transitive == null ? true : transitive;
 

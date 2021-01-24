@@ -253,7 +253,7 @@ public class ConfigurationsNode extends AbstractNode {
                                 NbGradleProjectImpl proj = (NbGradleProjectImpl) prj;
                                 assert prj.getLookup().lookup(LogicalViewProvider.class) != null;
                                 Node original = proj.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
-                                ret.add(new SubProjectsNode.ProjectFilterNode(proj, original));
+                                ret.add(new SubProjectsNode.ProjectFilterNode(original));
                             }
                         } catch (IllegalArgumentException | IOException ex) {
                             ex.printStackTrace();//TODO log ?

@@ -542,6 +542,21 @@ for more information about this.
         underlaying <a href="@TOP@/architecture-summary.html#script">scripting and templating
         engines</a>.
     </api>
+
+    <api name="org.netbeans.modules.openide.loaders.ASK_OnSaving" group="branding" type="export" category="stable">
+        Control on save yes/no dialog in
+        <a href="@TOP@/org/openide/text/DataEditorSupport.html">DataEditorSupport</a>
+        by setting the <code>ASK_OnSaving</code> key in
+        <code>org/netbeans/modules/openide/loaders/Bundle.properties</code>
+        to <code>yes</code> or <code>no</code> in a branding file in your application.
+    </api>
+    <api name="org.netbeans.modules.openide.loaders.ASK_OnClosing" group="branding" type="export" category="stable">
+        Control on close yes/no dialog in
+        <a href="@TOP@/org/openide/text/DataEditorSupport.html">DataEditorSupport</a>
+        by setting the <code>ASK_OnClosing</code> key in
+        <code>org/netbeans/modules/openide/loaders/Bundle.properties</code>
+        to <code>yes</code> or <code>no</code> in a branding file in your application.
+    </api>
 </answer>
 
 

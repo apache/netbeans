@@ -19,18 +19,32 @@
 
 package org.netbeans.modules.web.monitor.data;
 
-import org.w3c.dom.*;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.Vector;
+
+import org.netbeans.modules.schema2beans.AttrProp;
+import org.netbeans.modules.schema2beans.BaseBean;
+import org.netbeans.modules.schema2beans.BeanComparator;
+import org.netbeans.modules.schema2beans.BeanProp;
+import org.netbeans.modules.schema2beans.Common;
+import org.netbeans.modules.schema2beans.GraphManager;
+import org.netbeans.modules.schema2beans.Version;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
-import org.netbeans.modules.schema2beans.*;
-import java.beans.*;
-import java.util.*;
-import java.io.*;
+
 
 public class MonitorData extends BaseBean implements DataRecord {
 
     private final static boolean debug = false;
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
     static public final String CLIENTDATA = "ClientData";   // NOI18N
     static public final String SESSIONDATA = "SessionData"; // NOI18N
@@ -66,7 +80,7 @@ public class MonitorData extends BaseBean implements DataRecord {
     }
     
     public MonitorData(int options) {
-	super(MonitorData.comparators, new org.netbeans.modules.schema2beans.Version(1, 0, 6));
+	super(MonitorData.comparators, new Version(1, 0, 6));
 	// The graph manager is allocated in the bean root
 	this.graphManager = new GraphManager(this);
 

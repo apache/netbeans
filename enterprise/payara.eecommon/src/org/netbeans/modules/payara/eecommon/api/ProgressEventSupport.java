@@ -97,7 +97,7 @@ public class ProgressEventSupport {
         status = sCode;
         tmID = targetModuleID;
         
-	Vector targets = null;
+	Vector<ProgressListener> targets = null;
 	synchronized (this) {
 	    if (listeners != null) {
 	        targets = (Vector) listeners.clone();

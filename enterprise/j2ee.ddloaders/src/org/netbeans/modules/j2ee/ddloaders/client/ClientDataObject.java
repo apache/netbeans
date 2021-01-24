@@ -88,7 +88,7 @@ public class ClientDataObject extends  DDMultiViewDataObject
     private transient FileObject srcRoots[];
     
     /** List of updates to servlets that should be processed */
-    private Vector updates;
+    private Vector<DDChangeEvent> updates;
     
     private transient RequestProcessor.Task updateTask;
     
@@ -162,7 +162,7 @@ public class ClientDataObject extends  DDMultiViewDataObject
     public void deploymentChange(DDChangeEvent evt) {
         synchronized (this) {
             if (updates == null) {
-                updates = new Vector();
+                updates = new Vector<>();
             }
             updates.addElement(evt);
         }

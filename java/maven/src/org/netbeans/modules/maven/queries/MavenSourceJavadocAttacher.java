@@ -32,8 +32,8 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.AbstractArtifactResolutionException;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
@@ -112,8 +112,8 @@ public class MavenSourceJavadocAttacher implements SourceJavadocAttacherImplemen
             return Collections.emptyList();
         }
 
-        AggregateProgressHandle hndl = AggregateProgressFactory.createHandle(Bundle.attaching(art.getId()),
-                new ProgressContributor[]{AggregateProgressFactory.createProgressContributor("attach")},
+        AggregateProgressHandle hndl = BasicAggregateProgressFactory.createHandle(Bundle.attaching(art.getId()),
+                new ProgressContributor[]{ BasicAggregateProgressFactory.createProgressContributor("attach")},
                 ProgressTransferListener.cancellable(), null);
         ProgressTransferListener.setAggregateHandle(hndl);
         try {

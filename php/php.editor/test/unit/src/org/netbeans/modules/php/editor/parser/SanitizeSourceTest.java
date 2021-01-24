@@ -251,6 +251,10 @@ public class SanitizeSourceTest extends ParserTestBase {
         performTest("sanitize/unionTypesParameter05");
     }
 
+    public void testConstructorPropertyPromotionParameter01() throws Exception {
+        performTest("sanitize/constructorPropertyPromotionParameter01");
+    }
+
     protected String getTestResult(String filename) throws Exception {
         return getTestResult(filename, null);
     }

@@ -87,9 +87,9 @@ public final class BuildOptionsVisual extends JPanel {
             buildargsTable.getCellEditor().stopCellEditing();
         }
         for (Object o : model.getDataVector()) {
-            Vector v = (Vector) o;
-            String name = (String) v.elementAt(0);
-            String value = (String) v.elementAt(1);
+            Vector<String> v = (Vector<String>)o;
+            String name  = v.elementAt(0);
+            String value = v.elementAt(1);
             if (name != null && value != null) {
                 result.put(name, value);
             }

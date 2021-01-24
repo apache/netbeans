@@ -193,4 +193,8 @@ public class SemanticAnalyzerTest extends SemanticAnalysisTestBase {
     public void testUniformVariableSyntax_02() throws Exception {
         checkSemantic("testfiles/semantic/uniformVariableSyntax/uniformVariableSyntax_02.php");
     }
+
+    public void testConstrucotorPropertyPromotion() throws Exception {
+        checkSemantic("testfiles/semantic/constructorPropertyPromotion.php");
+    }
 }

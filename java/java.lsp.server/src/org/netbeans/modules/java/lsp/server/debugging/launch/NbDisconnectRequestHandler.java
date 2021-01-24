@@ -45,6 +45,8 @@ public final class NbDisconnectRequestHandler {
             } else {
                 debugSession.detach();
             }
+        } else {
+            context.requestProcessTermination();
         }
     }
 

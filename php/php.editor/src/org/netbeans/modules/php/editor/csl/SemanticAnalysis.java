@@ -56,6 +56,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionName;
 import org.netbeans.modules.php.editor.parser.astnodes.GroupUseStatementPart;
@@ -453,6 +454,18 @@ public class SemanticAnalysis extends SemanticAnalyzer {
         public void visit(MethodDeclaration md) {
             if (isCancelled()) {
                 return;
+            }
+            if (CodeUtils.isConstructor(md)) {
+                // [NETBEANS-4443] PHP 8.0 Constructor Property Promotion
+                for (FormalParameter formalParameter : md.getFunction().getFormalParameters()) {
+                    if (isCancelled()) {
+                        return;
+                    }
+                    FieldsDeclaration fieldsDeclaration = FieldsDeclaration.create(formalParameter);
+                    if (fieldsDeclaration != null) {
+                        scan(fieldsDeclaration);
+                    }
+                }
             }
             scan(md.getFunction().getFormalParameters());
             boolean isPrivate = Modifier.isPrivate(md.getModifier());

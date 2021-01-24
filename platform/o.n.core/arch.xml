@@ -614,9 +614,9 @@
             implementation of <code>ProxySelector</code>.
         </api>
         
-    <api name="TimableEventQueue.install" category="friend" group="branding" type="export">
+    <api name="org.netbeans.core.TimableEventQueue.install" category="friend" group="branding" type="export">
         By default NetBeans based applications install their own <code>EventQueue</code>.
-        One can suppress that since versiong 3.27 of <code>org.netbeans.core</code> module
+        One can suppress that since version 3.27 of <code>org.netbeans.core</code> module
         by branding key <code>TimableEventQueue.install</code> in
         <code>org/netbeans/core/Bundle</code> to <code>false</code>.
     </api>

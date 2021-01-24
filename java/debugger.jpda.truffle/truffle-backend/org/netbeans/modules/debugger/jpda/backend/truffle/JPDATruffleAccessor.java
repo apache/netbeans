@@ -155,6 +155,7 @@ public class JPDATruffleAccessor extends Object {
                                boolean haltedBefore,
                                DebugValue returnValue,
                                FrameInfo frameInfo,
+                               boolean supportsJavaFrames,
                                Breakpoint[] breakpointsHit,
                                Throwable[] breakpointConditionExceptions,
                                int stepCmd) {
@@ -193,11 +194,31 @@ public class JPDATruffleAccessor extends Object {
     }
     
     /**
+     * Tries to suspend immediately at the current location of the current execution thread.
+     * When called from a suspension in a Java code, it reveals the guest code execution.
+     *
+     * @return the halted info, the array corresponds to the arguments of
+     * {@link #executionHalted(JPDATruffleDebugManager, SourcePosition, boolean, DebugValue, FrameInfo, boolean, Breakpoint[], Throwable[], int)},
+     * or <code>null</code>, when the suspend wasn't successful.
+     */
+    static Object[] suspendHere() {
+        synchronized (debugManagers) {
+            for (JPDATruffleDebugManager tdm : debugManagers.values()) {
+                Object[] haltedInfo = tdm.suspendHere();
+                if (haltedInfo != null) {
+                    return haltedInfo;
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
      * @param frames The array of stack frame infos
      * @return An array of two elements: a String of frame information and
      * an array of code contents.
      */
-    static Object[] getFramesInfo(DebugStackFrame[] frames, boolean includeInternal) {
+    static Object[] getFramesInfo(DebugStackFrame[] frames, boolean includeInternal, boolean supportsJavaFrames) {
         trace("getFramesInfo({0})",includeInternal);
         int n = frames.length;
         StringBuilder frameInfos = new StringBuilder();
@@ -211,17 +232,20 @@ public class JPDATruffleAccessor extends Object {
             if (!includeInternal && isInternal) {
                 continue;
             }
+            boolean isHost = supportsJavaFrames && FrameInfo.isHost(sf);
             String sfName = sf.getName();
             if (sfName == null) {
                 sfName = "";
             }
             frameInfos.append(sfName);
             frameInfos.append('\n');
+            frameInfos.append(isHost);
+            frameInfos.append('\n');
             LanguageInfo sfLang = sf.getLanguage();
             String sfLangId = (sfLang != null) ? sfLang.getId() + " " + sfLang.getName() : "";
             frameInfos.append(sfLangId);
             frameInfos.append('\n');
-            frameInfos.append(DebuggerVisualizer.getSourceLocation(sf.getSourceSection()));
+            frameInfos.append(DebuggerVisualizer.getSourceLocation(sf, isHost));
             frameInfos.append('\n');
             /*if (fi.getCallNode() == null) {
                 /* frames with null call nodes are filtered out by JPDATruffleDebugManager.FrameInfo
@@ -231,14 +255,20 @@ public class JPDATruffleAccessor extends Object {
                 System.err.println("frameInfos = "+frameInfos);
                 *//*
             }*/
-            SourcePosition position = new SourcePosition(sf.getSourceSection(), sf.getLanguage());
+            SourcePosition position;
+            if (isHost) {
+                StackTraceElement ste = FrameInfo.getHostTraceElement(sf);
+                position = new SourcePosition(ste);
+            } else {
+                position = new SourcePosition(sf.getSourceSection(), sf.getLanguage());
+            }
             frameInfos.append(createPositionIdentificationString(position));
             if (includeInternal) {
                 frameInfos.append('\n');
                 frameInfos.append(isInternal);
             }
             
-            frameInfos.append("\n\n");
+            frameInfos.append("\n\t\n");
             
             codes[j] = position.code;
             j++;
@@ -258,6 +288,10 @@ public class JPDATruffleAccessor extends Object {
         str.append(position.name);
         str.append('\n');
         str.append(position.path);
+        str.append('\n');
+        str.append(position.hostClassName);
+        str.append('\n');
+        str.append(position.hostMethodName);
         str.append('\n');
         str.append(position.uri.toString());
         str.append('\n');

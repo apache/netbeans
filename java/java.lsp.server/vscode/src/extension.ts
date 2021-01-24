@@ -29,7 +29,7 @@ import {
     Message,
     MessageType,
     LogMessageNotification,
-    HandlerResult
+    RevealOutputChannelOn
 } from 'vscode-languageclient';
 
 import * as net from 'net';
@@ -38,7 +38,7 @@ import * as path from 'path';
 import { ChildProcess } from 'child_process';
 import * as vscode from 'vscode';
 import * as launcher from './nbcode';
-import { StatusMessageRequest, ShowStatusMessageParams  } from './protocol';
+import { StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest } from './protocol';
 
 const API_VERSION : string = "1.0";
 let client: Promise<LanguageClient>;
@@ -156,6 +156,14 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
 
     // find acceptable JDK and launch the Java part
     findJDK((specifiedJDK) => {
+        let currentClusters = findClusters(context.extensionPath).sort();
+        context.subscriptions.push(vscode.extensions.onDidChange(() => {
+            const newClusters = findClusters(context.extensionPath).sort();
+            if (newClusters.length !== currentClusters.length || newClusters.find((value, index) => value !== currentClusters[index])) {
+                currentClusters = newClusters;
+                activateWithJDK(specifiedJDK, context, log, true);
+            }
+        }));
         activateWithJDK(specifiedJDK, context, log, true);
     });
 
@@ -194,30 +202,30 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             });
         });
     }));
-    for (let generator of ['java.generate.getters', 'java.generate.setters', 'java.generate.getters.setters']) {
-        context.subscriptions.push(commands.registerCommand(generator + '.menu', () => {
-            return window.withProgress({ location: ProgressLocation.Window }, p => {
-                return new Promise(async (resolve, reject) => {
-                    const commands = await vscode.commands.getCommands();
-                    const editor = vscode.window.activeTextEditor;
-                    if (commands.includes(generator + '.menu') && editor != null) {
-                        const uri = editor.document.uri;
-                        const res = await vscode.commands.executeCommand(generator,
-                                                                         uri.scheme + "://" + uri.path,
-                                                                         editor.selection,
-                                                                         "all");
-                        if (res) {
-                            resolve();
-                        } else {
-                            reject();
-                        }
-                    } else {
-                        reject();
-                    }
-                });
-            });
-        }));
-    }
+    context.subscriptions.push(commands.registerCommand('java.rename.element.at', async (offset) => {
+        const editor = window.activeTextEditor;
+        if (editor) {
+            await commands.executeCommand('editor.action.rename', [
+                editor.document.uri,
+                editor.document.positionAt(offset),
+            ]);
+        }
+    }));
+    context.subscriptions.push(commands.registerCommand('java.debug.codelens', async (uri, methodName) => {
+        const editor = window.activeTextEditor;
+        if (editor) {
+            const docUri = editor.document.uri;
+            const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
+            const debugConfig = {
+                type: "java8+",
+                name: "CodeLens Debug",
+                request: "launch",
+                mainClass: uri,
+                singleMethod: methodName,
+            };
+            await vscode.debug.startDebugging(workspaceFolder, debugConfig).then();
+        }
+    }));
     return Object.freeze({
         version : API_VERSION
     });
@@ -410,7 +418,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 ]
             },
             outputChannel: log,
-            revealOutputChannelOn: 3, // error
+            revealOutputChannelOn: RevealOutputChannelOn.Never,
+            progressOnInitialization: true,
             initializationOptions : {
                 'nbcodeCapabilities' : {
                     'statusBarMessageSupport' : true
@@ -430,6 +439,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             }
         }
 
+        
         let c = new LanguageClient(
                 'java',
                 'NetBeans Java',
@@ -442,6 +452,13 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             commands.executeCommand('setContext', 'nbJavaLSReady', true);
             c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
+            c.onRequest(QuickPickRequest.type, async param => {
+                const selected = await window.showQuickPick(param.items, { placeHolder: param.placeHolder, canPickMany: param.canPickMany });
+                return selected ? Array.isArray(selected) ? selected : [selected] : undefined;
+            });
+            c.onRequest(InputBoxRequest.type, async param => {
+                return await window.showInputBox({ prompt: param.prompt, value: param.value });
+            });
             handleLog(log, 'Language Client: Ready');
             setClient[0](c);
         }).catch(setClient[1]);

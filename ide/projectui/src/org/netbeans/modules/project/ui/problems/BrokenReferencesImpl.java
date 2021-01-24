@@ -19,6 +19,10 @@
 package org.netbeans.modules.project.ui.problems;
 
 import java.awt.Dialog;
+import java.awt.GraphicsEnvironment;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.concurrent.Future;
 import javax.swing.JButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -33,6 +37,8 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.WindowManager;
 import static org.netbeans.modules.project.ui.problems.Bundle.*;
+import org.netbeans.spi.project.ui.ProjectProblemsProvider;
+import org.openide.awt.StatusDisplayer;
 import org.openide.util.Parameters;
 
 /**
@@ -102,6 +108,10 @@ public class BrokenReferencesImpl implements BrokenReferencesImplementation {
                         resolveOption.setVisible(!ctx.isEmpty());
                         if (DialogDisplayer.getDefault().notify(dd) == resolveOption) {
                             final BrokenReferencesModel model = new BrokenReferencesModel(ctx, true);
+                            if (GraphicsEnvironment.isHeadless()) {
+                                fixAllProblems(model, new HashSet<>());
+                                return;
+                            }
                             final BrokenReferencesCustomizer customizer = new BrokenReferencesCustomizer(model);
                             JButton close = new JButton (Bundle.LBL_Broken_References_Resolve_Panel_Close());
                             close.getAccessibleContext ().setAccessibleDescription (Bundle.AD_Broken_References_Resolve_Panel_Close());
@@ -129,7 +139,11 @@ public class BrokenReferencesImpl implements BrokenReferencesImplementation {
             rpTask = RP.create(new Runnable() {
                 @Override
                 public void run() {
-                    WindowManager.getDefault().invokeWhenUIReady(task);
+                    if (GraphicsEnvironment.isHeadless()) {
+                        task.run();
+                    } else {
+                        WindowManager.getDefault().invokeWhenUIReady(task);
+                    }
                 }
             });
         }
@@ -141,6 +155,31 @@ public class BrokenReferencesImpl implements BrokenReferencesImplementation {
         if (rpTask != null) {
             //Not yet shown, move
             rpTask.schedule(BROKEN_ALERT_TIMEOUT);
+        }
+    }
+    
+    private void fixAllProblems(BrokenReferencesModel model, Collection<BrokenReferencesModel.ProblemReference> seen) {
+        model.refresh();
+        for (int i = 0; i < model.getSize(); i++) {
+            Object value = model.getElementAt(i);
+            if (!(value instanceof BrokenReferencesModel.ProblemReference)) {
+                return;
+            }
+            final BrokenReferencesModel.ProblemReference or = (BrokenReferencesModel.ProblemReference) value;
+            if (or.resolved) {
+                continue;
+            }
+            BrokenReferencesCustomizer.performProblemFix(or, (result) -> {
+                seen.add(or);
+                final String msg = result.getMessage();
+                if (msg != null) {
+                    int importance = result.isResolved() ? 0 : StatusDisplayer.IMPORTANCE_ERROR_HIGHLIGHT;
+                    StatusDisplayer.getDefault().setStatusText(msg, importance);
+                }
+                // next round:
+                fixAllProblems(model, seen);
+            });
+            break;
         }
     }
 

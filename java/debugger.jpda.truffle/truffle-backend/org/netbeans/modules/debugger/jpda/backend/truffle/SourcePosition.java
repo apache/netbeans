@@ -38,6 +38,8 @@ final class SourcePosition {
 
     final long id;
     final String name;
+    final String hostClassName;
+    final String hostMethodName;
     final String path;
     final String sourceSection;
     final String code;
@@ -48,6 +50,8 @@ final class SourcePosition {
         Source source = sourceSection.getSource();
         this.id = getId(source);
         this.name = source.getName();
+        this.hostClassName = null;
+        this.hostMethodName = null;
         String sourcePath = source.getPath();
         if (sourcePath == null) {
             sourcePath = name;
@@ -57,6 +61,18 @@ final class SourcePosition {
         this.code = source.getCharacters().toString();
         this.uri = source.getURI();
         this.mimeType = findMIMEType(source, languageInfo);
+    }
+
+    public SourcePosition(StackTraceElement ste) {
+        this.id = -1;
+        this.name = ste.getFileName() != null ? ste.getFileName() : ste.getClassName();
+        this.hostClassName = ste.getClassName();
+        this.hostMethodName = ste.getMethodName();
+        this.path = ste.getFileName();
+        this.sourceSection = ste.getLineNumber() + "," + 0 + "," + ste.getLineNumber() + "," + 0;
+        this.code = null;
+        this.uri = URI.create("");
+        this.mimeType = null;
     }
 
     private String findMIMEType(Source source, LanguageInfo languageInfo) {

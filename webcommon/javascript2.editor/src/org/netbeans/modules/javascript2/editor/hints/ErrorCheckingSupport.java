@@ -85,6 +85,20 @@ public final class ErrorCheckingSupport {
     }
 
     public static String getMimeType(Parser.Result info) {
+        String mime = getWebPageMetadataMime(info);
+        if (mime != null) {
+            return mime;
+        }
+        FileObject fo = info.getSnapshot().getSource().getFileObject();
+        if (fo != null) {
+            return fo.getMIMEType();
+        } else {
+            // no fileobject?
+            return info.getSnapshot().getMimeType();
+        }
+    }
+    
+    private static String getWebPageMetadataMime(Parser.Result info) {
         String mime = WebPageMetadata.getContentMimeType(info, false);
         if (mime != null) {
             return mime;
@@ -116,16 +130,7 @@ public final class ErrorCheckingSupport {
             // XXX
             return null;
         }
-        if (res.get() != null) {
-            return res.get();
-        }
-        FileObject fo = info.getSnapshot().getSource().getFileObject();
-        if (fo != null) {
-            return fo.getMIMEType();
-        } else {
-            // no fileobject?
-            return info.getSnapshot().getMimeType();
-        }
+        return res.get();
     }
 
     public static HintFix createErrorFixForFile(Snapshot snapshot, boolean enable) {

@@ -30,7 +30,7 @@ public class CPPLiteDebuggerEngineProvider extends DebuggerEngineProvider {
 
     @Override
     public String[] getLanguages () {
-        return new String[] {"c"};
+        return new String[] {"C"};
     }
 
     @Override
@@ -47,7 +47,7 @@ public class CPPLiteDebuggerEngineProvider extends DebuggerEngineProvider {
     public void setDestructor (DebuggerEngine.Destructor desctuctor) {
         this.desctuctor = desctuctor;
     }
-    
+
     public DebuggerEngine.Destructor getDestructor () {
         return desctuctor;
     }

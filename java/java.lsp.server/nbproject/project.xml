@@ -26,6 +26,23 @@
             <code-name-base>org.netbeans.modules.java.lsp.server</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>com.google.gson</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>2.7</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.api.annotations.common</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.36</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.api.debugger</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -61,21 +78,21 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.api.annotations.common</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.36</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.api.java.classpath</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
                         <specification-version>1.57</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.api.progress</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.59</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -130,12 +147,29 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.editor.lib2</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>2.31</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.editor.mimelookup</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
                         <specification-version>1.43</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.gsf.testrunner.ui</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.21</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -182,6 +216,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.java.source</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <implementation-version/>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.java.source.base</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -196,6 +238,14 @@
                     <run-dependency>
                         <release-version>1</release-version>
                         <implementation-version/>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.java.testrunner.ui</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.15</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -239,7 +289,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>9.13</specification-version>
+                        <implementation-version/>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -283,7 +333,16 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.50</specification-version>
+                        <implementation-version/>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.refactoring.java</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <implementation-version/>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -410,14 +469,6 @@
                         <specification-version>9.14</specification-version>
                     </run-dependency>
                 </dependency>
-                <dependency>
-                    <code-name-base>com.google.gson</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>2.7</specification-version>
-                    </run-dependency>
-                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>
@@ -519,24 +570,24 @@
                 <package>org.netbeans.modules.java.lsp.server.ui</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j.debug-0.9.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j.debug-0.9.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.debug-0.10.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.debug-0.10.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/org.eclipse.xtend.lib.macro-2.19.0.jar</runtime-relative-path>
                 <binary-origin>external/org.eclipse.xtend.lib.macro-2.19.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j.generator-0.9.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j.generator-0.9.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.generator-0.10.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.generator-0.10.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc-0.9.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j.jsonrpc-0.9.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc-0.10.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.jsonrpc-0.10.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc.debug-0.9.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j.jsonrpc.debug-0.9.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j.jsonrpc.debug-0.10.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j.jsonrpc.debug-0.10.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/org.eclipse.xtend.lib-2.19.0.jar</runtime-relative-path>
@@ -547,8 +598,8 @@
                 <binary-origin>external/org.eclipse.xtext.xbase.lib-2.19.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/org.eclipse.lsp4j-0.9.0.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.lsp4j-0.9.0.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.lsp4j-0.10.0.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.lsp4j-0.10.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/commons-io-2.5.jar</runtime-relative-path>

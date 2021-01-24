@@ -29,13 +29,13 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ReturnTree;
-import com.sun.source.tree.Scope;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,18 +59,14 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.swing.JButton;
 import javax.swing.text.Document;
-import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
@@ -440,7 +436,21 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
         js.runModificationTask(new TaskImpl(access, name, target, replaceOther, val.getResult(), redoReferences)).commit();
         return null;
     }
-    
+
+    @Override
+    public ModificationResult getModificationResult() throws IOException {
+        ModificationResult result = null;
+        int counter = 0;
+        do {
+            try {
+                result = js.runModificationTask(new TaskImpl(EnumSet.of(Modifier.PRIVATE), "method" + (counter != 0 ? String.valueOf(counter) : ""), targets.iterator().next(), true, null, false));
+            } catch (Exception e) {
+                counter++;
+            }
+        } while (result == null && counter < 10);
+        return result;
+    }
+
     static class OccurrencePositionComparator implements Comparator<Occurrence> {
         final CompilationUnitTree cut;
         final SourcePositions positions;
@@ -569,7 +579,8 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
             }
             ModifiersTree mods = make.Modifiers(modifiers);
             MethodTree method = make.Method(mods, name, returnTypeTree, typeVars, formalArguments, thrown, make.Block(methodStatements, false), null);
-            
+            copy.tag(returnTypeTree, TYPE_TAG);
+
             return method;
         }
         /**
@@ -824,7 +835,7 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
                     statementsPaths.add(new TreePath(firstStatement.getParentPath(), t));
                 }
                 Pattern p = Pattern.createPatternWithRemappableVariables(statementsPaths, parameters, true);
-                List<? extends Occurrence> occurrences = new ArrayList<Occurrence>(Matcher.create(copy).setCancel(new AtomicBoolean()).match(p));
+                List<? extends Occurrence> occurrences = new ArrayList<Occurrence>(Matcher.create(copy).setSearchRoot(pathToClass).setCancel(new AtomicBoolean()).match(p));
                 Collections.sort(occurrences, new OccurrencePositionComparator(copy.getCompilationUnit(), copy.getTrees().getSourcePositions()));
                 for (Occurrence desc :occurrences ) {
                     TreePath firstLeaf = desc.getOccurrenceRoot();
@@ -862,7 +873,7 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
                     int startOff = (int) copy.getTrees().getSourcePositions().getStartPosition(copy.getCompilationUnit(), firstSt);
                     int endOff = (int) copy.getTrees().getSourcePositions().getEndPosition(copy.getCompilationUnit(), lastSt);
                     
-                    if (usedAfter || !IntroduceHint.shouldReplaceDuplicate(doc, startOff, endOff)) {
+                    if (usedAfter || !GraphicsEnvironment.isHeadless() && !IntroduceHint.shouldReplaceDuplicate(doc, startOff, endOff)) {
                         continue;
                     }
                     List<StatementTree> newStatements = new LinkedList<StatementTree>();

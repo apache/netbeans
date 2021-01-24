@@ -22,15 +22,12 @@ package org.netbeans.modules.java.j2seplatform.libraries;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 import org.netbeans.api.java.queries.JavadocForBinaryQuery;
 import org.netbeans.core.startup.layers.ArchiveURLMapper;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.j2seplatform.platformdefinition.JavaPlatformProviderImpl;
-import org.netbeans.modules.project.libraries.DefaultLibraryImplementation;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Utilities;
 import org.netbeans.modules.masterfs.MasterURLMapper;
@@ -110,25 +107,7 @@ public class JavadocForBinaryQueryLibraryImplTest extends NbTestCase {
     }
     
     private void registerLibrary(final String libName, final File cp, final File javadoc) throws Exception {
-        DefaultLibraryImplementation lib;
-        lib = new DefaultLibraryImplementation("j2se", new String[]{"classpath", "javadoc"});
-        lib.setName(libName);
-        List<URL> l = new ArrayList<URL>();
-        URL u = Utilities.toURI(cp).toURL();
-        if (cp.getPath().endsWith(".jar")) {
-            u = FileUtil.getArchiveRoot(u);
-        }
-        l.add(u);
-        lib.setContent("classpath", l);
-        l = new ArrayList<URL>();
-        u = Utilities.toURI(javadoc).toURL();
-        if (javadoc.getPath().endsWith(".jar")) {
-            u = FileUtil.getArchiveRoot(u);
-        }
-        l.add(u);
-        lib.setContent("javadoc", l);
-        TestLibraryProviderImpl prov = TestLibraryProviderImpl.getDefault();
-        prov.addLibrary(lib);
+        LibraryTestUtils.registerLibrary(libName, cp, null, javadoc);
     }
     
     public void testQuery() throws Exception {

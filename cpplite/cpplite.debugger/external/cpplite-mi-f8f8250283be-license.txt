@@ -1,6 +1,6 @@
 Name: CND Debugger parts
 Description: CND Debugger parts that didn't go through the Apache IP Clearance yet
-Version: 1.0-SNAPSHOT
+Version: f8f8250283be
 License: CDDL-1.0
 Origin: NetBeans
 

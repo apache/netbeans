@@ -536,7 +536,7 @@ final class VanillaCompileWorker extends CompileWorker {
 
             @Override
             public Void visitCompilationUnit(CompilationUnitTree node, Void p) {
-                diags = dc.getDiagnostics(cut.getSourceFile())
+                diags = dc.peekDiagnostics(cut.getSourceFile())
                           .stream()
                           .collect(Collectors.toMap(d -> d.getPosition(),
                                                     d -> Collections.singletonList(d),

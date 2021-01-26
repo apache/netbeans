@@ -1,6 +1,5 @@
-CRC:2157920864
-SIZE:252431
-URL:https://netbeans.osuosl.org/binaries/267AFC87A08301145B10D86DA674724B884F010C-nb-javac-15-api.jar
-URL:https://hg.netbeans.org/binaries/267AFC87A08301145B10D86DA674724B884F010C-nb-javac-15-api.jar
-MessageDigest: SHA-256 0a5e9b6afbdb86deb3286f37e1dee230c91f39438e55dc77910c9a48f38a2ffb
-MessageDigest: SHA-512 5b16a0c6466dc14cf2d428d4a84398f9de2d1782acf445c8da5ca874f807ac550db8b551ec41495963a29c2f400ca24ee8a70b1d589d0cdf2f05af5cb0f4ff56
+CRC:2027735193
+SIZE:246375
+URL:https://github.com/oracle/nb-javac/releases/download/release130/nb-javac-15.0.0.1-api.jar
+MessageDigest: SHA-256 1cc54e798c0f9794d9cfc4ac55c4d630e26bd1dd82258676084b40513b2c159c
+MessageDigest: SHA-512 7f2dbf752cf33ff458688d65969c59101f8a613e79d2193b0c4cb681da9855d46859d173bf0695a4ba47413aca50e9a9dac726608f555e9a0685b95de6d4bb0c

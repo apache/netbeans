@@ -19,11 +19,14 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -78,11 +81,9 @@ public final class ConstructorGenerator extends CodeGenerator {
     })
     public List<CodeAction> getCodeActions(CompilationInfo info, CodeActionParams params) {
         List<String> only = params.getContext().getOnly();
-        if (only == null || !only.contains(CodeActionKind.Source)) {
-            return Collections.emptyList();
-        }
-        int offset = getOffset(info, params.getRange().getStart());
-        TreePath tp = info.getTreeUtilities().pathFor(offset);
+        boolean isSource = only != null && only.contains(CodeActionKind.Source);
+        int startOffset = getOffset(info, params.getRange().getStart());
+        TreePath tp = info.getTreeUtilities().pathFor(startOffset);
         tp = info.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, tp);
         if (tp == null) {
             return Collections.emptyList();
@@ -92,6 +93,24 @@ public final class ConstructorGenerator extends CodeGenerator {
             return Collections.emptyList();
         }
         final Set<? extends VariableElement> uninitializedFields = info.getTreeUtilities().getUninitializedFields(tp);
+        if (!isSource) {
+            final Set<VariableElement> selectedFields = new HashSet<>();
+            int endOffset = getOffset(info, params.getRange().getEnd());
+            for (Tree m : ((ClassTree) tp.getLeaf()).getMembers()) {
+                if (m.getKind() != Tree.Kind.VARIABLE) continue;
+                int start = (int) info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), m);
+                int end   = (int) info.getTrees().getSourcePositions().getEndPosition(tp.getCompilationUnit(), m);
+                if (startOffset <= end && endOffset >= start) {
+                    VariableElement var = (VariableElement) info.getTrees().getElement(new TreePath(tp, m));
+                    if (uninitializedFields.contains(var)) {
+                        selectedFields.add(var);
+                    }
+                }
+            }
+            if (selectedFields.isEmpty()) {
+                return Collections.emptyList();
+            }
+        }
         final List<ExecutableElement> inheritedConstructors = new ArrayList<>();
         TypeMirror superClassType = typeElement.getSuperclass();
         if (superClassType.getKind() == TypeKind.DECLARED) {
@@ -136,6 +155,7 @@ public final class ConstructorGenerator extends CodeGenerator {
             for (VariableElement variableElement : uninitializedFields) {
                 QuickPickItem item = new QuickPickItem(createLabel(info, variableElement));
                 item.setUserData(new ElementData(variableElement));
+                item.setPicked(variableElement.getModifiers().contains(Modifier.FINAL));
                 fields.add(item);
             }
         }
@@ -143,7 +163,7 @@ public final class ConstructorGenerator extends CodeGenerator {
             return Collections.emptyList();
         }
         String uri = Utils.toUri(info.getFileObject());
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateConstructor(), CODE_GENERATOR_KIND, GENERATE_CONSTRUCTOR, uri, offset, constructors, fields));
+        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateConstructor(), isSource ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, GENERATE_CONSTRUCTOR, uri, startOffset, constructors, fields));
     }
 
     @Override

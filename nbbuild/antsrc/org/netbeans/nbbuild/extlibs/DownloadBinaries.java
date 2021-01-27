@@ -31,6 +31,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -177,20 +179,22 @@ public class DownloadBinaries extends Task {
     
     private byte[] mavenFile(MavenCoordinate mc) throws IOException {
         String cacheName = mc.toMavenPath();
-        File local = new File(new File(new File(new File(System.getProperty("user.home")), ".m2"), "repository"), cacheName.replace('/', File.separatorChar));
         List<String> urls = new ArrayList<>();
-        if (local.isFile()) {
-            urls.add(local.toURI().toString());
-        }
         for (String prefix : repos.split(" ")) {
             urls.add(prefix + cacheName);
         }
         for (String url : urls) {
             try {
+                if (url.startsWith("file:")) {
+                    File file = new File(new URI(url));
+                    if (!file.exists()) {
+                        continue;
+                    }
+                }
                 URL u = new URL(url);
                 log("Trying: " + url, Project.MSG_VERBOSE);
                 return downloadFromServer(u);
-            } catch (IOException ex) {
+            } catch (IOException | URISyntaxException ex) {
                 //Try the next URL
             }
         }

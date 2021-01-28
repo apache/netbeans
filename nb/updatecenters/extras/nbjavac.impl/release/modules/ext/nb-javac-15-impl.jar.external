@@ -1,5 +1,5 @@
-CRC:1909326985
-SIZE:3700023
-URL:https://github.com/oracle/nb-javac/releases/download/release130/nb-javac-15.0.0.1-impl.jar
-MessageDigest: SHA-256 5bc3c17b19b3e3006ff3a4d7990919ed99999ecd864144622018e77da962db3c
-MessageDigest: SHA-512 f3abad29134d778198ff60b2f329295dcc04dc48318f3ce22211b580c0508a80eb2d58419c843e9b5687856a040c1825ba6139393098905451caa4506b6229ad
+CRC:1887704140
+SIZE:246374
+URL:https://github.com/oracle/nb-javac/releases/download/release130/A152261F8D708A5E1A7FCDAA3981663E-nb-javac-15.0.0.1-api.jar
+MessageDigest: SHA-256 c1fbbbcb30e283a6477248bf4adf202188d55c2e7ef9aa29d343018a68571794
+MessageDigest: SHA-512 bc9ac9f68b21190e2d4231908ce0aa7d88c3f054c8ac226a13fd6b7fd05d63eebc59308c5a7f6df5518f9b8b01f85fd18334ce115b54e2b4994aec2253c33040

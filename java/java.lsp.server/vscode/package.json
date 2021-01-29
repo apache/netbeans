@@ -151,6 +151,11 @@
 				"command": "java.workspace.compile",
 				"key": "shift+alt+b",
 				"when": "nbJavaLSReady"
+			},
+			{
+				"command": "editor.action.sourceAction",
+				"key": "alt+insert",
+				"when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
 			}
 		],
 		"menus": {

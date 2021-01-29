@@ -1248,10 +1248,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                 documentChanges.add(Either.forLeft(new TextDocumentEdit(new VersionedTextDocumentIdentifier(Utils.toUri(fileObject), -1), edits)));
                             }
                         }
-                        CodeAction codeAction = new CodeAction(f.getText());
-                        codeAction.setKind(CodeActionKind.QuickFix);
-                        codeAction.setEdit(new WorkspaceEdit(documentChanges));
-                        result.add(Either.forRight(codeAction));
+                        if (!documentChanges.isEmpty()) {
+                            CodeAction codeAction = new CodeAction(f.getText());
+                            codeAction.setKind(CodeActionKind.QuickFix);
+                            codeAction.setEdit(new WorkspaceEdit(documentChanges));
+                            result.add(Either.forRight(codeAction));
+                        }
                     } catch (IOException ex) {
                         client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
                     }

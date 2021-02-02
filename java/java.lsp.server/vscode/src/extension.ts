@@ -41,7 +41,7 @@ import * as launcher from './nbcode';
 import { StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest } from './protocol';
 
 const API_VERSION : string = "1.0";
-let client: Promise<LanguageClient> | null = null;
+let client: Promise<LanguageClient>;
 let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
 let consoleLog: boolean = !!process.env['ENABLE_CONSOLE_LOG'];
@@ -178,30 +178,26 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(commands.registerCommand('java.workspace.compile', () => {
         return window.withProgress({ location: ProgressLocation.Window }, p => {
             return new Promise(async (resolve, reject) => {
-                if (!client) {
-                    reject('cannot compile workspace; no LSP client');
+                let c : LanguageClient = await client;
+                const commands = await vscode.commands.getCommands();
+                if (commands.includes('java.build.workspace')) {
+                    p.report({ message: 'Compiling workspace...' });
+                    c.outputChannel.show(true);
+                    const start = new Date().getTime();
+                    handleLog(log, `starting java.build.workspace`);
+                    const res = await vscode.commands.executeCommand('java.build.workspace');
+                    const elapsed = new Date().getTime() - start;
+                    handleLog(log, `finished java.build.workspace in ${elapsed} ms with result ${res}`);
+                    const humanVisibleDelay = elapsed < 1000 ? 1000 : 0;
+                    setTimeout(() => { // set a timeout so user would still see the message when build time is short
+                        if (res) {
+                            resolve(res);
+                        } else {
+                            reject(res);
+                        }
+                    }, humanVisibleDelay);
                 } else {
-                    let c : LanguageClient = await client;
-                    const commands = await vscode.commands.getCommands();
-                    if (commands.includes('java.build.workspace')) {
-                        p.report({ message: 'Compiling workspace...' });
-                        c.outputChannel.show(true);
-                        const start = new Date().getTime();
-                        handleLog(log, `starting java.build.workspace`);
-                        const res = await vscode.commands.executeCommand('java.build.workspace');
-                        const elapsed = new Date().getTime() - start;
-                        handleLog(log, `finished java.build.workspace in ${elapsed} ms with result ${res}`);
-                        const humanVisibleDelay = elapsed < 1000 ? 1000 : 0;
-                        setTimeout(() => { // set a timeout so user would still see the message when build time is short
-                            if (res) {
-                                resolve(res);
-                            } else {
-                                reject(res);
-                            }
-                        }, humanVisibleDelay);
-                    } else {
-                        reject(`cannot compile workspace; client is ${c}`);
-                    }
+                    reject(`cannot compile workspace; client is ${c}`);
                 }
             });
         });
@@ -251,25 +247,23 @@ function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext,
         handleLog(log, "Server activation requested repeatedly, ignoring...");
         return;
     }
+    let oldClient = client;
     let setClient : [(c : LanguageClient) => void, (err : any) => void];
+    client = new Promise<LanguageClient>((clientOK, clientErr) => {
+        setClient = [ clientOK, clientErr ];
+    });
     const a : Promise<void> | null = maintenance;
     commands.executeCommand('setContext', 'nbJavaLSReady', false);
     activationPending = true;
     // chain the restart after termination of the former process.
     if (a != null) {
         handleLog(log, "Server activation initiated while in maintenance mode, scheduling after maintenance");
-        a.then(() => stopClient()).then(() => killNbProcess(notifyKill, log)).then(() => {
-            client = new Promise<LanguageClient>((clientOK, clientErr) => {
-                setClient = [ clientOK, clientErr ];
-            });
+        a.then(() => stopClient(oldClient)).then(() => killNbProcess(notifyKill, log)).then(() => {
             doActivateWithJDK(specifiedJDK, context, log, notifyKill, setClient);
         });
     } else {
         handleLog(log, "Initiating server activation");
-        stopClient().then(() => killNbProcess(notifyKill, log)).then(() => {
-            client = new Promise<LanguageClient>((clientOK, clientErr) => {
-                setClient = [ clientOK, clientErr ];
-            });
+        stopClient(oldClient).then(() => killNbProcess(notifyKill, log)).then(() => {
             doActivateWithJDK(specifiedJDK, context, log, notifyKill, setClient);
         });
     }
@@ -547,15 +541,15 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     }
 }
 
-function stopClient(): Thenable<void> {
-    return client ? client.then(c => c.stop()) : Promise.resolve();
+function stopClient(clinetPromise: Promise<LanguageClient>): Thenable<void> {
+    return clinetPromise ? clinetPromise.then(c => c.stop()) : Promise.resolve();
 }
 
 export function deactivate(): Thenable<void> {
     if (nbProcess != null) {
         nbProcess.kill();
     }
-    return stopClient();
+    return stopClient(client);
 }
 
 class NetBeansDebugAdapterDescriptionFactory implements vscode.DebugAdapterDescriptorFactory {

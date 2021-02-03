@@ -211,7 +211,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             ]);
         }
     }));
-    context.subscriptions.push(commands.registerCommand('java.debug.codelens', async (uri, methodName) => {
+    const runCodelens = async (uri, methodName, noDebug) => {
         const editor = window.activeTextEditor;
         if (editor) {
             const docUri = editor.document.uri;
@@ -223,8 +223,17 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 mainClass: uri,
                 singleMethod: methodName,
             };
-            await vscode.debug.startDebugging(workspaceFolder, debugConfig).then();
+            const debugOptions = {
+                noDebug: noDebug,
+            }
+            await vscode.debug.startDebugging(workspaceFolder, debugConfig, debugOptions).then();
         }
+    };
+    context.subscriptions.push(commands.registerCommand('java.run.codelens', async (uri, methodName) => {
+        await runCodelens(uri, methodName, true);
+    }));
+    context.subscriptions.push(commands.registerCommand('java.debug.codelens', async (uri, methodName) => {
+        await runCodelens(uri, methodName, false);
     }));
     return Object.freeze({
         version : API_VERSION

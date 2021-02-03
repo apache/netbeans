@@ -1375,7 +1375,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                                     Utils.createPosition(cc.getCompilationUnit(), method.end().getOffset()));
                             List<Object> arguments = Arrays.asList(new Object[]{method.method().getFile().toURI(), method.method().getMethodName()});
                             lens.add(new CodeLens(range,
-                                                  new Command("Run test", Server.JAVA_TEST_SINGLE_METHOD, arguments),
+                                                  new Command("Run test", "java.run.codelens", arguments),
                                                   null));
                             lens.add(new CodeLens(range,
                                                   new Command("Debug test", "java.debug.codelens", arguments),
@@ -1391,7 +1391,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             Range range = Utils.treeRange(cc, tree);
                             List<Object> arguments = Collections.singletonList(params.getTextDocument().getUri());
                             lens.add(new CodeLens(range,
-                                                  new Command("Run main", Server.JAVA_RUN_MAIN_METHOD, arguments),
+                                                  new Command("Run main", "java.run.codelens", arguments),
                                                   null));
                             lens.add(new CodeLens(range,
                                                   new Command("Debug main", "java.debug.codelens", arguments),

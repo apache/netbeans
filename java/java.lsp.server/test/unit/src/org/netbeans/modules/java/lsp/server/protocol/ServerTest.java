@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import java.io.File;
 import java.io.FileWriter;
@@ -77,6 +79,7 @@ import org.eclipse.lsp4j.FoldingRange;
 import org.eclipse.lsp4j.FoldingRangeRequestParams;
 import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.HoverParams;
+import org.eclipse.lsp4j.ImplementationParams;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.InsertTextFormat;
@@ -144,6 +147,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 public class ServerTest extends NbTestCase {
 
+    private final Gson gson = new Gson();
     private Socket client;
     private Thread serverThread;
 
@@ -764,15 +768,15 @@ public class ServerTest extends NbTestCase {
         assertEquals(1, definition.size());
         assertEquals(toURI(src), definition.get(0).getUri());
         assertEquals(1, definition.get(0).getRange().getStart().getLine());
-        assertEquals(4, definition.get(0).getRange().getStart().getCharacter());
+        assertEquals(16, definition.get(0).getRange().getStart().getCharacter());
         assertEquals(1, definition.get(0).getRange().getEnd().getLine());
-        assertEquals(22, definition.get(0).getRange().getEnd().getCharacter());
+        assertEquals(21, definition.get(0).getRange().getEnd().getCharacter());
         pos = new Position(4, 30);
         definition = server.getTextDocumentService().definition(new DefinitionParams(new TextDocumentIdentifier(toURI(src)), pos)).get().getLeft();
         assertEquals(1, definition.size());
         assertEquals(toURI(src), definition.get(0).getUri());
         assertEquals(2, definition.get(0).getRange().getStart().getLine());
-        assertEquals(23, definition.get(0).getRange().getStart().getCharacter());
+        assertEquals(27, definition.get(0).getRange().getStart().getCharacter());
         assertEquals(2, definition.get(0).getRange().getEnd().getLine());
         assertEquals(30, definition.get(0).getRange().getEnd().getCharacter());
         pos = new Position(5, 22);
@@ -780,9 +784,131 @@ public class ServerTest extends NbTestCase {
         assertEquals(1, definition.size());
         assertEquals(toURI(otherSrc), definition.get(0).getUri());
         assertEquals(2, definition.get(0).getRange().getStart().getLine());
-        assertEquals(4, definition.get(0).getRange().getStart().getCharacter());
+        assertEquals(16, definition.get(0).getRange().getStart().getCharacter());
         assertEquals(2, definition.get(0).getRange().getEnd().getLine());
-        assertEquals(26, definition.get(0).getRange().getEnd().getCharacter());
+        assertEquals(20, definition.get(0).getRange().getEnd().getCharacter());
+    }
+
+    public void testGoToImplementations() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(new File(src.getParentFile(), ".test-project"))) {}
+        String code = "public interface Test {\n" +
+                      "    void test();\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        File otherSrc = new File(getWorkDir(), "Other.java");
+        try (Writer w = new FileWriter(otherSrc)) {
+            w.write("/**Some source*/\n" +
+                    "public class Other implements Test {\n" +
+                    "    public void test() {}\n" +
+                    "}\n");
+        }
+        FileUtil.refreshFor(getWorkDir());
+        CountDownLatch indexingComplete = new CountDownLatch(1);
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+            }
+
+            @Override
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setRootUri(getWorkDir().toURI().toString());
+        server.initialize(initParams).get();
+        indexingComplete.await();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        Position pos = new Position(1, 10);
+        List<? extends Location> implementations = server.getTextDocumentService().implementation(new ImplementationParams(new TextDocumentIdentifier(toURI(src)), pos)).get().getLeft();
+        assertEquals(1, implementations.size());
+        assertEquals(toURI(otherSrc), implementations.get(0).getUri());
+        assertEquals(2, implementations.get(0).getRange().getStart().getLine());
+        assertEquals(16, implementations.get(0).getRange().getStart().getCharacter());
+        assertEquals(2, implementations.get(0).getRange().getEnd().getLine());
+        assertEquals(20, implementations.get(0).getRange().getEnd().getCharacter());
+    }
+
+    public void testGoToSuperImplementation() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test implements Other {\n" +
+                      "    public void test() {\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        File otherSrc = new File(getWorkDir(), "Other.java");
+        try (Writer w = new FileWriter(otherSrc)) {
+            w.write("/**Some source*/\n" +
+                    "public interface Other {\n" +
+                    "    void test();\n" +
+                    "}");
+        }
+        FileUtil.refreshFor(getWorkDir());
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
+            @Override
+            public void telemetryEvent(Object params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+            }
+
+            @Override
+            public void showMessage(MessageParams params) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        server.initialize(new InitializeParams()).get();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        Position pos = new Position(1, 20);
+        Object ret = server.getWorkspaceService().executeCommand(new ExecuteCommandParams(Server.JAVA_SUPER_IMPLEMENTATION, Arrays.asList(new Object[] {toURI(src), pos}))).get();
+        assertNotNull(ret);
+        Location loc = gson.fromJson(gson.toJsonTree(ret).getAsJsonObject(), Location.class);
+        assertEquals(toURI(otherSrc), loc.getUri());
+        assertEquals(2, loc.getRange().getStart().getLine());
+        assertEquals(9, loc.getRange().getStart().getCharacter());
+        assertEquals(2, loc.getRange().getEnd().getLine());
+        assertEquals(13, loc.getRange().getEnd().getCharacter());
     }
 
     public void testOpenProjectOpenJDK() throws Exception {

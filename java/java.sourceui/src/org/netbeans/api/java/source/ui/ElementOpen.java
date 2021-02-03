@@ -294,7 +294,7 @@ public final class ElementOpen {
         assert fo != null;
         
         try {
-            Object[] result = new Object[4];
+            Object[] result = new Object[6];
             result[0] = fo;
             getOffset(fo, handle, result, cancel);
             return result;
@@ -348,6 +348,8 @@ public final class ElementOpen {
     private static void getOffset(final FileObject fo, final ElementHandle<? extends Element> handle, final Object[] result, final AtomicBoolean cancel) throws IOException {
         result[1] = -1;
         result[2] = -1;
+        result[3] = -1;
+        result[4] = -1;
         
         final JavaSource js = JavaSource.forFileObject(fo);
         if (js != null) {
@@ -361,7 +363,7 @@ public final class ElementOpen {
                     } catch (IOException ioe) {
                         Exceptions.printStackTrace(ioe);
                     }
-                    result[3] = info.getCompilationUnit().getLineMap();
+                    result[5] = info.getCompilationUnit().getLineMap();
                     Element el = handle.resolve(info);
                     if (el == null) {
                         if (!SourceUtils.isScanInProgress()) {
@@ -394,6 +396,25 @@ public final class ElementOpen {
                     if (elTree != null) {
                         result[1] = (int)info.getTrees().getSourcePositions().getStartPosition(cu, elTree);
                         result[2] = (int)info.getTrees().getSourcePositions().getEndPosition(cu, elTree);
+                        int[] span = null;
+                        switch(elTree.getKind()) {
+                            case CLASS:
+                            case INTERFACE:
+                            case ENUM:
+                            case ANNOTATION_TYPE:
+                                span = info.getTreeUtilities().findNameSpan((ClassTree)elTree);
+                                break;
+                            case METHOD:
+                                span = info.getTreeUtilities().findNameSpan((MethodTree)elTree);
+                                break;
+                            case VARIABLE:
+                                span = info.getTreeUtilities().findNameSpan((VariableTree)elTree);
+                                break;
+                        }
+                        if (span != null) {
+                            result[3] = span[0];
+                            result[4] = span[1];
+                        }
                     }
                 }
             };

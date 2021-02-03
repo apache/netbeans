@@ -202,6 +202,19 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             });
         });
     }));
+    context.subscriptions.push(commands.registerCommand('java.goto.super.implementation', async () => {
+        if (window.activeTextEditor?.document.languageId !== "java") {
+            return;
+        }
+        const uri = window.activeTextEditor.document.uri.toString();
+        const position = window.activeTextEditor.selection.active;
+        const location: any = await vscode.commands.executeCommand('java.super.implementation', uri, position);
+        if (location) {
+            return window.showTextDocument(vscode.Uri.parse(location.uri), { preserveFocus: true, selection: location.range });
+        } else {
+            return window.showInformationMessage('No super implementation found');
+        }
+    }));
     context.subscriptions.push(commands.registerCommand('java.rename.element.at', async (offset) => {
         const editor = window.activeTextEditor;
         if (editor) {

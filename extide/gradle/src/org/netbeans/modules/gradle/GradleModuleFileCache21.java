@@ -244,15 +244,10 @@ public final class GradleModuleFileCache21 {
     }
 
     public static String[] gavSplit(String gav) {
-        int firstColon = gav.indexOf(':');
-        int lastColon = gav.lastIndexOf(':');
-        if (firstColon == -1 || firstColon == lastColon) {
-            throw new IllegalArgumentException("Invalig GAV format: " + gav);
-        }
-        return new String[] {
-            gav.substring(0, firstColon),
-            gav.substring(firstColon + 1, lastColon),
-            gav.substring(lastColon + 1)
-        };
+        String[] gavParts = gav.split(":");
+        String gavGroup = gavParts.length > 1 ? gavParts[0] : "";
+        String gavName = gavParts.length > 1 ? gavParts[1] : gavParts[0];
+        String gavVer = gavParts.length > 2 ? gavParts[2] : "";
+        return new String[] { gavGroup, gavName, gavVer };
     }
 }

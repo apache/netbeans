@@ -58,8 +58,9 @@ public final class NbLaunchRequestHandler {
     public CompletableFuture<Void> launch(Map<String, Object> launchArguments, DebugAdapterContext context) {
         CompletableFuture<Void> resultFuture = new CompletableFuture<>();
         boolean noDebug = (Boolean) launchArguments.getOrDefault("noDebug", Boolean.FALSE);
-        activeLaunchHandler = noDebug ? new NbLaunchWithoutDebuggingDelegate((daContext) -> handleTerminatedEvent(daContext))
-                : new NbLaunchWithDebuggingDelegate();
+        Consumer<DebugAdapterContext> terminateHandle = (daContext) -> handleTerminatedEvent(daContext);
+        activeLaunchHandler = noDebug ? new NbLaunchWithoutDebuggingDelegate(terminateHandle)
+                : new NbLaunchWithDebuggingDelegate(terminateHandle);
         // validation
         List<String> modulePaths = (List<String>) launchArguments.getOrDefault("modulePaths", Collections.emptyList());
         List<String> classPaths = (List<String>) launchArguments.getOrDefault("classPaths", Collections.emptyList());

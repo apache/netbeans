@@ -87,6 +87,7 @@
         <delete dir="${build.dir}/bundles" />
         <mkdir dir="${build.dir}/bundles/package" />
         <copy file="vscode/package.json" todir="${build.dir}/bundles/package" />
+        <copy file="vscode/package-lock.json" todir="${build.dir}/bundles/package" />
 
         <exec executable="mvn" failonerror="true" dir="${nb_all}/nbbuild/misc/prepare-bundles">
             <arg value="package" />

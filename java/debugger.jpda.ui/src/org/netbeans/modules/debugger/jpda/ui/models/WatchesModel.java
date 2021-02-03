@@ -276,9 +276,9 @@ public class WatchesModel implements TreeModel, JPDAWatchRefreshModel {
                                                         PropertyChangeListener/*,
                                                         Watch.Provider*/ {
         
-        private JPDAWatchRefreshModel model;
-        private Watch w;
-        private JPDADebuggerImpl debugger;
+        private final JPDAWatchRefreshModel model;
+        private final Watch w;
+        private final JPDADebuggerImpl debugger;
         private JPDAWatch evaluatedWatch;
         private EvaluatorExpression expression;
         private final boolean[] evaluating = new boolean[] { false };
@@ -409,7 +409,7 @@ public class WatchesModel implements TreeModel, JPDAWatchRefreshModel {
                 return Bundle.CTL_WatchDisabled();
             }
             synchronized (evaluating) {
-                if (evaluating[0]) {
+                while (evaluating[0]) {
                     try {
                         evaluating.wait();
                     } catch (InterruptedException iex) {
@@ -442,6 +442,7 @@ public class WatchesModel implements TreeModel, JPDAWatchRefreshModel {
                         ObjectReferenceWrapper.enableCollection((ObjectReference) v);
                     } catch (Exception ex) {}
                 }*/
+                VariablesTableModel.setErrorValueMsg(this, null);
             } catch (InvalidExpressionException e) {
                 jw = JPDAWatchFactory.createJPDAWatch(debugger, w, e);
             } catch (RuntimeException ex) {

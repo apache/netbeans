@@ -35,9 +35,11 @@ import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.graalvm.polyglot.Engine;
@@ -71,6 +73,13 @@ public class JPDATruffleAccessor extends Object {
     /** A field to test for whether the access loop is sleeping and can be interrupted. */
     static boolean accessLoopSleeping = false;
     private static boolean stepIntoPrepared;
+    /** A cache of thread-local variables which prevents them from GC. */
+    private static final ThreadLocal<Set<Object>> threadVariablesCache = new ThreadLocal<Set<Object>>() {
+        @Override
+        protected Set<Object> initialValue() {
+            return new HashSet<>();
+        }
+    };
 
     /** A step command:
      * 0 no step (continue)
@@ -160,6 +169,10 @@ public class JPDATruffleAccessor extends Object {
                                Throwable[] breakpointConditionExceptions,
                                int stepCmd) {
         // Called when the execution is halted. Have a breakpoint here.
+        Set<Object> initialVars = threadVariablesCache.get();
+        assert initialVars != null;
+        // Clear again after execution is resumed.
+        threadVariablesCache.remove();
         return stepCmd;
     }
     
@@ -278,7 +291,10 @@ public class JPDATruffleAccessor extends Object {
             thiss = Arrays.copyOf(thiss, j);
         }
         boolean areSkippedInternalFrames = j < n;
-        return new Object[] { frameInfos.toString(), codes, thiss, areSkippedInternalFrames };
+        Object[] info = new Object[] { frameInfos.toString(), codes, thiss, areSkippedInternalFrames };
+        Set<Object> varCache = threadVariablesCache.get();
+        varCache.add(info);
+        return info;
     }
     
     private static String createPositionIdentificationString(SourcePosition position) {
@@ -399,7 +415,10 @@ public class JPDATruffleAccessor extends Object {
         } catch (Throwable t) {
             LangErrors.exception("An error when accessing scopes", t);
         }
-        return elements.toArray();
+        Object[] variables = elements.toArray();
+        Set<Object> varCache = threadVariablesCache.get();
+        varCache.add(variables);
+        return variables;
     }
 
     // An array of scope's arguments and variables:
@@ -452,7 +471,10 @@ public class JPDATruffleAccessor extends Object {
         } catch (Throwable t) {
             LangErrors.exception("An error when accessing scope "+scope, t);
         }
-        return elements.toArray();
+        Object[] variables = elements.toArray();
+        Set<Object> varCache = threadVariablesCache.get();
+        varCache.add(variables);
+        return variables;
     }
 
     // Store 12 elements: <name>, <language>, <type>, <readable>, <writable>, <internal>, <String value>,
@@ -587,7 +609,9 @@ public class JPDATruffleAccessor extends Object {
     
     static Object evaluate(DebugStackFrame sf, String expression) {
         DebugValue value = sf.eval(expression);
-        return new GuestObject(value);
+        Object result = new GuestObject(value);
+        threadVariablesCache.get().add(result);
+        return result;
     }
     
     /** Get the suspended event on current thread, if any. */

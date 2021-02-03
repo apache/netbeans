@@ -70,30 +70,4 @@ public class NBTreeMaker extends TreeMaker {
         return new NBTreeMaker(toplevel, names, types, syms);
     }
 
-    @Override
-    public JCClassDecl ClassDef(JCModifiers mods, Name name, List<JCTypeParameter> typarams, JCExpression extending, List<JCExpression> implementing, List<JCTree> defs) {
-        try {
-            IndexedClassDecl result = new IndexedClassDecl(mods, name, typarams, extending, implementing, defs, null);
-
-            result.pos = pos;
-
-            return result;
-        } catch (NoSuchMethodError err) {
-            return super.ClassDef(mods, name, typarams, extending, implementing, defs);
-        }
-    }
-
-    public static class IndexedClassDecl extends JCClassDecl {
-        public int index;
-        protected IndexedClassDecl(JCModifiers mods,
-                                   Name name,
-                                   List<JCTypeParameter> typarams,
-                                   JCExpression extending,
-                                   List<JCExpression> implementing,
-                                   List<JCTree> defs,
-                                   ClassSymbol sym) {
-            super(mods, name, typarams, extending, implementing, defs, sym);
-            this.index = -1;
-        }
-    }
 }

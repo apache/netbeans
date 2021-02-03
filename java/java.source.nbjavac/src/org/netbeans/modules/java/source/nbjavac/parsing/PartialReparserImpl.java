@@ -25,9 +25,11 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTrees;
+import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.parser.LazyDocCommentTable;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.CouplingAbort;
 import com.sun.tools.javac.util.Log;
@@ -108,7 +110,6 @@ public class PartialReparserImpl implements PartialReparser {
                 }
                 return false;
             }
-            final int firstInner = fav.firstInner;
             final int noInner = fav.noInner;
             final Context ctx = task.getContext();
             final TreeLoader treeLoader = TreeLoader.instance(ctx);
@@ -126,7 +127,8 @@ public class PartialReparserImpl implements PartialReparser {
                     ((CompilationInfoImpl.DiagnosticListenerImpl)dl).startPartialReparse(origStartPos, origEndPos);
                     long start = System.currentTimeMillis();
                     Map<JCTree,LazyDocCommentTable.Entry> docComments = new HashMap<>();
-                    block = pr.reparseMethodBody(cu, orig, newBody + " ", firstInner, docComments);
+                    Enter.instance(ctx).unenter((JCCompilationUnit) cu, ((JCTree.JCMethodDecl)orig).body);
+                    block = pr.reparseMethodBody(cu, orig, newBody + " ", docComments);
                     LOGGER.log(Level.FINER, "Reparsed method in: {0}", fo);     //NOI18N
                     if (block == null) {
                         LOGGER.log(

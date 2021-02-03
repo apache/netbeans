@@ -27,7 +27,6 @@ import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import java.util.HashSet;
 import java.util.Set;
-import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
 
 /**
  * Partial reparse helper visitor.

@@ -197,7 +197,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                         }
                     }, humanVisibleDelay);
                 } else {
-                    reject(`cannot compile workspace; client is ${client}`);
+                    reject(`cannot compile workspace; client is ${c}`);
                 }
             });
         });
@@ -242,29 +242,33 @@ let maintenance : Promise<void> | null;
 let activationPending : boolean = false;
 
 function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean): void {
-    let setClient : [(c : LanguageClient) => void, (err : any) => void];
-    client = new Promise<LanguageClient>((clientOK, clientErr) => {
-        setClient = [ clientOK, clientErr ];
-    });
-    const a : Promise<void> | null = maintenance;
     if (activationPending) {
         // do not activate more than once in parallel.
         handleLog(log, "Server activation requested repeatedly, ignoring...");
         return;
     }
+    let oldClient = client;
+    let setClient : [(c : LanguageClient) => void, (err : any) => void];
+    client = new Promise<LanguageClient>((clientOK, clientErr) => {
+        setClient = [ clientOK, clientErr ];
+    });
+    const a : Promise<void> | null = maintenance;
+    commands.executeCommand('setContext', 'nbJavaLSReady', false);
     activationPending = true;
     // chain the restart after termination of the former process.
     if (a != null) {
         handleLog(log, "Server activation initiated while in maintenance mode, scheduling after maintenance");
-        a.then(() => killNbProcess(notifyKill, log)).
-            then(() => doActivateWithJDK(specifiedJDK, context, log, notifyKill, setClient));
+        a.then(() => stopClient(oldClient)).then(() => killNbProcess(notifyKill, log)).then(() => {
+            doActivateWithJDK(specifiedJDK, context, log, notifyKill, setClient);
+        });
     } else {
         handleLog(log, "Initiating server activation");
-        killNbProcess(notifyKill, log).then(
-            () => doActivateWithJDK(specifiedJDK, context, log, notifyKill, setClient)
-        );
+        stopClient(oldClient).then(() => killNbProcess(notifyKill, log)).then(() => {
+            doActivateWithJDK(specifiedJDK, context, log, notifyKill, setClient);
+        });
     }
 }
+
 
 function killNbProcess(notifyKill : boolean, log : vscode.OutputChannel, specProcess?: ChildProcess) : Promise<void> {
     const p = nbProcess;
@@ -345,6 +349,9 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         });
         nbProcess = p;
         p.on('close', function(code: number) {
+            if (p == nbProcess) {
+                nbProcess = null;
+            }
             if (p == nbProcess && code != 0 && code) {
                 vscode.window.showWarningMessage("Apache NetBeans Language Server exited with " + code);
             }
@@ -449,7 +456,6 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         handleLog(log, 'Language Client: Starting');
         c.start();
         c.onReady().then(() => {
-            commands.executeCommand('setContext', 'nbJavaLSReady', true);
             c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
             c.onRequest(QuickPickRequest.type, async param => {
@@ -461,6 +467,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             });
             handleLog(log, 'Language Client: Ready');
             setClient[0](c);
+            commands.executeCommand('setContext', 'nbJavaLSReady', true);
         }).catch(setClient[1]);
     }).catch((reason) => {
         activationPending = false;
@@ -534,11 +541,15 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     }
 }
 
+function stopClient(clinetPromise: Promise<LanguageClient>): Thenable<void> {
+    return clinetPromise ? clinetPromise.then(c => c.stop()) : Promise.resolve();
+}
+
 export function deactivate(): Thenable<void> {
     if (nbProcess != null) {
         nbProcess.kill();
     }
-    return client.then(c => c.stop());
+    return stopClient(client);
 }
 
 class NetBeansDebugAdapterDescriptionFactory implements vscode.DebugAdapterDescriptorFactory {

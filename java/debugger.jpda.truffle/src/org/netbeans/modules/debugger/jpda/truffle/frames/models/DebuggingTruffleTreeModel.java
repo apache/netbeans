@@ -184,20 +184,33 @@ public class DebuggingTruffleTreeModel implements TreeModelFilter {
         stackFrames = join(stackFrames, topFrame);
         int chi = 0;
         if (haveTopHostFrames) {
+            boolean step2Java = false;
             for (; chi < children.length; chi++) {
                 Object ch = children[chi];
                 if (ch instanceof CallStackFrame) {
                     CallStackFrame csf = (CallStackFrame) ch;
-                    if (StepActionProvider.STEP2JAVA_CLASS.equals(csf.getClassName()) &&
+                    String className = csf.getClassName();
+                    if (StepActionProvider.STEP2JAVA_CLASS.equals(className) &&
                             StepActionProvider.STEP2JAVA_METHOD.equals(csf.getMethodName())) {
+                        step2Java = true;
+                        break;
+                    }
+                    int lastDot = className.lastIndexOf('.');
+                    String packageName = lastDot > 0 ? className.substring(0, lastDot) : "";
+                    if ("org.graalvm.polyglot".equals(packageName)) {
+                        // There's no step to Java call and we hit the SDK code.
                         break;
                     }
                 }
                 newChildren.add(ch);
             }
+            if (!step2Java) {
+                // No, we do not have top host frames:
+                newChildren.clear();
+            }
         }
         for (TruffleStackFrame tframe : stackFrames) {
-            if (tframe.isHost()) {
+            if (tframe.isHost() && chi < children.length) {
                 for (; chi < children.length; chi++) {
                     Object ch = children[chi];
                     if (ch instanceof CallStackFrame) {

@@ -49,6 +49,7 @@ import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.InvalidRequestStateExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.request.EventRequestManagerWrapper;
+import org.netbeans.modules.debugger.jpda.models.AbstractVariable;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
@@ -114,6 +115,10 @@ public class StepActionProvider extends JPDADebuggerActionProvider {
             stepCmd = 3;
         }
         try {
+            // The `stepCmd` variable is not visible anywhere.
+            // This change of it's value should not be followed by a refresh.
+            // We're resuming anyway.
+            ((AbstractVariable) currentPCInfo.getStepCommandVar()).setSilentChange(true);
             currentPCInfo.getStepCommandVar().setFromMirrorObject((Integer) stepCmd);
         } catch (InvalidObjectException ex) {
             Exceptions.printStackTrace(ex);

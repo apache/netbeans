@@ -211,19 +211,19 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             ]);
         }
     }));
-    const runCodelens = async (uri, methodName, noDebug) => {
+    const runCodelens = async (uri : any, methodName : string, noDebug : boolean) => {
         const editor = window.activeTextEditor;
         if (editor) {
             const docUri = editor.document.uri;
             const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
-            const debugConfig = {
+            const debugConfig : vscode.DebugConfiguration = {
                 type: "java8+",
                 name: "CodeLens Debug",
                 request: "launch",
                 mainClass: uri,
                 singleMethod: methodName,
             };
-            const debugOptions = {
+            const debugOptions : vscode.DebugSessionOptions = {
                 noDebug: noDebug,
             }
             await vscode.debug.startDebugging(workspaceFolder, debugConfig, debugOptions).then();

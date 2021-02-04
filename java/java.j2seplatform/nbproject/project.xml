@@ -338,6 +338,7 @@
                 <friend>org.netbeans.modules.javafx2.platform</friend>
                 <friend>org.netbeans.modules.projectimport.eclipse.core</friend>
                 <friend>org.netbeans.modules.projectimport.jbuilder</friend>
+                <friend>io.foojay.support.disco</friend>
                 <package>org.netbeans.modules.java.j2seplatform.api</package>
                 <package>org.netbeans.modules.java.j2seplatform.spi</package>
             </friend-packages>

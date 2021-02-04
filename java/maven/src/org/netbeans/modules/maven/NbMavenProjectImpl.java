@@ -391,15 +391,24 @@ public final class NbMavenProjectImpl implements Project {
      * getter for the maven's own project representation.. this instance is cached but gets reloaded
      * when one the pom files have changed.
      */
-    public @NonNull synchronized MavenProject getOriginalMavenProject() {
-        MavenProject mp = project == null ? null : project.get();
-        if (mp == null) {
-            mp = loadOriginalMavenProject(false);
-            project = new SoftReference<MavenProject>(mp);
-            if (hardReferencingMavenProject) {
-                hardRefProject = mp;
+    public @NonNull MavenProject getOriginalMavenProject() {
+        MavenProject mp;
+        synchronized (this) {
+            mp = project == null ? null : project.get();
+            if (mp != null) {
+                return mp;
+            }
+            if (mp == null) {
+                // PENDING: should be the whole project load synchronized ?
+                mp = loadOriginalMavenProject(false);
+                project = new SoftReference<MavenProject>(mp);
+                if (hardReferencingMavenProject) {
+                    hardRefProject = mp;
+                }
             }
         }
+        // in case someone got already information from the NbMavenProject:
+        ACCESSOR.doFireReload(watcher);
         return mp;
     }
     

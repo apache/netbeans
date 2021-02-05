@@ -28,7 +28,7 @@ import org.gradle.tooling.model.Task
 apply plugin: 'groovy'
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {

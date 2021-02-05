@@ -331,17 +331,10 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <friend-packages>
-                <friend>org.netbeans.modules.debugger.jpda.trufflenode</friend>
-                <friend>org.netbeans.modules.glassfish.common</friend>
-                <friend>org.netbeans.modules.payara.common</friend>
-                <friend>org.netbeans.modules.javafx2.platform</friend>
-                <friend>org.netbeans.modules.projectimport.eclipse.core</friend>
-                <friend>org.netbeans.modules.projectimport.jbuilder</friend>
-                <friend>io.foojay.support.disco</friend>
+            <public-packages>
                 <package>org.netbeans.modules.java.j2seplatform.api</package>
                 <package>org.netbeans.modules.java.j2seplatform.spi</package>
-            </friend-packages>
+            </public-packages>
             <extra-compilation-unit>
                 <package-root>probesrc</package-root>
                 <classpath/>

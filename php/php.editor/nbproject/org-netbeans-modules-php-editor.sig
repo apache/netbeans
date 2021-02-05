@@ -3007,6 +3007,15 @@ meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
 supr org.netbeans.modules.php.editor.parser.astnodes.Dispatch
 hfds method
 
+CLSS public org.netbeans.modules.php.editor.parser.astnodes.NamedArgument
+cons public init(int,int,org.netbeans.modules.php.editor.parser.astnodes.Identifier,org.netbeans.modules.php.editor.parser.astnodes.Expression)
+meth public java.lang.String toString()
+meth public org.netbeans.modules.php.editor.parser.astnodes.Expression getExpression()
+meth public org.netbeans.modules.php.editor.parser.astnodes.Identifier getParameterName()
+meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
+supr org.netbeans.modules.php.editor.parser.astnodes.Expression
+hfds expression,parameterName
+
 CLSS public org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration
 cons public init(int,int,org.netbeans.modules.php.editor.parser.astnodes.NamespaceName,org.netbeans.modules.php.editor.parser.astnodes.Block,boolean)
 meth public boolean isBracketed()
@@ -3601,6 +3610,7 @@ meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.MatchExpression)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation)
+meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.NamedArgument)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.NamespaceName)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.NullableType)
@@ -3730,6 +3740,7 @@ meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.MatchArm)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.MatchExpression)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation)
+meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.NamedArgument)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.PHPDocBlock)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.PHPDocMethodTag)
@@ -3837,6 +3848,7 @@ meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.MatchArm)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.MatchExpression)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation)
+meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.NamedArgument)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.NamespaceName)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.NullableType)

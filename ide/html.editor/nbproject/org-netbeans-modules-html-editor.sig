@@ -579,6 +579,7 @@ meth public void prepareHelp()
 meth public void processKeyEvent(java.awt.event.KeyEvent)
 meth public void render(java.awt.Graphics,java.awt.Font,java.awt.Color,java.awt.Color,int,int,boolean)
 supr java.lang.Object
+hfds END_FONT
 
 CLSS public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$Attribute
  outer org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem

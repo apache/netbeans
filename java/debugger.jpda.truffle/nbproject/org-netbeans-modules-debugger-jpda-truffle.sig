@@ -102,6 +102,7 @@ hfds LOG,codeRef,debugger,depth,frameInstance,hostClassName,hostMethodName,isHos
 
 CLSS public final org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackInfo
 cons public init(org.netbeans.api.debugger.jpda.JPDADebugger,org.netbeans.api.debugger.jpda.JPDAThread,org.netbeans.api.debugger.jpda.ObjectVariable)
+ anno 0 java.lang.Deprecated()
 cons public init(org.netbeans.api.debugger.jpda.JPDADebugger,org.netbeans.api.debugger.jpda.JPDAThread,org.netbeans.api.debugger.jpda.ObjectVariable,boolean)
 meth public boolean hasInternalFrames()
 meth public boolean hasJavaFrames()

@@ -2629,9 +2629,10 @@ meth public org.netbeans.api.debugger.jpda.JPDAClassType getClassType()
 meth public org.netbeans.api.debugger.jpda.Variable clone()
 meth public void setFromMirrorObject(java.lang.Object) throws java.io.InvalidObjectException
 meth public void setObject(java.lang.Object)
+meth public void setSilentChange(boolean)
 meth public void setValue(java.lang.String) throws org.netbeans.api.debugger.jpda.InvalidExpressionException
 supr java.lang.Object
-hfds cloneNumber,debugger,id,listeners,value
+hfds cloneNumber,debugger,id,listeners,silent,value
 
 CLSS public org.netbeans.modules.debugger.jpda.models.ArgumentObjectVariable
 cons public init(org.netbeans.modules.debugger.jpda.JPDADebuggerImpl,com.sun.jdi.ObjectReference,java.lang.String,java.lang.String)

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.2
+#Version 1.3
 
 CLSS public java.lang.Object
 cons public init()
@@ -18,5 +18,7 @@ meth public java.lang.String toString()
 CLSS public org.netbeans.modules.cpplite.debugger.api.Debugger
 cons public init()
 meth public static java.lang.Process startInDebugger(java.util.List<java.lang.String>) throws java.io.IOException
+ anno 0 java.lang.Deprecated()
+meth public static java.lang.Process startInDebugger(java.util.List<java.lang.String>,java.io.File) throws java.io.IOException
 supr java.lang.Object
 

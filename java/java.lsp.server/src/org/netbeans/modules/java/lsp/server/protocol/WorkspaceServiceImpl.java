@@ -90,10 +90,10 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     private static final RequestProcessor WORKER = new RequestProcessor(WorkspaceServiceImpl.class.getName(), 1, false, false);
 
     private final Gson gson = new Gson();
-    private final LanguageServer server;
+    private final Server.LanguageServerImpl server;
     private NbCodeLanguageClient client;
 
-    public WorkspaceServiceImpl(LanguageServer server) {
+    public WorkspaceServiceImpl(Server.LanguageServerImpl server) {
         this.server = server;
     }
 
@@ -108,7 +108,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             case Server.JAVA_BUILD_WORKSPACE: {
                 final CommandProgress progressOfCompilation = new CommandProgress();
                 final Lookup ctx = Lookups.singleton(progressOfCompilation);
-                for (Project prj : OpenProjects.getDefault().getOpenProjects()) {
+                for (Project prj : server.getWorkspaceProjects().getNow(OpenProjects.getDefault().getOpenProjects())) {
                     ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
                     if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_BUILD, Lookup.EMPTY)) {
                         ap.invokeAction(ActionProvider.COMMAND_REBUILD, ctx);

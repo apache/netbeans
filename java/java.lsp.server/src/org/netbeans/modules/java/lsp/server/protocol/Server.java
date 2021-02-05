@@ -225,7 +225,7 @@ public final class Server {
     private static final RequestProcessor SERVER_INIT_RP = new RequestProcessor(LanguageServerImpl.class.getName());
     
     
-    private static class LanguageServerImpl implements LanguageServer, LanguageClientAware {
+    static class LanguageServerImpl implements LanguageServer, LanguageClientAware {
 
         private static final Logger LOG = Logger.getLogger(LanguageServerImpl.class.getName());
         private NbCodeClientWrapper client;
@@ -236,6 +236,7 @@ public final class Server {
                 new AbstractLookup(sessionServices),
                 Lookup.getDefault()
         );
+        private final CompletableFuture<Project[]> workspaceProjects = new CompletableFuture<>();
         
         Lookup getSessionLookup() {
             return sessionLookup;
@@ -367,15 +368,17 @@ public final class Server {
                     //TODO: use getRootPath()?
                 }
             }
-            CompletableFuture<Project[]> fProjects = new CompletableFuture<>();
-            SERVER_INIT_RP.post(() -> asyncOpenSelectedProjects(fProjects, projectCandidates));
-            
-            return fProjects.
+            SERVER_INIT_RP.post(() -> asyncOpenSelectedProjects(workspaceProjects, projectCandidates));
+            return workspaceProjects.
                     thenApply(this::showIndexingCompleted).
                     thenApply(this::constructInitResponse).
                     thenApply(this::finishInitialization);
         }
-        
+
+        public CompletableFuture<Project[]> getWorkspaceProjects() {
+            return workspaceProjects;
+        }
+
         public InitializeResult finishInitialization(InitializeResult res) {
             OperationContext c = OperationContext.find(sessionLookup);
             // discard the progress token as it is going to be invalid anyway. Further pending

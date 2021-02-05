@@ -1,5 +1,5 @@
 CRC:1887704140
 SIZE:246374
-URL:https://github.com/oracle/nb-javac/releases/download/release130/A152261F8D708A5E1A7FCDAA3981663E-nb-javac-15.0.0.1-api.jar
+URL: m2:/com.dukescript.nbjavac:nb-javac:15.0.0.1:jar:api
 MessageDigest: SHA-256 c1fbbbcb30e283a6477248bf4adf202188d55c2e7ef9aa29d343018a68571794
 MessageDigest: SHA-512 bc9ac9f68b21190e2d4231908ce0aa7d88c3f054c8ac226a13fd6b7fd05d63eebc59308c5a7f6df5518f9b8b01f85fd18334ce115b54e2b4994aec2253c33040

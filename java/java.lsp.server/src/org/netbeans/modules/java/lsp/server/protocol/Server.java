@@ -230,7 +230,7 @@ public final class Server {
         private static final Logger LOG = Logger.getLogger(LanguageServerImpl.class.getName());
         private NbCodeClientWrapper client;
         private final TextDocumentService textDocumentService = new TextDocumentServiceImpl();
-        private final WorkspaceService workspaceService = new WorkspaceServiceImpl();
+        private final WorkspaceService workspaceService = new WorkspaceServiceImpl(this);
         private final InstanceContent   sessionServices = new InstanceContent();
         private final Lookup sessionLookup = new ProxyLookup(
                 new AbstractLookup(sessionServices),
@@ -319,10 +319,11 @@ public final class Server {
                 capabilities.setCodeActionProvider(new CodeActionOptions(Arrays.asList(CodeActionKind.QuickFix, CodeActionKind.Source)));
                 capabilities.setDocumentSymbolProvider(true);
                 capabilities.setDefinitionProvider(true);
+                capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
                 List<String> commands = new ArrayList<>(Arrays.asList(
-                        JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT,
+                        JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT, JAVA_SUPER_IMPLEMENTATION,
                         JAVA_TEST_SINGLE_METHOD, JAVA_RUN_MAIN_METHOD));
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     commands.addAll(codeGenerator.getCommands());
@@ -419,6 +420,7 @@ public final class Server {
     }
     
     public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
+    public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
     public static final String JAVA_TEST_SINGLE_METHOD =  "java.test.single.method";
     public static final String JAVA_RUN_MAIN_METHOD =  "java.run.main.method";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";

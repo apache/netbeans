@@ -141,6 +141,11 @@
 				"category": "Java"
 			},
 			{
+				"command": "java.goto.super.implementation",
+				"title": "Go to Super Implementation",
+				"category": "Java"
+			},
+			{
 				"command": "graalvm.pause.script",
 				"title": "Pause in Script",
 				"category": "GraalVM"
@@ -151,13 +156,29 @@
 				"command": "java.workspace.compile",
 				"key": "shift+alt+b",
 				"when": "nbJavaLSReady"
+			},
+			{
+				"command": "editor.action.sourceAction",
+				"key": "alt+insert",
+				"when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
 			}
 		],
 		"menus": {
+			"editor/context": [
+				{
+				  "command": "java.goto.super.implementation",
+				  "when": "nbJavaLSReady && editorLangId == java && editorTextFocus",
+				  "group": "navigation@100"
+				}
+			],
 			"commandPalette": [
 				{
 					"command": "java.workspace.compile",
 					"when": "nbJavaLSReady"
+				},
+				{
+					"command": "java.goto.super.implementation",
+					"when": "nbJavaLSReady && editorLangId == java"
 				},
 				{
 					"command": "graalvm.pause.script",

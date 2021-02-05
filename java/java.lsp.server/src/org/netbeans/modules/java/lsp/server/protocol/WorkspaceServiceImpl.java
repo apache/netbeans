@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
@@ -39,10 +40,12 @@ import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.Location;
+import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
+import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -69,7 +72,6 @@ import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -87,9 +89,12 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     private static final RequestProcessor WORKER = new RequestProcessor(WorkspaceServiceImpl.class.getName(), 1, false, false);
 
+    private final Gson gson = new Gson();
+    private final LanguageServer server;
     private NbCodeLanguageClient client;
 
-    public WorkspaceServiceImpl() {
+    public WorkspaceServiceImpl(LanguageServer server) {
+        this.server = server;
     }
 
     @Override
@@ -112,6 +117,10 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 progressOfCompilation.checkStatus();
                 return progressOfCompilation.getFinishFuture();
             }
+            case Server.JAVA_SUPER_IMPLEMENTATION:
+                String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                Position pos = gson.fromJson(gson.toJson(params.getArguments().get(1)), Position.class);
+                return (CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).superImplementation(uri, pos);
             case Server.JAVA_TEST_SINGLE_METHOD:
                 CommandProgress progressOfCommand = new CommandProgress();
                 String uriStr = ((JsonPrimitive) params.getArguments().get(0)).getAsString();

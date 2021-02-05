@@ -48,6 +48,7 @@ import org.netbeans.modules.java.editor.overridden.ElementDescription;
 import org.netbeans.modules.java.hints.TreeShims;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
 import org.netbeans.spi.java.hints.HintContext;
@@ -56,7 +57,7 @@ import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle.Messages;
 
-@Hint(displayName = "#DN_AddSealedForClass", description = "#DESC_AddSealedForClass", category = "general", minSourceVersion = "15")
+@Hint(displayName = "#DN_AddSealedForClass", description = "#DESC_AddSealedForClass", category = "suggestions", enabled=false, hintKind=org.netbeans.spi.java.hints.Hint.Kind.INSPECTION, severity=Severity.VERIFIER, minSourceVersion = "15")
 @Messages({
     "DN_AddSealedForClass=Can Be Sealed Type",
     "DESC_AddSealedForClass=This class can be set to sealed type with permiting only current sub classes."
@@ -205,9 +206,9 @@ public class AddSealedForClass {
             }
             ClassTree sealedClass=null;
             if (cls.getKind().equals(Tree.Kind.CLASS)) {
-                sealedClass = make.ClassWithPerms(newModifiersTree, oldClassTree.getSimpleName(), oldClassTree.getTypeParameters(), oldClassTree.getExtendsClause(), oldClassTree.getImplementsClause(), permits, oldClassTree.getMembers());
+                sealedClass = make.Class(newModifiersTree, oldClassTree.getSimpleName(), oldClassTree.getTypeParameters(), oldClassTree.getExtendsClause(), oldClassTree.getImplementsClause(), permits, oldClassTree.getMembers());
             } else if (cls.getKind().equals(Tree.Kind.INTERFACE)) {
-                sealedClass = make.InterfaceWithPerms(newModifiersTree, oldClassTree.getSimpleName(), oldClassTree.getTypeParameters(), oldClassTree.getImplementsClause(), permits, oldClassTree.getMembers());
+                sealedClass = make.Interface(newModifiersTree, oldClassTree.getSimpleName(), oldClassTree.getTypeParameters(), oldClassTree.getImplementsClause(), permits, oldClassTree.getMembers());
             }
             assert sealedClass!=null;
             ctx.getWorkingCopy().rewrite(ctx.getPath().getLeaf(), sealedClass);

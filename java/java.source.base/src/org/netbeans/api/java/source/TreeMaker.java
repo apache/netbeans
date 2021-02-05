@@ -317,7 +317,7 @@ public final class TreeMaker {
      * @return 
      * @see com.sun.source.tree.ClassTree
      */
-    public ClassTree ClassWithPerms(ModifiersTree modifiers, 
+    public ClassTree Class(ModifiersTree modifiers, 
               CharSequence simpleName,
               List<? extends TypeParameterTree> typeParameters,
               Tree extendsClause,
@@ -362,7 +362,7 @@ public final class TreeMaker {
      * @return 
      * @see com.sun.source.tree.ClassTree
      */
-    public ClassTree InterfaceWithPerms(ModifiersTree modifiers, 
+    public ClassTree Interface(ModifiersTree modifiers, 
               CharSequence simpleName,
               List<? extends TypeParameterTree> typeParameters,
               List<? extends Tree> extendsClauses,

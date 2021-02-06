@@ -55,10 +55,10 @@ public abstract class AttrValuesCompletion {
             new ValuesSetSupport(new String[]{"circle", "default", "poly", "rect"});
     private static final ValueCompletion<HtmlCompletionItem> ON_OFF_SUPPORT =
             new ValuesSetSupport(new String[]{"on", "off"});
-    private static final ValueCompletion<HtmlCompletionItem> FORMENCTYPE_SUPPORT =
+    private static final ValueCompletion<HtmlCompletionItem> FORM_ENCTYPE_SUPPORT =
             new ValuesSetSupport(new String[]{"application/x-www-form-urlencoded", "multipart/form-data", "text/plain"});
-    private static final ValueCompletion<HtmlCompletionItem> FORMMETHOD_SUPPORT =
-            new ValuesSetSupport(new String[]{"GET", "POST", "PUT", "DELETE"});
+    private static final ValueCompletion<HtmlCompletionItem> FORM_METHOD_SUPPORT =
+            new ValuesSetSupport(new String[]{"get", "post", "dialog"});
     private static final ValueCompletion<HtmlCompletionItem> PRELOAD_SUPPORT =
             new ValuesSetSupport(new String[]{"none", "metadata", "auto"});
     private static final ValueCompletion<HtmlCompletionItem> BUTTON_TYPE_SUPPORT =
@@ -69,6 +69,8 @@ public abstract class AttrValuesCompletion {
             new ValuesSetSupport(new String[]{"context", "toolbar"});
     private static final ValueCompletion<HtmlCompletionItem> WRAP_SUPPORT =
             new ValuesSetSupport(new String[]{"soft", "hard"});
+    private static final ValueCompletion<HtmlCompletionItem> TARGET_SUPPORT =
+            new ValuesSetSupport(new String[]{"_self", "_blank", "_parent", "_top"});
     private static final ValueCompletion<HtmlCompletionItem> INPUT_TYPE_SUPPORT =
             new ValuesSetSupport(new String[]{"hidden",
                 "text","search","tel","url","email","password","datetime","date",
@@ -96,6 +98,7 @@ public abstract class AttrValuesCompletion {
 
         putSupport("a", "href", FILE_NAME_SUPPORT); //NOI18N
         putSupport("a", "ping", FILE_NAME_SUPPORT); //NOI18N
+        putSupport("a", "target", TARGET_SUPPORT); //NOI18N
 
         putSupport("applet", "codebase", FILE_NAME_SUPPORT); //NOI18N
 
@@ -113,8 +116,9 @@ public abstract class AttrValuesCompletion {
         putSupport("body", "background", FILE_NAME_SUPPORT); //NOI18N
 
         putSupport("button", "formaction", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("button", "formenctype", FORMENCTYPE_SUPPORT); //NOI18N
-        putSupport("button", "formmethod", FORMMETHOD_SUPPORT); //NOI18N
+        putSupport("button", "formenctype", FORM_ENCTYPE_SUPPORT); //NOI18N
+        putSupport("button", "formmethod", FORM_METHOD_SUPPORT); //NOI18N
+        putSupport("button", "formtarget", TARGET_SUPPORT); //NOI18N
         putSupport("button", "type", BUTTON_TYPE_SUPPORT); //NOI18N
 
         putSupport("command", "icon", FILE_NAME_SUPPORT); //NOI18N
@@ -126,6 +130,9 @@ public abstract class AttrValuesCompletion {
 
         putSupport("form", "action", FILE_NAME_SUPPORT); //NOI18N
         putSupport("form", "autocomplete", ON_OFF_SUPPORT); //NOI18N
+        putSupport("form", "enctype", FORM_ENCTYPE_SUPPORT); //NOI18N
+        putSupport("form", "method", FORM_METHOD_SUPPORT); //NOI18N
+        putSupport("form", "target", TARGET_SUPPORT); //NOI18N
 
         putSupport("frame", "src", FILE_NAME_SUPPORT); //NOI18N
 
@@ -139,8 +146,9 @@ public abstract class AttrValuesCompletion {
 
         putSupport("input", "autocomplete", ON_OFF_SUPPORT); //NOI18N
         putSupport("input", "formaction", FILE_NAME_SUPPORT); //NOI18N
-        putSupport("input", "formenctype", FORMENCTYPE_SUPPORT); //NOI18N
-        putSupport("input", "formmethod", FORMMETHOD_SUPPORT); //NOI18N
+        putSupport("input", "formenctype", FORM_ENCTYPE_SUPPORT); //NOI18N
+        putSupport("input", "formmethod", FORM_METHOD_SUPPORT); //NOI18N
+        putSupport("input", "formtarget", TARGET_SUPPORT); //NOI18N
         putSupport("input", "src", FILE_NAME_SUPPORT); //NOI18N
         putSupport("input", "type", INPUT_TYPE_SUPPORT); //NOI18N
         putSupport("input", "usemap", FILE_NAME_SUPPORT); //NOI18N

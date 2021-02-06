@@ -258,30 +258,6 @@ if ($$${DIRH editable=false}) {
         </code>
     </codetemplate>
 
-    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.mySql.fa" abbreviation="my_fa" contexts="php-code">
-        <code>
-<![CDATA[while ($$${NEW_VAR newVarName default="row"} = mysql_fetch_array(${$query})) {
-    ${selection}${cursor}
-}]]>
-        </code>
-    </codetemplate>
-
-    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.mySql.fo" abbreviation="my_fo" contexts="php-code">
-        <code>
-<![CDATA[while ($$${NEW_VAR newVarName default="row"} = mysql_fetch_object(${$query})) {
-    ${selection}${cursor}
-}]]>
-        </code>
-    </codetemplate>
-
-    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.mySql.fr" abbreviation="my_fr" contexts="php-code">
-        <code>
-<![CDATA[while ($$${NEW_VAR newVarName default="row"} = mysql_fetch_row(${$query})) {
-    ${selection}${cursor}
-}]]>
-        </code>
-    </codetemplate>
-
     <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.my_gc" abbreviation="my_gc" contexts="php-code">
         <code>
 <![CDATA[ob_start();

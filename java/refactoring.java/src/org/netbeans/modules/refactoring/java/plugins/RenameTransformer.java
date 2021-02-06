@@ -254,17 +254,11 @@ public class RenameTransformer extends RefactoringVisitor {
             String useThis = null;
             String useSuper = null;
 
-            if (elementToFind!=null && elementToFind.getKind().isField() && tree.getKind() != Tree.Kind.MEMBER_SELECT) {
+            if (elementToFind!=null && elementToFind.getKind().isField() && tree.getKind() == Tree.Kind.IDENTIFIER) {
                 Scope scope = workingCopy.getTrees().getScope(elementPath);
                 for (Element ele : scope.getLocalElements()) {
                     if ((ele.getKind() == ElementKind.LOCAL_VARIABLE || ele.getKind() == ElementKind.PARAMETER) 
                             && ele.getSimpleName().toString().equals(newName)) {
-                        if (tree.getKind() == Tree.Kind.MEMBER_SELECT) {
-                            String isThis = ((MemberSelectTree) tree).getExpression().toString();
-                            if (isThis.equals("this") || isThis.endsWith(".this")) { // NOI18N
-                                break;
-                            }
-                        }
                         if (elementToFind.getModifiers().contains(Modifier.STATIC)) {
                             useThis = elementToFind.getEnclosingElement().getSimpleName().toString() + ".";
                         } else {

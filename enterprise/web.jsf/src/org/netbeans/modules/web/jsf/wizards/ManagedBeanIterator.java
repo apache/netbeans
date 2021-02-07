@@ -174,6 +174,7 @@ public class ManagedBeanIterator implements TemplateWizard.Iterator {
                 switch (namedScope) {
                     case SESSION:
                     case CONVERSATION:
+                    case VIEW:
                         templateProperties.put("passivationCapable", "true");    //NOI18N
                         break;
                     default:

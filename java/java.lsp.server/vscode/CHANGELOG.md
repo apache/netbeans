@@ -20,7 +20,17 @@
     under the License.
 
 -->
+## Version 12.3
 
+* LSP codelens for Run and Debug of main and test methods
+* NETBEANS-5319 - Always do save modified files when used through LSP.
+* Project problems and improvements in headless environment for VSNetBeans.
+  * Showing completions returned by annotation Processors in VS Code.
+  * Project problems are resolved in headless environment.
+  * Restart NBLS when an extension providing some NB cluster is installed/uninstalled.
+  * Enable full VSNetBeans Maven build test.
+  * Don't show reload/save dialogs in VSNetBeans
+  * Properly stop Maven execution from LSP/DAP 
 ## Version 12.2.1
 
 * Numerous refactorings for Java source code editing added

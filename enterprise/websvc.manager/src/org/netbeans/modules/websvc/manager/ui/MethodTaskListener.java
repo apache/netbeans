@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.websvc.manager.ui;
 
+import java.util.List;
 import java.util.LinkedList;
 
 /**
@@ -26,5 +27,5 @@ import java.util.LinkedList;
  * @author David Botterill
  */
 public interface MethodTaskListener {
-    void methodFinished(Object returnedObject, LinkedList paramList);
+    void methodFinished(Object returnedObject, List paramList);
 }

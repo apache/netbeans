@@ -20,7 +20,9 @@
 package org.netbeans.modules.dbschema.jdbcimpl;
 
 import java.sql.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.LinkedList;
 
 import org.netbeans.modules.dbschema.*;
 import org.netbeans.modules.dbschema.util.*;
@@ -95,8 +97,8 @@ public class IndexElementImpl extends DBMemberElementImpl implements IndexElemen
 		return (ColumnElement) columns.find(name);
     }
   
-    protected void initColumns(LinkedList idxs) {
-        LinkedList columnsList = new LinkedList();
+    protected void initColumns(List idxs) {
+        List<String> columnsList = new LinkedList<>();
         String name, info;
         int start, end;
         

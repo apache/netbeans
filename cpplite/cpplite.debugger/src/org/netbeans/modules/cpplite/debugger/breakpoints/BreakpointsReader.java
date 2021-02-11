@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.Properties;
+import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
@@ -35,6 +36,7 @@ import org.openide.text.Line;
  *
  * @author Jan Jancura
  */
+@DebuggerServiceRegistration(types={Properties.Reader.class})
 public class BreakpointsReader implements Properties.Reader {
     
     
@@ -67,6 +69,10 @@ public class BreakpointsReader implements Properties.Reader {
             hitCountFilteringStyle = null;
         }
         b.setHitCountFilter(hitCountFilter, hitCountFilteringStyle);
+        String condition = properties.getString(CPPLiteBreakpoint.PROP_CONDITION, null);
+        if (condition != null && !condition.isEmpty()) {
+            b.setCondition(condition);
+        }
         if (properties.getBoolean (Breakpoint.PROP_ENABLED, true))
             b.enable ();
         else
@@ -77,21 +83,25 @@ public class BreakpointsReader implements Properties.Reader {
     @Override
     public void write (Object object, Properties properties) {
         CPPLiteBreakpoint b = (CPPLiteBreakpoint) object;
-        FileObject fo = (FileObject) b.getLine ().getLookup ().
-            lookup (FileObject.class);
-            properties.setString("url", fo.toURL().toString());
-            properties.setInt (
-                "lineNumber", 
-                b.getLine ().getLineNumber ()
-            );
-            properties.setString (
-                Breakpoint.PROP_GROUP_NAME, 
-                b.getGroupName ()
-            );
-            properties.setBoolean (Breakpoint.PROP_ENABLED, b.isEnabled ());
-            properties.setInt(Breakpoint.PROP_HIT_COUNT_FILTER, b.getHitCountFilter());
-            Breakpoint.HIT_COUNT_FILTERING_STYLE style = b.getHitCountFilteringStyle();
-            properties.setInt(Breakpoint.PROP_HIT_COUNT_FILTER+"_style", style != null ? style.ordinal() : 0); // NOI18N
+        FileObject fo = (FileObject) b.getLine().getLookup().lookup(FileObject.class);
+        properties.setString("url", fo.toURL().toString());
+        properties.setInt (
+            "lineNumber", 
+            b.getLine ().getLineNumber ()
+        );
+        properties.setString (
+            Breakpoint.PROP_GROUP_NAME, 
+            b.getGroupName ()
+        );
+        properties.setBoolean (Breakpoint.PROP_ENABLED, b.isEnabled ());
+        properties.setInt(Breakpoint.PROP_HIT_COUNT_FILTER, b.getHitCountFilter());
+        Breakpoint.HIT_COUNT_FILTERING_STYLE style = b.getHitCountFilteringStyle();
+        properties.setInt(Breakpoint.PROP_HIT_COUNT_FILTER+"_style", style != null ? style.ordinal() : 0); // NOI18N
+        String condition = b.getCondition();
+        if (condition == null) {
+            condition = "";
+        }
+        properties.setString(CPPLiteBreakpoint.PROP_CONDITION, condition);
     }
     
 

@@ -27,9 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,7 +51,6 @@ import org.openide.util.Utilities;
 public final class NbLaunchRequestHandler {
 
     private NbLaunchDelegate activeLaunchHandler;
-    private final CompletableFuture<Boolean> waitForDebuggeeConsole = new CompletableFuture<>();
 
     public CompletableFuture<Void> launch(Map<String, Object> launchArguments, DebugAdapterContext context) {
         CompletableFuture<Void> resultFuture = new CompletableFuture<>();
@@ -174,14 +170,9 @@ public final class NbLaunchRequestHandler {
     }
 
     protected void handleTerminatedEvent(DebugAdapterContext context) {
-        CompletableFuture.runAsync(() -> {
-            try {
-                waitForDebuggeeConsole.get(1, TimeUnit.SECONDS);
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                // do nothing.
-            }
-            context.getClient().terminated(new TerminatedEventArguments());
-        });
+        // Project Action has already closed the I/O streams, and even in NetBeans IDE, the output area
+        // is already inactive at this point.
+        context.getClient().terminated(new TerminatedEventArguments());
     }
 
     private final class OutputListener implements Consumer<NbProcessConsole.ConsoleMessage> {
@@ -194,10 +185,7 @@ public final class NbLaunchRequestHandler {
 
         @Override
         public void accept(NbProcessConsole.ConsoleMessage message) {
-            if (message == null) {
-                // EOF
-                waitForDebuggeeConsole.complete(true);
-            } else {
+            if (message != null) {
                 OutputEventArguments outputEvent = convertToOutputEventArguments(message.output, message.category, context);
                 context.getClient().output(outputEvent);
             }

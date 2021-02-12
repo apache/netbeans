@@ -95,7 +95,7 @@
                     <code-name-base>org.netbeans.modules.updatecenters</code-name-base>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.51</specification-version>
+                        <specification-version>1.50</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>

@@ -60,7 +60,7 @@
         <ant dir="nbcode" target="clean" inheritall="false" inheritrefs="false"/>
     </target>
     <target name="build-vscode-ext" depends="build-lsp-server" description="Build the Visual Studio Code extension.">
-        <property name="vsix.version" value="0.1.0"/>
+        <property name="vsix.version" value="12.2.2"/>
 
         <exec executable="npm" failonerror="true" dir="vscode">
             <arg value="--allow-same-version"/>

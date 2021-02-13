@@ -23,14 +23,10 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.GradleProject;
-import org.netbeans.modules.gradle.GradleProjectLoader;
-import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.util.Lookup;
 
 /**
@@ -38,12 +34,14 @@ import org.openide.util.Lookup;
  * @author lkishalmi
  */
 //@ProjectServiceProvider(service = GradleProjectLoader.class, projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
-public class FallbackProjectLoader implements GradleProjectLoader {
+public class FallbackProjectLoader extends AbstractProjectLoader {
+
 
     final GradleFiles files;
 
-    public FallbackProjectLoader(Project project) {
-        this.files = ((NbGradleProjectImpl) project).getGradleFiles();
+    public FallbackProjectLoader(ReloadContext ctx) {
+        super(ctx);
+        this.files = ctx.project.getGradleFiles();
     }
 
     @Override
@@ -61,6 +59,11 @@ public class FallbackProjectLoader implements GradleProjectLoader {
 
         }
         return new GradleProject(NbGradleProject.Quality.FALLBACK, problems, infos.values());
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
 }

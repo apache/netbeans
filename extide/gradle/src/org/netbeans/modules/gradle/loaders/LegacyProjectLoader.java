@@ -18,14 +18,7 @@
  */
 package org.netbeans.modules.gradle.loaders;
 
-import java.io.File;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -46,31 +39,22 @@ import org.gradle.tooling.ProgressEvent;
 import org.gradle.tooling.ProgressListener;
 import org.gradle.tooling.ProjectConnection;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.GradleProject;
 import org.netbeans.modules.gradle.GradleProjectErrorNotifications;
-import org.netbeans.modules.gradle.GradleProjectLoader;
-import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import static org.netbeans.modules.gradle.loaders.GradleDaemon.GRADLE_LOADER_RP;
 import static org.netbeans.modules.gradle.loaders.GradleDaemon.INIT_SCRIPT;
 import static org.netbeans.modules.gradle.loaders.GradleDaemon.TOOLING_JAR;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
-import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.EVALUATED;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FALLBACK;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLINE;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.SIMPLE;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
-import org.netbeans.modules.gradle.cache.AbstractDiskCache;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
-import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
-import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.GradleSettings;
-import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
 import org.openide.util.Cancellable;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 import static org.netbeans.modules.gradle.loaders.Bundle.*;
@@ -80,7 +64,8 @@ import static org.netbeans.modules.gradle.loaders.Bundle.*;
  * @author lkishalmi
  */
 //@ProjectServiceProvider(service = GradleProjectLoader.class, projectTypes = @ProjectType(id = NbGradleProject.GRADLE_PROJECT_TYPE, position=500))
-public class LegacyProjectLoader implements GradleProjectLoader {
+public class LegacyProjectLoader extends AbstractProjectLoader {
+
     private enum GoOnline { NEVER, ON_DEMAND, ALWAYS }
 
     private static final Logger LOG = Logger.getLogger(LegacyProjectLoader.class.getName());
@@ -91,50 +76,33 @@ public class LegacyProjectLoader implements GradleProjectLoader {
 
     private static final boolean DEBUG_GRADLE_INFO_ACTION = Boolean.getBoolean("netbeans.debug.gradle.info.action"); //NOI18N
 
-    private final NbGradleProjectImpl project;
 
-    public LegacyProjectLoader(Project project) {
-        this.project = (NbGradleProjectImpl) project;
+    public LegacyProjectLoader(ReloadContext ctx) {
+        super(ctx);
     }
 
     @Override
     public GradleProject loadProject(NbGradleProject.Quality aim, boolean ignoreCache, boolean interactive, String... args) {
-        final GradleFiles files = project.getGradleFiles();
 
-        if (aim == FALLBACK) {
-            return null;//fallbackProject(files);
-        }
-        GradleProject prev = project.isGradleProjectLoaded() ? project.getGradleProject() : null;
-
-        // Try to turn to the cache
-        if (!ignoreCache  && ((prev == null) || (prev.getQuality() == FALLBACK))) {
-            AbstractDiskCache.CacheEntry<ProjectInfoDiskCache.QualifiedProjectInfo> cacheEntry = new ProjectInfoDiskCache(files).loadEntry();
-            if (cacheEntry != null) {
-                if (cacheEntry.isCompatible()) {
-                    prev = createGradleProject(cacheEntry.getData());
-                    if (cacheEntry.isValid()) {
-                        updateSubDirectoryCache(prev);
-                        return prev;
-                    }
-                }
-            }
-        }
-
-        final ReloadContext ctx = new ReloadContext(project, prev, aim);
         ctx.args = args;
 
         GradleProject ret;
         try {
-            if (RunUtils.isProjectTrusted(project, interactive)) {
+            if (RunUtils.isProjectTrusted(ctx.project, interactive)) {
                 ret = GRADLE_LOADER_RP.submit(new ProjectLoaderTask(ctx)).get();
                 updateSubDirectoryCache(ret);
             } else {
-                ret = prev.invalidate();
+                ret = ctx.previous.invalidate();
             }
         } catch (InterruptedException | ExecutionException ex) {
-            ret = null;//fallbackProject(files);
+            ret = null;
         }
         return ret;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return ctx.aim.betterThan(FALLBACK);
     }
 
     @NbBundle.Messages({
@@ -335,81 +303,6 @@ public class LegacyProjectLoader implements GradleProjectLoader {
             return true;
         }
 
-    }
-
-    private static GradleProject createGradleProject(ProjectInfoDiskCache.QualifiedProjectInfo info) {
-        Collection<? extends ProjectInfoExtractor> extractors = Lookup.getDefault().lookupAll(ProjectInfoExtractor.class);
-        Map<Class, Object> results = new HashMap<>();
-        Set<String> problems = new LinkedHashSet<>(info.getProblems());
-
-        Map<String, Object> projectInfo = new HashMap<>(info.getInfo());
-        projectInfo.putAll(info.getExt());
-
-        for (ProjectInfoExtractor extractor : extractors) {
-            ProjectInfoExtractor.Result result = extractor.extract(projectInfo, Collections.unmodifiableMap(results));
-            problems.addAll(result.getProblems());
-            for (Object extract : result.getExtract()) {
-                results.put(extract.getClass(), extract);
-            }
-
-        }
-        return new GradleProject(info.getQuality(), problems, results.values());
-
-    }
-
-    private static void updateSubDirectoryCache(GradleProject gp) {
-        if (gp.getQuality().atLeast(EVALUATED)) {
-            GradleBaseProject baseProject = gp.getBaseProject();
-            if (baseProject.isRoot()) {
-                SubProjectDiskCache spCache = SubProjectDiskCache.get(baseProject.getRootDir());
-                spCache.storeData(new SubProjectDiskCache.SubProjectInfo(baseProject));
-                ProjectManager.getDefault().clearNonProjectCache();
-            }
-        }
-    }
-
-    private static void saveCachedProjectInfo(ProjectInfoDiskCache.QualifiedProjectInfo data, GradleProject gp) {
-        assert gp.getQuality().betterThan(FALLBACK) : "Never attempt to cache FALLBACK projects."; //NOi18N
-        GradleFiles gf = new GradleFiles(gp.getBaseProject().getProjectDir(), true);
-        new ProjectInfoDiskCache(gf).storeData(data);
-    }
-
-    public static File getCacheDir(GradleFiles gf) {
-        return getCacheDir(gf.getRootDir(), gf.getProjectDir());
-    }
-
-    public static File getCacheDir(GradleProject gp) {
-        GradleBaseProject base = gp.getBaseProject();
-        return getCacheDir(base.getRootDir(), base.getProjectDir());
-    }
-
-    private static File getCacheDir(File rootDir, File projectDir) {
-        int code = Math.abs(projectDir.getAbsolutePath().hashCode());
-        String dirName = projectDir.getName() + "-" + code; //NOI18N
-        File dir = new File(rootDir, ".gradle/nb-cache/" + dirName); //NOI18N
-        return dir;
-    }
-
-    private static final class ReloadContext {
-
-        final NbGradleProjectImpl project;
-        final GradleProject previous;
-        final NbGradleProject.Quality aim;
-        String[] args = new String[0];
-
-        public ReloadContext(NbGradleProjectImpl project, GradleProject previous, NbGradleProject.Quality aim) {
-            this.project = project;
-            this.previous = previous;
-            this.aim = aim;
-        }
-
-        public GradleProject getPrevious() {
-            return previous;
-        }
-
-        public NbGradleProject.Quality getAim() {
-            return aim;
-        }
     }
 
 }

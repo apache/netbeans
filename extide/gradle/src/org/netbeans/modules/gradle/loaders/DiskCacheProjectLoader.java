@@ -18,44 +18,44 @@
  */
 package org.netbeans.modules.gradle.loaders;
 
-import java.util.Arrays;
-import java.util.List;
-import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.GradleProject;
-import org.netbeans.modules.gradle.GradleProjectLoader;
-import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.NbGradleProject;
+import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FALLBACK;
+import org.netbeans.modules.gradle.cache.AbstractDiskCache;
+import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
+import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 
 /**
  *
  * @author lkishalmi
  */
-public class GradleProjectLoaderImpl implements GradleProjectLoader {
+public class DiskCacheProjectLoader extends AbstractProjectLoader {
 
-    final Project project;
-
-    public GradleProjectLoaderImpl(Project project) {
-        this.project = project;
+    public DiskCacheProjectLoader(ReloadContext ctx) {
+        super(ctx);
     }
 
     @Override
     public GradleProject loadProject(NbGradleProject.Quality aim, boolean ignoreCache, boolean interactive, String... args) {
-        AbstractProjectLoader.ReloadContext ctx = new AbstractProjectLoader.ReloadContext((NbGradleProjectImpl) project, aim);
-        List<AbstractProjectLoader> loaders = Arrays.asList(
-                new DiskCacheProjectLoader(ctx),
-                new LegacyProjectLoader(ctx),
-                new FallbackProjectLoader(ctx)
-        );
-
-        GradleProject ret = null;
-        for (AbstractProjectLoader loader : loaders) {
-            if (loader.isEnabled()) {
-                ret = loader.loadProject(aim, ignoreCache, interactive, args);
-                if (ret != null) {
-                    break;
+        if ((aim == FALLBACK) || ignoreCache || GradleExperimentalSettings.getDefault().isCacheDisabled()) {
+            return null;
+        }
+        AbstractDiskCache.CacheEntry<ProjectInfoDiskCache.QualifiedProjectInfo> cacheEntry = new ProjectInfoDiskCache(ctx.project.getGradleFiles()).loadEntry();
+        if (cacheEntry != null) {
+            if (cacheEntry.isCompatible()) {
+                GradleProject prev = createGradleProject(cacheEntry.getData());
+                if (cacheEntry.isValid()) {
+                    updateSubDirectoryCache(prev);
+                    return prev;
                 }
             }
         }
-        return ret;
+        return null;
     }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 }

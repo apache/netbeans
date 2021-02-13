@@ -20,7 +20,6 @@
 package org.netbeans.modules.gradle;
 
 import org.netbeans.modules.gradle.loaders.GradleProjectLoaderImpl;
-import org.netbeans.modules.gradle.loaders.LegacyProjectLoader;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
@@ -396,7 +395,7 @@ public final class NbGradleProjectImpl implements Project {
 
         @Override
         public FileObject getCacheDirectory() throws IOException {
-            return FileUtil.createFolder(LegacyProjectLoader.getCacheDir(gradleFiles));
+            return FileUtil.createFolder(getCacheDir(gradleFiles));
         }
     }
 

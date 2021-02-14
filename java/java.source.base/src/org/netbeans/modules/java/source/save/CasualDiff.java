@@ -1421,6 +1421,11 @@ public class CasualDiff {
         int localPointer = bounds[0];
         // check that it is not enum constant. If so, match it in special way
         if ((oldT.mods.flags & Flags.ENUM) != 0) {
+            JCModifiers mods = oldT.getModifiers();
+            int startPos = mods.pos != Position.NOPOS ? getOldPos(mods) : getOldPos(oldT);
+
+            localPointer = diffAnnotationsLists(mods.getAnnotations(), newT.getModifiers().getAnnotations(), startPos, localPointer);
+
             if (nameChanged(oldT.name, newT.name)) {
                 copyTo(localPointer, oldT.pos);
                 printer.print(newT.name);
@@ -5895,7 +5900,7 @@ public class CasualDiff {
     }
 
     private boolean matchTypeTest(JCInstanceOf t1, JCInstanceOf t2) {
-        return treesMatch(t1.clazz, t2.clazz) && treesMatch(t1.expr, t2.expr);
+        return treesMatch(getPattern(t1), getPattern(t2)) && treesMatch(t1.expr, t2.expr);
     }
 
     private boolean matchIndexed(JCArrayAccess t1, JCArrayAccess t2) {

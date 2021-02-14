@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.debugging.launch;
 
 import java.io.File;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -43,6 +44,7 @@ import org.netbeans.modules.java.lsp.server.debugging.NbSourceProvider;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -91,14 +93,27 @@ public final class NbLaunchRequestHandler {
         activeLaunchHandler.preLaunch(launchArguments, context);
 
         String filePath = (String)launchArguments.get("mainClass");
-        FileObject file = filePath != null ? FileUtil.toFileObject(new File(filePath)) : null;
+        File ioFile = null;
+        if (filePath != null) {
+            ioFile = new File(filePath);
+            if (!ioFile.exists()) {
+                try {
+                    URI uri = new URI(filePath);
+                    ioFile = Utilities.toFile(uri);
+                } catch (URISyntaxException ex) {
+                    // Not a valid file
+                }
+            }
+        }
+        FileObject file = ioFile != null ? FileUtil.toFileObject(ioFile) : null;
         if (file == null) {
             ErrorUtilities.completeExceptionally(resultFuture,
                     "Missing file: " + filePath,
                     ResponseErrorCode.serverErrorStart);
             return resultFuture;
         }
-        activeLaunchHandler.nbLaunch(file, context, !noDebug, new OutputListener(context)).thenRun(() -> {
+        String singleMethod = (String)launchArguments.get("singleMethod");
+        activeLaunchHandler.nbLaunch(file, singleMethod, context, !noDebug, new OutputListener(context)).thenRun(() -> {
             activeLaunchHandler.postLaunch(launchArguments, context);
             resultFuture.complete(null);
         }).exceptionally(e -> {

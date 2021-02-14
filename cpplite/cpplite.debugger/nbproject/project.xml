@@ -190,8 +190,8 @@
                 <package>org.netbeans.modules.cpplite.debugger.api</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/cpplite-mi-1.0-SNAPSHOT.jar</runtime-relative-path>
-                <binary-origin>external/cpplite-mi-1.0-SNAPSHOT.jar</binary-origin>
+                <runtime-relative-path>ext/cpplite-mi-f8f8250283be.jar</runtime-relative-path>
+                <binary-origin>external/cpplite-mi-f8f8250283be.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

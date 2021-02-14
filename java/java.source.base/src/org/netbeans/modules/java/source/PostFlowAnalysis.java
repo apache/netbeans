@@ -48,8 +48,8 @@ import javax.lang.model.element.Element;
 import javax.tools.JavaFileObject;
 
 import com.sun.tools.javac.code.Symtab;
-import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.util.JCDiagnostic.Error;
+import org.netbeans.modules.java.source.builder.ElementsService;
 
 /**
  *
@@ -62,6 +62,7 @@ public class PostFlowAnalysis extends TreeScanner {
     private Enter enter;
     private Names names;
     private Symtab syms;
+    private ElementsService elementsService;
 
     private List<Pair<TypeSymbol, Symbol>> outerThisStack;
     private TypeSymbol currentClass;
@@ -73,6 +74,7 @@ public class PostFlowAnalysis extends TreeScanner {
         enter = Enter.instance(ctx);
         names = Names.instance(ctx);
         syms = Symtab.instance(ctx);
+        elementsService = ElementsService.instance(ctx);
         outerThisStack = List.nil();
     }
     
@@ -123,7 +125,7 @@ public class PostFlowAnalysis extends TreeScanner {
     @Override
     public void visitMethodDef(JCMethodDecl tree) {
         if (tree.name == names.init &&
-            (currentClass.isInner() || currentClass.isLocal())) {
+            (currentClass.isInner() || elementsService.isLocal(currentClass))) {
             List<Pair<TypeSymbol, Symbol>> prevOuterThisStack = outerThisStack;
             try {
                 if (currentClass.hasOuterInstance())
@@ -162,7 +164,7 @@ public class PostFlowAnalysis extends TreeScanner {
         super.visitNewClass(tree);
         Symbol c = tree.constructor != null ? tree.constructor.owner : null;
         if (c != null && c != syms.noSymbol && c.hasOuterInstance()) {
-            if (tree.encl == null && c.isLocal()) {
+            if (tree.encl == null && elementsService.isLocal(c)) {
                 checkThis(tree.pos(), c.type.getEnclosingType().tsym);
             }
         }
@@ -178,7 +180,7 @@ public class PostFlowAnalysis extends TreeScanner {
                 Symbol c = meth.owner;
                 if (c.hasOuterInstance()) {
                     checkThis = false;
-                    if (tree.meth.getTag() != JCTree.Tag.SELECT && (c.isLocal() || methName == names._this)) {
+                    if (tree.meth.getTag() != JCTree.Tag.SELECT && (elementsService.isLocal(c) || methName == names._this)) {
                         checkThis(tree.meth.pos(), c.type.getEnclosingType().tsym);
                     }
                 }
@@ -233,4 +235,5 @@ public class PostFlowAnalysis extends TreeScanner {
         if (constValue instanceof String && ((String)constValue).length() >= Pool.MAX_STRING_LENGTH)
             log.error(pos, new Error("compiler", "limit.string")); //NOI18N
     }
+
 }

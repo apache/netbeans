@@ -556,13 +556,13 @@ public final class CompilationInfoImpl {
                     if (errors == null) {
                         source2Errors.put(file, errors = new Diagnostics());
                         if (this.jfo != null && this.jfo == file) {
-                            errors.add(-1, new IncompleteClassPath(this.jfo));
+                            errors.add(0, new IncompleteClassPath(this.jfo));
                         }
                     }
                 } else {
                     errors = new Diagnostics();
                     if (this.jfo != null && this.jfo == file) {
-                        errors.add(-1, new IncompleteClassPath(this.jfo));
+                        errors.add(0, new IncompleteClassPath(this.jfo));
                     }
                 }
             } else {
@@ -702,7 +702,7 @@ public final class CompilationInfoImpl {
 
             IncompleteClassPath(final JavaFileObject file) {
                 this.file = file;
-    }
+            }
 
             @Override
             public Kind getKind() {
@@ -716,7 +716,7 @@ public final class CompilationInfoImpl {
 
             @Override
             public long getPosition() {
-                return -1;
+                return 0;
             }
 
             @Override

@@ -63,16 +63,8 @@ public class HintsTest extends PHPHintsTestBase {
         checkHints(new TypeRedeclarationHintError(), "testTypeRedeclarationHint.php");
     }
 
-    public void testFieldRedeclarationHint() throws Exception {
-        checkHints(new FieldRedeclarationHintError(), "testFieldRedeclarationHint.php");
-    }
-
     public void testConstantRedeclarationHint() throws Exception {
         checkHints(new ConstantRedeclarationHintError(), "testConstantRedeclarationHint.php");
-    }
-
-    public void testWrongOrderOfArgsHint() throws Exception {
-        checkHints(new WrongOrderOfArgsHint(), "testWrongOrderOfArgsHint.php");
     }
 
     public void testUnusedUsesHint() throws Exception {
@@ -478,10 +470,6 @@ public class HintsTest extends PHPHintsTestBase {
         applyHint(new EmptyStatementHint(), "testIssue259026_03.php", "$test1 = 1;;^", "Empty Statement");
     }
 
-    public void testIssue268557() throws Exception {
-        checkHints(new FieldRedeclarationHintError(), "testIssue268557.php");
-    }
-
     public void testConstantModifiersCheckHint() throws Exception {
         checkHints(new ModifiersCheckHintError(), "testConstantModifiersCheckHint.php");
     }
@@ -548,16 +536,6 @@ public class HintsTest extends PHPHintsTestBase {
 
     public void testDeclareStrictTypesFix_03() throws Exception {
         applyHint(new DeclareStrictTypesSuggestionStub(PhpVersion.PHP_71), "testDeclareStrictTypesSuggestion_03.php", "<?p^hp", "Add declare(strict_types=1)");
-    }
-
-    public void testFieldRedeclarationTypedProperties20Hint_01() throws Exception {
-        // PHP 7.4
-        checkHints(new FieldRedeclarationHintError(), "testFieldRedeclarationTypedProperties20Hint_01.php");
-    }
-
-    public void testFieldRedeclarationTypedProperties20Hint_02() throws Exception {
-        // PHP 7.4
-        checkHints(new FieldRedeclarationHintError(), "testFieldRedeclarationTypedProperties20Hint_02.php");
     }
 
     private void fixContent(File file) throws Exception {

@@ -76,6 +76,7 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
+import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.support.ProjectOperations;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
 import org.openide.awt.ActionID;
@@ -205,7 +206,6 @@ public class ActionProviderImpl implements ActionProvider {
         if (argLine == null) {
             return;
         }
-
         final StringWriter writer = new StringWriter();
 
         PrintWriter out = new PrintWriter(writer);
@@ -258,10 +258,15 @@ public class ActionProviderImpl implements ActionProvider {
             boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, ctx, 0, null);
             if (needReload && canReload) {
                 String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), ctx);
-                prj.reloadProject(true, maxQualily, reloadArgs);
+                final ActionProgress g = ActionProgress.start(context);
+                RequestProcessor.Task reloadTask = prj.reloadProject(true, maxQualily, reloadArgs);
+                reloadTask.addTaskListener((t) -> {
+                    g.finished(true);
+                });
             }
         } else {
             final ExecutorTask task = RunUtils.executeGradle(cfg, writer.toString());
+            final ActionProgress g = ActionProgress.start(context);
             final Lookup outerCtx = ctx;
             task.addTaskListener((Task t) -> {
                 try {
@@ -269,7 +274,8 @@ public class ActionProviderImpl implements ActionProvider {
                     boolean canReload = project.getLookup().lookup(BeforeReloadActionHook.class).beforeReload(action, outerCtx, task.result(), out1);
                     if (needReload && canReload) {
                         String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), outerCtx);
-                        prj.reloadProject(true, maxQualily, reloadArgs);
+                        RequestProcessor.Task reloadTask = prj.reloadProject(true, maxQualily, reloadArgs);
+                        reloadTask.waitFinished();
                     }
                     project.getLookup().lookup(AfterBuildActionHook.class).afterAction(action, outerCtx, task.result(), out1);
                     for (AfterBuildActionHook l : context.lookupAll(AfterBuildActionHook.class)) {
@@ -278,6 +284,7 @@ public class ActionProviderImpl implements ActionProvider {
                 } finally {
                     task.getInputOutput().getOut().close();
                     task.getInputOutput().getErr().close();
+                    g.finished(task.result() == 0);
                 }
             });
         }

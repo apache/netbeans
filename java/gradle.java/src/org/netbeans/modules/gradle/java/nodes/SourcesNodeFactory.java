@@ -72,10 +72,10 @@ public final class SourcesNodeFactory implements NodeFactory {
         public List<SourceGroup> keys() {
             Sources srcs = ProjectUtils.getSources(project);
             List<SourceGroup> ret = new ArrayList<>();
+            // Every Groovy SourceGroup is a Java SourceGroup as well
             ret.addAll(Arrays.asList(srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)));
             ret.addAll(Arrays.asList(srcs.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES)));
             ret.addAll(Arrays.asList(srcs.getSourceGroups(GradleSourcesImpl.SOURCE_TYPE_GENERATED)));
-            ret.addAll(Arrays.asList(srcs.getSourceGroups(GradleSourcesImpl.SOURCE_TYPE_GROOVY)));
             ret.sort(Comparator.comparing(SourceGroup::getName));
             return ret;
         }

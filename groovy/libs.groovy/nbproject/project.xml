@@ -51,11 +51,11 @@
             </friend-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/groovy.jar</runtime-relative-path>
-                <binary-origin>external/groovy-2.5.11.jar</binary-origin>
+                <binary-origin>external/groovy-2.5.14.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/groovy-ant.jar</runtime-relative-path>
-                <binary-origin>external/groovy-ant-2.5.11.jar</binary-origin>
+                <binary-origin>external/groovy-ant-2.5.14.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

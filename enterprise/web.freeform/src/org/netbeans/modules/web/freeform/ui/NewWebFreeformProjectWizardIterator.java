@@ -74,7 +74,7 @@ public class NewWebFreeformProjectWizardIterator implements WizardDescriptor.Ins
     }
     
     private WizardDescriptor.Panel[] createPanels () {
-        List<WizardDescriptor.Panel> l = new ArrayList<WizardDescriptor.Panel>();
+        List<WizardDescriptor.Panel> l = new ArrayList<>();
         List<TargetDescriptor> extraTargets = new ArrayList<TargetDescriptor>();
         extraTargets.add(WebProjectNature.getExtraTarget());
         l.add(NewFreeformProjectSupport.createBasicProjectInfoWizardPanel());

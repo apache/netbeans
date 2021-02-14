@@ -68,7 +68,7 @@ final class CookieSetLkp extends AbstractLookup {
             isInReplaceInst.set(this);
             
             it = lookupResult(Object.class).allItems().iterator();
-            pairs = new ArrayList<AbstractLookup.Pair>();
+            pairs = new ArrayList<>();
         
             boolean change = false;
             int index = 0;

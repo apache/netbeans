@@ -1385,7 +1385,7 @@ public final class TreeUtilities {
      * 
      * @param breakOrContinue {@link TreePath} to the tree that should be inspected.
      *                        The <code>breakOrContinue.getLeaf().getKind()</code>
-     *                        has to be either {@link Kind#BREAK} or {@link Kind#CONTINUE}, or
+     *                        has to be one of {@link Kind#BREAK}, {@link Kind#CONTINUE}, or {@link Kind#YIELD}, or
      *                        an IllegalArgumentException is thrown
      * @return the tree that is the "target" for the given break or continue statement, or null if there is none. Tree can be of type StatementTree or ExpressionTree
      * @throws IllegalArgumentException if the given tree is not a break or continue tree or if the given {@link CompilationInfo}
@@ -1424,6 +1424,9 @@ public final class TreeUtilities {
                     return target;
                 }
             default:
+                if (TreeShims.YIELD.equals(leaf.getKind().name())) {
+                    return TreeShims.getTarget(leaf);
+                }
                 throw new IllegalArgumentException("Unsupported kind: " + leaf.getKind());
         }
     }

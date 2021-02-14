@@ -278,6 +278,9 @@ public class BreadcrumbsImpl implements BackgroundTask {
         }
 
         public static List<BreadcrumbsElement> create(BreadcrumbsElement parent, List<DocumentSymbol> symbols, FileObject file, Document doc) {
+            if (symbols == null) {
+                return Collections.emptyList();
+            }
             return symbols.stream()
                           .map(c -> create(parent, file, doc, c))
                           .filter(e -> e != null)
@@ -339,11 +342,13 @@ public class BreadcrumbsImpl implements BackgroundTask {
                     r = () -> {
                         setPreferredSize(sidebar.getPreferredSize());
                         setMaximumSize(sidebar.getMaximumSize());
+                        revalidate();
                     };
                 } else {
                     r = () -> {
                         setPreferredSize(new Dimension(0,0));
                         setMaximumSize(new Dimension(0,0));
+                        revalidate();
                     };
                 }
 

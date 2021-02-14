@@ -148,7 +148,8 @@ public class ConfigurationsNode extends AbstractNode {
 
         @Override
         protected Node createNodeForKey(GradleConfiguration conf) {
-            AbstractNode ret = new AbstractNode(Children.create(new ConfigurationChildren(project, conf.getName()), true));
+            Children ch = conf.isEmpty() ? Children.LEAF : Children.create(new ConfigurationChildren(project, conf.getName()), true);
+            AbstractNode ret = new AbstractNode(ch);
             ret.setName(conf.getName());
             ret.setShortDescription(conf.getDescription());
             StringBuilder displayName = new StringBuilder(conf.getName());
@@ -222,7 +223,6 @@ public class ConfigurationsNode extends AbstractNode {
         })
         @Override
         protected Node[] createNodesForKey(GradleDependency key) {
-            GradleProject gp = project.getGradleProject();
             ArrayList<Node> ret = new ArrayList<>(1);
             switch (key.getType()) {
                 case MODULE: {
@@ -233,7 +233,7 @@ public class ConfigurationsNode extends AbstractNode {
                         if (fo != null) {
                             try {
                                 DataObject dataObject = DataObject.find(fo);
-                                ret.add(new ModuleFilterNode(project, dep, artifact, dataObject.getNodeDelegate().cloneNode()));
+                                ret.add(new ModuleFilterNode(project, dep, dataObject));
                             } catch (DataObjectNotFoundException ex) {
                                 // Should not happen here
                             }
@@ -253,7 +253,7 @@ public class ConfigurationsNode extends AbstractNode {
                                 NbGradleProjectImpl proj = (NbGradleProjectImpl) prj;
                                 assert prj.getLookup().lookup(LogicalViewProvider.class) != null;
                                 Node original = proj.getLookup().lookup(LogicalViewProvider.class).createLogicalView();
-                                ret.add(new SubProjectsNode.ProjectFilterNode(proj, original));
+                                ret.add(new SubProjectsNode.ProjectFilterNode(original));
                             }
                         } catch (IllegalArgumentException | IOException ex) {
                             ex.printStackTrace();//TODO log ?
@@ -327,10 +327,10 @@ public class ConfigurationsNode extends AbstractNode {
 
         private final NbGradleProjectImpl project;
         private final GradleDependency.ModuleDependency module;
-        private final File mainJar;
+        private final DataObject mainJar;
 
-        public ModuleFilterNode(NbGradleProjectImpl project, GradleDependency.ModuleDependency module, File mainJar, Node original) {
-            super(original);
+        public ModuleFilterNode(NbGradleProjectImpl project, GradleDependency.ModuleDependency module, DataObject mainJar) {
+            super(mainJar.getNodeDelegate().cloneNode());
             this.project = project;
             this.module = module;
             this.mainJar = mainJar;
@@ -339,15 +339,14 @@ public class ConfigurationsNode extends AbstractNode {
 
         @Override
         public Action[] getActions(boolean context) {
-            GradleArtifactStore store = GradleArtifactStore.getDefault();
             List<Action> actions = new ArrayList<>(3);
-            actions.add(new OpenJavadocAction(FileUtil.toFileObject(mainJar)));
-            if (store.getSources(mainJar) == null) {
+            actions.add(new OpenJavadocAction(mainJar.getPrimaryFile()));
+            if (module.getSources().isEmpty()) {
                 Action download = ActionProviderImpl.createCustomGradleAction(project, "Download Sources",
                         ActionProviderImpl.COMMAND_DL_SOURCES, Lookups.singleton(RunUtils.simpleReplaceTokenProvider(REQUESTED_COMPONENT, module.getId())));
                 actions.add(download);
             }
-            if (store.getJavadoc(mainJar) == null) {
+            if (module.getJavadoc().isEmpty()) {
                 Action download = ActionProviderImpl.createCustomGradleAction(project, "Download Javadoc",
                         ActionProviderImpl.COMMAND_DL_JAVADOC, Lookups.singleton(RunUtils.simpleReplaceTokenProvider(REQUESTED_COMPONENT, module.getId())));
                 actions.add(download);
@@ -364,24 +363,27 @@ public class ConfigurationsNode extends AbstractNode {
         public String getShortDescription() {
             StringBuilder sb = new StringBuilder("<html>");
             sb.append("Artifact Id: <b>").append(module.getId()).append("</b><br/>");
-            sb.append("File: ").append(mainJar.getAbsolutePath());
+            sb.append("File: ").append(mainJar.getPrimaryFile().getPath());
             return sb.toString();
         }
 
         @Override
         public String getDisplayName() {
-            return module.getVersion().isEmpty() ? module.getName() : module.getName() + ":" + module.getVersion();
+            String prefix = module.getName() + "-" + module.getVersion() + "-"; //NOI18N
+            String mainJarName = mainJar.getPrimaryFile().getName();
+            String postfix = mainJarName.startsWith(prefix) ? mainJarName.substring(prefix.length()) : null;
+            String moduleName = module.getVersion().isEmpty() ? module.getName() : module.getName() + ":" + module.getVersion(); //NOI18N
+            return postfix != null ? moduleName + " [" + postfix + "]" : moduleName; //NOI18N
         }
 
         @Override
         public Image getIcon(int type) {
-            GradleArtifactStore store = GradleArtifactStore.getDefault();
             Image ret = ImageUtilities.loadImage(ARTIFACT_ICON);
-            if (store.getJavadoc(mainJar) != null) {
+            if (!module.getSources().isEmpty()) {
                 Image javadoc = ImageUtilities.loadImage(JAVADOC_BADGE);
                 ret = ImageUtilities.mergeImages(ret, javadoc, 0, 8);
             }
-            if (store.getSources(mainJar) != null) {
+            if (!module.getJavadoc().isEmpty()) {
                 Image sources = ImageUtilities.loadImage(SOURCES_BADGE);
                 ret = ImageUtilities.mergeImages(ret, sources, 8, 8);
             }

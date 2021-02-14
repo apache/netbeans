@@ -1,18 +1,3 @@
-package org.netbeans.modules.gradle.queries;
-
-import java.io.IOException;
-import java.util.Random;
-import static junit.framework.TestCase.assertFalse;
-import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectManager;
-import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.api.project.SourceGroup;
-import org.netbeans.api.project.Sources;
-import org.netbeans.modules.gradle.AbstractGradleProjectTestCase;
-import org.netbeans.modules.gradle.ProjectTrust;
-import org.openide.filesystems.FileObject;
-import org.openide.util.NbPreferences;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -31,6 +16,17 @@ import org.openide.util.NbPreferences;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.gradle.queries;
+
+import java.io.IOException;
+import java.util.Random;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
+import org.netbeans.modules.gradle.AbstractGradleProjectTestCase;
+import org.openide.filesystems.FileObject;
 
 /**
  *

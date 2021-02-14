@@ -51,15 +51,17 @@ import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProgressEvent;
 import org.gradle.tooling.ProjectConnection;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.gradle.NbGradleProjectImpl;
+import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
 import org.netbeans.modules.gradle.spi.execute.GradleJavaPlatformProvider;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.awt.StatusDisplayer;
+import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
@@ -83,11 +85,12 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
     private OutputStream outStream;
     private OutputStream errStream;
     private boolean cancelling;
+    private GradleTask gradleTask;
 
     @SuppressWarnings("LeakingThisInConstructor")
     public GradleDaemonExecutor(RunConfig config) {
         super(config);
-        handle = ProgressHandleFactory.createHandle(config.getTaskDisplayName(), this, new AbstractAction() {
+        handle = ProgressHandle.createHandle(config.getTaskDisplayName(), this, new AbstractAction() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -196,6 +199,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             }
             buildLauncher.run();
             StatusDisplayer.getDefault().setStatusText(Bundle.BUILD_SUCCESS(getProjectName()));
+            gradleTask.finish(0);
         } catch (BuildCancelledException ex) {
             showAbort();
         } catch (UncheckedException | BuildException ex) {
@@ -330,5 +334,44 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
     private static String gradleExecutable() {
         return Utilities.isWindows() ? "bin\\gradle.bat" : "bin/gradle"; //NOI18N
+    }
+
+    public final ExecutorTask createTask(ExecutorTask process) {
+        assert gradleTask == null;
+        gradleTask = new GradleTask(process);
+        return gradleTask;
+    }
+
+    private static final class GradleTask extends ExecutorTask {
+        private final ExecutorTask delegate;
+        private Integer result;
+
+        GradleTask(ExecutorTask delegate) {
+            super(() -> {});
+            this.delegate = delegate;
+        }
+
+        @Override
+        public void stop() {
+            this.delegate.stop();
+        }
+
+        @Override
+        public int result() {
+            if (result != null) {
+                return result;
+            }
+            return this.delegate.result();
+        }
+
+        @Override
+        public InputOutput getInputOutput() {
+            return this.delegate.getInputOutput();
+        }
+
+        public void finish(int result) {
+            this.result = result;
+            notifyFinished();
+        }
     }
 }

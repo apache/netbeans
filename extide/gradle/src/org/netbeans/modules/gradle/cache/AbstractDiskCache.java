@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.Set;
 import static java.util.logging.Level.*;
 import java.util.logging.Logger;
-import org.netbeans.modules.gradle.spi.GradleSettings;
+import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 
 /**
  *
@@ -51,7 +51,7 @@ public abstract class AbstractDiskCache <K extends Serializable, T extends Seria
 
     public synchronized final CacheEntry<T> loadEntry() {
         CacheEntry<T> ret = entry;
-        if (ret == null && !GradleSettings.getDefault().isCacheDisabled()) {
+        if (ret == null && !GradleExperimentalSettings.getDefault().isCacheDisabled()) {
             File cacheFile = cacheFile();
             if (cacheFile.canRead()) {
                 try (ObjectInputStream is = new ObjectInputStream(new FileInputStream(cacheFile))) {

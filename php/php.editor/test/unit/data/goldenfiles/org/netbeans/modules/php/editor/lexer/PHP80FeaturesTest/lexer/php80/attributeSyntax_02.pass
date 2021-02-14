@@ -1,0 +1,90 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_COMMENT_START /*
+token #3 PHP_COMMENT \n * Licensed to the Apache Software Foundation (ASF) under one\n * or more contributor license agreements.  See the NOTICE file\n * distributed with this work for additional information\n * regarding copyright ownership.  The ASF licenses this file\n * to you under the Apache License, Version 2.0 (the\n * "License"); you may not use this file except in compliance\n * with the License.  You may obtain a copy of the License at\n *\n *   http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing,\n * software distributed under the License is distributed on an\n * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n * KIND, either express or implied.  See the License for the\n * specific language governing permissions and limitations\n * under the License.\n 
+token #4 PHP_COMMENT_END */
+token #5 WHITESPACE \n\n
+token #6 PHP_NAMESPACE namespace
+token #7 WHITESPACE  
+token #8 PHP_STRING Test
+token #9 PHP_NS_SEPARATOR \
+token #10 PHP_STRING AttributeSyntax
+token #11 WHITESPACE  
+token #12 PHP_CURLY_OPEN {
+token #13 WHITESPACE \n    
+token #14 PHP_USE use
+token #15 WHITESPACE  
+token #16 PHP_STRING Attribute
+token #17 PHP_SEMICOLON ;
+token #18 WHITESPACE \n\n    
+token #19 PHP_ATTRIBUTE #[
+token #20 PHP_STRING Attribute
+token #21 PHP_TOKEN ]
+token #22 WHITESPACE \n    
+token #23 PHP_CLASS class
+token #24 WHITESPACE  
+token #25 PHP_STRING AttributeTest
+token #26 WHITESPACE  
+token #27 PHP_CURLY_OPEN {
+token #28 WHITESPACE \n        
+token #29 PHP_PRIVATE private
+token #30 WHITESPACE  
+token #31 PHP_VARIABLE $test
+token #32 PHP_SEMICOLON ;
+token #33 WHITESPACE \n\n        
+token #34 PHP_PUBLIC public
+token #35 WHITESPACE  
+token #36 PHP_FUNCTION function
+token #37 WHITESPACE  
+token #38 PHP_STRING __construct
+token #39 PHP_TOKEN (
+token #40 PHP_VARIABLE $test
+token #41 PHP_TOKEN )
+token #42 WHITESPACE  
+token #43 PHP_CURLY_OPEN {
+token #44 WHITESPACE \n            
+token #45 PHP_VARIABLE $this
+token #46 PHP_OBJECT_OPERATOR ->
+token #47 PHP_STRING test
+token #48 WHITESPACE  
+token #49 PHP_OPERATOR =
+token #50 WHITESPACE  
+token #51 PHP_VARIABLE $test
+token #52 PHP_SEMICOLON ;
+token #53 WHITESPACE \n        
+token #54 PHP_CURLY_CLOSE }
+token #55 WHITESPACE \n    
+token #56 PHP_CURLY_CLOSE }
+token #57 WHITESPACE \n
+token #58 PHP_CURLY_CLOSE }
+token #59 WHITESPACE \n\n
+token #60 PHP_NAMESPACE namespace
+token #61 WHITESPACE  
+token #62 PHP_CURLY_OPEN {
+token #63 WHITESPACE \n    
+token #64 PHP_USE use
+token #65 WHITESPACE  
+token #66 PHP_STRING Test
+token #67 PHP_NS_SEPARATOR \
+token #68 PHP_STRING AttributeSyntax
+token #69 PHP_NS_SEPARATOR \
+token #70 PHP_STRING AttributeTest
+token #71 PHP_SEMICOLON ;
+token #72 WHITESPACE \n\n    
+token #73 PHP_ATTRIBUTE #[
+token #74 PHP_STRING AttributeTest
+token #75 PHP_TOKEN (
+token #76 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #77 PHP_TOKEN )
+token #78 PHP_TOKEN ]
+token #79 WHITESPACE \n    
+token #80 PHP_CLASS class
+token #81 WHITESPACE  
+token #82 PHP_STRING Test
+token #83 WHITESPACE  
+token #84 PHP_CURLY_OPEN {
+token #85 WHITESPACE \n    
+token #86 PHP_CURLY_CLOSE }
+token #87 WHITESPACE \n
+token #88 PHP_CURLY_CLOSE }
+token #89 WHITESPACE \n

@@ -21,19 +21,17 @@ apply plugin: 'groovy'
 apply plugin: 'application'
 
 mainClassName = 'org.netbeans.modules.gradle.DebugTooling'
-def toolingApiVersion = gradle.gradleVersion
 
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 repositories {
     jcenter()
-
 }
 
 dependencies {
-    compile gradleApi()
-    compile localGroovy()
+    implementation gradleApi()
+    implementation localGroovy()
 }
 
 testClasses.dependsOn('jar')

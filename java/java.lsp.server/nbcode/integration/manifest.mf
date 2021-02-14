@@ -4,3 +4,4 @@ OpenIDE-Module: org.netbeans.modules.nbcode.integration
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/nbcode/integration/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0
 OpenIDE-Module-Recommends: cnb.org.netbeans.modules.gradle.java
+OpenIDE-Module-Requires: org.openide.execution.ExecutionEngine.defaultLookup

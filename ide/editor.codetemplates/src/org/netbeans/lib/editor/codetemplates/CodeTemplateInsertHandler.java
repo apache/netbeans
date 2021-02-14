@@ -99,8 +99,6 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
     
     private boolean released;
     
-    private boolean completionInvoke;
-    
     private TextRegion completeTextRegion;
 
     private String completeInsertString;
@@ -109,6 +107,8 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
     private Indent indenter;   
     
     private TextSyncGroup textSyncGroup;
+    
+    private boolean completionInvoked;
     
     public CodeTemplateInsertHandler(
         CodeTemplate codeTemplate,
@@ -224,12 +224,8 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
         for (CodeTemplateProcessor processor : processors) {
             processor.updateDefaultValues();
         }
-
         // Insert the template into document
         insertTemplate();
-
-        if (!isEditable())
-            checkInvokeCompletion();
     }
 
     void checkInsertTextBuilt() {
@@ -273,6 +269,10 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
             }
             completeInsertString = null;
         }
+    }
+
+    boolean isCompletionInvoked() {
+        return completionInvoked;
     }
 
     public void run() {
@@ -321,7 +321,6 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
                 if (CodeTemplateParameter.CURSOR_PARAMETER_NAME.equals(master.getName())) {
                     // Add explicit ${cursor} as last into text sync group to jump to it by TAB as last param
                     caretTextRegion = masterImpl.textRegion(); 
-                    completionInvoke = master.getHints().get(CodeTemplateParameter.COMPLETION_INVOKE_HINT_NAME) != null;
                 } else {
                     textSyncGroup.addTextSync(masterImpl.textRegion().textSync());
                 }
@@ -457,18 +456,24 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
             textSync.setEditable(true);
         if (CodeTemplateParameter.CURSOR_PARAMETER_NAME.equals(paramImpl.getName()))
             textSync.setCaretMarker(true);
+        textSync.setCompletionInvoke(paramImpl.isCompletionInvoke());
     }
 
+    @Override
     public void stateChanged(TextRegionManagerEvent evt) {
+        completionInvoked = false;
         TextRegionManager trm = evt.textRegionManager();
         if (evt.isFocusChange()) {
+            TextSync activeTextSync = evt.activeTextSync();
+            if (activeTextSync != null && activeTextSync.isCompletionInvoke()) {
+                SwingUtilities.invokeLater(Completion.get()::showCompletion);
+                completionInvoked = true;
+            }
             List<TextSyncGroup<CodeTemplateInsertHandler>> removedGroups = evt.<CodeTemplateInsertHandler>removedGroups();
             for (int i = removedGroups.size() - 1; i >= 0; i--) {
                 CodeTemplateInsertHandler handler = removedGroups.get(i).clientInfo();
                 if (handler == this) {
                     release();
-                    if (isEditable())
-                        checkInvokeCompletion();
                     break;
                 }
             }
@@ -528,25 +533,6 @@ public final class CodeTemplateInsertHandler implements TextRegionManagerListene
 
     private String buildInsertText() {
         return parametrizedTextParser.buildInsertText(allParameters);
-    }
-
-    private void checkInvokeCompletion() {
-        if (completionInvoke) {
-            completionInvoke = false;
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    Completion.get().showCompletion();
-                }
-            });
-        }
-    }
-    
-    private boolean isEditable() {
-        for (CodeTemplateParameter param : masterParameters) {
-            if (param.isEditable())
-                return true;
-        }
-        return false;
     }
 
     @Override

@@ -156,7 +156,7 @@ public class JPDAClassTypeImpl implements JPDAClassType {
             int ss = subinterfaces.size();
             int is = implementors.size();
             if (ss > 0 || is > 0) {
-                List<JPDAClassType> subClasses = new ArrayList(ss + is);
+                List<JPDAClassType> subClasses = new ArrayList<>(ss + is);
                 for (InterfaceType subclass : subinterfaces) {
                     subClasses.add(debugger.getClassType(subclass));
                 }
@@ -225,7 +225,7 @@ public class JPDAClassTypeImpl implements JPDAClassType {
     private List<JPDAClassType> getTypes(Collection<? extends ReferenceType> types) {
         if (types.size() > 0) {
             types = new LinkedHashSet<>(types); // To remove duplicities
-            List<JPDAClassType> interfaces = new ArrayList(types.size());
+            List<JPDAClassType> interfaces = new ArrayList<>(types.size());
             for (ReferenceType intrfc : types) {
                 interfaces.add(debugger.getClassType(intrfc));
             }

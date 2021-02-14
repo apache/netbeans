@@ -75,8 +75,8 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.queries.JavadocForBinaryQuery;
-import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -1055,16 +1055,16 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
             }
             RP.post(new Runnable() {
                 public @Override void run() {
-                    ProgressContributor contributor =AggregateProgressFactory.createProgressContributor("multi-1");
+                    ProgressContributor contributor = BasicAggregateProgressFactory.createProgressContributor("multi-1");
                    
                     String label = javadoc ? Progress_Javadoc() : Progress_Source();
-                    AggregateProgressHandle handle = AggregateProgressFactory.createHandle(label, 
+                    AggregateProgressHandle handle = BasicAggregateProgressFactory.createHandle(label, 
                             new ProgressContributor [] {contributor}, ProgressTransferListener.cancellable(), null);
                     handle.start();
                     try {
                         ProgressTransferListener.setAggregateHandle(handle);
                         for (Data data : actionContext.lookupAll(Data.class)) {
-                            ProgressContributor contributor2 = AggregateProgressFactory.createProgressContributor("multi-1");
+                            ProgressContributor contributor2 = BasicAggregateProgressFactory.createProgressContributor("multi-1");
                             handle.addContributor(contributor2);
                             if (javadoc && !data.hasJavadocInRepository()) {
                                 data.getNode().downloadJavadocSources(contributor2, javadoc);

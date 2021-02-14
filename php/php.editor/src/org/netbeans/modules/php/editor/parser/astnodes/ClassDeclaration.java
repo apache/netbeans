@@ -18,19 +18,23 @@
  */
 package org.netbeans.modules.php.editor.parser.astnodes;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents a class declaration
- * <pre>
- * <pre>e.g.<pre>
+ * Represents a class declaration.
+ *
+ * <pre>e.g.
  * class MyClass { },
  * class MyClass extends SuperClass implements Interface1, Interface2 {
  *   const MY_CONSTANT = 3;
  *   public static final $myVar = 5, $yourVar;
  *   var $anotherOne;
  *   private function myFunction($a) { }
- * }
+ * },
+ * #[A(1)]
+ * class MyClass { } // [NETBEANS-4443] PHP 8.0
+ * </pre>
  */
 public class ClassDeclaration extends TypeDeclaration {
 
@@ -43,15 +47,34 @@ public class ClassDeclaration extends TypeDeclaration {
     private ClassDeclaration.Modifier modifier;
     private Expression superClass;
 
-    private ClassDeclaration(int start, int end, ClassDeclaration.Modifier modifier, Identifier className, Expression superClass, Expression[] interfaces, Block body) {
-        super(start, end, className, interfaces, body);
+    private ClassDeclaration(int start, int end, ClassDeclaration.Modifier modifier, Identifier className, Expression superClass, Expression[] interfaces, Block body, List<Attribute> attributes) {
+        super(start, end, className, interfaces, body, attributes);
 
         this.modifier = modifier;
         this.superClass = superClass;
     }
 
+    private ClassDeclaration(int start, int end, ClassDeclaration.Modifier modifier, Identifier className, Expression superClass, List<Expression> interfaces, Block body, List<Attribute> attributes) {
+        this(start, end, modifier, className, superClass, interfaces == null ? null : interfaces.toArray(new Expression[interfaces.size()]), body, attributes);
+    }
+
     public ClassDeclaration(int start, int end, ClassDeclaration.Modifier modifier, Identifier className, Expression superClass, List<Expression> interfaces, Block body) {
-        this(start, end, modifier, className, superClass, interfaces == null ? null : interfaces.toArray(new Expression[interfaces.size()]), body);
+        this(start, end, modifier, className, superClass, interfaces, body, Collections.emptyList());
+    }
+
+    public static ClassDeclaration create(ClassDeclaration declaration, List<Attribute> attributes) {
+        assert attributes != null;
+        int start = attributes.isEmpty() ? declaration.getStartOffset() : attributes.get(0).getStartOffset();
+        return new ClassDeclaration(
+                start,
+                declaration.getEndOffset(),
+                declaration.getModifier(),
+                declaration.getName(),
+                declaration.getSuperClass(),
+                declaration.getInterfaes(),
+                declaration.getBody(),
+                attributes
+        );
     }
 
     public ClassDeclaration.Modifier getModifier() {
@@ -69,11 +92,13 @@ public class ClassDeclaration extends TypeDeclaration {
 
     @Override
     public String toString() {
+        StringBuilder sbAttributes = new StringBuilder();
+        getAttributes().forEach(attribute -> sbAttributes.append(attribute).append(" ")); // NOI18N
         StringBuilder sb = new StringBuilder();
         for (Expression expression : getInterfaes()) {
             sb.append(expression).append(","); //NOI18N
         }
-        return getModifier() + "class " + getName() + " extends " + getSuperClass() + " implements " + sb + getBody(); //NOI18N
+        return sbAttributes.toString() + getModifier() + "class " + getName() + " extends " + getSuperClass() + " implements " + sb + getBody(); //NOI18N
     }
 
 }

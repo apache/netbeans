@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.lang.model.element.Element;
@@ -82,7 +83,7 @@ public class JavaSymbolProvider implements SymbolProvider {
     private static final String CAPTURED_WILDCARD = "<captured wildcard>"; //NOI18N
     private static final String UNKNOWN = "<unknown>"; //NOI18N
 
-    private volatile boolean canceled;
+    private final AtomicBoolean canceled = new AtomicBoolean();
 
     @Override
     public String name() {
@@ -117,110 +118,155 @@ public class JavaSymbolProvider implements SymbolProvider {
             final Cache cache = scanInProgress ?
                 Cache.create(textToSearch, st) :
                 null;
-            String prefix = null;
-            final int dotIndex = textToSearch.lastIndexOf('.'); //NOI18N
-            if (dotIndex > 0 && dotIndex != textToSearch.length()-1) {
-                prefix = textToSearch.substring(0, dotIndex);
-                textToSearch = textToSearch.substring(dotIndex+1);
-            }
-            final String textToHighLight = textToSearch;
-            ClassIndex.NameKind _kind;
-            boolean _caseSensitive;
-            switch (st) {
-                case PREFIX:
-                    _kind = ClassIndex.NameKind.PREFIX;
-                    _caseSensitive = true;
-                    break;
-                case REGEXP:
-                    _kind = ClassIndex.NameKind.REGEXP;
-                    textToSearch = NameMatcherFactory.wildcardsToRegexp(
-                            removeNonJavaChars(textToSearch),
-                            true);
-                    _caseSensitive = true;
-                    break;
-                case CAMEL_CASE:
-                    _kind = ClassIndex.NameKind.CAMEL_CASE;
-                    _caseSensitive = true;
-                    break;
-                case CASE_INSENSITIVE_CAMEL_CASE:
-                    _kind = ClassIndex.NameKind.CAMEL_CASE_INSENSITIVE;
-                    _caseSensitive = false;
-                    break;
-                case EXACT_NAME:
-                    _kind = ClassIndex.NameKind.SIMPLE_NAME;
-                    _caseSensitive = true;
-                    break;
-                case CASE_INSENSITIVE_PREFIX:
-                    _kind = ClassIndex.NameKind.CASE_INSENSITIVE_PREFIX;
-                    _caseSensitive = false;
-                    break;
-                case CASE_INSENSITIVE_EXACT_NAME:
-                    _kind = ClassIndex.NameKind.CASE_INSENSITIVE_REGEXP;
-                    _caseSensitive = false;
-                    break;
-                case CASE_INSENSITIVE_REGEXP:
-                    _kind = ClassIndex.NameKind.CASE_INSENSITIVE_REGEXP;
-                    textToSearch = NameMatcherFactory.wildcardsToRegexp(
-                            removeNonJavaChars(textToSearch),
-                            true);
-                    _caseSensitive = false;
-                    break;
-                default:
-                    throw new IllegalArgumentException();
-            }
-            final String ident = textToSearch;
-            final ClassIndex.NameKind kind = _kind;
-            final boolean caseSensitive = _caseSensitive;
-            final Pair<NameMatcher,Boolean> restriction;
-            if (prefix != null) {
-                restriction = compileName(prefix,caseSensitive);
-                result.setHighlightText(textToHighLight);
-            } else {
-                restriction = null;
-            }
-            try {
-                final ClassIndexManager manager = ClassIndexManager.getDefault();
-
-                Collection<FileObject> roots = QuerySupport.findRoots(
-                        (Project)null,
-                        Collections.singleton(ClassPath.SOURCE),
-                        Collections.<String>emptySet(),
-                        Collections.<String>emptySet());
-
-                final Set<URL> rootUrls = new HashSet<>();
-                for(FileObject root : roots) {
-                    if (canceled) {
-                        return;
-                    }
-                    rootUrls.add(root.toURL());
+            doComputeSymbols(st, textToSearch, new ResultHandler() {
+                private FileObject root;
+                private ProjectInformation projectInfo;
+                private ClassIndexImpl ci;
+                @Override
+                public void setHighlightText(String text) {
+                    result.setHighlightText(text);
                 }
 
-                if (LOGGER.isLoggable(Level.FINE)) {
-                    LOGGER.log(Level.FINE, "Querying following roots:"); //NOI18N
+                @Override
+                public void runRoot(FileObject root, ClassIndexImpl ci, Exec exec) throws IOException, InterruptedException {
+                    try {
+                        Project project = FileOwnerQuery.getOwner(root);
+
+                        this.root = root;
+                        this.projectInfo = project == null ?
+                                null :
+                                project.getLookup().lookup(ProjectInformation.class);   //Intentionally does not use ProjectUtils.getInformation() it does project icon annotation which is expensive
+                        this.ci = ci;
+                        exec.run();
+                    } finally {
+                        this.root = null;
+                        this.projectInfo = null;
+                        this.ci = null;
+                    }
+                }
+
+                @Override
+                public void handleResult(ElementHandle<TypeElement> owner, String ident, boolean caseSensitive) {
+                    final AsyncJavaSymbolDescriptor d = new AsyncJavaSymbolDescriptor(
+                            projectInfo,
+                            root,
+                            ci,
+                            owner,
+                            ident,
+                            caseSensitive);
+                    result.addResult(d);
+                    if (cache != null) {
+                        cache.offer(d);
+                    }
+                }
+            }, true, canceled);
+        } finally {
+            clearCancel();
+        }
+    }
+
+    public static void doComputeSymbols(SearchType st, String textToSearch, ResultHandler handler, boolean async, AtomicBoolean canceled) {
+        String prefix = null;
+        final int dotIndex = textToSearch.lastIndexOf('.'); //NOI18N
+        if (dotIndex > 0 && dotIndex != textToSearch.length()-1) {
+            prefix = textToSearch.substring(0, dotIndex);
+            textToSearch = textToSearch.substring(dotIndex+1);
+        }
+        final String textToHighLight = textToSearch;
+        ClassIndex.NameKind _kind;
+        boolean _caseSensitive;
+        switch (st) {
+            case PREFIX:
+                _kind = ClassIndex.NameKind.PREFIX;
+                _caseSensitive = true;
+                break;
+            case REGEXP:
+                _kind = ClassIndex.NameKind.REGEXP;
+                textToSearch = NameMatcherFactory.wildcardsToRegexp(
+                        removeNonJavaChars(textToSearch),
+                        true);
+                _caseSensitive = true;
+                break;
+            case CAMEL_CASE:
+                _kind = ClassIndex.NameKind.CAMEL_CASE;
+                _caseSensitive = true;
+                break;
+            case CASE_INSENSITIVE_CAMEL_CASE:
+                _kind = ClassIndex.NameKind.CAMEL_CASE_INSENSITIVE;
+                _caseSensitive = false;
+                break;
+            case EXACT_NAME:
+                _kind = ClassIndex.NameKind.SIMPLE_NAME;
+                _caseSensitive = true;
+                break;
+            case CASE_INSENSITIVE_PREFIX:
+                _kind = ClassIndex.NameKind.CASE_INSENSITIVE_PREFIX;
+                _caseSensitive = false;
+                break;
+            case CASE_INSENSITIVE_EXACT_NAME:
+                _kind = ClassIndex.NameKind.CASE_INSENSITIVE_REGEXP;
+                _caseSensitive = false;
+                break;
+            case CASE_INSENSITIVE_REGEXP:
+                _kind = ClassIndex.NameKind.CASE_INSENSITIVE_REGEXP;
+                textToSearch = NameMatcherFactory.wildcardsToRegexp(
+                        removeNonJavaChars(textToSearch),
+                        true);
+                _caseSensitive = false;
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+        final String ident = textToSearch;
+        final ClassIndex.NameKind kind = _kind;
+        final boolean caseSensitive = _caseSensitive;
+        final Pair<NameMatcher,Boolean> restriction;
+        if (prefix != null) {
+            restriction = compileName(prefix,caseSensitive);
+            handler.setHighlightText(textToHighLight);
+        } else {
+            restriction = null;
+        }
+        try {
+            final ClassIndexManager manager = ClassIndexManager.getDefault();
+
+            Collection<FileObject> roots = QuerySupport.findRoots(
+                    (Project)null,
+                    Collections.singleton(ClassPath.SOURCE),
+                    Collections.<String>emptySet(),
+                    Collections.<String>emptySet());
+
+            final Set<URL> rootUrls = new HashSet<>();
+            for(FileObject root : roots) {
+                if (canceled.get()) {
+                    return;
+                }
+                rootUrls.add(root.toURL());
+            }
+
+            if (LOGGER.isLoggable(Level.FINE)) {
+                LOGGER.log(Level.FINE, "Querying following roots:"); //NOI18N
+                for (URL url : rootUrls) {
+                    LOGGER.log(Level.FINE, "  {0}", url); //NOI18N
+                }
+                LOGGER.log(Level.FINE, "-------------------------"); //NOI18N
+            }
+            //Perform all queries in single op
+            IndexManager.priorityAccess(new IndexManager.Action<Void>() {
+                @Override
+                public Void run() throws IOException, InterruptedException {
                     for (URL url : rootUrls) {
-                        LOGGER.log(Level.FINE, "  {0}", url); //NOI18N
-                    }
-                    LOGGER.log(Level.FINE, "-------------------------"); //NOI18N
-                }
-                //Perform all queries in single op
-                IndexManager.priorityAccess(new IndexManager.Action<Void>() {
-                    @Override
-                    public Void run() throws IOException, InterruptedException {
-                        for (URL url : rootUrls) {
-                            if (canceled) {
-                                return null;
-                            }
-                            final FileObject root = URLMapper.findFileObject(url);
-                            if (root == null) {
-                                continue;
-                            }
+                        if (canceled.get()) {
+                            return null;
+                        }
+                        final FileObject root = URLMapper.findFileObject(url);
+                        if (root == null) {
+                            continue;
+                        }
 
-                            final Project project = FileOwnerQuery.getOwner(root);
-                            final ProjectInformation projectInfo = project == null ?
-                                    null :
-                                    project.getLookup().lookup(ProjectInformation.class);   //Intentionally does not use ProjectUtils.getInformation() it does project icon annotation which is expensive
-                            final ClassIndexImpl impl = manager.getUsagesQuery(root.toURL(), true);
-                            if (impl != null) {
+                        final ClassIndexImpl impl = manager.getUsagesQuery(root.toURL(), true);
+                        if (impl != null) {
+                            handler.runRoot(root, impl, () -> {
                                 final Map<ElementHandle<TypeElement>,Set<String>> r = new HashMap<>();
                                 impl.getDeclaredElements(ident, kind, DocumentUtil.typeElementConvertor(),r);
                                 if (!r.isEmpty()) {
@@ -228,34 +274,30 @@ public class JavaSymbolProvider implements SymbolProvider {
                                         final ElementHandle<TypeElement> owner = p.getKey();
                                         for (String symbol : p.getValue()) {
                                             if (matchesRestrictions(owner.getQualifiedName(), symbol, restriction, caseSensitive)) {
-                                                final AsyncJavaSymbolDescriptor d = new AsyncJavaSymbolDescriptor(
-                                                        projectInfo,
-                                                        root,
-                                                        impl,
-                                                        owner,
-                                                        symbol,
-                                                        caseSensitive);
-                                                result.addResult(d);
-                                                if (cache != null) {
-                                                    cache.offer(d);
-                                                }
+                                                handler.handleResult(owner, symbol, caseSensitive);
                                             }
                                         }
                                     }
                                 }
-                            }
+                            });
                         }
-                        return null;
                     }
-                });
-            } catch (IOException ioe) {
-                Exceptions.printStackTrace(ioe);
-            }
-            catch (InterruptedException ie) {
-                return;
-            }
-        } finally {
-            clearCancel();
+                    return null;
+                }
+            });
+        } catch (IOException ioe) {
+            Exceptions.printStackTrace(ioe);
+        } catch (InterruptedException ie) {
+            //ignore
+        }
+    }
+
+    public interface ResultHandler {
+        public void setHighlightText(String text);
+        public void runRoot(FileObject root, ClassIndexImpl ci, Exec exec) throws IOException, InterruptedException;
+        public void handleResult(@NonNull ElementHandle<TypeElement> owner, @NonNull String ident, boolean caseSensitive);
+        public interface Exec {
+            public void run() throws IOException, InterruptedException;
         }
     }
 
@@ -317,7 +359,7 @@ public class JavaSymbolProvider implements SymbolProvider {
     }
 
     @NonNull
-    static Pair<String,String> getDisplayName (
+    public static Pair<String,String> getDisplayName (
             @NonNull final Element e,
             @NonNull final Element enclosingElement) {
         assert e != null;
@@ -483,7 +525,7 @@ public class JavaSymbolProvider implements SymbolProvider {
 
     @Override
     public void cancel() {
-        canceled = true;
+        canceled.set(true);
     }
 
     @Override
@@ -493,7 +535,7 @@ public class JavaSymbolProvider implements SymbolProvider {
     }
 
     private void clearCancel() {
-        canceled = false;
+        canceled.set(false);
     }
 
     private static final class Cache {
@@ -519,7 +561,7 @@ public class JavaSymbolProvider implements SymbolProvider {
             }
         }
 
-        void offer(@NonNull final AsyncJavaSymbolDescriptor d) {
+        void offer(@NonNull final SymbolDescriptor d) {
             descriptors.add(d);
         }
 

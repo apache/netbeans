@@ -154,7 +154,6 @@ websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.templa
 **/*.nib
 **/*.oql
 **/*.ser
-nb/ide.launcher/macosx/NetBeansLauncher/ReadMe.rtf
 harness/jellytools.platform/src/org/netbeans/jellytools/version_info
 
 ######  generated test files 

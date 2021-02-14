@@ -36,7 +36,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 
 /**
- * Tests Ant debugger stepping actions: step in, step out and step over.
+ * Tests C/C++ debugger stepping actions: step in, step out and step over.
  *
  * @author Jan Jancura
  */
@@ -75,7 +75,7 @@ public class StepTest extends NbTestCase {
         LineCookie lc = DataObject.find(source).getLookup().lookup(LineCookie.class);
         assertNotNull(lc);
         DebuggerManager.getDebuggerManager().addBreakpoint(new CPPLiteBreakpoint(lc.getLineSet().getCurrent(4)));
-        CPPLiteDebugger d = CPPLiteDebugger.startDebugging(new CPPLiteDebuggerConfig(Arrays.asList(new File(wd, "main").getAbsolutePath()))).first();
+        CPPLiteDebugger d = CPPLiteDebugger.startDebugging(new CPPLiteDebuggerConfig(Arrays.asList(new File(wd, "main").getAbsolutePath()), wd)).first();
         int[] suspendCount = new int[1];
         int[] resumeCount = new int[1];
         d.addStateListener(new CPPLiteDebugger.StateListener() {
@@ -95,6 +95,14 @@ public class StepTest extends NbTestCase {
 
             @Override
             public void finished() {
+            }
+
+            @Override
+            public void currentThread(CPPThread thread) {
+            }
+
+            @Override
+            public void currentFrame(CPPFrame frame) {
             }
         });
 

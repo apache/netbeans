@@ -26,7 +26,7 @@ $fn0 = fn() => 100;
 
 $fn1a = fn(int $x) => $x + $y;
 
-$fn1b = function($x) use ($y) {
+$fn1b = function ($x) use ($y) {
     return $x + $y;
 };
 
@@ -63,13 +63,13 @@ $af = fn() => fn() => $y;
 $af = fn() =>
         fn() => $y;
 (fn() => fn() => $y)()();
-(fn() => function() use ($y) {
+(fn() => function () use ($y) {
     return $y;
 })()();
 
 $af = fn(int $x): callable => fn(int $z): int => $x + $y * $z;
 $af = fn(ArrowFunctions $x): callable => fn(?ArrowFunctions $z): ?ArrowFunctions => new ArrowFunctions();
-fn() => function($x) use ($y) {
+fn() => function ($x) use ($y) {
     return $x + $y;
 };
 

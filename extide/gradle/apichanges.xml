@@ -83,6 +83,21 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="deprecate-experimental-settings">
+            <api name="general"/>
+            <summary>Make ProjectActionMappingProvider available for other modules.</summary>
+            <version major="2" minor="7"/>
+            <date day="1" month="1" year="2021"/>
+            <author login="lkishalmi"/>
+            <compatibility semantic="incompatible" deprecation="yes"/>
+            <description>
+                <p>
+                    Experimental settings, <code>openLazy</code> and <code>disableDiskCache</code> in
+                    <a href="@TOP@/org/netbeans/modules/gradle/spi/GradleSettings.html">GradleSettings</a>
+                    made deprecated and no longer affect the IDE behavior.
+                </p>
+            </description>
+        </change>
         <change id="expose-project-action-mapping-provider">
             <api name="general"/>
             <summary>Make ProjectActionMappingProvider available for other modules.</summary>

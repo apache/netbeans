@@ -138,9 +138,9 @@ public class RunContainerPropertiesVisual extends javax.swing.JPanel {
             volumesTable.getCellEditor().stopCellEditing();
         }
         for (Object o : model.getDataVector()) {
-            Vector v = (Vector) o;
-            String target = (String) v.elementAt(0);
-            String source = (String) v.elementAt(1);
+            Vector<String> v = (Vector<String>)o;
+            String target = v.elementAt(0);
+            String source = v.elementAt(1);
             if (target != null && source != null) {
                 result.put(target, source);
             }

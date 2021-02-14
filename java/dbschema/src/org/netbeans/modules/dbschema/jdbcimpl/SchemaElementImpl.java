@@ -343,17 +343,17 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                 rs = dmd.getImportedKeys(catalog, schema, tables.get(i).toString());
 
             if (rs != null) {
-                Map rset = new HashMap();
+                Map<Integer, String> rset = new HashMap();
                 String c1, c2, s1, s2;
                 while (rs.next()) {
                     if (bridge != null) {
                         rset = bridge.getDriverSpecification().getRow();
                         
                         //test references between two schemas
-                        c1 = (String) rset.get(new Integer(1));
-                        s1 = (String) rset.get(new Integer(2));
-                        c2 = (String) rset.get(new Integer(5));
-                        s2 = (String) rset.get(new Integer(6));
+                        c1 = rset.get(new Integer(1));
+                        s1 = rset.get(new Integer(2));
+                        c2 = rset.get(new Integer(5));
+                        s2 = rset.get(new Integer(6));
                         
                         if (comp(c1, c2)) {
                             if (! comp(s1, s2))
@@ -361,10 +361,10 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         } else
                             continue;                            
                         
-                        pkSchema = (String) rset.get(new Integer(2));
-                        fkSchema = (String) rset.get(new Integer(6));
+                        pkSchema = rset.get(new Integer(2));
+                        fkSchema = rset.get(new Integer(6));
                         if ((pkSchema == fkSchema) || (pkSchema.equals(fkSchema))) {
-                            refTable = (String) rset.get(new Integer(3));
+                            refTable = rset.get(new Integer(3));
                             if (! tables.contains(refTable))
                                 tables.add(refTable);
                         }
@@ -503,11 +503,11 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         if (rs != null) {
                             if (! all) {
                                 String colName;
-                                Map rset = new HashMap();
+                                Map<Integer, String> rset = new HashMap<>();
                                 while (rs.next()) {
                                     if (bridge != null) {
                                         rset = bridge.getDriverSpecification().getRow();
-                                        colName = (String) rset.get(new Integer(4));
+                                        colName = rset.get(new Integer(4));
                                         rset.clear();
                                     } else
                                         colName = rs.getString("COLUMN_NAME").trim(); //NOI18N                                    
@@ -582,7 +582,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                             rs = cp.getDatabaseMetaData().getImportedKeys(cp.getConnection().getCatalog(), cp.getSchema(), tables.get(j).toString());
                         
                         if (rs != null) {
-                            Map rset = new HashMap();
+                            Map<Integer, String> rset = new HashMap();
                             LinkedList local = new LinkedList();
                             LinkedList ref = new LinkedList();
                             LinkedList fk = new LinkedList();
@@ -592,10 +592,10 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                                     rset = bridge.getDriverSpecification().getRow();
                                     
                                     //test references between two schemas
-                                    c1 = (String) rset.get(new Integer(1));
-                                    s1 = (String) rset.get(new Integer(2));
-                                    c2 = (String) rset.get(new Integer(5));
-                                    s2 = (String) rset.get(new Integer(6));
+                                    c1 = rset.get(new Integer(1));
+                                    s1 = rset.get(new Integer(2));
+                                    c2 = rset.get(new Integer(5));
+                                    s2 = rset.get(new Integer(6));
 
                                     if (comp(c1, c2)) {
                                         if (! comp(s1, s2))
@@ -603,7 +603,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                                     } else
                                         continue;                            
                                     
-                                    fkName = (String) rset.get(new Integer(12));
+                                    fkName = rset.get(new Integer(12));
                                     if (fkName == null)
                                         continue;
                                     else

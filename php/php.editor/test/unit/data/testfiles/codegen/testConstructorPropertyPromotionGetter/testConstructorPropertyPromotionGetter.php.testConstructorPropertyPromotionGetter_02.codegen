@@ -1,0 +1,12 @@
+public  function getX(): int  {
+return $$this->x;
+}
+
+public  function getY(): int|string  {
+return $$this->y;
+}
+
+public  function getZ(): ?int  {
+return $$this->z;
+}
+

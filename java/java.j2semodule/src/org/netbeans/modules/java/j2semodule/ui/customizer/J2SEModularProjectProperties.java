@@ -771,7 +771,7 @@ public class J2SEModularProjectProperties {
     }            
     
     private void storeRoots( ModuleRoots roots, DefaultTableModel tableModel ) throws MalformedURLException {
-        Vector data = tableModel.getDataVector();
+        Vector<Vector> data = tableModel.getDataVector();
         URL[] rootURLs = new URL[data.size()];
         String []rootPaths = new String[data.size()];
         final LinkedList<URL> oldRootURLs = new LinkedList<>(Arrays.asList (roots.getRootURLs (false)));

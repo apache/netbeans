@@ -33,6 +33,9 @@ import org.eclipse.lsp4j.debug.services.IDebugProtocolClient;
 
 import org.netbeans.modules.java.lsp.server.debugging.breakpoints.BreakpointsManager;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
+import org.netbeans.modules.java.lsp.server.progress.LspInternalHandle;
+import org.netbeans.modules.progress.spi.InternalHandle;
+import org.openide.util.Pair;
 
 public final class DebugAdapterContext {
 
@@ -49,9 +52,11 @@ public final class DebugAdapterContext {
     private Charset debuggeeEncoding;
     private boolean isVmStopOnEntry = false;
     private boolean isDebugMode = true;
+    private InternalHandle processExecutorHandle;
 
     private final AtomicInteger lastSourceReferenceId = new AtomicInteger(0);
-    private final Map<Integer, String> sourceReferences = new ConcurrentHashMap<>();
+    private final Map<Integer, Pair<URI, String>> sourcesById = new ConcurrentHashMap<>();
+    private final Map<URI, Integer> sourceReferences = new ConcurrentHashMap<>();
 
     private final NBConfigurationSemaphore configurationSemaphore = new NBConfigurationSemaphore();
     private final NbSourceProvider sourceProvider = new NbSourceProvider(this);
@@ -113,6 +118,25 @@ public final class DebugAdapterContext {
 
     void setClientPathsAreUri(boolean clientPathsAreUri) {
         this.clientPathsAreUri = clientPathsAreUri;
+    }
+    
+    public boolean requestProcessTermination() {
+        InternalHandle ih;
+        synchronized (this) {
+            ih = processExecutorHandle;
+        }
+        if (ih != null) {
+            ((LspInternalHandle)ih).forceRequestCancel();
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public void setProcessExecutorHandle(InternalHandle h) {
+        synchronized (this) {
+            this.processExecutorHandle = h;
+        }
     }
 
     public String getClientPath(String debuggerPath) {
@@ -179,13 +203,27 @@ public final class DebugAdapterContext {
         this.sourcePaths = sourcePaths;
     }
 
-    public String getSourceUri(int sourceReference) {
-        return sourceReferences.get(sourceReference);
+    public URI getSourceUri(int sourceReference) {
+        Pair<URI, String> sourceInfo = sourcesById.get(sourceReference);
+        if (sourceInfo != null) {
+            return sourceInfo.first();
+        } else {
+            return null;
+        }
     }
 
-    public int createSourceReference(String uri) {
-        int id = lastSourceReferenceId.incrementAndGet();
-        sourceReferences.put(id, uri);
+    public String getSourceMimeType(int sourceReference) {
+        Pair<URI, String> sourceInfo = sourcesById.get(sourceReference);
+        if (sourceInfo != null) {
+            return sourceInfo.second();
+        } else {
+            return null;
+        }
+    }
+
+    public int createSourceReference(URI uri, String mimeType) {
+        int id = sourceReferences.computeIfAbsent(uri, u -> lastSourceReferenceId.incrementAndGet());
+        sourcesById.put(id, Pair.of(uri, mimeType));
         return id;
     }
 

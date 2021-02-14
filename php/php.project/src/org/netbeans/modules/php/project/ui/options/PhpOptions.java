@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.project.ui.options;
 
 import java.io.IOException;
@@ -32,18 +31,20 @@ import org.netbeans.spi.project.support.ant.PropertyUtils;
 import org.openide.util.Exceptions;
 
 /**
- * Helper class to get actual PHP properties like debugger port etc.
- * Use {@link #getInstance()} to get class instance.
+ * Helper class to get actual PHP properties like debugger port etc. Use
+ * {@link #getInstance()} to get class instance.
+ *
  * @author Tomas Mysik
  * @since 1.2
  */
 public final class PhpOptions {
+
     // Do not change arbitrary - consult with layer's folder OptionsExport
     // Path to Preferences node for storing these preferences
     private static final String PREFERENCES_PATH = "general"; // NOI18N
 
     // these constants are used in API javadoc so therefore public modifier
-    public static final int DEFAULT_DEBUGGER_PORT = 9000;
+    public static final int DEFAULT_DEBUGGER_PORT = 9003;
     public static final String DEFAULT_DEBUGGER_SESSION_ID = "netbeans-xdebug"; // NOI18N
     public static final int DEFAULT_DEBUGGER_MAX_DATA_LENGTH = 2048;
     public static final int DEFAULT_DEBUGGER_MAX_STRUCTURES_DEPTH = 3;
@@ -52,6 +53,7 @@ public final class PhpOptions {
     public static final boolean DEFAULT_DEBUGGER_SHOW_CONSOLE = false;
     public static final boolean DEFAULT_DEBUGGER_STOP_AT_FIRST_LINE = true;
     public static final boolean DEFAULT_DEBUGGER_WATCHES_AND_EVAL = false;
+    public static final boolean DEFAULT_DEBUGGER_RESOLVE_BREAKPOINTS = true;
     public static final boolean DEFAULT_ANNOTATIONS_RESOLVE_DEPRECATED_ELEMENTS = false;
     public static final boolean DEFAULT_ANNOTATIONS_UNKNOWN_ANNOTATIONS_AS_TYPE_ANNOTATIONS = false;
 
@@ -71,6 +73,7 @@ public final class PhpOptions {
     public static final String PHP_DEBUGGER_WATCHES_AND_EVAL = "phpDebuggerWatchesAndEval"; // NOI18N
     public static final String PHP_DEBUGGER_SHOW_URLS = "phpDebuggerShowUrls"; // NOI18N
     public static final String PHP_DEBUGGER_SHOW_CONSOLE = "phpDebuggerShowConsole"; // NOI18N
+    public static final String PHP_DEBUGGER_RESOLVE_BREAKPOINTS = "phpDebuggerResolveBreakpoints"; // NOI18N
 
     // annotations
     public static final String PHP_ANNOTATIONS_RESOLVE_DEPRECATED_ELEMENTS = "phpAnnottationsResolveDeprecetatedElements"; // NOI18N
@@ -220,6 +223,14 @@ public final class PhpOptions {
         getPreferences().putBoolean(PHP_DEBUGGER_SHOW_CONSOLE, debuggerShowConsole);
     }
 
+    public boolean isDebuggerResolveBreakpoints() {
+        return getPreferences().getBoolean(PHP_DEBUGGER_RESOLVE_BREAKPOINTS, DEFAULT_DEBUGGER_RESOLVE_BREAKPOINTS);
+    }
+
+    public void setDebuggerResolveBreakpoints(boolean debuggerResolveBreakpoints) {
+        getPreferences().putBoolean(PHP_DEBUGGER_RESOLVE_BREAKPOINTS, debuggerResolveBreakpoints);
+    }
+
     public boolean isAnnotationsResolveDeprecatedElements() {
         return getPreferences().getBoolean(PHP_ANNOTATIONS_RESOLVE_DEPRECATED_ELEMENTS, DEFAULT_ANNOTATIONS_RESOLVE_DEPRECATED_ELEMENTS);
     }
@@ -262,7 +273,8 @@ public final class PhpOptions {
 
     // #210057
     /**
-     * Ensure that the php.global.include.path is written in build.properties so Ant can see it.
+     * Ensure that the php.global.include.path is written in build.properties so
+     * Ant can see it.
      */
     public void ensurePhpGlobalIncludePath() {
         if (phpGlobalIncludePathEnsured) {

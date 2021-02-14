@@ -237,6 +237,11 @@ class DocumentSwitcherTable extends SwitcherTable {
                     int res = project.getDisplayName().compareTo( otherProject.getDisplayName() );
                     if( res != 0 )
                         return res;
+
+                    res = project.getPath().compareTo(otherProject.getPath());
+                    if (res != 0) {
+                        return res;
+                    }
                 }
             }
             return super.compareTo( o );

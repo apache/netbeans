@@ -21,10 +21,10 @@
 -->
 <project name="nbbuild" default="build-nozip" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
 
-  <fail message="Please build using Ant 1.9.3 or higher.">
+  <fail message="Please build using Ant 1.9.8 or higher.">
     <condition>
       <not>
-        <antversion atleast="1.9.3"/>
+        <antversion atleast="1.9.8"/>
       </not>
     </condition>
   </fail>

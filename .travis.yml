@@ -15,6 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 language: java
+dist: bionic
 addons:
   apt:
     packages:

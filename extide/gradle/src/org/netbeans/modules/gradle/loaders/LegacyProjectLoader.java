@@ -51,7 +51,6 @@ import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FULL_ONLIN
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.SIMPLE;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
-import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.openide.util.Cancellable;
@@ -82,18 +81,11 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
     }
 
     @Override
-    public GradleProject loadProject(NbGradleProject.Quality aim, boolean ignoreCache, boolean interactive, String... args) {
-
-        ctx.args = args;
-
+    public GradleProject load() {
         GradleProject ret;
         try {
-            if (RunUtils.isProjectTrusted(ctx.project, interactive)) {
-                ret = GRADLE_LOADER_RP.submit(new ProjectLoaderTask(ctx)).get();
-                updateSubDirectoryCache(ret);
-            } else {
-                ret = ctx.previous.invalidate();
-            }
+            ret = GRADLE_LOADER_RP.submit(new ProjectLoaderTask(ctx)).get();
+            updateSubDirectoryCache(ret);
         } catch (InterruptedException | ExecutionException ex) {
             ret = null;
         }
@@ -121,7 +113,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         GradleProjectErrorNotifications errors = ctx.project.getLookup().lookup(GradleProjectErrorNotifications.class);
 
 
-        GradleCommandLine cmd = new GradleCommandLine(ctx.args);
+        GradleCommandLine cmd = new GradleCommandLine(ctx.cmd);
         cmd.setFlag(GradleCommandLine.Flag.CONFIGURE_ON_DEMAND, GradleSettings.getDefault().isConfigureOnDemand());
         cmd.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, INIT_SCRIPT);
         cmd.setStackTrace(GradleCommandLine.StackTrace.SHORT);

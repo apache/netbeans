@@ -18,13 +18,15 @@
  */
 package org.netbeans.modules.gradle.loaders;
 
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.GradleProject;
 import org.netbeans.modules.gradle.GradleProjectLoader;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
+import org.netbeans.modules.gradle.api.execute.RunUtils;
 
 /**
  *
@@ -40,21 +42,41 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
 
     @Override
     public GradleProject loadProject(NbGradleProject.Quality aim, boolean ignoreCache, boolean interactive, String... args) {
-        AbstractProjectLoader.ReloadContext ctx = new AbstractProjectLoader.ReloadContext((NbGradleProjectImpl) project, aim);
-        List<AbstractProjectLoader> loaders = Arrays.asList(
-                new DiskCacheProjectLoader(ctx),
-                new LegacyProjectLoader(ctx),
-                new FallbackProjectLoader(ctx)
-        );
+        GradleCommandLine cmd = new GradleCommandLine(args);
+        AbstractProjectLoader.ReloadContext ctx = new AbstractProjectLoader.ReloadContext((NbGradleProjectImpl) project, aim, cmd);
+        List<AbstractProjectLoader> loaders = new LinkedList<>();
+
+        if (!ignoreCache) loaders.add(new DiskCacheProjectLoader(ctx));
+        loaders.add(new LegacyProjectLoader(ctx));
+        loaders.add(new FallbackProjectLoader(ctx));
+
+        Boolean trust = null;
 
         GradleProject ret = null;
         for (AbstractProjectLoader loader : loaders) {
             if (loader.isEnabled()) {
-                ret = loader.loadProject(aim, ignoreCache, interactive, args);
+                if (loader.needsTrust()) {
+                    if (trust == null) {
+                        trust = RunUtils.isProjectTrusted(ctx.project, interactive);
+                    }
+                    if (trust) {
+                        ret = loader.load();
+                    } else {
+                        ret = ctx.getPrevious();
+                        if (ret != null) {
+                            ret = ret.invalidate("Gradle execution is not trusted on this project.");
+                        }
+                    }
+                } else {
+                    ret = loader.load();
+                }
                 if (ret != null) {
                     break;
                 }
             }
+        }
+        if (ret == null) {
+            throw new NullPointerException("Could not load Gradle Project: " + project);
         }
         return ret;
     }

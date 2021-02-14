@@ -31,6 +31,7 @@ import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.EVALUATED;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FALLBACK;
+import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
 import org.netbeans.modules.gradle.spi.GradleFiles;
@@ -41,27 +42,34 @@ import org.openide.util.Lookup;
  *
  * @author lkishalmi
  */
-public abstract class AbstractProjectLoader implements GradleProjectLoader {
+public abstract class AbstractProjectLoader {
 
     final ReloadContext ctx;
 
-    protected AbstractProjectLoader(ReloadContext ctx) {
+    AbstractProjectLoader(ReloadContext ctx) {
         this.ctx = ctx;
     }
 
-    public abstract boolean isEnabled();
+    abstract GradleProject load();
+ 
+    abstract boolean isEnabled();
 
+    boolean needsTrust() {
+        return true;
+    }
+    
     static final class ReloadContext {
 
         final NbGradleProjectImpl project;
         final GradleProject previous;
         final NbGradleProject.Quality aim;
-        String[] args = new String[0];
+        final GradleCommandLine cmd;
 
-        public ReloadContext(NbGradleProjectImpl project, NbGradleProject.Quality aim) {
+        public ReloadContext(NbGradleProjectImpl project, NbGradleProject.Quality aim, GradleCommandLine cmd) {
             this.project = project;
             this.previous = project.isGradleProjectLoaded() ? project.getGradleProject() : null;
             this.aim = aim;
+            this.cmd = cmd;
         }
 
         public GradleProject getPrevious() {

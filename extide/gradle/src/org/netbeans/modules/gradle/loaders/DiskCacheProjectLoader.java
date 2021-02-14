@@ -19,7 +19,6 @@
 package org.netbeans.modules.gradle.loaders;
 
 import org.netbeans.modules.gradle.GradleProject;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FALLBACK;
 import org.netbeans.modules.gradle.cache.AbstractDiskCache;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
@@ -31,15 +30,12 @@ import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
  */
 public class DiskCacheProjectLoader extends AbstractProjectLoader {
 
-    public DiskCacheProjectLoader(ReloadContext ctx) {
+    DiskCacheProjectLoader(ReloadContext ctx) {
         super(ctx);
     }
 
     @Override
-    public GradleProject loadProject(NbGradleProject.Quality aim, boolean ignoreCache, boolean interactive, String... args) {
-        if ((aim == FALLBACK) || ignoreCache || GradleExperimentalSettings.getDefault().isCacheDisabled()) {
-            return null;
-        }
+    public GradleProject load() {
         AbstractDiskCache.CacheEntry<ProjectInfoDiskCache.QualifiedProjectInfo> cacheEntry = new ProjectInfoDiskCache(ctx.project.getGradleFiles()).loadEntry();
         if (cacheEntry != null) {
             if (cacheEntry.isCompatible()) {
@@ -54,8 +50,12 @@ public class DiskCacheProjectLoader extends AbstractProjectLoader {
     }
 
     @Override
-    public boolean isEnabled() {
-        return true;
+    boolean isEnabled() {
+        return ctx.aim.betterThan(FALLBACK) && !GradleExperimentalSettings.getDefault().isCacheDisabled();
     }
 
+    @Override
+    boolean needsTrust() {
+        return false;
+    }
 }

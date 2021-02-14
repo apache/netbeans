@@ -39,13 +39,13 @@ public class FallbackProjectLoader extends AbstractProjectLoader {
 
     final GradleFiles files;
 
-    public FallbackProjectLoader(ReloadContext ctx) {
+    FallbackProjectLoader(ReloadContext ctx) {
         super(ctx);
         this.files = ctx.project.getGradleFiles();
     }
 
     @Override
-    public GradleProject loadProject(NbGradleProject.Quality aim, boolean ignoreCache, boolean interactive, String... args) {
+    public GradleProject load() {
         Collection<? extends ProjectInfoExtractor> extractors = Lookup.getDefault().lookupAll(ProjectInfoExtractor.class);
         Map<Class, Object> infos = new HashMap<>();
         Set<String> problems = new LinkedHashSet<>();
@@ -62,8 +62,12 @@ public class FallbackProjectLoader extends AbstractProjectLoader {
     }
 
     @Override
-    public boolean isEnabled() {
+    boolean isEnabled() {
         return true;
     }
 
+    @Override
+    boolean needsTrust() {
+        return false;
+    }
 }

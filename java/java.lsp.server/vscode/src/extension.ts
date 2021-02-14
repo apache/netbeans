@@ -343,7 +343,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             if (isOut) {
                 stdOut += text;
             }
-            if (stdOut.match(/org.netbeans.modules.java.lsp.server.*Enabled/)) {
+            if (stdOut.match(/org.netbeans.modules.java.lsp.server/)) {
                 resolve(text);
                 stdOut = null;
             }

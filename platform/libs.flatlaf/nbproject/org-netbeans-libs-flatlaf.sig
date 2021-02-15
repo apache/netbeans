@@ -312,6 +312,7 @@ CLSS public static com.formdev.flatlaf.util.ColorFunctions$Fade
 cons public init(float)
 fld public final float amount
 intf com.formdev.flatlaf.util.ColorFunctions$ColorFunction
+meth public java.lang.String toString()
 meth public void apply(float[])
 supr java.lang.Object
 
@@ -325,6 +326,7 @@ fld public final float amount
 fld public final int hslIndex
 intf com.formdev.flatlaf.util.ColorFunctions$ColorFunction
 meth protected boolean shouldInverse(float[])
+meth public java.lang.String toString()
 meth public void apply(float[])
 supr java.lang.Object
 
@@ -344,6 +346,7 @@ CLSS public com.formdev.flatlaf.util.DerivedColor
 cons public !varargs init(java.awt.Color,com.formdev.flatlaf.util.ColorFunctions$ColorFunction[])
 meth public com.formdev.flatlaf.util.ColorFunctions$ColorFunction[] getFunctions()
 meth public java.awt.Color derive(java.awt.Color)
+meth public java.lang.String toString()
 supr javax.swing.plaf.ColorUIResource
 hfds baseOfDefaultColorRGB,functions,hasBaseOfDefaultColor
 

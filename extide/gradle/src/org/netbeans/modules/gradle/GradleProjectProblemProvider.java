@@ -103,8 +103,9 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
         @Override
         public Result call() throws Exception {
             NbGradleProjectImpl impl = project.getLookup().lookup(NbGradleProjectImpl.class);
+            GradleProject original = impl.getGradleProject();
             GradleProject gradleProject = GradleProjectCache.loadProject(impl, FULL_ONLINE, true, true);
-            impl.fireProjectReload(false);
+            impl.recordOrReloadProject(original, gradleProject, true);
             Quality q = gradleProject.getQuality();
             Status st = q.worseThan(SIMPLE) ? Status.UNRESOLVED
                     : q.worseThan(FULL) ? Status.RESOLVED_WITH_WARNING : Status.RESOLVED;

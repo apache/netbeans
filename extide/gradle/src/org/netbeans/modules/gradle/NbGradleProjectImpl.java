@@ -181,6 +181,45 @@ public final class NbGradleProjectImpl implements Project {
         }
         return project;
     }
+    
+    /**
+     * Records a reloaded project instance. Indicates whether the project was replaced.
+     * The method refuses to replace a project that has been changed since the reload procedure
+     * started. Will also not replace the project, if the original has a better quality
+     * than the reloaded one.
+     * <p>
+     * 
+     * @param original the original project data instance.
+     * @param reloaded the reloaded data.
+     * @param reloadIfMismatch will fire new reload if the project differs from original or quality is not satisfactory.
+     * @return {@code null}, if the project was accepted. {@code Boolean.TRUE}, if the project has
+     * been changed independently; {@code Boolean.FALSE}, if the reloaded project's quality is lower than
+     * the current.
+     */
+    Boolean recordOrReloadProject(GradleProject original, GradleProject reloaded, boolean reloadIfMismatch) {
+        Boolean result = null;
+        synchronized (this) {
+            if (project != original) {
+                result = true;
+            } else if (original.getQuality().betterThan(reloaded.getQuality())) {
+                result = false;
+            } else {
+                this.project = reloaded;
+            }
+        }
+        if (result != null) {
+            if (reloadIfMismatch) {
+                // will fire appropriate events after reload
+                fireProjectReload(false);
+            }
+        } else {
+            // notify listeners asynchronously as in fireProjectReload
+            RELOAD_RP.submit(() -> {
+                ACCESSOR.doFireReload(watcher);
+            });
+        }
+        return result;
+    }
 
     public void fireProjectReload(boolean wait) {
         reloadTask.schedule(0);

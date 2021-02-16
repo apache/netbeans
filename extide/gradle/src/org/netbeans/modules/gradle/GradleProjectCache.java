@@ -110,7 +110,10 @@ public final class GradleProjectCache {
         if (aim == FALLBACK) {
             return fallbackProject(files);
         }
-        GradleProject prev = project.project != null ? project.project : fallbackProject(files);
+        GradleProject prev = project.getProjectInternal();
+        if (prev == null) {
+            prev = fallbackProject(files);
+        }
 
         // Try to turn to the cache
         if (!ignoreCache  && (prev.getQuality() == FALLBACK)) {

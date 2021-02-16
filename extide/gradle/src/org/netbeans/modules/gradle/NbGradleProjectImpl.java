@@ -74,8 +74,7 @@ public final class NbGradleProjectImpl implements Project {
     private final RequestProcessor.Task reloadTask = RELOAD_RP.create(new Runnable() {
         @Override
         public void run() {
-            project = loadProject();
-            ACCESSOR.doFireReload(watcher);
+            recordOrReloadProject(null, loadProject(), false);
         }
     });
 
@@ -90,7 +89,8 @@ public final class NbGradleProjectImpl implements Project {
     @SuppressWarnings("MS_SHOULD_BE_FINAL")
     public static WatcherAccessor ACCESSOR = null;
 
-    GradleProject project;
+    // @GuardedBy(this)
+    private GradleProject project;
 
     static {
         // invokes static initializer of ModelHandle.class
@@ -106,7 +106,7 @@ public final class NbGradleProjectImpl implements Project {
     private final GradleFiles gradleFiles;
 
     public boolean isGradleProjectLoaded() {
-        return project != null;
+        return getProjectInternal() != null;
     }
 
     public static abstract class WatcherAccessor {
@@ -174,12 +174,27 @@ public final class NbGradleProjectImpl implements Project {
                 state
         );
     }
+    
+    GradleProject getProjectInternal() {
+        synchronized (this) {
+            return project;
+        }
+    }
 
     public GradleProject getGradleProject() {
-        if (project == null) {
-            project = loadProject();
+        GradleProject p = getProjectInternal();
+        if (p != null) {
+            return p;
         }
-        return project;
+        p = loadProject();
+        synchronized (this) {
+            // avod unnecessary project replacements.
+            if (project != null) {
+                return project;
+            }
+            project = p;
+        }
+        return p;
     }
     
     /**
@@ -188,6 +203,7 @@ public final class NbGradleProjectImpl implements Project {
      * started. Will also not replace the project, if the original has a better quality
      * than the reloaded one.
      * <p>
+     * Pass {@code original = null} to just replace the project without checking.
      * 
      * @param original the original project data instance.
      * @param reloaded the reloaded data.
@@ -199,11 +215,14 @@ public final class NbGradleProjectImpl implements Project {
     Boolean recordOrReloadProject(GradleProject original, GradleProject reloaded, boolean reloadIfMismatch) {
         Boolean result = null;
         synchronized (this) {
-            if (project != original) {
-                result = true;
-            } else if (original.getQuality().betterThan(reloaded.getQuality())) {
-                result = false;
-            } else {
+            if (original != null) {
+                if (project != original) {
+                    result = true;
+                } else if (original.getQuality().betterThan(reloaded.getQuality())) {
+                    result = false;
+                }
+            }
+            if (result == null) {
                 this.project = reloaded;
             }
         }
@@ -214,13 +233,17 @@ public final class NbGradleProjectImpl implements Project {
             }
         } else {
             // notify listeners asynchronously as in fireProjectReload
-            RELOAD_RP.submit(() -> {
+            if (RELOAD_RP.isRequestProcessorThread()) {
                 ACCESSOR.doFireReload(watcher);
-            });
+            } else {
+                RELOAD_RP.submit(() -> {
+                    ACCESSOR.doFireReload(watcher);
+                });
+            }
         }
         return result;
     }
-
+    
     public void fireProjectReload(boolean wait) {
         reloadTask.schedule(0);
         if (wait) {
@@ -259,7 +282,9 @@ public final class NbGradleProjectImpl implements Project {
     }
 
     void dumpProject() {
-        project = null;
+        synchronized (this) {
+            project = null;
+        }
     }
 
     public Quality getAimedQuality() {
@@ -279,9 +304,11 @@ public final class NbGradleProjectImpl implements Project {
             ACCESSOR.passivate(watcher);
         }
         this.aimedQuality = aim;
-        if ((project == null) || project.getQuality().worseThan(aim)) {
-            project = loadProject();
-            ACCESSOR.doFireReload(watcher);
+        GradleProject cp = getProjectInternal();
+        if ((cp == null) || cp.getQuality().worseThan(aim)) {
+            // PENDING: check if the project did not change in the meantime for a quality
+            // at least aimed -> save unncessary replacement.
+            recordOrReloadProject(null, loadProject(), false);
         }
     }
 
@@ -296,8 +323,7 @@ public final class NbGradleProjectImpl implements Project {
 
     RequestProcessor.Task reloadProject(final boolean ignoreCache, final Quality aim, final String... args) {
         return RELOAD_RP.post(() -> {
-            project = loadProject(ignoreCache, aim, args);
-            ACCESSOR.doFireReload(watcher);
+            recordOrReloadProject(null, loadProject(ignoreCache, aim, args), false);
         });
     }
 
@@ -320,7 +346,8 @@ public final class NbGradleProjectImpl implements Project {
     @Override
     public String toString() {
         if (isGradleProjectLoaded()) {
-            return "Gradle: " + project.getBaseProject().getName() + "[" + project.getQuality() + "]";
+            GradleProject cp = getProjectInternal();
+            return "Gradle: " + cp.getBaseProject().getName() + "[" + cp.getQuality() + "]";
         } else {
             return "Unloaded Gradle Project: " + gradleFiles.toString();
         }

@@ -77,8 +77,8 @@ public class ReloadAction  extends AbstractAction implements ContextAwareAction 
                 NbGradleProjectImpl.RELOAD_RP.submit(() -> {
                     // A bit low level calls, just to allow UI interaction to
                     // Trust the project.
-                    impl.project = GradleProjectCache.loadProject(impl, FULL_ONLINE, true, true);
-                    NbGradleProjectImpl.ACCESSOR.doFireReload(NbGradleProject.get(impl));
+                    GradleProject newProject = GradleProjectCache.loadProject(impl, FULL_ONLINE, true, true);
+                    impl.recordOrReloadProject(null, newProject, false);
                 });
             }
         }

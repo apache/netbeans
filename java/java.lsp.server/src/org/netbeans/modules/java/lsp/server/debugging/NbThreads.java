@@ -27,7 +27,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import org.eclipse.lsp4j.debug.StoppedEventArguments;
 
-import org.eclipse.lsp4j.debug.TerminatedEventArguments;
 import org.eclipse.lsp4j.debug.ThreadEventArguments;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerManager;
@@ -63,15 +62,6 @@ public final class NbThreads {
     }
 
     private void initThreads(DebugAdapterContext context, JPDADebugger debugger) {
-        debugger.addPropertyChangeListener(JPDADebugger.PROP_STATE, evt -> {
-            int newState = (int) evt.getNewValue();
-            switch (newState) {
-                case JPDADebugger.STATE_DISCONNECTED:
-                    //debugger.removePropertyChangeListener(this);
-                    context.getClient().terminated(new TerminatedEventArguments());
-                    break;
-            }
-        });
         DebuggerEngine engine = debugger.getSession().getCurrentEngine();
         if (engine == null) {
             debugger.getSession().addPropertyChangeListener(Session.PROP_CURRENT_LANGUAGE, new PropertyChangeListener() {

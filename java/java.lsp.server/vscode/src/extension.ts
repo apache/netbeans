@@ -211,20 +211,29 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             ]);
         }
     }));
-    context.subscriptions.push(commands.registerCommand('java.debug.codelens', async (uri, methodName) => {
+    const runCodelens = async (uri : any, methodName : string, noDebug : boolean) => {
         const editor = window.activeTextEditor;
         if (editor) {
             const docUri = editor.document.uri;
             const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
-            const debugConfig = {
+            const debugConfig : vscode.DebugConfiguration = {
                 type: "java8+",
                 name: "CodeLens Debug",
                 request: "launch",
                 mainClass: uri,
                 singleMethod: methodName,
             };
-            await vscode.debug.startDebugging(workspaceFolder, debugConfig).then();
+            const debugOptions : vscode.DebugSessionOptions = {
+                noDebug: noDebug,
+            }
+            await vscode.debug.startDebugging(workspaceFolder, debugConfig, debugOptions).then();
         }
+    };
+    context.subscriptions.push(commands.registerCommand('java.run.codelens', async (uri, methodName) => {
+        await runCodelens(uri, methodName, true);
+    }));
+    context.subscriptions.push(commands.registerCommand('java.debug.codelens', async (uri, methodName) => {
+        await runCodelens(uri, methodName, false);
     }));
     return Object.freeze({
         version : API_VERSION
@@ -334,7 +343,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             if (isOut) {
                 stdOut += text;
             }
-            if (stdOut.match(/org.netbeans.modules.java.lsp.server.*Enabled/)) {
+            if (stdOut.match(/org.netbeans.modules.java.lsp.server/)) {
                 resolve(text);
                 stdOut = null;
             }

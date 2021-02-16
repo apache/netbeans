@@ -1422,7 +1422,7 @@ public class CasualDiff {
         // check that it is not enum constant. If so, match it in special way
         if ((oldT.mods.flags & Flags.ENUM) != 0) {
             JCModifiers mods = oldT.getModifiers();
-            int startPos = mods.pos != Position.NOPOS ? getOldPos(mods) : getOldPos(parent);
+            int startPos = mods.pos != Position.NOPOS ? getOldPos(mods) : getOldPos(oldT);
 
             localPointer = diffAnnotationsLists(mods.getAnnotations(), newT.getModifiers().getAnnotations(), startPos, localPointer);
 

@@ -260,6 +260,7 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
         private final ChangeListener listener;
 
         public FavoritesChildren() {
+            assert currentP != null;
             FavoriteTaskManager fvm = getFavoriteTaskManager();
             listener = (e) -> {
                 Set<GradleTask> favs = fvm.getFavoriteTasks();
@@ -271,7 +272,11 @@ public class TasksPanel extends javax.swing.JPanel implements ExplorerManager.Pr
 
         @Override
         protected Node[] createNodes(GradleTask key) {
-            return new Node[] {new TaskNode(currentP, key)};
+            // NETBEANS-5340 It might happen that the currentP is null, but the listener
+            // still active on the previous project.
+            return currentP != null ? 
+                    new Node[] {new TaskNode(currentP, key)} :
+                    new Node[0];
         }
 
     }

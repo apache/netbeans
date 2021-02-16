@@ -24,7 +24,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -61,14 +60,12 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.swing.text.BadLocationException;
@@ -339,6 +336,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private static class ItemFactoryImpl implements JavaCompletionTask.ItemFactory<CompletionItem> {
 
+        private static final int DEPRECATED = 10;
         private final LanguageClient client;
         private final String uri;
         private final int offset;
@@ -561,12 +559,26 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         @Override
         public CompletionItem createAttributeItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated) {
-            return null; //TODO: fill
+            CompletionItem item = new CompletionItem(elem.getSimpleName().toString());
+            item.setKind(CompletionItemKind.Property);
+            StringBuilder insertText = new StringBuilder();
+            insertText.append(elem.getSimpleName());
+            insertText.append("=");
+            item.setInsertText(insertText.toString());
+            item.setInsertTextFormat(InsertTextFormat.PlainText);
+            int priority = isDeprecated ? 100 + DEPRECATED : 100;
+            item.setSortText(String.format("%4d%s", priority, elem.getSimpleName().toString()));
+            setCompletionData(item, elem);
+            return item;
         }
 
         @Override
         public CompletionItem createAttributeValueItem(CompilationInfo info, String value, String documentation, TypeElement element, int substitutionOffset, ReferencesCount referencesCount) {
-            return null; //TODO: fill
+            CompletionItem item = new CompletionItem(value);
+            item.setKind(CompletionItemKind.Text);
+            item.setSortText(value);
+            item.setDocumentation(documentation);
+            return item;
         }
 
         private static final Object KEY_IMPORT_TEXT_EDITS = new Object();
@@ -1375,7 +1387,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                                     Utils.createPosition(cc.getCompilationUnit(), method.end().getOffset()));
                             List<Object> arguments = Arrays.asList(new Object[]{method.method().getFile().toURI(), method.method().getMethodName()});
                             lens.add(new CodeLens(range,
-                                                  new Command("Run test", Server.JAVA_TEST_SINGLE_METHOD, arguments),
+                                                  new Command("Run test", "java.run.codelens", arguments),
                                                   null));
                             lens.add(new CodeLens(range,
                                                   new Command("Debug test", "java.debug.codelens", arguments),
@@ -1391,7 +1403,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             Range range = Utils.treeRange(cc, tree);
                             List<Object> arguments = Collections.singletonList(params.getTextDocument().getUri());
                             lens.add(new CodeLens(range,
-                                                  new Command("Run main", Server.JAVA_RUN_MAIN_METHOD, arguments),
+                                                  new Command("Run main", "java.run.codelens", arguments),
                                                   null));
                             lens.add(new CodeLens(range,
                                                   new Command("Debug main", "java.debug.codelens", arguments),

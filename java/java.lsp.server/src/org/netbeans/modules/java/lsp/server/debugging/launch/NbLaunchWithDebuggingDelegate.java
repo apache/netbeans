@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.debugging.launch;
 
 import java.util.Map;
+import java.util.function.Consumer;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 
 
@@ -27,6 +28,18 @@ import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
  * @author martin
  */
 public final class NbLaunchWithDebuggingDelegate extends NbLaunchDelegate {
+
+    private final Consumer<DebugAdapterContext> onFinishCallback;
+
+    NbLaunchWithDebuggingDelegate(Consumer<DebugAdapterContext> onFinishCallback) {
+        this.onFinishCallback = onFinishCallback;
+    }
+
+    @Override
+    protected void notifyFinished(DebugAdapterContext ctx, boolean success) {
+        super.notifyFinished(ctx, success);
+        onFinishCallback.accept(ctx);
+    }
 
     @Override
     public void postLaunch(Map<String, Object> launchArguments, DebugAdapterContext context) {

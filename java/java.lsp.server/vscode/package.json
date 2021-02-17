@@ -21,7 +21,7 @@
 		"multi-root ready"
 	],
 	"engines": {
-		"vscode": "^1.47.0"
+		"vscode": "^1.49.0"
 	},
 	"activationEvents": [
 		"onLanguage:java",
@@ -196,7 +196,7 @@
 		"nbjavac": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.47.0",
+		"@types/vscode": "^1.49.0",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.2",
 		"@types/node": "^13.11.0",

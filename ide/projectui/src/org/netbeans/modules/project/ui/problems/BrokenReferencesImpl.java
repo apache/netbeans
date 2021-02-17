@@ -22,7 +22,6 @@ import java.awt.Dialog;
 import java.awt.GraphicsEnvironment;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.concurrent.Future;
 import javax.swing.JButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -37,7 +36,6 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.WindowManager;
 import static org.netbeans.modules.project.ui.problems.Bundle.*;
-import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Parameters;
 
@@ -158,6 +156,10 @@ public class BrokenReferencesImpl implements BrokenReferencesImplementation {
         }
     }
     
+    @NbBundle.Messages({
+        "# {0} - problem display name",
+        "ERROR_ProblemResolutionFailed=Resolution failed: {0}"
+    })
     private void fixAllProblems(BrokenReferencesModel model, Collection<BrokenReferencesModel.ProblemReference> seen) {
         model.refresh();
         for (int i = 0; i < model.getSize(); i++) {
@@ -166,7 +168,7 @@ public class BrokenReferencesImpl implements BrokenReferencesImplementation {
                 return;
             }
             final BrokenReferencesModel.ProblemReference or = (BrokenReferencesModel.ProblemReference) value;
-            if (or.resolved) {
+            if (or.resolved || seen.contains(or)) {
                 continue;
             }
             BrokenReferencesCustomizer.performProblemFix(or, (result) -> {
@@ -175,6 +177,11 @@ public class BrokenReferencesImpl implements BrokenReferencesImplementation {
                 if (msg != null) {
                     int importance = result.isResolved() ? 0 : StatusDisplayer.IMPORTANCE_ERROR_HIGHLIGHT;
                     StatusDisplayer.getDefault().setStatusText(msg, importance);
+                } else if (!result.isResolved()) {
+                    // note that resolution has failed:
+                    StatusDisplayer.getDefault().setStatusText(
+                            Bundle.ERROR_ProblemResolutionFailed(or.getDisplayName()), 
+                            StatusDisplayer.IMPORTANCE_ERROR_HIGHLIGHT);
                 }
                 // next round:
                 fixAllProblems(model, seen);

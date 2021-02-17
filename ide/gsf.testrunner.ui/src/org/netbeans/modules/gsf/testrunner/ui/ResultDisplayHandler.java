@@ -40,6 +40,7 @@ import org.netbeans.modules.gsf.testrunner.api.Report;
 import org.netbeans.modules.gsf.testrunner.api.TestSession;
 import org.netbeans.modules.gsf.testrunner.api.TestSuite;
 import org.netbeans.modules.gsf.testrunner.ui.api.Manager;
+import org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler;
 import org.openide.ErrorManager;
 import org.openide.util.Lookup;
 import org.openide.windows.IOContainer;
@@ -51,7 +52,7 @@ import org.openide.windows.OutputWriter;
  *
  * @author Marian Petras. Erno Mononen
  */
-public final class ResultDisplayHandler {
+public final class ResultDisplayHandler extends TestResultDisplayHandler {
 
     private static final Logger LOGGER = Logger.getLogger(ResultDisplayHandler.class.getName());
 

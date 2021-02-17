@@ -50,11 +50,10 @@ import org.gradle.tooling.GradleConnectionException;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProgressEvent;
 import org.gradle.tooling.ProjectConnection;
+import org.gradle.tooling.events.ProgressListener;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.modules.gradle.NbGradleProjectImpl;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
@@ -63,10 +62,12 @@ import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.awt.StatusDisplayer;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.openide.util.io.ReaderInputStream;
+import org.openide.util.lookup.Lookups;
 import org.openide.windows.IOColorPrint;
 import org.openide.windows.IOColors;
 import org.openide.windows.InputOutput;
@@ -128,6 +129,23 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         final InputOutput ioput = getInputOutput();
         actionStatesAtStart();
         handle.start();
+
+        // BuildLauncher creates its own threads, need to note the effective Lookup and re-establish it in the listeners
+        final Lookup execLookup = Lookup.getDefault();
+
+        class ProgressLookupListener implements org.gradle.tooling.events.ProgressListener {
+            private final org.gradle.tooling.events.ProgressListener delegate;
+
+            public ProgressLookupListener(ProgressListener delegate) {
+                this.delegate = delegate;
+            }
+
+            @Override
+            public void statusChanged(org.gradle.tooling.events.ProgressEvent event) {
+                Lookups.executeWith(execLookup, () -> delegate.statusChanged(event));
+            }
+        }
+
         try {
 
             BuildExecutionSupport.registerRunningItem(item);
@@ -187,14 +205,14 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
             buildLauncher.setStandardOutput(outStream);
             buildLauncher.setStandardError(errStream);
             buildLauncher.addProgressListener((ProgressEvent pe) -> {
-                handle.progress(pe.getDescription());
+                Lookups.executeWith(execLookup, () -> handle.progress(pe.getDescription()));
             });
 
             buildLauncher.withCancellationToken(cancelTokenSource.token());
             if (config.getProject() != null) {
                 Collection<? extends GradleProgressListenerProvider> providers = config.getProject().getLookup().lookupAll(GradleProgressListenerProvider.class);
                 for (GradleProgressListenerProvider provider : providers) {
-                    buildLauncher.addProgressListener(provider.getProgressListener(), provider.getSupportedOperationTypes());
+                    buildLauncher.addProgressListener(new ProgressLookupListener(provider.getProgressListener()), provider.getSupportedOperationTypes());
                 }
             }
             buildLauncher.run();

@@ -22,7 +22,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -40,12 +39,13 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.NbSourceProvider;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.java.lsp.server.progress.ProgressOperationEvent;
 import org.netbeans.modules.java.lsp.server.progress.ProgressOperationListener;
-import org.netbeans.modules.progress.spi.InternalHandle;
+import org.netbeans.modules.java.lsp.server.progress.TestProgressHandler;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.SingleMethod;
@@ -119,11 +119,6 @@ public abstract class NbLaunchDelegate {
                     notifyFinished(context, success);
                 }
             };
-            Lookup launchCtx = new ProxyLookup(
-                    Lookups.fixed(
-                            toRun, ioContext, progress
-                    ), Lookup.getDefault()
-            );
             OperationContext ctx = OperationContext.find(Lookup.getDefault());
             ctx.addProgressOperationListener(null, new ProgressOperationListener() {
                 @Override
@@ -131,6 +126,12 @@ public abstract class NbLaunchDelegate {
                     context.setProcessExecutorHandle(e.getProgressHandle());
                 }
             });
+            TestProgressHandler testProgressHandler = new TestProgressHandler(ctx.getClient(), Utils.toUri(toRun));
+            Lookup launchCtx = new ProxyLookup(
+                    Lookups.fixed(
+                            toRun, ioContext, progress, testProgressHandler
+                    ), Lookup.getDefault()
+            );
 
             Lookup lookup;
             if (singleMethod != null) {

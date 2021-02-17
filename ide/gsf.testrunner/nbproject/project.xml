@@ -79,6 +79,7 @@
                 <friend>org.netbeans.modules.groovy.support</friend>
                 <friend>org.netbeans.modules.gsf.testrunner.ui</friend>
                 <friend>org.netbeans.modules.hudson.ui</friend>
+                <friend>org.netbeans.modules.java.lsp.server</friend>
                 <friend>org.netbeans.modules.java.testrunner</friend>
                 <friend>org.netbeans.modules.java.testrunner.ant</friend>
                 <friend>org.netbeans.modules.java.testrunner.ui</friend>

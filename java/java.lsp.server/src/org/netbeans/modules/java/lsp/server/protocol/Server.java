@@ -225,7 +225,7 @@ public final class Server {
     private static final RequestProcessor SERVER_INIT_RP = new RequestProcessor(LanguageServerImpl.class.getName());
     
     
-    private static class LanguageServerImpl implements LanguageServer, LanguageClientAware {
+    static class LanguageServerImpl implements LanguageServer, LanguageClientAware {
 
         private static final Logger LOG = Logger.getLogger(LanguageServerImpl.class.getName());
         private NbCodeClientWrapper client;
@@ -241,7 +241,7 @@ public final class Server {
             return sessionLookup;
         }
         
-        private void asyncOpenSelectedProjects(CompletableFuture f, List<FileObject> projectCandidates) {
+        void asyncOpenSelectedProjects(CompletableFuture f, List<FileObject> projectCandidates) {
             List<Project> projects = new ArrayList<>();
             try {
                 for (FileObject candidate : projectCandidates) {
@@ -322,9 +322,8 @@ public final class Server {
                 capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
-                List<String> commands = new ArrayList<>(Arrays.asList(
-                        JAVA_BUILD_WORKSPACE, GRAALVM_PAUSE_SCRIPT, JAVA_SUPER_IMPLEMENTATION,
-                        JAVA_TEST_SINGLE_METHOD, JAVA_RUN_MAIN_METHOD));
+                List<String> commands = new ArrayList<>(Arrays.asList(JAVA_BUILD_WORKSPACE, JAVA_LOAD_WORKSPACE_TESTS, JAVA_TEST_WORKSPACE,
+                        GRAALVM_PAUSE_SCRIPT, JAVA_SUPER_IMPLEMENTATION, JAVA_TEST_SINGLE, JAVA_RUN_MAIN_METHOD));
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     commands.addAll(codeGenerator.getCommands());
                 }
@@ -420,8 +419,10 @@ public final class Server {
     }
     
     public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
+    public static final String JAVA_LOAD_WORKSPACE_TESTS =  "java.load.workspace.tests";
+    public static final String JAVA_TEST_WORKSPACE =  "java.test.workspace";
     public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
-    public static final String JAVA_TEST_SINGLE_METHOD =  "java.test.single.method";
+    public static final String JAVA_TEST_SINGLE =  "java.test.single";
     public static final String JAVA_RUN_MAIN_METHOD =  "java.run.main.method";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
     static final String INDEXING_COMPLETED = "Indexing completed.";
@@ -450,6 +451,11 @@ public final class Server {
         public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
             logWarning(params);
             return CompletableFuture.completedFuture(params.getValue());
+        }
+
+        @Override
+        public void notifyTestProgress(TestProgressParams params) {
+            logWarning(params);
         }
 
         @Override

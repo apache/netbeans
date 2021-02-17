@@ -19,7 +19,6 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import java.io.File;
 import java.io.FileWriter;
@@ -1345,6 +1344,11 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void notifyTestProgress(TestProgressParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
@@ -2709,6 +2713,11 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
+            public void notifyTestProgress(TestProgressParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
             public NbCodeClientCapabilities getNbCodeCapabilities() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
@@ -2903,6 +2912,11 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
+            public void notifyTestProgress(TestProgressParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
             public NbCodeClientCapabilities getNbCodeCapabilities() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
@@ -3010,6 +3024,11 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void notifyTestProgress(TestProgressParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
@@ -3126,6 +3145,11 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
+            public void notifyTestProgress(TestProgressParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
             public NbCodeClientCapabilities getNbCodeCapabilities() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
@@ -3221,6 +3245,11 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void notifyTestProgress(TestProgressParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
@@ -3329,6 +3358,11 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
+            public void notifyTestProgress(TestProgressParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
             public NbCodeClientCapabilities getNbCodeCapabilities() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
@@ -3427,6 +3461,11 @@ public class ServerTest extends NbTestCase {
             @Override
             public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
                 return CompletableFuture.completedFuture("LOGGER");
+            }
+
+            @Override
+            public void notifyTestProgress(TestProgressParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override

@@ -195,7 +195,7 @@ public abstract class Breakpoint {
 
     /**
      * Get group properties of the breakpoint.
-     * These are implementation-defined group properties as oposed to {@link #getGroupName()},
+     * These are implementation-defined group properties as opposed to {@link #getGroupName()},
      * which returns user-defined group name.
      * <p>
      * These properties are used by the Breakpoint Window to show a tree

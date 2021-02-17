@@ -49,17 +49,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+import org.netbeans.api.project.ProjectInformation;
 
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
-import org.netbeans.modules.gradle.execute.TrustProjectPanel;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.BaseUtilities;
@@ -255,22 +256,78 @@ public final class RunUtils {
      * @param interactive ask for permission from UI.
      * @return if the execution is trusted.
      */
-    @Messages({
-        "ProjectTrustDlg.TITLE=Not a Trusted Project"
-    })
     public static boolean isProjectTrusted(Project project, boolean interactive) {
         boolean ret = GradleSettings.getDefault().getGradleExecutionRule() == GradleSettings.GradleExecutionRule.ALWAYS
                 || ProjectTrust.getDefault().isTrusted(project);
         if (ret == false && interactive) {
-            TrustProjectPanel trust = new TrustProjectPanel(project);
-            DialogDescriptor dsc = new DialogDescriptor(trust, Bundle.ProjectTrustDlg_TITLE(), true, null);
-            if (DialogDisplayer.getDefault().notify(dsc) == DialogDescriptor.OK_OPTION) {
-                // trust just temporarily, or record the decision:
-                ProjectTrust.getDefault().trustProject(project, trust.getTrustInFuture());
-                ret = true;
+            Boolean q = askToTrustProject(project);
+            if (Boolean.FALSE == q) {
+                return false;
             }
+            ProjectTrust.getDefault().trustProject(project, Boolean.TRUE == q);
+            ret = true;
         }
         return ret;
+    }
+    
+    @Messages({
+        "ProjectTrustDlg.TITLE=Not a Trusted Project",
+        "# {0} = Project name",
+        "TrustProjectPanel.INFO=<html><p>NetBeans is about to invoke a Gradle build process of the project: <b>{0}</b>.</p>"
+            + " <p>Executing Gradle can be potentially un-safe as it"
+            + " allows arbitrary code execution.</p>",
+        "TrustProjectPanel.INFO_UNKNOWN=<html><p>NetBeans is about to invoke a Gradle build process.</p>"
+            + " <p>Executing Gradle can be potentially un-safe as it"
+            + " allows arbitrary code execution.</p>",
+        "TrustProjectPanel.PermanentTrust=Trust &Permanently",
+        "TrustProjectPanel.RunAlways=Trust &All Projects",
+    })
+    /**
+     * Asks the user to trust the project, returns tri-state answer.
+     * <ul>
+     * <li>Boolean.TRUE to permanently trust the project.
+     * <li>Boolean.FALSE to not run the project
+     * <li>{@code null} to trust the project, but not mark it as trusted.
+     * </ul>
+     */
+    private static Boolean askToTrustProject(Project project) {
+        ProjectInformation info = project != null ? project.getLookup().lookup(ProjectInformation.class) : null;
+        String msg;
+        Object[] options;
+        Object defaultOption;
+        String permanentOption = Bundle.TrustProjectPanel_PermanentTrust();
+        String runAlways = Bundle.TrustProjectPanel_RunAlways();
+        
+        if (info == null) {
+            msg = Bundle.TrustProjectPanel_INFO_UNKNOWN();
+            options = new Object[] {
+                DialogDescriptor.OK_OPTION, runAlways, DialogDescriptor.CANCEL_OPTION
+            };
+            defaultOption = DialogDescriptor.OK_OPTION;
+        } else {
+            msg = Bundle.TrustProjectPanel_INFO(info.getDisplayName());
+            options = new Object[] {
+                DialogDescriptor.OK_OPTION, permanentOption, runAlways, DialogDescriptor.CANCEL_OPTION
+            };
+            defaultOption = DialogDescriptor.OK_OPTION;
+        }
+        NotifyDescriptor.Confirmation dsc = new NotifyDescriptor.Confirmation(msg, Bundle.ProjectTrustDlg_TITLE(), 
+                NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.QUESTION_MESSAGE);
+        dsc.setOptions(options);
+        dsc.setValue(defaultOption);
+        
+        Object result = DialogDisplayer.getDefault().notify(dsc);
+        if (result == runAlways) {
+             GradleSettings.getDefault().setGradleExecutionRule(GradleSettings.GradleExecutionRule.ALWAYS);
+             return null;
+        }
+        if (result == DialogDescriptor.OK_OPTION) {
+            return null;
+        } else if (result == permanentOption) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     public static GradleCommandLine getDefaultCommandLine(Project project) {

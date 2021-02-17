@@ -18,9 +18,14 @@
  */
 package org.netbeans.modules.gradle.customizer;
 
+import java.awt.Component;
+import java.util.MissingResourceException;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -37,7 +42,10 @@ import org.openide.util.NbBundle.Messages;
             + "automatically trusted.</p>",
 })
 public class GradleExecutionPanel extends javax.swing.JPanel {
-
+    private static final String LEVEL_PERMANENT = "Permanent"; // NOI18N
+    private static final String LEVEL_TEMPORARY = "Temporary"; // NOI18N
+    private static final String LEVEL_NONE = "None"; // NOI18N
+    
     Project project;
 
     /**
@@ -54,9 +62,32 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
         GradleBaseProject gbp = GradleBaseProject.get(project);
         if (gbp != null) {
             lbReadOnly.setVisible(!gbp.isRoot());
-            cbTrustProject.setEnabled(gbp.isRoot());
+            lbTrustLevel.setEnabled(gbp.isRoot());
+            cbTrustLevel.setEnabled(gbp.isRoot());
             lbTrustTerms.setEnabled(gbp.isRoot());
-            cbTrustProject.setSelected(ProjectTrust.getDefault().isTrusted(project));
+            
+            if (ProjectTrust.getDefault().isTrustedPermanetly(project)) {
+                cbTrustLevel.setSelectedItem(LEVEL_PERMANENT);
+            } else if (ProjectTrust.getDefault().isTrusted(project)) {
+                cbTrustLevel.setSelectedItem(LEVEL_TEMPORARY);
+            } else {
+                cbTrustLevel.setSelectedItem(LEVEL_NONE);
+            }
+            
+            cbTrustLevel.setRenderer(new DefaultListCellRenderer() {
+                @Override
+                public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                    if (value == null) {
+                        value = ""; // NOI18N
+                    } else {
+                        try {
+                            value = NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.cbTrustLevel." + value.toString()); // NOI18N
+                        } catch (MissingResourceException ex) {
+                        }
+                    }
+                    return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                }
+            });
         }
     }
 
@@ -69,16 +100,19 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        cbTrustProject = new javax.swing.JCheckBox();
         lbTrustTerms = new javax.swing.JLabel();
         lbReadOnly = new javax.swing.JLabel();
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbTrustProject, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.cbTrustProject.text")); // NOI18N
+        cbTrustLevel = new javax.swing.JComboBox<>();
+        lbTrustLevel = new javax.swing.JLabel();
 
         lbTrustTerms.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         lbReadOnly.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/netbeans/modules/gradle/resources/info.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(lbReadOnly, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbReadOnly.text")); // NOI18N
+
+        cbTrustLevel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Temporary", "Permanent" }));
+
+        org.openide.awt.Mnemonics.setLocalizedText(lbTrustLevel, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbTrustLevel.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -90,17 +124,23 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lbReadOnly)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(cbTrustProject, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
-                        .addComponent(lbTrustTerms, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lbTrustLevel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cbTrustLevel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lbTrustTerms, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(cbTrustProject)
+                .addGap(5, 5, 5)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbTrustLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbTrustLevel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbTrustTerms, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
@@ -110,17 +150,27 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox cbTrustProject;
+    private javax.swing.JComboBox<String> cbTrustLevel;
     private javax.swing.JLabel lbReadOnly;
+    private javax.swing.JLabel lbTrustLevel;
     private javax.swing.JLabel lbTrustTerms;
     // End of variables declaration//GEN-END:variables
 
     void save() {
         if (project != null) {
-            if (cbTrustProject.isSelected()) {
-                ProjectTrust.getDefault().trustProject(project);
-            } else {
+            Object v = cbTrustLevel.getSelectedItem();
+            if (v == null) {
+                v = LEVEL_NONE;
+            }
+            if (LEVEL_NONE.equals(v)) {
                 ProjectTrust.getDefault().distrustProject(project);
+            } else if (LEVEL_PERMANENT.equals(v)) {
+                ProjectTrust.getDefault().trustProject(project, true);
+            } else if (LEVEL_TEMPORARY.equals(v)) {
+                if (ProjectTrust.getDefault().isTrustedPermanetly(project)) {
+                    ProjectTrust.getDefault().distrustProject(project);
+                }
+                ProjectTrust.getDefault().trustProject(project, false);
             }
         }
     }

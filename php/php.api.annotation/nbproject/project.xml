@@ -115,22 +115,11 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <friend-packages>
-                <friend>org.nbphpcouncil.modules.php.ci</friend>
-                <friend>org.nbphpcouncil.modules.php.yii2</friend>
-                <friend>org.netbeans.modules.php.api.framework</friend>
-                <friend>org.netbeans.modules.php.apigen</friend>
-                <friend>org.netbeans.modules.php.codeception</friend>
-                <friend>org.netbeans.modules.php.doctrine2</friend>
-                <friend>org.netbeans.modules.php.editor</friend>
-                <friend>org.netbeans.modules.php.nette2</friend>
-                <friend>org.netbeans.modules.php.phpunit</friend>
-                <friend>org.netbeans.modules.php.project</friend>
-                <friend>org.netbeans.modules.php.symfony2</friend>
+            <public-packages>
                 <package>org.netbeans.modules.php.api.annotation</package>
                 <package>org.netbeans.modules.php.api.annotation.util</package>
                 <package>org.netbeans.modules.php.spi.annotation</package>
-            </friend-packages>
+            </public-packages>
         </data>
     </configuration>
 </project>

@@ -78,9 +78,9 @@ export class NbTestAdapter implements TestAdapter {
                 if (current && current.file) {
                     const methodName = idx < 0 ? undefined : tests[0].slice(idx + 1);
                     if (methodName) {
-                        await commands.executeCommand('java.test.single', Uri.file(current.file).toString(), methodName);
+                        await commands.executeCommand('java.run.single', Uri.file(current.file).toString(), methodName);
                     } else {
-                        await commands.executeCommand('java.test.single', Uri.file(current.file).toString());
+                        await commands.executeCommand('java.run.single', Uri.file(current.file).toString());
                     }
                     this.statesEmitter.fire(<TestRunFinishedEvent>{ type: 'finished' });
                 } else {

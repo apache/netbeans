@@ -228,19 +228,22 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             ]);
         }
     }));
-    context.subscriptions.push(commands.registerCommand('java.debug.single', async (uri, singleMethod?) => {
+    const runSingle = async (noDebug : boolean, uri : any, methodName? : string) => {
         const editor = window.activeTextEditor;
         if (editor) {
             const docUri = editor.document.uri;
             const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
-            const debugConfig = {
+            const debugConfig : vscode.DebugConfiguration = {
                 type: "java8+",
                 name: "Java Single Debug",
                 request: "launch",
                 mainClass: uri,
-                singleMethod
+                methodName
             };
-            const ret = await vscode.debug.startDebugging(workspaceFolder, debugConfig);
+            const debugOptions : vscode.DebugSessionOptions = {
+                noDebug: noDebug,
+            }
+            const ret = await vscode.debug.startDebugging(workspaceFolder, debugConfig, debugOptions);
             return ret ? new Promise((resolve) => {
                 const listener = vscode.debug.onDidTerminateDebugSession(() => {
                     listener.dispose();
@@ -248,6 +251,12 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 });
             }) : ret;
         }
+    };
+    context.subscriptions.push(commands.registerCommand('java.run.single', async (uri, methodName?) => {
+        await runSingle(true, uri, methodName);
+    }));
+    context.subscriptions.push(commands.registerCommand('java.debug.single', async (uri, methodName?) => {
+        await runSingle(false, uri, methodName);
     }));
 
 	// get the Test Explorer extension and register TestAdapter
@@ -369,7 +378,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             if (isOut) {
                 stdOut += text;
             }
-            if (stdOut.match(/org.netbeans.modules.java.lsp.server.*Enabled/)) {
+            if (stdOut.match(/org.netbeans.modules.java.lsp.server/)) {
                 resolve(text);
                 stdOut = null;
             }

@@ -322,8 +322,8 @@ public final class Server {
                 capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
-                List<String> commands = new ArrayList<>(Arrays.asList(JAVA_BUILD_WORKSPACE, JAVA_LOAD_WORKSPACE_TESTS,
-                        GRAALVM_PAUSE_SCRIPT, JAVA_SUPER_IMPLEMENTATION));
+                List<String> commands = new ArrayList<>(Arrays.asList(
+                        JAVA_BUILD_WORKSPACE, JAVA_LOAD_WORKSPACE_TESTS, GRAALVM_PAUSE_SCRIPT, JAVA_SUPER_IMPLEMENTATION));
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     commands.addAll(codeGenerator.getCommands());
                 }

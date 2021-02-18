@@ -197,10 +197,23 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                         }
                     }, humanVisibleDelay);
                 } else {
-                    reject(`cannot compile workspace; client is ${client}`);
+                    reject(`cannot compile workspace; client is ${c}`);
                 }
             });
         });
+    }));
+    context.subscriptions.push(commands.registerCommand('java.goto.super.implementation', async () => {
+        if (window.activeTextEditor?.document.languageId !== "java") {
+            return;
+        }
+        const uri = window.activeTextEditor.document.uri.toString();
+        const position = window.activeTextEditor.selection.active;
+        const location: any = await vscode.commands.executeCommand('java.super.implementation', uri, position);
+        if (location) {
+            return window.showTextDocument(vscode.Uri.parse(location.uri), { preserveFocus: true, selection: location.range });
+        } else {
+            return window.showInformationMessage('No super implementation found');
+        }
     }));
     context.subscriptions.push(commands.registerCommand('java.rename.element.at', async (offset) => {
         const editor = window.activeTextEditor;
@@ -211,20 +224,29 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             ]);
         }
     }));
-    context.subscriptions.push(commands.registerCommand('java.debug.codelens', async (uri, methodName) => {
+    const runCodelens = async (uri : any, methodName : string, noDebug : boolean) => {
         const editor = window.activeTextEditor;
         if (editor) {
             const docUri = editor.document.uri;
             const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
-            const debugConfig = {
+            const debugConfig : vscode.DebugConfiguration = {
                 type: "java8+",
                 name: "CodeLens Debug",
                 request: "launch",
                 mainClass: uri,
                 singleMethod: methodName,
             };
-            await vscode.debug.startDebugging(workspaceFolder, debugConfig).then();
+            const debugOptions : vscode.DebugSessionOptions = {
+                noDebug: noDebug,
+            }
+            await vscode.debug.startDebugging(workspaceFolder, debugConfig, debugOptions).then();
         }
+    };
+    context.subscriptions.push(commands.registerCommand('java.run.codelens', async (uri, methodName) => {
+        await runCodelens(uri, methodName, true);
+    }));
+    context.subscriptions.push(commands.registerCommand('java.debug.codelens', async (uri, methodName) => {
+        await runCodelens(uri, methodName, false);
     }));
     return Object.freeze({
         version : API_VERSION
@@ -242,29 +264,33 @@ let maintenance : Promise<void> | null;
 let activationPending : boolean = false;
 
 function activateWithJDK(specifiedJDK: string | null, context: ExtensionContext, log : vscode.OutputChannel, notifyKill: boolean): void {
-    let setClient : [(c : LanguageClient) => void, (err : any) => void];
-    client = new Promise<LanguageClient>((clientOK, clientErr) => {
-        setClient = [ clientOK, clientErr ];
-    });
-    const a : Promise<void> | null = maintenance;
     if (activationPending) {
         // do not activate more than once in parallel.
         handleLog(log, "Server activation requested repeatedly, ignoring...");
         return;
     }
+    let oldClient = client;
+    let setClient : [(c : LanguageClient) => void, (err : any) => void];
+    client = new Promise<LanguageClient>((clientOK, clientErr) => {
+        setClient = [ clientOK, clientErr ];
+    });
+    const a : Promise<void> | null = maintenance;
+    commands.executeCommand('setContext', 'nbJavaLSReady', false);
     activationPending = true;
     // chain the restart after termination of the former process.
     if (a != null) {
         handleLog(log, "Server activation initiated while in maintenance mode, scheduling after maintenance");
-        a.then(() => killNbProcess(notifyKill, log)).
-            then(() => doActivateWithJDK(specifiedJDK, context, log, notifyKill, setClient));
+        a.then(() => stopClient(oldClient)).then(() => killNbProcess(notifyKill, log)).then(() => {
+            doActivateWithJDK(specifiedJDK, context, log, notifyKill, setClient);
+        });
     } else {
         handleLog(log, "Initiating server activation");
-        killNbProcess(notifyKill, log).then(
-            () => doActivateWithJDK(specifiedJDK, context, log, notifyKill, setClient)
-        );
+        stopClient(oldClient).then(() => killNbProcess(notifyKill, log)).then(() => {
+            doActivateWithJDK(specifiedJDK, context, log, notifyKill, setClient);
+        });
     }
 }
+
 
 function killNbProcess(notifyKill : boolean, log : vscode.OutputChannel, specProcess?: ChildProcess) : Promise<void> {
     const p = nbProcess;
@@ -330,7 +356,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             if (isOut) {
                 stdOut += text;
             }
-            if (stdOut.match(/org.netbeans.modules.java.lsp.server.*Enabled/)) {
+            if (stdOut.match(/org.netbeans.modules.java.lsp.server/)) {
                 resolve(text);
                 stdOut = null;
             }
@@ -345,6 +371,9 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         });
         nbProcess = p;
         p.on('close', function(code: number) {
+            if (p == nbProcess) {
+                nbProcess = null;
+            }
             if (p == nbProcess && code != 0 && code) {
                 vscode.window.showWarningMessage("Apache NetBeans Language Server exited with " + code);
             }
@@ -449,7 +478,6 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         handleLog(log, 'Language Client: Starting');
         c.start();
         c.onReady().then(() => {
-            commands.executeCommand('setContext', 'nbJavaLSReady', true);
             c.onNotification(StatusMessageRequest.type, showStatusBarMessage);
             c.onNotification(LogMessageNotification.type, (param) => handleLog(log, param.message));
             c.onRequest(QuickPickRequest.type, async param => {
@@ -461,6 +489,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             });
             handleLog(log, 'Language Client: Ready');
             setClient[0](c);
+            commands.executeCommand('setContext', 'nbJavaLSReady', true);
         }).catch(setClient[1]);
     }).catch((reason) => {
         activationPending = false;
@@ -534,11 +563,15 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
     }
 }
 
+function stopClient(clinetPromise: Promise<LanguageClient>): Thenable<void> {
+    return clinetPromise ? clinetPromise.then(c => c.stop()) : Promise.resolve();
+}
+
 export function deactivate(): Thenable<void> {
     if (nbProcess != null) {
         nbProcess.kill();
     }
-    return client.then(c => c.stop());
+    return stopClient(client);
 }
 
 class NetBeansDebugAdapterDescriptionFactory implements vscode.DebugAdapterDescriptorFactory {

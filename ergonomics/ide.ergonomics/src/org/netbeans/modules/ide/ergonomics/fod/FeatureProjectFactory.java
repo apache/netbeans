@@ -150,6 +150,8 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
                 return false;
             }
 
+            relative = relative.substring(pos);
+
             if (relative.contains("*")) {
                 for (String segment : relative.split("/")) {
                     FOUND: if (segment.contains("*")) {

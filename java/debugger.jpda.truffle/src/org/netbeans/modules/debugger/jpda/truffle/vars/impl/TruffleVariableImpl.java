@@ -138,9 +138,9 @@ public class TruffleVariableImpl implements TruffleVariable {
             }
 
             f = truffleObj.getField(FIELD_VALUE_SOURCE);
-            boolean hasValueSource = ((ObjectVariable) f).getUniqueID() != 0L;
+            boolean hasValueSource = f != null && ((ObjectVariable) f).getUniqueID() != 0L;
             f = truffleObj.getField(FIELD_TYPE_SOURCE);
-            boolean hasTypeSource = ((ObjectVariable) f).getUniqueID() != 0L;
+            boolean hasTypeSource = f != null && ((ObjectVariable) f).getUniqueID() != 0L;
 
             boolean leaf = isLeaf(truffleObj);
             return new TruffleVariableImpl(truffleObj, name, language, type, dispVal, readable, writable, internal, hasValueSource, hasTypeSource, leaf);
@@ -150,7 +150,10 @@ public class TruffleVariableImpl implements TruffleVariable {
     }
 
     static boolean isLeaf(ObjectVariable truffleObj) {
-        Field f = getFieldChecked(FIELD_LEAF, truffleObj);
+        Field f = truffleObj.getField(FIELD_LEAF);
+        if (f == null) {
+            return false;
+        }
         Boolean mirrorLeaf = (Boolean) f.createMirrorObject();
         boolean leaf;
         if (mirrorLeaf == null) {
@@ -234,7 +237,10 @@ public class TruffleVariableImpl implements TruffleVariable {
     @Override
     public synchronized SourcePosition getValueSource() {
         if (valueSource == null) {
-            Field f = getFieldChecked(FIELD_VALUE_SOURCE, guestObject);
+            Field f = guestObject.getField(FIELD_VALUE_SOURCE);
+            if (f == null) {
+                return null;
+            }
             valueSource = TruffleAccess.getSourcePosition(((AbstractVariable) f).getDebugger(), (ObjectVariable) f);
         }
         return valueSource;
@@ -248,7 +254,10 @@ public class TruffleVariableImpl implements TruffleVariable {
     @Override
     public synchronized SourcePosition getTypeSource() {
         if (typeSource == null) {
-            Field f = getFieldChecked(FIELD_TYPE_SOURCE, guestObject);
+            Field f = guestObject.getField(FIELD_TYPE_SOURCE);
+            if (f == null) {
+                return null;
+            }
             typeSource = TruffleAccess.getSourcePosition(((AbstractVariable) f).getDebugger(), (ObjectVariable) f);
         }
         return typeSource;
@@ -286,17 +295,5 @@ public class TruffleVariableImpl implements TruffleVariable {
         }
         return new Object[] {};
     }
-    
-    private static Field getFieldChecked(String fieldName, ObjectVariable guestObject) {
-        Field f = guestObject.getField(fieldName);
-        if (f == null) {
-            try {
-                throw new IllegalStateException("No "+fieldName+" field in "+guestObject.getToStringValue());
-            } catch (InvalidExpressionException iex) {
-                throw new IllegalStateException("No "+fieldName+" field in "+guestObject);
-            }
-        } else {
-            return f;
-        }
-    }
+
 }

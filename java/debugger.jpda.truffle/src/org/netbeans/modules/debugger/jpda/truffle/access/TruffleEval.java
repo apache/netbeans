@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.debugger.jpda.truffle.access;
 
+import com.sun.jdi.StringReference;
 import java.io.InvalidObjectException;
 import org.netbeans.api.debugger.jpda.InvalidExpressionException;
 import org.netbeans.api.debugger.jpda.JPDAClassType;
@@ -26,7 +27,12 @@ import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
+import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.expr.InvocationExceptionTranslated;
+import org.netbeans.modules.debugger.jpda.jdi.InternalExceptionWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.UnsupportedOperationExceptionWrapper;
+import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
+import org.netbeans.modules.debugger.jpda.truffle.PersistentValues;
 import org.netbeans.modules.debugger.jpda.truffle.TruffleDebugManager;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
 import org.openide.util.Exceptions;
@@ -56,8 +62,10 @@ public class TruffleEval {
         }
         ObjectVariable stackFrameInstance = selectedStackFrame.getStackFrameInstance();
         JPDAClassType debugAccessor = TruffleDebugManager.getDebugAccessorJPDAClass(debugger);
+        PersistentValues values = new PersistentValues(((JPDADebuggerImpl) debugger).getVirtualMachine());
         try {
-            Variable mirrorExpression = debugger.createMirrorVar(expression);
+            StringReference expressionReference = values.mirrorOf(expression);
+            Variable mirrorExpression = ((JPDADebuggerImpl) debugger).getVariable(expressionReference);
             Variable valueVar = debugAccessor.invokeMethod(
                     METHOD_EVALUATE,
                     METHOD_EVALUATE_ON_FRAME_SIG,
@@ -71,7 +79,7 @@ public class TruffleEval {
                 ((InvocationExceptionTranslated) targetException).resetInvocationMessage();
             }
             throw ex;
-        } catch (InvalidObjectException | NoSuchMethodException ex) {
+        } catch (InternalExceptionWrapper | NoSuchMethodException | UnsupportedOperationExceptionWrapper ex) {
             try {
                 return debugger.createMirrorVar(ex.getLocalizedMessage());
             } catch (InvalidObjectException iex) {
@@ -79,6 +87,10 @@ public class TruffleEval {
                 return null;
             }
             //return ex.getLocalizedMessage();
+        } catch (VMDisconnectedExceptionWrapper ex) {
+            return null;
+        }  finally {
+            values.collect();
         }
     }
 

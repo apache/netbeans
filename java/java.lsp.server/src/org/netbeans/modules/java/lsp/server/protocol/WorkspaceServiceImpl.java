@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
@@ -39,10 +40,12 @@ import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.Location;
+import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
+import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -69,7 +72,6 @@ import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -87,9 +89,12 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     private static final RequestProcessor WORKER = new RequestProcessor(WorkspaceServiceImpl.class.getName(), 1, false, false);
 
+    private final Gson gson = new Gson();
+    private final LanguageServer server;
     private NbCodeLanguageClient client;
 
-    public WorkspaceServiceImpl() {
+    public WorkspaceServiceImpl(LanguageServer server) {
+        this.server = server;
     }
 
     @Override
@@ -112,33 +117,10 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 progressOfCompilation.checkStatus();
                 return progressOfCompilation.getFinishFuture();
             }
-            case Server.JAVA_TEST_SINGLE_METHOD:
-                CommandProgress progressOfCommand = new CommandProgress();
-                String uriStr = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
-                FileObject file;
-                try {
-                    file = URLMapper.findFileObject(new URL(uriStr));
-                } catch (MalformedURLException ex) {
-                    Exceptions.printStackTrace(ex);
-                    return CompletableFuture.completedFuture(true);
-                }
-                String methodName = ((JsonPrimitive) params.getArguments().get(1)).getAsString();
-                SingleMethod method = new SingleMethod(file, methodName);
-                runSingleMethodCommand(method, SingleMethod.COMMAND_RUN_SINGLE_METHOD, progressOfCommand);
-                progressOfCommand.checkStatus();
-                return progressOfCommand.getFinishFuture();
-            case Server.JAVA_RUN_MAIN_METHOD:
-                progressOfCommand = new CommandProgress();
-                uriStr = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
-                try {
-                    file = URLMapper.findFileObject(new URL(uriStr));
-                } catch (MalformedURLException ex) {
-                    Exceptions.printStackTrace(ex);
-                    return CompletableFuture.completedFuture(true);
-                }
-                runSingleFile(file, ActionProvider.COMMAND_RUN_SINGLE, progressOfCommand);
-                progressOfCommand.checkStatus();
-                return progressOfCommand.getFinishFuture();
+            case Server.JAVA_SUPER_IMPLEMENTATION:
+                String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
+                Position pos = gson.fromJson(gson.toJson(params.getArguments().get(1)), Position.class);
+                return (CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).superImplementation(uri, pos);
             default:
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     if (codeGenerator.getCommands().contains(command)) {
@@ -147,46 +129,6 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
-    }
-
-    @NbBundle.Messages("No_Method_Found=No method found")
-    private void runSingleMethodCommand(SingleMethod singleMethod, String command, CommandProgress progressOfCommand) {
-        if (singleMethod == null) {
-            StatusDisplayer.getDefault().setStatusText(Bundle.No_Method_Found());
-            progressOfCommand.getFinishFuture().complete(true);
-        } else {
-            Mutex.EVENT.readAccess(new Runnable() {
-                @Override
-                public void run() {
-                    Project owner = FileOwnerQuery.getOwner(singleMethod.getFile());
-                    if (owner != null) {
-                        ActionProvider ap = owner.getLookup().lookup(ActionProvider.class);
-                        if (ap != null) {
-                            if (Arrays.asList(ap.getSupportedActions()).contains(command) && ap.isActionEnabled(command, Lookups.singleton(singleMethod))) {
-                                ap.invokeAction(command, Lookups.fixed(singleMethod, progressOfCommand));
-                            }
-                        }
-                    }
-                }
-            });
-        }
-    }
-
-    private void runSingleFile(FileObject file, String command, CommandProgress progressOfCommand) {
-        Mutex.EVENT.readAccess(new Runnable() {
-            @Override
-            public void run() {
-                Project owner = FileOwnerQuery.getOwner(file);
-                if (owner != null) {
-                    ActionProvider ap = owner.getLookup().lookup(ActionProvider.class);
-                    if (ap != null) {
-                        if (Arrays.asList(ap.getSupportedActions()).contains(command) && ap.isActionEnabled(command, Lookups.singleton(file))) {
-                            ap.invokeAction(command, Lookups.fixed(file, progressOfCommand));
-                        }
-                    }
-                }
-            }
-        });
     }
 
     @Override

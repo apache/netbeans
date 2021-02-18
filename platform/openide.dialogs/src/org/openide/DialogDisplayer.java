@@ -76,7 +76,7 @@ public abstract class DialogDisplayer {
     public abstract Object notify(NotifyDescriptor descriptor);
 
     /** Notify the user of something in a message box, possibly with feedback,
-     * this method method may be called
+     * this method may be called
      * from any thread. The thread will return immediately and
      * the dialog will be shown <q>later</q>, usually when AWT thread
      * is empty and can handle the request.

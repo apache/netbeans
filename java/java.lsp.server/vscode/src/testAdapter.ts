@@ -69,7 +69,7 @@ export class NbTestAdapter implements TestAdapter {
 		this.statesEmitter.fire(<TestRunStartedEvent>{ type: 'started', tests });
 		if (tests.length === 1) {
             if (tests[0] === '*') {
-                await commands.executeCommand('java.test.workspace', this.workspaceFolder.uri.toString());
+                await commands.executeCommand('java.run.test', this.workspaceFolder.uri.toString());
                 this.statesEmitter.fire(<TestRunFinishedEvent>{ type: 'finished' });
             } else {
                 const idx = tests[0].indexOf(':');

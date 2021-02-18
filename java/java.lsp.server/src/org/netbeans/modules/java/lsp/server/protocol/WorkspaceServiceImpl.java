@@ -71,7 +71,6 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
 import org.netbeans.modules.java.lsp.server.Utils;
-import org.netbeans.modules.java.lsp.server.progress.TestProgressHandler;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider.ResultHandler;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider.ResultHandler.Exec;
@@ -93,7 +92,6 @@ import org.openide.util.Lookup;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
-import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -170,32 +168,6 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     }
                     return file2TestSuites.values();
                 });
-            }
-            case Server.JAVA_TEST_WORKSPACE: {
-                final CommandProgress progressOfTest = new CommandProgress();
-                String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
-                FileObject file;
-                try {
-                    file = URLMapper.findFileObject(new URL(uri));
-                } catch (MalformedURLException ex) {
-                    Exceptions.printStackTrace(ex);
-                    return CompletableFuture.completedFuture(true);
-                }
-                CompletableFuture<Project[]> projectsFuture = new CompletableFuture<>();
-                server.asyncOpenSelectedProjects(projectsFuture, Collections.singletonList(file));
-                projectsFuture.thenAccept(projects -> {
-                    Lookups.executeWith(new ProxyLookup(Lookups.singleton(new TestProgressHandler(client, uri)), Lookup.getDefault()), () -> {
-                        final Lookup ctx = Lookups.singleton(progressOfTest);
-                        for (Project prj : projects) {
-                            ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
-                            if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_TEST, Lookup.EMPTY)) {
-                                ap.invokeAction(ActionProvider.COMMAND_TEST, ctx);
-                            }
-                        }
-                        progressOfTest.checkStatus();
-                    });
-                });
-                return progressOfTest.getFinishFuture();
             }
             case Server.JAVA_SUPER_IMPLEMENTATION:
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();

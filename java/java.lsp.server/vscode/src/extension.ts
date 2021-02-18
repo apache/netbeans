@@ -228,7 +228,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             ]);
         }
     }));
-    const runSingle = async (noDebug : boolean, uri : any, methodName? : string) => {
+    const runDebug = async (noDebug : boolean, testRun: boolean, uri : any, methodName? : string) => {
         const editor = window.activeTextEditor;
         if (editor) {
             const docUri = editor.document.uri;
@@ -238,7 +238,8 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
                 name: "Java Single Debug",
                 request: "launch",
                 mainClass: uri,
-                methodName
+                methodName,
+                testRun
             };
             const debugOptions : vscode.DebugSessionOptions = {
                 noDebug: noDebug,
@@ -252,11 +253,14 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             }) : ret;
         }
     };
+    context.subscriptions.push(commands.registerCommand('java.run.test', async (uri, methodName?) => {
+        await runDebug(true, true, uri, methodName);
+    }));
     context.subscriptions.push(commands.registerCommand('java.run.single', async (uri, methodName?) => {
-        await runSingle(true, uri, methodName);
+        await runDebug(true, false, uri, methodName);
     }));
     context.subscriptions.push(commands.registerCommand('java.debug.single', async (uri, methodName?) => {
-        await runSingle(false, uri, methodName);
+        await runDebug(false, false, uri, methodName);
     }));
 
 	// get the Test Explorer extension and register TestAdapter

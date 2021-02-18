@@ -124,7 +124,8 @@ public final class NbLaunchRequestHandler {
             context.setSourcePaths((String[]) launchArguments.get("sourcePaths"));
         }
         String singleMethod = (String)launchArguments.get("singleMethod");
-        activeLaunchHandler.nbLaunch(file, singleMethod, context, !noDebug, new OutputListener(context)).thenRun(() -> {
+        boolean testRun = (Boolean) launchArguments.getOrDefault("testRun", Boolean.FALSE);
+        activeLaunchHandler.nbLaunch(file, singleMethod, context, !noDebug, testRun, new OutputListener(context)).thenRun(() -> {
             activeLaunchHandler.postLaunch(launchArguments, context);
             resultFuture.complete(null);
         }).exceptionally(e -> {

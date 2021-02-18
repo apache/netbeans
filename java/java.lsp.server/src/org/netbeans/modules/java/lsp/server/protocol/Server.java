@@ -323,7 +323,7 @@ public final class Server {
                 capabilities.setDocumentHighlightProvider(true);
                 capabilities.setReferencesProvider(true);
                 List<String> commands = new ArrayList<>(Arrays.asList(JAVA_BUILD_WORKSPACE, JAVA_LOAD_WORKSPACE_TESTS, JAVA_TEST_WORKSPACE,
-                        GRAALVM_PAUSE_SCRIPT, JAVA_SUPER_IMPLEMENTATION, JAVA_TEST_SINGLE, JAVA_RUN_MAIN_METHOD));
+                        GRAALVM_PAUSE_SCRIPT, JAVA_SUPER_IMPLEMENTATION));
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     commands.addAll(codeGenerator.getCommands());
                 }
@@ -422,8 +422,6 @@ public final class Server {
     public static final String JAVA_LOAD_WORKSPACE_TESTS =  "java.load.workspace.tests";
     public static final String JAVA_TEST_WORKSPACE =  "java.test.workspace";
     public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
-    public static final String JAVA_TEST_SINGLE =  "java.test.single";
-    public static final String JAVA_RUN_MAIN_METHOD =  "java.run.main.method";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";

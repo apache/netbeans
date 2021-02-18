@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -66,7 +65,6 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
-import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
@@ -88,14 +86,10 @@ import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.jumpto.type.SearchType;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
-import org.netbeans.spi.project.SingleMethod;
-import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.Mutex;
-import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
@@ -207,37 +201,6 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 Position pos = gson.fromJson(gson.toJson(params.getArguments().get(1)), Position.class);
                 return (CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).superImplementation(uri, pos);
-            case Server.JAVA_TEST_SINGLE:
-                CommandProgress progressOfCommand = new CommandProgress();
-                String uriStr = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
-                FileObject file;
-                try {
-                    file = URLMapper.findFileObject(new URL(uriStr));
-                } catch (MalformedURLException ex) {
-                    Exceptions.printStackTrace(ex);
-                    return CompletableFuture.completedFuture(true);
-                }
-                String methodName = params.getArguments().size() > 1 ? ((JsonPrimitive) params.getArguments().get(1)).getAsString() : "";
-                if (methodName.isEmpty()) {
-                    runSingleFile(file, ActionProvider.COMMAND_TEST_SINGLE, progressOfCommand, new TestProgressHandler(client, uriStr));
-                } else {
-                    SingleMethod method = new SingleMethod(file, methodName);
-                    runSingleMethodCommand(method, SingleMethod.COMMAND_RUN_SINGLE_METHOD, progressOfCommand, new TestProgressHandler(client, uriStr));
-                }
-                progressOfCommand.checkStatus();
-                return progressOfCommand.getFinishFuture();
-            case Server.JAVA_RUN_MAIN_METHOD:
-                progressOfCommand = new CommandProgress();
-                uriStr = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
-                try {
-                    file = URLMapper.findFileObject(new URL(uriStr));
-                } catch (MalformedURLException ex) {
-                    Exceptions.printStackTrace(ex);
-                    return CompletableFuture.completedFuture(true);
-                }
-                runSingleFile(file, ActionProvider.COMMAND_RUN_SINGLE, progressOfCommand, null);
-                progressOfCommand.checkStatus();
-                return progressOfCommand.getFinishFuture();
             default:
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     if (codeGenerator.getCommands().contains(command)) {
@@ -298,55 +261,6 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             }
         }
         return offset[0] < 0 ? null : Utils.createPosition(lm[0], offset[0]).getLine();
-    }
-
-    @NbBundle.Messages("No_Method_Found=No method found")
-    private void runSingleMethodCommand(SingleMethod singleMethod, String command, CommandProgress progressOfCommand, TestProgressHandler testDisplayHandler) {
-        if (singleMethod == null) {
-            StatusDisplayer.getDefault().setStatusText(Bundle.No_Method_Found());
-            progressOfCommand.getFinishFuture().complete(true);
-        } else {
-            Mutex.EVENT.readAccess(new Runnable() {
-                @Override
-                public void run() {
-                    Project owner = FileOwnerQuery.getOwner(singleMethod.getFile());
-                    if (owner != null) {
-                        Lookups.executeWith(new ProxyLookup(Lookups.singleton(testDisplayHandler), Lookup.getDefault()), () -> {
-                            ActionProvider ap = owner.getLookup().lookup(ActionProvider.class);
-                            if (ap != null) {
-                                if (Arrays.asList(ap.getSupportedActions()).contains(command) && ap.isActionEnabled(command, Lookups.singleton(singleMethod))) {
-                                    ap.invokeAction(command, Lookups.fixed(singleMethod, progressOfCommand));
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-        }
-    }
-
-    private void runSingleFile(FileObject file, String command, CommandProgress progressOfCommand, TestProgressHandler testDisplayHandler) {
-        Mutex.EVENT.readAccess(new Runnable() {
-            @Override
-            public void run() {
-                Project owner = FileOwnerQuery.getOwner(file);
-                if (owner != null) {
-                    Runnable runnable = () -> {
-                        ActionProvider ap = owner.getLookup().lookup(ActionProvider.class);
-                        if (ap != null) {
-                            if (Arrays.asList(ap.getSupportedActions()).contains(command) && ap.isActionEnabled(command, Lookups.singleton(file))) {
-                                ap.invokeAction(command, Lookups.fixed(file, progressOfCommand));
-                            }
-                        }
-                    };
-                    if (testDisplayHandler != null) {
-                        Lookups.executeWith(new ProxyLookup(Lookups.singleton(testDisplayHandler), Lookup.getDefault()), runnable);
-                    } else {
-                        runnable.run();
-                    }
-                }
-            }
-        });
     }
 
     @Override

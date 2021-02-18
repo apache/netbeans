@@ -121,33 +121,6 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 Position pos = gson.fromJson(gson.toJson(params.getArguments().get(1)), Position.class);
                 return (CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).superImplementation(uri, pos);
-            case Server.JAVA_TEST_SINGLE_METHOD:
-                CommandProgress progressOfCommand = new CommandProgress();
-                String uriStr = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
-                FileObject file;
-                try {
-                    file = URLMapper.findFileObject(new URL(uriStr));
-                } catch (MalformedURLException ex) {
-                    Exceptions.printStackTrace(ex);
-                    return CompletableFuture.completedFuture(true);
-                }
-                String methodName = ((JsonPrimitive) params.getArguments().get(1)).getAsString();
-                SingleMethod method = new SingleMethod(file, methodName);
-                runSingleMethodCommand(method, SingleMethod.COMMAND_RUN_SINGLE_METHOD, progressOfCommand);
-                progressOfCommand.checkStatus();
-                return progressOfCommand.getFinishFuture();
-            case Server.JAVA_RUN_MAIN_METHOD:
-                progressOfCommand = new CommandProgress();
-                uriStr = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
-                try {
-                    file = URLMapper.findFileObject(new URL(uriStr));
-                } catch (MalformedURLException ex) {
-                    Exceptions.printStackTrace(ex);
-                    return CompletableFuture.completedFuture(true);
-                }
-                runSingleFile(file, ActionProvider.COMMAND_RUN_SINGLE, progressOfCommand);
-                progressOfCommand.checkStatus();
-                return progressOfCommand.getFinishFuture();
             default:
                 for (CodeGenerator codeGenerator : Lookup.getDefault().lookupAll(CodeGenerator.class)) {
                     if (codeGenerator.getCommands().contains(command)) {
@@ -156,46 +129,6 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
-    }
-
-    @NbBundle.Messages("No_Method_Found=No method found")
-    private void runSingleMethodCommand(SingleMethod singleMethod, String command, CommandProgress progressOfCommand) {
-        if (singleMethod == null) {
-            StatusDisplayer.getDefault().setStatusText(Bundle.No_Method_Found());
-            progressOfCommand.getFinishFuture().complete(true);
-        } else {
-            Mutex.EVENT.readAccess(new Runnable() {
-                @Override
-                public void run() {
-                    Project owner = FileOwnerQuery.getOwner(singleMethod.getFile());
-                    if (owner != null) {
-                        ActionProvider ap = owner.getLookup().lookup(ActionProvider.class);
-                        if (ap != null) {
-                            if (Arrays.asList(ap.getSupportedActions()).contains(command) && ap.isActionEnabled(command, Lookups.singleton(singleMethod))) {
-                                ap.invokeAction(command, Lookups.fixed(singleMethod, progressOfCommand));
-                            }
-                        }
-                    }
-                }
-            });
-        }
-    }
-
-    private void runSingleFile(FileObject file, String command, CommandProgress progressOfCommand) {
-        Mutex.EVENT.readAccess(new Runnable() {
-            @Override
-            public void run() {
-                Project owner = FileOwnerQuery.getOwner(file);
-                if (owner != null) {
-                    ActionProvider ap = owner.getLookup().lookup(ActionProvider.class);
-                    if (ap != null) {
-                        if (Arrays.asList(ap.getSupportedActions()).contains(command) && ap.isActionEnabled(command, Lookups.singleton(file))) {
-                            ap.invokeAction(command, Lookups.fixed(file, progressOfCommand));
-                        }
-                    }
-                }
-            }
-        });
     }
 
     @Override

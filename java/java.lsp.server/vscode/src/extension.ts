@@ -477,7 +477,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             progressOnInitialization: true,
             initializationOptions : {
                 'nbcodeCapabilities' : {
-                    'statusBarMessageSupport' : true
+                    'statusBarMessageSupport' : true,
+                    'testResultsSupport' : true
                 }
             },
             errorHandler: {

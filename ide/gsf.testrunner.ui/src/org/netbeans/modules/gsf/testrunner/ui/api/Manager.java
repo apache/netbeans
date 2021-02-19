@@ -484,11 +484,11 @@ public final class Manager {
         }
 
         if (displayHandler == null) {
-            displayHandler = TestResultDisplayHandler.get(session);
+            displayHandler = TestResultDisplayHandler.create(session);
             displayHandlers.put(session, new WeakReference<TestResultDisplayHandler>(displayHandler));
-            if (displayHandler instanceof ResultDisplayHandler) {
-                final ResultDisplayHandler dispHandler = (ResultDisplayHandler)displayHandler;
-                createIO(dispHandler);
+            TestResultDisplayHandler.Spi handlerSpi = displayHandler.getSpi();
+            if (handlerSpi instanceof ResultDisplayHandler) {
+                createIO((ResultDisplayHandler)handlerSpi);
                 lock = new Semaphore(1);
                 try {
                     lock.acquire(1);
@@ -499,8 +499,8 @@ public final class Manager {
 
                     @Override
                     public void run() {
-                        StatisticsPanel comp = (StatisticsPanel) dispHandler.getDisplayComponent().getLeftComponent();
-                        dispHandler.setTreePanel(comp.getTreePanel());
+                        StatisticsPanel comp = (StatisticsPanel) ((ResultDisplayHandler)handlerSpi).getDisplayComponent().getLeftComponent();
+                        ((ResultDisplayHandler)handlerSpi).setTreePanel(comp.getTreePanel());
                         lock.release();
                     }
                 });

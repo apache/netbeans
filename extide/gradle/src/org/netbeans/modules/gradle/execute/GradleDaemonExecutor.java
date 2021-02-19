@@ -223,6 +223,7 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
         } catch (UncheckedException | BuildException ex) {
             if (!cancelling) {
                 StatusDisplayer.getDefault().setStatusText(Bundle.BUILD_FAILED(getProjectName()));
+                gradleTask.finish(1);
             } else {
                 // This can happen if cancelling a Gradle build which is running
                 // an external aplication

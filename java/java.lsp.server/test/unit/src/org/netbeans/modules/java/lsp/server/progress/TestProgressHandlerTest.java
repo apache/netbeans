@@ -72,7 +72,7 @@ public class TestProgressHandlerTest extends NbTestCase {
         List<TestProgressParams> msgs = new ArrayList<>();
         MockLanguageClient mlc = new MockLanguageClient(msgs);
         TestProgressHandler progressHandler = new TestProgressHandler(mlc, fo.toURI().toString());
-        progressHandler.displaySuiteRunning("TestSuiteName");
+        progressHandler.displaySuiteRunning(progressHandler, "TestSuiteName");
         FileObject projectDir = fo;
         Project project = new Project() {
             @Override
@@ -109,7 +109,7 @@ public class TestProgressHandlerTest extends NbTestCase {
         report.setTotalTests(2);
         report.setPassed(1);
         report.setFailures(1);
-        progressHandler.displayReport(report);
+        progressHandler.displayReport(progressHandler, report);
         assertEquals("Two messages", 2, msgs.size());
         assertEquals(fo.toURI().toString(), msgs.get(0).getUri());
         TestSuiteInfo suite = msgs.get(0).getSuite();

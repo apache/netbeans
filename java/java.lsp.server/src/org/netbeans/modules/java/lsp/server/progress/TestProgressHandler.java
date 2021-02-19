@@ -38,7 +38,7 @@ import org.openide.filesystems.FileObject;
  *
  * @author Dusan Balek
  */
-public final class TestProgressHandler extends TestResultDisplayHandler implements TestResultDisplayHandler.Provider {
+public final class TestProgressHandler implements TestResultDisplayHandler.Spi<TestProgressHandler> {
 
     private final NbCodeLanguageClient client;
     private final String uri;
@@ -49,26 +49,26 @@ public final class TestProgressHandler extends TestResultDisplayHandler implemen
     }
 
     @Override
-    public TestResultDisplayHandler create(TestSession session) {
+    public TestProgressHandler create(TestSession session) {
         return this;
     }
 
     @Override
-    public void displayOutput(String text, boolean error) {
+    public void displayOutput(TestProgressHandler token, String text, boolean error) {
     }
 
     @Override
-    public void displaySuiteRunning(String suiteName) {
+    public void displaySuiteRunning(TestProgressHandler token, String suiteName) {
         client.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suiteName, TestSuiteInfo.State.Running)));
     }
 
     @Override
-    public void displaySuiteRunning(TestSuite suite) {
+    public void displaySuiteRunning(TestProgressHandler token, TestSuite suite) {
         client.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suite.getName(), TestSuiteInfo.State.Running)));
     }
 
     @Override
-    public void displayReport(Report report) {
+    public void displayReport(TestProgressHandler token, Report report) {
         Map<String, FileObject> fileLocations = new HashMap<>();
         List<TestSuiteInfo.TestCaseInfo> tests = report.getTests().stream().map((test) -> {
             String className = test.getClassName();
@@ -126,15 +126,15 @@ public final class TestProgressHandler extends TestResultDisplayHandler implemen
     }
 
     @Override
-    public void displayMessage(String message) {
+    public void displayMessage(TestProgressHandler token, String message) {
     }
 
     @Override
-    public void displayMessageSessionFinished(String message) {
+    public void displayMessageSessionFinished(TestProgressHandler token, String message) {
     }
 
     @Override
-    public int getTotalTests() {
+    public int getTotalTests(TestProgressHandler token) {
         return 0;
     }
 }

@@ -18,11 +18,12 @@
  */
 'use strict';
 
-import { WorkspaceFolder, Event, EventEmitter, Uri, commands } from "vscode";
+import { WorkspaceFolder, Event, EventEmitter, Uri, commands, debug } from "vscode";
 import * as path from 'path';
 import { TestAdapter, TestSuiteEvent, TestEvent, TestLoadFinishedEvent, TestLoadStartedEvent, TestRunFinishedEvent, TestRunStartedEvent, TestSuiteInfo, TestInfo } from "vscode-test-adapter-api";
 import { TestSuite } from "./protocol";
 import { LanguageClient } from "vscode-languageclient";
+import { getVSCodeDownloadUrl } from "vscode-test/out/util";
 
 export class NbTestAdapter implements TestAdapter {
 
@@ -115,7 +116,7 @@ export class NbTestAdapter implements TestAdapter {
     }
 
     cancel(): void {
-        throw new Error('Method not implemented.');
+        debug.stopDebugging();
     }
 
     dispose(): void {
@@ -174,8 +175,10 @@ export class NbTestAdapter implements TestAdapter {
             }
             if (suite.tests) {
                 suite.tests.forEach(test => {
+                    const children: (TestSuiteInfo | TestInfo)[] = [];
                     let currentTest = (currentSuite as TestSuiteInfo).children.find(ti => ti.id === test.id);
                     if (currentTest) {
+                        children.push(currentTest);
                         const file = test.file ? Uri.parse(test.file)?.path : undefined;
                         if (file && currentTest.file !== file) {
                             currentTest.file = file;
@@ -186,13 +189,17 @@ export class NbTestAdapter implements TestAdapter {
                             changed = true;
                         }
                     } else {
-                        (currentSuite as TestSuiteInfo).children.push({ type: 'test', id: test.id, label: test.shortName, tooltip: test.fullName, file: test.file ? Uri.parse(test.file)?.path : undefined, line: test.line });
+                        children.push({ type: 'test', id: test.id, label: test.shortName, tooltip: test.fullName, file: test.file ? Uri.parse(test.file)?.path : undefined, line: test.line });
                         changed = true;
                     }
+                    if ((currentSuite as TestSuiteInfo).children.length !== children.length) {
+                        changed = true;
+                    }
+                    (currentSuite as TestSuiteInfo).children = children;
                 });
             }
         } else {
-            let children: TestInfo[] = suite.tests ? suite.tests.map(test => {
+            const children: TestInfo[] = suite.tests ? suite.tests.map(test => {
                 return { type: 'test', id: test.id, label: test.shortName, tooltip: test.fullName, file: test.file ? Uri.parse(test.file)?.path : undefined, line: test.line };
             }) : [];
             this.children.push({ type: 'suite', id: suite.suiteName, label: suite.suiteName, file: suite.file ? Uri.parse(suite.file)?.path : undefined, line: suite.line, children });

@@ -22,7 +22,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -40,12 +39,13 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.NbSourceProvider;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.java.lsp.server.progress.ProgressOperationEvent;
 import org.netbeans.modules.java.lsp.server.progress.ProgressOperationListener;
-import org.netbeans.modules.progress.spi.InternalHandle;
+import org.netbeans.modules.java.lsp.server.progress.TestProgressHandler;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.SingleMethod;
@@ -68,7 +68,7 @@ public abstract class NbLaunchDelegate {
         // no op.
     }
 
-    public final CompletableFuture<Void> nbLaunch(FileObject toRun, String method, DebugAdapterContext context, boolean debug, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
+    public final CompletableFuture<Void> nbLaunch(FileObject toRun, String method, DebugAdapterContext context, boolean debug, boolean testRun, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
         CompletableFuture<Void> launchFuture = new CompletableFuture<>();
         NbProcessConsole ioContext = new NbProcessConsole(consoleMessages);
         SingleMethod singleMethod;
@@ -77,7 +77,7 @@ public abstract class NbLaunchDelegate {
         } else {
             singleMethod = null;
         }
-        CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(toRun, singleMethod, debug, ioContext);
+        CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(toRun, singleMethod, debug, testRun, ioContext);
         commandFuture.thenAccept((providerAndCommand) -> {
             if (debug) {
                 DebuggerManager.getDebuggerManager().addDebuggerListener(new DebuggerManagerAdapter() {
@@ -119,11 +119,6 @@ public abstract class NbLaunchDelegate {
                     notifyFinished(context, success);
                 }
             };
-            Lookup launchCtx = new ProxyLookup(
-                    Lookups.fixed(
-                            toRun, ioContext, progress
-                    ), Lookup.getDefault()
-            );
             OperationContext ctx = OperationContext.find(Lookup.getDefault());
             ctx.addProgressOperationListener(null, new ProgressOperationListener() {
                 @Override
@@ -131,6 +126,11 @@ public abstract class NbLaunchDelegate {
                     context.setProcessExecutorHandle(e.getProgressHandle());
                 }
             });
+            TestProgressHandler testProgressHandler = ctx.getClient().getNbCodeCapabilities().hasTestResultsSupport() ? new TestProgressHandler(ctx.getClient(), Utils.toUri(toRun)) : null;
+            Lookup launchCtx = new ProxyLookup(
+                    testProgressHandler != null ? Lookups.fixed(toRun, ioContext, progress, testProgressHandler) : Lookups.fixed(toRun, ioContext, progress),
+                    Lookup.getDefault()
+            );
 
             Lookup lookup;
             if (singleMethod != null) {
@@ -149,8 +149,8 @@ public abstract class NbLaunchDelegate {
         return launchFuture;
     }
 
-    private CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(FileObject toRun, SingleMethod singleMethod, boolean debug, NbProcessConsole ioContext) throws IllegalArgumentException {
-        Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, singleMethod, debug);
+    private CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun, NbProcessConsole ioContext) throws IllegalArgumentException {
+        Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, singleMethod, debug, testRun);
         if (providerAndCommand != null) {
             return CompletableFuture.completedFuture(providerAndCommand);
         }
@@ -166,7 +166,7 @@ public abstract class NbLaunchDelegate {
             @Override
             public void finished(boolean success) {
                 if (success) {
-                    Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, singleMethod, debug);
+                    Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, singleMethod, debug, testRun);
                     if (providerAndCommand != null) {
                         afterBuild.complete(providerAndCommand);
                         return;
@@ -199,14 +199,14 @@ public abstract class NbLaunchDelegate {
         return afterBuild;
     }
 
-    protected static @CheckForNull Pair<ActionProvider, String> findTarget(FileObject toRun, SingleMethod singleMethod, boolean debug) {
+    protected static @CheckForNull Pair<ActionProvider, String> findTarget(FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun) {
         ClassPath sourceCP = ClassPath.getClassPath(toRun, ClassPath.SOURCE);
         FileObject fileRoot = sourceCP != null ? sourceCP.findOwnerRoot(toRun) : null;
         boolean mainSource;
         if (fileRoot != null) {
             mainSource = UnitTestForSourceQuery.findUnitTests(fileRoot).length > 0;
         } else {
-            mainSource = true;
+            mainSource = !testRun;
         }
         ActionProvider provider = null;
         String command = null;

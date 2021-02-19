@@ -29,79 +29,84 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
  * @author Dusan Balek
  */
 @SuppressWarnings("all")
-public class ShowInputBoxParams {
+public class TestProgressParams {
 
     /**
-     * The text to display underneath the input box.
+     * The test suite or the workspace folder the test suite belongs to.
      */
     @NonNull
-    private String prompt;
+    private String uri;
 
     /**
-     * The value to prefill in the input box.
+     * Information about a test suite being loaded, started, completed or skipped
+     * during a test run.
      */
     @NonNull
-    private String value;
+    private TestSuiteInfo suite;
 
-    public ShowInputBoxParams() {
-        this("", "");
+    public TestProgressParams() {
+        this("", new TestSuiteInfo());
     }
 
-    public ShowInputBoxParams(@NonNull final String prompt, @NonNull final String value) {
-        this.prompt = Preconditions.checkNotNull(prompt, "prompt");
-        this.value = Preconditions.checkNotNull(value, "value");
+    public TestProgressParams(@NonNull final String uri, @NonNull final TestSuiteInfo suite) {
+        this.uri = Preconditions.checkNotNull(uri, "uri");
+        this.suite = Preconditions.checkNotNull(suite, "suite");
     }
 
     /**
-     * The text to display underneath the input box.
+     * The test suite or the workspace folder the test suite belongs to.
      */
     @Pure
     @NonNull
-    public String getPrompt() {
-        return prompt;
+    public String getUri() {
+        return uri;
     }
 
     /**
-     * The text to display underneath the input box.
+     * The test suite or the workspace folder the test suite belongs to.
      */
-    public void setPrompt(@NonNull final String prompt) {
-        this.prompt = Preconditions.checkNotNull(prompt, "prompt");
+    public void setUri(@NonNull final String uri) {
+        this.uri = Preconditions.checkNotNull(uri, "uri");
     }
 
     /**
-     * The value to prefill in the input box.
+     * Information about a test suite being loaded, started, completed or skipped
+     * during a test run.
      */
     @Pure
     @NonNull
-    public String getValue() {
-        return value;
+    public TestSuiteInfo getSuite() {
+        return suite;
     }
 
     /**
-     * The value to prefill in the input box.
+     * Information about a test suite being loaded, started, completed or skipped
+     * during a test run.
      */
-    public void setValue(@NonNull final String value) {
-        this.value = Preconditions.checkNotNull(value, "value");
+    public void setSuite(@NonNull final TestSuiteInfo suite) {
+        this.suite = Preconditions.checkNotNull(suite, "suite");
     }
 
     @Override
     @Pure
     public String toString() {
         ToStringBuilder b = new ToStringBuilder(this);
-        b.add("prompt", prompt);
-        b.add("value", value);
+        b.add("uri", uri);
+        b.add("suite", suite);
         return b.toString();
     }
 
     @Override
+    @Pure
     public int hashCode() {
         int hash = 5;
-        hash = 59 * hash + Objects.hashCode(this.prompt);
-        hash = 59 * hash + Objects.hashCode(this.value);
+        hash = 59 * hash + Objects.hashCode(this.uri);
+        hash = 59 * hash + Objects.hashCode(this.suite);
         return hash;
     }
 
     @Override
+    @Pure
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -112,11 +117,11 @@ public class ShowInputBoxParams {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ShowInputBoxParams other = (ShowInputBoxParams) obj;
-        if (!Objects.equals(this.prompt, other.prompt)) {
+        final TestProgressParams other = (TestProgressParams) obj;
+        if (!Objects.equals(this.uri, other.uri)) {
             return false;
         }
-        if (!Objects.equals(this.value, other.value)) {
+        if (!Objects.equals(this.suite, other.suite)) {
             return false;
         }
         return true;

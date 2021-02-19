@@ -234,7 +234,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private final Map<String, RequestProcessor.Task> diagnosticTasks = new HashMap<>();
     private NbCodeLanguageClient client;
 
-    public TextDocumentServiceImpl() {
+    TextDocumentServiceImpl() {
         Lookup.getDefault().lookup(RefreshDocument.class).register(this);
     }
 
@@ -830,7 +830,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(DefinitionParams params) {
         String uri = params.getTextDocument().getUri();
-        JavaSource js = getSource(uri);
+        JavaSource js = getJavaSource(uri);
         GoToTarget[] target = new GoToTarget[1];
         LineMap[] thisFileLineMap = new LineMap[1];
         try {
@@ -855,7 +855,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> implementation(ImplementationParams params) {
         String uri = params.getTextDocument().getUri();
-        JavaSource js = getSource(uri);
+        JavaSource js = getJavaSource(uri);
         List<GoToTarget> targets = new ArrayList<>();
         LineMap[] thisFileLineMap = new LineMap[1];
         try {
@@ -944,7 +944,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
         };
         WORKER.post(() -> {
-            JavaSource js = getSource(params.getTextDocument().getUri());
+            JavaSource js = getJavaSource(params.getTextDocument().getUri());
             try {
                 WhereUsedQuery[] query = new WhereUsedQuery[1];
                 List<Location> locations = new ArrayList<>();
@@ -1066,7 +1066,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         Preferences node = MarkOccurencesSettings.getCurrentNode();
 
-        JavaSource js = getSource(params.getTextDocument().getUri());
+        JavaSource js = getJavaSource(params.getTextDocument().getUri());
         List<DocumentHighlight> result = new ArrayList<>();
         try {
             js.runUserActionTask(cc -> {
@@ -1090,7 +1090,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(DocumentSymbolParams params) {
-        JavaSource js = getSource(params.getTextDocument().getUri());
+        JavaSource js = getJavaSource(params.getTextDocument().getUri());
         List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
         try {
             js.runUserActionTask(cc -> {
@@ -1373,7 +1373,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams params) {
-        JavaSource source = getSource(params.getTextDocument().getUri());
+        String uri = params.getTextDocument().getUri();
+        JavaSource source = getJavaSource(uri);
         if (source == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
@@ -1381,25 +1382,36 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         try {
             source.runUserActionTask(cc -> {
                 cc.toPhase(Phase.ELEMENTS_RESOLVED);
-                List<CodeLens> lens = new ArrayList<>();
                 //look for test methods:
+                List<TestMethod> testMethods = new ArrayList<>();
                 for (ComputeTestMethods.Factory methodsFactory : Lookup.getDefault().lookupAll(ComputeTestMethods.Factory.class)) {
-                    List<TestMethod> methods = methodsFactory.create().computeTestMethods(cc);
-                    if (methods != null) {
-                        for (TestMethod method : methods) {
-                            Range range = new Range(Utils.createPosition(cc.getCompilationUnit(), method.start().getOffset()),
-                                                    Utils.createPosition(cc.getCompilationUnit(), method.end().getOffset()));
-                            List<Object> arguments = Arrays.asList(new Object[]{method.method().getFile().toURI(), method.method().getMethodName()});
-                            lens.add(new CodeLens(range,
-                                                  new Command("Run test", "java.run.codelens", arguments),
-                                                  null));
-                            lens.add(new CodeLens(range,
-                                                  new Command("Debug test", "java.debug.codelens", arguments),
-                                                  null));
+                    testMethods.addAll(methodsFactory.create().computeTestMethods(cc));
+                }
+                if (!testMethods.isEmpty()) {
+                    String testClassName = null;
+                    List<TestSuiteInfo.TestCaseInfo> tests = new ArrayList<>(testMethods.size());
+                    for (TestMethod testMethod : testMethods) {
+                        if (testClassName == null) {
+                            testClassName = testMethod.getTestClassName();
+                        }
+                        String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
+                        String fullName = testMethod.getTestClassName() + '.' + testMethod.method().getMethodName();
+                        int line = Utils.createPosition(cc.getCompilationUnit(), testMethod.start().getOffset()).getLine();
+                        tests.add(new TestSuiteInfo.TestCaseInfo(id, testMethod.method().getMethodName(), fullName, uri, line, TestSuiteInfo.State.Loaded, null));
+                    }
+                    Integer line = null;
+                    Trees trees = cc.getTrees();
+                    for (Tree tree : cc.getCompilationUnit().getTypeDecls()) {
+                        Element element = trees.getElement(trees.getPath(cc.getCompilationUnit(), tree));
+                        if (element != null && element.getKind().isClass() && ((TypeElement)element).getQualifiedName().contentEquals(testClassName)) {
+                            line = Utils.createPosition(cc.getCompilationUnit(), (int)trees.getSourcePositions().getStartPosition(cc.getCompilationUnit(), tree)).getLine();
+                            break;
                         }
                     }
+                    client.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(testClassName, uri, line, TestSuiteInfo.State.Loaded, tests)));
                 }
                 //look for main methods:
+                List<CodeLens> lens = new ArrayList<>();
                 new TreePathScanner<Void, Void>() {
                     public Void visitMethod(MethodTree tree, Void p) {
                         Element el = cc.getTrees().getElement(getCurrentPath());
@@ -1407,10 +1419,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             Range range = Utils.treeRange(cc, tree);
                             List<Object> arguments = Collections.singletonList(params.getTextDocument().getUri());
                             lens.add(new CodeLens(range,
-                                                  new Command("Run main", "java.run.codelens", arguments),
+                                                  new Command("Run main", "java.run.single", arguments),
                                                   null));
                             lens.add(new CodeLens(range,
-                                                  new Command("Debug main", "java.debug.codelens", arguments),
+                                                  new Command("Debug main", "java.debug.single", arguments),
                                                   null));
                         }
                         return null;
@@ -1446,7 +1458,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(PrepareRenameParams params) {
-        JavaSource source = getSource(params.getTextDocument().getUri());
+        JavaSource source = getJavaSource(params.getTextDocument().getUri());
         if (source == null) {
             return CompletableFuture.completedFuture(Either.forLeft(null));
         }
@@ -1504,7 +1516,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
         };
         WORKER.post(() -> {
-            JavaSource js = getSource(params.getTextDocument().getUri());
+            JavaSource js = getJavaSource(params.getTextDocument().getUri());
             try {
                 RenameRefactoring[] refactoring = new RenameRefactoring[1];
                 js.runUserActionTask(cc -> {
@@ -1603,7 +1615,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<FoldingRange>> foldingRange(FoldingRangeRequestParams params) {
-        JavaSource source = getSource(params.getTextDocument().getUri());
+        JavaSource source = getJavaSource(params.getTextDocument().getUri());
         if (source == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
@@ -1730,7 +1742,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     CompletableFuture<Location> superImplementation(String uri, Position position) {
-        JavaSource js = getSource(uri);
+        JavaSource js = getJavaSource(uri);
         GoToTarget[] target = new GoToTarget[1];
         LineMap[] thisFileLineMap = new LineMap[1];
         try {
@@ -1952,7 +1964,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         public List<ErrorDescription> computeErrors(CompilationInfo info, Document doc) throws IOException;
     }
 
-    private JavaSource getSource(String fileUri) {
+    public JavaSource getJavaSource(String fileUri) {
         Document doc = openedDocuments.get(fileUri);
         if (doc == null) {
             try {
@@ -1963,6 +1975,20 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
         } else {
             return JavaSource.forDocument(doc);
+        }
+    }
+
+    public Source getSource(String fileUri) {
+        Document doc = openedDocuments.get(fileUri);
+        if (doc == null) {
+            try {
+                FileObject file = Utils.fromUri(fileUri);
+                return Source.create(file);
+            } catch (MalformedURLException ex) {
+                return null;
+            }
+        } else {
+            return Source.create(doc);
         }
     }
 

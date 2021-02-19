@@ -188,7 +188,7 @@ public final class NbGradleProjectImpl implements Project {
         }
         p = loadProject();
         synchronized (this) {
-            // avod unnecessary project replacements.
+            // avoid unnecessary project replacements.
             if (project != null) {
                 return project;
             }

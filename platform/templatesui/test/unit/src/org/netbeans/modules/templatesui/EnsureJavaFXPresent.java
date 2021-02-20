@@ -18,25 +18,35 @@
  */
 package org.netbeans.modules.templatesui;
 
-import org.junit.Test;
+import javafx.embed.swing.JFXPanel;
+import static org.junit.Assert.assertNotNull;
+import org.junit.Assume;
+import org.junit.AssumptionViolatedException;
 
-/**
- *
- * @author Jaroslav Tulach
- */
-public class CompatibilityKitTest {
-    @Test public void fallbacksToDataStep() throws Throwable {
-        EnsureJavaFXPresent.checkAndThrow();
-        RunTCK.test("datastep", "init()");
+class EnsureJavaFXPresent {
+    private static final Throwable initError;
+    static {
+        Throwable t;
+        try {
+            JFXPanel p = new JFXPanel();
+            assertNotNull("Allocated", p);
+            t = null;
+        } catch (RuntimeException | LinkageError err) {
+            t = err;
+        }
+        initError = t;
     }
     
-    @Test public void specifiedManually() throws Throwable {
-        EnsureJavaFXPresent.checkAndThrow();
-        RunTCK.test("manual", "init()");
+    private EnsureJavaFXPresent() {
     }
     
-    @Test public void validateOnNextButton() throws Throwable {
-        EnsureJavaFXPresent.checkAndThrow();
-        RunTCK.test("validation", "init()");
+    static void checkAndThrow() {
+        if (initError != null) {
+            throw new AssumptionViolatedException("Cannot initialize JavaFX: " + initError.getMessage(), initError);
+        }
+    }
+    
+    static boolean check() {
+        return initError == null;
     }
 }

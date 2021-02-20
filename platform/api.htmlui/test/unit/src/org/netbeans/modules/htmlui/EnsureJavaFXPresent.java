@@ -18,38 +18,34 @@
  */
 package org.netbeans.modules.htmlui;
 
-import java.awt.EventQueue;
-import java.util.concurrent.CountDownLatch;
-import org.netbeans.api.htmlui.HTMLDialog;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import javafx.embed.swing.JFXPanel;
+import static org.testng.AssertJUnit.assertNotNull;
+import org.testng.SkipException;
 
-/**
- *
- * @author Jaroslav Tulach
- */
-public class ShowDialogFromEDTTest implements Runnable {
-    @BeforeClass public void initNbResLoc() {
-        NbResloc.init();
+class EnsureJavaFXPresent {
+    private static final Throwable initError;
+    static {
+        Throwable t;
+        try {
+            JFXPanel p = new JFXPanel();
+            assertNotNull("Allocated", p);
+            t = null;
+        } catch (RuntimeException | LinkageError err) {
+            t = err;
+        }
+        initError = t;
     }
     
-    private CountDownLatch cdl;
-    
-    @Test(timeOut = 9000)
-    public void showDialog() throws InterruptedException {
-        EnsureJavaFXPresent.checkAndThrow();
-        cdl = new CountDownLatch(1);
-        EventQueue.invokeLater(this);
-        cdl.await();
+    private EnsureJavaFXPresent() {
     }
     
-    @HTMLDialog(url = "simple.html", className = "TestPages") 
-    static void displayedOKFromSwing(CountDownLatch cdl) {
-        cdl.countDown();
+    static void checkAndThrow() {
+        if (initError != null) {
+            throw new SkipException("Cannot initialize JavaFX", initError);
+        }
     }
-
-    @Override
-    public void run() {
-        TestPages.displayedOKFromSwing(cdl);
+    
+    static boolean check() {
+        return initError == null;
     }
 }

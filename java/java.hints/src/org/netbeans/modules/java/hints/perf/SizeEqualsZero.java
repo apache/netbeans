@@ -51,10 +51,29 @@ public class SizeEqualsZero {
     @BooleanOption(displayName = "#LBL_org.netbeans.modules.java.hints.perf.SizeEqualsZero.CHECK_NOT_EQUALS", tooltip = "#TP_org.netbeans.modules.java.hints.perf.SizeEqualsZero.CHECK_NOT_EQUALS", defaultValue=CHECK_NOT_EQUALS_DEFAULT)
     public static final String CHECK_NOT_EQUALS = "check.not.equals";
 
+    @BooleanOption(displayName = "#LBL_org.netbeans.modules.java.hints.perf.SizeEqualsZero.CHECK_GREATER_ZERO", tooltip = "#TP_org.netbeans.modules.java.hints.perf.SizeEqualsZero.CHECK_GREATER_ZERO", defaultValue=CHECK_NOT_EQUALS_DEFAULT)
+    public static final String CHECK_GREATER_ZERO = "check.greater_zero";
+
     @TriggerPatterns({
         @TriggerPattern(value="$subj.size() == 0", 
             constraints = @ConstraintVariableType(type = "java.util.Collection", variable = "$subj")),
         @TriggerPattern(value="$subj.size() == 0", 
+            constraints = @ConstraintVariableType(type = "java.util.Map", variable = "$subj")),
+        @TriggerPattern(value="$subj.size() <= 0",
+            constraints = @ConstraintVariableType(type = "java.util.Collection", variable = "$subj")),
+        @TriggerPattern(value="$subj.size() <= 0",
+            constraints = @ConstraintVariableType(type = "java.util.Map", variable = "$subj")),
+        @TriggerPattern(value="$subj.size() < 1",
+            constraints = @ConstraintVariableType(type = "java.util.Collection", variable = "$subj")),
+        @TriggerPattern(value="$subj.size() < 1",
+            constraints = @ConstraintVariableType(type = "java.util.Map", variable = "$subj")),
+        @TriggerPattern(value="1 > $subj.size()",
+            constraints = @ConstraintVariableType(type = "java.util.Collection", variable = "$subj")),
+        @TriggerPattern(value="1 > $subj.size()",
+            constraints = @ConstraintVariableType(type = "java.util.Map", variable = "$subj")),
+        @TriggerPattern(value="0 >= $subj.size()",
+            constraints = @ConstraintVariableType(type = "java.util.Collection", variable = "$subj")),
+        @TriggerPattern(value="0 >= $subj.size()",
             constraints = @ConstraintVariableType(type = "java.util.Map", variable = "$subj")),
         @TriggerPattern(value="0 == $subj.size()",
             constraints = @ConstraintVariableType(type = "java.util.Collection", variable = "$subj")),
@@ -77,6 +96,23 @@ public class SizeEqualsZero {
     })
     public static ErrorDescription sizeNotEqualsZero(HintContext ctx) {
         if (!ctx.getPreferences().getBoolean(CHECK_NOT_EQUALS, CHECK_NOT_EQUALS_DEFAULT)) {
+            return null;
+        }
+        return sizeEqualsZeroHint(ctx, true);
+    }
+
+    @TriggerPatterns({
+        @TriggerPattern(value="$subj.size() > 0",
+            constraints = @ConstraintVariableType(type = "java.util.Collection", variable = "$subj")),
+        @TriggerPattern(value="$subj.size() > 0",
+            constraints = @ConstraintVariableType(type = "java.util.Map", variable = "$subj")),
+        @TriggerPattern(value="0 < $subj.size()",
+            constraints = @ConstraintVariableType(type = "java.util.Collection", variable = "$subj")),
+        @TriggerPattern(value="0 < $subj.size()",
+            constraints = @ConstraintVariableType(type = "java.util.Map", variable = "$subj")),
+    })
+    public static ErrorDescription sizeGreaterZero(HintContext ctx) {
+        if (!ctx.getPreferences().getBoolean(CHECK_GREATER_ZERO, CHECK_NOT_EQUALS_DEFAULT)) {
             return null;
         }
         return sizeEqualsZeroHint(ctx, true);

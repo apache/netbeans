@@ -96,6 +96,7 @@ matrix:
           script:
             - ant $OPTS build
             - ant $OPTS test -Dtest.includes=NoTestsJustBuild
+            - ant $OPTS -f platform/o.n.core/ test -Dtest.includes=**/ValidateClassFilesTest.class
 
         - name: Test harness modules
           jdk: openjdk8

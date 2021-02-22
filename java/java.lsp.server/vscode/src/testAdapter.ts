@@ -174,8 +174,8 @@ export class NbTestAdapter implements TestAdapter {
                 changed = true
             }
             if (suite.tests) {
+                const children: (TestSuiteInfo | TestInfo)[] = [];
                 suite.tests.forEach(test => {
-                    const children: (TestSuiteInfo | TestInfo)[] = [];
                     let currentTest = (currentSuite as TestSuiteInfo).children.find(ti => ti.id === test.id);
                     if (currentTest) {
                         children.push(currentTest);
@@ -192,11 +192,11 @@ export class NbTestAdapter implements TestAdapter {
                         children.push({ type: 'test', id: test.id, label: test.shortName, tooltip: test.fullName, file: test.file ? Uri.parse(test.file)?.path : undefined, line: test.line });
                         changed = true;
                     }
-                    if ((currentSuite as TestSuiteInfo).children.length !== children.length) {
-                        changed = true;
-                    }
-                    (currentSuite as TestSuiteInfo).children = children;
                 });
+                if ((currentSuite as TestSuiteInfo).children.length !== children.length) {
+                    changed = true;
+                }
+                (currentSuite as TestSuiteInfo).children = children;
             }
         } else {
             const children: TestInfo[] = suite.tests ? suite.tests.map(test => {

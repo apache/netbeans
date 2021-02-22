@@ -108,6 +108,22 @@
 								],
 								"description": "The specified console to launch the program.",
 								"default": "internalConsole"
+							},
+							"args": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "description": "Arguments for the executed class",
+                                                            "default": null
+                                                        },
+							"vmArgs": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "description": "Arguments for the Java VM",
+                                                            "default": null
 							}
 						}
 					}

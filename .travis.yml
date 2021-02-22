@@ -398,7 +398,7 @@ matrix:
             #- ant $OPTS -f java/junit test
             - ant $OPTS -f java/junit.ant.ui test
             - ant $OPTS -f java/lib.nbjavac test
-            #- ant $OPTS -f java/maven test
+            - ant $OPTS -f java/maven test
             #- ant $OPTS -f java/maven.embedder test
             - ant $OPTS -f java/maven.grammar test
             #- ant $OPTS -f java/maven.hints test

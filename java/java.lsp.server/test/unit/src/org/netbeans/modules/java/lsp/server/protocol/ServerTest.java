@@ -720,6 +720,7 @@ public class ServerTest extends NbTestCase {
     public void testGoToDefinition() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(new File(src.getParentFile(), ".test-project"))) {}
         String code = "public class Test {\n" +
                       "    private int field;\n" +
                       "    public void method(int ppp) {\n" +
@@ -739,6 +740,7 @@ public class ServerTest extends NbTestCase {
                     "}");
         }
         FileUtil.refreshFor(getWorkDir());
+        CountDownLatch indexingComplete = new CountDownLatch(1);
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
@@ -750,7 +752,12 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public void showMessage(MessageParams arg0) {
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
             }
 
             @Override
@@ -765,7 +772,10 @@ public class ServerTest extends NbTestCase {
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
-        InitializeResult result = server.initialize(new InitializeParams()).get();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setRootUri(getWorkDir().toURI().toString());
+        server.initialize(initParams).get();
+        indexingComplete.await();
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         Position pos = new Position(3, 30);
         List<? extends Location> definition = server.getTextDocumentService().definition(new DefinitionParams(new TextDocumentIdentifier(toURI(src)), pos)).get().getLeft();

@@ -186,6 +186,20 @@
           to specify the default behavior of compile on save in Maven 
           projects.
       </api> 
+      <api category="stable" group="property" name="exec.vmArgs" type="export">
+          The plugin exports Java VM parameters to be used for application execution in <code>${exec.vmArgs}</code> 
+          property that can be used in action mappings or Maven pom.xml.
+      </api>
+      <api category="stable" group="property" name="exec.appArgs" type="export">
+          The plugin exports application parameters to be used for application execution in <code>${exec.appArgs}</code> 
+          property that can be used in action mappings or Maven pom.xml.
+      </api>
+      <api category="devel" group="lookup" name="ExplicitProcessParameters" type="export">
+          Project actions that execute user application (run, debug) accept additional VM and application
+          arguments as a series of <a href="@org-netbeans-modules-extexecution-base@/org/netbeans/api/extexecution/base/ExplicitProcessParameters.html">
+            ExplicitProcessParameters</a> instance(s) in the action's Lookup. See <a href="@org-netbeans-modules-extexecution-base@/org/netbeans/api/extexecution/base/ExplicitProcessParameters.html">
+            ExplicitProcessParameters</a> javadoc for more details.
+      </api>
   </p>
   
  </answer>

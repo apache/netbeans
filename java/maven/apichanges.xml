@@ -83,6 +83,35 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="RunConfig.getActionLookup">
+            <api name="general"/>
+            <summary>RunConfig provides access to action lookup for parameters extensibility</summary>
+            <version major="2" minor="144"/>
+            <date day="10" month="2" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" source="incompatible" binary="compatible" semantic="compatible"/>
+            <description>
+                <p>
+                    RunConfig now serves the originating action's context Lookup from <a href="@TOP@/org/netbeans/modules/maven/api/execute/RunConfig.html#getActionContext--">RunConfig.getActionContext()</a>
+                    so that the caller can pass extended one-time configuration for the action.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.maven.api.execute" name="RunConfig"/>
+        </change>
+        <change id="execution.explicitParameters">
+            <api name="general"/>
+            <summary>Allow to extend or override parameters for user execution from action caller</summary>
+            <version major="2" minor="144"/>
+            <date day="10" month="2" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible"/>
+            <description>
+                Added support for <a href="@org-netbeans-modules-extexecution-base@/org/netbeans/api/extexecution/base/ExplicitProcessParameters.html">ExplicitProcessParameters</a>
+                for Maven-nature projects. The <code>ExternaProcessParameterss</code> instructions now append to or replace VM argsuments or 
+                user program arguments. See <a href="@TOP@/org/netbeans/modules/maven/execute/MavenCommandLineExecutor.html">MavenCommandLineExecutor</a>
+                for more details.
+            </description>
+        </change>
         <change id="reusetabs-cos">
            <api name="general"/>
            <summary>Default for reusing tabs and compile on save</summary>

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.maven.customizer;
+package org.netbeans.modules.maven.runjar;
 
 import junit.framework.TestCase;
 

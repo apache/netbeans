@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.maven.customizer;
+package org.netbeans.modules.maven.runjar;
 
 /**
  *
@@ -31,12 +31,14 @@ public class PropertySplitter {
         private char newline;
         private boolean trim = true;
         private char escape;
+        private boolean outputQuotes = true;
         
         private int location = 0;
         private char quoteChar = 0;
         private boolean inQuote = false;
         private boolean escapeNext = false;
-        
+        private boolean preserveWhitespace = true;
+
         public PropertySplitter(String line) {
             this(line, new char[] { '"', '\'' } , '\\', '\n', '\n'); //NOI18N
         }
@@ -49,22 +51,34 @@ public class PropertySplitter {
             newline = nl;
         }
 
-        void setSeparator(char sep) {
+        public void setSeparator(char sep) {
             separator = sep;
         }
         
         
+        public void setOutputQuotes(boolean outputQuotes) {
+            this.outputQuotes = outputQuotes;
+        }
+
         public String nextPair() {
             StringBuilder buffer = new StringBuilder();
             if (location >= line.length()) {
                 return null;
             }
             //TODO should probably also handle (ignore) spaces before or after the = char somehow
-            while (location < line.length()
-                    && ((line.charAt(location) != separator && line.charAt(location) != newline) 
-                                                           || inQuote || escapeNext)) {
+            while (location < line.length()) {
+                if (!(inQuote || escapeNext)) {
+                    if (line.charAt(location) == separator || line.charAt(location) == newline) {
+                        if (preserveWhitespace || buffer.length() > 0) {
+                            break;
+                        } else {
+                            location++;
+                            continue;
+                        }
+                    }
+                }
                 char c = line.charAt(location);
-                if (escapeNext) {
+                X: if (escapeNext) {
                     if (c == newline) {
                         //just continue.. equals to \ + newline
                     } else {
@@ -76,12 +90,18 @@ public class PropertySplitter {
                 } else if (inQuote) {
                     if (c == quoteChar) {
                         inQuote = false;
-                    } 
+                        if (!outputQuotes) {
+                            break X;
+                        }
+                    }
                     buffer.append(c);
                 } else {
                     if (isQuoteChar(c)) {
                         inQuote = true;
                         quoteChar = c;
+                        if (!outputQuotes) {
+                            break X;
+                        }
                     }
                     buffer.append(c);
                 }
@@ -90,7 +110,7 @@ public class PropertySplitter {
             location++;
             return trim ? buffer.toString().trim() : buffer.toString();
         }
-        
+
         private boolean isQuoteChar(char c) {
             for (int i = 0; i < quotes.length; i++) {
                 char quote = quotes[i];

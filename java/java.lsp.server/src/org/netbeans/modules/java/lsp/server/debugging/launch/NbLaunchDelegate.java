@@ -21,7 +21,10 @@ package org.netbeans.modules.java.lsp.server.debugging.launch;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -31,10 +34,12 @@ import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.DebuggerManagerAdapter;
 import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -46,10 +51,13 @@ import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.java.lsp.server.progress.ProgressOperationEvent;
 import org.netbeans.modules.java.lsp.server.progress.ProgressOperationListener;
 import org.netbeans.modules.java.lsp.server.progress.TestProgressHandler;
+import org.netbeans.modules.progress.spi.InternalHandle;
+import org.netbeans.spi.extexecution.base.ProcessParameters;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Pair;
 import org.openide.util.lookup.Lookups;
@@ -68,7 +76,7 @@ public abstract class NbLaunchDelegate {
         // no op.
     }
 
-    public final CompletableFuture<Void> nbLaunch(FileObject toRun, String method, DebugAdapterContext context, boolean debug, boolean testRun, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
+    public final CompletableFuture<Void> nbLaunch(FileObject toRun, String method, Map<String, Object> launchArguments, DebugAdapterContext context, boolean debug, boolean testRun, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
         CompletableFuture<Void> launchFuture = new CompletableFuture<>();
         NbProcessConsole ioContext = new NbProcessConsole(consoleMessages);
         SingleMethod singleMethod;
@@ -119,6 +127,16 @@ public abstract class NbLaunchDelegate {
                     notifyFinished(context, success);
                 }
             };
+            List<String> args = argsToStringList(launchArguments.get("args"));
+            List<String> vmArgs = argsToStringList(launchArguments.get("vmArgs"));
+            ExplicitProcessParameters params = ExplicitProcessParameters.empty();
+            if (!(args.isEmpty() && vmArgs.isEmpty())) {
+                ExplicitProcessParameters.Builder bld = ExplicitProcessParameters.builder();
+                bld.launcherArgs(vmArgs);
+                bld.args(args);
+                bld.replaceArgs(false);
+                params = bld.build();
+            }
             OperationContext ctx = OperationContext.find(Lookup.getDefault());
             ctx.addProgressOperationListener(null, new ProgressOperationListener() {
                 @Override
@@ -134,9 +152,9 @@ public abstract class NbLaunchDelegate {
 
             Lookup lookup;
             if (singleMethod != null) {
-                lookup = Lookups.fixed(toRun, singleMethod, ioContext, progress);
+                lookup = Lookups.fixed(toRun, singleMethod, params, ioContext, progress);
             } else {
-                lookup = Lookups.fixed(toRun, ioContext, progress);
+                lookup = Lookups.fixed(toRun, ioContext, params, progress);
             }
             Lookups.executeWith(launchCtx, () -> {
                 providerAndCommand.first().invokeAction(providerAndCommand.second(), lookup);
@@ -147,6 +165,26 @@ public abstract class NbLaunchDelegate {
             return null;
         });
         return launchFuture;
+    }
+    
+    @NonNull
+    private List<String> argsToStringList(Object o) {
+        if (o == null) {
+            return Collections.emptyList();
+        }
+        if (o instanceof List) {
+            for (Object item : (List)o) {
+                if (!(o instanceof String)) {
+                    throw new IllegalArgumentException("Only string parameters expected");
+                }
+            }
+            return (List<String>)o;
+        } else if (o instanceof String) {
+            List<String> res = new ArrayList<>();
+            return Arrays.asList(BaseUtilities.parseParameters(o.toString()));
+        } else {
+            throw new IllegalArgumentException("Expected String or String list");
+        }
     }
 
     private CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun, NbProcessConsole ioContext) throws IllegalArgumentException {

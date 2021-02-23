@@ -188,7 +188,7 @@ public class AutoUpdate extends Task {
             List<String> info = installed.get(uu.getCodeName());
             if (info != null && !uu.isNewerThan(info.get(0))) {
                 log("Version " + info.get(0) + " of " + uu.getCodeName() + " is up to date", Project.MSG_VERBOSE);
-                    if (!force) {
+                if (!force) {
                     continue;
                 }
             }

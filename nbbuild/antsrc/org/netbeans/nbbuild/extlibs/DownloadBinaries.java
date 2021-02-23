@@ -35,13 +35,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
+import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -180,11 +178,7 @@ public class DownloadBinaries extends Task {
     }
 
     public static InputStream downloadMaven(Task task, URI u) throws IOException {
-        if (!"m2".equals(u.getScheme())) {
-            throw new IOException("Only m2 URL is supported: " + u);
-        }
-        String coord = u.getPath().replace("/", " ").trim();
-        MavenCoordinate mc = MavenCoordinate.fromGradleFormat(coord);
+        MavenCoordinate mc = MavenCoordinate.fromM2Url(u);
         byte[] arr = downloadMavenFile(task, mc, MAVEN_REPO);
         return new ByteArrayInputStream(arr);
     }
@@ -475,6 +469,43 @@ public class DownloadBinaries extends Task {
             String classifier = "";
             if (coordinates.length > 3) {
                 classifier = coordinates[3].trim();
+            }
+            return new MavenCoordinate(group, artifact, version, extension, classifier);
+        }
+
+        /**
+         * The maven coordinate is supplied in the form:
+         *
+         * <p>{@code m2:/group:name:version:extension:classifier}</p>
+         *
+         * <p>For the DownloadBinaries task the parts group, name, version and
+         * extension are requiered. classifier is optional.
+         *
+         * @param m2Url artifact coordinated to be parse as a MavenCoordinate
+         * @return
+         * @throws IllegalArgumentException if provided string fails to parse
+         */
+        public static MavenCoordinate fromM2Url(URI m2Url) throws IOException {
+            if (!"m2".equals(m2Url.getScheme())) {
+                throw new IOException("Only m2 URL is supported: " + m2Url);
+            }
+            if(! m2Url.getRawPath().startsWith("/")) {
+                throw new IOException("Invalid m2 URL. Expected format m2:/group:name:version:extension:classifier (classifier is optional)");
+            }
+            String[] coordinates = m2Url.getRawPath().substring(1).split(":");
+            if(coordinates.length < 4) {
+                throw new IOException("Invalid m2 URL. Expected format m2:/group:name:version:extension:classifier (classifier is optional)");
+            }
+            for (int i = 0; i < coordinates.length; i++) {
+                coordinates[i] = URLDecoder.decode(coordinates[i], "UTF-8");
+            }
+            String group = coordinates[0];
+            String artifact = coordinates[1];
+            String version = coordinates[2];
+            String extension = coordinates[3];
+            String classifier = "";
+            if (coordinates.length > 4) {
+                classifier = coordinates[4];
             }
             return new MavenCoordinate(group, artifact, version, extension, classifier);
         }

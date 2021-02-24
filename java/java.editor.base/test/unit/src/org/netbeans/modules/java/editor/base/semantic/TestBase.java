@@ -306,7 +306,11 @@ public abstract class TestBase extends NbTestCase {
 
         l.await();
 
-        assertEquals(Arrays.asList(expected),
+        assertEquals(highlights.stream()
+                               .map(h -> h.getHighlightTestData())
+                               .map(e -> "\"" + e + "\",")
+                               .collect(Collectors.joining("\n")),
+                     Arrays.asList(expected),
                      highlights.stream()
                                .map(h -> h.getHighlightTestData())
                                .collect(Collectors.toList()));

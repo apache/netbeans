@@ -16,27 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.templatesui;
+package org.netbeans.modules.maven.newproject.simplewizard;
 
-import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
 
-/**
- *
- * @author Jaroslav Tulach
- */
-public class CompatibilityKitTest {
-    @Test public void fallbacksToDataStep() throws Throwable {
-        EnsureJavaFXPresent.checkAndThrow();
-        RunTCK.test("datastep", "init()");
+class EnsureJavaFXPresent {
+    private static final Throwable initError;
+    static {
+        Throwable t;
+        try {
+            Object p = Class.forName("javafx.embed.swing.JFXPanel").newInstance();
+            assertNotNull("Allocated", p);
+            t = null;
+        } catch (Throwable err) {
+            t = err;
+        }
+        initError = t;
     }
-    
-    @Test public void specifiedManually() throws Throwable {
-        EnsureJavaFXPresent.checkAndThrow();
-        RunTCK.test("manual", "init()");
+
+    private EnsureJavaFXPresent() {
     }
-    
-    @Test public void validateOnNextButton() throws Throwable {
-        EnsureJavaFXPresent.checkAndThrow();
-        RunTCK.test("validation", "init()");
+
+    static boolean check() {
+        return initError == null;
     }
 }

@@ -15,6 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 language: java
+dist: bionic
 addons:
   apt:
     packages:
@@ -89,12 +90,13 @@ matrix:
         - name: Compile all modules with OpenJDK11
           jdk: openjdk11
           env:
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=full -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=full -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           before_script:
             - ant $OPTS clean
           script:
             - ant $OPTS build
             - ant $OPTS test -Dtest.includes=NoTestsJustBuild
+            - ant $OPTS -f platform/o.n.core/ test -Dtest.includes=**/ValidateClassFilesTest.class
 
         - name: Test harness modules
           jdk: openjdk8

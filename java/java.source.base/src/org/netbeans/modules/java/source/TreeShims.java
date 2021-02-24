@@ -25,6 +25,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.TreeMaker;
@@ -153,9 +154,15 @@ public class TreeShims {
 
     public static Name getBinding(Tree node) {
         try {
-            Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree");
-            Method getBinding = bpt.getDeclaredMethod("getBinding");
-            return (Name) getBinding.invoke(node);
+            try {
+                Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree");
+                Method getBinding = bpt.getDeclaredMethod("getVariable");
+                return ((VariableTree) getBinding.invoke(node)).getName();
+            } catch (NoSuchMethodException ex) {
+                Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree");
+                Method getBinding = bpt.getDeclaredMethod("getBinding");
+                return (Name) getBinding.invoke(node);
+            }
         } catch (NoSuchMethodException | ClassNotFoundException ex) {
             return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
@@ -222,9 +229,15 @@ public class TreeShims {
             return null;
         }
         try {
-            Class bindingPatternTreeClass = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
-            Method getType = bindingPatternTreeClass.getDeclaredMethod("getType");  //NOI18N
-            return (Tree) getType.invoke(node);
+            try {
+                Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree");
+                Method getBinding = bpt.getDeclaredMethod("getVariable");
+                return ((VariableTree) getBinding.invoke(node)).getType();
+            } catch (NoSuchMethodException ex) {
+                Class bindingPatternTreeClass = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
+                Method getType = bindingPatternTreeClass.getDeclaredMethod("getType");  //NOI18N
+                return (Tree) getType.invoke(node);
+            }
         } catch (NoSuchMethodException ex) {
             return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException ex) {

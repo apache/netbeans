@@ -1010,12 +1010,6 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 if (t != null) {
                     contextKeywords.add(t);
                 }
-            } else if (tree != null && TreeShims.BINDING_PATTERN.equals(tree.getKind().name())) {
-                super.scan(tree, p);
-                TreePath tp = new TreePath(getCurrentPath(), tree);
-                handlePossibleIdentifier(tp, true, info.getTrees().getElement(tp));
-                tl.moveToOffset(sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), TreeShims.getBindingPatternType(tree)));
-                firstIdentifier(tp, TreeShims.getBinding(tree).toString());
             } else if (tree != null && tree.getKind().equals(Kind.MODIFIERS)) {
                visitModifier(tree);
             }

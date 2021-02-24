@@ -69,3 +69,30 @@ export interface ShowInputBoxParams {
 export namespace InputBoxRequest {
     export const type = new RequestType<ShowInputBoxParams, string | undefined, void, void>('window/showInputBox');
 }
+
+export interface TestProgressParams {
+    uri: string;
+    suite: TestSuite;
+}
+
+export interface TestSuite {
+    suiteName: string;
+    file?: string;
+    line?: number;
+    state: 'running' | 'completed' | 'errored';
+    tests?: TestCase[];
+}
+
+export interface TestCase {
+    id: string;
+    shortName: string;
+    fullName: string;
+    file?: string;
+    line?: number;
+    state: 'running' | 'passed' | 'failed' | 'skipped' | 'errored';
+    stackTrace?: string[];
+}
+
+export namespace TestProgressNotification {
+    export const type = new NotificationType<TestProgressParams, void>('window/notifyTestProgress');
+};

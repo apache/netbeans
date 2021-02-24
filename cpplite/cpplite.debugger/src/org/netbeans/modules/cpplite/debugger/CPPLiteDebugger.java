@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.cpplite.debugger;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -27,10 +29,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.EventListener;
-import java.util.Iterator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
@@ -43,6 +44,7 @@ import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerInfo;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.debugger.DebuggerManagerAdapter;
 import org.netbeans.modules.cnd.debugger.gdb2.mi.MICommand;
 import org.netbeans.modules.cnd.debugger.gdb2.mi.MICommandInjector;
 import org.netbeans.modules.cnd.debugger.gdb2.mi.MIConst;
@@ -54,7 +56,6 @@ import org.netbeans.modules.cpplite.debugger.breakpoints.CPPLiteBreakpoint;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironmentFactory;
 import org.netbeans.modules.nativeexecution.api.pty.Pty;
 import org.netbeans.modules.nativeexecution.api.pty.PtySupport;
-import org.netbeans.spi.debugger.ActionsProviderSupport;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerEngineProvider;
 import org.netbeans.spi.debugger.SessionProvider;
@@ -62,6 +63,7 @@ import org.netbeans.spi.debugger.ui.DebuggingView;
 
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.text.Annotatable;
 import org.openide.text.Line;
 import org.openide.util.Exceptions;
 import org.openide.util.Pair;
@@ -72,22 +74,19 @@ import org.openide.util.RequestProcessor;
  *
  * @author  Honza
  */
-public class CPPLiteDebugger extends ActionsProviderSupport {
+public final class CPPLiteDebugger {
 
     private static final Logger LOGGER = Logger.getLogger(CPPLiteDebugger.class.getName());
-
-    /** The ReqeustProcessor used by action performers. */
-    private static RequestProcessor     actionsRequestProcessor;
-    private static RequestProcessor     killRequestProcessor;
 
     private CPPLiteDebuggerConfig       configuration;
     private CPPLiteDebuggerEngineProvider   engineProvider;
     private ContextProvider             contextProvider;
     private Process                     debuggee;
     private LiteMIProxy                 proxy;
-    private Object                      currentLine;
+    private volatile Object             currentLine;
     private volatile boolean            suspended = false;
     private final List<StateListener>   stateListeners = new CopyOnWriteArrayList<>();
+    private final BreakpointsHandler    breakpointsHandler = new BreakpointsHandler();
 
     private final ThreadsCollector      threadsCollector = new ThreadsCollector(this);
     private volatile CPPThread          currentThread;
@@ -98,10 +97,6 @@ public class CPPLiteDebugger extends ActionsProviderSupport {
         configuration = contextProvider.lookupFirst(null, CPPLiteDebuggerConfig.class);
         // init engineProvider
         engineProvider = (CPPLiteDebuggerEngineProvider) contextProvider.lookupFirst(null, DebuggerEngineProvider.class);
-        // init actions
-        for (Iterator it = actions.iterator(); it.hasNext(); ) {
-            setEnabled (it.next(), true);
-        }
     }
 
     void setDebuggee(Process debuggee) {
@@ -125,71 +120,12 @@ public class CPPLiteDebugger extends ActionsProviderSupport {
 
         proxy.waitStarted();
 
-        for (Breakpoint b : DebuggerManager.getDebuggerManager ().getBreakpoints ()) {
-            if (b instanceof CPPLiteBreakpoint) {
-                CPPLiteBreakpoint cpplineBreakpoint = (CPPLiteBreakpoint) b;
-                Line l = cpplineBreakpoint.getLine();
-                FileObject source = l.getLookup().lookup(FileObject.class);
-                File sourceFile = source != null ? FileUtil.toFile(source) : null;
-                if (sourceFile != null) {
-                    proxy.send(new Command("-break-insert " + sourceFile.getAbsolutePath() + ":" + (l.getLineNumber() + 1)));
-                }
-            }
-        }
+        breakpointsHandler.init();
 
         proxy.send(new Command("-gdb-set target-async"));
         //proxy.send(new Command("-gdb-set scheduler-locking on"));
         proxy.send(new Command("-gdb-set non-stop on"));
         proxy.send(new Command("-exec-run"));
-    }
-
-    // ActionsProvider .........................................................
-
-    private static final Set<Object> actions = new HashSet<>();
-    private static final Set<Object> actionsToDisable = new HashSet<>();
-    static {
-        actions.add (ActionsManager.ACTION_KILL);
-        actions.add (ActionsManager.ACTION_CONTINUE);
-        actions.add (ActionsManager.ACTION_PAUSE);
-        actions.add (ActionsManager.ACTION_START);
-        actions.add (ActionsManager.ACTION_STEP_INTO);
-        actions.add (ActionsManager.ACTION_STEP_OVER);
-        actions.add (ActionsManager.ACTION_STEP_OUT);
-        actionsToDisable.addAll(actions);
-        // Ignore the KILL action
-        actionsToDisable.remove(ActionsManager.ACTION_KILL);
-    }
-
-    @Override
-    public Set getActions () {
-        return actions;
-    }
-
-    @Override
-    public void doAction (Object action) {
-        LOGGER.log(Level.FINE, "CPPLiteDebugger.doAction({0}), is kill = {1}", new Object[]{action, action == ActionsManager.ACTION_KILL});
-        if (action == ActionsManager.ACTION_KILL) {
-            finish ();
-        } else
-        if (action == ActionsManager.ACTION_CONTINUE) {
-            CPPThread thread = currentThread;
-            if (thread != null) {
-                thread.notifyRunning();
-            }
-            proxy.send(new Command("-exec-continue --all"));
-        } else
-        if (action == ActionsManager.ACTION_PAUSE) {
-            proxy.send(new Command("-exec-interrupt --all"));
-        } else
-        if (action == ActionsManager.ACTION_START) {
-            return ;
-        } else
-        if ( action == ActionsManager.ACTION_STEP_INTO ||
-             action == ActionsManager.ACTION_STEP_OUT ||
-             action == ActionsManager.ACTION_STEP_OVER
-        ) {
-            doStep (action);
-        }
     }
 
     private static class CPPLiteInjector implements MICommandInjector {
@@ -216,51 +152,6 @@ public class CPPLiteDebugger extends ActionsProviderSupport {
             LOGGER.log(Level.FINE, "CPPLiteInjector.log({0})", data);
         }
 
-    }
-
-    @Override
-    public void postAction(final Object action, final Runnable actionPerformedNotifier) {
-        if (action == ActionsManager.ACTION_KILL) {
-            synchronized (CPPLiteDebugger.class) {
-                if (killRequestProcessor == null) {
-                    killRequestProcessor = new RequestProcessor("CPPLite debugger finish RP", 1);
-                }
-            }
-            killRequestProcessor.post(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        doAction(action);
-                    } finally {
-                        actionPerformedNotifier.run();
-                    }
-                }
-            });
-            return ;
-        }
-        setDebugActionsEnabled(false);
-        synchronized (CPPLiteDebugger.class) {
-            if (actionsRequestProcessor == null) {
-                actionsRequestProcessor = new RequestProcessor("CPPLite debugger actions RP", 1);
-            }
-        }
-        actionsRequestProcessor.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    doAction(action);
-                } finally {
-                    actionPerformedNotifier.run();
-                    setDebugActionsEnabled(true);
-                }
-            }
-        });
-    }
-
-    private void setDebugActionsEnabled(boolean enabled) {
-        for (Object action : actionsToDisable) {
-            setEnabled(action, enabled);
-        }
     }
 
     MIRecord sendAndGet(String command) throws InterruptedException {
@@ -434,7 +325,7 @@ public class CPPLiteDebugger extends ActionsProviderSupport {
     /**
      * should define callStack based on callStackInternal & action.
      */
-    private void doStep (Object action) {
+    void doStep (Object action) {
         CPPThread thread = currentThread;
         String threadId = "";
         if (thread != null) {
@@ -450,12 +341,22 @@ public class CPPLiteDebugger extends ActionsProviderSupport {
         }
     }
 
-    private void finish () {
+    void pause() {
+        proxy.send(new Command("-exec-interrupt --all"));
+    }
+
+    void resume() {
+        threadsCollector.running("all");
+        proxy.send(new Command("-exec-continue --all"));
+    }
+
+    void finish () {
         LOGGER.fine("CPPLiteDebugger.finish()");
         if (finished) {
             LOGGER.fine("finish(): already finished.");
             return ;
         }
+        breakpointsHandler.dispose();
         proxy.send(new Command("-gdb-exit"));
         Utils.unmarkCurrent ();
         engineProvider.getDestructor().killEngine();
@@ -526,8 +427,10 @@ public class CPPLiteDebugger extends ActionsProviderSupport {
                                 if (frame != null) {
                                     Line currentLine = frame.location();
                                     if (currentLine != null) {
-                                        Utils.markCurrent(new Line[] {currentLine});
-                                        Utils.showLine(new Line[] {currentLine});
+                                        Annotatable[] lines = new Annotatable[] {currentLine};
+                                        CPPLiteDebugger.this.currentLine = lines;
+                                        Utils.markCurrent(lines);
+                                        Utils.showLine(lines);
                                     }
                                 }
                                 break;
@@ -645,7 +548,7 @@ public class CPPLiteDebugger extends ActionsProviderSupport {
 
     }
 
-    public static @NonNull Pair<CPPLiteDebugger, Process> startDebugging (CPPLiteDebuggerConfig configuration) throws IOException {
+    public static @NonNull Pair<DebuggerEngine, Process> startDebugging (CPPLiteDebuggerConfig configuration) throws IOException {
         DebuggerInfo di = DebuggerInfo.create (
             "CPPLiteDebuggerInfo",
             new Object[] {
@@ -702,7 +605,7 @@ public class CPPLiteDebugger extends ActionsProviderSupport {
         });
         debugger.setDebuggee(debuggee);
 
-        return Pair.of(debugger, new Process() {
+        return Pair.of(es[0], new Process() {
             @Override
             public OutputStream getOutputStream() {
                 return pty.getOutputStream();
@@ -733,5 +636,115 @@ public class CPPLiteDebugger extends ActionsProviderSupport {
                 debuggee.destroy();
             }
         });
+    }
+
+    private class BreakpointsHandler extends DebuggerManagerAdapter implements PropertyChangeListener {
+
+        private final Map<String, CPPLiteBreakpoint> breakpointsById = new ConcurrentHashMap<>();
+        private final Map<CPPLiteBreakpoint, String> breakpointIds = new ConcurrentHashMap<>();
+
+        BreakpointsHandler() {
+        }
+
+        private void init() {
+            DebuggerManager.getDebuggerManager().addDebuggerListener(DebuggerManager.PROP_BREAKPOINTS, this);
+            for (Breakpoint b : DebuggerManager.getDebuggerManager().getBreakpoints()) {
+                if (b instanceof CPPLiteBreakpoint) {
+                    CPPLiteBreakpoint cpplineBreakpoint = (CPPLiteBreakpoint) b;
+                    addBreakpoint(cpplineBreakpoint);
+                }
+            }
+        }
+
+        void dispose() {
+            DebuggerManager.getDebuggerManager().removeDebuggerListener(DebuggerManager.PROP_BREAKPOINTS, this);
+            for (Breakpoint b : DebuggerManager.getDebuggerManager().getBreakpoints()) {
+                if (b instanceof CPPLiteBreakpoint) {
+                    b.removePropertyChangeListener(this);
+                }
+            }
+        }
+
+        @Override
+        public void breakpointAdded(Breakpoint breakpoint) {
+            if (breakpoint instanceof CPPLiteBreakpoint) {
+                addBreakpoint((CPPLiteBreakpoint) breakpoint);
+            }
+        }
+
+        @Override
+        public void breakpointRemoved(Breakpoint breakpoint) {
+            if (breakpoint instanceof CPPLiteBreakpoint) {
+                removeBreakpoint((CPPLiteBreakpoint) breakpoint);
+            }
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            Object source = evt.getSource();
+            if (source instanceof CPPLiteBreakpoint) {
+                String id = breakpointIds.get((CPPLiteBreakpoint) source);
+                if (id != null) {
+                    String propertyName = evt.getPropertyName();
+                    switch (propertyName) {
+                        case Breakpoint.PROP_ENABLED:
+                            if (Boolean.TRUE.equals(evt.getNewValue())) {
+                                proxy.send(new Command("-break-enable " + id));
+                            } else {
+                                proxy.send(new Command("-break-disable " + id));
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+
+        private void addBreakpoint(CPPLiteBreakpoint breakpoint) {
+            Line l = breakpoint.getLine();
+            FileObject source = l.getLookup().lookup(FileObject.class);
+            File sourceFile = source != null ? FileUtil.toFile(source) : null;
+            if (sourceFile != null) {
+                String disabled = breakpoint.isEnabled() ? "" : "-d ";
+                Command command = new Command("-break-insert " + disabled + sourceFile.getAbsolutePath() + ":" + (l.getLineNumber() + 1)) {
+                    @Override
+                    protected void onDone(MIRecord record) {
+                        MIValue bkpt = record.results().valueOf("bkpt");
+                        if (bkpt instanceof MITList) {
+                            breakpointResolved(breakpoint, (MITList) bkpt);
+                        }
+                        super.onDone(record);
+                    }
+
+                    @Override
+                    protected void onError(MIRecord record) {
+                        String msg = record.results().getConstValue("msg");
+                        breakpointError(breakpoint, msg);
+                        super.onError(record);
+                    }
+                };
+                proxy.send(command);
+            }
+            breakpoint.addPropertyChangeListener(this);
+        }
+
+        private void removeBreakpoint(CPPLiteBreakpoint breakpoint) {
+            String id = breakpointIds.remove(breakpoint);
+            if (id != null) {
+                breakpoint.removePropertyChangeListener(this);
+                Command command = new Command("-break-delete " + id);
+                proxy.send(command);
+            }
+        }
+
+        private void breakpointResolved(CPPLiteBreakpoint breakpoint, MITList list) {
+            breakpoint.setCPPValidity(Breakpoint.VALIDITY.VALID, null);
+            String id = list.getConstValue("number");
+            breakpointsById.put(id, breakpoint);
+            breakpointIds.put(breakpoint, id);
+        }
+
+        private void breakpointError(CPPLiteBreakpoint breakpoint, String msg) {
+            breakpoint.setCPPValidity(Breakpoint.VALIDITY.INVALID, msg);
+        }
     }
 }

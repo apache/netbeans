@@ -400,7 +400,7 @@ matrix:
             #- ant $OPTS -f java/junit test
             - ant $OPTS -f java/junit.ant.ui test
             - ant $OPTS -f java/lib.nbjavac test
-            #- ant $OPTS -f java/maven test
+            - ant $OPTS -f java/maven test
             #- ant $OPTS -f java/maven.embedder test
             - ant $OPTS -f java/maven.grammar test
             #- ant $OPTS -f java/maven.hints test
@@ -795,7 +795,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - (cd java/java.lsp.server; ant build-vscode-ext)
+            - (cd java/java.lsp.server; ant build-vscode-ext -D3rdparty.modules=.*nbjavac.*)
             - (cd java/java.lsp.server; ant test-vscode-ext)
 
         - name: "GraalVM Tests (latest)"

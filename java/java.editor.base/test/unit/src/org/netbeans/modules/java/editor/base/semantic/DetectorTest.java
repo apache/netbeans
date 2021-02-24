@@ -754,6 +754,153 @@ public class DetectorTest extends TestBase {
                     "[PRIVATE, METHOD, DECLARATION], 17:25-17:29");
     }
 
+    public void testChainTypes2() throws Exception {
+        setShowPrependedText(true);
+        performTest("Test.java",
+                    "package test;\n" +
+                    "public class Test<T> {\n" +
+                    "    public void test(Test<String> t) {\n" +
+                    "        test2(t.run1()\n" +
+                    "               .run2()\n" +
+                    "               .run3()\n" +
+                    "               .run4(),\n" +
+                    "              t.run1()\n" +
+                    "               .run2()\n" +
+                    "               .run3()\n" +
+                    "               .run4());\n" +
+                    "    }\n" +
+                    "    private Test<Integer> run1() {\n" +
+                    "        return null;\n" +
+                    "    }\n" +
+                    "    private Test<String> run2() {\n" +
+                    "        return null;\n" +
+                    "    }\n" +
+                    "    private Test<Integer> run3() {\n" +
+                    "        return null;\n" +
+                    "    }\n" +
+                    "    private Test<String> run4() {\n" +
+                    "        return null;\n" +
+                    "    }\n" +
+                    "    public void test2(Test<String> t1, Test<String> t2) {\n" +
+                    "    }\n" +
+                    "}\n",
+                    "[PUBLIC, CLASS, DECLARATION], 1:13-1:17",
+                    "[PUBLIC, METHOD, DECLARATION], 2:16-2:20",
+                    "[PUBLIC, CLASS], 2:21-2:25",
+                    "[PUBLIC, CLASS], 2:26-2:32",
+                    "[PARAMETER, DECLARATION], 2:34-2:35",
+                    "[PUBLIC, METHOD], 3:8-3:13",
+                    "[t1:], 3:14-3:15",
+                    "[PRIVATE, METHOD], 3:16-3:20",
+                    "[  Test<Integer>], 3:22-4:0",
+                    "[PRIVATE, METHOD], 4:16-4:20",
+                    "[  Test<String>], 4:22-5:0",
+                    "[PRIVATE, METHOD], 5:16-5:20",
+                    "[  Test<Integer>], 5:22-6:0",
+                    "[PRIVATE, METHOD], 6:16-6:20",
+                    "[t2:], 7:14-7:15",
+                    "[PRIVATE, METHOD], 7:16-7:20",
+                    "[  Test<Integer>], 7:22-8:0",
+                    "[PRIVATE, METHOD], 8:16-8:20",
+                    "[  Test<String>], 8:22-9:0",
+                    "[PRIVATE, METHOD], 9:16-9:20",
+                    "[  Test<Integer>], 9:22-10:0",
+                    "[PRIVATE, METHOD], 10:16-10:20",
+                    "[PUBLIC, CLASS], 12:12-12:16",
+                    "[PUBLIC, CLASS], 12:17-12:24",
+                    "[PRIVATE, METHOD, DECLARATION], 12:26-12:30",
+                    "[PUBLIC, CLASS], 15:12-15:16",
+                    "[PUBLIC, CLASS], 15:17-15:23",
+                    "[PRIVATE, METHOD, DECLARATION], 15:25-15:29",
+                    "[PUBLIC, CLASS], 18:12-18:16",
+                    "[PUBLIC, CLASS], 18:17-18:24",
+                    "[PRIVATE, METHOD, DECLARATION], 18:26-18:30",
+                    "[PUBLIC, CLASS], 21:12-21:16",
+                    "[PUBLIC, CLASS], 21:17-21:23",
+                    "[PRIVATE, METHOD, DECLARATION], 21:25-21:29",
+                    "[PUBLIC, METHOD, DECLARATION], 24:16-24:21",
+                    "[PUBLIC, CLASS], 24:22-24:26",
+                    "[PUBLIC, CLASS], 24:27-24:33",
+                    "[PARAMETER, DECLARATION], 24:35-24:37",
+                    "[PUBLIC, CLASS], 24:39-24:43",
+                    "[PUBLIC, CLASS], 24:44-24:50",
+                    "[PARAMETER, DECLARATION], 24:52-24:54");
+    }
+
+    public void testChainTypes3() throws Exception {
+        setShowPrependedText(true);
+        performTest("Test.java",
+                    "package test;\n" +
+                    "public class Test<T> {\n" +
+                    "    public void test(Test<String> t) {\n" +
+                    "        testChain1(testChain2(testChain1(t.run1()\n" +
+                    "               .run2()\n" +
+                    "               .run3()\n" +
+                    "               .run4())));\n" +
+                    "    }\n" +
+                    "    private Test<Integer> run1() {\n" +
+                    "        return null;\n" +
+                    "    }\n" +
+                    "    private Test<String> run2() {\n" +
+                    "        return null;\n" +
+                    "    }\n" +
+                    "    private Test<Integer> run3() {\n" +
+                    "        return null;\n" +
+                    "    }\n" +
+                    "    private Test<String> run4() {\n" +
+                    "        return null;\n" +
+                    "    }\n" +
+                    "    public Test<Integer> testChain1(Test<String> t1) {\n" +
+                    "        return null;\n" +
+                    "    }\n" +
+                    "    public Test<String> testChain2(Test<Integer> t1) {\n" +
+                    "        return null;\n" +
+                    "    }\n" +
+                    "}\n",
+                    "[PUBLIC, CLASS, DECLARATION], 1:13-1:17",
+                    "[PUBLIC, METHOD, DECLARATION], 2:16-2:20",
+                    "[PUBLIC, CLASS], 2:21-2:25",
+                    "[PUBLIC, CLASS], 2:26-2:32",
+                    "[PARAMETER, DECLARATION], 2:34-2:35",
+                    "[PUBLIC, METHOD], 3:8-3:18",
+                    "[t1:], 3:19-3:20",
+                    "[PUBLIC, METHOD], 3:19-3:29",
+                    "[t1:], 3:30-3:31",
+                    "[PUBLIC, METHOD], 3:30-3:40",
+                    "[t1:], 3:41-3:42",
+                    "[PRIVATE, METHOD], 3:43-3:47",
+                    "[  Test<Integer>], 3:49-4:0",
+                    "[PRIVATE, METHOD], 4:16-4:20",
+                    "[  Test<String>], 4:22-5:0",
+                    "[PRIVATE, METHOD], 5:16-5:20",
+                    "[  Test<Integer>], 5:22-6:0",
+                    "[PRIVATE, METHOD], 6:16-6:20",
+                    "[PUBLIC, CLASS], 8:12-8:16",
+                    "[PUBLIC, CLASS], 8:17-8:24",
+                    "[PRIVATE, METHOD, DECLARATION], 8:26-8:30",
+                    "[PUBLIC, CLASS], 11:12-11:16",
+                    "[PUBLIC, CLASS], 11:17-11:23",
+                    "[PRIVATE, METHOD, DECLARATION], 11:25-11:29",
+                    "[PUBLIC, CLASS], 14:12-14:16",
+                    "[PUBLIC, CLASS], 14:17-14:24",
+                    "[PRIVATE, METHOD, DECLARATION], 14:26-14:30",
+                    "[PUBLIC, CLASS], 17:12-17:16",
+                    "[PUBLIC, CLASS], 17:17-17:23",
+                    "[PRIVATE, METHOD, DECLARATION], 17:25-17:29",
+                    "[PUBLIC, CLASS], 20:11-20:15",
+                    "[PUBLIC, CLASS], 20:16-20:23",
+                    "[PUBLIC, METHOD, DECLARATION], 20:25-20:35",
+                    "[PUBLIC, CLASS], 20:36-20:40",
+                    "[PUBLIC, CLASS], 20:41-20:47",
+                    "[PARAMETER, DECLARATION], 20:49-20:51",
+                    "[PUBLIC, CLASS], 23:11-23:15",
+                    "[PUBLIC, CLASS], 23:16-23:22",
+                    "[PUBLIC, METHOD, DECLARATION], 23:24-23:34",
+                    "[PUBLIC, CLASS], 23:35-23:39",
+                    "[PUBLIC, CLASS], 23:40-23:47",
+                    "[PARAMETER, DECLARATION], 23:49-23:51");
+    }
+
     public void testRawStringLiteralNETBEANS_5118() throws Exception {
         try {
             SourceVersion.valueOf("RELEASE_15");

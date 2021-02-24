@@ -22,6 +22,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExportsTree;
 import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -713,6 +714,10 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             
             scan(tree.getTypeArguments(), null);
             
+            for (ExpressionTree arg : tree.getArguments()) {
+                addChainedTypes(new TreePath(getCurrentPath(), arg));
+            }
+
             scan(tree.getArguments(), p);
             
             addParameterInlineHint(tree);
@@ -721,8 +726,13 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
 
         @Override
         public Void visitExpressionStatement(ExpressionStatementTree node, Void p) {
-            List<TreePath> chain = new ArrayList<>(); //TODO: avoid creating an instance if possible!
             TreePath current = new TreePath(getCurrentPath(), node.getExpression());
+            addChainedTypes(current);
+            return super.visitExpressionStatement(node, p);
+        }
+
+        private void addChainedTypes(TreePath current) {
+            List<TreePath> chain = new ArrayList<>(); //TODO: avoid creating an instance if possible!
             OUTER: while (true) {
                 chain.add(current);
                 switch (current.getLeaf().getKind()) {
@@ -760,7 +770,6 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 }
             }
             tl.resetToIndex(prevIndex);
-            return super.visitExpressionStatement(node, p);
         }
 
         @Override

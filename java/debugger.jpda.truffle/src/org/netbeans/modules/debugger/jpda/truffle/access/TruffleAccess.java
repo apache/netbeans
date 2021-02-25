@@ -236,6 +236,7 @@ public class TruffleAccess implements JPDABreakpointListener {
                 }
             }
             if (info == null) {
+                ((JPDAThreadImpl) thread).addPropertyChangeListener(JPDAThreadImpl.PROP_SUSPENDED, threadResumeListener);
                 info = new ThreadInfo();
                 suspendHerePCInfos.put(thread, info);
             }
@@ -273,14 +274,17 @@ public class TruffleAccess implements JPDABreakpointListener {
             JPDADebuggerImpl debugger = threadImpl.getDebugger();
             Value haltInfo;
             Lock writeLock = threadImpl.accessLock.writeLock();
-            Function<EventSet, Boolean> breakpointEventInterceptor = null;
+            Runnable cleanup = null;
             try {
                 writeLock.lock();
-                breakpointEventInterceptor = skipSuspendedEventClearLeakingReferences(debugger, thread);
+                cleanup = skipSuspendedEventClearLeakingReferences(debugger, thread);
                 haltInfo = ClassTypeWrapper.invokeMethod(debugAccessorClass, tr, suspendHereMethod, Collections.emptyList(), ObjectReference.INVOKE_SINGLE_THREADED);
             } finally {
-                ((JPDADebuggerImpl) debugger).getOperator().removeEventInterceptor(breakpointEventInterceptor);
-                writeLock.unlock();
+                try {
+                    cleanup.run();
+                } finally {
+                    writeLock.unlock();
+                }
             }
             if (haltInfo instanceof ObjectReference) {
                 return (ObjectVariable) debugger.getVariable(haltInfo);
@@ -293,7 +297,7 @@ public class TruffleAccess implements JPDABreakpointListener {
         return null;
     }
 
-    private static Function<EventSet, Boolean> skipSuspendedEventClearLeakingReferences(JPDADebugger debugger, JPDAThread thread) {
+    private static Runnable skipSuspendedEventClearLeakingReferences(JPDADebugger debugger, JPDAThread thread) {
         ThreadReference tr = ((JPDAThreadImpl) thread).getThreadReference();
         MethodBreakpoint clearLeakingReferencesBreakpoint = MethodBreakpoint.create("com.oracle.truffle.api.debug.SuspendedEvent", "clearLeakingReferences");
         clearLeakingReferencesBreakpoint.setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY);
@@ -343,7 +347,10 @@ public class TruffleAccess implements JPDABreakpointListener {
         });
         ((JPDADebuggerImpl) debugger).getOperator().addEventInterceptor(breakpointEventInterceptor);
         DebuggerManager.getDebuggerManager().addBreakpoint(clearLeakingReferencesBreakpoint);
-        return breakpointEventInterceptor;
+        return () -> { // Cleanup
+            ((JPDADebuggerImpl) debugger).getOperator().removeEventInterceptor(breakpointEventInterceptor);
+            DebuggerManager.getDebuggerManager().removeBreakpoint(clearLeakingReferencesBreakpoint);
+        };
     }
 
     @Override
@@ -605,6 +612,9 @@ public class TruffleAccess implements JPDABreakpointListener {
             i1 = i2 + 1;
             i2 = sourceDef.indexOf('\n', i1);
             hostMethodName = sourceDef.substring(i1, i2);
+            if ("null".equals(hostMethodName)) {
+                hostMethodName = null;
+            }
             i1 = i2 + 1;
             i2 = sourceDef.indexOf('\n', i1);
             sourcePath = sourceDef.substring(i1, i2);
@@ -618,6 +628,9 @@ public class TruffleAccess implements JPDABreakpointListener {
             i1 = i2 + 1;
             i2 = sourceDef.indexOf('\n', i1);
             mimeType = sourceDef.substring(i1, i2);
+            if ("null".equals(mimeType)) {
+                mimeType = null;
+            }
             i1 = i2 + 1;
             i2 = sourceDef.indexOf('\n', i1);
             if (i2 < 0) {

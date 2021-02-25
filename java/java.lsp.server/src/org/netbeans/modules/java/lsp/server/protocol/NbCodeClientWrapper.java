@@ -76,6 +76,11 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     }
 
     @Override
+    public void notifyTestProgress(TestProgressParams params) {
+        remote.notifyTestProgress(params);
+    }
+
+    @Override
     public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
         return remote.applyEdit(params);
     }

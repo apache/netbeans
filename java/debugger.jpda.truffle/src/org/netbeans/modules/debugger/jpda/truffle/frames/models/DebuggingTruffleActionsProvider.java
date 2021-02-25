@@ -29,10 +29,12 @@ import java.util.WeakHashMap;
 import javax.swing.Action;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.debugger.jpda.CallStackFrame;
+import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAThread;
 
 import org.netbeans.modules.debugger.jpda.EditorContextBridge;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
+import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
@@ -64,12 +66,14 @@ public class DebuggingTruffleActionsProvider implements NodeActionsProviderFilte
     private final Action HIDE_INTERNAL_ACTION;
     private final Action SHOW_HOST_ACTION;
     private final Action HIDE_HOST_ACTION;
+    private final JPDADebuggerImpl debugger;
     private final RequestProcessor requestProcessor;
 
     private static final Map<DebuggingView.DVThread, Boolean> SHOWING_ALL_HOST_FRAMES = Collections.synchronizedMap(new WeakHashMap<>());
     private static final PropertyChangeSupport SHOWING_ALL_HOST_FRAMES_CHANGE = new PropertyChangeSupport(new Object());
     
     public DebuggingTruffleActionsProvider(ContextProvider lookupProvider) {
+        debugger = (JPDADebuggerImpl) lookupProvider.lookupFirst(null, JPDADebugger.class);
         requestProcessor = lookupProvider.lookupFirst(null, RequestProcessor.class);
         MAKE_CURRENT_ACTION = createMAKE_CURRENT_ACTION(requestProcessor);
         GO_TO_SOURCE_ACTION = createGO_TO_SOURCE_ACTION(requestProcessor);
@@ -85,7 +89,9 @@ public class DebuggingTruffleActionsProvider implements NodeActionsProviderFilte
         if (node instanceof TruffleStackFrame) {
             requestProcessor.post(() ->{
                 TruffleStackFrame f = (TruffleStackFrame) node;
-                CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(f.getThread());
+                JPDAThread thread = f.getThread();
+                debugger.setCurrentThread(thread);
+                CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(thread);
                 if (currentPCInfo != null) {
                     currentPCInfo.setSelectedStackFrame(f);
                     goToSource(f);
@@ -189,6 +195,10 @@ public class DebuggingTruffleActionsProvider implements NodeActionsProviderFilte
             public boolean isEnabled (Object node) {
                 if (node instanceof TruffleStackFrame) {
                     TruffleStackFrame f = (TruffleStackFrame) node;
+                    JPDAThread thread = f.getThread();
+                    if (thread != debugger.getCurrentThread()) {
+                        return true;
+                    }
                     CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(f.getThread());
                     if (currentPCInfo != null) {
                         return f != currentPCInfo.getSelectedStackFrame();
@@ -202,7 +212,9 @@ public class DebuggingTruffleActionsProvider implements NodeActionsProviderFilte
                 if (nodes.length == 0) return ;
                 if (nodes[0] instanceof TruffleStackFrame) {
                     TruffleStackFrame f = (TruffleStackFrame) nodes[0];
-                    CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(f.getThread());
+                    JPDAThread thread = f.getThread();
+                    debugger.setCurrentThread(thread);
+                    CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(thread);
                     if (currentPCInfo != null) {
                         currentPCInfo.setSelectedStackFrame(f);
                     }

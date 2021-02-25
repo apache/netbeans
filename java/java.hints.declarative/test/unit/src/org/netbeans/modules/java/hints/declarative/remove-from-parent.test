@@ -43,3 +43,25 @@ public class Test {
 }
 %%=>
 remove-from-parent:f
+%%TestCase pos-annotation
+package test;
+public class Test {
+     @Deprecated
+     private void g() {}
+}
+%%=>
+package test;
+public class Test {
+     private void g() {}
+}
+%%TestCase pos-annotation-enum-constant
+package test;
+public enum Test {
+    @Deprecated
+    A();
+}
+%%=>
+package test;
+public enum Test {
+    A();
+}

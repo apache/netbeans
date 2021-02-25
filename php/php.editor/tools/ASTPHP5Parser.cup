@@ -451,6 +451,8 @@ non terminal List non_empty_parameter_list;
 non terminal FormalParameter parameter;
 non terminal List function_call_parameter_list;
 non terminal List non_empty_function_call_parameter_list;
+non terminal Expression argument;
+non terminal Expression argument_expr;
 non terminal List global_var_list;
 non terminal VariableBase global_var;
 non terminal List static_var_list;
@@ -2535,74 +2537,79 @@ non_empty_function_call_parameter_list:paramsList possible_comma
 ;
 
 non_empty_function_call_parameter_list ::=
-is_variadic:isVariadic expr_without_variable:var
+argument:arg
 {:
     List paramsList = new LinkedList();
-    Expression param = var;
-        if (isVariadic) {
-            param = new Variadic(isVariadicleft, varright, var);
-        }
-    paramsList.add(param);
+    paramsList.add(arg);
     RESULT = paramsList;
 :}
 
-| is_variadic:isVariadic variable:var
+| non_empty_function_call_parameter_list:paramsList T_COMMA argument:arg
 {:
-    List paramsList = new LinkedList();
-    Expression param = var;
-        if (isVariadic) {
-            param = new Variadic(isVariadicleft, varright, var);
-        }
-    paramsList.add(param);
+    paramsList.add(arg);
     RESULT = paramsList;
+:}
+;
+
+argument ::=
+argument_expr:var
+{:
+    RESULT = var;
+:}
+
+| T_ELLIPSIS:e argument_expr:var
+{:
+    Expression param = var;
+    param = new Variadic(eleft, varright, var);
+    RESULT = param;
+:}
+
+/*
+ * if identifier is used instead of string_st, T_CLASS, semi_reserved_without_class,
+ * conflict with namespace_name (identifier:ident T_NEKUDOTAIM argument_expr:var)
+ */
+| string_st:ident T_NEKUDOTAIM argument_expr:var
+{:
+    Identifier identifier = new Identifier(identleft, identright, ident);
+    Expression param = new NamedArgument(identleft, varright, identifier, var);
+    RESULT = param;
+:}
+
+| T_CLASS:ident T_NEKUDOTAIM argument_expr:var
+{:
+    Identifier identifier = new Identifier(identleft, identright, ident);
+    Expression param = new NamedArgument(identleft, varright, identifier, var);
+    RESULT = param;
+:}
+
+| semi_reserved_without_class:ident T_NEKUDOTAIM argument_expr:var
+{:
+    Expression param = new NamedArgument(identleft, varright, ident, var);
+    RESULT = param;
 :}
 
 | T_REFERENCE:start w_variable:var
 {:
-    List paramsList = new LinkedList();
+    // Call-time pass-by-reference has been removed since PHP 5.4.0
     Expression var_ref = new Reference(startleft, varright, var);
-    paramsList.add(var_ref);
-    RESULT = paramsList;
+    RESULT = var_ref;
 :}
 
 | error:expr
 {:
-    List paramsList = new LinkedList();
-    paramsList.add(new ASTErrorExpression(exprleft, exprright));
-    RESULT = paramsList;
+    RESULT = new ASTErrorExpression(exprleft, exprright);
+:}
+;
+
+argument_expr ::=
+expr_without_variable:var
+{:
+    RESULT = var;
 :}
 
-| non_empty_function_call_parameter_list:paramsList T_COMMA is_variadic:isVariadic expr_without_variable:var
+| variable:var
 {:
-    Expression param = var;
-    if (isVariadic) {
-        param = new Variadic(isVariadicleft, varright, var);
-    }
-    paramsList.add(param);
-    RESULT = paramsList;
-:}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA is_variadic:isVariadic variable:var
-{:
-    Expression param = var;
-    if (isVariadic) {
-        param = new Variadic(isVariadicleft, varright, var);
-    }
-    paramsList.add(param);
-    RESULT = paramsList;
-:}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA T_REFERENCE:start w_variable:var
-{:
-    Expression var_ref = new Reference(startleft, varright, var);
-    paramsList.add(var_ref);
-    RESULT = paramsList;
-:}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA error:expr
-{:
-    paramsList.add(new ASTErrorExpression(exprleft, exprright));
-    RESULT = paramsList;
+    RESULT = var;
 :}
 ;
 

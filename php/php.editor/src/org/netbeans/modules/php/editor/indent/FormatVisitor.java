@@ -78,6 +78,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.MatchArm;
 import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
+import org.netbeans.modules.php.editor.parser.astnodes.NamedArgument;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
@@ -1251,7 +1252,7 @@ public class FormatVisitor extends DefaultVisitor {
 
     @Override
     public void visit(LambdaFunctionDeclaration node) {
-        disableIndentForFunctionInvocation(node.getStartOffset());
+        boolean disableIndent = disableIndentForFunctionInvocation(node.getStartOffset());
         scan(node.getAttributes());
         List<FormalParameter> parameters = node.getFormalParameters();
         Block body = node.getBody();
@@ -1284,18 +1285,51 @@ public class FormatVisitor extends DefaultVisitor {
             scan(body);
         }
 
-        enableIndentForFunctionInvocation(node.getEndOffset());
-    }
-
-    private void disableIndentForFunctionInvocation(int offset) {
-        if (path.get(1) instanceof FunctionInvocation) {
-            // #233353 disable indent for function invocation temporarily
-            formatTokens.add(new FormatToken.IndentToken(offset, -1 * options.continualIndentSize));
+        if (disableIndent) {
+            enableIndentForFunctionInvocation(node.getEndOffset());
         }
     }
 
+    private boolean disableIndentForFunctionInvocation(int offset) {
+        boolean disable = false;
+        if (path.get(1) instanceof FunctionInvocation
+                || (path.size() > 2 && path.get(1) instanceof NamedArgument && path.get(2) instanceof FunctionInvocation)) {
+            disable = true;
+            // if there is an indent, do nothing
+            // e.g.
+            // test(
+            //     function (): int {
+            //         return 1;
+            //     }
+            // );
+            int index = formatTokens.size() - 1;
+            ASTNode currentNode = path.get(0);
+            int currentNodeStart = currentNode.getStartOffset();
+            FormatToken lastFormatToken = formatTokens.get(index);
+            ASTNode functionInvocation = path.get(1) instanceof FunctionInvocation ? path.get(1) : path.get(2);
+            int lastFormatTokenStart;
+            while (lastFormatToken.getOffset() > functionInvocation.getStartOffset()) {
+                index--;
+                lastFormatToken = formatTokens.get(index);
+                lastFormatTokenStart = lastFormatToken.getOffset();
+                if (lastFormatTokenStart < currentNodeStart) {
+                    if (lastFormatToken.getId() == FormatToken.Kind.WHITESPACE_INDENT) {
+                        disable = false;
+                        break;
+                    }
+                }
+            }
+            if (disable) {
+                // #233353 disable indent for function invocation temporarily
+                formatTokens.add(new FormatToken.IndentToken(offset, -1 * options.continualIndentSize));
+            }
+        }
+        return disable;
+    }
+
     private void enableIndentForFunctionInvocation(int offset) {
-        if (path.get(1) instanceof FunctionInvocation) {
+        if (path.get(1) instanceof FunctionInvocation
+                || (path.size() > 2 && path.get(1) instanceof NamedArgument && path.get(2) instanceof FunctionInvocation)) {
             // #233353 enable indent for function invocation
             formatTokens.add(new FormatToken.IndentToken(offset, options.continualIndentSize));
         }
@@ -2277,6 +2311,10 @@ public class FormatVisitor extends DefaultVisitor {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_RETURN_TYPE_SEPARATOR, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_RETURN_TYPE_SEPARATOR, ts.offset() + ts.token().length()));
+                    } else if (parent instanceof NamedArgument){ // [NETBEANS-4443] PHP 8.0 Support
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_NAMED_ARGUMENT_SEPARATOR, ts.offset()));
+                        tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_NAMED_ARGUMENT_SEPARATOR, ts.offset() + ts.token().length()));
                     } else {
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     }

@@ -258,6 +258,9 @@ public final class CPPThread implements DVThread {
 
     void notifyRunning() {
         synchronized (this) {
+            if (status == Status.RUNNING) {
+                return ;
+            }
             status = Status.RUNNING;
             topFrame = null;
             stack = null;

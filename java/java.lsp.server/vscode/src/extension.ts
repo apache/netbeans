@@ -37,11 +37,15 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ChildProcess } from 'child_process';
 import * as vscode from 'vscode';
+import { testExplorerExtensionId, TestHub } from 'vscode-test-adapter-api';
+import { TestAdapterRegistrar } from 'vscode-test-adapter-util';
 import * as launcher from './nbcode';
-import { StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest } from './protocol';
+import {NbTestAdapter} from './testAdapter';
+import { StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, TestProgressNotification } from './protocol';
 
 const API_VERSION : string = "1.0";
 let client: Promise<LanguageClient>;
+let testAdapterRegistrar: TestAdapterRegistrar<NbTestAdapter>;
 let nbProcess : ChildProcess | null = null;
 let debugPort: number = -1;
 let consoleLog: boolean = !!process.env['ENABLE_CONSOLE_LOG'];
@@ -224,21 +228,52 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             ]);
         }
     }));
-    context.subscriptions.push(commands.registerCommand('java.debug.codelens', async (uri, methodName) => {
+    const runDebug = async (noDebug : boolean, testRun: boolean, uri : any, methodName? : string) => {
         const editor = window.activeTextEditor;
         if (editor) {
             const docUri = editor.document.uri;
             const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
-            const debugConfig = {
+            const debugConfig : vscode.DebugConfiguration = {
                 type: "java8+",
-                name: "CodeLens Debug",
+                name: "Java Single Debug",
                 request: "launch",
                 mainClass: uri,
-                singleMethod: methodName,
+                methodName,
+                testRun
             };
-            await vscode.debug.startDebugging(workspaceFolder, debugConfig).then();
+            const debugOptions : vscode.DebugSessionOptions = {
+                noDebug: noDebug,
+            }
+            const ret = await vscode.debug.startDebugging(workspaceFolder, debugConfig, debugOptions);
+            return ret ? new Promise((resolve) => {
+                const listener = vscode.debug.onDidTerminateDebugSession(() => {
+                    listener.dispose();
+                    resolve(true);
+                });
+            }) : ret;
         }
+    };
+    context.subscriptions.push(commands.registerCommand('java.run.test', async (uri, methodName?) => {
+        await runDebug(true, true, uri, methodName);
     }));
+    context.subscriptions.push(commands.registerCommand('java.run.single', async (uri, methodName?) => {
+        await runDebug(true, false, uri, methodName);
+    }));
+    context.subscriptions.push(commands.registerCommand('java.debug.single', async (uri, methodName?) => {
+        await runDebug(false, false, uri, methodName);
+    }));
+
+	// get the Test Explorer extension and register TestAdapter
+	const testExplorerExtension = vscode.extensions.getExtension<TestHub>(testExplorerExtensionId);
+	if (testExplorerExtension) {
+		const testHub = testExplorerExtension.exports;
+        testAdapterRegistrar = new TestAdapterRegistrar(
+			testHub,
+			workspaceFolder => new NbTestAdapter(workspaceFolder, client)
+		);
+		context.subscriptions.push(testAdapterRegistrar);
+	}
+
     return Object.freeze({
         version : API_VERSION
     });
@@ -347,7 +382,7 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             if (isOut) {
                 stdOut += text;
             }
-            if (stdOut.match(/org.netbeans.modules.java.lsp.server.*Enabled/)) {
+            if (stdOut.match(/org.netbeans.modules.java.lsp.server/)) {
                 resolve(text);
                 stdOut = null;
             }
@@ -442,7 +477,8 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             progressOnInitialization: true,
             initializationOptions : {
                 'nbcodeCapabilities' : {
-                    'statusBarMessageSupport' : true
+                    'statusBarMessageSupport' : true,
+                    'testResultsSupport' : true
                 }
             },
             errorHandler: {
@@ -478,6 +514,17 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             c.onRequest(InputBoxRequest.type, async param => {
                 return await window.showInputBox({ prompt: param.prompt, value: param.value });
             });
+            c.onNotification(TestProgressNotification.type, param => {
+                if (testAdapterRegistrar) {
+                    const ws = workspace.getWorkspaceFolder(vscode.Uri.parse(param.uri));
+                    if (ws) {
+                        const adapter = testAdapterRegistrar.getAdapter(ws);
+                        if (adapter) {
+                            adapter.testProgress(param.suite);
+                        }
+                    }
+                }
+            })
             handleLog(log, 'Language Client: Ready');
             setClient[0](c);
             commands.executeCommand('setContext', 'nbJavaLSReady', true);

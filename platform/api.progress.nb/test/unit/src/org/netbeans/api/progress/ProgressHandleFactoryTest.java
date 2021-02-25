@@ -36,7 +36,6 @@ import org.netbeans.modules.progress.spi.ProgressEvent;
 import org.netbeans.modules.progress.spi.ProgressUIWorker;
 import org.netbeans.modules.progress.spi.SwingController;
 import org.openide.util.Cancellable;
-import org.openide.util.test.MockLookup;
 
 /**
  *
@@ -182,14 +181,13 @@ public class ProgressHandleFactoryTest extends NbTestCase {
         } while (tc.getTestTimer().isRunning());
 
     }
-     
-
+    
     /**
      * Checks that handles produced by other env than org.netbeans.modules.progress.ui module
      * can still get some +- suitable Progress components.
      */
     public void testUnexpectedInternalHandleExtraction() throws Exception {
-        MockLookup.setLayersAndInstances(new StrangeEnvironment());
+        TestProgressEnvironment.withEnvironment(new StrangeEnvironment(), () -> {
         
         ProgressHandle handle = ProgressHandle.createHandle("task 1");
         assertFalse(handle.getInternalHandle() instanceof UIInternalHandle);
@@ -202,14 +200,18 @@ public class ProgressHandleFactoryTest extends NbTestCase {
         assertNotNull(l);
         // the handle changed its placement:
         assertTrue(ih.isCustomPlaced());
+        return null;
+        });
     }
 
     /**
      * Checks semantics of the InternalHandle + extraction after the progress starts.
      */
     public void testUnexpectedInternalHandleExtractFailsAfterStart() throws Exception {
-        MockLookup.setLayersAndInstances(new StrangeEnvironment());
+        TestProgressEnvironment.withEnvironment(new StrangeEnvironment(), () -> {
         ProgressHandle handle = ProgressHandle.createHandle("task 1");
+        assertFalse(handle.getInternalHandle() instanceof UIInternalHandle);
+
         handle.start(100);
         
         // should throw an exception:
@@ -219,6 +221,8 @@ public class ProgressHandleFactoryTest extends NbTestCase {
         } catch (IllegalStateException ex) {
             // OK
         }
+        return null;
+        });
     }
     
     public class StrangeHandle extends InternalHandle {

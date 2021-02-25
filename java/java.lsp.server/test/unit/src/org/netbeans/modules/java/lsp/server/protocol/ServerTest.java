@@ -19,7 +19,6 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import java.io.File;
 import java.io.FileWriter;
@@ -37,6 +36,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -50,6 +50,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
@@ -115,6 +116,8 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
+import org.netbeans.api.java.queries.AnnotationProcessingQuery.Result;
+import org.netbeans.api.java.queries.AnnotationProcessingQuery.Trigger;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -124,6 +127,7 @@ import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.java.queries.AnnotationProcessingQueryImplementation;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
@@ -716,6 +720,7 @@ public class ServerTest extends NbTestCase {
     public void testGoToDefinition() throws Exception {
         File src = new File(getWorkDir(), "Test.java");
         src.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(new File(src.getParentFile(), ".test-project"))) {}
         String code = "public class Test {\n" +
                       "    private int field;\n" +
                       "    public void method(int ppp) {\n" +
@@ -735,6 +740,7 @@ public class ServerTest extends NbTestCase {
                     "}");
         }
         FileUtil.refreshFor(getWorkDir());
+        CountDownLatch indexingComplete = new CountDownLatch(1);
         Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
@@ -746,7 +752,12 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
-            public void showMessage(MessageParams arg0) {
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
             }
 
             @Override
@@ -761,7 +772,10 @@ public class ServerTest extends NbTestCase {
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
-        InitializeResult result = server.initialize(new InitializeParams()).get();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setRootUri(getWorkDir().toURI().toString());
+        server.initialize(initParams).get();
+        indexingComplete.await();
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         Position pos = new Position(3, 30);
         List<? extends Location> definition = server.getTextDocumentService().definition(new DefinitionParams(new TextDocumentIdentifier(toURI(src)), pos)).get().getLeft();
@@ -1345,6 +1359,11 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void notifyTestProgress(TestProgressParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
@@ -2709,6 +2728,11 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
+            public void notifyTestProgress(TestProgressParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
             public NbCodeClientCapabilities getNbCodeCapabilities() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
@@ -2903,6 +2927,11 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
+            public void notifyTestProgress(TestProgressParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
             public NbCodeClientCapabilities getNbCodeCapabilities() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
@@ -3010,6 +3039,11 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void notifyTestProgress(TestProgressParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
@@ -3126,6 +3160,11 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
+            public void notifyTestProgress(TestProgressParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
             public NbCodeClientCapabilities getNbCodeCapabilities() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
@@ -3221,6 +3260,11 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void notifyTestProgress(TestProgressParams params) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
 
@@ -3329,6 +3373,11 @@ public class ServerTest extends NbTestCase {
             }
 
             @Override
+            public void notifyTestProgress(TestProgressParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
             public NbCodeClientCapabilities getNbCodeCapabilities() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
@@ -3427,6 +3476,11 @@ public class ServerTest extends NbTestCase {
             @Override
             public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
                 return CompletableFuture.completedFuture("LOGGER");
+            }
+
+            @Override
+            public void notifyTestProgress(TestProgressParams params) {
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -3721,7 +3775,7 @@ public class ServerTest extends NbTestCase {
         assertTrue(result.getCapabilities().getFoldingRangeProvider().isRight());
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         List<FoldingRange> folds = server.getTextDocumentService().foldingRange(new FoldingRangeRequestParams(new TextDocumentIdentifier(toURI(src)))).get();
-        System.err.println("folds=" + folds);
+
         assertEquals(5, folds.size());
 
         assertEquals(0, folds.get(0).getStartLine());
@@ -3753,6 +3807,34 @@ public class ServerTest extends NbTestCase {
         assertEquals(13, folds.get(4).getEndLine());
         assertEquals(5, (int) folds.get(4).getEndCharacter());
         assertEquals("region", folds.get(4).getKind());
+    }
+
+    public void testAnnotationCompletion() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "@java.lang.Supp public class Test { }";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient(), client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, 15))).get();
+        assertTrue(completion.isRight());
+        List<String> actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
+        assertEquals(Arrays.asList("Interface:SuppressWarnings"), actualItems);
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(1);
+        id.setUri(toURI(src));
+        server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 1), new Position(0, 15)), 14, "SuppressWarnings(v"))));
+        completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, 19))).get();
+        actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
+        assertTrue(actualItems.contains("Property:value"));
+        server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 19), new Position(0, 19)), 0, "alue=\"\""))));
+        completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, 25))).get();
+        actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
+        assertTrue(actualItems.contains("Text:\"empty-statement\""));
     }
 
     interface Validator<T> {
@@ -3836,6 +3918,42 @@ public class ServerTest extends NbTestCase {
                 return BootClassPathUtil.getBootClassPath();
             }
             return null;
+        }
+
+    }
+
+    @ServiceProvider(service=AnnotationProcessingQueryImplementation.class, position=100)
+    public static final class AnnotationProcessingQueryImpl implements AnnotationProcessingQueryImplementation {
+
+        private final Result result = new Result() {
+            @Override
+            public Set<? extends Trigger> annotationProcessingEnabled() {
+                return EnumSet.allOf(Trigger.class);
+            }
+
+            @Override
+            public Iterable<? extends String> annotationProcessorsToRun() {
+                return Collections.emptyList();
+            }
+            @Override
+            public URL sourceOutputDirectory() {
+                return null;
+            }
+            @Override
+            public Map<? extends String, ? extends String> processorOptions() {
+                return Collections.emptyMap();
+            }
+            @Override
+            public void addChangeListener(ChangeListener l) {
+            }
+            @Override
+            public void removeChangeListener(ChangeListener l) {
+            }
+        };
+
+        @Override
+        public Result getAnnotationProcessingOptions(FileObject file) {
+            return result;
         }
 
     }

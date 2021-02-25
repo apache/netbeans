@@ -37,6 +37,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.Position;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -113,13 +114,14 @@ public final class TestClassInfoTask implements CancellableTask<CompilationContr
     public static List<TestMethod> computeTestMethods(CompilationInfo info, AtomicBoolean cancel, int caretPosIfAny) {
         //TODO: first verify if this is a test class/class in a test source group?
         FileObject fileObject = info.getFileObject();
+        ClassTree clazz;
         List<TreePath> methods;
         if (caretPosIfAny == (-1)) {
             Optional<? extends Tree> anyClass = info.getCompilationUnit().getTypeDecls().stream().filter(t -> t.getKind() == Kind.CLASS).findAny();
             if (!anyClass.isPresent()) {
                 return Collections.emptyList();
             }
-            ClassTree clazz = (ClassTree) anyClass.get();
+            clazz = (ClassTree) anyClass.get();
             TreePath pathToClass = new TreePath(new TreePath(info.getCompilationUnit()), clazz);
             methods = clazz.getMembers().stream().filter(m -> m.getKind() == Kind.METHOD).map(m -> new TreePath(pathToClass, m)).collect(Collectors.toList());
         } else {
@@ -128,11 +130,13 @@ public final class TestClassInfoTask implements CancellableTask<CompilationContr
                 tp = tp.getParentPath();
             }
             if (tp != null) {
+                clazz = (ClassTree) tp.getParentPath().getLeaf();
                 methods = Collections.singletonList(tp);
             } else {
                 return Collections.emptyList();
             }
         }
+        TypeElement typeElement = (TypeElement) info.getTrees().getElement(new TreePath(new TreePath(info.getCompilationUnit()), clazz));
         Elements elements = info.getElements();
         List<TestMethod> result = new ArrayList<>();
         for (TreePath tp : methods) {
@@ -144,21 +148,23 @@ public final class TestClassInfoTask implements CancellableTask<CompilationContr
                 List<? extends AnnotationMirror> allAnnotationMirrors = elements.getAllAnnotationMirrors(element);
                 for (Iterator<? extends AnnotationMirror> it = allAnnotationMirrors.iterator(); it.hasNext();) {
                     AnnotationMirror annotationMirror = it.next();
-                    TypeElement typeElement = (TypeElement) annotationMirror.getAnnotationType().asElement();
-                    if (typeElement.getQualifiedName().contentEquals(ANNOTATION)) {
+                    TypeElement annTypeElement = (TypeElement) annotationMirror.getAnnotationType().asElement();
+                    if (annTypeElement.getQualifiedName().contentEquals(ANNOTATION)) {
                         String mn = element.getSimpleName().toString();
                         SourcePositions sp = info.getTrees().getSourcePositions();
                         int start = (int) sp.getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
                         int end = (int) sp.getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
                         Document doc = info.getSnapshot().getSource().getDocument(false);
                         try {
-                            result.add(new TestMethod(new SingleMethod(fileObject, mn), doc != null ? doc.createPosition(start) : null, doc != null ? doc.createPosition(end) : null));
+                            result.add(new TestMethod(typeElement.getQualifiedName().toString(), new SingleMethod(fileObject, mn),
+                                    doc != null ? doc.createPosition(start) : new SimplePosition(start),
+                                    doc != null ? doc.createPosition(end) : new SimplePosition(end)));
                         } catch (BadLocationException ex) {
                             //ignore
-                        }
                     }
                 }
             }
+        }
         }
         return result;
     }
@@ -186,5 +192,19 @@ public final class TestClassInfoTask implements CancellableTask<CompilationContr
             }
         }
 
+    }
+
+    private static class SimplePosition implements Position {
+
+        private final int offset;
+
+        private SimplePosition(int offset) {
+            this.offset = offset;
+        }
+
+        @Override
+        public int getOffset() {
+            return offset;
+        }
     }
 }

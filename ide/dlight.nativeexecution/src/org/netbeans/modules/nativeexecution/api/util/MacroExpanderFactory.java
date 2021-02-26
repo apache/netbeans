@@ -48,15 +48,6 @@ public final class MacroExpanderFactory {
         return getExpander(execEnv, ExpanderStyle.DEFAULT_STYLE, true);
     }
 
-    public static MacroExpander getExpander(ExecutionEnvironment execEnv, boolean connectIfNeed) {
-        return getExpander(execEnv, ExpanderStyle.DEFAULT_STYLE, connectIfNeed);
-    }
-
-    public static MacroExpander getExpander(
-            ExecutionEnvironment execEnv, ExpanderStyle style) {        
-        return getExpander(execEnv, style, true);
-    }
-
     public static MacroExpander getExpander(
             ExecutionEnvironment execEnv, ExpanderStyle style, boolean connectIfNeed) {
 

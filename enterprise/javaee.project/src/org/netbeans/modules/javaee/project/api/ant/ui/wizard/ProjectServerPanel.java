@@ -604,7 +604,7 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
         if (serverInstanceId != null) {
             try {
                 J2eePlatform j2eePlatform = Deployment.getDefault().getServerInstance(serverInstanceId).getJ2eePlatform();
-                Set jdks = j2eePlatform.getSupportedJavaPlatformVersions();
+                Set<String> jdks = j2eePlatform.getSupportedJavaPlatformVersions();
                 // make sure that chosen source level is suported by server:
                 if (jdks != null && !jdks.contains(sourceLevel)) { // workaround for #212146 when jdks == null
                     if ("1.7".equals(sourceLevel) && jdks.contains("1.6")) {
@@ -844,7 +844,7 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
             cdiCheckbox.setVisible(false);
             return;
         }
-        Set jdks = Collections.emptySet();
+        Set<String> jdks = Collections.emptySet();
         String serverInstanceId = getSelectedServer();
         if (serverInstanceId != null) {
             try {

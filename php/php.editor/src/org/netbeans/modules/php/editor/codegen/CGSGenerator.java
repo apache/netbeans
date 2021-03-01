@@ -418,14 +418,15 @@ public final class CGSGenerator implements CodeGenerator {
         Preferences preferences = null;
         Project project = FileOwnerQuery.getOwner(fo);
         if (project != null) {
-            preferences = ProjectUtils.getPreferences(project, CGSGenerator.class, false);
+            // Share settings because style of generated code is part of project coding standard.
+            preferences = ProjectUtils.getPreferences(project, CGSGenerator.class, true);
             try {
                 cgsInfo.setHowToGenerate(GenWay.valueOf(preferences.get(GETTER_SETTER_PROJECT_PROPERTY, GenWay.AS_JAVA.name())));
             } catch (IllegalArgumentException ex) {
                 cgsInfo.setHowToGenerate(GenWay.AS_JAVA);
             }
             cgsInfo.setFluentSetter(preferences.getBoolean(FLUENT_SETTER_PROJECT_PROPERTY, false));
-            cgsInfo.setPublicModifier(preferences.getBoolean(PUBLIC_MODIFIER_PROJECT_PROPERTY, false));
+            cgsInfo.setPublicModifier(preferences.getBoolean(PUBLIC_MODIFIER_PROJECT_PROPERTY, true));
         }
         DialogDescriptor desc = new DialogDescriptor(genType.createPanel(cgsInfo), genType.getDialogTitle());
         Dialog dialog = DialogDisplayer.getDefault().createDialog(desc);

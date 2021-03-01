@@ -98,6 +98,7 @@ public class TextDocumentSyncServerCapabilityHandler {
 
         Document doc = opened.getDocument();
         ensureDidOpenSent(doc);
+        registerBackgroundTasks(opened);
     }
 
     public static void refreshOpenedFilesInServers() {
@@ -130,7 +131,6 @@ public class TextDocumentSyncServerCapabilityHandler {
             return; //ignore
 
         openDocument2PanesCount.computeIfAbsent(doc, d -> {
-            doc.putProperty(HyperlinkProviderImpl.class, true);
             doc.putProperty(TextDocumentSyncServerCapabilityHandler.class, true);
             ensureDidOpenSent(doc);
             doc.addDocumentListener(new DocumentListener() { //XXX: listener
@@ -216,7 +216,7 @@ public class TextDocumentSyncServerCapabilityHandler {
                                     });
                                 }
                             }
-                            server.scheduleBackgroundTasks(file);
+                            LSPBindings.scheduleBackgroundTasks(file);
                         });
                     } catch (BadLocationException ex) {
                         Exceptions.printStackTrace(ex);
@@ -237,6 +237,7 @@ public class TextDocumentSyncServerCapabilityHandler {
             return; //ignore
 
         documentOpened(doc);
+        registerBackgroundTasks(c);
         openDocument2PanesCount.compute(doc, (d, count) -> count + 1);
     }
 
@@ -287,6 +288,8 @@ public class TextDocumentSyncServerCapabilityHandler {
                 return ;
             }
 
+            doc.putProperty(HyperlinkProviderImpl.class, true);
+
             String uri = Utils.toURI(file);
             String[] text = new String[1];
 
@@ -305,7 +308,35 @@ public class TextDocumentSyncServerCapabilityHandler {
                                                                      text[0]);
 
             server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(textDocumentItem));
-            server.scheduleBackgroundTasks(file);
+            LSPBindings.scheduleBackgroundTasks(file);
+        });
+    }
+
+    private void registerBackgroundTasks(JTextComponent c) {
+        Document doc = c.getDocument();
+        WORKER.post(() -> {
+            FileObject file = NbEditorUtilities.getFileObject(doc);
+
+            if (file == null)
+                return; //ignore
+
+            LSPBindings server = LSPBindings.getBindings(file);
+
+            if (server == null)
+                return ; //ignore
+
+            SwingUtilities.invokeLater(() -> {
+                if (c.getClientProperty(MarkOccurrences.class) == null) {
+                    MarkOccurrences mo = new MarkOccurrences(c);
+                    LSPBindings.addBackgroundTask(file, mo);
+                    c.putClientProperty(MarkOccurrences.class, mo);
+                }
+                if (c.getClientProperty(BreadcrumbsImpl.class) == null) {
+                    BreadcrumbsImpl bi = new BreadcrumbsImpl(c);
+                    LSPBindings.addBackgroundTask(file, bi);
+                    c.putClientProperty(BreadcrumbsImpl.class, bi);
+                }
+            });
         });
     }
 }

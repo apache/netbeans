@@ -32,6 +32,7 @@ import org.netbeans.modules.php.dbgp.SessionId;
 import org.netbeans.modules.php.dbgp.SessionManager;
 import org.netbeans.modules.php.dbgp.UnsufficientValueException;
 import org.openide.util.Exceptions;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -39,6 +40,7 @@ import org.w3c.dom.Node;
  *
  */
 public class Property extends BaseMessageChildElement {
+
     static final String PROPERTY = "property"; // NOI18N
     private static final String NUMCHILDREN = "numchildren"; // NOI18N
     static final String ENCODING = "encoding"; // NOI18N
@@ -64,12 +66,11 @@ public class Property extends BaseMessageChildElement {
     }
 
     public void setName(String value) {
-        Node node = getNode().getAttributes().getNamedItem(NAME);
-        if (node == null) {
-            node = getNode().getOwnerDocument().createAttribute(NAME);
-            getNode().appendChild(node);
+        Node node = getNode();
+        if (node instanceof Element) {
+            Element element = (Element) node;
+            element.setAttribute(NAME, value);
         }
-        node.setNodeValue(value);
     }
 
     public String getFullName() {

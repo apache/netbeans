@@ -943,6 +943,80 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath("nullsafeOperatorWithComments"), "$obj/**/?->\n// aa\n^foo();", false);
     }
 
+    public void testConstructorPropertyPromotion01a() throws Exception {
+        // one line
+        checkCompletion(getTestPath("constructorPropertyPromotion01a"), "    public function __construct(^", false);
+    }
+
+    public void testConstructorPropertyPromotion01b() throws Exception {
+        // multiple lines
+        checkCompletion(getTestPath("constructorPropertyPromotion01b"), "            ^", false);
+    }
+
+    public void testConstructorPropertyPromotion02a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion02a"), "    public function __construct(pr^", false);
+    }
+
+    public void testConstructorPropertyPromotion02b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion02b"), "            pr^", false);
+    }
+
+    public void testConstructorPropertyPromotion03a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion03a"), "    public function __construct(private ^) {", false);
+    }
+
+    public void testConstructorPropertyPromotion03b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion03b"), "            private ^", false);
+    }
+
+    public void testConstructorPropertyPromotion04a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion04a"), "    public function __construct(private ?^) {", false);
+    }
+
+    public void testConstructorPropertyPromotion04b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion04b"), "            private ?^", false);
+    }
+
+    public void testConstructorPropertyPromotion05a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion05a"), "    public function __construct(private string|^) {", false);
+    }
+
+    public void testConstructorPropertyPromotion05b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion05b"), "            private string|^", false);
+    }
+
+    public void testConstructorPropertyPromotion06a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion06a"), "    public function __construct(private string|int $param1, ^) {", false);
+    }
+
+    public void testConstructorPropertyPromotion06b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion06b"), "            ^// test", false);
+    }
+
+    public void testConstructorPropertyPromotion07a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion07a"), "    public function __construct(private string|int $param1, protected ^) {", false);
+    }
+
+    public void testConstructorPropertyPromotion07b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion07b"), "            protected ^", false);
+    }
+
+    public void testConstructorPropertyPromotion08a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion08a"), "    public function __construct(private string|int $param1, protected ?string $param2 = ^) {", false);
+    }
+
+    public void testConstructorPropertyPromotion08b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion08b"), "            protected ?string $param2 = ^", false);
+    }
+
+    public void testConstructorPropertyPromotion09a() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion09a"), "    public function __construct(private string|int $param1, protected ?string $param2 = ^,) {", false);
+    }
+
+    public void testConstructorPropertyPromotion09b() throws Exception {
+        checkCompletion(getTestPath("constructorPropertyPromotion09b"), "            protected ?string $param2 = ^,", false);
+    }
+
     public void testStaticReturnTypeOverrideMethod01() throws Exception {
         checkCompletionCustomTemplateResult(getTestPath("testStaticReturnTypeOverrideMethod01"), "    test^",
                 new DefaultFilter(PhpVersion.PHP_80, "test"), true);

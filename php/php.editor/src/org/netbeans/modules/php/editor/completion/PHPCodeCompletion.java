@@ -232,6 +232,11 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             "or", // NOI18N
             "xor" // NOI18N
     );
+    private static final List<String> PHP_VISIBILITY_KEYWORDS = Arrays.asList(
+            "public", // NOI18N
+            "protected", // NOI18N
+            "private" // NOI18N
+    );
     private static final Collection<Character> AUTOPOPUP_STOP_CHARS = new TreeSet<>(
             Arrays.asList('=', ';', '+', '-', '*', '/',
             '%', '(', ')', '[', ']', '{', '}', '?'));
@@ -486,6 +491,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         request,
                         codeStyle.startUseWithNamespaceSeparator() ? QualifiedNameKind.FULLYQUALIFIED : QualifiedNameKind.QUALIFIED);
                 break;
+            case VISIBILITY_MODIFIER_OR_TYPE_NAME: // no break
+                autoCompleteKeywords(completionResult, request, PHP_VISIBILITY_KEYWORDS);
             case TYPE_NAME:
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteTypeNames(completionResult, request);
@@ -920,6 +927,13 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     }
                     completionResult.add(new PHPCompletionItem.InterfaceItem(iface, request, QualifiedNameKind.FULLYQUALIFIED, false));
                 }
+                // NETBEANS-4650
+                for (TraitElement trait : request.index.getTraits(nameQuery)) {
+                    if (CancelSupport.getDefault().isCancelled()) {
+                        return;
+                    }
+                    completionResult.add(new PHPCompletionItem.TraitItem(trait, request));
+                }
                 break;
             case CONST:
                 for (ConstantElement constant : request.index.getConstants(nameQuery)) {
@@ -974,6 +988,13 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         return;
                     }
                     completionResult.add(new PHPCompletionItem.InterfaceItem(iface, request, kind, false));
+                }
+                // NETBEANS-4650
+                for (TraitElement trait : request.index.getTraits(nameQuery)) {
+                    if (CancelSupport.getDefault().isCancelled()) {
+                        return;
+                    }
+                    completionResult.add(new PHPCompletionItem.TraitItem(trait, request));
                 }
                 break;
             case CONST:

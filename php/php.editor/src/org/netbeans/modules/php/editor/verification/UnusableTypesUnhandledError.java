@@ -172,6 +172,15 @@ public class UnusableTypesUnhandledError extends UnhandledErrorRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
+            for (FormalParameter parameter : node.getFunction().getFormalParameters()) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                FieldsDeclaration fieldsDeclaration = FieldsDeclaration.create(parameter);
+                if (fieldsDeclaration != null) {
+                    scan(fieldsDeclaration);
+                }
+            }
             isInMethod = true;
             FunctionDeclaration function = node.getFunction();
             scan(function.getFunctionName());

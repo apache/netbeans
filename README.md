@@ -67,7 +67,6 @@ $ ant -Dcluster.config=platform
 
 #### Notes:
 * You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
-* It is possible to compile with newer JDK versions, by adding the ' -Dpermit.jdk9.builds=true' parameter to the ant build expression
 
 #### Building Windows Launchers
 Windows launchers can be build using [MinGW](http://www.mingw.org/) both on Windows and Linux.
@@ -111,7 +110,7 @@ $ ant tryme
 
 ### Download
 
-Developer builds can be downloaded: https://builds.apache.org/job/netbeans-linux.
+Developer builds can be downloaded: [Latest build (netbeans-xxx.zip)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/lastSuccessfulBuild/artifact/nbbuild/NetBeans-dev-Netbeans/).
 
 Convenience binary of released source artifacts: https://netbeans.apache.org/download/index.html.
 

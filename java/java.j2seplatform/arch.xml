@@ -340,9 +340,54 @@
     </api>
    </li>
   </ul>
+  
+  <api name="org.netbeans.modules.java.j2seplatform.api.API_Ask_attachSourcesQuestion" group="branding" type="export" category="stable">
+      <p>
+        Controls interaction when <b>sources</b> are about to be attached to a Classpath root, in
+        <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceJavadocAttacherImplementation.html">SourceJavadocAttacherImplementation</a>
+        provided by this module. By setting <code>API_Ask_attachSourcesQuestion</code> key in 
+        <code>org/netbeans/modules/java/j2seplatform/api/Bundle.properties</code> one can control the function:
+      </p>
+      <ul>
+          <li>
+              <b>no</b> will disable the attachers. No source/javadoc will be attached, and no user interaction will be started.
+          </li>
+          <li>
+              <b>yes</b> will permit the registered <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceJavadocAttacherImplementation#Definer.html">
+                  SourceJavadocAttacherImplementation.Definer</a> to attach an appropriate resource(s). <b>User interaction will be skipped</b>
+          </li>
+          <li>
+              <b>ask</b> (the default) will ask the user to supply the resources.
+          </li>
+      </ul>
+      <p>
+          The key can be set by a branding file in your application build.
+      </p>
+  </api>
+  <api name="org.netbeans.modules.java.j2seplatform.api.API_Ask_attachJavadocQuestion" group="branding" type="export" category="stable">
+      <p>
+        Controls interaction when <b>javadocs</b> are about to be attached to a Classpath root, in
+        <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceJavadocAttacherImplementation.html">SourceJavadocAttacherImplementation</a>
+        provided by this module. By setting <code>API_Ask_attachJavadocQuestion</code> key in 
+        <code>org/netbeans/modules/java/j2seplatform/api/Bundle.properties</code> one can control the function:
+      </p>
+      <ul>
+          <li>
+              <b>no</b> will disable the attachers. No source/javadoc will be attached, and no user interaction will be started.
+          </li>
+          <li>
+              <b>yes</b> will permit the registered <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceJavadocAttacherImplementation#Definer.html">
+                  SourceJavadocAttacherImplementation.Definer</a> to attach an appropriate resource(s). <b>User interaction will be skipped</b>
+          </li>
+          <li>
+              <b>ask</b> (the default) will ask the user to supply the resources.
+          </li>
+      </ul>
+      <p>
+          The key can be set by a branding file in your application build.
+      </p>
+  </api>  
  </answer>
-
-
 
 <!--
         <question id="dep-non-nb" when="init">

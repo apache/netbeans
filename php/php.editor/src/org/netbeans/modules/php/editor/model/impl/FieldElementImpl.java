@@ -34,6 +34,7 @@ import org.netbeans.modules.php.editor.index.PHPIndexer;
 import org.netbeans.modules.php.editor.index.Signature;
 import org.netbeans.modules.php.editor.model.ClassScope;
 import org.netbeans.modules.php.editor.model.FieldElement;
+import org.netbeans.modules.php.editor.model.FunctionScope;
 import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.TypeScope;
@@ -53,6 +54,7 @@ import org.openide.util.Union2;
  * @author Radek Matous
  */
 class FieldElementImpl extends ScopeImpl implements FieldElement {
+
     String defaultType;
     private String defaultFQType;
     private String className;
@@ -134,7 +136,6 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
         //super.addElement(element);
     }
 
-
     static String toName(SingleFieldDeclaration node) {
         return VariableNameImpl.toName(node.getName());
     }
@@ -192,7 +193,7 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
     public Collection<? extends String> getTypeNames(int offset) {
         AssignmentImpl assignment = findAssignment(offset);
         Collection<? extends String> retval = (assignment != null) ? assignment.getTypeNames() : Collections.emptyList();
-        if  (retval.isEmpty()) {
+        if (retval.isEmpty()) {
             retval = getDefaultTypeNames();
             if (retval.isEmpty()) {
                 ClassScope classScope = (ClassScope) getInScope();
@@ -207,6 +208,7 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
     }
 
     private static Set<String> recursionDetection = new HashSet<>(); //#168868
+
     @Override
     public Collection<? extends TypeScope> getArrayAccessTypes(int offset) {
         return getTypes(offset);
@@ -216,7 +218,7 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
     public Collection<? extends TypeScope> getTypes(int offset) {
         AssignmentImpl assignment = findAssignment(offset);
         Collection retval = (assignment != null) ? assignment.getTypes() : Collections.emptyList();
-        if  (retval.isEmpty()) {
+        if (retval.isEmpty()) {
             retval = getDefaultTypes();
             if (retval.isEmpty() && getInScope() instanceof ClassScope) {
                 ClassScope classScope = (ClassScope) getInScope();
@@ -229,7 +231,7 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
                                 return variableName.getFieldTypes(this, offset);
                             }
                         } finally {
-                          recursionDetection.remove(checkName);
+                            recursionDetection.remove(checkName);
                         }
                     }
                 }
@@ -275,9 +277,9 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
             for (FieldAssignmentImpl assignmentImpl : assignments) {
                 if (assignmentImpl.getBlockRange().containsInclusive(offset)) {
                     if (retval == null || retval.getOffset() <= assignmentImpl.getOffset()) {
-                         if (assignmentImpl.getOffset() < offset) {
+                        if (assignmentImpl.getOffset() < offset) {
                             retval = assignmentImpl;
-                         }
+                        }
                     }
                 }
             }

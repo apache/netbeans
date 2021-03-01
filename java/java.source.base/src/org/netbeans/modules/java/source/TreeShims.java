@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.source;
 
+import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
@@ -25,10 +26,12 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.tree.DocTreeMaker;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.ListBuffer;
+import com.sun.tools.javac.util.Names;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -174,6 +177,19 @@ public class TreeShims {
             throw TreeShims.<RuntimeException>throwAny(ex);
         }
         return perms;
+    }
+
+    public static ReferenceTree getRefrenceTree(DocTreeMaker docMake, ExpressionTree qualExpr, CharSequence member, List<? extends Tree> paramTypes, Names names, List<JCTree> paramTypesList) {
+        int NOPOS = -2;
+        try {
+            Class classTree = Class.forName("com.sun.tools.javac.tree.DocTreeMaker");
+            Method newReferenceTree = classTree.getDeclaredMethod("newReferenceTree", java.lang.String.class, com.sun.tools.javac.tree.JCTree.JCExpression.class, com.sun.tools.javac.tree.JCTree.class, javax.lang.model.element.Name.class, java.util.List.class);
+            return (ReferenceTree) newReferenceTree.invoke(docMake.at(NOPOS), "", (JCTree.JCExpression) qualExpr, qualExpr == null ? null : ((JCTree.JCExpression) qualExpr).getTree(), member != null ? (com.sun.tools.javac.util.Name) names.fromString(member.toString()) : null, paramTypesList);
+        } catch (ClassNotFoundException | NoSuchMethodException ex) {
+            return null;
+        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
     }
 
     public static List<? extends Tree> getPermits(JCClassDecl newT) {

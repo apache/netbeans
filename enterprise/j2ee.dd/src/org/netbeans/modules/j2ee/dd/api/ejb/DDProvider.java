@@ -58,13 +58,13 @@ import org.openide.util.Exceptions;
 public final class DDProvider {
     private static final String EJB_21_DOCTYPE = "http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd"; //NOI18N
     private static final DDProvider ddProvider = new DDProvider();
-    private final Map ddMap;
+    private final Map<Object, EjbJarProxy> ddMap;
 
     /** 
      * Creates a new instance of DDProvider.
      */
     private DDProvider() {
-        ddMap = new HashMap(5);
+        ddMap = new HashMap<>(5);
     }
 
     /**
@@ -142,16 +142,7 @@ public final class DDProvider {
     }
 
     private EjbJarProxy getFromCache (Object o) {
-        /*       WeakReference wr = (WeakReference) ddMap.get(o);
-       if (wr == null) {
-           return null;
-       }
-       EjbJarProxy ejbJarProxy = (EjbJarProxy) wr.get ();
-       if (ejbJarProxy == null) {
-           ddMap.remove (o);
-       }
-       return ejbJarProxy;*/
-        return (EjbJarProxy) ddMap.get(o);
+        return ddMap.get(o);
     }
 
     private void putToCache(Object o, EjbJarProxy ejbJarProxy) {

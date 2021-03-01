@@ -50,8 +50,8 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.java.source.SourceUtils;
-import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
@@ -406,10 +406,10 @@ public class DependenciesNode extends AbstractNode {
                     Node[] nds = getChildren().getNodes(true);
                     ProgressContributor[] contribs = new ProgressContributor[nds.length];
                     for (int i = 0; i < nds.length; i++) {
-                        contribs[i] = AggregateProgressFactory.createProgressContributor("multi-" + i); //NOI18N
+                        contribs[i] = BasicAggregateProgressFactory.createProgressContributor("multi-" + i); //NOI18N
                     }
                     String label = javadoc ? Progress_Javadoc() : Progress_Source();
-                    AggregateProgressHandle handle = AggregateProgressFactory.createHandle(label, 
+                    AggregateProgressHandle handle = BasicAggregateProgressFactory.createHandle(label, 
                             contribs, ProgressTransferListener.cancellable(), null);
                     handle.start();
                     try {

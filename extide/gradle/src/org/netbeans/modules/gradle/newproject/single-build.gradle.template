@@ -22,7 +22,7 @@ sourceCompatibility = ${javaVersion}
 targetCompatibility = ${javaVersion}
 </#if>
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 <#if dependencies??>

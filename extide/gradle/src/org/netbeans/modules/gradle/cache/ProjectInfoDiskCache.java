@@ -21,10 +21,10 @@ package org.netbeans.modules.gradle.cache;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import org.netbeans.modules.gradle.GradleProjectCache;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache.QualifiedProjectInfo;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
@@ -38,7 +38,7 @@ import org.netbeans.modules.gradle.spi.GradleFiles;
 public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, QualifiedProjectInfo> {
 
     // Increase this number if new info is gathered from the projects.
-    private static final int COMPATIBLE_CACHE_VERSION = 16;
+    private static final int COMPATIBLE_CACHE_VERSION = 18;
     private static final String INFO_CACHE_FILE_NAME = "project-info.ser"; //NOI18N
 
     public ProjectInfoDiskCache(GradleFiles gf) {
@@ -66,12 +66,14 @@ public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Q
 
         private final Quality quality;
         private final Map<String, Object> info;
+        private transient final Map<String, Object> ext;
         private final Set<String> problems;
         private final String gradleException;
 
         public QualifiedProjectInfo(Quality quality, NbProjectInfo pinfo) {
             this.quality = quality;
-            info = new LinkedHashMap<>(pinfo.getInfo());
+            info = new TreeMap<>(pinfo.getInfo());
+            ext = new TreeMap<>(pinfo.getExt());
             problems = new LinkedHashSet<>(pinfo.getProblems());
             gradleException = pinfo.getGradleException();
         }
@@ -83,7 +85,7 @@ public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Q
 
         @Override
         public Map<String, Object> getExt() {
-            return Collections.emptyMap();
+            return ext != null ? ext : Collections.emptyMap();
         }
 
         @Override

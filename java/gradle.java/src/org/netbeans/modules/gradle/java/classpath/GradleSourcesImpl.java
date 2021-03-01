@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -46,7 +47,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SourceGroupModifierImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -58,7 +58,6 @@ import org.openide.util.Pair;
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = {Sources.class, SourceGroupModifierImplementation.class}, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 @NbBundle.Messages({
     "# {0} - source group name",
     "# {1} - language",
@@ -145,31 +144,30 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
     private Map<String, Collection<File>> sourceGroups;
     private final Map<Pair<String, File>, SourceGroup> cache = new HashMap<>();
 
-    public GradleSourcesImpl(Project proj) {
-        this.proj = proj;
+    public GradleSourcesImpl(Project project) {
+        this.proj = project;
     }
 
     @Override
     public synchronized SourceGroup[] getSourceGroups(String type) {
         checkChanges(false);
-        SourceType stype = soureType2SourceType(type);
-        if (stype != null) {
-            ArrayList<SourceGroup> ret = new ArrayList<>();
+        ArrayList<SourceGroup> ret = new ArrayList<>();
+        Set<SourceType> stype = soureType2SourceType(type);
+        for (SourceType st : stype) {
             Set<File> processed = new HashSet();
             for (String group : gradleSources.keySet()) {
-                Set<File> dirs = gradleSources.get(group).getSourceDirs(stype);
+                Set<File> dirs = gradleSources.get(group).getSourceDirs(st);
                 boolean unique = dirs.size() == 1;
                 for (File dir : dirs) {
                     if (!processed.contains(dir) && dir.isDirectory()) {
                         processed.add(dir);
-                        ret.add(createSourceGroup(unique, group, dir, stype));
+                        ret.add(createSourceGroup(unique, group, dir, st));
                     }
                 }
             }
-            Collections.sort(ret, Comparator.comparing(SourceGroup::getName));
-            return ret.toArray(new SourceGroup[ret.size()]);
         }
-        return new SourceGroup[0];
+        Collections.sort(ret, Comparator.comparing(SourceGroup::getName));
+        return ret.toArray(new SourceGroup[ret.size()]);
     }
 
     SourceGroup createSourceGroup(boolean unique, String group, File dir,
@@ -331,14 +329,14 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
         return ret && gp.getSourceSets().containsKey(hint);
     }
 
-    private static SourceType soureType2SourceType(String type) {
+    private static Set<SourceType> soureType2SourceType(String type) {
         switch (type) {
-            case JavaProjectConstants.SOURCES_TYPE_JAVA: return SourceType.JAVA;
-            case JavaProjectConstants.SOURCES_TYPE_RESOURCES: return SourceType.RESOURCES;
-            case SOURCE_TYPE_GENERATED: return SourceType.GENERATED;
-            case SOURCE_TYPE_GROOVY: return SourceType.GROOVY; // Should be in the Groovy support module theoretically
+            case JavaProjectConstants.SOURCES_TYPE_JAVA: return EnumSet.of(SourceType.JAVA, SourceType.GROOVY);
+            case JavaProjectConstants.SOURCES_TYPE_RESOURCES: return EnumSet.of(SourceType.RESOURCES);
+            case SOURCE_TYPE_GENERATED: return EnumSet.of(SourceType.GENERATED);
+            case SOURCE_TYPE_GROOVY: return EnumSet.of(SourceType.GROOVY); // Should be in the Groovy support module theoretically
         }
-        return null;
+        return Collections.emptySet();
     }
 
     private final class GradleSourceGroup implements SourceGroup {

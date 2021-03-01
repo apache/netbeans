@@ -1,0 +1,4 @@
+Code completion result for source line:
+echo self::NO_KEYS|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   NO_KEYS [44, 55, 66, 77]        [PUBLIC]   Constants

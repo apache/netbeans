@@ -693,7 +693,8 @@ public class SettingsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btDefaultHomeActionPerformed
 
     public void setValues() {
-        final GradleSettings settings = GradleSettings.getDefault();
+        GradleSettings settings = GradleSettings.getDefault();
+        GradleExperimentalSettings experimental = GradleExperimentalSettings.getDefault();
 
         tfGradleUserHome.setText(settings.getGradleUserHome().getAbsolutePath());
 
@@ -720,8 +721,8 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbDisplayDescription.setSelected(settings.isDisplayDesctiption());
         cbReuseEditorOnStackTrace.setSelected(settings.isReuseEditorOnStackTace());
 
-        cbEnableCache.setSelected(!settings.isCacheDisabled());
-        cbOpenLazy.setSelected(settings.isOpenLazy());
+        cbEnableCache.setSelected(!experimental.isCacheDisabled());
+        cbOpenLazy.setSelected(experimental.isOpenLazy());
 
         cbPreferMaven.setSelected(settings.isPreferMaven());
 
@@ -759,6 +760,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     })
     public void applyValues() {
         GradleSettings settings = GradleSettings.getDefault();
+        GradleExperimentalSettings experimental = GradleExperimentalSettings.getDefault();
 
         if (getDefaultGradleUserHome().equals(tfGradleUserHome.getText())) {
             settings.setGradleUserHome(null);
@@ -785,8 +787,8 @@ public class SettingsPanel extends javax.swing.JPanel {
         settings.setDisplayDescription(cbDisplayDescription.isSelected());
         settings.setReuseEditorOnStackTrace(cbReuseEditorOnStackTrace.isSelected());
 
-        settings.setCacheDisabled(!cbEnableCache.isSelected());
-        settings.setOpenLazy(cbOpenLazy.isSelected());
+        experimental.setCacheDisabled(!cbEnableCache.isSelected());
+        experimental.setOpenLazy(cbOpenLazy.isSelected());
 
         settings.setDownloadLibs((GradleSettings.DownloadLibsRule) cbDownloadLibs.getSelectedItem());
         settings.setDownloadSources((GradleSettings.DownloadMiscRule) cbDownloadSources.getSelectedItem());
@@ -807,6 +809,7 @@ public class SettingsPanel extends javax.swing.JPanel {
 
     public boolean hasChanges() {
         GradleSettings settings = GradleSettings.getDefault();
+        GradleExperimentalSettings experimental = GradleExperimentalSettings.getDefault();
         boolean isChanged = !settings.getDistributionHome().equals(tfUseCustomGradle.getText());
         isChanged |= settings.isWrapperPreferred() != cbPreferWrapper.isSelected();
         isChanged |= !settings.getGradleVersion().equals(String.valueOf(cbGradleVersion.getSelectedItem()));
@@ -830,8 +833,8 @@ public class SettingsPanel extends javax.swing.JPanel {
         isChanged |= settings.isReuseOutputTabs() != cbReuseOutputTabs.isSelected();
         isChanged |= settings.isReuseEditorOnStackTace() != cbReuseEditorOnStackTrace.isSelected();
 
-        isChanged |= settings.isCacheDisabled() == cbEnableCache.isSelected();
-        isChanged |= settings.isOpenLazy() != cbOpenLazy.isSelected();
+        isChanged |= experimental.isCacheDisabled() == cbEnableCache.isSelected();
+        isChanged |= experimental.isOpenLazy() != cbOpenLazy.isSelected();
 
         isChanged |= settings.isPreferMaven() != cbPreferMaven.isSelected();
 

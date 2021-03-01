@@ -108,7 +108,7 @@ public abstract class TestMethodDebuggerProvider {
 	    singleMethodTask = RP.create(new Runnable() {
 		@Override
 		public void run() {
-		    singleMethod = getTestMethod(doc, caret);
+		    singleMethod = TestMethodRunnerProvider.findTestMethod(doc, caret, TestMethodDebuggerProvider.this::getTestMethod);
 		}
 	    });
 	    final ProgressHandle ph = ProgressHandleFactory.createHandle(Bundle.Search_For_Test_Method(), singleMethodTask);

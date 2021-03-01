@@ -68,15 +68,17 @@
         <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}"/>
     </target>
 
-    <target name="jdk-8-check" depends="-jdk-init" if="have-jdk-1.9" unless="permit.jdk9.builds">
-        <property name="user.build.properties" location="${nb_all}/nbbuild/user.build.properties"/>
-        <property name=".nbbuild.properties" location="${user.home}/.nbbuild.properties"/>
-        <fail>You are attempting to build NetBeans using JDK 9 (or higher).
-This is forbidden as it may lead to accidental usage of JDK 9+ APIs.
-Either run Ant with JDK 8, or set nbjdk.home=&lt;JDK 8 home&gt; in ${user.build.properties}
-(can be set from IDE by opening a module project's Properties dialog and picking the right Java Platform in Libraries).
-You can alternatively set this property in ${.nbbuild.properties} to affect all checkouts on this machine.
-If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=true</fail>
+    <target name="jdk-8-check" depends="-jdk-init">
+        <fail message="You need JDK 8+ to build NetBeans; nbjdk.home=${nbjdk.home} java.home=${java.home}">
+            <condition>
+                <not>
+                    <or>
+                        <isset property="have-jdk-1.8"/>
+                        <isset property="have-jdk-1.9"/>
+                    </or>
+                </not>
+            </condition>
+        </fail>
     </target>
 
     <target name="-define-custom-javac-task" unless="have-custom-javac-task">
@@ -177,7 +179,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <property name="locmakenbm.brands" value="${brandings}"/>
         <!-- When requires.nb.javac property is true, prepend javac-api and javac-impl on bootclasspath to allow override the default annotation
              processing API located in rt.jar. -->
-        <property name="bootclasspath.prepend.nb" value="${nb_all}/java/libs.javacapi/external/nb-javac-15-api.jar${path.separator}${nb_all}/java/libs.javacimpl/external/nb-javac-15-impl.jar" />
+        <property name="bootclasspath.prepend.nb" value="${nb_all}/java/libs.javacapi/external/nb-javac-15.0.0.2-api.jar${path.separator}${nb_all}/java/libs.javacimpl/external/nb-javac-15.0.0.2.jar" />
         <property name="bootclasspath.prepend.vanilla" value="${nb_all}/nbbuild/external/vanilla-javac-api.jar${path.separator}${nb_all}/nbbuild/external/vanilla-javac-impl.jar" />
         <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
             <istrue value="${requires.nb.javac.impl}"/>

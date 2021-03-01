@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.36
+#Version 1.37
 
 CLSS public java.lang.Object
 cons public init()
@@ -29,6 +29,7 @@ meth public boolean addResult(java.lang.Runnable,java.lang.String)
  anno 0 org.netbeans.api.annotations.common.CheckReturnValue()
 meth public boolean addResult(java.lang.Runnable,java.lang.String,java.lang.String,java.util.List<? extends javax.swing.KeyStroke>)
  anno 0 org.netbeans.api.annotations.common.CheckReturnValue()
+meth public boolean isObsolete()
 supr java.lang.Object
 hfds catResult,sRequest
 

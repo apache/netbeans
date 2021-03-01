@@ -59,7 +59,6 @@ import javax.swing.Icon;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
@@ -337,7 +336,7 @@ public final class OpenProjectList {
             action = a;
             currentFiles = Utilities.actionsGlobalContext().lookupResult(FileObject.class);
             currentFiles.addLookupListener(WeakListeners.create(LookupListener.class, this, currentFiles));
-            progress = ProgressHandleFactory.createHandle(CAP_Opening_Projects());
+            progress = ProgressHandle.createHandle(CAP_Opening_Projects());
         }
 
         final boolean waitFinished(long timeout) {
@@ -658,7 +657,7 @@ public final class OpenProjectList {
                 }
             }
             final Cancellation cancellation = new Cancellation();
-            final ProgressHandle handle = ProgressHandleFactory.createHandle(CAP_Opening_Projects(), cancellation);
+            final ProgressHandle handle = ProgressHandle.createHandle(CAP_Opening_Projects(), cancellation);
             handle.start();
             handle.progress(projects[0].getProjectDirectory().getNameExt());
             OPENING_RP.post(new Runnable() {

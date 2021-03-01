@@ -55,34 +55,34 @@ public final class XSLGrammarQuery implements GrammarQuery{
      * allowed XSL children. Neither the element name keys nor the names in the
      * value set should contain the namespace prefix.
      */
-    private static Map<String, Set> elementDecls;
+    private static Map<String, Set<String>> elementDecls;
 
     /** Contains a mapping from XSL namespace element names to set of names of
      * allowed XSL attributes for that element.  The element name keys should
      * not contain the namespace prefix.
      */
-    private static Map<String, Set> attrDecls;
+    private static Map<String, Set<String>> attrDecls;
 
     /** A Set of XSL attributes which should be allowd for result elements*/
-    private static Set resultElementAttr;
+    private static Set<String> resultElementAttr;
 
     /** An object which indicates that result element should be allowed in a element Set */
     private static String resultElements = "RESULT_ELEMENTS_DUMMY_STRING"; // NOI18N
 
     /** A Set of elements which should be allowed at template level in XSL stylesheet */
-    private static Set template;
+    private static Set<String> template;
 
     /** Contains a mapping from XSL namespace element names to an attribute name which
      * should contain XPath expression.  The element name keys should
      * not contain the namespace prefix.
      */
-    private static Map exprAttributes;
+    private static Map<String, String> exprAttributes;
 
     /** A set containing all functions allowed in XSLT */
-    private static Set xslFunctions;
+    private static Set<String> xslFunctions;
 
     /** A set containing XPath axes */
-    private static Set xpathAxes;
+    private static Set<String> xpathAxes;
 
     /** A list of prefixes using the "http://www.w3.org/1999/XSL/Transform" namespace
      * defined in the context XSL document.  The first prefix in the list is the actual XSL
@@ -136,33 +136,33 @@ public final class XSLGrammarQuery implements GrammarQuery{
             // Commonly used variables
             Set emptySet = new TreeSet();
             String spaceAtt = "xml:space";  // NOI18N
-            Set tmpSet;
+            Set<String> tmpSet;
 
             ////////////////////////////////////////////////
             // Initialize common sets
 
-            Set charInstructions = new TreeSet(Arrays.asList(new String[]{"apply-templates", // NOI18N
+            Set<String> charInstructions = new TreeSet<>(Arrays.asList(new String[]{"apply-templates", // NOI18N
             "call-template","apply-imports","for-each","value-of", // NOI18N
             "copy-of","number","choose","if","text","copy", // NOI18N
             "variable","message","fallback"})); // NOI18N
 
-            Set instructions = new TreeSet(charInstructions);
+            Set<String> instructions = new TreeSet<>(charInstructions);
             instructions.addAll(Arrays.asList(new String[]{"processing-instruction", // NOI18N
             "comment","element","attribute"})); // NOI18N
 
-            Set charTemplate = charInstructions; // We don't care about PCDATA
+            Set<String> charTemplate = charInstructions; // We don't care about PCDATA
 
-            template = new TreeSet(instructions);
+            template = new TreeSet<>(instructions);
             template.add(resultElements);
 
-            Set topLevel = new TreeSet(Arrays.asList(new String[]{"import","include","strip-space", // NOI18N
+            Set<String> topLevel = new TreeSet<>(Arrays.asList(new String[]{"import","include","strip-space", // NOI18N
             "preserve-space","output","key","decimal-format","attribute-set", // NOI18N
             "variable","param","template","namespace-alias"})); // NOI18N
 
-            Set topLevelAttr = new TreeSet(Arrays.asList(new String[]{"extension-element-prefixes", // NOI18N
+            Set<String> topLevelAttr = new TreeSet<>(Arrays.asList(new String[]{"extension-element-prefixes", // NOI18N
             "exclude-result-prefixes","id","version",spaceAtt})); // NOI18N
 
-            resultElementAttr = new TreeSet(Arrays.asList(new String[]{"extension-element-prefixes", // NOI18N
+            resultElementAttr = new TreeSet<>(Arrays.asList(new String[]{"extension-element-prefixes", // NOI18N
             "exclude-result-prefixes","use-attribute-sets","version"})); // NOI18N
 
             ////////////////////////////////////////////////
@@ -214,7 +214,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
                 "stylesheet-prefix","result-prefix"}))); // NOI18N
 
             // xsl:template
-            tmpSet = new TreeSet(instructions);
+            tmpSet = new TreeSet<>(instructions);
             tmpSet.add(resultElements);
             tmpSet.add("param"); // NOI18N
             elementDecls.put("template", tmpSet); // NOI18N
@@ -365,7 +365,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
     private static Set getXslFunctions() {
         if (xslFunctions == null) {
-            xslFunctions = new TreeSet(Arrays.asList(new String[]{
+            xslFunctions = new TreeSet<>(Arrays.asList(new String[]{
                 "boolean(","ceiling(","concat(", "contains(","count(","current()","document(", // NOI18N
                 "false()", "floor(","format-number(","generate-id(", // NOI18N
                 "id(","local-name(","key(","lang(","last()","name(","namespace-uri(", "normalize-space(", // NOI18N
@@ -378,7 +378,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
     private static Set getXPathAxes() {
         if (xpathAxes == null) {
-            xpathAxes = new TreeSet(Arrays.asList(new String[]{"ancestor::", "ancestor-or-self::", // NOI18N
+            xpathAxes = new TreeSet<>(Arrays.asList(new String[]{"ancestor::", "ancestor-or-self::", // NOI18N
             "attribute::", "child::", "descendant::", "descendant-or-self::", "following::", // NOI18N
             "following-sibling::", "namespace::", "parent::", "preceding::", // NOI18N
             "preceding-sibling::", "self::"})); // NOI18N
@@ -388,7 +388,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
     private static Map getExprAttributes() {
         if (exprAttributes == null) {
-            exprAttributes = new HashMap();
+            exprAttributes = new HashMap<>();
             exprAttributes.put("key", "use"); // NOI18N
             exprAttributes.put("value-of", "select"); // NOI18N
             exprAttributes.put("copy-of", "select"); // NOI18N

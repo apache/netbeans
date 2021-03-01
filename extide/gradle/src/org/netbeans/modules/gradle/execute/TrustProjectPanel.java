@@ -42,19 +42,23 @@ public class TrustProjectPanel extends javax.swing.JPanel {
             + " allows arbitrary code execution.</p>",
         "TrustProjectPanel.INFO_UNKNOWN=<html><p>NetBeans is about to invoke a Gradle build process.</p>"
             + " <p>Executing Gradle can be potentially un-safe as it"
-            + " allows arbitrary code execution.</p>"
+            + " allows arbitrary code execution.</p>",
+        "ProjectTrustDlg.TITLE=Not a Trusted Project"
     })
     public TrustProjectPanel(Project project) {
         initComponents();
         ProjectInformation info = project != null ? project.getLookup().lookup(ProjectInformation.class) : null;
+        getAccessibleContext().setAccessibleName(Bundle.ProjectTrustDlg_TITLE());
         if (project == null) {
             cbTrustProject.setEnabled(false);
             cbTrustProject.setVisible(false);
         }
         if (info == null) {
             lbTrustMessage.setText(Bundle.TrustProjectPanel_INFO_UNKNOWN());
+            getAccessibleContext().setAccessibleDescription(Bundle.TrustProjectPanel_INFO_UNKNOWN());
         } else {
             lbTrustMessage.setText(Bundle.TrustProjectPanel_INFO(info.getDisplayName()));
+            getAccessibleContext().setAccessibleDescription(Bundle.TrustProjectPanel_INFO(info.getDisplayName()));
         }
     }
 

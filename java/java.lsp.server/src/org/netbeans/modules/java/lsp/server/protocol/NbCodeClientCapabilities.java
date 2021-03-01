@@ -20,6 +20,7 @@ package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
 
 /**
@@ -35,12 +36,29 @@ import org.eclipse.lsp4j.InitializeParams;
  */
 public final class NbCodeClientCapabilities {
     /**
+     * The LSP client official capabilities.
+     */
+    private ClientCapabilities clientCaps;
+    
+    /**
      * Supports status bar messages:
      * <ul>
      * <li>window/showStatusBarMessage
      * </ul>
      */
     private Boolean statusBarMessageSupport;
+
+    /**
+     * Supports test results display:
+     * <ul>
+     * <li>window/notifyTestProgress
+     * </ul>
+     */
+    private Boolean testResultsSupport;
+
+    public ClientCapabilities getClientCapabilities() {
+        return clientCaps;
+    }
 
     public Boolean getStatusBarMessageSupport() {
         return statusBarMessageSupport;
@@ -52,6 +70,26 @@ public final class NbCodeClientCapabilities {
 
     public void setStatusBarMessageSupport(Boolean statusBarMessageSupport) {
         this.statusBarMessageSupport = statusBarMessageSupport;
+    }
+
+    public Boolean getTestResultsSupport() {
+        return testResultsSupport;
+    }
+
+    public boolean hasTestResultsSupport() {
+        return testResultsSupport != null && testResultsSupport.booleanValue();
+    }
+
+    public void setTestResultsSupport(Boolean testResultsSupport) {
+        this.testResultsSupport = testResultsSupport;
+    }
+
+    private NbCodeClientCapabilities withCapabilities(ClientCapabilities caps) {
+        if (caps == null) {
+            caps = new ClientCapabilities();
+        }
+        this.clientCaps = caps;
+        return this;
     }
     
     public static NbCodeClientCapabilities get(InitializeParams initParams) {
@@ -69,7 +107,7 @@ public final class NbCodeClientCapabilities {
                 */
                 create().
                 fromJson((JsonElement)ext, InitializationExtendedCapabilities.class);
-        return root == null ? null : root.getNbcodeCapabilities();
+        return root == null ? null : root.getNbcodeCapabilities().withCapabilities(initParams.getCapabilities());
                 
     }
     

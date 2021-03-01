@@ -150,12 +150,18 @@ public class WrongOrderOfArgsHint extends HintRule {
         @Override
         public void implement() throws Exception {
             EditList edits = new EditList(doc);
-            OffsetRange offsetRange = getOffsetRange();
-            StringBuilder sb = new StringBuilder();
-            for (ParameterElement param : functionDeclarationInfo.getParameters()) {
-                sb.append(param.asString(OutputType.COMPLETE_DECLARATION)).append(", "); //NOI18N
+            List<FormalParameter> originalParameters = node.getFormalParameters();
+            List<ParameterElement> parameters = functionDeclarationInfo.getParameters();
+            assert originalParameters.size() == parameters.size() : originalParameters.size() + " != " + parameters.size();
+            // maybe, in the case of constructor property promotion
+            // parameters can be declared with multiple lines
+            // so, replace the rearranged parameters with positions of original parameters
+            // instead of replacing whole parameters as one line
+            for (int i = 0; i < originalParameters.size(); i++) {
+                FormalParameter originalParameter = originalParameters.get(i);
+                OffsetRange originalRange = new OffsetRange(originalParameter.getStartOffset(), originalParameter.getEndOffset());
+                edits.replace(originalRange.getStart(), originalRange.getLength(), parameters.get(i).asString(OutputType.COMPLETE_DECLARATION_WITH_MODIFIER), false, 0);
             }
-            edits.replace(offsetRange.getStart(), offsetRange.getLength(), sb.toString().substring(0, sb.length() - 2), true, 0);
             edits.apply();
         }
 

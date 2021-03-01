@@ -29,7 +29,6 @@
         <type>classpath</type>
         <resource>jar:nbinst://org.netbeans.libs.jaxb/modules/ext/jaxb/jaxb-impl.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.libs.jaxb/modules/ext/jaxb/jaxb-xjc.jar!/</resource>
-        <resource>jar:nbinst://org.netbeans.libs.jaxb/modules/ext/jaxb/jaxb1-impl.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.xml.jaxb.api/modules/ext/jaxb/activation.jar!/</resource>
         <resource>jar:nbinst://org.netbeans.modules.xml.jaxb.api/modules/ext/jaxb/api/jaxb-api.jar!/</resource>
     </volume>
@@ -41,7 +40,7 @@
         <!-- please check with mkleint@netbeans.org before/after updating this or "classpath" section -->
         <property>
             <name>maven-dependencies</name>
-            <value>com.sun.xml.bind:jaxb-impl:2.2.5-2:jar</value>
+            <value>com.sun.xml.bind:jaxb-impl:2.3.3:jar</value>
         </property>
     </properties>    
 </library>

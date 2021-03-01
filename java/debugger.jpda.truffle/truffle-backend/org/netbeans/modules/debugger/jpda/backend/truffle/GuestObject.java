@@ -145,7 +145,7 @@ public final class GuestObject {
             SourceSection sourceLocation = value.getSourceLocation();
             //System.err.println("\nSOURCE of "+value.getName()+" is: "+sourceLocation);
             if (sourceLocation != null && sourceLocation.isAvailable()) {
-                sp = new SourcePosition(sourceLocation);
+                sp = new SourcePosition(sourceLocation, value.getOriginalLanguage());
             }
         } catch (ThreadDeath td) {
             throw td;
@@ -159,7 +159,7 @@ public final class GuestObject {
                 SourceSection sourceLocation = metaObject.getSourceLocation();
                 //System.err.println("\nSOURCE of metaobject "+metaObject+" is: "+sourceLocation);
                 if (sourceLocation != null && sourceLocation.isAvailable()) {
-                    sp = new SourcePosition(sourceLocation);
+                    sp = new SourcePosition(sourceLocation, value.getOriginalLanguage());
                 }
             } catch (ThreadDeath td) {
                 throw td;

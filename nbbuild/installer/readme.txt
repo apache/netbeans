@@ -48,6 +48,7 @@ export BUILDNUMBER BASENAME_PREFIX NB_BUILD_NUMBER DATESTAMP BUILD_DESC
 #To build MAC installer on mac host set BUILD_MAC to 1
 BUILD_MAC=0
 export BUILD_MAC
+#Set MAC_SIGN_IDENTITY_NAME to the path to file containing Common Name of your certificate or set to 0 to not sign mac installer
 MAC_SIGN_IDENTITY_NAME=/Users/reemataneja/sign.txt
 export MAC_SIGN_IDENTITY_NAME
 

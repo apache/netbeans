@@ -18,7 +18,11 @@
  */
 package org.netbeans.modules.java.lsp.server.debugging;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -286,11 +290,33 @@ public final class NbProtocolServer implements IDebugProtocolServer {
                     stackFrame.setId(frameId);
                     stackFrame.setName(frame.getName());
                     URI sourceURI = frame.getSourceURI();
-                    if (sourceURI != null && sourceURI.getPath() != null) {
+                    if (sourceURI != null) {
                         Source source = new Source();
-                        source.setName(Paths.get(sourceURI.getPath()).getFileName().toString());
-                        source.setPath(sourceURI.getPath());
-                        source.setSourceReference(0);
+                        String scheme = sourceURI.getScheme();
+                        if (null == scheme || scheme.isEmpty() || "file".equalsIgnoreCase(scheme)) {
+                            source.setName(Paths.get(sourceURI).getFileName().toString());
+                            source.setPath(sourceURI.getPath());
+                            source.setSourceReference(0);
+                        } else {
+                            int ref = context.createSourceReference(sourceURI, frame.getSourceMimeType());
+                            String path = sourceURI.getPath();
+                            if (path == null) {
+                                path = sourceURI.getSchemeSpecificPart();
+                            }
+                            if (path != null) {
+                                int sepIndex = Math.max(path.lastIndexOf('/'), path.lastIndexOf(File.separatorChar));
+                                source.setName(path.substring(sepIndex + 1));
+                                if ("jar".equalsIgnoreCase(scheme)) {
+                                    try {
+                                        path = new URI(path).getPath();
+                                    } catch (URISyntaxException ex) {
+                                        // ignore, we just tried
+                                    }
+                                }
+                                source.setPath(path);
+                            }
+                            source.setSourceReference(ref);
+                        }
                         stackFrame.setSource(source);
                     }
                     stackFrame.setLine(line);
@@ -343,10 +369,10 @@ public final class NbProtocolServer implements IDebugProtocolServer {
         if (sourceReference <= 0) {
             ErrorUtilities.completeExceptionally(future, "SourceRequest: property 'sourceReference' is missing, null, or empty", ResponseErrorCode.InvalidParams);
         } else {
-            String uri = context.getSourceUri(sourceReference);
+            URI uri = context.getSourceUri(sourceReference);
             NbSourceProvider sourceProvider = context.getSourceProvider();
             SourceResponse response = new SourceResponse();
-            response.setMimeType("text/x-java"); // Set mimeType to tell clients to recognize the source contents as java source
+            response.setMimeType(context.getSourceMimeType(sourceReference));
             response.setContent(sourceProvider.getSourceContents(uri));
             future.complete(response);
         }
@@ -379,13 +405,13 @@ public final class NbProtocolServer implements IDebugProtocolServer {
             String expression = args.getExpression();
             if (StringUtils.isBlank(expression)) {
                 throw ErrorUtilities.createResponseErrorException(
-                    "Failed to evaluate. Reason: Empty expression cannot be evaluated.",
+                    "Empty expression cannot be evaluated.",
                     ResponseErrorCode.InvalidParams);
             }
             NbFrame stackFrame = (NbFrame) context.getThreadsProvider().getThreadObjects().getObject(args.getFrameId());
             if (stackFrame == null) {
                 throw ErrorUtilities.createResponseErrorException(
-                    "Failed to evaluate. Reason: Unknown frame " + args.getFrameId(),
+                    "Unknown frame " + args.getFrameId(),
                     ResponseErrorCode.InvalidParams);
             }
             stackFrame.getDVFrame().makeCurrent(); // The evaluation is always performed with respect to the current frame
@@ -397,7 +423,7 @@ public final class NbProtocolServer implements IDebugProtocolServer {
                 variable = debugger.evaluate(expression);
             } catch (InvalidExpressionException ex) {
                 throw ErrorUtilities.createResponseErrorException(
-                    "Failed to evaluate. Reason: " + ex.getLocalizedMessage(),
+                    ex.getLocalizedMessage(),
                     ResponseErrorCode.ParseError);
             }
             EvaluateResponse response = new EvaluateResponse();
@@ -407,7 +433,7 @@ public final class NbProtocolServer implements IDebugProtocolServer {
                 response.setResult(truffleVariable.getDisplayValue());
                 response.setVariablesReference(referenceId);
                 response.setType(truffleVariable.getType());
-                response.setIndexedVariables(truffleVariable.isLeaf() ? 0 : Integer.MAX_VALUE);
+                response.setIndexedVariables(truffleVariable.isLeaf() ? 0 : truffleVariable.getChildren().length);
             } else {
                 if (variable instanceof ObjectVariable) {
                     int referenceId = context.getThreadsProvider().getThreadObjects().addObject(threadId, variable);

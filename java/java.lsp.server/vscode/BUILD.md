@@ -20,6 +20,13 @@
     under the License.
 
 -->
+## Prerequisities
+It is necessary to have installed:
+- Ant, latest version
+- Maven, latest version
+- node.js, latest LTS (to build VSIX)
+
+It is recommended to build using JDK 8.
 
 ## Getting the Code
 
@@ -35,11 +42,20 @@ To build the VS Code extension invoke:
 ```bash
 netbeans$ ant build
 netbeans$ cd java/java.lsp.server
-java.lsp.server$ ant build-vscode-ext -D3rdparty.modules=.*nbjavac.*
+java.lsp.server$ ant build-vscode-ext
+```
+The resulting extension is then in the `build` directory, with the `.vsix` extension.
+#### Build Options
+- `-Dvsix.version=x.y.z`can be used to set release version. E.g. set this option to `12.3.0` to get proper NetBeans release version for extension. 
+- `-D3rdparty.modules=.*nbjavac.*` can be set to include nb-javac which allows extension to run out of the box on JDK8. For **zsh** it is necessary to wrap it: `-D3rdparty.modules='.*nbjavac.*'`
+
+The build of NetBeans VSCode extension with nb-javac included, for version 12.3.0 then looks like this:
+```bash
+netbeans$ ant build
+netbeans$ cd java/java.lsp.server
+java.lsp.server$ ant build-vscode-ext -D3rdparty.modules=.*nbjavac.* -Dvsix.version=12.3.0
 ```
 
-The `3rdparty.modules` property doesn't have to be set at all.
-The resulting extension is then in the `build` directory, with the `.vsix` extension.
 
 ### Building for Development
 

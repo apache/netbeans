@@ -186,6 +186,17 @@ public class MavenSourceLevelImpl implements SourceLevelQueryImplementation2 {
                 }
             }
         }
+        String release = PluginPropertyUtils.getPluginProperty(project, Constants.GROUP_APACHE_PLUGINS, //NOI18N
+                Constants.PLUGIN_COMPILER, //NOI18N
+                "release", //NOI18N
+                goal,
+                null);
+        if (release != null) {
+            SourceLevelQuery.Profile p = SourceLevelQuery.Profile.forRelease(release);
+            if (p != null) {
+                return p;
+            }
+        }
         return SourceLevelQuery.Profile.DEFAULT;
     }
 

@@ -974,6 +974,12 @@ public class JavacParser extends Parser {
         if (lintOptions.length() > 0) {
             options.addAll(Arrays.asList(lintOptions.split(" ")));
         }
+        if (sourceProfile != null &&
+            sourceProfile != SourceLevelQuery.Profile.DEFAULT) {
+            options.add(sourceProfile.getOptionName()); // Limit JRE to required compact profile
+            options.add(sourceProfile.getOptionValue());
+        }
+        final boolean dontSpecifySourceAndTarget = options.contains("--release");
         if (!backgroundCompilation) {
             options.add("-Xjcov"); //NOI18N, Make the compiler store end positions
             options.add("-XDallowStringFolding=false"); //NOI18N
@@ -983,8 +989,10 @@ public class JavacParser extends Parser {
             options.add("-XDbackgroundCompilation");    //NOI18N
             options.add("-XDcompilePolicy=byfile");     //NOI18N
             options.add("-XD-Xprefer=source");     //NOI18N
-            options.add("-target");                     //NOI18N
-            options.add(validatedSourceLevel.requiredTarget().name);
+            if (!dontSpecifySourceAndTarget) {
+                options.add("-target");                     //NOI18N
+                options.add(validatedSourceLevel.requiredTarget().name);
+            }
         }
         options.add("-XDide");   // NOI18N, javac runs inside the IDE
         if (!DISABLE_PARAMETER_NAMES_READING) {
@@ -996,12 +1004,9 @@ public class JavacParser extends Parser {
         options.add("-g:source"); // NOI18N, Make the compiler to maintian source file info
         options.add("-g:lines"); // NOI18N, Make the compiler to maintain line table
         options.add("-g:vars");  // NOI18N, Make the compiler to maintain local variables table
-        options.add("-source");  // NOI18N
-        options.add(validatedSourceLevel.name);
-        if (sourceProfile != null &&
-            sourceProfile != SourceLevelQuery.Profile.DEFAULT) {
-            options.add("-profile");    //NOI18N, Limit JRE to required compact profile
-            options.add(sourceProfile.getName());
+        if (!dontSpecifySourceAndTarget) {
+            options.add("-source");  // NOI18N
+            options.add(validatedSourceLevel.name);
         }
         options.add("-XDdiags.formatterOptions=-source");  // NOI18N
         options.add("-XDdiags.layout=%L%m|%L%m|%L%m");  // NOI18N

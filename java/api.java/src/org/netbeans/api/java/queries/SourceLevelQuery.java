@@ -161,17 +161,70 @@ public class SourceLevelQuery {
         /**
          * The compact1 profile.
          */
-        COMPACT1("compact1", Bundle.NAME_Compact1(), JDK8),   //NOI18N
+        COMPACT1("compact1", Bundle.NAME_Compact1(), "-profile", null, JDK8),   //NOI18N
 
         /**
          * The compact2 profile.
          */
-        COMPACT2("compact2", Bundle.NAME_Compact2(), JDK8),   //NOI18N
+        COMPACT2("compact2", Bundle.NAME_Compact2(), "-profile", null, JDK8),   //NOI18N
 
         /**
          * The compact3 profile.
          */
-        COMPACT3("compact3", Bundle.NAME_Compact3(), JDK8),   //NOI18N
+        COMPACT3("compact3", Bundle.NAME_Compact3(), "-profile", null, JDK8),   //NOI18N
+
+        /**
+         * The release7 profile.
+         */
+        RELEASE7("release7", Bundle.NAME_Release7(), "--release", "7", new SpecificationVersion("9")),   //NOI18N
+
+        /**
+         * The release8 profile.
+         * @since 1.80
+         */
+        RELEASE8("release8", Bundle.NAME_Release8(), "--release", "8", new SpecificationVersion("9")),   //NOI18N
+
+        /**
+         * The release9 profile.
+         * @since 1.80
+         */
+        RELEASE9("release9", Bundle.NAME_Release9(), "--release", "9", new SpecificationVersion("9")),   //NOI18N
+
+        /**
+         * The release10 profile.
+         * @since 1.80
+         */
+        RELEASE10("release10", Bundle.NAME_Release10(), "--release", "10", new SpecificationVersion("10")),   //NOI18N
+
+        /**
+         * The release11 profile.
+         * @since 1.80
+         */
+        RELEASE11("release11", Bundle.NAME_Release11(), "--release", "11", new SpecificationVersion("11")),   //NOI18N
+
+        /**
+         * The release12 profile.
+         * @since 1.80
+         */
+        RELEASE12("release12", Bundle.NAME_Release12(), "--release", "12", new SpecificationVersion("12")),   //NOI18N
+
+        /**
+         * The release13 profile.
+         * @since 1.80
+         */
+        RELEASE13("release13", Bundle.NAME_Release13(), "--release", "13", new SpecificationVersion("13")),   //NOI18N
+
+        /**
+         * The release14 profile.
+         * @since 1.80
+         */
+        RELEASE14("release14", Bundle.NAME_Release14(), "--release", "14", new SpecificationVersion("14")),   //NOI18N
+
+        /**
+         * The release15 profile.
+         * @since 1.80
+         */
+        RELEASE15("release15", Bundle.NAME_Release8(), "--release", "15", new SpecificationVersion("15")),   //NOI18N
 
         /**
          * The default full JRE profile.
@@ -190,25 +243,58 @@ public class SourceLevelQuery {
             }
         }
 
+        /**
+         * Finds JDK9+ release profile by its name.
+         * 
+         * @param release name of the release {@code 8, 9, 11, 15}
+         * @return found release profile or {@code null}
+         * @since 1.80
+         */
+        public static Profile forRelease(String release) {
+            for (Profile p : values()) {
+                if ("--release".equals(p.getOptionName())) { // NO18N
+                    if (release.equals(p.release)) {
+                        return p;
+                    }
+                }
+            }
+            return null;
+        }
+
         private final String name;
         private final String displayName;
+        private final String optionName;
+        private final String release;
         private final SpecificationVersion supportedFrom;
 
         @NbBundle.Messages({
         "NAME_Compact1=Compact 1",
         "NAME_Compact2=Compact 2",
         "NAME_Compact3=Compact 3",
+        "NAME_Release7=Release 7",
+        "NAME_Release8=Release 8",
+        "NAME_Release9=Release 9",
+        "NAME_Release10=Release 10",
+        "NAME_Release11=Release 11",
+        "NAME_Release12=Release 12",
+        "NAME_Release13=Release 13",
+        "NAME_Release14=Release 14",
+        "NAME_Release15=Release 15",
         "NAME_FullJRE=Full JRE"
         })
         private Profile(
                 @NonNull final String name,
                 @NonNull final String displayName,
+                @NonNull final String optionName,
+                @NonNull final String release,
                 @NonNull final SpecificationVersion supportedFrom) {
             assert name != null;
             assert displayName != null;
             assert supportedFrom != null;
             this.name = name;
             this.displayName = displayName;
+            this.optionName = optionName;
+            this.release = release;
             this.supportedFrom = supportedFrom;
         }
 
@@ -216,6 +302,8 @@ public class SourceLevelQuery {
             assert displayName != null;
             this.name = "";   //NOI18N
             this.displayName = displayName;
+            this.optionName = ""; //NOI18N
+            this.release = null;
             this.supportedFrom = null;
         }
 
@@ -235,6 +323,27 @@ public class SourceLevelQuery {
         @NonNull
         public String getDisplayName() {
             return displayName;
+        }
+
+        /**
+         * Returns the name of {@code javac} option to enable the profile.
+         *
+         * @return the option name
+         * @since 1.80
+         */
+        @NonNull
+        public String getOptionName() {
+            return optionName;
+        }
+
+        /**
+         * Returns the value of {@code javac} option to choose the profile.
+         *
+         * @return the option value
+         * @since 1.80
+         */
+        public String getOptionValue() {
+            return release != null ? release : getName();
         }
 
         /**

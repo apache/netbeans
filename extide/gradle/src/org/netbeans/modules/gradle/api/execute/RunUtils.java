@@ -42,11 +42,14 @@ import org.openide.windows.InputOutput;
 
 import org.netbeans.modules.gradle.spi.actions.ReplaceTokenProvider;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.WeakHashMap;
 import org.netbeans.api.project.ProjectInformation;
@@ -64,6 +67,7 @@ import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.BaseUtilities;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
 
@@ -251,9 +255,33 @@ public final class RunUtils {
      * Check if the given project is trusted for execution. If the project is not
      * trusted invoking this method can ask for temporal trust for one execution
      * only by displaying a dialog.
-     *
+     * <p>
+     * <b>Starting with version 2.8</b>, the presence and order of individual options
+     * can be customized by branding. This allows integrators to select appropriate choices.
+     * The supported options are:
+     * <ul>
+     * <li>{@code org.netbeans.modules.gradle.api.execute.TrustProjectOption.TrustOnce} - trusts just in this session. Equivalent of {@link ProjectTrust#trustProject(org.netbeans.api.project.Project, boolean)} 
+     * called with <code>permanently = false</code>.
+     * <li>{@code org.netbeans.modules.gradle.api.execute.TrustProjectOption.PermanentTrust} - trusts the project permanently. Equivalent of {@link ProjectTrust#trustProject(org.netbeans.api.project.Project, boolean)} 
+     * called with {@code permanently = true}. This option is only present if the passed {@code project} is not {@code null}and has {@link ProjectInformation} in it.
+     * <li>{@code org.netbeans.modules.gradle.api.execute.TrustProjectOption.RunAlways} - sets total trust in gradle scripts, see {@link GradleSettings#setGradleExecutionRule}.
+     * </ul>
+     * The presence and order of those options can be altered by keys in {@code Bundle.properties} branding in {@code org.netbeans.modules.gradle.api.execute} package:
+     * <ol>
+     * <li>if the key does not exist, is empty or has a non-numeric value, the option will be hidden.
+     * <li>negative value flags the default (pre-selected) option. Value is treated as positive for ordering. If more negative values are present one of them is selected.
+     * <li>the visible options will be selected in ascending order of their numeric values
+     * <li>Cancel is always present and is the last one.
+     * </ol>
+     * <div class="nonnormative">
+     * Example of branding: 
+     * {@codesnippet org.netbeans.modules.gradle.api.execute.Bundle#trustDialgoBranding}
+     * This branding enables all supported options, and will make the "Trust Permanently" the default one.
+     * </div>
+     * 
      * @param project the project to be checked
      * @param interactive ask for permission from UI.
+     * @since 2.8 the dialog options can be customized.
      * @return if the execution is trusted.
      */
     public static boolean isProjectTrusted(Project project, boolean interactive) {
@@ -269,7 +297,18 @@ public final class RunUtils {
         }
         return ret;
     }
+
+    /**
+     * Prefix for option labels. THe prefix must match the messages listed below.
+     */
+    private static final String OPTION_MESSAGE_PREFIX = "TrustProjectPanel."; // NOI18N
     
+    /**
+     * Prefix for the 'branding API' keys. The resource bundle is used to enable / disable / order
+     * choices in the dialog.
+     */
+    private static final String BRANDING_API_PREFIX = "org.netbeans.modules.gradle.api.execute.TrustProjectOption."; // NOI18N
+
     @Messages({
         "ProjectTrustDlg.TITLE=Not a Trusted Project",
         "# {0} = Project name",
@@ -279,6 +318,8 @@ public final class RunUtils {
         "TrustProjectPanel.INFO_UNKNOWN=<html><p>NetBeans is about to invoke a Gradle build process.</p>"
             + " <p>Executing Gradle can be potentially un-safe as it"
             + " allows arbitrary code execution.</p>",
+        "# Labels for trust dialog opptions. Do not change the \"TrustProjectPanel.\" prefix",
+        "TrustProjectPanel.TrustOnce=&OK",
         "TrustProjectPanel.PermanentTrust=Trust &Permanently",
         "TrustProjectPanel.RunAlways=Trust &All Projects",
     })
@@ -297,31 +338,26 @@ public final class RunUtils {
         Object defaultOption;
         String permanentOption = Bundle.TrustProjectPanel_PermanentTrust();
         String runAlways = Bundle.TrustProjectPanel_RunAlways();
-        
+        String ok = Bundle.TrustProjectPanel_TrustOnce();
+
         if (info == null) {
             msg = Bundle.TrustProjectPanel_INFO_UNKNOWN();
-            options = new Object[] {
-                DialogDescriptor.OK_OPTION, runAlways, DialogDescriptor.CANCEL_OPTION
-            };
-            defaultOption = DialogDescriptor.OK_OPTION;
         } else {
             msg = Bundle.TrustProjectPanel_INFO(info.getDisplayName());
-            options = new Object[] {
-                DialogDescriptor.OK_OPTION, permanentOption, runAlways, DialogDescriptor.CANCEL_OPTION
-            };
-            defaultOption = DialogDescriptor.OK_OPTION;
         }
-        NotifyDescriptor.Confirmation dsc = new NotifyDescriptor.Confirmation(msg, Bundle.ProjectTrustDlg_TITLE(), 
-                NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.QUESTION_MESSAGE);
-        dsc.setOptions(options);
-        dsc.setValue(defaultOption);
+        Pair<Object[], Object> opts = brandedOptions(info != null);
+        options = opts.first();
+        defaultOption = opts.second();
+        NotifyDescriptor dsc = new NotifyDescriptor(msg, Bundle.ProjectTrustDlg_TITLE(), 
+                NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.QUESTION_MESSAGE, 
+                options, defaultOption);
         
         Object result = DialogDisplayer.getDefault().notify(dsc);
         if (result == runAlways) {
              GradleSettings.getDefault().setGradleExecutionRule(GradleSettings.GradleExecutionRule.ALWAYS);
              return null;
         }
-        if (result == DialogDescriptor.OK_OPTION) {
+        if (result == ok) {
             return null;
         } else if (result == permanentOption) {
             return true;
@@ -329,6 +365,61 @@ public final class RunUtils {
             return false;
         }
     }
+    
+    private static Pair<Object[], Object> brandedOptions(boolean allowPermanent) {
+        Map<Object, Integer>  options = new HashMap<>();
+        Object def = null;
+        for (String opt : TRUST_DIALOG_OPTION_IDS) {
+            if (opt == TRUST_DIALOG_OPTION_IDS.get(2) && !allowPermanent) {
+                continue;
+            }
+            String key = BRANDING_API_PREFIX + opt;
+            String m;
+            int pos;
+            try  {
+                m = NbBundle.getMessage(RunUtils.class, OPTION_MESSAGE_PREFIX + opt);
+                String v = NbBundle.getMessage(RunUtils.class, key);
+                if ("".equals(v)) {
+                    continue;
+                }
+                pos = Integer.parseInt(v);
+                if (pos == 0) {
+                    continue;
+                } else if (pos < 0) {
+                    def = m;
+                    pos = -pos;
+                }
+            } catch (MissingResourceException ex) {
+                // just ignore
+                continue;
+            } catch (IllegalArgumentException ex) {
+                // non-numeric
+                continue;
+            }
+            if (def == null) {
+                def = m;
+            }
+            options.put(m, pos);
+        }
+        if (options.isEmpty()) {
+            // fall back to the default:
+            return Pair.of(new Object[] { 
+                    Bundle.TrustProjectPanel_TrustOnce(),
+                    Bundle.TrustProjectPanel_PermanentTrust(),
+                    DialogDescriptor.CANCEL_OPTION
+                }, 
+                Bundle.TrustProjectPanel_TrustOnce()
+            );
+        }
+        List<Object> ordered = new ArrayList<>(options.keySet());
+        Collections.sort(ordered, (a, b) -> options.get(a) - options.get(b));
+        ordered.add(DialogDescriptor.CANCEL_OPTION);
+        return Pair.of(ordered.toArray(new Object[ordered.size()]), def);
+    };
+    
+    private static final List<String> TRUST_DIALOG_OPTION_IDS = Arrays.asList(
+        "TrustOnce", "PermanentTrust", "RunAlways"
+    );
     
     public static GradleCommandLine getDefaultCommandLine(Project project) {
         String args = NbGradleProject.getPreferences(project, true).get(PROP_DEFAULT_CLI, null);

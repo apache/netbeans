@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.48.0
+#Version 1.49.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1995,6 +1995,7 @@ meth protected abstract void selectionChanged(org.openide.nodes.Node[],org.openi
 meth protected abstract void showPath(javax.swing.tree.TreePath)
 meth protected abstract void showSelection(javax.swing.tree.TreePath[])
 meth protected boolean useExploredContextMenu()
+meth public boolean getScrollsOnExpand()
 meth public boolean isDefaultActionEnabled()
 meth public boolean isDragSource()
 meth public boolean isDropTarget()
@@ -2024,6 +2025,7 @@ meth public void setDropTarget(boolean)
 meth public void setPopupAllowed(boolean)
 meth public void setQuickSearchAllowed(boolean)
 meth public void setRootVisible(boolean)
+meth public void setScrollsOnExpand(boolean)
 meth public void setSelectionMode(int)
 meth public void setUseSubstringInQuickSearch(boolean)
  anno 0 java.lang.Deprecated()

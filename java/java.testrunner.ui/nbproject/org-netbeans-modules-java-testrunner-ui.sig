@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.14
+#Version 1.15
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -156,4 +156,13 @@ meth public static void openTestsuite(org.netbeans.modules.gsf.testrunner.ui.api
 meth public static void searchAllMethods(org.netbeans.modules.gsf.testrunner.ui.api.TestMethodNode,org.openide.filesystems.FileObject[],long[],org.netbeans.api.java.source.CompilationController,javax.lang.model.element.Element)
 supr java.lang.Object
 hfds LOGGER,NO_ACTIONS
+
+CLSS public abstract interface org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods
+innr public abstract interface static Factory
+meth public abstract java.util.List<org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod> computeTestMethods(org.netbeans.api.java.source.CompilationInfo)
+meth public abstract void cancel()
+
+CLSS public abstract interface static org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods$Factory
+ outer org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods
+meth public abstract org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods create()
 

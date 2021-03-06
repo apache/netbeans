@@ -1,6 +1,6 @@
 Name: vscode-jsonrpc
 Description: A json rpc implementation over streams
-Version: 5.0.0-next.4
+Version: 6.0.0
 License: MIT-vscode-jsonrpc
 Origin: https://github.com/Microsoft/vscode-languageserver-node#readme
 

@@ -1,6 +1,6 @@
 Name: graceful-fs
 Description: A drop-in replacement for fs, making various improvements.
-Version: 4.2.3
+Version: 4.2.6
 License: ISC-graceful-fs
 Origin: https://github.com/isaacs/node-graceful-fs#readme
 

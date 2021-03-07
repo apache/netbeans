@@ -24,13 +24,13 @@ import java.util.Set;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.EditorRegistry;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.modules.editor.NbEditorDocument;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.java.editor.overridden.GoToImplementation;
-import org.netbeans.spi.java.source.RemotePlatform;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -57,7 +57,7 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
 
     public int[] getHyperlinkSpan(Document doc, int offset, HyperlinkType type) {
         FileObject file = NbEditorUtilities.getFileObject(doc);
-        if (file != null && RemotePlatform.hasRemotePlatform(file)) {
+        if (file != null && SourceUtils.hasRemoteEditorPlatform(file)) {
             return null;
         }
         return GoToSupport.getIdentifierOrLambdaArrowSpan(doc, offset, null);

@@ -27,10 +27,11 @@ import java.security.MessageDigest;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
-import org.netbeans.spi.java.source.RemotePlatform;
+import org.netbeans.spi.java.source.RemoteEditorPlatform.Provider;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.Places;
 import org.openide.util.Lookup;
+import org.netbeans.spi.java.source.RemoteEditorPlatform;
 
 /**
  *
@@ -39,8 +40,21 @@ import org.openide.util.Lookup;
 public class LanguageServerProviderImpl implements LanguageServerProvider {
     @Override
     public LanguageServerDescription startServer(Lookup lookup) {
+        if (RemoteEditorPlatform.isRemoteEditorPlatformSupported()) {
+            return null;
+        }
+
         Project prj = lookup.lookup(Project.class);
-        RemotePlatform remotePlatform = RemotePlatform.lookupRemotePlatform(prj.getProjectDirectory());
+        RemoteEditorPlatform remotePlatform = null;
+
+        for (Provider p : Lookup.getDefault().lookupAll(Provider.class)) {
+            RemoteEditorPlatform rp = p.findPlatform(prj.getProjectDirectory());
+            if (rp != null) {
+                remotePlatform = rp;
+                break;
+            }
+        }
+
         if (remotePlatform == null || !remotePlatform.isEnabled()) {
             return null;
         }
@@ -53,7 +67,7 @@ public class LanguageServerProviderImpl implements LanguageServerProvider {
                 digest.append(String.format("%02X", b));
             }
             File cache = Places.getCacheSubdirectory("java-lsp-server/" + digest.toString());
-            Process process = new ProcessBuilder(launcher.getAbsolutePath(), "--jdkhome", jdkHome, "--installdir", launcher.getParentFile().getParentFile().getParentFile().getParentFile().getParentFile().getParentFile().getAbsolutePath(), "--userdir", cache.getAbsolutePath()).redirectError(ProcessBuilder.Redirect.INHERIT).start();
+            Process process = new ProcessBuilder(launcher.getAbsolutePath(), "--jdkhome", jdkHome, "--installdir", launcher.getParentFile().getParentFile().getParentFile().getParentFile().getParentFile().getParentFile().getAbsolutePath(), "--userdir", cache.getAbsolutePath(), "-J-Dremote.editor.platform.running=true").redirectError(ProcessBuilder.Redirect.INHERIT).start();
             return LanguageServerDescription.create(new InputStreamWrapper(process.getInputStream()), new OutputStreamWrapper(process.getOutputStream()), process);
         } catch (Throwable t) {
             t.printStackTrace(); //TODO

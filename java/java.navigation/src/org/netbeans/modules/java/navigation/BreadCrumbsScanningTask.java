@@ -29,6 +29,7 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy;
 import org.netbeans.api.java.source.JavaParserResultTask;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.support.CaretAwareJavaSourceTaskFactory;
 import org.netbeans.modules.editor.breadcrumbs.spi.BreadcrumbsController;
 import org.netbeans.modules.editor.breadcrumbs.spi.BreadcrumbsElement;
@@ -40,7 +41,6 @@ import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.parsing.spi.SchedulerTask;
 import org.netbeans.modules.parsing.spi.TaskFactory;
 import org.netbeans.modules.parsing.spi.TaskIndexingMode;
-import org.openide.nodes.Node;
 
 /**
  *
@@ -60,7 +60,7 @@ public final class BreadCrumbsScanningTask extends JavaParserResultTask {
         cancel.set(false);
 
         CompilationInfo info = CompilationInfo.get(result);
-        if (info == null) {
+        if (info == null || SourceUtils.hasRemoteEditorPlatform(info.getFileObject())) {
             return;
         }
 

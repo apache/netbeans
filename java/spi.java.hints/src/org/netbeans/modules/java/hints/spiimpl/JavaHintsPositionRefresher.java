@@ -34,6 +34,7 @@ import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.progress.ProgressUtils;
 import org.netbeans.modules.editor.NbEditorUtilities;
@@ -41,7 +42,6 @@ import org.netbeans.spi.editor.hints.Context;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.PositionRefresher;
 import org.netbeans.modules.java.hints.providers.spi.PositionRefresherHelper;
-import org.netbeans.spi.java.source.RemotePlatform;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -56,7 +56,7 @@ public class JavaHintsPositionRefresher implements PositionRefresher {
 
     @Override
     public Map<String, List<ErrorDescription>> getErrorDescriptionsAt(final Context context, final Document doc) {
-        if (RemotePlatform.hasRemotePlatform(NbEditorUtilities.getFileObject(doc))) {
+        if (SourceUtils.hasRemoteEditorPlatform(NbEditorUtilities.getFileObject(doc))) {
             return Collections.emptyMap();
         }
         final List<PositionRefresherHelper> refreshers = new ArrayList<PositionRefresherHelper>(MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class));

@@ -1,6 +1,6 @@
 Name: typescript-language-server
 Description: Language Server Protocol (LSP) implementation for TypeScript using tsserver
-Version: 0.4.0
+Version: 0.5.1
 License: Apache-2.0-typescript-language-server
 Origin: https://github.com/theia-ide/typescript-language-server#readme
 

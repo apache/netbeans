@@ -541,6 +541,8 @@ public class DataNode extends AbstractNode {
             }
             ss.put(new SizeProperty());
             ss.put(new MIMETypeProperty());
+            ss.put(new MIMETypeDisplayNameProperty());
+            ss.put(new MIMETypeDisplayFilterProperty());
             ss.put(new LastModifiedProperty());
         }
         ss.put(new AllFilesProperty()); // #120560, #188315
@@ -620,6 +622,48 @@ public class DataNode extends AbstractNode {
 
         public String getValue() {
             return getDataObject().getPrimaryFile().getMIMEType();
+        }
+
+    }
+    
+    private String getMIMEResolverAttribute(FileObject primaryFile, String attributeName) {
+        final String mimeType = primaryFile.getMIMEType();
+        if (mimeType != null) {
+            FileObject mimeResolversFolder = FileUtil.getConfigFile("Services/MIMEResolver"); // NOI18N
+            if (mimeResolversFolder != null) {
+                FileObject[] children = mimeResolversFolder.getChildren();
+                for (FileObject mimeResolver : children) {
+                    String currentMimeType = (String) mimeResolver.getAttribute("mimeType"); // NOI18N
+                    if (mimeType.equals(currentMimeType)) {
+                        return (String) mimeResolver.getAttribute(attributeName);
+                    }
+                }
+            }
+        }
+        return "";
+    }
+
+    private final class MIMETypeDisplayNameProperty extends PropertySupport.ReadOnly<String> {
+
+        public MIMETypeDisplayNameProperty() {
+            super("mimeTypeDisplayName", String.class, DataObject.getString("PROP_mimeTypeDisplayName"), DataObject.getString("HINT_mimeTypeDisplayName"));
+        }
+
+        @Override
+        public String getValue() {
+            return getMIMEResolverAttribute(getDataObject().getPrimaryFile(), "displayName"); // NOI18N
+        }
+    }
+
+    private final class MIMETypeDisplayFilterProperty extends PropertySupport.ReadOnly<String> {
+
+        public MIMETypeDisplayFilterProperty() {
+            super("mimeTypeDisplayFilter", String.class, DataObject.getString("PROP_mimeTypeDisplayFilter"), DataObject.getString("HINT_mimeTypeDisplayFilter")); // NOI18N
+        }
+
+        @Override
+        public String getValue() {
+            return getMIMEResolverAttribute(getDataObject().getPrimaryFile(), "displayFilter"); // NOI18N
         }
 
     }

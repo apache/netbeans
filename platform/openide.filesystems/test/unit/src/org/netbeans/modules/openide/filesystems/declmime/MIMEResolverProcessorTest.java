@@ -71,7 +71,7 @@ import org.openide.util.lookup.Lookups;
 )
 @MIMEResolver.PatternRegistration(
     displayName="#PATTERN_NAME",
-    displayPattern="#PATTERN_FILTER",
+    displayFilter="#PATTERN_FILTER",
     mimeType = "application/x-s-files",
     regex=".+\\.S[\\d]{4}$",
     flags=Pattern.CASE_INSENSITIVE,
@@ -198,7 +198,7 @@ public class MIMEResolverProcessorTest extends NbTestCase {
         FileObject fo = FileUtil.getConfigFile(PATH);
         assertNotNull(fo);
         assertEquals(Bundle.PATTERN_NAME(), fo.getAttribute("displayName"));
-        assertEquals(Bundle.PATTERN_FILTER(), fo.getAttribute("displayPattern"));
+        assertEquals(Bundle.PATTERN_FILTER(), fo.getAttribute("displayFilter"));
         assertEquals("application/x-s-files", fo.getAttribute("mimeType"));
         assertEquals(".+\\.S[\\d]{4}$", fo.getAttribute("regex"));
         assertEquals(Pattern.CASE_INSENSITIVE, fo.getAttribute("flags"));

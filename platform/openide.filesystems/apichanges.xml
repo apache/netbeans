@@ -25,6 +25,22 @@
         <apidef name="filesystems">Filesystems API</apidef>
     </apidefs>
     <changes>
+        <change id="MIMEResolver.Registration.displayFilter">
+            <api name="filesystems"/>
+            <summary>Add displayFilter annotation type element to all MIMEResolver.*Registration annotations</summary>
+            <version major="9" minor="22"/>
+            <date year="2021" month="3" day="8"/>
+            <author login="digiovinazzo"/>
+            <compatibility addition="yes" deprecation="yes"/>
+            <description>
+                <p>
+                    Add displayFilter annotation type element to all MIMEResolver.*Registration annotations to document the filter
+                    to present to the user on which a mimetype is based.
+                </p>
+            </description>
+            <class package="org.openide.filesystems" name="MIMEResolver"/>
+            <issue number="NETBEANS-5471"/>
+        </change>
         <change id="MIMEResolver.PatternRegistration">
             <api name="filesystems"/>
             <summary>Annotation to declare MIME type using java.util.regex.Pattern</summary>

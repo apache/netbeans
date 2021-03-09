@@ -98,6 +98,9 @@ public class MIMEResolverProcessor extends LayerGeneratingProcessor {
             f.bundlevalue("fileChooser." + (ccnt++), chooser);
         }
         f.bundlevalue("displayName", r.displayName()); // NOI18N
+        if (!"".equals(r.displayFilter())) {
+            f.bundlevalue("displayFilter", r.displayFilter()); // NOI18N
+        }
         f.write();
     }
 
@@ -115,6 +118,9 @@ public class MIMEResolverProcessor extends LayerGeneratingProcessor {
             f.bundlevalue("fileChooser." + (ccnt++), chooser);
         }
         f.bundlevalue("displayName", r.displayName()); // NOI18N
+        if (!"".equals(r.displayFilter())) {
+            f.bundlevalue("displayFilter", r.displayFilter()); // NOI18N
+        }
         f.write();
     }
 
@@ -132,6 +138,9 @@ public class MIMEResolverProcessor extends LayerGeneratingProcessor {
             f.bundlevalue("fileChooser." + (ccnt++), chooser);
         }
         f.bundlevalue("displayName", r.displayName()); // NOI18N
+        if (!"".equals(r.displayFilter())) {
+            f.bundlevalue("displayFilter", r.displayFilter()); // NOI18N
+        }
         f.write();
     }
 
@@ -192,6 +201,9 @@ public class MIMEResolverProcessor extends LayerGeneratingProcessor {
         }
         f.position(r.position());
         f.bundlevalue("displayName", r.displayName()); // NOI18N
+        if (!"".equals(r.displayFilter())) {
+            f.bundlevalue("displayFilter", r.displayFilter()); // NOI18N
+        }
         f.write();
     }
 

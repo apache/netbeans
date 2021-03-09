@@ -180,6 +180,10 @@ public abstract class MIMEResolver {
         /** Display name to present this type of objects to the user.
          */
         public String displayName();
+        /** Display filter to present this type of objects to the user, such as
+         * {@literal "*.html"}.
+         */
+        public String displayFilter() default "";
         /** Mime type to be assigned to files with {@link #extension}.
          */
         public String mimeType();
@@ -238,6 +242,10 @@ public abstract class MIMEResolver {
         /** Display name to present this type of objects to the user.
          */
         public String displayName();
+        /** Display filter to present this type of objects to the user, such as
+         * {@literal "*.form"}.
+         */
+        public String displayFilter() default "";
         /** Mime type to be assigned to files that match description of this
          * annotation.
          */
@@ -288,6 +296,10 @@ public abstract class MIMEResolver {
         /** Display name to present this type of objects to the user.
          */
         public String displayName();
+        /** Display filter to present this type of objects to the user, such as
+         * {@literal "*.Snnnn"}.
+         */
+        public String displayFilter() default "";
         /** Mime type to be assigned to files with file name matching {@link #regex}.
          */
         public String mimeType();
@@ -356,6 +368,12 @@ public abstract class MIMEResolver {
         /** Display name to present this type of objects to the user.
          */
         public String displayName();
+
+        /** Display filter to present this type of objects to the user, such as
+         * {@literal "*.txt"}.
+         */
+        public String displayFilter() default "";
+
         /**
          * Show file filters for registered MIME types. Set localized names of
          * file filters that should accept files resolved by this resolver. Only

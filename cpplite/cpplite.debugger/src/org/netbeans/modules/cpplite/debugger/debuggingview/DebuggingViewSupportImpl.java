@@ -85,7 +85,7 @@ public class DebuggingViewSupportImpl extends DebuggingView.DVSupport implements
 
     @Override
     public void resume() {
-        debugger.doAction(ActionsManager.ACTION_CONTINUE);
+        session.getCurrentEngine().getActionsManager().doAction(ActionsManager.ACTION_CONTINUE);
     }
 
     @Override

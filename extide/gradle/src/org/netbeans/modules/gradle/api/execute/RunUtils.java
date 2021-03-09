@@ -265,9 +265,8 @@ public final class RunUtils {
             TrustProjectPanel trust = new TrustProjectPanel(project);
             DialogDescriptor dsc = new DialogDescriptor(trust, Bundle.ProjectTrustDlg_TITLE(), true, null);
             if (DialogDisplayer.getDefault().notify(dsc) == DialogDescriptor.OK_OPTION) {
-                if (trust.getTrustInFuture()) {
-                    ProjectTrust.getDefault().trustProject(project);
-                }
+                // trust just temporarily, or record the decision:
+                ProjectTrust.getDefault().trustProject(project, trust.getTrustInFuture());
                 ret = true;
             }
         }

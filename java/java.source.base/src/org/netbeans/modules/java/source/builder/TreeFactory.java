@@ -1922,6 +1922,10 @@ public class TreeFactory {
             }
             paramTypesList = lbl.toList();
         }
+        ReferenceTree refrenceTree = TreeShims.getRefrenceTree(docMake, qualExpr, member, paramTypes, names, paramTypesList);
+        if (refrenceTree != null) {
+            return refrenceTree;
+        }
         return docMake.at(NOPOS).newReferenceTree("", (JCExpression) qualExpr, member != null ? (Name) names.fromString(member.toString()) : null, paramTypesList);
     }
     

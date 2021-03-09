@@ -37,6 +37,7 @@ public class ShowDialogFromEDTTest implements Runnable {
     
     @Test(timeOut = 9000)
     public void showDialog() throws InterruptedException {
+        EnsureJavaFXPresent.checkAndThrow();
         cdl = new CountDownLatch(1);
         EventQueue.invokeLater(this);
         cdl.await();

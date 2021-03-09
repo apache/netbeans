@@ -1,8 +1,8 @@
 import * as path from 'path';
 
-import { runTests } from 'vscode-test';
+import { downloadAndUnzipVSCode, resolveCliPathFromVSCodeExecutablePath, runTests } from 'vscode-test';
 
-import * as os from 'os';
+import * as cp from 'child_process';
 import * as fs from 'fs';
 
 async function main() {
@@ -10,6 +10,14 @@ async function main() {
         // The folder containing the Extension Manifest package.json
         // Passed to `--extensionDevelopmentPath`
         const extensionDevelopmentPath = path.resolve(__dirname, '../../');
+
+        const vscodeExecutablePath: string = await downloadAndUnzipVSCode('stable');
+        const cliPath: string = resolveCliPathFromVSCodeExecutablePath(vscodeExecutablePath);
+
+        cp.spawnSync(cliPath, ['--install-extension', 'hbenl.vscode-test-explorer'], {
+            encoding: 'utf-8',
+            stdio: 'inherit',
+        });
 
         // The path to test runner
         // Passed to --extensionTestsPath
@@ -23,7 +31,7 @@ async function main() {
 
         // Download VS Code, unzip it and run the integration test
         await runTests({
-            version: "1.50.0",
+            vscodeExecutablePath,
             extensionDevelopmentPath,
             extensionTestsPath,
             extensionTestsEnv: {

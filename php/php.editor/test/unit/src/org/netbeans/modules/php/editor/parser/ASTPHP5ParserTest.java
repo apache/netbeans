@@ -1289,6 +1289,14 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php80/allowTrailingCommaInClosureUseLists_01");
     }
 
+    public void testNamedArguments_01() throws Exception {
+        performTest("parser/php80/namedArguments_01");
+    }
+
+    public void testNamedArgumentsWithAttribute_01() throws Exception {
+        performTest("parser/php80/namedArgumentsWithAttribute_01");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

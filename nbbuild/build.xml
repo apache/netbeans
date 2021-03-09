@@ -21,10 +21,10 @@
 -->
 <project name="nbbuild" default="build-nozip" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
 
-  <fail message="Please build using Ant 1.9.3 or higher.">
+  <fail message="Please build using Ant 1.9.8 or higher.">
     <condition>
       <not>
-        <antversion atleast="1.9.3"/>
+        <antversion atleast="1.9.8"/>
       </not>
     </condition>
   </fail>
@@ -69,7 +69,7 @@
     <taskdef name="downloadbinaries" classname="org.netbeans.nbbuild.extlibs.DownloadBinaries" classpath="${build.ant.classes.dir}"/>
     <taskdef name="configureproxy" classname="org.netbeans.nbbuild.extlibs.ConfigureProxy" classpath="${build.ant.classes.dir}"/>
     <property name="have-downloadbinaries-task" value="true" />
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}">
         <manifest dir="${nb_all}">
             <include name="nbbuild/external/binaries-list"/>
             <include name="platform/libs.junit4/external/binaries-list"/>
@@ -198,7 +198,7 @@ metabuild.hash=${metabuild.hash}</echo>
   <target name="download-all-extbins" unless="ext.binaries.downloaded" depends="bootstrap">
     <echo>Downloading external binaries (*/external/ directories)...</echo>
     <!-- optionnal reporttofile used to speed resolving artefacts resolution for maven artefacts -->
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" >
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}"  >
         <manifest dir="${nb_all}">
             <include name="**/external/binaries-list"/>
         </manifest>
@@ -235,7 +235,7 @@ metabuild.hash=${metabuild.hash}</echo>
         <map from="${nb_all}/" to=""/>
         <globmapper from="*" to="*/external/binaries-list"/>
     </pathconvert>
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}">
         <manifest dir="${nb_all}" includes="${modules.binaries-list}"/>
     </downloadbinaries>
   </target>
@@ -468,7 +468,7 @@ metabuild.hash=${metabuild.hash}</echo>
   </target>
   
   <target name="-download-nb-windows-launchers" depends="init,-check-nb-cluster" if="has.nb.cluster" unless="do.build.windows.launchers">
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}">
         <manifest dir="${nb_all}" includes="nb/ide.launcher/external/binaries-list"/>
     </downloadbinaries>
 
@@ -587,7 +587,6 @@ Hg ID:    ${hg.id}
       <mkdir dir="${netbeans.dest.dir}"/>
       <ant dir="." target="build" inheritAll="false">
           <property name="cluster.config" value="basic"/>
-          <property name="permit.jdk9.builds" value="true"/>
       </ant>
   </target>
 
@@ -597,7 +596,6 @@ Hg ID:    ${hg.id}
           <property name="cluster.config" value="basic"/>
           <property name="test.type" value="test-unit"/>
           <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
-          <property name="permit.jdk9.builds" value="true"/>
           <property name="vanilla.javac.exists" value="true"/>
       </ant>
   </target>
@@ -612,7 +610,6 @@ Hg ID:    ${hg.id}
       <mkdir dir="${netbeans.dest.dir}"/>
       <ant dir="." target="-build-platform" inheritAll="false">
           <property name="cluster.config" value="platform"/>
-          <property name="permit.jdk9.builds" value="true"/>
           <property name="vanilla.javac.exists" value="true"/>
       </ant>
   </target>
@@ -623,7 +620,6 @@ Hg ID:    ${hg.id}
           <property name="cluster.config" value="platform"/>
           <property name="test.type" value="test-unit"/>
           <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
-          <property name="permit.jdk9.builds" value="true"/>
           <property name="vanilla.javac.exists" value="true"/>
       </ant>
   </target>
@@ -1310,7 +1306,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       </fileset>
     </subant>
     <taskdef name="downloadbinaries" classname="org.netbeans.nbbuild.extlibs.DownloadBinaries" classpath="${nbantext.jar}"/>
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" clean="true">
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}" clean="true">
         <manifest dir="${nb_all}">
             <include name="*/external/binaries-list"/>
             <include name="contrib/*/external/binaries-list"/>
@@ -1689,7 +1685,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <pathconvert property="source.dirs" pathsep="," refid="source.dirset">
       <regexpmapper from="${nb_all}/(.*)$" to="\1/**/*" handledirsep="yes"/>
     </pathconvert>
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}"> <!--XXX-->
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}"> <!--XXX-->
         <manifest dir="${nb_all}">
             <include name="libs.antlr3.devel/external/binaries-list"/>
         </manifest>
@@ -2172,7 +2168,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <taskdef name="exclusionsfromlicenseinfo" classname="org.netbeans.nbbuild.extlibs.ExclusionsFromLicenseInfo" classpath="${nbantext.jar}"/>
         <taskdef name="reportFromLicenseinfo" classname="org.netbeans.nbbuild.extlibs.ReportFromLicenseinfo" classpath="${nbantext.jar}"/>
         
-        <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+        <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}">
             <manifest dir="${nb_all}">
                 <include name="nbbuild/external/binaries-list"/>
             </manifest>

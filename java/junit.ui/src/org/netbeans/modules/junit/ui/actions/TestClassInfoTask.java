@@ -40,6 +40,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.Position;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource.Phase;
@@ -123,7 +124,9 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                     int end = (int) sp.getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
                     Document doc = info.getSnapshot().getSource().getDocument(false);
                     try {
-                        result.add(new TestMethod(new SingleMethod(fileObject, mn), doc != null ? doc.createPosition(start) : null, doc != null ? doc.createPosition(end) : null));
+                        result.add(new TestMethod(typeElement.getQualifiedName().toString(), new SingleMethod(fileObject, mn),
+                                doc != null ? doc.createPosition(start) : new SimplePosition(start),
+                                doc != null ? doc.createPosition(end) : new SimplePosition(end)));
                     } catch (BadLocationException ex) {
                         //ignore
                     }
@@ -191,5 +194,19 @@ public final class TestClassInfoTask implements Task<CompilationController> {
             }
         }
 
+    }
+
+    private static class SimplePosition implements Position {
+
+        private final int offset;
+
+        private SimplePosition(int offset) {
+            this.offset = offset;
+        }
+
+        @Override
+        public int getOffset() {
+            return offset;
+        }
     }
 }

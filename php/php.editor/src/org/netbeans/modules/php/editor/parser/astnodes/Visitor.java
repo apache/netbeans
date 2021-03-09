@@ -140,6 +140,8 @@ public interface Visitor {
 
     public void visit(MatchExpression matchExpression);
 
+    public void visit(NamedArgument namedArgument);
+
     //public void endVisit(Identifier identifier);
     public void visit(NamespaceName namespaceName);
 

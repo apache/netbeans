@@ -65,7 +65,7 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
     private static final String ENGINE_CLASS = "org.graalvm.polyglot.Engine";
     private static final String ENGINE_BUILDER_CLASS = "org.graalvm.polyglot.Engine$Builder";
     // Breakpoint on this class triggers search of existing engines
-    private static final String EXISTING_ENGINES_TRIGGER = "com.oracle.truffle.api.frame.FrameSlot";
+    private static final String EXISTING_ENGINES_TRIGGER = "com.oracle.truffle.api.frame.Frame";
     
     private JPDABreakpoint debugManagerLoadBP;
     private static final Map<JPDADebugger, Boolean> haveExistingEnginesTrigger = new WeakHashMap<>();

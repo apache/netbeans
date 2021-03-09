@@ -979,6 +979,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                 String tokenText = t.text().toString();
                 String[] lines = tokenText.split("\n");
                 int indent = Arrays.stream(lines, 1, lines.length)
+                                   .filter(l -> !l.trim().isEmpty())
                                    .mapToInt(this::leadingIndent)
                                    .min()
                                    .orElse(0);

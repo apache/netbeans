@@ -171,6 +171,9 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
                 }
             }
         );
+
+        spPreview.getVerticalScrollBar().setUnitIncrement(10);
+        spPreview.getHorizontalScrollBar().setUnitIncrement(10);
     }
     
     private void updateLanguageCombobox() {

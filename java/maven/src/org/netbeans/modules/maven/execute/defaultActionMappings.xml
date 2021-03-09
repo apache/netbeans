@@ -117,7 +117,10 @@
             <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
         </goals>
         <properties>
-            <exec.args>-classpath %classpath ${packageClassName}</exec.args>
+            <exec.vmArgs></exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <exec.appArgs></exec.appArgs>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
             <exec.executable>java</exec.executable>
         </properties>
     </action>
@@ -131,7 +134,10 @@
             <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
         </goals>
         <properties>
-            <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName}</exec.args>
+            <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <exec.appArgs></exec.appArgs>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
             <exec.executable>java</exec.executable>
             <jpda.listen>true</jpda.listen>
         </properties>
@@ -146,8 +152,10 @@
             <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
         </goals>
         <properties>
-            <exec.args>-classpath %classpath ${packageClassName}</exec.args>
+            <exec.vmArgs></exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
             <exec.executable>java</exec.executable>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
             <exec.classpathScope>${classPathScope}</exec.classpathScope>
         </properties>
     </action>
@@ -162,8 +170,10 @@
             <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
         </goals>
         <properties>
-            <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName}</exec.args>
+            <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
             <exec.executable>java</exec.executable>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
             <exec.classpathScope>${classPathScope}</exec.classpathScope>
             <jpda.listen>true</jpda.listen>
         </properties>
@@ -227,7 +237,9 @@
             <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
         </goals>
         <properties>
-            <exec.args>-classpath %classpath ${packageClassName}</exec.args>
+            <exec.vmArgs></exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
             <exec.executable>java</exec.executable>
         </properties>
     </action>
@@ -242,7 +254,9 @@
             <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
         </goals>
         <properties>
-            <exec.args>-classpath %classpath ${packageClassName}</exec.args>
+            <exec.vmArgs></exec.vmArgs>
+            <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+            <exec.mainClass>${packageClassName}</exec.mainClass>
             <exec.executable>java</exec.executable>
             <exec.classpathScope>${classPathScope}</exec.classpathScope>
         </properties>
@@ -260,8 +274,9 @@
         <properties>
             <test>${packageClassName}</test>
             <forkMode>once</forkMode>
-            <maven.surefire.debug>${exec.args}</maven.surefire.debug>
-            <!-- need to declare exec.args property to engage the StartupExtender infrastructure -->
+            <maven.surefire.debug>${exec.vmArgs}</maven.surefire.debug>
+            <!-- need to declare exec.args or exec.vmArgs property to engage the StartupExtender infrastructure -->
+            <exec.vmArgs/>
             <exec.args/>
         </properties>
     </action>

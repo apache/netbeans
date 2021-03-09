@@ -25,6 +25,22 @@
         <apidef name="filesystems">Filesystems API</apidef>
     </apidefs>
     <changes>
+        <change id="MIMEResolver.PatternRegistration">
+            <api name="filesystems"/>
+            <summary>Annotation to declare MIME type using java.util.regex.Pattern</summary>
+            <version major="9" minor="22"/>
+            <date year="2021" month="3" day="5"/>
+            <author login="digiovinazzo"/>
+            <compatibility addition="yes" deprecation="yes"/>
+            <description>
+                <p>
+                    Added a new annotation to register mime type using java.util.regex.Pattern against the file name
+                    <a href="@TOP@/org/openide/filesystems/MIMEResolver.PatternRegistration.html">MIMEResolver.PatternRegistration</a>.
+                </p>
+            </description>
+            <class package="org.openide.filesystems" name="MIMEResolver"/>
+            <issue number="NETBEANS-5471"/>
+        </change>
         <change id="LayerProcessorSupportedSource">
             <api name="filesystems"/>
             <summary>Declare support for all source levels.</summary>

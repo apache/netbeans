@@ -283,6 +283,13 @@ public class MIMEResolverImplTest extends NbTestCase {
         assertMimeType(resolver, null, "empty.dtd", "makefile", "makefileRakefile", "makefile.Rakefile");
     }
 
+    /** Test filenamepattern element in declarative MIME resolver. */
+    public void testFileNamePatternElement() throws Exception {
+        MIMEResolver resolver = createResolver(resolversRoot.getFileObject("s1234-resolver.xml"));
+        assertMimeType(resolver, "application/x-eclipse-non-unified-summary", "file.s1234", "FiLe.S5678");
+        assertMimeType(resolver, null, "file.txt", "file.S12AA", "FiLe.SAA56");
+    }
+
     /** Test ruby declarative MIME resolver. */
     public void testRubyResolver() throws Exception {
         MIMEResolver resolver = createResolver(resolversRoot.getFileObject("ruby-resolver.xml"));

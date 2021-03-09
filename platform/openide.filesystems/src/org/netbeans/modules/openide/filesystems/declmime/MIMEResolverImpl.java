@@ -288,6 +288,18 @@ public final class MIMEResolverImpl {
         return orderedResolvers.values();
     }
 
+    private static FileElement fileNamePatternElem(String regex, Integer flags, String mimeType) {
+        FileElement e = new FileElement();
+        e.fileCheck.addFileNamePattern(regex, flags);
+        e.setMIME(mimeType);
+        return e;
+    }
+
+    private static MIMEResolver forPattern(FileObject def, String mimeType, String regex, Integer flags) throws IOException {
+        FileElement[] e = { fileNamePatternElem(regex, flags, mimeType) };
+        return new Impl(def, e, mimeType);
+    }
+
     private static FileElement extensionElem(List<String> exts, String mimeType) {
         FileElement e = new FileElement();
         for (String ext : exts) {
@@ -340,6 +352,13 @@ public final class MIMEResolverImpl {
         if (!exts.isEmpty()) {
             return forExts(fo, mimeType, exts);
         }
+        
+        String regex = (String) fo.getAttribute("regex"); // NOI18N
+        Integer flags = (Integer) fo.getAttribute("flags"); // NOI18N
+        if (regex != null) {
+            return forPattern(fo, mimeType, regex, flags);
+        }
+        
         throw new IllegalArgumentException("" + fo);
     }
 
@@ -600,6 +619,9 @@ public final class MIMEResolverImpl {
         private static final String RESOLVER = "resolver"; // NOI18N
         private static final String FATTR = "fattr"; // NOI18N
         private static final String NAME = "name"; // NOI18N
+        private static final String FILE_NAME_PATTERN = "filenamepattern"; // NOI18N
+        private static final String REGEX = "regex"; // NOI18N
+        private static final String FLAGS = "flags"; // NOI18N
         private static final String PATTERN = "pattern"; // NOI18N
         private static final String VALUE = "value"; // NOI18N
         private static final String RANGE = "range"; // NOI18N
@@ -726,6 +748,17 @@ public final class MIMEResolverImpl {
                             ignoreCase = Boolean.valueOf(ignoreCaseAttr);
                         }
                         template[0].fileCheck.addName(s, substring, ignoreCase);
+                        break;
+
+                    } else if (FILE_NAME_PATTERN.equals(qName)) {
+
+                        String regex = atts.getValue(REGEX); if (regex == null) error();
+                        int flags = Type.FileNamePattern.DEFAULT_FLAGS;
+                        String flagsAttr = atts.getValue(FLAGS);
+                        if (flagsAttr != null) {
+                            flags = Integer.valueOf(flagsAttr);
+                        }
+                        template[0].fileCheck.addFileNamePattern(regex, flags);
                         break;
 
                     } else if (RESOLVER.equals(qName)) {

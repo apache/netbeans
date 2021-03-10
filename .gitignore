@@ -106,3 +106,5 @@ derby.log
 /extide/gradle/netbeans-gradle-tooling/gradle/wrapper/gradle-wrapper.jar
 /extide/gradle/release/modules/gradle/daemon-loader/.gradle/
 /nbbuild/misc/prepare-bundles/target/
+/nb/updatecenters/extras/nbjavac.api/nbproject/private/
+/nb/updatecenters/extras/nbjavac.impl/nbproject/private/

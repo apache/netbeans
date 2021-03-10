@@ -403,6 +403,11 @@ public final class Server {
         }
 
         @Override
+        public void cancelProgress(WorkDoneProgressCancelParams params) {
+            // handled in the interceptor, after the complete RPC call completes.
+        }
+        
+        @Override
         public void connect(LanguageClient aClient) {
             this.client = new NbCodeClientWrapper((NbCodeLanguageClient)aClient);
             sessionServices.add(client);

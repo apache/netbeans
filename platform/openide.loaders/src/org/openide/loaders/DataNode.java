@@ -540,6 +540,7 @@ public class DataNode extends AbstractNode {
                 ss.put(new ExtensionProperty());
             }
             ss.put(new SizeProperty());
+            ss.put(new MIMETypeProperty());
             ss.put(new LastModifiedProperty());
         }
         ss.put(new AllFilesProperty()); // #120560, #188315
@@ -611,6 +612,18 @@ public class DataNode extends AbstractNode {
         
     }
     
+    private final class MIMETypeProperty extends PropertySupport.ReadOnly<String> {
+
+        public MIMETypeProperty() {
+            super("mimeType", String.class, DataObject.getString("PROP_mimeType"), DataObject.getString("HINT_mimeType"));
+        }
+
+        public String getValue() {
+            return getDataObject().getPrimaryFile().getMIMEType();
+        }
+
+    }
+
     private final class LastModifiedProperty extends PropertySupport.ReadOnly<Date> {
         
         public LastModifiedProperty() {

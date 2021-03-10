@@ -46,8 +46,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
@@ -204,6 +206,21 @@ public class ServerTest extends NbTestCase {
     }
     
     List<Diagnostic>[] diags = new List[1];
+    Set<String> diagnosticURIs = Collections.synchronizedSet(new HashSet<>());
+    
+    void clearDiagnostics() {
+        synchronized (diags) {
+            diagnosticURIs.clear();
+            diags[0] = null;
+        }
+    }
+    
+    void cancelDiagnostics(AtomicBoolean cancel) {
+        synchronized (diags) {
+            cancel.set(true);
+            diags.notifyAll();
+        }
+    }
     
     class LspClient implements LanguageClient {
         List<MessageParams> loggedMessages = new ArrayList<>();
@@ -216,6 +233,7 @@ public class ServerTest extends NbTestCase {
         @Override
         public void publishDiagnostics(PublishDiagnosticsParams params) {
             synchronized (diags) {
+                diagnosticURIs.add(params.getUri());
                 diags[0] = params.getDiagnostics();
                 diags.notifyAll();
             }
@@ -306,6 +324,41 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, closingBrace), new Position(0, closingBrace)), 0, "public  void assignToSelf(Object o) { o = o; }"))));
         assertDiags(diags, "Error:1:0-1:9");//errors
         assertDiags(diags, "Error:1:0-1:9", "Warning:0:148-0:153", "Warning:0:152-0:153");//hints
+    }
+    
+    /**
+     * Checks that diagnostics are cleared if the file vanishes. Uses didClose to trigger reparse,
+     * similar to vscode that notices a file has been removed or renames the file.
+     */
+    public void testDiagnosticsRemovedForDeletedFile() throws Exception {
+        AtomicBoolean cancel = new AtomicBoolean(false);
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "public class Test { int i = \"\".hash(); public void run() { this.test(); } /**Test.*/public void test() {} }";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        Launcher<LanguageServer> serverLauncher = LSPLauncher.createClientLauncher(new LspClient(), client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        assertDiags(diags, "Error:0:31-0:35");//errors
+        
+        clearDiagnostics();
+        Files.move(src.toPath(), src.toPath().resolveSibling("Test2.java"));
+        
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(1);
+        id.setUri(toURI(src));
+
+        server.getTextDocumentService().didClose(new DidCloseTextDocumentParams(id));
+        Executors.newSingleThreadScheduledExecutor().schedule(() -> {
+            cancelDiagnostics(cancel);
+        }, 5, TimeUnit.SECONDS);
+        
+        assertDiags(diags, cancel);
+        assertEquals(1, diagnosticURIs.size());
+        assertEquals(toURI(src), diagnosticURIs.iterator().next());
     }
     
     private class OpenCloseHook {
@@ -558,12 +611,19 @@ public class ServerTest extends NbTestCase {
     }
 
     private List<Diagnostic> assertDiags(List<Diagnostic>[] diags, String... expected) {
+        return assertDiags(diags, new AtomicBoolean(false), expected);
+    }
+    
+    private List<Diagnostic> assertDiags(List<Diagnostic>[] diags, AtomicBoolean cancel, String... expected) {
         synchronized (diags) {
             while (diags[0] == null) {
                 try {
                     diags.wait();
                 } catch (InterruptedException ex) {
                     //ignore
+                }
+                if (cancel.get()) {
+                    fail("Diagnostics not received");
                 }
             }
             Set<String> actualDiags = diags[0].stream()

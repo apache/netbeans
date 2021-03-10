@@ -33,9 +33,12 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,6 +59,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
@@ -132,6 +137,7 @@ import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.TextDocumentService;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.queries.SourceJavadocAttacher;
@@ -226,10 +232,19 @@ import org.openide.util.lookup.ServiceProvider;
  * @author lahvac
  */
 public class TextDocumentServiceImpl implements TextDocumentService, LanguageClientAware {
-
+    private static final Logger LOG = Logger.getLogger(TextDocumentServiceImpl.class.getName());
+    
     private static final RequestProcessor BACKGROUND_TASKS = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
     private static final RequestProcessor WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
 
+    /**
+     * File URIs touched / queried by the client.
+     */
+    private Map<String, Instant> knownFiles = new HashMap<>();
+    
+    /**
+     * Documents actually opened by the client.
+     */
     private final Map<String, Document> openedDocuments = new HashMap<>();
     private final Map<String, RequestProcessor.Task> diagnosticTasks = new HashMap<>();
     private NbCodeLanguageClient client;
@@ -271,7 +286,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
         try {
             String uri = params.getTextDocument().getUri();
-            FileObject file = Utils.fromUri(uri);
+            FileObject file = fromURI(uri);
+            if (file == null) {
+                return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
+            }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             final int caret = Utils.getOffset(doc, params.getPosition());
@@ -707,7 +725,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         CompletionData data = new Gson().fromJson(rawData, CompletionData.class);
         try {
-            FileObject file = Utils.fromUri(data.uri);
+            FileObject file = fromURI(data.uri);
+            if (file == null) {
+                return CompletableFuture.completedFuture(ci);
+            }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             final ElementHandle<Element> handle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(data.kind), data.elementHandle);
@@ -779,7 +800,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     public CompletableFuture<Hover> hover(HoverParams params) {
         try {
             String uri = params.getTextDocument().getUri();
-            FileObject file = Utils.fromUri(uri);
+            FileObject file = fromURI(uri);
+            if (file == null) {
+                return CompletableFuture.completedFuture(null);
+            }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             final JavaDocumentationTask<Future<String>> task = JavaDocumentationTask.create(Utils.getOffset(doc, params.getPosition()), null, new JavaDocumentationTask.DocumentationFactory<Future<String>>() {
@@ -831,6 +855,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(DefinitionParams params) {
         String uri = params.getTextDocument().getUri();
         JavaSource js = getJavaSource(uri);
+        if (js == null) {
+            return CompletableFuture.completedFuture(Either.forLeft(new ArrayList<>()));
+        }
         GoToTarget[] target = new GoToTarget[1];
         LineMap[] thisFileLineMap = new LineMap[1];
         try {
@@ -856,6 +883,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> implementation(ImplementationParams params) {
         String uri = params.getTextDocument().getUri();
         JavaSource js = getJavaSource(uri);
+        if (js == null) {
+            return CompletableFuture.completedFuture(Either.forLeft(new ArrayList<>()));
+        }
         List<GoToTarget> targets = new ArrayList<>();
         LineMap[] thisFileLineMap = new LineMap[1];
         try {
@@ -945,6 +975,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         };
         WORKER.post(() -> {
             JavaSource js = getJavaSource(params.getTextDocument().getUri());
+            if (js == null) {
+                result.complete(new ArrayList<>());
+                return;
+            }
             try {
                 WhereUsedQuery[] query = new WhereUsedQuery[1];
                 List<Location> locations = new ArrayList<>();
@@ -1068,6 +1102,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         JavaSource js = getJavaSource(params.getTextDocument().getUri());
         List<DocumentHighlight> result = new ArrayList<>();
+        if (js == null) {
+            return CompletableFuture.completedFuture(result);
+        }
         try {
             js.runUserActionTask(cc -> {
                 cc.toPhase(JavaSource.Phase.RESOLVED);
@@ -1092,6 +1129,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(DocumentSymbolParams params) {
         JavaSource js = getJavaSource(params.getTextDocument().getUri());
         List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
+        if (js == null) {
+            return CompletableFuture.completedFuture(result);
+        }
         try {
             js.runUserActionTask(cc -> {
                 cc.toPhase(JavaSource.Phase.RESOLVED);
@@ -1138,6 +1178,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
         Document doc = openedDocuments.get(params.getTextDocument().getUri());
+        if (doc == null) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
         JavaSource js = JavaSource.forDocument(doc);
         if (doc == null || js == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
@@ -1517,6 +1560,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         };
         WORKER.post(() -> {
             JavaSource js = getJavaSource(params.getTextDocument().getUri());
+            if (js == null) {
+                result.completeExceptionally(new FileNotFoundException(params.getTextDocument().getUri()));
+                return;
+            }
             try {
                 RenameRefactoring[] refactoring = new RenameRefactoring[1];
                 js.runUserActionTask(cc -> {
@@ -1675,7 +1722,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public void didOpen(DidOpenTextDocumentParams params) {
         try {
-            FileObject file = Utils.fromUri(params.getTextDocument().getUri());
+            FileObject file = fromURI(params.getTextDocument().getUri(), true);
+            if (file == null) {
+                return;
+            }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.getDocument();
             // the document may be not opened yet. Clash with in-memory content can happen only if
@@ -1706,18 +1756,20 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public void didChange(DidChangeTextDocumentParams params) {
         Document doc = openedDocuments.get(params.getTextDocument().getUri());
-        NbDocument.runAtomic((StyledDocument) doc, () -> {
-            for (TextDocumentContentChangeEvent change : params.getContentChanges()) {
-                try {
-                    int start = Utils.getOffset(doc, change.getRange().getStart());
-                    int end   = Utils.getOffset(doc, change.getRange().getEnd());
-                    doc.remove(start, end - start);
-                    doc.insertString(start, change.getText(), null);
-                } catch (BadLocationException ex) {
-                    throw new IllegalStateException(ex);
+        if (doc != null) {
+            NbDocument.runAtomic((StyledDocument) doc, () -> {
+                for (TextDocumentContentChangeEvent change : params.getContentChanges()) {
+                    try {
+                        int start = Utils.getOffset(doc, change.getRange().getStart());
+                        int end   = Utils.getOffset(doc, change.getRange().getEnd());
+                        doc.remove(start, end - start);
+                        doc.insertString(start, change.getText(), null);
+                    } catch (BadLocationException ex) {
+                        throw new IllegalStateException(ex);
+                    }
                 }
-            }
-        });
+            });
+        }
         runDiagnoticTasks(params.getTextDocument().getUri());
         reportNotificationDone("didChange", params);
     }
@@ -1725,12 +1777,15 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public void didClose(DidCloseTextDocumentParams params) {
         try {
-            FileObject file = Utils.fromUri(params.getTextDocument().getUri());
+            // the order here is important ! As the file may cease to exist, it's
+            // important that the doucment is already gone form the client.
+            openedDocuments.remove(params.getTextDocument().getUri());
+            FileObject file = fromURI(params.getTextDocument().getUri(), true);
+            if (file == null) {
+                return;
+            }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             ec.close();
-            openedDocuments.remove(params.getTextDocument().getUri());
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
         } finally {
             reportNotificationDone("didClose", params);
         }
@@ -1903,7 +1958,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private void computeDiags(String uri, ProduceErrors produceErrors, String keyPrefix, boolean update) {
         try {
-            FileObject file = Utils.fromUri(uri);
+            FileObject file = fromURI(uri);
+            if (file == null) {
+                // the file does not exist.
+                return;
+            }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
@@ -1950,43 +2009,109 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     }
                     doc.putProperty("lsp-errors", mergedId2Errors);
                     doc.putProperty("lsp-errors-diags", mergedDiags);
-                    client.publishDiagnostics(new PublishDiagnosticsParams(uri, mergedDiags));
+                    publishDiagnostics(uri, mergedDiags);
                 }
             });
         } catch (IOException | ParseException ex) {
             throw new IllegalStateException(ex);
         }
     }
-
+    
+    private FileObject fromURI(String uri) {
+        return fromURI(uri, false);
+    }
+    
+    /**
+     * Converts URI to a FileObject. Can try harder using refresh on the filesystem, useful
+     * for didOpen or didClose notification which may have been fired because the client changed files on the dist.
+     * @param uri the uri
+     * @param tryHard if true, will refresh the filesystems first.
+     * @return FileObject or null if missing.
+     */
+    private FileObject fromURI(String uri, boolean tryHard) {
+        try {
+            FileObject file = Utils.fromUri(uri);
+            if (tryHard) {
+                if (file != null ) {
+                    file.refresh(true);
+                } else {
+                    URI parentU = URI.create(uri).resolve("..").normalize();
+                    FileObject parentF = Utils.fromUri(parentU.toString());
+                    if (parentF != null) {
+                        parentF.refresh(true);
+                        file = Utils.fromUri(uri);
+                    }
+                }
+            }
+            if (file != null && file.isValid()) {
+                return file;
+            }
+            missingFileDiscovered(uri);
+        } catch (MalformedURLException ex) {
+            LOG.log(Level.WARNING, "Invalid file URL: " + uri, ex);
+        }
+        return null;
+    }
+    
+    /**
+     * Handles file disappearance. The method should be called whenever a file that ought to exist 
+     * is not found on the disk. The method should fire any necessary updates to the client to synchronize the
+     * state, i.e. remove obsolete diagnostics for the file.
+     * @param uri file URI
+     */
+    private void missingFileDiscovered(String uri) {
+        if (openedDocuments.get(uri) != null) {
+            // do not report anything, the document is still opened in the editor
+            return;
+        }
+        Instant last = knownFiles.remove(uri);
+        if (last == null) {
+            return;
+        }
+        client.publishDiagnostics(new PublishDiagnosticsParams(uri, new ArrayList<>()));
+    }
+    
+    /**
+     * Publishes diagnostics to the client. Remembers the file, so that if the file vanishes (i.e. event is received, or
+     * it's reported as missing during some processing), the client will get an empty diagnostics message for this file to
+     * clear out its problem view.
+     * @param uri file URI
+     * @param mergedDiags the diagnostics
+     */
+    private void publishDiagnostics(String uri, List<Diagnostic> mergedDiags) {
+        knownFiles.put(uri, Instant.now());
+        client.publishDiagnostics(new PublishDiagnosticsParams(uri, mergedDiags));
+    }
+    
     private static final String[] ERROR_KEYS = {"errors", "hints"};
 
     private interface ProduceErrors {
         public List<ErrorDescription> computeErrors(CompilationInfo info, Document doc) throws IOException;
     }
 
+    @CheckForNull
     public JavaSource getJavaSource(String fileUri) {
         Document doc = openedDocuments.get(fileUri);
         if (doc == null) {
-            try {
-                FileObject file = Utils.fromUri(fileUri);
-                return JavaSource.forFileObject(file);
-            } catch (MalformedURLException ex) {
+            FileObject file = fromURI(fileUri);
+            if (file == null) {
                 return null;
             }
+            return JavaSource.forFileObject(file);
         } else {
             return JavaSource.forDocument(doc);
         }
     }
 
+    @CheckForNull
     public Source getSource(String fileUri) {
         Document doc = openedDocuments.get(fileUri);
         if (doc == null) {
-            try {
-                FileObject file = Utils.fromUri(fileUri);
-                return Source.create(file);
-            } catch (MalformedURLException ex) {
+            FileObject file = fromURI(fileUri);
+            if (file == null) {
                 return null;
             }
+            return Source.create(file);
         } else {
             return Source.create(doc);
         }

@@ -70,6 +70,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
+import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider.ResultHandler;
@@ -102,10 +103,10 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     private static final RequestProcessor WORKER = new RequestProcessor(WorkspaceServiceImpl.class.getName(), 1, false, false);
 
     private final Gson gson = new Gson();
-    private final Server.LanguageServerImpl server;
+    private final LspServerState server;
     private NbCodeLanguageClient client;
 
-    WorkspaceServiceImpl(Server.LanguageServerImpl server) {
+    WorkspaceServiceImpl(LspServerState server) {
         this.server = server;
     }
 
@@ -138,8 +139,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     Exceptions.printStackTrace(ex);
                     return CompletableFuture.completedFuture(true);
                 }
-                CompletableFuture<Project[]> projectsFuture = new CompletableFuture<>();
-                server.asyncOpenSelectedProjects(projectsFuture, Collections.singletonList(file));
+                CompletableFuture<Project[]> projectsFuture = server.asyncOpenSelectedProjects(Collections.singletonList(file));
                 return projectsFuture.thenApply(projects -> {
                     List<TestMethodController.TestMethod> testMethods = new ArrayList<>();
                     for (Project prj : projects) {
@@ -237,6 +237,10 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     @Override
     public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {
+        // shortcut: if the projects are not yet initialized, return empty:
+        if (server.openedProjects().getNow(null) == null) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
         String query = params.getQuery();
         if (query.isEmpty()) {
             //cannot query "all":

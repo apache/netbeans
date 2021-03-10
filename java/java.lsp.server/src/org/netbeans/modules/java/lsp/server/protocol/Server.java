@@ -25,10 +25,13 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,9 +75,12 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.progress.spi.InternalHandle;
+import org.netbeans.spi.project.ActionProgress;
+import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -225,11 +231,11 @@ public final class Server {
     private static final RequestProcessor SERVER_INIT_RP = new RequestProcessor(LanguageServerImpl.class.getName());
     
     
-    static class LanguageServerImpl implements LanguageServer, LanguageClientAware {
+    static class LanguageServerImpl implements LanguageServer, LanguageClientAware, LspServerState {
 
         private static final Logger LOG = Logger.getLogger(LanguageServerImpl.class.getName());
         private NbCodeClientWrapper client;
-        private final TextDocumentService textDocumentService = new TextDocumentServiceImpl();
+        private final TextDocumentService textDocumentService = new TextDocumentServiceImpl(this);
         private final WorkspaceService workspaceService = new WorkspaceServiceImpl(this);
         private final InstanceContent   sessionServices = new InstanceContent();
         private final Lookup sessionLookup = new ProxyLookup(
@@ -237,11 +243,39 @@ public final class Server {
                 Lookup.getDefault()
         );
         
+        /**
+         * Projects that are being opened and primed right now.
+         */
+        private final Map<Project, CompletableFuture<Void>> beingOpened = new HashMap<>();
+        private final CompletableFuture<Project[]> initialOpenedProjects = new CompletableFuture<>();
+        
         Lookup getSessionLookup() {
             return sessionLookup;
         }
         
-        void asyncOpenSelectedProjects(CompletableFuture f, List<FileObject> projectCandidates) {
+        /**
+         * Open projects that own the `projectCandidates` files asynchronously.
+         * Returns immediately, results or errors are reported through the Future.
+         * 
+         * @param projectCandidates files whose projects should be opened.
+         * @return future that yields the opened project instances.
+         */
+        @Override
+        public CompletableFuture<Project[]> asyncOpenSelectedProjects(List<FileObject> projectCandidates) {
+            System.err.println("Called asyncOpenProjects for " + projectCandidates);
+            CompletableFuture<Project[]> f = new CompletableFuture<>();
+            SERVER_INIT_RP.post(() -> {
+                asyncOpenSelectedProjects0(f, projectCandidates);
+            });
+            return f;
+        }
+        
+        /**
+         * For diagnostic purposes
+         */
+        private AtomicInteger openRequestId = new AtomicInteger(1);
+
+        private void asyncOpenSelectedProjects0(CompletableFuture<Project[]> f, List<FileObject> projectCandidates) {
             List<Project> projects = new ArrayList<>();
             try {
                 for (FileObject candidate : projectCandidates) {
@@ -250,8 +284,9 @@ public final class Server {
                         projects.add(prj);
                     }
                 }
+                Project[] previouslyOpened;
                 try {
-                    Project[] previouslyOpened = OpenProjects.getDefault().openProjects().get();
+                    previouslyOpened = OpenProjects.getDefault().openProjects().get();
                     if (previouslyOpened.length > 0) {
                         Level level = Level.FINEST;
                         assert (level = Level.CONFIG) != null;
@@ -261,9 +296,73 @@ public final class Server {
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     throw new IllegalStateException(ex);
+                
                 }
+                asyncOpenSelectedProjects1(f, previouslyOpened, projects);
+            } catch (RuntimeException ex) {
+                f.completeExceptionally(ex);
+            }
+        }
+        
+        private void asyncOpenSelectedProjects1(CompletableFuture<Project[]> f, Project[] previouslyOpened, List<Project> projects) {
+            int id = this.openRequestId.getAndIncrement();
+            
+            List<CompletableFuture> primingBuilds = new ArrayList<>();
+            List<Project> toOpen = new ArrayList<>();
+            Map<Project, CompletableFuture<Void>> local = new HashMap<>();
+            synchronized (this) {
+                LOG.log(Level.FINER, "{0}: Asked to open project(s): {1}", new Object[]{ id, Arrays.asList(projects) });
+                for (Project p : projects) { 
+                    CompletableFuture<Void> pending = beingOpened.get(p);
+                    if (pending != null) {
+                        primingBuilds.add(pending);
+                    } else {
+                        toOpen.add(p);
+                        local.put(p, new CompletableFuture<Void>());
+                    }
+                }
+                beingOpened.putAll(local);
+            }
+            
+            LOG.log(Level.FINER, id + ": Opening projects: {0}", Arrays.asList(toOpen));
+
+            // before the projects are officialy 'opened', try to prime the projects
+            for (Project p : toOpen) {
+                ActionProvider pap = p.getLookup().lookup(ActionProvider.class);
+                if (pap == null) {
+                    LOG.log(Level.FINER, "{0}: No action provider at all !", id);
+                    continue;
+                }
+                if (!Arrays.asList(pap.getSupportedActions()).contains(ActionProvider.COMMAND_PRIME)) {
+                    LOG.log(Level.FINER, "{0}: No action provider gives PRIME", id);
+                    // this may take some while; so better call outside of any locks.
+                    continue;
+                }
+                LOG.log(Level.FINER, "{0}: Found Priming action: {1}", new Object[]{id, p});
+                if (pap.isActionEnabled(ActionProvider.COMMAND_PRIME, Lookup.EMPTY)) {
+                    final CompletableFuture<Void> primeF = local.get(p);
+                    LOG.log(Level.FINER, "{0}: Found enabled Priming build for: {1}", new Object[]{id, p});
+                    ActionProgress progress = new ActionProgress() {
+                        @Override
+                        protected void started() {}
+
+                        @Override
+                        public void finished(boolean success) {
+                            LOG.log(Level.FINER, id + ": Priming build completed for project " + p);
+                            primeF.complete(null);
+                        }
+                    };
+                    primingBuilds.add(primeF);
+
+                    pap.invokeAction(ActionProvider.COMMAND_PRIME, Lookups.fixed(progress));
+                }
+            }
+            
+            // Wait for all priming builds, even those already pending, to finish:
+            CompletableFuture.allOf(primingBuilds.toArray(new CompletableFuture[primingBuilds.size()])).thenRun(() -> {
                 OpenProjects.getDefault().open(projects.toArray(new Project[0]), false);
                 try {
+                    LOG.log(Level.FINER, "{0}: Calling openProjects() for : {1}", new Object[]{id, Arrays.asList(projects)});
                     OpenProjects.getDefault().openProjects().get();
                 } catch (InterruptedException | ExecutionException ex) {
                     throw new IllegalStateException(ex);
@@ -273,22 +372,38 @@ public final class Server {
                     ProjectUtils.getSources(prj).getSourceGroups(Sources.TYPE_GENERIC);
                 }
                 Project[] prjs = projects.toArray(new Project[projects.size()]);
+                synchronized (this) {
+                    LOG.log(Level.FINER, "{0}: Finished opening projects: {1}", new Object[]{id, Arrays.asList(projects)});
+                    beingOpened.keySet().removeAll(toOpen);
+                }
                 f.complete(prjs);
-            } catch (RuntimeException ex) {
-                f.completeExceptionally(ex);
+            }).exceptionally(e -> {
+                f.completeExceptionally(e);
+                return null;
+            });
+        }
+        
+        private JavaSource checkJavaSupport() {
+            final ClasspathInfo info = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY);
+            final JavaSource source = JavaSource.create(info);
+            if (source == null) {
+                SERVER_INIT_RP.post(() -> {
+                    final String msg = NO_JAVA_SUPPORT + System.getProperty("java.version");
+                    showStatusBarMessage(MessageType.Error, msg, 5000);
+                });
             }
+            return source;
+        }
+        
+        @Override
+        public CompletableFuture<Project[]> openedProjects() {
+            return initialOpenedProjects;
         }
         
         private JavaSource showIndexingCompleted(Project[] opened) {
             try {
-                final ClasspathInfo info = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY);
-                final JavaSource source = JavaSource.create(info);
-                if (source == null) {
-                    SERVER_INIT_RP.post(() -> {
-                        final String msg = NO_JAVA_SUPPORT + System.getProperty("java.version");
-                        showStatusBarMessage(MessageType.Error, msg, 5000);
-                    });
-                } else {
+                final JavaSource source = checkJavaSupport();
+                if (source != null) {
                     source.runWhenScanFinished(cc -> {
                         showStatusBarMessage(MessageType.Info, INDEXING_COMPLETED, 0);
                     }, true);
@@ -366,13 +481,18 @@ public final class Server {
                     //TODO: use getRootPath()?
                 }
             }
-            CompletableFuture<Project[]> fProjects = new CompletableFuture<>();
-            SERVER_INIT_RP.post(() -> asyncOpenSelectedProjects(fProjects, projectCandidates));
+            SERVER_INIT_RP.post(() -> asyncOpenSelectedProjects0(initialOpenedProjects, projectCandidates));
             
-            return fProjects.
-                    thenApply(this::showIndexingCompleted).
-                    thenApply(this::constructInitResponse).
-                    thenApply(this::finishInitialization);
+            // chain showIndexingComplete message after initial project open.
+            initialOpenedProjects.
+                    thenApply(this::showIndexingCompleted);
+            
+            // but complete the InitializationRequest independently of the project initialization.
+            return CompletableFuture.completedFuture(
+                    finishInitialization(
+                        constructInitResponse(checkJavaSupport())
+                    )
+            );
         }
         
         public InitializeResult finishInitialization(InitializeResult res) {
@@ -405,6 +525,7 @@ public final class Server {
         @Override
         public void connect(LanguageClient aClient) {
             this.client = new NbCodeClientWrapper((NbCodeLanguageClient)aClient);
+            sessionServices.add(this);
             sessionServices.add(client);
             sessionServices.add(new WorkspaceIOContext() {
                 @Override

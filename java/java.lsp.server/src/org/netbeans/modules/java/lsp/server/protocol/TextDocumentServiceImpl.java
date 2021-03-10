@@ -179,6 +179,7 @@ import org.netbeans.modules.java.hints.project.IncompleteClassPath;
 import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
+import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
@@ -232,9 +233,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private final Map<String, Document> openedDocuments = new HashMap<>();
     private final Map<String, RequestProcessor.Task> diagnosticTasks = new HashMap<>();
+    private final LspServerState server;
     private NbCodeLanguageClient client;
 
-    TextDocumentServiceImpl() {
+    TextDocumentServiceImpl(LspServerState server) {
+        this.server = server;
         Lookup.getDefault().lookup(RefreshDocument.class).register(this);
     }
 
@@ -269,13 +272,17 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
+        final CompletionList completionList = new CompletionList();
+        // shortcut: if the projects are not yet initialized, return empty:
+        if (server.openedProjects().getNow(null) == null) {
+            return CompletableFuture.completedFuture(Either.forRight(completionList));
+        }
         try {
             String uri = params.getTextDocument().getUri();
             FileObject file = Utils.fromUri(uri);
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             final int caret = Utils.getOffset(doc, params.getPosition());
-            final CompletionList completionList = new CompletionList();
             ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
                 @Override
                 public void run(ResultIterator resultIterator) throws Exception {
@@ -777,6 +784,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<Hover> hover(HoverParams params) {
+        // shortcut: if the projects are not yet initialized, return empty:
+        if (server.openedProjects().getNow(null) == null) {
+            return CompletableFuture.completedFuture(new Hover());
+        }
         try {
             String uri = params.getTextDocument().getUri();
             FileObject file = Utils.fromUri(uri);
@@ -854,6 +865,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> implementation(ImplementationParams params) {
+        // shortcut: if the projects are not yet initialized, return empty:
+        if (server.openedProjects().getNow(null) == null) {
+            return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
+        }
         String uri = params.getTextDocument().getUri();
         JavaSource js = getJavaSource(uri);
         List<GoToTarget> targets = new ArrayList<>();
@@ -931,6 +946,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<? extends Location>> references(ReferenceParams params) {
+        // shortcut: if the projects are not yet initialized, return empty:
+        if (server.openedProjects().getNow(null) == null) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
         AtomicBoolean cancel = new AtomicBoolean();
         Runnable[] cancelCallback = new Runnable[1];
         CompletableFuture<List<? extends Location>> result = new CompletableFuture<List<? extends Location>>() {
@@ -1090,6 +1109,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(DocumentSymbolParams params) {
+        // shortcut: if the projects are not yet initialized, return empty:
+        if (server.openedProjects().getNow(null) == null) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
         JavaSource js = getJavaSource(params.getTextDocument().getUri());
         List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
         try {
@@ -1137,6 +1160,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
+        // shortcut: if the projects are not yet initialized, return empty:
+        if (server.openedProjects().getNow(null) == null) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
         Document doc = openedDocuments.get(params.getTextDocument().getUri());
         JavaSource js = JavaSource.forDocument(doc);
         if (doc == null || js == null) {
@@ -1373,6 +1400,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams params) {
+        // shortcut: if the projects are not yet initialized, return empty:
+        if (server.openedProjects().getNow(null) == null) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
         String uri = params.getTextDocument().getUri();
         JavaSource source = getJavaSource(uri);
         if (source == null) {
@@ -1458,6 +1489,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(PrepareRenameParams params) {
+        // shortcut: if the projects are not yet initialized, return empty:
+        if (server.openedProjects().getNow(null) == null) {
+            return CompletableFuture.completedFuture(Either.forLeft(null));
+        }
         JavaSource source = getJavaSource(params.getTextDocument().getUri());
         if (source == null) {
             return CompletableFuture.completedFuture(Either.forLeft(null));
@@ -1503,6 +1538,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<WorkspaceEdit> rename(RenameParams params) {
+        // shortcut: if the projects are not yet initialized, return empty:
+        if (server.openedProjects().getNow(null) == null) {
+            return CompletableFuture.completedFuture(new WorkspaceEdit());
+        }
         AtomicBoolean cancel = new AtomicBoolean();
         Runnable[] cancelCallback = new Runnable[1];
         CompletableFuture<WorkspaceEdit> result = new CompletableFuture<WorkspaceEdit>() {
@@ -1876,6 +1915,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     private void runDiagnoticTasks(String uri) {
+        if (server.openedProjects().getNow(null) == null) {
+            return;
+        }
         //XXX: cancelling/deferring the tasks!
         diagnosticTasks.computeIfAbsent(uri, u -> {
             return BACKGROUND_TASKS.create(() -> {

@@ -311,7 +311,7 @@ public class ConnectionErrMessage extends JPanel {
         StringBuilder sb = new StringBuilder();
         sb.append("xdebug.mode=debug").append(NEWLINE); // NOI18N
         sb.append("xdebug.client_host=localhost").append(NEWLINE); // NOI18N
-        sb.append("xdebug.remote_port=").append(String.valueOf(PhpOptions.getInstance().getDebuggerPort())).append(NEWLINE); // NOI18N
+        sb.append("xdebug.client_port=").append(String.valueOf(PhpOptions.getInstance().getDebuggerPort())).append(NEWLINE); // NOI18N
         sb.append(String.format("xdebug.idekey=\"%s\"", PhpOptions.getInstance().getDebuggerSessionId())); // NOI18N
         return sb.toString();
     }

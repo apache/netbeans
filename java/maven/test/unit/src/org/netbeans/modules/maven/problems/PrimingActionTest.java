@@ -167,16 +167,21 @@ public class PrimingActionTest extends NbTestCase {
      * collected.
      */
     public void testActionNotEnabledOnOKProject() throws Exception {
-        setupOKProject();
-        System.setProperty("test.reload.sync", "true");
-        
-        Project p = ProjectManager.getDefault().findProject(FileUtil.toFileObject(getWorkDir()));
-        // no problems at all
-        assertTrue(collectProblems(p).isEmpty());
-        ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
-        
-        boolean enabled = ap.isActionEnabled(ActionProvider.COMMAND_PRIME, Lookup.EMPTY);
-        assertFalse(enabled);
+        try {
+            setupOKProject();
+            System.setProperty("test.reload.sync", "true");
+
+            Project p = ProjectManager.getDefault().findProject(FileUtil.toFileObject(getWorkDir()));
+            // no problems at all
+            assertTrue(collectProblems(p).isEmpty());
+            ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
+
+            boolean enabled = ap.isActionEnabled(ActionProvider.COMMAND_PRIME, Lookup.EMPTY);
+            assertFalse(enabled);
+        } catch (Exception | Error t) {
+            t.printStackTrace();
+            throw t;
+        }
     }
     
     /**
@@ -214,6 +219,7 @@ public class PrimingActionTest extends NbTestCase {
      * the action may be temporarily enabled.
      */
     public void testPrimingBuildNotRunOnOK() throws Exception {
+        try {
         MockMavenExec mme = new MockMavenExec();
         MockLookup.setLayersAndInstances(mme);
         CountDownLatch cdl = new CountDownLatch(1);
@@ -268,6 +274,10 @@ public class PrimingActionTest extends NbTestCase {
         
         // check that the action is now disabled.
         assertFalse(ap.isActionEnabled(ActionProvider.COMMAND_PRIME, Lookup.EMPTY));
+        } catch (Exception | Error t) {
+            t.printStackTrace();
+            throw t;
+        }
     }
     
     /**

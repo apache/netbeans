@@ -21,7 +21,10 @@ package org.netbeans.modules.java.lsp.server.debugging.launch;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -31,19 +34,30 @@ import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.DebuggerManagerAdapter;
 import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.NbSourceProvider;
+import org.netbeans.modules.java.lsp.server.progress.OperationContext;
+import org.netbeans.modules.java.lsp.server.progress.ProgressOperationEvent;
+import org.netbeans.modules.java.lsp.server.progress.ProgressOperationListener;
+import org.netbeans.modules.java.lsp.server.progress.TestProgressHandler;
+import org.netbeans.modules.progress.spi.InternalHandle;
+import org.netbeans.spi.extexecution.base.ProcessParameters;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Pair;
 import org.openide.util.lookup.Lookups;
@@ -57,11 +71,21 @@ public abstract class NbLaunchDelegate {
     public abstract void preLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
 
     public abstract void postLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
+    
+    protected void notifyFinished(DebugAdapterContext ctx, boolean success) {
+        // no op.
+    }
 
-    public final CompletableFuture<Void> nbLaunch(FileObject toRun, DebugAdapterContext context, boolean debug, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
+    public final CompletableFuture<Void> nbLaunch(FileObject toRun, String method, Map<String, Object> launchArguments, DebugAdapterContext context, boolean debug, boolean testRun, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
         CompletableFuture<Void> launchFuture = new CompletableFuture<>();
         NbProcessConsole ioContext = new NbProcessConsole(consoleMessages);
-        CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(toRun, debug, ioContext);
+        SingleMethod singleMethod;
+        if (method != null) {
+            singleMethod = new SingleMethod(toRun, method);
+        } else {
+            singleMethod = null;
+        }
+        CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(toRun, singleMethod, debug, testRun, ioContext);
         commandFuture.thenAccept((providerAndCommand) -> {
             if (debug) {
                 DebuggerManager.getDebuggerManager().addDebuggerListener(new DebuggerManagerAdapter() {
@@ -100,15 +124,41 @@ public abstract class NbLaunchDelegate {
                 @Override
                 public void finished(boolean success) {
                     ioContext.stop();
+                    notifyFinished(context, success);
                 }
             };
+            List<String> args = argsToStringList(launchArguments.get("args"));
+            List<String> vmArgs = argsToStringList(launchArguments.get("vmArgs"));
+            ExplicitProcessParameters params = ExplicitProcessParameters.empty();
+            if (!(args.isEmpty() && vmArgs.isEmpty())) {
+                ExplicitProcessParameters.Builder bld = ExplicitProcessParameters.builder();
+                bld.launcherArgs(vmArgs);
+                bld.args(args);
+                bld.replaceArgs(false);
+                params = bld.build();
+            }
+            OperationContext ctx = OperationContext.find(Lookup.getDefault());
+            ctx.addProgressOperationListener(null, new ProgressOperationListener() {
+                @Override
+                public void progressHandleCreated(ProgressOperationEvent e) {
+                    context.setProcessExecutorHandle(e.getProgressHandle());
+                }
+            });
+            TestProgressHandler testProgressHandler = ctx.getClient().getNbCodeCapabilities().hasTestResultsSupport() ? new TestProgressHandler(ctx.getClient(), Utils.toUri(toRun)) : null;
             Lookup launchCtx = new ProxyLookup(
-                    Lookups.fixed(
-                            toRun, ioContext, progress
-                    ), Lookup.getDefault()
+                    testProgressHandler != null ? Lookups.fixed(toRun, ioContext, progress, testProgressHandler) : Lookups.fixed(toRun, ioContext, progress),
+                    Lookup.getDefault()
             );
+
+            Lookup lookup;
+            if (singleMethod != null) {
+                lookup = Lookups.fixed(toRun, singleMethod, params, ioContext, progress);
+            } else {
+                lookup = Lookups.fixed(toRun, ioContext, params, progress);
+            }
             Lookups.executeWith(launchCtx, () -> {
-                providerAndCommand.first().invokeAction(providerAndCommand.second(), Lookups.fixed(toRun, ioContext, progress));
+                providerAndCommand.first().invokeAction(providerAndCommand.second(), lookup);
+
             });
         }).exceptionally((t) -> {
             launchFuture.completeExceptionally(t);
@@ -116,9 +166,29 @@ public abstract class NbLaunchDelegate {
         });
         return launchFuture;
     }
+    
+    @NonNull
+    private List<String> argsToStringList(Object o) {
+        if (o == null) {
+            return Collections.emptyList();
+        }
+        if (o instanceof List) {
+            for (Object item : (List)o) {
+                if (!(o instanceof String)) {
+                    throw new IllegalArgumentException("Only string parameters expected");
+                }
+            }
+            return (List<String>)o;
+        } else if (o instanceof String) {
+            List<String> res = new ArrayList<>();
+            return Arrays.asList(BaseUtilities.parseParameters(o.toString()));
+        } else {
+            throw new IllegalArgumentException("Expected String or String list");
+        }
+    }
 
-    private CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(FileObject toRun, boolean debug, NbProcessConsole ioContext) throws IllegalArgumentException {
-        Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, debug);
+    private CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun, NbProcessConsole ioContext) throws IllegalArgumentException {
+        Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, singleMethod, debug, testRun);
         if (providerAndCommand != null) {
             return CompletableFuture.completedFuture(providerAndCommand);
         }
@@ -134,7 +204,7 @@ public abstract class NbLaunchDelegate {
             @Override
             public void finished(boolean success) {
                 if (success) {
-                    Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, debug);
+                    Pair<ActionProvider, String> providerAndCommand = findTarget(toRun, singleMethod, debug, testRun);
                     if (providerAndCommand != null) {
                         afterBuild.complete(providerAndCommand);
                         return;
@@ -167,23 +237,29 @@ public abstract class NbLaunchDelegate {
         return afterBuild;
     }
 
-    protected static @CheckForNull Pair<ActionProvider, String> findTarget(FileObject toRun, boolean debug) {
+    protected static @CheckForNull Pair<ActionProvider, String> findTarget(FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun) {
         ClassPath sourceCP = ClassPath.getClassPath(toRun, ClassPath.SOURCE);
         FileObject fileRoot = sourceCP != null ? sourceCP.findOwnerRoot(toRun) : null;
         boolean mainSource;
         if (fileRoot != null) {
             mainSource = UnitTestForSourceQuery.findUnitTests(fileRoot).length > 0;
         } else {
-            mainSource = true;
+            mainSource = !testRun;
         }
         ActionProvider provider = null;
         String command = null;
         Collection<ActionProvider> actionProviders = findActionProviders(toRun);
         Lookup testLookup = Lookups.singleton(toRun);
-        String[] actions = debug ? mainSource ? new String[] {ActionProvider.COMMAND_DEBUG_SINGLE}
-                                              : new String[] {ActionProvider.COMMAND_DEBUG_TEST_SINGLE, ActionProvider.COMMAND_DEBUG_SINGLE}
-                                 : mainSource ? new String[] {ActionProvider.COMMAND_RUN_SINGLE}
-                                              : new String[] {ActionProvider.COMMAND_TEST_SINGLE, ActionProvider.COMMAND_RUN_SINGLE};
+        String[] actions;
+        if (mainSource && singleMethod != null) {
+            actions = debug ? new String[] {SingleMethod.COMMAND_DEBUG_SINGLE_METHOD}
+                            : new String[] {SingleMethod.COMMAND_RUN_SINGLE_METHOD};
+        } else {
+            actions = debug ? mainSource ? new String[] {ActionProvider.COMMAND_DEBUG_SINGLE}
+                                         : new String[] {ActionProvider.COMMAND_DEBUG_TEST_SINGLE, ActionProvider.COMMAND_DEBUG_SINGLE}
+                            : mainSource ? new String[] {ActionProvider.COMMAND_RUN_SINGLE}
+                                         : new String[] {ActionProvider.COMMAND_TEST_SINGLE, ActionProvider.COMMAND_RUN_SINGLE};
+        }
 
         for (String commandCandidate : actions) {
             provider = findActionProvider(commandCandidate, actionProviders, testLookup);

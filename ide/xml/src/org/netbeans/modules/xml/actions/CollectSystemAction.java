@@ -116,7 +116,7 @@ public abstract class CollectSystemAction extends SystemAction implements Presen
         if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug (
             "\n--> CollectSystemAction.createMenu: ( " + coll + " )");
 
-        ArrayList items = new ArrayList ();
+        List<JMenuItem> items = new ArrayList<>();
 
         Iterator it = coll.iterator();
         while (it.hasNext ()) {

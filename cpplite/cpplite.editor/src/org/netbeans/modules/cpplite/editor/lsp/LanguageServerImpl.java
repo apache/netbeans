@@ -66,7 +66,7 @@ public class LanguageServerImpl implements LanguageServerProvider {
 
     private static final Logger LOG = Logger.getLogger(LanguageServerImpl.class.getName());
 
-    private Map<Project, LanguageServerDescription> prj2Server = new HashMap<>();
+    private static final Map<Project, LanguageServerDescription> prj2Server = new HashMap<>();
 
     @Override
     public LanguageServerDescription startServer(Lookup lookup) {
@@ -117,8 +117,18 @@ public class LanguageServerImpl implements LanguageServerProvider {
                             command.add("--clang-tidy");
                             command.add("--completion-style=detailed");
                         }
-                        Process process = new ProcessBuilder(command).redirectError(Redirect.INHERIT).start();
-                        return LanguageServerDescription.create(new CopyInput(process.getInputStream(), System.err), new CopyOutput(process.getOutputStream(), System.err), process);
+                        ProcessBuilder builder = new ProcessBuilder(command);
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            builder.redirectError(Redirect.INHERIT);
+                        }
+                        Process process = builder.start();
+                        InputStream in = process.getInputStream();
+                        OutputStream out = process.getOutputStream();
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            in = new CopyInput(in, System.err);
+                            out = new CopyOutput(out, System.err);
+                        }
+                        return LanguageServerDescription.create(in, out, process);
                     }
                     return null;
                 } catch (IOException ex) {

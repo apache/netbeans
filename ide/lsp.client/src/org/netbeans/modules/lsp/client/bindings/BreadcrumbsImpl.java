@@ -34,6 +34,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
@@ -69,7 +70,7 @@ public class BreadcrumbsImpl implements BackgroundTask {
     private static final RequestProcessor WORKER = new RequestProcessor(BreadcrumbsImpl.class.getName(), 1, false, false);
     private final JTextComponent comp;
     private final Document doc;
-    private RootBreadcrumbsElementImpl rootElement;
+    private volatile RootBreadcrumbsElementImpl rootElement;
 
     public BreadcrumbsImpl(JTextComponent comp) {
         this.comp = comp;
@@ -85,9 +86,7 @@ public class BreadcrumbsImpl implements BackgroundTask {
             //TODO: modified while the query is running?
             List<Either<SymbolInformation, DocumentSymbol>> symbols = bindings.getTextDocumentService().documentSymbol(new DocumentSymbolParams(new TextDocumentIdentifier(Utils.toURI(file)))).get();
 
-            synchronized (this) {
-                this.rootElement = new RootBreadcrumbsElementImpl(file, doc, symbols.stream().map(this::toDocumentSymbol).collect(Collectors.toList()));
-            }
+            this.rootElement = new RootBreadcrumbsElementImpl(file, doc, symbols.stream().map(this::toDocumentSymbol).collect(Collectors.toList()));
 
             SwingUtilities.invokeLater(() -> update());
         } catch (InterruptedException | ExecutionException ex) {
@@ -104,33 +103,33 @@ public class BreadcrumbsImpl implements BackgroundTask {
     }
 
     private void update() {
-        BreadcrumbsElement element;
-
-        synchronized (this) {
-            element = this.rootElement;
-        }
+        BreadcrumbsElement element = this.rootElement;
 
         if (element == null) {
             return ;
         }
 
-        element = ((RootBreadcrumbsElementImpl) element).children.get(0);
-        //TODO: stale results... modified while the query is running?
+        Caret caret = comp.getCaret();
 
-        int caret = comp.getCaretPosition();
+        if (caret != null && (!element.getChildren().isEmpty())) {
+            element = element.getChildren().get(0);
 
-        OUTER: while (true) {
-            for (BreadcrumbsElement child : element.getChildren()) {
-                BreadcrumbsElementImpl impl = (BreadcrumbsElementImpl) child;
-                if (impl.startPos.getOffset() <= caret && caret <= impl.endPos.getOffset()) {
-                    element = child;
-                    continue OUTER;
+            int caretPos = caret.getDot();
+
+            OUTER:
+            while (true) {
+                for (BreadcrumbsElement child : element.getChildren()) {
+                    BreadcrumbsElementImpl impl = (BreadcrumbsElementImpl) child;
+                    if (impl.startPos.getOffset() <= caretPos && caretPos <= impl.endPos.getOffset()) {
+                        element = child;
+                        continue OUTER;
+                    }
                 }
+                break;
             }
-            break;
-        }
 
-        BreadcrumbsController.setBreadcrumbs(doc, element);
+            BreadcrumbsController.setBreadcrumbs(doc, element);
+        }
     }
 
     private static final class RootBreadcrumbsElementImpl implements BreadcrumbsElement {

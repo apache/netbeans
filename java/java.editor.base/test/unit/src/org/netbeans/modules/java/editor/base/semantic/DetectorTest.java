@@ -632,12 +632,12 @@ public class DetectorTest extends TestBase {
 
     public void testRawStringLiteral() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_13");
+            SourceVersion.valueOf("RELEASE_15");
         } catch (IllegalArgumentException iae) {
             //OK, presumably no support for raw string literals
             return ;
         }
-        setSourceLevel("13");
+        setSourceLevel("15");
         performTest("RawStringLiteral",
                     "public class RawStringLiteral {\n" +
                     "    String s1 = \"\"\"\n" +
@@ -752,6 +752,31 @@ public class DetectorTest extends TestBase {
                     "[PUBLIC, CLASS], 17:12-17:16",
                     "[PUBLIC, CLASS], 17:17-17:23",
                     "[PRIVATE, METHOD, DECLARATION], 17:25-17:29");
+    }
+
+    public void testRawStringLiteralNETBEANS_5118() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_15");
+        } catch (IllegalArgumentException iae) {
+            //OK, presumably no support for raw string literals
+            return ;
+        }
+        setSourceLevel("15");
+        performTest("RawStringLiteral",
+                    "public class RawStringLiteral {\n" +
+                    "    String s1 = \"\"\"\n" +
+                    "                int i1 = 1;    \n" +
+                    "\n" +
+                    "     \n" +
+                    "     \t\n" +
+                    "                  int i2 = 2;\n" +
+                    "             \"\"\";\n" +
+                    "}\n",
+                    "[PUBLIC, CLASS, DECLARATION], 0:13-0:29",
+                    "[PUBLIC, CLASS], 1:4-1:10",
+                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:11-1:13",
+                    "[UNINDENTED_TEXT_BLOCK], 2:13-2:27",
+                    "[UNINDENTED_TEXT_BLOCK], 6:13-6:29");
     }
 
     private void performTest(String fileName) throws Exception {

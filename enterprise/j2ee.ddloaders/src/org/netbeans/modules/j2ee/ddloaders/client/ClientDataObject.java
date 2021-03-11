@@ -88,7 +88,7 @@ public class ClientDataObject extends  DDMultiViewDataObject
     private transient FileObject srcRoots[];
     
     /** List of updates to servlets that should be processed */
-    private Vector updates;
+    private Vector<DDChangeEvent> updates;
     
     private transient RequestProcessor.Task updateTask;
     
@@ -119,7 +119,7 @@ public class ClientDataObject extends  DDMultiViewDataObject
     }
     
     private void refreshSourceFolders() {
-        ArrayList srcRootList = new ArrayList();
+        List<FileObject> srcRootList = new ArrayList<>();
         
         Project project = FileOwnerQuery.getOwner(getPrimaryFile());
         if (project != null) {
@@ -162,7 +162,7 @@ public class ClientDataObject extends  DDMultiViewDataObject
     public void deploymentChange(DDChangeEvent evt) {
         synchronized (this) {
             if (updates == null) {
-                updates = new Vector();
+                updates = new Vector<>();
             }
             updates.addElement(evt);
         }

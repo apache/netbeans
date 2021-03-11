@@ -33,15 +33,16 @@ import java.util.ArrayList;
  * @author martin
  */
 final class FrameInfo {
+
     final DebugStackFrame frame;  // the top frame instance
     final DebugStackFrame[] stackTrace; // All but the top frame
     final String topFrame;
     final Object[] topVariables;
     // TODO: final Object[] thisObjects;
 
-    FrameInfo(DebugStackFrame topStackFrame, Iterable<DebugStackFrame> stackFrames) {
+    FrameInfo(DebugStackFrame topStackFrame, Iterable<DebugStackFrame> stackFrames, boolean supportsJavaFrames) {
         SourceSection topSS = topStackFrame.getSourceSection();
-        SourcePosition position = new SourcePosition(topSS);
+        SourcePosition position = new SourcePosition(topSS, topStackFrame.getLanguage());
         ArrayList<DebugStackFrame> stackFramesArray = new ArrayList<>();
         for (DebugStackFrame sf : stackFrames) {
             if (sf == topStackFrame) {
@@ -49,7 +50,8 @@ final class FrameInfo {
             }
             SourceSection ss = sf.getSourceSection();
             // Ignore frames without sources:
-            if (ss == null || ss.getSource() == null) {
+            boolean isHost = supportsJavaFrames && isHost(sf);
+            if (!isHost && (ss == null || ss.getSource() == null)) {
                 continue;
             }
             stackFramesArray.add(sf);
@@ -57,12 +59,14 @@ final class FrameInfo {
         frame = topStackFrame;
         stackTrace = stackFramesArray.toArray(new DebugStackFrame[stackFramesArray.size()]);
         LanguageInfo sfLang = topStackFrame.getLanguage();
-        topFrame = topStackFrame.getName() + "\n" +
+        boolean isHost = supportsJavaFrames && isHost(topStackFrame);
+        topFrame = topStackFrame.getName() + "\n" + isHost + "\n" +
                    ((sfLang != null) ? sfLang.getId() + " " + sfLang.getName() : "") + "\n" +
-                   DebuggerVisualizer.getSourceLocation(topSS) + "\n" +
+                   DebuggerVisualizer.getSourceLocation(topStackFrame, isHost) + "\n" +
                    position.id + "\n" + position.name + "\n" + position.path + "\n" +
-                   position.uri.toString() + "\n" + position.sourceSection +/* "," + position.startColumn + "," +
-                   position.endLine + "," + position.endColumn +*/ "\n" + isInternal(topStackFrame);
+                   position.hostClassName + "\n" + position.hostMethodName + "\n" +
+                   position.uri.toString() + "\n" + position.mimeType + "\n" + position.sourceSection + "\n" +
+                   isInternal(topStackFrame);
         topVariables = JPDATruffleAccessor.getVariables(topStackFrame);
     }
     
@@ -90,4 +94,21 @@ final class FrameInfo {
         return isInternal;
     }
     
+    static boolean isHost(DebugStackFrame sf) {
+        try {
+            Method isHostMethod = DebugStackFrame.class.getMethod("isHost");
+            return (Boolean) isHostMethod.invoke(sf);
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    static StackTraceElement getHostTraceElement(DebugStackFrame sf) {
+        try {
+            Method getHostTraceElementMethod = DebugStackFrame.class.getMethod("getHostTraceElement");
+            return (StackTraceElement) getHostTraceElementMethod.invoke(sf);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
 }

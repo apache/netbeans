@@ -56,7 +56,7 @@ public final class ProxyContextProvider implements ContextProvider {
     
     public Map getContext() {
         if (providers == null || providers.length == 0) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
         Map[] m = new Map[providers.length];
         for (int i=0; i < m.length; i++) {

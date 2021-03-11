@@ -1,0 +1,278 @@
+<testresult testFile='namedArgumentsWithAttribute_01.php'>
+    <scanner>
+        <token id='T_ATTRIBUTE' start='816' end='818'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='818' end='827'>
+            <text>Attribute</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='827' end='828'>
+            <text>]</text>
+        </token>
+        <token id='T_CLASS' start='829' end='834'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='835' end='851'>
+            <text>AttributeExample</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='852' end='853'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='858' end='864'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='865' end='873'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='874' end='885'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='885' end='886'>
+            <text>(</text>
+        </token>
+        <token id='T_PUBLIC' start='895' end='901'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='902' end='908'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='909' end='911'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='912' end='913'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='914' end='917'>
+            <text>&apos;x&apos;</text>
+        </token>
+        <token id='T_COMMA' start='917' end='918'>
+            <text>,</text>
+        </token>
+        <token id='T_PUBLIC' start='927' end='933'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='934' end='940'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='941' end='943'>
+            <text>$y</text>
+        </token>
+        <token id='T_EQUAL' start='944' end='945'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='946' end='949'>
+            <text>&apos;y&apos;</text>
+        </token>
+        <token id='T_COMMA' start='949' end='950'>
+            <text>,</text>
+        </token>
+        <token id='T_PUBLIC' start='959' end='965'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='966' end='972'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='973' end='975'>
+            <text>$z</text>
+        </token>
+        <token id='T_EQUAL' start='976' end='977'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='978' end='981'>
+            <text>&apos;z&apos;</text>
+        </token>
+        <token id='T_COMMA' start='981' end='982'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='987' end='988'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='989' end='990'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='990' end='991'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='992' end='993'>
+            <text>}</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='995' end='997'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='997' end='1013'>
+            <text>AttributeExample</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1013' end='1014'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1014' end='1022'>
+            <text>&apos;test x&apos;</text>
+        </token>
+        <token id='T_COMMA' start='1022' end='1023'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1024' end='1025'>
+            <text>z</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1025' end='1026'>
+            <text>:</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1027' end='1035'>
+            <text>&apos;test z&apos;</text>
+        </token>
+        <token id='T_COMMA' start='1035' end='1036'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1037' end='1038'>
+            <text>y</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1038' end='1039'>
+            <text>:</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1040' end='1048'>
+            <text>&apos;test y&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1048' end='1049'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1049' end='1050'>
+            <text>]</text>
+        </token>
+        <token id='T_CLASS' start='1051' end='1056'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='1057' end='1061'>
+            <text>Test</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1062' end='1063'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1063' end='1064'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1065' end='1065'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1065'>
+        <Comments>
+            <Comment start='7' end='814' commentType='multiLine'/>
+            <Comment start='7' end='814' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='816' end='993' modifier='NONE'>
+                <Attributes>
+                    <Attribute start='816' end='828'>
+                        <AttributeDeclarations>
+                            <AttributeDeclaration start='818' end='827'>
+                                <AttributeName>
+                                    <NamespaceName start='818' end='827' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='818' end='827' name='Attribute'/>
+                                    </NamespaceName>
+                                </AttributeName>
+                            </AttributeDeclaration>
+                        </AttributeDeclarations>
+                    </Attribute>
+                </Attributes>
+                <ClassName>
+                    <Identifier start='835' end='851' name='AttributeExample'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='852' end='993' isCurly='true'>
+                    <MethodDeclaration start='858' end='991' modifiers='public'>
+                        <FunctionDeclaration start='865' end='991' isReference='false'>
+                            <Identifier start='874' end='885' name='__construct'/>
+                            <FormalParameters>
+                                <FormalParameter start='895' end='917' modifier='public' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='902' end='908' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='902' end='908' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='909' end='911' isDollared='true'>
+                                            <Identifier start='910' end='911' name='x'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='914' end='917' type='STRING' value='&apos;x&apos;'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='927' end='949' modifier='public' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='934' end='940' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='934' end='940' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='941' end='943' isDollared='true'>
+                                            <Identifier start='942' end='943' name='y'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='946' end='949' type='STRING' value='&apos;y&apos;'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='959' end='981' modifier='public' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='966' end='972' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='966' end='972' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='973' end='975' isDollared='true'>
+                                            <Identifier start='974' end='975' name='z'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='978' end='981' type='STRING' value='&apos;z&apos;'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='989' end='991' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ClassDeclaration start='995' end='1064' modifier='NONE'>
+                <Attributes>
+                    <Attribute start='995' end='1050'>
+                        <AttributeDeclarations>
+                            <AttributeDeclaration start='997' end='1049'>
+                                <AttributeName>
+                                    <NamespaceName start='997' end='1013' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='997' end='1013' name='AttributeExample'/>
+                                    </NamespaceName>
+                                </AttributeName>
+                                <AttributeParameters>
+                                    <Scalar start='1014' end='1022' type='STRING' value='&apos;test x&apos;'/>
+                                    <NamedArgument start='1024' end='1035'>
+                                        <Identifier start='1024' end='1025' name='z'/>
+                                        <Scalar start='1027' end='1035' type='STRING' value='&apos;test z&apos;'/>
+                                    </NamedArgument>
+                                    <NamedArgument start='1037' end='1048'>
+                                        <Identifier start='1037' end='1038' name='y'/>
+                                        <Scalar start='1040' end='1048' type='STRING' value='&apos;test y&apos;'/>
+                                    </NamedArgument>
+                                </AttributeParameters>
+                            </AttributeDeclaration>
+                        </AttributeDeclarations>
+                    </Attribute>
+                </Attributes>
+                <ClassName>
+                    <Identifier start='1057' end='1061' name='Test'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='1062' end='1064' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+        </Statements>
+    </Program>
+</testresult>

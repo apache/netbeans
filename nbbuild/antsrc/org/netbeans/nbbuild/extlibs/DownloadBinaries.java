@@ -31,10 +31,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
+import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -59,6 +60,7 @@ import org.apache.tools.ant.util.FileUtils;
  * Motivation: http://wiki.netbeans.org/wiki/view/HgMigration#section-HgMigration-Binaries
  */
 public class DownloadBinaries extends Task {
+    private static final String MAVEN_REPO = "https://repo1.maven.org/maven2/";
 
     private File cache;
     /**
@@ -82,9 +84,9 @@ public class DownloadBinaries extends Task {
         this.server = server;
     }
 
-    private String repos = "https://repo1.maven.org/maven2/";
-    
-    
+    private String repos = MAVEN_REPO;
+
+
     /**
      * Space separated URL prefixes for maven repositories.
      * Should generally include a trailing slash.
@@ -94,7 +96,7 @@ public class DownloadBinaries extends Task {
     public void setRepos(String repos) {
         this.repos = repos;
     }
-    
+
     private final List<FileSet> manifests = new ArrayList<>();
     /**
      * Add one or more manifests of files to download.
@@ -174,27 +176,43 @@ public class DownloadBinaries extends Task {
             throw new BuildException("Failed to download binaries - see log message for the detailed reasons.", getLocation());
         }
     }
-    
+
+    public static InputStream downloadMaven(Task task, URI u) throws IOException {
+        MavenCoordinate mc = MavenCoordinate.fromM2Url(u);
+        byte[] arr = downloadMavenFile(task, mc, MAVEN_REPO);
+        return new ByteArrayInputStream(arr);
+    }
+
     private byte[] mavenFile(MavenCoordinate mc) throws IOException {
-        String cacheName = mc.toMavenPath();
-        File local = new File(new File(new File(new File(System.getProperty("user.home")), ".m2"), "repository"), cacheName.replace('/', File.separatorChar));
-        List<String> urls = new ArrayList<>();
-        if (local.isFile()) {
-            urls.add(local.toURI().toString());
+        try {
+            return downloadMavenFile(this, mc, repos.split(" "));
+        } catch (BuildException ex) {
+            throw new BuildException(ex.getMessage() + " from maven and " + server, null, getLocation());
         }
-        for (String prefix : repos.split(" ")) {
+    }
+
+    private static byte[] downloadMavenFile(Task task, MavenCoordinate mc, String... m2Repositories) throws IOException {
+        String cacheName = mc.toMavenPath();
+        List<String> urls = new ArrayList<>();
+        for (String prefix : m2Repositories) {
             urls.add(prefix + cacheName);
         }
         for (String url : urls) {
             try {
+                if (url.startsWith("file:")) {
+                    File file = new File(new URI(url));
+                    if (!file.exists()) {
+                        continue;
+                    }
+                }
                 URL u = new URL(url);
-                log("Trying: " + url, Project.MSG_VERBOSE);
-                return downloadFromServer(u);
-            } catch (IOException ex) {
+                task.getProject().log("Trying: " + url);
+                return downloadFromServer(task, u);
+            } catch (IOException | URISyntaxException ex) {
                 //Try the next URL
             }
         }
-        throw new BuildException("Could not download " + cacheName + " from maven and " + server, null, getLocation());
+        throw new BuildException("Could not download " + cacheName);
     }
 
     private boolean fillInFile(String expectedHash, String baseName, File manifest, Downloader download) throws BuildException {
@@ -286,17 +304,17 @@ public class DownloadBinaries extends Task {
             try {
                 URL url = new URL(prefix + cacheName);
                 log("Trying: " + url, Project.MSG_VERBOSE);
-                return downloadFromServer(url);
+                return downloadFromServer(this, url);
             } catch (IOException ex) {
                 //Try the next URL
             }
         }
         throw new BuildException("Could not download " + cacheName + " from " + server + ": " + firstProblem, firstProblem, getLocation());
     }
-    
-    private byte[] downloadFromServer(URL url) throws IOException {
-        log("Downloading: " + url);
-        URLConnection conn = ConfigureProxy.openConnection(this, url, null);
+
+    private static byte[] downloadFromServer(Task task, URL url) throws IOException {
+        task.getProject().log("Downloading: " + url);
+        URLConnection conn = ConfigureProxy.openConnection(task, url, null);
         int code = HttpURLConnection.HTTP_OK;
         if (conn instanceof HttpURLConnection) {
             code = ((HttpURLConnection) conn).getResponseCode();
@@ -362,7 +380,7 @@ public class DownloadBinaries extends Task {
             this.extension = extension;
             this.classifier = classifier;
         }
-        
+
         public boolean hasClassifier() {
             return (! classifier.isEmpty());
         }
@@ -386,9 +404,9 @@ public class DownloadBinaries extends Task {
         public String getClassifier() {
             return classifier;
         }
-        
+
         /**
-         * @return filename of the artifact by maven convention: 
+         * @return filename of the artifact by maven convention:
          *         {@code artifact-version[-classifier].extension}
          */
         public String toArtifactFilename() {
@@ -399,12 +417,12 @@ public class DownloadBinaries extends Task {
                     getExtension()
             );
         }
-        
+
         /**
-         * @return The repository path for an artifact by maven convention: 
+         * @return The repository path for an artifact by maven convention:
          *         {@code group/artifact/version/artifact-version[-classifier].extension}.
-         *         In the group part all dots are replaced by a slash. 
-         */        
+         *         In the group part all dots are replaced by a slash.
+         */
         public String toMavenPath() {
             return String.format("%s/%s/%s/%s",
                     getGroupId().replace(".", "/"),
@@ -413,22 +431,22 @@ public class DownloadBinaries extends Task {
                     toArtifactFilename()
                     );
         }
-        
+
         public static boolean isMavenFile(String gradleFormat) {
             return gradleFormat.split(":").length > 2;
         }
-        
+
         /**
          * The maven coordinate is supplied in the form:
-         * 
+         *
          * <p>{@code group:name:version:classifier@extension}</p>
-         * 
+         *
          * <p>For the DownloadBinaries task the parts group, name and version
          * are requiered. classifier and extension are optional. The extension
          * has a default value of "jar".
-         * 
+         *
          * @param gradleFormat artifact coordinated to be parse as a MavenCoordinate
-         * @return 
+         * @return
          * @throws IllegalArgumentException if provided string fails to parse
          */
         public static MavenCoordinate fromGradleFormat(String gradleFormat) {
@@ -451,6 +469,43 @@ public class DownloadBinaries extends Task {
             String classifier = "";
             if (coordinates.length > 3) {
                 classifier = coordinates[3].trim();
+            }
+            return new MavenCoordinate(group, artifact, version, extension, classifier);
+        }
+
+        /**
+         * The maven coordinate is supplied in the form:
+         *
+         * <p>{@code m2:/group:name:version:extension:classifier}</p>
+         *
+         * <p>For the DownloadBinaries task the parts group, name, version and
+         * extension are requiered. classifier is optional.
+         *
+         * @param m2Url artifact coordinated to be parse as a MavenCoordinate
+         * @return
+         * @throws IllegalArgumentException if provided string fails to parse
+         */
+        public static MavenCoordinate fromM2Url(URI m2Url) throws IOException {
+            if (!"m2".equals(m2Url.getScheme())) {
+                throw new IOException("Only m2 URL is supported: " + m2Url);
+            }
+            if(! m2Url.getRawPath().startsWith("/")) {
+                throw new IOException("Invalid m2 URL. Expected format m2:/group:name:version:extension:classifier (classifier is optional)");
+            }
+            String[] coordinates = m2Url.getRawPath().substring(1).split(":");
+            if(coordinates.length < 4) {
+                throw new IOException("Invalid m2 URL. Expected format m2:/group:name:version:extension:classifier (classifier is optional)");
+            }
+            for (int i = 0; i < coordinates.length; i++) {
+                coordinates[i] = URLDecoder.decode(coordinates[i], "UTF-8");
+            }
+            String group = coordinates[0];
+            String artifact = coordinates[1];
+            String version = coordinates[2];
+            String extension = coordinates[3];
+            String classifier = "";
+            if (coordinates.length > 4) {
+                classifier = coordinates[4];
             }
             return new MavenCoordinate(group, artifact, version, extension, classifier);
         }

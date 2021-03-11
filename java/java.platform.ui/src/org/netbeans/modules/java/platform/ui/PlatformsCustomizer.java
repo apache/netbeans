@@ -355,8 +355,8 @@ public class PlatformsCustomizer extends javax.swing.JPanel implements PropertyC
                         dlg.setVisible(true);
                         if (wiz.getValue() == WizardDescriptor.FINISH_OPTION) {
                             self.getChildren().refreshPlatforms();
-                            Set result = wiz.getInstantiatedObjects();
-                            self.expandPlatforms (result.isEmpty() ? null : (JavaPlatform)result.iterator().next());
+                            Set<JavaPlatform> result = wiz.getInstantiatedObjects();
+                            self.expandPlatforms (result.isEmpty() ? null : result.iterator().next());
                         }
                     } finally {
                         dlg.dispose();

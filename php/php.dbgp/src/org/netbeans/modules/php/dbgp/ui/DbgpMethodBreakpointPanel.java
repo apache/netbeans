@@ -41,8 +41,6 @@ public class DbgpMethodBreakpointPanel extends JPanel implements Controller {
 
     public DbgpMethodBreakpointPanel() {
         initComponents();
-        myStopOnLbl.setVisible(false);
-        myStopType.setVisible(false);
     }
 
     @Override
@@ -106,13 +104,10 @@ public class DbgpMethodBreakpointPanel extends JPanel implements Controller {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(myStopOnLbl)
-                        .addGap(31, 31, 31))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(myMethodLbl)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(myMethodLbl)
+                    .addComponent(myStopOnLbl))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(myStopType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(myMethodName, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE))

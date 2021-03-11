@@ -1,0 +1,1991 @@
+<testresult testFile='constructorPropertyPromotion_01.php'>
+    <scanner>
+        <token id='T_CLASS' start='816' end='821'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='822' end='856'>
+            <text>ConstructorPropertyPromotionClass1</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='857' end='858'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='864' end='870'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='871' end='879'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='880' end='891'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='891' end='892'>
+            <text>(</text>
+        </token>
+        <token id='T_PUBLIC' start='901' end='907'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='908' end='915'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='915' end='916'>
+            <text>,</text>
+        </token>
+        <token id='T_PROTECTED' start='925' end='934'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='935' end='938'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='939' end='946'>
+            <text>$param2</text>
+        </token>
+        <token id='T_COMMA' start='946' end='947'>
+            <text>,</text>
+        </token>
+        <token id='T_PRIVATE' start='956' end='963'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='964' end='967'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='967' end='968'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='968' end='974'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='975' end='982'>
+            <text>$param3</text>
+        </token>
+        <token id='T_COMMA' start='982' end='983'>
+            <text>,</text>
+        </token>
+        <token id='T_PRIVATE' start='992' end='999'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='1000' end='1005'>
+            <text>float</text>
+        </token>
+        <token id='T_REFERENCE' start='1006' end='1007'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_VARIABLE' start='1007' end='1014'>
+            <text>$param4</text>
+        </token>
+        <token id='T_EQUAL' start='1015' end='1016'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1017' end='1018'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='1018' end='1019'>
+            <text>,</text>
+        </token>
+        <token id='T_PRIVATE' start='1028' end='1035'>
+            <text>private</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='1036' end='1037'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='1037' end='1043'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1044' end='1051'>
+            <text>$param5</text>
+        </token>
+        <token id='T_EQUAL' start='1052' end='1053'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1054' end='1058'>
+            <text>null</text>
+        </token>
+        <token id='T_COMMA' start='1058' end='1059'>
+            <text>,</text>
+        </token>
+        <token id='T_PUBLIC' start='1068' end='1074'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1075' end='1081'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1082' end='1089'>
+            <text>$param6</text>
+        </token>
+        <token id='T_EQUAL' start='1090' end='1091'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1092' end='1107'>
+            <text>"default value"</text>
+        </token>
+        <token id='T_COMMA' start='1107' end='1108'>
+            <text>,</text>
+        </token>
+        <token id='T_PUBLIC' start='1117' end='1123'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1124' end='1130'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='1130' end='1131'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1131' end='1134'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1135' end='1142'>
+            <text>$param7</text>
+        </token>
+        <token id='T_EQUAL' start='1143' end='1144'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1145' end='1160'>
+            <text>"default value"</text>
+        </token>
+        <token id='T_COMMA' start='1160' end='1161'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1166' end='1167'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1168' end='1169'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='1178' end='1182'>
+            <text>echo</text>
+        </token>
+        <token id='T_VARIABLE' start='1183' end='1188'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1188' end='1190'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1190' end='1196'>
+            <text>param2</text>
+        </token>
+        <token id='T_EQUAL' start='1197' end='1198'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1199' end='1206'>
+            <text>$param3</text>
+        </token>
+        <token id='T_SEMICOLON' start='1206' end='1207'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1212' end='1213'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1219' end='1225'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1226' end='1234'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1235' end='1239'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1239' end='1240'>
+            <text>(</text>
+        </token>
+        <token id='T_PUBLIC' start='1253' end='1259'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1260' end='1263'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1264' end='1266'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='1267' end='1268'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1269' end='1270'>
+            <text>0</text>
+        </token>
+        <token id='T_COMMA' start='1270' end='1271'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1315' end='1316'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1317' end='1318'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1323' end='1324'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1325' end='1326'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='1328' end='1333'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='1334' end='1368'>
+            <text>ConstructorPropertyPromotionClass2</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1369' end='1370'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='1376' end='1382'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1383' end='1391'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1392' end='1403'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1403' end='1404'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1413' end='1420'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='1420' end='1421'>
+            <text>,</text>
+        </token>
+        <token id='T_PUBLIC' start='1430' end='1436'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1437' end='1440'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1441' end='1448'>
+            <text>$param2</text>
+        </token>
+        <token id='T_COMMA' start='1448' end='1449'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1458' end='1464'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1465' end='1472'>
+            <text>$param3</text>
+        </token>
+        <token id='T_EQUAL' start='1473' end='1474'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1475' end='1490'>
+            <text>"default value"</text>
+        </token>
+        <token id='T_COMMA' start='1490' end='1491'>
+            <text>,</text>
+        </token>
+        <token id='T_PUBLIC' start='1500' end='1506'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1507' end='1513'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1514' end='1521'>
+            <text>$param4</text>
+        </token>
+        <token id='T_EQUAL' start='1522' end='1523'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1524' end='1539'>
+            <text>"default value"</text>
+        </token>
+        <token id='T_COMMA' start='1539' end='1540'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1545' end='1546'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1547' end='1548'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1553' end='1554'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1556' end='1557'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='1559' end='1564'>
+            <text>$anon</text>
+        </token>
+        <token id='T_EQUAL' start='1565' end='1566'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='1567' end='1570'>
+            <text>new</text>
+        </token>
+        <token id='T_CLASS' start='1571' end='1576'>
+            <text>class</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1577' end='1578'>
+            <text>(</text>
+        </token>
+        <token id='T_LNUMBER' start='1578' end='1579'>
+            <text>1</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1579' end='1580'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1581' end='1582'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='1587' end='1593'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1594' end='1602'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1603' end='1614'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1614' end='1615'>
+            <text>(</text>
+        </token>
+        <token id='T_PUBLIC' start='1624' end='1630'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1631' end='1634'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1635' end='1637'>
+            <text>$x</text>
+        </token>
+        <token id='T_COMMA' start='1637' end='1638'>
+            <text>,</text>
+        </token>
+        <token id='T_PUBLIC' start='1647' end='1653'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1654' end='1657'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1658' end='1660'>
+            <text>$y</text>
+        </token>
+        <token id='T_EQUAL' start='1661' end='1662'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1663' end='1664'>
+            <text>0</text>
+        </token>
+        <token id='T_COMMA' start='1664' end='1665'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1670' end='1671'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1672' end='1673'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1678' end='1679'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1680' end='1681'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1681' end='1682'>
+            <text>;</text>
+        </token>
+        <token id='T_TRAIT' start='1684' end='1689'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='1690' end='1723'>
+            <text>ConstructorPropertyPromotionTrait</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1724' end='1725'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='1731' end='1737'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='1738' end='1746'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1747' end='1758'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1758' end='1759'>
+            <text>(</text>
+        </token>
+        <token id='T_PUBLIC' start='1768' end='1774'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='1775' end='1782'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='1782' end='1783'>
+            <text>,</text>
+        </token>
+        <token id='T_PROTECTED' start='1792' end='1801'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='1802' end='1805'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1806' end='1813'>
+            <text>$param2</text>
+        </token>
+        <token id='T_COMMA' start='1813' end='1814'>
+            <text>,</text>
+        </token>
+        <token id='T_PRIVATE' start='1823' end='1830'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='1831' end='1834'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='1834' end='1835'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1835' end='1841'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1842' end='1849'>
+            <text>$param3</text>
+        </token>
+        <token id='T_COMMA' start='1849' end='1850'>
+            <text>,</text>
+        </token>
+        <token id='T_PRIVATE' start='1859' end='1866'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='1867' end='1872'>
+            <text>float</text>
+        </token>
+        <token id='T_REFERENCE' start='1873' end='1874'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_VARIABLE' start='1874' end='1881'>
+            <text>$param4</text>
+        </token>
+        <token id='T_EQUAL' start='1882' end='1883'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1884' end='1885'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='1885' end='1886'>
+            <text>,</text>
+        </token>
+        <token id='T_PRIVATE' start='1895' end='1902'>
+            <text>private</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='1903' end='1904'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='1904' end='1910'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1911' end='1918'>
+            <text>$param5</text>
+        </token>
+        <token id='T_EQUAL' start='1919' end='1920'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1921' end='1925'>
+            <text>null</text>
+        </token>
+        <token id='T_COMMA' start='1925' end='1926'>
+            <text>,</text>
+        </token>
+        <token id='T_PUBLIC' start='1935' end='1941'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1942' end='1948'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1949' end='1956'>
+            <text>$param6</text>
+        </token>
+        <token id='T_EQUAL' start='1957' end='1958'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1959' end='1974'>
+            <text>"default value"</text>
+        </token>
+        <token id='T_COMMA' start='1974' end='1975'>
+            <text>,</text>
+        </token>
+        <token id='T_PUBLIC' start='1984' end='1990'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1991' end='1997'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='1997' end='1998'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1998' end='2001'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2002' end='2009'>
+            <text>$param7</text>
+        </token>
+        <token id='T_EQUAL' start='2010' end='2011'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2012' end='2027'>
+            <text>"default value"</text>
+        </token>
+        <token id='T_COMMA' start='2027' end='2028'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2033' end='2034'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2035' end='2036'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='2045' end='2049'>
+            <text>echo</text>
+        </token>
+        <token id='T_VARIABLE' start='2050' end='2055'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='2055' end='2057'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2057' end='2063'>
+            <text>param2</text>
+        </token>
+        <token id='T_EQUAL' start='2064' end='2065'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='2066' end='2073'>
+            <text>$param3</text>
+        </token>
+        <token id='T_SEMICOLON' start='2073' end='2074'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2079' end='2080'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2082' end='2083'>
+            <text>}</text>
+        </token>
+        <token id='T_ABSTRACT' start='2185' end='2193'>
+            <text>abstract</text>
+        </token>
+        <token id='T_CLASS' start='2194' end='2199'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='2200' end='2241'>
+            <text>ConstructorPropertyPromotionAbstractClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2242' end='2243'>
+            <text>{</text>
+        </token>
+        <token id='T_ABSTRACT' start='2249' end='2257'>
+            <text>abstract</text>
+        </token>
+        <token id='T_PUBLIC' start='2258' end='2264'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='2265' end='2273'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2274' end='2285'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2285' end='2286'>
+            <text>(</text>
+        </token>
+        <token id='T_PUBLIC' start='2295' end='2301'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='2302' end='2305'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2306' end='2313'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='2313' end='2314'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2364' end='2365'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='2365' end='2366'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2367' end='2368'>
+            <text>}</text>
+        </token>
+        <token id='T_INTERFACE' start='2370' end='2379'>
+            <text>interface</text>
+        </token>
+        <token id='T_STRING' start='2380' end='2417'>
+            <text>ConstructorPropertyPromotionInterface</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2418' end='2419'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='2424' end='2430'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='2431' end='2439'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2440' end='2451'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2451' end='2452'>
+            <text>(</text>
+        </token>
+        <token id='T_PUBLIC' start='2452' end='2458'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='2459' end='2462'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2463' end='2470'>
+            <text>$param1</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2470' end='2471'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='2471' end='2472'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2518' end='2519'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='2521' end='2526'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='2527' end='2539'>
+            <text>LegacySyntax</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2540' end='2541'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='2547' end='2553'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='2554' end='2561'>
+            <text>$param1</text>
+        </token>
+        <token id='T_SEMICOLON' start='2561' end='2562'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='2567' end='2576'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='2577' end='2580'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2581' end='2588'>
+            <text>$param2</text>
+        </token>
+        <token id='T_SEMICOLON' start='2588' end='2589'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='2594' end='2601'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='2602' end='2605'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='2605' end='2606'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='2606' end='2612'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2613' end='2620'>
+            <text>$param3</text>
+        </token>
+        <token id='T_SEMICOLON' start='2620' end='2621'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='2626' end='2633'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='2634' end='2639'>
+            <text>float</text>
+        </token>
+        <token id='T_VARIABLE' start='2640' end='2647'>
+            <text>$param4</text>
+        </token>
+        <token id='T_SEMICOLON' start='2647' end='2648'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='2653' end='2660'>
+            <text>private</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='2661' end='2662'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='2662' end='2668'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2669' end='2676'>
+            <text>$param5</text>
+        </token>
+        <token id='T_SEMICOLON' start='2676' end='2677'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='2682' end='2688'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='2689' end='2695'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2696' end='2703'>
+            <text>$param6</text>
+        </token>
+        <token id='T_SEMICOLON' start='2703' end='2704'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='2709' end='2715'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='2716' end='2722'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='2722' end='2723'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='2723' end='2726'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2727' end='2734'>
+            <text>$param7</text>
+        </token>
+        <token id='T_SEMICOLON' start='2734' end='2735'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='2741' end='2747'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='2748' end='2756'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='2757' end='2768'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2768' end='2769'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='2778' end='2785'>
+            <text>$param1</text>
+        </token>
+        <token id='T_COMMA' start='2785' end='2786'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='2795' end='2798'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2799' end='2806'>
+            <text>$param2</text>
+        </token>
+        <token id='T_COMMA' start='2806' end='2807'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='2816' end='2819'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='2819' end='2820'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='2820' end='2826'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2827' end='2834'>
+            <text>$param3</text>
+        </token>
+        <token id='T_COMMA' start='2834' end='2835'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='2844' end='2849'>
+            <text>float</text>
+        </token>
+        <token id='T_REFERENCE' start='2850' end='2851'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_VARIABLE' start='2851' end='2858'>
+            <text>$param4</text>
+        </token>
+        <token id='T_EQUAL' start='2859' end='2860'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='2861' end='2862'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='2862' end='2863'>
+            <text>,</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='2872' end='2873'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='2873' end='2879'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2880' end='2887'>
+            <text>$param5</text>
+        </token>
+        <token id='T_EQUAL' start='2888' end='2889'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2890' end='2894'>
+            <text>null</text>
+        </token>
+        <token id='T_COMMA' start='2894' end='2895'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='2904' end='2910'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='2911' end='2918'>
+            <text>$param6</text>
+        </token>
+        <token id='T_EQUAL' start='2919' end='2920'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2921' end='2936'>
+            <text>"default value"</text>
+        </token>
+        <token id='T_COMMA' start='2936' end='2937'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='2946' end='2952'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='2952' end='2953'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='2953' end='2956'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2957' end='2964'>
+            <text>$param7</text>
+        </token>
+        <token id='T_EQUAL' start='2965' end='2966'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2967' end='2982'>
+            <text>"default value"</text>
+        </token>
+        <token id='T_COMMA' start='2982' end='2983'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2988' end='2989'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2990' end='2991'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='3000' end='3005'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='3005' end='3007'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='3007' end='3013'>
+            <text>param1</text>
+        </token>
+        <token id='T_EQUAL' start='3014' end='3015'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='3016' end='3023'>
+            <text>$param1</text>
+        </token>
+        <token id='T_SEMICOLON' start='3023' end='3024'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='3033' end='3038'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='3038' end='3040'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='3040' end='3046'>
+            <text>param2</text>
+        </token>
+        <token id='T_EQUAL' start='3047' end='3048'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='3049' end='3056'>
+            <text>$param2</text>
+        </token>
+        <token id='T_SEMICOLON' start='3056' end='3057'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='3066' end='3071'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='3071' end='3073'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='3073' end='3079'>
+            <text>param3</text>
+        </token>
+        <token id='T_EQUAL' start='3080' end='3081'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='3082' end='3089'>
+            <text>$param3</text>
+        </token>
+        <token id='T_SEMICOLON' start='3089' end='3090'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='3099' end='3104'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='3104' end='3106'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='3106' end='3112'>
+            <text>param4</text>
+        </token>
+        <token id='T_EQUAL' start='3113' end='3114'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='3115' end='3122'>
+            <text>$param4</text>
+        </token>
+        <token id='T_SEMICOLON' start='3122' end='3123'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='3132' end='3137'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='3137' end='3139'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='3139' end='3145'>
+            <text>param5</text>
+        </token>
+        <token id='T_EQUAL' start='3146' end='3147'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='3148' end='3155'>
+            <text>$param5</text>
+        </token>
+        <token id='T_SEMICOLON' start='3155' end='3156'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='3165' end='3170'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='3170' end='3172'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='3172' end='3178'>
+            <text>param6</text>
+        </token>
+        <token id='T_EQUAL' start='3179' end='3180'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='3181' end='3188'>
+            <text>$param6</text>
+        </token>
+        <token id='T_SEMICOLON' start='3188' end='3189'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='3198' end='3203'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='3203' end='3205'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='3205' end='3211'>
+            <text>param7</text>
+        </token>
+        <token id='T_EQUAL' start='3212' end='3213'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='3214' end='3221'>
+            <text>$param7</text>
+        </token>
+        <token id='T_SEMICOLON' start='3221' end='3222'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3227' end='3228'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3230' end='3231'>
+            <text>}</text>
+        </token>
+        <token id='T_NEW' start='3233' end='3236'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='3237' end='3271'>
+            <text>ConstructorPropertyPromotionClass1</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='3271' end='3272'>
+            <text>(</text>
+        </token>
+        <token id='T_LNUMBER' start='3272' end='3273'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='3273' end='3274'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='3275' end='3276'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='3276' end='3277'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='3278' end='3279'>
+            <text>3</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='3279' end='3280'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='3280' end='3281'>
+            <text>;</text>
+        </token>
+        <token id='T_NEW' start='3282' end='3285'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='3286' end='3298'>
+            <text>LegacySyntax</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='3298' end='3299'>
+            <text>(</text>
+        </token>
+        <token id='T_LNUMBER' start='3299' end='3300'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='3300' end='3301'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='3302' end='3303'>
+            <text>2</text>
+        </token>
+        <token id='T_COMMA' start='3303' end='3304'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='3305' end='3306'>
+            <text>3</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='3306' end='3307'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='3307' end='3308'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='3309' end='3309'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='3309'>
+        <Comments>
+            <Comment start='7' end='814' commentType='multiLine'/>
+            <Comment start='1272' end='1311' commentType='singleLine'/>
+            <Comment start='2085' end='2185' commentType='singleLine'/>
+            <Comment start='2315' end='2360' commentType='singleLine'/>
+            <Comment start='2473' end='2518' commentType='singleLine'/>
+            <Comment start='7' end='814' commentType='multiLine'/>
+            <Comment start='1272' end='1311' commentType='singleLine'/>
+            <Comment start='2085' end='2185' commentType='singleLine'/>
+            <Comment start='2315' end='2360' commentType='singleLine'/>
+            <Comment start='2473' end='2518' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='816' end='1326' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='822' end='856' name='ConstructorPropertyPromotionClass1'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='857' end='1326' isCurly='true'>
+                    <MethodDeclaration start='864' end='1213' modifiers='public'>
+                        <FunctionDeclaration start='871' end='1213' isReference='false'>
+                            <Identifier start='880' end='891' name='__construct'/>
+                            <FormalParameters>
+                                <FormalParameter start='901' end='915' modifier='public' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='908' end='915' isDollared='true'>
+                                            <Identifier start='909' end='915' name='param1'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='925' end='946' modifier='protected' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='935' end='938' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='935' end='938' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='939' end='946' isDollared='true'>
+                                            <Identifier start='940' end='946' name='param2'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='956' end='982' modifier='private' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='964' end='974'>
+                                            <NamespaceName start='964' end='967' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='964' end='967' name='int'/>
+                                            </NamespaceName>
+                                            <NamespaceName start='968' end='974' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='968' end='974' name='string'/>
+                                            </NamespaceName>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='975' end='982' isDollared='true'>
+                                            <Identifier start='976' end='982' name='param3'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='992' end='1018' modifier='private' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1000' end='1005' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1000' end='1005' name='float'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Reference start='1006' end='1014'>
+                                            <Variable start='1007' end='1014' isDollared='true'>
+                                                <Identifier start='1008' end='1014' name='param4'/>
+                                            </Variable>
+                                        </Reference>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1017' end='1018' type='INT' value='1'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1028' end='1058' modifier='private' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NullableType start='1036' end='1043'>
+                                            <NamespaceName start='1037' end='1043' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1037' end='1043' name='string'/>
+                                            </NamespaceName>
+                                        </NullableType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1044' end='1051' isDollared='true'>
+                                            <Identifier start='1045' end='1051' name='param5'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <NamespaceName start='1054' end='1058' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1054' end='1058' name='null'/>
+                                        </NamespaceName>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1068' end='1107' modifier='public' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1075' end='1081' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1075' end='1081' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1082' end='1089' isDollared='true'>
+                                            <Identifier start='1083' end='1089' name='param6'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1092' end='1107' type='STRING' value='"default value"'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1117' end='1160' modifier='public' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='1124' end='1134'>
+                                            <NamespaceName start='1124' end='1130' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1124' end='1130' name='string'/>
+                                            </NamespaceName>
+                                            <NamespaceName start='1131' end='1134' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1131' end='1134' name='int'/>
+                                            </NamespaceName>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1135' end='1142' isDollared='true'>
+                                            <Identifier start='1136' end='1142' name='param7'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1145' end='1160' type='STRING' value='"default value"'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='1168' end='1213' isCurly='true'>
+                                <EchoStatement start='1178' end='1207'>
+                                    <Assignment start='1183' end='1206' operator='EQUAL'>
+                                        <FieldAccess start='1183' end='1196' isNullsafe='false'>
+                                            <Variable start='1183' end='1188' isDollared='true'>
+                                                <Identifier start='1184' end='1188' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='1190' end='1196' isDollared='false'>
+                                                    <Identifier start='1190' end='1196' name='param2'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                        <Variable start='1199' end='1206' isDollared='true'>
+                                            <Identifier start='1200' end='1206' name='param3'/>
+                                        </Variable>
+                                    </Assignment>
+                                </EchoStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='1219' end='1324' modifiers='public'>
+                        <FunctionDeclaration start='1226' end='1324' isReference='false'>
+                            <Identifier start='1235' end='1239' name='test'/>
+                            <FormalParameters>
+                                <FormalParameter start='1253' end='1270' modifier='public' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1260' end='1263' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1260' end='1263' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1264' end='1266' isDollared='true'>
+                                            <Identifier start='1265' end='1266' name='x'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1269' end='1270' type='INT' value='0'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='1317' end='1324' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ClassDeclaration start='1328' end='1557' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='1334' end='1368' name='ConstructorPropertyPromotionClass2'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='1369' end='1557' isCurly='true'>
+                    <MethodDeclaration start='1376' end='1554' modifiers='public'>
+                        <FunctionDeclaration start='1383' end='1554' isReference='false'>
+                            <Identifier start='1392' end='1403' name='__construct'/>
+                            <FormalParameters>
+                                <FormalParameter start='1413' end='1420' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1413' end='1420' isDollared='true'>
+                                            <Identifier start='1414' end='1420' name='param1'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1430' end='1448' modifier='public' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1437' end='1440' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1437' end='1440' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1441' end='1448' isDollared='true'>
+                                            <Identifier start='1442' end='1448' name='param2'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1458' end='1490' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1458' end='1464' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1458' end='1464' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1465' end='1472' isDollared='true'>
+                                            <Identifier start='1466' end='1472' name='param3'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1475' end='1490' type='STRING' value='"default value"'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1500' end='1539' modifier='public' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1507' end='1513' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1507' end='1513' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1514' end='1521' isDollared='true'>
+                                            <Identifier start='1515' end='1521' name='param4'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1524' end='1539' type='STRING' value='"default value"'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='1547' end='1554' isCurly='true'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='1559' end='1682'>
+                <Assignment start='1559' end='1681' operator='EQUAL'>
+                    <Variable start='1559' end='1564' isDollared='true'>
+                        <Identifier start='1560' end='1564' name='anon'/>
+                    </Variable>
+                    <ClassInstanceCreation start='1567' end='1681' anonymous='true'>
+                        <Parameters>
+                            <Scalar start='1578' end='1579' type='INT' value='1'/>
+                        </Parameters>
+                        <Superclass>
+                        </Superclass>
+                        <Interfaces>
+                        </Interfaces>
+                        <Block start='1581' end='1681' isCurly='true'>
+                            <MethodDeclaration start='1587' end='1679' modifiers='public'>
+                                <FunctionDeclaration start='1594' end='1679' isReference='false'>
+                                    <Identifier start='1603' end='1614' name='__construct'/>
+                                    <FormalParameters>
+                                        <FormalParameter start='1624' end='1637' modifier='public' isMandatory='true' isVariadic='false'>
+                                            <ParametrType>
+                                                <NamespaceName start='1631' end='1634' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1631' end='1634' name='int'/>
+                                                </NamespaceName>
+                                            </ParametrType>
+                                            <ParametrName>
+                                                <Variable start='1635' end='1637' isDollared='true'>
+                                                    <Identifier start='1636' end='1637' name='x'/>
+                                                </Variable>
+                                            </ParametrName>
+                                            <DefaultValue>
+                                            </DefaultValue>
+                                        </FormalParameter>
+                                        <FormalParameter start='1647' end='1664' modifier='public' isMandatory='false' isVariadic='false'>
+                                            <ParametrType>
+                                                <NamespaceName start='1654' end='1657' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1654' end='1657' name='int'/>
+                                                </NamespaceName>
+                                            </ParametrType>
+                                            <ParametrName>
+                                                <Variable start='1658' end='1660' isDollared='true'>
+                                                    <Identifier start='1659' end='1660' name='y'/>
+                                                </Variable>
+                                            </ParametrName>
+                                            <DefaultValue>
+                                                <Scalar start='1663' end='1664' type='INT' value='0'/>
+                                            </DefaultValue>
+                                        </FormalParameter>
+                                    </FormalParameters>
+                                    <Block start='1672' end='1679' isCurly='true'>
+                                    </Block>
+                                </FunctionDeclaration>
+                            </MethodDeclaration>
+                        </Block>
+                    </ClassInstanceCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <TraitDeclaration start='1684' end='2083'>
+                <TraitName>
+                    <Identifier start='1690' end='1723' name='ConstructorPropertyPromotionTrait'/>
+                </TraitName>
+                <Block start='1724' end='2083' isCurly='true'>
+                    <MethodDeclaration start='1731' end='2080' modifiers='public'>
+                        <FunctionDeclaration start='1738' end='2080' isReference='false'>
+                            <Identifier start='1747' end='1758' name='__construct'/>
+                            <FormalParameters>
+                                <FormalParameter start='1768' end='1782' modifier='public' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1775' end='1782' isDollared='true'>
+                                            <Identifier start='1776' end='1782' name='param1'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1792' end='1813' modifier='protected' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1802' end='1805' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1802' end='1805' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1806' end='1813' isDollared='true'>
+                                            <Identifier start='1807' end='1813' name='param2'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1823' end='1849' modifier='private' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='1831' end='1841'>
+                                            <NamespaceName start='1831' end='1834' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1831' end='1834' name='int'/>
+                                            </NamespaceName>
+                                            <NamespaceName start='1835' end='1841' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1835' end='1841' name='string'/>
+                                            </NamespaceName>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1842' end='1849' isDollared='true'>
+                                            <Identifier start='1843' end='1849' name='param3'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1859' end='1885' modifier='private' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1867' end='1872' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1867' end='1872' name='float'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Reference start='1873' end='1881'>
+                                            <Variable start='1874' end='1881' isDollared='true'>
+                                                <Identifier start='1875' end='1881' name='param4'/>
+                                            </Variable>
+                                        </Reference>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1884' end='1885' type='INT' value='1'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1895' end='1925' modifier='private' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NullableType start='1903' end='1910'>
+                                            <NamespaceName start='1904' end='1910' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1904' end='1910' name='string'/>
+                                            </NamespaceName>
+                                        </NullableType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1911' end='1918' isDollared='true'>
+                                            <Identifier start='1912' end='1918' name='param5'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <NamespaceName start='1921' end='1925' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1921' end='1925' name='null'/>
+                                        </NamespaceName>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1935' end='1974' modifier='public' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='1942' end='1948' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='1942' end='1948' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='1949' end='1956' isDollared='true'>
+                                            <Identifier start='1950' end='1956' name='param6'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='1959' end='1974' type='STRING' value='"default value"'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='1984' end='2027' modifier='public' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='1991' end='2001'>
+                                            <NamespaceName start='1991' end='1997' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1991' end='1997' name='string'/>
+                                            </NamespaceName>
+                                            <NamespaceName start='1998' end='2001' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1998' end='2001' name='int'/>
+                                            </NamespaceName>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2002' end='2009' isDollared='true'>
+                                            <Identifier start='2003' end='2009' name='param7'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='2012' end='2027' type='STRING' value='"default value"'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='2035' end='2080' isCurly='true'>
+                                <EchoStatement start='2045' end='2074'>
+                                    <Assignment start='2050' end='2073' operator='EQUAL'>
+                                        <FieldAccess start='2050' end='2063' isNullsafe='false'>
+                                            <Variable start='2050' end='2055' isDollared='true'>
+                                                <Identifier start='2051' end='2055' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='2057' end='2063' isDollared='false'>
+                                                    <Identifier start='2057' end='2063' name='param2'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                        <Variable start='2066' end='2073' isDollared='true'>
+                                            <Identifier start='2067' end='2073' name='param3'/>
+                                        </Variable>
+                                    </Assignment>
+                                </EchoStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </TraitDeclaration>
+            <ClassDeclaration start='2185' end='2368' modifier='ABSTRACT'>
+                <ClassName>
+                    <Identifier start='2200' end='2241' name='ConstructorPropertyPromotionAbstractClass'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='2242' end='2368' isCurly='true'>
+                    <MethodDeclaration start='2249' end='2366' modifiers='public abstract'>
+                        <FunctionDeclaration start='2265' end='2366' isReference='false'>
+                            <Identifier start='2274' end='2285' name='__construct'/>
+                            <FormalParameters>
+                                <FormalParameter start='2295' end='2313' modifier='public' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2302' end='2305' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2302' end='2305' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2306' end='2313' isDollared='true'>
+                                            <Identifier start='2307' end='2313' name='param1'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <InterfaceDeclaration start='2370' end='2519'>
+                <Name>
+                    <Identifier start='2380' end='2417' name='ConstructorPropertyPromotionInterface'/>
+                </Name>
+                <Block start='2418' end='2519' isCurly='true'>
+                    <MethodDeclaration start='2424' end='2472' modifiers='public'>
+                        <FunctionDeclaration start='2431' end='2472' isReference='false'>
+                            <Identifier start='2440' end='2451' name='__construct'/>
+                            <FormalParameters>
+                                <FormalParameter start='2452' end='2470' modifier='public' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2459' end='2462' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2459' end='2462' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2463' end='2470' isDollared='true'>
+                                            <Identifier start='2464' end='2470' name='param1'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='2471' end='2472' isCurly='flase'>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </InterfaceDeclaration>
+            <ClassDeclaration start='2521' end='3231' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='2527' end='2539' name='LegacySyntax'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='2540' end='3231' isCurly='true'>
+                    <FieldsDeclaration start='2547' end='2562' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2554' end='2561' isDollared='true'>
+                                <Identifier start='2555' end='2561' name='param1'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2567' end='2589' modifier='protected'>
+                        <FieldType>
+                            <NamespaceName start='2577' end='2580' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2577' end='2580' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2581' end='2588' isDollared='true'>
+                                <Identifier start='2582' end='2588' name='param2'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2594' end='2621' modifier='private'>
+                        <FieldType>
+                            <UnionType start='2602' end='2612'>
+                                <NamespaceName start='2602' end='2605' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2602' end='2605' name='int'/>
+                                </NamespaceName>
+                                <NamespaceName start='2606' end='2612' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2606' end='2612' name='string'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2613' end='2620' isDollared='true'>
+                                <Identifier start='2614' end='2620' name='param3'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2626' end='2648' modifier='private'>
+                        <FieldType>
+                            <NamespaceName start='2634' end='2639' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2634' end='2639' name='float'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2640' end='2647' isDollared='true'>
+                                <Identifier start='2641' end='2647' name='param4'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2653' end='2677' modifier='private'>
+                        <FieldType>
+                            <NullableType start='2661' end='2668'>
+                                <NamespaceName start='2662' end='2668' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2662' end='2668' name='string'/>
+                                </NamespaceName>
+                            </NullableType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2669' end='2676' isDollared='true'>
+                                <Identifier start='2670' end='2676' name='param5'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2682' end='2704' modifier='public'>
+                        <FieldType>
+                            <NamespaceName start='2689' end='2695' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2689' end='2695' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2696' end='2703' isDollared='true'>
+                                <Identifier start='2697' end='2703' name='param6'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2709' end='2735' modifier='public'>
+                        <FieldType>
+                            <UnionType start='2716' end='2726'>
+                                <NamespaceName start='2716' end='2722' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2716' end='2722' name='string'/>
+                                </NamespaceName>
+                                <NamespaceName start='2723' end='2726' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2723' end='2726' name='int'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2727' end='2734' isDollared='true'>
+                                <Identifier start='2728' end='2734' name='param7'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <MethodDeclaration start='2741' end='3228' modifiers='public'>
+                        <FunctionDeclaration start='2748' end='3228' isReference='false'>
+                            <Identifier start='2757' end='2768' name='__construct'/>
+                            <FormalParameters>
+                                <FormalParameter start='2778' end='2785' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2778' end='2785' isDollared='true'>
+                                            <Identifier start='2779' end='2785' name='param1'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='2795' end='2806' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2795' end='2798' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2795' end='2798' name='int'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2799' end='2806' isDollared='true'>
+                                            <Identifier start='2800' end='2806' name='param2'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='2816' end='2834' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='2816' end='2826'>
+                                            <NamespaceName start='2816' end='2819' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='2816' end='2819' name='int'/>
+                                            </NamespaceName>
+                                            <NamespaceName start='2820' end='2826' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='2820' end='2826' name='string'/>
+                                            </NamespaceName>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2827' end='2834' isDollared='true'>
+                                            <Identifier start='2828' end='2834' name='param3'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='2844' end='2862' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2844' end='2849' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2844' end='2849' name='float'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Reference start='2850' end='2858'>
+                                            <Variable start='2851' end='2858' isDollared='true'>
+                                                <Identifier start='2852' end='2858' name='param4'/>
+                                            </Variable>
+                                        </Reference>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='2861' end='2862' type='INT' value='1'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='2872' end='2894' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NullableType start='2872' end='2879'>
+                                            <NamespaceName start='2873' end='2879' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='2873' end='2879' name='string'/>
+                                            </NamespaceName>
+                                        </NullableType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2880' end='2887' isDollared='true'>
+                                            <Identifier start='2881' end='2887' name='param5'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <NamespaceName start='2890' end='2894' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2890' end='2894' name='null'/>
+                                        </NamespaceName>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='2904' end='2936' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <NamespaceName start='2904' end='2910' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2904' end='2910' name='string'/>
+                                        </NamespaceName>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2911' end='2918' isDollared='true'>
+                                            <Identifier start='2912' end='2918' name='param6'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='2921' end='2936' type='STRING' value='"default value"'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                                <FormalParameter start='2946' end='2982' isMandatory='false' isVariadic='false'>
+                                    <ParametrType>
+                                        <UnionType start='2946' end='2956'>
+                                            <NamespaceName start='2946' end='2952' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='2946' end='2952' name='string'/>
+                                            </NamespaceName>
+                                            <NamespaceName start='2953' end='2956' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='2953' end='2956' name='int'/>
+                                            </NamespaceName>
+                                        </UnionType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='2957' end='2964' isDollared='true'>
+                                            <Identifier start='2958' end='2964' name='param7'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                        <Scalar start='2967' end='2982' type='STRING' value='"default value"'/>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <Block start='2990' end='3228' isCurly='true'>
+                                <ExpressionStatement start='3000' end='3024'>
+                                    <Assignment start='3000' end='3023' operator='EQUAL'>
+                                        <FieldAccess start='3000' end='3013' isNullsafe='false'>
+                                            <Variable start='3000' end='3005' isDollared='true'>
+                                                <Identifier start='3001' end='3005' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='3007' end='3013' isDollared='false'>
+                                                    <Identifier start='3007' end='3013' name='param1'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                        <Variable start='3016' end='3023' isDollared='true'>
+                                            <Identifier start='3017' end='3023' name='param1'/>
+                                        </Variable>
+                                    </Assignment>
+                                </ExpressionStatement>
+                                <ExpressionStatement start='3033' end='3057'>
+                                    <Assignment start='3033' end='3056' operator='EQUAL'>
+                                        <FieldAccess start='3033' end='3046' isNullsafe='false'>
+                                            <Variable start='3033' end='3038' isDollared='true'>
+                                                <Identifier start='3034' end='3038' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='3040' end='3046' isDollared='false'>
+                                                    <Identifier start='3040' end='3046' name='param2'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                        <Variable start='3049' end='3056' isDollared='true'>
+                                            <Identifier start='3050' end='3056' name='param2'/>
+                                        </Variable>
+                                    </Assignment>
+                                </ExpressionStatement>
+                                <ExpressionStatement start='3066' end='3090'>
+                                    <Assignment start='3066' end='3089' operator='EQUAL'>
+                                        <FieldAccess start='3066' end='3079' isNullsafe='false'>
+                                            <Variable start='3066' end='3071' isDollared='true'>
+                                                <Identifier start='3067' end='3071' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='3073' end='3079' isDollared='false'>
+                                                    <Identifier start='3073' end='3079' name='param3'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                        <Variable start='3082' end='3089' isDollared='true'>
+                                            <Identifier start='3083' end='3089' name='param3'/>
+                                        </Variable>
+                                    </Assignment>
+                                </ExpressionStatement>
+                                <ExpressionStatement start='3099' end='3123'>
+                                    <Assignment start='3099' end='3122' operator='EQUAL'>
+                                        <FieldAccess start='3099' end='3112' isNullsafe='false'>
+                                            <Variable start='3099' end='3104' isDollared='true'>
+                                                <Identifier start='3100' end='3104' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='3106' end='3112' isDollared='false'>
+                                                    <Identifier start='3106' end='3112' name='param4'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                        <Variable start='3115' end='3122' isDollared='true'>
+                                            <Identifier start='3116' end='3122' name='param4'/>
+                                        </Variable>
+                                    </Assignment>
+                                </ExpressionStatement>
+                                <ExpressionStatement start='3132' end='3156'>
+                                    <Assignment start='3132' end='3155' operator='EQUAL'>
+                                        <FieldAccess start='3132' end='3145' isNullsafe='false'>
+                                            <Variable start='3132' end='3137' isDollared='true'>
+                                                <Identifier start='3133' end='3137' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='3139' end='3145' isDollared='false'>
+                                                    <Identifier start='3139' end='3145' name='param5'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                        <Variable start='3148' end='3155' isDollared='true'>
+                                            <Identifier start='3149' end='3155' name='param5'/>
+                                        </Variable>
+                                    </Assignment>
+                                </ExpressionStatement>
+                                <ExpressionStatement start='3165' end='3189'>
+                                    <Assignment start='3165' end='3188' operator='EQUAL'>
+                                        <FieldAccess start='3165' end='3178' isNullsafe='false'>
+                                            <Variable start='3165' end='3170' isDollared='true'>
+                                                <Identifier start='3166' end='3170' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='3172' end='3178' isDollared='false'>
+                                                    <Identifier start='3172' end='3178' name='param6'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                        <Variable start='3181' end='3188' isDollared='true'>
+                                            <Identifier start='3182' end='3188' name='param6'/>
+                                        </Variable>
+                                    </Assignment>
+                                </ExpressionStatement>
+                                <ExpressionStatement start='3198' end='3222'>
+                                    <Assignment start='3198' end='3221' operator='EQUAL'>
+                                        <FieldAccess start='3198' end='3211' isNullsafe='false'>
+                                            <Variable start='3198' end='3203' isDollared='true'>
+                                                <Identifier start='3199' end='3203' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='3205' end='3211' isDollared='false'>
+                                                    <Identifier start='3205' end='3211' name='param7'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                        <Variable start='3214' end='3221' isDollared='true'>
+                                            <Identifier start='3215' end='3221' name='param7'/>
+                                        </Variable>
+                                    </Assignment>
+                                </ExpressionStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='3233' end='3281'>
+                <ClassInstanceCreation start='3233' end='3280' anonymous='false'>
+                    <ClassName start='3237' end='3271'>
+                        <NamespaceName start='3237' end='3271' isCurrent='false' isGlobal='false'>
+                            <Identifier start='3237' end='3271' name='ConstructorPropertyPromotionClass1'/>
+                        </NamespaceName>
+                    </ClassName>
+                    <Parameters>
+                        <Scalar start='3272' end='3273' type='INT' value='1'/>
+                        <Scalar start='3275' end='3276' type='INT' value='2'/>
+                        <Scalar start='3278' end='3279' type='INT' value='3'/>
+                    </Parameters>
+                </ClassInstanceCreation>
+            </ExpressionStatement>
+            <ExpressionStatement start='3282' end='3308'>
+                <ClassInstanceCreation start='3282' end='3307' anonymous='false'>
+                    <ClassName start='3286' end='3298'>
+                        <NamespaceName start='3286' end='3298' isCurrent='false' isGlobal='false'>
+                            <Identifier start='3286' end='3298' name='LegacySyntax'/>
+                        </NamespaceName>
+                    </ClassName>
+                    <Parameters>
+                        <Scalar start='3299' end='3300' type='INT' value='1'/>
+                        <Scalar start='3302' end='3303' type='INT' value='2'/>
+                        <Scalar start='3305' end='3306' type='INT' value='3'/>
+                    </Parameters>
+                </ClassInstanceCreation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

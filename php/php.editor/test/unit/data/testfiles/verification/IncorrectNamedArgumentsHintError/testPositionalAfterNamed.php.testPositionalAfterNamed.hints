@@ -1,0 +1,15 @@
+    "function"
+    ----------
+HINT:Can't use positional argument after named argument.
+            "method",
+            --------
+HINT:Can't use positional argument after named argument.
+            "static method",
+            ---------------
+HINT:Can't use positional argument after named argument.
+    "constructor",
+    -------------
+HINT:Can't use positional argument after named argument.
+    "anonymous class",
+    -----------------
+HINT:Can't use positional argument after named argument.

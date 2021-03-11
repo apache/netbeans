@@ -19,14 +19,16 @@
 
 package org.netbeans.modules.web.monitor.data;
 
-import org.w3c.dom.*;
-import org.netbeans.modules.schema2beans.*;
-import java.beans.*;
-import java.util.*;
+import java.util.Vector;
+import org.netbeans.modules.schema2beans.AttrProp;
+
+import org.netbeans.modules.schema2beans.BaseBean;
+import org.netbeans.modules.schema2beans.BeanComparator;
+import org.netbeans.modules.schema2beans.Common;
 
 public class Dispatches extends BaseBean {
 
-    static Vector comparators = new Vector();
+    static Vector<BeanComparator> comparators = new Vector<>();
 
     static public final String DISPATCHDATA = "DispatchData"; // NOI18N
 

@@ -50,10 +50,10 @@ public abstract class AbstractLspStatusDisplayer extends StatusDisplayer {
         final MessageType type;
         if (importance >= IMPORTANCE_ANNOTATION) {
             type = MessageType.Info;
-        } else if (importance >= IMPORTANCE_ERROR_HIGHLIGHT) {
-            type = MessageType.Error;
         } else if (importance >= IMPORTANCE_FIND_OR_REPLACE) {
             type = MessageType.Info;
+        } else if (importance >= IMPORTANCE_ERROR_HIGHLIGHT) {
+            type = MessageType.Error;
         } else {
             type = MessageType.Info;
         }

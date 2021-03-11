@@ -2020,7 +2020,7 @@ public final class JPDAThreadImpl implements JPDAThread, Customizer, BeanContext
                 if (!submitMonitorEnteredFor(waitingMonitor)) {
                     submitCheckForMonitorEntered(waitingMonitor);
                 }
-                lockerThreadsList = new ThreadListDelegate(debugger, new ArrayList(lockedThreadsWithMonitors.keySet()));
+                lockerThreadsList = new ThreadListDelegate(debugger, new ArrayList<ThreadReference>(lockedThreadsWithMonitors.keySet()));
             } else {
                 //lockerThreads2 = null;
                 lockerThreadsMonitor = null;

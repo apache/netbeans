@@ -77,7 +77,9 @@ public final class FormalParameterInfo extends ASTNodeInfo<FormalParameter> {
                 isRawType,
                 formalParameter.isReference(),
                 formalParameter.isVariadic(),
-                formalParameter.isUnionType());
+                formalParameter.isUnionType(),
+                formalParameter.getModifier()
+        );
     }
 
     public static FormalParameterInfo create(FormalParameter node, Map<String, List<Pair<QualifiedName, Boolean>>> paramDocTypes) {

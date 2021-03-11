@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.gradle.java.output;
 
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.RunConfig;
 import org.netbeans.modules.gradle.api.output.OutputDisplayer;
 import org.netbeans.modules.gradle.api.output.OutputListeners;
@@ -31,14 +30,12 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.util.Utilities;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = OutputProcessorFactory.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/com.github.lkishalmi.gatling")
 public class GatlingReportProcessorFactory implements OutputProcessorFactory {
 
     static final OutputProcessor GATLING_OUTPUT_PROCESSOR = new GatlingOutputProcessor();

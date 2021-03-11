@@ -191,7 +191,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         out.addTrimObserver(this);
         this.indentSize = cs.getIndentSize();
         this.tree2Tag = tree2Tag;
-        this.tree2Doc = tree2Doc == null ? Collections.EMPTY_MAP : tree2Doc;
+        this.tree2Doc = tree2Doc == null ? Collections.<Tree, DocCommentTree>emptyMap(): tree2Doc;
         this.tag2Span = (Map<Object, int[]>) tag2Span;//XXX
         this.origText = origText;
         this.comments = CommentHandlerService.instance(context);

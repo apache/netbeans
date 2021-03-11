@@ -19,11 +19,13 @@
 package org.netbeans.modules.refactoring.api;
 
 import java.util.Collection;
+import java.util.List;
 import org.netbeans.modules.refactoring.api.impl.APIAccessor;
 import org.netbeans.modules.refactoring.api.impl.SPIAccessor;
 import org.netbeans.modules.refactoring.spi.GuardedBlockHandler;
 import org.netbeans.modules.refactoring.spi.ProblemDetailsImplementation;
 import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
+import org.netbeans.modules.refactoring.spi.Transaction;
 import org.netbeans.modules.refactoring.spi.ui.FiltersDescription;
 
 /**
@@ -86,6 +88,16 @@ final class AccessorImpl extends APIAccessor {
     @Override
     public boolean isFinished(RefactoringSession session) {
         return session.isFinished();
+    }
+
+    @Override
+    public List<Transaction> getCommits(RefactoringSession session) {
+        return session.getCommits();
+    }
+
+    @Override
+    public List<RefactoringElementImplementation> getFileChanges(RefactoringSession session) {
+        return session.getFileChanges();
     }
     
 }

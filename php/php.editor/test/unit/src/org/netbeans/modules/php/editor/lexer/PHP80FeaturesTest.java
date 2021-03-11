@@ -56,4 +56,12 @@ public class PHP80FeaturesTest extends PHPLexerTestBase {
     public void testNullsafeOperator_03() throws Exception {
         performTest("lexer/php80/nullsafeOperator_03");
     }
+
+    public void testAttributeSyntax_01() throws Exception {
+        performTest("lexer/php80/attributeSyntax_01");
+    }
+
+    public void testAttributeSyntax_02() throws Exception {
+        performTest("lexer/php80/attributeSyntax_02");
+    }
 }

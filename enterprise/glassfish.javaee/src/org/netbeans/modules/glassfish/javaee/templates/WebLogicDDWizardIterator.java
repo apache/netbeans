@@ -90,7 +90,7 @@ public final class WebLogicDDWizardIterator implements WizardDescriptor.Instanti
     
     @Override
     public Set instantiate() throws IOException {
-        Set result = Collections.emptySet();
+        Set<FileObject> result = Collections.emptySet();
         WebLogicDDWizardPanel wizardPanel = (WebLogicDDWizardPanel) panels[0];
         
         File configDir = wizardPanel.getSelectedLocation();

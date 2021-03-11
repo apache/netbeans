@@ -83,6 +83,38 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="project-priming-action">
+            <api name="general"/>
+            <summary>Added <code>ActionProvider.COMMAND_PRIME</code> that initializes the project for IDE use.</summary>
+            <version major="1" minor="80"/>
+            <date day="5" month="3" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code><a href="@TOP@/org/netbeans/spi/project/ActionProvider.html">ActionProvider.COMMAND_PRIME</a></code> was introduced, so that
+                    projects can declare (and enable/disable as needed) an action that "primes" or initializes the project for the IDE. That often includes
+                    downloads, or partial build, which may produce messages, and could be automated by project-opening code.
+                </p>
+            </description>
+        </change>
+        <change id="parent-and-root-project-provider">
+            <api name="general"/>
+            <summary>Added <code>ParentProjectProvider</code> and <code>RootProjectProvider</code> to improve project hierarchy discovery</summary>
+            <version major="1" minor="79"/>
+            <date day="2" month="1" year="2021"/>
+            <author login="lkishalmi"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code><a href="@TOP@/org/netbeans/spi/project/ParentProjectProvider.html">ParentProjectProvider</a></code> and
+                    <code><a href="@TOP@/org/netbeans/spi/project/RootProjectProvider.html">RootProjectProvider</a></code> with correspondig
+                    utility methods in <code><a href="@TOP@/org/netbeans/api/project/ProjectUtils.html">RootProjectProvider</a></code>
+                    to improve project hierarchy discovery.
+                </p>
+            </description>
+            <issue number="NETBEANS-5204"/>
+        </change>
         <change id="SourceGroupRelativeModifierImplementation">
             <api name="general"/>
             <summary>Added a <code>SourceGroupRelativeModifierImplementation</code> to improve source root creation</summary>

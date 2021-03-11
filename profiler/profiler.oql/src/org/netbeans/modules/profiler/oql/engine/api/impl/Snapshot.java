@@ -278,7 +278,7 @@ public class Snapshot {
         Instance queue = (Instance) clazz.getValueOfStaticField("queue"); // NOI18N
         Instance head = (Instance) queue.getValueOfField("head"); // NOI18N
 
-        List finalizables = new ArrayList();
+        List<Instance> finalizables = new ArrayList<>();
         if (head != null) {
             while (true) {
                 Instance referent = (Instance) head.getValueOfField("referent"); // NOI18N

@@ -80,14 +80,6 @@ public class PrimingActionTest extends NbTestCase {
             + "  <artifactId>m</artifactId>" 
             + "  <groupId>g</groupId>"
             + "    <version>0</version>"
-            + "  <dependencies>"
-            + "    <dependency>"
-            + "      <groupId>io.micronaut</groupId>"
-            + "      <artifactId>micronaut-validation</artifactId>"
-            + "      <version>2.3.3</version>"
-            + "      <scope>compile</scope>"
-            + "    </dependency>"
-            + "  </dependencies>"
             + "</project>");
         
     }

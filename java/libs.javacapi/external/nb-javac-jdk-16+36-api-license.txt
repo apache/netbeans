@@ -1,9 +1,9 @@
 Name: Javac Compiler API
 Description: Javac Compiler API
-Version: 15.0.0.2
+Version: 16
 License: GPL-2-CP
-Origin: OpenJDK (http://hg.openjdk.java.net/)
-Source: http://hg.netbeans.org/main/nb-java-x/
+Origin: OpenJDK (https://github.com/openjdk/jdk16)
+Source: https://github.com/oracle/nb-javac/
 Type: compile-time,optional
 Comment: Used at design time to compile against; optional at runtime.
 

@@ -1784,7 +1784,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
             }
             openedDocuments.put(params.getTextDocument().getUri(), doc);
-            runDiagnoticTasks(params.getTextDocument().getUri());
+            
+            // attempt to open the directly owning project, delay diagnostics after project open:
+            server.asyncOpenFileOwner(file).thenRun(() ->
+                runDiagnoticTasks(params.getTextDocument().getUri())
+            );
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         } finally {

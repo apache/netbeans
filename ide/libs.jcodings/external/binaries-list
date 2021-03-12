@@ -14,11 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-is.autoload=true
-javac.source=1.8
-javac.compilerargs=-Xlint -Xlint:-serial
-javadoc.arch=${basedir}/arch.xml
-javadoc.apichanges=${basedir}/apichanges.xml
-release.external/joni-2.1.11.jar=modules/ext/joni-2.1.11.jar
-release.external/org.eclipse.tm4e.core-0.4.1-pack1.jar=modules/ext/org.eclipse.tm4e.core-0.4.1-pack1.jar
-spec.version.base=1.12.0
+E2C76A19F00128BB1806207E2989139BFB45F49D org.jruby.jcodings:jcodings:1.0.18

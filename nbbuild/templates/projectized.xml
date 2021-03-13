@@ -181,10 +181,10 @@
              processing API located in rt.jar. -->
         <pathconvert property="bootclasspath.prepend.nb">
             <path>
-                <fileset dir="${nb_all}/java/libs.javacapi/external/">
+                <fileset dir="${nb_all}/java/libs.javacapi/external/" erroronmissingdir="false">
                     <include name="nb-javac*.jar"/>
                 </fileset>
-                <fileset dir="${nb_all}/java/libs.javacimpl/external/">
+                <fileset dir="${nb_all}/java/libs.javacimpl/external/" erroronmissingdir="false">
                     <include name="nb-javac*.jar"/>
                 </fileset>
             </path>

@@ -1,0 +1,26 @@
+|-ConstructorPropertyPromotion [822, 1210] : ESCAPED{ConstructorPropertyPromotion}
+|--__construct [874, 1207] : ESCAPED{__construct}ESCAPED{(}ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{, }<font color="#999999">ESCAPED{int}ESCAPED{|}ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param3}ESCAPED{, }<font color="#999999">ESCAPED{float}ESCAPED{ }</font>ESCAPED{$param4}ESCAPED{, }<font color="#999999">ESCAPED{?}ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param5}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param6}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{|}ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param7}ESCAPED{)}
+|--$param1 [903, 909] : ESCAPED{$param1}
+|--$param2 [934, 940] : ESCAPED{$param2}<font color="#999999">:ESCAPED{int}</font>
+|--$param3 [970, 976] : ESCAPED{$param3}<font color="#999999">:ESCAPED{int}ESCAPED{, }ESCAPED{string}</font>
+|--$param4 [1002, 1008] : ESCAPED{$param4}<font color="#999999">:ESCAPED{float}</font>
+|--$param5 [1039, 1045] : ESCAPED{$param5}<font color="#999999">:ESCAPED{?}ESCAPED{string}</font>
+|--$param6 [1077, 1083] : ESCAPED{$param6}<font color="#999999">:ESCAPED{string}</font>
+|--$param7 [1130, 1136] : ESCAPED{$param7}<font color="#999999">:ESCAPED{string}ESCAPED{, }ESCAPED{int}</font>
+|-ConstructorPropertyPromotionClass2 [1218, 1441] : ESCAPED{ConstructorPropertyPromotionClass2}
+|--__construct [1276, 1438] : ESCAPED{__construct}ESCAPED{(}ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param3}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param4}ESCAPED{)}
+|--$param2 [1326, 1332] : ESCAPED{$param2}<font color="#999999">:ESCAPED{int}</font>
+|--$param4 [1399, 1405] : ESCAPED{$param4}<font color="#999999">:ESCAPED{string}</font>
+|-#anon#php80ConstructorPropertyPromotion_php#1 [1451, 1565] : ESCAPED{{}}
+|--__construct [1487, 1563] : ESCAPED{__construct}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$x}ESCAPED{, }<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$y}ESCAPED{)}
+|--$x [1520, 1521] : ESCAPED{$x}<font color="#999999">:ESCAPED{int}</font>
+|--$y [1543, 1544] : ESCAPED{$y}<font color="#999999">:ESCAPED{int}</font>
+|-ConstructorPropertyPromotionTrait [1574, 1967] : ESCAPED{ConstructorPropertyPromotionTrait}
+|--__construct [1631, 1964] : ESCAPED{__construct}ESCAPED{(}ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{, }<font color="#999999">ESCAPED{int}ESCAPED{|}ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param3}ESCAPED{, }<font color="#999999">ESCAPED{float}ESCAPED{ }</font>ESCAPED{$param4}ESCAPED{, }<font color="#999999">ESCAPED{?}ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param5}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param6}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{|}ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param7}ESCAPED{)}
+|--$param1 [1660, 1666] : ESCAPED{$param1}
+|--$param2 [1691, 1697] : ESCAPED{$param2}<font color="#999999">:ESCAPED{int}</font>
+|--$param3 [1727, 1733] : ESCAPED{$param3}<font color="#999999">:ESCAPED{int}ESCAPED{, }ESCAPED{string}</font>
+|--$param4 [1759, 1765] : ESCAPED{$param4}<font color="#999999">:ESCAPED{float}</font>
+|--$param5 [1796, 1802] : ESCAPED{$param5}<font color="#999999">:ESCAPED{?}ESCAPED{string}</font>
+|--$param6 [1834, 1840] : ESCAPED{$param6}<font color="#999999">:ESCAPED{string}</font>
+|--$param7 [1887, 1893] : ESCAPED{$param7}<font color="#999999">:ESCAPED{string}ESCAPED{, }ESCAPED{int}</font>

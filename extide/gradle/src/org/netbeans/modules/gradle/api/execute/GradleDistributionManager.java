@@ -57,7 +57,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.openide.awt.Notification;
@@ -481,7 +480,7 @@ public final class GradleDistributionManager {
 
         @Override
         public String toString() {
-            return "GradleDistribution{" + "distributionDir=" + distributionDir + ", distributionURI=" + distributionURI + ", version=" + version + '}';
+            return "GradleDistribution{" + "gradleUserHome=" + gradleUserHome + ", distributionDir=" + distributionDir + ", distributionURI=" + distributionURI + ", version=" + version + '}';
         }
 
     }
@@ -500,7 +499,7 @@ public final class GradleDistributionManager {
         })
         public DownloadTask(GradleDistribution dist) {
             this.dist = dist;
-            handle = ProgressHandleFactory.createSystemHandle(Bundle.TIT_Download_Gradle(dist.getVersion()));
+            handle = ProgressHandle.createSystemHandle(Bundle.TIT_Download_Gradle(dist.getVersion()), null);
             notification = NotificationDisplayer.getDefault().notify(
                     Bundle.TIT_Download_Gradle(dist.getVersion()),
                     NbGradleProject.getIcon(),

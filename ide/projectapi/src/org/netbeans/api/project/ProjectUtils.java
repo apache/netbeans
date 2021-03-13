@@ -35,8 +35,10 @@ import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.netbeans.spi.project.AuxiliaryProperties;
 import org.netbeans.spi.project.CacheDirectoryProvider;
 import org.netbeans.spi.project.DependencyProjectProvider;
+import org.netbeans.spi.project.ParentProjectProvider;
 import org.netbeans.spi.project.ProjectContainerProvider;
 import org.netbeans.spi.project.ProjectInformationProvider;
+import org.netbeans.spi.project.RootProjectProvider;
 import org.netbeans.spi.project.SubprojectProvider;
 import org.netbeans.spi.project.support.GenericSources;
 import org.openide.filesystems.FileObject;
@@ -198,7 +200,40 @@ public class ProjectUtils {
         }
         return null;
     }
-    
+
+
+    /**
+     * Utility method for {@link ParentProjectProvider}. If the given project
+     * support {@link ParentProjectProvider} this method will return the immediate
+     * parent of that project or <code>null</code> if that can not be determined
+     * or the project has no parent. This method also returns <code>null</code>
+     * if the given project has no {@link ParentProjectProvider} support.
+     *
+     * @param project a suspected child project
+     * @return the immediate parent of the given project if known or <code>null</code>.
+     * @since 1.79
+     */
+    public static Project parentOf(@NonNull Project project) {
+        ParentProjectProvider pvd = project.getLookup().lookup(ParentProjectProvider.class);
+        return pvd != null ? pvd.getPartentProject() : null;
+    }
+
+    /**
+     * Utility method for {@link RootProjectProvider}. If the given project
+     * support {@link RootProjectProvider} this method will return its farthest
+     * parent.If the given project itself is root the it returns that. If the
+     * the farthest parent cannot be determined the given project is considered
+     * to be a root project and will be returned.
+     *
+     * @param project a suspected child project
+     * @return the farthest parent of the given project if known or <code>this</code>.
+     * @since 1.79
+     */
+    public static Project rootOf(@NonNull Project project) {
+        RootProjectProvider pvd = project.getLookup().lookup(RootProjectProvider.class);
+        return pvd != null ? pvd.getRootProject() : project;
+    }
+
     /**
      * Return {@link Preferences} for the given project and given module.
      * 

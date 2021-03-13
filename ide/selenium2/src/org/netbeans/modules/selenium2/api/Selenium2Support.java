@@ -147,6 +147,7 @@ public final class Selenium2Support {
             Selenium2SupportImpl selenium2Support = Selenium2Support.findSelenium2Support(p);
             if (selenium2Support != null) {
                 FileObject dir = context.getTargetFolder();
+                selenium2Support.configureProject(dir);
                 boolean singleClass = context.isSingleClass();
                 if (singleClass) {
                     FileObject seleniumTestFile = createSeleniumTestFile(selenium2Support, dir, context.getTestClassName());

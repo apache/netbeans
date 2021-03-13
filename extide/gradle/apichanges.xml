@@ -83,6 +83,33 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="trust-question-branding">
+            <api name="general"/>
+            <summary>Project trust dialog can be customized by branding</summary>
+            <version major="2" minor="8"/>
+            <date day="3" month="3" year="2021"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Branding API can be used to select and order options present in "Trust Gradle project for execution" confirmation
+                dialog. See <a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html#isProjectTrusted-org.netbeans.api.project.Project-boolean-">RunUtils.isProjectTrusted</a>.
+            </description>
+        </change>
+        <change id="deprecate-experimental-settings">
+            <api name="general"/>
+            <summary>Make ProjectActionMappingProvider available for other modules.</summary>
+            <version major="2" minor="7"/>
+            <date day="1" month="1" year="2021"/>
+            <author login="lkishalmi"/>
+            <compatibility semantic="incompatible" deprecation="yes"/>
+            <description>
+                <p>
+                    Experimental settings, <code>openLazy</code> and <code>disableDiskCache</code> in
+                    <a href="@TOP@/org/netbeans/modules/gradle/spi/GradleSettings.html">GradleSettings</a>
+                    made deprecated and no longer affect the IDE behavior.
+                </p>
+            </description>
+        </change>
         <change id="expose-project-action-mapping-provider">
             <api name="general"/>
             <summary>Make ProjectActionMappingProvider available for other modules.</summary>

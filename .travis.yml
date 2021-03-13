@@ -15,6 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 language: java
+dist: bionic
 addons:
   apt:
     packages:
@@ -89,12 +90,13 @@ matrix:
         - name: Compile all modules with OpenJDK11
           jdk: openjdk11
           env:
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=full -Dpermit.jdk9.builds=true -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
+            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=full -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
           before_script:
             - ant $OPTS clean
           script:
             - ant $OPTS build
             - ant $OPTS test -Dtest.includes=NoTestsJustBuild
+            - ant $OPTS -f platform/o.n.core/ test -Dtest.includes=**/ValidateClassFilesTest.class
 
         - name: Test harness modules
           jdk: openjdk8
@@ -305,7 +307,7 @@ matrix:
             - ant $OPTS -f ide/xml.lexer test
             - ant $OPTS -f ide/xml.multiview test
             - ant $OPTS -f ide/xml.retriever test
-            - ant $OPTS -f ide/xml.schema.completion test -Dtest.config=stableBTD
+            - ant $OPTS -f ide/xml.schema.completion test
             - ant $OPTS -f ide/xml.schema.model test
             - ant $OPTS -f ide/xml.text test
             - ant $OPTS -f ide/xml.text.obsolete90 test
@@ -376,6 +378,7 @@ matrix:
             - ant $OPTS -f java/java.module.graph test
             - ant $OPTS -f java/java.navigation test
             #- ant $OPTS -f java/java.openjdk.project test
+            - ant $OPTS -f java/java.mx.project test
             - ant $OPTS -f java/java.platform test
             - ant $OPTS -f java/java.platform.ui test
             - ant $OPTS -f java/java.preprocessorbridge test
@@ -397,7 +400,7 @@ matrix:
             #- ant $OPTS -f java/junit test
             - ant $OPTS -f java/junit.ant.ui test
             - ant $OPTS -f java/lib.nbjavac test
-            #- ant $OPTS -f java/maven test
+            - ant $OPTS -f java/maven test
             #- ant $OPTS -f java/maven.embedder test
             - ant $OPTS -f java/maven.grammar test
             #- ant $OPTS -f java/maven.hints test
@@ -545,6 +548,60 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -Dtest.config=batch2-vanilla-javac -f java/java.hints test
+
+        - name: Test Java modules without nb-javac on Java 15
+          jdk: openjdk8
+          env:
+            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+            - export TEST_JDK=`bash install-jdk.sh --feature 15 --license GPL --emit-java-home --silent | tail -1`
+            - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS -Dtest.nbjdk.home=$TEST_JDK -Dtest.use.jdk.javac=true"
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -f java/java.completion test
+            - ant $OPTS -Dtest.config=vanilla-javac -f java/java.source.base test
+
+        - name: Test refactoring.java without nb-javac on Java 15
+          jdk: openjdk8
+          env:
+            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+            - export TEST_JDK=`bash install-jdk.sh --feature 15 --license GPL --emit-java-home --silent | tail -1`
+            - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS -Dtest.nbjdk.home=$TEST_JDK -Dtest.use.jdk.javac=true"
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - travis_retry ant $OPTS -f java/refactoring.java test-unit
+
+        - name: Test java.hints batch1 without nb-javac on Java 15
+          jdk: openjdk8
+          env:
+            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+            - export TEST_JDK=`bash install-jdk.sh --feature 15 --license GPL --emit-java-home --silent | tail -1`
+            - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS -Dtest.nbjdk.home=$TEST_JDK -Dtest.use.jdk.javac=true"
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -Dtest.config=batch1-vanilla-javac -f java/java.hints test
+
+        - name: Test java.hints batch2 without nb-javac on Java 15
+          jdk: openjdk8
+          env:
+            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+            - export TEST_JDK=`bash install-jdk.sh --feature 15 --license GPL --emit-java-home --silent | tail -1`
+            - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS -Dtest.nbjdk.home=$TEST_JDK -Dtest.use.jdk.javac=true"
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - ant $OPTS -Dtest.config=batch2-vanilla-javac -f java/java.hints test
+
 
         - name: Test apisupport modules
           jdk: openjdk8
@@ -734,7 +791,45 @@ matrix:
             - ant $BUILD_OPTS clean
             - ant $BUILD_OPTS build
             - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
-            - export TEST_JDK=`bash install-jdk.sh --feature 11 --license GPL --emit-java-home --silent | tail -1`
+            - export TEST_JDK=`bash install-jdk.sh --feature 14 --license GPL --emit-java-home --silent | tail -1`
+            - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS  -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"            
+          script:
+            #- ant $TEST_OPTS -f groovy/groovy test
+            #- ant $TEST_OPTS -f groovy/groovy.java test
+            - ant $TEST_OPTS -f groovy/groovy.editor test
+            - ant $TEST_OPTS -f groovy/groovy.gsp test
+            #- ant $TEST_OPTS -f groovy/groovy.kit test
+            - ant $TEST_OPTS -f groovy/groovy.support test
+
+        - name: Test groovy modules on Java 15
+          jdk: openjdk8
+          env:
+            - BUILD_OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+            - TEST_OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $BUILD_OPTS clean
+            - ant $BUILD_OPTS build
+            - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+            - export TEST_JDK=`bash install-jdk.sh --feature 15 --license GPL --emit-java-home --silent | tail -1`
+            - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS  -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"            
+          script:
+            #- ant $TEST_OPTS -f groovy/groovy test
+            #- ant $TEST_OPTS -f groovy/groovy.java test
+            - ant $TEST_OPTS -f groovy/groovy.editor test
+            - ant $TEST_OPTS -f groovy/groovy.gsp test
+            #- ant $TEST_OPTS -f groovy/groovy.kit test
+            - ant $TEST_OPTS -f groovy/groovy.support test
+
+        - name: Test groovy modules on Java 16
+          jdk: openjdk8
+          env:
+            - BUILD_OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+            - TEST_OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -Dcluster.config=groovy -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - ant $BUILD_OPTS clean
+            - ant $BUILD_OPTS build
+            - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+            - export TEST_JDK=`bash install-jdk.sh --feature 16 --license GPL --emit-java-home --silent | tail -1`
             - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS  -Dtest.nbjdk.home=$TEST_JDK -Dtest.run.args=--limit-modules=java.base,java.logging,java.xml,java.prefs,java.desktop,java.management,java.instrument,jdk.zipfs,java.scripting,java.naming -Dtest.bootclasspath.prepend.args=-Dno.netbeans.bootclasspath.prepend.needed=true"            
           script:
             #- ant $TEST_OPTS -f groovy/groovy test
@@ -747,14 +842,15 @@ matrix:
         - name: Build the Visual Studio Code extension for Java
           jdk: openjdk8
           before_install:
-            - nvm install 8
+            - nvm install 12.14.1
           env:
             - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=java -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
           before_script:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - (cd java/java.lsp.server; ant build-vscode-ext)
+            - (cd java/java.lsp.server; ant build-vscode-ext -D3rdparty.modules=.*nbjavac.*)
+            - (cd java/java.lsp.server; ant test-vscode-ext)
 
         - name: "GraalVM Tests (latest)"
           jdk: openjdk8

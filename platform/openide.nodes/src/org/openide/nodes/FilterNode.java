@@ -2073,7 +2073,7 @@ public class FilterNode extends Node {
                     this.delegate = l;
 
                     if (results != null) {
-                        toCheck = new ArrayList<ProxyResult>(results).iterator();
+                        toCheck = new ArrayList<>(results).iterator();
                     }
                 }
             }

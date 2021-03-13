@@ -22,6 +22,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -92,9 +93,16 @@ public class BridgingIOProvider<IO, S extends PrintWriter, P, F>
     @Override
     public InputOutput getIO(String name, boolean newIO, Action[] actions,
             IOContainer ioContainer) {
+        Object[] lookupContent;
+        if (ioContainer != null) {
+            lookupContent = Arrays.copyOf(actions, actions.length + 1, Object[].class);
+            lookupContent[actions.length] = ioContainer;
+        } else {
+            lookupContent = actions;
+        }
         return new BridgingInputOutput(
                 providerDelegate.getIO(name, newIO,
-                        Lookups.fixed((Object[]) actions, ioContainer)));
+                        Lookups.fixed(lookupContent)));
     }
 
     @NbBundle.Messages({"LBL_STDOUT=Standard output"})

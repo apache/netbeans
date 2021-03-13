@@ -251,7 +251,7 @@ public class ReflectionHelper {
             } else {
                 Class<?> cls = Class.forName(className, true, loader);
                 if (cls.isInterface()) {
-                    return new ArrayList();
+                    return new ArrayList<Object>();
                 } else {
                     savedLoader = Thread.currentThread().getContextClassLoader();
                     Thread.currentThread().setContextClassLoader(loader);

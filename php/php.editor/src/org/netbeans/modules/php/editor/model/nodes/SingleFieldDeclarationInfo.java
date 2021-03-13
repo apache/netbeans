@@ -38,6 +38,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
  * @author Radek Matous
  */
 public final class SingleFieldDeclarationInfo extends ASTNodeInfo<SingleFieldDeclaration> {
+
     private final FieldsDeclaration fieldsDeclaration;
 
     private SingleFieldDeclarationInfo(FieldsDeclaration fieldsDeclaration, SingleFieldDeclaration node) {

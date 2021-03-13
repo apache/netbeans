@@ -26,13 +26,13 @@ import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacScope;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symtab;
-import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Enter;
@@ -52,28 +52,54 @@ import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.CharBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import javax.lang.model.SourceVersion;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.JavaParserResultTask;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.lib.nbjavac.services.CancelService;
 import org.netbeans.lib.nbjavac.services.NBLog;
 import org.netbeans.lib.nbjavac.services.NBParserFactory;
+import org.netbeans.modules.java.source.CompilationInfoAccessor;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.parsing.JavacParser.PartialReparser;
 import org.netbeans.modules.parsing.api.Snapshot;
+import org.netbeans.modules.parsing.impl.Utilities;
+import org.netbeans.modules.parsing.spi.ParseException;
+import org.netbeans.modules.parsing.spi.Parser.Result;
+import org.netbeans.modules.parsing.spi.Scheduler;
+import org.netbeans.modules.parsing.spi.SchedulerEvent;
+import org.netbeans.modules.parsing.spi.SchedulerTask;
+import org.netbeans.modules.parsing.spi.TaskFactory;
+import org.netbeans.modules.parsing.spi.TaskIndexingMode;
 import org.openide.filesystems.FileObject;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -124,8 +150,15 @@ public class VanillaPartialReparser implements PartialReparser {
         }
         this.lineMapBuild = lineMapBuild;
         allowPartialReparse = unenter != null && lazyDocCommentsTable != null &&
-                              parserDocComments != null && lineMapBuild != null &&
-                              Boolean.getBoolean("java.enable.partial.reparse");
+                              parserDocComments != null && lineMapBuild != null;
+        if (!allowPartialReparse) {
+            try {
+                SourceVersion sv16 = SourceVersion.valueOf("RELEASE_16");
+                if (SourceVersion.latest().compareTo(sv16) >= 0) {
+                    LOGGER.warning("Partial reparse disabled!");
+                }
+            } catch (IllegalArgumentException ignore) {}
+        }
     }
 
     @Override
@@ -154,7 +187,7 @@ public class VanillaPartialReparser implements PartialReparser {
                 return false;
             }
             CompilationInfo info = JavaSourceAccessor.getINSTANCE().createCompilationInfo(ci);
-            TreePath methodPath = info.getTreeUtilities().pathFor(((JCTree.JCMethodDecl) orig).pos);
+            TreePath methodPath = info.getTreeUtilities().pathFor(((JCTree.JCMethodDecl) orig).pos + 1);
             if (methodPath.getLeaf().getKind() != Kind.METHOD) {
                 return false;
             }
@@ -416,4 +449,156 @@ public class VanillaPartialReparser implements PartialReparser {
         flow.analyzeTree(enter.getEnv(((JCTree.JCClassDecl) ownerClass).sym), make);
         return methodToReparse.getBody();
     }
+
+    public static class VerifyPartialReparse extends JavaParserResultTask<Result> {
+
+        private final AtomicBoolean cancel = new AtomicBoolean();
+        private final AtomicReference<JavacParser> parser = new AtomicReference<>();
+
+        public VerifyPartialReparse() {
+            super(Phase.UP_TO_DATE, TaskIndexingMode.ALLOWED_DURING_SCAN);
+        }
+
+        @Override
+        public void run(Result result, SchedulerEvent event) {
+            cancel.set(false);
+
+            try {
+                CompilationInfo info = CompilationInfo.get(result);
+
+                if (info != null && info.getChangedTree() != null) {
+                    CompilationInfoImpl reparsedInfoImpl = CompilationInfoAccessor.getInstance().getCompilationInfoImpl(info);
+                    JavacParser verifyParser = new JavacParser(Collections.singletonList(info.getSnapshot()), true);
+                    parser.set(verifyParser);
+                    if (cancel.get()) {
+                        return ;
+                    }
+                    verifyParser.parse(info.getSnapshot(), this, null);
+                    JavacParserResult verifyResult = verifyParser.getResult(this);
+                    if (verifyResult == null || cancel.get()) {
+                        return ;
+                    }
+                    CompilationInfo verifyInfo = CompilationInfo.get(verifyResult);
+                    CompilationInfoImpl verifyInfoImpl = CompilationInfoAccessor.getInstance().getCompilationInfoImpl(verifyInfo);
+                    verifyCompilationInfos(reparsedInfoImpl, verifyInfoImpl);
+                }
+            } catch (IOException | ParseException ex) {
+                LOGGER.log(Level.FINE, null, ex);
+            } finally {
+                parser.set(null);
+            }
+        }
+
+        @Override
+        public int getPriority() {
+            return Integer.MAX_VALUE - 1;
+        }
+
+        @Override
+        public Class<? extends Scheduler> getSchedulerClass() {
+            return Scheduler.EDITOR_SENSITIVE_TASK_SCHEDULER;
+        }
+
+        @Override
+        public void cancel() {
+            cancel.set(true);
+            JavacParser currentParser = parser.get();
+            if (currentParser != null) {
+                currentParser.cancelParse();
+            }
+        }
+
+        private void verifyCompilationInfos(CompilationInfoImpl reparsed, CompilationInfoImpl verifyInfo) throws IOException {
+            if (cancel.get()) return ;
+            String failInfo = "";
+            //move to phase, and verify
+            if (verifyInfo.toPhase(reparsed.getPhase()) != reparsed.getPhase()) {
+                failInfo += "Expected phase: " + reparsed.getPhase() + ", actual phase: " + verifyInfo.getPhase();
+            }
+            if (cancel.get()) return ;
+            //verify diagnostics:
+            Set<String> reparsedDiags = (Set<String>) reparsed.getDiagnostics().stream().map(this::diagnosticToString).collect(Collectors.toSet());
+            if (cancel.get()) return ;
+            Set<String> verifyDiags = (Set<String>) verifyInfo.getDiagnostics().stream().map(this::diagnosticToString).collect(Collectors.toSet());
+            if (cancel.get()) return ;
+            if (!Objects.equals(reparsedDiags, verifyDiags)) {
+                failInfo += "Expected diags: " + reparsedDiags + ", actual diags: " + verifyDiags;
+            }
+            if (cancel.get()) return ;
+            String reparsedTree = treeToString(reparsed, reparsed.getCompilationUnit());
+            if (cancel.get()) return ;
+            String verifyTree = treeToString(verifyInfo, verifyInfo.getCompilationUnit());
+            if (cancel.get()) return ;
+            if (!Objects.equals(reparsedTree, verifyTree)) {
+                failInfo += "Expected tree: " + reparsedTree + ", actual tree: " + verifyTree;
+            }
+            if (!failInfo.isEmpty() && !cancel.get()) {
+                Utilities.revalidate(reparsed.getFileObject());
+                File dumpFile = JavacParser.createDumpFile(reparsed);
+                if (dumpFile != null) {
+                    try (OutputStream os = new FileOutputStream(dumpFile);
+                         PrintWriter writer = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8))) {   //NOI18N
+                        writer.println("Incorrectly reparsed file: " + reparsed.getFileObject().toURI());
+                        Snapshot original = reparsed.getPartialReparseLastGoodSnapshot();
+                        if (original != null) {
+                            writer.println("----- Original text: ---------------------------------------------");
+                            writer.println(original.getText());
+                        };
+                        writer.println("----- Updated text: ---------------------------------------------");
+                        writer.println(reparsed.getSnapshot().getText());
+                        writer.println("----- Errors: ---------------------------------------------");
+                        writer.println(failInfo);
+                    }
+                }
+                LOGGER.log(Level.INFO, "Incorrect partial reparse detected, dump filed: " + dumpFile);
+            } else {
+                reparsed.setPartialReparseLastGoodSnapshot(reparsed.getSnapshot());
+            }
+        }
+
+        private String diagnosticToString(Diagnostic<JavaFileObject> d) {
+            return d.getSource().toUri().toString() + ":" +
+                   d.getKind() + ":" +
+                   d.getStartPosition() + ":" +
+                   d.getPosition() + ":" +
+                   d.getEndPosition() + ":" +
+                   d.getLineNumber() + ":" +
+                   d.getColumnNumber() + ":" +
+                   d.getCode() + ":" +
+                   d.getMessage(null);
+        }
+
+        private String treeToString(CompilationInfoImpl info, CompilationUnitTree cut) {
+            StringBuilder dump = new StringBuilder();
+            new CancellableTreePathScanner<Void, Void>(cancel) {
+                @Override
+                public Void scan(Tree tree, Void p) {
+                    if (tree == null) {
+                        dump.append("null,");
+                    } else {
+                        TreePath tp = new TreePath(getCurrentPath(), tree);
+                        dump.append(tree.getKind()).append(":");
+                        dump.append(Trees.instance(info.getJavacTask()).getSourcePositions().getStartPosition(tp.getCompilationUnit(), tree)).append(":");
+                        dump.append(Trees.instance(info.getJavacTask()).getSourcePositions().getEndPosition(tp.getCompilationUnit(), tree)).append(":");
+                        dump.append(String.valueOf(Trees.instance(info.getJavacTask()).getElement(tp))).append(":");
+                        dump.append(String.valueOf(Trees.instance(info.getJavacTask()).getTypeMirror(tp))).append(":");
+                        dump.append(",");
+                    }
+                    return super.scan(tree, p);
+                }
+            }.scan(cut, null);
+            return dump.toString();
+        }
+
+        @MimeRegistration(service=TaskFactory.class, mimeType="text/x-java")
+        public static final class FactoryImpl extends TaskFactory {
+
+            @Override
+            public Collection<? extends SchedulerTask> create(Snapshot snapshot) {
+                return Collections.singletonList(new VerifyPartialReparse());
+            }
+
+        }
+    }
+
 }

@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import org.openide.util.MutexException;
 import org.netbeans.modules.openide.util.DefaultMutexImplementation;
 import org.netbeans.modules.openide.util.LazyMutexImplementation;
+import org.openide.util.lookup.Lookups;
 import org.openide.util.spi.MutexEventProvider;
 import org.openide.util.spi.MutexImplementation;
 
@@ -113,6 +114,11 @@ public final class Mutex {
      *  unless the current thread is the event dispatch thread, in which case
      *  <code>action.run()</code> is immediately executed.
      * </UL>
+     * <p>
+     * Since version 9.18 the methods of the {@code EVENT} instance properly
+     * understand semantics of {@link Lookups#executeWith(org.openide.util.Lookup, java.lang.Runnable)}
+     * method and propagate the effective {@link Lookup} to the event dispatch
+     * thread.
      */
     public static final Mutex EVENT;
     static {

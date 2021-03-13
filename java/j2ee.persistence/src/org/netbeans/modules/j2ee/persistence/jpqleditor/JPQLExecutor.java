@@ -138,7 +138,7 @@ public class JPQLExecutor {
                 Method method2 = sessionFactoryImpl.getClass().getMethod(HIBERNATE_QUERY_SQL1);
                 Object qPlanCache = method2.invoke(sessionFactoryImpl);
                 Method method3 = qPlanCache.getClass().getMethod(HIBERNATE_QUERY_SQL2, String.class, boolean.class, Map.class);
-                Object cache = method3.invoke(qPlanCache, jpql, true, Collections.EMPTY_MAP);
+                Object cache = method3.invoke(qPlanCache, jpql, true, Collections.emptyMap());
                 Method method4 = cache.getClass().getMethod(HIBERNATE_QUERY_SQL3);
                 Object[] translators = (Object[]) method4.invoke(cache);
                 StringBuilder stringBuff = new StringBuilder();

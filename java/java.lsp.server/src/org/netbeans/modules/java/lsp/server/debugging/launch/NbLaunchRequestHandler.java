@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.debugging.launch;
 
 import java.io.File;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -26,9 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,11 +36,13 @@ import org.eclipse.lsp4j.debug.OutputEventArguments;
 import org.eclipse.lsp4j.debug.Source;
 import org.eclipse.lsp4j.debug.TerminatedEventArguments;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.NbSourceProvider;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -51,13 +51,13 @@ import org.openide.filesystems.FileUtil;
 public final class NbLaunchRequestHandler {
 
     private NbLaunchDelegate activeLaunchHandler;
-    private final CompletableFuture<Boolean> waitForDebuggeeConsole = new CompletableFuture<>();
 
     public CompletableFuture<Void> launch(Map<String, Object> launchArguments, DebugAdapterContext context) {
         CompletableFuture<Void> resultFuture = new CompletableFuture<>();
         boolean noDebug = (Boolean) launchArguments.getOrDefault("noDebug", Boolean.FALSE);
-        activeLaunchHandler = noDebug ? new NbLaunchWithoutDebuggingDelegate((daContext) -> handleTerminatedEvent(daContext))
-                : new NbLaunchWithDebuggingDelegate();
+        Consumer<DebugAdapterContext> terminateHandle = (daContext) -> handleTerminatedEvent(daContext);
+        activeLaunchHandler = noDebug ? new NbLaunchWithoutDebuggingDelegate(terminateHandle)
+                : new NbLaunchWithDebuggingDelegate(terminateHandle);
         // validation
         List<String> modulePaths = (List<String>) launchArguments.getOrDefault("modulePaths", Collections.emptyList());
         List<String> classPaths = (List<String>) launchArguments.getOrDefault("classPaths", Collections.emptyList());
@@ -91,14 +91,41 @@ public final class NbLaunchRequestHandler {
         activeLaunchHandler.preLaunch(launchArguments, context);
 
         String filePath = (String)launchArguments.get("mainClass");
-        FileObject file = filePath != null ? FileUtil.toFileObject(new File(filePath)) : null;
+        File ioFile = null;
+        if (filePath != null) {
+            ioFile = new File(filePath);
+            if (!ioFile.exists()) {
+                try {
+                    URI uri = new URI(filePath);
+                    ioFile = Utilities.toFile(uri);
+                } catch (URISyntaxException ex) {
+                    // Not a valid file
+                }
+            }
+        }
+        FileObject file = ioFile != null ? FileUtil.toFileObject(ioFile) : null;
         if (file == null) {
             ErrorUtilities.completeExceptionally(resultFuture,
                     "Missing file: " + filePath,
                     ResponseErrorCode.serverErrorStart);
             return resultFuture;
         }
-        activeLaunchHandler.nbLaunch(file, context, !noDebug, new OutputListener(context)).thenRun(() -> {
+        if (!launchArguments.containsKey("sourcePaths")) {
+            ClassPath sourceCP = ClassPath.getClassPath(file, ClassPath.SOURCE);
+            if (sourceCP != null) {
+                FileObject[] roots = sourceCP.getRoots();
+                String[] sourcePaths = new String[roots.length];
+                for (int i = 0; i < roots.length; i++) {
+                    sourcePaths[i] = roots[i].getPath();
+                }
+                context.setSourcePaths(sourcePaths);
+            }
+        } else {
+            context.setSourcePaths((String[]) launchArguments.get("sourcePaths"));
+        }
+        String singleMethod = (String)launchArguments.get("singleMethod");
+        boolean testRun = (Boolean) launchArguments.getOrDefault("testRun", Boolean.FALSE);
+        activeLaunchHandler.nbLaunch(file, singleMethod, launchArguments, context, !noDebug, testRun, new OutputListener(context)).thenRun(() -> {
             activeLaunchHandler.postLaunch(launchArguments, context);
             resultFuture.complete(null);
         }).exceptionally(e -> {
@@ -144,14 +171,9 @@ public final class NbLaunchRequestHandler {
     }
 
     protected void handleTerminatedEvent(DebugAdapterContext context) {
-        CompletableFuture.runAsync(() -> {
-            try {
-                waitForDebuggeeConsole.get(5, TimeUnit.SECONDS);
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                // do nothing.
-            }
-            context.getClient().terminated(new TerminatedEventArguments());
-        });
+        // Project Action has already closed the I/O streams, and even in NetBeans IDE, the output area
+        // is already inactive at this point.
+        context.getClient().terminated(new TerminatedEventArguments());
     }
 
     private final class OutputListener implements Consumer<NbProcessConsole.ConsoleMessage> {
@@ -164,10 +186,7 @@ public final class NbLaunchRequestHandler {
 
         @Override
         public void accept(NbProcessConsole.ConsoleMessage message) {
-            if (message == null) {
-                // EOF
-                waitForDebuggeeConsole.complete(true);
-            } else {
+            if (message != null) {
                 OutputEventArguments outputEvent = convertToOutputEventArguments(message.output, message.category, context);
                 context.getClient().output(outputEvent);
             }

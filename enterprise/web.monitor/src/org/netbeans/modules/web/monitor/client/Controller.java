@@ -927,7 +927,7 @@ class Controller  {
 	}
 
 	Enumeration e = null;
-	Vector nodes = new Vector(); 
+	Vector<TransactionNode> nodes = new Vector<>(); 
 	int numtns = 0;
 	TransactionNode[] tns = null;
 	FileObject fo = null;
@@ -977,7 +977,7 @@ class Controller  {
 
 
 	savedTrans.remove(savedTrans.getNodes());
-	nodes = new Vector();
+	nodes = new Vector<>();
 	e = saveDir.getData(false);
 	while(e.hasMoreElements()) {
 

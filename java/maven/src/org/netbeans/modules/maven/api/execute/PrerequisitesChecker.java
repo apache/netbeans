@@ -25,7 +25,27 @@ package org.netbeans.modules.maven.api.execute;
  * jar and assembly configurations..
  * Similar to LateBoundPrerequisitesChecker but this one is called only once per action invokation.
  * Reruns (from output window for example) don't retrigger this.
- * @see LateBoundPrerequisitesChecker
+ * <p>
+ * The {@code PrerequisitesChecker} must be registered in <b>Project type's Lookup</b>,
+ * and can be registered for a <b>specific packaging type</b>. There's a special packaging pseudo-type <b>_any</b>,
+ * that is included for every packaging type, and its services are run after all packaging-specific ones. So the
+ * execution happens the following order:
+ * <ol>
+ * <li>generic services, registered in project type's Lookup. They should establish the defaults suitable
+ * for all projects.
+ * <li>packaging-specific services. Can override values or provide special values specifically for the packaging type.
+ * <li><i>_any</i> services. Provide a fallback if no packaging (or other specific) service created the necessary data. 
+ * These are also run for all packaging types.
+ * </ol>
+ * <p>
+ * <div class="nonnormative">
+ * Let's have some examples:
+ * {@codesnippet RunUtilsTest.GeneralPrerequisiteChecker}
+ * {@codesnippet RunUtilsTest.SpecificPrerequisiteChecker}
+ * {@codesnippet RunUtilsTest.FallbackPrerequisiteChecker}
+ * </div>
+
+* @see LateBoundPrerequisitesChecker
  * @author mkleint
  */
 public interface PrerequisitesChecker {

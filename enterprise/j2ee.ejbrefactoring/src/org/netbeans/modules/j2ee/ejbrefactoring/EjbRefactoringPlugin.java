@@ -255,7 +255,7 @@ public class EjbRefactoringPlugin implements RefactoringPlugin {
                 //in this case J2eeApplicationprovider might provide the same results though.
                 Object obj = project.getLookup().lookup(SubprojectProvider.class);
                 if ((obj != null) && (obj instanceof SubprojectProvider)) {
-                    Set subprojects = ((SubprojectProvider) obj).getSubprojects();
+                    Set<? extends Project> subprojects = ((SubprojectProvider) obj).getSubprojects();
                     if (subprojects.contains(affectedProject)) {
                         org.netbeans.modules.j2ee.api.ejbjar.EjbJar em = org.netbeans.modules.j2ee.api.ejbjar.EjbJar
                                 .getEjbJar(project.getProjectDirectory());

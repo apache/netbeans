@@ -84,8 +84,8 @@ public class TestSingleMethodSupport {
             TestClassInfoTask task = new TestClassInfoTask(cursor);
             try {
                 Future<Void> f = js.runWhenScanFinished(task, true);
-                if (f.isDone() && task.getFileObject() != null && task.getMethodName() != null){
-                    sm = new SingleMethod(task.getFileObject(), task.getMethodName());
+                if (f.isDone() && task.getSingleMethod() != null){
+                    sm = task.getSingleMethod();
                 }
             } catch (IOException ex) {
                 LOGGER.log(Level.WARNING, null, ex);

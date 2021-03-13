@@ -6,3 +6,4 @@ PACKAGE    First                           [PUBLIC]   null
 PACKAGE    Second                          [PUBLIC]   First
 CLASS      ThirdC                          [PUBLIC]   First\Second
 CLASS      ThirdI                          [PUBLIC]   First\Second
+CLASS      ThirdT                          [PUBLIC]   First\Second

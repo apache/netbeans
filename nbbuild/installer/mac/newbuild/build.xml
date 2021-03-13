@@ -25,7 +25,7 @@
     
     <import file="${basedir}/build.pro"/>
     <property file="${basedir}/Bundle.properties"/>
-    <loadfile property="sign_iden_name" srcFile="${mac.sign.idname}">
+    <loadfile property="sign_iden_name" srcFile="${mac.sign.idname}" quiet="true">
         <filterchain>
             <striplinebreaks/>
         </filterchain>
@@ -99,13 +99,16 @@
             </or>
         </condition>
         <condition property="do.build.jdk7">
-	    <equals arg1="${build.jdk7}" arg2="1"/>
+	           <equals arg1="${build.jdk7}" arg2="1"/>
         </condition>
         <condition property="do.build.jdk8">
-	    <equals arg1="${build.jdk8}" arg2="1"/>
+	           <equals arg1="${build.jdk8}" arg2="1"/>
         </condition>
         <condition property="do.build.jdk11">
             <equals arg1="${build.jdk11}" arg2="1"/>
+        </condition>
+        <condition property="sign_iden_name_arg" value="" else="--sign '${sign_iden_name}'">
+            <equals arg1="${mac.sign.idname}" arg2="0"/>
         </condition>
     </target>        
 
@@ -228,11 +231,8 @@
         <echo message="Building ${module.name} into ${basedir}/build/${module.name}-${nb.id}.pkg"/>
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>            
-            <arg value="pkgbuild --root '${module.builddir}/netbeans' --scripts '${scriptsdir}' --identifier org.netbeans.ide.${module.name}.${nb.id} --sign '${sign_iden_name}' --install-location '/${app.name}/Contents/Resources/NetBeans' '${basedir}/build/${module.name}-${nb.id}.pkg'"/>
+            <arg value="pkgbuild --root '${module.builddir}/netbeans' --scripts '${scriptsdir}' --identifier org.netbeans.ide.${module.name}.${nb.id} ${sign_iden_name_arg} --install-location '/${app.name}/Contents/Resources/NetBeans' '${basedir}/build/${module.name}-${nb.id}.pkg'"/>
         </exec>
-        <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
-            <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign '${basedir}/build/${module.name}-${nb.id}.pkg' -signed_location '${basedir}/build' -sign_method mac_pkg -server UK" />
-        </java-->
     </target>          
 
 
@@ -506,21 +506,15 @@
         
         <exec executable="sh" failonerror="yes">
             <arg value="-c"/>            
-            <arg value="pkgbuild --nopayload --scripts '${target.scriptsdir}' --identifier org.netbeans.postinstallscripts --sign '${sign_iden_name}' '${basedir}/build/postinstallscripts.pkg'"/>
+            <arg value="pkgbuild --nopayload --scripts '${target.scriptsdir}' --identifier org.netbeans.postinstallscripts ${sign_iden_name_arg} '${basedir}/build/postinstallscripts.pkg'"/>
         </exec>
-        <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
-            <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign '${basedir}/build/postinstallscripts.pkg' -signed_location '${basedir}/build' -sign_method mac_pkg -server UK" />
-        </java-->
     </target>
 
     <target name="pack-bundle" description="Packs nested packages into the main one">
         <mkdir dir="${pkg.file}/inst_package"/>
         <exec executable="sh" failonerror="yes">
             <arg value="-cv"/>
-            <arg value="productbuild --distribution '${pkg.file}/distribution.xml' --package-path '${pkg.file}/packages' --resources '${pkg.file}/resources/' --sign '${sign_iden_name}' '${pkg.file}/inst_package/${pkg.name}.pkg'"/>
+            <arg value="productbuild --distribution '${pkg.file}/distribution.xml' --package-path '${pkg.file}/packages' --resources '${pkg.file}/resources/' ${sign_iden_name_arg} '${pkg.file}/inst_package/${pkg.name}.pkg'"/>
         </exec>
-        <!--java jar="${mac.sign.client}" fork="true" failonerror="true" maxmemory="2048m">
-            <arg line="sign -user ${mac.sign.user} -global_uid ${mac.sign.guid} -file_to_sign '${pkg.file}/inst_package/${pkg.name}.pkg' -signed_location '${pkg.file}/inst_package' -sign_method mac_pkg -server UK" />
-        </java-->
     </target>    
 </project>

@@ -447,6 +447,14 @@ PHP_TYPE_MIXED=[m][i][x][e][d]
     return PHPTokenId.PHP_RETURN;
 }
 
+// NETBEANS-4443 PHP 8.0: Attribute Syntax
+// https://wiki.php.net/rfc/attributes_v2
+// https://wiki.php.net/rfc/shorter_attribute_syntax
+// https://wiki.php.net/rfc/shorter_attribute_syntax_change
+<ST_PHP_IN_SCRIPTING>"#[" {
+    return PHPTokenId.PHP_ATTRIBUTE;
+}
+
 <ST_PHP_IN_SCRIPTING>"yield"{WHITESPACE}+"from" {
     return PHPTokenId.PHP_YIELD_FROM;
 }

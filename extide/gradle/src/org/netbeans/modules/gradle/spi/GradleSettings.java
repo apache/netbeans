@@ -118,7 +118,9 @@ public final class GradleSettings {
     public static final String PROP_DISPLAY_DESCRIPTION = "displayDescription";
     public static final String PROP_REUSE_EDITOR_ON_STACKTRACE = "reuseEditorOnStackTace";
 
+    @Deprecated
     public static final String PROP_DISABLE_CACHE = "disableCache";
+    @Deprecated
     public static final String PROP_LAZY_OPEN_GROUPS = "lazyOpen";
     public static final String PROP_PREFER_MAVEN = "preferMaven";
 
@@ -318,20 +320,54 @@ public final class GradleSettings {
         return getPreferences().getBoolean(PROP_REUSE_EDITOR_ON_STACKTRACE, false);
     }
 
+    /**
+     * This experimental setting shouldn't have been exposed to the SPI. The
+     * method remains here for binary compatibility, but it won't have any
+     * effect.
+     *
+     * @param b
+     * @deprecated since version 2.7
+     */
+    @Deprecated
     public void setOpenLazy(boolean b) {
-        getPreferences().putBoolean(PROP_LAZY_OPEN_GROUPS, b);
     }
 
+    /**
+     * This experimental setting shouldn't have been exposed to the SPI. The
+     * method remains here for binary compatibility, returning its former
+     * default value.
+     *
+     * @return <code>true</code>
+     * @deprecated since version 2.7
+     */
+    @Deprecated
     public boolean isOpenLazy() {
-        return getPreferences().getBoolean(PROP_LAZY_OPEN_GROUPS, false);
+        return true;
     }
 
+    /**
+     * This experimental setting shouldn't have been exposed to the SPI. The
+     * method remains here for binary compatibility, but it won't have any
+     * effect.
+     *
+     * @param b
+     * @deprecated since version 2.7
+     */
+    @Deprecated
     public void setCacheDisabled(boolean b) {
-        getPreferences().putBoolean(PROP_DISABLE_CACHE, b);
     }
 
+    /**
+     * This experimental setting shouldn't have been exposed to the SPI. The
+     * method remains here for binary compatibility, returning its former
+     * default value.
+     *
+     * @return <code>false</code>
+     * @deprecated since version 2.7
+     */
+    @Deprecated
     public boolean isCacheDisabled() {
-        return getPreferences().getBoolean(PROP_DISABLE_CACHE, false);
+        return false;
     }
 
     public void setPreferMaven(boolean b) {

@@ -33,6 +33,7 @@ public interface ParameterElement {
     boolean isReference();
     boolean isVariadic();
     boolean isUnionType();
+    int getModifier();
     Set<TypeResolver> getTypes();
     @CheckForNull
     String getDefaultValue();
@@ -58,6 +59,16 @@ public interface ParameterElement {
         /**
          * Represents: <code>$foo</code>.
          */
-        SIMPLE_NAME
-    }
+        SIMPLE_NAME,
+
+        /**
+         * Represents: <code>public array &$foo = VERY_SUPER_LONG_DEFAULT_VALUE</code>.
+         */
+        COMPLETE_DECLARATION_WITH_MODIFIER,
+
+        /**
+         * Represents: <code>private array &$foo = ...</code>.
+         */
+        SHORTEN_DECLARATION_WITH_MODIFIER,
+   }
 }

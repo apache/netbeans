@@ -486,7 +486,7 @@
   <p>
       By default this module also opens all projects that were opened before
       shutting down. This behavior can however be disabled in application using
-      this module: <api name="LOAD_PROJECTS_ON_START" group="branding" type="export" category="stable">
+      this module: <api name="org.netbeans.modules.project.ui.LOAD_PROJECTS_ON_START" group="branding" type="export" category="stable">
         To disable loading of previously opened projects on startup
           set <code>LOAD_PROJECTS_ON_START=false</code> in
           <code>org/netbeans/modules/project/ui/Bundle.properties</code>

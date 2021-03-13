@@ -36,6 +36,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
+import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
@@ -55,6 +56,7 @@ import org.openide.util.NbBundle;
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
 public class InitializeFieldSuggestion extends SuggestionRule {
+
     private static final String SUGGESTION_ID = "Initialize.Field.Suggestion"; //NOI18N
 
     @Override
@@ -86,6 +88,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
     }
 
     private final class ConstructorVisitor extends DefaultVisitor {
+
         private final FileObject fileObject;
         private final BaseDocument baseDocument;
         private final ArrayList<Hint> hints;
@@ -103,7 +106,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
         }
 
         public List<Hint> getHints() {
-            return hints;
+            return Collections.unmodifiableList(hints);
         }
 
         @Override
@@ -168,6 +171,10 @@ public class InitializeFieldSuggestion extends SuggestionRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
+            // [NETBEANS-4443] PHP 8.0 Constructor Property Promotion
+            if (CodeUtils.isConstructor(node)) {
+                processConstructorPropertyPromotion(node);
+            }
             FunctionDeclaration function = node.getFunction();
             if (CodeUtils.isConstructor(node) && function.getBody() != null) {
                 formalParameters = new ArrayList<>(function.getFormalParameters());
@@ -176,6 +183,26 @@ public class InitializeFieldSuggestion extends SuggestionRule {
                 scan(function.getBody());
                 isInConstructor = false;
                 createHints();
+            }
+        }
+
+        private void processConstructorPropertyPromotion(MethodDeclaration node) {
+            for (FormalParameter formalParameter : node.getFunction().getFormalParameters()) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                // scan paramters as fields
+                FieldsDeclaration fieldsDeclaration = FieldsDeclaration.create(formalParameter);
+                if (fieldsDeclaration != null) {
+                    // e.g.
+                    // private int $param,
+                    // private string $param = "default value"
+                    String paramName = CodeUtils.extractFormalParameterName(formalParameter);
+                    if (paramName != null) {
+                        usedVariables.add(paramName);
+                    }
+                    scan(fieldsDeclaration);
+                }
             }
         }
 
@@ -221,6 +248,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
     }
 
     private final class ParameterToInit {
+
         private final FormalParameter formalParameter;
         private final List<Initializer> initializers;
 
@@ -263,6 +291,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
     }
 
     private abstract static class InitializerImpl implements Initializer {
+
         private final int offset;
 
         public InitializerImpl(int offset) {
@@ -279,6 +308,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
     }
 
     private static class FieldDeclarationInitializer extends InitializerImpl {
+
         private final String initString;
 
         public FieldDeclarationInitializer(int offset, FormalParameter node, PhpVersion phpVersion) {
@@ -323,6 +353,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
     }
 
     private static class FieldAssignmentInitializer extends InitializerImpl {
+
         private final String initString;
 
         public FieldAssignmentInitializer(int offset, String parameterName) {
@@ -338,6 +369,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
     }
 
     private static final class Fix implements HintFix {
+
         private final ParameterToInit parameterToInit;
         private final BaseDocument baseDocument;
 

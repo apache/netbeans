@@ -42,6 +42,7 @@
             <file name="2.xsd" url="freeform-project-java-2.xsd"/>
             <file name="3.xsd" url="freeform-project-java-3.xsd"/>
             <file name="4.xsd" url="freeform-project-java-4.xsd"/>
+            <file name="5.xsd" url="freeform-project-java-5.xsd"/>
         </folder>
     </folder>
 </filesystem>

@@ -29,6 +29,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.swing.text.Position;
+import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -129,7 +130,7 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
                     for (Project project : projects) {
                         MicronautConfigProperties configProperties = project.getLookup().lookup(MicronautConfigProperties.class);
                         if (configProperties != null) {
-                            SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups("Resources");
+                            SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES);
                             for (SourceGroup sourceGroup : sourceGroups) {
                                 FileObject rootFolder = sourceGroup.getRootFolder();
                                 FileObject fo = rootFolder.getFileObject("application.yml");

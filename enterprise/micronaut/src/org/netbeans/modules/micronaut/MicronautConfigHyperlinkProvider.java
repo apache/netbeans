@@ -26,6 +26,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import javax.lang.model.element.ElementKind;
@@ -44,6 +45,7 @@ import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.lib.editor.hyperlink.spi.HyperlinkLocation;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.modules.csl.api.StructureItem;
@@ -96,32 +98,11 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
             ConfigurationMetadataProperty property = resolve(doc, offset, null, sources);
             if (property != null && !sources.isEmpty()) {
                 ClasspathInfo cpInfo = ClasspathInfo.create(doc);
-                if (cpInfo != null) {
-                    ElementHandle[] handle = new ElementHandle[1];
-                    try {
-                        JavaSource.create(cpInfo).runUserActionTask(controller -> {
-                            if (cancel.get()) {
-                                return;
-                            }
-                            handle[0] = ElementHandle.createTypeElementHandle(ElementKind.CLASS, sources.get(0).getType());
-                            TypeElement te = (TypeElement) handle[0].resolve(controller);
-                            if (te != null) {
-                                String name = "set" + property.getName().replaceAll("-", "");
-                                for (ExecutableElement executableElement : ElementFilter.methodsIn(te.getEnclosedElements())) {
-                                    if (name.equalsIgnoreCase(executableElement.getSimpleName().toString())) {
-                                        handle[0] = ElementHandle.create(executableElement);
-                                        break;
-                                    }
-                                }
-                            }
-                        }, true);
-                    } catch (IOException ex) {}
-                    if (handle[0] != null && ElementOpen.open(cpInfo, handle[0])) {
-                        return;
-                    }
+                ElementHandle handle = getElementHandle(cpInfo, sources.get(0).getType(), property.getName(), cancel);
+                if (handle == null || !ElementOpen.open(cpInfo, handle)) {
+                    Toolkit.getDefaultToolkit().beep();
                 }
             }
-            Toolkit.getDefaultToolkit().beep();
         }, Bundle.LBL_GoToDeclaration(), cancel, false);
     }
 
@@ -138,6 +119,22 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
             return sb.toString();
         }
         return null;
+    }
+
+    @Override
+    public CompletableFuture<HyperlinkLocation> getHyperlinkLocation(Document doc, int offset, HyperlinkType type) {
+        final AtomicBoolean cancel = new AtomicBoolean();
+        List<ConfigurationMetadataSource> sources = new ArrayList<>();
+        ConfigurationMetadataProperty property = resolve(doc, offset, null, sources);
+        if (property != null && !sources.isEmpty()) {
+            ClasspathInfo cpInfo = ClasspathInfo.create(doc);
+            String typeName = sources.get(0).getType();
+            ElementHandle handle = getElementHandle(cpInfo, typeName, property.getName(), cancel);
+            if (handle != null) {
+                return ElementOpen.getLocation(cpInfo, handle, typeName.replace('.', '/') + ".class");
+            }
+        }
+        return CompletableFuture.completedFuture(null);
     }
 
     static ConfigurationMetadataProperty resolve(Document doc, int offset, int[] span, List<ConfigurationMetadataSource> sources) {
@@ -236,5 +233,30 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
             sb.append(item.getName());
         }
         return sb.toString();
+    }
+
+    private ElementHandle getElementHandle(ClasspathInfo cpInfo, String typeName, String propertyName, AtomicBoolean cancel) {
+        ElementHandle[] handle = new ElementHandle[1];
+        if (cpInfo != null) {
+            try {
+                JavaSource.create(cpInfo).runUserActionTask(controller -> {
+                    if (cancel != null && cancel.get()) {
+                        return;
+                    }
+                    handle[0] = ElementHandle.createTypeElementHandle(ElementKind.CLASS, typeName);
+                    TypeElement te = (TypeElement) handle[0].resolve(controller);
+                    if (te != null) {
+                        String name = "set" + propertyName.replaceAll("-", "");
+                        for (ExecutableElement executableElement : ElementFilter.methodsIn(te.getEnclosedElements())) {
+                            if (name.equalsIgnoreCase(executableElement.getSimpleName().toString())) {
+                                handle[0] = ElementHandle.create(executableElement);
+                                break;
+                            }
+                        }
+                    }
+                }, true);
+            } catch (IOException ex) {}
+        }
+        return handle[0];
     }
 }

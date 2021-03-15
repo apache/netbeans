@@ -41,6 +41,10 @@ public class TestMethodController {
         private final Position start;
         private final Position end;
 
+        public TestMethod(SingleMethod method, Position start, Position end) {
+            this("", method, start, end);
+        }
+
         public TestMethod(String testClassName, SingleMethod method, Position start, Position end) {
             this.testClassName = testClassName;
             this.method = method;

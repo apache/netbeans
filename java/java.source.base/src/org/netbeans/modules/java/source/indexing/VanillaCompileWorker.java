@@ -530,7 +530,7 @@ final class VanillaCompileWorker extends CompileWorker {
         TreeMaker make = TreeMaker.instance(ctx);
         //TODO: should preserve error types!!!
         new TreePathScanner<Void, Void>() {
-            private Set<JCNewClass> anonymousClasses = Collections.newSetFromMap(new IdentityHashMap<>());
+            private Set<JCNewClass> anonymousClasses = Collections.newSetFromMap(new LinkedHashMap<>());
             private ClassSymbol currentClass = null;
             private TreeMap<Long, List<Diagnostic<? extends JavaFileObject>>> diags;
 
@@ -673,7 +673,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 boolean prevErrorFound = errorFound;
                 errorFound = false;
                 try {
-                    anonymousClasses = Collections.newSetFromMap(new IdentityHashMap<>());
+                    anonymousClasses = Collections.newSetFromMap(new LinkedHashMap<>());
                 JCClassDecl clazz = (JCTree.JCClassDecl) node;
                 Symbol.ClassSymbol csym = clazz.sym;
                 if (isErroneousClass(csym)) {

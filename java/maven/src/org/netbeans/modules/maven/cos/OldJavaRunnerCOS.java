@@ -61,6 +61,7 @@ import org.netbeans.modules.maven.classpath.RuntimeClassPathImpl;
 import org.netbeans.modules.maven.classpath.TestRuntimeClassPathImpl;
 import org.netbeans.modules.maven.customizer.RunJarPanel;
 import org.netbeans.modules.maven.execute.DefaultReplaceTokenProvider;
+import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.modules.maven.spi.cos.CompileOnSaveSkipper;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ActionProvider;
@@ -387,7 +388,7 @@ public class OldJavaRunnerCOS {
         }
         String exargs = config.getProperties().get("exec.args");
         if (exargs != null) {
-            String[] args = RunJarPanel.splitAll(exargs);
+            String[] args = MavenExecuteUtils.splitAll(exargs, true);
             if (params.get(JavaRunner.PROP_EXECUTE_FILE) == null) {
                 params.put(JavaRunner.PROP_CLASSNAME, args[1]);
             }

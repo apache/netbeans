@@ -494,6 +494,10 @@ public class CompilationInfo {
             public JavacTask getJavacTask(CompilationInfo info) {
                 return info.impl.getJavacTask();
             }
+            @Override
+            public CompilationInfoImpl getCompilationInfoImpl(CompilationInfo info) {
+                return info.impl;
+            }
         });
     }
 }

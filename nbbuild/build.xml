@@ -21,10 +21,10 @@
 -->
 <project name="nbbuild" default="build-nozip" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
 
-  <fail message="Please build using Ant 1.9.3 or higher.">
+  <fail message="Please build using Ant 1.9.8 or higher.">
     <condition>
       <not>
-        <antversion atleast="1.9.3"/>
+        <antversion atleast="1.9.8"/>
       </not>
     </condition>
   </fail>
@@ -587,7 +587,6 @@ Hg ID:    ${hg.id}
       <mkdir dir="${netbeans.dest.dir}"/>
       <ant dir="." target="build" inheritAll="false">
           <property name="cluster.config" value="basic"/>
-          <property name="permit.jdk9.builds" value="true"/>
       </ant>
   </target>
 
@@ -597,7 +596,6 @@ Hg ID:    ${hg.id}
           <property name="cluster.config" value="basic"/>
           <property name="test.type" value="test-unit"/>
           <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
-          <property name="permit.jdk9.builds" value="true"/>
           <property name="vanilla.javac.exists" value="true"/>
       </ant>
   </target>
@@ -612,7 +610,6 @@ Hg ID:    ${hg.id}
       <mkdir dir="${netbeans.dest.dir}"/>
       <ant dir="." target="-build-platform" inheritAll="false">
           <property name="cluster.config" value="platform"/>
-          <property name="permit.jdk9.builds" value="true"/>
           <property name="vanilla.javac.exists" value="true"/>
       </ant>
   </target>
@@ -623,7 +620,6 @@ Hg ID:    ${hg.id}
           <property name="cluster.config" value="platform"/>
           <property name="test.type" value="test-unit"/>
           <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
-          <property name="permit.jdk9.builds" value="true"/>
           <property name="vanilla.javac.exists" value="true"/>
       </ant>
   </target>

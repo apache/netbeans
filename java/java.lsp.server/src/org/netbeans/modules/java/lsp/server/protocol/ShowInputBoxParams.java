@@ -65,7 +65,7 @@ public class ShowInputBoxParams {
      * The text to display underneath the input box.
      */
     public void setPrompt(@NonNull final String prompt) {
-        this.prompt = prompt;
+        this.prompt = Preconditions.checkNotNull(prompt, "prompt");
     }
 
     /**
@@ -81,7 +81,7 @@ public class ShowInputBoxParams {
      * The value to prefill in the input box.
      */
     public void setValue(@NonNull final String value) {
-        this.value = value;
+        this.value = Preconditions.checkNotNull(value, "value");
     }
 
     @Override

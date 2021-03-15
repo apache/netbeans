@@ -26,8 +26,10 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.prefs.Preferences;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -53,6 +55,11 @@ public class ProjectTrust {
     private final Key key;
     final Preferences projectTrust;
     final byte[] salt;
+    
+    /**
+     * Projects that are trusted just "transiently", for a single IDE session.
+     */
+    private final Set<String> temporaryTrustedIds = new HashSet<>();
 
     ProjectTrust(Preferences prefs) {
         byte[] buf = prefs.getByteArray(KEY_SALT, null);
@@ -65,7 +72,7 @@ public class ProjectTrust {
         projectTrust = prefs.node(NODE_PROJECT);
         key = new SecretKeySpec(salt, HMAC_SHA256);
     }
-
+    
     /**
      * Returns true if the specified project is trusted.
      *
@@ -73,6 +80,23 @@ public class ProjectTrust {
      * @return true if the given project is trusted.
      */
     public boolean isTrusted(Project project) {
+        synchronized (this) {
+            if (temporaryTrustedIds.contains(getPathId(project))) {
+                return true;
+            }
+        }
+        return isTrustedPermanetly(project);
+    }
+
+    /**
+     * Returns true if the specified project is trusted <b>permanently</b>.
+     * You should be probably using {@link #isTrusted} to avoid duplicate questions
+     * during one IDE run.
+     *
+     * @param project of the trust check.
+     * @return true if the given project is trusted.
+     */
+    public boolean isTrustedPermanetly(Project project) {
         String pathId = getPathId(project);
         String projectId = projectTrust.get(pathId, null);
         if (projectId == null) {
@@ -88,14 +112,19 @@ public class ProjectTrust {
         }
         return ret;        
     }
-
+    
     /**
-     * Marks the given project trusted, if it was not trusted before.
+     * Marks the given project trusted, if it was not trusted before. If {@code permanently}
+     * is true, the decision will be recorded for further IDE runs.
+     * 
      * @param project the project to trust.
      */
-    public void trustProject(Project project) {
-        if (!isTrusted(project)) {
-            String pathId = getPathId(project);
+    public void trustProject(Project project, boolean permanently) {
+        String pathId = getPathId(project);
+        synchronized (this) {
+            temporaryTrustedIds.add(pathId);
+        }
+        if (permanently && !isTrustedPermanetly(project)) {
             Path trustFile = getProjectTrustFile(project);
             byte[] rnd = new byte[16];
             new Random().nextBytes(rnd);
@@ -109,12 +138,27 @@ public class ProjectTrust {
     }
 
     /**
-     * Marks the given project not trusted.
+     * Marks the given project trusted, if it was not trusted before. The decision
+     * will be recorded persistently.
+     * 
+     * @param project the project to trust.
+     */
+    public void trustProject(Project project) {
+        trustProject(project, true);
+    }
+
+    /**
+     * Marks the given project not trusted. The decision will be deleted also
+     * from the persistent storage and from the temporarily trusted projects.
+     * 
      * @param project the project to remove trust from.
      */
     public void distrustProject(Project project) {
         String pathId = getPathId(project);
         projectTrust.remove(pathId);
+        synchronized (this) {
+            temporaryTrustedIds.remove(pathId);
+        }
         Path trustFile = getProjectTrustFile(project);
         if (trustFile != null) {
             try {

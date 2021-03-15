@@ -150,6 +150,13 @@ public interface ActionProvider {
     String COMMAND_RENAME = "rename"; // NOI18N
     
     /**
+     * Standard command for priming / initializing
+     * the project.
+     * @since 1.80
+     */
+    String COMMAND_PRIME = "prime"; // NOI18N
+    
+    /**
      * Get a list of all commands which this project supports.
      * @return a list of command names suitable for {@link #invokeAction}
      * @see #COMMAND_BUILD

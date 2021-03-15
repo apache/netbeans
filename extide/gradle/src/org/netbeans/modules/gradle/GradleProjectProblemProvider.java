@@ -102,6 +102,7 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
 
         @Override
         public Result call() throws Exception {
+            ProjectTrust.getDefault().trustProject(project);
             NbGradleProjectImpl impl = project.getLookup().lookup(NbGradleProjectImpl.class);
             GradleProject gradleProject = GradleProjectCache.loadProject(impl, FULL_ONLINE, true, true);
             impl.fireProjectReload(false);

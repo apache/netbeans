@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.65
+#Version 2.67
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -351,6 +351,7 @@ meth public abstract java.lang.String getName()
 meth public abstract java.net.URI getSourceURI()
 meth public abstract org.netbeans.spi.debugger.ui.DebuggingView$DVThread getThread()
 meth public abstract void makeCurrent()
+meth public java.lang.String getSourceMimeType()
 
 CLSS public abstract static org.netbeans.spi.debugger.ui.DebuggingView$DVSupport
  outer org.netbeans.spi.debugger.ui.DebuggingView

@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.netbeans.api.project.Project;
-import org.openide.filesystems.FileUtil;
+import org.netbeans.modules.gradle.GradleModuleFileCache21;
 
 /**
  * This object holds the basic information of the Gradle project.
@@ -255,11 +255,8 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     }
 
     @Override
-    public Set<GradleDependency.ModuleDependency> findModules(String gav) {
-        String parts[] = GradleDependency.gavSplit(gav);
-        if (parts.length != 3) {
-            throw new IllegalArgumentException("Invalid gav filter: "  + gav);
-        }
+    public Set<GradleDependency.ModuleDependency> findModules(String gav) throws IllegalArgumentException {
+        String parts[] = GradleModuleFileCache21.gavSplit(gav);
         String groupId = parts[0].isEmpty() ? null : parts[0];
         String artifactId = parts[1].isEmpty() ? null : parts[1];
         String ver = parts[2].isEmpty() ? null : parts[2];

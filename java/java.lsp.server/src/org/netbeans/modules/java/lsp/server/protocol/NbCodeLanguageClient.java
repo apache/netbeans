@@ -63,6 +63,15 @@ public interface NbCodeLanguageClient extends LanguageClient {
     public CompletableFuture<String> showInputBox(@NonNull ShowInputBoxParams params);
 
     /**
+     * Notifies client of running tests progress. Provides information about a test suite being loaded,
+     * started, completed or skipped during a test run.
+     *
+     * @param params test run information
+     */
+    @JsonNotification("window/notifyTestProgress")
+    public void notifyTestProgress(@NonNull TestProgressParams params);
+
+    /**
      * Returns extended code capabilities.
      * @return code capabilities.
      */

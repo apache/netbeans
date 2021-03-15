@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.64
+#Version 1.65
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1526,6 +1526,7 @@ meth public abstract java.lang.String getName()
 meth public abstract java.net.URI getSourceURI()
 meth public abstract org.netbeans.spi.debugger.ui.DebuggingView$DVThread getThread()
 meth public abstract void makeCurrent()
+meth public java.lang.String getSourceMimeType()
 
 CLSS public abstract static org.netbeans.spi.debugger.ui.DebuggingView$DVSupport
  outer org.netbeans.spi.debugger.ui.DebuggingView

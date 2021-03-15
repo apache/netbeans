@@ -21,7 +21,10 @@ package org.netbeans.modules.cpplite.debugger.breakpoints;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerManager;
@@ -41,13 +44,16 @@ import org.openide.util.WeakListeners;
  *
  * @author  Honza
  */
-public class CPPLiteBreakpoint extends Breakpoint {
+public final class CPPLiteBreakpoint extends Breakpoint {
 
-    private boolean enabled = true;
-    private Line    line;
+    public static final String PROP_CONDITION = "condition";                    // NOI18N
 
+    private volatile boolean enabled = true;
+    private final Map<CPPLiteDebugger, String> ids = new HashMap<>();
+    private final Line line;
+    private volatile String condition;
 
-    /*test?*/public CPPLiteBreakpoint (Line line) {
+    public CPPLiteBreakpoint (Line line) {
         this.line = line;
     }
 
@@ -64,7 +70,7 @@ public class CPPLiteBreakpoint extends Breakpoint {
     public boolean isEnabled () {
         return enabled;
     }
-    
+
     /**
      * Disables the breakpoint.
      */
@@ -74,7 +80,7 @@ public class CPPLiteBreakpoint extends Breakpoint {
         enabled = false;
         firePropertyChange (PROP_ENABLED, Boolean.TRUE, Boolean.FALSE);
     }
-    
+
     /**
      * Enables the breakpoint.
      */
@@ -85,18 +91,44 @@ public class CPPLiteBreakpoint extends Breakpoint {
         firePropertyChange (PROP_ENABLED, Boolean.FALSE, Boolean.TRUE);
     }
 
-    @Override
-    public GroupProperties getGroupProperties() {
-        return new AntGroupProperties();
+    /**
+     * Get the breakpoint condition, or <code>null</code>.
+     */
+    public String getCondition() {
+        return condition;
     }
 
-    private final class AntGroupProperties extends GroupProperties {
+    /**
+     * Set the breakpoint condition.
+     */
+    public void setCondition(String condition) {
+        String oldCondition;
+        synchronized (this) {
+            oldCondition = this.condition;
+            if (Objects.equals(oldCondition, condition)) {
+                return ;
+            }
+            this.condition = condition;
+        }
+        firePropertyChange (PROP_CONDITION, oldCondition, condition);
+    }
 
-        private AntEngineListener engineListener;
+    public void setCPPValidity(VALIDITY validity, String reason) {
+        setValidity(validity, reason);
+    }
+
+    @Override
+    public GroupProperties getGroupProperties() {
+        return new CPPGroupProperties();
+    }
+
+    private final class CPPGroupProperties extends GroupProperties {
+
+        private CPPEngineListener engineListener;
 
         @Override
         public String getLanguage() {
-            return "ANT";
+            return "C/C++";
         }
 
         @Override
@@ -140,7 +172,7 @@ public class CPPLiteBreakpoint extends Breakpoint {
         @Override
         public DebuggerEngine[] getEngines() {
             if (engineListener == null) {
-                engineListener = new AntEngineListener();
+                engineListener = new CPPEngineListener();
                 DebuggerManager.getDebuggerManager().addDebuggerListener(
                         WeakListeners.create(DebuggerManagerListener.class,
                                              engineListener,
@@ -151,7 +183,7 @@ public class CPPLiteBreakpoint extends Breakpoint {
                 return null;
             }
             if (engines.length == 1) {
-                if (isAntEngine(engines[0])) {
+                if (isCPPEngine(engines[0])) {
                     return engines;
                 } else {
                     return null;
@@ -160,9 +192,9 @@ public class CPPLiteBreakpoint extends Breakpoint {
             // Several running sessions
             List<DebuggerEngine> antEngines = null;
             for (DebuggerEngine e : engines) {
-                if (isAntEngine(e)) {
+                if (isCPPEngine(e)) {
                     if (antEngines == null) {
-                        antEngines = new ArrayList<DebuggerEngine>();
+                        antEngines = new ArrayList<>();
                     }
                     antEngines.add(e);
                 }
@@ -170,11 +202,11 @@ public class CPPLiteBreakpoint extends Breakpoint {
             if (antEngines == null) {
                 return null;
             } else {
-                return antEngines.toArray(new DebuggerEngine[]{});
+                return antEngines.toArray(new DebuggerEngine[antEngines.size()]);
             }
         }
 
-        private boolean isAntEngine(DebuggerEngine e) {
+        private boolean isCPPEngine(DebuggerEngine e) {
             return e.lookupFirst(null, CPPLiteDebugger.class) != null;
         }
 
@@ -183,19 +215,19 @@ public class CPPLiteBreakpoint extends Breakpoint {
             return false;
         }
 
-        private final class AntEngineListener extends DebuggerManagerAdapter {
+        private final class CPPEngineListener extends DebuggerManagerAdapter {
 
             @Override
             public void engineAdded(DebuggerEngine engine) {
-                if (isAntEngine(engine)) {
-                    firePropertyChange(PROP_GROUP_PROPERTIES, null, AntGroupProperties.this);
+                if (isCPPEngine(engine)) {
+                    firePropertyChange(PROP_GROUP_PROPERTIES, null, CPPGroupProperties.this);
                 }
             }
 
             @Override
             public void engineRemoved(DebuggerEngine engine) {
-                if (isAntEngine(engine)) {
-                    firePropertyChange(PROP_GROUP_PROPERTIES, null, AntGroupProperties.this);
+                if (isCPPEngine(engine)) {
+                    firePropertyChange(PROP_GROUP_PROPERTIES, null, CPPGroupProperties.this);
                 }
             }
 

@@ -242,6 +242,7 @@ public final class Server {
                 new AbstractLookup(sessionServices),
                 Lookup.getDefault()
         );
+        private final CompletableFuture<Project[]> workspaceProjects = new CompletableFuture<>();
         
         /**
          * Projects that are being opened and primed right now.
@@ -494,7 +495,11 @@ public final class Server {
                     )
             );
         }
-        
+
+        public CompletableFuture<Project[]> getWorkspaceProjects() {
+            return workspaceProjects;
+        }
+
         public InitializeResult finishInitialization(InitializeResult res) {
             OperationContext c = OperationContext.find(sessionLookup);
             // discard the progress token as it is going to be invalid anyway. Further pending
@@ -522,6 +527,11 @@ public final class Server {
             return workspaceService;
         }
 
+        @Override
+        public void cancelProgress(WorkDoneProgressCancelParams params) {
+            // handled in the interceptor, after the complete RPC call completes.
+        }
+        
         @Override
         public void connect(LanguageClient aClient) {
             this.client = new NbCodeClientWrapper((NbCodeLanguageClient)aClient);

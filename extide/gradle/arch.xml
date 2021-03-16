@@ -138,6 +138,11 @@
          Use <code>never</code> value, if the reuse shall never be done,
          regardless of the settings value.
      </api>
+     <api category="devel" group="branding" name="org.netbeans.modules.gradle.api.execute.TrustProjectOption" type="export">
+         Brand the <code>org.netbeans.modules.gradle.api.execute.TrustProjectOption.*</code> keys in <code>org.netbeans.modules.gradle.api.execution</code>
+         to enable/disable/reorder options in 'trust project' confirmation dialog.
+         For more details, see <a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html#isProjectTrusted-org.netbeans.api.project.Project-boolean-">RunUtils.isProjectTrusted</a>.
+     </api>
      <api category="devel" group="systemproperty" name="netbeans.debug.gradle.info.action" type="export" >
          Starting NetBeans with <code>netbeans.debug.gradle.info.action=true</code>
          would make the Gradle project information loading into a debugabble JVM

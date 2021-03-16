@@ -121,7 +121,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             case Server.JAVA_BUILD_WORKSPACE: {
                 final CommandProgress progressOfCompilation = new CommandProgress();
                 final Lookup ctx = Lookups.singleton(progressOfCompilation);
-                for (Project prj : OpenProjects.getDefault().getOpenProjects()) {
+                for (Project prj : server.openedProjects().getNow(OpenProjects.getDefault().getOpenProjects())) {
                     ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
                     if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_BUILD, Lookup.EMPTY)) {
                         ap.invokeAction(ActionProvider.COMMAND_REBUILD, ctx);

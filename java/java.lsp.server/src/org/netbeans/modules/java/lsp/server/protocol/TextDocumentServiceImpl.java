@@ -33,9 +33,12 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,6 +59,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
@@ -133,8 +138,10 @@ import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.TextDocumentService;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.CompilationController;
@@ -236,10 +243,19 @@ import org.openide.util.lookup.ServiceProvider;
  * @author lahvac
  */
 public class TextDocumentServiceImpl implements TextDocumentService, LanguageClientAware {
-
+    private static final Logger LOG = Logger.getLogger(TextDocumentServiceImpl.class.getName());
+    
     private static final RequestProcessor BACKGROUND_TASKS = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
     private static final RequestProcessor WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
 
+    /**
+     * File URIs touched / queried by the client.
+     */
+    private Map<String, Instant> knownFiles = new HashMap<>();
+    
+    /**
+     * Documents actually opened by the client.
+     */
     private final Map<String, Document> openedDocuments = new HashMap<>();
     private final Map<String, RequestProcessor.Task> diagnosticTasks = new HashMap<>();
     private final LspServerState server;
@@ -288,7 +304,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         try {
             String uri = params.getTextDocument().getUri();
-            FileObject file = Utils.fromUri(uri);
+            FileObject file = fromURI(uri);
+            if (file == null) {
+                return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
+            }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             final int caret = Utils.getOffset(doc, params.getPosition());
@@ -753,7 +772,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         CompletionData data = new Gson().fromJson(rawData, CompletionData.class);
         try {
-            FileObject file = Utils.fromUri(data.uri);
+            FileObject file = fromURI(data.uri);
+            if (file == null) {
+                return CompletableFuture.completedFuture(ci);
+            }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             final ElementHandle<Element> handle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(data.kind), data.elementHandle);
@@ -829,7 +851,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         try {
             String uri = params.getTextDocument().getUri();
-            FileObject file = Utils.fromUri(uri);
+            FileObject file = fromURI(uri);
+            if (file == null) {
+                return CompletableFuture.completedFuture(null);
+            }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             final JavaDocumentationTask<Future<String>> task = JavaDocumentationTask.create(Utils.getOffset(doc, params.getPosition()), null, new JavaDocumentationTask.DocumentationFactory<Future<String>>() {
@@ -917,64 +942,65 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         String uri = params.getTextDocument().getUri();
         JavaSource js = getJavaSource(uri);
+        if (js == null) {
+            return CompletableFuture.completedFuture(Either.forLeft(new ArrayList<>()));
+        }
         List<GoToTarget> targets = new ArrayList<>();
         LineMap[] thisFileLineMap = new LineMap[1];
         try {
-            if (js != null) {
-                js.runUserActionTask(cc -> {
-                    cc.toPhase(JavaSource.Phase.RESOLVED);
-                    Document doc = cc.getSnapshot().getSource().getDocument(true);
-                    int offset = Utils.getOffset(doc, params.getPosition());
-                    Element el = null;
-                    Context context = GoToSupport.resolveContext(cc, doc, offset, false, false);
-                    if (context == null) {
-                        TreePath tp = cc.getTreeUtilities().pathFor(offset);
-                        if (tp.getLeaf().getKind() == Kind.MODIFIERS) tp = tp.getParentPath();
-                        int[] elementNameSpan = null;
-                        switch (tp.getLeaf().getKind()) {
-                            case ANNOTATION_TYPE:
-                            case CLASS:
-                            case ENUM:
-                            case INTERFACE:
-                                elementNameSpan = cc.getTreeUtilities().findNameSpan((ClassTree) tp.getLeaf());
-                                break;
-                            case METHOD:
-                                elementNameSpan = cc.getTreeUtilities().findNameSpan((MethodTree) tp.getLeaf());
-                                break;
-                        }
-                        if (elementNameSpan != null && offset <= elementNameSpan[1]) {
-                            el = cc.getTrees().getElement(tp);
-                        }
-                    } else if (EnumSet.of(ElementKind.METHOD, ElementKind.ANNOTATION_TYPE, ElementKind.CLASS, ElementKind.ENUM, ElementKind.INTERFACE).contains(context.resolved.getKind())) {
-                        el = context.resolved;
+            js.runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+                Document doc = cc.getSnapshot().getSource().getDocument(true);
+                int offset = Utils.getOffset(doc, params.getPosition());
+                Element el = null;
+                Context context = GoToSupport.resolveContext(cc, doc, offset, false, false);
+                if (context == null) {
+                    TreePath tp = cc.getTreeUtilities().pathFor(offset);
+                    if (tp.getLeaf().getKind() == Kind.MODIFIERS) tp = tp.getParentPath();
+                    int[] elementNameSpan = null;
+                    switch (tp.getLeaf().getKind()) {
+                        case ANNOTATION_TYPE:
+                        case CLASS:
+                        case ENUM:
+                        case INTERFACE:
+                            elementNameSpan = cc.getTreeUtilities().findNameSpan((ClassTree) tp.getLeaf());
+                            break;
+                        case METHOD:
+                            elementNameSpan = cc.getTreeUtilities().findNameSpan((MethodTree) tp.getLeaf());
+                            break;
                     }
-                    if (el != null) {
-                        TypeElement type = el.getKind() == ElementKind.METHOD ? (TypeElement) el.getEnclosingElement() : (TypeElement) el;
-                        ExecutableElement method = el.getKind() == ElementKind.METHOD ? (ExecutableElement) el : null;
-                        Map<ElementHandle<? extends Element>, List<ElementDescription>> overriding = new ComputeOverriders(new AtomicBoolean()).process(cc, type, method, true);
-                        List<ElementDescription> overridingMethods = overriding != null ? overriding.get(ElementHandle.create(el)) : null;
-                        if (overridingMethods != null) {
-                            for (ElementDescription ed : overridingMethods) {
-                                Element elm = ed.getHandle().resolve(cc);
-                                TreePath tp = cc.getTrees().getPath(elm);
-                                long startPos = tp != null && cc.getCompilationUnit() == tp.getCompilationUnit() ? cc.getTrees().getSourcePositions().getStartPosition(cc.getCompilationUnit(), tp.getLeaf()) : -1;
-                                if (startPos >= 0) {
-                                    long endPos = cc.getTrees().getSourcePositions().getEndPosition(cc.getCompilationUnit(), tp.getLeaf());
-                                    targets.add(new GoToTarget(cc.getSnapshot().getOriginalOffset((int) startPos),
-                                            cc.getSnapshot().getOriginalOffset((int) endPos), GoToSupport.getNameSpan(tp.getLeaf(), cc.getTreeUtilities()),
-                                            null, null, null, ed.getDisplayName(), true));
-                                } else {
-                                    TypeElement te = elm != null ? cc.getElementUtilities().outermostTypeElement(elm) : null;
-                                    targets.add(new GoToTarget(-1, -1, null, cc.getClasspathInfo(),ed.getHandle(),
-                                            te != null ? te.getQualifiedName().toString().replace('.', '/') + ".class" : null,
-                                            ed.getDisplayName(), true));
-                                }
+                    if (elementNameSpan != null && offset <= elementNameSpan[1]) {
+                        el = cc.getTrees().getElement(tp);
+                    }
+                } else if (EnumSet.of(ElementKind.METHOD, ElementKind.ANNOTATION_TYPE, ElementKind.CLASS, ElementKind.ENUM, ElementKind.INTERFACE).contains(context.resolved.getKind())) {
+                    el = context.resolved;
+                }
+                if (el != null) {
+                    TypeElement type = el.getKind() == ElementKind.METHOD ? (TypeElement) el.getEnclosingElement() : (TypeElement) el;
+                    ExecutableElement method = el.getKind() == ElementKind.METHOD ? (ExecutableElement) el : null;
+                    Map<ElementHandle<? extends Element>, List<ElementDescription>> overriding = new ComputeOverriders(new AtomicBoolean()).process(cc, type, method, true);
+                    List<ElementDescription> overridingMethods = overriding != null ? overriding.get(ElementHandle.create(el)) : null;
+                    if (overridingMethods != null) {
+                        for (ElementDescription ed : overridingMethods) {
+                            Element elm = ed.getHandle().resolve(cc);
+                            TreePath tp = cc.getTrees().getPath(elm);
+                            long startPos = tp != null && cc.getCompilationUnit() == tp.getCompilationUnit() ? cc.getTrees().getSourcePositions().getStartPosition(cc.getCompilationUnit(), tp.getLeaf()) : -1;
+                            if (startPos >= 0) {
+                                long endPos = cc.getTrees().getSourcePositions().getEndPosition(cc.getCompilationUnit(), tp.getLeaf());
+                                targets.add(new GoToTarget(cc.getSnapshot().getOriginalOffset((int) startPos),
+                                        cc.getSnapshot().getOriginalOffset((int) endPos), GoToSupport.getNameSpan(tp.getLeaf(), cc.getTreeUtilities()),
+                                        null, null, null, ed.getDisplayName(), true));
+                            } else {
+                                TypeElement te = elm != null ? cc.getElementUtilities().outermostTypeElement(elm) : null;
+                                targets.add(new GoToTarget(-1, -1, null, cc.getClasspathInfo(),ed.getHandle(),
+                                        te != null ? te.getQualifiedName().toString().replace('.', '/') + ".class" : null,
+                                        ed.getDisplayName(), true));
                             }
                         }
                     }
-                    thisFileLineMap[0] = cc.getCompilationUnit().getLineMap();
-                }, true);
-            }
+                }
+                thisFileLineMap[0] = cc.getCompilationUnit().getLineMap();
+            }, true);
         } catch (IOException ex) {
             //TODO: include stack trace:
             client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
@@ -1013,49 +1039,51 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         };
         WORKER.post(() -> {
             JavaSource js = getJavaSource(params.getTextDocument().getUri());
+            if (js == null) {
+                result.complete(new ArrayList<>());
+                return;
+            }
             try {
                 WhereUsedQuery[] query = new WhereUsedQuery[1];
                 List<Location> locations = new ArrayList<>();
-                if (js != null) {
-                    js.runUserActionTask(cc -> {
-                        cc.toPhase(JavaSource.Phase.RESOLVED);
-                        if (cancel.get()) return ;
-                        Document doc = cc.getSnapshot().getSource().getDocument(true);
-                        TreePath path = cc.getTreeUtilities().pathFor(Utils.getOffset(doc, params.getPosition()));
-                        if (params.getContext().isIncludeDeclaration()) {
-                            Element decl = cc.getTrees().getElement(path);
-                            if (decl != null) {
-                                TreePath declPath = cc.getTrees().getPath(decl);
-                                if (declPath != null && cc.getCompilationUnit() == declPath.getCompilationUnit()) {
-                                    Range range = declarationRange(cc, declPath);
-                                    if (range != null) {
-                                        locations.add(new Location(Utils.toUri(cc.getFileObject()),
-                                                                   range));
-                                    }
-                                } else {
-                                    ElementHandle<Element> declHandle = ElementHandle.create(decl);
-                                    FileObject sourceFile = SourceUtils.getFile(declHandle, cc.getClasspathInfo());
-                                    JavaSource source = sourceFile != null ? JavaSource.forFileObject(sourceFile) : null;
-                                    if (source != null) {
-                                        source.runUserActionTask(nestedCC -> {
-                                            nestedCC.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                                            Element declHandle2 = declHandle.resolve(nestedCC);
-                                            TreePath declPath2 = declHandle2 != null ? nestedCC.getTrees().getPath(declHandle2) : null;
-                                            if (declPath2 != null) {
-                                                Range range = declarationRange(nestedCC, declPath2);
-                                                if (range != null) {
-                                                    locations.add(new Location(Utils.toUri(nestedCC.getFileObject()),
-                                                                               range));
-                                                }
+                js.runUserActionTask(cc -> {
+                    cc.toPhase(JavaSource.Phase.RESOLVED);
+                    if (cancel.get()) return ;
+                    Document doc = cc.getSnapshot().getSource().getDocument(true);
+                    TreePath path = cc.getTreeUtilities().pathFor(Utils.getOffset(doc, params.getPosition()));
+                    if (params.getContext().isIncludeDeclaration()) {
+                        Element decl = cc.getTrees().getElement(path);
+                        if (decl != null) {
+                            TreePath declPath = cc.getTrees().getPath(decl);
+                            if (declPath != null && cc.getCompilationUnit() == declPath.getCompilationUnit()) {
+                                Range range = declarationRange(cc, declPath);
+                                if (range != null) {
+                                    locations.add(new Location(Utils.toUri(cc.getFileObject()),
+                                                               range));
+                                }
+                            } else {
+                                ElementHandle<Element> declHandle = ElementHandle.create(decl);
+                                FileObject sourceFile = SourceUtils.getFile(declHandle, cc.getClasspathInfo());
+                                JavaSource source = sourceFile != null ? JavaSource.forFileObject(sourceFile) : null;
+                                if (source != null) {
+                                    source.runUserActionTask(nestedCC -> {
+                                        nestedCC.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                                        Element declHandle2 = declHandle.resolve(nestedCC);
+                                        TreePath declPath2 = declHandle2 != null ? nestedCC.getTrees().getPath(declHandle2) : null;
+                                        if (declPath2 != null) {
+                                            Range range = declarationRange(nestedCC, declPath2);
+                                            if (range != null) {
+                                                locations.add(new Location(Utils.toUri(nestedCC.getFileObject()),
+                                                                           range));
                                             }
-                                        }, true);
-                                    }
+                                        }
+                                    }, true);
                                 }
                             }
                         }
-                        query[0] = new WhereUsedQuery(Lookups.singleton(TreePathHandle.create(path, cc)));
-                    }, true);
-                }
+                    }
+                    query[0] = new WhereUsedQuery(Lookups.singleton(TreePathHandle.create(path, cc)));
+                }, true);
                 if (cancel.get()) return ;
                 List<FileObject> sourceRoots = new ArrayList<>();
                 for (Project project : projects) {
@@ -1148,21 +1176,22 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
         JavaSource js = getJavaSource(params.getTextDocument().getUri());
         List<DocumentHighlight> result = new ArrayList<>();
+        if (js == null) {
+            return CompletableFuture.completedFuture(result);
+        }
         try {
-            if (js != null) {
-                js.runUserActionTask(cc -> {
-                    cc.toPhase(JavaSource.Phase.RESOLVED);
-                    Document doc = cc.getSnapshot().getSource().getDocument(true);
-                    int offset = Utils.getOffset(doc, params.getPosition());
-                    List<int[]> spans = new MOHighligther().processImpl(cc, node, doc, offset);
-                    if (spans != null) {
-                        for (int[] span : spans) {
-                            result.add(new DocumentHighlight(new Range(Utils.createPosition(cc.getCompilationUnit(), span[0]),
-                                                                       Utils.createPosition(cc.getCompilationUnit(), span[1]))));
-                        }
+            js.runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+                Document doc = cc.getSnapshot().getSource().getDocument(true);
+                int offset = Utils.getOffset(doc, params.getPosition());
+                List<int[]> spans = new MOHighligther().processImpl(cc, node, doc, offset);
+                if (spans != null) {
+                    for (int[] span : spans) {
+                        result.add(new DocumentHighlight(new Range(Utils.createPosition(cc.getCompilationUnit(), span[0]),
+                                                                   Utils.createPosition(cc.getCompilationUnit(), span[1]))));
                     }
-                }, true);
-            }
+                }
+            }, true);
         } catch (IOException ex) {
             //TODO: include stack trace:
             client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
@@ -1178,17 +1207,18 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         JavaSource js = getJavaSource(params.getTextDocument().getUri());
         List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
+        if (js == null) {
+            return CompletableFuture.completedFuture(result);
+        }
         try {
-            if (js != null) {
-                js.runUserActionTask(cc -> {
-                    cc.toPhase(JavaSource.Phase.RESOLVED);
-                    for (Element tel : cc.getTopLevelElements()) {
-                        DocumentSymbol ds = element2DocumentSymbol(cc, tel);
-                        if (ds != null)
-                            result.add(Either.forRight(ds));
-                    }
-                }, true);
-            }
+            js.runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+                for (Element tel : cc.getTopLevelElements()) {
+                    DocumentSymbol ds = element2DocumentSymbol(cc, tel);
+                    if (ds != null)
+                        result.add(Either.forRight(ds));
+                }
+            }, true);
         } catch (IOException ex) {
             //TODO: include stack trace:
             client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
@@ -1230,8 +1260,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
         Document doc = openedDocuments.get(params.getTextDocument().getUri());
+        if (doc == null) {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
         JavaSource js = JavaSource.forDocument(doc);
-        if (doc == null || js == null) {
+        if (js == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
         Map<String, ErrorDescription> id2Errors = (Map<String, ErrorDescription>) doc.getProperty("lsp-errors");
@@ -1621,33 +1654,35 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         };
         WORKER.post(() -> {
             JavaSource js = getJavaSource(params.getTextDocument().getUri());
+            if (js == null) {
+                result.completeExceptionally(new FileNotFoundException(params.getTextDocument().getUri()));
+                return;
+            }
             try {
                 RenameRefactoring[] refactoring = new RenameRefactoring[1];
-                if (js != null) {
-                    js.runUserActionTask(cc -> {
-                        cc.toPhase(JavaSource.Phase.RESOLVED);
-                        if (cancel.get()) return ;
-                        Document doc = cc.getSnapshot().getSource().getDocument(true);
-                        TreePath path = cc.getTreeUtilities().pathFor(Utils.getOffset(doc, params.getPosition()));
-                        List<Object> lookupContent = new ArrayList<>();
+                js.runUserActionTask(cc -> {
+                    cc.toPhase(JavaSource.Phase.RESOLVED);
+                    if (cancel.get()) return ;
+                    Document doc = cc.getSnapshot().getSource().getDocument(true);
+                    TreePath path = cc.getTreeUtilities().pathFor(Utils.getOffset(doc, params.getPosition()));
+                    List<Object> lookupContent = new ArrayList<>();
 
-                        lookupContent.add(TreePathHandle.create(path, cc));
+                    lookupContent.add(TreePathHandle.create(path, cc));
 
-                        //from RenameRefactoringUI:
-                        Element selected = cc.getTrees().getElement(path);
-                        if (selected instanceof TypeElement && !((TypeElement) selected).getNestingKind().isNested()) {
-                            ElementHandle<TypeElement> handle = ElementHandle.create((TypeElement) selected);
-                            FileObject f = SourceUtils.getFile(handle, cc.getClasspathInfo());
-                            if (f != null && selected.getSimpleName().toString().equals(f.getName())) {
-                                lookupContent.add(f);
-                            }
+                    //from RenameRefactoringUI:
+                    Element selected = cc.getTrees().getElement(path);
+                    if (selected instanceof TypeElement && !((TypeElement) selected).getNestingKind().isNested()) {
+                        ElementHandle<TypeElement> handle = ElementHandle.create((TypeElement) selected);
+                        FileObject f = SourceUtils.getFile(handle, cc.getClasspathInfo());
+                        if (f != null && selected.getSimpleName().toString().equals(f.getName())) {
+                            lookupContent.add(f);
                         }
+                    }
 
-                        refactoring[0] = new RenameRefactoring(Lookups.fixed(lookupContent.toArray(new Object[0])));
-                        refactoring[0].setNewName(params.getNewName());
-                        refactoring[0].setSearchInComments(true); //TODO?
-                    }, true);
-                }
+                    refactoring[0] = new RenameRefactoring(Lookups.fixed(lookupContent.toArray(new Object[0])));
+                    refactoring[0].setNewName(params.getNewName());
+                    refactoring[0].setSearchInComments(true); //TODO?
+                }, true);
                 if (cancel.get()) return ;
                 cancelCallback[0] = () -> refactoring[0].cancelRequest();
                 RefactoringSession session = RefactoringSession.create("Rename");
@@ -1781,7 +1816,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public void didOpen(DidOpenTextDocumentParams params) {
         try {
-            FileObject file = Utils.fromUri(params.getTextDocument().getUri());
+            FileObject file = fromURI(params.getTextDocument().getUri(), true);
+            if (file == null) {
+                return;
+            }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.getDocument();
             // the document may be not opened yet. Clash with in-memory content can happen only if
@@ -1812,18 +1850,20 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public void didChange(DidChangeTextDocumentParams params) {
         Document doc = openedDocuments.get(params.getTextDocument().getUri());
-        NbDocument.runAtomic((StyledDocument) doc, () -> {
-            for (TextDocumentContentChangeEvent change : params.getContentChanges()) {
-                try {
-                    int start = Utils.getOffset(doc, change.getRange().getStart());
-                    int end   = Utils.getOffset(doc, change.getRange().getEnd());
-                    doc.remove(start, end - start);
-                    doc.insertString(start, change.getText(), null);
-                } catch (BadLocationException ex) {
-                    throw new IllegalStateException(ex);
+        if (doc != null) {
+            NbDocument.runAtomic((StyledDocument) doc, () -> {
+                for (TextDocumentContentChangeEvent change : params.getContentChanges()) {
+                    try {
+                        int start = Utils.getOffset(doc, change.getRange().getStart());
+                        int end   = Utils.getOffset(doc, change.getRange().getEnd());
+                        doc.remove(start, end - start);
+                        doc.insertString(start, change.getText(), null);
+                    } catch (BadLocationException ex) {
+                        throw new IllegalStateException(ex);
+                    }
                 }
-            }
-        });
+            });
+        }
         runDiagnoticTasks(params.getTextDocument().getUri());
         reportNotificationDone("didChange", params);
     }
@@ -1831,12 +1871,15 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public void didClose(DidCloseTextDocumentParams params) {
         try {
-            FileObject file = Utils.fromUri(params.getTextDocument().getUri());
+            // the order here is important ! As the file may cease to exist, it's
+            // important that the doucment is already gone form the client.
+            openedDocuments.remove(params.getTextDocument().getUri());
+            FileObject file = fromURI(params.getTextDocument().getUri(), true);
+            if (file == null) {
+                return;
+            }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             ec.close();
-            openedDocuments.remove(params.getTextDocument().getUri());
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
         } finally {
             reportNotificationDone("didClose", params);
         }
@@ -1949,7 +1992,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     private void computeDiags(String uri, ProduceErrors produceErrors, String keyPrefix, boolean update) {
         try {
-            FileObject file = Utils.fromUri(uri);
+            FileObject file = fromURI(uri);
+            if (file == null) {
+                // the file does not exist.
+                return;
+            }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
@@ -1997,7 +2044,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
                         doc.putProperty("lsp-errors", mergedId2Errors);
                         doc.putProperty("lsp-errors-diags", mergedDiags);
-                        client.publishDiagnostics(new PublishDiagnosticsParams(uri, mergedDiags));
+                        publishDiagnostics(uri, mergedDiags);
                     }
                 }
             });
@@ -2005,36 +2052,102 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             throw new IllegalStateException(ex);
         }
     }
-
+    
+    private FileObject fromURI(String uri) {
+        return fromURI(uri, false);
+    }
+    
+    /**
+     * Converts URI to a FileObject. Can try harder using refresh on the filesystem, useful
+     * for didOpen or didClose notification which may have been fired because the client changed files on the dist.
+     * @param uri the uri
+     * @param tryHard if true, will refresh the filesystems first.
+     * @return FileObject or null if missing.
+     */
+    private FileObject fromURI(String uri, boolean tryHard) {
+        try {
+            FileObject file = Utils.fromUri(uri);
+            if (tryHard) {
+                if (file != null ) {
+                    file.refresh(true);
+                } else {
+                    URI parentU = URI.create(uri).resolve("..").normalize();
+                    FileObject parentF = Utils.fromUri(parentU.toString());
+                    if (parentF != null) {
+                        parentF.refresh(true);
+                        file = Utils.fromUri(uri);
+                    }
+                }
+            }
+            if (file != null && file.isValid()) {
+                return file;
+            }
+            missingFileDiscovered(uri);
+        } catch (MalformedURLException ex) {
+            LOG.log(Level.WARNING, "Invalid file URL: " + uri, ex);
+        }
+        return null;
+    }
+    
+    /**
+     * Handles file disappearance. The method should be called whenever a file that ought to exist 
+     * is not found on the disk. The method should fire any necessary updates to the client to synchronize the
+     * state, i.e. remove obsolete diagnostics for the file.
+     * @param uri file URI
+     */
+    private void missingFileDiscovered(String uri) {
+        if (openedDocuments.get(uri) != null) {
+            // do not report anything, the document is still opened in the editor
+            return;
+        }
+        Instant last = knownFiles.remove(uri);
+        if (last == null) {
+            return;
+        }
+        client.publishDiagnostics(new PublishDiagnosticsParams(uri, new ArrayList<>()));
+    }
+    
+    /**
+     * Publishes diagnostics to the client. Remembers the file, so that if the file vanishes (i.e. event is received, or
+     * it's reported as missing during some processing), the client will get an empty diagnostics message for this file to
+     * clear out its problem view.
+     * @param uri file URI
+     * @param mergedDiags the diagnostics
+     */
+    private void publishDiagnostics(String uri, List<Diagnostic> mergedDiags) {
+        knownFiles.put(uri, Instant.now());
+        client.publishDiagnostics(new PublishDiagnosticsParams(uri, mergedDiags));
+    }
+    
     private static final String[] ERROR_KEYS = {"errors", "hints"};
 
     private interface ProduceErrors {
         public List<ErrorDescription> computeErrors(CompilationInfo info, Document doc) throws IOException;
     }
 
+    @CheckForNull
     public JavaSource getJavaSource(String fileUri) {
         Document doc = openedDocuments.get(fileUri);
-        try {
-            if (doc == null) {
-                FileObject file = Utils.fromUri(fileUri);
-                return JavaSource.forFileObject(file);
-            } else {
-                return JavaSource.forDocument(doc);
+        if (doc == null) {
+            FileObject file = fromURI(fileUri);
+            if (file == null) {
+                return null;
             }
-        } catch (Exception ex) {
-            return null;
+            return JavaSource.forFileObject(file);
+        } else {
+            return JavaSource.forDocument(doc);
         }
     }
 
+    @CheckForNull
     public Source getSource(String fileUri) {
         Document doc = openedDocuments.get(fileUri);
         if (doc == null) {
-            try {
-                FileObject file = Utils.fromUri(fileUri);
-                return Source.create(file);
-            } catch (MalformedURLException ex) {
+            FileObject file = fromURI(fileUri);
+            if (file == null) {
                 return null;
             }
+            return Source.create(file);
         } else {
             return Source.create(doc);
         }

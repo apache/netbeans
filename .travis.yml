@@ -370,6 +370,7 @@ matrix:
             - ant $OPTS -f java/hudson.maven test
             - ant $OPTS -f java/java.completion test
             - hide-logs.sh ant $OPTS -f java/java.hints.declarative test
+            - hide-logs.sh ant $OPTS -f java/java.freeform test
             #- ant $OPTS -f java/java.kit test
             #- ant $OPTS -f java/java.lexer test
             #- ant $OPTS -f java/java.lexer test

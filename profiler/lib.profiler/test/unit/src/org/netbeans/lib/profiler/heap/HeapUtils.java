@@ -328,7 +328,6 @@ final class HeapUtils {
                         .dumpClass();
             }
             generator.generate(seg);
-            seg.close();
         }
 
         @Override
@@ -435,5 +434,5 @@ final class HeapUtils {
             return stringId;
         }
     }
-    
+
 }

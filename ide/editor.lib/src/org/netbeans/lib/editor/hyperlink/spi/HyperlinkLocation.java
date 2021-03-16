@@ -23,8 +23,10 @@ import java.util.Objects;
 import org.openide.filesystems.FileObject;
 
 /**
+ * Represents hyperlink target location.
  *
  * @author Dusan Balek
+ * @since 4.20
  */
 public final class HyperlinkLocation {
 
@@ -36,10 +38,20 @@ public final class HyperlinkLocation {
         this.range = range;
     }
 
+    /**
+     * Get target file object.
+     *
+     * @return file object
+     */
     public FileObject getFileObject() {
         return fileObject;
     }
 
+    /**
+     * Returns target's range within its file object.
+     *
+     * @return span of the target
+     */
     public int[] getRange() {
         return range;
     }

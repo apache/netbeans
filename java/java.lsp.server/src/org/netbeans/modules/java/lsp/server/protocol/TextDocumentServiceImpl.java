@@ -80,6 +80,7 @@ import org.eclipse.lsp4j.CodeLensParams;
 import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
+import org.eclipse.lsp4j.CompletionItemTag;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
 import org.eclipse.lsp4j.CompletionTriggerKind;
@@ -211,6 +212,8 @@ import org.netbeans.modules.refactoring.plugins.FileRenamePlugin;
 import org.netbeans.modules.refactoring.spi.RefactoringCommit;
 import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.Transaction;
+import org.netbeans.spi.editor.completion.CompletionProvider;
+import org.netbeans.spi.editor.completion.ItemFactory;
 import org.netbeans.spi.editor.hints.EnhancedFix;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
@@ -289,35 +292,66 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             final int caret = Utils.getOffset(doc, params.getPosition());
-            ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
-                @Override
-                public void run(ResultIterator resultIterator) throws Exception {
-                    TokenSequence<JavaTokenId> ts = resultIterator.getSnapshot().getTokenHierarchy().tokenSequence(JavaTokenId.language());
-                    if (ts.move(caret) == 0 || !ts.moveNext()) {
-                        if (!ts.movePrevious()) {
-                            ts.moveNext();
-                        }
-                    }
-                    int len = caret - ts.offset();
-                    boolean allCompletion = params.getContext() != null && params.getContext().getTriggerKind() == CompletionTriggerKind.TriggerForIncompleteCompletions
-                            || len > 0 && ts.token().length() >= len && ts.token().id() == JavaTokenId.IDENTIFIER;
-                    CompilationController controller = CompilationController.get(resultIterator.getParserResult(ts.offset()));
-                    controller.toPhase(JavaSource.Phase.RESOLVED);
-                    JavaCompletionTask<CompletionItem> task = JavaCompletionTask.create(caret, new ItemFactoryImpl(client, controller, uri, ts.offset()), allCompletion ? EnumSet.of(Options.ALL_COMPLETION) : EnumSet.noneOf(Options.class), () -> false);
-                    task.run(resultIterator);
-                    List<CompletionItem> results = task.getResults();
-                    if (results != null) {
-                        for (Iterator<CompletionItem> it = results.iterator(); it.hasNext();) {
-                            CompletionItem item = it.next();
-                            if (item == null) {
-                                it.remove();
+            String mimeType = file.getMIMEType();
+            if ("text/x-java".equals(mimeType)) {
+                ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
+                    @Override
+                    public void run(ResultIterator resultIterator) throws Exception {
+                        TokenSequence<JavaTokenId> ts = resultIterator.getSnapshot().getTokenHierarchy().tokenSequence(JavaTokenId.language());
+                        if (ts.move(caret) == 0 || !ts.moveNext()) {
+                            if (!ts.movePrevious()) {
+                                ts.moveNext();
                             }
                         }
-                        completionList.setItems(results);
+                        int len = caret - ts.offset();
+                        boolean allCompletion = params.getContext() != null && params.getContext().getTriggerKind() == CompletionTriggerKind.TriggerForIncompleteCompletions
+                                || len > 0 && ts.token().length() >= len && ts.token().id() == JavaTokenId.IDENTIFIER;
+                        CompilationController controller = CompilationController.get(resultIterator.getParserResult(ts.offset()));
+                        controller.toPhase(JavaSource.Phase.RESOLVED);
+                        JavaCompletionTask<CompletionItem> task = JavaCompletionTask.create(caret, new ItemFactoryImpl(client, controller, uri, ts.offset()), allCompletion ? EnumSet.of(Options.ALL_COMPLETION) : EnumSet.noneOf(Options.class), () -> false);
+                        task.run(resultIterator);
+                        List<CompletionItem> results = task.getResults();
+                        if (results != null) {
+                            for (Iterator<CompletionItem> it = results.iterator(); it.hasNext();) {
+                                CompletionItem item = it.next();
+                                if (item == null) {
+                                    it.remove();
+                                }
+                            }
+                            completionList.setItems(results);
+                        }
+                        completionList.setIsIncomplete(task.hasAdditionalClasses());
                     }
-                    completionList.setIsIncomplete(task.hasAdditionalClasses());
+                });
+            } else {
+                MimePath mimePath = MimePath.parse(mimeType);
+                for (CompletionProvider provider : MimeLookup.getLookup(mimePath).lookupAll(CompletionProvider.class)) {
+                    completionList.setItems(provider.getCompletionItems(doc, caret, new ItemFactory<CompletionItem>() {
+                        @Override
+                        public CompletionItem create(String label, int kind, int[] tags, String sortText, String insertText, int insertTextFormat, String documentation) {
+                            CompletionItem item = new CompletionItem(label);
+                            item.setKind(CompletionItemKind.forValue(kind));
+                            if (tags != null) {
+                                List<CompletionItemTag> completionItemTags = new ArrayList<>(tags.length);
+                                for (int tag : tags) {
+                                    completionItemTags.add(CompletionItemTag.forValue(tag));
+                                }
+                                item.setTags(completionItemTags);
+                            }
+                            item.setSortText(sortText);
+                            item.setInsertText(insertText);
+                            item.setInsertTextFormat(InsertTextFormat.forValue(insertTextFormat));
+                            if (documentation != null) {
+                                MarkupContent markup = new MarkupContent();
+                                markup.setKind("markdown");
+                                markup.setValue(html2MD(documentation));
+                                item.setDocumentation(markup);
+                            }
+                            return item;
+                        }
+                    }));
                 }
-            });
+            }
             return CompletableFuture.completedFuture(Either.<List<CompletionItem>, CompletionList>forRight(completionList));
         } catch (IOException | ParseException ex) {
             throw new IllegalStateException(ex);
@@ -344,7 +378,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         public String toString() {
             return "CompletionData{" + "uri=" + uri + ", kind=" + kind + ", elementHandle=" + elementHandle + '}';
         }
-        
     }
 
     @Override
@@ -1923,47 +1956,49 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 @Override
                 public void run(ResultIterator it) throws Exception {
                     CompilationController cc = CompilationController.get(it.getParserResult());
-                    cc.toPhase(JavaSource.Phase.RESOLVED);
-                    Map<String, ErrorDescription> id2Errors = new HashMap<>();
-                    List<Diagnostic> diags = new ArrayList<>();
-                    int idx = 0;
-                    List<ErrorDescription> errors = produceErrors.computeErrors(cc, doc);
-                    if (errors == null) {
-                        errors = Collections.emptyList();
-                    }
-                    for (ErrorDescription err : errors) {
-                        Diagnostic diag = new Diagnostic(new Range(Utils.createPosition(cc.getCompilationUnit(), err.getRange().getBegin().getOffset()),
-                                                                   Utils.createPosition(cc.getCompilationUnit(), err.getRange().getEnd().getOffset())),
-                                                         err.getDescription());
-                        switch (err.getSeverity()) {
-                            case ERROR: diag.setSeverity(DiagnosticSeverity.Error); break;
-                            case VERIFIER:
-                            case WARNING: diag.setSeverity(DiagnosticSeverity.Warning); break;
-                            case HINT: diag.setSeverity(DiagnosticSeverity.Hint); break;
-                            default: diag.setSeverity(DiagnosticSeverity.Information); break;
+                    if (cc != null) {
+                        cc.toPhase(JavaSource.Phase.RESOLVED);
+                        Map<String, ErrorDescription> id2Errors = new HashMap<>();
+                        List<Diagnostic> diags = new ArrayList<>();
+                        int idx = 0;
+                        List<ErrorDescription> errors = produceErrors.computeErrors(cc, doc);
+                        if (errors == null) {
+                            errors = Collections.emptyList();
                         }
-                        String id = keyPrefix + ":" + idx++ + "-" + err.getId();
-                        diag.setCode(id);
-                        id2Errors.put(id, err);
-                        diags.add(diag);
-                    }
-                    doc.putProperty("lsp-errors-" + keyPrefix, id2Errors);
-                    doc.putProperty("lsp-errors-diags-" + keyPrefix, diags);
-                    Map<String, ErrorDescription> mergedId2Errors = new HashMap<>();
-                    List<Diagnostic> mergedDiags = new ArrayList<>();
-                    for (String k : ERROR_KEYS) {
-                        Map<String, ErrorDescription> prevErrors = (Map<String, ErrorDescription>) doc.getProperty("lsp-errors-" + k);
-                        if (prevErrors != null) {
-                            mergedId2Errors.putAll(prevErrors);
+                        for (ErrorDescription err : errors) {
+                            Diagnostic diag = new Diagnostic(new Range(Utils.createPosition(cc.getCompilationUnit(), err.getRange().getBegin().getOffset()),
+                                                                       Utils.createPosition(cc.getCompilationUnit(), err.getRange().getEnd().getOffset())),
+                                                             err.getDescription());
+                            switch (err.getSeverity()) {
+                                case ERROR: diag.setSeverity(DiagnosticSeverity.Error); break;
+                                case VERIFIER:
+                                case WARNING: diag.setSeverity(DiagnosticSeverity.Warning); break;
+                                case HINT: diag.setSeverity(DiagnosticSeverity.Hint); break;
+                                default: diag.setSeverity(DiagnosticSeverity.Information); break;
+                            }
+                            String id = keyPrefix + ":" + idx++ + "-" + err.getId();
+                            diag.setCode(id);
+                            id2Errors.put(id, err);
+                            diags.add(diag);
                         }
-                        List<Diagnostic> prevDiags = (List<Diagnostic>) doc.getProperty("lsp-errors-diags-" + k);
-                        if (prevDiags != null) {
-                            mergedDiags.addAll(prevDiags);
+                        doc.putProperty("lsp-errors-" + keyPrefix, id2Errors);
+                        doc.putProperty("lsp-errors-diags-" + keyPrefix, diags);
+                        Map<String, ErrorDescription> mergedId2Errors = new HashMap<>();
+                        List<Diagnostic> mergedDiags = new ArrayList<>();
+                        for (String k : ERROR_KEYS) {
+                            Map<String, ErrorDescription> prevErrors = (Map<String, ErrorDescription>) doc.getProperty("lsp-errors-" + k);
+                            if (prevErrors != null) {
+                                mergedId2Errors.putAll(prevErrors);
+                            }
+                            List<Diagnostic> prevDiags = (List<Diagnostic>) doc.getProperty("lsp-errors-diags-" + k);
+                            if (prevDiags != null) {
+                                mergedDiags.addAll(prevDiags);
+                            }
                         }
+                        doc.putProperty("lsp-errors", mergedId2Errors);
+                        doc.putProperty("lsp-errors-diags", mergedDiags);
+                        client.publishDiagnostics(new PublishDiagnosticsParams(uri, mergedDiags));
                     }
-                    doc.putProperty("lsp-errors", mergedId2Errors);
-                    doc.putProperty("lsp-errors-diags", mergedDiags);
-                    client.publishDiagnostics(new PublishDiagnosticsParams(uri, mergedDiags));
                 }
             });
         } catch (IOException | ParseException ex) {

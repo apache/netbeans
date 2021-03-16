@@ -18,39 +18,22 @@
  */
 package org.netbeans.modules.micronaut;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.document.EditorDocumentUtils;
-import org.netbeans.api.editor.document.LineDocument;
-import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.csl.api.StructureItem;
-import org.netbeans.modules.csl.api.StructureScanner;
-import org.netbeans.modules.csl.core.Language;
-import org.netbeans.modules.csl.core.LanguageRegistry;
-import org.netbeans.modules.csl.spi.ParserResult;
-import org.netbeans.modules.editor.indent.api.IndentUtils;
-import org.netbeans.modules.parsing.api.ParserManager;
-import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.parsing.api.Source;
-import org.netbeans.modules.parsing.api.UserTask;
-import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.lib.editor.util.ArrayUtilities;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
 import org.netbeans.spi.editor.completion.CompletionTask;
+import org.netbeans.spi.editor.completion.ItemFactory;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.springframework.boot.configurationmetadata.ConfigurationMetadataProperty;
 
 /**
@@ -86,6 +69,63 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
         return 0;
     }
 
+    @Override
+    public <T> List<T> getCompletionItems(Document doc, int caretOffset, ItemFactory<T> factory) {
+        FileObject fo = EditorDocumentUtils.getFileObject(doc);
+        if (fo != null && "application.yml".equalsIgnoreCase(fo.getNameExt())) {
+            Project project = FileOwnerQuery.getOwner(fo);
+            if (project != null) {
+                MicronautConfigProperties configProperties = project.getLookup().lookup(MicronautConfigProperties.class);
+                if (configProperties != null) {
+                    return new MicronautConfigCompletionTask().query(doc, caretOffset, configProperties, new MicronautConfigCompletionTask.ItemFactory<T>() {
+                        @Override
+                        public T createTopLevelPropertyItem(String propName, int offset, int baseIndent, int indentLevelSize) {
+                            StringBuilder insertText = new StringBuilder();
+                            int insertTextFormat = 1;
+                            if ("*".equals(propName)) {
+                                insertText.append("$1:\n");
+                                ArrayUtilities.appendSpaces(insertText, baseIndent + indentLevelSize);
+                                insertTextFormat = 2;
+                            } else {
+                                insertText.append(propName).append(":\n");
+                                ArrayUtilities.appendSpaces(insertText, indentLevelSize);
+                            }
+                            return factory.create(propName, 10, null, String.format("%4d%s", 10, propName), insertText.toString(), insertTextFormat, null);
+                        }
+
+                        @Override
+                        public T createPropertyItem(ConfigurationMetadataProperty property, int offset, int baseIndent, int indentLevelSize, int idx) {
+                            String[] parts = property.getId().substring(idx).split("\\.");
+                            StringBuilder insertText = new StringBuilder();
+                            int num = 1;
+                            int indent = 0;
+                            int insertTextFormat = 1;
+                            for (int i = 0; i < parts.length; i++) {
+                                String part = parts[i];
+                                if ("*".equals(part)) {
+                                    insertText.append("$" + num++);
+                                    insertTextFormat = 2;
+                                } else {
+                                    insertText.append(part);
+                                }
+                                if (i < parts.length - 1) {
+                                    insertText.append(":\n");
+                                    ArrayUtilities.appendSpaces(insertText, (indent = indent + indentLevelSize));
+                                } else {
+                                    insertText.append(": ");
+                                }
+                            }
+                            return factory.create(property.getId(), 10, property.isDeprecated() ? new int[] {1} : null,
+                                    String.format("%4d%s", property.isDeprecated() ? 30 : 20, property.getId()),
+                                    insertText.toString(), insertTextFormat, new MicronautConfigDocumentation(property).getText());
+                        }
+                    });
+                }
+            }
+        }
+        return Collections.emptyList();
+    }
+
     static CompletionTask createDocTask(ConfigurationMetadataProperty element) {
         return new AsyncCompletionTask(new MicronautConfigDocumentationQuery(element));
     }
@@ -100,153 +140,20 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
 
         @Override
         protected void query(CompletionResultSet resultSet, Document doc, int caretOffset) {
-            LineDocument lineDocument = LineDocumentUtils.as(doc, LineDocument.class);
-            if (lineDocument != null) {
-                int lineStart = LineDocumentUtils.getLineStart(lineDocument, caretOffset);
-                try {
-                    String text = lineDocument.getText(lineStart, caretOffset - lineStart);
-                    if (!text.contains("#")) {
-                        int idx = text.indexOf(':');
-                        if (idx < 0) {
-                            final int lineIndent = Math.min(IndentUtils.lineIndent(lineDocument, lineStart), caretOffset - lineStart);
-                            final int wordStart = LineDocumentUtils.getPreviousWhitespace(lineDocument, caretOffset) + 1;
-                            final String prefix = wordStart < caretOffset ? text.substring(wordStart - lineStart) : null;
-                            final int anchorOffset = wordStart < caretOffset ? wordStart : caretOffset;
-                            resultSet.setAnchorOffset(anchorOffset);
-                            ParserManager.parse(Collections.singleton(Source.create(lineDocument)), new UserTask() {
-                                public @Override void run(ResultIterator resultIterator) throws Exception {
-                                    Parser.Result r = resultIterator.getParserResult();
-                                    if (r instanceof ParserResult) {
-                                        Language language = LanguageRegistry.getInstance().getLanguageByMimeType(resultIterator.getSnapshot().getMimeType());
-                                        if (language != null) {
-                                            StructureScanner scanner = language.getStructure();
-                                            if (scanner != null) {
-                                                List<? extends StructureItem> structures = scanner.scan((ParserResult) r);
-                                                int indentLevelSize = getIndentLevelSize(lineDocument, structures);
-                                                List<? extends StructureItem> context = getContext(structures, wordStart);
-                                                String filter = "";
-                                                StructureItem currentItem = null;
-                                                for (StructureItem item : context) {
-                                                    int itemLineStart = LineDocumentUtils.getLineStart(lineDocument, (int) item.getPosition());
-                                                    int itemLineIndent = IndentUtils.lineIndent(lineDocument, itemLineStart);
-                                                    if (itemLineIndent < lineIndent) {
-                                                        filter += item.getName() + '.';
-                                                        currentItem = item;
-                                                    }
-                                                }
-                                                int filterLength = filter.length();
-                                                if (prefix != null) {
-                                                    filter += prefix;
-                                                }
-                                                int currentItemLineIndent = currentItem != null ? IndentUtils.lineIndent(lineDocument, LineDocumentUtils.getLineStart(lineDocument, (int) currentItem.getPosition())) : -indentLevelSize;
-                                                Map<String, ConfigurationMetadataProperty> properties = configProperties.getProperties();
-                                                Set<String> topLevels = new HashSet<>();
-                                                for (Map.Entry<String, ConfigurationMetadataProperty> entry : properties.entrySet()) {
-                                                    String propName = entry.getKey();
-                                                    int idx = match(propName, filter);
-                                                    if (idx >= 0) {
-                                                        int dotIdx = propName.indexOf('.', idx);
-                                                        String simpleName = dotIdx < 0 ? propName.substring(idx) : propName.substring(idx, dotIdx);
-                                                        if (filter(currentItem != null ? currentItem.getNestedItems() : structures, simpleName)) {
-                                                            resultSet.addItem(MicronautConfigCompletionItem.createPropertyItem(entry.getValue(), anchorOffset, currentItemLineIndent + indentLevelSize, indentLevelSize, idx));
-                                                            if (dotIdx > 0) {
-                                                                topLevels.add(simpleName);
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                for (String topLevel : topLevels) {
-                                                    resultSet.addItem(MicronautConfigCompletionItem.createTopLevelPropertyItem(topLevel, anchorOffset, currentItemLineIndent + indentLevelSize, indentLevelSize));
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            });
-                        }
-                    }
-                } catch (Exception ex) {
-                    Exceptions.printStackTrace(ex);
+            resultSet.addAllItems(new MicronautConfigCompletionTask().query(doc, caretOffset, configProperties, new MicronautConfigCompletionTask.ItemFactory<MicronautConfigCompletionItem>() {
+                @Override
+                public MicronautConfigCompletionItem createPropertyItem(ConfigurationMetadataProperty property, int offset, int baseIndent, int indentLevelSize, int idx) {
+                    resultSet.setAnchorOffset(offset);
+                    return MicronautConfigCompletionItem.createPropertyItem(property, offset, baseIndent, indentLevelSize, idx);
                 }
-            }
+
+                @Override
+                public MicronautConfigCompletionItem createTopLevelPropertyItem(String propName, int offset, int baseIndent, int indentLevelSize) {
+                    resultSet.setAnchorOffset(offset);
+                    return MicronautConfigCompletionItem.createTopLevelPropertyItem(propName, offset, baseIndent, indentLevelSize);
+                }
+            }));
             resultSet.finish();
-        }
-
-        private int match(String propName, String filter) {
-            int len = 0;
-            String[] parts = propName.split("\\*");
-            for (int i = 0; i < parts.length; i++) {
-                String part = parts[i];
-                if (filter.length() <= part.length()) {
-                    if (part.startsWith(filter)) {
-                        int idx = filter.lastIndexOf('.');
-                        return idx < 0 ? len : len + idx + 1;
-                    } else {
-                        return -1;
-                    }
-                }
-                if (i < parts.length - 1) {
-                    if (!part.equals(filter.substring(0, part.length()))) {
-                        return -1;
-                    }
-                    len += part.length();
-                    int idx = filter.indexOf('.', part.length());
-                    if (idx < 0) {
-                        return -1;
-                    }
-                    len += 1;
-                    filter = filter.substring(idx);
-                } else {
-                    return filter.startsWith(part) ? len : -1;
-                }
-            }
-            return -1;
-        }
-
-        private boolean filter(List<? extends StructureItem> structures, String name) {
-            for (StructureItem item : structures) {
-                if (name.equals(item.getName())) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private List<StructureItem> getContext(List<? extends StructureItem> structure, int offset) {
-            List<StructureItem> items = new ArrayList<>();
-            while (structure != null && !structure.isEmpty()) {
-                StructureItem currentItem = null;
-                for (StructureItem item : structure) {
-                    if (item.getPosition() < offset) {
-                        currentItem = item;
-                    }
-                }
-                if (currentItem != null) {
-                    items.add(currentItem);
-                    structure = currentItem.getNestedItems();
-                } else {
-                    structure = null;
-                }
-            }
-            return items;
-        }
-
-        private int getIndentLevelSize(LineDocument lineDocument, List<? extends StructureItem> structures) {
-            int indentLevel = IndentUtils.indentLevelSize(lineDocument);
-            try {
-                for (StructureItem structure : structures) {
-                    int baseStart = LineDocumentUtils.getLineStart(lineDocument, (int) structure.getPosition());
-                    int baseIndent = IndentUtils.lineIndent(lineDocument, baseStart);
-                    for (StructureItem nestedItem : structure.getNestedItems()) {
-                        int lineStart = LineDocumentUtils.getLineStart(lineDocument, (int) nestedItem.getPosition());
-                        int lineIndent = IndentUtils.lineIndent(lineDocument, lineStart) - baseIndent;
-                        if (lineIndent > 0 && lineIndent < indentLevel) {
-                            indentLevel = lineIndent;
-                        }
-                    }
-                }
-            } catch (BadLocationException ble) {}
-            return indentLevel;
         }
     }
 

@@ -19,13 +19,10 @@
 
 package org.netbeans.lib.editor.hyperlink.spi;
 
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import javax.swing.text.Document;
 import org.netbeans.spi.editor.mimelookup.MimeLocation;
-import org.openide.filesystems.FileObject;
 
 /**
  * This interface should be implemented by anyone who whats to provide hyperlinking

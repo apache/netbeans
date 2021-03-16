@@ -92,7 +92,7 @@ public class ConvertToPatternInstanceOf {
                 String varName = Utilities.makeNameUnique(ctx.getInfo(), ctx.getInfo().getTrees().getScope(ctx.getPath()), varNameCandidates.get(0));
                 IfTree it = (IfTree) ctx.getPath().getLeaf();
                 BlockTree bt = (BlockTree) it.getThenStatement();
-                Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), varName, false, convertPath, (VariableTree) bt.getStatements().get(0)).toEditorFix();
+                Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), varName, false, convertPath, TreeShims.isJDKVersionSupportEnablePreview() ? null : (VariableTree) bt.getStatements().get(0)).toEditorFix();
 
                 return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertToPatternInstanceOf(), fix);
             }
@@ -110,7 +110,7 @@ public class ConvertToPatternInstanceOf {
         IfTree it = (IfTree) ctx.getPath().getLeaf();
         BlockTree bt = (BlockTree) it.getThenStatement();
         VariableTree var = (VariableTree) bt.getStatements().get(0);
-        Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), var.getName().toString(), true, Collections.emptySet(), var).toEditorFix();
+        Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), var.getName().toString(), true, Collections.emptySet(), TreeShims.isJDKVersionSupportEnablePreview() ? null : var).toEditorFix();
         
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertToPatternInstanceOf(), fix);
     }

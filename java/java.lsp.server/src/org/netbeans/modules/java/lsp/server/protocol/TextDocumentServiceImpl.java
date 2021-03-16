@@ -344,8 +344,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 });
             } else {
                 MimePath mimePath = MimePath.parse(mimeType);
+                List<CompletionItem> items = new ArrayList<>();
                 for (CompletionProvider provider : MimeLookup.getLookup(mimePath).lookupAll(CompletionProvider.class)) {
-                    completionList.setItems(provider.getCompletionItems(doc, caret, new ItemFactory<CompletionItem>() {
+                    items.addAll(provider.getCompletionItems(doc, caret, new ItemFactory<CompletionItem>() {
                         @Override
                         public CompletionItem create(String label, int kind, int[] tags, String sortText, String insertText, int insertTextFormat, String documentation) {
                             CompletionItem item = new CompletionItem(label);
@@ -370,6 +371,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
                     }));
                 }
+                completionList.setItems(items);
             }
             return CompletableFuture.completedFuture(Either.<List<CompletionItem>, CompletionList>forRight(completionList));
         } catch (IOException | ParseException ex) {

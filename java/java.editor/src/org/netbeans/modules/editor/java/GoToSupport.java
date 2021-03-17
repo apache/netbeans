@@ -198,7 +198,7 @@ public class GoToSupport {
                     }
                     int start = target[0].nameSpan != null ? target[0].nameSpan[0] : target[0].offsetToOpen;
                     int end = target[0].nameSpan != null ? target[0].nameSpan[1] : target[0].endPos;
-                    return CompletableFuture.completedFuture(new HyperlinkLocation(fo, new int[] {start, end}));
+                    return CompletableFuture.completedFuture(new HyperlinkLocation(fo, start, end));
                 }
             }
             return CompletableFuture.completedFuture(null);

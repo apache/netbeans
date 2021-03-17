@@ -141,7 +141,6 @@ import org.eclipse.lsp4j.services.TextDocumentService;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
-import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.CompilationController;
@@ -219,8 +218,7 @@ import org.netbeans.modules.refactoring.plugins.FileRenamePlugin;
 import org.netbeans.modules.refactoring.spi.RefactoringCommit;
 import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.Transaction;
-import org.netbeans.spi.editor.completion.CompletionProvider;
-import org.netbeans.spi.editor.completion.ItemFactory;
+import org.netbeans.spi.editor.completion.CompletionCollector;
 import org.netbeans.spi.editor.hints.EnhancedFix;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
@@ -345,31 +343,51 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             } else {
                 MimePath mimePath = MimePath.parse(mimeType);
                 List<CompletionItem> items = new ArrayList<>();
-                for (CompletionProvider provider : MimeLookup.getLookup(mimePath).lookupAll(CompletionProvider.class)) {
-                    items.addAll(provider.getCompletionItems(doc, caret, new ItemFactory<CompletionItem>() {
-                        @Override
-                        public CompletionItem create(String label, int kind, int[] tags, String sortText, String insertText, int insertTextFormat, String documentation) {
-                            CompletionItem item = new CompletionItem(label);
-                            item.setKind(CompletionItemKind.forValue(kind));
-                            if (tags != null) {
-                                List<CompletionItemTag> completionItemTags = new ArrayList<>(tags.length);
-                                for (int tag : tags) {
-                                    completionItemTags.add(CompletionItemTag.forValue(tag));
-                                }
-                                item.setTags(completionItemTags);
-                            }
-                            item.setSortText(sortText);
-                            item.setInsertText(insertText);
-                            item.setInsertTextFormat(InsertTextFormat.forValue(insertTextFormat));
-                            if (documentation != null) {
-                                MarkupContent markup = new MarkupContent();
-                                markup.setKind("markdown");
-                                markup.setValue(html2MD(documentation));
-                                item.setDocumentation(markup);
-                            }
-                            return item;
+                for (CompletionCollector collector : MimeLookup.getLookup(mimePath).lookupAll(CompletionCollector.class)) {
+                    boolean isComplete = collector.collectCompletions(doc, caret, completion -> {
+                        CompletionItem item = new CompletionItem(completion.getLabel());
+                        if (completion.getKind() != null) {
+                            item.setKind(CompletionItemKind.forValue(completion.getKind().getValue()));
                         }
-                    }));
+                        if (completion.getTags() != null) {
+                            item.setTags(completion.getTags().stream().map(tag -> CompletionItemTag.forValue(tag.getValue())).collect(Collectors.toList()));
+                        }
+                        item.setDetail(completion.getDetail());
+                        if (completion.getDocumentation() != null) {
+                            MarkupContent markup = new MarkupContent();
+                            markup.setKind("markdown");
+                            markup.setValue(html2MD(completion.getDocumentation()));
+                            item.setDocumentation(markup);
+                        }
+                        if (completion.isPreselect()) {
+                            item.setPreselect(true);
+                        }
+                        item.setSortText(completion.getSortText());
+                        item.setFilterText(completion.getFilterText());
+                        item.setInsertText(completion.getInsertText());
+                        if (completion.getInsertTextFormat() != null) {
+                            item.setInsertTextFormat(InsertTextFormat.forValue(completion.getInsertTextFormat().getValue()));
+                        }
+                        CompletionCollector.TextEdit edit = completion.getTextEdit();
+                        if (edit != null) {
+                            item.setTextEdit(new TextEdit(new Range(Utils.createPosition(file, edit.getStartOffset()), Utils.createPosition(file, edit.getEndOffset())), edit.getNewText()));
+                        }
+                        if (completion.getAdditionalTextEdits() != null) {
+                            item.setAdditionalTextEdits(completion.getAdditionalTextEdits().stream().map(ed -> {
+                                return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
+                            }).collect(Collectors.toList()));
+                        }
+                        item.setCommitCharacters(completion.getCommitCharacters());
+                        CompletionCollector.Command command = completion.getCommand();
+                        if (command != null) {
+                            item.setCommand(new Command(command.getTitle(), command.getCommand(), command.getArguments()));
+                        }
+                        item.setData(completion.getData());
+                        items.add(item);
+                    });
+                    if (!isComplete) {
+                        completionList.setIsIncomplete(true);
+                    }
                 }
                 completionList.setItems(items);
             }
@@ -922,8 +940,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             HyperlinkLocation location = future.getNow(null);
                             if (location != null) {
                                 FileObject fo = location.getFileObject();
-                                int[] range = location.getRange();
-                                locations.add(new Location(Utils.toUri(fo), new Range(Utils.createPosition(fo, range[0]), Utils.createPosition(fo, range[1]))));
+                                locations.add(new Location(Utils.toUri(fo), new Range(Utils.createPosition(fo, location.getStartOffset()), Utils.createPosition(fo, location.getEndOffset()))));
                             }
                         }
                         return Either.forLeft(locations);
@@ -1949,8 +1966,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 return future.thenApply(loc -> {
                     if (loc != null) {
                         FileObject fo = loc.getFileObject();
-                        int[] range = loc.getRange();
-                        return new Location(Utils.toUri(fo), new Range(Utils.createPosition(fo, range[0]), Utils.createPosition(fo, range[1])));
+                        return new Location(Utils.toUri(fo), new Range(Utils.createPosition(fo, loc.getStartOffset()), Utils.createPosition(fo, loc.getEndOffset())));
                     }
                     return null;
                 });

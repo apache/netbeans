@@ -19,9 +19,6 @@
 
 package org.netbeans.spi.editor.completion;
 
-import java.util.Collections;
-import java.util.List;
-import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.spi.editor.mimelookup.MimeLocation;
 
@@ -108,21 +105,4 @@ public interface CompletionProvider {
      *         values, or zero if no query should be automatically invoked.
      */
     public int getAutoQueryTypes(JTextComponent component, String typedText);
-
-    /**
-     * Computes completion items for a document at a given caret position. This method
-     * is called outside of AWT to collect completion items and e.g. send them via
-     * the Language Server Protocol to client for display.
-     *
-     * @param <T> a type of completion items
-     * @param doc a text document
-     * @param caretOffset a position inside the text document
-     * @param factory factory for completion items creation
-     * @return the list of completion items
-     *
-     * @since 1.57
-     */
-    public default <T> List<T> getCompletionItems(Document doc, int caretOffset, ItemFactory<T> factory) {
-        return Collections.emptyList();
-    }
 }

@@ -18,12 +18,12 @@
  */
 package org.netbeans.lib.editor.hyperlink.spi;
 
-import java.util.Arrays;
 import java.util.Objects;
 import org.openide.filesystems.FileObject;
 
 /**
- * Represents hyperlink target location.
+ * Represents the target location of a hyperlink. Location is a range inside
+ * a file object, such as a line inside a text file.
  *
  * @author Dusan Balek
  * @since 4.20
@@ -31,15 +31,17 @@ import org.openide.filesystems.FileObject;
 public final class HyperlinkLocation {
 
     private final FileObject fileObject;
-    private final int[] range;
+    private final int startOffset;
+    private final int endOffset;
 
-    public HyperlinkLocation(FileObject fileObject, int[] range) {
+    public HyperlinkLocation(FileObject fileObject, int startOffset, int endOffset) {
         this.fileObject = fileObject;
-        this.range = range;
+        this.startOffset = startOffset;
+        this.endOffset = endOffset;
     }
 
     /**
-     * Get target file object.
+     * Target file object of this hyperlink.
      *
      * @return file object
      */
@@ -48,19 +50,29 @@ public final class HyperlinkLocation {
     }
 
     /**
-     * Returns target's range within its file object.
+     * The start offset of a hyperlink's target range.
      *
-     * @return span of the target
+     * @return offset
      */
-    public int[] getRange() {
-        return range;
+    public int getStartOffset() {
+        return startOffset;
+    }
+
+    /**
+     * The end offset of a hyperlink's target range.
+     *
+     * @return offset
+     */
+    public int getEndOffset() {
+        return endOffset;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 43 * hash + Objects.hashCode(this.fileObject);
-        hash = 43 * hash + Arrays.hashCode(this.range);
+        int hash = 5;
+        hash = 29 * hash + Objects.hashCode(this.fileObject);
+        hash = 29 * hash + this.startOffset;
+        hash = 29 * hash + this.endOffset;
         return hash;
     }
 
@@ -76,10 +88,13 @@ public final class HyperlinkLocation {
             return false;
         }
         final HyperlinkLocation other = (HyperlinkLocation) obj;
-        if (!Objects.equals(this.fileObject, other.fileObject)) {
+        if (this.startOffset != other.startOffset) {
             return false;
         }
-        if (!Arrays.equals(this.range, other.range)) {
+        if (this.endOffset != other.endOffset) {
+            return false;
+        }
+        if (!Objects.equals(this.fileObject, other.fileObject)) {
             return false;
         }
         return true;
@@ -87,6 +102,6 @@ public final class HyperlinkLocation {
 
     @Override
     public String toString() {
-        return "Location{" + "fileObject=" + fileObject + ", range=" + range + '}';
+        return "HyperlinkLocation{" + "fileObject=" + fileObject + ", startOffset=" + startOffset + ", endOffset=" + endOffset + '}';
     }
 }

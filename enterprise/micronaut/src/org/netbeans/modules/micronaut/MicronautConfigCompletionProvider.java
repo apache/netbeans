@@ -18,19 +18,15 @@
  */
 package org.netbeans.modules.micronaut;
 
-import java.util.Collections;
-import java.util.List;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.document.EditorDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.lib.editor.util.ArrayUtilities;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
 import org.netbeans.spi.editor.completion.CompletionTask;
-import org.netbeans.spi.editor.completion.ItemFactory;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
 import org.openide.filesystems.FileObject;
@@ -67,63 +63,6 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
     @Override
     public int getAutoQueryTypes(JTextComponent component, String typedText) {
         return 0;
-    }
-
-    @Override
-    public <T> List<T> getCompletionItems(Document doc, int caretOffset, ItemFactory<T> factory) {
-        FileObject fo = EditorDocumentUtils.getFileObject(doc);
-        if (fo != null && "application.yml".equalsIgnoreCase(fo.getNameExt())) {
-            Project project = FileOwnerQuery.getOwner(fo);
-            if (project != null) {
-                MicronautConfigProperties configProperties = project.getLookup().lookup(MicronautConfigProperties.class);
-                if (configProperties != null) {
-                    return new MicronautConfigCompletionTask().query(doc, caretOffset, configProperties, new MicronautConfigCompletionTask.ItemFactory<T>() {
-                        @Override
-                        public T createTopLevelPropertyItem(String propName, int offset, int baseIndent, int indentLevelSize) {
-                            StringBuilder insertText = new StringBuilder();
-                            int insertTextFormat = 1;
-                            if ("*".equals(propName)) {
-                                insertText.append("$1:\n");
-                                ArrayUtilities.appendSpaces(insertText, baseIndent + indentLevelSize);
-                                insertTextFormat = 2;
-                            } else {
-                                insertText.append(propName).append(":\n");
-                                ArrayUtilities.appendSpaces(insertText, indentLevelSize);
-                            }
-                            return factory.create(propName, 10, null, String.format("%4d%s", 10, propName), insertText.toString(), insertTextFormat, null);
-                        }
-
-                        @Override
-                        public T createPropertyItem(ConfigurationMetadataProperty property, int offset, int baseIndent, int indentLevelSize, int idx) {
-                            String[] parts = property.getId().substring(idx).split("\\.");
-                            StringBuilder insertText = new StringBuilder();
-                            int num = 1;
-                            int indent = 0;
-                            int insertTextFormat = 1;
-                            for (int i = 0; i < parts.length; i++) {
-                                String part = parts[i];
-                                if ("*".equals(part)) {
-                                    insertText.append("$" + num++);
-                                    insertTextFormat = 2;
-                                } else {
-                                    insertText.append(part);
-                                }
-                                if (i < parts.length - 1) {
-                                    insertText.append(":\n");
-                                    ArrayUtilities.appendSpaces(insertText, (indent = indent + indentLevelSize));
-                                } else {
-                                    insertText.append(": ");
-                                }
-                            }
-                            return factory.create(property.getId(), 10, property.isDeprecated() ? new int[] {1} : null,
-                                    String.format("%4d%s", property.isDeprecated() ? 30 : 20, property.getId()),
-                                    insertText.toString(), insertTextFormat, new MicronautConfigDocumentation(property).getText());
-                        }
-                    });
-                }
-            }
-        }
-        return Collections.emptyList();
     }
 
     static CompletionTask createDocTask(ConfigurationMetadataProperty element) {

@@ -304,7 +304,7 @@ public final class ElementOpen {
                 if (end < 0) {
                     end = (int) openInfo[2];
                 }
-                return new HyperlinkLocation(file, new int[] {start, end});
+                return new HyperlinkLocation(file, start, end);
             }
             return null;
         });

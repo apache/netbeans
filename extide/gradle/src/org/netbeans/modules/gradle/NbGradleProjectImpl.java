@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectState;
@@ -286,7 +287,57 @@ public final class NbGradleProjectImpl implements Project {
             return "Unloaded Gradle Project: " + gradleFiles.toString();
         }
     }
+    
+    final RequestProcessor GRADLE_PRIMING_RP = new RequestProcessor("gradle-project-resolver", 1); //NOI18N
 
+    // @GuardedBy(this)
+    private CompletableFuture<GradleProject>    primingBuild;
+
+    boolean isProjectPrimingRequired() {
+        GradleProject gp = getGradleProject();
+        return gp.getQuality().notBetterThan(EVALUATED) || !gp.getProblems().isEmpty();
+    }
+    
+    /**
+     * The core implementation is tied to project quality itself, so it is extracted here from
+     * {@link GradleProjectProblemProvider}. 
+     * <p>
+     * <b>Note: Priming build makes the project trusted</b>
+     * 
+     * @return future that produces the result.
+     */
+    CompletableFuture<GradleProject> primeProject() {
+        CompletableFuture<GradleProject> ret;
+        synchronized (this) {
+            if (primingBuild != null && !primingBuild.isDone()) {
+                // avoid priming twice, piggyback on the old one
+                LOG.log(Level.FINER, "Priming build runs for {0}: {1}", new Object[] { this, primingBuild });
+                return primingBuild;
+            }
+            ret = new CompletableFuture<>();
+            primingBuild = ret;
+        }
+        LOG.log(Level.FINER, "Submitting priming build runs for {0}: {1}", new Object[] { this, ret });
+        GRADLE_PRIMING_RP.submit(() -> {
+            try {
+                // this was explicitly invoked as project action, or problem resolution. Same level as
+                // Build project, so trust the project.
+                ProjectTrust.getDefault().trustProject(this, true);
+                GradleProject gradleProject = GradleProjectCache.loadProject(this, FULL_ONLINE, true, true);
+                LOG.log(Level.FINER, "Priming finished, reloading {0}: {1}", project);
+                fireProjectReload(false);
+                ret.complete(gradleProject);
+            } catch (Throwable t) {
+                LOG.log(Level.FINER, t, () -> String.format("Priming errored for %s", project));
+                ret.completeExceptionally(t);
+                if (t instanceof ThreadDeath) {
+                    throw t;
+                }
+            }
+        });
+        return ret;
+    }
+    
     private class ProjectOpenedHookImpl extends ProjectOpenedHook {
 
         @Override

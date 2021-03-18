@@ -94,7 +94,7 @@ public final class CaretMoveContext {
         NavigationFilter naviFilter = transaction.getCaret().getNavigationFilterNoDefault(transaction.getOrigin());
         if (naviFilter != null) {
             FilterBypassImpl fbi = new FilterBypassImpl(transaction, caret, transaction.getDocument());
-            naviFilter.setDot(fbi, dotPos.getOffset(), Position.Bias.Forward);
+            naviFilter.setDot(fbi, dotPos.getOffset(), Position.Bias.Forward);//XXX: forward!
             return fbi.getResult();
         } else {
             return setDotAndMark(caret, dotPos, dotBias, dotPos, dotBias);

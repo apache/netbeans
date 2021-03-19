@@ -24,7 +24,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -40,7 +39,6 @@ import java.net.URI;
 import java.net.URL;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -57,6 +55,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
 import java.util.logging.Level;
@@ -67,13 +66,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.ExecutableType;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
@@ -88,7 +80,6 @@ import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.CompletionItemTag;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
-import org.eclipse.lsp4j.CompletionTriggerKind;
 import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
@@ -145,7 +136,6 @@ import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
@@ -156,7 +146,6 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
-import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.java.source.ui.ElementJavadoc;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lexer.TokenSequence;
@@ -170,10 +159,7 @@ import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.editor.java.GoToSupport.Context;
 import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
-import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
-import org.netbeans.modules.java.completion.JavaCompletionTask;
-import org.netbeans.modules.java.completion.JavaCompletionTask.Options;
 import org.netbeans.modules.java.completion.JavaDocumentationTask;
 import org.netbeans.modules.java.editor.base.fold.JavaElementFoldVisitor;
 import org.netbeans.modules.java.editor.base.fold.JavaElementFoldVisitor.FoldCreator;
@@ -197,7 +183,6 @@ import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
-import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
@@ -293,8 +278,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
     }
 
+    private List<CompletionCollector.Completion> lastCompletions = null;
+
     @Override
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
+        lastCompletions = new ArrayList<>();
+        AtomicInteger index = new AtomicInteger(0);
         final CompletionList completionList = new CompletionList();
         // shortcut: if the projects are not yet initialized, return empty:
         if (server.openedProjects().getNow(null) == null) {
@@ -310,112 +299,88 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             Document doc = ec.openDocument();
             final int caret = Utils.getOffset(doc, params.getPosition());
             String mimeType = file.getMIMEType();
-            if ("text/x-java".equals(mimeType)) {
-                ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
-                    @Override
-                    public void run(ResultIterator resultIterator) throws Exception {
-                        TokenSequence<JavaTokenId> ts = resultIterator.getSnapshot().getTokenHierarchy().tokenSequence(JavaTokenId.language());
-                        if (ts.move(caret) == 0 || !ts.moveNext()) {
-                            if (!ts.movePrevious()) {
-                                ts.moveNext();
-                            }
-                        }
-                        int len = caret - ts.offset();
-                        boolean allCompletion = params.getContext() != null && params.getContext().getTriggerKind() == CompletionTriggerKind.TriggerForIncompleteCompletions
-                                || len > 0 && ts.token().length() >= len && ts.token().id() == JavaTokenId.IDENTIFIER;
-                        CompilationController controller = CompilationController.get(resultIterator.getParserResult(ts.offset()));
-                        controller.toPhase(JavaSource.Phase.RESOLVED);
-                        JavaCompletionTask<CompletionItem> task = JavaCompletionTask.create(caret, new ItemFactoryImpl(client, controller, uri, ts.offset()), allCompletion ? EnumSet.of(Options.ALL_COMPLETION) : EnumSet.noneOf(Options.class), () -> false);
-                        task.run(resultIterator);
-                        List<CompletionItem> results = task.getResults();
-                        if (results != null) {
-                            for (Iterator<CompletionItem> it = results.iterator(); it.hasNext();) {
-                                CompletionItem item = it.next();
-                                if (item == null) {
-                                    it.remove();
-                                }
-                            }
-                            completionList.setItems(results);
-                        }
-                        completionList.setIsIncomplete(task.hasAdditionalClasses());
+            List<CompletionItem> items = new ArrayList<>();
+            MimePath mimePath = MimePath.parse(mimeType);
+            CompletionCollector.Context context = params.getContext() != null
+                    ? new CompletionCollector.Context(CompletionCollector.TriggerKind.forValue(params.getContext().getTriggerKind().getValue()), params.getContext().getTriggerCharacter())
+                    : null;
+            for (CompletionCollector collector : MimeLookup.getLookup(mimePath).lookupAll(CompletionCollector.class)) {
+                boolean isComplete = collector.collectCompletions(doc, caret, context, completion -> {
+                    CompletionItem item = new CompletionItem(completion.getLabel());
+                    if (completion.getKind() != null) {
+                        item.setKind(CompletionItemKind.forValue(completion.getKind().getValue()));
                     }
-                });
-            } else {
-                MimePath mimePath = MimePath.parse(mimeType);
-                List<CompletionItem> items = new ArrayList<>();
-                for (CompletionCollector collector : MimeLookup.getLookup(mimePath).lookupAll(CompletionCollector.class)) {
-                    boolean isComplete = collector.collectCompletions(doc, caret, completion -> {
-                        CompletionItem item = new CompletionItem(completion.getLabel());
-                        if (completion.getKind() != null) {
-                            item.setKind(CompletionItemKind.forValue(completion.getKind().getValue()));
-                        }
-                        if (completion.getTags() != null) {
-                            item.setTags(completion.getTags().stream().map(tag -> CompletionItemTag.forValue(tag.getValue())).collect(Collectors.toList()));
-                        }
-                        item.setDetail(completion.getDetail());
-                        if (completion.getDocumentation() != null) {
+                    if (completion.getTags() != null) {
+                        item.setTags(completion.getTags().stream().map(tag -> CompletionItemTag.forValue(tag.getValue())).collect(Collectors.toList()));
+                    }
+                    if (completion.getDetail() != null && completion.getDetail().isDone()) {
+                        item.setDetail(completion.getDetail().getNow(null));
+                    }
+                    if (completion.getDocumentation() != null && completion.getDocumentation().isDone()) {
+                        String documentation = completion.getDocumentation().getNow(null);
+                        if (documentation != null) {
                             MarkupContent markup = new MarkupContent();
                             markup.setKind("markdown");
-                            markup.setValue(html2MD(completion.getDocumentation()));
+                            markup.setValue(html2MD(documentation));
                             item.setDocumentation(markup);
                         }
-                        if (completion.isPreselect()) {
-                            item.setPreselect(true);
-                        }
-                        item.setSortText(completion.getSortText());
-                        item.setFilterText(completion.getFilterText());
-                        item.setInsertText(completion.getInsertText());
-                        if (completion.getInsertTextFormat() != null) {
-                            item.setInsertTextFormat(InsertTextFormat.forValue(completion.getInsertTextFormat().getValue()));
-                        }
-                        CompletionCollector.TextEdit edit = completion.getTextEdit();
-                        if (edit != null) {
-                            item.setTextEdit(new TextEdit(new Range(Utils.createPosition(file, edit.getStartOffset()), Utils.createPosition(file, edit.getEndOffset())), edit.getNewText()));
-                        }
-                        if (completion.getAdditionalTextEdits() != null) {
-                            item.setAdditionalTextEdits(completion.getAdditionalTextEdits().stream().map(ed -> {
+                    }
+                    if (completion.isPreselect()) {
+                        item.setPreselect(true);
+                    }
+                    item.setSortText(completion.getSortText());
+                    item.setFilterText(completion.getFilterText());
+                    item.setInsertText(completion.getInsertText());
+                    if (completion.getInsertTextFormat() != null) {
+                        item.setInsertTextFormat(InsertTextFormat.forValue(completion.getInsertTextFormat().getValue()));
+                    }
+                    CompletionCollector.TextEdit edit = completion.getTextEdit();
+                    if (edit != null) {
+                        item.setTextEdit(new TextEdit(new Range(Utils.createPosition(file, edit.getStartOffset()), Utils.createPosition(file, edit.getEndOffset())), edit.getNewText()));
+                    }
+                    if (completion.getAdditionalTextEdits() != null && completion.getAdditionalTextEdits().isDone()) {
+                        List<CompletionCollector.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().getNow(null);
+                        if (additionalTextEdits != null) {
+                            item.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
                                 return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
                             }).collect(Collectors.toList()));
                         }
-                        item.setCommitCharacters(completion.getCommitCharacters());
-                        CompletionCollector.Command command = completion.getCommand();
-                        if (command != null) {
-                            item.setCommand(new Command(command.getTitle(), command.getCommand(), command.getArguments()));
-                        }
-                        item.setData(completion.getData());
-                        items.add(item);
-                    });
-                    if (!isComplete) {
-                        completionList.setIsIncomplete(true);
                     }
+                    item.setCommitCharacters(completion.getCommitCharacters());
+                    CompletionCollector.Command command = completion.getCommand();
+                    if (command != null) {
+                        item.setCommand(new Command(command.getTitle(), command.getCommand(), command.getArguments()));
+                    }
+                    lastCompletions.add(completion);
+                    item.setData(new CompletionData(uri, index.getAndIncrement()));
+                    items.add(item);
+                });
+                if (!isComplete) {
+                    completionList.setIsIncomplete(true);
                 }
-                completionList.setItems(items);
             }
+            completionList.setItems(items);
             return CompletableFuture.completedFuture(Either.<List<CompletionItem>, CompletionList>forRight(completionList));
-        } catch (IOException | ParseException ex) {
+        } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
 
     public static final class CompletionData {
         public String uri;
-        public int offset;
-        public String kind;
-        public String[] elementHandle;
+        public int index;
 
         public CompletionData() {
         }
 
-        public CompletionData(String uri, int offset, String kind, String[] elementHandle) {
+        public CompletionData(String uri, int index) {
             this.uri = uri;
-            this.offset = offset;
-            this.kind = kind;
-            this.elementHandle = elementHandle;
+            this.index = index;
         }
 
         @Override
         public String toString() {
-            return "CompletionData{" + "uri=" + uri + ", kind=" + kind + ", elementHandle=" + elementHandle + '}';
+            return "CompletionData{" + "uri=" + uri + ", index=" + index + '}';
         }
     }
 
@@ -424,438 +389,55 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         this.client = (NbCodeLanguageClient)client;
     }
 
-    private static class ItemFactoryImpl implements JavaCompletionTask.ItemFactory<CompletionItem> {
-
-        private static final int DEPRECATED = 10;
-        private final LanguageClient client;
-        private final String uri;
-        private final int offset;
-        private final CompilationInfo info;
-        private final Scope scope;
-
-        public ItemFactoryImpl(LanguageClient client, CompilationInfo info, String uri, int offset) {
-            this.client = client;
-            this.uri = uri;
-            this.offset = offset;
-            this.info = info;
-            this.scope = info.getTrees().getScope(info.getTreeUtilities().pathFor(offset));
-        }
-
-        private static final Set<String> SUPPORTED_ELEMENT_KINDS = new HashSet<>(Arrays.asList("PACKAGE", "CLASS", "INTERFACE", "ENUM", "ANNOTATION_TYPE", "METHOD", "CONSTRUCTOR", "INSTANCE_INIT", "STATIC_INIT", "FIELD", "ENUM_CONSTANT", "TYPE_PARAMETER", "MODULE"));
-
-        private void setCompletionData(CompletionItem ci, Element el) {
-            if (SUPPORTED_ELEMENT_KINDS.contains(el.getKind().name())) {
-                setCompletionData(ci, ElementHandle.create(el));
-            }
-        }
-
-        private void setCompletionData(CompletionItem ci, ElementHandle handle) {
-            ci.setData(new CompletionData(uri, offset, handle.getKind().name(), SourceUtils.getJVMSignature(handle)));
-        }
-
-        @Override
-        public CompletionItem createKeywordItem(String kwd, String postfix, int substitutionOffset, boolean smartType) {
-            CompletionItem item = new CompletionItem(kwd);
-            item.setKind(CompletionItemKind.Keyword);
-            item.setSortText(String.format("%4d%s", smartType ? 670 : 1670, kwd)); //NOI18N
-            return item;
-        }
-
-        @Override
-        public CompletionItem createPackageItem(String pkgFQN, int substitutionOffset, boolean inPackageStatement) {
-            final String simpleName = pkgFQN.substring(pkgFQN.lastIndexOf('.') + 1);
-            CompletionItem item = new CompletionItem(simpleName);
-            item.setKind(CompletionItemKind.Folder);
-            item.setSortText(String.format("%4d%s#%s", 1900, simpleName, pkgFQN)); //NOI18N
-            return item;
-        }
-
-        @Override
-        public CompletionItem createTypeItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars, boolean addSimpleName, boolean smartType, boolean autoImportEnclosingType) {
-            CompletionItem item = new CompletionItem(elem.getSimpleName().toString());
-            item.setKind(elementKind2CompletionItemKind(elem.getKind()));
-            String name = elem.getQualifiedName().toString();
-            int idx = name.lastIndexOf('.');
-            String pkgName = idx < 0 ? "" : name.substring(0, idx);
-            if (!pkgName.isEmpty()) {
-                item.setDetail(name.substring(0, idx));
-            }
-            item.setSortText(String.format("%4d%s#%2d#%s", smartType ? 800 : 1800, elem.getSimpleName().toString(), Utilities.getImportanceLevel(name), pkgName)); //NOI18N
-            setCompletionData(item, elem);
-            return item;
-        }
-
-        @Override
-        public CompletionItem createTypeItem(ElementHandle<TypeElement> handle, EnumSet<ElementKind> kinds, int substitutionOffset, ReferencesCount referencesCount, Source source, boolean insideNew, boolean addTypeVars, boolean afterExtends) {
-            TypeElement te = handle.resolve(info);
-            if (te != null && info.getTrees().isAccessible(scope, te)) {
-                CompletionItem item = new CompletionItem(te.getSimpleName().toString());
-                String name = handle.getQualifiedName();
-                int idx = name.lastIndexOf('.');
-                String pkgName = idx < 0 ? "" : name.substring(0, idx);
-                if (!pkgName.isEmpty()) {
-                    item.setDetail(pkgName);
-                }
-                item.setKind(elementKind2CompletionItemKind(handle.getKind()));
-                item.setSortText(String.format("%4d%s#%2d#%s", 1800, te.getSimpleName().toString(), Utilities.getImportanceLevel(name), pkgName)); //NOI18N
-                setCompletionData(item, handle);
-                return item;
-            }
-            return null;
-        }
-
-        @Override
-        public CompletionItem createArrayItem(CompilationInfo info, ArrayType type, int substitutionOffset, ReferencesCount referencesCount, Elements elements) {
-            return null; //TODO: fill
-        }
-
-        @Override
-        public CompletionItem createTypeParameterItem(TypeParameterElement elem, int substitutionOffset) {
-            CompletionItem item = new CompletionItem(elem.getSimpleName().toString());
-            item.setKind(elementKind2CompletionItemKind(elem.getKind()));
-            item.setSortText(String.format("%4d%s", 1700, elem.getSimpleName().toString())); //NOI18N
-            return item;
-        }
-
-        @Override
-        public CompletionItem createVariableItem(CompilationInfo info, VariableElement elem, TypeMirror type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean smartType, int assignToVarOffset) {
-            CompletionItem item = new CompletionItem(elem.getSimpleName().toString());
-            item.setKind(elementKind2CompletionItemKind(elem.getKind()));
-            int priority = elem.getKind() == ElementKind.ENUM_CONSTANT || elem.getKind() == ElementKind.FIELD ? smartType ? 300 : 1300 : smartType ? 200 : 1200;
-            item.setSortText(String.format("%4d%s", priority, elem.getSimpleName().toString())); //NOI18N
-            setCompletionData(item, elem);
-            return item;
-        }
-
-        @Override
-        public CompletionItem createVariableItem(CompilationInfo info, String varName, int substitutionOffset, boolean newVarName, boolean smartType) {
-            CompletionItem item = new CompletionItem(varName);
-            item.setKind(CompletionItemKind.Variable);
-            item.setSortText(String.format("%4d%s", smartType ? 200 : 1200, varName)); //NOI18N
-            return item;
-        }
-
-        @Override
-        public CompletionItem createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
-            Iterator<? extends VariableElement> it = elem.getParameters().iterator();
-            Iterator<? extends TypeMirror> tIt = type.getParameterTypes().iterator();
-            StringBuilder label = new StringBuilder();
-            String sep = "";
-            label.append(elem.getSimpleName().toString());
-            label.append("(");
-            StringBuilder sortParams = new StringBuilder();
-            sortParams.append('(');
-            int cnt = 0;
-            while(it.hasNext() && tIt.hasNext()) {
-                TypeMirror tm = tIt.next();
-                if (tm == null) {
-                    break;
-                }
-                label.append(sep);
-                String paramTypeName = Utilities.getTypeName(info, tm, false, elem.isVarArgs() && !tIt.hasNext()).toString();
-                label.append(paramTypeName);
-                label.append(' ');
-                label.append(it.next().getSimpleName().toString());
-                sep = ", ";
-                sortParams.append(paramTypeName);
-                if (tIt.hasNext()) {
-                    sortParams.append(',');
-                }
-                cnt++;
-            }
-            label.append(") : ");
-            sortParams.append(')');
-            TypeMirror retType = type.getReturnType();
-            label.append(Utilities.getTypeName(info, retType, false).toString());
-            CompletionItem item = new CompletionItem(label.toString());
-            item.setKind(elementKind2CompletionItemKind(elem.getKind()));
-            StringBuilder insertText = new StringBuilder();
-            insertText.append(elem.getSimpleName());
-            insertText.append("(");
-            if (elem.getParameters().isEmpty()) {
-                insertText.append(")");
-            }
-            item.setInsertText(insertText.toString());
-            item.setInsertTextFormat(InsertTextFormat.PlainText);
-            int priority = elem.getKind() == ElementKind.METHOD ? smartType ? 500 : 1500 : smartType ? 650 : 1650;
-            item.setSortText(String.format("%4d%s#%2d%s", priority, elem.getSimpleName().toString(), cnt, sortParams)); //NOI18N
-            setCompletionData(item, elem);
-            return item;
-        }
-
-        @Override
-        public CompletionItem createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name) {
-            CompletionItem item = createExecutableItem(info, elem, type, substitutionOffset, null, false, isDeprecated, false, false, false, -1, false);
-            item.setLabel(name != null ? name : elem.getEnclosingElement().getSimpleName().toString());
-            StringBuilder insertText = new StringBuilder();
-            insertText.append(item.getLabel());
-            insertText.append("(");
-            if (elem.getParameters().isEmpty()) {
-                insertText.append(")");
-            }
-            item.setInsertText(insertText.toString());
-            item.setKind(CompletionItemKind.Constructor);
-            item.setSortText(String.format("%4d%s", name != null ? 1550 : 1650, item.getSortText().substring(4))); //NOI18N
-            setCompletionData(item, elem);
-            return item;
-        }
-
-        @Override
-        public CompletionItem createOverrideMethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean implement) {
-            CompletionItem item = createExecutableItem(info, elem, type, substitutionOffset, null, false, false, false, false, false, -1, false);
-            item.setLabel(String.format("%s - %s", item.getLabel(), implement ? "implement" : "override"));
-            item.setInsertText(null);
-            item.setKind(elementKind2CompletionItemKind(elem.getKind()));
-            try {
-                List<TextEdit> textEdits = modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), wc -> {
-                    wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                    TreePath tp = wc.getTreeUtilities().pathFor(offset);
-                    if (implement) {
-                        GeneratorUtils.generateAbstractMethodImplementation(wc, tp, elem, offset);
-                    } else {
-                        GeneratorUtils.generateMethodOverride(wc, tp, elem, offset);
-                    }
-                });
-                if (!textEdits.isEmpty()) {
-                    item.setTextEdit(textEdits.get(0));
-                }
-            } catch (IOException ex) {
-                //TODO: include stack trace:
-                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-            }
-            setCompletionData(item, elem);
-            return item;
-        }
-
-        @Override
-        public CompletionItem createGetterSetterMethodItem(CompilationInfo info, VariableElement elem, TypeMirror type, int substitutionOffset, String name, boolean setter) {
-            return null; //TODO: fill
-        }
-
-        @Override
-        public CompletionItem createDefaultConstructorItem(TypeElement elem, int substitutionOffset, boolean smartType) {
-            return null; //TODO: fill
-        }
-
-        @Override
-        public CompletionItem createParametersItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, int activeParamIndex, String name) {
-            return null; //TODO: fill
-        }
-
-        @Override
-        public CompletionItem createAnnotationItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated) {
-            return null; //TODO: fill
-        }
-
-        @Override
-        public CompletionItem createAttributeItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated) {
-            CompletionItem item = new CompletionItem(elem.getSimpleName().toString());
-            item.setKind(CompletionItemKind.Property);
-            StringBuilder insertText = new StringBuilder();
-            insertText.append(elem.getSimpleName());
-            insertText.append("=");
-            item.setInsertText(insertText.toString());
-            item.setInsertTextFormat(InsertTextFormat.PlainText);
-            int priority = isDeprecated ? 100 + DEPRECATED : 100;
-            item.setSortText(String.format("%4d%s", priority, elem.getSimpleName().toString()));
-            setCompletionData(item, elem);
-            return item;
-        }
-
-        @Override
-        public CompletionItem createAttributeValueItem(CompilationInfo info, String value, String documentation, TypeElement element, int substitutionOffset, ReferencesCount referencesCount) {
-            CompletionItem item = new CompletionItem(value);
-            item.setKind(CompletionItemKind.Text);
-            item.setSortText(value);
-            item.setDocumentation(documentation);
-            return item;
-        }
-
-        private static final Object KEY_IMPORT_TEXT_EDITS = new Object();
-
-        @Override
-        public CompletionItem createStaticMemberItem(CompilationInfo info, DeclaredType type, Element memberElem, TypeMirror memberType, boolean multipleVersions, int substitutionOffset, boolean isDeprecated, boolean addSemicolon) {
-            //TODO: prefer static imports (but would be much slower?)
-            //TODO: should be resolveImport instead of addImports:
-            Map<Element, List<TextEdit>> imports = (Map<Element, List<TextEdit>>) info.getCachedValue(KEY_IMPORT_TEXT_EDITS);
-            if (imports == null) {
-                info.putCachedValue(KEY_IMPORT_TEXT_EDITS, imports = new HashMap<>(), CacheClearPolicy.ON_TASK_END);
-            }
-            List<TextEdit> currentClassImport = imports.computeIfAbsent(type.asElement(), toImport -> {
-                try {
-                    return modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), wc -> {
-                        wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        wc.rewrite(info.getCompilationUnit(), GeneratorUtilities.get(wc).addImports(wc.getCompilationUnit(), new HashSet<>(Arrays.asList(toImport))));
-                    });
-                } catch (IOException ex) {
-                    //TODO: include stack trace:
-                    client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-                    return Collections.emptyList();
-                }
-            });
-            String label = type.asElement().getSimpleName() + "." + memberElem.getSimpleName();
-            CompletionItem item = new CompletionItem(label);
-            item.setKind(elementKind2CompletionItemKind(memberElem.getKind()));
-            item.setInsertText(label);
-            item.setInsertTextFormat(InsertTextFormat.PlainText);
-            item.setAdditionalTextEdits(currentClassImport);
-            String sortText = memberElem.getSimpleName().toString();
-            if (memberElem.getKind().isField()) {
-                sortText += String.format("#%s", Utilities.getTypeName(info, type, false)); //NOI18N
-            } else {
-                StringBuilder sortParams = new StringBuilder();
-                sortParams.append('(');
-                int cnt = 0;
-                Iterator<? extends TypeMirror> tIt = ((ExecutableType)memberType).getParameterTypes().iterator();
-                while(tIt.hasNext()) {
-                    TypeMirror tm = tIt.next();
-                    if (tm == null) {
-                        break;
-                    }
-                    sortParams.append(Utilities.getTypeName(info, tm, false, ((ExecutableElement)memberElem).isVarArgs() && !tIt.hasNext()).toString());
-                    if (tIt.hasNext()) {
-                        sortParams.append(',');
-                    }
-                    cnt++;
-                }
-                sortParams.append(')');
-                sortText += String.format("#%2d#%s#s", cnt, sortParams.toString(), Utilities.getTypeName(info, type, false)); //NOI18N
-            }
-            item.setSortText(String.format("%4d%s", memberElem.getKind().isField() ? 720 : 750, sortText)); //NOI18N
-            setCompletionData(item, memberElem);
-            return item;
-        }
-
-        @Override
-        public CompletionItem createStaticMemberItem(ElementHandle<TypeElement> handle, String name, int substitutionOffset, boolean addSemicolon, ReferencesCount referencesCount, Source source) {
-            return null; //TODO: fill
-        }
-
-        @Override
-        public CompletionItem createChainedMembersItem(CompilationInfo info, List<? extends Element> chainedElems, List<? extends TypeMirror> chainedTypes, int substitutionOffset, boolean isDeprecated, boolean addSemicolon) {
-            return null; //TODO: fill
-        }
-
-        @Override
-        public CompletionItem createInitializeAllConstructorItem(CompilationInfo info, boolean isDefault, Iterable<? extends VariableElement> fields, ExecutableElement superConstructor, TypeElement parent, int substitutionOffset) {
-            return null; //TODO: fill
-        }
-
-        private static CompletionItemKind elementKind2CompletionItemKind(ElementKind kind) {
-            switch (kind) {
-                case PACKAGE:
-                    return CompletionItemKind.Folder;
-                case ENUM:
-                    return CompletionItemKind.Enum;
-                case CLASS:
-                    return CompletionItemKind.Class;
-                case ANNOTATION_TYPE:
-                    return CompletionItemKind.Interface;
-                case INTERFACE:
-                    return CompletionItemKind.Interface;
-                case ENUM_CONSTANT:
-                    return CompletionItemKind.EnumMember;
-                case FIELD:
-                    return CompletionItemKind.Field;
-                case PARAMETER:
-                    return CompletionItemKind.Variable;
-                case LOCAL_VARIABLE:
-                    return CompletionItemKind.Variable;
-                case EXCEPTION_PARAMETER:
-                    return CompletionItemKind.Variable;
-                case METHOD:
-                    return CompletionItemKind.Method;
-                case CONSTRUCTOR:
-                    return CompletionItemKind.Constructor;
-                case TYPE_PARAMETER:
-                    return CompletionItemKind.TypeParameter;
-                case RESOURCE_VARIABLE:
-                    return CompletionItemKind.Variable;
-                case MODULE:
-                    return CompletionItemKind.Module;
-                case STATIC_INIT:
-                case INSTANCE_INIT:
-                case OTHER:
-                default:
-                    return CompletionItemKind.Text;
-            }
-        }
-    }
-
     private static final RequestProcessor JAVADOC_WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName() + ".javadoc", 1);
 
     @Override
     public CompletableFuture<CompletionItem> resolveCompletionItem(CompletionItem ci) {
         JsonObject rawData = (JsonObject) ci.getData();
-        if (rawData == null) {
-            return CompletableFuture.completedFuture(ci);
-        }
-        CompletionData data = new Gson().fromJson(rawData, CompletionData.class);
-        try {
-            FileObject file = fromURI(data.uri);
-            if (file == null) {
-                return CompletableFuture.completedFuture(ci);
-            }
-            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
-            Document doc = ec.openDocument();
-            final ElementHandle<Element> handle = ElementHandleAccessor.getInstance().create(ElementKind.valueOf(data.kind), data.elementHandle);
-            final JavaDocumentationTask<Future<String>> task = JavaDocumentationTask.create(-1, handle, new JavaDocumentationTask.DocumentationFactory<Future<String>>() {
-                @Override
-                public Future<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
-                    return ElementJavadoc.create(compilationInfo, element, cancel).getTextAsync();
+        if (rawData != null) {
+            CompletionData data = new Gson().fromJson(rawData, CompletionData.class);
+            CompletionCollector.Completion completion = lastCompletions.get(data.index);
+            if (completion != null) {
+                FileObject file = fromURI(data.uri);
+                if (file == null) {
+                    return CompletableFuture.completedFuture(ci);
                 }
-            }, () -> false);
-            LineMap[] lm = new LineMap[1];
-            ModificationResult mr = ModificationResult.runModificationTask(Collections.singletonList(Source.create(doc)), new UserTask() {
-                @Override
-                public void run(ResultIterator resultIterator) throws Exception {
-                    task.run(resultIterator);
-                    if (ci.getDetail() != null) {
-                        final WorkingCopy copy = WorkingCopy.get(resultIterator.getParserResult(data.offset));
-                        copy.toPhase(JavaSource.Phase.RESOLVED);
-                        Element e = handle.resolve(copy);
-                        if (e != null) {
-                            copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), Collections.singleton(e)));
+                if (completion.getDetail() != null) {
+                    try {
+                        String detail = completion.getDetail().get();
+                        if (detail != null) {
+                            ci.setDetail(detail);
                         }
-                        lm[0] = copy.getCompilationUnit().getLineMap();
+                    } catch (Exception ex) {
                     }
                 }
-            });
-            List<? extends ModificationResult.Difference> diffs = mr.getDifferences(file);
-            if (diffs != null && !diffs.isEmpty()) {
-                List<TextEdit> edits = new ArrayList<>();
-                for (ModificationResult.Difference diff : diffs) {
-                    edits.add(new TextEdit(new Range(Utils.createPosition(lm[0], diff.getStartPosition().getOffset()),
-                            Utils.createPosition(lm[0], diff.getEndPosition().getOffset())), diff.getNewText()));
+                if (completion.getDocumentation() != null) {
+                    try {
+                        String documentation = completion.getDocumentation().get();
+                        if (documentation != null) {
+                            MarkupContent markup = new MarkupContent();
+                            markup.setKind("markdown");
+                            markup.setValue(html2MD(documentation));
+                            ci.setDocumentation(markup);
+                        }
+                    } catch (Exception ex) {
+                    }
                 }
-                ci.setAdditionalTextEdits(edits);
-            }
-            Future<String> futureJavadoc = task.getDocumentation();
-            CompletableFuture<CompletionItem> result = new CompletableFuture<CompletionItem>() {
-                @Override
-                public boolean cancel(boolean mayInterruptIfRunning) {
-                    return futureJavadoc.cancel(mayInterruptIfRunning) && super.cancel(mayInterruptIfRunning);
+                if (completion.getAdditionalTextEdits() != null) {
+                    try {
+                        List<CompletionCollector.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().get();
+                        if (additionalTextEdits != null) {
+                            ci.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
+                                return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
+                            }).collect(Collectors.toList()));
+                        }
+                    } catch (Exception ex) {
+                    }
                 }
-            };
 
-            JAVADOC_WORKER.post(() -> {
-                try {
-                    String javadoc = futureJavadoc.get();
-                    MarkupContent markup = new MarkupContent();
-                    markup.setKind("markdown");
-                    markup.setValue(html2MD(javadoc));
-                    ci.setDocumentation(markup);
-                    result.complete(ci);
-                } catch (ExecutionException | InterruptedException ex) {
-                    result.completeExceptionally(ex);
-                }
-            });
-            return result;
-        } catch (IOException | ParseException ex) {
-            CompletableFuture<CompletionItem> result = new CompletableFuture<CompletionItem>();
-            result.completeExceptionally(ex);
-            return result;
+            }
         }
+        return CompletableFuture.completedFuture(ci);
     }
 
     public static String html2MD(String html) {

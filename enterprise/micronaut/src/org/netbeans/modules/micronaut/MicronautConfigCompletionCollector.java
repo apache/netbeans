@@ -19,6 +19,7 @@
 package org.netbeans.modules.micronaut;
 
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.document.EditorDocumentUtils;
@@ -38,7 +39,7 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataPrope
 public class MicronautConfigCompletionCollector implements CompletionCollector {
 
     @Override
-    public boolean collectCompletions(Document doc, int offset, Consumer<Completion> consumer) {
+    public boolean collectCompletions(Document doc, int offset, Context context, Consumer<Completion> consumer) {
         FileObject fo = EditorDocumentUtils.getFileObject(doc);
         if (fo != null && "application.yml".equalsIgnoreCase(fo.getNameExt())) {
             Project project = FileOwnerQuery.getOwner(fo);
@@ -86,7 +87,7 @@ public class MicronautConfigCompletionCollector implements CompletionCollector {
                             }
                             Completion.Builder builder = CompletionCollector.Completion.newBuilder(property.getId()).kind(Kind.Property)
                                     .sortText(String.format("%4d%s", property.isDeprecated() ? 30 : 20, property.getId())).insertText(insertText.toString())
-                                    .insertTextFormat(insertTextFormat).documentation(new MicronautConfigDocumentation(property).getText());
+                                    .insertTextFormat(insertTextFormat).documentation(CompletableFuture.completedFuture(new MicronautConfigDocumentation(property).getText()));
                             if (property.isDeprecated()) {
                                 builder.tags(Collections.singletonList(Tag.Deprecated));
                             }

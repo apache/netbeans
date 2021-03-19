@@ -68,6 +68,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.libs.json_simple</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>0.24</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.csl.api</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -317,12 +326,8 @@
             </module-dependencies>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>ext/spring-boot-configuration-metadata-2.3.9.RELEASE.jar</runtime-relative-path>
-                <binary-origin>external/spring-boot-configuration-metadata-2.3.9.RELEASE.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/android-json-0.0.20131108.vaadin1.jar</runtime-relative-path>
-                <binary-origin>external/android-json-0.0.20131108.vaadin1.jar</binary-origin>
+                <runtime-relative-path>ext/spring-boot-configuration-metadata-2.4.4.jar</runtime-relative-path>
+                <binary-origin>external/spring-boot-configuration-metadata-2.4.4.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

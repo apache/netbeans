@@ -1,6 +1,6 @@
 Name: Spring Boot Configuration Metadata
 Description: Spring Boot Configuration Metadata library
-Version: 2.3.9.RELEASE
+Version: 2.4.4
 License: Apache-2.0
 Origin: Pivotal Software, Inc.
 URL: https://spring.io/projects/spring-boot

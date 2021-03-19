@@ -19,6 +19,7 @@
 package org.netbeans.spi.editor.completion;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -43,13 +44,47 @@ public interface CompletionCollector {
      *
      * @param doc a text document
      * @param offset an offset inside the text document
+     * @param context an optional completion context
      * @param consumer an operation accepting collected completions
      *
      * @return true if the list of collected completion is complete
      */
-    public boolean collectCompletions(Document doc, int offset, Consumer<Completion> consumer);
+    public boolean collectCompletions(@NonNull Document doc, int offset, @NullAllowed Context context, @NonNull Consumer<Completion> consumer);
 
-    public final static class Completion {
+    /**
+     * Contains additional information about the context in which a request for
+     * collections completions is triggered.
+     */
+    public static final class Context {
+
+        private final TriggerKind triggerKind;
+        private final String triggerCharacter;
+
+        public Context(@NonNull TriggerKind triggerKind, @NullAllowed String triggerCharacter) {
+            this.triggerKind = triggerKind;
+            this.triggerCharacter = triggerCharacter;
+        }
+
+        /**
+         * How the completion was triggered.
+         */
+        public TriggerKind getTriggerKind() {
+            return triggerKind;
+        }
+
+        /**
+         * The trigger character (a single character) that has trigger code complete.
+         * Is undefined if {@code triggerKind != TriggerKind.TriggerCharacter}.
+         */
+        public String getTriggerCharacter() {
+            return triggerCharacter;
+        }
+    }
+
+    /**
+     * Represents a completion proposal.
+     */
+    public static final class Completion {
 
         /**
          * Creates a new completion builder.
@@ -65,22 +100,21 @@ public interface CompletionCollector {
         private final String label;
         private final Kind kind;
         private final List<Tag> tags;
-        private final String detail;
-        private final String documentation;
+        private final CompletableFuture<String> detail;
+        private final CompletableFuture<String> documentation;
         private final boolean preselect;
         private final String sortText;
         private final String filterText;
         private final String insertText;
         private final TextFormat insertTextFormat;
         private final TextEdit textEdit;
-        private final List<TextEdit> additionalTextEdits;
+        private final CompletableFuture<List<TextEdit>> additionalTextEdits;
         private final List<String> commitCharacters;
         private final Command command;
-        private final Object data;
 
-        private Completion(String label, Kind kind, List<Tag> tags, String detail, String documentation,
+        private Completion(String label, Kind kind, List<Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
                 boolean preselect, String sortText, String filterText, String insertText, TextFormat insertTextFormat,
-                TextEdit textEdit, List<TextEdit> additionalTextEdits, List<String> commitCharacters, Command command, Object data) {
+                TextEdit textEdit, CompletableFuture<List<TextEdit>> additionalTextEdits, List<String> commitCharacters, Command command) {
             this.label = label;
             this.kind = kind;
             this.tags = tags;
@@ -95,7 +129,6 @@ public interface CompletionCollector {
             this.additionalTextEdits = additionalTextEdits;
             this.commitCharacters = commitCharacters;
             this.command = command;
-            this.data = data;
         }
 
         /**
@@ -128,7 +161,7 @@ public interface CompletionCollector {
 	 * about this completion, like type or symbol information.
 	 */
         @CheckForNull
-        public String getDetail() {
+        public CompletableFuture<String> getDetail() {
             return detail;
         }
 
@@ -136,7 +169,7 @@ public interface CompletionCollector {
 	 * A human-readable string that represents a doc-comment.
 	 */
         @CheckForNull
-        public String getDocumentation() {
+        public CompletableFuture<String> getDocumentation() {
             return documentation;
         }
 
@@ -204,7 +237,7 @@ public interface CompletionCollector {
 	 * top of the file if the completion item will insert an unqualified type).
 	 */
         @CheckForNull
-        public List<TextEdit> getAdditionalTextEdits() {
+        public CompletableFuture<List<TextEdit>> getAdditionalTextEdits() {
             return additionalTextEdits;
         }
 
@@ -227,34 +260,35 @@ public interface CompletionCollector {
             return command;
         }
 
-        /**
-	 * A data entry to identify this completion.
-	 */
-        @CheckForNull
-        public Object getData() {
-            return data;
-        }
-
         public static final class Builder {
 
-            private final String label;
+            private String label;
             private Kind kind;
             private List<Tag> tags;
-            private String detail;
-            private String documentation;
+            private CompletableFuture<String> detail;
+            private CompletableFuture<String> documentation;
             private boolean preselect;
             private String sortText;
             private String filterText;
             private String insertText;
             private TextFormat insertTextFormat;
             private TextEdit textEdit;
-            private List<TextEdit> additionalTextEdits;
+            private CompletableFuture<List<TextEdit>> additionalTextEdits;
             private List<String> commitCharacters;
             private Command command;
-            private Object data;
 
             private Builder(@NonNull String label) {
                 this.label = label;
+            }
+
+            /**
+             * The label of this completion. By default also the text that is inserted
+             * when selecting this completion.
+             */
+            @NonNull
+            public Builder label(@NonNull String label) {
+                this.label = label;
+                return this;
             }
 
             /**
@@ -280,7 +314,7 @@ public interface CompletionCollector {
              * about this completion, like type or symbol information.
              */
             @NonNull
-            public Builder detail(@NonNull String detail) {
+            public Builder detail(@NonNull CompletableFuture<String> detail) {
                 this.detail = detail;
                 return this;
             }
@@ -289,7 +323,7 @@ public interface CompletionCollector {
              * A human-readable string that represents a doc-comment.
              */
             @NonNull
-            public Builder documentation(@NonNull String documentation) {
+            public Builder documentation(@NonNull CompletableFuture<String> documentation) {
                 this.documentation = documentation;
                 return this;
             }
@@ -365,7 +399,7 @@ public interface CompletionCollector {
              * top of the file if the completion item will insert an unqualified type).
              */
             @NonNull
-            public Builder additionalTextEdits(@NonNull List<TextEdit> additionalTextEdits) {
+            public Builder additionalTextEdits(@NonNull CompletableFuture<List<TextEdit>> additionalTextEdits) {
                 this.additionalTextEdits = additionalTextEdits;
                 return this;
             }
@@ -392,24 +426,52 @@ public interface CompletionCollector {
             }
 
             /**
-             * A data entry to identify this completion.
-             */
-            @NonNull
-            public Builder data(@NonNull Object data) {
-                this.data = data;
-                return this;
-            }
-
-            /**
              * Builds completion.
              */
             @NonNull
             public Completion build() {
                 return new Completion(label, kind, tags, detail, documentation, preselect,
                         sortText, filterText, insertText, insertTextFormat, textEdit,
-                        additionalTextEdits, commitCharacters, command, data);
+                        additionalTextEdits, commitCharacters, command);
             }
         }
+    }
+
+    public static enum TriggerKind {
+
+	/**
+	 * Completion was triggered by typing an identifier (24x7 code
+	 * complete), manual invocation (e.g Ctrl+Space) or via API.
+	 */
+	Invoked(1),
+
+	/**
+	 * Completion was triggered by a trigger character.
+	 */
+	TriggerCharacter(2),
+
+	/**
+	 * Completion was re-triggered as the current completion list is incomplete.
+	 */
+	TriggerForIncompleteCompletions(3);
+
+        private final int value;
+
+	private TriggerKind(int value) {
+            this.value = value;
+	}
+
+	public int getValue() {
+	    return value;
+	}
+
+        public static TriggerKind forValue(int value) {
+            TriggerKind[] allValues = TriggerKind.values();
+            if (value < 1 || value > allValues.length) {
+                throw new IllegalArgumentException("Illegal enum value: " + value);
+            }
+            return allValues[value - 1];
+	}
     }
 
     public static enum Kind {
@@ -449,6 +511,14 @@ public interface CompletionCollector {
 	public int getValue() {
 	    return value;
 	}
+
+        public static Kind forValue(int value) {
+            Kind[] allValues = Kind.values();
+            if (value < 1 || value > allValues.length) {
+                throw new IllegalArgumentException("Illegal enum value: " + value);
+            }
+            return allValues[value - 1];
+	}
     }
 
     public static enum Tag {
@@ -464,6 +534,14 @@ public interface CompletionCollector {
         public int getValue() {
             return value;
         }
+
+        public static Tag forValue(int value) {
+            Tag[] allValues = Tag.values();
+            if (value < 1 || value > allValues.length) {
+                throw new IllegalArgumentException("Illegal enum value: " + value);
+            }
+            return allValues[value - 1];
+	}
     }
 
     public static enum TextFormat {
@@ -487,6 +565,14 @@ public interface CompletionCollector {
         public int getValue() {
             return value;
         }
+
+        public static TextFormat forValue(int value) {
+            TextFormat[] allValues = TextFormat.values();
+            if (value < 1 || value > allValues.length) {
+                throw new IllegalArgumentException("Illegal enum value: " + value);
+            }
+            return allValues[value - 1];
+	}
     }
 
     public static final class TextEdit {

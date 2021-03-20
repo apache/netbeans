@@ -153,7 +153,7 @@ public class SQLCompletionQuery extends AsyncCompletionQuery {
                         }
                     }
                 });
-            } else {
+                    } else {
                 // No DB Connection established presently      
                 doQuery(newEnv, metadata, quoter);
             }
@@ -1062,9 +1062,9 @@ public class SQLCompletionQuery extends AsyncCompletionQuery {
                         quoted = true;
                     } else if (quoteString.length() > 0 && lastPrefix.endsWith(quoteString)) {
                         // User typed '"foo".bar"|', can't complete.
-                        return null;
+                return null;
+            }
                     }
-                }
                 for (int i = 0; i < parts.size(); i++) {
                     String unquoted = quoter.unquote(parts.get(i));
                     if (unquoted.length() == 0) {

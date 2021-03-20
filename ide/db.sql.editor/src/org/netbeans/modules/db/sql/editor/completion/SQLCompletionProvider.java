@@ -98,7 +98,7 @@ public class SQLCompletionProvider implements CompletionProvider {
             StatusDisplayer.getDefault().setStatusText(message);
             SQLExecutionBaseAction.notifyNoDatabaseConnection();            
             // XXX: Maybe add content specific "fixs"
-        }
+            }
         return COMPLETION_QUERY_TYPE;
     }
 
@@ -167,4 +167,4 @@ public class SQLCompletionProvider implements CompletionProvider {
         TokenHierarchy<?> hierarchy = TokenHierarchy.get(doc);
         return hierarchy.tokenSequence(SQLTokenId.language());
     }
-}
+        }

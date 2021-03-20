@@ -148,9 +148,9 @@
                         <attr name="position" intvalue="9200"/>
                     </file>
                 </folder>
+                </folder>
             </folder>
         </folder>
-    </folder>
 
     <folder name="OptionsDialog">
         <folder name="PreviewExamples">

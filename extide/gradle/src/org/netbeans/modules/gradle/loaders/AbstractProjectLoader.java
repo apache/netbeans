@@ -34,7 +34,10 @@ import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FALLBACK;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
+import static org.netbeans.modules.gradle.loaders.GradleDaemon.INIT_SCRIPT;
+import static org.netbeans.modules.gradle.loaders.GradleDaemon.TOOLING_JAR;
 import org.netbeans.modules.gradle.spi.GradleFiles;
+import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
 import org.openide.util.Lookup;
 
@@ -81,6 +84,16 @@ public abstract class AbstractProjectLoader {
         }
     }
 
+    static GradleCommandLine injectNetBeansTooling(GradleCommandLine cmd) {
+        GradleCommandLine ret = new GradleCommandLine(cmd);
+        ret.setFlag(GradleCommandLine.Flag.CONFIGURE_ON_DEMAND, GradleSettings.getDefault().isConfigureOnDemand());
+        ret.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, INIT_SCRIPT);
+        ret.setStackTrace(GradleCommandLine.StackTrace.SHORT);
+        ret.addSystemProperty(GradleDaemon.PROP_TOOLING_JAR, TOOLING_JAR);
+        ret.addProjectProperty("nbSerializeCheck", "true");
+        return ret;
+    }
+
     static GradleProject createGradleProject(ProjectInfoDiskCache.QualifiedProjectInfo info) {
         Collection<? extends ProjectInfoExtractor> extractors = Lookup.getDefault().lookupAll(ProjectInfoExtractor.class);
         Map<Class, Object> results = new HashMap<>();
@@ -114,7 +127,7 @@ public abstract class AbstractProjectLoader {
     static void saveCachedProjectInfo(ProjectInfoDiskCache.QualifiedProjectInfo data, GradleProject gp) {
         assert gp.getQuality().betterThan(FALLBACK) : "Never attempt to cache FALLBACK projects."; //NOi18N
         GradleFiles gf = new GradleFiles(gp.getBaseProject().getProjectDir(), true);
-        new ProjectInfoDiskCache(gf).storeData(data);
+        ProjectInfoDiskCache.get(gf).storeData(data);
     }
 
 

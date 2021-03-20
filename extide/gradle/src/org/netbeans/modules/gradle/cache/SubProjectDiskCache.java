@@ -28,6 +28,7 @@ import java.util.WeakHashMap;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache.SubProjectInfo;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.gradle.tooling.model.GradleProject;
+import org.netbeans.modules.gradle.GradleProjectStructure;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 
 /**
@@ -37,9 +38,9 @@ import org.netbeans.modules.gradle.api.GradleBaseProject;
 public class SubProjectDiskCache extends AbstractDiskCache<File, SubProjectInfo> {
 
     private static final String SUBPROJECT_CACHE_FILE_NAME = ".gradle/nb-cache/subprojects.ser"; //NOI18N
-    private static final int COMPATIBLE_CACHE_VERSION = 1;
+    private static final int COMPATIBLE_CACHE_VERSION = 2;
 
-    private static Map<File, SubProjectDiskCache> diskCaches = new WeakHashMap<>();
+    private static final Map<File, SubProjectDiskCache> DISK_CACHES = new WeakHashMap<>();
 
     protected SubProjectDiskCache() {}
 
@@ -63,55 +64,81 @@ public class SubProjectDiskCache extends AbstractDiskCache<File, SubProjectInfo>
     }
 
     public static SubProjectDiskCache get(File key) {
-        SubProjectDiskCache ret = diskCaches.get(key);
+        SubProjectDiskCache ret = DISK_CACHES.get(key);
         if (ret == null) {
             ret = new SubProjectDiskCache(key);
-            diskCaches.put(key, ret);
+            DISK_CACHES.put(key, ret);
         }
         return ret;
     }
 
-    public static final class SubProjectInfo implements Serializable {
-        String rootProjectName;
-        Map<String, String> path2Name;
-        Map<File, String> file2Path;
-        Map<String, String> path2Description;
+    public static final class SubProjectInfo implements GradleProjectStructure, Serializable {
+        public static final String ROOT_PATH = ":"; //NOI18N
+
+        private Map<String, String> path2Name;
+        private Map<File, String> file2Path;
+        private Map<String, File> path2File;
+        private Map<String, String> path2Description;
 
         protected SubProjectInfo() {}
 
         public SubProjectInfo(GradleProject prj) {
             assert prj.getParent() == null : "This shall be called only on a root project!";
-            rootProjectName = prj.getName();
-            path2Name = new HashMap<>();
-            file2Path = new HashMap<>();
-            path2Description = new HashMap<>();
-            for (GradleProject child : prj.getChildren()) {
-                path2Name.put(child.getPath(), child.getName());
-                if (child.getDescription() != null) {
-                    path2Description.put(child.getPath(), child.getDescription());
+            if (prj.getChildren().isEmpty()) {
+                path2Name = Collections.singletonMap(ROOT_PATH, prj.getName());
+                file2Path = Collections.singletonMap(prj.getProjectDirectory(), ROOT_PATH);
+                path2File = Collections.singletonMap(ROOT_PATH, prj.getProjectDirectory());
+                path2Description = Collections.singletonMap(ROOT_PATH, prj.getDescription());
+            } else {
+                path2Name = new HashMap<>();
+                file2Path = new HashMap<>();
+                path2File = new HashMap<>();
+                path2Description = new HashMap<>();
+
+                path2Name.put(ROOT_PATH, prj.getName());
+                file2Path.put(prj.getProjectDirectory(), ROOT_PATH);
+                path2File.put(ROOT_PATH, prj.getProjectDirectory());
+                if (prj.getDescription() != null) {
+                    path2Description.put(ROOT_PATH, prj.getDescription());
                 }
-                File dir = child.getProjectDirectory();
-                if (!dir.isAbsolute()) {
-                    dir = new File(prj.getProjectDirectory(), dir.toString());
+
+                for (GradleProject child : prj.getChildren()) {
+                    path2Name.put(child.getPath(), child.getName());
+                    if (child.getDescription() != null) {
+                        path2Description.put(child.getPath(), child.getDescription());
+                    }
+                    File dir = child.getProjectDirectory();
+                    if (!dir.isAbsolute()) {
+                        dir = new File(prj.getProjectDirectory(), dir.toString());
+                    }
+                    file2Path.put(dir, child.getPath());
+                    path2File.put(child.getPath(), dir);
                 }
-                file2Path.put(dir, child.getPath());
             }
         }
 
         public SubProjectInfo(GradleBaseProject gbp) {
             assert gbp.isRoot() : "This shall be called only on a root project!";
-            rootProjectName = gbp.getName();
-            path2Name = new HashMap<>();
-            file2Path = new HashMap<>();
-            path2Description = Collections.emptyMap();
-            for (Map.Entry<String, File> sprj : gbp.getSubProjects().entrySet()) {
-                file2Path.put(sprj.getValue(), sprj.getKey());
-                path2Name.put(sprj.getKey(), sprj.getKey());
-            }
-        }
+            if (gbp.getSubProjects().isEmpty()) {
+                path2Name = Collections.singletonMap(ROOT_PATH, gbp.getName());
+                file2Path = Collections.singletonMap(gbp.getProjectDir(), ROOT_PATH);
+                path2File = Collections.singletonMap(ROOT_PATH, gbp.getProjectDir());
+                path2Description = Collections.singletonMap(ROOT_PATH, gbp.getDescription());
+            } else {
+                path2Name = new HashMap<>();
+                file2Path = new HashMap<>();
+                path2File = new HashMap<>();
+                path2Description = Collections.emptyMap();
 
-        public String gerRootProjectName() {
-            return rootProjectName;
+                path2Name.put(ROOT_PATH, gbp.getName());
+                file2Path.put(gbp.getProjectDir(), ROOT_PATH);
+                path2File.put(ROOT_PATH, gbp.getProjectDir());
+                for (Map.Entry<String, File> sprj : gbp.getSubProjects().entrySet()) {
+                    file2Path.put(sprj.getValue(), sprj.getKey());
+                    path2File.put(sprj.getKey(), sprj.getValue());
+                    path2Name.put(sprj.getKey(), sprj.getKey());
+                }
+            }
         }
 
         public String getProjectName(String path) {
@@ -141,9 +168,20 @@ public class SubProjectDiskCache extends AbstractDiskCache<File, SubProjectInfo>
         }
 
         @Override
-        public String toString() {
-            return "SubProjects of [" + rootProjectName + "]: " + file2Path.keySet();
+        public Set<String> getProjectPaths() {
+            return path2Name.keySet();
         }
+
+        @Override
+        public File getProjectDir(String path) {
+            return path2File.get(path);
+        }
+
+        @Override
+        public String toString() {
+            return "SubProjects of [" + path2Name.get(ROOT_PATH) + "]: " + file2Path.keySet();
+        }
+
 
     }
 }

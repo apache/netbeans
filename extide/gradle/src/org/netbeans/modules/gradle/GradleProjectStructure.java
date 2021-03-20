@@ -16,30 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.gradle;
 
-package org.netbeans.modules.gradle.api;
-
-import org.netbeans.modules.gradle.tooling.Model;
-import java.util.Map;
+import java.io.File;
 import java.util.Set;
 
 /**
  *
- * @author Laszlo Kishalmi
+ * @author lkishalmi
  */
-public interface NbProjectInfo extends Model, org.gradle.tooling.model.Model {
-    
-    /**
-     * Project information which shall be cached.
-     * @return the important project data.
-     */
-    Map<String, Object> getInfo();
-    
-    /**
-     * Additional project information which could be thrown away.
-     * @return the not-that-important project data.
-     */    
-    Map<String, Object> getExt();
-    Set<String> getProblems();
-    boolean getMiscOnly();
+public interface GradleProjectStructure {
+
+    Set<String> getProjectPaths();
+    File getProjectDir(String path);
 }

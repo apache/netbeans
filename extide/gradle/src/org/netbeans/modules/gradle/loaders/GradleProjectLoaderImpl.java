@@ -47,6 +47,7 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
         List<AbstractProjectLoader> loaders = new LinkedList<>();
 
         if (!ignoreCache) loaders.add(new DiskCacheProjectLoader(ctx));
+        loaders.add(new BundleProjectLoader(ctx));
         loaders.add(new LegacyProjectLoader(ctx));
         loaders.add(new FallbackProjectLoader(ctx));
 

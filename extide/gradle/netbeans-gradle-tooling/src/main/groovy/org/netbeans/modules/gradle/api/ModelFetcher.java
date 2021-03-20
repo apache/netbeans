@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.gradle.api.Action;
 import org.gradle.tooling.BuildAction;
@@ -74,6 +75,7 @@ public final class ModelFetcher {
         return requestModel(null, modelType, parameterType, parameterInitializer);
     }
 
+    @SuppressWarnings("unchecked")
     public <T,P> Future<T> requestModel(String target, Class<T> modelType, Class<P> parameterType, Action<? super P> parameterInitializer) throws RejectedExecutionException {
         ModelRequest req = new ModelRequest(target, modelType, parameterType, parameterInitializer);
         Future ret = executor.submit(() -> {
@@ -93,6 +95,34 @@ public final class ModelFetcher {
         return ret;
     }
 
+    public <T,P> void modelAction(String target, Class<T> modelType, Action<T> action) throws RejectedExecutionException {
+        modelAction(target, modelType, null, null, action, null);
+    }
+
+    public <T,P> void modelAction(String target, Class<T> modelType, Action<T> action, Action<Exception> error) throws RejectedExecutionException {
+        modelAction(target, modelType, null, null, action, error);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T,P> void modelAction(String target, Class<T> modelType, Class<P> parameterType, Action<? super P> parameterInitializer, Action<T> action, Action<Exception> error) throws RejectedExecutionException {
+        ModelRequest req = new ModelRequest(target, modelType, parameterType, parameterInitializer);
+        executor.submit(() -> {
+            lock.await();
+            ModelResult result = modelResults.get(req.sequenceId);
+            if (result != null) {
+                if (result.problem == null) {
+                    if (action != null) action.execute((T) result.model);
+                } else {
+                    if (error != null) error.execute(new Exception(result.problem));
+                }
+            } else {
+                throw new Exception("Model not found");
+            }
+            return null;
+        });
+        this.action.modelRequests.add(req);
+    }
+
     public void fetchModels(ProjectConnection pconn, Action<? super BuildActionExecuter> config) {
         executor.shutdown();
         try {
@@ -108,11 +138,16 @@ public final class ModelFetcher {
         }
     }
 
+    public boolean awaitTermination(long time, TimeUnit unit) throws InterruptedException {
+        return executor.awaitTermination(time, unit);
+    }
+    
     static class MultiModelAction implements BuildAction<Map<Integer, ModelResult>> {
 
         final List<ModelRequest> modelRequests = new LinkedList<>();
 
         @Override
+        @SuppressWarnings("unchecked")
         public Map<Integer, ModelResult> execute(BuildController bc) {
             Map<Integer,ModelResult> ret = new HashMap<>();
             List<ModelRequest> reqs = new LinkedList<>(modelRequests);

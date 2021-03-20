@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.Set;
 import static java.util.logging.Level.*;
@@ -39,9 +40,8 @@ public abstract class AbstractDiskCache <K extends Serializable, T extends Seria
 
     private static final Logger LOG = Logger.getLogger(AbstractDiskCache.class.getName());
 
-    protected K key;
-    private boolean valid = false;
-    private transient CacheEntry<T> entry;
+    protected transient K key;
+    private transient WeakReference<CacheEntryImpl<T>> entryRef;
 
     protected AbstractDiskCache() {}
     
@@ -49,23 +49,22 @@ public abstract class AbstractDiskCache <K extends Serializable, T extends Seria
         this.key = key;
     }
 
+    @SuppressWarnings("unchecked")
     public synchronized final CacheEntry<T> loadEntry() {
-        CacheEntry<T> ret = entry;
+        CacheEntryImpl<T> ret = entryRef != null ? entryRef.get() : null;
         if (ret == null && !GradleExperimentalSettings.getDefault().isCacheDisabled()) {
             File cacheFile = cacheFile();
             if (cacheFile.canRead()) {
                 try (ObjectInputStream is = new ObjectInputStream(new FileInputStream(cacheFile))) {
-                    ret = (CacheEntry<T>) is.readObject();
-                    valid = true;
+                    ret = (CacheEntryImpl<T>) is.readObject();
                 } catch (ClassNotFoundException | IOException ex) {
                     LOG.log(INFO, "Could no load project info from {0} due to: {1}", new Object[]{cacheFile, ex.getMessage()});
                     cacheFile.delete();
                 }
             }
-            entry = ret;
+            entryRef = ret != null ? new WeakReference<>(ret) : null;
         }
         return ret;
-
     }
 
     public synchronized final T loadData() {
@@ -73,15 +72,21 @@ public abstract class AbstractDiskCache <K extends Serializable, T extends Seria
         return e != null && e.isValid() ? e.getData() : null;
     }
 
+    public final boolean isValid() {
+        CacheEntry<T> e = loadEntry();
+        return e != null && e.isValid();        
+    }
+    
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public synchronized final void storeData(T data) {
         File cacheFile = cacheFile();
         if (!cacheFile.exists()) {
             cacheFile.getParentFile().mkdirs();
         }
         try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(cacheFile))) {
-            CacheEntry e = new CacheEntryImpl(data);
+            CacheEntryImpl e = new CacheEntryImpl(data);
             os.writeObject(e);
-            entry = e;
+            entryRef = new WeakReference(e);
         } catch (IOException ex) {
             LOG.log(INFO, "Failed to persist info to {0} due to {1}", new Object[]{cacheFile, ex.getMessage()});
             cacheFile.delete();
@@ -89,8 +94,8 @@ public abstract class AbstractDiskCache <K extends Serializable, T extends Seria
     }
 
     public synchronized final void invalidate() {
+        entryRef = null;
         File cacheFile = cacheFile();
-        valid = false;
         if (cacheFile.canRead()) {
             cacheFile.delete();
         }
@@ -130,7 +135,7 @@ public abstract class AbstractDiskCache <K extends Serializable, T extends Seria
         @Override
         public boolean isValid() {
             boolean ret = (data != null) && isCompatible();
-            if (AbstractDiskCache.this.valid && ret && (sourceFiles != null)) {
+            if (ret && (sourceFiles != null)) {
                 for (File f : sourceFiles) {
                     if (!f.exists() || (f.lastModified() > timestamp)) {
                         ret = false;
@@ -148,7 +153,7 @@ public abstract class AbstractDiskCache <K extends Serializable, T extends Seria
 
         @Override
         public String toString() {
-            Class dataClass = data != null ? data.getClass() : null;
+            Class<?> dataClass = data != null ? data.getClass() : null;
             return "CacheEntryImpl{" + "data:version=" + dataClass + ":" + version + ", timestamp=" + new Date(timestamp) + ", sourceFiles=" + sourceFiles + '}';
         }
         

@@ -16,30 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.gradle.loaders;
 
-package org.netbeans.modules.gradle.api;
-
-import org.netbeans.modules.gradle.tooling.Model;
-import java.util.Map;
 import java.util.Set;
+import org.gradle.tooling.model.Model;
+import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 
 /**
  *
- * @author Laszlo Kishalmi
+ * @author lkishalmi
  */
-public interface NbProjectInfo extends Model, org.gradle.tooling.model.Model {
-    
-    /**
-     * Project information which shall be cached.
-     * @return the important project data.
-     */
-    Map<String, Object> getInfo();
-    
-    /**
-     * Additional project information which could be thrown away.
-     * @return the not-that-important project data.
-     */    
-    Map<String, Object> getExt();
-    Set<String> getProblems();
-    boolean getMiscOnly();
+public interface ModelCachingDescriptor <T extends Model> {
+
+    Class<T> getModelClass();
+
+    Set<String> getTargets();
+
+    GradleCommandLine gradleCommandLine();
+
+    void onLoad(String target, T model);
+    void onError(String target, Exception ex);
+
+    boolean needsRefresh(String target);
+
 }

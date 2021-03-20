@@ -239,6 +239,8 @@ public class SQLStatementAnalyzer {
     }
 
     protected String getUnquotedIdentifier() {
+        if (quoter == null)
+            return "";
         return quoter.unquote(seq.token().text().toString());
     }
 

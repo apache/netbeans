@@ -112,8 +112,8 @@
                     <name>unit</name>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.nbjunit</code-name-base>
-                        <compile-dependency/>
                         <recursive/>
+                        <compile-dependency/>
                     </test-dependency>
                 </test-type>
             </test-dependencies>

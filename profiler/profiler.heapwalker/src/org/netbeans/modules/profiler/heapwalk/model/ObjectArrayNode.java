@@ -127,7 +127,7 @@ public class ObjectArrayNode extends ArrayNode {
             public HeapWalkerNode[] computeChildren() {
                 HeapWalkerNode[] children = null;
 
-                if (getMode() == HeapWalkerNode.MODE_FIELDS) {
+                if (isModeFields()) {
                     int fieldsSize = getInstance().getLength();
 
                     if (fieldsSize == 0) {

@@ -48,12 +48,14 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.queries.CollocationQuery;
+import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectContainerProvider;
 import org.netbeans.spi.project.SubprojectProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
@@ -98,7 +100,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
         // Disable the Accessory. JFileChooser does not select a file
         // by default
-        setAccessoryEnablement( false, 0 );
+        setAccessoryEnablement(false, 0, 0);
     }
 
     /** This method is called from within the constructor to
@@ -246,7 +248,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
             if ( !projects.isEmpty() ) {
                 // Enable all components acessory
-                setAccessoryEnablement( true, projects.size() );
+                setAccessoryEnablement(true, projects.size(), countPrimable(projects));
 
                 if ( projects.size() == 1 ) {
                     String projectName = projectNames.get(0);
@@ -291,7 +293,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
                 }
 
                 // Disable all components in accessory
-                setAccessoryEnablement( false, 0 );
+                setAccessoryEnablement(false, 0, 0);
 
                 // But, in case it is a load error, show that:
                 if (projectDirs.length == 1 && projectDirs[0] != null) {
@@ -333,12 +335,23 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         }
         else if ( JFileChooser.DIRECTORY_CHANGED_PROPERTY.equals( e.getPropertyName() ) ) {
             // Selection lost => disable accessory
-            setAccessoryEnablement( false, 0 );
+            setAccessoryEnablement(false, 0, 0);
         }
     }
 
-
     // Private methods ---------------------------------------------------------
+
+    private static int countPrimable(Iterable<Project> projects) {
+        int cnt = 0;
+        for (Project p : projects) {
+            final Lookup lkp = p.getLookup();
+            final ActionProvider ap = lkp.lookup(ActionProvider.class);
+            if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_PRIME, lkp)) {
+                cnt++;
+            }
+        }
+        return cnt;
+    }
 
     private static Project getProject( File dir ) {
         return OpenProjectList.fileToProject( dir );
@@ -354,12 +367,12 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
     }
 
-    private void setAccessoryEnablement( boolean enable, int numberOfProjects ) {
+    private void setAccessoryEnablement( boolean enable, int numberOfProjects, int numberOfPrimable ) {
         jLabelProjectName.setEnabled( enable );
         jTextFieldProjectName.setEnabled( enable );
         jTextFieldProjectName.setForeground(/* i.e. L&F default */null);
         jCheckBoxSubprojects.setEnabled( enable );
-        jCheckBoxPrime.setEnabled(enable);
+        jCheckBoxPrime.setEnabled(numberOfPrimable > 0);
         jScrollPaneSubprojects.setEnabled( enable );
     }
 

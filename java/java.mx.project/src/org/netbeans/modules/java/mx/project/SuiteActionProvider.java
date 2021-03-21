@@ -247,7 +247,7 @@ final class SuiteActionProvider implements ActionProvider {
             case ActionProvider.COMMAND_DEBUG_SINGLE:
                 return fo != null;
             default:
-                return true;
+                return false;
         }
     }
 }

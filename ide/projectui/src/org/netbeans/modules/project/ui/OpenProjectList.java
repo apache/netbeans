@@ -709,7 +709,7 @@ public final class OpenProjectList {
                 }
                 if (prime) {
                     ActionProvider ap = p2.getLookup().lookup(ActionProvider.class);
-                    if (ap.isActionEnabled(ActionProvider.COMMAND_PRIME, p2.getLookup())) {
+                    if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_PRIME, p2.getLookup())) {
                         ap.invokeAction(ActionProvider.COMMAND_PRIME, p2.getLookup());
                     }
                 }

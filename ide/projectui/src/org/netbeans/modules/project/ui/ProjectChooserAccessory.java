@@ -73,7 +73,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
     private Map<Project,Set<? extends Project>> subprojectsCache = new HashMap<Project,Set<? extends Project>>(); // #59098
     /** Creates new form ProjectChooserAccessory */
-    public ProjectChooserAccessory(JFileChooser chooser, boolean isOpenSubprojects) {
+    public ProjectChooserAccessory(JFileChooser chooser, boolean isOpenSubprojects, boolean trustAndPrime) {
         initComponents();
 
         modelUpdater = new ModelUpdater();
@@ -86,6 +86,9 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         // Listen on the subproject checkbox to change the option accordingly
         jCheckBoxSubprojects.setSelected( isOpenSubprojects );
         jCheckBoxSubprojects.addActionListener( this );
+
+        jCheckBoxPrime.setSelected(trustAndPrime);
+        jCheckBoxPrime.addActionListener(this);
 
         // Listen on the chooser to update the Accessory
         chooser.addPropertyChangeListener( this );
@@ -109,6 +112,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
         jLabelProjectName = new javax.swing.JLabel();
         jTextFieldProjectName = new javax.swing.JTextField();
+        jCheckBoxPrime = new javax.swing.JCheckBox();
         jCheckBoxSubprojects = new javax.swing.JCheckBox();
         jScrollPaneSubprojects = new javax.swing.JScrollPane();
         jListSubprojects = new javax.swing.JList();
@@ -133,6 +137,14 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 0);
         add(jTextFieldProjectName, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxPrime, org.openide.util.NbBundle.getMessage(ProjectChooserAccessory.class, "LBL_PrjChooser_Prime_CheckBox")); // NOI18N
+        jCheckBoxPrime.setMargin(new java.awt.Insets(2, 0, 2, 2));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 0);
+        add(jCheckBoxPrime, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxSubprojects, org.openide.util.NbBundle.getMessage(ProjectChooserAccessory.class, "LBL_PrjChooser_Subprojects_CheckBox")); // NOI18N
         jCheckBoxSubprojects.setMargin(new java.awt.Insets(2, 0, 2, 2));
@@ -160,6 +172,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox jCheckBoxPrime;
     private javax.swing.JCheckBox jCheckBoxSubprojects;
     private javax.swing.JLabel jLabelProjectName;
     private javax.swing.JList jListSubprojects;
@@ -173,6 +186,9 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
     public void actionPerformed( ActionEvent e ) {
         if ( e.getSource() == jCheckBoxSubprojects ) {
             OpenProjectListSettings.getInstance().setOpenSubprojects( jCheckBoxSubprojects.isSelected() );
+        }
+        if (e.getSource() == jCheckBoxPrime) {
+            OpenProjectListSettings.getInstance().setTrustAndPrime(jCheckBoxPrime.isSelected());
         }
     }
 
@@ -342,6 +358,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         jTextFieldProjectName.setEnabled( enable );
         jTextFieldProjectName.setForeground(/* i.e. L&F default */null);
         jCheckBoxSubprojects.setEnabled( enable );
+        jCheckBoxPrime.setEnabled(enable);
         jScrollPaneSubprojects.setEnabled( enable );
     }
 
@@ -426,7 +443,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
 
 
         if ( defaultAccessory ) {
-            chooser.setAccessory(new ProjectChooserAccessory(chooser, opls.isOpenSubprojects()));
+            chooser.setAccessory(new ProjectChooserAccessory(chooser, opls.isOpenSubprojects(), opls.isTrustAndPrime()));
         }
 
         File currDir = null;

@@ -196,7 +196,7 @@ public class NewProject extends AbstractAction {
                             mainProject = lastProject;
                         }
                         
-                        OpenProjectList.getDefault().open(projectsToOpen.toArray(new Project[0]), false, true, mainProject);
+                        OpenProjectList.getDefault().open(projectsToOpen.toArray(new Project[0]), false, false, true, mainProject);
                         
         EventQueue.invokeLater( new Runnable() {
             @Override public void run() {

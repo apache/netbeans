@@ -139,6 +139,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         add(jTextFieldProjectName, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxPrime, org.openide.util.NbBundle.getMessage(ProjectChooserAccessory.class, "LBL_PrjChooser_Prime_CheckBox")); // NOI18N
+        jCheckBoxPrime.setToolTipText(org.openide.util.NbBundle.getMessage(ProjectChooserAccessory.class, "LBL_PrjChooser_Prime_CheckBoxTooltipText")); // NOI18N
         jCheckBoxPrime.setMargin(new java.awt.Insets(2, 0, 2, 2));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;

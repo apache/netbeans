@@ -239,7 +239,7 @@ public class OpenProjectListSettings {
     }
 
     public boolean isTrustAndPrime() {
-        return getPreferences().getBoolean(TRUST_AND_PRIME, true);
+        return getPreferences().getBoolean(TRUST_AND_PRIME, false);
     }
 
     public void setTrustAndPrime( boolean openSubprojects ) {

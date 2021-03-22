@@ -66,6 +66,7 @@ import javax.swing.text.*;
 import javax.swing.undo.UndoableEdit;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
+import org.netbeans.modules.openide.text.AskEditorQuestions;
 import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.Parameters;
@@ -1710,14 +1711,10 @@ public abstract class CloneableEditorSupport extends CloneableOpenSupport {
                     d.getProperty(javax.swing.text.Document.TitleProperty)
                 );
 
-            NotifyDescriptor nd = new NotifyDescriptor.Confirmation(msg, NotifyDescriptor.YES_NO_OPTION);
-
             reloadDialogOpened = true;
 
             try {
-                Object ret = DialogDisplayer.getDefault().notify(nd);
-
-                if (NotifyDescriptor.YES_OPTION.equals(ret)) {
+                if (AskEditorQuestions.askReloadDocument(msg)) {
                     doReload = true;
                 }
             } finally {

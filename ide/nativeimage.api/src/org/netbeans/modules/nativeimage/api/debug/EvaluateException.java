@@ -16,17 +16,35 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.cpplite.debugger;
+package org.netbeans.modules.nativeimage.api.debug;
 
-public final class EvaluateException extends Exception {
+/**
+ * Thrown when evaluation in the native debugger fails.
+ *
+ * @since 1.0
+ */
+public class EvaluateException extends Exception {
 
     /**
      * Constructs an instance of <code>EvaluateException</code> with the
      * specified detail message.
      *
      * @param msg the detail message.
+     * @since 1.0
      */
-    EvaluateException(String msg) {
+    public EvaluateException(String msg) {
         super(msg);
+    }
+
+    /**
+     * Constructs an instance of <code>EvaluateException</code> from an
+     * existing exception.
+     *
+     * @param t exception.
+     * @since 1.0
+     */
+    public EvaluateException(Throwable t) {
+        super(t.getLocalizedMessage(), t);
+        
     }
 }

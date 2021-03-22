@@ -90,7 +90,7 @@ public class ActionProviderImpl implements ActionProvider {
         }, executionDescriptor, ProjectUtils.getInformation(prj).getDisplayName() + " - " + command).run();
     }
 
-    private String quote(String s) {
+    private static String quote(String s) {
         return s.replace("_", "_u_").replace(" ", "_s_");
     }
 

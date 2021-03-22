@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -71,6 +72,7 @@ import static org.netbeans.modules.project.ui.Bundle.*;
 import org.netbeans.modules.project.ui.api.UnloadedProjectInformation;
 import org.netbeans.modules.project.ui.groups.Group;
 import org.netbeans.modules.project.uiapi.ProjectOpenedTrampoline;
+import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectContainerProvider;
 import org.netbeans.spi.project.SubprojectProvider;
@@ -103,6 +105,8 @@ import org.openide.util.Parameters;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.WindowManager;
 
 /**
@@ -710,12 +714,32 @@ public final class OpenProjectList {
                 if (prime) {
                     ActionProvider ap = p2.getLookup().lookup(ActionProvider.class);
                     if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_PRIME, p2.getLookup())) {
-                        ap.invokeAction(ActionProvider.COMMAND_PRIME, p2.getLookup());
+                        final CountDownLatch[] await = new CountDownLatch[1];
+                        ActionProgress awaitPriming = new ActionProgress() {
+                            @Override
+                            protected void started() {
+                                if (await[0] == null) {
+                                    await[0] = new CountDownLatch(1);
+                                }
+                            }
+
+                            @Override
+                            public void finished(boolean success) {
+                                if (await[0] != null) {
+                                    await[0].countDown();
+                                }
+                            }
+                        };
+                        Lookup waitAndProject = new ProxyLookup(
+                            Lookups.singleton(awaitPriming), p2.getLookup()
+                        );
+                        ap.invokeAction(ActionProvider.COMMAND_PRIME, waitAndProject);
+                        if (await[0] != null) {
+                            await[0].await();
+                        }
                     }
                 }
-            } catch (IOException ex) {
-                LOGGER.log(Level.INFO, "Cannot convert " + p.getProjectDirectory(), ex);
-            } catch (IllegalArgumentException ex) {
+            } catch (InterruptedException | IOException | IllegalArgumentException ex) {
                 LOGGER.log(Level.INFO, "Cannot convert " + p.getProjectDirectory(), ex);
             }
         }

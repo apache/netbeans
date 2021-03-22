@@ -58,7 +58,6 @@ import org.netbeans.spi.project.support.ant.PropertyEvaluator;
 import org.openide.util.MutexException;
 import org.openide.util.Mutex;
 import org.netbeans.api.project.ProjectManager;
-import org.netbeans.modules.j2ee.common.SharabilityUtility;
 import org.netbeans.modules.java.api.common.classpath.ClassPathSupport;
 import org.netbeans.modules.java.api.common.project.ui.ClassPathUiSupport;
 import org.netbeans.modules.javaee.project.api.ant.DeployOnSaveUtils;
@@ -323,12 +322,15 @@ final public class EjbJarProjectProperties {
         PLATFORM_LIST_RENDERER = PlatformUiSupport.createPlatformListCellRenderer();
         SpecificationVersion minimalSourceLevel = null;
         Profile profile = Profile.fromPropertiesString(evaluator.getProperty(J2EE_PLATFORM));
-        if (Profile.JAVA_EE_6_FULL.equals(profile)) {
+
+        if (Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile)) {
+            minimalSourceLevel = new SpecificationVersion("1.8");
+        } else if (Profile.JAVA_EE_7_FULL.equals(profile)) {
+            minimalSourceLevel = new SpecificationVersion("1.7");
+        } else if (Profile.JAVA_EE_6_FULL.equals(profile)) {
             minimalSourceLevel = new SpecificationVersion("1.6");
         } else if (Profile.JAVA_EE_5.equals(profile)) {
             minimalSourceLevel = new SpecificationVersion("1.5");
-        } else if (Profile.JAVA_EE_7_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.7");
         }
         JAVAC_SOURCE_MODEL = PlatformUiSupport.createSourceLevelComboBoxModel (PLATFORM_MODEL, evaluator.getProperty(JAVAC_SOURCE), evaluator.getProperty(JAVAC_TARGET), minimalSourceLevel);
         JAVAC_SOURCE_RENDERER = PlatformUiSupport.createSourceLevelListCellRenderer ();
@@ -574,8 +576,9 @@ final public class EjbJarProjectProperties {
         }
     }
     
-    /** Finds out what are new and removed project dependencies and 
-     * applyes the info to the project
+    /** 
+     * Finds out what are new and removed project dependencies and 
+     * applies the info to the project
      */   
     private void resolveProjectDependenciesNew() {
             

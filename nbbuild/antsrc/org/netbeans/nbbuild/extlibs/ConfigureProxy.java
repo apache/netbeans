@@ -114,7 +114,9 @@ public final class ConfigureProxy extends Task {
             for (Exception ex : errs) {
                 task.log(ex, Project.MSG_ERR);
             }
-            task.log(msgs.toString(), Project.MSG_ERR);
+            if (msgs.length() > 0) {
+                task.log(msgs.toString(), Project.MSG_ERR);
+            }
             throw new IOException("Cannot connect to " + url);
         } else {
             task.log(msgs.toString(), Project.MSG_DEBUG);

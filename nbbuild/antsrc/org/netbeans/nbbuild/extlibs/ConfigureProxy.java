@@ -80,7 +80,7 @@ public final class ConfigureProxy extends Task {
     }
 
     static URLConnection openConnection(Task task, final URL url, URI[] connectedVia) throws IOException {
-        long connectTimeoutMs = getProjectPropertyInt(task, "downloadBinaries.connectTimeoutMs", 5000);
+        long connectTimeoutMs = getProjectPropertyInt(task, "downloadBinaries.connectTimeoutMs", 15000);
         task.log("Connect timeout set to " + connectTimeoutMs + " milliseconds prior to connecting to " + url, Project.MSG_DEBUG);
         final URLConnection[] conn = { null };
         final List<Exception> errs = new CopyOnWriteArrayList<>();

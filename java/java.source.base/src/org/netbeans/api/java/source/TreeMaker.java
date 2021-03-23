@@ -111,6 +111,7 @@ import org.openide.util.Parameters;
  * 
  * @since 0.44.0
  */
+
 public final class TreeMaker {
     
     private TreeFactory delegate;
@@ -1213,18 +1214,27 @@ public final class TreeMaker {
     
     /**
      * Creates a new BindingPatternTree.
-     *
+     * @deprecated
      * @param name name of the binding variable
      * @param type the type of the pattern
      * @return the newly created BindingPatternTree
      * @throws NoSuchMethodException if the used javac does not support
      *                               BindingPatternTree.
      */
+    @Deprecated
     public Tree BindingPattern(CharSequence name,
                                Tree type) {
         return delegate.BindingPattern(name, type);
     }
     
+      /**
+     * Creates a new Tree for a given VariableTree
+     * @specication : 15.20.2
+     * @param vt the VariableTree of the pattern
+     * @see com.sun.source.tree.BindingPatternTree
+     * @return the newly created BindingPatternTree
+     * @since 16
+     */
     public Tree BindingPattern(VariableTree vt) {
         return delegate.BindingPattern(vt);
     }

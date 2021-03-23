@@ -348,6 +348,22 @@
         </description>
         <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
     </change>
+    
+    <change id="TreeMaker.BindingPattern">
+        <api name="javasource_base" />
+        <summary>Added new method for getting Tree using VariableTree type</summary>
+        <version major="12" minor="4"/>
+        <date day="23" month="3" year="2021"/>
+        <author login="singh-akhilesh"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+            <p>
+                Regarding the JEP 394 (finalization of pattern matching for instanceof in JDK 16).
+                The shape of the BindingPatternTree has changed; the BindingPatternTree does not have a name and type, but rather a VariableTree.
+            </p>
+        </description>
+        <class name="TreeMaker" package="org.netbeans.api.java.source"/>
+    </change>
 </changes>
 <htmlcontents>
 <head>

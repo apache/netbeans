@@ -417,7 +417,7 @@ static void calc_fs_skew(struct timeval *skew) {
     
     char path[PATH_MAX+1];
     getcwd(path, sizeof path);
-    strncat(path, "/tmpXXXXXX", sizeof path);
+    strncat(path, "/tmpXXXXXX", (sizeof path)-1);
 
     int fd;
 

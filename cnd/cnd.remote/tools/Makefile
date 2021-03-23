@@ -38,11 +38,11 @@ CFLAGS-Linux := ${CFLAGS-COMMON} -Wreturn-type -Wimplicit -Werror -std=c99 ${PRE
 CFLAGS-SunOS := ${CFLAGS-COMMON} -xc99 -errwarn ${PREVISE_FLAG}
 CFLAGS-Mac_OS_X := ${CFLAGS-COMMON}
 
-LDFLAGS-LIB-Linux := -shared -ldl -lrt
+LDFLAGS-LIB-Linux := -shared -lpthread -ldl -lrt
 LDFLAGS-LIB-SunOS := -shared -ldl -lrt -lsocket
 LDFLAGS-LIB-Mac_OS_X := -G -ldl -lrt
 
-LDFLAGS-APP-Linux := -lrt -lnsl -lresolv
+LDFLAGS-APP-Linux := -lrt -lpthread -lnsl -lresolv
 LDFLAGS-APP-SunOS := -lrt -lnsl -lsocket -lresolv
 LDFLAGS-APP-Mac_OS_X := -lrt -lnsl -lsocket -lresolv
 

@@ -73,7 +73,7 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         assertNotNull(testSourceFO);
         DataObject testSourceDO = DataObject.find(testSourceFO);
         assertNotNull(testSourceDO);
-        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        EditorCookie ec = testSourceDO.getLookup().lookup(EditorCookie.class);
         assertNotNull(ec);
         final Document doc = ec.openDocument();
         assertNotNull(doc);

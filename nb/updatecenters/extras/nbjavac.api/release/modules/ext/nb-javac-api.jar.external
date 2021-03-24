@@ -1,5 +1,5 @@
-CRC:1966570976
-SIZE:207539
-URL:https://oss.sonatype.org/content/repositories/comdukescript-1139/com/dukescript/nbjavac/nb-javac/jdk-16+36/nb-javac-jdk-16+36-api.jar
-MessageDigest: SHA-256 d2c62769f5b7cd5c73a4ede46e8324133045d09fda567eab34c57bd0d656d022
-MessageDigest: SHA-512 de85d429facd206168c66bc9f3fbb5cb25aa50a33301ebc9958c54fa8e76beb2e11f2d8724f40d3c16f797852f203cf5a8efcdeab9ef2decdf1167a8b333088b
+CRC:138603707
+SIZE:207866
+URL:https://oss.sonatype.org/content/repositories/comdukescript-1140/com/dukescript/nbjavac/nb-javac/jdk-16+36/nb-javac-jdk-16+36-api.jar
+MessageDigest: SHA-256 019000d85659bbd4d2c7e927154976ca2e521fd1357f536654ccc8be74363f23
+MessageDigest: SHA-512 82efdc5006fa211fca7e2a835131c88434710356b7c87be7c6d633a353650ed882abdf31cfdce28bb1f28339dc63fffc4fc0b8fda82247ae610f48f09a99d9fe

@@ -19,6 +19,7 @@
 package org.netbeans.modules.micronaut;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -87,6 +88,44 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
         return null;
     }
 
+    static void addProperties(FileObject fo, String propertyName, List<WhereUsedRefactoringElement> refactoringElements) {
+        try {
+            ParserManager.parse(Collections.singleton(Source.create(fo)), new UserTask() {
+                public @Override void run(ResultIterator resultIterator) throws Exception {
+                    Parser.Result r = resultIterator.getParserResult();
+                    if (r instanceof ParserResult) {
+                        Language language = LanguageRegistry.getInstance().getLanguageByMimeType(resultIterator.getSnapshot().getMimeType());
+                        if (language != null) {
+                            StructureScanner scanner = language.getStructure();
+                            if (scanner != null) {
+                                find(fo, propertyName, scanner.scan((ParserResult) r), r.getSnapshot().getText(), refactoringElements);
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (ParseException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
+    private static void find(FileObject fo, String propertyName, List<? extends StructureItem> structures, CharSequence content, List<WhereUsedRefactoringElement> refactoringElements) {
+        int idx = propertyName.indexOf('.');
+        String name = idx < 0 ? propertyName : propertyName.substring(0, idx);
+        for (StructureItem structure : structures) {
+            if ("*".equals(name) || name.equals(structure.getName())) {
+                if (idx < 0) {
+                    int start = (int) structure.getPosition();
+                    int end = (int) structure.getEndPosition();
+                    String text = content.subSequence(start, end).toString();
+                    refactoringElements.add(new WhereUsedRefactoringElement(fo, new int[] {start, end}, text));
+                } else {
+                    find(fo, propertyName.substring(idx + 1), structure.getNestedItems(), content, refactoringElements);
+                }
+            }
+        }
+    }
+
     private static class MicronautWhereUsedRefactoringPlugin implements RefactoringPlugin {
 
         private final WhereUsedQuery refactoring;
@@ -145,7 +184,11 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
                                                 for (ConfigurationMetadataProperty property : source.getProperties().values()) {
                                                     String name = "set" + property.getName().replaceAll("-", "");
                                                     if (name.equalsIgnoreCase(info.methodName)) {
-                                                        addProperties(fo, property.getId(), refactoringElements);
+                                                        List<WhereUsedRefactoringElement> elements = new ArrayList<>();
+                                                        addProperties(fo, property.getId(), elements);
+                                                        for (WhereUsedRefactoringElement element : elements) {
+                                                            refactoringElements.add(refactoring, element);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -159,44 +202,6 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
                 }
             }
             return null;
-        }
-
-        private void addProperties(FileObject fo, String propertyName, RefactoringElementsBag refactoringElements) {
-            try {
-                ParserManager.parse(Collections.singleton(Source.create(fo)), new UserTask() {
-                    public @Override void run(ResultIterator resultIterator) throws Exception {
-                        Parser.Result r = resultIterator.getParserResult();
-                        if (r instanceof ParserResult) {
-                            Language language = LanguageRegistry.getInstance().getLanguageByMimeType(resultIterator.getSnapshot().getMimeType());
-                            if (language != null) {
-                                StructureScanner scanner = language.getStructure();
-                                if (scanner != null) {
-                                    find(fo, propertyName, scanner.scan((ParserResult) r), r.getSnapshot().getText(), refactoringElements);
-                                }
-                            }
-                        }
-                    }
-                });
-            } catch (ParseException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-
-        private void find(FileObject fo, String propertyName, List<? extends StructureItem> structures, CharSequence content, RefactoringElementsBag refactoringElements) {
-            int idx = propertyName.indexOf('.');
-            String name = idx < 0 ? propertyName : propertyName.substring(0, idx);
-            for (StructureItem structure : structures) {
-                if ("*".equals(name) || name.equals(structure.getName())) {
-                    if (idx < 0) {
-                        int start = (int) structure.getPosition();
-                        int end = (int) structure.getEndPosition();
-                        String text = content.subSequence(start, end).toString();
-                        refactoringElements.add(refactoring, new WhereUsedRefactoringElement(fo, new int[] {start, end}, text));
-                    } else {
-                        find(fo, propertyName.substring(idx + 1), structure.getNestedItems(), content, refactoringElements);
-                    }
-                }
-            }
         }
 
         private Info getInfo() throws IOException {
@@ -216,73 +221,73 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
             return info;
         }
 
-        public static final class WhereUsedRefactoringElement extends SimpleRefactoringElementImplementation {
-
-            private final FileObject fileObject;
-            private final int[] pos;
-            private final String text;
-
-            private WhereUsedRefactoringElement(FileObject fileObject, int[] pos, String text) {
-                this.fileObject = fileObject;
-                this.pos = pos;
-                this.text = text;
-            }
-
-            @Override
-            public String getText() {
-                return text;
-            }
-
-            @Override
-            public String getDisplayText() {
-                StringBuilder sb = new StringBuilder();
-                int idx = text.indexOf(':');
-                if (idx < 0) {
-                    sb.append(text);
-                } else {
-                    sb.append(MicronautConfigCompletionItem.PROPERTY_NAME_COLOR).append("<b>");
-                    sb.append(text.substring(0, idx));
-                    sb.append("</b></font>");
-                    sb.append(text.substring(idx));
-                }
-                return sb.toString();
-            }
-
-            @Override
-            public void performChange() {
-            }
-
-            @Override
-            public Lookup getLookup() {
-                return Lookup.EMPTY;
-            }
-
-            @Override
-            public FileObject getParentFile() {
-                return fileObject;
-            }
-
-            @Override
-            public PositionBounds getPosition() {
-                try {
-                    DataObject dobj = DataObject.find(getParentFile());
-                    if (dobj != null) {
-                        EditorCookie.Observable obs = (EditorCookie.Observable)dobj.getCookie(EditorCookie.Observable.class);
-                        if (obs != null && obs instanceof CloneableEditorSupport) {
-                            CloneableEditorSupport supp = (CloneableEditorSupport)obs;
-                            return new PositionBounds(supp.createPositionRef(pos[0], Position.Bias.Forward), supp.createPositionRef(Math.max(pos[0], pos[1]), Position.Bias.Forward));
-                        }
-                    }
-                } catch (DataObjectNotFoundException ex) {
-                    ex.printStackTrace();
-                }
-                return null;
-            }
-        }
-
         private static class Info {
             private String className;
             private String methodName;
+        }
+    }
+
+    public static final class WhereUsedRefactoringElement extends SimpleRefactoringElementImplementation {
+
+        private final FileObject fileObject;
+        private final int[] pos;
+        private final String text;
+
+        private WhereUsedRefactoringElement(FileObject fileObject, int[] pos, String text) {
+            this.fileObject = fileObject;
+            this.pos = pos;
+            this.text = text;
+        }
+
+        @Override
+        public String getText() {
+            return text;
+        }
+
+        @Override
+        public String getDisplayText() {
+            StringBuilder sb = new StringBuilder();
+            int idx = text.indexOf(':');
+            if (idx < 0) {
+                sb.append(text);
+            } else {
+                sb.append(MicronautConfigCompletionItem.PROPERTY_NAME_COLOR).append("<b>");
+                sb.append(text.substring(0, idx));
+                sb.append("</b></font>");
+                sb.append(text.substring(idx));
+            }
+            return sb.toString();
+        }
+
+        @Override
+        public void performChange() {
+        }
+
+        @Override
+        public Lookup getLookup() {
+            return Lookup.EMPTY;
+        }
+
+        @Override
+        public FileObject getParentFile() {
+            return fileObject;
+        }
+
+        @Override
+        public PositionBounds getPosition() {
+            try {
+                DataObject dobj = DataObject.find(getParentFile());
+                if (dobj != null) {
+                    EditorCookie.Observable obs = (EditorCookie.Observable)dobj.getCookie(EditorCookie.Observable.class);
+                    if (obs != null && obs instanceof CloneableEditorSupport) {
+                        CloneableEditorSupport supp = (CloneableEditorSupport)obs;
+                        return new PositionBounds(supp.createPositionRef(pos[0], Position.Bias.Forward), supp.createPositionRef(Math.max(pos[0], pos[1]), Position.Bias.Forward));
+                    }
+                }
+            } catch (DataObjectNotFoundException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            return null;
         }
     }
 }

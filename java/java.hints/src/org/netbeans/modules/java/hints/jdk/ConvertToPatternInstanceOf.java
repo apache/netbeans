@@ -92,7 +92,7 @@ public class ConvertToPatternInstanceOf {
                 String varName = Utilities.makeNameUnique(ctx.getInfo(), ctx.getInfo().getTrees().getScope(ctx.getPath()), varNameCandidates.get(0));
                 IfTree it = (IfTree) ctx.getPath().getLeaf();
                 BlockTree bt = (BlockTree) it.getThenStatement();
-                Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), varName, false, convertPath, TreeShims.isJDKVersionSupportEnablePreview() ? null : (VariableTree) bt.getStatements().get(0)).toEditorFix();
+                Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), varName, false, convertPath).toEditorFix();
 
                 return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertToPatternInstanceOf(), fix);
             }
@@ -110,7 +110,7 @@ public class ConvertToPatternInstanceOf {
         IfTree it = (IfTree) ctx.getPath().getLeaf();
         BlockTree bt = (BlockTree) it.getThenStatement();
         VariableTree var = (VariableTree) bt.getStatements().get(0);
-        Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), var.getName().toString(), true, Collections.emptySet(), TreeShims.isJDKVersionSupportEnablePreview() ? null : var).toEditorFix();
+        Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), var.getName().toString(), true, Collections.emptySet()).toEditorFix();
         
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertToPatternInstanceOf(), fix);
     }
@@ -120,14 +120,12 @@ public class ConvertToPatternInstanceOf {
         private final String varName;
         private final boolean removeFirst;
         private final Set<TreePathHandle> replaceOccurrences;
-        private final VariableTree vt;
 
-        public FixImpl(CompilationInfo info, TreePath main, String varName, boolean removeFirst, Set<TreePath> replaceOccurrences, VariableTree vt) {
+        public FixImpl(CompilationInfo info, TreePath main, String varName, boolean removeFirst, Set<TreePath> replaceOccurrences) {
             super(info, main);
             this.varName = varName;
             this.removeFirst = removeFirst;
             this.replaceOccurrences = replaceOccurrences.stream().map(tp -> TreePathHandle.create(tp, info)).collect(Collectors.toSet());
-            this.vt = vt;
         }
 
 
@@ -143,10 +141,9 @@ public class ConvertToPatternInstanceOf {
             IfTree it = (IfTree) main.getLeaf();
             InstanceOfTree iot = (InstanceOfTree) ((ParenthesizedTree) it.getCondition()).getExpression();
             StatementTree bt = it.getThenStatement();
-//            wc.rewrite(iot.getType(), wc.getTreeMaker().BindingPattern(var.getName(), iot.getType()));
-//            wc.rewrite(bt, wc.getTreeMaker().removeBlockStatement(bt, 0));
-            InstanceOfTree cond = wc.getTreeMaker().InstanceOf(iot.getExpression(), TreeShims.isJDKVersionSupportEnablePreview() ? 
-                     wc.getTreeMaker().BindingPattern(varName, iot.getType()) : wc.getTreeMaker().BindingPattern(vt));
+            InstanceOfTree cond = wc.getTreeMaker().InstanceOf(iot.getExpression(), TreeShims.isJDKVersionSupportEnablePreview()
+                    ? wc.getTreeMaker().BindingPattern(varName, iot.getType())
+                    : wc.getTreeMaker().BindingPattern(wc.getTreeMaker().Variable(wc.getTreeMaker().Modifiers(EnumSet.noneOf(Modifier.class)), varName, iot.getType(), null)));
             StatementTree thenBlock = removeFirst ? wc.getTreeMaker().removeBlockStatement((BlockTree) bt, 0) : bt;
             wc.rewrite(it, wc.getTreeMaker().If(wc.getTreeMaker().Parenthesized(cond), thenBlock, it.getElseStatement()));
             replaceOccurrences.stream().map(tph -> tph.resolve(wc)).forEach(tp -> {

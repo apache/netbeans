@@ -54,6 +54,7 @@ import org.netbeans.modules.maven.configurations.M2Configuration;
 import static org.netbeans.modules.maven.cos.Bundle.*;
 import org.netbeans.modules.maven.customizer.CustomizerProviderImpl;
 import org.netbeans.modules.maven.execute.BeanRunConfig;
+import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.modules.maven.spi.cos.CompileOnSaveSkipper;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ActionProvider;
@@ -436,33 +437,7 @@ public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesC
 
 
     static List<String> extractDebugJVMOptions(String argLine) throws Exception {
-        String[] split = CommandLineUtils.translateCommandline(argLine);
-        List<String> toRet = new ArrayList<String>();
-        for (String arg : split) {
-            if ("-Xdebug".equals(arg)) { //NOI18N
-                continue;
-            }
-            if ("-Djava.compiler=none".equals(arg)) { //NOI18N
-                continue;
-            }
-            if ("-Xnoagent".equals(arg)) { //NOI18N
-                continue;
-            }
-            if (arg.startsWith("-Xrunjdwp")) { //NOI18N
-                continue;
-            }
-            if (arg.equals("-agentlib:jdwp")) { //NOI18N
-                continue;
-            }
-            if (arg.startsWith("-agentlib:jdwp=")) { //NOI18N
-                continue;
-            }
-            if (arg.trim().length() == 0) {
-                continue;
-            }
-            toRet.add(arg);
-        }
-        return toRet;
+        return MavenExecuteUtils.extractDebugJVMOptions(argLine);
     }
     
     static void touchProject(Project project) {

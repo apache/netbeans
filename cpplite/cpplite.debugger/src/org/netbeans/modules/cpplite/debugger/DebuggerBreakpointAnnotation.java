@@ -19,7 +19,11 @@
 
 package org.netbeans.modules.cpplite.debugger;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.netbeans.api.debugger.Breakpoint;
+import org.netbeans.api.debugger.Breakpoint.HIT_COUNT_FILTERING_STYLE;
 import org.netbeans.modules.cpplite.debugger.breakpoints.CPPLiteBreakpoint;
 import org.netbeans.spi.debugger.ui.BreakpointAnnotation;
 import org.openide.text.Annotatable;
@@ -42,41 +46,104 @@ public class DebuggerBreakpointAnnotation extends BreakpointAnnotation {
     /** Annotation type constant. */
     public static final String DISABLED_CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE = "DisabledCondBreakpoint"; // NOI18N
 
-    private Annotatable annotatable;
-    private String      type;
-    private CPPLiteBreakpoint breakpoint;
-    
-    
+    private final String type;
+    private final CPPLiteBreakpoint breakpoint;
+
     public DebuggerBreakpointAnnotation (String type, CPPLiteBreakpoint b) {
         this.type = type;
-        this.annotatable = b.getLine ();
         this.breakpoint = b;
+        Annotatable annotatable = b.getLine ();
         attach (annotatable);
     }
-    
+
     @Override
     public String getAnnotationType () {
         return type;
     }
-    
+
     @Override
+    @NbBundle.Messages({"TTP_Breakpoint_Hits=Hits when:",
+                        "# {0} - hit count",
+                        "TTP_Breakpoint_HitsEqual=Hit count \\= {0}",
+                        "# {0} - hit count",
+                        "TTP_Breakpoint_HitsGreaterThan=Hit count > {0}",
+                        "# {0} - hit count",
+                        "TTP_Breakpoint_HitsMultipleOf=Hit count is multiple of {0}"})
     public String getShortDescription () {
-        if (type == BREAKPOINT_ANNOTATION_TYPE)
-            return NbBundle.getMessage 
-                (DebuggerBreakpointAnnotation.class, "TOOLTIP_BREAKPOINT");
-        else 
-        if (type == DISABLED_BREAKPOINT_ANNOTATION_TYPE)
-            return NbBundle.getMessage 
-                (DebuggerBreakpointAnnotation.class, "TOOLTIP_DISABLED_BREAKPOINT");
-        else 
-        if (type == CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE)
-            return NbBundle.getMessage 
-                (DebuggerBreakpointAnnotation.class, "TOOLTIP_CONDITIONAL_BREAKPOINT");
-        else
-        if (type == DISABLED_CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE)
-            return NbBundle.getMessage 
-                (DebuggerBreakpointAnnotation.class, "TOOLTIP_DISABLED_CONDITIONAL_BREAKPOINT");
-        return null;
+        List<String> list = new LinkedList<>();
+        //add condition if available
+        String condition = breakpoint.getCondition();
+        if (condition != null) {
+            list.add(condition);
+        }
+
+        // add hit count if available
+        HIT_COUNT_FILTERING_STYLE hitCountFilteringStyle = breakpoint.getHitCountFilteringStyle();
+        if (hitCountFilteringStyle != null) {
+            int hcf = breakpoint.getHitCountFilter();
+            String tooltip;
+            switch (hitCountFilteringStyle) {
+                case EQUAL:
+                    tooltip = Bundle.TTP_Breakpoint_HitsEqual(hcf);
+                    break;
+                case GREATER:
+                    tooltip = Bundle.TTP_Breakpoint_HitsGreaterThan(hcf);
+                    break;
+                case MULTIPLE:
+                    tooltip = Bundle.TTP_Breakpoint_HitsMultipleOf(hcf);
+                    break;
+                default:
+                    throw new IllegalStateException("Unknown HitCountFilteringStyle: "+hitCountFilteringStyle); // NOI18N
+            }
+            list.add(tooltip);
+        }
+
+        String typeDesc = getBPTypeDescription();
+        if (list.isEmpty()) {
+            return typeDesc;
+        }
+        StringBuilder result = new StringBuilder(typeDesc);
+        //append more information
+        result.append("\n");        // NOI18N
+        result.append(Bundle.TTP_Breakpoint_Hits());
+        for (String text : list) {
+            result.append("\n");    // NOI18N
+            result.append(text);
+        }
+        return result.toString();
+    }
+
+    @NbBundle.Messages({"TTP_Breakpoint=Breakpoint",
+                        "TTP_BreakpointDisabled=Disabled Breakpoint",
+                        "TTP_BreakpointConditional=Conditional Breakpoint",
+                        "TTP_BreakpointDisabledConditional=Disabled Conditional Breakpoint",
+                        "TTP_BreakpointBroken=Broken breakpoint - It is not possible to stop on this line.",
+                        "# {0} - Reason for being invalid",
+                        "TTP_BreakpointBrokenInvalid=Broken breakpoint: {0}",
+                        "TTP_BreakpointStroke=Deactivated breakpoint"})
+    private String getBPTypeDescription () {
+        if (type.endsWith("_broken")) {                                         // NOI18N
+            if (breakpoint.getValidity() == Breakpoint.VALIDITY.INVALID) {
+                String msg = breakpoint.getValidityMessage();
+                return Bundle.TTP_BreakpointBrokenInvalid(msg);
+            }
+            return Bundle.TTP_BreakpointBroken();
+        }
+        if (type.endsWith("_stroke")) {                                         // NOI18N
+            return Bundle.TTP_BreakpointStroke();
+        }
+        switch (type) {
+            case BREAKPOINT_ANNOTATION_TYPE:
+                return Bundle.TTP_Breakpoint();
+            case DISABLED_BREAKPOINT_ANNOTATION_TYPE:
+                return Bundle.TTP_BreakpointDisabled();
+            case CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE:
+                return Bundle.TTP_BreakpointConditional();
+            case DISABLED_CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE:
+                return Bundle.TTP_BreakpointDisabledConditional();
+            default:
+                throw new IllegalStateException(type);
+        }
     }
 
     @Override

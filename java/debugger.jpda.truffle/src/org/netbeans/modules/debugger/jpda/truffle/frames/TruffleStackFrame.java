@@ -115,7 +115,7 @@ public final class TruffleStackFrame {
             hostClassName = frameDefinition.substring(i1, i2);
             i1 = i2 + 1;
             i2 = frameDefinition.indexOf('\n', i1);
-            hostMethodName = frameDefinition.substring(i1, i2);
+            hostMethodName = stringOrNull(frameDefinition.substring(i1, i2));
             i1 = i2 + 1;
             i2 = frameDefinition.indexOf('\n', i1);
             try {
@@ -125,7 +125,7 @@ public final class TruffleStackFrame {
             }
             i1 = i2 + 1;
             i2 = frameDefinition.indexOf('\n', i1);
-            mimeType = frameDefinition.substring(i1, i2);
+            mimeType = stringOrNull(frameDefinition.substring(i1, i2));
             i1 = i2 + 1;
             if (includeInternal) {
                 i2 = frameDefinition.indexOf('\n', i1);
@@ -142,6 +142,14 @@ public final class TruffleStackFrame {
         this.scopes = scopes;
         this.thisObject = thisObject;
         this.isInternal = internalFrame;
+    }
+    
+    private static String stringOrNull(String str) {
+        if ("null".equals(str)) {
+            return null;
+        } else {
+            return str;
+        }
     }
     
     public final JPDADebugger getDebugger() {

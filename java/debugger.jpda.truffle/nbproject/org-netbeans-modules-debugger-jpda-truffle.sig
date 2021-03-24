@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.7
+#Version 1.8
 
 CLSS public java.lang.Object
 cons public init()
@@ -81,11 +81,14 @@ hcls FixedLineHandler
 
 CLSS public final org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame
 cons public init(org.netbeans.api.debugger.jpda.JPDADebugger,org.netbeans.api.debugger.jpda.JPDAThread,int,org.netbeans.api.debugger.jpda.ObjectVariable,java.lang.String,com.sun.jdi.StringReference,org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleScope[],org.netbeans.api.debugger.jpda.ObjectVariable,boolean)
+meth public boolean isHost()
 meth public boolean isInternal()
 meth public final int getDepth()
 meth public final org.netbeans.api.debugger.jpda.JPDADebugger getDebugger()
 meth public final org.netbeans.api.debugger.jpda.JPDAThread getThread()
 meth public java.lang.String getDisplayName()
+meth public java.lang.String getHostClassName()
+meth public java.lang.String getHostMethodName()
 meth public java.lang.String getMethodName()
 meth public java.lang.String getSourceLocation()
 meth public org.netbeans.api.debugger.jpda.ObjectVariable getStackFrameInstance()
@@ -95,27 +98,35 @@ meth public org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition get
 meth public org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleScope[] getScopes()
 meth public void popToHere()
 supr java.lang.Object
-hfds LOG,codeRef,debugger,depth,frameInstance,isInternal,language,methodName,scopes,sourceId,sourceLocation,sourceName,sourcePath,sourceSection,sourceURI,thisObject,thread
+hfds LOG,codeRef,debugger,depth,frameInstance,hostClassName,hostMethodName,isHost,isInternal,language,methodName,mimeType,scopes,sourceId,sourceLocation,sourceName,sourcePath,sourceSection,sourceURI,thisObject,thread
 
 CLSS public final org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackInfo
 cons public init(org.netbeans.api.debugger.jpda.JPDADebugger,org.netbeans.api.debugger.jpda.JPDAThread,org.netbeans.api.debugger.jpda.ObjectVariable)
+ anno 0 java.lang.Deprecated()
+cons public init(org.netbeans.api.debugger.jpda.JPDADebugger,org.netbeans.api.debugger.jpda.JPDAThread,org.netbeans.api.debugger.jpda.ObjectVariable,boolean)
 meth public boolean hasInternalFrames()
+meth public boolean hasJavaFrames()
 meth public org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame[] getStackFrames(boolean)
 supr java.lang.Object
-hfds METHOD_GET_FRAMES_INFO,METHOD_GET_FRAMES_INFO_SIG,areInternalFrames,debugger,includedInternalFrames,stackFrames,stackTrace,thread
+hfds METHOD_GET_FRAMES_INFO,METHOD_GET_FRAMES_INFO_SIG,areInternalFrames,debugger,includedInternalFrames,stackFrames,stackTrace,supportsJavaFrames,thread
 
 CLSS public final org.netbeans.modules.debugger.jpda.truffle.source.Source
 fld public final static java.lang.String URL_PROTOCOL = "truffle-scripts"
 meth public java.lang.String getContent()
+meth public java.lang.String getHostMethodName()
+meth public java.lang.String getMimeType()
 meth public java.lang.String getName()
+meth public java.lang.String getPath()
 meth public java.net.URI getURI()
 meth public java.net.URL getUrl()
 meth public long getHash()
 meth public static java.net.URI getTruffleInternalURI(org.openide.filesystems.FileObject)
 meth public static org.netbeans.modules.debugger.jpda.truffle.source.Source getExistingSource(org.netbeans.api.debugger.jpda.JPDADebugger,long)
+meth public static org.netbeans.modules.debugger.jpda.truffle.source.Source getSource(org.netbeans.api.debugger.jpda.JPDADebugger,long,java.lang.String,java.lang.String,java.lang.String,java.net.URI,java.lang.String,com.sun.jdi.StringReference)
 meth public static org.netbeans.modules.debugger.jpda.truffle.source.Source getSource(org.netbeans.api.debugger.jpda.JPDADebugger,long,java.lang.String,java.lang.String,java.net.URI,com.sun.jdi.StringReference)
+meth public static org.netbeans.modules.debugger.jpda.truffle.source.Source getSource(org.netbeans.api.debugger.jpda.JPDADebugger,long,java.lang.String,java.lang.String,java.net.URI,java.lang.String,com.sun.jdi.StringReference)
 supr java.lang.Object
-hfds ATTR_URI,KNOWN_SOURCES,codeRef,content,hash,name,uri,url
+hfds ATTR_URI,KNOWN_SOURCES,codeRef,content,hash,hostMethodName,mimeType,name,path,uri,url
 
 CLSS public final org.netbeans.modules.debugger.jpda.truffle.source.SourceBinaryTranslator
 cons public init()

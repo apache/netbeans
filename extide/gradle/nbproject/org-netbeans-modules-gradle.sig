@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.6
+#Version 2.7
 
 CLSS public abstract interface java.io.Serializable
 
@@ -615,6 +615,7 @@ cons public init()
  anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PROP_ALWAYS_SHOW_OUTPUT = "alwaysShowOutput"
 fld public final static java.lang.String PROP_DISABLE_CACHE = "disableCache"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PROP_DISPLAY_DESCRIPTION = "displayDescription"
 fld public final static java.lang.String PROP_DOWNLOAD_JAVADOC = "downloadJavaDoc"
 fld public final static java.lang.String PROP_DOWNLOAD_LIBS = "downloadLibs"
@@ -625,6 +626,7 @@ fld public final static java.lang.String PROP_GRADLE_USER_HOME = "gradleUserHome
 fld public final static java.lang.String PROP_GRADLE_VERSION = "gradleVersion"
 fld public final static java.lang.String PROP_HIDE_EMPTY_CONF = "hideEmptyConfiguration"
 fld public final static java.lang.String PROP_LAZY_OPEN_GROUPS = "lazyOpen"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PROP_LOG_LEVEL = "logLevel"
 fld public final static java.lang.String PROP_OPT_CONFIGURE_ON_DEMAND = "configureOnDemand"
 fld public final static java.lang.String PROP_OPT_NO_REBUILD = "noRebuild"
@@ -645,11 +647,13 @@ innr public final static !enum GradleExecutionRule
 meth public boolean getNoRebuild()
 meth public boolean isAlwaysShowOutput()
 meth public boolean isCacheDisabled()
+ anno 0 java.lang.Deprecated()
 meth public boolean isConfigureOnDemand()
 meth public boolean isDisplayDesctiption()
 meth public boolean isHideEmptyConfigurations()
 meth public boolean isOffline()
 meth public boolean isOpenLazy()
+ anno 0 java.lang.Deprecated()
 meth public boolean isPreferMaven()
 meth public boolean isReuseEditorOnStackTace()
 meth public boolean isReuseOutputTabs()
@@ -672,6 +676,7 @@ meth public org.netbeans.modules.gradle.spi.GradleSettings$GradleExecutionRule g
 meth public static org.netbeans.modules.gradle.spi.GradleSettings getDefault()
 meth public void setAlwaysShowOutput(boolean)
 meth public void setCacheDisabled(boolean)
+ anno 0 java.lang.Deprecated()
 meth public void setConfigureOnDemand(boolean)
 meth public void setDefaultLogLevel(org.netbeans.modules.gradle.api.execute.GradleCommandLine$LogLevel)
 meth public void setDefaultStackTrace(org.netbeans.modules.gradle.api.execute.GradleCommandLine$StackTrace)
@@ -687,6 +692,7 @@ meth public void setHideEmptyConfigurations(boolean)
 meth public void setNoRebuild(boolean)
 meth public void setOffline(boolean)
 meth public void setOpenLazy(boolean)
+ anno 0 java.lang.Deprecated()
 meth public void setPreferMaven(boolean)
 meth public void setReuseEditorOnStackTrace(boolean)
 meth public void setReuseOutputTabs(boolean)

@@ -23,7 +23,7 @@ import java.security.KeyStore;
 
 /** Registers <code>java.security.KeyStore</code> into Autoupdate infrastructure.
  * This KeyStore is used for verification of downloaded NBMs. The system finds out
- * the KeyStoreProvider in <code>Lookup.getDefault()<code>.
+ * the KeyStoreProvider in <code>Lookup.getDefault()</code>.
  * The <code>KeyStoreProvider</code> should be registered using {@link org.openide.util.lookup.ServiceProvider}.
  *
  * @author Jiri Rechtacek

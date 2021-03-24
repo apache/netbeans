@@ -47,6 +47,9 @@ public class DialogsTest {
 
     @BeforeClass(timeOut = 9000)
     public static void initializeContext() throws Exception {
+        if (!EnsureJavaFXPresent.check()) {
+            return;
+        }
         final JFXPanel p = new JFXPanel();
         final URL u = DialogsTest.class.getResource("/org/netbeans/api/htmlui/empty.html");
         Platform.runLater(new Runnable() {
@@ -73,6 +76,7 @@ public class DialogsTest {
 
     @Test(timeOut = 9000)
     public void parseButtons() throws Throwable {
+        EnsureJavaFXPresent.checkAndThrow();
         final Throwable[] ex = { null };
         final JButton[] buttons = { null, null };
         final CountDownLatch done = new CountDownLatch(1);
@@ -125,6 +129,7 @@ public class DialogsTest {
     
     @Test(timeOut = 9000)
     public void noDefinedButtonsMeanOKCancel() throws Throwable {
+        EnsureJavaFXPresent.checkAndThrow();
         final Throwable[] ex = { null };
         final CountDownLatch done = new CountDownLatch(1);
         ctx.execute(new Runnable() {

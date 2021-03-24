@@ -247,7 +247,7 @@ public final class GradleModuleFileCache21 {
         int firstColon = gav.indexOf(':');
         int lastColon = gav.lastIndexOf(':');
         if (firstColon == -1 || firstColon == lastColon) {
-            throw new IllegalArgumentException("Invalig GAV format: " + gav);
+            throw new IllegalArgumentException("Invalid GAV format: " + gav); //NOI18N
         }
         return new String[] {
             gav.substring(0, firstColon),

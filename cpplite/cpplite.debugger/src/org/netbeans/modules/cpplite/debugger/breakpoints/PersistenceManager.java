@@ -30,6 +30,7 @@ import org.netbeans.api.debugger.LazyDebuggerManagerListener;
 import org.netbeans.api.debugger.Properties;
 import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.Watch;
+import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 
 /**
  * Listens on DebuggerManager and:
@@ -39,6 +40,7 @@ import org.netbeans.api.debugger.Watch;
  *
  * @author Jan Jancura
  */
+@DebuggerServiceRegistration(types={LazyDebuggerManagerListener.class})
 public class PersistenceManager implements LazyDebuggerManagerListener {
     
     @Override

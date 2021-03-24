@@ -61,6 +61,10 @@ public class SimpleWizardHandlerTest extends NbTestCase {
     }
     
     public void testSimpleWizard() throws Exception {
+        if (!EnsureJavaFXPresent.check()) {
+            return;
+        }
+
         clearWorkDir();
         File whereTo = new File(getWorkDir(), "whereTo");
         whereTo.mkdirs();

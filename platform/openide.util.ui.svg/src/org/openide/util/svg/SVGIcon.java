@@ -38,11 +38,14 @@ import javax.swing.Icon;
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.bridge.BridgeContext;
 import org.apache.batik.bridge.DocumentLoader;
+import org.apache.batik.bridge.ExternalResourceSecurity;
 import org.apache.batik.bridge.GVTBuilder;
+import org.apache.batik.bridge.NoLoadExternalResourceSecurity;
 import org.apache.batik.bridge.UserAgent;
 import org.apache.batik.bridge.UserAgentAdapter;
 import org.apache.batik.ext.awt.image.GraphicsUtil;
 import org.apache.batik.gvt.GraphicsNode;
+import org.apache.batik.util.ParsedURL;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.openide.util.CachedHiDPIIcon;
 import org.openide.util.Parameters;
@@ -137,7 +140,14 @@ final class SVGIcon extends CachedHiDPIIcon {
             /* Don't provide an URI here; we shouldn't commit to supporting relative links from
             loaded SVG documents. */
             doc = factory.createDocument(null, is);
-            UserAgent userAgent = new UserAgentAdapter();
+            // Disallow external resource dereferences
+            UserAgent userAgent = new UserAgentAdapter() {
+              @Override
+              public ExternalResourceSecurity getExternalResourceSecurity(
+                  ParsedURL resourceURL, ParsedURL docURL) {
+                return new NoLoadExternalResourceSecurity();
+              }
+            };
             DocumentLoader loader = new DocumentLoader(userAgent);
             BridgeContext bctx = new BridgeContext(userAgent, loader);
             try {

@@ -9,7 +9,7 @@ allprojects {
 
 </#if>
     repositories {
-        jcenter()
+        mavenCentral()
     }
 }
 

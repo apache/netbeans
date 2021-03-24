@@ -150,6 +150,12 @@
          can be attached to that port, make the <code>netbeans-gradle-tooling</code>
          project debuggable in action.
      </api>
+     <api category="friend" group="property" name="runJvmArgs" type="export">
+         NetBeans Tooling plugin recognizes <code>runJvmArgs</code> project property, and injects
+         specified JVM arguments into JavaExec executing the user code. Use <code>-PrunJvmArgs=...</code>.
+         If passing more arguments, the whole -P must be properly quoted. Arguments that contain spaces must
+         also use quoting or escapes.
+     </api>
  </answer>
 
  <answer id="resources-file">

@@ -196,9 +196,7 @@ public class JavaExecTokenProviderTest extends NbTestCase {
                 build();
         
         ActionProvider actions = project.getLookup().lookup(ActionProvider.class);
-        if (actions == null) {
-            // fail, no action available
-        }
+        assert actions != null : "No actions available";
         // Invoke the project action, with two explicit params
         actions.invokeAction(ActionProvider.COMMAND_RUN, Lookups.fixed(
                 params, params2

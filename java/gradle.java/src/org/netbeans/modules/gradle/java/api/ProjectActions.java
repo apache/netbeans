@@ -25,7 +25,7 @@ import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
  * @author sdedic
  * @since 1.12
  */
-public class ProjectActions {
+public final class ProjectActions {
     /**
      * Replaceable token for JVM arguments project property. Generates project property for NB Tooling Gradle plugin, if the extra JVM arguments are present, otherwise
      * generates an empty String. The token is interpolated in <code>action-mapping.xml</code> that can be customized by the user. This feature cooperates with
@@ -49,4 +49,7 @@ public class ProjectActions {
      * @since 1.9
      */
     public static String TOKEN_JAVAEXEC_ARGS = "javaExec.args";
+
+
+    private ProjectActions() {}
 }

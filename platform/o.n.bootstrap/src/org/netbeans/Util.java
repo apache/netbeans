@@ -139,9 +139,10 @@ public final class Util {
                 sampleName = packageName + '.' + sampleName;
             }
         }
+        Class<?> sampleClass = null;
         if (sampleName != null) {
             try {
-                cl.loadClass(sampleName);
+                sampleClass = cl.loadClass(sampleName);
             } catch (ClassNotFoundException cnfe) {
                 if (packageName == null) {
                     // This was all we were relying on, so it is an error.
@@ -169,6 +170,9 @@ public final class Util {
                 pkg = ((ProxyClassLoader) cl).getPackage(packageName);
             } else {
                 pkg = Package.getPackage(packageName);
+            }
+            if (pkg == null && sampleClass != null) {
+                pkg = sampleClass.getPackage();
             }
             if (pkg == null) {
                 err.fine("No package with the name " + packageName + " found");

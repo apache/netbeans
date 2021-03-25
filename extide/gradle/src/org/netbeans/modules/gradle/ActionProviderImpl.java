@@ -60,6 +60,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static javax.swing.Action.NAME;
@@ -123,14 +124,41 @@ public class ActionProviderImpl implements ActionProvider {
         for (GradleActionsProvider provider : providers) {
             actions.addAll(provider.getSupportedActions());
         }
+        // add a fixed 'prime build' action
+        actions.add(ActionProvider.COMMAND_PRIME);
         return actions.toArray(new String[actions.size()]);
     }
-
+    
     @Override
     public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
         if (COMMAND_DELETE.equals(command)) {
             DefaultProjectOperations.performDefaultDeleteOperation(project);
             return;
+        }
+        if (ActionProvider.COMMAND_PRIME.equals(command)) {
+            // delegate to prooblem provider we know exists & is registered
+            NbGradleProjectImpl prjImpl = project.getLookup().lookup(NbGradleProjectImpl.class);
+            ActionProgress prg = ActionProgress.start(context);
+            LOG.log(Level.FINER, "Priming build starting for {0}", project);
+            if (prjImpl.isProjectPrimingRequired()) {
+                prjImpl.primeProject().
+                        thenAccept(gp -> {
+                            LOG.log(Level.FINER, "Priming build of {0} finished with status {1}, ", new Object[] { project, prjImpl.isProjectPrimingRequired() });
+                            prg.finished(prjImpl.isProjectPrimingRequired());
+                        }).
+                        exceptionally((e) -> { 
+                            LOG.log(Level.FINER, e, () -> String.format("Priming build errored: %s", project));
+                            prg.finished(false);
+                            return null;
+                        });
+                return;
+            } else {
+                // no action, but report finish to unblock potential observers
+                LOG.log(Level.FINER, "Priming build unncessary for {0}", project);
+                prg.finished(true);
+                return;
+            }
+            
         }
         ActionMapping mapping = ActionToTaskUtils.getActiveMapping(command, project);
         invokeProjectAction(project, mapping, context, false);
@@ -141,6 +169,12 @@ public class ActionProviderImpl implements ActionProvider {
         if (COMMAND_DELETE.equals(command)) {
             GradleBaseProject gbp = GradleBaseProject.get(project);
             return gbp != null && gbp.getSubProjects().isEmpty() && ProjectOperations.isDeleteOperationSupported(project);
+        }
+        if (ActionProvider.COMMAND_PRIME.equals(command)) {
+            NbGradleProjectImpl prjImpl = project.getLookup().lookup(NbGradleProjectImpl.class);
+            boolean enabled = prjImpl.isProjectPrimingRequired();
+            LOG.log(Level.FINEST, "Priming build action for {0} is: {1}", new Object[] { project, enabled });
+            return enabled;
         }
         return ActionToTaskUtils.isActionEnabled(command, project, context);
     }

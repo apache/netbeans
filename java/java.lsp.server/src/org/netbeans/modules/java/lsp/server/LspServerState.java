@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server;
 
 import java.util.List;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.netbeans.api.project.Project;
@@ -49,6 +50,23 @@ public interface LspServerState {
      * @return opened projects.
      */
     public CompletableFuture<Project[]>   asyncOpenSelectedProjects(List<FileObject> fileCandidates);
+    
+    /**
+     * Opens project on behalf of a file. This makes the project 'second-class citizen' in LSP: it will be
+     * opened in OpenProjects to be reachable for all supports, but will track it separately from projects
+     * opened by {@link #asyncOpenSelectedProjects}. 
+     * <p/>
+     * The user may be asked, if the opened project is not part of existing workspace projects or opened
+     * projects. If the user cancels, the returned future completes exceptionally with {@link CancellationException}.
+     * <p/>
+     * If the file is not owned by a project, or the project open fails, the returned future will return
+     * {@code null}.
+     * 
+     * @param file file owned by a project
+     * @return future that completes when the project is opened, or opening cancelled.
+     * @see CancellationException
+     */
+    public CompletableFuture<Project> asyncOpenFileOwner(FileObject file);
     
     /**
      * Accesses TextDocumentService instance.

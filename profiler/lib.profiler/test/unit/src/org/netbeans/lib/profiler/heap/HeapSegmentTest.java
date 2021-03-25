@@ -21,7 +21,10 @@ package org.netbeans.lib.profiler.heap;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -29,6 +32,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.netbeans.lib.profiler.heap.HeapUtils.HprofGenerator;
 
@@ -37,16 +41,15 @@ public class HeapSegmentTest {
     public void singleObject() throws IOException {
         singleObject(false);
     }
-    
+
     @Test
     public void singleObjectMultipleSegments() throws IOException {
         singleObject(true);
     }
-    
+
     private static void singleObject(boolean flush) throws IOException {
         File mydump = File.createTempFile("mydump", ".hprof");
-        generateSingleObject(new FileOutputStream(mydump), flush);
-        Heap heap = HeapFactory.createHeap(mydump);
+        Heap heap = generateSampleDump(mydump, flush);
         List<JavaClass> allClasses = heap.getAllClasses();
         assertEquals(5, allClasses.size());
         assertEquals("java.lang.String", allClasses.get(0).getName());
@@ -77,13 +80,38 @@ public class HeapSegmentTest {
         assertFalse("It is not daemon", (Boolean) daemon);
     }
 
+    public static Heap generateSampleDump(File mydump) throws IOException {
+        return generateSampleDump(mydump, true);
+    }
+
+    public static Heap generateComplexDump(File mydump) throws IOException, URISyntaxException {
+        InputStream is = HeapUtils.class.getResourceAsStream("heap_dump.bin");
+        FileOutputStream out = new FileOutputStream(mydump);
+        byte[] arr = new byte[4096];
+        for (;;) {
+            int len = is.read(arr);
+            if (len == -1) {
+                break;
+            }
+            out.write(arr, 0, len);
+        }
+        is.close();
+        out.close();
+        return HeapFactory.createHeap(mydump);
+    }
+
+    static Heap generateSampleDump(File mydump, boolean flush) throws IOException {
+        generateSingleObject(new FileOutputStream(mydump), flush);
+        return HeapFactory.createHeap(mydump);
+    }
+
     private static void generateSingleObject(OutputStream os, boolean flush) throws IOException {
         try (HprofGenerator gen = new HprofGenerator(os)) {
             gen.writeHeapSegment(new SampleDumpMemory(), flush);
             gen.writeHeapSegment(new SampleDumpMemory2(), flush);
         }
     }
-    
+
     private static class SampleDumpMemory implements HprofGenerator.Generator<HprofGenerator.HeapSegment> {
         @Override
         public void generate(HprofGenerator.HeapSegment seg) throws IOException {
@@ -118,5 +146,5 @@ public class HeapSegmentTest {
             seg.dumpPrimitive(threadId);
         }
     }
-    
+
 }

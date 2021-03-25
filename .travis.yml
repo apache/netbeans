@@ -509,7 +509,7 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f java/java.completion test
-            - ant $OPTS -Dtest.config=vanilla-javac -f java/java.source.base test
+            - ant $OPTS -f java/java.source.base test
 
         - name: Test refactoring.java without nb-javac on Java 14
           jdk: openjdk8
@@ -535,7 +535,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - ant $OPTS -Dtest.config=batch1-vanilla-javac -f java/java.hints test
+            - ant $OPTS -Dtest.config=batch1 -f java/java.hints test
 
         - name: Test java.hints batch2 without nb-javac on Java 14
           jdk: openjdk8
@@ -548,7 +548,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - ant $OPTS -Dtest.config=batch2-vanilla-javac -f java/java.hints test
+            - ant $OPTS -Dtest.config=batch2 -f java/java.hints test
 
         - name: Test Java modules without nb-javac on Java 15
           jdk: openjdk8
@@ -562,7 +562,7 @@ matrix:
             - ant $OPTS build
           script:
             - ant $OPTS -f java/java.completion test
-            - ant $OPTS -Dtest.config=vanilla-javac -f java/java.source.base test
+            - ant $OPTS -f java/java.source.base test
 
         - name: Test refactoring.java without nb-javac on Java 15
           jdk: openjdk8
@@ -588,7 +588,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - ant $OPTS -Dtest.config=batch1-vanilla-javac -f java/java.hints test
+            - ant $OPTS -Dtest.config=batch1 -f java/java.hints test
 
         - name: Test java.hints batch2 without nb-javac on Java 15
           jdk: openjdk8
@@ -601,7 +601,7 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
-            - ant $OPTS -Dtest.config=batch2-vanilla-javac -f java/java.hints test
+            - ant $OPTS -Dtest.config=batch2 -f java/java.hints test
 
 
         - name: Test apisupport modules

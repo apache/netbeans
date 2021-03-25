@@ -90,8 +90,6 @@ public class ConvertToPatternInstanceOf {
                 TypeMirror typeITM = ctx.getInfo().getTrees().getTypeMirror(typeI);
                 List<String> varNameCandidates = org.netbeans.modules.editor.java.Utilities.varNamesSuggestions(typeITM, ElementKind.LOCAL_VARIABLE, EnumSet.noneOf(Modifier.class), null, null, ctx.getInfo().getTypes(), ctx.getInfo().getElements(), Collections.emptyList(), CodeStyle.getDefault(ctx.getInfo().getFileObject()));
                 String varName = Utilities.makeNameUnique(ctx.getInfo(), ctx.getInfo().getTrees().getScope(ctx.getPath()), varNameCandidates.get(0));
-                IfTree it = (IfTree) ctx.getPath().getLeaf();
-                BlockTree bt = (BlockTree) it.getThenStatement();
                 Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath(), varName, false, convertPath).toEditorFix();
 
                 return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_ConvertToPatternInstanceOf(), fix);

@@ -105,4 +105,5 @@ public interface CompletionProvider {
      *         values, or zero if no query should be automatically invoked.
      */
     public int getAutoQueryTypes(JTextComponent component, String typedText);
+
 }

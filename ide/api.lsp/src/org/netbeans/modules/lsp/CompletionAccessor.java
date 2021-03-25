@@ -21,7 +21,6 @@ package org.netbeans.modules.lsp;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.lsp.Command;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.TextEdit;
 import org.openide.util.Exceptions;
@@ -54,5 +53,5 @@ public abstract class CompletionAccessor {
 
     public abstract Completion createCompletion(String label, Completion.Kind kind, List<Completion.Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
             boolean preselect, String sortText, String filterText, String insertText, Completion.TextFormat insertTextFormat,
-            TextEdit textEdit, CompletableFuture<List<TextEdit>> additionalTextEdits, List<Character> commitCharacters, Command command);
+            TextEdit textEdit, CompletableFuture<List<TextEdit>> additionalTextEdits, List<Character> commitCharacters);
 }

@@ -36,6 +36,7 @@ import org.netbeans.spi.lsp.CompletionCollector;
  * Represents a completion proposal.
  *
  * @author Dusan Balek
+ * @since 1.0
  */
 public final class Completion {
 
@@ -44,8 +45,8 @@ public final class Completion {
             @Override
             public Completion createCompletion(String label, Kind kind, List<Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
                     boolean preselect, String sortText, String filterText, String insertText, TextFormat insertTextFormat, TextEdit textEdit, CompletableFuture<List<TextEdit>> additionalTextEdits,
-                    List<Character> commitCharacters, Command command) {
-                return new Completion(label, kind, tags, detail, documentation, preselect, sortText, filterText, insertText, insertTextFormat, textEdit, additionalTextEdits, commitCharacters, command);
+                    List<Character> commitCharacters) {
+                return new Completion(label, kind, tags, detail, documentation, preselect, sortText, filterText, insertText, insertTextFormat, textEdit, additionalTextEdits, commitCharacters);
             }
         });
     }
@@ -63,11 +64,10 @@ public final class Completion {
     private final TextEdit textEdit;
     private final CompletableFuture<List<TextEdit>> additionalTextEdits;
     private final List<Character> commitCharacters;
-    private final Command command;
 
     private Completion(String label, Kind kind, List<Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
             boolean preselect, String sortText, String filterText, String insertText, TextFormat insertTextFormat,
-            TextEdit textEdit, CompletableFuture<List<TextEdit>> additionalTextEdits, List<Character> commitCharacters, Command command) {
+            TextEdit textEdit, CompletableFuture<List<TextEdit>> additionalTextEdits, List<Character> commitCharacters) {
         this.label = label;
         this.kind = kind;
         this.tags = tags;
@@ -81,12 +81,13 @@ public final class Completion {
         this.textEdit = textEdit;
         this.additionalTextEdits = additionalTextEdits;
         this.commitCharacters = commitCharacters;
-        this.command = command;
     }
 
     /**
      * The label of this completion. By default also the text that is inserted
      * when selecting this completion.
+     *
+     * @since 1.0
      */
     @NonNull
     public String getLabel() {
@@ -95,6 +96,8 @@ public final class Completion {
 
     /**
      * The kind of this completion.
+     *
+     * @since 1.0
      */
     @CheckForNull
     public Kind getKind() {
@@ -103,6 +106,8 @@ public final class Completion {
 
     /**
      * Tags for this completion.
+     *
+     * @since 1.0
      */
     @CheckForNull
     public List<Tag> getTags() {
@@ -112,6 +117,8 @@ public final class Completion {
     /**
      * A human-readable string with additional information
      * about this completion, like type or symbol information.
+     *
+     * @since 1.0
      */
     @CheckForNull
     public CompletableFuture<String> getDetail() {
@@ -121,6 +128,8 @@ public final class Completion {
     /**
      * A human-readable string that represents a doc-comment. An HTML format is
      * supported.
+     *
+     * @since 1.0
      */
     @CheckForNull
     public CompletableFuture<String> getDocumentation() {
@@ -129,6 +138,8 @@ public final class Completion {
 
     /**
      * Select this completion when showing.
+     *
+     * @since 1.0
      */
     public boolean isPreselect() {
         return preselect;
@@ -137,6 +148,8 @@ public final class Completion {
     /**
      * A string that should be used when comparing this completion with other
      * completions. When {@code null} the label is used as the sort text.
+     *
+     * @since 1.0
      */
     @CheckForNull
     public String getSortText() {
@@ -146,6 +159,8 @@ public final class Completion {
     /**
      * A string that should be used when filtering a set of completions.
      * When {@code null} the label is used as the filter.
+     *
+     * @since 1.0
      */
     @CheckForNull
     public String getFilterText() {
@@ -155,6 +170,8 @@ public final class Completion {
     /**
      * A string that should be inserted into a document when selecting
      * this completion. When {@code null} the label is used as the insert text.
+     *
+     * @since 1.0
      */
     @CheckForNull
     public String getInsertText() {
@@ -165,6 +182,8 @@ public final class Completion {
      * The format of the insert text. The format applies to both the
      * {@code insertText} property and the {@code newText} property of a provided
      * {@code textEdit}. If omitted defaults to {@link TextFormat#PlainText}.
+     *
+     * @since 1.0
      */
     @CheckForNull
     public TextFormat getInsertTextFormat() {
@@ -176,6 +195,8 @@ public final class Completion {
      * When an edit is provided the value of {@code insertText} is ignored.
      * The range of the edit must be a single line range and it must
      * contain the position at which completion has been requested.
+     *
+     * @since 1.0
      */
     @CheckForNull
     public TextEdit getTextEdit() {
@@ -189,6 +210,8 @@ public final class Completion {
      * Additional text edits should be used to change text unrelated to the
      * current cursor position (for example adding an import statement at the
      * top of the file if the completion item will insert an unqualified type).
+     *
+     * @since 1.0
      */
     @CheckForNull
     public CompletableFuture<List<TextEdit>> getAdditionalTextEdits() {
@@ -198,6 +221,8 @@ public final class Completion {
     /**
      * A list of characters that when pressed while this completion is
      * active will accept it first and then type that character.
+     *
+     * @since 1.0
      */
     @CheckForNull
     public List<Character> getCommitCharacters() {
@@ -205,24 +230,18 @@ public final class Completion {
     }
 
     /**
-     * A command that is executed after inserting this completion.
-     */
-    @CheckForNull
-    public Command getCommand() {
-        return command;
-    }
-
-    /**
      * Computes and collects completions for a document at a given offset.
-     * This method is called outside of AWT to collect completions and
-     * send them via the Language Server Protocol to client for display.
      *
      * @param doc a text document
      * @param offset an offset inside the text document
      * @param context an optional completion context
      * @param consumer an operation accepting collected completions
      *
-     * @return true if the list of collected completion is complete
+     * @return true if the list of collected completion is complete. If {@code false},
+     * further typing should result in subsequent calls to this method to recompute
+     * the completions.
+     *
+     * @since 1.0
      */
     public static boolean collect(@NonNull Document doc, int offset, @NullAllowed Context context, @NonNull Consumer<Completion> consumer) {
         boolean isComplete = true;
@@ -236,19 +255,23 @@ public final class Completion {
     /**
      * Contains additional information about the context in which a request for
      * collections completions is triggered.
+     *
+     * @since 1.0
      */
     public static final class Context {
 
         private final TriggerKind triggerKind;
-        private final String triggerCharacter;
+        private final Character triggerCharacter;
 
-        public Context(@NonNull TriggerKind triggerKind, @NullAllowed String triggerCharacter) {
+        public Context(@NonNull TriggerKind triggerKind, @NullAllowed Character triggerCharacter) {
             this.triggerKind = triggerKind;
             this.triggerCharacter = triggerCharacter;
         }
 
         /**
          * How the completion was triggered.
+         *
+         * @since 1.0
          */
         @NonNull
         public TriggerKind getTriggerKind() {
@@ -256,30 +279,43 @@ public final class Completion {
         }
 
         /**
-         * The trigger character (a single character) that has trigger code complete.
+         * The trigger character that has trigger code complete.
          * Is undefined if {@code triggerKind != TriggerKind.TriggerCharacter}.
+         *
+         * @since 1.0
          */
         @CheckForNull
-        public String getTriggerCharacter() {
+        public Character getTriggerCharacter() {
             return triggerCharacter;
         }
     }
 
+    /**
+     * Specifies how a completion was triggered.
+     *
+     * @since 1.0
+     */
     public enum TriggerKind {
 
         /**
          * Completion was triggered by typing an identifier (24x7 code
          * complete), manual invocation (e.g Ctrl+Space) or via API.
+         *
+         * @since 1.0
          */
         Invoked(1),
 
         /**
          * Completion was triggered by a trigger character.
+         *
+         * @since 1.0
          */
         TriggerCharacter(2),
 
         /**
          * Completion was re-triggered as the current completion list is incomplete.
+         *
+         * @since 1.0
          */
         TriggerForIncompleteCompletions(3);
 
@@ -302,6 +338,11 @@ public final class Completion {
         }
     }
 
+    /**
+     * The kind of a completion.
+     *
+     * @since 1.0
+     */
     public static enum Kind {
 
         Text(1),
@@ -349,6 +390,12 @@ public final class Completion {
         }
     }
 
+    /**
+     * Completion item tags are extra annotations that tweak the rendering of a
+     * completion.
+     *
+     * @since 1.0
+     */
     public static enum Tag {
 
         Deprecated(1);
@@ -372,15 +419,25 @@ public final class Completion {
         }
     }
 
+    /**
+     * Defines whether the insert text in a completion item should be interpreted
+     * as plain text or a snippet.
+     *
+     * @since 1.0
+     */
     public static enum TextFormat {
 
         /**
          * The primary text to be inserted is treated as a plain string.
+         *
+         * @since 1.0
          */
         PlainText(1),
 
         /**
          * The primary text to be inserted is treated as a snippet.
+         *
+         * @since 1.0
          */
         Snippet(2);
 

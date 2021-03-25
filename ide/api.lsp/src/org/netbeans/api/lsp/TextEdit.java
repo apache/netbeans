@@ -24,6 +24,7 @@ import org.netbeans.api.annotations.common.NonNull;
  * Represents a textual edit applicable to a text document.
  *
  * @author Dusan Balek
+ * @since 1.0
  */
 public final class TextEdit {
 
@@ -40,6 +41,8 @@ public final class TextEdit {
     /**
      * The start offset of the text document range to be manipulated. To insert
      * text into a document create edit where {@code startOffset == endOffset}.
+     *
+     * @since 1.0
      */
     public int getStartOffset() {
         return start;
@@ -48,6 +51,8 @@ public final class TextEdit {
     /**
      * The end offset of the text document range to be manipulated. To insert
      * text into a document create edit where {@code startOffset == endOffset}.
+     *
+     * @since 1.0
      */
     public int getEndOffset() {
         return end;
@@ -55,6 +60,8 @@ public final class TextEdit {
 
     /**
      * The string to be inserted. For delete operations use an empty string.
+     *
+     * @since 1.0
      */
     @NonNull
     public String getNewText() {

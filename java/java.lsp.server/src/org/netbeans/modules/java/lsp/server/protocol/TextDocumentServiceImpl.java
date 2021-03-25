@@ -296,7 +296,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             final int caret = Utils.getOffset(doc, params.getPosition());
             List<CompletionItem> items = new ArrayList<>();
             Completion.Context context = params.getContext() != null
-                    ? new Completion.Context(Completion.TriggerKind.forValue(params.getContext().getTriggerKind().getValue()), params.getContext().getTriggerCharacter())
+                    ? new Completion.Context(Completion.TriggerKind.forValue(params.getContext().getTriggerKind().getValue()),
+                            params.getContext().getTriggerCharacter() == null || params.getContext().getTriggerCharacter().isEmpty() ? null : params.getContext().getTriggerCharacter().charAt(0))
                     : null;
             boolean isComplete = Completion.collect(doc, caret, context, completion -> {
                 CompletionItem item = new CompletionItem(completion.getLabel());
@@ -341,10 +342,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
                 if (completion.getCommitCharacters() != null) {
                     item.setCommitCharacters(completion.getCommitCharacters().stream().map(ch -> ch.toString()).collect(Collectors.toList()));
-                }
-                org.netbeans.api.lsp.Command command = completion.getCommand();
-                if (command != null) {
-                    item.setCommand(new Command(command.getTitle(), command.getCommand(), command.getArguments()));
                 }
                 lastCompletions.add(completion);
                 item.setData(new CompletionData(uri, index.getAndIncrement()));

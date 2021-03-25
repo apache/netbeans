@@ -31,6 +31,7 @@ import org.openide.filesystems.FileObject;
  * should be registered in MimeLookup.
  *
  * @author Dusan Balek
+ * @since 1.0
  */
 @MimeLocation(subfolderName = "HyperlinkLocationProviders")
 public interface HyperlinkLocationProvider {
@@ -42,9 +43,21 @@ public interface HyperlinkLocationProvider {
      * @param doc document on which to operate.
      * @param offset offset within document
      * @return target location
+     *
+     * @since 1.0
      */
     CompletableFuture<HyperlinkLocation> getHyperlinkLocation(@NonNull Document doc, int offset);
 
+    /**
+     * Creates {@link HyperlinkLocation} instances.
+     *
+     * @param fileObject target file object of the hyperlink
+     * @param startOffset start offset of the hyperlink's target range
+     * @param endOffset end offset of the hyperlink's target range
+     * @return new created instance
+     *
+     * @since 1.0
+     */
     public static HyperlinkLocation createHyperlinkLocation(@NonNull FileObject fileObject, int startOffset, int endOffset) {
         return HyperlinkLocationAccessor.getDefault().createHyperlinkLocation(fileObject, startOffset, endOffset);
     }

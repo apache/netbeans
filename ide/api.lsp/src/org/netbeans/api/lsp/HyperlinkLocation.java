@@ -36,6 +36,7 @@ import org.openide.filesystems.FileObject;
  * file object, such as a line inside a text file.
  *
  * @author Dusan Balek
+ * @since 1.0
  */
 public final class HyperlinkLocation {
 
@@ -62,6 +63,8 @@ public final class HyperlinkLocation {
      * Target file object of this hyperlink.
      *
      * @return file object
+     *
+     * @since 1.0
      */
     @NonNull
     public FileObject getFileObject() {
@@ -72,6 +75,8 @@ public final class HyperlinkLocation {
      * The start offset of a hyperlink's target range.
      *
      * @return offset
+     *
+     * @since 1.0
      */
     public int getStartOffset() {
         return startOffset;
@@ -81,6 +86,8 @@ public final class HyperlinkLocation {
      * The end offset of a hyperlink's target range.
      *
      * @return offset
+     *
+     * @since 1.0
      */
     public int getEndOffset() {
         return endOffset;
@@ -131,6 +138,8 @@ public final class HyperlinkLocation {
      * @param doc document on which to operate.
      * @param offset offset within document
      * @return target location(s)
+     *
+     * @since 1.0
      */
     @NonNull
     public static CompletableFuture<List<HyperlinkLocation>> resolve(@NonNull final Document doc, final int offset) {

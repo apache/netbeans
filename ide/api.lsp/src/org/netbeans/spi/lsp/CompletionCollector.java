@@ -25,7 +25,6 @@ import java.util.function.Consumer;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.api.lsp.Command;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.TextEdit;
 import org.netbeans.modules.lsp.CompletionAccessor;
@@ -38,14 +37,13 @@ import org.netbeans.spi.editor.mimelookup.MimeLocation;
  * in MimeLookup.
  *
  * @author Dusan Balek
+ * @since 1.0
  */
 @MimeLocation(subfolderName = "CompletionCollectors")
 public interface CompletionCollector {
 
     /**
      * Computes and collects completions for a document at a given offset.
-     * This method is called outside of AWT to collect completions and
-     * send them via the Language Server Protocol to client for display.
      *
      * @param doc a text document
      * @param offset an offset inside the text document
@@ -53,19 +51,28 @@ public interface CompletionCollector {
      * @param consumer an operation accepting collected completions
      *
      * @return true if the list of collected completion is complete
+     *
+     * @since 1.0
      */
     public boolean collectCompletions(@NonNull Document doc, int offset, @NullAllowed Completion.Context context, @NonNull Consumer<Completion> consumer);
 
     /**
-     * Creates a builder for {@link Completion} instances
+     * Creates a builder for {@link Completion} instances.
      *
      * @param label the label of the completion
      * @return newly created builder
+     *
+     * @since 1.0
      */
     public static Builder newBuilder(@NonNull String label) {
         return new Builder(label);
     }
 
+    /**
+     * Builder for {@link Completion} instances.
+     *
+     * @since 1.0
+     */
     public static final class Builder {
 
         private String label;
@@ -81,7 +88,6 @@ public interface CompletionCollector {
         private TextEdit textEdit;
         private CompletableFuture<List<TextEdit>> additionalTextEdits;
         private List<Character> commitCharacters;
-        private Command command;
 
         private Builder(@NonNull String label) {
             this.label = label;
@@ -90,6 +96,8 @@ public interface CompletionCollector {
         /**
          * The label of this completion. By default also the text that is inserted
          * when selecting this completion.
+         *
+         * @since 1.0
          */
         @NonNull
         public Builder label(@NonNull String label) {
@@ -99,6 +107,8 @@ public interface CompletionCollector {
 
         /**
          * The kind of this completion.
+         *
+         * @since 1.0
          */
         @NonNull
         public Builder kind(@NonNull Completion.Kind kind) {
@@ -108,6 +118,8 @@ public interface CompletionCollector {
 
         /**
          * Adds tag for this completion.
+         *
+         * @since 1.0
          */
         @NonNull
         public Builder addTag(@NonNull Completion.Tag tag) {
@@ -121,6 +133,8 @@ public interface CompletionCollector {
         /**
          * A human-readable string with additional information
          * about this completion, like type or symbol information.
+         *
+         * @since 1.0
          */
         @NonNull
         public Builder detail(@NonNull CompletableFuture<String> detail) {
@@ -131,6 +145,8 @@ public interface CompletionCollector {
         /**
          * A human-readable string that represents a doc-comment. An HTML format
          * is supported.
+         *
+         * @since 1.0
          */
         @NonNull
         public Builder documentation(@NonNull CompletableFuture<String> documentation) {
@@ -140,6 +156,8 @@ public interface CompletionCollector {
 
         /**
          * Select this completion when showing.
+         *
+         * @since 1.0
          */
         @NonNull
         public Builder preselect(boolean preselect) {
@@ -150,6 +168,8 @@ public interface CompletionCollector {
         /**
          * A string that should be used when comparing this completion with other
          * completions. When {@code null} the label is used as the sort text.
+         *
+         * @since 1.0
          */
         @NonNull
         public Builder sortText(@NonNull String sortText) {
@@ -160,6 +180,8 @@ public interface CompletionCollector {
         /**
          * A string that should be used when filtering a set of completions.
          * When {@code null} the label is used as the filter.
+         *
+         * @since 1.0
          */
         @NonNull
         public Builder filterText(@NonNull String filterText) {
@@ -170,6 +192,8 @@ public interface CompletionCollector {
         /**
          * A string that should be inserted into a document when selecting
          * this completion. When {@code null} the label is used as the insert text.
+         *
+         * @since 1.0
          */
         @NonNull
         public Builder insertText(@NonNull String insertText) {
@@ -181,6 +205,8 @@ public interface CompletionCollector {
          * The format of the insert text. The format applies to both the
          * {@code insertText} property and the {@code newText} property of a provided
          * {@code textEdit}. If omitted defaults to {@link TextFormat#PlainText}.
+         *
+         * @since 1.0
          */
         @NonNull
         public Builder insertTextFormat(@NonNull Completion.TextFormat insertTextFormat) {
@@ -193,6 +219,8 @@ public interface CompletionCollector {
          * When an edit is provided the value of {@code insertText} is ignored.
          * The range of the edit must be a single line range and it must
          * contain the position at which completion has been requested.
+         *
+         * @since 1.0
          */
         @NonNull
         public Builder textEdit(@NonNull TextEdit textEdit) {
@@ -207,6 +235,8 @@ public interface CompletionCollector {
          * Additional text edits should be used to change text unrelated to the
          * current cursor position (for example adding an import statement at the
          * top of the file if the completion item will insert an unqualified type).
+         *
+         * @since 1.0
          */
         @NonNull
         public Builder additionalTextEdits(@NonNull CompletableFuture<List<TextEdit>> additionalTextEdits) {
@@ -217,34 +247,29 @@ public interface CompletionCollector {
         /**
          * Adds character that when pressed while this completion is active will
          * accept it first and then type that character.
+         *
+         * @since 1.0
          */
         @NonNull
-        public Builder addCommitCharacter(@NonNull Character commitCharacter) {
+        public Builder addCommitCharacter(char commitCharacter) {
             if (this.commitCharacters == null) {
                 this.commitCharacters = new ArrayList<>();
             }
-            this.commitCharacters = commitCharacters;
-            return this;
-        }
-
-        /**
-         * A command that is executed after inserting this completion.
-         */
-        @NonNull
-        public Builder command(@NonNull Command command) {
-            this.command = command;
+            this.commitCharacters.add(commitCharacter);
             return this;
         }
 
         /**
          * Builds completion.
+         *
+         * @since 1.0
          */
         @NonNull
         public Completion build() {
             return CompletionAccessor.getDefault().createCompletion(label, kind,
                     tags, detail, documentation, preselect, sortText, filterText,
                     insertText, insertTextFormat, textEdit, additionalTextEdits,
-                    commitCharacters, command);
+                    commitCharacters);
         }
     }
 }

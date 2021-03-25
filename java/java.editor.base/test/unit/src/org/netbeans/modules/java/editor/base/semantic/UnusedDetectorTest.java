@@ -102,7 +102,7 @@ public class UnusedDetectorTest extends NbTestCase {
                     "    }\n" +
                     "}\n",
                     "3:unused:NOT_READ",
-                    "22:<init>:NOT_USED");
+                    "22:brokenMethod:NOT_USED");
     }
 
     @Test

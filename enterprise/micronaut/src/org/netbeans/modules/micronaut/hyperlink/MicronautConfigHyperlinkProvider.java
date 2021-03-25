@@ -50,7 +50,7 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataSourc
  *
  * @author Dusan Balek
  */
-@MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkProviderExt.class)
+@MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkProviderExt.class, position = 1250)
 public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
 
     @Override

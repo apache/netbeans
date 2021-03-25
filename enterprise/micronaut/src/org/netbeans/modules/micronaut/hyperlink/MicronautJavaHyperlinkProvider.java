@@ -64,7 +64,7 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataPrope
  *
  * @author Dusan Balek
  */
-@MimeRegistration(mimeType = "text/x-java", service = HyperlinkProviderExt.class)
+@MimeRegistration(mimeType = "text/x-java", service = HyperlinkProviderExt.class, position = 1250)
 public class MicronautJavaHyperlinkProvider implements HyperlinkProviderExt {
 
     private static final Pattern INJECT = Pattern.compile("\\$\\{(\\S+)(:\\S*)?}");

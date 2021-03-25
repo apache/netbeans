@@ -42,7 +42,6 @@ import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.queries.SourceJavadocAttacher;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.progress.ProgressUtils;
-import org.netbeans.lib.editor.hyperlink.spi.HyperlinkLocation;
 import org.netbeans.modules.java.BinaryElementOpen;
 import org.netbeans.modules.java.classfile.CodeGenerator;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
@@ -291,7 +290,7 @@ public final class ElementOpen {
      *
      * @since 1.58
      */
-    public static CompletableFuture<HyperlinkLocation> getLocation(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName) {
+    public static CompletableFuture<Location> getLocation(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName) {
         final CompletableFuture<Object[]> future = getFutureOpenInfo(cpInfo, el, resourceName, new AtomicBoolean());
         return future.thenApply(openInfo -> {
             if (openInfo[0] != null && (int) openInfo[1] != (-1) && (int) openInfo[2] != (-1)) {
@@ -304,12 +303,54 @@ public final class ElementOpen {
                 if (end < 0) {
                     end = (int) openInfo[2];
                 }
-                return new HyperlinkLocation(file, start, end);
+                return new Location(file, start, end);
             }
             return null;
         });
     }
 
+    /**
+     * Represents the location of an element. It is a range inside of a file object.
+     */
+    public static final class Location {
+
+        private final FileObject fileObject;
+        private final int startOffset;
+        private final int endOffset;
+
+        private Location(FileObject fileObject, int startOffset, int endOffset) {
+            this.fileObject = fileObject;
+            this.startOffset = startOffset;
+            this.endOffset = endOffset;
+        }
+
+        /**
+         * The location's file object.
+         *
+         * @return file object
+         */
+        public FileObject getFileObject() {
+            return fileObject;
+        }
+
+        /**
+         * The location's start offset.
+         *
+         * @return offset
+         */
+        public int getStartOffset() {
+            return startOffset;
+        }
+
+        /**
+         * The location's end offset.
+         *
+         * @return offset
+         */
+        public int getEndOffset() {
+            return endOffset;
+        }
+    }
     // Private methods ---------------------------------------------------------
 
     private static boolean isClassFile(@NonNull final FileObject file) {

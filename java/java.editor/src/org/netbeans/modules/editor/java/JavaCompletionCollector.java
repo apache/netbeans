@@ -61,6 +61,8 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.java.source.ui.ElementJavadoc;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lsp.Completion;
+import org.netbeans.api.lsp.TextEdit;
 import org.netbeans.modules.java.completion.JavaCompletionTask;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.parsing.api.ParserManager;
@@ -68,7 +70,7 @@ import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
-import org.netbeans.spi.editor.completion.CompletionCollector;
+import org.netbeans.spi.lsp.CompletionCollector;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -80,7 +82,7 @@ import org.openide.util.Exceptions;
 public class JavaCompletionCollector implements CompletionCollector {
 
     @Override
-    public boolean collectCompletions(Document doc, int offset, Context context, Consumer<Completion> consumer) {
+    public boolean collectCompletions(Document doc, int offset, Completion.Context context, Consumer<Completion> consumer) {
         AtomicBoolean ret = new AtomicBoolean(true);
         try {
             ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
@@ -93,7 +95,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                         }
                     }
                     int len = offset - ts.offset();
-                    boolean allCompletion = context != null && context.getTriggerKind() == TriggerKind.TriggerForIncompleteCompletions
+                    boolean allCompletion = context != null && context.getTriggerKind() == Completion.TriggerKind.TriggerForIncompleteCompletions
                             || len > 0 && ts.token().length() >= len && ts.token().id() == JavaTokenId.IDENTIFIER;
                     CompilationController controller = CompilationController.get(resultIterator.getParserResult(ts.offset()));
                     controller.toPhase(JavaSource.Phase.RESOLVED);
@@ -138,8 +140,8 @@ public class JavaCompletionCollector implements CompletionCollector {
 
         @Override
         public Completion createKeywordItem(String kwd, String postfix, int substitutionOffset, boolean smartType) {
-            return Completion.newBuilder(kwd)
-                    .kind(Kind.Keyword)
+            return CompletionCollector.newBuilder(kwd)
+                    .kind(Completion.Kind.Keyword)
                     .sortText(String.format("%4d%s", smartType ? 670 : 1670, kwd))
                     .insertText(kwd + postfix)
                     .build();
@@ -148,8 +150,8 @@ public class JavaCompletionCollector implements CompletionCollector {
         @Override
         public Completion createPackageItem(String pkgFQN, int substitutionOffset, boolean inPackageStatement) {
             final String simpleName = pkgFQN.substring(pkgFQN.lastIndexOf('.') + 1);
-            return Completion.newBuilder(simpleName)
-                    .kind(Kind.Folder)
+            return CompletionCollector.newBuilder(simpleName)
+                    .kind(Completion.Kind.Folder)
                     .sortText(String.format("%4d%s#%s", 1900, simpleName, pkgFQN))
                     .insertText(simpleName + (inPackageStatement ? "" : "."))
                     .build();
@@ -160,14 +162,17 @@ public class JavaCompletionCollector implements CompletionCollector {
             String name = elem.getQualifiedName().toString();
             int idx = name.lastIndexOf('.');
             String pkgName = idx < 0 ? "" : name.substring(0, idx);
-            Completion.Builder builder = Completion.newBuilder(elem.getSimpleName().toString())
+            CompletionCollector.Builder builder = CompletionCollector.newBuilder(elem.getSimpleName().toString())
                     .kind(elementKind2CompletionItemKind(elem.getKind()))
                     .sortText(String.format("%4d%s#%2d#%s", smartType ? 800 : 1800, elem.getSimpleName().toString(), Utilities.getImportanceLevel(name), pkgName))
                     .detail(CompletableFuture.completedFuture(name));
             ElementHandle<TypeElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
-                    builder.documentation(getDocumentation(doc, handle))
-                    .additionalTextEdits(addImport(doc, handle));
+                builder.documentation(getDocumentation(doc, handle))
+                        .additionalTextEdits(addImport(doc, handle));
+            }
+            if (isDeprecated) {
+                builder.addTag(Completion.Tag.Deprecated);
             }
             return builder.build();
         }
@@ -179,7 +184,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                 String name = handle.getQualifiedName();
                 int idx = name.lastIndexOf('.');
                 String pkgName = idx < 0 ? "" : name.substring(0, idx);
-                return Completion.newBuilder(te.getSimpleName().toString())
+                return CompletionCollector.newBuilder(te.getSimpleName().toString())
                         .kind(elementKind2CompletionItemKind(handle.getKind()))
                         .sortText(String.format("%4d%s#%2d#%s", 1800, te.getSimpleName().toString(), Utilities.getImportanceLevel(name), pkgName))
                         .detail(CompletableFuture.completedFuture(name))
@@ -197,7 +202,7 @@ public class JavaCompletionCollector implements CompletionCollector {
 
         @Override
         public Completion createTypeParameterItem(TypeParameterElement elem, int substitutionOffset) {
-            return Completion.newBuilder(elem.getSimpleName().toString())
+            return CompletionCollector.newBuilder(elem.getSimpleName().toString())
                     .kind(elementKind2CompletionItemKind(elem.getKind()))
                     .sortText(String.format("%4d%s", 1700, elem.getSimpleName().toString()))
                     .build();
@@ -206,20 +211,23 @@ public class JavaCompletionCollector implements CompletionCollector {
         @Override
         public Completion createVariableItem(CompilationInfo info, VariableElement elem, TypeMirror type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean smartType, int assignToVarOffset) {
             int priority = elem.getKind() == ElementKind.ENUM_CONSTANT || elem.getKind() == ElementKind.FIELD ? smartType ? 300 : 1300 : smartType ? 200 : 1200;
-            Completion.Builder builder = Completion.newBuilder(elem.getSimpleName().toString())
+            CompletionCollector.Builder builder = CompletionCollector.newBuilder(elem.getSimpleName().toString())
                     .kind(elementKind2CompletionItemKind(elem.getKind()))
                     .sortText(String.format("%4d%s", priority, elem.getSimpleName().toString()));
             ElementHandle<VariableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
                 builder.documentation(getDocumentation(doc, handle));
             }
+            if (isDeprecated) {
+                builder.addTag(Completion.Tag.Deprecated);
+            }
             return builder.build();
         }
 
         @Override
         public Completion createVariableItem(CompilationInfo info, String varName, int substitutionOffset, boolean newVarName, boolean smartType) {
-            return Completion.newBuilder(varName)
-                    .kind(Kind.Variable)
+            return CompletionCollector.newBuilder(varName)
+                    .kind(Completion.Kind.Variable)
                     .sortText(String.format("%4d%s", smartType ? 200 : 1200, varName))
                     .build();
         }
@@ -263,13 +271,16 @@ public class JavaCompletionCollector implements CompletionCollector {
                 insertText.append(")");
             }
             int priority = elem.getKind() == ElementKind.METHOD ? smartType ? 500 : 1500 : smartType ? 650 : 1650;
-            Completion.Builder builder = Completion.newBuilder(label.toString())
+            CompletionCollector.Builder builder = CompletionCollector.newBuilder(label.toString())
                     .kind(elementKind2CompletionItemKind(elem.getKind()))
                     .insertText(insertText.toString())
                     .sortText(String.format("%4d%s#%2d%s", priority, elem.getSimpleName().toString(), cnt, sortParams));
             ElementHandle<ExecutableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
                 builder.documentation(getDocumentation(doc, handle));
+            }
+            if (isDeprecated) {
+                builder.addTag(Completion.Tag.Deprecated);
             }
             return builder.build();
         }
@@ -282,8 +293,8 @@ public class JavaCompletionCollector implements CompletionCollector {
             String label = simpleName + item.getLabel().substring(idx);
             idx = item.getInsertText().indexOf('(');
             String insertText = simpleName + item.getInsertText().substring(idx);
-            Completion.Builder builder = Completion.newBuilder(label)
-                    .kind(Kind.Constructor)
+            CompletionCollector.Builder builder = CompletionCollector.newBuilder(label)
+                    .kind(Completion.Kind.Constructor)
                     .insertText(insertText)
                     .sortText(String.format("%4d%s", name != null ? 1550 : 1650, item.getSortText().substring(4)));
             ElementHandle<ExecutableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
@@ -296,7 +307,7 @@ public class JavaCompletionCollector implements CompletionCollector {
         @Override
         public Completion createOverrideMethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean implement) {
             Completion item = createExecutableItem(info, elem, type, substitutionOffset, null, false, false, false, false, false, -1, false);
-            Completion.Builder builder = Completion.newBuilder(String.format("%s - %s", item.getLabel(), implement ? "implement" : "override"))
+            CompletionCollector.Builder builder = CompletionCollector.newBuilder(String.format("%s - %s", item.getLabel(), implement ? "implement" : "override"))
                     .kind(elementKind2CompletionItemKind(elem.getKind()));
             ElementHandle<ExecutableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
@@ -345,22 +356,25 @@ public class JavaCompletionCollector implements CompletionCollector {
             StringBuilder insertText = new StringBuilder();
             insertText.append(elem.getSimpleName());
             insertText.append("=");
-            Completion.Builder builder = Completion.newBuilder(elem.getSimpleName().toString())
-                    .kind(Kind.Property)
+            CompletionCollector.Builder builder = CompletionCollector.newBuilder(elem.getSimpleName().toString())
+                    .kind(Completion.Kind.Property)
                     .insertText(insertText.toString())
-                    .insertTextFormat(TextFormat.PlainText)
+                    .insertTextFormat(Completion.TextFormat.PlainText)
                     .sortText(String.format("%4d%s", isDeprecated ? 100 + DEPRECATED : 100, elem.getSimpleName().toString()));
             ElementHandle<ExecutableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
                 builder.documentation(getDocumentation(doc, handle));
+            }
+            if (isDeprecated) {
+                builder.addTag(Completion.Tag.Deprecated);
             }
             return builder.build();
         }
 
         @Override
         public Completion createAttributeValueItem(CompilationInfo info, String value, String documentation, TypeElement element, int substitutionOffset, ReferencesCount referencesCount) {
-            return Completion.newBuilder(value)
-                    .kind(Kind.Text)
+            return CompletionCollector.newBuilder(value)
+                    .kind(Completion.Kind.Text)
                     .sortText(value)
                     .documentation(CompletableFuture.completedFuture(documentation))
                     .build();
@@ -409,7 +423,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                 sortParams.append(')');
                 sortText += String.format("#%2d#%s#s", cnt, sortParams.toString(), Utilities.getTypeName(info, type, false)); //NOI18N
             }
-            Completion.Builder builder = Completion.newBuilder(label)
+            CompletionCollector.Builder builder = CompletionCollector.newBuilder(label)
                     .kind(elementKind2CompletionItemKind(memberElem.getKind()))
                     .insertText(label)
                     .additionalTextEdits(CompletableFuture.completedFuture(currentClassImport))
@@ -417,6 +431,9 @@ public class JavaCompletionCollector implements CompletionCollector {
             ElementHandle<Element> handle = SUPPORTED_ELEMENT_KINDS.contains(memberElem.getKind().name()) ? ElementHandle.create(memberElem) : null;
             if (handle != null) {
                 builder.documentation(getDocumentation(doc, handle));
+            }
+            if (isDeprecated) {
+                builder.addTag(Completion.Tag.Deprecated);
             }
             return builder.build();
         }
@@ -466,43 +483,43 @@ public class JavaCompletionCollector implements CompletionCollector {
             });
         }
 
-        private static Kind elementKind2CompletionItemKind(ElementKind kind) {
+        private static Completion.Kind elementKind2CompletionItemKind(ElementKind kind) {
             switch (kind) {
                 case PACKAGE:
-                    return Kind.Folder;
+                    return Completion.Kind.Folder;
                 case ENUM:
-                    return Kind.Enum;
+                    return Completion.Kind.Enum;
                 case CLASS:
-                    return Kind.Class;
+                    return Completion.Kind.Class;
                 case ANNOTATION_TYPE:
-                    return Kind.Interface;
+                    return Completion.Kind.Interface;
                 case INTERFACE:
-                    return Kind.Interface;
+                    return Completion.Kind.Interface;
                 case ENUM_CONSTANT:
-                    return Kind.EnumMember;
+                    return Completion.Kind.EnumMember;
                 case FIELD:
-                    return Kind.Field;
+                    return Completion.Kind.Field;
                 case PARAMETER:
-                    return Kind.Variable;
+                    return Completion.Kind.Variable;
                 case LOCAL_VARIABLE:
-                    return Kind.Variable;
+                    return Completion.Kind.Variable;
                 case EXCEPTION_PARAMETER:
-                    return Kind.Variable;
+                    return Completion.Kind.Variable;
                 case METHOD:
-                    return Kind.Method;
+                    return Completion.Kind.Method;
                 case CONSTRUCTOR:
-                    return Kind.Constructor;
+                    return Completion.Kind.Constructor;
                 case TYPE_PARAMETER:
-                    return Kind.TypeParameter;
+                    return Completion.Kind.TypeParameter;
                 case RESOURCE_VARIABLE:
-                    return Kind.Variable;
+                    return Completion.Kind.Variable;
                 case MODULE:
-                    return Kind.Module;
+                    return Completion.Kind.Module;
                 case STATIC_INIT:
                 case INSTANCE_INIT:
                 case OTHER:
                 default:
-                    return Kind.Text;
+                    return Completion.Kind.Text;
             }
         }
 

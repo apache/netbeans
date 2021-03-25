@@ -20,7 +20,6 @@
 package org.netbeans.lib.editor.hyperlink.spi;
 
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import javax.swing.text.Document;
 import org.netbeans.spi.editor.mimelookup.MimeLocation;
 
@@ -126,17 +125,5 @@ public interface HyperlinkProviderExt {
      * @since 1.18
      */
     String getTooltipText(Document doc, int offset, HyperlinkType type);
-
-    /**
-     * Returns hyperlink target location.
-     *
-     * @param doc document on which to operate.
-     * @param offset &gt;=0 offset to test (it generally should be offset &lt; doc.getLength(), but
-     *               the implementations should not depend on it)
-     * @param type the hyperlink type
-     * @return 4.20
-     */
-    default CompletableFuture<HyperlinkLocation> getHyperlinkLocation(Document doc, int offset, HyperlinkType type) {
-        return CompletableFuture.completedFuture(null);
-    }
+    
 }

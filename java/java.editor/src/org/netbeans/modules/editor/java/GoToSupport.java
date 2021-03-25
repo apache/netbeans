@@ -97,10 +97,10 @@ import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lsp.HyperlinkLocation;
 import org.netbeans.api.progress.ProgressUtils;
 import org.netbeans.editor.ext.ToolTipSupport;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
-import org.netbeans.lib.editor.hyperlink.spi.HyperlinkLocation;
 import org.netbeans.lib.editor.util.StringEscapeUtils;
 import org.netbeans.modules.java.editor.base.javadoc.JavadocImports;
 import org.netbeans.modules.parsing.api.ParserManager;
@@ -109,6 +109,7 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser.Result;
+import org.netbeans.spi.lsp.HyperlinkLocationProvider;
 import org.openide.awt.HtmlBrowser;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
@@ -194,11 +195,14 @@ public class GoToSupport {
                 });
                 if (target[0] != null && target[0].success) {
                     if (target[0].offsetToOpen < 0) {
-                        return ElementOpen.getLocation(target[0].cpInfo, target[0].elementToOpen, target[0].resourceName);
+                        CompletableFuture<ElementOpen.Location> future = ElementOpen.getLocation(target[0].cpInfo, target[0].elementToOpen, target[0].resourceName);
+                        return future.thenApply(location -> {
+                            return location != null ? HyperlinkLocationProvider.createHyperlinkLocation(location.getFileObject(), location.getStartOffset(), location.getEndOffset()) : null;
+                        });
                     }
                     int start = target[0].nameSpan != null ? target[0].nameSpan[0] : target[0].offsetToOpen;
                     int end = target[0].nameSpan != null ? target[0].nameSpan[1] : target[0].endPos;
-                    return CompletableFuture.completedFuture(new HyperlinkLocation(fo, start, end));
+                    return CompletableFuture.completedFuture(HyperlinkLocationProvider.createHyperlinkLocation(fo, start, end));
                 }
             }
             return CompletableFuture.completedFuture(null);

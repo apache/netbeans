@@ -16,25 +16,43 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.lib.editor.hyperlink.spi;
+package org.netbeans.api.lsp;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import javax.swing.text.Document;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.api.editor.mimelookup.MimePath;
+import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.netbeans.modules.lsp.HyperlinkLocationAccessor;
+import org.netbeans.spi.lsp.HyperlinkLocationProvider;
 import org.openide.filesystems.FileObject;
 
 /**
- * Represents the target location of a hyperlink. Location is a range inside
- * a file object, such as a line inside a text file.
+ * Represents the target location of a hyperlink. Location is a range inside a
+ * file object, such as a line inside a text file.
  *
  * @author Dusan Balek
- * @since 4.20
  */
 public final class HyperlinkLocation {
+
+    static {
+        HyperlinkLocationAccessor.setDefault(new HyperlinkLocationAccessor() {
+            @Override
+            public HyperlinkLocation createHyperlinkLocation(FileObject fileObject, int startOffset, int endOffset) {
+                return new HyperlinkLocation(fileObject, startOffset, endOffset);
+            }
+        });
+    }
 
     private final FileObject fileObject;
     private final int startOffset;
     private final int endOffset;
 
-    public HyperlinkLocation(FileObject fileObject, int startOffset, int endOffset) {
+    private HyperlinkLocation(@NonNull FileObject fileObject, int startOffset, int endOffset) {
         this.fileObject = fileObject;
         this.startOffset = startOffset;
         this.endOffset = endOffset;
@@ -45,6 +63,7 @@ public final class HyperlinkLocation {
      *
      * @return file object
      */
+    @NonNull
     public FileObject getFileObject() {
         return fileObject;
     }
@@ -103,5 +122,30 @@ public final class HyperlinkLocation {
     @Override
     public String toString() {
         return "HyperlinkLocation{" + "fileObject=" + fileObject + ", startOffset=" + startOffset + ", endOffset=" + endOffset + '}';
+    }
+
+    /**
+     * Resolves a hyperlink at the given document offset and returns its target
+     * location(s).
+     *
+     * @param doc document on which to operate.
+     * @param offset offset within document
+     * @return target location(s)
+     */
+    @NonNull
+    public static CompletableFuture<List<HyperlinkLocation>> resolve(@NonNull final Document doc, final int offset) {
+        MimePath mimePath = MimePath.parse(DocumentUtilities.getMimeType(doc));
+        CompletableFuture<HyperlinkLocation>[] futures = MimeLookup.getLookup(mimePath).lookupAll(HyperlinkLocationProvider.class).stream()
+                .map(provider -> provider.getHyperlinkLocation(doc, offset)).toArray(CompletableFuture[]::new);
+        return CompletableFuture.allOf(futures).thenApply(value -> {
+            List<HyperlinkLocation> locations = new ArrayList<>(futures.length);
+            for (CompletableFuture<HyperlinkLocation> future : futures) {
+                HyperlinkLocation location = future.getNow(null);
+                if (location != null) {
+                    locations.add(location);
+                }
+            }
+            return locations;
+        });
     }
 }

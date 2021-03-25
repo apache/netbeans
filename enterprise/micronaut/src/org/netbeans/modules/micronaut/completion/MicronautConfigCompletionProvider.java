@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.micronaut;
+package org.netbeans.modules.micronaut.completion;
 
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
@@ -24,6 +24,8 @@ import org.netbeans.api.editor.document.EditorDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.micronaut.MicronautConfigProperties;
+import org.netbeans.modules.micronaut.MicronautConfigUtilities;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
 import org.netbeans.spi.editor.completion.CompletionTask;
@@ -45,12 +47,11 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
         if (fo != null && "application.yml".equalsIgnoreCase(fo.getNameExt())) {
             Project project = FileOwnerQuery.getOwner(fo);
             if (project != null) {
-                MicronautConfigProperties configProperties = project.getLookup().lookup(MicronautConfigProperties.class);
-                if (configProperties != null) {
+                if (MicronautConfigProperties.hasConfigMetadata(project)) {
                     switch (queryType) {
                         case COMPLETION_ALL_QUERY_TYPE:
                         case COMPLETION_QUERY_TYPE:
-                            return new AsyncCompletionTask(new MicronautConfigCompletionQuery(configProperties), component);
+                            return new AsyncCompletionTask(new MicronautConfigCompletionQuery(project), component);
                         case DOCUMENTATION_QUERY_TYPE:
                             return new AsyncCompletionTask(new MicronautConfigDocumentationQuery(null), component);
                     }
@@ -71,15 +72,15 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
 
     private static class MicronautConfigCompletionQuery extends AsyncCompletionQuery {
 
-        private final MicronautConfigProperties configProperties;
+        private final Project project;
 
-        public MicronautConfigCompletionQuery(MicronautConfigProperties configProperties) {
-            this.configProperties = configProperties;
+        public MicronautConfigCompletionQuery(Project project) {
+            this.project = project;
         }
 
         @Override
         protected void query(CompletionResultSet resultSet, Document doc, int caretOffset) {
-            resultSet.addAllItems(new MicronautConfigCompletionTask().query(doc, caretOffset, configProperties, new MicronautConfigCompletionTask.ItemFactory<MicronautConfigCompletionItem>() {
+            resultSet.addAllItems(new MicronautConfigCompletionTask().query(doc, caretOffset, project, new MicronautConfigCompletionTask.ItemFactory<MicronautConfigCompletionItem>() {
                 @Override
                 public MicronautConfigCompletionItem createPropertyItem(ConfigurationMetadataProperty property, int offset, int baseIndent, int indentLevelSize, int idx) {
                     resultSet.setAnchorOffset(offset);
@@ -107,7 +108,7 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
         @Override
         protected void query(CompletionResultSet resultSet, Document doc, int caretOffset) {
             if (element == null) {
-                element = MicronautConfigHyperlinkProvider.resolve(doc, caretOffset, null, null);
+                element = MicronautConfigUtilities.resolveProperty(doc, caretOffset, null, null);
             }
             resultSet.setDocumentation(new MicronautConfigDocumentation(element));
             resultSet.finish();

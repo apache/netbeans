@@ -16,13 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.micronaut;
+package org.netbeans.modules.micronaut.refactor;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -37,17 +34,9 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
-import org.netbeans.modules.csl.api.StructureItem;
-import org.netbeans.modules.csl.api.StructureScanner;
-import org.netbeans.modules.csl.core.Language;
-import org.netbeans.modules.csl.core.LanguageRegistry;
-import org.netbeans.modules.csl.spi.ParserResult;
-import org.netbeans.modules.parsing.api.ParserManager;
-import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.parsing.api.Source;
-import org.netbeans.modules.parsing.api.UserTask;
-import org.netbeans.modules.parsing.spi.ParseException;
-import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.modules.micronaut.MicronautConfigProperties;
+import org.netbeans.modules.micronaut.MicronautConfigUtilities;
+import org.netbeans.modules.micronaut.completion.MicronautConfigCompletionItem;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.Scope;
@@ -86,44 +75,6 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
             }
         }
         return null;
-    }
-
-    static void addProperties(FileObject fo, String propertyName, List<WhereUsedRefactoringElement> refactoringElements) {
-        try {
-            ParserManager.parse(Collections.singleton(Source.create(fo)), new UserTask() {
-                public @Override void run(ResultIterator resultIterator) throws Exception {
-                    Parser.Result r = resultIterator.getParserResult();
-                    if (r instanceof ParserResult) {
-                        Language language = LanguageRegistry.getInstance().getLanguageByMimeType(resultIterator.getSnapshot().getMimeType());
-                        if (language != null) {
-                            StructureScanner scanner = language.getStructure();
-                            if (scanner != null) {
-                                find(fo, propertyName, scanner.scan((ParserResult) r), r.getSnapshot().getText(), refactoringElements);
-                            }
-                        }
-                    }
-                }
-            });
-        } catch (ParseException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-    }
-
-    private static void find(FileObject fo, String propertyName, List<? extends StructureItem> structures, CharSequence content, List<WhereUsedRefactoringElement> refactoringElements) {
-        int idx = propertyName.indexOf('.');
-        String name = idx < 0 ? propertyName : propertyName.substring(0, idx);
-        for (StructureItem structure : structures) {
-            if ("*".equals(name) || name.equals(structure.getName())) {
-                if (idx < 0) {
-                    int start = (int) structure.getPosition();
-                    int end = (int) structure.getEndPosition();
-                    String text = content.subSequence(start, end).toString();
-                    refactoringElements.add(new WhereUsedRefactoringElement(fo, new int[] {start, end}, text));
-                } else {
-                    find(fo, propertyName.substring(idx + 1), structure.getNestedItems(), content, refactoringElements);
-                }
-            }
-        }
     }
 
     private static class MicronautWhereUsedRefactoringPlugin implements RefactoringPlugin {
@@ -167,8 +118,7 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
                 try {
                     Info info = null;
                     for (Project project : projects) {
-                        MicronautConfigProperties configProperties = project.getLookup().lookup(MicronautConfigProperties.class);
-                        if (configProperties != null) {
+                        if (MicronautConfigProperties.hasConfigMetadata(project)) {
                             SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES);
                             for (SourceGroup sourceGroup : sourceGroups) {
                                 FileObject rootFolder = sourceGroup.getRootFolder();
@@ -178,17 +128,15 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
                                         info = getInfo();
                                     }
                                     if (info.className != null && info.methodName != null && info.methodName.startsWith("set")) {
-                                        for (ConfigurationMetadataGroup group : configProperties.getGroups().values()) {
+                                        for (ConfigurationMetadataGroup group : MicronautConfigProperties.getGroups(project).values()) {
                                             ConfigurationMetadataSource source = group.getSources().get(info.className);
                                             if (source != null) {
                                                 for (ConfigurationMetadataProperty property : source.getProperties().values()) {
                                                     String name = "set" + property.getName().replaceAll("-", "");
                                                     if (name.equalsIgnoreCase(info.methodName)) {
-                                                        List<WhereUsedRefactoringElement> elements = new ArrayList<>();
-                                                        addProperties(fo, property.getId(), elements);
-                                                        for (WhereUsedRefactoringElement element : elements) {
-                                                            refactoringElements.add(refactoring, element);
-                                                        }
+                                                        MicronautConfigUtilities.collectUsages(fo, property.getId(), usage -> {
+                                                            refactoringElements.add(refactoring, new WhereUsedRefactoringElement(usage.getFileObject(), usage.getStartOffset(), usage.getEndOffset(), usage.getText()));
+                                                        });
                                                     }
                                                 }
                                             }
@@ -230,12 +178,14 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
     public static final class WhereUsedRefactoringElement extends SimpleRefactoringElementImplementation {
 
         private final FileObject fileObject;
-        private final int[] pos;
+        private final int startOffset;
+        private final int endOffset;
         private final String text;
 
-        private WhereUsedRefactoringElement(FileObject fileObject, int[] pos, String text) {
+        private WhereUsedRefactoringElement(FileObject fileObject, int startOffset, int endOffset, String text) {
             this.fileObject = fileObject;
-            this.pos = pos;
+            this.startOffset = startOffset;
+            this.endOffset = endOffset;
             this.text = text;
         }
 
@@ -281,7 +231,7 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
                     EditorCookie.Observable obs = (EditorCookie.Observable)dobj.getCookie(EditorCookie.Observable.class);
                     if (obs != null && obs instanceof CloneableEditorSupport) {
                         CloneableEditorSupport supp = (CloneableEditorSupport)obs;
-                        return new PositionBounds(supp.createPositionRef(pos[0], Position.Bias.Forward), supp.createPositionRef(Math.max(pos[0], pos[1]), Position.Bias.Forward));
+                        return new PositionBounds(supp.createPositionRef(startOffset, Position.Bias.Forward), supp.createPositionRef(Math.max(startOffset, endOffset), Position.Bias.Forward));
                     }
                 }
             } catch (DataObjectNotFoundException ex) {

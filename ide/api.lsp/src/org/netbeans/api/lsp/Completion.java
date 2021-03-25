@@ -1,0 +1,405 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.netbeans.api.lsp;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import javax.swing.text.Document;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.api.editor.mimelookup.MimePath;
+import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.netbeans.modules.lsp.CompletionAccessor;
+import org.netbeans.spi.lsp.CompletionCollector;
+
+/**
+ * Represents a completion proposal.
+ *
+ * @author Dusan Balek
+ */
+public final class Completion {
+
+    static {
+        CompletionAccessor.setDefault(new CompletionAccessor() {
+            @Override
+            public Completion createCompletion(String label, Kind kind, List<Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
+                    boolean preselect, String sortText, String filterText, String insertText, TextFormat insertTextFormat, TextEdit textEdit, CompletableFuture<List<TextEdit>> additionalTextEdits,
+                    List<Character> commitCharacters, Command command) {
+                return new Completion(label, kind, tags, detail, documentation, preselect, sortText, filterText, insertText, insertTextFormat, textEdit, additionalTextEdits, commitCharacters, command);
+            }
+        });
+    }
+
+    private final String label;
+    private final Kind kind;
+    private final List<Tag> tags;
+    private final CompletableFuture<String> detail;
+    private final CompletableFuture<String> documentation;
+    private final boolean preselect;
+    private final String sortText;
+    private final String filterText;
+    private final String insertText;
+    private final TextFormat insertTextFormat;
+    private final TextEdit textEdit;
+    private final CompletableFuture<List<TextEdit>> additionalTextEdits;
+    private final List<Character> commitCharacters;
+    private final Command command;
+
+    private Completion(String label, Kind kind, List<Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
+            boolean preselect, String sortText, String filterText, String insertText, TextFormat insertTextFormat,
+            TextEdit textEdit, CompletableFuture<List<TextEdit>> additionalTextEdits, List<Character> commitCharacters, Command command) {
+        this.label = label;
+        this.kind = kind;
+        this.tags = tags;
+        this.detail = detail;
+        this.documentation = documentation;
+        this.preselect = preselect;
+        this.sortText = sortText;
+        this.filterText = filterText;
+        this.insertText = insertText;
+        this.insertTextFormat = insertTextFormat;
+        this.textEdit = textEdit;
+        this.additionalTextEdits = additionalTextEdits;
+        this.commitCharacters = commitCharacters;
+        this.command = command;
+    }
+
+    /**
+     * The label of this completion. By default also the text that is inserted
+     * when selecting this completion.
+     */
+    @NonNull
+    public String getLabel() {
+        return label;
+    }
+
+    /**
+     * The kind of this completion.
+     */
+    @CheckForNull
+    public Kind getKind() {
+        return kind;
+    }
+
+    /**
+     * Tags for this completion.
+     */
+    @CheckForNull
+    public List<Tag> getTags() {
+        return tags != null ? Collections.unmodifiableList(tags) : null;
+    }
+
+    /**
+     * A human-readable string with additional information
+     * about this completion, like type or symbol information.
+     */
+    @CheckForNull
+    public CompletableFuture<String> getDetail() {
+        return detail;
+    }
+
+    /**
+     * A human-readable string that represents a doc-comment. An HTML format is
+     * supported.
+     */
+    @CheckForNull
+    public CompletableFuture<String> getDocumentation() {
+        return documentation;
+    }
+
+    /**
+     * Select this completion when showing.
+     */
+    public boolean isPreselect() {
+        return preselect;
+    }
+
+    /**
+     * A string that should be used when comparing this completion with other
+     * completions. When {@code null} the label is used as the sort text.
+     */
+    @CheckForNull
+    public String getSortText() {
+        return sortText;
+    }
+
+    /**
+     * A string that should be used when filtering a set of completions.
+     * When {@code null} the label is used as the filter.
+     */
+    @CheckForNull
+    public String getFilterText() {
+        return filterText;
+    }
+
+    /**
+     * A string that should be inserted into a document when selecting
+     * this completion. When {@code null} the label is used as the insert text.
+     */
+    @CheckForNull
+    public String getInsertText() {
+        return insertText;
+    }
+
+    /**
+     * The format of the insert text. The format applies to both the
+     * {@code insertText} property and the {@code newText} property of a provided
+     * {@code textEdit}. If omitted defaults to {@link TextFormat#PlainText}.
+     */
+    @CheckForNull
+    public TextFormat getInsertTextFormat() {
+        return insertTextFormat;
+    }
+
+    /**
+     * An edit which is applied to a document when selecting this completion.
+     * When an edit is provided the value of {@code insertText} is ignored.
+     * The range of the edit must be a single line range and it must
+     * contain the position at which completion has been requested.
+     */
+    @CheckForNull
+    public TextEdit getTextEdit() {
+        return textEdit;
+    }
+
+    /**
+     * A list of additional text edits that are applied when selecting this
+     * completion. Edits must not overlap (including the same insert position)
+     * with the main edit nor with themselves.
+     * Additional text edits should be used to change text unrelated to the
+     * current cursor position (for example adding an import statement at the
+     * top of the file if the completion item will insert an unqualified type).
+     */
+    @CheckForNull
+    public CompletableFuture<List<TextEdit>> getAdditionalTextEdits() {
+        return additionalTextEdits;
+    }
+
+    /**
+     * A list of characters that when pressed while this completion is
+     * active will accept it first and then type that character.
+     */
+    @CheckForNull
+    public List<Character> getCommitCharacters() {
+        return commitCharacters != null ? Collections.unmodifiableList(commitCharacters) : null;
+    }
+
+    /**
+     * A command that is executed after inserting this completion.
+     */
+    @CheckForNull
+    public Command getCommand() {
+        return command;
+    }
+
+    /**
+     * Computes and collects completions for a document at a given offset.
+     * This method is called outside of AWT to collect completions and
+     * send them via the Language Server Protocol to client for display.
+     *
+     * @param doc a text document
+     * @param offset an offset inside the text document
+     * @param context an optional completion context
+     * @param consumer an operation accepting collected completions
+     *
+     * @return true if the list of collected completion is complete
+     */
+    public static boolean collect(@NonNull Document doc, int offset, @NullAllowed Context context, @NonNull Consumer<Completion> consumer) {
+        boolean isComplete = true;
+        MimePath mimePath = MimePath.parse(DocumentUtilities.getMimeType(doc));
+        for (CompletionCollector collector : MimeLookup.getLookup(mimePath).lookupAll(CompletionCollector.class)) {
+            isComplete &= collector.collectCompletions(doc, offset, context, consumer);
+        }
+        return isComplete;
+    }
+
+    /**
+     * Contains additional information about the context in which a request for
+     * collections completions is triggered.
+     */
+    public static final class Context {
+
+        private final TriggerKind triggerKind;
+        private final String triggerCharacter;
+
+        public Context(@NonNull TriggerKind triggerKind, @NullAllowed String triggerCharacter) {
+            this.triggerKind = triggerKind;
+            this.triggerCharacter = triggerCharacter;
+        }
+
+        /**
+         * How the completion was triggered.
+         */
+        @NonNull
+        public TriggerKind getTriggerKind() {
+            return triggerKind;
+        }
+
+        /**
+         * The trigger character (a single character) that has trigger code complete.
+         * Is undefined if {@code triggerKind != TriggerKind.TriggerCharacter}.
+         */
+        @CheckForNull
+        public String getTriggerCharacter() {
+            return triggerCharacter;
+        }
+    }
+
+    public enum TriggerKind {
+
+        /**
+         * Completion was triggered by typing an identifier (24x7 code
+         * complete), manual invocation (e.g Ctrl+Space) or via API.
+         */
+        Invoked(1),
+
+        /**
+         * Completion was triggered by a trigger character.
+         */
+        TriggerCharacter(2),
+
+        /**
+         * Completion was re-triggered as the current completion list is incomplete.
+         */
+        TriggerForIncompleteCompletions(3);
+
+        private final int value;
+
+        private TriggerKind(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static TriggerKind forValue(int value) {
+            TriggerKind[] allValues = TriggerKind.values();
+            if (value < 1 || value > allValues.length) {
+                throw new IllegalArgumentException("Illegal enum value: " + value);
+            }
+            return allValues[value - 1];
+        }
+    }
+
+    public static enum Kind {
+
+        Text(1),
+        Method(2),
+        Function(3),
+        Constructor(4),
+        Field(5),
+        Variable(6),
+        Class(7),
+        Interface(8),
+        Module(9),
+        Property(10),
+        Unit(11),
+        Value(12),
+        Enum(13),
+        Keyword(14),
+        Snippet(15),
+        Color(16),
+        File(17),
+        Reference(18),
+        Folder(19),
+        EnumMember(20),
+        Constant(21),
+        Struct(22),
+        Event(23),
+        Operator(24),
+        TypeParameter(25);
+
+        private final int value;
+
+        private Kind(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static Kind forValue(int value) {
+            Kind[] allValues = Kind.values();
+            if (value < 1 || value > allValues.length) {
+                throw new IllegalArgumentException("Illegal enum value: " + value);
+            }
+            return allValues[value - 1];
+        }
+    }
+
+    public static enum Tag {
+
+        Deprecated(1);
+
+        private final int value;
+
+        private Tag(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static Tag forValue(int value) {
+            Tag[] allValues = Tag.values();
+            if (value < 1 || value > allValues.length) {
+                throw new IllegalArgumentException("Illegal enum value: " + value);
+            }
+            return allValues[value - 1];
+        }
+    }
+
+    public static enum TextFormat {
+
+        /**
+         * The primary text to be inserted is treated as a plain string.
+         */
+        PlainText(1),
+
+        /**
+         * The primary text to be inserted is treated as a snippet.
+         */
+        Snippet(2);
+
+        private final int value;
+
+        private TextFormat(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static TextFormat forValue(int value) {
+            TextFormat[] allValues = TextFormat.values();
+            if (value < 1 || value > allValues.length) {
+                throw new IllegalArgumentException("Illegal enum value: " + value);
+            }
+            return allValues[value - 1];
+        }
+    }
+}

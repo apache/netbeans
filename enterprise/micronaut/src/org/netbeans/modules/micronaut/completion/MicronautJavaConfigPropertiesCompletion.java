@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.micronaut;
+package org.netbeans.modules.micronaut.completion;
 
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
@@ -42,6 +42,7 @@ import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.micronaut.MicronautConfigProperties;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
@@ -91,27 +92,24 @@ public class MicronautJavaConfigPropertiesCompletion implements Processor {
                         }
                         Project project = fo != null ? FileOwnerQuery.getOwner(fo) : null;
                         if (project != null) {
-                            MicronautConfigProperties configProperties = project.getLookup().lookup(MicronautConfigProperties.class);
-                            if (configProperties != null) {
-                                Map<String, ConfigurationMetadataProperty> properties = configProperties.getProperties();
-                                List<Completion> ret = new ArrayList<>(properties.size());
-                                String format = prefix + "%s" + postfix;
-                                for (ConfigurationMetadataProperty property : properties.values()) {
-                                    if (!property.getId().contains("*")) {
-                                        ret.add(new Completion() {
-                                            @Override
-                                            public String getValue() {
-                                                return String.format(format, property.getId());
-                                            }
-                                            @Override
-                                            public String getMessage() {
-                                                return new MicronautConfigDocumentation(property).getText();
-                                            }
-                                        });
-                                    }
+                            Map<String, ConfigurationMetadataProperty> properties = MicronautConfigProperties.getProperties(project);
+                            List<Completion> ret = new ArrayList<>(properties.size());
+                            String format = prefix + "%s" + postfix;
+                            for (ConfigurationMetadataProperty property : properties.values()) {
+                                if (!property.getId().contains("*")) {
+                                    ret.add(new Completion() {
+                                        @Override
+                                        public String getValue() {
+                                            return String.format(format, property.getId());
+                                        }
+                                        @Override
+                                        public String getMessage() {
+                                            return new MicronautConfigDocumentation(property).getText();
+                                        }
+                                    });
                                 }
-                                return ret;
                             }
+                            return ret;
                         }
                     }
                 }

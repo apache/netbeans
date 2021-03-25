@@ -110,7 +110,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>3</release-version>
-                        <specification-version>4.20</specification-version>
+                        <specification-version>4.19</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

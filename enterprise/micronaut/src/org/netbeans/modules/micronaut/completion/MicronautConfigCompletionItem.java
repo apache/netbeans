@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.micronaut;
+package org.netbeans.modules.micronaut.completion;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -48,7 +48,7 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataPrope
  */
 public abstract class MicronautConfigCompletionItem implements CompletionItem {
 
-    static final String PROPERTY_NAME_COLOR = getHTMLColor(64, 64, 217);
+    public static final String PROPERTY_NAME_COLOR = getHTMLColor(64, 64, 217);
     private static final String ICON = "org/netbeans/modules/editor/resources/completion/field_16.png"; //NOI18N
 
     public static MicronautConfigCompletionItem createTopLevelPropertyItem(String propName, int offset, int baseIndent, int indentLevelSize) {

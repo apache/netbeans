@@ -33,13 +33,14 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.templates.TemplateRegistration;
-import org.netbeans.modules.maven.api.NbMavenProject;
+import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.AsyncGUIJob;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 
@@ -107,9 +108,9 @@ public class MicronautProjectWizardIterator implements WizardDescriptor.Progress
             ProjectManager.getDefault().clearNonProjectCache();
             Project prj = ProjectManager.getDefault().findProject(projDir);
             if (prj != null) {
-                final NbMavenProject mvn = prj.getLookup().lookup(NbMavenProject.class);
-                if (mvn != null) {
-                    mvn.downloadDependencyAndJavadocSource(false);
+                ActionProvider actionProvider = prj.getLookup().lookup(ActionProvider.class);
+                if (actionProvider != null && actionProvider.isActionEnabled(ActionProvider.COMMAND_PRIME, Lookup.EMPTY)) {
+                    actionProvider.invokeAction(ActionProvider.COMMAND_PRIME, Lookup.EMPTY);
                 }
             }
             File parent = projFile.getParentFile();

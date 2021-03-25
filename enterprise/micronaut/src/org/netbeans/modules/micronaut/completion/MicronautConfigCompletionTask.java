@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.micronaut;
+package org.netbeans.modules.micronaut.completion;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,12 +28,14 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.core.Language;
 import org.netbeans.modules.csl.core.LanguageRegistry;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
+import org.netbeans.modules.micronaut.MicronautConfigProperties;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -53,7 +55,7 @@ public class MicronautConfigCompletionTask {
         T createPropertyItem(ConfigurationMetadataProperty property, int offset, int baseIndent, int indentLevelSize, int idx);
     }
 
-    public <T> List<T> query(Document doc, int caretOffset, MicronautConfigProperties configProperties, ItemFactory<T> factory) {
+    public <T> List<T> query(Document doc, int caretOffset, Project project, ItemFactory<T> factory) {
         List<T> items = new ArrayList<>();
         LineDocument lineDocument = LineDocumentUtils.as(doc, LineDocument.class);
         if (lineDocument != null) {
@@ -93,7 +95,7 @@ public class MicronautConfigCompletionTask {
                                                 filter += prefix;
                                             }
                                             int currentItemLineIndent = currentItem != null ? IndentUtils.lineIndent(lineDocument, LineDocumentUtils.getLineStart(lineDocument, (int) currentItem.getPosition())) : -indentLevelSize;
-                                            Map<String, ConfigurationMetadataProperty> properties = configProperties.getProperties();
+                                            Map<String, ConfigurationMetadataProperty> properties = MicronautConfigProperties.getProperties(project);
                                             Set<String> topLevels = new HashSet<>();
                                             for (Map.Entry<String, ConfigurationMetadataProperty> entry : properties.entrySet()) {
                                                 String propName = entry.getKey();

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.micronaut;
+package org.netbeans.modules.micronaut.hyperlink;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
@@ -45,14 +45,17 @@ import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
+import org.netbeans.api.lsp.HyperlinkLocation;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
-import org.netbeans.lib.editor.hyperlink.spi.HyperlinkLocation;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.modules.csl.api.UiUtils;
+import org.netbeans.modules.micronaut.MicronautConfigProperties;
+import org.netbeans.modules.micronaut.MicronautConfigUtilities;
+import org.netbeans.spi.lsp.HyperlinkLocationProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.springframework.boot.configurationmetadata.ConfigurationMetadataProperty;
@@ -79,37 +82,30 @@ public class MicronautJavaHyperlinkProvider implements HyperlinkProviderExt {
     @Override
     public int[] getHyperlinkSpan(Document doc, int offset, HyperlinkType type) {
         int[] span = new int[2];
-        MicronautRefactoringFactory.WhereUsedRefactoringElement element = resolve(doc, offset, span);
-        return element != null ? span : null;
+        MicronautConfigUtilities.Usage usage = resolve(doc, offset, span);
+        return usage != null ? span : null;
     }
 
     @Override
     public void performClickAction(Document doc, int offset, HyperlinkType type) {
-        MicronautRefactoringFactory.WhereUsedRefactoringElement element = resolve(doc, offset, null);
-        if (element == null || !UiUtils.open(element.getParentFile(), element.getPosition().getBegin().getOffset())) {
+        MicronautConfigUtilities.Usage usage = resolve(doc, offset, null);
+        if (usage == null || !UiUtils.open(usage.getFileObject(), usage.getStartOffset())) {
             Toolkit.getDefaultToolkit().beep();
         }
     }
 
     @Override
     public String getTooltipText(Document doc, int offset, HyperlinkType type) {
-        MicronautRefactoringFactory.WhereUsedRefactoringElement element = resolve(doc, offset, null);
-        return element != null ? element.getText() : null;
+        MicronautConfigUtilities.Usage usage = resolve(doc, offset, null);
+        return usage != null ? usage.getText() : null;
     }
 
-    @Override
-    public CompletableFuture<HyperlinkLocation> getHyperlinkLocation(Document doc, int offset, HyperlinkType type) {
-        MicronautRefactoringFactory.WhereUsedRefactoringElement element = resolve(doc, offset, null);
-        return CompletableFuture.completedFuture(element != null ? new HyperlinkLocation(element.getParentFile(), element.getPosition().getBegin().getOffset(), element.getPosition().getEnd().getOffset()) : null);
-    }
-
-    private MicronautRefactoringFactory.WhereUsedRefactoringElement resolve(Document doc, int offset, int[] span) {
+    private static MicronautConfigUtilities.Usage resolve(Document doc, int offset, int[] span) {
         FileObject fo = EditorDocumentUtils.getFileObject(doc);
         if (fo != null) {
             Project project = FileOwnerQuery.getOwner(fo);
             if (project != null) {
-                final MicronautConfigProperties configProperties = project.getLookup().lookup(MicronautConfigProperties.class);
-                if (configProperties != null) {
+                if (MicronautConfigProperties.hasConfigMetadata(project)) {
                     SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_RESOURCES);
                     for (SourceGroup sourceGroup : sourceGroups) {
                         FileObject rootFolder = sourceGroup.getRootFolder();
@@ -119,12 +115,14 @@ public class MicronautJavaHyperlinkProvider implements HyperlinkProviderExt {
                             if (source != null) {
                                 try {
                                     String propertyName = getPropertyName(doc, offset, span);
-                                    ConfigurationMetadataProperty property = configProperties.getProperties().get(propertyName);
+                                    ConfigurationMetadataProperty property = MicronautConfigProperties.getProperties(project).get(propertyName);
                                     if (property != null) {
-                                        List<MicronautRefactoringFactory.WhereUsedRefactoringElement> elements = new ArrayList<>();
-                                        MicronautRefactoringFactory.addProperties(cfgFo, propertyName, elements);
-                                        if (!elements.isEmpty()) {
-                                            return elements.get(0);
+                                        List<MicronautConfigUtilities.Usage> usages = new ArrayList<>();
+                                        MicronautConfigUtilities.collectUsages(cfgFo, propertyName, usage -> {
+                                            usages.add(usage);
+                                        });
+                                        if (!usages.isEmpty()) {
+                                            return usages.get(0);
                                         }
                                     }
                                 } catch (Exception ex) {
@@ -139,7 +137,7 @@ public class MicronautJavaHyperlinkProvider implements HyperlinkProviderExt {
         return null;
     }
 
-    private String getPropertyName(Document doc, int offset, int[] span) throws IOException {
+    private static String getPropertyName(Document doc, int offset, int[] span) throws IOException {
         String[] ret = new String[1];
         JavaSource source = JavaSource.forDocument(doc);
         if (source != null) {
@@ -191,5 +189,17 @@ public class MicronautJavaHyperlinkProvider implements HyperlinkProviderExt {
             }, true);
         }
         return ret[0];
+    }
+
+    @MimeRegistration(mimeType = "text/x-java", service = HyperlinkLocationProvider.class)
+    public static class LocationProvider implements HyperlinkLocationProvider {
+
+        @Override
+        public CompletableFuture<HyperlinkLocation> getHyperlinkLocation(Document doc, int offset) {
+            MicronautConfigUtilities.Usage usage = resolve(doc, offset, null);
+            return CompletableFuture.completedFuture(usage != null
+                    ? HyperlinkLocationProvider.createHyperlinkLocation(usage.getFileObject(), usage.getStartOffset(), usage.getEndOffset())
+                    : null);
+        }
     }
 }

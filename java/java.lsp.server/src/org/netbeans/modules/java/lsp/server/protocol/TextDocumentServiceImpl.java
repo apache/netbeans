@@ -130,8 +130,6 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.netbeans.api.annotations.common.CheckForNull;
-import org.netbeans.api.editor.mimelookup.MimeLookup;
-import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.CompilationController;
@@ -149,13 +147,12 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.ui.ElementJavadoc;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lsp.Completion;
+import org.netbeans.api.lsp.HyperlinkLocation;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
-import org.netbeans.lib.editor.hyperlink.spi.HyperlinkLocation;
-import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
-import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.editor.java.GoToSupport.Context;
 import org.netbeans.modules.editor.java.GoToSupport.GoToTarget;
@@ -203,7 +200,6 @@ import org.netbeans.modules.refactoring.plugins.FileRenamePlugin;
 import org.netbeans.modules.refactoring.spi.RefactoringCommit;
 import org.netbeans.modules.refactoring.spi.RefactoringElementImplementation;
 import org.netbeans.modules.refactoring.spi.Transaction;
-import org.netbeans.spi.editor.completion.CompletionCollector;
 import org.netbeans.spi.editor.hints.EnhancedFix;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
@@ -278,7 +274,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
     }
 
-    private List<CompletionCollector.Completion> lastCompletions = null;
+    private List<Completion> lastCompletions = null;
 
     @Override
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
@@ -298,66 +294,64 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
             final int caret = Utils.getOffset(doc, params.getPosition());
-            String mimeType = file.getMIMEType();
             List<CompletionItem> items = new ArrayList<>();
-            MimePath mimePath = MimePath.parse(mimeType);
-            CompletionCollector.Context context = params.getContext() != null
-                    ? new CompletionCollector.Context(CompletionCollector.TriggerKind.forValue(params.getContext().getTriggerKind().getValue()), params.getContext().getTriggerCharacter())
+            Completion.Context context = params.getContext() != null
+                    ? new Completion.Context(Completion.TriggerKind.forValue(params.getContext().getTriggerKind().getValue()), params.getContext().getTriggerCharacter())
                     : null;
-            for (CompletionCollector collector : MimeLookup.getLookup(mimePath).lookupAll(CompletionCollector.class)) {
-                boolean isComplete = collector.collectCompletions(doc, caret, context, completion -> {
-                    CompletionItem item = new CompletionItem(completion.getLabel());
-                    if (completion.getKind() != null) {
-                        item.setKind(CompletionItemKind.forValue(completion.getKind().getValue()));
-                    }
-                    if (completion.getTags() != null) {
-                        item.setTags(completion.getTags().stream().map(tag -> CompletionItemTag.forValue(tag.getValue())).collect(Collectors.toList()));
-                    }
-                    if (completion.getDetail() != null && completion.getDetail().isDone()) {
-                        item.setDetail(completion.getDetail().getNow(null));
-                    }
-                    if (completion.getDocumentation() != null && completion.getDocumentation().isDone()) {
-                        String documentation = completion.getDocumentation().getNow(null);
-                        if (documentation != null) {
-                            MarkupContent markup = new MarkupContent();
-                            markup.setKind("markdown");
-                            markup.setValue(html2MD(documentation));
-                            item.setDocumentation(markup);
-                        }
-                    }
-                    if (completion.isPreselect()) {
-                        item.setPreselect(true);
-                    }
-                    item.setSortText(completion.getSortText());
-                    item.setFilterText(completion.getFilterText());
-                    item.setInsertText(completion.getInsertText());
-                    if (completion.getInsertTextFormat() != null) {
-                        item.setInsertTextFormat(InsertTextFormat.forValue(completion.getInsertTextFormat().getValue()));
-                    }
-                    CompletionCollector.TextEdit edit = completion.getTextEdit();
-                    if (edit != null) {
-                        item.setTextEdit(new TextEdit(new Range(Utils.createPosition(file, edit.getStartOffset()), Utils.createPosition(file, edit.getEndOffset())), edit.getNewText()));
-                    }
-                    if (completion.getAdditionalTextEdits() != null && completion.getAdditionalTextEdits().isDone()) {
-                        List<CompletionCollector.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().getNow(null);
-                        if (additionalTextEdits != null) {
-                            item.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
-                                return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
-                            }).collect(Collectors.toList()));
-                        }
-                    }
-                    item.setCommitCharacters(completion.getCommitCharacters());
-                    CompletionCollector.Command command = completion.getCommand();
-                    if (command != null) {
-                        item.setCommand(new Command(command.getTitle(), command.getCommand(), command.getArguments()));
-                    }
-                    lastCompletions.add(completion);
-                    item.setData(new CompletionData(uri, index.getAndIncrement()));
-                    items.add(item);
-                });
-                if (!isComplete) {
-                    completionList.setIsIncomplete(true);
+            boolean isComplete = Completion.collect(doc, caret, context, completion -> {
+                CompletionItem item = new CompletionItem(completion.getLabel());
+                if (completion.getKind() != null) {
+                    item.setKind(CompletionItemKind.forValue(completion.getKind().getValue()));
                 }
+                if (completion.getTags() != null) {
+                    item.setTags(completion.getTags().stream().map(tag -> CompletionItemTag.forValue(tag.getValue())).collect(Collectors.toList()));
+                }
+                if (completion.getDetail() != null && completion.getDetail().isDone()) {
+                    item.setDetail(completion.getDetail().getNow(null));
+                }
+                if (completion.getDocumentation() != null && completion.getDocumentation().isDone()) {
+                    String documentation = completion.getDocumentation().getNow(null);
+                    if (documentation != null) {
+                        MarkupContent markup = new MarkupContent();
+                        markup.setKind("markdown");
+                        markup.setValue(html2MD(documentation));
+                        item.setDocumentation(markup);
+                    }
+                }
+                if (completion.isPreselect()) {
+                    item.setPreselect(true);
+                }
+                item.setSortText(completion.getSortText());
+                item.setFilterText(completion.getFilterText());
+                item.setInsertText(completion.getInsertText());
+                if (completion.getInsertTextFormat() != null) {
+                    item.setInsertTextFormat(InsertTextFormat.forValue(completion.getInsertTextFormat().getValue()));
+                }
+                org.netbeans.api.lsp.TextEdit edit = completion.getTextEdit();
+                if (edit != null) {
+                    item.setTextEdit(new TextEdit(new Range(Utils.createPosition(file, edit.getStartOffset()), Utils.createPosition(file, edit.getEndOffset())), edit.getNewText()));
+                }
+                if (completion.getAdditionalTextEdits() != null && completion.getAdditionalTextEdits().isDone()) {
+                    List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().getNow(null);
+                    if (additionalTextEdits != null) {
+                        item.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
+                            return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
+                        }).collect(Collectors.toList()));
+                    }
+                }
+                if (completion.getCommitCharacters() != null) {
+                    item.setCommitCharacters(completion.getCommitCharacters().stream().map(ch -> ch.toString()).collect(Collectors.toList()));
+                }
+                org.netbeans.api.lsp.Command command = completion.getCommand();
+                if (command != null) {
+                    item.setCommand(new Command(command.getTitle(), command.getCommand(), command.getArguments()));
+                }
+                lastCompletions.add(completion);
+                item.setData(new CompletionData(uri, index.getAndIncrement()));
+                items.add(item);
+            });
+            if (!isComplete) {
+                completionList.setIsIncomplete(true);
             }
             completionList.setItems(items);
             return CompletableFuture.completedFuture(Either.<List<CompletionItem>, CompletionList>forRight(completionList));
@@ -396,7 +390,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         JsonObject rawData = (JsonObject) ci.getData();
         if (rawData != null) {
             CompletionData data = new Gson().fromJson(rawData, CompletionData.class);
-            CompletionCollector.Completion completion = lastCompletions.get(data.index);
+            Completion completion = lastCompletions.get(data.index);
             if (completion != null) {
                 FileObject file = fromURI(data.uri);
                 if (file == null) {
@@ -425,7 +419,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
                 if (completion.getAdditionalTextEdits() != null) {
                     try {
-                        List<CompletionCollector.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().get();
+                        List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().get();
                         if (additionalTextEdits != null) {
                             ci.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
                                 return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
@@ -513,19 +507,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 FileObject file = Utils.fromUri(uri);
                 if (file != null) {
                     int offset = Utils.getOffset(doc, params.getPosition());
-                    MimePath mimePath = MimePath.parse(file.getMIMEType());
-                    CompletableFuture<HyperlinkLocation>[] futures = MimeLookup.getLookup(mimePath).lookupAll(HyperlinkProviderExt.class).stream()
-                            .map(hyperlinkProvider -> hyperlinkProvider.getHyperlinkLocation(doc, offset, HyperlinkType.GO_TO_DECLARATION)).toArray(CompletableFuture[]::new);
-                    return CompletableFuture.allOf(futures).thenApply(value -> {
-                        ArrayList<Location> locations = new ArrayList<>(futures.length);
-                        for (CompletableFuture<HyperlinkLocation> future : futures) {
-                            HyperlinkLocation location = future.getNow(null);
-                            if (location != null) {
-                                FileObject fo = location.getFileObject();
-                                locations.add(new Location(Utils.toUri(fo), new Range(Utils.createPosition(fo, location.getStartOffset()), Utils.createPosition(fo, location.getEndOffset()))));
-                            }
-                        }
-                        return Either.forLeft(locations);
+                    return HyperlinkLocation.resolve(doc, offset).thenApply(locs -> {
+                        return Either.forLeft(locs.stream().map(location -> {
+                            FileObject fo = location.getFileObject();
+                            return new Location(Utils.toUri(fo), new Range(Utils.createPosition(fo, location.getStartOffset()), Utils.createPosition(fo, location.getEndOffset())));
+                        }).collect(Collectors.toList()));
                     });
                 }
             }

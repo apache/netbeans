@@ -25,7 +25,6 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.springframework.boot.configurationmetadata.ConfigurationMetadataGroup;
@@ -37,23 +36,19 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataRepos
  *
  * @author Dusan Balek
  */
-@ProjectServiceProvider(
-        service = MicronautConfigProperties.class,
-        projectType = {
-            "org-netbeans-modules-maven",
-            "org-netbeans-modules-gradle"
-        }
-)
-public class MicronautConfigProperties {
+public final class MicronautConfigProperties {
 
     private static final String CONFIG_METADATA_JSON = "META-INF/spring-configuration-metadata.json";
-    private final Project project;
 
-    public MicronautConfigProperties(Project p) {
-        this.project = p;
+    private MicronautConfigProperties() {
     }
 
-    public Map<String, ConfigurationMetadataProperty> getProperties() {
+    public static boolean hasConfigMetadata(Project project) {
+        ClassPath cp = getExecuteClasspath(project);
+        return cp != null && !cp.findAllResources(CONFIG_METADATA_JSON).isEmpty();
+    }
+
+    public static Map<String, ConfigurationMetadataProperty> getProperties(Project project) {
         Map<String, ConfigurationMetadataProperty> props = new LinkedHashMap<>();
         ClassPath cp = getExecuteClasspath(project);
         if (cp != null) {
@@ -69,7 +64,7 @@ public class MicronautConfigProperties {
         return props;
     }
 
-    public Map<String, ConfigurationMetadataGroup> getGroups() {
+    public static Map<String, ConfigurationMetadataGroup> getGroups(Project project) {
         Map<String, ConfigurationMetadataGroup> groups = new LinkedHashMap<>();
         ClassPath cp = getExecuteClasspath(project);
         if (cp != null) {
@@ -85,7 +80,7 @@ public class MicronautConfigProperties {
         return groups;
     }
 
-    public static ClassPath getExecuteClasspath(Project project) {
+    private static ClassPath getExecuteClasspath(Project project) {
         SourceGroup[] srcGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
         if (srcGroups.length > 0) {
             return ClassPath.getClassPath(srcGroups[0].getRootFolder(), ClassPath.EXECUTE);

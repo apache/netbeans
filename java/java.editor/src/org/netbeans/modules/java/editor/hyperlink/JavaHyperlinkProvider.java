@@ -25,11 +25,13 @@ import java.util.concurrent.CompletableFuture;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.EditorRegistry;
-import org.netbeans.lib.editor.hyperlink.spi.HyperlinkLocation;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.lsp.HyperlinkLocation;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.modules.editor.java.GoToSupport;
 import org.netbeans.modules.java.editor.overridden.GoToImplementation;
+import org.netbeans.spi.lsp.HyperlinkLocationProvider;
 
 /**
  * Implementation of the hyperlink provider for java language.
@@ -81,8 +83,12 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
         return GoToSupport.getGoToElementTooltip(doc, offset, false, type);
     }
 
-    @Override
-    public CompletableFuture<HyperlinkLocation> getHyperlinkLocation(Document doc, int offset, HyperlinkType type) {
-        return GoToSupport.getGoToLocation(doc, offset);
+    @MimeRegistration(mimeType = "text/x-java", service = HyperlinkLocationProvider.class)
+    public static class LocationProvider implements HyperlinkLocationProvider {
+
+        @Override
+        public CompletableFuture<HyperlinkLocation> getHyperlinkLocation(Document doc, int offset) {
+            return GoToSupport.getGoToLocation(doc, offset);
+        }
     }
 }

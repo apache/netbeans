@@ -84,22 +84,6 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
-        <change id="CompletionCollector">
-            <api name="completion"/>
-            <summary>Addition of CompletionCollector interface</summary>
-            <version major="1" minor="57"/>
-            <date day="16" month="3" year="2021"/>
-            <author login="dbalek"/>
-            <compatibility addition="yes"/>
-            <description>
-            <p>
-                <code>CompletionCollector</code> interface was added. Clients can
-                use this interface to compute and collect completions that can be
-                sent for presentation outside of NetBeans (e.g. using the Language
-                Server Protocol).
-            </p>
-            </description>
-        </change>
         <change id="CompositeCompletionItem">
             <api name="completion"/>
             <summary>Addition of CompositeCompletionItem</summary>

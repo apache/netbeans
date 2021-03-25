@@ -621,8 +621,6 @@
                 <friend>org.netbeans.modules.maven.util</friend>
                 <!-- JShel support -->
                 <friend>org.netbeans.modules.jshell.support</friend>
-                <!-- Micronaut support -->
-                <friend>org.netbeans.modules.micronaut</friend>
                 <package>org.netbeans.modules.maven.api</package>
                 <package>org.netbeans.modules.maven.api.archetype</package>
                 <package>org.netbeans.modules.maven.api.classpath</package>

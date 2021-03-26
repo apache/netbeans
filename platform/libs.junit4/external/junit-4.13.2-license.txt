@@ -1,9 +1,9 @@
 Name: JUnit
-Version: 4.13.1
+Version: 4.13.2
 License: EPL-v10
 Description: JUnit harness runtime
 Origin: JUnit
-URL: http://search.maven.org/#artifactdetails|junit|junit|4.13.1|jar
+URL: http://search.maven.org/#artifactdetails|junit|junit|4.13.2|jar
 
 Eclipse Public License - v 1.0
 

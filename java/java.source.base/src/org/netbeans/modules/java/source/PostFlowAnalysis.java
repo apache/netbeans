@@ -28,7 +28,6 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Env;
-import com.sun.tools.javac.jvm.Pool;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -231,8 +230,9 @@ public class PostFlowAnalysis extends TreeScanner {
         outerThisStack = outerThisStack.prepend(outerThis);
     }
     
+    private static final int MAX_STRING_LENGTH = 65535;
     private void checkStringConstant(DiagnosticPosition pos, Object constValue) {
-        if (constValue instanceof String && ((String)constValue).length() >= Pool.MAX_STRING_LENGTH)
+        if (constValue instanceof String && ((String)constValue).length() >= MAX_STRING_LENGTH)
             log.error(pos, new Error("compiler", "limit.string")); //NOI18N
     }
 

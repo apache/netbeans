@@ -18,6 +18,7 @@
  */
 package org.netbeans.lib.nbjavac.services;
 
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
@@ -98,6 +99,20 @@ public class NBAttr extends Attr {
                 MethodHandles.lookup()
                              .findSpecial(Attr.class, "breakTreeFound", MethodType.methodType(void.class, Env.class), NBAttr.class)
                              .invokeExact(this, env);
+            } catch (Throwable ex) {
+                sneakyThrows(ex);
+            }
+        }
+    }
+
+    protected void breakTreeFound(Env<AttrContext> env, Type result) {
+        if (fullyAttribute) {
+            fullyAttributeResult = env;
+        } else {
+            try {
+                MethodHandles.lookup()
+                             .findSpecial(Attr.class, "breakTreeFound", MethodType.methodType(void.class, Env.class, Type.class), NBAttr.class)
+                             .invokeExact(this, env, result);
             } catch (Throwable ex) {
                 sneakyThrows(ex);
             }

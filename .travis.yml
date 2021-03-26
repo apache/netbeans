@@ -87,17 +87,6 @@ matrix:
             - ant $OPTS build
             - ant $OPTS test -Dtest.includes=NoTestsJustBuild
 
-        - name: Compile all modules with OpenJDK11
-          jdk: openjdk11
-          env:
-            - OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json -quiet -Dcluster.config=full -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false"
-          before_script:
-            - ant $OPTS clean
-          script:
-            - ant $OPTS build
-            - ant $OPTS test -Dtest.includes=NoTestsJustBuild
-            - ant $OPTS -f platform/o.n.core/ test -Dtest.includes=**/ValidateClassFilesTest.class
-
         - name: Test harness modules
           jdk: openjdk8
           env:
@@ -883,4 +872,33 @@ matrix:
             - ant $OPTS clean
             - ant $OPTS build
           script:
+            - hide-logs.sh ant $OPTS commit-validation
+
+        - name: commit-validation on Java 11
+          jdk: openjdk11
+          env:
+            - OPTS="-quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+            - export TEST_JDK=`bash install-jdk.sh --feature 11 --license GPL --emit-java-home --silent | tail -1`
+            - export JAVA_HOME=$TEST_JDK
+            - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS -Dnbjdk.home=$TEST_JDK -Dtest.use.jdk.javac=true"
+            - ant $OPTS clean
+            - ant $OPTS build
+            - ant $OPTS test -Dtest.includes=NoTestsJustBuild
+          script:
+            - hide-logs.sh ant $OPTS commit-validation
+
+        - name: commit-validation on Java 15
+          jdk: openjdk8
+          env:
+            - OPTS="-quiet -Dcluster.config=release -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest-unit-sys-prop.ignore.random.failures=true"
+          before_script:
+            - wget https://raw.githubusercontent.com/sormuras/bach/master/install-jdk.sh
+            - export TEST_JDK=`bash install-jdk.sh --feature 15 --license GPL --emit-java-home --silent | tail -1`
+            - export OPTS="-Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json $OPTS -Dtest.nbjdk.home=$TEST_JDK -Dtest.use.jdk.javac=true"
+            - ant $OPTS clean
+            - ant $OPTS build
+          script:
+            - export JAVA_HOME=$TEST_JDK
             - hide-logs.sh ant $OPTS commit-validation

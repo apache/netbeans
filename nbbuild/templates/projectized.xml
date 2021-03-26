@@ -86,7 +86,52 @@
         <property name="have-custom-javac-task" value="true" />
     </target>
 
-    <target name="build-init" depends="basic-init,jdk-8-check,set-buildnumber,-define-custom-javac-task">
+    <target name="-init-compile-bootclasspath-nb-vanilla" depends="basic-init,jdk-8-check,set-buildnumber,-define-custom-javac-task">
+        <property name="bootclasspath.prepend.nb" value="${nb_all}/java/libs.javacapi/external/nb-javac-15.0.0.2-api.jar${path.separator}${nb_all}/java/libs.javacimpl/external/nb-javac-15.0.0.2.jar" />
+        <property name="bootclasspath.prepend.vanilla" value="${nb_all}/nbbuild/external/vanilla-javac-api.jar${path.separator}${nb_all}/nbbuild/external/vanilla-javac-impl.jar" />
+    </target>
+    <target name="-init-bootclasspath-prepend-compile" depends="-init-compile-bootclasspath-nb-vanilla">
+        <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
+            <istrue value="${requires.nb.javac.impl}"/>
+        </condition>
+        <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.vanilla}">
+            <istrue value="${requires.nb.javac}"/>
+        </condition>
+    </target>
+    <target name="-init-bootclasspath-prepend-run" depends="-init-bootclasspath-prepend-compile" unless="have-jdk-1.9">
+        <condition property="run.bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
+            <istrue value="${requires.nb.javac.impl}"/>
+        </condition>
+        <condition property="run.bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
+            <and>
+                <istrue value="${requires.nb.javac}"/>
+                <not>
+                    <istrue value="${test.use.jdk.javac}"/>
+                </not>
+            </and>
+        </condition>
+        <condition property="run.bootclasspath.prepend" value="${bootclasspath.prepend}">
+            <and>
+                <isset property="bootclasspath.prepend"/>
+                <not>
+                    <istrue value="${test.use.jdk.javac}"/>
+                </not>
+            </and>
+        </condition>
+        <condition property="test.extra.nb.javac.deps" value="${java.source.nbjavac.dir}/modules/org-netbeans-modules-java-source-nbjavac.jar">
+            <and>
+                <istrue value="${requires.nb.javac}"/>
+                <not>
+                    <istrue value="${test.use.jdk.javac}"/>
+                </not>
+            </and>
+        </condition>
+    </target>
+    <target name="-init-bootclasspath-prepend" depends="-init-bootclasspath-prepend-run,-init-bootclasspath-prepend-compile">
+        <!-- When requires.nb.javac property is true, prepend javac-api and javac-impl on bootclasspath to allow override the default annotation
+             processing API located in rt.jar. -->
+    </target>
+    <target name="build-init" depends="basic-init,jdk-8-check,set-buildnumber,-define-custom-javac-task,-init-bootclasspath-prepend">
         <property name="public.package.jar.dir" location="${nb.build.dir}/public-package-jars"/>
         <mkdir dir="${public.package.jar.dir}"/>
         <parseprojectxml
@@ -177,43 +222,6 @@
         <property name="locjhindexer.locales" value="${locales}"/>
         <property name="locmakenbm.locales" value="${locales}"/>
         <property name="locmakenbm.brands" value="${brandings}"/>
-        <!-- When requires.nb.javac property is true, prepend javac-api and javac-impl on bootclasspath to allow override the default annotation
-             processing API located in rt.jar. -->
-        <property name="bootclasspath.prepend.nb" value="${nb_all}/java/libs.javacapi/external/nb-javac-15.0.0.2-api.jar${path.separator}${nb_all}/java/libs.javacimpl/external/nb-javac-15.0.0.2.jar" />
-        <property name="bootclasspath.prepend.vanilla" value="${nb_all}/nbbuild/external/vanilla-javac-api.jar${path.separator}${nb_all}/nbbuild/external/vanilla-javac-impl.jar" />
-        <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
-            <istrue value="${requires.nb.javac.impl}"/>
-        </condition>
-        <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.vanilla}">
-            <istrue value="${requires.nb.javac}"/>
-        </condition>
-        <condition property="run.bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
-            <istrue value="${requires.nb.javac.impl}"/>
-        </condition>
-        <condition property="run.bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
-            <and>
-                <istrue value="${requires.nb.javac}"/>
-                <not>
-                    <istrue value="${test.use.jdk.javac}"/>
-                </not>
-            </and>
-        </condition>
-        <condition property="run.bootclasspath.prepend" value="${bootclasspath.prepend}">
-            <and>
-                <isset property="bootclasspath.prepend"/>
-                <not>
-                    <istrue value="${test.use.jdk.javac}"/>
-                </not>
-            </and>
-        </condition>
-        <condition property="test.extra.nb.javac.deps" value="${java.source.nbjavac.dir}/modules/org-netbeans-modules-java-source-nbjavac.jar">
-            <and>
-                <istrue value="${requires.nb.javac}"/>
-                <not>
-                    <istrue value="${test.use.jdk.javac}"/>
-                </not>
-            </and>
-        </condition>
         <property name="test.extra.nb.javac.deps" value="" />
         <fail message="Delete standalone/suite-related metadata from netbeans.org modules">
             <condition>

@@ -78,6 +78,54 @@ public class FieldsDeclaration extends BodyDeclaration {
         );
     }
 
+    /**
+     * Convert from FormalParameter to FieldsDeclaration.
+     *
+     * @param parameter
+     * @return the FieldsDeclaration, can be {@code null} if the parameter
+     * doesn't have a visibility modifier.
+     */
+    @CheckForNull
+    public static FieldsDeclaration create(FormalParameter parameter) {
+        // [NETBEANS-4443] PHP 8.0 Constructor Property Promotion
+        // convert from FormalParameter of constructor to FieldsDeclaration
+        if (!BodyDeclaration.Modifier.isVisibilityModifier(parameter.getModifier())) {
+            return null;
+        }
+        Variable variable = null;
+        Expression expression = parameter.getParameterName();
+        if (expression instanceof Reference) {
+            expression = ((Reference) expression).getExpression();
+        }
+        if (expression instanceof Variadic) {
+            // just check because the parser accepts it
+            // although can't be declared variadic promoted property
+            expression = ((Variadic) expression).getExpression();
+        }
+        if (expression instanceof Variable) {
+            variable = (Variable) expression;
+        }
+        assert variable != null;
+        int start = variable.getStartOffset();
+        Expression type = parameter.getParameterType();
+        int end = variable.getEndOffset();
+        Expression value = parameter.getDefaultValue();
+        if (value != null) {
+            end = value.getEndOffset();
+        }
+        SingleFieldDeclaration singleFieldDeclaration = new SingleFieldDeclaration(start, end, variable, value, type);
+        return FieldsDeclaration.create(
+                new FieldsDeclaration(
+                        parameter.getStartOffset(),
+                        parameter.getEndOffset(),
+                        parameter.getModifier(),
+                        parameter.getParameterType(),
+                        Collections.singletonList(singleFieldDeclaration)
+                ),
+                parameter.getAttributes()
+        );
+    }
+
     private SingleFieldDeclaration createField(Variable name, Expression value, Expression fieldType) {
         int start = name.getStartOffset();
         int end = value == null ? name.getEndOffset() : value.getEndOffset();
@@ -130,7 +178,13 @@ public class FieldsDeclaration extends BodyDeclaration {
         for (SingleFieldDeclaration singleFieldDeclaration : getFields()) {
             sb.append(singleFieldDeclaration).append(" "); //NOI18N
         }
-        return sbAttributes.toString() + getModifierString() + sb.toString();
+        String modifierString = getModifierString();
+        if (modifierString != null && modifierString.isEmpty()) {
+            modifierString += " "; // NOI18N
+        }
+        return sbAttributes.toString()
+                + modifierString
+                + sb.toString();
     }
 
 }

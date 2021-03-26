@@ -1,0 +1,9 @@
+Code completion result for source line:
+public function __construct(private string|int $param1, protected ?string $param2 = |,) {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      ConstructorPropertyPromotion    [PUBLIC]   constructorPropertyPromotion09a.php
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+KEYWORD    static::                                   null
+------------------------------------
+KEYWORD    array                                      null

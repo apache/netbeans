@@ -451,6 +451,8 @@ non terminal List non_empty_parameter_list;
 non terminal FormalParameter parameter;
 non terminal List function_call_parameter_list;
 non terminal List non_empty_function_call_parameter_list;
+non terminal Expression argument;
+non terminal Expression argument_expr;
 non terminal List global_var_list;
 non terminal VariableBase global_var;
 non terminal List static_var_list;
@@ -542,6 +544,7 @@ non terminal Identifier identifier_without_class;
 non terminal Identifier identifier;
 non terminal List class_constant_declaration;
 non terminal List constant_declaration;
+non terminal Integer optional_visibility_modifier;
 non terminal Integer constant_modifiers;
 non terminal Integer method_modifiers;
 non terminal Block method_body;
@@ -2328,56 +2331,73 @@ attributes:attributes parameter:param
 :}
 ;
 
+optional_visibility_modifier ::=
+constant_modifiers:modifier
+{:
+    RESULT = modifier;
+:}
+;
+
 parameter ::=
-optional_class_type_without_static:classType is_variadic:isVariadic T_VARIABLE:var
+optional_visibility_modifier:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var
 {:
-    int start = classType == null ? (isVariadic ? isVariadicleft : varleft) : classTypeleft;
+    int start = varleft;
+    if (isVariadic) {
+        start = isVariadicleft;
+    }
+    if (isReference) {
+        start = isReferenceleft;
+    }
+    if (classType != null) {
+        start = classTypeleft;
+    }
+    if (modifier != null) {
+        start = modifierleft;
+    }
     Variable v = new Variable(varleft, varright, var);
-        Expression argument = v;
+    Expression argument = v;
+    if (isVariadic) {
+        argument = new Variadic(isVariadicleft, varright, v);
+    }
+    if (isReference) {
         if (isVariadic) {
-            argument = new Variadic(isVariadicleft, varright, v);
+            argument = new Reference(isReferenceleft, varright, (Variadic) argument);
+        } else {
+            argument = new Reference(isReferenceleft, varright, v);
         }
-    FormalParameter parameter = new FormalParameter(start, varright, classType, argument);
+    }
+    FormalParameter parameter = new FormalParameter(start, varright, modifier, classType, argument);
     RESULT = parameter;
 :}
 
-| optional_class_type_without_static:classType T_REFERENCE:ref T_VARIABLE:var
+| optional_visibility_modifier:modifier optional_class_type_without_static:classType is_reference:isReference is_variadic:isVariadic T_VARIABLE:var T_EQUAL static_scalar:scalar
 {:
-    int start = classType == null ? refleft : classTypeleft;
+    int start = varleft;
+    if (isVariadic) {
+        start = isVariadicleft;
+    }
+    if (isReference) {
+        start = isReferenceleft;
+    }
+    if (classType != null) {
+        start = classTypeleft;
+    }
+    if (modifier != null) {
+        start = modifierleft;
+    }
     Variable v = new Variable(varleft, varright, var);
-    Reference ref_var = new Reference (refleft, varright, v);
-    FormalParameter parameter = new FormalParameter(start, varright, classType, ref_var);
-    RESULT = parameter;
-:}
-
-| optional_class_type_without_static:classType T_REFERENCE:ref T_ELLIPSIS:ell T_VARIABLE:var
-{:
-    int start = classType == null ? refleft : classTypeleft;
-    Variable v = new Variable(varleft, varright, var);
-    Variadic variadic = new Variadic(ellleft, varright, v);
-    Reference ref_var = new Reference (refleft, varright, variadic);
-    FormalParameter parameter = new FormalParameter(start, varright, classType, ref_var);
-    RESULT = parameter;
-:}
-
-| optional_class_type_without_static:classType is_variadic:isVariadic T_VARIABLE:var T_EQUAL static_scalar:scalar
-{:
-    int start = classType == null ? (isVariadic ? isVariadicleft : varleft) : classTypeleft;
-    Variable v = new Variable(varleft, varright, var);
-        Expression argument = v;
+    Expression argument = v;
+    if (isVariadic) {
+        argument = new Variadic(isVariadicleft, varright, v);
+    }
+    if (isReference) {
         if (isVariadic) {
-            argument = new Variadic(isVariadicleft, varright, v);
+            argument = new Reference(isReferenceleft, varright, (Variadic) argument);
+        } else {
+            argument = new Reference(isReferenceleft, varright, v);
         }
-    FormalParameter parameter = new FormalParameter(start, scalarright, classType, argument, scalar);
-    RESULT = parameter;
-:}
-
-| optional_class_type_without_static:classType T_REFERENCE:ref T_VARIABLE:var T_EQUAL static_scalar:scalar
-{:
-    int start = classType == null ? refleft : classTypeleft;
-    Variable v = new Variable(varleft, varright, var);
-    Reference ref_var = new Reference (refleft, varright, v);
-    FormalParameter parameter = new FormalParameter(start, scalarright, classType, ref_var, scalar);
+    }
+    FormalParameter parameter = new FormalParameter(start, scalarright, modifier, classType, argument, scalar);
     RESULT = parameter;
 :}
 ;
@@ -2517,74 +2537,79 @@ non_empty_function_call_parameter_list:paramsList possible_comma
 ;
 
 non_empty_function_call_parameter_list ::=
-is_variadic:isVariadic expr_without_variable:var
+argument:arg
 {:
     List paramsList = new LinkedList();
-    Expression param = var;
-        if (isVariadic) {
-            param = new Variadic(isVariadicleft, varright, var);
-        }
-    paramsList.add(param);
+    paramsList.add(arg);
     RESULT = paramsList;
 :}
 
-| is_variadic:isVariadic variable:var
+| non_empty_function_call_parameter_list:paramsList T_COMMA argument:arg
 {:
-    List paramsList = new LinkedList();
-    Expression param = var;
-        if (isVariadic) {
-            param = new Variadic(isVariadicleft, varright, var);
-        }
-    paramsList.add(param);
+    paramsList.add(arg);
     RESULT = paramsList;
+:}
+;
+
+argument ::=
+argument_expr:var
+{:
+    RESULT = var;
+:}
+
+| T_ELLIPSIS:e argument_expr:var
+{:
+    Expression param = var;
+    param = new Variadic(eleft, varright, var);
+    RESULT = param;
+:}
+
+/*
+ * if identifier is used instead of string_st, T_CLASS, semi_reserved_without_class,
+ * conflict with namespace_name (identifier:ident T_NEKUDOTAIM argument_expr:var)
+ */
+| string_st:ident T_NEKUDOTAIM argument_expr:var
+{:
+    Identifier identifier = new Identifier(identleft, identright, ident);
+    Expression param = new NamedArgument(identleft, varright, identifier, var);
+    RESULT = param;
+:}
+
+| T_CLASS:ident T_NEKUDOTAIM argument_expr:var
+{:
+    Identifier identifier = new Identifier(identleft, identright, ident);
+    Expression param = new NamedArgument(identleft, varright, identifier, var);
+    RESULT = param;
+:}
+
+| semi_reserved_without_class:ident T_NEKUDOTAIM argument_expr:var
+{:
+    Expression param = new NamedArgument(identleft, varright, ident, var);
+    RESULT = param;
 :}
 
 | T_REFERENCE:start w_variable:var
 {:
-    List paramsList = new LinkedList();
+    // Call-time pass-by-reference has been removed since PHP 5.4.0
     Expression var_ref = new Reference(startleft, varright, var);
-    paramsList.add(var_ref);
-    RESULT = paramsList;
+    RESULT = var_ref;
 :}
 
 | error:expr
 {:
-    List paramsList = new LinkedList();
-    paramsList.add(new ASTErrorExpression(exprleft, exprright));
-    RESULT = paramsList;
+    RESULT = new ASTErrorExpression(exprleft, exprright);
+:}
+;
+
+argument_expr ::=
+expr_without_variable:var
+{:
+    RESULT = var;
 :}
 
-| non_empty_function_call_parameter_list:paramsList T_COMMA is_variadic:isVariadic expr_without_variable:var
+| variable:var
 {:
-    Expression param = var;
-    if (isVariadic) {
-        param = new Variadic(isVariadicleft, varright, var);
-    }
-    paramsList.add(param);
-    RESULT = paramsList;
-:}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA is_variadic:isVariadic variable:var
-{:
-    Expression param = var;
-    if (isVariadic) {
-        param = new Variadic(isVariadicleft, varright, var);
-    }
-    paramsList.add(param);
-    RESULT = paramsList;
-:}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA T_REFERENCE:start w_variable:var
-{:
-    Expression var_ref = new Reference(startleft, varright, var);
-    paramsList.add(var_ref);
-    RESULT = paramsList;
-:}
-
-| non_empty_function_call_parameter_list:paramsList T_COMMA error:expr
-{:
-    paramsList.add(new ASTErrorExpression(exprleft, exprright));
-    RESULT = paramsList;
+    RESULT = var;
 :}
 ;
 
@@ -3732,7 +3757,7 @@ lexical_vars ::=
     RESULT = null;
 :}
 
-| T_USE:s T_OPEN_PARENTHESE lexical_var_list:list T_CLOSE_PARENTHESE:e
+| T_USE:s T_OPEN_PARENTHESE lexical_var_list:list possible_comma T_CLOSE_PARENTHESE:e
 {:
     RESULT = list;
 :}

@@ -420,7 +420,6 @@
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                 <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/FormJApplet.html"/>
                 <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/applet.gif"/>
-                <attr name="SystemFileSystem.icon32" urlvalue="nbresloc:/javax/swing/beaninfo/images/JAppletColor32.gif"/>
                 <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
                 <attr name="templateCategory" stringvalue="java-forms"/>
                 <attr name="weight" intvalue="100"/>
@@ -584,7 +583,6 @@
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                 <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/FormApplet.html"/>
                 <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/applet.gif"/>
-                <attr name="SystemFileSystem.icon32" urlvalue="nbresloc:/javax/swing/beaninfo/images/JAppletColor32.gif"/>
                 <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
                 <attr name="templateCategory" stringvalue="java-forms,java-awt-forms"/>
                 <attr name="weight" intvalue="100"/>

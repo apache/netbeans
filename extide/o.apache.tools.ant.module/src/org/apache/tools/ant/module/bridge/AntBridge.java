@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -56,6 +57,9 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import org.apache.tools.ant.module.AntSettings;
 import org.netbeans.api.annotations.common.NonNull;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileSystem;
+import org.openide.filesystems.FileUtil;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.ModuleInfo;
 import org.openide.util.ChangeSupport;
@@ -757,6 +761,9 @@ public final class AntBridge {
             if (isFromContextClassLoader(name, false)) {
                 return contextClassLoader.getResource(name);
             }
+            if (META_INF_PLATFORM_PROVIDER_REGISTRATION_NAME.equals(name)) {
+                return META_INF_PLATFORM_PROVIDER_REGISTRATION;
+            }
             return super.getResource(name);
         }
 
@@ -767,7 +774,28 @@ public final class AntBridge {
                 final Enumeration<URL> cclRes = contextClassLoader.getResources(name);
                 res = Enumerations.concat(res, cclRes);
             }
+            if (META_INF_PLATFORM_PROVIDER_REGISTRATION_NAME.equals(name)) {
+                res = Enumerations.concat(res, Enumerations.singleton(META_INF_PLATFORM_PROVIDER_REGISTRATION));
+            }
             return res;
+        }
+
+        //need to add JDKPlatformProvider registration into META-INF/services, otherwise it would not be found by javac, and --release would not work:
+        private static final String META_INF_PLATFORM_PROVIDER_REGISTRATION_NAME = "META-INF/services/com.sun.tools.javac.platform.PlatformProvider";
+        private static final FileSystem META_INF_PLATFORM_PROVIDER_FS;
+        private static final URL META_INF_PLATFORM_PROVIDER_REGISTRATION;
+
+        static {
+            try {
+                META_INF_PLATFORM_PROVIDER_FS = FileUtil.createMemoryFileSystem();
+                FileObject file = FileUtil.createData(META_INF_PLATFORM_PROVIDER_FS.getRoot(), META_INF_PLATFORM_PROVIDER_REGISTRATION_NAME);
+                try (OutputStream out = file.getOutputStream()) {
+                    out.write("com.sun.tools.javac.platform.JDKPlatformProvider\n".getBytes("UTF-8"));
+                }
+                META_INF_PLATFORM_PROVIDER_REGISTRATION = file.toURL();
+            } catch (Throwable t) {
+                throw new IllegalStateException(t);
+            }
         }
 
         private static boolean isFromContextClassLoader(

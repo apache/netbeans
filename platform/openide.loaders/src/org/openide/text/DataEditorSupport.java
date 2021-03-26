@@ -21,7 +21,6 @@ package org.openide.text;
 
 
 import java.awt.EventQueue;
-import java.awt.GraphicsEnvironment;
 import org.netbeans.modules.openide.loaders.SimpleES;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -53,7 +52,6 @@ import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -62,10 +60,9 @@ import javax.swing.text.StyledDocument;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.progress.ProgressUtils;
 import org.netbeans.api.queries.FileEncodingQuery;
+import org.netbeans.modules.openide.loaders.AskEditorQuestions;
 import org.netbeans.modules.openide.loaders.DataObjectAccessor;
 import org.netbeans.modules.openide.loaders.UIException;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.cookies.EditorCookie;
 import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileAttributeEvent;
@@ -430,16 +427,8 @@ public class DataEditorSupport extends CloneableEditorSupport {
     @Override
     protected boolean canClose() {
         if(desEnv().isModified() && isEnvReadOnly()) {
-            Object result = DialogDisplayer.getDefault().notify(
-                new NotifyDescriptor.Confirmation(
-                    NbBundle.getMessage(DataObject.class,
-                        "MSG_FileReadOnlyClosing", 
-                        new Object[] {((Env)env).getFileImpl().getNameExt()}),
-                    NotifyDescriptor.OK_CANCEL_OPTION,
-                    NotifyDescriptor.WARNING_MESSAGE
-            ));
-
-            return result == NotifyDescriptor.OK_OPTION;
+            final String fileName = ((Env)env).getFileImpl().getNameExt();
+            return AskEditorQuestions.askFileReadOnlyOnClose(fileName);
         }
         
         return super.canClose();
@@ -1036,13 +1025,8 @@ public class DataEditorSupport extends CloneableEditorSupport {
         private void readOnlyRefresh() {
             if (initCanWrite(true)) {
                 if (!canWrite && isModified()) {
-                    // notify user if the object is modified and externally changed to read-only
-                    DialogDisplayer.getDefault().notify(
-                            new NotifyDescriptor.Message(
-                            NbBundle.getMessage(DataObject.class,
-                            "MSG_FileReadOnlyChanging",
-                            new Object[]{getFileImpl().getNameExt()}),
-                            NotifyDescriptor.WARNING_MESSAGE));
+                    final String fileName = getFileImpl().getNameExt();
+                    AskEditorQuestions.notifyChangedToReadOnly(fileName);
                 }
                 // event is consumed in CloneableEditorSupport
                 firePropertyChange("DataEditorSupport.read-only.changing", !canWrite, canWrite);  //NOI18N
@@ -1332,14 +1316,8 @@ public class DataEditorSupport extends CloneableEditorSupport {
 
         public void run() throws IOException {
             if (des.desEnv().isModified() && des.isEnvReadOnly()) {
-                IOException e = new IOException("File is read-only: " + ((Env) des.env).getFileImpl()); // NOI18N
-                UIException.annotateUser(e, null, 
-                    org.openide.util.NbBundle.getMessage(
-                        org.openide.loaders.DataObject.class, 
-                        "MSG_FileReadOnlySaving", 
-                        new java.lang.Object[]{
-                            ((org.openide.text.DataEditorSupport.Env) des.env).getFileImpl().getNameExt()}), null, null);
-                throw e;
+                final FileObject fo = ((Env) des.env).getFileImpl();
+                throw AskEditorQuestions.throwableIsReadOnly(fo);
             }
             DataObject tmpObj = des.getDataObject();
             Charset c = charsets.get(tmpObj);
@@ -1353,19 +1331,8 @@ public class DataEditorSupport extends CloneableEditorSupport {
                 try {
                     des.superSaveDoc();
                 } catch (UserQuestionException ex) {
-                    if (GraphicsEnvironment.isHeadless()) {
-                        // We cn not ask for anything in headless mode.
-                        // When there are e.g. external changes, we want to reload them,
-                        // otherwise we'd keep an inconsistent state.
+                    if (AskEditorQuestions.askUserQuestionExceptionOnSave(ex.getLocalizedMessage())) {
                         ex.confirmed();
-                    } else {
-                        NotifyDescriptor nd = new NotifyDescriptor.Confirmation(ex.getLocalizedMessage(),
-                                NotifyDescriptor.YES_NO_OPTION);
-                        Object res = DialogDisplayer.getDefault().notify(nd);
-
-                        if (NotifyDescriptor.OK_OPTION.equals(res) || true) {
-                            ex.confirmed();
-                        }
                     }
                 }
             } catch (IOException e) {

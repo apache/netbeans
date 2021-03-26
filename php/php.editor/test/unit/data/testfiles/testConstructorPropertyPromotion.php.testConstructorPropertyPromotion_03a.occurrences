@@ -1,0 +1,5 @@
+            public ?string $|>MARK_OCCURRENCES:field^3<| = "default value",
+            echo $|>MARK_OCCURRENCES:field3<|;
+            $this->|>MARK_OCCURRENCES:field3<|;
+            var_dump($this->|>MARK_OCCURRENCES:field3<|);
+    $instance->|>MARK_OCCURRENCES:field3<|;

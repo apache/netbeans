@@ -31,6 +31,7 @@ import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.modules.debugger.jpda.expr.JDIVariable;
+import org.netbeans.modules.debugger.jpda.models.JPDAClassTypeImpl;
 import org.netbeans.modules.debugger.jpda.truffle.TruffleDebugManager;
 import org.openide.util.Exceptions;
 
@@ -51,6 +52,7 @@ public final class TruffleStackInfo {
     private boolean includedInternalFrames;
     private boolean areInternalFrames;
 
+    @Deprecated
     public TruffleStackInfo(JPDADebugger debugger, JPDAThread thread, ObjectVariable stackTrace) {
         this(debugger, thread, stackTrace, false);
     }
@@ -83,13 +85,16 @@ public final class TruffleStackInfo {
         try {
             Variable internalVar = debugger.createMirrorVar(includeInternal, true);
             Variable javaFramesVar = debugger.createMirrorVar(supportsJavaFrames, true);
-            Variable framesVar = debugAccessor.invokeMethod(METHOD_GET_FRAMES_INFO,
+            Variable framesVar = ((JPDAClassTypeImpl) debugAccessor).invokeMethod(thread, METHOD_GET_FRAMES_INFO,
                                                             METHOD_GET_FRAMES_INFO_SIG,
                                                             new Variable[] { stackTrace,
                                                                              internalVar,
                                                                              javaFramesVar });
             Field[] framesInfos = ((ObjectVariable) framesVar).getFields(0, Integer.MAX_VALUE);
             String framesDesc = (String) framesInfos[0].createMirrorObject();
+            if (framesDesc == null) {
+                return new TruffleStackFrame[] {};
+            }
             Field[] codes = ((ObjectVariable) framesInfos[1]).getFields(0, Integer.MAX_VALUE);
             Field[] thiss = ((ObjectVariable) framesInfos[2]).getFields(0, Integer.MAX_VALUE);
             areInternalFrames = false;
@@ -115,7 +120,9 @@ public final class TruffleStackInfo {
                 depth++;
             }
             return truffleFrames.toArray(new TruffleStackFrame[truffleFrames.size()]);
-        } catch (InvalidExpressionException | NoSuchMethodException | InvalidObjectException ex) {
+        } catch (InvalidExpressionException | InvalidObjectException ex) {
+            return new TruffleStackFrame[] {};
+        } catch (NoSuchMethodException ex) {
             Exceptions.printStackTrace(ex);
             return new TruffleStackFrame[] {};
         }

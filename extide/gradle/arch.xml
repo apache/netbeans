@@ -130,13 +130,18 @@
 
 
  <answer id="exec-property">
-     <api category="devel" group="branding" name="DEFAULT_REUSE_OUTPUT" type="export">
+     <api category="devel" group="branding" name="org.netbeans.modules.gradle.spi.DEFAULT_REUSE_OUTPUT" type="export">
          Brand the <code>DEFAULT_REUSE_OUTPUT</code> key in a 
          <code>org.netbeans.modules.gradle.spi.Bundle</code> file
          with one of the values <code>true</code> or <code>false</code>
          to specify the default behavior of reusing output by your application.
          Use <code>never</code> value, if the reuse shall never be done,
          regardless of the settings value.
+     </api>
+     <api category="devel" group="branding" name="org.netbeans.modules.gradle.api.execute.TrustProjectOption" type="export">
+         Brand the <code>org.netbeans.modules.gradle.api.execute.TrustProjectOption.*</code> keys in <code>org.netbeans.modules.gradle.api.execution</code>
+         to enable/disable/reorder options in 'trust project' confirmation dialog.
+         For more details, see <a href="@TOP@/org/netbeans/modules/gradle/api/execute/RunUtils.html#isProjectTrusted-org.netbeans.api.project.Project-boolean-">RunUtils.isProjectTrusted</a>.
      </api>
      <api category="devel" group="systemproperty" name="netbeans.debug.gradle.info.action" type="export" >
          Starting NetBeans with <code>netbeans.debug.gradle.info.action=true</code>

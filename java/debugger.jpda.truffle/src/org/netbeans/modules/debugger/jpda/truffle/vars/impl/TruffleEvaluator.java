@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.debugger.jpda.truffle.vars.impl;
 
-import org.netbeans.api.debugger.jpda.CallStackFrame;
 import org.netbeans.api.debugger.jpda.InvalidExpressionException;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
@@ -53,12 +52,11 @@ public class TruffleEvaluator implements Evaluator<TruffleExpression> {
             expr = TruffleExpression.parse(expression.getExpression());
             expression.setPreprocessedObject(expr);
         }
-        Variable ret = evaluateIn(expr, context.getCallStackFrame(), contextVariable);
+        Variable ret = evaluateIn(expr);
         return new Result(ret);
     }
 
-    private Variable evaluateIn(TruffleExpression expr, CallStackFrame callStackFrame, ObjectVariable contextVar) throws InvalidExpressionException {
-        //return DebuggerSupport.evaluate(debugger, callStackFrame, expr.getExpression(), contextVar);
+    private Variable evaluateIn(TruffleExpression expr) throws InvalidExpressionException {
         return TruffleEval.evaluate(debugger, expr.getExpression());
     }
     

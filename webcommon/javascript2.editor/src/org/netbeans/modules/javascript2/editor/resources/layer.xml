@@ -437,8 +437,8 @@
                 </folder>            
             </folder>
             <folder name="x-json">
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/javascript2/editor/resources/javascript.png"/>
-                <attr name="iconBase" stringvalue="org/netbeans/modules/javascript2/editor/resources/javascript.png"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/javascript2/editor/resources/json.png"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/javascript2/editor/resources/json.png"/>
                 <folder name="Actions">
                     <file name="CopyAction.shadow">
                         <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>

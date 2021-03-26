@@ -61,7 +61,7 @@
                                 </AttributeName>
                                 <AttributeParameters>
                                     <Scalar start='824' end='825' type='INT' value='1'/>
-                                    <ASTErrorExpression start='825' end='833'/>
+                                    <ASTErrorExpression start='827' end='833'/>
                                 </AttributeParameters>
                             </AttributeDeclaration>
                         </AttributeDeclarations>

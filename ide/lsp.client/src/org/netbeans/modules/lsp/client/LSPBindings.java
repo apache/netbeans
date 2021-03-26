@@ -125,7 +125,7 @@ public class LSPBindings {
             TimeUnit.MINUTES);
     }
 
-    private final Map<FileObject, Map<BackgroundTask, RequestProcessor.Task>> backgroundTasks = new WeakHashMap<>();
+    private static final Map<FileObject, Map<BackgroundTask, RequestProcessor.Task>> backgroundTasks = new WeakHashMap<>();
     private final Set<FileObject> openedFiles = new HashSet<>();
 
     public static synchronized LSPBindings getBindings(FileObject file) {
@@ -363,25 +363,22 @@ public class LSPBindings {
     }
 
     @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
-    public static void addBackgroundTask(FileObject file, BackgroundTask task) {
-        LSPBindings bindings = getBindings(file);
+    public static synchronized void addBackgroundTask(FileObject file, BackgroundTask task) {
+        RequestProcessor.Task req = WORKER.create(() -> {
+            LSPBindings bindings = getBindings(file);
 
-        if (bindings == null)
-            return ;
+            if (bindings == null)
+                return ;
 
-        RequestProcessor.Task req = WORKER.create(() -> task.run(bindings, file));
+            task.run(bindings, file);
+        });
 
-        bindings.backgroundTasks.computeIfAbsent(file, f -> new LinkedHashMap<>()).put(task, req);
-        bindings.scheduleBackgroundTask(req);
+        backgroundTasks.computeIfAbsent(file, f -> new LinkedHashMap<>()).put(task, req);
+        scheduleBackgroundTask(req);
     }
 
-    public static void removeBackgroundTask(FileObject file, BackgroundTask task) {
-        LSPBindings bindings = getBindings(file);
-
-        if (bindings == null)
-            return ;
-
-        RequestProcessor.Task req = bindings.backgroundTasksMapFor(file).remove(task);
+    public static synchronized void removeBackgroundTask(FileObject file, BackgroundTask task) {
+        RequestProcessor.Task req = backgroundTasksMapFor(file).remove(task);
 
         if (req != null) {
             req.cancel();
@@ -396,28 +393,23 @@ public class LSPBindings {
         WORKER.post(r);
     }
 
-    public void scheduleBackgroundTask(RequestProcessor.Task req) {
+    private static void scheduleBackgroundTask(RequestProcessor.Task req) {
         WORKER.post(req, DELAY);
     }
 
-    public static void rescheduleBackgroundTask(FileObject file, BackgroundTask task) {
-        LSPBindings bindings = getBindings(file);
-
-        if (bindings == null)
-            return ;
-
-        RequestProcessor.Task req = bindings.backgroundTasksMapFor(file).get(task);
+    public static synchronized void rescheduleBackgroundTask(FileObject file, BackgroundTask task) {
+        RequestProcessor.Task req = backgroundTasksMapFor(file).get(task);
 
         if (req != null) {
             WORKER.post(req, DELAY);
         }
     }
 
-    public void scheduleBackgroundTasks(FileObject file) {
-        backgroundTasksMapFor(file).values().stream().forEach(this::scheduleBackgroundTask);
+    public static synchronized void scheduleBackgroundTasks(FileObject file) {
+        backgroundTasksMapFor(file).values().stream().forEach(LSPBindings::scheduleBackgroundTask);
     }
 
-    private Map<BackgroundTask, Task> backgroundTasksMapFor(FileObject file) {
+    private static Map<BackgroundTask, Task> backgroundTasksMapFor(FileObject file) {
         return backgroundTasks.computeIfAbsent(file, f -> new IdentityHashMap<>());
     }
 

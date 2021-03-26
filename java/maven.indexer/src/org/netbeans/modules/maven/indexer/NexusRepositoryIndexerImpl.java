@@ -599,7 +599,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                 throw e;
             }
         } catch (Cancellation x) {
-            throw new IOException("canceled indexing");
+            throw new IOException("canceled indexing", x);
         } catch (ComponentLookupException x) {
             throw new IOException("could not find protocol handler for " + repo.getRepositoryUrl(), x);
         } finally {

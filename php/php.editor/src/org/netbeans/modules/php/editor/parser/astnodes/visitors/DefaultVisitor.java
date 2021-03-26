@@ -30,7 +30,6 @@ import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.Attribute;
 import org.netbeans.modules.php.editor.parser.astnodes.AttributeDeclaration;
-import org.netbeans.modules.php.editor.parser.astnodes.Attributed;
 import org.netbeans.modules.php.editor.parser.astnodes.BackTickExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.BreakStatement;
@@ -80,6 +79,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.MatchArm;
 import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
+import org.netbeans.modules.php.editor.parser.astnodes.NamedArgument;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
@@ -453,6 +453,12 @@ public class DefaultVisitor implements Visitor {
     public void visit(MethodInvocation node) {
         scan(node.getDispatcher());
         scan(node.getMethod());
+    }
+
+    @Override
+    public void visit(NamedArgument node) {
+        scan(node.getParameterName());
+        scan(node.getExpression());
     }
 
     @Override

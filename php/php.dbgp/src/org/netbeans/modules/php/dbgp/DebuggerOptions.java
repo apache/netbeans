@@ -26,6 +26,7 @@ import org.openide.util.Pair;
  * @author Radek Matous
  */
 public class DebuggerOptions {
+
     private static final DebuggerOptions GLOBAL_INSTANCE = new DefaultGlobal();
     int port = -1;
     int maxData = -2;
@@ -53,11 +54,11 @@ public class DebuggerOptions {
     }
 
     public int getPort() {
-        return (port != -1) ? port :  getGlobalInstance().getPort();
+        return (port != -1) ? port : getGlobalInstance().getPort();
     }
 
     public int getMaxData() {
-        return (maxData != -2) ? maxData :  getGlobalInstance().getMaxData();
+        return (maxData != -2) ? maxData : getGlobalInstance().getMaxData();
     }
 
     public int getMaxChildren() {
@@ -79,6 +80,11 @@ public class DebuggerOptions {
     public boolean showDebuggerConsole() {
         return getGlobalInstance().showDebuggerConsole();
     }
+
+    public boolean resolveBreakpoints() {
+        return getGlobalInstance().resolveBreakpoints();
+    }
+
     public boolean isDebuggerStoppedAtTheFirstLine() {
         return getGlobalInstance().isDebuggerStoppedAtTheFirstLine();
     }
@@ -92,6 +98,7 @@ public class DebuggerOptions {
     }
 
     private static class DefaultGlobal extends DebuggerOptions {
+
         public DefaultGlobal() {
         }
 
@@ -128,6 +135,11 @@ public class DebuggerOptions {
         @Override
         public boolean showDebuggerConsole() {
             return PhpOptions.getInstance().isDebuggerShowDebuggerConsole();
+        }
+
+        @Override
+        public boolean resolveBreakpoints() {
+            return PhpOptions.getInstance().isDebuggerResolveBreakpoints();
         }
 
         @Override

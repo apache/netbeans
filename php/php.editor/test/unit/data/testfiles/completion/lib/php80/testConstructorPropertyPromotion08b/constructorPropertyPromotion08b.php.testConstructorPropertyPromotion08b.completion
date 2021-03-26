@@ -1,0 +1,9 @@
+Code completion result for source line:
+protected ?string $param2 = |
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      ConstructorPropertyPromotion    [PUBLIC]   constructorPropertyPromotion08b.php
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+KEYWORD    static::                                   null
+------------------------------------
+KEYWORD    array                                      null

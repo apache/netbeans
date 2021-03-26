@@ -577,4 +577,66 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
         ));
     }
 
+    public void testConstructorPropertyPromotionGetter_01() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^// test1", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleGetters()),
+                new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testConstructorPropertyPromotionGetter_02() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^// test2", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleGetters()),
+                new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testConstructorPropertyPromotionGetter_03() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^// test3", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleGetters()),
+                new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testConstructorPropertyPromotionSetter_01() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^// test1", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleSetters()),
+                new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testConstructorPropertyPromotionSetter_02() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^// test2", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleSetters()),
+                new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testConstructorPropertyPromotionSetter_03() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^// test3", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleSetters()),
+                new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testConstructorPropertyPromotionOverrideConstructor_01() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Child extends ConstructorPropertyPromotionParent {^", PhpVersion.PHP_80);
+        List<MethodProperty> possibleMethods = cgsInfo.getPossibleMethods();
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(possibleMethods, "__construct"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
 }

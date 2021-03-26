@@ -148,7 +148,9 @@ public class JavaWhereUsedQueryPlugin extends JavaRefactoringPlugin implements F
                 final Set<String> packageSet = new HashSet<>(packages.size());
                 for (NonRecursiveFolder nonRecursiveFolder : packages) {
                     String resourceName = cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE).getResourceName(nonRecursiveFolder.getFolder());
-                    packageSet.add(resourceName.replace('/', '.'));
+                    if (resourceName != null) {
+                        packageSet.add(resourceName.replace('/', '.'));
+                    }
                 }
                 searchScopeType.add(new SearchScopeType() {
                     @Override

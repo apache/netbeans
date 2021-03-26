@@ -1323,7 +1323,9 @@ public class TokenFormatter {
                                         helpIndex = index - 1;
                                         while (helpIndex > 0
                                                 && formatTokens.get(helpIndex).getId() != FormatToken.Kind.WHITESPACE_WITHIN_METHOD_DECL_PARENS
-                                                && (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE /*
+                                                && (formatTokens.get(helpIndex).getId() == FormatToken.Kind.WHITESPACE
+                                                || formatTokens.get(helpIndex).getId() == FormatToken.Kind.INDENT
+                                                /*
                                                  * ||
                                                  * formatTokens.get(helpIndex).getId()
                                                  * == FormatToken.Kind.WHITESPACE_INDENT
@@ -1757,6 +1759,12 @@ public class TokenFormatter {
 
                                         break;
                                     case WHITESPACE_AFTER_CLOSE_PHP_TAG:
+                                        break;
+                                    case WHITESPACE_BEFORE_NAMED_ARGUMENT_SEPARATOR:
+                                        countSpaces = 0;
+                                        break;
+                                    case WHITESPACE_AFTER_NAMED_ARGUMENT_SEPARATOR:
+                                        countSpaces = 1;
                                         break;
                                     case WHITESPACE_BEFORE_RETURN_TYPE_SEPARATOR:
                                         countSpaces = 0;

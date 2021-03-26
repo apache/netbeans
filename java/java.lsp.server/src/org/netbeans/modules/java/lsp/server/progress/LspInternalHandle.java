@@ -36,17 +36,23 @@ import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.modules.progress.spi.ProgressEvent;
 import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 /**
  *
  * @author sdedic
  */
-public class LspInternalHandle extends InternalHandle {
+public final class LspInternalHandle extends InternalHandle {
     private static final Logger LOG = Logger.getLogger(LspInternalHandle.class.getName());
     
     private final NbCodeLanguageClient  lspClient;
     private final OperationContext opContext;
     private final Function<InternalHandle, Controller> controllerProvider;
+    private final Lookup operationLookup;
+    /**
+     * Code origin may help to map the Handle to an operation.
+     */
+    private final StackTraceElement[] creatorTrace;
     
     private CompletableFuture<Either<String, Number>> tokenPromise;
     private int reportedPercentage;
@@ -59,17 +65,27 @@ public class LspInternalHandle extends InternalHandle {
     private boolean explicitCancelRequest;
     
     private static Field controllerField;
-
+    
     public LspInternalHandle(OperationContext opContext, 
             NbCodeLanguageClient  lspClient, Function<InternalHandle, Controller> controllerProvider,
             String displayName, Cancellable cancel, boolean userInitiated) {
         super(displayName, cancel, userInitiated);
+        this.creatorTrace = new Throwable().getStackTrace();
         this.lspClient = lspClient;
         this.opContext = opContext;
         this.controllerProvider = controllerProvider;
+        this.operationLookup = Lookup.getDefault();
         if (opContext != null) {
             opContext.internalHandleCreated(this);
         }
+    }
+
+    public StackTraceElement[] getCreatorTrace() {
+        return creatorTrace;
+    }
+
+    public Lookup getOperationLookup() {
+        return operationLookup;
     }
 
     public void forceRequestCancel() {

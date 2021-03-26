@@ -433,7 +433,7 @@ public final class NbProtocolServer implements IDebugProtocolServer {
                 response.setResult(truffleVariable.getDisplayValue());
                 response.setVariablesReference(referenceId);
                 response.setType(truffleVariable.getType());
-                response.setIndexedVariables(truffleVariable.isLeaf() ? 0 : Integer.MAX_VALUE);
+                response.setIndexedVariables(truffleVariable.isLeaf() ? 0 : truffleVariable.getChildren().length);
             } else {
                 if (variable instanceof ObjectVariable) {
                     int referenceId = context.getThreadsProvider().getThreadObjects().addObject(threadId, variable);

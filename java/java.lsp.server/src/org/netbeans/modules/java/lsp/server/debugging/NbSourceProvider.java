@@ -118,11 +118,14 @@ public final class NbSourceProvider {
         String uri = sourceProvider.getSourceFileURI(fullyQualifiedName, relativeSourcePath);
 
         if (uri == null || uri.isEmpty()) {
-            for (String path : context.getSourcePaths()) {
-                Path fullpath = Paths.get(path, relativeSourcePath);
-                if (Files.isRegularFile(fullpath)) {
-                    uri = fullpath.toString();
-                    break;
+            String[] sourcePaths = context.getSourcePaths();
+            if (sourcePaths != null) {
+                for (String path : sourcePaths) {
+                    Path fullpath = Paths.get(path, relativeSourcePath);
+                    if (Files.isRegularFile(fullpath)) {
+                        uri = fullpath.toString();
+                        break;
+                    }
                 }
             }
         }

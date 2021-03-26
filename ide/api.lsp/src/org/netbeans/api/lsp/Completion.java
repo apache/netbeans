@@ -230,7 +230,9 @@ public final class Completion {
     }
 
     /**
-     * Computes and collects completions for a document at a given offset.
+     * Computes and collects completions for a document at a given offset. Example
+     * usage can be illustrated by:
+     * {@codesnippet CompletionTest#testCompletionCollect}
      *
      * @param doc a text document
      * @param offset an offset inside the text document
@@ -303,39 +305,21 @@ public final class Completion {
          *
          * @since 1.0
          */
-        Invoked(1),
+        Invoked,
 
         /**
          * Completion was triggered by a trigger character.
          *
          * @since 1.0
          */
-        TriggerCharacter(2),
+        TriggerCharacter,
 
         /**
          * Completion was re-triggered as the current completion list is incomplete.
          *
          * @since 1.0
          */
-        TriggerForIncompleteCompletions(3);
-
-        private final int value;
-
-        private TriggerKind(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public static TriggerKind forValue(int value) {
-            TriggerKind[] allValues = TriggerKind.values();
-            if (value < 1 || value > allValues.length) {
-                throw new IllegalArgumentException("Illegal enum value: " + value);
-            }
-            return allValues[value - 1];
-        }
+        TriggerForIncompleteCompletions
     }
 
     /**
@@ -345,49 +329,31 @@ public final class Completion {
      */
     public static enum Kind {
 
-        Text(1),
-        Method(2),
-        Function(3),
-        Constructor(4),
-        Field(5),
-        Variable(6),
-        Class(7),
-        Interface(8),
-        Module(9),
-        Property(10),
-        Unit(11),
-        Value(12),
-        Enum(13),
-        Keyword(14),
-        Snippet(15),
-        Color(16),
-        File(17),
-        Reference(18),
-        Folder(19),
-        EnumMember(20),
-        Constant(21),
-        Struct(22),
-        Event(23),
-        Operator(24),
-        TypeParameter(25);
-
-        private final int value;
-
-        private Kind(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public static Kind forValue(int value) {
-            Kind[] allValues = Kind.values();
-            if (value < 1 || value > allValues.length) {
-                throw new IllegalArgumentException("Illegal enum value: " + value);
-            }
-            return allValues[value - 1];
-        }
+        Text,
+        Method,
+        Function,
+        Constructor,
+        Field,
+        Variable,
+        Class,
+        Interface,
+        Module,
+        Property,
+        Unit,
+        Value,
+        Enum,
+        Keyword,
+        Snippet,
+        Color,
+        File,
+        Reference,
+        Folder,
+        EnumMember,
+        Constant,
+        Struct,
+        Event,
+        Operator,
+        TypeParameter
     }
 
     /**
@@ -398,25 +364,7 @@ public final class Completion {
      */
     public static enum Tag {
 
-        Deprecated(1);
-
-        private final int value;
-
-        private Tag(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public static Tag forValue(int value) {
-            Tag[] allValues = Tag.values();
-            if (value < 1 || value > allValues.length) {
-                throw new IllegalArgumentException("Illegal enum value: " + value);
-            }
-            return allValues[value - 1];
-        }
+        Deprecated
     }
 
     /**
@@ -432,31 +380,13 @@ public final class Completion {
          *
          * @since 1.0
          */
-        PlainText(1),
+        PlainText,
 
         /**
          * The primary text to be inserted is treated as a snippet.
          *
          * @since 1.0
          */
-        Snippet(2);
-
-        private final int value;
-
-        private TextFormat(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public static TextFormat forValue(int value) {
-            TextFormat[] allValues = TextFormat.values();
-            if (value < 1 || value > allValues.length) {
-                throw new IllegalArgumentException("Illegal enum value: " + value);
-            }
-            return allValues[value - 1];
-        }
+        Snippet
     }
 }

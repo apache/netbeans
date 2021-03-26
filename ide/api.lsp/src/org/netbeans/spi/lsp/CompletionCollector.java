@@ -21,7 +21,9 @@ package org.netbeans.spi.lsp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -35,6 +37,14 @@ import org.netbeans.spi.editor.mimelookup.MimeLocation;
  * to collect completions and send them for presentation outside of NetBeans using
  * the Language Server Protocol. Implementations of the interface should be registered
  * in MimeLookup.
+ * <pre>
+ *
+ *  {@code @MimeRegistration(mimeType = "text/foo", service = CompletionCollector.class)
+ *   public class FooCompletionCollector implements CompletionCollector {
+ *     ...
+ *   }
+ *  }
+ * </pre>
  *
  * @author Dusan Balek
  * @since 1.0
@@ -69,7 +79,8 @@ public interface CompletionCollector {
     }
 
     /**
-     * Builder for {@link Completion} instances.
+     * Builder for {@link Completion} instances. Its usage can be illustrated by:
+     * {@codesnippet CompletionTest.FooCompletionCollector#builder}
      *
      * @since 1.0
      */
@@ -131,26 +142,56 @@ public interface CompletionCollector {
         }
 
         /**
-         * A human-readable string with additional information
-         * about this completion, like type or symbol information.
+         * A human-readable string with additional information about this completion,
+         * like type or symbol information. If computing of a full detail is expensive,
+         * user should use {@link #detail(java.util.function.Supplier)} to defer
+         * computation to the subsequent {@code completionItem/resolve} request.
          *
          * @since 1.0
          */
         @NonNull
-        public Builder detail(@NonNull CompletableFuture<String> detail) {
-            this.detail = detail;
+        public Builder detail(@NonNull String detail) {
+            this.detail = CompletableFuture.completedFuture(detail);
+            return this;
+        }
+
+        /**
+         * A human-readable string with additional information about this completion,
+         * like type or symbol information. Use this method to defer computation
+         * of a full detail to the subsequent {@code completionItem/resolve} request.
+         *
+         * @since 1.0
+         */
+        @NonNull
+        public Builder detail(@NonNull Supplier<String> detail) {
+            this.detail = new LazyCompletableFuture<>(detail);
             return this;
         }
 
         /**
          * A human-readable string that represents a doc-comment. An HTML format
-         * is supported.
+         * is supported. If computing of a full documentation is expensive,
+         * user should use {@link #documentation(java.util.function.Supplier)} to
+         * defer computation to the subsequent {@code completionItem/resolve} request.
          *
          * @since 1.0
          */
         @NonNull
-        public Builder documentation(@NonNull CompletableFuture<String> documentation) {
-            this.documentation = documentation;
+        public Builder documentation(@NonNull String documentation) {
+            this.documentation = CompletableFuture.completedFuture(documentation);
+            return this;
+        }
+
+        /**
+         * A human-readable string that represents a doc-comment. An HTML format
+         * is supported. Use this method to defer computation of a full documentation
+         * to the subsequent {@code completionItem/resolve} request.
+         *
+         * @since 1.0
+         */
+        @NonNull
+        public Builder documentation(@NonNull Supplier<String> documentation) {
+            this.documentation = new LazyCompletableFuture<>(documentation);
             return this;
         }
 
@@ -198,6 +239,7 @@ public interface CompletionCollector {
         @NonNull
         public Builder insertText(@NonNull String insertText) {
             this.insertText = insertText;
+            this.textEdit = null;
             return this;
         }
 
@@ -225,6 +267,7 @@ public interface CompletionCollector {
         @NonNull
         public Builder textEdit(@NonNull TextEdit textEdit) {
             this.textEdit = textEdit;
+            this.insertText = null;
             return this;
         }
 
@@ -235,12 +278,33 @@ public interface CompletionCollector {
          * Additional text edits should be used to change text unrelated to the
          * current cursor position (for example adding an import statement at the
          * top of the file if the completion item will insert an unqualified type).
+         * If computing of the additional text edits is expensive, user should use
+         * {@link #additionalTextEdits(java.util.function.Supplier)} to defer
+         * computation to the subsequent {@code completionItem/resolve} request.
          *
          * @since 1.0
          */
         @NonNull
-        public Builder additionalTextEdits(@NonNull CompletableFuture<List<TextEdit>> additionalTextEdits) {
-            this.additionalTextEdits = additionalTextEdits;
+        public Builder additionalTextEdits(@NonNull List<TextEdit> additionalTextEdits) {
+            this.additionalTextEdits = CompletableFuture.completedFuture(additionalTextEdits);
+            return this;
+        }
+
+        /**
+         * A list of additional text edits that are applied when selecting this
+         * completion. Edits must not overlap (including the same insert position)
+         * with the main edit nor with themselves.
+         * Additional text edits should be used to change text unrelated to the
+         * current cursor position (for example adding an import statement at the
+         * top of the file if the completion item will insert an unqualified type).
+         * Use this method to defer computation of the additional text edits to
+         * the subsequent {@code completionItem/resolve} request.
+         *
+         * @since 1.0
+         */
+        @NonNull
+        public Builder additionalTextEdits(@NonNull Supplier<List<TextEdit>> additionalTextEdits) {
+            this.additionalTextEdits = new LazyCompletableFuture<>(additionalTextEdits);
             return this;
         }
 
@@ -270,6 +334,25 @@ public interface CompletionCollector {
                     tags, detail, documentation, preselect, sortText, filterText,
                     insertText, insertTextFormat, textEdit, additionalTextEdits,
                     commitCharacters);
+        }
+
+        private static class LazyCompletableFuture<T> extends CompletableFuture<T> {
+
+            private final Supplier<T> supplier;
+
+            private LazyCompletableFuture(Supplier<T> supplier) {
+                this.supplier = supplier;
+            }
+
+            @Override
+            public T get() throws InterruptedException, ExecutionException {
+                try {
+                    this.complete(supplier.get());
+                } catch (Exception ex) {
+                    this.completeExceptionally(ex);
+                }
+                return super.get();
+            }
         }
     }
 }

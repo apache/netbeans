@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.micronaut.completion;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.document.EditorDocumentUtils;
@@ -87,7 +86,7 @@ public class MicronautConfigCompletionCollector implements CompletionCollector {
                             }
                             CompletionCollector.Builder builder = CompletionCollector.newBuilder(property.getId()).kind(Completion.Kind.Property)
                                     .sortText(String.format("%4d%s", property.isDeprecated() ? 30 : 20, property.getId())).insertText(insertText.toString())
-                                    .insertTextFormat(insertTextFormat).documentation(CompletableFuture.completedFuture(new MicronautConfigDocumentation(property).getText()));
+                                    .insertTextFormat(insertTextFormat).documentation(new MicronautConfigDocumentation(property).getText());
                             if (property.isDeprecated()) {
                                 builder.addTag(Completion.Tag.Deprecated);
                             }

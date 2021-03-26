@@ -30,11 +30,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -165,7 +163,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             CompletionCollector.Builder builder = CompletionCollector.newBuilder(elem.getSimpleName().toString())
                     .kind(elementKind2CompletionItemKind(elem.getKind()))
                     .sortText(String.format("%4d%s#%2d#%s", smartType ? 800 : 1800, elem.getSimpleName().toString(), Utilities.getImportanceLevel(name), pkgName))
-                    .detail(CompletableFuture.completedFuture(name));
+                    .detail(name);
             ElementHandle<TypeElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
                 builder.documentation(getDocumentation(doc, handle))
@@ -187,7 +185,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                 return CompletionCollector.newBuilder(te.getSimpleName().toString())
                         .kind(elementKind2CompletionItemKind(handle.getKind()))
                         .sortText(String.format("%4d%s#%2d#%s", 1800, te.getSimpleName().toString(), Utilities.getImportanceLevel(name), pkgName))
-                        .detail(CompletableFuture.completedFuture(name))
+                        .detail(name)
                         .documentation(getDocumentation(doc, handle))
                         .additionalTextEdits(addImport(doc, handle))
                         .build();
@@ -376,7 +374,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             return CompletionCollector.newBuilder(value)
                     .kind(Completion.Kind.Text)
                     .sortText(value)
-                    .documentation(CompletableFuture.completedFuture(documentation))
+                    .documentation(documentation)
                     .build();
         }
 
@@ -426,7 +424,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             CompletionCollector.Builder builder = CompletionCollector.newBuilder(label)
                     .kind(elementKind2CompletionItemKind(memberElem.getKind()))
                     .insertText(label)
-                    .additionalTextEdits(CompletableFuture.completedFuture(currentClassImport))
+                    .additionalTextEdits(currentClassImport)
                     .sortText(String.format("%4d%s", memberElem.getKind().isField() ? 720 : 750, sortText));
             ElementHandle<Element> handle = SUPPORTED_ELEMENT_KINDS.contains(memberElem.getKind().name()) ? ElementHandle.create(memberElem) : null;
             if (handle != null) {
@@ -453,34 +451,42 @@ public class JavaCompletionCollector implements CompletionCollector {
             return null; //TODO: fill
         }
 
-        private static CompletableFuture<String> getDocumentation(Document doc, ElementHandle<?> handle) {
-            return new LazyFuture(() -> {
-                String[] ret = new String[1];
-                ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
-                    public void run (ResultIterator resultIterator) throws Exception {
-                        CompilationInfo info = CompilationInfo.get(resultIterator.getParserResult());
-                        if (info != null) {
-                            Element element = handle.resolve(info);
-                            if (element != null) {
-                                ret[0] = ElementJavadoc.create(info, element, null).getText();
+        private static Supplier<String> getDocumentation(Document doc, ElementHandle<?> handle) {
+            return () -> {
+                try {
+                    String[] ret = new String[1];
+                    ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
+                        public void run (ResultIterator resultIterator) throws Exception {
+                            CompilationInfo info = CompilationInfo.get(resultIterator.getParserResult());
+                            if (info != null) {
+                                Element element = handle.resolve(info);
+                                if (element != null) {
+                                    ret[0] = ElementJavadoc.create(info, element, null).getText();
+                                }
                             }
                         }
-                    }
-                });
-                return ret[0];
-            });
+                    });
+                    return ret[0];
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
+            };
         }
 
-        private static CompletableFuture<List<TextEdit>> addImport(Document doc, ElementHandle<?> handle) {
-            return new LazyFuture(() -> {
-                return modify2TextEdits(JavaSource.forDocument(doc), copy -> {
-                    copy.toPhase(JavaSource.Phase.RESOLVED);
-                    Element e = handle.resolve(copy);
-                    if (e != null) {
-                        copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), Collections.singleton(e)));
-                    }
-                });
-            });
+        private static Supplier<List<TextEdit>> addImport(Document doc, ElementHandle<?> handle) {
+            return () -> {
+                try {
+                    return modify2TextEdits(JavaSource.forDocument(doc), copy -> {
+                        copy.toPhase(JavaSource.Phase.RESOLVED);
+                        Element e = handle.resolve(copy);
+                        if (e != null) {
+                            copy.rewrite(copy.getCompilationUnit(), GeneratorUtilities.get(copy).addImports(copy.getCompilationUnit(), Collections.singleton(e)));
+                        }
+                    });
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            };
         }
 
         private static Completion.Kind elementKind2CompletionItemKind(ElementKind kind) {
@@ -537,24 +543,6 @@ public class JavaCompletionCollector implements CompletionCollector {
                 String newText = diff.getNewText();
                 return new TextEdit(diff.getStartPosition().getOffset(), diff.getEndPosition().getOffset(), newText != null ? newText : "");
             }).collect(Collectors.toList());
-        }
-
-        private static class LazyFuture<T> extends CompletableFuture<T> {
-            private final Callable<T> callable;
-
-            private LazyFuture(Callable<T> callable) {
-                this.callable = callable;
-            }
-
-            @Override
-            public T get() throws InterruptedException, ExecutionException {
-                try {
-                    this.complete(callable.call());
-                } catch (Exception ex) {
-                    this.completeExceptionally(ex);
-                }
-                return super.get();
-            }
         }
     }
 }

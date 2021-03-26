@@ -29,6 +29,14 @@ import org.openide.filesystems.FileObject;
 /**
  * Interface for resolving hyperlink locations. Implementations of the interface
  * should be registered in MimeLookup.
+ * <pre>
+ *
+ *  {@code @MimeRegistration(mimeType = "text/foo", service = HyperlinkLocationProvider.class)
+ *   public class FooHyperlinkLocationProvider implements HyperlinkLocationProvider {
+ *     ...
+ *   }
+ *  }
+ * </pre>
  *
  * @author Dusan Balek
  * @since 1.0

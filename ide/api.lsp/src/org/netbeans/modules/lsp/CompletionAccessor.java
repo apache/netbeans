@@ -48,6 +48,9 @@ public abstract class CompletionAccessor {
 
     public static void setDefault(@NonNull final CompletionAccessor accessor) {
         Parameters.notNull("accessor", accessor);   //NOI18N
+        if (DEFAULT != null) {
+            throw new IllegalStateException("Accessor already initialized");
+        }
         DEFAULT = accessor;
     }
 

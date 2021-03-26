@@ -296,16 +296,16 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             final int caret = Utils.getOffset(doc, params.getPosition());
             List<CompletionItem> items = new ArrayList<>();
             Completion.Context context = params.getContext() != null
-                    ? new Completion.Context(Completion.TriggerKind.forValue(params.getContext().getTriggerKind().getValue()),
+                    ? new Completion.Context(Completion.TriggerKind.valueOf(params.getContext().getTriggerKind().name()),
                             params.getContext().getTriggerCharacter() == null || params.getContext().getTriggerCharacter().isEmpty() ? null : params.getContext().getTriggerCharacter().charAt(0))
                     : null;
             boolean isComplete = Completion.collect(doc, caret, context, completion -> {
                 CompletionItem item = new CompletionItem(completion.getLabel());
                 if (completion.getKind() != null) {
-                    item.setKind(CompletionItemKind.forValue(completion.getKind().getValue()));
+                    item.setKind(CompletionItemKind.valueOf(completion.getKind().name()));
                 }
                 if (completion.getTags() != null) {
-                    item.setTags(completion.getTags().stream().map(tag -> CompletionItemTag.forValue(tag.getValue())).collect(Collectors.toList()));
+                    item.setTags(completion.getTags().stream().map(tag -> CompletionItemTag.valueOf(tag.name())).collect(Collectors.toList()));
                 }
                 if (completion.getDetail() != null && completion.getDetail().isDone()) {
                     item.setDetail(completion.getDetail().getNow(null));
@@ -326,7 +326,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 item.setFilterText(completion.getFilterText());
                 item.setInsertText(completion.getInsertText());
                 if (completion.getInsertTextFormat() != null) {
-                    item.setInsertTextFormat(InsertTextFormat.forValue(completion.getInsertTextFormat().getValue()));
+                    item.setInsertTextFormat(InsertTextFormat.valueOf(completion.getInsertTextFormat().name()));
                 }
                 org.netbeans.api.lsp.TextEdit edit = completion.getTextEdit();
                 if (edit != null) {

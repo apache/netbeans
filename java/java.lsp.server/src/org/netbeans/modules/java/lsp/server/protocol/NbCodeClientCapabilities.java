@@ -47,7 +47,15 @@ public final class NbCodeClientCapabilities {
      * </ul>
      */
     private Boolean statusBarMessageSupport;
-    
+
+    /**
+     * Supports test results display:
+     * <ul>
+     * <li>window/notifyTestProgress
+     * </ul>
+     */
+    private Boolean testResultsSupport;
+
     public ClientCapabilities getClientCapabilities() {
         return clientCaps;
     }
@@ -63,7 +71,19 @@ public final class NbCodeClientCapabilities {
     public void setStatusBarMessageSupport(Boolean statusBarMessageSupport) {
         this.statusBarMessageSupport = statusBarMessageSupport;
     }
-    
+
+    public Boolean getTestResultsSupport() {
+        return testResultsSupport;
+    }
+
+    public boolean hasTestResultsSupport() {
+        return testResultsSupport != null && testResultsSupport.booleanValue();
+    }
+
+    public void setTestResultsSupport(Boolean testResultsSupport) {
+        this.testResultsSupport = testResultsSupport;
+    }
+
     private NbCodeClientCapabilities withCapabilities(ClientCapabilities caps) {
         if (caps == null) {
             caps = new ClientCapabilities();

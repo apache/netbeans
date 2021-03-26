@@ -148,6 +148,17 @@ public final class J2eeProjectCapabilities {
     }
 
     /**
+     * Is CDI 1.0 supported in this project?
+     * @return {@code true} if the project targets EE6 profile, {@code false} otherwise
+     * @since 1.113
+     */
+    public boolean isCdi10Supported() {
+        return Profile.JAVA_EE_6_FULL.equals(ejbJarProfile) ||
+            Profile.JAVA_EE_6_WEB.equals(webProfile) ||
+            Profile.JAVA_EE_6_FULL.equals(ejbJarProfile);
+    }
+    
+    /**
      * Is CDI 1.1 supported in this project?
      * @return {@code true} if the project targets EE7 profile, {@code false} otherwise
      * @since 1.86
@@ -159,6 +170,20 @@ public final class J2eeProjectCapabilities {
             Profile.JAVA_EE_7_WEB.equals(webProfile) ||
             Profile.JAVA_EE_7_FULL.equals(carProfile) ||
             Profile.JAVA_EE_8_FULL.equals(carProfile);
+    }
+    
+    /**
+     * Is CDI 2.0 supported in this project?
+     * @return {@code true} if the project targets EE8 profile, {@code false} otherwise
+     * @since 1.113
+     */
+    public boolean isCdi20Supported() {
+        return Profile.JAVA_EE_8_FULL.equals(ejbJarProfile) ||
+            Profile.JAVA_EE_8_WEB.equals(webProfile) ||
+            Profile.JAVA_EE_8_FULL.equals(carProfile) ||
+            Profile.JAKARTA_EE_8_FULL.equals(ejbJarProfile) ||
+            Profile.JAKARTA_EE_8_WEB.equals(webProfile) ||
+            Profile.JAKARTA_EE_8_FULL.equals(carProfile);
     }
 
     /**

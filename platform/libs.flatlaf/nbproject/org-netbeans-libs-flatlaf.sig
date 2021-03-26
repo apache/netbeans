@@ -312,6 +312,7 @@ CLSS public static com.formdev.flatlaf.util.ColorFunctions$Fade
 cons public init(float)
 fld public final float amount
 intf com.formdev.flatlaf.util.ColorFunctions$ColorFunction
+meth public java.lang.String toString()
 meth public void apply(float[])
 supr java.lang.Object
 
@@ -325,6 +326,7 @@ fld public final float amount
 fld public final int hslIndex
 intf com.formdev.flatlaf.util.ColorFunctions$ColorFunction
 meth protected boolean shouldInverse(float[])
+meth public java.lang.String toString()
 meth public void apply(float[])
 supr java.lang.Object
 
@@ -344,6 +346,7 @@ CLSS public com.formdev.flatlaf.util.DerivedColor
 cons public !varargs init(java.awt.Color,com.formdev.flatlaf.util.ColorFunctions$ColorFunction[])
 meth public com.formdev.flatlaf.util.ColorFunctions$ColorFunction[] getFunctions()
 meth public java.awt.Color derive(java.awt.Color)
+meth public java.lang.String toString()
 supr javax.swing.plaf.ColorUIResource
 hfds baseOfDefaultColorRGB,functions,hasBaseOfDefaultColor
 
@@ -684,7 +687,7 @@ meth public java.awt.FontMetrics getFontMetrics()
 meth public java.awt.Graphics create(int,int,int,int)
 meth public java.awt.Rectangle getClipBounds(java.awt.Rectangle)
 meth public java.awt.Rectangle getClipRect()
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String toString()
 meth public void draw3DRect(int,int,int,int,boolean)
 meth public void drawBytes(byte[],int,int,int,int)
@@ -694,7 +697,6 @@ meth public void drawRect(int,int,int,int)
 meth public void fill3DRect(int,int,int,int,boolean)
 meth public void fillPolygon(java.awt.Polygon)
 meth public void finalize()
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 supr java.lang.Object
 
 CLSS public abstract java.awt.Graphics2D
@@ -833,7 +835,6 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()

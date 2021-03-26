@@ -276,7 +276,7 @@ public final class Manager {
                        final String text,
                        final boolean error) {
 
-        final ResultDisplayHandler displayHandler = getDisplayHandler(session);
+        final TestResultDisplayHandler displayHandler = getDisplayHandler(session);
         displayHandler.displayOutput(text, error);
         displayInWindow(session, displayHandler);
     }
@@ -290,7 +290,7 @@ public final class Manager {
     public synchronized void displaySuiteRunning(final TestSession session,
                              final String suiteName) {
 
-        final ResultDisplayHandler displayHandler = getDisplayHandler(session);
+        final TestResultDisplayHandler displayHandler = getDisplayHandler(session);
         displayHandler.displaySuiteRunning(suiteName);
         displayInWindow(session, displayHandler);
     }
@@ -304,7 +304,7 @@ public final class Manager {
     public synchronized void displaySuiteRunning(final TestSession session,
                              final TestSuite suite) {
 
-        final ResultDisplayHandler displayHandler = getDisplayHandler(session);
+        final TestResultDisplayHandler displayHandler = getDisplayHandler(session);
         displayHandler.displaySuiteRunning(suite);
         displayInWindow(session, displayHandler);
     }
@@ -334,7 +334,7 @@ public final class Manager {
 
         /* Called from the AntLogger's thread */
         report.setCompleted(completed);
-        final ResultDisplayHandler displayHandler = getDisplayHandler(session);
+        final TestResultDisplayHandler displayHandler = getDisplayHandler(session);
         displayHandler.displayReport(report);
         displayInWindow(session, displayHandler);
     }
@@ -364,7 +364,7 @@ public final class Manager {
         
         /* Called from the AntLogger's thread */
 
-        final ResultDisplayHandler displayHandler = getDisplayHandler(session);
+        final TestResultDisplayHandler displayHandler = getDisplayHandler(session);
         displayInWindow(session, displayHandler, sessionEnd);
         if (!sessionEnd) {
             displayHandler.displayMessage(message);
@@ -376,7 +376,7 @@ public final class Manager {
     /**
      */
     private void displayInWindow(final TestSession session,
-                                 final ResultDisplayHandler displayHandler) {
+                                 final TestResultDisplayHandler displayHandler) {
          displayInWindow(session, displayHandler, false);
     }
 
@@ -388,7 +388,7 @@ public final class Manager {
         "LBL_NotificationDisplayer_NoTestsExecuted_title=No tests executed for project: {0}",
         "LBL_NotificationDisplayer_detailsText=Open Test Results Window"})
     private void displayInWindow(final TestSession session,
-                                 final ResultDisplayHandler displayHandler,
+                                 final TestResultDisplayHandler displayHandler,
                                  final boolean sessionEnd) {
         final boolean firstDisplay = (testSessions.add(session) == true);
 
@@ -447,9 +447,9 @@ public final class Manager {
      *
      */
     private class Displayer implements Runnable {
-        private final ResultDisplayHandler displayHandler;
+        private final TestResultDisplayHandler displayHandler;
         private final boolean promote;
-        Displayer(final ResultDisplayHandler displayHandler,
+        Displayer(final TestResultDisplayHandler displayHandler,
                   final boolean promote) {
             this.displayHandler = displayHandler;
             this.promote = promote;
@@ -465,48 +465,50 @@ public final class Manager {
     /** singleton of the <code>ResultDisplayHandler</code> */
     // the ResultDisplayHandler holds TestSession and is referenced from other
     // places so we use WeakReference, otherwise there would be memory leak
-    private Map<TestSession,WeakReference<ResultDisplayHandler>> displayHandlers;
+    private Map<TestSession,WeakReference<TestResultDisplayHandler>> displayHandlers;
     private Semaphore lock;
     /**
      */
     @NbBundle.Messages({"Null_Session_Error=Test session passed was null"})
-    private synchronized ResultDisplayHandler getDisplayHandler(final TestSession session) {
+    private synchronized TestResultDisplayHandler getDisplayHandler(final TestSession session) {
         // just in case a client passes null as a test session catch it early here
         assert session != null : Bundle.Null_Session_Error();
-        ResultDisplayHandler displayHandler = null;
+        TestResultDisplayHandler displayHandler = null;
         if (displayHandlers != null) {
-            WeakReference<ResultDisplayHandler> reference = displayHandlers.get(session);
+            WeakReference<TestResultDisplayHandler> reference = displayHandlers.get(session);
             if (reference != null) {
                 displayHandler = reference.get();
             }
         } else {
-            displayHandlers = new WeakHashMap<TestSession,WeakReference<ResultDisplayHandler>>(7);
+            displayHandlers = new WeakHashMap<TestSession,WeakReference<TestResultDisplayHandler>>(7);
         }
 
         if (displayHandler == null) {
-            displayHandler = new ResultDisplayHandler(session);
-            createIO(displayHandler);
-            displayHandlers.put(session, new WeakReference<ResultDisplayHandler>(displayHandler));
-            final ResultDisplayHandler dispHandler = displayHandler;
-            lock = new Semaphore(1);
-            try {
-                lock.acquire(1);
-            } catch (InterruptedException e) {
-                LOGGER.log(Level.FINE, "Current thread was interrupted while acquiring a permit: {0}", e);
-            }
-            Mutex.EVENT.writeAccess(new Runnable() {
-
-                @Override
-                public void run() {
-                    StatisticsPanel comp = (StatisticsPanel) dispHandler.getDisplayComponent().getLeftComponent();
-                    dispHandler.setTreePanel(comp.getTreePanel());
-                    lock.release();
+            displayHandler = TestResultDisplayHandler.create(session);
+            displayHandlers.put(session, new WeakReference<TestResultDisplayHandler>(displayHandler));
+            TestResultDisplayHandler.Spi handlerSpi = displayHandler.getSpi();
+            if (handlerSpi instanceof ResultDisplayHandler) {
+                createIO((ResultDisplayHandler)handlerSpi);
+                lock = new Semaphore(1);
+                try {
+                    lock.acquire(1);
+                } catch (InterruptedException e) {
+                    LOGGER.log(Level.FINE, "Current thread was interrupted while acquiring a permit: {0}", e);
                 }
-            });
-            try {
-                lock.acquire(1);
-            } catch (InterruptedException e) {
-                LOGGER.log(Level.FINE, "Current thread was interrupted while acquiring a permit: {0}", e);
+                Mutex.EVENT.writeAccess(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        StatisticsPanel comp = (StatisticsPanel) ((ResultDisplayHandler)handlerSpi).getDisplayComponent().getLeftComponent();
+                        ((ResultDisplayHandler)handlerSpi).setTreePanel(comp.getTreePanel());
+                        lock.release();
+                    }
+                });
+                try {
+                    lock.acquire(1);
+                } catch (InterruptedException e) {
+                    LOGGER.log(Level.FINE, "Current thread was interrupted while acquiring a permit: {0}", e);
+                }
             }
         }
         return displayHandler;

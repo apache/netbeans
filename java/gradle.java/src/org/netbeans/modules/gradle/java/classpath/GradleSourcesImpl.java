@@ -381,9 +381,6 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
                     // #67450: avoid actually loading the nested project.
                     return false;
                 }
-                if (FileOwnerQuery.getOwner(file) != proj) {
-                    return false;
-                }
             }
             return true;
         }

@@ -23,6 +23,7 @@ import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,13 +39,16 @@ import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.api.editor.fold.FoldUtilities;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
+import org.netbeans.api.java.queries.SourceJavadocAttacher;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.progress.ProgressUtils;
 import org.netbeans.modules.java.BinaryElementOpen;
+import org.netbeans.modules.java.classfile.CodeGenerator;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.parsing.ClassParser;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.ui.ElementOpenAccessor;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -276,10 +280,125 @@ public final class ElementOpen {
         }
     }
 
+    /**
+     * Gets location of the {@link Element} corresponding to the given {@link ElementHandle}.
+     *
+     * @param cpInfo ClasspathInfo which should be used for the search
+     * @param el ElementHandle to search
+     * @param resourceName optional resource name to search
+     * @return location of the given element
+     *
+     * @since 1.58
+     */
+    public static CompletableFuture<Location> getLocation(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName) {
+        final CompletableFuture<Object[]> future = getFutureOpenInfo(cpInfo, el, resourceName, new AtomicBoolean());
+        return future.thenApply(openInfo -> {
+            if (openInfo[0] != null && (int) openInfo[1] != (-1) && (int) openInfo[2] != (-1)) {
+                FileObject file = (FileObject) openInfo[0];
+                int start = (int) openInfo[3];
+                if (start < 0) {
+                    start = (int) openInfo[1];
+                }
+                int end = (int) openInfo[4];
+                if (end < 0) {
+                    end = (int) openInfo[2];
+                }
+                return new Location(file, start, end);
+            }
+            return null;
+        });
+    }
+
+    /**
+     * Represents the location of an element. It is a range inside of a file object.
+     */
+    public static final class Location {
+
+        private final FileObject fileObject;
+        private final int startOffset;
+        private final int endOffset;
+
+        private Location(FileObject fileObject, int startOffset, int endOffset) {
+            this.fileObject = fileObject;
+            this.startOffset = startOffset;
+            this.endOffset = endOffset;
+        }
+
+        /**
+         * The location's file object.
+         *
+         * @return file object
+         */
+        public FileObject getFileObject() {
+            return fileObject;
+        }
+
+        /**
+         * The location's start offset.
+         *
+         * @return offset
+         */
+        public int getStartOffset() {
+            return startOffset;
+        }
+
+        /**
+         * The location's end offset.
+         *
+         * @return offset
+         */
+        public int getEndOffset() {
+            return endOffset;
+        }
+    }
     // Private methods ---------------------------------------------------------
 
     private static boolean isClassFile(@NonNull final FileObject file) {
         return FileObjects.CLASS.equals(file.getExt()) || ClassParser.MIME_TYPE.equals(file.getMIMEType(ClassParser.MIME_TYPE));
+    }
+
+    private static CompletableFuture<Object[]> getFutureOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, String resourceName, AtomicBoolean cancel) {
+        Object[] openInfo = getOpenInfo(cpInfo, el, cancel);
+        if (openInfo == null && resourceName != null) {
+            // try to attach sources
+            final ClassPath cp = ClassPathSupport.createProxyClassPath(
+                    cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT),
+                    cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE),
+                    cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE));
+            final FileObject resource = cp.findResource(resourceName);
+            if (resource != null) {
+                final FileObject root = cp.findOwnerRoot(resource);
+                if (root != null) {
+                    final CompletableFuture<Object[]> future = new CompletableFuture<>();
+                    SourceJavadocAttacher.attachSources(root.toURL(), new SourceJavadocAttacher.AttachmentListener() {
+                        @Override
+                        public void attachmentSucceeded() {
+                            Object[] openInfo = getOpenInfo(cpInfo, el, cancel);
+                            if (openInfo != null && (int) openInfo[1] != (-1) && (int) openInfo[2] != (-1) && openInfo[5] != null) {
+                                future.complete(openInfo);
+                            } else {
+                                attachmentFailed();
+                            }
+                        }
+
+                        @Override
+                        public void attachmentFailed() {
+                            try {
+                                FileObject generated = CodeGenerator.generateCode(cpInfo, el);
+                                if (generated != null) {
+                                    future.complete(getOpenInfo(generated, el, cancel));
+                                    return;
+                                }
+                            } catch (Exception e) {
+                            }
+                            future.complete(null);
+                        }
+                    });
+                    return future;
+                }
+            }
+        }
+        return CompletableFuture.completedFuture(openInfo);
     }
 
     private static Object[] getOpenInfo(final ClasspathInfo cpInfo, final ElementHandle<? extends Element> el, AtomicBoolean cancel) {

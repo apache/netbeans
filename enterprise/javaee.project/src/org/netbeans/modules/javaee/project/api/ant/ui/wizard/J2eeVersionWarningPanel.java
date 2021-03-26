@@ -149,29 +149,31 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
         SpecificationVersion version = defaultPlatform.getSpecification().getVersion();
         String sourceLevel = version.toString();
 
-        // no warning if 1.5 is the default for j2ee15
-        if (j2eeProfile == Profile.JAVA_EE_5 && isAcceptableSourceLevel("1.5", sourceLevel, acceptableSourceLevels)) // NOI18N
+        // no warning if 1.5 is the default for jee5
+        if (j2eeProfile == Profile.JAVA_EE_5 && isAcceptableSourceLevel("1.5", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
-
-        // no warning if 1.6 is the default for j2ee16
+        }
+        // no warning if 1.6 is the default for jee6
         if ((j2eeProfile == Profile.JAVA_EE_6_FULL || j2eeProfile == Profile.JAVA_EE_6_WEB) &&
-                isAcceptableSourceLevel("1.6", sourceLevel, acceptableSourceLevels)) // NOI18N
+                isAcceptableSourceLevel("1.6", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
-
-        // no warning if 1.7 is the default for j2ee7
+        }
+        // no warning if 1.7 is the default for jee7
         if ((j2eeProfile == Profile.JAVA_EE_7_FULL || j2eeProfile == Profile.JAVA_EE_7_WEB) &&
-                isAcceptableSourceLevel("1.7", sourceLevel, acceptableSourceLevels)) // NOI18N
+                isAcceptableSourceLevel("1.7", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
-
-        // no warning if 1.8 is the default for j2ee8
+        }
+        // no warning if 1.8 is the default for jee8
         if ((j2eeProfile == Profile.JAVA_EE_8_FULL || j2eeProfile == Profile.JAVA_EE_8_WEB) &&
-                isAcceptableSourceLevel("1.8", sourceLevel, acceptableSourceLevels)) // NOI18N
+                isAcceptableSourceLevel("1.8", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
-
-            if ((j2eeProfile == Profile.JAKARTA_EE_8_FULL || j2eeProfile == Profile.JAKARTA_EE_8_WEB) &&
-                    isAcceptableSourceLevel("1.8", sourceLevel, acceptableSourceLevels)) // NOI18N
-                return null;
-
+        }
+        // no warning if 1.8 is the default for jakartaee8
+        if ((j2eeProfile == Profile.JAKARTA_EE_8_FULL || j2eeProfile == Profile.JAKARTA_EE_8_WEB) &&
+                isAcceptableSourceLevel("1.8", sourceLevel, acceptableSourceLevels)) { // NOI18N
+            return null;
+        }
+        
         if (j2eeProfile == Profile.JAVA_EE_5) {
             JavaPlatform[] java15Platforms = getJavaPlatforms("1.5"); //NOI18N
             if (java15Platforms.length > 0) {
@@ -205,18 +207,18 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
             JavaPlatform[] java18Platforms = getJavaPlatforms("1.8"); //NOI18N
             if (java18Platforms.length > 0) {
                 return WARN_SET_JDK_8;
-           }  else {
-                    if (canSetSourceLevel("1.8")) {
-                        return WARN_SET_SOURCE_LEVEL_8;
-                    } else {
-                        return WARN_JDK_8_REQUIRED;
-                    }
+            } else {
+                if (canSetSourceLevel("1.8")) {
+                    return WARN_SET_SOURCE_LEVEL_8;
+                } else {
+                    return WARN_JDK_8_REQUIRED;
                 }
+            }
         } else if (j2eeProfile == Profile.JAKARTA_EE_8_FULL || j2eeProfile == Profile.JAKARTA_EE_8_WEB) {
             JavaPlatform[] java18Platforms = getJavaPlatforms("1.8"); //NOI18N
             if (java18Platforms.length > 0) {
                 return WARN_SET_JDK_8;
-        } else {
+            } else {
                 if (canSetSourceLevel("1.8")) {
                     return WARN_SET_SOURCE_LEVEL_8;
                 } else {

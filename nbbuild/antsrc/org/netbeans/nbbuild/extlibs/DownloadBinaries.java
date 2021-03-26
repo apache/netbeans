@@ -159,12 +159,17 @@ public class DownloadBinaries extends Task {
                                 throw new BuildException("Bad line '" + line + "' in " + manifest, getLocation());
                             }
 
+                            boolean ok;
                             if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
                                 MavenCoordinate mc = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
-                                success &= fillInFile(hashAndFile[0], mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
+                                ok = fillInFile(hashAndFile[0], mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
                             } else {
-                                success &= fillInFile(hashAndFile[0], hashAndFile[1], manifest, () -> legacyDownload(hashAndFile[0] + "-" + hashAndFile[1]));
+                                ok = fillInFile(hashAndFile[0], hashAndFile[1], manifest, () -> legacyDownload(hashAndFile[0] + "-" + hashAndFile[1]));
                             }
+                            if (!ok) {
+                                log("Failure downloading: " + line, Project.MSG_WARN);
+                            }
+                            success &= ok;
                         }
                     }
                 } catch (IOException x) {

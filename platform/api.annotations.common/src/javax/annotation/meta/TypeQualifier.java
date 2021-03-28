@@ -16,10 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package javax.annotation;
+package javax.annotation.meta;
 
-import javax.annotation.meta.When;
-
-public @interface Nonnull {
-    When when() default When.MAYBE;
+public @interface TypeQualifier {
+    Class<?> applicableTo() default Object.class;
 }

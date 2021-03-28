@@ -21,6 +21,7 @@ package org.netbeans.modules.maven.runjar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -136,7 +137,7 @@ public class RunJarStartupArgs implements LateBoundPrerequisitesChecker {
             if (mainClass.length == 0) {
                 // accept userargs, since we don't know where the division is, make it fixed in the processing.
                 joinedArgs.addAll(appArgsValue);
-                appArgsValue = null;
+                appArgsValue = Collections.emptyList();
             } else {
                 joinedArgs.addAll(Arrays.asList(mainClass));
             }

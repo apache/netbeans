@@ -52,6 +52,18 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="TestMethodPreferred">
+        <api name="CommonTestrunnerUIAPI"/>
+        <summary>Added preferred position to TestMethod</summary>
+        <version major="1" minor="24"/>
+        <date day="4" month="4" year="2021"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added preferred position to TestMethod, to represent place where the method name starts.
+        </description>
+        <class package="org.netbeans.modules.gsf.testrunner.ui.api" name="TestMethodController"/>
+    </change>
     <change id="TestResultDisplayHandler">
         <api name="CommonTestrunnerUIAPI"/>
         <summary>Added API class and SPI interface for handlers displaying test results</summary>

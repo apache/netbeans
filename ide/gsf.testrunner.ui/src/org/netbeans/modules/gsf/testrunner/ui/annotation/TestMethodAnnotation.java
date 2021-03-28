@@ -18,8 +18,9 @@
  */
 package org.netbeans.modules.gsf.testrunner.ui.annotation;
 
-import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController;
+import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
 import org.openide.text.Annotation;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
@@ -31,9 +32,9 @@ public class TestMethodAnnotation extends Annotation {
     public static final Object DOCUMENT_ANNOTATIONS_KEY = new Object() {};
     public static final Object DOCUMENT_ANNOTATION_LINES_KEY = new Object() {};
 
-    private final TestMethodController.TestMethod testMethod;
+    private final TestMethod testMethod;
 
-    public TestMethodAnnotation(TestMethodController.TestMethod testMethod) {
+    public TestMethodAnnotation(TestMethod testMethod) {
         this.testMethod = testMethod;
     }
 
@@ -43,8 +44,12 @@ public class TestMethodAnnotation extends Annotation {
     }
 
     @Override
+    @Messages({
+        "# {0} - the name of the method",
+        "SD_TestMethod=Test Method: {0}"
+    })
     public String getShortDescription() {
-        return "XXX: test method";
+        return Bundle.SD_TestMethod(testMethod.method().getMethodName());
     }
     
 }

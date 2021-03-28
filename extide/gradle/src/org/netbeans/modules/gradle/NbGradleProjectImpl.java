@@ -327,7 +327,8 @@ public final class NbGradleProjectImpl implements Project {
                 // this was explicitly invoked as project action, or problem resolution. Same level as
                 // Build project, so trust the project.
                 ProjectTrust.getDefault().trustProject(this, true);
-                GradleProject gradleProject = GradleProjectCache.loadProject(this, FULL_ONLINE, true, true);
+                GradleProjectLoader loader = getLookup().lookup(GradleProjectLoader.class);
+                GradleProject gradleProject = loader.loadProject(FULL_ONLINE, true, true);
                 LOG.log(Level.FINER, "Priming finished, reloading {0}: {1}", project);
                 fireProjectReload(false);
                 ret.complete(gradleProject);

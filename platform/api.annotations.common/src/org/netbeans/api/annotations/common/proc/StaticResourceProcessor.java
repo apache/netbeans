@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
@@ -55,6 +56,9 @@ public class StaticResourceProcessor extends AbstractProcessor {
         all.add(NullUnknown.class.getCanonicalName());
         all.add(StaticResource.class.getCanonicalName());
         all.add(SuppressWarnings.class.getCanonicalName());
+
+        // other well-known Java platform annotations
+        all.add(SupportedAnnotationTypes.class.getCanonicalName());
 
         return all;
     }

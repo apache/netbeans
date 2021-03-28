@@ -103,20 +103,28 @@ public class SubProjectDiskCache extends AbstractDiskCache<File, SubProjectInfo>
                 }
 
                 for (GradleProject child : prj.getChildren()) {
-                    path2Name.put(child.getPath(), child.getName());
-                    if (child.getDescription() != null) {
-                        path2Description.put(child.getPath(), child.getDescription());
-                    }
-                    File dir = child.getProjectDirectory();
-                    if (!dir.isAbsolute()) {
-                        dir = new File(prj.getProjectDirectory(), dir.toString());
-                    }
-                    file2Path.put(dir, child.getPath());
-                    path2File.put(child.getPath(), dir);
+                    processGradleProject(child);
                 }
             }
         }
 
+        private void processGradleProject(GradleProject prj) {
+            String path = prj.getPath();
+            path2Name.put(path, prj.getName());
+            File dir = prj.getProjectDirectory();
+            if (!dir.isAbsolute()) {
+                dir = new File(prj.getProjectDirectory(), dir.toString());
+            }
+            file2Path.put(dir, path);
+            path2File.put(path, dir);
+            if (prj.getDescription() != null) {
+                path2Description.put(path, prj.getDescription());
+            }
+            for (GradleProject child : prj.getChildren()) {
+                processGradleProject(child);
+            }
+        }
+        
         public SubProjectInfo(GradleBaseProject gbp) {
             assert gbp.isRoot() : "This shall be called only on a root project!";
             if (gbp.getSubProjects().isEmpty()) {

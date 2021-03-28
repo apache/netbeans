@@ -25,7 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import org.netbeans.modules.gradle.GradleProject;
-import org.netbeans.modules.gradle.GradleProjectLoader;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
@@ -36,6 +35,7 @@ import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
 import static org.netbeans.modules.gradle.loaders.GradleDaemon.INIT_SCRIPT;
 import static org.netbeans.modules.gradle.loaders.GradleDaemon.TOOLING_JAR;
+import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
@@ -117,7 +117,8 @@ public abstract class AbstractProjectLoader {
     static void updateSubDirectoryCache(GradleProject gp) {
         if (gp.getQuality().atLeast(EVALUATED)) {
             GradleBaseProject baseProject = gp.getBaseProject();
-            if (baseProject.isRoot()) {
+            if (baseProject.isRoot() && !GradleExperimentalSettings.getDefault().isBundledLoading()) {
+                // Bundled Gradle Project loading saves better information, do not overwrite that
                 SubProjectDiskCache spCache = SubProjectDiskCache.get(baseProject.getRootDir());
                 spCache.storeData(new SubProjectDiskCache.SubProjectInfo(baseProject));
             }

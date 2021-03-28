@@ -33,6 +33,9 @@ import java.util.Map;
 import java.util.Set;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.GradleModuleFileCache21;
+import org.netbeans.modules.gradle.cache.AbstractDiskCache.CacheEntry;
+import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
+import org.netbeans.modules.gradle.cache.SubProjectDiskCache.SubProjectInfo;
 
 /**
  * This object holds the basic information of the Gradle project.
@@ -329,19 +332,28 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
         ret.buildDir = new File(files.getProjectDir(), "build");
         ret.rootDir = files.getRootDir();
         ret.version = "unspecified";
-        StringBuilder path = new StringBuilder(":");       //NOI18N
-        if (!files.isRootProject()) {
-            Path prjPath = files.getProjectDir().toPath();
-            Path rootPath = files.getRootDir().toPath();
-            String separator = "";
-            Path relPath = rootPath.relativize(prjPath);
-            for(int i = 0; i < relPath.getNameCount() ; i++) {
-                path.append(separator);
-                path.append(relPath.getName(i));
-                separator = ":"; //NOI18N
-            }
+        CacheEntry<SubProjectInfo> structureCache = SubProjectDiskCache.get(files.getRootDir()).loadEntry();
+        if (structureCache != null) {
+            SubProjectInfo info = structureCache.getData();
+            ret.path = info.getProjectPath(files.getProjectDir());
+            ret.description = info.getProjectDescription(files.getProjectDir());
+            ret.name = info.getProjectName(files.getProjectDir());
         }
-        ret.path = path.toString();
+        if (ret.path == null) {
+            StringBuilder path = new StringBuilder(":");       //NOI18N
+            if (!files.isRootProject()) {
+                Path prjPath = files.getProjectDir().toPath();
+                Path rootPath = files.getRootDir().toPath();
+                String separator = "";
+                Path relPath = rootPath.relativize(prjPath);
+                for(int i = 0; i < relPath.getNameCount() ; i++) {
+                    path.append(separator);
+                    path.append(relPath.getName(i));
+                    separator = ":"; //NOI18N
+                }
+            }
+            ret.path = path.toString();
+        }
         ret.status = "release";
         ret.parentName = files.isRootProject() ? null : files.getRootDir().getName();
 

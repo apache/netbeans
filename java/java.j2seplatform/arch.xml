@@ -49,6 +49,17 @@
  <answer id="arch-overall">
   <p>
    Provides implementations of the Java platform SPI and the project library SPI.
+  </p>
+  <p>
+    <api category="official" group="java" name="J2SEPlatformCreator" type="export" url="@TOP@/org/netbeans/modules/java/j2seplatform/api/J2SEPlatformCreator.html">
+        API to register a JDK
+    </api>
+    and these
+    <api category="official" group="java" name="SPI" type="export" url="@TOP@/org/netbeans/modules/java/j2seplatform/spi/package-summary.html">
+        (service provide interfaces) for JDK sources and JavaDoc
+    </api>.
+  </p>
+  <p>
    Defines some formats:
   </p>
   <ul>
@@ -500,7 +511,7 @@
 -->
  <answer id="deploy-packages">
   <p>
-   No public packages.
+   Only API and SPI packages are exported.
   </p>
  </answer>
 

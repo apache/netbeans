@@ -543,12 +543,10 @@ implements FileNameMapper, URIResolver, EntityResolver {
             return delegate.size();
         }
 
-        @Override
         public Stream<? extends Resource> stream() {
             return delegate.stream();
         }
 
-        @Override
         public boolean isEmpty() {
             return delegate.isEmpty();
         }

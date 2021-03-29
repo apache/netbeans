@@ -63,6 +63,7 @@ import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import java.util.WeakHashMap;
 import javax.swing.JLabel;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.gradle.cache.AbstractDiskCache.CacheEntry;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache.QualifiedProjectInfo;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
@@ -412,6 +413,7 @@ public final class GradleProjectCache {
             if (baseProject.isRoot()) {
                 SubProjectDiskCache spCache = SubProjectDiskCache.get(baseProject.getRootDir());
                 spCache.storeData(new SubProjectDiskCache.SubProjectInfo(baseProject));
+                ProjectManager.getDefault().clearNonProjectCache();
             }
         }
     }

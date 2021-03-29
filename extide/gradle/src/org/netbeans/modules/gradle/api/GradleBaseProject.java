@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Set;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.GradleModuleFileCache21;
-import org.netbeans.modules.gradle.cache.AbstractDiskCache.CacheEntry;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache.SubProjectInfo;
 
@@ -332,12 +331,12 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
         ret.buildDir = new File(files.getProjectDir(), "build");
         ret.rootDir = files.getRootDir();
         ret.version = "unspecified";
-        CacheEntry<SubProjectInfo> structureCache = SubProjectDiskCache.get(files.getRootDir()).loadEntry();
-        if (structureCache != null) {
-            SubProjectInfo info = structureCache.getData();
-            ret.path = info.getProjectPath(files.getProjectDir());
-            ret.description = info.getProjectDescription(files.getProjectDir());
-            ret.name = info.getProjectName(files.getProjectDir());
+        SubProjectInfo structure = SubProjectDiskCache.get(files.getRootDir()).loadData();
+        if (structure != null) {
+            // Note: The structure information might be invalid, though we are just guessing here
+            ret.path = structure.getProjectPath(files.getProjectDir());
+            ret.description = structure.getProjectDescription(files.getProjectDir());
+            ret.name = structure.getProjectName(files.getProjectDir());
         }
         if (ret.path == null) {
             StringBuilder path = new StringBuilder(":");       //NOI18N

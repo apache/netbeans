@@ -19,14 +19,11 @@
 package org.netbeans.modules.gradle.loaders;
 
 import java.io.File;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import org.gradle.tooling.ProjectConnection;
+import java.util.logging.Logger;
 import org.netbeans.modules.gradle.GradleProject;
-import org.netbeans.modules.gradle.api.ModelFetcher;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
-import org.netbeans.modules.gradle.cache.AbstractDiskCache.CacheEntry;
+import org.netbeans.modules.gradle.cache.AbstractDiskCache;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache.SubProjectInfo;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
@@ -38,8 +35,7 @@ import org.openide.util.Exceptions;
  */
 public class BundleProjectLoader extends AbstractProjectLoader {
 
-
-    private CacheEntry<SubProjectInfo> structureCache;
+    private static final Logger LOGGER = Logger.getLogger(BundleProjectLoader.class.getName());
     BundleProjectLoader(ReloadContext ctx) {
         super(ctx);
     }
@@ -48,22 +44,18 @@ public class BundleProjectLoader extends AbstractProjectLoader {
     @Override
     GradleProject load() {
         File rootDir = ctx.project.getGradleFiles().getRootDir();
-        if (structureCache == null) {
-            SubProjectDiskCache spCache = SubProjectDiskCache.get(rootDir);
-            structureCache = spCache.loadEntry();
-        }
-        if (structureCache == null || !structureCache.isValid()) {
+        SubProjectDiskCache spCache = SubProjectDiskCache.get(rootDir);
+        if (!spCache.isValid()) {
             ModelCache modelCache = ModelCacheManager.getModelCache(rootDir, org.gradle.tooling.model.GradleProject.class, () -> new ModelCache(ctx.project, new ProjectStructureCachingDescriptor(rootDir)));
             try {
                 modelCache.refreshAndWait();
             } catch (InterruptedException ex) {
                 Exceptions.printStackTrace(ex);
             }
-            SubProjectDiskCache spCache = SubProjectDiskCache.get(rootDir);
-            structureCache = spCache.loadEntry();
         }
-        if (structureCache != null) {
-            ModelCache modelCache = ModelCacheManager.getModelCache(rootDir, NbProjectInfo.class, () -> new ModelCache(ctx.project, new NbProjectInfoCachingDescriptor(structureCache.getData())));
+        if (spCache.isValid()) {
+            SubProjectInfo structure = spCache.loadData();
+            ModelCache modelCache = ModelCacheManager.getModelCache(rootDir, NbProjectInfo.class, () -> new ModelCache(ctx.project, new NbProjectInfoCachingDescriptor(structure)));
             try {
                 modelCache.refreshAndWait();
             } catch (InterruptedException ex) {

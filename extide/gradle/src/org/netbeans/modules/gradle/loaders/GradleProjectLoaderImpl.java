@@ -20,6 +20,7 @@ package org.netbeans.modules.gradle.loaders;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.GradleProject;
 import org.netbeans.modules.gradle.GradleProjectLoader;
@@ -27,6 +28,7 @@ import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
+import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 
 /**
  *
@@ -35,6 +37,7 @@ import org.netbeans.modules.gradle.api.execute.RunUtils;
 public class GradleProjectLoaderImpl implements GradleProjectLoader {
 
     final Project project;
+    private static final Logger LOGGER = Logger.getLogger(GradleProjectLoaderImpl.class.getName());
 
     public GradleProjectLoaderImpl(Project project) {
         this.project = project;
@@ -42,12 +45,16 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
 
     @Override
     public GradleProject loadProject(NbGradleProject.Quality aim, boolean ignoreCache, boolean interactive, String... args) {
+        LOGGER.info("Load aiming " +aim + " for "+ project);
         GradleCommandLine cmd = new GradleCommandLine(args);
         AbstractProjectLoader.ReloadContext ctx = new AbstractProjectLoader.ReloadContext((NbGradleProjectImpl) project, aim, cmd);
         List<AbstractProjectLoader> loaders = new LinkedList<>();
 
         if (!ignoreCache) loaders.add(new DiskCacheProjectLoader(ctx));
-        loaders.add(new BundleProjectLoader(ctx));
+        if (GradleExperimentalSettings.getDefault().isBundledLoading()) {
+            loaders.add(new BundleProjectLoader(ctx));
+            loaders.add(new DiskCacheProjectLoader(ctx));
+        }
         loaders.add(new LegacyProjectLoader(ctx));
         loaders.add(new FallbackProjectLoader(ctx));
 

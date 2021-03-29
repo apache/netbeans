@@ -30,7 +30,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
-import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.spi.project.ProjectContainerProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;

@@ -28,6 +28,7 @@ import java.util.WeakHashMap;
 import org.netbeans.modules.gradle.cache.SubProjectDiskCache.SubProjectInfo;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.gradle.tooling.model.GradleProject;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.gradle.GradleProjectStructure;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 
@@ -35,7 +36,7 @@ import org.netbeans.modules.gradle.api.GradleBaseProject;
  *
  * @author lkishalmi
  */
-public class SubProjectDiskCache extends AbstractDiskCache<File, SubProjectInfo> {
+public final class SubProjectDiskCache extends AbstractDiskCache<File, SubProjectInfo> {
 
     private static final String SUBPROJECT_CACHE_FILE_NAME = ".gradle/nb-cache/subprojects.ser"; //NOI18N
     private static final int COMPATIBLE_CACHE_VERSION = 2;
@@ -71,6 +72,14 @@ public class SubProjectDiskCache extends AbstractDiskCache<File, SubProjectInfo>
         }
         return ret;
     }
+
+    @Override
+    protected boolean doStoreEntry(CacheEntry<SubProjectInfo> entry) {
+        boolean ret = super.doStoreEntry(entry);
+        ProjectManager.getDefault().clearNonProjectCache();
+        return ret;
+    }
+    
 
     public static final class SubProjectInfo implements GradleProjectStructure, Serializable {
         public static final String ROOT_PATH = ":"; //NOI18N

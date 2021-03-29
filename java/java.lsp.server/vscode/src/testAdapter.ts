@@ -23,7 +23,6 @@ import * as path from 'path';
 import { TestAdapter, TestSuiteEvent, TestEvent, TestLoadFinishedEvent, TestLoadStartedEvent, TestRunFinishedEvent, TestRunStartedEvent, TestSuiteInfo, TestInfo } from "vscode-test-adapter-api";
 import { TestSuite } from "./protocol";
 import { LanguageClient } from "vscode-languageclient";
-import { getVSCodeDownloadUrl } from "vscode-test/out/util";
 
 export class NbTestAdapter implements TestAdapter {
 

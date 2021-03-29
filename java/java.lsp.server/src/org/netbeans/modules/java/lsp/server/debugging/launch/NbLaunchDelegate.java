@@ -144,7 +144,7 @@ public abstract class NbLaunchDelegate {
                     context.setProcessExecutorHandle(e.getProgressHandle());
                 }
             });
-            TestProgressHandler testProgressHandler = ctx.getClient().getNbCodeCapabilities().hasTestResultsSupport() ? new TestProgressHandler(ctx.getClient(), Utils.toUri(toRun)) : null;
+            TestProgressHandler testProgressHandler = ctx.getClient().getNbCodeCapabilities().hasTestResultsSupport() ? new TestProgressHandler(ctx.getClient(), context.getClient(), Utils.toUri(toRun)) : null;
             Lookup launchCtx = new ProxyLookup(
                     testProgressHandler != null ? Lookups.fixed(toRun, ioContext, progress, testProgressHandler) : Lookups.fixed(toRun, ioContext, progress),
                     Lookup.getDefault()

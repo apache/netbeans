@@ -27,6 +27,8 @@ import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.debug.OutputEventArguments;
+import org.eclipse.lsp4j.debug.services.IDebugProtocolClient;
 import org.junit.Test;
 import org.netbeans.api.extexecution.print.LineConvertors;
 import org.netbeans.api.project.Project;
@@ -71,7 +73,7 @@ public class TestProgressHandlerTest extends NbTestCase {
         assertNotNull(fo);
         List<TestProgressParams> msgs = new ArrayList<>();
         MockLanguageClient mlc = new MockLanguageClient(msgs);
-        TestProgressHandler progressHandler = new TestProgressHandler(mlc, fo.toURI().toString());
+        TestProgressHandler progressHandler = new TestProgressHandler(mlc, new IDebugProtocolClient() {}, fo.toURI().toString());
         progressHandler.displaySuiteRunning(progressHandler, "TestSuiteName");
         FileObject projectDir = fo;
         Project project = new Project() {

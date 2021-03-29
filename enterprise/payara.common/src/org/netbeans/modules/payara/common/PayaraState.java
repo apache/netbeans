@@ -21,7 +21,7 @@ package org.netbeans.modules.payara.common;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.payara.tooling.PayaraStatus;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.common.status.AuthFailureStateListener;
 import org.netbeans.modules.payara.common.status.MonitoringInitStateListener;
 import org.openide.util.NbBundle;
@@ -120,12 +120,10 @@ public class PayaraState {
                     PayaraStatus.OFFLINE, PayaraStatus.STARTUP,
                     PayaraStatus.ONLINE, PayaraStatus.SHUTDOWN);
             if (added) {
-                if (instance.getVersion() != null) {
+                if (instance.getPlatformVersion() != null) {
                    AuthFailureStateListener authListener
-                           =  new AuthFailureStateListener(
-                           instance.getVersion().ordinal()
-                           >= PayaraVersion.PF_4_1_144.ordinal());
-                   PayaraStatus.addChangeListener(instance, authListener, PayaraStatus.STARTUP);
+                            = new AuthFailureStateListener(instance.getPlatformVersion().isMinimumSupportedVersion());
+                    PayaraStatus.addChangeListener(instance, authListener, PayaraStatus.STARTUP);
                     PayaraStatus.addErrorListener(instance, authListener);
                 }
                 try {

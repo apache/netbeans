@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.utils.ServerUtils;
 import org.netbeans.modules.payara.common.PayaraInstanceProvider;
 import org.openide.filesystems.FileObject;
@@ -83,17 +83,15 @@ public class AutomaticRegistration {
         String config = "PayaraEE6/Instances";
         String deployer = "deployer:pfv3ee6";
         String defaultDisplayNamePrefix = "Payara Server ";
-        PayaraVersion version = ServerUtils.getServerVersion(payaraRoot);
-        if (PayaraVersion.ge(version, PayaraVersion.PF_4_1_144)) {
-            deployer = "deployer:pfv4ee7";
-        } 
-        if (PayaraVersion.ge(version, PayaraVersion.PF_5_181)) {
-            deployer = "deployer:pfv5ee8";
-        }
-
+        PayaraPlatformVersionAPI version = ServerUtils.getPlatformVersion(payaraRoot);
         StringBuilder sb = new StringBuilder(
                 defaultDisplayNamePrefix.length() + 12);
         if (version != null) {
+            if (version.isEE8Supported()) {
+                deployer = "deployer:pfv5ee8";
+            } else if (version.isEE7Supported()) {
+                deployer = "deployer:pfv4ee7";
+            }
             sb.append(defaultDisplayNamePrefix);
             sb.append(version.toString());
         } else {

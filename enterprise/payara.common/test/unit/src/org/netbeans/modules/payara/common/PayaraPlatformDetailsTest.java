@@ -20,20 +20,23 @@
 package org.netbeans.modules.payara.common;
 
 import java.io.File;
+import java.util.Optional;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 
 /**
  *
  * @author vkraemer
  */
-public class ServerDetailsTest {
+public class PayaraPlatformDetailsTest {
 
-    public ServerDetailsTest() {
+    public PayaraPlatformDetailsTest() {
     }
 
     @BeforeClass
@@ -53,51 +56,26 @@ public class ServerDetailsTest {
     }
 
     /**
-     * Test of valueOf method, of class ServerDetails.
-     */
-    @Test
-    public void testValueOf() {
-        System.out.println("valueOf");
-        String name = "PAYARA_SERVER_4_1_144";
-        ServerDetails expResult = ServerDetails.PAYARA_SERVER_4_1_144;
-        ServerDetails result = ServerDetails.valueOf(name);
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of getVersionFromInstallDirectory method, of class ServerDetails.
+     * Test of getVersionFromInstallDirectory method, of class PayaraPlatformDetails.
      */
     @Test
     public void testGetVersionFromInstallDirectory() {
         System.out.println("getVersionFromInstallDirectory");
         File glassfishDir = null;
-        int expResult = -1;
-        int result = ServerDetails.getVersionFromInstallDirectory(glassfishDir);
-        assertEquals(expResult, result);
+        Optional<PayaraPlatformVersionAPI> result = PayaraPlatformDetails.getVersionFromInstallDirectory(glassfishDir);
+        assertFalse(result.isPresent());
     }
 
     /**
-     * Test of getVersionFromDomainXml method, of class ServerDetails.
-     */
-    @Test
-    public void testGetVersionFromDomainXml() {
-        System.out.println("getVersionFromDomainXml");
-        File domainXml = null;
-        int expResult = -1;
-        int result = ServerDetails.getVersionFromDomainXml(domainXml);
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of isInstalledInDirectory method, of class ServerDetails.
+     * Test of isInstalledInDirectory method, of class PayaraPlatformDetails.
      */
     @Test
     public void testIsInstalledInDirectory() {
         System.out.println("isInstalledInDirectory");
         File glassfishDir = null;
-        ServerDetails instance = ServerDetails.PAYARA_SERVER_4_1_144;
+        PayaraPlatformVersionAPI instance = PayaraPlatformVersion.getLatestVersion();
         boolean expResult = false;
-        boolean result = instance.isInstalledInDirectory(glassfishDir);
+        boolean result = PayaraPlatformDetails.isInstalledInDirectory(instance, glassfishDir);
         assertEquals(expResult, result);
     }
 

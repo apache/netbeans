@@ -46,6 +46,10 @@ public class FallbackProjectLoader extends AbstractProjectLoader {
 
     @Override
     public GradleProject load() {
+        return createFallbackProject(files);
+    }
+
+    public static GradleProject createFallbackProject(GradleFiles files) {
         Collection<? extends ProjectInfoExtractor> extractors = Lookup.getDefault().lookupAll(ProjectInfoExtractor.class);
         Map<Class, Object> infos = new HashMap<>();
         Set<String> problems = new LinkedHashSet<>();
@@ -58,9 +62,9 @@ public class FallbackProjectLoader extends AbstractProjectLoader {
             }
 
         }
-        return new GradleProject(NbGradleProject.Quality.FALLBACK, problems, infos.values());
+        return new GradleProject(NbGradleProject.Quality.FALLBACK, problems, infos.values());        
     }
-
+    
     @Override
     boolean isEnabled() {
         return true;

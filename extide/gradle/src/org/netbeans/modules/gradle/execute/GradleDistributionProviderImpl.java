@@ -156,7 +156,7 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
 
     @Override
     public Set<File> getWatchedResources() {
-        return Collections.singleton(project.getGradleFiles().getWrapperProperties());
+        return Collections.singleton(new File(project.getGradleFiles().getRootDir(), GradleFiles.WRAPPER_PROPERTIES));
     }
 
 }

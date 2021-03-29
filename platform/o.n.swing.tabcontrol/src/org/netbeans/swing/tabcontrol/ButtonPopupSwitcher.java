@@ -26,10 +26,13 @@ import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.*;
 import org.netbeans.swing.popupswitcher.SwitcherTableItem;
@@ -76,6 +79,7 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
     private static ButtonPopupSwitcher currentSwitcher;
     
     private final DocumentSwitcherTable pTable;
+    private final JTextField filter;
     
     private int x;
     private int y;
@@ -105,6 +109,23 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
         Arrays.sort(items);
 
         this.pTable = new DocumentSwitcherTable(displayer, items, y);
+        this.filter = new JTextField();
+        this.filter.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changed();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changed();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                changed();
+            }
+        });
         this.x = x;
         this.y = y;
     }
@@ -124,7 +145,8 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
         popup = new JPopupMenu();
         popup.setBorderPainted( false );
         popup.setBorder( BorderFactory.createEmptyBorder() );
-        popup.add( pTable );
+        popup.add(filter);
+        popup.add(pTable);
         popup.pack();
         int locationX = x - (int) pTable.getPreferredSize().getWidth();
         int locationY = y + 1;
@@ -383,7 +405,8 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
                 }
                 break;
             default:
-                switched = false;
+                filter.requestFocus();
+                switched = true;
         }
         if( switched ) {
             pTable.changeSelection( selRow, selCol, false, false );
@@ -400,6 +423,7 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
             hideCurrentPopup();
             return;
         }
+        items = filterSwitcherItems(items, filter.getText());
         Arrays.sort(items);
 
         pTable.setSwitcherItems( items, y );
@@ -407,6 +431,19 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
         int locationX = x - (int) pTable.getPreferredSize().getWidth();
         int locationY = y + 1;
         popup.setLocation( locationX, locationY );
+    }
+
+    private Item[] filterSwitcherItems(Item[] items, String filter) {
+        if (filter == null || filter.isEmpty()) {
+            return items;
+        }
+        List<Item> ret = new ArrayList<>(items.length);
+        for (Item item : items) {
+            if (item.getName().contains(filter)) {
+                ret.add(item);
+            }
+        }
+        return ret.toArray(new Item[ret.size()]);
     }
 
     @Override

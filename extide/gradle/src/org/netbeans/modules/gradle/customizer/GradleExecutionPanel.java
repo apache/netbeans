@@ -18,10 +18,7 @@
  */
 package org.netbeans.modules.gradle.customizer;
 
-import java.awt.Component;
-import java.util.MissingResourceException;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
+import javax.swing.DefaultComboBoxModel;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
@@ -42,10 +39,19 @@ import org.openide.util.NbBundle.Messages;
             + "automatically trusted.</p>",
 })
 public class GradleExecutionPanel extends javax.swing.JPanel {
-    private static final String LEVEL_PERMANENT = "Permanent"; // NOI18N
-    private static final String LEVEL_TEMPORARY = "Temporary"; // NOI18N
-    private static final String LEVEL_NONE = "None"; // NOI18N
     
+    private enum TrustLevel {
+        Permanent,
+        Temporary,
+        None;
+        
+        @Override
+        public String toString() {
+            return NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.cbTrustLevel." + name()); // NOI18N
+        }
+        
+    }
+
     Project project;
 
     /**
@@ -66,28 +72,15 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
             cbTrustLevel.setEnabled(gbp.isRoot());
             lbTrustTerms.setEnabled(gbp.isRoot());
             
+            cbTrustLevel.setModel(new DefaultComboBoxModel<>(TrustLevel.values()));
+
             if (ProjectTrust.getDefault().isTrustedPermanetly(project)) {
-                cbTrustLevel.setSelectedItem(LEVEL_PERMANENT);
+                cbTrustLevel.setSelectedItem(TrustLevel.Permanent);
             } else if (ProjectTrust.getDefault().isTrusted(project)) {
-                cbTrustLevel.setSelectedItem(LEVEL_TEMPORARY);
+                cbTrustLevel.setSelectedItem(TrustLevel.Temporary);
             } else {
-                cbTrustLevel.setSelectedItem(LEVEL_NONE);
+                cbTrustLevel.setSelectedItem(TrustLevel.None);
             }
-            
-            cbTrustLevel.setRenderer(new DefaultListCellRenderer() {
-                @Override
-                public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                    if (value == null) {
-                        value = ""; // NOI18N
-                    } else {
-                        try {
-                            value = NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.cbTrustLevel." + value.toString()); // NOI18N
-                        } catch (MissingResourceException ex) {
-                        }
-                    }
-                    return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                }
-            });
         }
     }
 
@@ -109,8 +102,6 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
 
         lbReadOnly.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/netbeans/modules/gradle/resources/info.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(lbReadOnly, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbReadOnly.text")); // NOI18N
-
-        cbTrustLevel.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Temporary", "Permanent" }));
 
         org.openide.awt.Mnemonics.setLocalizedText(lbTrustLevel, org.openide.util.NbBundle.getMessage(GradleExecutionPanel.class, "GradleExecutionPanel.lbTrustLevel.text")); // NOI18N
 
@@ -150,7 +141,7 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> cbTrustLevel;
+    private javax.swing.JComboBox<TrustLevel> cbTrustLevel;
     private javax.swing.JLabel lbReadOnly;
     private javax.swing.JLabel lbTrustLevel;
     private javax.swing.JLabel lbTrustTerms;
@@ -158,19 +149,25 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
 
     void save() {
         if (project != null) {
-            Object v = cbTrustLevel.getSelectedItem();
+            TrustLevel v = (TrustLevel)cbTrustLevel.getSelectedItem();
             if (v == null) {
-                v = LEVEL_NONE;
+                v = TrustLevel.None;
             }
-            if (LEVEL_NONE.equals(v)) {
-                ProjectTrust.getDefault().distrustProject(project);
-            } else if (LEVEL_PERMANENT.equals(v)) {
-                ProjectTrust.getDefault().trustProject(project, true);
-            } else if (LEVEL_TEMPORARY.equals(v)) {
-                if (ProjectTrust.getDefault().isTrustedPermanetly(project)) {
+            switch (v) {
+                case None:
                     ProjectTrust.getDefault().distrustProject(project);
-                }
-                ProjectTrust.getDefault().trustProject(project, false);
+                    break;
+                    
+                case Permanent:
+                    ProjectTrust.getDefault().trustProject(project, true);
+                    break;
+                    
+                case Temporary:
+                    if (ProjectTrust.getDefault().isTrustedPermanetly(project)) {
+                        ProjectTrust.getDefault().distrustProject(project);
+                    }
+                    ProjectTrust.getDefault().trustProject(project, false);
+                    break;
             }
         }
     }

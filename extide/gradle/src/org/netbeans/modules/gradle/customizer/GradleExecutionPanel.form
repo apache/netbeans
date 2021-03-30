@@ -94,17 +94,8 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="cbTrustLevel">
-      <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="3">
-            <StringItem index="0" value="None"/>
-            <StringItem index="1" value="Temporary"/>
-            <StringItem index="2" value="Permanent"/>
-          </StringArray>
-        </Property>
-      </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;TrustLevel&gt;"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="lbTrustLevel">

@@ -74,7 +74,7 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
             
             cbTrustLevel.setModel(new DefaultComboBoxModel<>(TrustLevel.values()));
 
-            if (ProjectTrust.getDefault().isTrustedPermanetly(project)) {
+            if (ProjectTrust.getDefault().isTrustedPermanently(project)) {
                 cbTrustLevel.setSelectedItem(TrustLevel.Permanent);
             } else if (ProjectTrust.getDefault().isTrusted(project)) {
                 cbTrustLevel.setSelectedItem(TrustLevel.Temporary);
@@ -163,7 +163,7 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
                     break;
                     
                 case Temporary:
-                    if (ProjectTrust.getDefault().isTrustedPermanetly(project)) {
+                    if (ProjectTrust.getDefault().isTrustedPermanently(project)) {
                         ProjectTrust.getDefault().distrustProject(project);
                     }
                     ProjectTrust.getDefault().trustProject(project, false);

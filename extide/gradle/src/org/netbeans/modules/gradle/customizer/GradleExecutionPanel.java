@@ -25,6 +25,8 @@ import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
+import static org.netbeans.modules.gradle.customizer.GradleExecutionPanel.TrustLevel.*;
+
 /**
  *
  * @author lkishalmi
@@ -40,10 +42,10 @@ import org.openide.util.NbBundle.Messages;
 })
 public class GradleExecutionPanel extends javax.swing.JPanel {
     
-    private enum TrustLevel {
-        Permanent,
-        Temporary,
-        None;
+    enum TrustLevel {
+        PERMANENT,
+        TEMPORARY,
+        NONE;
         
         @Override
         public String toString() {
@@ -75,11 +77,11 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
             cbTrustLevel.setModel(new DefaultComboBoxModel<>(TrustLevel.values()));
 
             if (ProjectTrust.getDefault().isTrustedPermanently(project)) {
-                cbTrustLevel.setSelectedItem(TrustLevel.Permanent);
+                cbTrustLevel.setSelectedItem(PERMANENT);
             } else if (ProjectTrust.getDefault().isTrusted(project)) {
-                cbTrustLevel.setSelectedItem(TrustLevel.Temporary);
+                cbTrustLevel.setSelectedItem(TEMPORARY);
             } else {
-                cbTrustLevel.setSelectedItem(TrustLevel.None);
+                cbTrustLevel.setSelectedItem(NONE);
             }
         }
     }
@@ -151,18 +153,18 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
         if (project != null) {
             TrustLevel v = (TrustLevel)cbTrustLevel.getSelectedItem();
             if (v == null) {
-                v = TrustLevel.None;
+                v = NONE;
             }
             switch (v) {
-                case None:
+                case NONE:
                     ProjectTrust.getDefault().distrustProject(project);
                     break;
                     
-                case Permanent:
+                case PERMANENT:
                     ProjectTrust.getDefault().trustProject(project, true);
                     break;
                     
-                case Temporary:
+                case TEMPORARY:
                     if (ProjectTrust.getDefault().isTrustedPermanently(project)) {
                         ProjectTrust.getDefault().distrustProject(project);
                     }

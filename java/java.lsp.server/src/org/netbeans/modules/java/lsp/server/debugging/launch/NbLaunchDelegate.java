@@ -44,6 +44,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.NbSourceProvider;
@@ -275,6 +276,36 @@ public abstract class NbLaunchDelegate {
                             : mainSource ? ActionProvider.COMMAND_RUN
                                          : ActionProvider.COMMAND_TEST;
             provider = findActionProvider(command, actionProviders, testLookup);
+            if (!mainSource) {
+                final Collection<ActionProvider> nestedAPs = findNestedActionProviders(toRun, command, testLookup);
+                if (!nestedAPs.isEmpty()) {
+                    final String finalCommand = command;
+                    final ActionProvider finalProvider = provider;
+                    provider = new ActionProvider() {
+                        @Override
+                        public String[] getSupportedActions() {
+                            return new String[] {finalCommand};
+                        }
+
+                        @Override
+                        public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
+                            return finalCommand.equals(command);
+                        }
+
+                        @Override
+                        public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
+                            if (finalCommand.equals(command)) {
+                                if (finalProvider != null) {
+                                    finalProvider.invokeAction(command, context);
+                                }
+                                for (ActionProvider nestedAP : nestedAPs) {
+                                    nestedAP.invokeAction(command, context);
+                                }
+                            }
+                        }
+                    };
+                }
+            }
         }
         if (provider == null) {
             return null;
@@ -309,5 +340,19 @@ public abstract class NbLaunchDelegate {
             }
         }
         return null;
+    }
+
+    private static Collection<ActionProvider> findNestedActionProviders(FileObject toRun, String action, Lookup enabledOnLookup) {
+        Collection<ActionProvider> actionProviders = new ArrayList<>();
+        Project prj = FileOwnerQuery.getOwner(toRun);
+        if (prj != null) {
+            for (Project containedPrj : ProjectUtils.getContainedProjects(prj, true)) {
+                ActionProvider ap = containedPrj.getLookup().lookup(ActionProvider.class);
+                if (supportsAction(ap, action) && ap.isActionEnabled(action, enabledOnLookup)) {
+                    actionProviders.add(ap);
+                }
+            }
+        }
+        return actionProviders;
     }
 }

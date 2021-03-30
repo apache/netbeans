@@ -62,14 +62,18 @@ export class NbTestAdapter implements TestAdapter {
                 this.children.push({ type: 'suite', id: suite.suiteName, label: suite.suiteName, file: suite.file ? Uri.parse(suite.file)?.path : undefined, line: suite.line, children });
             });
         }
-		this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', suite: this.testSuite });
+        if (this.children.length > 0) {
+            this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', suite: this.testSuite });
+        } else {
+            this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished' });
+        }
     }
 
     async run(tests: string[]): Promise<void> {
 		this.statesEmitter.fire(<TestRunStartedEvent>{ type: 'started', tests });
 		if (tests.length === 1) {
             if (tests[0] === '*') {
-                await commands.executeCommand('java.run.test', this.workspaceFolder.uri.toString());
+                await commands.executeCommand('java.run.test', this.workspaceFolder.uri);
                 this.statesEmitter.fire(<TestRunFinishedEvent>{ type: 'finished' });
             } else {
                 const idx = tests[0].indexOf(':');
@@ -78,9 +82,9 @@ export class NbTestAdapter implements TestAdapter {
                 if (current && current.file) {
                     const methodName = idx < 0 ? undefined : tests[0].slice(idx + 1);
                     if (methodName) {
-                        await commands.executeCommand('java.run.single', Uri.file(current.file).toString(), methodName);
+                        await commands.executeCommand('java.run.single', Uri.file(current.file), methodName);
                     } else {
-                        await commands.executeCommand('java.run.single', Uri.file(current.file).toString());
+                        await commands.executeCommand('java.run.single', Uri.file(current.file));
                     }
                     this.statesEmitter.fire(<TestRunFinishedEvent>{ type: 'finished' });
                 } else {
@@ -101,9 +105,9 @@ export class NbTestAdapter implements TestAdapter {
             if (current && current.file) {
                 const methodName = idx < 0 ? undefined : tests[0].slice(idx + 1);
                 if (methodName) {
-                    await commands.executeCommand('java.debug.single', Uri.file(current.file).toString(), methodName);
+                    await commands.executeCommand('java.debug.single', Uri.file(current.file), methodName);
                 } else {
-                    await commands.executeCommand('java.debug.single', Uri.file(current.file).toString());
+                    await commands.executeCommand('java.debug.single', Uri.file(current.file));
                 }
                 this.statesEmitter.fire(<TestRunFinishedEvent>{ type: 'finished' });
             } else {

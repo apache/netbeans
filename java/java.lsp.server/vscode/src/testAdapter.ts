@@ -58,8 +58,7 @@ export class NbTestAdapter implements TestAdapter {
         const loadedTests: any = await commands.executeCommand('java.load.workspace.tests', this.workspaceFolder.uri.toString());
         if (loadedTests) {
             loadedTests.forEach((suite: TestSuite) => {
-                const children: TestInfo[] = suite.tests ? suite.tests.map(test => ({ type: 'test', id: test.id, label: test.shortName, tooltip: test.fullName, file: test.file ? Uri.parse(test.file)?.path : undefined, line: test.line })) : [];
-                this.children.push({ type: 'suite', id: suite.suiteName, label: suite.suiteName, file: suite.file ? Uri.parse(suite.file)?.path : undefined, line: suite.line, children });
+                this.updateTests(suite, false);
             });
         }
         if (this.children.length > 0) {
@@ -131,7 +130,7 @@ export class NbTestAdapter implements TestAdapter {
 	}
 
     testProgress(suite: TestSuite): void {
-        this.updateTests(suite);
+        this.updateTests(suite, true);
         if (suite.state === 'running') {
             this.statesEmitter.fire(<TestSuiteEvent>{ type: 'suite', suite: suite.suiteName, state: suite.state });
         } else {
@@ -163,7 +162,7 @@ export class NbTestAdapter implements TestAdapter {
         }
     }
 
-    updateTests(suite: TestSuite): void {
+    updateTests(suite: TestSuite, notifyFinish: boolean): void {
         let changed = false;
         const currentSuite = this.children.find(s => s.id === suite.suiteName);
         if (currentSuite) {
@@ -208,7 +207,7 @@ export class NbTestAdapter implements TestAdapter {
             this.children.push({ type: 'suite', id: suite.suiteName, label: suite.suiteName, file: suite.file ? Uri.parse(suite.file)?.path : undefined, line: suite.line, children });
             changed = true;
         }
-        if (changed) {
+        if (notifyFinish && changed) {
             this.testsEmitter.fire(<TestLoadFinishedEvent>{ type: 'finished', suite: this.testSuite });
         }
     }

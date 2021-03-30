@@ -133,7 +133,7 @@ export class NbTestAdapter implements TestAdapter {
         this.updateTests(suite, true);
         if (suite.state === 'running') {
             this.statesEmitter.fire(<TestSuiteEvent>{ type: 'suite', suite: suite.suiteName, state: suite.state });
-        } else {
+        } else if (suite.state !== 'loaded') {
             if (suite.tests) {
                 suite.tests.forEach(test => {
                     let message;

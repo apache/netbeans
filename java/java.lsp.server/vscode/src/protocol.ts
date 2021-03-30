@@ -79,7 +79,7 @@ export interface TestSuite {
     suiteName: string;
     file?: string;
     line?: number;
-    state: 'running' | 'completed' | 'errored';
+    state: 'loaded' | 'running' | 'completed' | 'errored';
     tests?: TestCase[];
 }
 
@@ -89,7 +89,7 @@ export interface TestCase {
     fullName: string;
     file?: string;
     line?: number;
-    state: 'running' | 'passed' | 'failed' | 'skipped' | 'errored';
+    state: 'loaded' | 'running' | 'passed' | 'failed' | 'skipped' | 'errored';
     stackTrace?: string[];
 }
 

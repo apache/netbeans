@@ -20,7 +20,7 @@
 package org.netbeans.modules.maven.indexer.api;
 
 import java.util.Date;
-import static junit.framework.Assert.assertEquals;
+import java.util.Locale;
 import org.apache.maven.settings.Mirror;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
@@ -159,5 +159,25 @@ public void testNonHttpRepositoryInfos() throws Exception { //#227322
         }
     } 
 
+    public void testDefaultFreqIsWeek() {
+        Locale orig = Locale.getDefault();
+        try {
+            Locale.setDefault(Locale.ENGLISH);
+            int def = RepositoryPreferences.getDefaultIndexUpdateFrequency();
+            assertEquals("Once a week is default", RepositoryPreferences.FREQ_ONCE_WEEK, def);
+        } finally {
+            Locale.setDefault(orig);
+        }
+    }
 
+    public void testBrandingFreqToNever() {
+        Locale orig = Locale.getDefault();
+        try {
+            Locale.setDefault(new Locale("te", "ST"));
+            int def = RepositoryPreferences.getDefaultIndexUpdateFrequency();
+            assertEquals("Branded to never", RepositoryPreferences.FREQ_NEVER, def);
+        } finally {
+            Locale.setDefault(orig);
+        }
+    }
 }

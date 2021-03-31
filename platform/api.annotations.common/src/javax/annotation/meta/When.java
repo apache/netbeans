@@ -18,6 +18,13 @@
  */
 package javax.annotation.meta;
 
+/** Compatibility layer for {@link org.netbeans.api.annotations.common}.
+ * This is a transitively referenced JSR-305 element from other common NetBeans
+ * annotations. Don't reference this item directly. Rather use one of the
+ * pre-configured {@link org.netbeans.api.annotations.common} annotations.
+ * 
+ * @since 1.40
+ */
 public enum When {
     MAYBE, ALWAYS, UNKNOWN
 }

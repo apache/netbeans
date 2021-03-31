@@ -335,7 +335,12 @@ public final class RepositoryPreferences {
     }
 
     public static int getIndexUpdateFrequency() {
-        int defaultFrequency = getDefaultIndexUpdateFrequency();
+        int defaultFrequency;
+        if (Boolean.getBoolean("netbeans.full.hack")) { // NOI18N
+            defaultFrequency = FREQ_NEVER;
+        } else {
+            defaultFrequency = getDefaultIndexUpdateFrequency();
+        }
         return getPreferences().getInt(PROP_INDEX_FREQ, defaultFrequency);
     }
 
@@ -344,13 +349,7 @@ public final class RepositoryPreferences {
         "DEFAULT_UPDATE_FREQ=0"
     })
     static int getDefaultIndexUpdateFrequency() throws NumberFormatException {
-        final int defaultFrequency;
-        if (Boolean.getBoolean("netbeans.full.hack")) { // NOI18N
-            defaultFrequency = FREQ_NEVER;
-        } else {
-            defaultFrequency = Integer.parseInt(Bundle.DEFAULT_UPDATE_FREQ());
-        }
-        return defaultFrequency;
+        return Integer.parseInt(Bundle.DEFAULT_UPDATE_FREQ());
     }
 
     /**
@@ -366,7 +365,15 @@ public final class RepositoryPreferences {
      * @return 
      */
     public static boolean isIndexRepositories() {
-        return getPreferences().getBoolean(PROP_INDEX, true);
+        return getPreferences().getBoolean(PROP_INDEX, getDefaultIndexRepositories());
+    }
+
+    @NbBundle.Messages({
+        "# true or false:",
+        "DEFAULT_CREATE_INDEX=true"
+    })
+    static boolean getDefaultIndexRepositories() {
+        return Boolean.valueOf(Bundle.DEFAULT_CREATE_INDEX());
     }
 
     public static Date getLastIndexUpdate(String repoId) {

@@ -212,6 +212,13 @@
             ExplicitProcessParameters</a> instance(s) in the action's Lookup. See <a href="@org-netbeans-modules-extexecution-base@/org/netbeans/api/extexecution/base/ExplicitProcessParameters.html">
             ExplicitProcessParameters</a> javadoc for more details.
       </api>
+      <api category="devel" group="branding" name="org.netbeans.modules.maven.indexer.api.DEFAULT_CREATE_INDEX" type="export">
+          Brand the <code>DEFAULT_CREATE_INDEX</code> key in
+          <code>org.netbeans.modules.maven.indexer.api.Bundle</code> file
+          with one of the values <code>true</code> or <code>false</code>
+          to control (usually to disable with <code>DEFAULT_CREATE_INDEX=false</code>)
+          the default behavior automatic maven index downloading.
+      </api> 
       <api category="devel" group="branding" name="org.netbeans.modules.maven.indexer.api.DEFAULT_UPDATE_FREQ" type="export">
           Brand the <code>DEFAULT_UPDATE_FREQ</code> key in
           <code>org.netbeans.modules.maven.indexer.api.Bundle</code> file

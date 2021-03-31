@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.mx.project;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -36,11 +37,22 @@ public final class ParseSuitesTest extends NbTestCase {
     }
 
     public void testParseThemAll() throws IOException {
+        assertSuitePys(getDataDir(), 14);
+    }
+
+    public static void main(String... args) throws IOException {
+        if (args.length == 0) {
+            throw new IOException("Specify parameter to directory with suite.py files you want to verify!");
+        }
+        assertSuitePys(new File(args[0]), -1);
+    }
+
+    private static void assertSuitePys(final File dir, final int expected) throws IOException {
         StringWriter s = new StringWriter();
         PrintWriter pw = new PrintWriter(s);
         int cnt[] = { 0 };
         int error[] = { 0 };
-        Files.walkFileTree(getDataDir().toPath(), new FileVisitor<Path>() {
+        Files.walkFileTree(dir.toPath(), new FileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path t, BasicFileAttributes bfa) throws IOException {
                 return FileVisitResult.CONTINUE;
@@ -75,6 +87,8 @@ public final class ParseSuitesTest extends NbTestCase {
         });
 
         assertEquals(s.toString(), 0, error[0]);
-        assertEquals("Parsed all suites", 14, cnt[0]);
+        if (expected >= 0) {
+            assertEquals(s.toString(), expected, cnt[0]);
+        }
     }
 }

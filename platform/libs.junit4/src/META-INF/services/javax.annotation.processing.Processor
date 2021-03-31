@@ -14,4 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-25EA2E8B0C338A877313BD4672D3FE056EA78F0D com.google.code.findbugs:jsr305:3.0.2
+#
+org.netbeans.libs.junit4.NbJUnitProcessor

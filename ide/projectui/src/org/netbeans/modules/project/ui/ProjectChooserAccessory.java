@@ -31,6 +31,7 @@ import java.net.URI;
 import java.text.Collator;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -346,7 +347,12 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
         for (Project p : projects) {
             final Lookup lkp = p.getLookup();
             final ActionProvider ap = lkp.lookup(ActionProvider.class);
-            if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_PRIME, lkp)) {
+            if (ap == null) {
+                // a Project without any actions ? Most probably ergonomics-proxy, count it in!
+                cnt++;
+            } else if (
+                Arrays.asList(ap.getSupportedActions()).contains(ActionProvider.COMMAND_PRIME) &&
+                ap.isActionEnabled(ActionProvider.COMMAND_PRIME, lkp)) {
                 cnt++;
             }
         }

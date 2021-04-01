@@ -4,7 +4,7 @@
 	"description": "Apache NetBeans Language Server Extension for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
-	"version": "12.3.0",
+	"version": "12.3.9",
 	"preview": true,
 	"repository": {
 		"type": "git",
@@ -110,20 +110,20 @@
 								"default": "internalConsole"
 							},
 							"args": {
-                                                            "type": [
-                                                                "string",
-                                                                "null"
-                                                            ],
-                                                            "description": "Arguments for the executed class",
-                                                            "default": null
-                                                        },
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "Arguments for the executed class",
+								"default": null
+							},
 							"vmArgs": {
-                                                            "type": [
-                                                                "string",
-                                                                "null"
-                                                            ],
-                                                            "description": "Arguments for the Java VM",
-                                                            "default": null
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "Arguments for the Java VM",
+								"default": null
 							}
 						}
 					}

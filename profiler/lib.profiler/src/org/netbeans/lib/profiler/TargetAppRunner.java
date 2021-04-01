@@ -194,6 +194,10 @@ public class TargetAppRunner implements CommonConstants {
         return settings;
     }
 
+    public ProfilingPointsProcessor getProfilingPointsProcessor() {
+        return profilerClient.getProfilingPointsProcessor();
+    }
+
     public ProfilingSessionStatus getProfilingSessionStatus() {
         return status;
     }

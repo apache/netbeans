@@ -28,7 +28,7 @@ import java.util.List;
  * This class represents java.lang.Class instances on the heap.
  * @author Tomas Hurka
  */
-public interface JavaClass {
+public interface JavaClass extends Type {
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
     /**
@@ -185,5 +185,7 @@ public interface JavaClass {
      * Speed: fast
      * @return heap
      */
-    Heap getHeap();
+    default Heap getHeap() {
+        return null;
+    }
 }

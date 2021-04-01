@@ -20,6 +20,7 @@
 package org.netbeans.lib.profiler.heap;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -58,7 +59,9 @@ public interface Heap {
      * @param instance {@link Instance} whose associated list of {@link GCRoot} is to be returned.
      * @return list of {@link GCRoot} for corresponding instance or empty list if instance is not GC root.
      */
-    Collection<GCRoot> getGCRoots(Instance instance);
+    default Collection<GCRoot> getGCRoots(Instance instance) {
+        return Collections.singleton(getGCRoot(instance));
+    }
 
     /**
      * returns list of all GC roots.
@@ -143,4 +146,6 @@ public interface Heap {
 
     boolean isRetainedSizeComputed();
     boolean isRetainedSizeByClassComputed();
+
+    GCRoot getGCRoot(Instance instance_2);
 }

@@ -176,6 +176,13 @@ class HprofHeap implements Heap {
         }
         return bigObjects;
     }
+
+    public GCRoot getGCRoot(Instance instance) {
+        for (GCRoot root : getGCRoots(instance)) {
+            return root;
+        }
+        return null;
+    }
     
     public Collection<GCRoot> getGCRoots(Instance instance) {
        Long instanceId = Long.valueOf(instance.getInstanceId());
@@ -195,7 +202,7 @@ class HprofHeap implements Heap {
         }
         return gcRoots.getGCRoots();
     }
-
+    
     public Instance getInstanceByID(long instanceID) {
         if (instanceID == 0L) {
             return null;

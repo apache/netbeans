@@ -407,6 +407,11 @@ public class ProfilerClient implements CommonConstants {
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
+    public ProfilerClient(ProfilerEngineSettings settings, ProfilingSessionStatus status, AppStatusHandler ash,
+                          AppStatusHandler.ServerCommandHandler sch) {
+        this(settings, status, ash, null, sch);
+    }
+
     public ProfilerClient(ProfilerEngineSettings settings, ProfilingSessionStatus status,
             AppStatusHandler ash, ProfilingPointsProcessor ppp,
                           AppStatusHandler.ServerCommandHandler sch) {

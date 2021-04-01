@@ -51,7 +51,7 @@ import static org.netbeans.lib.profiler.global.CommonConstants.JDK_19_STRING;
  * @author Misha Dmitriev
  * @author Ian Formanek
  */
-public class MiscUtils {
+public class MiscUtils implements CommonConstants {
     //~ Static fields/initializers -----------------------------------------------------------------------------------------------
 
     // -----

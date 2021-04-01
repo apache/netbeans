@@ -449,6 +449,11 @@ public class PresoObjAllocCCTNode extends CCTNode {
         }
     }
 
+    @Deprecated
+    protected static void checkMethodIdForNodeFromVM(RuntimeMemoryCCTNode rtNode) {
+        checkMethodIdForNodeFromVM(JMethodIdTable.getDefault(), rtNode);
+    }
+    
     protected static void checkMethodIdForNodeFromVM(JMethodIdTable table, RuntimeMemoryCCTNode rtNode) {
         if (rtNode.methodId != 0) {
             table.checkMethodId(rtNode.methodId);

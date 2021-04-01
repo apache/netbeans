@@ -142,7 +142,7 @@ public class CPUResultsSnapshot extends ResultsSnapshot {
     protected PrestimeCPUCCTNode[] rootNode; // Per-view root nodes
     protected CPUCCTContainer[][] threadCCTContainers; // [method|class|package aggregation level][0-nThreads] -> CPUCCTContainer
     protected boolean collectingTwoTimeStamps;
-    protected InstrumentationFilter filter;
+    InstrumentationFilter filter;
 
     // Number of instrumented methods - may be smaller than the size of the above arrays
     protected int nInstrMethods;

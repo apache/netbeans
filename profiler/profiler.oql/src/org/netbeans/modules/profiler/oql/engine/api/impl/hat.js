@@ -29,6 +29,7 @@ var FieldValue = Java.type("org.netbeans.lib.profiler.heap.FieldValue");
 var GCRoot = Java.type("org.netbeans.lib.profiler.heap.GCRoot");
 
 var snapshot;
+var classWrapperCache;
 
 /**
  * This is JavaScript interface for heap analysis using HAT
@@ -79,15 +80,15 @@ function filterEnumeration(e, func, wrap) {
     return new java.util.Iterator() {
         hasNext: function() {
             findNext();
-            return next != undefined;
+            return next !== undefined;
         },
 
         next: function() {
-            if (next == undefined) {
+            if (next === undefined) {
                 // user may not have called hasMoreElements?
                 findNext();
             }
-            if (next == undefined) {
+            if (next === undefined) {
                 throw "NoSuchElementException";
             }
             var res = next;
@@ -124,15 +125,15 @@ function filterIterator(e, func, wrap) {
     return new java.util.Iterator() {
         hasNext: function() {
             findNext();
-            return next != undefined;
+            return next !== undefined;
         },
 
         next: function() {
-            if (next == undefined) {
+            if (next === undefined) {
                 // user may not have called hasMoreElements?
                 findNext();
             }
-            if (next == undefined) {
+            if (next === undefined) {
                 throw "NoSuchElementException";
             }
             var res = next;
@@ -160,7 +161,7 @@ var emptyEnumeration = new java.util.Enumeration() {
 function wrapRoot(root) {
     if (root) {
         return {
-            id: root.kind,
+            id: root.instance.getInstanceId(),
             description: "Reference " + root.kind,
             referrer: wrapJavaValue(root.instance),
             type: root.kind,
@@ -224,7 +225,7 @@ function JavaClassProto() {
      *                 default is true.
      */
     this.subclasses = function(indirect) {
-        if (indirect == undefined) indirect = true;
+        if (indirect === undefined) indirect = true;
         var classes = wrapIterator(jclass(this).subClasses.iterator(), true);
         var res = new Array();
         while (classes.hasMoreElements()) {
@@ -251,7 +252,7 @@ var theJavaClassProto = new JavaClassProto();
 // Script wrapper for HAT model objects, values.
 // wraps a Java value as appropriate for script object
 function wrapJavaValue(thing) {
-    if (thing == null || thing == undefined) {
+    if (thing === null || thing === undefined) {
         return null;
     }
 
@@ -262,16 +263,16 @@ function wrapJavaValue(thing) {
         var type = thing.field.type;
 
         // map primitive values to closest JavaScript primitives
-        if (type.name == "boolean") {
-            return thing.value == "true";
-        } else if (type.name == "char") {
+        if (type.name === "boolean") {
+            return thing.value === "true";
+        } else if (type.name === "char") {
             return thing.value + '';
-        } else if (type.name == "float" ||
-            type.name == "double" ||
-            type.name == "byte" ||
-            type.name == "short" ||
-            type.name == "int" ||
-            type.name == "long"){
+        } else if (type.name === "float" ||
+            type.name === "double" ||
+            type.name === "byte" ||
+            type.name === "short" ||
+            type.name === "int" ||
+            type.name === "long"){
             return java.lang.Double.parseDouble(thing.value);
         } else {
             // wrap Java object as script object
@@ -292,7 +293,11 @@ function javaObject(jobject) {
     //        print(jobject.getClass());
     if (jobject instanceof JavaClass) {
         //            print("wrapping as Class");
-        return new JavaClassWrapper(jobject);
+        var classId = jobject.getJavaClassId();
+        if (classWrapperCache[classId] === undefined) {
+            classWrapperCache[classId] = new JavaClassWrapper(jobject);
+        }
+        return classWrapperCache[classId];
     } else if (jobject instanceof ObjectArrayInstance) {
         //            print("wrapping as ObjectArray");
         return new JavaObjectArrayWrapper(jobject);
@@ -310,58 +315,67 @@ function javaObject(jobject) {
 
 // returns wrapper for Java instances
 function JavaObjectWrapper(instance) {
-    var things = instance.fieldValues;
+    var things;
     var fldValueCache = new Array();
 
     // instance fields can be accessed in natural syntax
     return new JSAdapter() {
         __getIds__ : function() {
+            if (things === undefined) {
+                things = instance.getJavaClass().getFields();
+            }
             var res = new Array(things.size());
             for(var j=0;j<things.size();j++) {
-                res[j] = things.get(j).field.name;
+                res[j] = things.get(j).getName();
             }
             return res;
         },
         __has__ : function(name) {
-            for (var i=0;i<things.size();i++) {
-                if (name == things.get(i).field.name) return true;
+            if  (name === 'clazz' || name === 'toString' ||
+            name === 'id' || name === 'wrapped-object' || name === 'statics') {
+                return true;
             }
-            return name == 'clazz' || name == 'toString' ||
-            name == 'id' || name == 'wrapped-object' || name == 'statics';
+            if (things === undefined) {
+                things = instance.getJavaClass().getFields();
+            }
+            for (var i=0;i<things.size();i++) {
+                if (name == things.get(i).getName()) return true;
+            }
+            return false;
         },
         __get__ : function(name) {
-            if (name == 'clazz') {
-                if (fldValueCache[name] == undefined) {
-                    fldValueCache[name] = wrapJavaObject(instance.javaClass);
+            if (name === 'clazz') {
+                if (fldValueCache[name] === undefined) {
+                    fldValueCache[name] = wrapJavaObject(instance.getJavaClass());
                 }
                 return fldValueCache[name];
-            } else if (name == 'statics') {
-                if (fldValueCache[name] == undefined) {
-                    var clz = wrapJavaObject(instance.javaClass);
-                    if (clz != undefined) {
+            } else if (name === 'statics') {
+                if (fldValueCache[name] === undefined) {
+                    var clz = wrapJavaObject(instance.getJavaClass());
+                    if (clz !== undefined) {
                         fldValueCache[name] = clz.statics;
                     } else {
                         fldValueCache[name] = null;
                     }
                 }
                 return fldValueCache[name];
-            } else if (name == 'id') {
-                if (fldValueCache[name] == undefined) {
-                    fldValueCache[name] = instance.instanceId;
+            } else if (name === 'id') {
+                if (fldValueCache[name] === undefined) {
+                    fldValueCache[name] = instance.getInstanceId();
                 }
                 return fldValueCache[name];
-            } else if (name == 'wrapped-object') {
+            } else if (name === 'wrapped-object') {
                 return instance;
             } else {
-                if (fldValueCache["_$"+name] == undefined) {
+                if (fldValueCache["_$"+name] === undefined) {
                     fldValueCache["_$"+name] = wrapJavaObject(instance.getValueOfField(name));
                 }
                 return fldValueCache["_$"+name];
             }
         },
         __call__: function(name) {
-            if (name == 'toString') {
-                if (instance.javaClass.name == "java.lang.String") {
+            if (name === 'toString') {
+                if (instance.getJavaClass().getName() === "java.lang.String") {
                     return snapshot.valueString(instance);
                 }
                 return instance.toString();
@@ -390,13 +404,13 @@ function JavaClassWrapper(jclass) {
         },
         __has__ : function(name) {
             for (var i=0;i<static_fields.size();i++) {
-                if (name == static_fields.get(i).field.name) {
+                if (name === static_fields.get(i).field.name) {
                     return true;
                 }					
             }
         },
         __get__ : function(name) {
-            if (fldValueCache["_$"+name] == undefined) {
+            if (fldValueCache["_$"+name] === undefined) {
                 var result;
                 result = wrapJavaObject(jclass.getValueOfStaticField(name));
                 fldValueCache["_$"+name] = result;
@@ -404,7 +418,7 @@ function JavaClassWrapper(jclass) {
             return fldValueCache["_$"+name];
         },
         __call__: function(name) {
-            if (name == 'toString') {
+            if (name === 'toString') {
                 return jclass.toString();
             } else {
                 return undefined;
@@ -429,7 +443,7 @@ function JavaClassWrapper(jclass) {
 }
 
 for (var i in theJavaClassProto) {
-    if (typeof theJavaClassProto[i] == 'function') {
+    if (typeof theJavaClassProto[i] === 'function') {
        JavaClassWrapper.prototype[i] = theJavaClassProto[i];
     }
 }
@@ -450,35 +464,35 @@ function JavaObjectArrayWrapper(array) {
         },
         __has__: function(name) {
             return (name >= 0 && name < elements.size())  ||
-            name == 'length' || name == 'clazz' ||
-            name == 'toString' || name == 'wrapped-object';
+            name === 'length' || name === 'clazz' ||
+            name === 'toString' || name === 'wrapped-object';
         },
         __get__ : function(name) {
             if (name >= 0 && name < elements.size()) {
                 return wrapJavaValue(elements.get(name));
-            } else if (name == 'id') {
-                if (fldValueCache[name] == undefined) {
+            } else if (name === 'id') {
+                if (fldValueCache[name] === undefined) {
                     fldValueCache[name] = array.instanceId;
                 }
                 return fldValueCache[name];
-            } else if (name == 'length') {
-                if (fldValueCache["len"] == undefined) {
+            } else if (name === 'length') {
+                if (fldValueCache["len"] === undefined) {
                     fldValueCache["len"] = elements.size();
                 }
                 return fldValueCache["len"];
-            } else if (name == 'clazz') {
-                if (fldValueCache[name] == undefined) {
+            } else if (name === 'clazz') {
+                if (fldValueCache[name] === undefined) {
                     fldValueCache[name] = wrapJavaObject(array.javaClass);
                 }
                 return fldValueCache[name];
-            } else if (name == 'wrapped-object') {
+            } else if (name === 'wrapped-object') {
                 return array;
             } else {
                 return undefined;
             }				
         },
         __call__: function(name) {
-            if (name == 'toString') {
+            if (name === 'toString') {
                 return array.toString();
             } else {
                 return undefined;
@@ -503,23 +517,23 @@ function JavaValueArrayWrapper(array) {
         },
         __has__: function(name) {
             return (name >= 0 && name < elements.size()) ||
-            name == 'length' || name == 'clazz' ||
-            name == 'toString' || name == 'wrapped-object';
+            name === 'length' || name === 'clazz' ||
+            name === 'toString' || name === 'wrapped-object';
         },
         __get__: function(name) {
             if (name >= 0 && name < elements.size()) {
                 return elements.get(name);
             }
 
-            if (name == 'length') {
-                if (fldValueCache["len"] == undefined) {
+            if (name === 'length') {
+                if (fldValueCache["len"] === undefined) {
                     fldValueCache["len"] = elements.size();
                 }
                 return fldValueCache["len"];
-            } else if (name == 'wrapped-object') {
+            } else if (name === 'wrapped-object') {
                 return array;
-            } else if (name == 'clazz') {
-                if (fldValueCache[name] == undefined) {
+            } else if (name === 'clazz') {
+                if (fldValueCache[name] === undefined) {
                     fldValueCache[name] = wrapJavaObject(array.javaClass);
                 }
                 return fldValueCache[name];
@@ -528,8 +542,8 @@ function JavaValueArrayWrapper(array) {
             }
         },
         __call__: function(name) {
-            if (name == 'toString') {
-                if (array.javaClass.name == 'char[]') {
+            if (name === 'toString') {
+                if (array.javaClass.name === 'char[]') {
                         return snapshot.valueString(array);
                     }
                 return array.toString();
@@ -542,7 +556,7 @@ function JavaValueArrayWrapper(array) {
 
 // wrap Java object with appropriate script object
 function wrapJavaObject(thing) {
-    if (thing == null) return null;
+    if (thing === null) return null;
     
     return javaObject(thing);
 }
@@ -567,10 +581,10 @@ function unwrapJavaObject(jobject) {
             //            print(typeof(jobject));
             var orig = jobject;
             jobject = orig["wrapped-object"];
-            if (jobject == undefined) {
+            if (jobject === undefined) {
                 jobject = orig.wrapped;
             }
-            if (jobject == undefined) {
+            if (jobject === undefined) {
                 jobject = orig;
             }
         } catch (e) {
@@ -603,7 +617,7 @@ function unwrapArray(jsobject) {
 function unwrapJavaObjectRes(jobject) {
     var ret = unwrapJavaObject(jobject);
 
-    if (ret == jobject) {
+    if (ret === jobject) {
         return null;
     }
     return ret;
@@ -626,11 +640,11 @@ function unwrapJavaObjectRes(jobject) {
  */
 function wrapHeapSnapshot(heap) {
     function getClazz(clazz) {
-        if (clazz == undefined) clazz = "java.lang.Object";
+        if (clazz === undefined) clazz = "java.lang.Object";
         var type = typeof(clazz);
-        if (type == "string") {
+        if (type === "string") {
             clazz = heap.findClass(clazz);
-        } else if (type == "object") {
+        } else if (type === "object") {
             clazz = unwrapJavaObject(clazz);
         } else {
             throw "class expected";;
@@ -639,6 +653,7 @@ function wrapHeapSnapshot(heap) {
     }
 
     snapshot = heap;
+    classWrapperCache = new Array();
 
     // return heap as a script object with useful methods.
     return {
@@ -653,7 +668,7 @@ function wrapHeapSnapshot(heap) {
          * @param callback function to be called.
          */
         forEachClass: function(callback) {
-            if (callback == undefined) callback = print;
+            if (callback === undefined) callback = print;
             var classes = this.snapshot.classes;
             while (classes.hasNext() && !cancelled.get()) {
                 var wrapped = wrapJavaObject(classes.next());
@@ -690,8 +705,8 @@ function wrapHeapSnapshot(heap) {
          *        are included or not. optional, default is true.
          */
         forEachObject: function(callback, clazz, includeSubtypes) {
-            if (includeSubtypes == undefined) includeSubtypes = true;
-            if (callback == undefined) callback = print;
+            if (includeSubtypes === undefined) includeSubtypes = true;
+            if (callback === undefined) callback = print;
             clazz = getClazz(clazz);
 
             if (clazz) {
@@ -718,9 +733,9 @@ function wrapHeapSnapshot(heap) {
          *        filter expression.
          */
         objects: function(clazz, includeSubtypes, where) {
-            if (includeSubtypes == undefined) includeSubtypes = true;
+            if (includeSubtypes === undefined) includeSubtypes = true;
             if (where) {
-                if (typeof(where) == 'string') {
+                if (typeof(where) === 'string') {
                     where = new Function("it", "return " + where);
                 }
             }
@@ -786,7 +801,7 @@ function wrapHeapSnapshot(heap) {
          *             weak references or not. default is false.
          */
         livepaths: function (jobject, weak) {
-            if (weak == undefined) {
+            if (weak === undefined) {
                 weak = false;
             }
 
@@ -835,24 +850,24 @@ function wrapHeapSnapshot(heap) {
                     },
                     __has__ : function (name) {
                         return (name >= 0 && name < path.length) ||
-                        name == 'length' || name == 'toHtml' ||
-                        name == 'toString' || name == 'wrapped-object';
+                        name === 'length' || name === 'toHtml' ||
+                        name === 'toString' || name === 'wrapped-object';
                     },
                     __get__ : function(name) {
                         if (name >= 0 && name < path.length) {
                             return path[name];
-                        } else if (name == 'length') {
+                        } else if (name === 'length') {
                             return path.length;
-                        } else if (name == 'wrapped-object') {
+                        } else if (name === 'wrapped-object') {
                             return refChain;
                         } else {
                             return undefined;
                         }
                     },
                     __call__: function(name) {
-                        if (name == 'toString') {
+                        if (name === 'toString') {
                             return computeDescription(false);
-                        } else if (name == 'toHtml') {
+                        } else if (name === 'toHtml') {
                             return computeDescription(true);
                         }else {
                             return undefined;
@@ -955,7 +970,7 @@ function forEachReferee(callback, jobject) {
  * @param o1, o2 objects to compare for identity
  */
 function identical(o1, o2) {
-    return objectid(o1) == objectid(o2);
+    return objectid(o1) === objectid(o2);
 }
 
 /**
@@ -984,7 +999,7 @@ function objectid(jobject) {
  */
 function printAllocTrace(jobject) {
     var frames = this.allocTrace(jobject);
-    if (frames == null || frames.length == 0) {
+    if (frames === null || frames.length === 0) {
         print("allocation site trace unavailable for " + 
             objectid(jobject));
         return;
@@ -993,7 +1008,7 @@ function printAllocTrace(jobject) {
     for (var i in frames) {
         var frame = frames[i];
         var src = frame.sourceFileName;
-        if (src == null) src = '<unknown source>';
+        if (src === null) src = '<unknown source>';
         print('\t' + frame.className + "." +
             frame.methodName + '(' + frame.methodSignature + ') [' +
             src + ':' + frame.lineNumber + ']');
@@ -1008,7 +1023,7 @@ function printAllocTrace(jobject) {
  */
 function referrers(jobject, weak) {
     try {
-        if (weak == undefined) {
+        if (weak === undefined) {
             weak = false
         }
         jobject = unwrapJavaObject(jobject);
@@ -1028,7 +1043,7 @@ function referrers(jobject, weak) {
  */
 function referees(jobject, weak) {
     try {
-        if (weak == undefined) {
+        if (weak === undefined) {
             weak = false;
         }
         jobject = unwrapJavaObject(jobject);
@@ -1050,9 +1065,9 @@ function referees(jobject, weak) {
  *                 written as class_name.field_name form.
  */
 function reachables(jobject, excludes) {
-    if (excludes == undefined) {
+    if (excludes === undefined) {
         excludes = null;
-    } else if (typeof(excludes) == 'string') {
+    } else if (typeof(excludes) === 'string') {
         var st = new java.util.StringTokenizer(excludes, ",");
         var excludedFields = new Array();
         while (st.hasMoreTokens() && !cancelled.get()) {
@@ -1170,16 +1185,16 @@ function rsizeof(jobject) {
  * @param obj object for which HTML string is returned.
  */
 function toHtml(obj) {
-    if (obj == null) {
+    if (obj === null) {
         return "null";
     } 
 
-    if (obj == undefined) {
+    if (obj === undefined) {
         return "undefined";
     } 
     //print("tohtml "+typeof(obj));
     var tmp = unwrapJavaObject(obj);
-    if (tmp != undefined) {
+    if (tmp !== undefined) {
         //print("1");
         if (tmp instanceof JavaClass) {
             //print("2");
@@ -1216,7 +1231,7 @@ function toHtml(obj) {
             //print("6");
             // if the object has a toHtml function property
             // just use that...
-            if (typeof(obj.toHtml) == 'function') {
+            if (typeof(obj.toHtml) === 'function') {
                 //print("7");
                 return obj.toHtml();
             } else {
@@ -1275,7 +1290,7 @@ function wrapIterator(itr, wrap) {
         return itr; // already wrapped
     } else if (itr instanceof org.netbeans.lib.profiler.heap.ArrayDump) {
         return wrapJavaObject(itr);
-    } else if (itr.constructor == JavaClassProto && !(itr instanceof JSAdapter)) {
+    } else if (itr.constructor === JavaClassProto && !(itr instanceof JSAdapter)) {
         var arr = new Array();
         arr[0] = itr;
         return arr;
@@ -1311,21 +1326,21 @@ function toArray(obj) {
 }
 
 function top(array, code, num) {
-    if (array == undefined) {
+    if (array === undefined) {
         return array;
     }
     var func;
-    if (code == undefined) {
+    if (code === undefined) {
         func = function(lhs, rhs) {
             return 1; // first-come order
         }
-    } else if (typeof(code) == 'string') {
+    } else if (typeof(code) === 'string') {
         func = new Function("lhs", "rhs", "return " + code);
     } else {
         func = code;
     }
 
-    if (num == undefined) {
+    if (num === undefined) {
         num = 10;
     }
     array = wrapIterator(array, true);
@@ -1432,7 +1447,7 @@ function concat(array1, array2) {
  * 'array' -> array that is being iterated
  */
 function count(array, code) {
-    if (code == undefined) {
+    if (code === undefined) {
         return length(array);
     }
     array = wrapIterator(array);
@@ -1509,7 +1524,7 @@ function length(array) {
     array = wrapIterator(array);
     var length = array.length;
 
-    if (length != undefined) return length;
+    if (length !== undefined) return length;
     
     if (array instanceof java.util.Enumeration) {
         var cnt = 0;
@@ -1583,7 +1598,7 @@ function map(array, code) {
 
 // private function used by min, max functions
 function minmax(array, code) {
-    if (typeof(code) == 'string') {
+    if (typeof(code) === 'string') {
         code = new Function("lhs", "rhs", "return " + code);
     }
     array = wrapIterator(array);
@@ -1600,7 +1615,7 @@ function minmax(array, code) {
         }
         return res;
     } else {
-        if (array.length == 0) {
+        if (array.length === 0) {
             return undefined;
         }
         var res = array[0];
@@ -1622,7 +1637,7 @@ function minmax(array, code) {
  *        by default numerical maximum is computed.
  */
 function max(array, code) {
-    if (code == undefined) {
+    if (code === undefined) {
         code = function (lhs, rhs) { 
             return lhs > rhs;
         }
@@ -1638,7 +1653,7 @@ function max(array, code) {
  *        by default numerical minimum is computed.
  */
 function min(array, code) {
-    if (code == undefined) {
+    if (code === undefined) {
         code = function (lhs, rhs) { 
             return lhs < rhs;
         }
@@ -1667,11 +1682,11 @@ function sort(array, code) {
     
     // by default use numerical comparison
     var func = code;
-    if (code == undefined) {
+    if (code === undefined) {
         func = function(lhs, rhs) { 
             return lhs - rhs;
         };
-    } else if (typeof(code) == 'string') {
+    } else if (typeof(code) === 'string') {
         func = new Function("lhs", "rhs", "return " + code);
     }
     return array.sort(func);
@@ -1686,7 +1701,7 @@ function sort(array, code) {
  */
 function sum(array, code) {
     array = wrapIterator(array);
-    if (code != undefined) {
+    if (code !== undefined) {
         array = map(array, code);
     }
     var result = 0;
@@ -1714,9 +1729,9 @@ function sum(array, code) {
  */
 function unique(array, code) {
     array = wrapIterator(array);
-    if (code == undefined) {
-        code = new Function("it", "var id = objectid(it);return id != undefined ? id : it;");
-    } else if (typeof(code) == 'string') {
+    if (code === undefined) {
+        code = new Function("it", "var id = objectid(it);return id !== undefined ? id : it;");
+    } else if (typeof(code) === 'string') {
         code = new Function("it", "return " + code);
     }
     var tmp = new Object();
@@ -1750,10 +1765,10 @@ function printStackTrace() {
 }
 
 function isJsArray(obj) {
-    if (obj.constructor == undefined) {
+    if (obj.constructor === undefined) {
         return false;
     }
-    return obj.constructor == Array;
+    return obj.constructor === Array;
 }
 
 function search(a, v, i, func){

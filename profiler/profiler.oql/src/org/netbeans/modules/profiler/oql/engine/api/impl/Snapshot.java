@@ -137,7 +137,11 @@ public class Snapshot {
             gcInstance = gcInstance.getNearestGCRootPointer();
         } while (!gcInstance.isGCRoot());
         if (gcInstance != null) {
-            return delegate.getGCRoot(gcInstance);
+            Collection<GCRoot> roots = delegate.getGCRoots(gcInstance);
+            if (!roots.isEmpty()) {
+                // TODO getGCRoot() now returns Collection
+                return roots.iterator().next();
+            }
         }
         return null;
     }
@@ -194,7 +198,7 @@ public class Snapshot {
 
             @Override
             protected Iterator<Instance> getSameLevelIterator(JavaClass popped) {
-                return popped.getInstances().iterator();
+                return popped.getInstancesIterator();
             }
 
             @Override
@@ -365,7 +369,7 @@ public class Snapshot {
             State s1 = stack.poll();
             if (s1 == null) break;
             s1.hits.addAndGet(s.hits.get());
-            if (s.hits.get() == 0L) {
+            if (s.hits.get() == 0L && path != null) {
                 ignored.add(path.getObj());
             }
             s = s1;

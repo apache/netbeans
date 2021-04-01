@@ -30,6 +30,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -62,6 +64,7 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.TextEdit;
 import org.netbeans.modules.java.completion.JavaCompletionTask;
+import org.netbeans.modules.java.completion.JavaDocumentationTask;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
@@ -272,6 +275,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             CompletionCollector.Builder builder = CompletionCollector.newBuilder(label.toString())
                     .kind(elementKind2CompletionItemKind(elem.getKind()))
                     .insertText(insertText.toString())
+                    .insertTextFormat(Completion.TextFormat.PlainText)
                     .sortText(String.format("%4d%s#%2d%s", priority, elem.getSimpleName().toString(), cnt, sortParams));
             ElementHandle<ExecutableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
@@ -294,6 +298,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             CompletionCollector.Builder builder = CompletionCollector.newBuilder(label)
                     .kind(Completion.Kind.Constructor)
                     .insertText(insertText)
+                    .insertTextFormat(Completion.TextFormat.PlainText)
                     .sortText(String.format("%4d%s", name != null ? 1550 : 1650, item.getSortText().substring(4)));
             ElementHandle<ExecutableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
@@ -306,7 +311,9 @@ public class JavaCompletionCollector implements CompletionCollector {
         public Completion createOverrideMethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean implement) {
             Completion item = createExecutableItem(info, elem, type, substitutionOffset, null, false, false, false, false, false, -1, false);
             CompletionCollector.Builder builder = CompletionCollector.newBuilder(String.format("%s - %s", item.getLabel(), implement ? "implement" : "override"))
-                    .kind(elementKind2CompletionItemKind(elem.getKind()));
+                    .kind(elementKind2CompletionItemKind(elem.getKind()))
+                    .sortText(item.getSortText())
+                    .insertTextFormat(Completion.TextFormat.PlainText);
             ElementHandle<ExecutableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
             if (handle != null) {
                 builder.documentation(getDocumentation(doc, handle));
@@ -424,6 +431,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             CompletionCollector.Builder builder = CompletionCollector.newBuilder(label)
                     .kind(elementKind2CompletionItemKind(memberElem.getKind()))
                     .insertText(label)
+                    .insertTextFormat(Completion.TextFormat.PlainText)
                     .additionalTextEdits(currentClassImport)
                     .sortText(String.format("%4d%s", memberElem.getKind().isField() ? 720 : 750, sortText));
             ElementHandle<Element> handle = SUPPORTED_ELEMENT_KINDS.contains(memberElem.getKind().name()) ? ElementHandle.create(memberElem) : null;
@@ -451,23 +459,23 @@ public class JavaCompletionCollector implements CompletionCollector {
             return null; //TODO: fill
         }
 
-        private static Supplier<String> getDocumentation(Document doc, ElementHandle<?> handle) {
+        private Supplier<String> getDocumentation(Document doc, ElementHandle handle) {
             return () -> {
                 try {
-                    String[] ret = new String[1];
+                    JavaDocumentationTask<Future<String>> task = JavaDocumentationTask.create(offset, handle, new JavaDocumentationTask.DocumentationFactory<Future<String>>() {
+                        @Override
+                        public Future<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
+                            return ElementJavadoc.create(compilationInfo, element, cancel).getTextAsync();
+                        }
+                    }, () -> false);
                     ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
-                        public void run (ResultIterator resultIterator) throws Exception {
-                            CompilationInfo info = CompilationInfo.get(resultIterator.getParserResult());
-                            if (info != null) {
-                                Element element = handle.resolve(info);
-                                if (element != null) {
-                                    ret[0] = ElementJavadoc.create(info, element, null).getText();
-                                }
-                            }
+                        @Override
+                        public void run(ResultIterator resultIterator) throws Exception {
+                            task.run(resultIterator);
                         }
                     });
-                    return ret[0];
-                } catch (ParseException ex) {
+                    return task.getDocumentation().get();
+                } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
             };

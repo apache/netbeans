@@ -289,7 +289,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             String uri = params.getTextDocument().getUri();
             FileObject file = fromURI(uri);
             if (file == null) {
-                return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
+                return CompletableFuture.completedFuture(Either.forRight(completionList));
             }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
@@ -351,7 +351,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 completionList.setIsIncomplete(true);
             }
             completionList.setItems(items);
-            return CompletableFuture.completedFuture(Either.<List<CompletionItem>, CompletionList>forRight(completionList));
+            return CompletableFuture.completedFuture(Either.forRight(completionList));
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
@@ -390,42 +390,45 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             Completion completion = lastCompletions.get(data.index);
             if (completion != null) {
                 FileObject file = fromURI(data.uri);
-                if (file == null) {
-                    return CompletableFuture.completedFuture(ci);
-                }
-                if (completion.getDetail() != null) {
-                    try {
-                        String detail = completion.getDetail().get();
-                        if (detail != null) {
-                            ci.setDetail(detail);
+                if (file != null) {
+                    CompletableFuture<CompletionItem> result = new CompletableFuture<>();
+                    JAVADOC_WORKER.post(() -> {
+                        if (completion.getDetail() != null) {
+                            try {
+                                String detail = completion.getDetail().get();
+                                if (detail != null) {
+                                    ci.setDetail(detail);
+                                }
+                            } catch (Exception ex) {
+                            }
                         }
-                    } catch (Exception ex) {
-                    }
-                }
-                if (completion.getDocumentation() != null) {
-                    try {
-                        String documentation = completion.getDocumentation().get();
-                        if (documentation != null) {
-                            MarkupContent markup = new MarkupContent();
-                            markup.setKind("markdown");
-                            markup.setValue(html2MD(documentation));
-                            ci.setDocumentation(markup);
+                        if (completion.getDocumentation() != null) {
+                            try {
+                                String documentation = completion.getDocumentation().get();
+                                if (documentation != null) {
+                                    MarkupContent markup = new MarkupContent();
+                                    markup.setKind("markdown");
+                                    markup.setValue(html2MD(documentation));
+                                    ci.setDocumentation(markup);
+                                }
+                            } catch (Exception ex) {
+                            }
                         }
-                    } catch (Exception ex) {
-                    }
-                }
-                if (completion.getAdditionalTextEdits() != null) {
-                    try {
-                        List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().get();
-                        if (additionalTextEdits != null) {
-                            ci.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
-                                return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
-                            }).collect(Collectors.toList()));
+                        if (completion.getAdditionalTextEdits() != null) {
+                            try {
+                                List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().get();
+                                if (additionalTextEdits != null && !additionalTextEdits.isEmpty()) {
+                                    ci.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
+                                        return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
+                                    }).collect(Collectors.toList()));
+                                }
+                            } catch (Exception ex) {
+                            }
                         }
-                    } catch (Exception ex) {
-                    }
+                        result.complete(ci);
+                    });
+                    return result;
                 }
-
             }
         }
         return CompletableFuture.completedFuture(ci);
@@ -440,7 +443,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     public CompletableFuture<Hover> hover(HoverParams params) {
         // shortcut: if the projects are not yet initialized, return empty:
         if (server.openedProjects().getNow(null) == null) {
-            return CompletableFuture.completedFuture(new Hover());
+            return CompletableFuture.completedFuture(null);
         }
         try {
             String uri = params.getTextDocument().getUri();
@@ -527,7 +530,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         String uri = params.getTextDocument().getUri();
         JavaSource js = getJavaSource(uri);
         if (js == null) {
-            return CompletableFuture.completedFuture(Either.forLeft(new ArrayList<>()));
+            return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
         }
         List<GoToTarget> targets = new ArrayList<>();
         LineMap[] thisFileLineMap = new LineMap[1];
@@ -790,10 +793,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
         JavaSource js = getJavaSource(params.getTextDocument().getUri());
-        List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
         if (js == null) {
-            return CompletableFuture.completedFuture(result);
+            return CompletableFuture.completedFuture(Collections.emptyList());
         }
+        List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
         try {
             js.runUserActionTask(cc -> {
                 cc.toPhase(JavaSource.Phase.RESOLVED);
@@ -1531,7 +1534,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         Location location = null;
         if (target != null && target.success) {
             if (target.offsetToOpen < 0) {
-                final CompletableFuture<HyperlinkLocation> future = ElementOpen.getLocation(target.cpInfo, target.elementToOpen, target.resourceName);
+                final CompletableFuture<ElementOpen.Location> future = ElementOpen.getLocation(target.cpInfo, target.elementToOpen, target.resourceName);
                 return future.thenApply(loc -> {
                     if (loc != null) {
                         FileObject fo = loc.getFileObject();

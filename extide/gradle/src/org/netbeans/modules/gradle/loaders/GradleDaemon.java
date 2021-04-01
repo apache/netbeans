@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.gradle;
+package org.netbeans.modules.gradle.loaders;
 
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;

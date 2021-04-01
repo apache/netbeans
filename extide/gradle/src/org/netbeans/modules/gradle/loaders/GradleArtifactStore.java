@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.gradle;
+package org.netbeans.modules.gradle.loaders;
 
 import org.netbeans.modules.gradle.api.GradleConfiguration;
 import org.netbeans.modules.gradle.api.GradleDependency;
@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.event.ChangeListener;
+import org.netbeans.modules.gradle.GradleProject;
 import org.openide.modules.OnStart;
 import org.openide.modules.Places;
 import org.openide.util.ChangeSupport;

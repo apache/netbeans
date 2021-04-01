@@ -19,7 +19,7 @@
 
 package org.netbeans.modules.gradle.execute;
 
-import org.netbeans.modules.gradle.GradleDaemon;
+import org.netbeans.modules.gradle.loaders.GradleDaemon;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import org.netbeans.modules.gradle.api.execute.RunConfig;

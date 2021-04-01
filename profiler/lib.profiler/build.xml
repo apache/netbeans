@@ -26,8 +26,13 @@
     <property name="profiler.cluster" value="./release"/>
     <property name="header.dir" value="${basedir}/native/build"/>
     <target name="-process.release.files">
+        <!-- CDDL licensed binaries, from the Oracle days -->
         <unzip src="external/profiler-external-binaries-8.2.zip" 
                overwrite="false"
+               dest="${profiler.cluster}"/>
+        <!-- AL2 licensed binaries, build from ASF code (overwrites CDDL binaries) -->
+        <unzip src="external/profiler-external-binaries-ASF.zip"
+               overwrite="true"
                dest="${profiler.cluster}"/>
     </target>
 

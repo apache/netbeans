@@ -52,8 +52,6 @@ import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 import org.netbeans.modules.java.lsp.server.progress.ProgressOperationEvent;
 import org.netbeans.modules.java.lsp.server.progress.ProgressOperationListener;
 import org.netbeans.modules.java.lsp.server.progress.TestProgressHandler;
-import org.netbeans.modules.progress.spi.InternalHandle;
-import org.netbeans.spi.extexecution.base.ProcessParameters;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.SingleMethod;
@@ -252,7 +250,7 @@ public abstract class NbLaunchDelegate {
         Collection<ActionProvider> actionProviders = findActionProviders(toRun);
         Lookup testLookup = Lookups.singleton(toRun);
         String[] actions;
-        if (mainSource && singleMethod != null) {
+        if (!mainSource && singleMethod != null) {
             actions = debug ? new String[] {SingleMethod.COMMAND_DEBUG_SINGLE_METHOD}
                             : new String[] {SingleMethod.COMMAND_RUN_SINGLE_METHOD};
         } else {

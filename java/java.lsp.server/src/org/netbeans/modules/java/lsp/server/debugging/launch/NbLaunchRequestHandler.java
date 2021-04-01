@@ -123,7 +123,7 @@ public final class NbLaunchRequestHandler {
         } else {
             context.setSourcePaths((String[]) launchArguments.get("sourcePaths"));
         }
-        String singleMethod = (String)launchArguments.get("singleMethod");
+        String singleMethod = (String)launchArguments.get("methodName");
         boolean testRun = (Boolean) launchArguments.getOrDefault("testRun", Boolean.FALSE);
         activeLaunchHandler.nbLaunch(file, singleMethod, launchArguments, context, !noDebug, testRun, new OutputListener(context)).thenRun(() -> {
             activeLaunchHandler.postLaunch(launchArguments, context);

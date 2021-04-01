@@ -228,15 +228,15 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             ]);
         }
     }));
-    const runDebug = async (noDebug : boolean, testRun: boolean, uri : vscode.Uri, methodName? : string) => {
-        const docUri = uri ? uri : window.activeTextEditor?.document.uri;
+    const runDebug = async (noDebug: boolean, testRun: boolean, uri: string, methodName?: string) => {
+        const docUri = uri ? vscode.Uri.file(uri) : window.activeTextEditor?.document.uri;
         if (docUri) {
             const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
             const debugConfig : vscode.DebugConfiguration = {
                 type: "java8+",
                 name: "Java Single Debug",
                 request: "launch",
-                mainClass: uri.toString(),
+                mainClass: uri,
                 methodName,
                 testRun
             };

@@ -80,6 +80,8 @@ public final class ConfigureProxy extends Task {
     }
 
     static URLConnection openConnection(Task task, final URL url, URI[] connectedVia) throws IOException {
+        long connectTimeoutMs = getProjectPropertyInt(task, "downloadBinaries.connectTimeoutMs", 15000);
+        task.log("Connect timeout set to " + connectTimeoutMs + " milliseconds prior to connecting to " + url, Project.MSG_DEBUG);
         final URLConnection[] conn = { null };
         final List<Exception> errs = new CopyOnWriteArrayList<>();
         final StringBuffer msgs = new StringBuffer();
@@ -103,14 +105,18 @@ public final class ConfigureProxy extends Task {
             }
         });
         try {
-            connected.await(5, TimeUnit.SECONDS);
+            if (!connected.await(connectTimeoutMs, TimeUnit.MILLISECONDS)) {
+                throw new IOException("Could not connect to " + url + " within " + connectTimeoutMs + " milliseconds");
+            }
         } catch (InterruptedException ex) {
         }
         if (conn[0] == null) {
             for (Exception ex : errs) {
                 task.log(ex, Project.MSG_ERR);
             }
-            task.log(msgs.toString(), Project.MSG_ERR);
+            if (msgs.length() > 0) {
+                task.log(msgs.toString(), Project.MSG_ERR);
+            }
             throw new IOException("Cannot connect to " + url);
         } else {
             task.log(msgs.toString(), Project.MSG_DEBUG);
@@ -148,4 +154,22 @@ public final class ConfigureProxy extends Task {
         }
     }
 
+    private static long getProjectPropertyInt(Task task, String propertyName, int defaultValue) {
+        if (task == null) {
+            return defaultValue;
+        }
+        Project project = task.getProject();
+        if (project != null) {
+            String p = project.getProperty(propertyName);
+            if (p == null) {
+                return defaultValue;
+            }
+            try {
+                return Long.parseLong(p);
+            } catch (NumberFormatException ex) {
+                return defaultValue;
+            }
+        }
+        return defaultValue;
+    }
 }

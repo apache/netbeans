@@ -18,15 +18,20 @@
  */
 package org.netbeans.modules.java.lsp.server.progress;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.eclipse.lsp4j.debug.OutputEventArguments;
+import org.eclipse.lsp4j.debug.services.IDebugProtocolClient;
 import org.netbeans.api.extexecution.print.LineConvertors;
 import org.netbeans.modules.gsf.testrunner.api.Report;
 import org.netbeans.modules.gsf.testrunner.api.TestSession;
 import org.netbeans.modules.gsf.testrunner.api.TestSuite;
+import org.netbeans.modules.gsf.testrunner.api.Testcase;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler;
 import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
@@ -40,11 +45,13 @@ import org.openide.filesystems.FileObject;
  */
 public final class TestProgressHandler implements TestResultDisplayHandler.Spi<TestProgressHandler> {
 
-    private final NbCodeLanguageClient client;
+    private final NbCodeLanguageClient lspClient;
+    private final IDebugProtocolClient debugClient;
     private final String uri;
 
-    public TestProgressHandler(NbCodeLanguageClient client, String uri) {
-        this.client = client;
+    public TestProgressHandler(NbCodeLanguageClient lspClient, IDebugProtocolClient debugClient, String uri) {
+        this.lspClient = lspClient;
+        this.debugClient = debugClient;
         this.uri = uri;
     }
 
@@ -55,29 +62,35 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<T
 
     @Override
     public void displayOutput(TestProgressHandler token, String text, boolean error) {
+        if (text != null) {
+            OutputEventArguments output = new OutputEventArguments();
+            output.setOutput(text.endsWith("\n") ? text : text + "\n");
+            debugClient.output(output);
+        }
     }
 
     @Override
     public void displaySuiteRunning(TestProgressHandler token, String suiteName) {
-        client.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suiteName, TestSuiteInfo.State.Running)));
+        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suiteName, TestSuiteInfo.State.Running)));
     }
 
     @Override
     public void displaySuiteRunning(TestProgressHandler token, TestSuite suite) {
-        client.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suite.getName(), TestSuiteInfo.State.Running)));
+        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(suite.getName(), TestSuiteInfo.State.Running)));
     }
 
     @Override
     public void displayReport(TestProgressHandler token, Report report) {
         Map<String, FileObject> fileLocations = new HashMap<>();
-        List<TestSuiteInfo.TestCaseInfo> tests = report.getTests().stream().map((test) -> {
+        Map<String, TestSuiteInfo.TestCaseInfo> testCases = new LinkedHashMap<>();
+        for (Testcase test : report.getTests()) {
             String className = test.getClassName();
-            String displayName = test.getDisplayName();
-            String shortName = displayName.startsWith(className + '.') ? displayName.substring(className.length() + 1) : displayName;
-            int idx = shortName.indexOf('(');
+            String name = test.getName();
+            int idx = name.indexOf('(');
             if (idx > 0) {
-                shortName = shortName.substring(0, idx);
+                name = name.substring(0, idx);
             }
+            String id = className + ':' + name;
             String status;
             switch (test.getStatus()) {
                 case PASSED:
@@ -105,9 +118,14 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<T
                 }
                 return fileLocator != null ? fileLocator.find(loc) : null;
             }) : null;
-            return new TestSuiteInfo.TestCaseInfo(className + ':' + shortName, shortName, displayName,
-                    fo != null ? Utils.toUri(fo) : null, null, status, stackTrace);
-        }).collect(Collectors.toList());
+            TestSuiteInfo.TestCaseInfo info = testCases.get(id);
+            if (info != null) {
+                updateState(info, status);
+            } else {
+                info = new TestSuiteInfo.TestCaseInfo(id, name, className + '.' + name, fo != null ? Utils.toUri(fo) : null, null, status, stackTrace);
+                testCases.put(id, info);
+            }
+        }
         String status;
         switch (report.getStatus()) {
             case PASSED:
@@ -121,8 +139,8 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<T
                 throw new IllegalStateException("Unexpected testsuite status: " + report.getStatus());
         }
         FileObject fo = fileLocations.size() == 1 ? fileLocations.values().iterator().next() : null;
-        client.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(report.getSuiteClassName(),
-                fo != null ? Utils.toUri(fo) : null, null, status, tests)));
+        lspClient.notifyTestProgress(new TestProgressParams(uri, new TestSuiteInfo(report.getSuiteClassName(),
+                fo != null ? Utils.toUri(fo) : null, null, status, new ArrayList<>(testCases.values()))));
     }
 
     @Override
@@ -136,5 +154,23 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<T
     @Override
     public int getTotalTests(TestProgressHandler token) {
         return 0;
+    }
+
+    private void updateState(TestSuiteInfo.TestCaseInfo info, String state) {
+        switch (state) {
+            case TestSuiteInfo.State.Errored:
+                info.setState(state);
+                break;
+            case TestSuiteInfo.State.Failed:
+                if (!TestSuiteInfo.State.Errored.equals(info.getState())) {
+                    info.setState(state);
+                }
+                break;
+            case TestSuiteInfo.State.Passed:
+                if (TestSuiteInfo.State.Skipped.equals(info.getState())) {
+                    info.setState(state);
+                }
+                break;
+        }
     }
 }

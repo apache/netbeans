@@ -47,7 +47,7 @@ to set your environment up to support
 * __GraalVM: Pause in Script__ - place a breakpoint into first executed polyglot script
 * Debugger __Java 8+__ - start test or main class on JDK8+ in polyglot mode
 * Progress shown for long running operations with cancel support for selected types
-* __Native Image Debugger__ is a new Run configuration addede which allows Java style debugging of Ahead of Time compiled native-images, produced by GraalVM. It is experimental feature whichworks with GDB on Linux. GDB 7.11 or GDB 10.1 is required due to known issue [#26139](https://sourceware.org/bugzilla/show_bug.cgi?id=26139) in GDB 8 and 9.
+* __Native Image Debugger__ is a new Run configuration added which allows Java style debugging of Ahead of Time compiled native-images, produced by GraalVM. It is experimental feature which works with GDB on Linux. GDB 7.11 or GDB 10.1 is required due to known issue [#26139](https://sourceware.org/bugzilla/show_bug.cgi?id=26139) in GDB 8 and 9.
 * __Micronaut and Spring__ support especially for YAML configuration files with code completion and source code navigation to Java.
 * __Test Explorer__ for Java tests results visualization and execution including editor code Lenses.
 * Improved Maven and Gradle support including multi-project projects, subprojects opening and Gradle priming builds.

@@ -64,7 +64,7 @@ public class HeapFactory {
      */
     public static Heap createHeap(File heapDump, int segment)
                            throws FileNotFoundException, IOException {
-        CacheDirectory cacheDir = CacheDirectory.getHeapDumpCacheDirectory(heapDump);
+        CacheDirectory cacheDir = CacheDirectory.getHeapDumpCacheDirectory(heapDump, segment);
         if (!cacheDir.isTemporary()) {
             File savedDump = cacheDir.getHeapDumpAuxFile();
 
@@ -74,6 +74,7 @@ public class HeapFactory {
                 } catch (IOException ex) {
                     System.err.println("Loading heap dump "+heapDump+" from cache failed.");
                     ex.printStackTrace(System.err);
+                    cacheDir.deleteAllCachedFiles();
                 }
             }
         }

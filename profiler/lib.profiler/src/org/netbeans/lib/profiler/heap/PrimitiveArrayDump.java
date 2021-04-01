@@ -29,7 +29,7 @@ import java.util.List;
 class PrimitiveArrayDump extends ArrayDump implements PrimitiveArrayInstance {
     //~ Static fields/initializers -----------------------------------------------------------------------------------------------
 
-    private static final int charSize = 2;
+    private static final int charSize = 2;  // Character.BYTES
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ class PrimitiveArrayDump extends ArrayDump implements PrimitiveArrayInstance {
         return dumpClass.classDumpSegment.getMinimumInstanceSize() + HPROF_ARRAY_OVERHEAD + (elementSize * getLength());
     }
 
-    public List /*<String>*/ getValues() {
+    public List<String> getValues() {
         HprofByteBuffer dumpBuffer = dumpClass.getHprofBuffer();
         HprofHeap heap = dumpClass.getHprof();
         byte type = getType();

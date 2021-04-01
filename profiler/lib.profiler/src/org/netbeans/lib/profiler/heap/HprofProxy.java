@@ -19,7 +19,6 @@
 
 package org.netbeans.lib.profiler.heap;
 
-import java.util.Iterator;
 import java.util.Properties;
 
 
@@ -63,10 +62,7 @@ class HprofProxy {
     }
 
     private static Properties getPropertiesFromTable(ObjectArrayDump entriesObj, Properties props, String keyName, String valueName) {
-        Iterator enIt = entriesObj.getValues().iterator();
-        while (enIt.hasNext()) {
-            Instance entry = (Instance) enIt.next();
-            
+        for (Instance entry : entriesObj.getValues()) {
             for (; entry != null; entry = (Instance) entry.getValueOfField("next")) { // NOI18N
                 Instance key = (Instance) entry.getValueOfField(keyName);
                 Instance val = (Instance) entry.getValueOfField(valueName);

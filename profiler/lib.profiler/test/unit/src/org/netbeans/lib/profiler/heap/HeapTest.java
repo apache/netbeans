@@ -123,7 +123,7 @@ public class HeapTest {
     public void testGetInstanceByID() {
         String fqn = "java.io.PrintStream";
         JavaClass printStream = heap.getJavaClassByName(fqn);
-        Instance printStreamInstance = (Instance) printStream.getInstances().get(0);
+        Instance printStreamInstance = printStream.getInstances().get(0);
         long instanceId = printStreamInstance.getInstanceId();
         Instance result = heap.getInstanceByID(instanceId);
         assertEquals(instanceId, result.getInstanceId());

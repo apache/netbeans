@@ -45,7 +45,7 @@ class ClassDumpInstance implements Instance {
     }
 
     public boolean isGCRoot() {
-        return classDump.getHprof().getGCRoot(this) != null;
+        return classDump.getHprof().isGCRoot(this);
     }
 
     public long getInstanceId() {
@@ -80,7 +80,7 @@ class ClassDumpInstance implements Instance {
         return getJavaClass().getInstanceSize();
     }
 
-    public List getStaticFieldValues() {
+    public List<FieldValue> getStaticFieldValues() {
         return getJavaClass().getStaticFieldValues();
     }
 

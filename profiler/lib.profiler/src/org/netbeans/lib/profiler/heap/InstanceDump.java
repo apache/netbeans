@@ -42,10 +42,10 @@ class InstanceDump extends HprofObject implements Instance {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
-    public List getFieldValues() {
+    public List<FieldValue> getFieldValues() {
         long offset = fileOffset + getInstanceFieldValuesOffset();
         List fields = dumpClass.getAllInstanceFields();
-        List values = new ArrayList(fields.size());
+        List<FieldValue> values = new ArrayList(fields.size());
         Iterator fit = fields.iterator();
 
         while (fit.hasNext()) {
@@ -64,7 +64,7 @@ class InstanceDump extends HprofObject implements Instance {
     }
 
     public boolean isGCRoot() {
-        return getHprof().getGCRoot(this) != null;
+        return getHprof().isGCRoot(this);
     }
 
     public long getInstanceId() {
@@ -99,7 +99,7 @@ class InstanceDump extends HprofObject implements Instance {
         return dumpClass.getInstanceSize();
     }
 
-    public List /*<FieldValue>*/ getStaticFieldValues() {
+    public List<FieldValue> getStaticFieldValues() {
         return dumpClass.getStaticFieldValues();
     }
 

@@ -112,4 +112,8 @@ public class ResultsSnapshot {
         LOGGER.finest("beginTime: " + beginTime); // NOI18N
         LOGGER.finest("timeTaken: " + timeTaken); // NOI18N
     }
+
+    // used by LoadedSnapshot when loading from file
+    public void setProfilerSettings(ProfilerEngineSettings pes) {
+    }
 }

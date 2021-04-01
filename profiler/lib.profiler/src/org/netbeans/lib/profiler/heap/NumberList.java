@@ -45,7 +45,8 @@ class NumberList {
     private final RandomAccessFile data;
     private final int numberSize;
     private final int blockSize;
-    private final Map/*offset,block*/ blockCache;
+    // Map <offset,block>
+    private final Map<Long,byte[]> blockCache;
     private final Set dirtyBlocks;
     private long blocks;
     private MappedByteBuffer buf;
@@ -246,7 +247,7 @@ class NumberList {
               ((buf[i++] & 255) <<  0));
     }
         
-    private void writeNumber(long blockOffset,byte[] block,int slot,long element) throws IOException {
+    private synchronized void writeNumber(long blockOffset,byte[] block,int slot,long element) throws IOException {
         if (blockOffset < mappedSize) {
             long offset = blockOffset+slot*numberSize;
             buf.position((int)offset);
@@ -269,7 +270,7 @@ class NumberList {
         }
     }
     
-    private byte[] getBlock(long offset) throws IOException {
+    private synchronized byte[] getBlock(long offset) throws IOException {
         byte[] block;
         if (offset < mappedSize) {
             block = new byte[blockSize];
@@ -279,7 +280,7 @@ class NumberList {
         } else {
             Long offsetObj = new Long(offset);
 
-            block = (byte[]) blockCache.get(offsetObj);
+            block = blockCache.get(offsetObj);
             if (block == null) {
                 block = new byte[blockSize];
                 data.seek(offset);
@@ -308,7 +309,7 @@ class NumberList {
         long lastBlockOffset = 0;
         for(int i=0;i<dirty.length;i++) {
             Long blockOffsetLong = dirty[i];
-            byte[] block = (byte[]) blockCache.get(blockOffsetLong);
+            byte[] block = blockCache.get(blockOffsetLong);
             long blockOffset = blockOffsetLong.longValue();
             if (lastBlockOffset+dataOffset==blockOffset && dataOffset <= blocks.length - blockSize) {
                 System.arraycopy(block,0,blocks,dataOffset,blockSize);

@@ -55,7 +55,7 @@ class NearestGCRoot {
     private LongBuffer writeBuffer;
     private LongBuffer leaves;
     private LongBuffer multipleParents;
-    private Set referenceClasses;
+    private Set<JavaClass> referenceClasses;
     private boolean gcRootsComputed;
     private long allInstances;
     private long processedInstances;
@@ -72,7 +72,7 @@ class NearestGCRoot {
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
     Instance getNearestGCRootPointer(Instance instance) {
-        if (heap.getGCRoot(instance) != null) {
+        if (heap.isGCRoot(instance)) {
             return instance;
         }
         computeGCRoots();
@@ -97,6 +97,7 @@ class NearestGCRoot {
             }
         }
         heap.computeReferences(); // make sure references are computed first
+        heap.cacheDirectory.setDirty(true);
         allInstances = heap.getSummary().getTotalLiveInstances();
         Set processedClasses = new HashSet(heap.getAllClasses().size()*4/3);
         
@@ -153,8 +154,7 @@ class NearestGCRoot {
         for (;;) {
             Instance instance;
             long instanceOffset = readLong();
-            List fieldValues;
-            Iterator valuesIt;
+            List<FieldValue> fieldValues;
             boolean hasValues = false;
             
             if (instanceOffset == 0L) { // end of level
@@ -196,10 +196,7 @@ class NearestGCRoot {
                 throw new IllegalArgumentException("Illegal type " + instance.getClass()); // NOI18N
             }
             long instanceId = instance.getInstanceId();
-            valuesIt = fieldValues.iterator();
-            while (valuesIt.hasNext()) {
-                FieldValue val = (FieldValue) valuesIt.next();
-
+            for (FieldValue val : fieldValues) {
                 if (val instanceof ObjectFieldValue) {
                      // skip Soft, Weak, Final and Phantom References
                     if (!isSpecialReference(val, instance)) {
@@ -230,13 +227,8 @@ class NearestGCRoot {
         JavaClass reference = heap.getJavaClassByName(className);
 
         if (reference != null) {
-            Iterator fieldRef = reference.getFields().iterator();
-
-            while (fieldRef.hasNext()) {
-                Field f = (Field) fieldRef.next();
-
+            for (Field f : reference.getFields()) {
                 if (f.getName().equals(fieldName)) {
-
                     return f;
                 }
             }
@@ -308,7 +300,7 @@ class NearestGCRoot {
         if (refInstanceId != 0) {
             LongMap.Entry entry = heap.idToOffsetMap.get(refInstanceId);
 
-            if (entry != null && entry.getNearestGCRootPointer() == 0L && heap.gcRoots.getGCRoot(refInstanceId) == null) {
+            if (entry != null && entry.getNearestGCRootPointer() == 0L && heap.gcRoots.getGCRoots(refInstanceId) == null) {
                 writeLong(entry.getOffset());
                 if (addRefInstanceId) {
                     if (!checkReferences(refInstanceId, instanceId)) {
@@ -329,11 +321,8 @@ class NearestGCRoot {
 
     private boolean checkReferences(final long refInstanceId, final long instanceId) {
         Instance instance = heap.getInstanceByID(instanceId);        
-        Iterator fieldIt = instance.getFieldValues().iterator();
         
-        while (fieldIt.hasNext()) {
-            Object field = fieldIt.next();
-
+        for (FieldValue field : instance.getFieldValues()) {
             if (field instanceof HprofInstanceObjectValue) {
                 HprofInstanceObjectValue objectValue = (HprofInstanceObjectValue) field;
 

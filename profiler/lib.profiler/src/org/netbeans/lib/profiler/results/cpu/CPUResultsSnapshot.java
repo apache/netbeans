@@ -139,6 +139,7 @@ public class CPUResultsSnapshot extends ResultsSnapshot {
     protected PrestimeCPUCCTNode[] rootNode; // Per-view root nodes
     protected CPUCCTContainer[][] threadCCTContainers; // [method|class|package aggregation level][0-nThreads] -> CPUCCTContainer
     protected boolean collectingTwoTimeStamps;
+    protected InstrumentationFilter filter;
 
     // Number of instrumented methods - may be smaller than the size of the above arrays
     protected int nInstrMethods;
@@ -155,9 +156,19 @@ public class CPUResultsSnapshot extends ResultsSnapshot {
     public CPUResultsSnapshot(long beginTime, long timeTaken, CPUCCTProvider cctProvider, boolean collectingTwoTimestamps,
                               String[] instrClassNames, String[] instrMethodNames, String[] instrMethodSigs, int nInstrMethods)
                        throws NoDataAvailableException {
+        this(beginTime, timeTaken, cctProvider,
+             collectingTwoTimestamps, null,
+             instrClassNames, instrMethodNames, instrMethodSigs, nInstrMethods);
+    }
+
+    public CPUResultsSnapshot(long beginTime, long timeTaken,
+                              CPUCCTProvider cctProvider, boolean collectingTwoTimestamps, InstrumentationFilter filter,
+                              String[] instrClassNames, String[] instrMethodNames, String[] instrMethodSigs, int nInstrMethods)
+                       throws NoDataAvailableException {
         super(beginTime, timeTaken);
 
         this.collectingTwoTimeStamps = collectingTwoTimestamps;
+        this.filter = filter;
 
         this.instrMethodClassesViews = new String[3][];
         this.instrMethodClassesViews[METHOD_LEVEL_VIEW] = instrClassNames;
@@ -191,6 +202,13 @@ public class CPUResultsSnapshot extends ResultsSnapshot {
     }
     
     //~ Methods ------------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void setProfilerSettings(ProfilerEngineSettings pes) {
+        if (pes.getCPUProfilingType() == CommonConstants.CPU_SAMPLED) {
+            filter = pes.getInstrumentationFilter();
+        }
+    }
 
     public boolean isCollectingTwoTimeStamps() {
         return collectingTwoTimeStamps;

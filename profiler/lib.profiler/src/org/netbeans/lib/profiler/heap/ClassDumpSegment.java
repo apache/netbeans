@@ -41,7 +41,8 @@ class ClassDumpSegment extends TagBounds {
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
     HprofHeap hprofHeap;
-    Map /*<JavaClass represeting array,Integer - allInstanceSize>*/ arrayMap;
+    // Map <JavaClass represeting array,Long - allInstanceSize>
+    Map<JavaClass,Long> arrayMap;
     final int classIDOffset;
     final int classLoaderIDOffset;
     final int constantPoolSizeOffset;
@@ -134,14 +135,11 @@ class ClassDumpSegment extends TagBounds {
         return null;
     }
 
-    Collection getJavaClassesByRegExp(String regexp) {
-        Iterator classIt = createClassCollection().iterator();
+    Collection<JavaClass> getJavaClassesByRegExp(String regexp) {
         Collection result = new ArrayList(256);
         Pattern pattern = Pattern.compile(regexp);
         
-        while (classIt.hasNext()) {
-            ClassDump cls = (ClassDump) classIt.next();
-
+        for (JavaClass cls : createClassCollection()) {
             if (pattern.matcher(cls.getName()).matches()) {
                 result.add(cls);
             }
@@ -178,7 +176,7 @@ class ClassDumpSegment extends TagBounds {
     
     void addInstanceSize(ClassDump cls, int tag, long instanceOffset) {
         if ((tag == HprofHeap.OBJECT_ARRAY_DUMP) || (tag == HprofHeap.PRIMITIVE_ARRAY_DUMP)) {
-            Long sizeLong = (Long) arrayMap.get(cls);
+            Long sizeLong = arrayMap.get(cls);
             long size = 0;
             HprofByteBuffer dumpBuffer = hprofHeap.dumpBuffer;
             int idSize = dumpBuffer.getIDSize();
@@ -306,7 +304,7 @@ class ClassDumpSegment extends TagBounds {
                 ClassDump classDump = (ClassDump) classes.get(i);
 
                 classDump.writeToStream(out);
-                Long size = (Long) arrayMap.get(classDump);
+                Long size = arrayMap.get(classDump);
                 out.writeBoolean(size != null);
                 if (size != null) {
                     out.writeLong(size.longValue());

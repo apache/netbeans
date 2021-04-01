@@ -44,7 +44,7 @@ public class StackTraceSnapshotBuilder {
     static final char NAME_SIG_SPLITTER = '|';
     private static final StackTraceElement[] NO_STACK_TRACE = new StackTraceElement[0];
     private static final boolean COLLECT_TWO_TIMESTAMPS = true;
-    private static final List<MethodInfo> knownBLockingMethods = Arrays.asList(new MethodInfo[] {
+    private static final Set<MethodInfo> knownBLockingMethods = new HashSet(Arrays.asList(new MethodInfo[] {
         new MethodInfo("java.net.PlainSocketImpl", "socketAccept[native]"), // NOI18N
         new MethodInfo("java.net.PlainSocketImpl", "socketAccept[native](java.net.SocketImpl) : void"), // NOI18N
         new MethodInfo("sun.awt.windows.WToolkit", "eventLoop[native]"), // NOI18N
@@ -79,7 +79,21 @@ public class StackTraceSnapshotBuilder {
         new MethodInfo("sun.nio.ch.WindowsSelectorImpl$SubSelector","poll0[native](long, int, int[], int[], int[], long) : int"), // NOI18N
         new MethodInfo("java.net.PlainSocketImpl", "socketConnect[native]"), // NOI18N
         new MethodInfo("java.net.PlainSocketImpl", "socketConnect[native](java.net.InetAddress, int, int) : void"), // NOI18N
-    });
+        new MethodInfo("sun.nio.ch.ServerSocketChannelImpl", "accept0[native]"), // NOI18N
+        new MethodInfo("sun.nio.ch.ServerSocketChannelImpl", "accept0[native](java.io.FileDescriptor, java.io.FileDescriptor, java.net.InetSocketAddress[]) : int"), // NOI18N
+        new MethodInfo("java.lang.ref.Reference", "waitForReferencePendingList[native]"), // NOI18N
+        new MethodInfo("java.lang.ref.Reference", "waitForReferencePendingList[native]() : void"), // NOI18N
+        new MethodInfo("sun.nio.fs.LinuxWatchService", "poll[native]"), // NOI18N
+        new MethodInfo("sun.nio.fs.LinuxWatchService", "poll[native](int, int) : int"), // NOI18N
+        new MethodInfo("sun.nio.ch.Net", "accept[native]"), // NOI18N
+        new MethodInfo("sun.nio.ch.Net", "accept[native](java.io.FileDescriptor, java.io.FileDescriptor, java.net.InetSocketAddress[]) : int"), // NOI18N
+        new MethodInfo("sun.nio.ch.Net", "poll[native]"), // NOI18N
+        new MethodInfo("sun.nio.ch.Net", "poll[native](java.io.FileDescriptor, int, long) : int"), // NOI18N
+        new MethodInfo("sun.nio.ch.Net", "connect0[native]"), // NOI18N
+        new MethodInfo("sun.nio.ch.Net", "connect0[native](boolean, java.io.FileDescriptor, java.net.InetAddress, int) : int"), // NOI18N
+        new MethodInfo("java.lang.ProcessHandleImpl", "waitForProcessExit0[native]"), // NOI18N
+        new MethodInfo("java.lang.ProcessHandleImpl", "waitForProcessExit0[native](long, boolean) : int"), // NOI18N
+    }));
 
     private InstrumentationFilter filter;
     
@@ -163,12 +177,18 @@ public class StackTraceSnapshotBuilder {
         private Thread.State state;
         private String threadName;
         private long threadId;
+        private long threadCpuTime;
  
         SampledThreadInfo(String tn, long tid, Thread.State ts, StackTraceElement[] st, InstrumentationFilter filter) {
+            this (tn, tid,ts, st, -1, filter);
+        }
+
+        SampledThreadInfo(String tn, long tid, Thread.State ts, StackTraceElement[] st, long tct, InstrumentationFilter filter) {
             threadName = tn;
             threadId = tid;
             state = ts;
             stackTrace = st;
+            threadCpuTime = tct;
             if (state == Thread.State.RUNNABLE && containsKnownBlockingMethod(st)) { // known blocking method -> change state to waiting
                 state = Thread.State.WAITING;
             }
@@ -313,6 +333,29 @@ public class StackTraceSnapshotBuilder {
             //            }
         }
     }
+
+    final public void addStacktrace(Map<String, Object>[] infoMap, long dumpTimeStamp) throws IllegalStateException {
+        List<SampledThreadInfo> threads = new ArrayList<>(infoMap.length);
+
+        for (Map<String,Object> threadInfo : infoMap) {
+            String name = (String) threadInfo.get("name");
+            StackTraceElement[] stack = (StackTraceElement[]) threadInfo.get("stack");
+            long tid = (Long) threadInfo.get("tid");
+            Long threadCpuTime = (Long) threadInfo.get("threadCpuTime");
+            State state = (State) threadInfo.get("state");
+
+            if (threadCpuTime == null) {
+                threadCpuTime = Long.valueOf(-1);   // no thread cpu time
+            }
+            if (state == null) {
+                state = State.RUNNABLE;
+            }
+            SampledThreadInfo i = new SampledThreadInfo(name, tid, state, stack, threadCpuTime.longValue(), filter);
+
+            threads.add(i);
+        }
+        addStacktrace(threads.toArray(new SampledThreadInfo[0]), dumpTimeStamp);
+    }
     
     final public void addStacktrace(java.lang.management.ThreadInfo[] threads, long dumpTimeStamp) throws IllegalStateException {
         long timediff = processDumpTimeStamp(dumpTimeStamp);
@@ -357,10 +400,15 @@ public class StackTraceSnapshotBuilder {
             
             long threadId = tinfo.getThreadId();
             if (!threadIds.contains(threadId)) {
+                long threadCpuTime = tinfo.threadCpuTime;
                 threadIds.add(threadId);
                 threadNames.add(tname);
                 ccgb.newThread((int) threadId, tname, "<none>");
-                threadtimes.put(threadId,dumpTimeStamp);
+                if (threadCpuTime != -1) {
+                    threadtimes.put(threadId,threadCpuTime);
+                } else {
+                    threadtimes.put(threadId,dumpTimeStamp);
+                }
             }
             StackTraceElement[] newElements = tinfo.getStackTrace();
             SampledThreadInfo oldTinfo = lastStackTrace.get().get(threadId);
@@ -371,14 +419,14 @@ public class StackTraceSnapshotBuilder {
                 oldElements = oldTinfo.getStackTrace();
                 oldState = oldTinfo.getThreadState();
             }
-            processDiffs((int) threadId, oldElements, newElements, dumpTimeStamp, timediff, oldState, newState);
+            processDiffs((int) threadId, oldElements, newElements, dumpTimeStamp, tinfo.threadCpuTime, timediff, oldState, newState);
         }
         
         for (SampledThreadInfo oldTinfo : lastStackTrace.get().values()) {            
             if (!tinfoMap.containsKey(oldTinfo.getThreadId())) {
                 Thread.State oldState = oldTinfo.getThreadState();
                 Thread.State newState = Thread.State.TERMINATED;
-                processDiffs((int) oldTinfo.getThreadId(), oldTinfo.getStackTrace(), NO_STACK_TRACE, dumpTimeStamp, timediff, oldState, newState);
+                processDiffs((int) oldTinfo.getThreadId(), oldTinfo.getStackTrace(), NO_STACK_TRACE, dumpTimeStamp, oldTinfo.threadCpuTime, timediff, oldState, newState);
             }
         }
         
@@ -402,12 +450,11 @@ public class StackTraceSnapshotBuilder {
         return timediff;
     }
     
-    private void processDiffs(int threadId, StackTraceElement[] oldElements, StackTraceElement[] newElements, long timestamp, long timediff, Thread.State oldState, Thread.State newState) throws IllegalStateException {
+    private void processDiffs(int threadId, StackTraceElement[] oldElements, StackTraceElement[] newElements, long timestamp, long threadCpuTime, long timediff, Thread.State oldState, Thread.State newState) throws IllegalStateException {
         assert newState != Thread.State.NEW : "Invalid thread state " + newState.name() + " for taking a stack trace"; // just to be sure
         if (oldState == Thread.State.TERMINATED && newState != Thread.State.TERMINATED) {
             throw new IllegalStateException("Thread has already been set to " + Thread.State.TERMINATED.name() + " - stack trace can not be taken");
         }
-        long threadtime = threadtimes.get(Long.valueOf(threadId));
         //        switch (oldState) {
         //            case NEW: {
         //                switch (newState) {
@@ -431,9 +478,15 @@ public class StackTraceSnapshotBuilder {
         //                break;
         //            }
         //        }
-        if (oldState == Thread.State.RUNNABLE) {
-            threadtime += timediff;
-            threadtimes.put(Long.valueOf(threadId),threadtime);
+        long threadtime;
+        if (threadCpuTime == -1) {
+            threadtime = threadtimes.get(Long.valueOf(threadId));
+            if (oldState == Thread.State.RUNNABLE) {
+                threadtime += timediff;
+                threadtimes.put(Long.valueOf(threadId),threadtime);
+            }
+        } else {
+            threadtime = threadCpuTime;
         }
         //        if (newState == Thread.State.RUNNABLE && newElements.length > 0) {
         //            StackTraceElement top = newElements[0];
@@ -601,11 +654,12 @@ public class StackTraceSnapshotBuilder {
             for (MethodInfo mi : methodInfos) {
                 instrMethodClasses[counter] = mi.className;
                 instrMethodNames[counter] = mi.methodName;
-                instrMethodSigs[counter] = "";
+                instrMethodSigs[counter] = mi.signature;
                 counter++;
             }
-            addStacktrace(new java.lang.management.ThreadInfo[0], currentDumpTimeStamp+1);
-            return new CPUResultsSnapshot(since, System.currentTimeMillis(), ccgb, ccgb.isCollectingTwoTimeStamps(), instrMethodClasses, instrMethodNames, instrMethodSigs, miCount);
+            return new CPUResultsSnapshot(since, System.currentTimeMillis(),
+                    ccgb, ccgb.isCollectingTwoTimeStamps(), filter,
+                    instrMethodClasses, instrMethodNames, instrMethodSigs, miCount);
         }
     }
     
@@ -668,6 +722,54 @@ public class StackTraceSnapshotBuilder {
             }
         }
 
-    }
+        @Override
+        protected void applyDiffAtGetResultsMoment(ThreadInfo ti) {
+            long time0 = getDumpAbsTimeStamp();
+            long diff0 = time0 - ti.topMethodEntryTime0;
+            long diff1 = getThreadTime(ti, time0) - ti.topMethodEntryTime1;
 
+            if (diff0<0) diff0=0;
+            if (diff1<0) diff1=0;
+            if (diff0>0 || diff1>0) {
+                applyDiffToTopNode(ti, diff0, diff1);
+                ti.diffAtGetResultsMoment0 = diff0;
+                ti.diffAtGetResultsMoment1 = diff1;
+            }
+        }
+
+        @Override
+        protected void undoDiffAtGetResultsMoment(ThreadInfo ti) {
+            if (ti.diffAtGetResultsMoment0>0) {
+                applyDiffToTopNode(ti, -ti.diffAtGetResultsMoment0, -ti.diffAtGetResultsMoment1);
+                ti.diffAtGetResultsMoment0 = 0;
+            }
+        }
+
+        private long getThreadTime(ThreadInfo ti, long time0) {
+            if (isCollectingTwoTimeStamps()) {
+                SampledThreadInfo sti = lastStackTrace.get().get(Long.valueOf(ti.threadId));
+
+                if (sti!=null) {
+                    if (sti.threadCpuTime != -1) {
+                        return sti.threadCpuTime;
+                    }
+                    if (sti.getThreadState() == Thread.State.RUNNABLE) {
+                        return threadtimes.get(Long.valueOf(ti.threadId));
+                    }
+                }
+            }
+            return 0;
+        }
+
+        private void applyDiffToTopNode(ThreadInfo ti, long diff0, long diff1) {
+            TimedCPUCCTNode top = ti.peek();
+
+            if (top instanceof MethodCPUCCTNode) {
+                top.addNetTime0(diff0);
+                if (isCollectingTwoTimeStamps()) {
+                    top.addNetTime1(diff1);
+                }
+            }
+        }
+    }
 }

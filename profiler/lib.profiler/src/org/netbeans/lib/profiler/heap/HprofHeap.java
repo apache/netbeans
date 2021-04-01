@@ -97,7 +97,8 @@ class HprofHeap implements Heap {
     private static final boolean DEBUG = false;
 
     private static final String SNAPSHOT_ID = "NBPHD";
-    private static final int SNAPSHOT_VERSION  = 2;
+    private static final int SNAPSHOT_VERSION  = 3;
+    private static final String OS_PROP = "os.name";
     
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
@@ -148,7 +149,7 @@ class HprofHeap implements Heap {
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
-    public List /*<JavaClass>*/ getAllClasses() {
+    public List<JavaClass> getAllClasses() {
         ClassDumpSegment classDumpBounds;
 
         if (heapDumpSegment == null) {
@@ -164,9 +165,9 @@ class HprofHeap implements Heap {
         return classDumpBounds.createClassCollection();
     }
 
-    public List getBiggestObjectsByRetainedSize(int number) {
+    public List<Instance> getBiggestObjectsByRetainedSize(int number) {
         long[] ids;
-        List bigObjects = new ArrayList(number);
+        List<Instance> bigObjects = new ArrayList(number);
         
         computeRetainedSize();
         ids = idToOffsetMap.getBiggestObjectsByRetainedSize(number);
@@ -176,12 +177,19 @@ class HprofHeap implements Heap {
         return bigObjects;
     }
     
-    public GCRoot getGCRoot(Instance instance) {
+    public Collection<GCRoot> getGCRoots(Instance instance) {
        Long instanceId = Long.valueOf(instance.getInstanceId());
-       return gcRoots.getGCRoot(instanceId);
+       Object gcroot = gcRoots.getGCRoots(instanceId);
+       if (gcroot == null) {
+           return Collections.EMPTY_LIST;
+       }
+       if (gcroot instanceof GCRoot) {
+           return Collections.singletonList((GCRoot)gcroot);
+       }
+       return Collections.unmodifiableCollection((Collection)gcroot);
     }
 
-    public Collection getGCRoots() {
+    public Collection<GCRoot> getGCRoots() {
         if (heapDumpSegment == null) {
             return Collections.EMPTY_LIST;
         }
@@ -213,7 +221,7 @@ class HprofHeap implements Heap {
         return getClassDumpSegment().getJavaClassByName(fqn);
     }
 
-    public Collection getJavaClassesByRegExp(String regexp) {
+    public Collection<JavaClass> getJavaClassesByRegExp(String regexp) {
         if (heapDumpSegment == null) {
             return Collections.EMPTY_LIST;
         }
@@ -221,7 +229,7 @@ class HprofHeap implements Heap {
     }
     
     
-    private class InstancesIterator implements Iterator {
+    private class InstancesIterator implements Iterator<Instance> {
         private long[] offset;
         private Instance nextInstance;
         
@@ -236,7 +244,7 @@ class HprofHeap implements Heap {
             return nextInstance != null;
         }
 
-        public Object next() {
+        public Instance next() {
             if (hasNext()) {
                 Instance ni = nextInstance;
 
@@ -247,7 +255,7 @@ class HprofHeap implements Heap {
         }
     }
         
-    public Iterator getAllInstancesIterator() {
+    public Iterator<Instance> getAllInstancesIterator() {
         // make sure java classes are initialized
         List classes = getAllClasses();
         if (classes.isEmpty()) {
@@ -284,6 +292,22 @@ class HprofHeap implements Heap {
                 return HprofProxy.getProperties(props);
             }
         }
+        // Substrate VM
+        systemClass = getJavaClassByName("com.oracle.svm.core.jdk.SystemPropertiesSupport"); // NOI18N
+        if (systemClass != null) {
+            for (JavaClass propSupportSubClass : systemClass.getSubClasses()) {
+                List<Instance> propSupportInstances = propSupportSubClass.getInstances();
+
+                if (!propSupportInstances.isEmpty()) {
+                    Instance propSupportInstance = propSupportInstances.get(0);
+                    Object props = propSupportInstance.getValueOfField("properties");   // NOI18N
+
+                    if (props instanceof Instance) {
+                        return HprofProxy.getProperties((Instance) props);
+                    }
+                }
+            }
+        }
         return null;
     }
 
@@ -304,6 +328,7 @@ class HprofHeap implements Heap {
                 out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(outFile), 32768));
                 writeToStream(out);
                 out.close();
+                cacheDirectory.setDirty(false);
             } catch (IOException ex) {
                 ex.printStackTrace(System.err);
             }
@@ -314,6 +339,8 @@ class HprofHeap implements Heap {
         out.writeUTF(SNAPSHOT_ID);
         out.writeInt(SNAPSHOT_VERSION);
         out.writeUTF(heapDumpFile.getAbsolutePath());
+        out.writeLong(dumpBuffer.getTime());
+        out.writeUTF(System.getProperty(OS_PROP));
         nearestGCRoot.writeToStream(out);
         allInstanceDumpBounds.writeToStream(out);
         heapDumpSegment.writeToStream(out);
@@ -333,6 +360,9 @@ class HprofHeap implements Heap {
     }
 
     HprofHeap(DataInputStream dis, CacheDirectory cacheDir) throws IOException {
+        if (cacheDir.isDirty()) {
+            throw new IOException("Dirty cache "+cacheDir);
+        }
         String id = dis.readUTF();
         if (!SNAPSHOT_ID.equals(id)) {
             throw new IOException("Invalid HPROF dump id "+id);
@@ -344,6 +374,14 @@ class HprofHeap implements Heap {
         heapDumpFile = cacheDir.getHeapFile(dis.readUTF());
         cacheDirectory = cacheDir;
         dumpBuffer = HprofByteBuffer.createHprofByteBuffer(heapDumpFile);
+        long time = dis.readLong();
+        if (time != dumpBuffer.getTime()) {
+            throw new IOException("HPROF time mismatch. Cached "+time+" from heap dump "+dumpBuffer.getTime());
+        }
+        String os = dis.readUTF();
+        if (!os.equals(System.getProperty(OS_PROP))) {
+            throw new IOException("HPROF OS mismatch. Cached "+os+" current OS "+System.getProperty(OS_PROP));
+        }
         nearestGCRoot = new NearestGCRoot(this, dis);
         allInstanceDumpBounds = new TagBounds(dis);
         heapDumpSegment = new TagBounds(dis);
@@ -480,6 +518,7 @@ class HprofHeap implements Heap {
         }
 
         HeapProgress.progressStart();
+        cacheDirectory.setDirty(true);
         ClassDumpSegment classDumpBounds = getClassDumpSegment();
         int idSize = dumpBuffer.getIDSize();
         long[] offset = new long[] { allInstanceDumpBounds.startOffset };
@@ -551,11 +590,8 @@ class HprofHeap implements Heap {
                 long classId = dumpBuffer.getID(start + 1 + idSize + 4);
                 ClassDump classDump = classDumpBounds.getClassDumpByID(classId);
                 InstanceDump instance = new InstanceDump(classDump, start);
-                Iterator fieldIt = instance.getFieldValues().iterator();
 
-                while (fieldIt.hasNext()) {
-                    Object field = fieldIt.next();
-
+                for (Object field : instance.getFieldValues()) {
                     if (field instanceof HprofInstanceObjectValue) {
                         HprofInstanceObjectValue objectValue = (HprofInstanceObjectValue) field;
 
@@ -603,6 +639,7 @@ class HprofHeap implements Heap {
         Map classIdToClassMap = classDumpBounds.getClassIdToClassMap();
 
         computeInstances();
+        cacheDirectory.setDirty(true);
         for (long counter=0; offset[0] < allInstanceDumpBounds.endOffset; counter++) {
             long start = offset[0];
             int tag = readDumpTag(offset);
@@ -610,26 +647,28 @@ class HprofHeap implements Heap {
             if (tag == INSTANCE_DUMP) {
                 long classId = dumpBuffer.getID(start+1+idSize+4);
                 ClassDump classDump = (ClassDump) classIdToClassMap.get(new Long(classId));
-                long instanceId = dumpBuffer.getID(start+1);
-                long inOff = start+1+idSize+4+idSize+4;
-                List fields = classDump.getAllInstanceFields();
-                Iterator fit = fields.iterator();
-                
-                while(fit.hasNext()) {
-                    HprofField field = (HprofField) fit.next();
-                    if (field.getValueType() == HprofHeap.OBJECT) {
-                        long outId = dumpBuffer.getID(inOff);
-                        
-                        if (outId != 0) {
-                            LongMap.Entry entry = idToOffsetMap.get(outId);
-                            if (entry != null) {
-                                entry.addReference(instanceId);
-                            } else {
-                                //    System.err.println("instance entry:" + Long.toHexString(outId));
+                if (classDump != null) {
+                    long instanceId = dumpBuffer.getID(start+1);
+                    long inOff = start+1+idSize+4+idSize+4;
+                    List fields = classDump.getAllInstanceFields();
+                    Iterator fit = fields.iterator();
+
+                    while(fit.hasNext()) {
+                        HprofField field = (HprofField) fit.next();
+                        if (field.getValueType() == HprofHeap.OBJECT) {
+                            long outId = dumpBuffer.getID(inOff);
+
+                            if (outId != 0) {
+                                LongMap.Entry entry = idToOffsetMap.get(outId);
+                                if (entry != null) {
+                                    entry.addReference(instanceId);
+                                } else {
+                                    //    System.err.println("instance entry:" + Long.toHexString(outId));
+                                }
                             }
                         }
+                        inOff += field.getValueSize();
                     }
-                    inOff += field.getValueSize();
                 }
             } else if (tag == OBJECT_ARRAY_DUMP) {
                 long instanceId = dumpBuffer.getID(start+1);
@@ -655,11 +694,8 @@ class HprofHeap implements Heap {
         
         while (classesIt.hasNext()) {
             ClassDump classDump = (ClassDump)classesIt.next();
-            List fields = classDump.getStaticFieldValues();
-            Iterator fit = fields.iterator();
             
-            while(fit.hasNext()) {
-                Object field = fit.next();
+            for (FieldValue field : classDump.getStaticFieldValues()) {
                 if (field instanceof HprofFieldObjectValue) {
                     long outId = ((HprofFieldObjectValue)field).getInstanceID();
 
@@ -686,12 +722,15 @@ class HprofHeap implements Heap {
         if (retainedSizeComputed) {
             return;
         }
-        new TreeObject(this,nearestGCRoot.getLeaves()).computeTrees();
+        HeapProgress.progressStart();
+        LongBuffer leaves = nearestGCRoot.getLeaves();
+        cacheDirectory.setDirty(true);
+        new TreeObject(this,leaves).computeTrees();
         domTree = new DominatorTree(this,nearestGCRoot.getMultipleParents());
         domTree.computeDominators();
         long[] offset = new long[] { allInstanceDumpBounds.startOffset };
 
-        while (offset[0] < allInstanceDumpBounds.endOffset) {
+        for (long counter=0; offset[0] < allInstanceDumpBounds.endOffset; counter++) {
             int instanceIdOffset = 0;
             long start = offset[0];
             int tag = readDumpTag(offset);
@@ -711,10 +750,10 @@ class HprofHeap implements Heap {
             boolean isTreeObj = instanceEntry.isTreeObj();
             long instSize = 0;
             
-            if (!isTreeObj && (instanceEntry.getNearestGCRootPointer() != 0 || gcRoots.getGCRoot(new Long(instanceId)) != null)) {
+            if (!isTreeObj && (instanceEntry.getNearestGCRootPointer() != 0 || gcRoots.getGCRoots(new Long(instanceId)) != null)) {
                 long origSize = instanceEntry.getRetainedSize();
                 if (origSize < 0) origSize = 0;
-                Instance instance = getInstanceByID(instanceId);
+                Instance instance = getInstanceByOffset(new long[] {start});
                 instSize = instance != null ? instance.getSize() : getClassDumpSegment().getMinimumInstanceSize();
                 instanceEntry.setRetainedSize(origSize + instSize);
             }
@@ -738,10 +777,12 @@ class HprofHeap implements Heap {
                     entry.setRetainedSize(retainedSize+size);
                 }
             }
+            HeapProgress.progress(counter,allInstanceDumpBounds.startOffset,start,allInstanceDumpBounds.endOffset);
         }
         retainedSizeComputed = true;
         writeToFile();
         }
+        HeapProgress.progressFinish();
     }
 
     void computeRetainedSizeByClass() {
@@ -750,42 +791,42 @@ class HprofHeap implements Heap {
             return;
         }
         computeRetainedSize();
+        cacheDirectory.setDirty(true);
+        HeapProgress.progressStart();
         long[] offset = new long[] { allInstanceDumpBounds.startOffset };
 
-        while (offset[0] < allInstanceDumpBounds.endOffset) {
-            int instanceIdOffset = 0;
+        for (long counter=0; offset[0] < allInstanceDumpBounds.endOffset; counter++) {
             long start = offset[0];
             int tag = readDumpTag(offset);
 
-            if (tag == INSTANCE_DUMP) {
-                instanceIdOffset = 1;
-            } else if (tag == OBJECT_ARRAY_DUMP) {
-                instanceIdOffset = 1;
-            } else if (tag == PRIMITIVE_ARRAY_DUMP) {
-                instanceIdOffset = 1;
-            } else {
-                continue;
-            }
-            long instanceId = dumpBuffer.getID(start + instanceIdOffset);
-            Instance i = getInstanceByID(instanceId);
-            if (i != null) {
-                ClassDump javaClass = (ClassDump) i.getJavaClass();
-                if (javaClass != null && !domTree.hasInstanceInChain(tag, i)) {
-                    javaClass.addSizeForInstance(i);
+            if (tag == INSTANCE_DUMP || tag == OBJECT_ARRAY_DUMP || tag == PRIMITIVE_ARRAY_DUMP) {
+                Instance i = getInstanceByOffset(new long[] {start});
+                if (i != null) {
+                    ClassDump javaClass = (ClassDump) i.getJavaClass();
+                    if (javaClass != null && !domTree.hasInstanceInChain(tag, i)) {
+                        javaClass.addSizeForInstance(i);
+                    }
                 }
             }
+            HeapProgress.progress(counter,allInstanceDumpBounds.startOffset,start,allInstanceDumpBounds.endOffset);
         }
         // all done, release domTree
         domTree = null;
         retainedSizeByClassComputed = true;
         writeToFile();
         }
+        HeapProgress.progressFinish();
     }
 
     Instance getNearestGCRootPointer(Instance instance) {
         return nearestGCRoot.getNearestGCRootPointer(instance);
     }
     
+    boolean isGCRoot(Instance instance) {
+       Long instanceId = Long.valueOf(instance.getInstanceId());
+       return gcRoots.getGCRoots(instanceId) != null;
+    }
+
     int readDumpTag(long[] offset) {
         long position = offset[0];
         int dumpTag = dumpBuffer.get(position++) & 0xFF;
@@ -1164,6 +1205,20 @@ class HprofHeap implements Heap {
         return heapTagBounds[heapTag];
     }
 
+    /**
+     *
+     * @return number of microseconds since the time stamp in the header
+     */
+    long getHeapTime() {
+        if (heapDumpSegment == null) return 0;
+        return getTagTime(heapDumpSegment.startOffset);
+    }
+
+    private long getTagTime(long start) {
+        int time = dumpBuffer.getInt(start+1);
+        return time & 0xFFFFFFFFL; // time is unsigned int
+    }
+
     private TagBounds computeHeapDumpStart() throws IOException {
         TagBounds heapDumpBounds = tagBounds[HEAP_DUMP];
 
@@ -1190,13 +1245,34 @@ class HprofHeap implements Heap {
             TagBounds heapDumpSegmentBounds = tagBounds[HEAP_DUMP_SEGMENT];
 
             if (heapDumpSegmentBounds != null) {
+                heapDumpSegmentBounds = heapDumpSegmentBounds.union(tagBounds[HEAP_DUMP_END]);
                 long start = heapDumpSegmentBounds.startOffset;
-                long end = heapDumpSegmentBounds.endOffset;
+                long[] offset = new long[] { start };
+                long segmentStart = 0;
+                long segmentEnd = 0;
 
-                return new TagBounds(HEAP_DUMP, start, end);
+                for (int i = 0; (i <= segment) && (start < heapDumpSegmentBounds.endOffset);) {
+                    int tag = readTag(offset);
+
+                    if (tag == HEAP_DUMP_SEGMENT) {
+                        if (i == segment) {
+                            if (segmentStart == 0) segmentStart = start;
+                            segmentEnd = offset[0];
+                        }
+                    }
+                    if (tag == HEAP_DUMP_END) {
+                        if (i == segment) {
+                            return new TagBounds(HEAP_DUMP, segmentStart, segmentEnd);
+                        } else {
+                            i++;
+                        }
+                    }
+
+                    start = offset[0];
+                }
+                throw new IOException("Invalid segment " + segment); // NOI18N
             }
         }
-
         return null;
     }
 

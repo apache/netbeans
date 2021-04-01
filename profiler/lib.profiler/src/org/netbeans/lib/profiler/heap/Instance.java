@@ -36,7 +36,7 @@ public interface Instance {
      * Speed: normal
      * @return list of {@link FieldValue} instance field values.
      */
-    List /*<FieldValue>*/ getFieldValues();
+    List<FieldValue> getFieldValues();
 
     /**
      * returns <CODE>true</CODE> if this is instance of GC root.
@@ -89,7 +89,7 @@ public interface Instance {
      * Speed: first invocation is slow, all subsequent invocations are fast
      * @return list of {@link Value} representing all references to this instance
      */
-    List /*<Value>*/ getReferences();
+    List<Value> getReferences();
 
     long getRetainedSize();
 
@@ -110,7 +110,7 @@ public interface Instance {
      * Speed: normal
      * @return list of {@link FieldValue} static field values.
      */
-    List /*<FieldValue>*/ getStaticFieldValues();
+    List<FieldValue> getStaticFieldValues();
 
     /**
      * Returns a value object that reflects the specified field of the instance

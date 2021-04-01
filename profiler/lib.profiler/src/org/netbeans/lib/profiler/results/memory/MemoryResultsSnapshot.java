@@ -330,7 +330,7 @@ public abstract class MemoryResultsSnapshot extends ResultsSnapshot {
                 }
             }
 
-            table = new JMethodIdTable(JMethodIdTable.getDefault());
+            table = new JMethodIdTable(client.getJMethodIdTable());
         }        
     }
 

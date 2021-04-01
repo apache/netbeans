@@ -19,9 +19,6 @@
 
 package org.netbeans.lib.profiler.heap;
 
-import java.util.Iterator;
-
-
 /**
  *
  * @author Tomas Hurka
@@ -38,17 +35,16 @@ class ComputedSummary implements HeapSummary {
     ComputedSummary(HprofHeap heap) {
         long bytesCount = 0;
         long instancesCount = 0;
-        Iterator classIt = heap.getAllClasses().iterator();
 
-        while (classIt.hasNext()) {
-            JavaClass jcls = (JavaClass) classIt.next();
-
+        for (JavaClass jcls : heap.getAllClasses()) {
             instancesCount += jcls.getInstancesCount();
             bytesCount += jcls.getAllInstancesSize();
         }
         bytes = bytesCount;
         instances = instancesCount;
-        time = heap.dumpBuffer.getTime();
+        long headerTime = heap.dumpBuffer.getTime();
+        long tagTime = heap.getHeapTime() / 1000;
+        time = headerTime + tagTime;
     }
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------

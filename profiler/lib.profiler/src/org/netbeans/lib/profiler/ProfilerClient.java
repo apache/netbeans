@@ -97,7 +97,6 @@ public class ProfilerClient implements CommonConstants {
                         case Command.ROOT_CLASS_LOADED:
                             instrumentMethodGroupFromRoot((RootClassLoadedCommand) cmd);
 
-                            //instrMethodGroupFromRootComplete = true;
                             break;
                         case Command.CLASS_LOADED:
                         case Command.METHOD_INVOKED_FIRST_TIME:
@@ -281,7 +280,7 @@ public class ProfilerClient implements CommonConstants {
                                                                                    new Object[] { ebdCmd.getEventBufferFileName() }));
                             }
                         }
-                        JMethodIdTable.reset();
+                        resetJMethodIdTable();
                     }
                     readAndProcessProfilingResults(ebdCmd);
 
@@ -361,18 +360,19 @@ public class ProfilerClient implements CommonConstants {
     private Instrumentor instrumentor;
     private MemoryCCTProvider memCctProvider;
     private JdbcCCTProvider jdbcCctProvider;
+    private final Object methodIdsTableLock = new Object();
+    private JMethodIdTable methodIdsTable;
     private final Object execInSeparateThreadLock = new Object();
-    final private Object forceObtainedResultsDumpLock = new Object(); // To make dump processing and other commands mutually
-                                                                // exclusive
-
-    /*instrMethodGroupFromRootComplete, */
-    private final Object instrumentationLock = new Object(); // To make sure all instrumentation-related operations
-                                                       // happen serially
+    // To make dump processing and other commands mutually exclusive
+    final private Object forceObtainedResultsDumpLock = new Object();
+    // To make sure all instrumentation-related operations happen serially
+    private final Object instrumentationLock = new Object();
     private final Object responseLock = new Object();
     private ObjectInputStream socketIn;
     private ObjectOutputStream socketOut;
     private ProfilerEngineSettings settings;
     private ProfilingSessionStatus status;
+    private ProfilingPointsProcessor profilingPointProcessor;
     private volatile Response lastResponse;
     private SeparateCmdExecutionThread separateCmdExecThread;
     private ServerListener serverListener;
@@ -406,7 +406,8 @@ public class ProfilerClient implements CommonConstants {
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
-    public ProfilerClient(ProfilerEngineSettings settings, ProfilingSessionStatus status, AppStatusHandler ash,
+    public ProfilerClient(ProfilerEngineSettings settings, ProfilingSessionStatus status,
+            AppStatusHandler ash, ProfilingPointsProcessor ppp,
                           AppStatusHandler.ServerCommandHandler sch) {
         this.settings = settings;
         this.status = status;
@@ -521,6 +522,21 @@ public class ProfilerClient implements CommonConstants {
 
     public int getCurrentInstrType() {
         return status.currentInstrType;
+    }
+
+    public JMethodIdTable getJMethodIdTable() {
+        synchronized (methodIdsTableLock) {
+            if (methodIdsTable == null) {
+                methodIdsTable = new JMethodIdTable();
+            }
+            return methodIdsTable;
+        }
+    }
+
+    void resetJMethodIdTable() {
+        synchronized (methodIdsTableLock) {
+            methodIdsTable = null;
+        }
     }
 
     /**
@@ -737,7 +753,7 @@ public class ProfilerClient implements CommonConstants {
             try {
                 MonitoredNumbersResponse mresp = (MonitoredNumbersResponse) resp;
 
-                return MonitoredData.getMonitoredData(mresp);
+                return MonitoredData.getMonitoredData(getStatus(), mresp);
             } catch (ClassCastException ex) {
                 // FIXME: this diagnostics stuff should be ultimately removed once the root cause of the problem is understood
                 MiscUtils.printErrorMessage("caught ClassCastException in getMonitoredNumbers. The real class of resp is " // NOI18N
@@ -761,15 +777,10 @@ public class ProfilerClient implements CommonConstants {
         return settings;
     }
 
-    /**
-     * We are using this essentially to let user know when the longest part of what happens after hitting e.g.
-     * "Instrument Object Allocation", is complete. Otherwise it might be difficult to figure out what's going on
-     */
+    public ProfilingPointsProcessor getProfilingPointsProcessor() {
+        return profilingPointProcessor;
+    }
 
-    //  public boolean isInstrMethodGroupFromRootComplete()       { return instrMethodGroupFromRootComplete; }
-    //  public CPUCallGraphBuilder getCPUCallGraphBuilder() { return ccgb; }
-
-    //  public MemoryCallGraphBuilder getMemoryCallGraphBuilder() { return mcgb; }
     public ObjectInputStream getSocketInputStream() {
         return socketIn;
     }
@@ -1031,17 +1042,8 @@ public class ProfilerClient implements CommonConstants {
                 String[] rootClassNames = new String[]{settings.getMainClassName()};
                 commandOnStartup = createInitiateInstrumnetation(instrType, rootClassNames, false, status.startProfilingPointsActive);
 
-                //      switch (instrType) {
-                //        case INSTR_OBJECT_ALLOCATIONS:
-                //          mcgb = new ObjAllocCallGraphBuilder(this);
-                //          break;
-                //        case INSTR_OBJECT_LIVENESS:
-                //          mcgb = new ObjLivenessCallGraphBuilder(this);
-                //          break;
-                //      }
-
-                // See initiateRecursiveCPUProfInstrumentation for why it's important to setCurrentInstrType() early
             }
+            // See initiateRecursiveCPUProfInstrumentation for why it's important to setCurrentInstrType() early
             setCurrentInstrType(instrType);
 
             if (status.targetAppRunning) {
@@ -1053,8 +1055,6 @@ public class ProfilerClient implements CommonConstants {
                     appStatusHandler.displayWarning(errorMessage);
                 }
             }
-
-            //instrMethodGroupFromRootComplete = false;
         }
     }
 
@@ -1091,16 +1091,6 @@ public class ProfilerClient implements CommonConstants {
             commandOnStartup = cmd;
             status.setTimerTypes(settings.getAbsoluteTimerOn(), settings.getThreadCPUTimerOn());
 
-            // the following code is moved to the CPUCallGraphBuilder.startup() method
-            //      switch (instrType) {
-            //        case INSTR_RECURSIVE_FULL:
-            //          ccgb = new FullInstrCPUCallGraphBuilder(this);
-            //          break;
-            //        case INSTR_RECURSIVE_SAMPLED:
-            //          ccgb = new SampledInstrCPUCallGraphBuilder(this);
-            //          break;
-            //      }
-
             // It's important that we set current instr type *before* we make the following call. That's because,
             // if targetAppRunning, at the server side all the operations in reaction to the commandOnStartup are performed
             // in a separate thread. It appears that that thread may quickly send back the response with loaded classes etc..,
@@ -1117,9 +1107,6 @@ public class ProfilerClient implements CommonConstants {
                     appStatusHandler.displayWarning(errorMessage);
                 }
             }
-
-            //      CPUResultsDispatcher.getInstance().setProfilerClient(this); // initialize CPUResultsDispatcher
-            //instrMethodGroupFromRootComplete = false;
         }
     }
 
@@ -1182,8 +1169,6 @@ public class ProfilerClient implements CommonConstants {
             }
 
             setCurrentInstrType(INSTR_NONE);
-
-            //instrMethodGroupFromRootComplete = true;  // False means we are awaiting this event or it's being processed
         }
     }
 
@@ -1202,10 +1187,6 @@ public class ProfilerClient implements CommonConstants {
 
         status.resetInstrClassAndMethodInfo();
         instrumentor.resetPerVMInstanceData();
-
-        //    CPUResultsDispatcher.getInstance().stop();
-        //    mcgb = null;
-        //    CPUResultsDispatcher.getInstance().shutdown();
     }
 
     public synchronized void resetProfilerCollectors()
@@ -1325,21 +1306,7 @@ public class ProfilerClient implements CommonConstants {
                         }
                     }
 
-                    // the following code is moved to the CPUCallGraphBuilder.startup() method
-                    //          if (getCurrentInstrType() == INSTR_RECURSIVE_FULL) {
-                    //            ccgb = new FullInstrCPUCallGraphBuilder(this);
-                    //          } else {
-                    //            ccgb = new SampledInstrCPUCallGraphBuilder(this);
-                    //          }
-                    //          CPUResultsDispatcher.getInstance().setProfilerClient(this);  // initialize CPUResultsDispatcher
                     break;
-
-                //        case INSTR_OBJECT_ALLOCATIONS:
-                //          mcgb = new ObjAllocCallGraphBuilder(this);
-                //          break;
-                //        case INSTR_OBJECT_LIVENESS:
-                //          mcgb = new ObjLivenessCallGraphBuilder(this);
-                //          break;
             }
 
             String errorMessage = sendCommandAndGetResponse(commandOnStartup);
@@ -1613,12 +1580,10 @@ public class ProfilerClient implements CommonConstants {
         // But avoid doing that while we are processing the data at the client side, since it looks like when these two
         // things happen at the same time, it's likely to cause problems.
         // This is a quick fix. Probably a more solid solution is needed.
-        if (handlingEventBufferDump) {
-            while (handlingEventBufferDump) {
-                try {
-                    Thread.sleep(20);
-                } catch (Exception ex) {
-                }
+        while (handlingEventBufferDump) {
+            try {
+                Thread.sleep(20);
+            } catch (Exception ex) {
             }
         }
 
@@ -1666,8 +1631,6 @@ public class ProfilerClient implements CommonConstants {
                 Thread.sleep(400);
             } catch (InterruptedException e) {
             }
-
-            //serverCommandHandler.handleServerCommand(null); // does not seem to do anything
         } catch (IOException ex) {
             // Don't do anything
         } finally {

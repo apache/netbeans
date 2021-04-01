@@ -38,7 +38,7 @@ class StackTraceSegment extends TagBounds {
     final int framesListOffset;
     final int numberOfFramesOffset;
     final int timeOffset;
-    private Map serialNumToStackTrace;
+    private Map<Long,Long> serialNumToStackTrace;
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
@@ -61,7 +61,7 @@ class StackTraceSegment extends TagBounds {
         long[] offset;
         
         initSerialNumToFrame();
-        initialOffset = (Long) serialNumToStackTrace.get(new Long(stackTraceSerialNumber/SERIALNUM_DIV));
+        initialOffset = serialNumToStackTrace.get(new Long(stackTraceSerialNumber/SERIALNUM_DIV));
         if (initialOffset == null) {
             initialOffset = new Long(startOffset);
         }
@@ -101,7 +101,7 @@ class StackTraceSegment extends TagBounds {
                 long start = offset[0];
                 long serialNumber = readStackTraceTag(offset);
                 Long serialNumberMask = new Long(serialNumber/SERIALNUM_DIV);
-                Long minOffset = (Long) serialNumToStackTrace.get(serialNumberMask);
+                Long minOffset = serialNumToStackTrace.get(serialNumberMask);
                 
                 if (minOffset == null || minOffset > start) {
                     serialNumToStackTrace.put(serialNumberMask, new Long(start));

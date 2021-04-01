@@ -20,6 +20,7 @@
 package org.netbeans.lib.profiler.server;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.List;
 import org.netbeans.lib.profiler.global.Platform;
 import org.netbeans.lib.profiler.server.system.Stacks;
@@ -485,7 +486,7 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
 
     static void writeRetValue(Object ret, ThreadInfo ti) {
         if (ret != NO_RET_VALUE) {
-            ti.addParameter(ret != null ? converToString(ret) : "");
+            ti.addParameter(ret != null ? convertToString(ret) : "");
             writeParametersEvent(ti);
         }
     }
@@ -660,7 +661,7 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
         }
 
         ti.inProfilingRuntimeMethod++;
-        ti.addParameter(b != null ? converToString(b) : "");
+        ti.addParameter(b != null ? convertToString(b) : "");
         ti.inProfilingRuntimeMethod--; 
     }
     
@@ -672,6 +673,8 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
             return 1;
         } else if (type == Byte.class) {
             return 1;
+        } else if (type == Short.class) {
+            return 2;
         } else if (type == Character.class) {
             return 2;
         } else if (type == Short.class) {
@@ -704,6 +707,11 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
             byte vp = ((Byte)p).byteValue();
             evBuf[curPos++] = ProfilerInterface.BYTE;
             evBuf[curPos++] = vp;
+        } else if (type == Short.class) {
+            short vp = ((Short)p).shortValue();
+            evBuf[curPos++] = ProfilerInterface.SHORT;
+            evBuf[curPos++] = (byte) ((vp >> 8) & 0xFF);
+            evBuf[curPos++] = (byte) ((vp) & 0xFF);
         } else if (type == Character.class) {
             char vp = ((Character)p).charValue();
             evBuf[curPos++] = ProfilerInterface.CHAR;
@@ -758,17 +766,17 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
         return curPos;
     }
     
-    static String converToString(Object o) {
+    static String convertToString(Object o) {
         String clazz = o.getClass().getName();
         
         if (clazz.startsWith("java.lang.")) {
             return o.toString();
         }
         if (clazz.equals("java.sql.Date")) {
-            return String.valueOf(((java.sql.Date)o).getTime());
+            return String.valueOf(((Date)o).getTime());
         }
         if (clazz.equals("java.sql.Timestamp")) {
-            return String.valueOf(((java.sql.Timestamp)o).getTime());            
+            return String.valueOf(((Date)o).getTime());
         }
         if (clazz.equals("java.math.BigDecimal")) {
             return o.toString();

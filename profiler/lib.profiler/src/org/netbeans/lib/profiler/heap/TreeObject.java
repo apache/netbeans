@@ -93,7 +93,7 @@ class TreeObject {
                 
                 for  (int i=0; i<arrSize && size != -1; i++) {
                     long refInstanceId = heap.dumpBuffer.getID(offset + (i * idSize));
-                    size = checkInstance(instanceId, refInstanceId, refs);
+                    size = checkInstance(refInstanceId, refs);
                     retainedSize += size;
                 }
                 changed |= processInstance(instance, size, retainedSize);
@@ -118,11 +118,11 @@ class TreeObject {
             LongSet refs = new LongSet();
             valuesIt = fieldValues.iterator();
             while (valuesIt.hasNext() && size != -1) {
-                FieldValue val = (FieldValue) valuesIt.next();
+                Object val = valuesIt.next();
                 
                 if (val instanceof ObjectFieldValue) {
                     Instance refInstance = ((ObjectFieldValue) val).getInstance();
-                    size = checkInstance(instanceId, refInstance, refs);
+                    size = checkInstance(refInstance, refs);
                     retainedSize += size;
                 }
             }
@@ -134,7 +134,7 @@ class TreeObject {
     private boolean processInstance(Instance instance, long size, long retainedSize) throws IOException {
         if (size != -1) {
             LongMap.Entry entry = heap.idToOffsetMap.get(instance.getInstanceId());
-            entry.setRetainedSize((int)(instance.getSize()+retainedSize));
+            entry.setRetainedSize(instance.getSize()+retainedSize);
             entry.setTreeObj();
             if (entry.hasOnlyOneReference()) {
                 long gcRootPointer = entry.getNearestGCRootPointer();
@@ -178,14 +178,14 @@ class TreeObject {
         }
     }
     
-    private long checkInstance(long instanceId, Instance refInstance, LongSet refs) throws IOException {
+    private long checkInstance(Instance refInstance, LongSet refs) throws IOException {
         if (refInstance != null) {
-            return checkInstance(instanceId, refInstance.getInstanceId(), refs);
+            return checkInstance(refInstance.getInstanceId(), refs);
         }
         return 0;
     }
     
-    private long checkInstance(long instanceId, long refInstanceId, LongSet refs) throws IOException {
+    private long checkInstance(long refInstanceId, LongSet refs) throws IOException {
         if (refInstanceId != 0L) {
             LongMap.Entry refEntry = heap.idToOffsetMap.get(refInstanceId);
             

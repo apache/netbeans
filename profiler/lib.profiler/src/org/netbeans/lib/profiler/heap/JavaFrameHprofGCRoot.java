@@ -19,8 +19,6 @@
 
 package org.netbeans.lib.profiler.heap;
 
-import java.util.Iterator;
-
 /**
  *
  * @author Tomas Hurka

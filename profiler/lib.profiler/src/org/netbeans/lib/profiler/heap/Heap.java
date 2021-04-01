@@ -39,7 +39,7 @@ public interface Heap {
      * Speed: slow for the first time, subsequent invocations are fast.
      * @return list of all {@link JavaClass} in the heap.
      */
-    List /*<JavaClass>*/ getAllClasses();
+    List<JavaClass> getAllClasses();
     
     /**
      * computes List of N biggest {@link Instance}-s in this heap.
@@ -49,16 +49,16 @@ public interface Heap {
      * @param number size of the returned List
      * @return list of N biggest {@link Instance}.
      */
-    List /*<Instance>*/ getBiggestObjectsByRetainedSize(int number);
+    List<Instance> getBiggestObjectsByRetainedSize(int number);
     
     /**
-     * returns {@link GCRoot} for {@link Instance}.
+     * returns list of {@link GCRoot} for {@link Instance}.
      * <br>
      * Speed: normal for first invocation, fast for subsequent
-     * @param instance {@link Instance} whose associated {@link GCRoot} is to be returned.
-     * @return {@link GCRoot} for corresponding instance or <CODE>null</CODE> if instance is not GC root.
+     * @param instance {@link Instance} whose associated list of {@link GCRoot} is to be returned.
+     * @return list of {@link GCRoot} for corresponding instance or empty list if instance is not GC root.
      */
-    GCRoot getGCRoot(Instance instance);
+    Collection<GCRoot> getGCRoots(Instance instance);
 
     /**
      * returns list of all GC roots.
@@ -66,7 +66,7 @@ public interface Heap {
      * Speed: normal for first invocation, fast for subsequent
      * @return list of {@link GCRoot} instances representing all GC roots.
      */
-    Collection /*<GCRoot>*/ getGCRoots();
+    Collection<GCRoot> getGCRoots();
 
     /**
      * computes {@link Instance} for instanceId.
@@ -107,7 +107,7 @@ public interface Heap {
      * @return return collection of {@link JavaClass} instances, which names satisfy the regexp expression. This
      * collection is empty if no class matches the regular expression
      */
-    Collection getJavaClassesByRegExp(String regexp);
+    Collection<JavaClass> getJavaClassesByRegExp(String regexp);
 
     /**
      * returns an iterator over the {@link Instance}es in the whole heap. There are no
@@ -117,7 +117,7 @@ public interface Heap {
      *
      * @return an <tt>Iterator</tt> over the {@link Instance}es in this heap
      */
-    public Iterator getAllInstancesIterator();
+    public Iterator<Instance> getAllInstancesIterator();
     
     /**
      * returns optional summary information of the heap.

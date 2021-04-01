@@ -75,7 +75,7 @@ public class MonitoredData {
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
-    private MonitoredData(MonitoredNumbersResponse mresp) {
+    private MonitoredData(ProfilingSessionStatus status, MonitoredNumbersResponse mresp) {
         long[] gn = mresp.getGeneralMonitoredNumbers();
         generalMNumbers = new long[gn.length];
         System.arraycopy(gn, 0, generalMNumbers, 0, gn.length);
@@ -117,9 +117,9 @@ public class MonitoredData {
         }
 
         gcStarts = mresp.getGCStarts();
-        convertToTimeInMillis(gcStarts);
+        convertToTimeInMillis(status, gcStarts);
         gcFinishs = mresp.getGCFinishs();
-        convertToTimeInMillis(gcFinishs);
+        convertToTimeInMillis(status, gcFinishs);
 
         serverState = mresp.getServerState();
         serverProgress = mresp.getServerProgress();
@@ -173,7 +173,11 @@ public class MonitoredData {
      * generally can't afford that, so here we create a new object every time and copy data into it.
      */
     public static MonitoredData getMonitoredData(MonitoredNumbersResponse mresp) {
-        return new MonitoredData(mresp);
+        return new MonitoredData(null, mresp);
+    }
+
+    public static MonitoredData getMonitoredData(ProfilingSessionStatus status, MonitoredNumbersResponse mresp) {
+        return new MonitoredData(status, mresp);
     }
 
     public int getNNewThreads() {
@@ -250,9 +254,8 @@ public class MonitoredData {
         return generalMNumbers[MonitoredNumbersResponse.TOTAL_MEMORY_IDX];
     }
 
-    private static void convertToTimeInMillis(final long[] hiResTimeStamp) {
+    private static void convertToTimeInMillis(ProfilingSessionStatus session, final long[] hiResTimeStamp) {
         if (hiResTimeStamp.length > 0) {
-            ProfilingSessionStatus session = TargetAppRunner.getDefault().getProfilingSessionStatus();
             long statupInCounts = session.startupTimeInCounts;
             long startupMillis = session.startupTimeMillis;
 

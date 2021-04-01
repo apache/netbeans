@@ -42,8 +42,8 @@ class StackFrameSegment extends TagBounds {
     final int timeOffset;
     final int classSerialNumberOffset;
     final int lineNumberOffset;
-    private Map idToFrame;
-    private Map classCache = Collections.synchronizedMap(new LoadClassCache());
+    private Map<Long,Long> idToFrame;
+    private Map<Integer,String> classCache = Collections.synchronizedMap(new LoadClassCache());
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
@@ -69,7 +69,7 @@ class StackFrameSegment extends TagBounds {
         long[] offset;
         
         initIdToFrame();
-        initialOffset = (Long) idToFrame.get(new Long(stackFrameID/FRAME_DIV));
+        initialOffset = idToFrame.get(new Long(stackFrameID/FRAME_DIV));
         if (initialOffset == null) {
             initialOffset = new Long(startOffset);
         }
@@ -108,7 +108,7 @@ class StackFrameSegment extends TagBounds {
                 long start = offset[0];
                 long frameID = readStackFrameTag(offset);
                 Long frameIDMask = new Long(frameID/FRAME_DIV);
-                Long minOffset = (Long) idToFrame.get(frameIDMask);
+                Long minOffset = idToFrame.get(frameIDMask);
                 
                 if (minOffset == null || minOffset > start) {
                     idToFrame.put(frameIDMask, new Long(start));
@@ -120,7 +120,7 @@ class StackFrameSegment extends TagBounds {
     
     String getClassNameBySerialNumber(int classSerialNumber) {
         Integer classSerialNumberObj = Integer.valueOf(classSerialNumber);
-        String className = (String) classCache.get(classSerialNumberObj);
+        String className = classCache.get(classSerialNumberObj);
         
         if (className == null) {
             LoadClass loadClass = hprofHeap.getLoadClassSegment().getClassBySerialNumber(classSerialNumber);

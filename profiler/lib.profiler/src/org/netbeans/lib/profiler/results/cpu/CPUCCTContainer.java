@@ -386,7 +386,7 @@ public class CPUCCTContainer {
 
     protected void addFlatProfTimeForNode(int dataOfs) {
         int methodId = getMethodIdForNodeOfs(dataOfs);
-        Integer methodIdInt = new Integer(methodId);
+        Integer methodIdInt = Integer.valueOf(methodId);
         boolean isRecursiveCall = methodsOnStack.contains(methodIdInt);
         
         if (methodId >= invPerMethodId.length) {
@@ -516,6 +516,7 @@ public class CPUCCTContainer {
         invPerMethodId = null;
         methodsOnStack = null;
 
+        fpc.filterOriginalData(cpuResSnapshot.filter);
         return fpc;
     }
 

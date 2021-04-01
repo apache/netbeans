@@ -136,9 +136,7 @@ public class CPUCallGraphBuilder extends BaseCallGraphBuilder implements CPUProf
 
                 // Fix the problem with inconsistent thread times that otherwise will occur for e.g. threads sitting in wait()
                 // for long enough time when "get results" is pressed
-                /* not in use any longer
-                   ti.applyDiffAtGetResultsMoment();
-                 */
+                applyDiffAtGetResultsMoment(ti);
                 double[] activeTimes = calculateThreadActiveTimes(ti);
 
                 TimedCPUCCTNode rootNode = ti.stack[0];
@@ -149,6 +147,7 @@ public class CPUCallGraphBuilder extends BaseCallGraphBuilder implements CPUProf
                 if ((cct.rootNode != null) && (cct.rootNode.getNChildren() > 0)) {
                     ccts.add(cct);
                 }
+                undoDiffAtGetResultsMoment(ti);
             }
 
             return (CPUCCTContainer[]) ccts.toArray(new CPUCCTContainer[0]);
@@ -163,6 +162,17 @@ public class CPUCallGraphBuilder extends BaseCallGraphBuilder implements CPUProf
 
     protected boolean isCollectingTwoTimeStamps() {
         return status.collectingTwoTimeStamps();
+    }
+
+    /** See the comment to ThreadInfo.diffAtGetResultsMoment field. */
+    protected void applyDiffAtGetResultsMoment(ThreadInfo ti) {
+    }
+
+    /**
+     * See the comment to ThreadInfo.diffAtGetResultsMoment field. When we resume data processing for the given thread,
+     * we need to undo the effect of applyDiffAtGetResultsMoment.
+     */
+    protected void undoDiffAtGetResultsMoment(ThreadInfo ti) {
     }
 
     protected long getDumpAbsTimeStamp() {
@@ -548,7 +558,7 @@ public class CPUCallGraphBuilder extends BaseCallGraphBuilder implements CPUProf
             return;
         }
 
-        final ProfilingPointsProcessor ppp = TargetAppRunner.getDefault().getProfilingPointsProcessor();
+        final ProfilingPointsProcessor ppp = client.getProfilingPointsProcessor();
 
         afterBatchCommands.add(new Runnable() {
             public void run() {
@@ -565,7 +575,6 @@ public class CPUCallGraphBuilder extends BaseCallGraphBuilder implements CPUProf
             return;
         }
 
-        final ProfilingPointsProcessor ppp = TargetAppRunner.getDefault().getProfilingPointsProcessor();
         ThreadInfo ti = threadInfos.threadInfos[threadId];
 
         // In this case, time stamps are actually time adjustments.
@@ -578,12 +587,16 @@ public class CPUCallGraphBuilder extends BaseCallGraphBuilder implements CPUProf
             ti.topMethodEntryTime1 += timeDiff1;
         }
 
-        if (ppp != null) {
-            afterBatchCommands.add(new Runnable() {
-                public void run() {
-                    ppp.timeAdjust(threadId, timeDiff0, timeDiff1);
-                }
-            });
+        ProfilerClient client = getClient();
+        if (client != null) {
+            final ProfilingPointsProcessor ppp = client.getProfilingPointsProcessor();
+            if (ppp != null) {
+                afterBatchCommands.add(new Runnable() {
+                    public void run() {
+                        ppp.timeAdjust(threadId, timeDiff0, timeDiff1);
+                    }
+                });
+            }
         }
         batchNotEmpty = true;
     }

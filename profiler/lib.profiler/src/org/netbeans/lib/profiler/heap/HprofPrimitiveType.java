@@ -30,7 +30,7 @@ import java.util.Map;
 class HprofPrimitiveType implements PrimitiveType {
     //~ Static fields/initializers -----------------------------------------------------------------------------------------------
 
-    private static Map primitiveTypeMap;
+    private static Map<Integer,Type> primitiveTypeMap;
 
     static {
         primitiveTypeMap = new HashMap(10);
@@ -61,6 +61,6 @@ class HprofPrimitiveType implements PrimitiveType {
     }
 
     static Type getType(byte type) {
-        return (Type) primitiveTypeMap.get(Integer.valueOf(type));
+        return primitiveTypeMap.get(Integer.valueOf(type));
     }
 }

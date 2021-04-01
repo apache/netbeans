@@ -137,32 +137,12 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     file = URLMapper.findFileObject(new URL(uri));
                 } catch (MalformedURLException ex) {
                     Exceptions.printStackTrace(ex);
-                    return CompletableFuture.completedFuture(true);
+                    return CompletableFuture.completedFuture(Collections.emptyList());
                 }
-                final Set<URL> testRootURLs = new HashSet<>();
-                return server.asyncOpenFileOwner(file).thenCompose(prj -> {
-                    List<CompletableFuture<?>> futures = new ArrayList<>();
-                    if (prj != null) {
-                        for (SourceGroup sg : ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
-                            for (URL url : UnitTestForSourceQuery.findUnitTests(sg.getRootFolder())) {
-                                testRootURLs.add(url);
-                            }
-                        }
-                        for (Project containedPrj : ProjectUtils.getContainedProjects(prj, true)) {
-                            boolean testRootFound = false;
-                            for (SourceGroup sg : ProjectUtils.getSources(containedPrj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
-                                for (URL url : UnitTestForSourceQuery.findUnitTests(sg.getRootFolder())) {
-                                    testRootURLs.add(url);
-                                    testRootFound = true;
-                                }
-                            }
-                            if (testRootFound) {
-                                futures.add(server.asyncOpenFileOwner(containedPrj.getProjectDirectory()));
-                            }
-                        }
-                    }
-                    return CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()]));
-                }).thenApply(value -> {
+                if (file == null) {
+                    return CompletableFuture.completedFuture(Collections.emptyList());
+                }
+                return server.asyncOpenFileOwner(file).thenCompose(this::getTestRootURLs).thenApply(testRootURLs -> {
                     List<TestMethodController.TestMethod> testMethods = new ArrayList<>();
                     findTestMethods(testRootURLs, testMethods);
                     if (testMethods.isEmpty()) {
@@ -195,6 +175,31 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
+    }
+
+    private CompletableFuture<Set<URL>> getTestRootURLs(Project prj) {
+        final Set<URL> testRootURLs = new HashSet<>();
+        List<CompletableFuture<?>> futures = new ArrayList<>();
+        if (prj != null) {
+            for (SourceGroup sg : ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
+                for (URL url : UnitTestForSourceQuery.findUnitTests(sg.getRootFolder())) {
+                    testRootURLs.add(url);
+                }
+            }
+            for (Project containedPrj : ProjectUtils.getContainedProjects(prj, true)) {
+                boolean testRootFound = false;
+                for (SourceGroup sg : ProjectUtils.getSources(containedPrj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
+                    for (URL url : UnitTestForSourceQuery.findUnitTests(sg.getRootFolder())) {
+                        testRootURLs.add(url);
+                        testRootFound = true;
+                    }
+                }
+                if (testRootFound) {
+                    futures.add(server.asyncOpenFileOwner(containedPrj.getProjectDirectory()));
+                }
+            }
+        }
+        return CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()])).thenApply(value -> testRootURLs);
     }
 
     private void findTestMethods(Set<URL> testRootURLs, List<TestMethodController.TestMethod> testMethods) {

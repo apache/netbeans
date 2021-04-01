@@ -22,7 +22,6 @@
 <licenseinfo>
     <fileset>
         <file>test/unit/src/org/netbeans/lib/profiler/heap/heap_dump.bin</file>
-        <file>test/unit/src/org/netbeans/lib/profiler/heap/heapDumpLog.txt</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
         <sourceOnly />

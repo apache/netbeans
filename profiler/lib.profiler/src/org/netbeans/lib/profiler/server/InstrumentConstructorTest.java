@@ -19,8 +19,8 @@
 
 package org.netbeans.lib.profiler.server;
 
-import org.graalvm.visualvm.lib.jfluid.global.CommonConstants;
-import org.graalvm.visualvm.lib.jfluid.global.Platform;
+import org.netbeans.lib.profiler.global.CommonConstants;
+import org.netbeans.lib.profiler.global.Platform;
 
 /**
  *

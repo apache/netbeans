@@ -36,6 +36,12 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import static org.netbeans.lib.profiler.global.CommonConstants.JDK_110_BEYOND_STRING;
+import static org.netbeans.lib.profiler.global.CommonConstants.JDK_15_STRING;
+import static org.netbeans.lib.profiler.global.CommonConstants.JDK_16_STRING;
+import static org.netbeans.lib.profiler.global.CommonConstants.JDK_17_STRING;
+import static org.netbeans.lib.profiler.global.CommonConstants.JDK_18_STRING;
+import static org.netbeans.lib.profiler.global.CommonConstants.JDK_19_STRING;
 
 
 /**

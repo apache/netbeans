@@ -31,6 +31,7 @@ import org.netbeans.lib.profiler.classfile.ClassRepository;
 import org.netbeans.lib.profiler.client.AppStatusHandler;
 import org.netbeans.lib.profiler.client.ClientUtils;
 import org.netbeans.lib.profiler.client.MonitoredData;
+import org.netbeans.lib.profiler.client.ProfilingPointsProcessor;
 import org.netbeans.lib.profiler.client.RuntimeProfilingPoint;
 import org.netbeans.lib.profiler.global.CalibrationDataFileIO;
 import org.netbeans.lib.profiler.global.CommonConstants;

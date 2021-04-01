@@ -20,6 +20,7 @@
 package org.netbeans.lib.profiler.results.cpu;
 
 import org.netbeans.lib.profiler.client.ClientUtils;
+import org.netbeans.lib.profiler.filters.InstrumentationFilter;
 import org.netbeans.lib.profiler.global.CommonConstants;
 import org.netbeans.lib.profiler.utils.IntSorter;
 import org.netbeans.lib.profiler.utils.LongSorter;

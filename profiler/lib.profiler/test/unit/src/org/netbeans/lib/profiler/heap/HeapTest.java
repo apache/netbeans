@@ -91,8 +91,15 @@ public class HeapTest {
      */
     @Test
     public void testGetGCRoot() {
-        Instance instance_2 = heap.getInstanceByID(3606613704l);
-        GCRoot result = heap.getGCRoot(instance_2);
+        System.out.println("getGCRoot");
+        Instance instance_2 = heap.getInstanceByID(1684081264);
+        Collection<GCRoot> resultList = heap.getGCRoots(instance_2);
+        assertEquals(resultList.size(), 2);
+        GCRoot[] results = resultList.toArray(new GCRoot[0]);
+        GCRoot result = results[0];
+        assertEquals(instance_2, result.getInstance());
+        assertEquals(GCRoot.JAVA_FRAME, result.getKind());
+        result = results[1];
         assertEquals(instance_2, result.getInstance());
         assertEquals(GCRoot.MONITOR_USED, result.getKind());
     }

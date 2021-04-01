@@ -34,6 +34,8 @@ import org.netbeans.lib.profiler.filters.InstrumentationFilter;
 import org.netbeans.lib.profiler.global.CommonConstants;
 import org.netbeans.lib.profiler.global.ProfilingSessionStatus;
 import org.netbeans.lib.profiler.results.RuntimeCCTNode;
+import org.netbeans.lib.profiler.results.cpu.cct.nodes.MethodCPUCCTNode;
+import org.netbeans.lib.profiler.results.cpu.cct.nodes.TimedCPUCCTNode;
 
 /**
  *

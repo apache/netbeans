@@ -27,7 +27,6 @@
 * Micronaut projects support added
   * YAML configuration files code completion
 * Maven multi-project projects support
-* Maven repository index download is not performed
 * Gradle projects improvements
   * Multi-project projects supported
   * Priming build is run and project remembered as trusted

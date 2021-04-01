@@ -24,8 +24,11 @@
     <import file="../../nbbuild/templates/projectized.xml"/>
 
     <property name="profiler.cluster" value="./release"/>
+    <property name="header.dir" value="${basedir}/native/build"/>
     <target name="-process.release.files">
-        <unzip src="external/profiler-external-binaries-8.2.zip" dest="${profiler.cluster}"/>
+        <unzip src="external/profiler-external-binaries-8.2.zip" 
+               overwrite="false"
+               dest="${profiler.cluster}"/>
     </target>
 
   <!-- Compile the JFluid engine system library, that depends on JDK version - so there are two libraries -->
@@ -46,6 +49,7 @@
                 deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="${javac.source}" target="${javac.target}" includeantruntime="false">
             <include name="org/netbeans/lib/profiler/server/system/**"/>
             <compilerarg line="${javac.compilerargs}"/>
+            <compilerarg line="-h ${header.dir}"/>
         </javac>
         <mkdir dir="${buildcvm.classes.dir}"/>
         <javac  srcdir="${srccvm.dir}" destdir="${buildcvm.classes.dir}" deprecation="${build.compiler.deprecation}"
@@ -60,6 +64,7 @@
             <include name="org/netbeans/lib/profiler/global/**"/>
             <include name="org/netbeans/lib/profiler/wireprotocol/**"/>
             <compilerarg line="${javac.compilerargs}"/>
+            <compilerarg line="-h ${header.dir}"/>
         </javac>
     </target>
 

@@ -178,10 +178,15 @@ class HprofHeap implements Heap {
     }
 
     public GCRoot getGCRoot(Instance instance) {
+        JavaFrameHprofGCRoot fallback = null;
         for (GCRoot root : getGCRoots(instance)) {
+            if (root instanceof JavaFrameHprofGCRoot) {
+                fallback = (JavaFrameHprofGCRoot) root;
+                continue;
+            }
             return root;
         }
-        return null;
+        return fallback;
     }
     
     public Collection<GCRoot> getGCRoots(Instance instance) {

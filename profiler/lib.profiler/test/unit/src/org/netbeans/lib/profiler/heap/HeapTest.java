@@ -18,29 +18,16 @@
  */
 package org.netbeans.lib.profiler.heap;
 
-import java.io.BufferedOutputStream;
-import java.util.Map;
-import java.util.Date;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
-import java.util.TimeZone;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -103,7 +90,7 @@ public class HeapTest {
     @Test
     public void testGetGCRootNew() {
         System.out.println("getGCRoot");
-        Instance instance_2 = heap.getInstanceByID(1684081264);
+        Instance instance_2 = heap.getInstanceByID(3606613704l);
         Collection<GCRoot> resultList = heap.getGCRoots(instance_2);
         assertEquals(resultList.size(), 2);
         GCRoot[] results = resultList.toArray(new GCRoot[0]);
@@ -121,7 +108,7 @@ public class HeapTest {
     @Test
     public void testGetGCRoots() {
         Collection result = heap.getGCRoots();
-        assertEquals(429, result.size());
+        assertEquals(453, result.size());
     }
 
     /**
@@ -246,136 +233,5 @@ public class HeapTest {
             }
             assertFalse(instIt.hasNext());
         }
-    }
-
-    @Test
-    public void testHeapDumpLog() throws IOException, URISyntaxException {
-        File outFile = File.createTempFile("heapDumpLog", ".txt");
-        URL url = getClass().getResource("heapDumpLog.txt");
-        File goledFile = new File(url.toURI());
-        OutputStream outs = new FileOutputStream(outFile);
-        PrintStream out = new PrintStream(new BufferedOutputStream(outs, 128 * 1024), false, "UTF-8");
-        HeapSummary summary = heap.getSummary();
-        out.println("Heap Summary");
-        DateFormat df = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss aaa", Locale.US);
-        df.setTimeZone(TimeZone.getTimeZone("UTC"));
-        out.println("Time " + df.format(new Date(summary.getTime())));
-        out.println("Live instances " + summary.getTotalLiveInstances());
-        out.println("Live bytes " + summary.getTotalLiveBytes());
-        out.println("Total alloc instances " + summary.getTotalAllocatedInstances());
-        out.println("Total alloc bytes " + summary.getTotalAllocatedBytes());
-        Collection classes = heap.getAllClasses();
-        out.println("Classes size " + classes.size());
-        out.println("System properties: ");
-        for (Object en : heap.getSystemProperties().entrySet()) {
-            Map.Entry entry = (Map.Entry) en;
-
-            out.println(entry.getKey() + " " + entry.getValue());
-        }
-        for (Object c : classes) {
-            JavaClass jc = (JavaClass) c;
-            JavaClass sc = jc.getSuperClass();
-            out.println(" Id 0x" + Long.toHexString(jc.getJavaClassId()) + " Class " + jc.getName() + " SuperClass " + (sc == null ? "null" : sc.getName())
-                    + " Instance size " + jc.getInstanceSize() + " Instance count " + jc.getInstancesCount() + " All Instances Size " + jc.getAllInstancesSize());
-
-            for (Object v : jc.getStaticFieldValues()) {
-                FieldValue fv = (FieldValue) v;
-
-                out.println("  Static Field name " + fv.getField().getName() + " type " + fv.getField().getType().getName() + " value " + fv.getValue());
-                if (fv instanceof ObjectFieldValue) {
-                    ObjectFieldValue objectField = (ObjectFieldValue) fv;
-                    Instance refInstance = objectField.getInstance();
-                    if (refInstance != null) {
-                        out.println("   Ref object " + refInstance.getJavaClass().getName() + "#" + refInstance.getInstanceNumber());
-                    }
-                }
-            }
-
-            for (Object f : jc.getFields()) {
-                Field in = (Field) f;
-
-                out.println("  Field name " + in.getName() + " type " + in.getType().getName());
-            }
-
-            for (Object i : jc.getInstances()) {
-                Instance in = (Instance) i;
-
-                out.println("  Instance Id 0x" + Long.toHexString(in.getInstanceId()) + " number " + in.getInstanceNumber() + " retained size " + in.getRetainedSize());
-
-                for (Object v : in.getFieldValues()) {
-                    FieldValue inField = (FieldValue) v;
-
-                    out.println("   Instance Field name " + inField.getField().getName() + " type " + inField.getField().getType().getName() + " value " + inField.getValue());
-                    if (inField instanceof ObjectFieldValue) {
-                        ObjectFieldValue objectField = (ObjectFieldValue) inField;
-                        Instance refInstance = objectField.getInstance();
-                        if (refInstance != null) {
-                            out.println("    Ref object " + refInstance.getJavaClass().getName() + "#" + refInstance.getInstanceNumber());
-                        }
-                    }
-                }
-                Collection references = in.getReferences();
-                out.println("   References count " + references.size());
-                for (Object v : references) {
-                    Value val = (Value) v;
-
-                    if (val instanceof ArrayItemValue) {
-                        ArrayItemValue arrVal = (ArrayItemValue) val;
-
-                        out.println("   Element " + arrVal.getIndex() + " of array 0x" + Long.toHexString(arrVal.getDefiningInstance().getInstanceId()));
-                    } else if (val instanceof FieldValue) {
-                        FieldValue fieldVal = (FieldValue) val;
-                        Field f = fieldVal.getField();
-
-                        if (f.isStatic()) {
-                            out.println("   Field " + f.getName() + " of Class " + f.getDeclaringClass().getName());
-                        } else {
-                            out.println("   Field " + f.getName() + " of instance 0x" + Long.toHexString(fieldVal.getDefiningInstance().getInstanceId()));
-                        }
-                    } else {
-                        out.println("   Error " + val);
-                    }
-                }
-                out.println("   Path to nearest GC root");
-                Instance p = in;
-                Instance next = p.getNearestGCRootPointer();
-                while (!p.equals(next)) {
-                    if (next == null) {
-                        out.println("    Null");
-                        break;
-                    }
-                    out.println("    Next object " + next.getJavaClass().getName() + "#" + next.getInstanceNumber());
-                    p = next;
-                    next = next.getNearestGCRootPointer();
-                }
-            }
-        }
-        Collection roots = heap.getGCRoots();
-        out.println("GC roots " + roots.size());
-
-        for (Object g : roots) {
-            GCRoot root = (GCRoot) g;
-            Instance i = root.getInstance();
-
-            out.println("Root kind " + root.getKind() + " Class " + i.getJavaClass().getName() + "#" + i.getInstanceNumber());
-        }
-        out.close();
-        compareTextFiles(goledFile, outFile);
-        outFile.delete();
-    }
-
-    private void compareTextFiles(File goledFile, File outFile) throws IOException {
-        InputStreamReader goldenIsr = new InputStreamReader(new FileInputStream(goledFile), "UTF-8");
-        LineNumberReader goldenReader = new LineNumberReader(goldenIsr);
-        InputStreamReader isr = new InputStreamReader(new FileInputStream(outFile), "UTF-8");
-        LineNumberReader reader = new LineNumberReader(isr);
-        String goldenLine = "";
-        String line = "";
-
-        while (goldenLine != null && goldenLine.equals(line)) {
-            goldenLine = goldenReader.readLine();
-            line = reader.readLine();
-        }
-        assertEquals("File " + goledFile.getAbsolutePath() + " and " + outFile.getAbsolutePath() + " differs on line " + goldenReader.getLineNumber(), goldenLine, line);
     }
 }

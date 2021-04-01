@@ -337,7 +337,7 @@ final class HeapUtils {
 
         private void dumpHeap() throws IOException {
             if (rawHeap.size() > 0) {
-                whole.writeByte(0x1c);
+                whole.writeByte(0xc);
                 whole.writeInt(0); // ms
                 final byte[] bytes = rawHeap.toByteArray();
                 whole.writeInt(bytes.length);

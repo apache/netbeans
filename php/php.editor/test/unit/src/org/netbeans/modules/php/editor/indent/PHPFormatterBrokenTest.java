@@ -73,4 +73,9 @@ public class PHPFormatterBrokenTest extends PHPFormatterTestBase {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/broken/netbeans3103_parent_02.php", options);
     }
+
+    public void testConstructorPropertyPromotion() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/broken/constructorPropertyPromotion.php", options);
+    }
 }

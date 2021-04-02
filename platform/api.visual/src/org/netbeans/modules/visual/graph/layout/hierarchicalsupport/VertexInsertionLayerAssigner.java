@@ -41,8 +41,8 @@ public class VertexInsertionLayerAssigner {
      *
      *
      */
-    public LayeredGraph assignLayers(DirectedGraph graph) {
-        LayeredGraph layeredGraph = LayeredGraph.createGraph(graph);
+    public <N, E> LayeredGraph<N, E> assignLayers(DirectedGraph<N, E> graph) {
+        LayeredGraph<N, E> layeredGraph = LayeredGraph.createGraph(graph);
         
         insertDummyVertices(layeredGraph);
         
@@ -54,24 +54,26 @@ public class VertexInsertionLayerAssigner {
      *
      *
      */
-    private void insertDummyVertices(LayeredGraph graph) {
-        DirectedGraph originalGraph = graph.getOriginalGraph();
-        List<List<Vertex>> layers = graph.getLayers();
+    private <N, E> void insertDummyVertices(LayeredGraph<N, E> graph) {
+        DirectedGraph<N, E> originalGraph = graph.getOriginalGraph();
+        List<List<Vertex<N>>> layers = graph.getLayers();
         
         for (int i = 0; i < layers.size(); i++) {
-            List<Vertex> layer = layers.get(i);
+            List<Vertex<N>> layer = layers.get(i);
             
-            for (Vertex v : layer) {
+            for (Vertex<N> v : layer) {
                 int layerIndex = v.getNumber();
                 
                 // work around concurrent modification exception
-                Collection<Edge> edges = new ArrayList<Edge>(v.getOutgoingEdges());
-                for (Edge e : edges) {
-                    Vertex nv = e.getTarget();
+                Collection<Edge<?>> edges = new ArrayList<>(v.getOutgoingEdges());
+                for (Edge<?> e : edges) {
+                    Vertex<?> nv = e.getTarget();
                     int nvLayerIndex = nv.getNumber();
                     
                     if (nvLayerIndex > layerIndex+1) {
-                        Vertex dummyVertex = originalGraph.insertDummyVertex(e, DummyVertex.Type.BEND);
+                        @SuppressWarnings("unchecked")
+                        Edge<E> tmp = (Edge<E>) e;
+                        Vertex<N> dummyVertex = originalGraph.insertDummyVertex(tmp, DummyVertex.Type.BEND);
                         graph.assignLayer(dummyVertex,  layerIndex+1);
                     }
                 }

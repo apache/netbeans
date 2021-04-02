@@ -187,7 +187,6 @@ public class Selenium2MavenSupportImpl extends Selenium2SupportImpl {
 
     @Override
     public List<Object> getTestSourceRoots(Collection<SourceGroup> createdSourceRoots, FileObject refFileObject) {
-        configureProject(refFileObject);
         return Arrays.asList(Utils.getTestSourceRoots(createdSourceRoots, refFileObject));
     }
 

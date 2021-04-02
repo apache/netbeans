@@ -1,0 +1,67 @@
+<testresult testFile='constructorPropertyPromotionErrorWithStatic.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='849'>
+            <text>ConstructorPropertyPromotion</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='850' end='851'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='857' end='863'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='864' end='872'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='873' end='884'>
+            <text>__construct</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='884' end='885'>
+            <text>(</text>
+        </token>
+        <token id='T_PUBLIC' start='898' end='904'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='905' end='911'>
+            <text>static</text>
+        </token>
+        <token id='T_STRING' start='912' end='915'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='916' end='918'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='923' end='924'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='925' end='926'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='931' end='932'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='933' end='934'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='935' end='935'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='935'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='815' end='904'/>
+            <ASTError start='905' end='911'/>
+            <ASTError start='912' end='915'/>
+            <ASTError start='916' end='918'/>
+            <Block start='925' end='932' isCurly='true'>
+            </Block>
+            <ASTError start='0' end='932'/>
+        </Statements>
+    </Program>
+</testresult>

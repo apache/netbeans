@@ -27,7 +27,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import org.eclipse.lsp4j.debug.StoppedEventArguments;
 
-import org.eclipse.lsp4j.debug.TerminatedEventArguments;
 import org.eclipse.lsp4j.debug.ThreadEventArguments;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerManager;
@@ -56,37 +55,27 @@ public final class NbThreads {
             @Override
             public void sessionAdded(Session session) {
                 DebuggerManager.getDebuggerManager().removeDebuggerListener(DebuggerManager.PROP_SESSIONS, this);
-                JPDADebugger debugger = session.lookupFirst(null, JPDADebugger.class);
-                initThreads(context, debugger);
+                initThreads(context, session);
             }
         });
     }
 
-    private void initThreads(DebugAdapterContext context, JPDADebugger debugger) {
-        debugger.addPropertyChangeListener(JPDADebugger.PROP_STATE, evt -> {
-            int newState = (int) evt.getNewValue();
-            switch (newState) {
-                case JPDADebugger.STATE_DISCONNECTED:
-                    //debugger.removePropertyChangeListener(this);
-                    context.getClient().terminated(new TerminatedEventArguments());
-                    break;
-            }
-        });
-        DebuggerEngine engine = debugger.getSession().getCurrentEngine();
+    private void initThreads(DebugAdapterContext context, Session session) {
+        DebuggerEngine engine = session.getCurrentEngine();
         if (engine == null) {
-            debugger.getSession().addPropertyChangeListener(Session.PROP_CURRENT_LANGUAGE, new PropertyChangeListener() {
+            session.addPropertyChangeListener(Session.PROP_CURRENT_LANGUAGE, new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
-                    DebuggerEngine currentEngine = debugger.getSession().getCurrentEngine();
+                    DebuggerEngine currentEngine = session.getCurrentEngine();
                     if (currentEngine != null) {
-                        debugger.getSession().removePropertyChangeListener(Session.PROP_CURRENT_LANGUAGE, this);
+                        session.removePropertyChangeListener(Session.PROP_CURRENT_LANGUAGE, this);
                         if (!initialized.getAndSet(true)) {
                             initThreads(context, currentEngine);
                         }
                     }
                 }
             });
-            engine = debugger.getSession().getCurrentEngine();
+            engine = session.getCurrentEngine();
         }
         if (engine != null && !initialized.getAndSet(true)) {
             initThreads(context, engine);
@@ -219,7 +208,11 @@ public final class NbThreads {
 
     private JPDAThread getJPDAThread(DVThread dvThread) {
         // JPDA implementation implements Supplier.
-        return ((Supplier<JPDAThread>) dvThread).get();
+        if (dvThread instanceof Supplier) {
+            return ((Supplier<JPDAThread>) dvThread).get();
+        } else {
+            return null;
+        }
     }
 
     public void visitThreads(BiConsumer<Integer, DVThread> threadsConsumer) {

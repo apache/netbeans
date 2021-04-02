@@ -38,6 +38,8 @@ import org.netbeans.modules.debugger.jpda.truffle.Utils;
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackFrame;
+import org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleScope;
+import org.netbeans.modules.debugger.jpda.ui.debugging.JPDADVThread;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.debugger.jpda.EditorContext;
@@ -47,6 +49,7 @@ import org.netbeans.spi.viewmodel.ModelEvent;
 import org.netbeans.spi.viewmodel.ModelListener;
 import org.netbeans.spi.viewmodel.NodeModel;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
+import org.openide.util.NbBundle;
 
 import org.openide.util.WeakListeners;
 import org.openide.util.WeakSet;
@@ -64,6 +67,7 @@ public class DebuggingTruffleNodeModel implements ExtendedNodeModelFilter {
     
     public DebuggingTruffleNodeModel(ContextProvider lookupProvider) {
         debugger = lookupProvider.lookupFirst(null, JPDADebugger.class);
+        debugger.addPropertyChangeListener(JPDADebugger.PROP_CURRENT_THREAD, WeakListeners.propertyChange(cpiChL, debugger));
     }
 
     @Override
@@ -106,15 +110,22 @@ public class DebuggingTruffleNodeModel implements ExtendedNodeModelFilter {
         if (node instanceof TruffleStackFrame) {
             return original.getIconBaseWithExtension(EmptyCallStackFrame.INSTANCE);
         }
+        if (node instanceof TruffleScope) {
+            return null;
+        }
         return original.getIconBaseWithExtension(node);
     }
 
     @Override
+    @NbBundle.Messages({"# {0} - thread name",
+                        "# {1} - source location",
+                        "CTL_Thread_State_Truffle_Suspended_At=''{0}'' suspended at ''{1}''",})
     public String getDisplayName(NodeModel original, Object node) throws UnknownTypeException {
         if (node instanceof TruffleStackFrame) {
             TruffleStackFrame tf = (TruffleStackFrame) node;
             String displayName = tf.getDisplayName();
-            CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(tf.getThread());
+            JPDAThread thread = tf.getThread();
+            CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(thread);
             if (currentPCInfo != null) {
                 synchronized (cpisListening) {
                     if (!cpisListening.contains(currentPCInfo)) {
@@ -123,7 +134,10 @@ public class DebuggingTruffleNodeModel implements ExtendedNodeModelFilter {
                         cpisListening.add(currentPCInfo);
                     }
                 }
-                TruffleStackFrame selectedStackFrame = currentPCInfo.getSelectedStackFrame();
+                TruffleStackFrame selectedStackFrame = null;
+                if (debugger.getCurrentThread() == thread) {
+                    selectedStackFrame = currentPCInfo.getSelectedStackFrame();
+                }
                 if (selectedStackFrame == tf) {
                     displayName = Utils.toHTML(displayName, true, tf.isInternal(), null);
                 } else if (tf.isInternal()) {
@@ -131,9 +145,17 @@ public class DebuggingTruffleNodeModel implements ExtendedNodeModelFilter {
                 }
             }
             return displayName;
-        } else {
-            return original.getDisplayName(node);
+        } else if (node instanceof JPDADVThread) {
+            JPDAThread thread = ((JPDADVThread) node).getKey();
+            if (thread.isSuspended()) {
+                CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(thread);
+                if (currentPCInfo != null) {
+                    String where = currentPCInfo.getTopFrame().getSourceLocation();
+                    return Bundle.CTL_Thread_State_Truffle_Suspended_At(thread.getName(), where);
+                }
+            }
         }
+        return original.getDisplayName(node);
     }
 
     @Override

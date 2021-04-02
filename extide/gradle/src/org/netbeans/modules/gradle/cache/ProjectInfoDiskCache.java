@@ -21,12 +21,12 @@ package org.netbeans.modules.gradle.cache;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import org.netbeans.modules.gradle.GradleProjectCache;
+import java.util.WeakHashMap;
+import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache.QualifiedProjectInfo;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.netbeans.modules.gradle.api.NbProjectInfo;
@@ -39,10 +39,20 @@ import org.netbeans.modules.gradle.spi.GradleFiles;
 public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, QualifiedProjectInfo> {
 
     // Increase this number if new info is gathered from the projects.
-    private static final int COMPATIBLE_CACHE_VERSION = 17;
+    private static final int COMPATIBLE_CACHE_VERSION = 18;
     private static final String INFO_CACHE_FILE_NAME = "project-info.ser"; //NOI18N
+    private static final Map<GradleFiles, ProjectInfoDiskCache> DISK_CACHES = new WeakHashMap<>();
 
-    public ProjectInfoDiskCache(GradleFiles gf) {
+    public static ProjectInfoDiskCache get(GradleFiles gf) {
+        ProjectInfoDiskCache ret = DISK_CACHES.get(gf);
+        if (ret == null) {
+            ret = new ProjectInfoDiskCache(gf);
+            DISK_CACHES.put(gf, ret);
+        }
+        return ret;
+    }
+    
+    private ProjectInfoDiskCache(GradleFiles gf) {
         super(gf);
     }
     
@@ -53,7 +63,7 @@ public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Q
 
     @Override
     protected File cacheFile() {
-        return new File(GradleProjectCache.getCacheDir(key), INFO_CACHE_FILE_NAME);
+        return new File(NbGradleProjectImpl.getCacheDir(key), INFO_CACHE_FILE_NAME);
     }
 
     @Override

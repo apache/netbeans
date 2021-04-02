@@ -113,21 +113,6 @@ public class ClasspathsTest extends TestBase {
         assertNull("have no SOURCE classpath for build.properties", cp);
     }
     
-    public void testCompileClasspath() throws Exception {
-        ClassPath cp = ClassPath.getClassPath(myAppJava, ClassPath.COMPILE);
-        assertNotNull("have some COMPILE classpath for src/", cp);
-        assertEquals("have two entries in " + cp, 2, cp.entries().size());
-        assertEquals("have two roots in " + cp, 2, cp.getRoots().length);
-        assertNotNull("found WeakSet in " + cp, cp.findResource("org/openide/util/WeakSet.class"));
-        assertNotNull("found NullInputStream", cp.findResource("org/openide/util/io/NullInputStream.class"));
-        cp = ClassPath.getClassPath(specialTaskJava, ClassPath.COMPILE);
-        assertNotNull("have some COMPILE classpath for antsrc/", cp);
-        assertEquals("have one entry", 1, cp.getRoots().length);
-        assertNotNull("found Task", cp.findResource("org/apache/tools/ant/Task.class"));
-        cp = ClassPath.getClassPath(buildProperties, ClassPath.COMPILE);
-        assertNull("have no COMPILE classpath for build.properties", cp);
-    }
-    
     public void testExecuteClasspath() throws Exception {
         ClassPath cp = ClassPath.getClassPath(myAppJava, ClassPath.EXECUTE);
         assertNotNull("have some EXECUTE classpath for src/", cp);
@@ -237,56 +222,6 @@ public class ClasspathsTest extends TestBase {
         assertEquals("again no COMPILE classpaths", Collections.EMPTY_SET, gpr.getPaths(ClassPath.COMPILE));
         assertEquals("again no EXECUTE classpaths", Collections.EMPTY_SET, gpr.getPaths(ClassPath.EXECUTE));
         assertEquals("again no SOURCE classpaths", Collections.EMPTY_SET, gpr.getPaths(ClassPath.SOURCE));
-    }
-    
-    public void testCompileClasspathChanges() throws Exception {
-        clearWorkDir();
-        FreeformProject simple2 = copyProject(simple);
-        FileObject myAppJava2 = simple2.getProjectDirectory().getFileObject("src/org/foo/myapp/MyApp.java");
-        assertNotNull("found MyApp.java", myAppJava2);
-        ClassPath cp = ClassPath.getClassPath(myAppJava2, ClassPath.COMPILE);
-        assertNotNull("have some COMPILE classpath for src/", cp);
-        assertEquals("have two entries in " + cp, 2, cp.entries().size());
-        assertEquals("have two roots in " + cp, 2, cp.getRoots().length);
-        assertNotNull("found WeakSet in " + cp, cp.findResource("org/openide/util/WeakSet.class"));
-        assertNotNull("found NullInputStream", cp.findResource("org/openide/util/io/NullInputStream.class"));
-        TestPCL l = new TestPCL();
-        cp.addPropertyChangeListener(l);
-        EditableProperties props = new EditableProperties();
-        FileObject buildProperties = simple2.getProjectDirectory().getFileObject("build.properties");
-        assertNotNull("have build.properties", buildProperties);
-        InputStream is = buildProperties.getInputStream();
-        try {
-            props.load(is);
-        } finally {
-            is.close();
-        }
-        assertEquals("right original src.cp", "${lib.dir}/lib1.jar:${lib.dir}/lib2.jar", props.getProperty("src.cp"));
-        props.setProperty("src.cp", "${lib.dir}/lib1.jar");
-        FileLock lock = buildProperties.lock();
-        try {
-            final OutputStream os = buildProperties.getOutputStream(lock);
-            try {
-                props.store(os);
-            } finally {
-                // close file under ProjectManager.readAccess so that events are fired synchronously
-                ProjectManager.mutex().readAccess(new Mutex.ExceptionAction<Void>() {
-                    public Void run() throws Exception {
-                        os.close();
-                        return null;
-                    }
-                });
-            }
-        } finally {
-            lock.releaseLock();
-        }
-        /* XXX failing: #137767
-        assertEquals("ROOTS fired", new HashSet<String>(Arrays.asList(ClassPath.PROP_ENTRIES, ClassPath.PROP_ROOTS)), l.changed);
-        assertEquals("have one entry in " + cp, 1, cp.entries().size());
-        assertEquals("have one root in " + cp, 1, cp.getRoots().length);
-        assertNotNull("found WeakSet in " + cp, cp.findResource("org/openide/util/WeakSet.class"));
-        assertNull("did not find NullInputStream", cp.findResource("org/openide/util/io/NullInputStream.class"));
-         */
     }
 
     @RandomlyFails // NB-Core-Build #1440, 1447

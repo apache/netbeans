@@ -113,7 +113,15 @@ public interface PayaraServer {
      * <p/>
      * @return The version
      */
+    @Deprecated
     public PayaraVersion getVersion();
+
+    /**
+     * Get Payara Platform version.
+     * <p/>
+     * @return The platformVersion.
+     */
+    PayaraPlatformVersionAPI getPlatformVersion();
 
     /**
      * Get Payara server administration interface type.

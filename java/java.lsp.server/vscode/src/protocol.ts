@@ -18,8 +18,10 @@
  */
 'use strict';
 
+import {QuickPickItem} from 'vscode';
 import {
     NotificationType,
+    RequestType,
     ShowMessageParams
 } from 'vscode-languageclient';
 
@@ -32,4 +34,65 @@ export interface ShowStatusMessageParams extends ShowMessageParams {
 
 export namespace StatusMessageRequest {
     export const type = new NotificationType<ShowStatusMessageParams, void>('window/showStatusBarMessage');
+};
+
+export interface ShowQuickPickParams {
+    /**
+     * A string to show as placeholder in the input box to guide the user what to pick on.
+     */
+    placeHolder: string;
+    /**
+     * An optional flag to make the picker accept multiple selections.
+     */
+    canPickMany?: boolean;
+    /**
+     * A list of items.
+     */
+    items: QuickPickItem[];
+}
+
+export namespace QuickPickRequest {
+    export const type = new RequestType<ShowQuickPickParams, QuickPickItem[], void, void>('window/showQuickPick');
+}
+
+export interface ShowInputBoxParams {
+    /**
+     * The text to display underneath the input box.
+     */
+    prompt: string;
+    /**
+     * The value to prefill in the input box.
+     */
+    value: string;
+}
+
+export namespace InputBoxRequest {
+    export const type = new RequestType<ShowInputBoxParams, string | undefined, void, void>('window/showInputBox');
+}
+
+export interface TestProgressParams {
+    uri: string;
+    suite: TestSuite;
+}
+
+export interface TestSuite {
+    suiteName: string;
+    file?: string;
+    line?: number;
+    state: 'loaded' | 'running' | 'completed' | 'errored';
+    tests?: TestCase[];
+}
+
+export interface TestCase {
+    id: string;
+    shortName: string;
+    fullName: string;
+    file?: string;
+    line?: number;
+    state: 'loaded' | 'running' | 'passed' | 'failed' | 'skipped' | 'errored';
+    stackTrace?: string[];
+}
+
+export namespace TestProgressNotification {
+    export const type = new NotificationType<TestProgressParams, void>('window/notifyTestProgress');
 };

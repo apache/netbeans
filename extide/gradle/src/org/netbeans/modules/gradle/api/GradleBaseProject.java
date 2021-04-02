@@ -32,7 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.netbeans.api.project.Project;
-import org.openide.filesystems.FileUtil;
+import org.netbeans.modules.gradle.GradleModuleFileCache21;
+import org.netbeans.modules.gradle.cache.SubProjectDiskCache;
+import org.netbeans.modules.gradle.cache.SubProjectDiskCache.SubProjectInfo;
 
 /**
  * This object holds the basic information of the Gradle project.
@@ -255,11 +257,8 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
     }
 
     @Override
-    public Set<GradleDependency.ModuleDependency> findModules(String gav) {
-        String parts[] = GradleDependency.gavSplit(gav);
-        if (parts.length != 3) {
-            throw new IllegalArgumentException("Invalid gav filter: "  + gav);
-        }
+    public Set<GradleDependency.ModuleDependency> findModules(String gav) throws IllegalArgumentException {
+        String parts[] = GradleModuleFileCache21.gavSplit(gav);
         String groupId = parts[0].isEmpty() ? null : parts[0];
         String artifactId = parts[1].isEmpty() ? null : parts[1];
         String ver = parts[2].isEmpty() ? null : parts[2];
@@ -332,19 +331,28 @@ public final class GradleBaseProject implements Serializable, ModuleSearchSuppor
         ret.buildDir = new File(files.getProjectDir(), "build");
         ret.rootDir = files.getRootDir();
         ret.version = "unspecified";
-        StringBuilder path = new StringBuilder(":");       //NOI18N
-        if (!files.isRootProject()) {
-            Path prjPath = files.getProjectDir().toPath();
-            Path rootPath = files.getRootDir().toPath();
-            String separator = "";
-            Path relPath = rootPath.relativize(prjPath);
-            for(int i = 0; i < relPath.getNameCount() ; i++) {
-                path.append(separator);
-                path.append(relPath.getName(i));
-                separator = ":"; //NOI18N
-            }
+        SubProjectInfo structure = SubProjectDiskCache.get(files.getRootDir()).loadData();
+        if (structure != null) {
+            // Note: The structure information might be invalid, though we are just guessing here
+            ret.path = structure.getProjectPath(files.getProjectDir());
+            ret.description = structure.getProjectDescription(files.getProjectDir());
+            ret.name = structure.getProjectName(files.getProjectDir());
         }
-        ret.path = path.toString();
+        if (ret.path == null) {
+            StringBuilder path = new StringBuilder(":");       //NOI18N
+            if (!files.isRootProject()) {
+                Path prjPath = files.getProjectDir().toPath();
+                Path rootPath = files.getRootDir().toPath();
+                String separator = "";
+                Path relPath = rootPath.relativize(prjPath);
+                for(int i = 0; i < relPath.getNameCount() ; i++) {
+                    path.append(separator);
+                    path.append(relPath.getName(i));
+                    separator = ":"; //NOI18N
+                }
+            }
+            ret.path = path.toString();
+        }
         ret.status = "release";
         ret.parentName = files.isRootProject() ? null : files.getRootDir().getName();
 

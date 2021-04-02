@@ -28,7 +28,7 @@ import org.netbeans.modules.payara.tooling.TaskState;
 import org.netbeans.modules.payara.tooling.admin.CommandGetProperty;
 import org.netbeans.modules.payara.tooling.admin.ResultMap;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.utils.StringPrefixTree;
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
 
@@ -179,8 +179,7 @@ public class DataSourcesReader {
             buildJDBCContentObjects(properties, pools, resources);
             assignConnectionPoolsToResources(pools, resources);
             // Add Java EE 7 comp/DefaultDataSource data source (since PF 4).
-            if (server.getVersion().ordinal()
-                    >= PayaraVersion.PF_4_1_144.ordinal()) {
+            if (server.getPlatformVersion().isEE7Supported()) {
                 addNewJavaEE7dataSource(resources);
             }
             return new HashSet<>(resources.values());

@@ -18,17 +18,40 @@
  */
 package org.netbeans.modules.php.editor.parser.astnodes;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
- * Represents a trait declaration
- * <pre>
- * <pre>e.g.<pre>
- * trait MyTrait { }
+ * Represents a trait declaration.
+ *
+ * <pre>e.g.
+ * trait MyTrait { },
+ * #[A(1)]
+ * trait MyTrait { } // [NETBEANS-4443] PHP 8.0
+ * </pre>
  *
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
 public class TraitDeclaration extends TypeDeclaration {
+
     public TraitDeclaration(int start, int end, final Identifier name, final Block body) {
-        super(start, end, name, null, body);
+        this(start, end, name, body, Collections.emptyList());
+    }
+
+    private TraitDeclaration(int start, int end, final Identifier name, final Block body, List<Attribute> attributes) {
+        super(start, end, name, null, body, attributes);
+    }
+
+    public static TraitDeclaration create(TraitDeclaration declaration, List<Attribute> attributes) {
+        assert attributes != null;
+        int start = attributes.isEmpty() ? declaration.getStartOffset() : attributes.get(0).getStartOffset();
+        return new TraitDeclaration(
+                start,
+                declaration.getEndOffset(),
+                declaration.getName(),
+                declaration.getBody(),
+                attributes
+        );
     }
 
     @Override

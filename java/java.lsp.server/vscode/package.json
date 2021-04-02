@@ -4,7 +4,7 @@
 	"description": "Apache NetBeans Language Server Extension for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
-	"version": "0.1.0",
+	"version": "12.3.9",
 	"preview": true,
 	"repository": {
 		"type": "git",
@@ -21,7 +21,7 @@
 		"multi-root ready"
 	],
 	"engines": {
-		"vscode": "^1.47.0"
+		"vscode": "^1.49.0"
 	},
 	"activationEvents": [
 		"onLanguage:java",
@@ -108,6 +108,22 @@
 								],
 								"description": "The specified console to launch the program.",
 								"default": "internalConsole"
+							},
+							"args": {
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "Arguments for the executed class",
+								"default": null
+							},
+							"vmArgs": {
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "Arguments for the Java VM",
+								"default": null
 							}
 						}
 					}
@@ -132,6 +148,61 @@
 						}
 					}
 				]
+			},
+			{
+				"type": "nativeimage",
+				"label": "Native Image",
+				"runtime": "node",
+				"languages": [
+					"java"
+				],
+				"configurationAttributes": {
+					"launch": {
+						"required": [
+							"nativeImagePath"
+						],
+						"properties": {
+							"nativeImagePath": {
+								"type": "string",
+								"description": "Absolute path to the application native image.",
+								"default": "${workspaceFolder}/build/native-image/application"
+							},
+							"miDebugger": {
+								"type": "string",
+								"description": "MI Debugger",
+								"default": "gdb"
+							},
+							"console": {
+								"type": "string",
+								"enum": [
+									"internalConsole"
+								],
+								"description": "The specified console to launch the program.",
+								"default": "internalConsole"
+							}
+						}
+					}
+				},
+				"initialConfigurations": [
+					{
+						"type": "nativeimage",
+						"request": "launch",
+						"name": "Launch Native Image",
+						"nativeImagePath": "${workspaceFolder}/build/native-image/application"
+					}
+				],
+				"configurationSnippets": [
+					{
+						"label": "Launch Native Image",
+						"description": "Launch a native image with MI debugger.",
+						"body": {
+							"type": "nativeimage",
+							"request": "launch",
+							"name": "Launch Native Image",
+							"nativeImagePath": "^\"${1:\\${workspaceFolder\\}/build/native-image/application}\""
+						}
+					}
+				]
 			}
 		],
 		"commands": [
@@ -141,18 +212,8 @@
 				"category": "Java"
 			},
 			{
-				"command": "java.generate.getters.menu",
-				"title": "Generate all getters",
-				"category": "Java"
-			},
-			{
-				"command": "java.generate.setters.menu",
-				"title": "Generate all setters",
-				"category": "Java"
-			},
-			{
-				"command": "java.generate.getters.setters.menu",
-				"title": "Generate all getters and setters",
+				"command": "java.goto.super.implementation",
+				"title": "Go to Super Implementation",
 				"category": "Java"
 			},
 			{
@@ -166,49 +227,36 @@
 				"command": "java.workspace.compile",
 				"key": "shift+alt+b",
 				"when": "nbJavaLSReady"
+			},
+			{
+				"command": "editor.action.sourceAction",
+				"key": "alt+insert",
+				"when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
 			}
 		],
 		"menus": {
+			"editor/context": [
+				{
+					"command": "java.goto.super.implementation",
+					"when": "nbJavaLSReady && editorLangId == java && editorTextFocus",
+					"group": "navigation@100"
+				}
+			],
 			"commandPalette": [
 				{
 					"command": "java.workspace.compile",
 					"when": "nbJavaLSReady"
 				},
 				{
+					"command": "java.goto.super.implementation",
+					"when": "nbJavaLSReady && editorLangId == java"
+				},
+				{
 					"command": "graalvm.pause.script",
 					"when": "nbJavaLSReady"
 				}
-			],
-			"editor/context": [
-				{
-                                        "submenu": "java.generate",
-                                        "group": "1_modification"
-				}
-			],
-			"java.generate": [
-				{
-                                        "command": "java.generate.getters.menu",
-					"when": "nbJavaLSReady",
-                                        "group": "1_getters_setters"
-				},
-				{
-                                        "command": "java.generate.setters.menu",
-					"when": "nbJavaLSReady",
-                                        "group": "1_getters_setters"
-				},
-				{
-                                        "command": "java.generate.getters.setters.menu",
-					"when": "nbJavaLSReady",
-                                        "group": "1_getters_setters"
-				}
 			]
-		},
-                "submenus": [
-                    {
-                        "id": "java.generate",
-                        "label": "Generate"
-                    }
-                ]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
@@ -219,17 +267,24 @@
 		"nbjavac": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.47.0",
+		"@types/vscode": "^1.49.0",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.2",
 		"@types/node": "^13.11.0",
+		"@types/ps-node": "^0.1.0",
 		"glob": "^7.1.6",
 		"mocha": "^7.1.2",
 		"typescript": "^3.8.3",
-		"vscode-test": "^1.3.0"
+		"vscode-test": "^1.3.0",
+		"ps-node": "^0.1.6"
 	},
 	"dependencies": {
-		"vscode-languageclient": "4.4.2",
-		"vscode-debugadapter": "1.33.0"
-	}
+		"vscode-debugadapter": "1.42.1",
+		"vscode-languageclient": "6.1.3",
+		"vscode-test-adapter-api": "^1.9.0",
+		"vscode-test-adapter-util": "^0.7.1"
+	},
+	"extensionDependencies": [
+		"hbenl.vscode-test-explorer"
+	]
 }

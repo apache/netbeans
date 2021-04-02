@@ -107,7 +107,7 @@
       based on available JavaScript engine installed in the JVM.
       Execution of the downloaded JavaScript code is sandboxed.
   </p>
-  <api name="ALLOWED_PAC_ENGINES" type="export" category="stable" group="branding">
+  <api name="org.netbeans.core.network.proxy.pac.impl.ALLOWED_PAC_ENGINES" type="export" category="stable" group="branding">
       To further secure execution of downloaded scripts, it is possible
       to restrict the set of allowed 
       <a href="@JDK@/javax/script/ScriptEngine.html">ScriptEngine</a>s

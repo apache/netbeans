@@ -35,6 +35,10 @@ done
 
 progdir=`dirname "$PRG"`
 APPNAME=`basename "$PRG"`
+if [ -z "$APP_DOCK_NAME" ] ; then
+  APP_DOCK_NAME="$APPNAME"
+fi
+
 case "`uname`" in
     Darwin*)
         # set default userdir and cachedir on Mac OS X
@@ -123,7 +127,7 @@ case "`uname`" in
     Darwin*)
         eval exec sh '"$nbexec"' \
             --jdkhome '"$jdkhome"' \
-            -J-Xdock:name='"$APPNAME"' \
+            -J-Xdock:name='"$APP_DOCK_NAME"' \
             '"-J-Xdock:icon=$progdir/../../$APPNAME.icns"' \
             --clusters '"$clusters"' \
             --userdir '"${userdir}"' \

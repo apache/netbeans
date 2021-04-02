@@ -47,7 +47,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SourceGroupModifierImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -59,7 +58,6 @@ import org.openide.util.Pair;
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = {Sources.class, SourceGroupModifierImplementation.class}, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 @NbBundle.Messages({
     "# {0} - source group name",
     "# {1} - language",
@@ -146,8 +144,8 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
     private Map<String, Collection<File>> sourceGroups;
     private final Map<Pair<String, File>, SourceGroup> cache = new HashMap<>();
 
-    public GradleSourcesImpl(Project proj) {
-        this.proj = proj;
+    public GradleSourcesImpl(Project project) {
+        this.proj = project;
     }
 
     @Override
@@ -381,9 +379,6 @@ public class GradleSourcesImpl implements Sources, SourceGroupModifierImplementa
             if (proj != null) {
                 if (file.isFolder() && file != proj.getProjectDirectory() && ProjectManager.getDefault().isProject(file)) {
                     // #67450: avoid actually loading the nested project.
-                    return false;
-                }
-                if (FileOwnerQuery.getOwner(file) != proj) {
                     return false;
                 }
             }

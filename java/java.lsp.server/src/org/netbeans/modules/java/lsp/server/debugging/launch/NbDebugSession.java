@@ -18,7 +18,9 @@
  */
 package org.netbeans.modules.java.lsp.server.debugging.launch;
 
+import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
 
 /**
  *
@@ -26,14 +28,27 @@ import org.netbeans.api.debugger.jpda.JPDADebugger;
  */
 public final class NbDebugSession {
 
-    private final JPDADebugger debugger;
+    private final Session session;
+    private volatile NIDebugger niDebugger;
 
-    NbDebugSession(JPDADebugger debugger) {
-        this.debugger = debugger;
+    NbDebugSession(Session session) {
+        this.session = session;
     }
 
-    public JPDADebugger getDebugger() {
-        return debugger;
+    public Session getSession() {
+        return session;
+    }
+
+    public JPDADebugger getJPDADebugger() {
+        return session.lookupFirst(null, JPDADebugger.class);
+    }
+
+    public NIDebugger getNIDebugger() {
+        return niDebugger;
+    }
+
+    void setNIDebugger(NIDebugger niDebugger) {
+        this.niDebugger = niDebugger;
     }
 
     public void detach() {
@@ -41,7 +56,7 @@ public final class NbDebugSession {
     }
 
     public void terminate() {
-        debugger.getSession().kill();
+        session.kill();
     }
 
     public void setExceptionBreakpoints(boolean notifyCaught, boolean notifyUncaught) {

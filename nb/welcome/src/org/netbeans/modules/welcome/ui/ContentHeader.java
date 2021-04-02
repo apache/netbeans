@@ -24,6 +24,7 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -78,6 +79,11 @@ public class ContentHeader extends JPanel implements Constants {
         int width = getWidth();
         int height = getHeight();
 
+        RenderingHints rh = new RenderingHints(
+             RenderingHints.KEY_INTERPOLATION,
+             RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
+        g2d.setRenderingHints(rh);
         g2d.setColor( Utils.getBorderColor() );
         g2d.drawRect( 0, 0, width, 12 );
 

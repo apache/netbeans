@@ -37,7 +37,6 @@ import org.netbeans.api.autoupdate.InstallSupport.Validator;
 import org.netbeans.api.autoupdate.OperationContainer.OperationInfo;
 import org.netbeans.api.autoupdate.OperationSupport.Restarter;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.spi.autoupdate.CustomInstaller;
 import org.netbeans.spi.autoupdate.CustomUninstaller;
 import org.openide.LifecycleManager;
@@ -531,10 +530,10 @@ public abstract class OperationSupportImpl {
             }
             assert containerForUpdate.listInvalid().isEmpty();
             
-            Validator v = containerForUpdate.getSupport().doDownload(ProgressHandleFactory.createHandle(OperationSupportImpl.class.getName()), null, false);
-            Installer i = containerForUpdate.getSupport().doValidate(v, ProgressHandleFactory.createHandle(OperationSupportImpl.class.getName()));
+            Validator v = containerForUpdate.getSupport().doDownload(ProgressHandle.createHandle(OperationSupportImpl.class.getName()), null, false);
+            Installer i = containerForUpdate.getSupport().doValidate(v, ProgressHandle.createHandle(OperationSupportImpl.class.getName()));
             InstallSupportImpl installSupportImpl = Trampoline.API.impl(containerForUpdate.getSupport());
-            Boolean needRestart = installSupportImpl.doInstall(i, ProgressHandleFactory.createHandle(OperationSupportImpl.class.getName()), true);
+            Boolean needRestart = installSupportImpl.doInstall(i, ProgressHandle.createHandle(OperationSupportImpl.class.getName()), true);
             return needRestart;
         }
         @Override
@@ -583,7 +582,7 @@ public abstract class OperationSupportImpl {
                     }
                     CustomInstaller installer = impl.getInstallInfo ().getCustomInstaller ();
                     assert installer != null : "CustomInstaller must found for " + impl.getUpdateElement ();
-                    ProgressHandle handle = ProgressHandleFactory.createHandle("Installing " + impl.getDisplayName());
+                    ProgressHandle handle = ProgressHandle.createHandle("Installing " + impl.getDisplayName());
                     //handle.start();
                     success = installer.install (impl.getCodeName (),
                             impl.getSpecificationVersion () == null ? null : impl.getSpecificationVersion ().toString (),
@@ -660,7 +659,7 @@ public abstract class OperationSupportImpl {
                     progress.progress(NbBundle.getMessage(OperationSupportImpl.class, "OperationSupportImpl_Custom_Uninstall", impl.getDisplayName()), ++index);
                     CustomUninstaller uninstaller = impl.getNativeItem ().getUpdateItemDeploymentImpl ().getCustomUninstaller ();
                     assert uninstaller != null : "CustomInstaller must found for " + impl.getUpdateElement ();
-                    ProgressHandle handle = ProgressHandleFactory.createHandle("Installing " + impl.getDisplayName());
+                    ProgressHandle handle = ProgressHandle.createHandle("Installing " + impl.getDisplayName());
                     success = uninstaller.uninstall (impl.getCodeName (),
                             impl.getSpecificationVersion () == null ? null : impl.getSpecificationVersion ().toString (),
                             handle);

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.6.0
+#Version 2.7.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1233,6 +1233,8 @@ hfds LOGGER,j2eeModuleTypeToValue,moduleType
 CLSS public abstract org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration
 cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper,org.netbeans.modules.payara.tooling.data.PayaraVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 cons public init()
  anno 0 java.lang.Deprecated()
 fld protected final java.io.File primaryDD
@@ -1256,6 +1258,7 @@ meth protected void createDefaultSunDD(java.io.File) throws java.io.IOException
 meth protected void displayError(java.lang.Exception,java.lang.String)
 meth protected void handleEventRelatedException(java.lang.Exception)
 meth protected void handleEventRelatedIOException(java.io.IOException)
+meth protected org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPlatformVersion()
 meth public <%0 extends java.lang.Object> org.netbeans.modules.j2ee.metadata.model.api.MetadataModel<{%%0}> getMetadataModel(java.lang.Class<{%%0}>)
 meth public abstract boolean supportsCreateDatasource()
 meth public abstract boolean supportsCreateMessageDestination()
@@ -1267,6 +1270,8 @@ meth public final org.netbeans.modules.j2ee.dd.api.common.RootInterface getStand
 meth public final org.netbeans.modules.j2ee.dd.api.webservices.Webservices getWebServicesRootDD()
 meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getExistingResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion)
 meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getNewResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion)
+meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getExistingResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
+meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getNewResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public java.lang.String findDatasourceJndiName(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 meth public java.lang.String findDatasourceJndiNameForEjb(java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 meth public java.lang.String findJndiNameForEjb(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException

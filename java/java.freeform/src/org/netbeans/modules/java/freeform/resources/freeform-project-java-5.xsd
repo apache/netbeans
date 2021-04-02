@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!--
+XML Schema to define the project.xml for a freeform project.
+Cf. http://projects.netbeans.org/buildsys/design.html#freeform
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.netbeans.org/ns/freeform-project-java/5"
+            xmlns="http://www.netbeans.org/ns/freeform-project-java/5"
+            elementFormDefault="qualified">
+
+    <xsd:element name="java-data">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="compilation-unit" minOccurs="0" maxOccurs="unbounded" type="compilation-unit"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:complexType name="compilation-unit">
+        <xsd:sequence>
+            <xsd:element name="package-root" maxOccurs="unbounded" type="substitutable-text"/>
+            <xsd:element name="unit-tests" minOccurs="0"><xsd:complexType/></xsd:element>
+            <xsd:element name="classpath" minOccurs="0" maxOccurs="unbounded">
+                <!-- XXX use schema to declare that the mode must be unique within this group -->
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="substitutable-text">
+                            <xsd:attribute name="mode" use="required">
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:NMTOKEN">
+                                        <xsd:enumeration value="boot"/>
+                                        <xsd:enumeration value="compile"/>
+                                        <xsd:enumeration value="execute"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:attribute>
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="built-to" minOccurs="0" maxOccurs="unbounded" type="substitutable-text"/>
+            <xsd:element name="javadoc-built-to" minOccurs="0" maxOccurs="unbounded" type="substitutable-text"/>
+            <xsd:element name="source-level" minOccurs="0">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:NMTOKEN">
+                        <xsd:pattern value="(\d+)|(1\.([3-9]|[1-9][0-9]))"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="annotation-processing" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Annotation processing support</xsd:documentation>   
+                </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="scan-trigger" minOccurs="0">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    When this element exists the annotation processors are invoked during the scan
+                                    of the project and when a file is saved
+                                </xsd:documentation>
+                             </xsd:annotation>
+                            <xsd:complexType/>
+                        </xsd:element>
+                        <xsd:element name="editor-trigger" minOccurs="0">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    When this element exists the annotation processors are also invoked during
+                                    typing in the editor which may slow down editing. This element requires presence
+                                    of the scan-trigger element
+                                </xsd:documentation>
+                             </xsd:annotation>
+                            <xsd:complexType/>
+                        </xsd:element>
+                        <xsd:element name="source-output" minOccurs="0" type="substitutable-text">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    The folder to which annotation processors generate files
+                                </xsd:documentation>
+                             </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="processor-path" minOccurs="0" type="substitutable-text">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    Explicit classpath holding the annotation processors. When available
+                                    this classpath is used to lookup the processors otherwise the compile 
+                                    classpath is used
+                                </xsd:documentation>
+                             </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="processor" minOccurs="0" maxOccurs="unbounded" type="substitutable-text">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    Explicit processor(s) to be invoked. If available these processor(s)
+                                    are executed otherwise the processors are looked up in META-INF/services
+                                </xsd:documentation>
+                             </xsd:annotation>
+                        </xsd:element>    
+                        <xsd:element name="processor-option" minOccurs="0" maxOccurs="unbounded" type="processor-option">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    Processor specific options
+                                </xsd:documentation>
+                             </xsd:annotation>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- XXX: this type was copied from freeform-project-general.xsd -->
+    <!-- Some text that might be substituted with Ant property references. -->
+    <xsd:simpleType name="substitutable-text">
+        <xsd:restriction base="xsd:string">
+            <!-- XXX limit by regexp, perhaps -->
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="processor-option">
+        <xsd:sequence>
+            <xsd:element name="key" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Name of the option
+                    </xsd:documentation>
+                 </xsd:annotation>
+            </xsd:element><!-- xsd:token???? -->
+            <xsd:element name="value" type="substitutable-text">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Option value
+                    </xsd:documentation>
+                 </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+</xsd:schema>

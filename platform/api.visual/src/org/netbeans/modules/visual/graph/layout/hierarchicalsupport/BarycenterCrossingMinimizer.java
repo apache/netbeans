@@ -36,8 +36,8 @@ public class BarycenterCrossingMinimizer {
      *
      *
      */
-    public LayeredGraph minimizeCrossings(LayeredGraph graph) {
-        List<List<Vertex>> layers = graph.getLayers();
+    public <N, E> LayeredGraph<N, E> minimizeCrossings(LayeredGraph<N, E> graph) {
+        List<List<Vertex<N>>> layers = graph.getLayers();
         
         if (layers.size() > 1) {
             int maxIteration = 2;
@@ -56,21 +56,21 @@ public class BarycenterCrossingMinimizer {
      *
      *
      */
-    private void minimizeCrossingsPhaseI(LayeredGraph graph) {
-        List<List<Vertex>> layers = graph.getLayers();
+    private <N, E> void minimizeCrossingsPhaseI(LayeredGraph<N, E> graph) {
+        List<List<Vertex<N>>> layers = graph.getLayers();
         int size = layers.size();
         
         // downward phase
         for (int i = 0; i < size-1; i++) {
             float lowerBarycenters[] = graph.computeLowerBarycenters(i);
-            List<Vertex> lowerLayer = layers.get(i+1);
+            List<Vertex<N>> lowerLayer = layers.get(i+1);
             sortVertices(lowerLayer, lowerBarycenters, false);
         }
         
         // upward phase
         for (int i = size-2; i >= 0; i--) {
             float upperBarycenters[] = graph.computeUpperBarycenters(i);
-            List<Vertex> upperLayer = layers.get(i);
+            List<Vertex<N>> upperLayer = layers.get(i);
             sortVertices(upperLayer, upperBarycenters, false);
         }
     }
@@ -80,14 +80,14 @@ public class BarycenterCrossingMinimizer {
      *
      *
      */
-    private void minimizeCrossingsPhaseII(LayeredGraph graph) {
-        List<List<Vertex>> layers = graph.getLayers();
+    private <N, E> void minimizeCrossingsPhaseII(LayeredGraph<N, E> graph) {
+        List<List<Vertex<N>>> layers = graph.getLayers();
         int size = layers.size();
         
         // upward phase
         for (int i = size-2; i >= 0; i--) {
             float upperBarycenters[] = graph.computeUpperBarycenters(i);
-            List<Vertex> upperLayer = layers.get(i);
+            List<Vertex<N>> upperLayer = layers.get(i);
             sortVertices(upperLayer, upperBarycenters, true);
             minimizeCrossingsPhaseI(graph);
         }
@@ -95,7 +95,7 @@ public class BarycenterCrossingMinimizer {
         // downward phase
         for (int i = 0; i < size-1; i++) {
             float lowerBarycenters[] = graph.computeLowerBarycenters(i);
-            List<Vertex> lowerLayer = layers.get(i+1);
+            List<Vertex<N>> lowerLayer = layers.get(i+1);
             sortVertices(lowerLayer, lowerBarycenters, true);
             minimizeCrossingsPhaseI(graph);
         }
@@ -106,15 +106,15 @@ public class BarycenterCrossingMinimizer {
      *
      *
      */
-    private boolean sortVertices(List<Vertex> vertices,
+    private <N> boolean sortVertices(List<Vertex<N>> vertices,
             float barycenters[], boolean reverseEqualBarycenters) {
         int size = vertices.size();
         boolean changed = false;
         
         for (int i = 0; i < size-1; i++) {
             for (int j = i+1; j < size; j++) {
-                Vertex jv = vertices.get(j);
-                Vertex iv = vertices.get(i);
+                Vertex<N> jv = vertices.get(j);
+                Vertex<N> iv = vertices.get(i);
                 float jbc = barycenters[j]; 
                 float ibc = barycenters[i];
                 boolean swap = false;

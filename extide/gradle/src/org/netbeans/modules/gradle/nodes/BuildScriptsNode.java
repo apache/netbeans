@@ -27,10 +27,15 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.gradle.spi.GradleFiles.Kind;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.openide.filesystems.FileChangeAdapter;
@@ -49,12 +54,15 @@ import org.openide.util.Pair;
 import org.openide.util.lookup.Lookups;
 
 import static org.netbeans.modules.gradle.spi.GradleFiles.Kind.*;
+import org.openide.util.Exceptions;
 /**
  *
  * @author Laszlo Kishalmi
  */
 public final class BuildScriptsNode extends AnnotatedAbstractNode {
 
+    private static final Logger LOG = Logger.getLogger(BuildScriptsNode.class.getName());
+    
     @StaticResource
     private static final String BS_BADGE
             = "org/netbeans/modules/gradle/resources/buildscripts-badge.png";
@@ -136,10 +144,24 @@ public final class BuildScriptsNode extends AnnotatedAbstractNode {
                 case SETTINGS_SCRIPT:
                     return createBuildFileNode(fo, null);
                 case BUILD_SRC:
-                    return SubProjectsNode.createSubProjectNode(fo);
+                    return createSubProjectNode(fo);
                 default:
                     return null;
             }
+        }
+
+        private static Node createSubProjectNode(FileObject fo) {
+            try {
+                Project prj = ProjectManager.getDefault().findProject(fo);
+                if (prj != null) {
+                    return SubProjectsNode.createSubProjectNode(prj);
+                } else {
+                    LOG.log(Level.WARNING, "It seems {0} was not identified as a buildSrc project.", fo.getPath());
+                }
+            } catch (IOException | IllegalArgumentException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            return null;
         }
 
         private static Node createBuildFileNode(FileObject fo, String nameSuffix) {

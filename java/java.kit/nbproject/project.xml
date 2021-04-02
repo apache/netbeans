@@ -167,6 +167,13 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.java.nativeimage.debugger</code-name-base>
+                    <run-dependency>
+                        <release-version>0</release-version>
+                        <specification-version>0.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.java.navigation</code-name-base>
                     <run-dependency>
                         <release-version>1</release-version>

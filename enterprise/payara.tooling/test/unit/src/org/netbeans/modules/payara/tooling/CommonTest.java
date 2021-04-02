@@ -34,9 +34,10 @@ import org.netbeans.modules.payara.tooling.admin.CommandRestoreDomain;
 import org.netbeans.modules.payara.tooling.admin.ResultString;
 import org.netbeans.modules.payara.tooling.admin.ServerAdmin;
 import org.netbeans.modules.payara.tooling.data.PayaraAdminInterface;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
 import org.netbeans.modules.payara.tooling.data.PayaraServerEntity;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.logging.Logger;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
@@ -324,12 +325,12 @@ public abstract class CommonTest {
         server.setPort(intPayaraProperty(pClass, pMeth, PFPROP_PORT));
         server.setAdminPort(intPayaraProperty(pClass, pMeth,
                 PFPROP_ADMIN_PORT));
-        PayaraVersion version = PayaraVersion.toValue(
+        PayaraPlatformVersionAPI version = PayaraPlatformVersion.toValue(
                 getPayaraProperty(pClass, pMeth, PFPROP_VERSION));
         if (version == null) {
             LOGGER.log(Level.WARNING, METHOD, "unknownVersion", PFPROP_ADMIN_PORT);
         }
-        server.setVersion(version);
+        server.setPlatformVersion(version);
         PayaraAdminInterface adminInterface =
                 PayaraAdminInterface.toValue(
                 getPayaraProperty(pClass, pMeth, PFPROP_ADMIN_INTERFACE));

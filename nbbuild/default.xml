@@ -122,7 +122,9 @@
   <target name="init" depends="init-tasks,-define-cluster-path">
     <!-- Gets the module name -->
     <getmodulename name="module.name" id="module.id" root="${nb_all}"/>
-    
+
+    <property name="javac.default.target" value="1.8"/>
+
     <property name="cluster.dir.fallback" value="extra" />
     <setcluster name="cluster.dir" module="${module.name}" defaultLocation="${cluster.dir.fallback}" clusterName="module.cluster.name"/>
     <property name="cluster.dir" value="${cluster.dir.fallback}"/>

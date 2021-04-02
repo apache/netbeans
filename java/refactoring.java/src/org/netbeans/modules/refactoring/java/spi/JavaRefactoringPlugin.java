@@ -37,6 +37,7 @@ import org.netbeans.modules.refactoring.java.RefactoringUtils;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.netbeans.modules.refactoring.java.plugins.FindVisitor;
 import org.netbeans.modules.refactoring.java.plugins.JavaPluginUtils;
+import org.netbeans.modules.refactoring.java.spi.hooks.JavaModificationResult;
 import org.netbeans.modules.refactoring.spi.ProgressProviderAdapter;
 import org.netbeans.modules.refactoring.spi.RefactoringCommit;
 import org.netbeans.modules.refactoring.spi.RefactoringElementsBag;

@@ -20,7 +20,6 @@
 package org.netbeans.modules.gradle.java.queries;
 
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaProject;
 import java.io.File;
 import java.net.URISyntaxException;
@@ -33,7 +32,6 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.queries.BinaryForSourceQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation;
-import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Utilities;
 
@@ -41,7 +39,6 @@ import org.openide.util.Utilities;
  *
  * @author Laszlo Kishalmi
  */
-@ProjectServiceProvider(service = BinaryForSourceQueryImplementation.class, projectType = NbGradleProject.GRADLE_PLUGIN_TYPE + "/java-base")
 public class GradleBinaryForSource implements BinaryForSourceQueryImplementation {
 
     private final Project project;

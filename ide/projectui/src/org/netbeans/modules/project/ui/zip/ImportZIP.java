@@ -45,7 +45,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -130,7 +129,7 @@ public class ImportZIP extends JPanel {
     private static void unpackAndOpen(File zip, File root) throws IOException {
         final AtomicBoolean canceled = new AtomicBoolean();
         List<Project> projects = new ArrayList<Project>();
-        ProgressHandle handle = ProgressHandleFactory.createHandle(MSG_unpacking(zip.getName()), new Cancellable() {
+        ProgressHandle handle = ProgressHandle.createHandle(MSG_unpacking(zip.getName()), new Cancellable() {
             @Override public boolean cancel() {
                 return canceled.compareAndSet(false, true);
             }

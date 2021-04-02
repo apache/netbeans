@@ -63,7 +63,7 @@ public final class Profile {
 
     public static final Profile JAKARTA_EE_8_WEB  = new Profile(10, "8.0", "web", "JakartaEE8Web.displayName");
 
-    public static final Profile JAKARTA_EE_8_FULL  = new Profile(11, "8.0", "web", "JakartaEE8Full.displayName");
+    public static final Profile JAKARTA_EE_8_FULL  = new Profile(11, "8.0", null, "JakartaEE8Full.displayName");
 
     private final int order;
 

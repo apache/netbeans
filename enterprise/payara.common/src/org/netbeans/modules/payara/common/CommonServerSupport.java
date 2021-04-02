@@ -74,7 +74,7 @@ import org.openide.util.lookup.Lookups;
 import org.netbeans.modules.payara.spi.PayaraModule;
 import org.netbeans.modules.payara.spi.PayaraModule3;
 import org.netbeans.modules.payara.tooling.data.PayaraServerStatus;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 
 /**
  * Payara server support API.

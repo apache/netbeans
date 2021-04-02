@@ -25,15 +25,19 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Spliterator;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -527,10 +531,43 @@ implements FileNameMapper, URIResolver, EntityResolver {
         }
     }
 
-    private static final class ResArray extends ArrayList<Resource>
-    implements ResourceCollection {
+    private static final class ResArray implements ResourceCollection {
+        private final List<Resource> delegate = new ArrayList<>();
+
         public boolean isFilesystemOnly() {
             return false;
+        }
+
+        @Override
+        public int size() {
+            return delegate.size();
+        }
+
+        public Stream<? extends Resource> stream() {
+            return delegate.stream();
+        }
+
+        public boolean isEmpty() {
+            return delegate.isEmpty();
+        }
+
+        @Override
+        public Iterator<Resource> iterator() {
+            return delegate.iterator();
+        }
+
+        @Override
+        public void forEach(Consumer<? super Resource> action) {
+            delegate.forEach(action);
+        }
+
+        @Override
+        public Spliterator<Resource> spliterator() {
+            return delegate.spliterator();
+        }
+
+        public boolean add(Resource r) {
+            return delegate.add(r);
         }
     }
 

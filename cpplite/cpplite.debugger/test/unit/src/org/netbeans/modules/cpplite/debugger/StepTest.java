@@ -23,12 +23,11 @@ import java.io.File;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.Arrays;
 import junit.framework.Test;
+
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.junit.NbModuleSuite;
-import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.cpplite.debugger.breakpoints.CPPLiteBreakpoint;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
@@ -36,11 +35,11 @@ import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 
 /**
- * Tests Ant debugger stepping actions: step in, step out and step over.
+ * Tests C/C++ debugger stepping actions: step in, step out and step over.
  *
  * @author Jan Jancura
  */
-public class StepTest extends NbTestCase {
+public class StepTest extends AbstractDebugTest {
 
     public StepTest (String s) {
         super (s);
@@ -55,7 +54,7 @@ public class StepTest extends NbTestCase {
         File wd = getWorkDir();
         FileObject source = FileUtil.createData(FileUtil.toFileObject(wd), "main.cpp");
         try (OutputStream os = source.getOutputStream();
-             Writer w = new OutputStreamWriter(os)) {
+            Writer w = new OutputStreamWriter(os)) {
             w.append("#include <iostream>\n" +
                      "\n" +
                      "void test(void) {\n" +
@@ -70,61 +69,25 @@ public class StepTest extends NbTestCase {
                      "    std::cout << \"Hello, second time!\" << std::endl;\n" +
                      "}");
         }
-        Process compile = new ProcessBuilder("g++", "-o", "main", "-g", "main.cpp").directory(wd).start();
-        assertEquals(0, compile.waitFor());
+        compileCPP("main", wd);
         LineCookie lc = DataObject.find(source).getLookup().lookup(LineCookie.class);
         assertNotNull(lc);
-        DebuggerManager.getDebuggerManager().addBreakpoint(new CPPLiteBreakpoint(lc.getLineSet().getCurrent(4)));
-        CPPLiteDebugger d = CPPLiteDebugger.startDebugging(new CPPLiteDebuggerConfig(Arrays.asList(new File(wd, "main").getAbsolutePath()))).first();
-        int[] suspendCount = new int[1];
-        int[] resumeCount = new int[1];
-        d.addStateListener(new CPPLiteDebugger.StateListener() {
-            @Override
-            public void suspended(boolean suspended) {
-                int[] count;
-                if (suspended) {
-                    count = suspendCount;
-                } else {
-                    count = resumeCount;
-                }
-                synchronized (count) {
-                    count[0]++;
-                    count.notifyAll();
-                }
-            }
+        DebuggerManager.getDebuggerManager().addBreakpoint(CPPLiteBreakpoint.create(lc.getLineSet().getCurrent(4)));
+        startDebugging("main", wd);
 
-            @Override
-            public void finished() {
-            }
-        });
+        waitSuspended(1);
 
-        synchronized (suspendCount) {
-            while (suspendCount[0] < 1) {
-                suspendCount.wait();
-            }
-        }
+        assertStoppedAt(source.toURI(), 5);
 
-        //on line 4, there is a breakpoint and the PC
-        assertEquals(2, lc.getLineSet().getCurrent(4).getAnnotationCount());
+        engine.getActionsManager().doAction(ActionsManager.ACTION_STEP_OVER);
 
-        d.doAction(ActionsManager.ACTION_STEP_OVER);
+        waitResumed(1);
 
-        synchronized (resumeCount) {
-            while (resumeCount[0] < 1) {
-                resumeCount.wait();
-            }
-        }
+        waitSuspended(2);
 
-        synchronized (suspendCount) {
-            while (suspendCount[0] < 2) {
-                suspendCount.wait();
-            }
-        }
+        assertStoppedAt(source.toURI(), 6);
 
-        //on line 4, there is a breakpoint
-        assertEquals(1, lc.getLineSet().getCurrent(4).getAnnotationCount());
-        //PC:
-        assertEquals(1, lc.getLineSet().getCurrent(5).getAnnotationCount());
+        engine.getActionsManager().doAction(ActionsManager.ACTION_KILL);
     }
 
     public static Test suite() {

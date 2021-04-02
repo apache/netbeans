@@ -73,7 +73,7 @@ if [ ! -z $NATIVE_MAC_MACHINE ] && [ ! -z $MAC_PATH ]; then
    sh $NB_ALL/nbbuild/installer/mac/newbuild/init.sh | ssh $NATIVE_MAC_MACHINE "cat > $MAC_PATH/nbbuild/installer/mac/newbuild/build-private.sh"
    ssh $NATIVE_MAC_MACHINE chmod a+x $MAC_PATH/nbbuild/installer/mac/newbuild/build.sh
 
-   BASE_COMMAND="$MAC_PATH/nbbuild/installer/mac/newbuild/build.sh $MAC_PATH $BASENAME_PREFIX $BUILDNUMBER $BUILD_NBJDK7 $BUILD_NBJDK8 $BUILD_NBJDK11 $MAC_SIGN_CLIENT $MAC_SIGN_USER $MAC_SIGN_GUID $CODESIGNBUREAU_CREDFILE $LOCALES $BINARY_NAME $NB_VER_NUMBER"
+   BASE_COMMAND="$MAC_PATH/nbbuild/installer/mac/newbuild/build.sh $DIST $BASENAME_PREFIX $BUILDNUMBER $BUILD_NBJDK7 $BUILD_NBJDK8 $BUILD_NBJDK11 $BINARY_NAME $MAC_SIGN_IDENTITY_NAME $NB_VER_NUMBER $LOCALES"
    
    ssh $NATIVE_MAC_MACHINE "$UNLOCK_COMMAND $BASE_COMMAND" > $MAC_LOG_NEW 2>&1 &
    REMOTE_MAC_PID=$!

@@ -82,7 +82,7 @@ public class ActionProviderImpl implements ActionProvider {
             LifecycleManager.getDefault().saveAll();
             if (COMMAND_DEBUG.equals(command)) {
                 List<List<String>> executablesFor = config.executablesFor(COMMAND_RUN);
-                return Debugger.startInDebugger(executablesFor.get(0));
+                return Debugger.startInDebugger(executablesFor.get(0), FileUtil.toFile(prj.getProjectDirectory()));
             }
             List<List<String>> executablesFor = config.executablesFor(command);
             String arg = executablesFor.stream().map(c -> quote(c.stream().map(p -> quote(p)).collect(Collectors.joining(" ")))).collect(Collectors.joining(" "));
@@ -90,7 +90,7 @@ public class ActionProviderImpl implements ActionProvider {
         }, executionDescriptor, ProjectUtils.getInformation(prj).getDisplayName() + " - " + command).run();
     }
 
-    private String quote(String s) {
+    private static String quote(String s) {
         return s.replace("_", "_u_").replace(" ", "_s_");
     }
 

@@ -29,6 +29,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.debug.Capabilities;
@@ -69,6 +71,7 @@ import org.eclipse.lsp4j.debug.services.IDebugProtocolServer;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.jpda.InvalidExpressionException;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
@@ -80,6 +83,9 @@ import org.netbeans.modules.java.lsp.server.debugging.launch.NbLaunchRequestHand
 import org.netbeans.modules.java.lsp.server.debugging.breakpoints.NbBreakpointsRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.variables.NbVariablesRequestHandler;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
+import org.netbeans.modules.nativeimage.api.debug.EvaluateException;
+import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
+import org.netbeans.modules.nativeimage.api.debug.NIVariable;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
 
@@ -187,8 +193,8 @@ public final class NbProtocolServer implements IDebugProtocolServer {
             }
             response.setAllThreadsContinued(false);
         } else {
-            JPDADebugger debugger = context.getDebugSession().getDebugger();
-            debugger.getSession().getCurrentEngine().getActionsManager().doAction("continue");
+            Session session = context.getDebugSession().getSession();
+            session.getCurrentEngine().getActionsManager().doAction("continue");
             context.getThreadsProvider().getThreadObjects().cleanAll();
             response.setAllThreadsContinued(true);
         }
@@ -249,8 +255,8 @@ public final class NbProtocolServer implements IDebugProtocolServer {
                 ev = null;
             }
         } else {
-            JPDADebugger debugger = context.getDebugSession().getDebugger();
-            debugger.getSession().getCurrentEngine().getActionsManager().doAction("pause");
+            Session session = context.getDebugSession().getSession();
+            session.getCurrentEngine().getActionsManager().doAction("pause");
             ev = new StoppedEventArguments();
             ev.setReason("pause");
             ev.setThreadId(0);
@@ -417,46 +423,76 @@ public final class NbProtocolServer implements IDebugProtocolServer {
             stackFrame.getDVFrame().makeCurrent(); // The evaluation is always performed with respect to the current frame
             DVThread dvThread = stackFrame.getDVFrame().getThread();
             int threadId = context.getThreadsProvider().getId(dvThread);
-            JPDADebugger debugger = context.getDebugSession().getDebugger();
-            Variable variable;
-            try {
-                variable = debugger.evaluate(expression);
-            } catch (InvalidExpressionException ex) {
-                throw ErrorUtilities.createResponseErrorException(
-                    ex.getLocalizedMessage(),
-                    ResponseErrorCode.ParseError);
-            }
             EvaluateResponse response = new EvaluateResponse();
-            TruffleVariable truffleVariable = TruffleVariable.get(variable);
-            if (truffleVariable != null) {
-                int referenceId = context.getThreadsProvider().getThreadObjects().addObject(threadId, truffleVariable);
-                response.setResult(truffleVariable.getDisplayValue());
-                response.setVariablesReference(referenceId);
-                response.setType(truffleVariable.getType());
-                response.setIndexedVariables(truffleVariable.isLeaf() ? 0 : Integer.MAX_VALUE);
+            JPDADebugger debugger = context.getDebugSession().getJPDADebugger();
+            if (debugger != null) {
+                evaluateJPDA(debugger, expression, threadId, response);
             } else {
-                if (variable instanceof ObjectVariable) {
-                    int referenceId = context.getThreadsProvider().getThreadObjects().addObject(threadId, variable);
-                    int indexedVariables = ((ObjectVariable) variable).getFieldsCount();
-                    String toString;
-                    try {
-                        toString = ((ObjectVariable) variable).getToStringValue();
-                    } catch (InvalidExpressionException ex) {
-                        toString = variable.getValue();
-                    }
-                    response.setResult(toString);
-                    response.setVariablesReference(referenceId);
-                    response.setType(variable.getType());
-                    response.setIndexedVariables(Math.max(indexedVariables, 0));
-                } else {
-                    response.setResult(variable.getValue());
-                    response.setVariablesReference(0);
-                    response.setType(variable.getType());
-                    response.setIndexedVariables(0);
-                }
+                NIDebugger niDebugger = context.getDebugSession().getNIDebugger();
+                evaluateNative(niDebugger, expression, threadId, response);
             }
             return response;
         });
+    }
+
+    private void evaluateJPDA(JPDADebugger debugger, String expression, int threadId, EvaluateResponse response) {
+        Variable variable;
+        try {
+            variable = debugger.evaluate(expression);
+        } catch (InvalidExpressionException ex) {
+            throw ErrorUtilities.createResponseErrorException(
+                ex.getLocalizedMessage(),
+                ResponseErrorCode.ParseError);
+        }
+        TruffleVariable truffleVariable = TruffleVariable.get(variable);
+        if (truffleVariable != null) {
+            int referenceId = context.getThreadsProvider().getThreadObjects().addObject(threadId, truffleVariable);
+            response.setResult(truffleVariable.getDisplayValue());
+            response.setVariablesReference(referenceId);
+            response.setType(truffleVariable.getType());
+            response.setIndexedVariables(truffleVariable.isLeaf() ? 0 : truffleVariable.getChildren().length);
+        } else {
+            if (variable instanceof ObjectVariable) {
+                int referenceId = context.getThreadsProvider().getThreadObjects().addObject(threadId, variable);
+                int indexedVariables = ((ObjectVariable) variable).getFieldsCount();
+                String toString;
+                try {
+                    toString = ((ObjectVariable) variable).getToStringValue();
+                } catch (InvalidExpressionException ex) {
+                    toString = variable.getValue();
+                }
+                response.setResult(toString);
+                response.setVariablesReference(referenceId);
+                response.setType(variable.getType());
+                response.setIndexedVariables(Math.max(indexedVariables, 0));
+            } else {
+                response.setResult(variable.getValue());
+                //response.setVariablesReference(0);
+                response.setType(variable.getType());
+                //response.setIndexedVariables(0);
+            }
+        }
+    }
+
+    private void evaluateNative(NIDebugger niDebugger, String expression, int threadId, EvaluateResponse response) {
+        try {
+            NIVariable variable = niDebugger.evaluate(expression, null, null);
+            int numChildren = variable.getNumChildren();
+            if (numChildren > 0) {
+                int referenceId = context.getThreadsProvider().getThreadObjects().addObject(threadId, variable);
+                response.setResult(variable.getValue());
+                response.setVariablesReference(referenceId);
+                response.setType(variable.getType());
+                response.setIndexedVariables(numChildren);
+            } else {
+                response.setResult(variable.getValue());
+                response.setType(variable.getType());
+            }
+        } catch (EvaluateException ex) {
+            throw ErrorUtilities.createResponseErrorException(
+                ex.getLocalizedMessage(),
+                ResponseErrorCode.ParseError);
+        }
     }
 
     @Override
@@ -466,7 +502,6 @@ public final class NbProtocolServer implements IDebugProtocolServer {
         if (exceptionVariable == null) {
             ErrorUtilities.completeExceptionally(future, "No exception exists in thread " + args.getThreadId(), ResponseErrorCode.InvalidParams);
         } else {
-            JPDADebugger debugger = context.getDebugSession().getDebugger();
             Throwable exception = (Throwable) exceptionVariable.createMirrorObject();
             String typeName = exception.getLocalizedMessage(); // TODO
             String exceptionToString = exception.toString();

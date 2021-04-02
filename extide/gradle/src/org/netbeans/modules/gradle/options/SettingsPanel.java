@@ -136,6 +136,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         cbEnableCache = new javax.swing.JCheckBox();
         cbOpenLazy = new javax.swing.JCheckBox();
+        cbBundledLoading = new javax.swing.JCheckBox();
 
         setPreferredSize(new java.awt.Dimension(723, 417));
         setLayout(new java.awt.BorderLayout());
@@ -576,6 +577,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(cbOpenLazy, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbOpenLazy.text")); // NOI18N
         cbOpenLazy.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbOpenLazy.toolTipText")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(cbBundledLoading, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbBundledLoading.text")); // NOI18N
+        cbBundledLoading.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbBundledLoading.toolTipText")); // NOI18N
+
         javax.swing.GroupLayout pnlExperimentalLayout = new javax.swing.GroupLayout(pnlExperimental);
         pnlExperimental.setLayout(pnlExperimentalLayout);
         pnlExperimentalLayout.setHorizontalGroup(
@@ -588,7 +592,8 @@ public class SettingsPanel extends javax.swing.JPanel {
                         .addGap(6, 6, 6)
                         .addGroup(pnlExperimentalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbOpenLazy)
-                            .addComponent(cbEnableCache))))
+                            .addComponent(cbEnableCache)
+                            .addComponent(cbBundledLoading))))
                 .addContainerGap(423, Short.MAX_VALUE))
         );
         pnlExperimentalLayout.setVerticalGroup(
@@ -600,7 +605,9 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addComponent(cbEnableCache)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbOpenLazy)
-                .addContainerGap(362, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbBundledLoading)
+                .addContainerGap(334, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlExperimental, "Experimental");
@@ -693,7 +700,8 @@ public class SettingsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btDefaultHomeActionPerformed
 
     public void setValues() {
-        final GradleSettings settings = GradleSettings.getDefault();
+        GradleSettings settings = GradleSettings.getDefault();
+        GradleExperimentalSettings experimental = GradleExperimentalSettings.getDefault();
 
         tfGradleUserHome.setText(settings.getGradleUserHome().getAbsolutePath());
 
@@ -720,8 +728,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbDisplayDescription.setSelected(settings.isDisplayDesctiption());
         cbReuseEditorOnStackTrace.setSelected(settings.isReuseEditorOnStackTace());
 
-        cbEnableCache.setSelected(!settings.isCacheDisabled());
-        cbOpenLazy.setSelected(settings.isOpenLazy());
+        cbEnableCache.setSelected(!experimental.isCacheDisabled());
+        cbOpenLazy.setSelected(experimental.isOpenLazy());
+        cbBundledLoading.setSelected(experimental.isBundledLoading());
 
         cbPreferMaven.setSelected(settings.isPreferMaven());
 
@@ -759,6 +768,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     })
     public void applyValues() {
         GradleSettings settings = GradleSettings.getDefault();
+        GradleExperimentalSettings experimental = GradleExperimentalSettings.getDefault();
 
         if (getDefaultGradleUserHome().equals(tfGradleUserHome.getText())) {
             settings.setGradleUserHome(null);
@@ -785,8 +795,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         settings.setDisplayDescription(cbDisplayDescription.isSelected());
         settings.setReuseEditorOnStackTrace(cbReuseEditorOnStackTrace.isSelected());
 
-        settings.setCacheDisabled(!cbEnableCache.isSelected());
-        settings.setOpenLazy(cbOpenLazy.isSelected());
+        experimental.setCacheDisabled(!cbEnableCache.isSelected());
+        experimental.setOpenLazy(cbOpenLazy.isSelected());
+        experimental.setBundledLoading(cbBundledLoading.isSelected());
 
         settings.setDownloadLibs((GradleSettings.DownloadLibsRule) cbDownloadLibs.getSelectedItem());
         settings.setDownloadSources((GradleSettings.DownloadMiscRule) cbDownloadSources.getSelectedItem());
@@ -807,6 +818,7 @@ public class SettingsPanel extends javax.swing.JPanel {
 
     public boolean hasChanges() {
         GradleSettings settings = GradleSettings.getDefault();
+        GradleExperimentalSettings experimental = GradleExperimentalSettings.getDefault();
         boolean isChanged = !settings.getDistributionHome().equals(tfUseCustomGradle.getText());
         isChanged |= settings.isWrapperPreferred() != cbPreferWrapper.isSelected();
         isChanged |= !settings.getGradleVersion().equals(String.valueOf(cbGradleVersion.getSelectedItem()));
@@ -830,8 +842,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         isChanged |= settings.isReuseOutputTabs() != cbReuseOutputTabs.isSelected();
         isChanged |= settings.isReuseEditorOnStackTace() != cbReuseEditorOnStackTrace.isSelected();
 
-        isChanged |= settings.isCacheDisabled() == cbEnableCache.isSelected();
-        isChanged |= settings.isOpenLazy() != cbOpenLazy.isSelected();
+        isChanged |= experimental.isCacheDisabled() == cbEnableCache.isSelected();
+        isChanged |= experimental.isOpenLazy() != cbOpenLazy.isSelected();
+        isChanged |= experimental.isBundledLoading() != cbBundledLoading.isSelected();
 
         isChanged |= settings.isPreferMaven() != cbPreferMaven.isSelected();
 
@@ -899,6 +912,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JButton btUseCustomGradle;
     private javax.swing.JComboBox<GradleSettings.GradleExecutionRule> cbAllowExecution;
     private javax.swing.JCheckBox cbAlwaysShowOutput;
+    private javax.swing.JCheckBox cbBundledLoading;
     private javax.swing.JCheckBox cbConfigureOnDemand;
     private javax.swing.JCheckBox cbDisplayDescription;
     private javax.swing.JComboBox<GradleSettings.DownloadMiscRule> cbDownloadJavadoc;

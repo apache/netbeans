@@ -537,7 +537,6 @@ public final class Source implements Lookup.Provider {
             @NonNull final Lookup context) {
         synchronized (Source.class) {
             final Source source = SourceFactory.getDefault().createSource(fileObject, mimeType, context);
-            assert source.context == context;
             return source;
         }
     }

@@ -1,6 +1,0 @@
-Name: Profiler Binaries
-Description: Profiler Binaries for a large variety of platforms, superseds older CDDL binaries where applicable.
-Version: ASF-v1 (first version released under ASF hospice)
-License: Apache License v2
-Source: https://netbeans.apache.org
-Origin: Apache NetBeans

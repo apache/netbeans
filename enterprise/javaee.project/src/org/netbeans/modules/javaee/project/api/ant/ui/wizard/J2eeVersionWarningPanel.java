@@ -167,15 +167,15 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
         if ((j2eeProfile == Profile.JAVA_EE_8_FULL || j2eeProfile == Profile.JAVA_EE_8_WEB) &&
                 isAcceptableSourceLevel("1.8", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
-
+        }
         if ((j2eeProfile == Profile.JAKARTA_EE_8_FULL || j2eeProfile == Profile.JAKARTA_EE_8_WEB) &&
-                isAcceptableSourceLevel("1.8", sourceLevel, acceptableSourceLevels)) // NOI18N
+                isAcceptableSourceLevel("1.8", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
-
+        }
         if ((j2eeProfile == Profile.JAKARTA_EE_9_FULL || j2eeProfile == Profile.JAKARTA_EE_9_WEB) &&
-                isAcceptableSourceLevel("1.8", sourceLevel, acceptableSourceLevels)) // NOI18N
+                isAcceptableSourceLevel("1.8", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
-
+        }
         if (j2eeProfile == Profile.JAVA_EE_5) {
             JavaPlatform[] java15Platforms = getJavaPlatforms("1.5"); //NOI18N
             if (java15Platforms.length > 0) {

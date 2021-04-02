@@ -81,11 +81,11 @@ abstract class RunnerJava extends Runner {
     static PayaraConfig getServerConfig(final PayaraServer server) {
         final String METHOD = "getServerConfig";
         PayaraConfig config = PayaraConfigManager.getConfig(
-                ConfigBuilderProvider.getBuilderConfig(
-                server.getVersion()));
+                ConfigBuilderProvider.getPlatformBuilderConfig(
+                server.getPlatformVersion()));
         if (config == null) {
             throw new CommandException(LOGGER.excMsg(METHOD, "noConfig"),
-                    server.getVersion());
+                    server.getPlatformVersion());
         }
         return config;
     }

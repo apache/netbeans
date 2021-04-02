@@ -100,6 +100,6 @@ public class GradleProjectProblemProvider implements ProjectProblemsProvider {
                         : q.worseThan(FULL) ? Status.RESOLVED_WITH_WARNING : Status.RESOLVED;
                 return Result.create(st);
             });
-        }
+       }
     }
 }

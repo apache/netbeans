@@ -76,8 +76,8 @@ public class BreakpointsTest extends AbstractDebugTest {
         compileC("breakpoints", wd);
         LineCookie lc = DataObject.find(source).getLookup().lookup(LineCookie.class);
         assertNotNull(lc);
-        CPPLiteBreakpoint bp8 = new CPPLiteBreakpoint(lc.getLineSet().getCurrent(7));
-        CPPLiteBreakpoint bp9 = new CPPLiteBreakpoint(lc.getLineSet().getCurrent(8));
+        CPPLiteBreakpoint bp8 = CPPLiteBreakpoint.create(lc.getLineSet().getCurrent(7));
+        CPPLiteBreakpoint bp9 = CPPLiteBreakpoint.create(lc.getLineSet().getCurrent(8));
         bp9.disable();
         DebuggerManager.getDebuggerManager().addBreakpoint(bp8);
         DebuggerManager.getDebuggerManager().addBreakpoint(bp9);
@@ -98,7 +98,7 @@ public class BreakpointsTest extends AbstractDebugTest {
         waitSuspended(3);
         assertStoppedAt(source.toURI(), 9);
 
-        CPPLiteBreakpoint bp10 = new CPPLiteBreakpoint(lc.getLineSet().getCurrent(9));
+        CPPLiteBreakpoint bp10 = CPPLiteBreakpoint.create(lc.getLineSet().getCurrent(9));
         DebuggerManager.getDebuggerManager().addBreakpoint(bp10);
 
         engine.getActionsManager().doAction(ActionsManager.ACTION_CONTINUE);
@@ -116,7 +116,7 @@ public class BreakpointsTest extends AbstractDebugTest {
 
         bp10.disable();
 
-        bp8 = new CPPLiteBreakpoint(lc.getLineSet().getCurrent(7));
+        bp8 = CPPLiteBreakpoint.create(lc.getLineSet().getCurrent(7));
         DebuggerManager.getDebuggerManager().addBreakpoint(bp8);
 
         engine.getActionsManager().doAction(ActionsManager.ACTION_CONTINUE);

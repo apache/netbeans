@@ -19,9 +19,11 @@
 
 package org.netbeans.modules.gradle.tooling
 
+import java.lang.Iterable
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.JavaExec
+import org.gradle.process.CommandLineArgumentProvider
 
 /**
  *
@@ -32,6 +34,7 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
     static String RUN_SINGLE_TASK = "runSingle"
     static String RUN_SINGLE_MAIN = "runClassName"
     static String RUN_SINGLE_ARGS = "runArgs"
+    static String RUN_SINGLE_JVM_ARGS = "runJvmArgs"
     
     void apply(Project project) {
         project.afterEvaluate {
@@ -40,6 +43,15 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
                 && project.hasProperty(RUN_SINGLE_MAIN)) {
                 
                 addTask(project)
+            }
+            if (project.hasProperty(RUN_SINGLE_JVM_ARGS)) {
+                project.tasks.withType(JavaExec).configureEach { je ->
+                    je.jvmArgumentProviders.add(new CommandLineArgumentProvider() {
+                        public Iterable<String> asArguments() {
+                            return project.getProperty(RUN_SINGLE_JVM_ARGS).tokenize(' ')
+                        }
+                    })
+                }
             }
         }
     }
@@ -57,4 +69,3 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
     }
     
 }
-

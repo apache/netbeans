@@ -194,8 +194,9 @@ class Main {
                         then(() => waitUserApplication(5, false, () => resolve(true)));
                 }
                 console.log("Test: invoking debug debug.run");
-                vscode.commands.executeCommand("workbench.action.debug.run").then(
-                    () => waitUserApplication(5, true, onProcessStarted));
+                const workspaceFolder = (vscode.workspace.workspaceFolders!)[0];
+                vscode.debug.startDebugging(workspaceFolder, {type: "java8+", name: "Launch Java 8+ App", request: "launch"}, {}).
+                    then(() => waitUserApplication(5, true, onProcessStarted));
             });
             return r;
         } catch (error) {

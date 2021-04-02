@@ -50,21 +50,21 @@
         </action>
 
         <action name="run.single">
-            <args>-PrunClassName=${selectedClass} runSingle</args>
+            <args>-PrunClassName=${selectedClass} runSingle  ${javaExec.jvmArgs} ${javaExec.args}</args>
         </action>
 
         <action name="debug.single">
-            <args>-PrunClassName=${selectedClass} runSingle --debug-jvm</args>
+            <args>-PrunClassName=${selectedClass} runSingle --debug-jvm  ${javaExec.jvmArgs} ${javaExec.args}</args>
         </action>
     </apply-for>
 
     <apply-for plugins="application">
         <action name="run">
-            <args>run</args>
+            <args>run ${javaExec.jvmArgs} ${javaExec.args}</args>
         </action>
 
         <action name="debug">
-            <args>run --debug-jvm</args>
+            <args>run --debug-jvm  ${javaExec.jvmArgs} ${javaExec.args}</args>
         </action>
     </apply-for>
 

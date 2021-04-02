@@ -20,17 +20,32 @@
     under the License.
 
 -->
+
+## Version 12.4 Beta
+
+* Test results UI added using Test Explorer UI extension
+* Micronaut projects support added
+  * YAML configuration files code completion
+* Maven multi-project projects support
+* Gradle projects improvements
+  * Multi-project projects supported
+  * Priming build is run and project remembered as trusted
+  * Support for explicit parameters for the application and its VM
+* GDB debugging using CppLite for C/C++ and Native-Image
+* Number of bug fixes
+
 ## Version 12.3
 
 * LSP codelens for Run and Debug of main and test methods
-* NETBEANS-5319 - Always do save modified files when used through LSP.
-* Project problems and improvements in headless environment for VSNetBeans.
-  * Showing completions returned by annotation Processors in VS Code.
-  * Project problems are resolved in headless environment.
-  * Restart NBLS when an extension providing some NB cluster is installed/uninstalled.
-  * Enable full VSNetBeans Maven build test.
+* NETBEANS-5319 - Always do save modified files when used through LSP
+* Project problems and improvements in headless environment for VSNetBeans
+  * Showing completions returned by annotation Processors in VS Code
+  * Project problems are resolved in headless environment
+  * Restart NBLS when an extension providing some NB cluster is installed/uninstalled
+  * Enable full VSNetBeans Maven build test
   * Don't show reload/save dialogs in VSNetBeans
   * Properly stop Maven execution from LSP/DAP 
+
 ## Version 12.2.1
 
 * Numerous refactorings for Java source code editing added
@@ -38,4 +53,3 @@
 * Ability to cancel selected operations
 * Maven projects: Go to Definition source code action downloads and open Java source
 * JavaDoc is shown when mouse hoovers over symbol
-  

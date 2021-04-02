@@ -19,7 +19,6 @@
 package org.netbeans.modules.gradle.options;
 
 import java.util.prefs.Preferences;
-import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.openide.util.NbPreferences;
 
 /**
@@ -29,6 +28,7 @@ import org.openide.util.NbPreferences;
 public final class GradleExperimentalSettings {
     public static final String PROP_DISABLE_CACHE = "disableCache";
     public static final String PROP_LAZY_OPEN_GROUPS = "lazyOpen";
+    public static final String PROP_BUNDLED_LOADING = "bundledLoading";
 
     private static final GradleExperimentalSettings INSTANCE = new GradleExperimentalSettings(NbPreferences.forModule(GradleExperimentalSettings.class));
     private final Preferences preferences;
@@ -61,4 +61,11 @@ public final class GradleExperimentalSettings {
         return getPreferences().getBoolean(PROP_DISABLE_CACHE, false);
     }
 
+    public void setBundledLoading(boolean b) {
+        getPreferences().putBoolean(PROP_BUNDLED_LOADING, b);
+    }
+
+    public boolean isBundledLoading() {
+        return getPreferences().getBoolean(PROP_BUNDLED_LOADING, false);
+    }
 }

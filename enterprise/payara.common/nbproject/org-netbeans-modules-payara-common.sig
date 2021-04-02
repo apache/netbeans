@@ -1341,6 +1341,7 @@ meth public org.netbeans.modules.payara.common.PayaraJvmMode getJvmMode()
 meth public org.netbeans.modules.payara.common.parser.DomainXMLChangeListener getDomainXMLChangeListener()
 meth public org.netbeans.modules.payara.tooling.data.PayaraAdminInterface getAdminInterface()
 meth public org.netbeans.modules.payara.tooling.data.PayaraVersion getVersion()
+meth public org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPlatformVersion()
 meth public org.openide.nodes.Node getBasicNode()
 meth public org.openide.nodes.Node getFullNode()
 meth public org.openide.util.Lookup getLookup()
@@ -1490,6 +1491,7 @@ meth public org.netbeans.modules.payara.tooling.TaskState call2()
 supr org.netbeans.modules.payara.common.BasicTask<org.netbeans.modules.payara.tooling.TaskState>
 hfds LOGGER,RESTART_DELAY,support
 
+ anno 0 java.lang.Deprecated()
 CLSS public final !enum org.netbeans.modules.payara.common.ServerDetails
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_144
 fld public final static org.netbeans.modules.payara.common.ServerDetails PAYARA_SERVER_4_1_151
@@ -1533,6 +1535,12 @@ meth public static org.openide.WizardDescriptor$InstantiatingIterator getInstant
 supr java.lang.Enum<org.netbeans.modules.payara.common.ServerDetails>
 hfds CDDL_LICENSE,DOWNLOAD_URL,directUrl,displayName,downloadable,indirectUrl,licenseUrl,uriFragment,version,versionInt
 hcls DomainParser
+
+CLSS public org.netbeans.modules.payara.common.PayaraPlatformDetails
+meth public static boolean isInstalledInDirectory(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI,java.io.File)
+meth public java.lang.String toString()
+meth public static java.util.Optional getVersionFromInstallDirectory(java.io.File)
+meth public static org.openide.WizardDescriptor$InstantiatingIterator getInstantiatingIterator()
 
 CLSS public org.netbeans.modules.payara.common.SimpleIO
 cons public init(java.lang.String,java.lang.Process)
@@ -2289,6 +2297,7 @@ meth public abstract java.lang.String getServerRoot()
 meth public abstract java.lang.String getUrl()
 meth public abstract org.netbeans.modules.payara.tooling.data.PayaraAdminInterface getAdminInterface()
 meth public abstract org.netbeans.modules.payara.tooling.data.PayaraVersion getVersion()
+meth public abstract org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPlatformVersion()
 
 CLSS public abstract interface org.netbeans.spi.server.ServerInstanceImplementation
 meth public abstract boolean isRemovable()

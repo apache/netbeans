@@ -26,6 +26,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.tree.DocTreeMaker;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
@@ -38,9 +39,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Name;
-import org.openide.util.Exceptions;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
@@ -52,7 +52,8 @@ public class TreeShims {
     public static final String YIELD = "YIELD"; //NOI18N
     public static final String BINDING_VARIABLE = "BINDING_VARIABLE"; //NOI18N
     public static final String RECORD = "RECORD"; //NOI18N
-
+    public static final int PATTERN_MATCHING_INSTANCEOF_PREVIEW_JDK_VERSION = 15; //NOI18N
+    
     public static List<? extends ExpressionTree> getExpressions(CaseTree node) {
         try {
             Method getExpressions = CaseTree.class.getDeclaredMethod("getExpressions");
@@ -156,9 +157,11 @@ public class TreeShims {
 
     public static Name getBinding(Tree node) {
         try {
-            Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree");
-            Method getBinding = bpt.getDeclaredMethod("getBinding");
-            return (Name) getBinding.invoke(node);
+            Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
+            return isJDKVersionSupportEnablePreview() 
+                    ? (Name)bpt.getDeclaredMethod("getBinding").invoke(node)  //NOI18N
+                    : ((VariableTree)bpt.getDeclaredMethod("getVariable").invoke(node)).getName(); //NOI18N
+
         } catch (NoSuchMethodException | ClassNotFoundException ex) {
             return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
@@ -238,9 +241,11 @@ public class TreeShims {
             return null;
         }
         try {
-            Class bindingPatternTreeClass = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
-            Method getType = bindingPatternTreeClass.getDeclaredMethod("getType");  //NOI18N
-            return (Tree) getType.invoke(node);
+            Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
+            return isJDKVersionSupportEnablePreview()
+                    ? (Tree) bpt.getDeclaredMethod("getType").invoke(node) //NOI18N
+                    : ((VariableTree) bpt.getDeclaredMethod("getVariable").invoke(node)).getType(); //NOI18N
+
         } catch (NoSuchMethodException ex) {
             return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException ex) {
@@ -305,5 +310,9 @@ public class TreeShims {
         } catch (IllegalAccessException | IllegalArgumentException ex) {
             throw TreeShims.<RuntimeException>throwAny(ex);
         }
+    }
+    
+    public static boolean isJDKVersionSupportEnablePreview() {
+        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(PATTERN_MATCHING_INSTANCEOF_PREVIEW_JDK_VERSION) <= 0;
     }
 }

@@ -34,7 +34,7 @@ import java.util.prefs.PreferenceChangeListener;
 import javax.swing.event.ChangeListener;
 import org.gradle.internal.impldep.com.google.common.base.Objects;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.api.GradleBaseProject;
+import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
@@ -72,26 +72,25 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
         }
     };
 
-    final Project project;
+    final NbGradleProjectImpl project;
     private GradleDistribution dist;
     private PropertyChangeListener pcl;
     private URI distributionURI;
 
     public GradleDistributionProviderImpl(Project project) {
-        this.project = project;
+        this.project = (NbGradleProjectImpl) project;
         pcl = (evt) -> {
             if (NbGradleProject.PROP_RESOURCES.endsWith(evt.getPropertyName())) {
                 URI uri = (URI) evt.getNewValue();
                 if ((uri != null) && (uri.getPath() != null) && uri.getPath().endsWith(GradleFiles.WRAPPER_PROPERTIES)) {
                     URI newDistURI = getWrapperDistributionURI();
-                    if (GradleSettings.getDefault().isWrapperPreferred() && ! Objects.equal(distributionURI, newDistURI)) {
+                    if (GradleSettings.getDefault().isWrapperPreferred() && (distributionURI != null) && !Objects.equal(distributionURI, newDistURI)) {
                         distributionURI = newDistURI;
                         distributionChanged();
                     }
                 }
             }
         };
-        distributionURI = getWrapperDistributionURI();
         NbGradleProject.addPropertyChangeListener(project, WeakListeners.propertyChange(pcl, project));
     }
 
@@ -102,11 +101,9 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
 
             GradleDistributionManager mgr = GradleDistributionManager.get(settings.getGradleUserHome());
 
-            GradleBaseProject gbp = GradleBaseProject.get(project);
-
-            if ((gbp != null) && settings.isWrapperPreferred()) {
+            if (settings.isWrapperPreferred()) {
                 try {
-                    dist = mgr.distributionFromWrapper(gbp.getRootDir());
+                    dist = mgr.distributionFromWrapper(project.getGradleFiles().getRootDir());
                 } catch (Exception ex) {
                     LOGGER.log(Level.FINE, "Cannot evaulate Gradle Wrapper", ex); //NOI18N
                 }
@@ -136,10 +133,7 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
     private URI getWrapperDistributionURI() {
         URI ret = null;
         try {
-            GradleBaseProject gbp = GradleBaseProject.get(project);
-            if (gbp != null) {
-                ret = GradleDistributionManager.getWrapperDistributionURI(gbp.getRootDir());
-            }
+            ret = GradleDistributionManager.getWrapperDistributionURI(project.getGradleFiles().getRootDir());
         } catch (IOException | URISyntaxException ex) {}
         return ret;
     }
@@ -162,8 +156,7 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
 
     @Override
     public Set<File> getWatchedResources() {
-        GradleBaseProject gbp = GradleBaseProject.get(project);
-        return gbp != null ? Collections.singleton(new File(gbp.getRootDir(), GradleFiles.WRAPPER_PROPERTIES)) : Collections.emptySet();
+        return Collections.singleton(new File(project.getGradleFiles().getRootDir(), GradleFiles.WRAPPER_PROPERTIES));
     }
 
 }

@@ -53,7 +53,7 @@ public class Scene2Image {
 
     private final File file;
     private final Scene scene;
-    private Set selectedObjects;
+    private Set<?> selectedObjects;
     private int imageHeight;
     private int imageWidth;
     private double scale;
@@ -276,7 +276,7 @@ public class Scene2Image {
         int _imageWidth = sceneRec.width;
         int _imageHeight = sceneRec.height;
 
-        Set _selectedObjects = null;
+        Set<?> _selectedObjects = null;
 
         if (selectedOnly) {
             //in order to use getSelectedObject the scene must be an ObjectScene
@@ -353,8 +353,8 @@ public class Scene2Image {
             FileImageOutputStream fo = new FileImageOutputStream(file);
 
             if (imageType == ImageType.JPG) {
-                Iterator iter = ImageIO.getImageWritersByFormatName("jpg");
-                ImageWriter writer = (ImageWriter) iter.next();
+                Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName("jpg");
+                ImageWriter writer = iter.next();
 
                 ImageWriteParam iwp = writer.getDefaultWriteParam();
                 iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);

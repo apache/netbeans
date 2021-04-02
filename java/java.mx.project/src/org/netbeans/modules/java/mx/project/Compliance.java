@@ -18,6 +18,9 @@
  */
 package org.netbeans.modules.java.mx.project;
 
+import java.util.logging.Level;
+import org.openide.util.Exceptions;
+
 public final class Compliance {
 
     final int max;
@@ -65,7 +68,17 @@ public final class Compliance {
         if (comma != -1) {
             spec = spec.substring(0, comma);
         }
-        int version = Integer.parseInt(spec);
+        if (spec.endsWith("-loom")) {
+            spec = spec.substring(0, spec.length() - 5);
+        }
+        int version;
+        try {
+            version = Integer.parseInt(spec);
+        } catch (NumberFormatException numberFormatException) {
+            Exceptions.attachSeverity(numberFormatException, Level.INFO);
+            Exceptions.printStackTrace(numberFormatException);
+            return plus(8);
+        }
         return plus ? Compliance.plus(version) : Compliance.exact(version);
     }
 

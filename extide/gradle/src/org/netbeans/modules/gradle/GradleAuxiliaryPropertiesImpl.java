@@ -27,8 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.AuxiliaryProperties;
@@ -124,6 +122,6 @@ public class GradleAuxiliaryPropertiesImpl implements AuxiliaryProperties {
 
     private File getPropFile(boolean shared) {
         GradleFiles gf = project.getGradleFiles();
-        return new File(shared ? gf.getProjectDir() : GradleProjectCache.getCacheDir(gf), GradleFiles.GRADLE_PROPERTIES_NAME);
+        return new File(shared ? gf.getProjectDir() : NbGradleProjectImpl.getCacheDir(gf), GradleFiles.GRADLE_PROPERTIES_NAME);
     }
 }

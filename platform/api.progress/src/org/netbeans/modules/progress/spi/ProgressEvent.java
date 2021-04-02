@@ -157,4 +157,8 @@ public final class ProgressEvent {
         sb.append("]");
         return sb.toString();
     }
+
+    void markAsFinished() {
+        type = TYPE_FINISH;
+    }
 }

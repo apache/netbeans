@@ -92,6 +92,8 @@
         <file>src/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_1.xsd</file>
         <file>src/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_2.xsd</file>
         <file>src/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_3.xsd</file>
+        <file>src/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_3.xsd</file>
+        <file>src/org/netbeans/modules/web/jsf/resources/web-facesconfig_3_0.xsd</file>
         <license ref="CDDL-1.1" />
         <comment type="CATEGORY_B" />
     </fileset>

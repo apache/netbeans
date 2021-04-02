@@ -558,7 +558,9 @@ public final class ProjectWebModule extends J2eeModuleProvider
     public String getModuleVersion () {
         // return a version based on the Java EE version
         Profile platformVersion = getJ2eeProfile();
-        if (Profile.JAKARTA_EE_8_FULL.equals(platformVersion) || Profile.JAKARTA_EE_8_WEB.equals(platformVersion)) {
+        if (Profile.JAKARTA_EE_9_FULL.equals(platformVersion) || Profile.JAKARTA_EE_9_WEB.equals(platformVersion)) {
+            return WebApp.VERSION_4_0;
+        } else if (Profile.JAKARTA_EE_8_FULL.equals(platformVersion) || Profile.JAKARTA_EE_8_WEB.equals(platformVersion)) {
             return WebApp.VERSION_4_0;
         } else if (Profile.JAVA_EE_8_FULL.equals(platformVersion) || Profile.JAVA_EE_8_WEB.equals(platformVersion)) {
             return WebApp.VERSION_4_0;

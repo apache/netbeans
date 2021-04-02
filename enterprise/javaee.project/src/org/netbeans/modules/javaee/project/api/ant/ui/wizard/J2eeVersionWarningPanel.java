@@ -168,12 +168,14 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
                 isAcceptableSourceLevel("1.8", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
         }
-        // no warning if 1.8 is the default for jakartaee8
         if ((j2eeProfile == Profile.JAKARTA_EE_8_FULL || j2eeProfile == Profile.JAKARTA_EE_8_WEB) &&
                 isAcceptableSourceLevel("1.8", sourceLevel, acceptableSourceLevels)) { // NOI18N
             return null;
         }
-        
+        if ((j2eeProfile == Profile.JAKARTA_EE_9_FULL || j2eeProfile == Profile.JAKARTA_EE_9_WEB) &&
+                isAcceptableSourceLevel("1.8", sourceLevel, acceptableSourceLevels)) { // NOI18N
+            return null;
+        }
         if (j2eeProfile == Profile.JAVA_EE_5) {
             JavaPlatform[] java15Platforms = getJavaPlatforms("1.5"); //NOI18N
             if (java15Platforms.length > 0) {
@@ -218,6 +220,18 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
             JavaPlatform[] java18Platforms = getJavaPlatforms("1.8"); //NOI18N
             if (java18Platforms.length > 0) {
                 return WARN_SET_JDK_8;
+            }  else {
+                    if (canSetSourceLevel("1.8")) {
+                        return WARN_SET_SOURCE_LEVEL_8;
+                    } else {
+                        return WARN_JDK_8_REQUIRED;
+                    }
+                }
+        } else if (j2eeProfile == Profile.JAKARTA_EE_9_FULL || j2eeProfile == Profile.JAKARTA_EE_9_WEB) {
+            JavaPlatform[] java18Platforms = getJavaPlatforms("1.8"); //NOI18N
+            if (java18Platforms.length > 0) {
+                return WARN_SET_JDK_8;
+
             } else {
                 if (canSetSourceLevel("1.8")) {
                     return WARN_SET_SOURCE_LEVEL_8;

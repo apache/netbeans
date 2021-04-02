@@ -53,6 +53,7 @@ public final class NbLaunchRequestHandler {
     private NbLaunchDelegate activeLaunchHandler;
 
     public CompletableFuture<Void> launch(Map<String, Object> launchArguments, DebugAdapterContext context) {
+        boolean isNative = "nativeimage".equals(launchArguments.get("type"));
         CompletableFuture<Void> resultFuture = new CompletableFuture<>();
         boolean noDebug = (Boolean) launchArguments.getOrDefault("noDebug", Boolean.FALSE);
         Consumer<DebugAdapterContext> terminateHandle = (daContext) -> handleTerminatedEvent(daContext);
@@ -61,8 +62,8 @@ public final class NbLaunchRequestHandler {
         // validation
         List<String> modulePaths = (List<String>) launchArguments.getOrDefault("modulePaths", Collections.emptyList());
         List<String> classPaths = (List<String>) launchArguments.getOrDefault("classPaths", Collections.emptyList());
-        if (StringUtils.isBlank((String)launchArguments.get("mainClass"))
-                || modulePaths.isEmpty() && classPaths.isEmpty()) {
+        if (!isNative && (StringUtils.isBlank((String)launchArguments.get("mainClass"))
+                          || modulePaths.isEmpty() && classPaths.isEmpty())) {
             ErrorUtilities.completeExceptionally(resultFuture,
                 "Failed to launch debuggee VM. Missing mainClass or modulePaths/classPaths options in launch configuration.",
                 ResponseErrorCode.serverErrorStart);
@@ -80,37 +81,52 @@ public final class NbLaunchRequestHandler {
             context.setDebuggeeEncoding(Charset.forName((String)launchArguments.get("encoding")));
         }
 
-        if (StringUtils.isBlank((String)launchArguments.get("vmArgs"))) {
-            launchArguments.put("vmArgs", String.format("-Dfile.encoding=%s", context.getDebuggeeEncoding().name()));
-        } else {
-            // if vmArgs already has the file.encoding settings, duplicate options for jvm will not cause an error, the right most value wins
-            launchArguments.put("vmArgs", String.format("%s -Dfile.encoding=%s", launchArguments.get("vmArgs"), context.getDebuggeeEncoding().name()));
+        if (!isNative) {
+            if (StringUtils.isBlank((String)launchArguments.get("vmArgs"))) {
+                launchArguments.put("vmArgs", String.format("-Dfile.encoding=%s", context.getDebuggeeEncoding().name()));
+            } else {
+                // if vmArgs already has the file.encoding settings, duplicate options for jvm will not cause an error, the right most value wins
+                launchArguments.put("vmArgs", String.format("%s -Dfile.encoding=%s", launchArguments.get("vmArgs"), context.getDebuggeeEncoding().name()));
+            }
         }
         context.setDebugMode(!noDebug);
 
         activeLaunchHandler.preLaunch(launchArguments, context);
 
         String filePath = (String)launchArguments.get("mainClass");
-        File ioFile = null;
-        if (filePath != null) {
-            ioFile = new File(filePath);
-            if (!ioFile.exists()) {
-                try {
-                    URI uri = new URI(filePath);
-                    ioFile = Utilities.toFile(uri);
-                } catch (URISyntaxException ex) {
-                    // Not a valid file
+        FileObject file = null;
+        File nativeImageFile = null;
+        if (!isNative) {
+            File ioFile = null;
+            if (filePath != null) {
+                ioFile = new File(filePath);
+                if (!ioFile.exists()) {
+                    try {
+                        URI uri = new URI(filePath);
+                        ioFile = Utilities.toFile(uri);
+                    } catch (URISyntaxException ex) {
+                        // Not a valid file
+                    }
                 }
             }
-        }
-        FileObject file = ioFile != null ? FileUtil.toFileObject(ioFile) : null;
-        if (file == null) {
-            ErrorUtilities.completeExceptionally(resultFuture,
-                    "Missing file: " + filePath,
+            file = ioFile != null ? FileUtil.toFileObject(ioFile) : null;
+            if (file == null) {
+                ErrorUtilities.completeExceptionally(resultFuture,
+                        "Missing file: " + filePath,
+                        ResponseErrorCode.serverErrorStart);
+                return resultFuture;
+            }
+        } else {
+            String nativeImage = (String) launchArguments.get("nativeImagePath");
+            if (nativeImage == null) {
+                ErrorUtilities.completeExceptionally(resultFuture,
+                    "Failed to launch debuggee native image. No native image is specified.",
                     ResponseErrorCode.serverErrorStart);
-            return resultFuture;
+                return resultFuture;
+            }
+            nativeImageFile = new File(nativeImage);
         }
-        if (!launchArguments.containsKey("sourcePaths")) {
+        if (!isNative && !launchArguments.containsKey("sourcePaths")) {
             ClassPath sourceCP = ClassPath.getClassPath(file, ClassPath.SOURCE);
             if (sourceCP != null) {
                 FileObject[] roots = sourceCP.getRoots();
@@ -125,7 +141,7 @@ public final class NbLaunchRequestHandler {
         }
         String singleMethod = (String)launchArguments.get("methodName");
         boolean testRun = (Boolean) launchArguments.getOrDefault("testRun", Boolean.FALSE);
-        activeLaunchHandler.nbLaunch(file, singleMethod, launchArguments, context, !noDebug, testRun, new OutputListener(context)).thenRun(() -> {
+        activeLaunchHandler.nbLaunch(file, nativeImageFile, singleMethod, launchArguments, context, !noDebug, testRun, new OutputListener(context)).thenRun(() -> {
             activeLaunchHandler.postLaunch(launchArguments, context);
             resultFuture.complete(null);
         }).exceptionally(e -> {

@@ -21,12 +21,14 @@ package org.netbeans.modules.cpplite.debugger;
 
 import java.util.LinkedList;
 import java.util.List;
+import org.netbeans.api.annotations.common.CheckForNull;
 
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.Breakpoint.HIT_COUNT_FILTERING_STYLE;
 import org.netbeans.modules.cpplite.debugger.breakpoints.CPPLiteBreakpoint;
 import org.netbeans.spi.debugger.ui.BreakpointAnnotation;
 import org.openide.text.Annotatable;
+import org.openide.text.Line;
 import org.openide.util.NbBundle;
 
 
@@ -49,11 +51,19 @@ public class DebuggerBreakpointAnnotation extends BreakpointAnnotation {
     private final String type;
     private final CPPLiteBreakpoint breakpoint;
 
-    public DebuggerBreakpointAnnotation (String type, CPPLiteBreakpoint b) {
+    private DebuggerBreakpointAnnotation (String type, Annotatable annotatable, CPPLiteBreakpoint b) {
         this.type = type;
         this.breakpoint = b;
-        Annotatable annotatable = b.getLine ();
         attach (annotatable);
+    }
+
+    @CheckForNull
+    public static DebuggerBreakpointAnnotation create(String type, CPPLiteBreakpoint b) {
+        Line line = b.getLine();
+        if (line == null) {
+            return null;
+        }
+        return new DebuggerBreakpointAnnotation(type, line, b);
     }
 
     @Override

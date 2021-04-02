@@ -27,7 +27,7 @@ import org.netbeans.modules.cpplite.debugger.CPPFrame;
 import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger;
 import org.netbeans.modules.cpplite.debugger.CPPLiteDebugger.StateListener;
 import org.netbeans.modules.cpplite.debugger.CPPThread;
-import org.netbeans.modules.cpplite.debugger.CPPVariable;
+import org.netbeans.modules.nativeimage.api.debug.NIVariable;
 
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
@@ -40,6 +40,7 @@ import org.netbeans.spi.viewmodel.UnknownTypeException;
 import org.openide.util.NbBundle;
 
 import org.openide.util.WeakListeners;
+import org.netbeans.modules.nativeimage.spi.debug.filters.VariableDisplayer;
 
 /**
  *
@@ -56,12 +57,14 @@ public class VariablesModel implements TreeModel, NodeModel, TableModel, StateLi
 
     private final CPPLiteDebugger       debugger;
     private final List<ModelListener>   listeners = new CopyOnWriteArrayList<>();
+    private final VariableDisplayer    displayer;
     private volatile CPPFrame           currentFrame;
 
 
     public VariablesModel (ContextProvider contextProvider) {
         debugger = contextProvider.lookupFirst(null, CPPLiteDebugger.class);
         debugger.addStateListener(WeakListeners.create(StateListener.class, this, debugger));
+        displayer = contextProvider.lookupFirst(null, VariableDisplayer.class);
         currentFrame = debugger.getCurrentFrame();
     }
 
@@ -96,24 +99,31 @@ public class VariablesModel implements TreeModel, NodeModel, TableModel, StateLi
      */
     @Override
     public Object[] getChildren (Object parent, int from, int to) throws UnknownTypeException {
-        CPPVariable parentVar;
+        NIVariable parentVar;
         if (parent == ROOT) {
             parentVar = null;
-        } else if (parent instanceof CPPVariable) {
-            parentVar = (CPPVariable) parent;
+        } else if (parent instanceof NIVariable) {
+            parentVar = (NIVariable) parent;
         } else {
             throw new UnknownTypeException (parent);
         }
         CPPFrame frame = currentFrame;
         if (frame != null) {
-            Map<String, CPPVariable> variables = (parentVar == null) ? frame.getVariables() : parentVar.getChildrenVariables();
-            Object[] array = variables.values().toArray();
-            if (array.length == 1 && array[0] == null) {
-                // Some error / message
-                return new Object[]{variables.keySet().iterator().next()};
+            NIVariable[] array;
+            if (parentVar == null) {
+                Map<String, NIVariable> variables = frame.getVariables();
+                array = variables.values().toArray(new NIVariable[0]);
+                if (array.length == 1 && array[0] == null) {
+                    // Some error / message
+                    return new Object[]{variables.keySet().iterator().next()};
+                }
             } else {
-                return array;
+                array = parentVar.getChildren(from, to);
             }
+            if (displayer != null) {
+                array = displayer.displayed(array);
+            }
+            return array;
         } else {
             return NO_VARS;
         }
@@ -134,8 +144,8 @@ public class VariablesModel implements TreeModel, NodeModel, TableModel, StateLi
         if (node instanceof String) {
             return true;
         }
-        if (node instanceof CPPVariable) {
-            return ((CPPVariable) node).getNumChildren() == 0;
+        if (node instanceof NIVariable) {
+            return ((NIVariable) node).getNumChildren() == 0;
         }
         throw new UnknownTypeException (node);
     }
@@ -158,8 +168,8 @@ public class VariablesModel implements TreeModel, NodeModel, TableModel, StateLi
     public int getChildrenCount (Object node) throws UnknownTypeException {
         if (node == ROOT) {
             return Integer.MAX_VALUE;
-        } else if (node instanceof CPPVariable) {
-            return ((CPPVariable) node).getNumChildren();
+        } else if (node instanceof NIVariable) {
+            return ((NIVariable) node).getNumChildren();
         }
         throw new UnknownTypeException (node);
     }
@@ -201,8 +211,8 @@ public class VariablesModel implements TreeModel, NodeModel, TableModel, StateLi
         if (node instanceof String) {
             return (String) node;
         }
-        if (node instanceof CPPVariable) {
-            return ((CPPVariable) node).getName();
+        if (node instanceof NIVariable) {
+            return ((NIVariable) node).getName();
         }
         throw new UnknownTypeException (node);
     }
@@ -218,7 +228,7 @@ public class VariablesModel implements TreeModel, NodeModel, TableModel, StateLi
      */
     @Override
     public String getIconBase (Object node) throws UnknownTypeException {
-        if (node instanceof CPPVariable) {
+        if (node instanceof NIVariable) {
             return LOCAL;
         }
         if (node instanceof String) {
@@ -265,13 +275,13 @@ public class VariablesModel implements TreeModel, NodeModel, TableModel, StateLi
     @Override
     public Object getValueAt (Object node, String columnID) throws UnknownTypeException {
         if (columnID.equals ("LocalsValue")) {
-            if (node instanceof CPPVariable) {
-                return ((CPPVariable) node).getValue();
+            if (node instanceof NIVariable) {
+                return ((NIVariable) node).getValue();
             }
         }
         if (columnID.equals ("LocalsType")) {
-            if (node instanceof CPPVariable) {
-                return ((CPPVariable) node).getType();
+            if (node instanceof NIVariable) {
+                return ((NIVariable) node).getType();
             }
         }
         if (node instanceof String) {

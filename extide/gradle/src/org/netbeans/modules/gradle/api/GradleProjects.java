@@ -19,7 +19,7 @@
 
 package org.netbeans.modules.gradle.api;
 
-import org.netbeans.modules.gradle.GradleArtifactStore;
+import org.netbeans.modules.gradle.loaders.GradleArtifactStore;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;

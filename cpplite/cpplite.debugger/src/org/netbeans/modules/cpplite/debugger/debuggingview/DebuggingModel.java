@@ -128,7 +128,7 @@ public class DebuggingModel extends CachedChildrenTreeModel implements ExtendedN
             return ((CPPThread) node).getName();
         } else if (node instanceof CPPFrame) {
             CPPFrame frame = (CPPFrame) node;
-            return frame.functionName + "; " + frame.shortFileName + ":" + frame.line;
+            return frame.getName();
         }
         throw new UnknownTypeException (node);
     }
@@ -143,7 +143,7 @@ public class DebuggingModel extends CachedChildrenTreeModel implements ExtendedN
             return details;
         } else if (node instanceof CPPFrame) {
             CPPFrame frame = (CPPFrame) node;
-            return frame.functionName + "; " + frame.fullFileName + ":" + frame.line;
+            return frame.getDescription();
         }
         throw new UnknownTypeException (node);
     }

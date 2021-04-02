@@ -412,12 +412,24 @@ static void free_file_list(file_elem* list) {
 
 static void calc_fs_skew(struct timeval *skew) {
 
+
     skew->tv_sec = 0;
     skew->tv_usec = 0;
+
+    const char * FS_SKEW_PREFIX = "/tmpXXXXXX";
+    const int FS_SKEW_PREFIX_LEN = strlen(FS_SKEW_PREFIX);
     
     char path[PATH_MAX+1];
-    getcwd(path, sizeof path);
-    strncat(path, "/tmpXXXXXX", sizeof path);
+    const char * cwd = getcwd(path, (sizeof path) - 1);
+    if (cwd == NULL) {
+        perror("rfs_controller: cannot get current working directory:");
+        return;
+    }
+    if ((sizeof path) < strlen(path) + FS_SKEW_PREFIX_LEN + 1) {
+        fprintf(stderr, "rfs_controller: path '%s' too large.", path);
+        return;
+    }
+    strncat(path, FS_SKEW_PREFIX, FS_SKEW_PREFIX_LEN + 1);
 
     int fd;
 

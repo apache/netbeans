@@ -122,31 +122,36 @@ public class SQLCompletionQuery extends AsyncCompletionQuery {
         try {
             // DB Connection available
             if (dbconn != null) {
-            // DB connection present so 
-            DBConnMetadataModelManager.get(dbconn).runReadAction(new Action<Metadata>() {
-                @Override
-                public void run(Metadata metadata) {
-                    Connection conn = null;
-                    if (dbconn != null) {
-                        conn = dbconn.getJDBCConnection();
-                    } 
-                    Quoter quoter = null;
-                    try {
-                        if (conn != null) {
-                            // get Database meta data
-                            DatabaseMetaData dmd = conn.getMetaData();
-                            quoter = SQLIdentifiers.createQuoter(dmd);
+                // DB connection present so 
+                DBConnMetadataModelManager.get(dbconn).runReadAction(new Action<Metadata>() {
+                    @Override
+                    public void run(Metadata metadata) {
+                        Connection conn = null;
+                        if (dbconn != null) {
+                            conn = dbconn.getJDBCConnection();
+                        } 
+                        Quoter quoter = null;
+                        try {
+                            /* if connection available allow for bb meta data 
+                            and quoter to help in auto completion */
+                            if (conn != null) {
+                                // get Database meta data
+                                DatabaseMetaData dmd = conn.getMetaData();
+                                quoter = SQLIdentifiers.createQuoter(dmd);
+                            }
+                        } catch (SQLException e) {
+                            throw new MetadataException(e);
                         }
-                    } catch (SQLException e) {
-                        throw new MetadataException(e);
+                        /* if quoter available then allow for query for 
+                        auto completion to occur, else avoid this sort of
+                        activities when quoter/connection not available*/
+                        if (quoter != null) {
+                            doQuery(newEnv, metadata, quoter);
+                        } else {
+                            return;
+                        }
                     }
-                    if (quoter != null) {
-                        doQuery(newEnv, metadata, quoter);
-                    } else {
-                        return;
-                    }
-                }
-            });
+                });
             } else {
                 // No DB Connection established presently      
                 doQuery(newEnv, metadata, quoter);
@@ -173,8 +178,7 @@ public class SQLCompletionQuery extends AsyncCompletionQuery {
         }
 
         // not empty so address possible statement cases
-        if (quoter == null) {}
-        statement = SQLStatementAnalyzer.analyze(env.getTokenSequence(), quoter);
+         statement = SQLStatementAnalyzer.analyze(env.getTokenSequence(), quoter);
         
         // unable to find relevant case so include basic keywords items
         if (statement == null) {
@@ -542,6 +546,7 @@ public class SQLCompletionQuery extends AsyncCompletionQuery {
     }
 
     private void completeColumnWithTupleIfSimpleIdent(String typedPrefix, boolean quoted) {
+        if (metadata != null) {
         Schema defaultSchema = metadata.getDefaultSchema();
         if (defaultSchema != null) {
             // All columns in default schema, but only if a prefix has been typed, otherwise there
@@ -568,6 +573,7 @@ public class SQLCompletionQuery extends AsyncCompletionQuery {
         items.addSchemas(defaultCatalog, null, typedPrefix, quoted, substitutionOffset);
         // All catalogs.
         items.addCatalogs(metadata, null, typedPrefix, quoted, substitutionOffset);
+        }
     }
 
     private void completeColumnWithTupleIfQualIdent(QualIdent fullyTypedIdent, String lastPrefix, boolean quoted) {
@@ -680,6 +686,7 @@ public class SQLCompletionQuery extends AsyncCompletionQuery {
             items.addColumns(tuple, typedPrefix, quoted, substitutionOffset);
         }
         // Tuples from default schema, restricted to non-aliased tuple names in the FROM clause.
+        if (metadata != null ) {
         Schema defaultSchema = metadata.getDefaultSchema();
         if (defaultSchema != null) {
             Set<String> simpleTupleNames = new TreeSet<String>();
@@ -711,6 +718,7 @@ public class SQLCompletionQuery extends AsyncCompletionQuery {
         Catalog defaultCatalog = metadata.getDefaultCatalog();
         items.addSchemas(defaultCatalog, schemaNames, typedPrefix, quoted, substitutionOffset);
         items.addCatalogs(metadata, catalogNames, typedPrefix, quoted, substitutionOffset);
+        }
     }
 
     private void completeQualIdentBasedOnFromClause(QualIdent fullyTypedIdent, String lastPrefix, boolean quoted) {
@@ -788,21 +796,20 @@ public class SQLCompletionQuery extends AsyncCompletionQuery {
     }
 
     private Schema resolveSchema(QualIdent schemaName) {
-        if (metadata == null) {
-            return null;
-        }
         Schema schema = null;
-        switch (schemaName.size()) {
-            case 1:
-                Catalog catalog = metadata.getDefaultCatalog();
-                schema = catalog.getSchema(schemaName.getSimpleName());
-                break;
-            case 2:
-                catalog = metadata.getCatalog(schemaName.getFirstQualifier());
-                if (catalog != null) {
+        if (metadata != null) {
+            switch (schemaName.size()) {
+                case 1:
+                    Catalog catalog = metadata.getDefaultCatalog();
                     schema = catalog.getSchema(schemaName.getSimpleName());
-                }
-                break;
+                    break;
+                case 2:
+                    catalog = metadata.getCatalog(schemaName.getFirstQualifier());
+                    if (catalog != null) {
+                        schema = catalog.getSchema(schemaName.getSimpleName());
+                    }
+                    break;
+            }
         }
         return schema;
     }
@@ -958,7 +965,7 @@ public class SQLCompletionQuery extends AsyncCompletionQuery {
                         String part;
                         int offset = caretOffset - seq.offset();
                         String tokenText = seq.token().text().toString();
-                        if (offset > 0 && offset < seq.token().length()) {
+                        if (offset > 0 && offset < seq.token().length() && quoter != null) {
                             String quoteString = quoter.getQuoteString();
                             if (tokenText.startsWith(quoteString) && tokenText.endsWith(quoteString) && offset == tokenText.length() - 1) {
                                 // identifier inside closed quotes and cursor before ending quote ("foo|")
@@ -1018,6 +1025,10 @@ public class SQLCompletionQuery extends AsyncCompletionQuery {
     }
 
     /**
+     * Used to create an Identifier based on current parts of the expression so far,
+     * if the details are "Complete" and the offset of given prefix involved.
+     *
+     * @param parts the list of potentail
      * @param lastPrefixOffset the offset of the last prefix in the identifier, or
      *        if no such prefix, the caret offset.
      * @return
@@ -1033,33 +1044,32 @@ public class SQLCompletionQuery extends AsyncCompletionQuery {
             }
             // Fine, nothing was typed.
         } else {
-            if (quoter == null) {
-                return null;
-            }
-            if (!incomplete) {
-                lastPrefix = parts.remove(parts.size() - 1);
-                String quoteString = quoter.getQuoteString();
-                if (quoteString.length() > 0 && lastPrefix.startsWith(quoteString)) {
-                    if (lastPrefix.endsWith(quoteString) && lastPrefix.length() > quoteString.length()) {
-                        // User typed '"foo"."bar"|', can't complete that.
+            if (quoter != null ) {
+                if (!incomplete) {
+                    lastPrefix = parts.remove(parts.size() - 1);
+                    String quoteString = quoter.getQuoteString();
+                    if (quoteString.length() > 0 && lastPrefix.startsWith(quoteString)) {
+                        if (lastPrefix.endsWith(quoteString) && lastPrefix.length() > quoteString.length()) {
+                            // User typed '"foo"."bar"|', can't complete that.
+                            return null;
+                        }
+                        int lastPrefixLength = lastPrefix.length();
+                        lastPrefix = quoter.unquote(lastPrefix);
+                        lastPrefixOffset = lastPrefixOffset + (lastPrefixLength - lastPrefix.length());
+                        quoted = true;
+                    } else if (quoteString.length() > 0 && lastPrefix.endsWith(quoteString)) {
+                        // User typed '"foo".bar"|', can't complete.
                         return null;
                     }
-                    int lastPrefixLength = lastPrefix.length();
-                    lastPrefix = quoter.unquote(lastPrefix);
-                    lastPrefixOffset = lastPrefixOffset + (lastPrefixLength - lastPrefix.length());
-                    quoted = true;
-                } else if (quoteString.length() > 0 && lastPrefix.endsWith(quoteString)) {
-                    // User typed '"foo".bar"|', can't complete.
-                    return null;
                 }
-            }
-            for (int i = 0; i < parts.size(); i++) {
-                String unquoted = quoter.unquote(parts.get(i));
-                if (unquoted.length() == 0) {
-                    // User typed something like '"foo".""."bar|'.
-                    return null;
+                for (int i = 0; i < parts.size(); i++) {
+                    String unquoted = quoter.unquote(parts.get(i));
+                    if (unquoted.length() == 0) {
+                        // User typed something like '"foo".""."bar|'.
+                        return null;
+                    }
+                    parts.set(i, unquoted);
                 }
-                parts.set(i, unquoted);
             }
         }
         return new Identifier(new QualIdent(parts), lastPrefix, quoted, lastPrefixOffset, substOffset);

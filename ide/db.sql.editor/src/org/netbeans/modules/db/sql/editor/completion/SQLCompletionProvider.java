@@ -46,7 +46,6 @@ import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.editor.hints.HintsController;
 import org.netbeans.spi.editor.hints.Severity;
 import org.openide.awt.StatusDisplayer;
-import org.openide.text.Annotation;
 import org.openide.text.Line;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -58,7 +57,6 @@ import org.openide.util.NbBundle;
  */
 public class SQLCompletionProvider implements CompletionProvider {
     private static final String SQL_CONNECTION_HINT_ID = "sql_connection_hint";
-    private String selection;
     private static JTextComponent component = null;
     private static DatabaseConnection dbconn = null;
 
@@ -96,8 +94,7 @@ public class SQLCompletionProvider implements CompletionProvider {
      * @return 
      */
     public int getAutoQueryTypes(JTextComponent component, String typedText) {
-        /* TODO: Need to check "enable/disable" autocomplete is setting. 
-        See NETBEANS-188 */
+        // XXX: Check if "enable/disable" autocomplete is setting.  See NETBEANS-188
 
         // If "." has not been typed then acceptable to start checking for options.
         if (!".".equals(typedText)) { // NOI18N
@@ -108,50 +105,21 @@ public class SQLCompletionProvider implements CompletionProvider {
             return 0;
         }
         
-//        List<Fix> fixes = new ArrayList<>(Collections.emptyList());
-//        Document doc = component.getDocument();
-//        List<ErrorDescription> warnings = new ArrayList<>(Collections.emptyList());
-
         // check if there is a DB connection
         DatabaseConnection dbconn = findDBConn(component);
         if (dbconn == null) {
             String message = NbBundle.getMessage(SQLCompletionProvider.class, "MSG_NoDatabaseConnection");
             StatusDisplayer.getDefault().setStatusText(message);
-            /* TODO: Find How to povide tip to create new connection and/or 
-            allow further typing and/or other options. 
-            
-            Maybe provide a list of available connections. 
-            
-            return 0; */
-//            createSuggestions(component, doc, fixes, warnings, dbconn);
             createSuggestions(component, dbconn);
+            SQLExecutionBaseAction.notifyNoDatabaseConnection();
         }
 
         // check if DB connection is active
         if (dbconn != null && dbconn.getJDBCConnection() == null) {
             String message = NbBundle.getMessage(SQLCompletionProvider.class, "MSG_NotConnected");
             StatusDisplayer.getDefault().setStatusText(message);
-            /* TODO: Find How to povide tip to "allow to connect" and/or 
-            allow further typing and/or other options. */
-//            return 0;
-
-            // determine the selected line
-            selection = component.getSelectedText();
-            Document doc = component.getDocument();
-                    
-            if (selection.length() > 0) {
-                component.replaceSelection("<b>" + selection + "</b>");
-                // use NbEditorUtilities.getLine() to extract a line from the 
-                // current document and offset, 
-                // for which we need a DocumentListener, as described in the next step:
-                int lineOffset = component.getSelectionStart() - 1;
-                
-                Line myLine = NbEditorUtilities.getLine(doc, lineOffset, false);
-
-                // TODO: Figure out how to set message
-                //Here we attach our annotation to the line:
-                SqlConnectionAnnotation.DEFAULT.attach(myLine);
-            }
+            SQLExecutionBaseAction.notifyNoDatabaseConnection();
+            // XXX: Maybe add content specific "fixs"
         }
         return COMPLETION_QUERY_TYPE;
     }
@@ -162,14 +130,11 @@ public class SQLCompletionProvider implements CompletionProvider {
         List<ErrorDescription> warnings = new ArrayList<>(Collections.emptyList());
         
         // determine the selected line
-        selection = component.getSelectedText();
-      Document doc = component.getDocument();
+        String selection = component.getSelectedText();
+        Document doc = component.getDocument();
 
         // for selected lines with content
         if (selection != null && selection.length() > 0) {
-            // bold relevant selected line associated with possible hint/fix
-            component.replaceSelection("<b>" + selection + "</b>");
-            
             // use NbEditorUtilities.getLine() to get line from current document and offset,
             int lineOffset = component.getSelectionStart() - 1;
             int endOffset = lineOffset + selection.length();
@@ -203,13 +168,7 @@ public class SQLCompletionProvider implements CompletionProvider {
             }
         } else {
             // for non-selected lines
-            
-            // setup annotations (this may need to be removed in favor of hints/fixes)
-         
-            // attach annotation to the line:
-            Line myLine = NbEditorUtilities.getLine(doc, 0, false);
-            SqlConnectionAnnotation.DEFAULT.attach(myLine);
-            
+                        
             // setup sql hints/fixes
             try {
                 // identify possible fixes
@@ -239,7 +198,6 @@ public class SQLCompletionProvider implements CompletionProvider {
             HintsController.setErrors(doc, SQL_CONNECTION_HINT_ID, warnings);
         }
     }
-        
 
     private static DatabaseConnection findDBConn(JTextComponent component) {
         Lookup context = findContext(component);
@@ -306,31 +264,11 @@ public class SQLCompletionProvider implements CompletionProvider {
         TokenHierarchy<?> hierarchy = TokenHierarchy.get(doc);
         return hierarchy.tokenSequence(SQLTokenId.language());
     }
-    
         
-    /**
-     * Related to annotation for hints on the left for use during tip context
-     */
-    private static final class SqlConnectionAnnotation extends Annotation {
-
-        static final SqlConnectionAnnotation DEFAULT = new SqlConnectionAnnotation();
-
-        @Override
-        public String getAnnotationType() {
-            return "org-netbeans-modules-db-sql-editor_annotation";
-        }
-
-        @Override
-        public String getShortDescription() {
-            return "Select Connection to ensure database specific autoompletion";
-        }
-    }
-    
     private static class SqlNewConnectionFix implements Fix {
         @Override
         public String getText() {
             return "Create New Database connection."; 
-            // TODO: Change over to bundle property type to accomidate localization
         }
 
         @Override
@@ -354,7 +292,6 @@ public class SQLCompletionProvider implements CompletionProvider {
             JDBCDriverManager dm = JDBCDriverManager.getDefault();
             JDBCDriver[] drivers = dm.getDrivers();
             
-            // TODO: Determine how to handle when no drivers are present
             if (drivers == null || drivers.length ==0) {
                 dm.showAddDriverDialog();
             }
@@ -380,11 +317,6 @@ public class SQLCompletionProvider implements CompletionProvider {
         public ChangeInfo implement() throws Exception {
             
             SQLExecutionBaseAction.notifyNoDatabaseConnection();
-            Document doc = component.getDocument();
-                  
-            Line myLine = NbEditorUtilities.getLine(doc, 0, false);
-            
-            SqlConnectionAnnotation.DEFAULT.attach(myLine);
             ChangeInfo results = new ChangeInfo();
             return results;
         }

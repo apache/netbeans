@@ -34,7 +34,6 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.db.sql.analyzer.SQLStatement.Context;
 import org.netbeans.modules.db.sql.editor.StringUtils;
 import org.netbeans.modules.db.sql.lexer.SQLTokenId;
-
 /**
  *
  * @author Jiri Rechtacek, Jiri Skrivanek
@@ -239,8 +238,10 @@ public class SQLStatementAnalyzer {
     }
 
     protected String getUnquotedIdentifier() {
-        if (quoter == null)
+        // when quoter unavailable likely due to lack of connection
+        if (quoter == null) {
             return "";
+        }
         return quoter.unquote(seq.token().text().toString());
     }
 

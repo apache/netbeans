@@ -713,7 +713,9 @@ public final class OpenProjectList {
                 }
                 if (prime) {
                     ActionProvider ap = p2.getLookup().lookup(ActionProvider.class);
-                    if (ap != null && ap.isActionEnabled(ActionProvider.COMMAND_PRIME, p2.getLookup())) {
+                    if (ap != null && 
+                        Arrays.asList(ap.getSupportedActions()).contains(ActionProvider.COMMAND_PRIME) &&
+                        ap.isActionEnabled(ActionProvider.COMMAND_PRIME, p2.getLookup())) {
                         final CountDownLatch[] await = new CountDownLatch[1];
                         ActionProgress awaitPriming = new ActionProgress() {
                             @Override

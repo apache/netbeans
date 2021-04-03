@@ -615,9 +615,9 @@ public final class MavenExecuteUtils {
      * @return
      */
     public static String[] splitAll(String argline, boolean filterClassPath) {
-        String jvm = splitJVMParams(argline, false);
-        String mainClazz = splitMainClass(argline);
-        String args = splitParams(argline);
+        String jvm = argline == null ? null : splitJVMParams(argline, false);
+        String mainClazz = argline == null ? null : splitMainClass(argline);
+        String args = argline == null ? null : splitParams(argline);
         if (filterClassPath && jvm != null && jvm.contains("-classpath %classpath")) {
             jvm = jvm.replace("-classpath %classpath", "");
         }

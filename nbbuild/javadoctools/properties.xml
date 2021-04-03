@@ -237,3 +237,4 @@
 <property name="javadoc.docs.org-netbeans-modules-java-editor-lib" value="${javadoc.web.root}/org-netbeans-modules-java-editor-lib"/>
 <property name="javadoc.docs.org-netbeans-modules-web-common" value="${javadoc.web.root}/org-netbeans-modules-web-common"/>
 <property name="javadoc.docs.org-netbeans-modules-db-core" value="${javadoc.web.root}/org-netbeans-modules-db-core"/>
+<property name="javadoc.docs.org-netbeans-modules-nativeimage-api" value="${javadoc.web.root}/org-netbeans-modules-nativeimage-api"/>

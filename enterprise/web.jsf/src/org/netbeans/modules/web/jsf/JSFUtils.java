@@ -79,6 +79,7 @@ public class JSFUtils {
     public static final String JSF_2_1__API_SPECIFIC_CLASS = "javax.faces.component.TransientStateHelper"; //NOI18N
     public static final String JSF_2_2__API_SPECIFIC_CLASS = "javax.faces.flow.Flow"; //NOI18N
     public static final String JSF_2_3__API_SPECIFIC_CLASS = "javax.faces.push.PushContext"; //NOI18N
+    public static final String JSF_3_0__API_SPECIFIC_CLASS = "jakarta.faces.push.PushContext"; //NOI18N
     public static final String MYFACES_SPECIFIC_CLASS = "org.apache.myfaces.webapp.StartupServletContextListener"; //NOI18N
 
     //constants for web.xml
@@ -384,7 +385,8 @@ public class JSFUtils {
         return cp.findResource(JSFUtils.MYFACES_SPECIFIC_CLASS.replace('.', '/') + ".class") != null || //NOI18N
                 cp.findResource("com/sun/facelets/Facelet.class") != null || //NOI18N
                 cp.findResource("com/sun/faces/facelets/Facelet.class") != null || // NOI18N
-                cp.findResource("javax/faces/view/facelets/FaceletContext.class") != null; //NOI18N
+                cp.findResource("javax/faces/view/facelets/FaceletContext.class") != null || //NOI18N
+                cp.findResource("jakarta/faces/view/facelets/FaceletContext.class") != null; //NOI18N
     }
 
     /**

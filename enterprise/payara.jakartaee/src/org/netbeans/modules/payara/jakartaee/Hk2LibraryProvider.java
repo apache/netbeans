@@ -415,7 +415,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
             return lib;
         }
         ConfigBuilder cb = ConfigBuilderProvider.getBuilder(server);
-        List<PayaraLibrary> gfLibs = cb.getLibraries(server.getVersion());
+        List<PayaraLibrary> gfLibs = cb.getPlatformLibraries(server.getPlatformVersion());
         for (PayaraLibrary gfLib : gfLibs) {
             if (namePattern.matcher(gfLib.getLibraryID()).matches()) {
                 Map<String,List<URL>> contents = new HashMap<>(1);
@@ -453,7 +453,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
     private void setLibraryImplementationContent(LibraryImplementation lib,
             Pattern namePattern, String libraryName) {
         ConfigBuilder cb = ConfigBuilderProvider.getBuilder(server);
-        List<PayaraLibrary> pfLibs = cb.getLibraries(server.getVersion());
+        List<PayaraLibrary> pfLibs = cb.getPlatformLibraries(server.getPlatformVersion());
         for (PayaraLibrary pfLib : pfLibs) {
             if (namePattern.matcher(pfLib.getLibraryID()).matches()) {
                 List<String> javadocLookups = pfLib.getJavadocLookups();
@@ -501,7 +501,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
      */
     private List<URL> getLibraryClassPathURLs(Pattern namePattern) {
         ConfigBuilder cb = ConfigBuilderProvider.getBuilder(server);
-        List<PayaraLibrary> pfLibs = cb.getLibraries(server.getVersion());
+        List<PayaraLibrary> pfLibs = cb.getPlatformLibraries(server.getPlatformVersion());
         for (PayaraLibrary pfLib : pfLibs) {
             if (namePattern.matcher(pfLib.getLibraryID()).matches()) {
                 return pfLib.getClasspath();

@@ -27,7 +27,7 @@ import java.util.Set;
  *
  * @author Laszlo Kishalmi
  */
-public interface NbProjectInfo extends Model {
+public interface NbProjectInfo extends Model, org.gradle.tooling.model.Model {
     
     /**
      * Project information which shall be cached.

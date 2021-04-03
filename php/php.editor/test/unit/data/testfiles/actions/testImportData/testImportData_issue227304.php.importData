@@ -1,7 +1,7 @@
 Caret position: 34
 Should show uses panel: true
 Defaults:
- Don't use type.
+ Don't import.
 
 Names:
  MyClass
@@ -9,5 +9,5 @@ Names:
 Variants:
  \Three\MyClass
  \Two\MyClass
- Don't use type.
+ Don't import.
 

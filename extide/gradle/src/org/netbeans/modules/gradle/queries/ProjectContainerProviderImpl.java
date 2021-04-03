@@ -24,11 +24,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
-import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.spi.project.ProjectContainerProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
@@ -44,6 +45,7 @@ import org.openide.filesystems.FileUtil;
 @ProjectServiceProvider(service = {ProjectContainerProvider.class, SubprojectProvider.class}, projectType = NbGradleProject.GRADLE_PROJECT_TYPE)
 public class ProjectContainerProviderImpl extends AbstractProjectChangeAdaptor implements SubprojectProvider, ProjectContainerProvider {
 
+    private static final Logger LOG = Logger.getLogger(ProjectContainerProviderImpl.class.getName());
     public ProjectContainerProviderImpl(Project project) {
         super(project);
     }
@@ -70,7 +72,12 @@ public class ProjectContainerProviderImpl extends AbstractProjectChangeAdaptor i
                         FileObject fo = FileUtil.toFileObject(sub.getValue());
                         if (fo != null) {
                             try {
-                                ret.add(ProjectManager.getDefault().findProject(fo));
+                                Project p = ProjectManager.getDefault().findProject(fo);
+                                if (p != null) {
+                                    ret.add(p);
+                                } else {
+                                    LOG.log(Level.WARNING, "It seems {0} was not identified as a (sub-)project of {1}", new Object[]{fo.getPath(), project.toString()});
+                                }
                             } catch (IllegalArgumentException | IOException ex) {
                                 ErrorManager.getDefault().notify(ex);
                             }

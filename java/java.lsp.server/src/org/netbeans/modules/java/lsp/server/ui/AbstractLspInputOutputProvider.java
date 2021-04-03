@@ -92,7 +92,7 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
 
     @Override
     public final boolean isIOClosed(LspIO io) {
-        return false;
+        return io.closed;
     }
 
     @Override
@@ -133,6 +133,7 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
         final Reader in;
         final PrintWriter out;
         final PrintWriter err;
+        volatile boolean closed;
 
         LspIO(String name, IOContext ioCtx, Lookup lookup) {
             this.name = name;
@@ -170,6 +171,7 @@ public abstract class AbstractLspInputOutputProvider implements InputOutputProvi
 
             @Override
             public void close() throws IOException {
+                closed = true;
             }
         }
     }

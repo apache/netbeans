@@ -26,7 +26,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.modules.payara.tooling.data.PayaraVersion;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.server.config.JavaEEProfile;
 import org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform;
 import org.netbeans.modules.payara.tooling.server.config.ModuleType;
@@ -696,15 +696,15 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
 
     /**
      * Get Payara version.
-     * Returns {@see PayaraVersion} for current Payara server instance.
+     * Returns {@see PayaraPlatformVersionAPI} for current Payara server instance.
      * <p/>
      * @return Payara version.
      */
-    private PayaraVersion getPFVersion() {
-        PayaraVersion version = null;
+    private PayaraPlatformVersionAPI getPFVersion() {
+        PayaraPlatformVersionAPI version = null;
         try {
             version = dm
-                    .getCommonServerSupport().getInstance().getVersion();
+                    .getCommonServerSupport().getInstance().getPlatformVersion();
         } catch (NullPointerException npe) {
             Logger.getLogger("payara-jakartaee").log(Level.INFO,
                     "Caught NullPointerException in Hk2JavaEEPlatformImpl "
@@ -721,10 +721,9 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
      *         for Payara.
      */
     private String getAccConfigFile() {
-        final PayaraVersion version = getPFVersion();
+        final PayaraPlatformVersionAPI version = getPFVersion();
         final String accConfigFile;
-        if (version != null
-                && version.ordinal() >= PayaraVersion.PF_4_1_144.ordinal()) {
+        if (version != null && version.isMinimumSupportedVersion()) {
             accConfigFile = GF_ACC_XML;
         } else {
             accConfigFile = SUN_ACC_XML;
@@ -828,15 +827,16 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
             }
             // TODO: Rewrite to use Hk2LibraryProvider#getJaxRsName()
             // or getJaxRsClassPathURLs()
-            final PayaraVersion version = getPFVersion();
+            final PayaraPlatformVersionAPI version = getPFVersion();
             try {
                 if (version == null) {
                     return false;
-                }
-                else if (version.equalsMajorMinor(PayaraVersion.PF_4_1_144)) {
-                    final File javaxWsRs = ServerUtilities.getJarName(dm.getProperties().
-                            getPayaraRoot(), "javax.ws.rs-api.jar"); // NOI18N
-                    if ( javaxWsRs== null || !javaxWsRs.exists()){
+                } else if (version.getMajor() == 4) {
+                    final File javaxWsRs = ServerUtilities.getJarName(
+                            dm.getProperties().getPayaraRoot(),
+                            "javax.ws.rs-api.jar" // NOI18N
+                    );
+                    if (javaxWsRs == null || !javaxWsRs.exists()) {
                         return false;
                     }
                     return addJars(project, Collections.singletonList(
@@ -1006,11 +1006,11 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
          * <p/>
          * @return Payara version from instance stored in deployment manager.
          */
-        private PayaraVersion getPFVersion() {
-            PayaraVersion version = null;
+        private PayaraPlatformVersionAPI getPFVersion() {
+            PayaraPlatformVersionAPI version = null;
             try {
                 version = dm
-                        .getCommonServerSupport().getInstance().getVersion();
+                        .getCommonServerSupport().getInstance().getPlatformVersion();
             } catch (NullPointerException npe) {
                 Logger.getLogger("payara-jakartaee").log(Level.INFO,
                         "Caught NullPointerException in Hk2JavaEEPlatformImpl "

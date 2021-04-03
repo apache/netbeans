@@ -26,14 +26,16 @@ import java.util.List;
  *
  * @author lahvac
  */
-public class CPPLiteDebuggerConfig {
+public final class CPPLiteDebuggerConfig {
 
     private final List<String> executable;
     private final File directory;
+    private final String debugger;
 
-    public CPPLiteDebuggerConfig(List<String> executable, File directory) {
+    public CPPLiteDebuggerConfig(List<String> executable, File directory, String debugger) {
         this.executable = executable;
         this.directory = directory;
+        this.debugger = debugger;
     }
 
     public String getDisplayName() {
@@ -46,5 +48,9 @@ public class CPPLiteDebuggerConfig {
 
     public File getDirectory() {
         return directory;
+    }
+
+    public String getDebugger() {
+        return debugger;
     }
 }

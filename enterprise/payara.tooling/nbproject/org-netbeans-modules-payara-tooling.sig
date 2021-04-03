@@ -509,6 +509,7 @@ cons public init()
 meth public static boolean verifyResult(org.netbeans.modules.payara.tooling.admin.ResultString,org.netbeans.modules.payara.tooling.data.PayaraServer)
 meth public static org.netbeans.modules.payara.tooling.admin.ResultString getVersion(org.netbeans.modules.payara.tooling.data.PayaraServer)
 meth public static org.netbeans.modules.payara.tooling.data.PayaraVersion getPayaraVersion(org.netbeans.modules.payara.tooling.data.PayaraServer)
+meth public static org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPayaraPlatformVersion(org.netbeans.modules.payara.tooling.data.PayaraServer)
 supr org.netbeans.modules.payara.tooling.admin.Command
 hfds COMMAND,LOGGER
 
@@ -1329,6 +1330,7 @@ meth public abstract java.lang.String getServerRoot()
 meth public abstract java.lang.String getUrl()
 meth public abstract org.netbeans.modules.payara.tooling.data.PayaraAdminInterface getAdminInterface()
 meth public abstract org.netbeans.modules.payara.tooling.data.PayaraVersion getVersion()
+meth public abstract org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPlatformVersion()
 
 CLSS public org.netbeans.modules.payara.tooling.data.PayaraServerEntity
 cons public init()
@@ -1348,6 +1350,7 @@ meth public java.lang.String getServerRoot()
 meth public java.lang.String getUrl()
 meth public org.netbeans.modules.payara.tooling.data.PayaraAdminInterface getAdminInterface()
 meth public org.netbeans.modules.payara.tooling.data.PayaraVersion getVersion()
+meth public org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPlatformVersion()
 meth public void setAdminInterface(org.netbeans.modules.payara.tooling.data.PayaraAdminInterface)
 meth public void setAdminPassword(java.lang.String)
 meth public void setAdminPort(int)
@@ -1361,6 +1364,7 @@ meth public void setServerHome(java.lang.String)
 meth public void setServerRoot(java.lang.String)
 meth public void setUrl(java.lang.String)
 meth public void setVersion(org.netbeans.modules.payara.tooling.data.PayaraVersion)
+meth public void setPlatformVersion(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 supr java.lang.Object
 hfds adminInterface,adminPassword,adminPort,adminUser,domainName,domainsFolder,host,name,port,serverHome,serverRoot,url,version
 
@@ -1398,6 +1402,25 @@ meth public abstract org.netbeans.modules.payara.tooling.TaskEvent getEvent()
 meth public abstract org.netbeans.modules.payara.tooling.data.PayaraStatusCheck getType()
 meth public abstract org.netbeans.modules.payara.tooling.data.PayaraStatusCheckResult getStatus()
 
+CLSS public final org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI
+fld public final static char SEPARATOR = '.'
+fld public final static java.lang.String SEPARATOR_PATTERN = "\u005c."
+meth public java.lang.String toFullString()
+meth public short getBuild()
+meth public short getMajor()
+meth public short getMinor()
+meth public short getUpdate()
+meth public java.lang.String getDirectUrl()
+meth public java.lang.String getIndirectUrl()
+meth public java.lang.String getUriFragment()
+meth public java.lang.String getLicenseUrl()
+meth public boolean isMinimumSupportedVersion()
+meth public boolean isEE8Supported()
+meth public boolean isEE7Supported()
+meth public boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
+meth public boolean equals(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
+
+ anno 0 java.lang.Deprecated()
 CLSS public final !enum org.netbeans.modules.payara.tooling.data.PayaraVersion
 fld public final static char SEPARATOR = '.'
 fld public final static int length
@@ -1428,12 +1451,22 @@ fld public final static org.netbeans.modules.payara.tooling.data.PayaraVersion P
 fld public final static org.netbeans.modules.payara.tooling.data.PayaraVersion PF_5_202
 meth public boolean equals(org.netbeans.modules.payara.tooling.data.PayaraVersion)
 meth public boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraVersion)
+intf org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI
 meth public java.lang.String toFullString()
 meth public java.lang.String toString()
 meth public short getBuild()
 meth public short getMajor()
 meth public short getMinor()
 meth public short getUpdate()
+meth public boolean isMinimumSupportedVersion()
+meth public boolean isEE8Supported()
+meth public boolean isEE7Supported()
+meth public java.lang.String getUriFragment()
+meth public java.lang.String getLicenseUrl()
+meth public java.lang.String getIndirectUrl()
+meth public java.lang.String getDirectUrl()
+meth public boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
+meth public boolean equals(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public static boolean eq(java.lang.Enum<org.netbeans.modules.payara.tooling.data.PayaraVersion>,java.lang.Enum<org.netbeans.modules.payara.tooling.data.PayaraVersion>)
 meth public static boolean ge(java.lang.Enum<org.netbeans.modules.payara.tooling.data.PayaraVersion>,java.lang.Enum<org.netbeans.modules.payara.tooling.data.PayaraVersion>)
 meth public static boolean gt(java.lang.Enum<org.netbeans.modules.payara.tooling.data.PayaraVersion>,java.lang.Enum<org.netbeans.modules.payara.tooling.data.PayaraVersion>)
@@ -1608,6 +1641,7 @@ CLSS public org.netbeans.modules.payara.tooling.server.FetchLogSimple
 cons public init(java.io.InputStream)
 supr org.netbeans.modules.payara.tooling.server.FetchLog
 
+ anno 0 java.lang.Deprecated()
 CLSS public org.netbeans.modules.payara.tooling.server.JpaSupport
 cons public init()
 innr public static ApiVersion
@@ -1700,13 +1734,15 @@ hfds jar
 
 CLSS public org.netbeans.modules.payara.tooling.server.config.Config
 cons public !varargs init(java.net.URL,org.netbeans.modules.payara.tooling.server.config.Config$Next[])
+cons public !varargs init(org.netbeans.modules.payara.tooling.server.config.Config$Next[])
 innr public static Next
 supr java.lang.Object
-hfds configFiles,index
+hfds configFiles,index,libraryConfigFiles 
 
 CLSS public static org.netbeans.modules.payara.tooling.server.config.Config$Next
  outer org.netbeans.modules.payara.tooling.server.config.Config
 cons public init(org.netbeans.modules.payara.tooling.data.PayaraVersion,java.net.URL)
+cons public init(short,java.net.URL)
 supr java.lang.Object
 hfds configFile,version
 
@@ -1714,12 +1750,16 @@ CLSS public org.netbeans.modules.payara.tooling.server.config.ConfigBuilder
 meth public java.util.List<org.netbeans.modules.payara.tooling.data.PayaraLibrary> getLibraries(org.netbeans.modules.payara.tooling.data.PayaraVersion)
 meth public org.netbeans.modules.payara.tooling.data.PayaraJavaEEConfig getJavaEEConfig(org.netbeans.modules.payara.tooling.data.PayaraVersion)
 meth public org.netbeans.modules.payara.tooling.data.PayaraJavaSEConfig getJavaSEConfig(org.netbeans.modules.payara.tooling.data.PayaraVersion)
+meth public java.util.List<org.netbeans.modules.payara.tooling.data.PayaraLibrary> getPlatformLibraries(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
+meth public org.netbeans.modules.payara.tooling.data.PayaraJavaEEConfig getPlatformJavaEEConfig(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
+meth public org.netbeans.modules.payara.tooling.data.PayaraJavaSEConfig getPlatformJavaSEConfig(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 supr java.lang.Object
 hfds classpathHome,config,javaEEConfigCache,javaSEConfigCache,javadocsHome,libraryCache,srcHome,version
 
 CLSS public org.netbeans.modules.payara.tooling.server.config.ConfigBuilderProvider
 cons public init()
 meth public static java.net.URL getBuilderConfig(org.netbeans.modules.payara.tooling.data.PayaraVersion)
+meth public static java.net.URL getPlatformBuilderConfig(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public static org.netbeans.modules.payara.tooling.server.config.ConfigBuilder getBuilder(org.netbeans.modules.payara.tooling.data.PayaraServer)
 meth public static void destroyBuilder(org.netbeans.modules.payara.tooling.data.PayaraServer)
 supr java.lang.Object
@@ -2219,6 +2259,7 @@ meth public void resize(int)
 supr java.lang.Object
 hfds LOGGER,beg,buff,len,size
 
+ anno 0 java.lang.Deprecated()
 CLSS public final org.netbeans.modules.payara.tooling.utils.EnumUtils
 cons public init()
 meth public final static boolean eq(java.lang.Enum<? extends java.lang.Enum>,java.lang.Enum<? extends java.lang.Enum>)
@@ -2409,6 +2450,7 @@ meth public static java.lang.String javaRootProperty(java.lang.String)
 meth public static java.lang.String manifestDecode(java.lang.String)
 meth public static java.lang.String serverLogFileRelativePath()
 meth public static org.netbeans.modules.payara.tooling.data.PayaraVersion getServerVersion(java.lang.String)
+meth public static org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPlatformVersion(java.lang.String)
 meth public static void addComponentToMap(java.util.Map<java.lang.String,java.util.List<java.lang.String>>,java.lang.String)
 meth public static void addPathElement(java.lang.StringBuilder,java.lang.String)
 supr java.lang.Object

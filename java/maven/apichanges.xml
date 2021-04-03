@@ -83,6 +83,20 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="disable-maven-repo-indexing">
+            <api name="general"/>
+            <summary>Default for frequency of indexing</summary>
+            <version major="2" minor="147"/>
+            <date day="1" month="4" year="2021"/>
+            <author login="jtulach"/>
+            <compatibility semantic="compatible"/>
+            <description>
+                <p>
+                    Introducing <a href="@TOP@architecture-summary.html#group-branding">branding APIs</a>
+                    specify default frequency for downloading Maven index.
+                </p>
+            </description>
+        </change>
         <change id="ProjectLookup.fallback">
             <api name="general"/>
             <summary>Allow project services, that are ordered <b>after</b> specific packaging type</summary>

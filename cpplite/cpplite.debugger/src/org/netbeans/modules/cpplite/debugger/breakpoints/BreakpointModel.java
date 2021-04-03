@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.cpplite.debugger.breakpoints;
 
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -65,9 +66,15 @@ public class BreakpointModel implements NodeModel {
     public String getDisplayName (Object node) throws UnknownTypeException {
         if (node instanceof CPPLiteBreakpoint) {
             CPPLiteBreakpoint breakpoint = (CPPLiteBreakpoint) node;
-            FileObject fileObject = breakpoint.getLine().getLookup().lookup(FileObject.class);
-            return fileObject.getNameExt () + ":" + 
-                (breakpoint.getLine ().getLineNumber () + 1);
+            String nameExt;
+            FileObject fileObject = breakpoint.getFileObject();
+            if (fileObject != null) {
+                nameExt = fileObject.getNameExt();
+            } else {
+                File file = new File(breakpoint.getFilePath());
+                nameExt = file.getName();
+            }
+            return nameExt + ":" + breakpoint.getLineNumber();
         }
         throw new UnknownTypeException (node);
     }
@@ -114,7 +121,7 @@ public class BreakpointModel implements NodeModel {
     throws UnknownTypeException {
         if (node instanceof CPPLiteBreakpoint) {
             CPPLiteBreakpoint breakpoint = (CPPLiteBreakpoint) node;
-            return breakpoint.getLine ().getDisplayName ();
+            return breakpoint.getFilePath() + ":" + breakpoint.getLineNumber();
         }
         throw new UnknownTypeException (node);
     }

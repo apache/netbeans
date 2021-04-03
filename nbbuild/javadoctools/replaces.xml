@@ -237,3 +237,4 @@
 <replacefilter token="@org-netbeans-modules-java-editor-lib@" value="${javadoc.docs.org-netbeans-modules-java-editor-lib}"/>
 <replacefilter token="@org-netbeans-modules-web-common@" value="${javadoc.docs.org-netbeans-modules-web-common}"/>
 <replacefilter token="@org-netbeans-modules-db-core@" value="${javadoc.docs.org-netbeans-modules-db-core}"/>
+<replacefilter token="@org-netbeans-modules-nativeimage-api@" value="${javadoc.docs.org-netbeans-modules-nativeimage-api}"/>

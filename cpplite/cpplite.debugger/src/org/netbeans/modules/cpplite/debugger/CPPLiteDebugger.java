@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EventListener;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ import org.netbeans.modules.cnd.debugger.gdb2.mi.MIConst;
 import org.netbeans.modules.cnd.debugger.gdb2.mi.MIProxy;
 import org.netbeans.modules.cnd.debugger.gdb2.mi.MIRecord;
 import org.netbeans.modules.cnd.debugger.gdb2.mi.MITList;
+import org.netbeans.modules.cnd.debugger.gdb2.mi.MITListItem;
 import org.netbeans.modules.cnd.debugger.gdb2.mi.MIValue;
 import org.netbeans.modules.cpplite.debugger.breakpoints.CPPLiteBreakpoint;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironmentFactory;
@@ -125,6 +127,10 @@ public final class CPPLiteDebugger {
         proxy.send(new Command("-gdb-set target-async"));
         //proxy.send(new Command("-gdb-set scheduler-locking on"));
         proxy.send(new Command("-gdb-set non-stop on"));
+        proxy.send(new Command("-gdb-set print object on"));
+    }
+
+    public void execRun() {
         proxy.send(new Command("-exec-run"));
     }
 
@@ -365,6 +371,46 @@ public final class CPPLiteDebugger {
         LOGGER.fine("finish() done, build finished.");
     }
 
+    public String readMemory(String address, long offset, int length) {
+        MIRecord memory;
+        String offsetArg;
+        if (offset != 0) {
+            offsetArg = "-o " + offset + " ";
+        } else {
+            offsetArg = "";
+        }
+        try {
+            memory = sendAndGet("-data-read-memory-bytes " + offsetArg + address + " " + length);
+        } catch (InterruptedException ex) {
+            return null;
+        }
+        MIValue memoryValue = memory.results().valueOf("memory");
+        if (memoryValue instanceof MITList) {
+            MITList memoryList = (MITList) memoryValue;
+            if (!memoryList.isEmpty()) {
+                MITListItem row = memoryList.get(0);
+                if (row instanceof MITList) {
+                    String contents = ((MITList) row).getConstValue("contents");
+                    return contents;
+                }
+            }
+        }
+        return null;
+    }
+
+    public String getVersion() {
+        MIRecord versionRecord;
+        try {
+            versionRecord = sendAndGet("-gdb-version");
+        } catch (InterruptedException ex) {
+            return null;
+        }
+        return versionRecord.results().toString();
+    }
+
+    ContextProvider getContextProvider() {
+        return contextProvider;
+    }
 
     DebuggingView.DVSupport getDVSupport() {
         return contextProvider.lookupFirst(null, DebuggingView.DVSupport.class);
@@ -421,7 +467,7 @@ public final class CPPLiteDebugger {
                                 break;
                             default:
                                 MITList topFrameList = (MITList) results.valueOf("frame");
-                                CPPFrame frame = topFrameList != null ? new CPPFrame(thread, topFrameList) : null;
+                                CPPFrame frame = topFrameList != null ? CPPFrame.create(thread, topFrameList) : null;
                                 thread.setTopFrame(frame);
                                 setSuspended(true, thread, frame);
                                 if (frame != null) {
@@ -497,8 +543,16 @@ public final class CPPLiteDebugger {
         void send(MICommand cmd, boolean waitForRunning) {
             if (waitForRunning) {
                 waitRunning();
+                send(cmd);
+            } else {
+                try {
+                    startedLatch.await();
+                } catch (InterruptedException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                LOGGER.log(Level.FINE, "MIProxy.send({0})", cmd);
+                super.send(cmd);
             }
-            send(cmd);
         }
 
         @Override
@@ -548,40 +602,41 @@ public final class CPPLiteDebugger {
 
     }
 
-    public static @NonNull Pair<DebuggerEngine, Process> startDebugging (CPPLiteDebuggerConfig configuration) throws IOException {
-        DebuggerInfo di = DebuggerInfo.create (
-            "CPPLiteDebuggerInfo",
-            new Object[] {
-                new SessionProvider () {
-                    @Override
-                    public String getSessionName () {
-                        return configuration.getDisplayName ();
-                    }
-
-                    @Override
-                    public String getLocationName () {
-                        return "localhost";
-                    }
-
-                    @Override
-                    public String getTypeID () {
-                        return "CPPLiteSession";
-                    }
-
-                    @Override
-                    public Object[] getServices () {
-                        return new Object[] {};
-                    }
-                },
-                configuration
+    public static @NonNull Pair<DebuggerEngine, Process> startDebugging (CPPLiteDebuggerConfig configuration, Object... services) throws IOException {
+        SessionProvider sessionProvider = new SessionProvider () {
+            @Override
+            public String getSessionName () {
+                return configuration.getDisplayName ();
             }
+
+            @Override
+            public String getLocationName () {
+                return "localhost";
+            }
+
+            @Override
+            public String getTypeID () {
+                return "CPPLiteSession";
+            }
+
+            @Override
+            public Object[] getServices () {
+                return new Object[] {};
+            }
+        };
+        Object[] allServices = Arrays.copyOf(services, services.length + 2);
+        allServices[services.length] = sessionProvider;
+        allServices[services.length + 1] = configuration;
+        DebuggerInfo di = DebuggerInfo.create(
+            "CPPLiteDebuggerInfo",
+            allServices
         );
         DebuggerEngine[] es = DebuggerManager.getDebuggerManager ().
             startDebugging (di);
         Pty pty = PtySupport.allocate(ExecutionEnvironmentFactory.getLocal());
         CPPLiteDebugger debugger = es[0].lookupFirst(null, CPPLiteDebugger.class);
         List<String> executable = new ArrayList<>();
-        executable.add("gdb");
+        executable.add(configuration.getDebugger());
         executable.add("--interpreter=mi");
         executable.add("--tty=" + pty.getSlaveName());
         executable.addAll(configuration.getExecutable());
@@ -700,30 +755,27 @@ public final class CPPLiteDebugger {
         }
 
         private void addBreakpoint(CPPLiteBreakpoint breakpoint) {
-            Line l = breakpoint.getLine();
-            FileObject source = l.getLookup().lookup(FileObject.class);
-            File sourceFile = source != null ? FileUtil.toFile(source) : null;
-            if (sourceFile != null) {
-                String disabled = breakpoint.isEnabled() ? "" : "-d ";
-                Command command = new Command("-break-insert " + disabled + sourceFile.getAbsolutePath() + ":" + (l.getLineNumber() + 1)) {
-                    @Override
-                    protected void onDone(MIRecord record) {
-                        MIValue bkpt = record.results().valueOf("bkpt");
-                        if (bkpt instanceof MITList) {
-                            breakpointResolved(breakpoint, (MITList) bkpt);
-                        }
-                        super.onDone(record);
+            String path = breakpoint.getFilePath();
+            int lineNumber = breakpoint.getLineNumber();
+            String disabled = breakpoint.isEnabled() ? "" : "-d ";
+            Command command = new Command("-break-insert " + disabled + path + ":" + lineNumber) {
+                @Override
+                protected void onDone(MIRecord record) {
+                    MIValue bkpt = record.results().valueOf("bkpt");
+                    if (bkpt instanceof MITList) {
+                        breakpointResolved(breakpoint, (MITList) bkpt);
                     }
+                    super.onDone(record);
+                }
 
-                    @Override
-                    protected void onError(MIRecord record) {
-                        String msg = record.results().getConstValue("msg");
-                        breakpointError(breakpoint, msg);
-                        super.onError(record);
-                    }
-                };
-                proxy.send(command);
-            }
+                @Override
+                protected void onError(MIRecord record) {
+                    String msg = record.results().getConstValue("msg");
+                    breakpointError(breakpoint, msg);
+                    super.onError(record);
+                }
+            };
+            proxy.send(command, false);
             breakpoint.addPropertyChangeListener(this);
         }
 

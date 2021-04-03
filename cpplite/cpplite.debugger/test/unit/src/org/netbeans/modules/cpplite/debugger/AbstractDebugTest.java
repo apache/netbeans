@@ -51,7 +51,7 @@ public abstract class AbstractDebugTest extends NbTestCase {
     }
 
     protected final void startDebugging(String name, File wd) throws IOException {
-        engine = CPPLiteDebugger.startDebugging(new CPPLiteDebuggerConfig(Arrays.asList(new File(wd, name).getAbsolutePath()), wd)).first();
+        engine = CPPLiteDebugger.startDebugging(new CPPLiteDebuggerConfig(Arrays.asList(new File(wd, name).getAbsolutePath()), wd, "gdb")).first();
         debugger = engine.lookupFirst(null, CPPLiteDebugger.class);
         debugger.addStateListener(new CPPLiteDebugger.StateListener() {
             @Override
@@ -80,6 +80,7 @@ public abstract class AbstractDebugTest extends NbTestCase {
             public void currentFrame(CPPFrame frame) {
             }
         });
+        debugger.execRun();
     }
 
     protected final void waitSuspended(int count) throws InterruptedException {

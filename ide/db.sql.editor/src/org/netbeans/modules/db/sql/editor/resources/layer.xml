@@ -148,11 +148,6 @@
                         <attr name="position" intvalue="9200"/>
                     </file>
                 </folder>
-                <folder name="AnnotationTypes">
-                    <file name="org-netbeans-modules-db-sql-editor_annotation" 
-                        url="org-netbeans-modules-db-sql-editor_annotation.xml">
-                    </file>
-                </folder>
             </folder>
         </folder>
     </folder>

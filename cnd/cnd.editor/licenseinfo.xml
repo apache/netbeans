@@ -1,4 +1,5 @@
-<#--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
 
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -18,8 +19,14 @@
     under the License.
 
 -->
-<#assign licenseFirst = "!">
-<#assign licensePrefix = "! ">
-<#assign licenseLast = "!">
-<#include "${project.licensePath}">
-
+<licenseinfo>
+    <fileset>
+        <!-- User templates -->
+        <file>src/org/netbeans/modules/cnd/editor/resources/cplusplus/CCExample</file>
+        <file>src/org/netbeans/modules/cnd/editor/resources/cplusplus/CExample</file>
+        <file>src/org/netbeans/modules/cnd/editor/resources/cplusplus/HExample</file>
+        <file>src/org/netbeans/modules/cnd/editor/resources/fortran/FExample</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="TEMPLATE_MINIMAL_IP" />
+    </fileset>
+</licenseinfo>

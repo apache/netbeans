@@ -91,27 +91,30 @@ public class JavaToCHyperlinkProvider implements HyperlinkProviderExt {
         final String[][] lookFor = new String[1][];
 
         try {
-            JavaSource.forDocument(doc).runUserActionTask(new Task<CompilationController>() {
-                @Override
-                public void run(CompilationController parameter) throws Exception {
-                    parameter.toPhase(Phase.PARSED);
+            final JavaSource source = JavaSource.forDocument(doc);
+            if (source != null) {
+                source.runUserActionTask(new Task<CompilationController>() {
+                    @Override
+                    public void run(CompilationController parameter) throws Exception {
+                        parameter.toPhase(Phase.PARSED);
 
-                    TreePath tp = parameter.getTreeUtilities().pathFor(offset);
+                        TreePath tp = parameter.getTreeUtilities().pathFor(offset);
 
-                    if (tp.getLeaf().getKind() != Kind.METHOD || !((MethodTree) tp.getLeaf()).getModifiers().getFlags().contains(Modifier.NATIVE))
-                        return ;
+                        if (tp.getLeaf().getKind() != Kind.METHOD || !((MethodTree) tp.getLeaf()).getModifiers().getFlags().contains(Modifier.NATIVE))
+                            return ;
 
-                    int[] nameSpan = parameter.getTreeUtilities().findNameSpan((MethodTree) tp.getLeaf());
+                        int[] nameSpan = parameter.getTreeUtilities().findNameSpan((MethodTree) tp.getLeaf());
 
-                    if (nameSpan[0] <= offset && offset <= nameSpan[1]) {
-                        parameter.toPhase(Phase.RESOLVED);
-                        Element el = parameter.getTrees().getElement(tp);
-                        if (el != null && el.getKind() == ElementKind.METHOD) {
-                            lookFor[0] = SourceUtils.getJVMSignature(ElementHandle.create(el));
+                        if (nameSpan[0] <= offset && offset <= nameSpan[1]) {
+                            parameter.toPhase(Phase.RESOLVED);
+                            Element el = parameter.getTrees().getElement(tp);
+                            if (el != null && el.getKind() == ElementKind.METHOD) {
+                                lookFor[0] = SourceUtils.getJVMSignature(ElementHandle.create(el));
+                            }
                         }
                     }
-                }
-            }, true);
+                }, true);
+            }
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }

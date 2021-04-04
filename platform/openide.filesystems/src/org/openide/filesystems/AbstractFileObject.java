@@ -548,7 +548,9 @@ final class AbstractFileObject extends AbstractFolder {
                       System.out.println ("Name: " + name);
                       System.out.println ("Old : " + oldName);
                 */
-                parent.refresh(name, oldName);
+                if (parent instanceof AbstractFolder) {
+                    ((AbstractFolder) parent).refresh(name, oldName);
+                }
 
                 if (hasAtLeastOneListeners()) {
                     fileRenamed0(new FileRenameEvent(this, on, oe));
@@ -597,7 +599,9 @@ final class AbstractFileObject extends AbstractFolder {
                 String n = name;
                 validFlag = false;
 
-                parent.refresh(null, n, true);
+                if (parent instanceof AbstractFolder) {
+                    ((AbstractFolder) parent).refresh(null, n, true);
+                }
             }
 
             getAbstractFileSystem().attr.deleteAttributes(fullName);
@@ -730,7 +734,9 @@ final class AbstractFileObject extends AbstractFolder {
                         validFlag = false;
 
                         // refresh the parent because this file has been deleted
-                        parent.refresh(null, oldN);
+                        if (parent instanceof AbstractFolder) {
+                            ((AbstractFolder) parent).refresh(null, oldN);
+                        }
 
                         // deletes all attributes asssociated with the moved file
                         // JST: I am not sure if this is the right behaviour, maybe this
@@ -861,8 +867,8 @@ final class AbstractFileObject extends AbstractFolder {
                 }
             }
 
-            if (refreshParent && (parent.getFileObject(getName(), getExt()) != null)) {
-                parent.refreshFolder(null, this.getNameExt(), fire, expected, null);
+            if (refreshParent && (parent.getFileObject(getName(), getExt()) != null) && parent instanceof AbstractFolder) {
+                ((AbstractFolder) parent).refreshFolder(null, this.getNameExt(), fire, expected, null);
             }
         } finally {
             getFileSystem().finishAtomicAction();

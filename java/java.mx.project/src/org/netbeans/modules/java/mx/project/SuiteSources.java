@@ -625,11 +625,10 @@ final class SuiteSources implements Sources,
             if (SuiteSources.this.dir == null) {
                 return null;
             }
-            FileObject dists = SuiteSources.this.dir.getFileObject("mxbuild/dists");
-            if (dists == null) {
-                return null;
-            }
-            List<FileObject> dist = Arrays.stream(dists.getChildren()).filter((fo) -> fo.isFolder() && fo.getName().startsWith("jdk")).collect(Collectors.toList());
+            FileObject dists = getSubDir(SuiteSources.this.dir, "mxbuild/dists");
+            List<FileObject> dist = Arrays.stream(dists.getChildren()).
+                filter((fo) -> fo.isFolder() && fo.getName().startsWith("jdk")).
+                collect(Collectors.toList());
             dist.sort((fo1, fo2) -> fo2.getName().compareTo(fo1.getName()));
             for (FileObject jdkDir : dist) {
                 FileObject jar = jdkDir.getFileObject(name.toLowerCase().replace("_", "-") + ".jar");
@@ -637,11 +636,7 @@ final class SuiteSources implements Sources,
                     return jar;
                 }
             }
-            FileObject jar = dists.getFileObject(name.toLowerCase().replace("_", "-") + ".jar");
-            if (jar != null) {
-                return jar;
-            }
-            return null;
+            return dists.getFileObject(name.toLowerCase().replace("_", "-") + ".jar", false);
         }
 
         @Override

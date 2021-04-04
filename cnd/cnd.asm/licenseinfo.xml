@@ -26,6 +26,6 @@
         <file>src/org/netbeans/modules/cnd/asm/core/resources/AsmTemplate.s</file>
         <file>src/org/netbeans/modules/cnd/asm/core/resources/InlineTemplate.il</file>
         <license ref="Apache-2.0-ASF" />
-        <comment type="TEMPLATE_MINIMAL_IP" />
+        <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
 </licenseinfo>

@@ -22,10 +22,13 @@
 <licenseinfo>
     <fileset>
         <!-- User templates -->
-        <file>src/org/netbeans/modules/cnd/editor/resources/cplusplus/CCExample</file>
-        <file>src/org/netbeans/modules/cnd/editor/resources/cplusplus/CExample</file>
-        <file>src/org/netbeans/modules/cnd/editor/resources/cplusplus/HExample</file>
-        <file>src/org/netbeans/modules/cnd/editor/resources/fortran/FExample</file>
+        <file>src/org/netbeans/modules/cnd/resources/templates/qt/widget.template</file>
+        <file>src/org/netbeans/modules/cnd/resources/templates/qt/dialog-buttonsright.template</file>
+        <file>src/org/netbeans/modules/cnd/resources/templates/qt/resource.template</file>
+        <file>src/org/netbeans/modules/cnd/resources/templates/qt/translation.template</file>
+        <file>src/org/netbeans/modules/cnd/resources/templates/qt/dialog-buttonsbottom.template</file>
+        <file>src/org/netbeans/modules/cnd/resources/templates/qt/mainwindow.template</file>
+        <file>src/org/netbeans/modules/cnd/resources/templates/qt/dialog-nobuttons.template</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="GUI_USABILITY" />
     </fileset>

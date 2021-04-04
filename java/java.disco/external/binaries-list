@@ -15,7 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 4FCCADF37F1C61A0895BAC3D42FE0C530438826C org.checkerframework:checker-qual:3.9.1
-3F18E1AA31031D89DB6F01BA05D501258CE69D2C commons-codec:commons-codec:1.13
 B8DF472B31E1F17C232D2AD78CEB1C84E00C641B org.apache.commons:commons-compress:1.20
 C4BC772689D4BB2D4128C5E4966F765A8A76E904 org.apache.httpcomponents.client5:httpclient5:5.0.3
 EA298CD1CE1D860747149FBB5F6236300219F378 org.apache.httpcomponents.core5:httpcore5:5.0.2

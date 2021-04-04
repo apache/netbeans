@@ -26,6 +26,12 @@
             <code-name-base>org.netbeans.modules.java.disco</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>org.apache.commons.codec</code-name-base>
+                    <run-dependency>
+                        <specification-version>1.3</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>com.google.gson</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -209,10 +215,6 @@
             <class-path-extension>
                 <runtime-relative-path>ext/discoclient-1.0.jar</runtime-relative-path>
                 <binary-origin>external/discoclient-1.0.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/commons-codec-1.13.jar</runtime-relative-path>
-                <binary-origin>external/commons-codec-1.13.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/httpclient5-5.0.3.jar</runtime-relative-path>

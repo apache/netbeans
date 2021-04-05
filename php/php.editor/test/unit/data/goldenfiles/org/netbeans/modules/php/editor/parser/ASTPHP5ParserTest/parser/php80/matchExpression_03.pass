@@ -1,0 +1,186 @@
+<testresult testFile='matchExpression_03.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='815' end='817'>
+            <text>$x</text>
+        </token>
+        <token id='T_EQUAL' start='818' end='819'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='820' end='821'>
+            <text>3</text>
+        </token>
+        <token id='T_SEMICOLON' start='821' end='822'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='823' end='830'>
+            <text>$result</text>
+        </token>
+        <token id='T_EQUAL' start='831' end='832'>
+            <text>=</text>
+        </token>
+        <token id='T_MATCH' start='833' end='838'>
+            <text>match</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='839' end='840'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='840' end='842'>
+            <text>$x</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='842' end='843'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='844' end='845'>
+            <text>{</text>
+        </token>
+        <token id='T_LNUMBER' start='850' end='851'>
+            <text>1</text>
+        </token>
+        <token id='T_COMMA' start='851' end='852'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='853' end='854'>
+            <text>2</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='855' end='857'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='858' end='864'>
+            <text>&apos;1, 2&apos;</text>
+        </token>
+        <token id='T_COMMA' start='864' end='865'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='870' end='871'>
+            <text>3</text>
+        </token>
+        <token id='T_COMMA' start='871' end='872'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='873' end='874'>
+            <text>4</text>
+        </token>
+        <token id='T_COMMA' start='874' end='875'>
+            <text>,</text>
+        </token>
+        <token id='T_LNUMBER' start='876' end='877'>
+            <text>5</text>
+        </token>
+        <token id='T_COMMA' start='877' end='878'>
+            <text>,</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='879' end='881'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='882' end='891'>
+            <text>&apos;3, 4, 5&apos;</text>
+        </token>
+        <token id='T_COMMA' start='891' end='892'>
+            <text>,</text>
+        </token>
+        <token id='T_DEFAULT' start='897' end='904'>
+            <text>default</text>
+        </token>
+        <token id='T_COMMA' start='904' end='905'>
+            <text>,</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='906' end='908'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_LNUMBER' start='909' end='911'>
+            <text>10</text>
+        </token>
+        <token id='T_COMMA' start='911' end='912'>
+            <text>,</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='913' end='914'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='914' end='915'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='917' end='925'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='925' end='926'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='926' end='933'>
+            <text>$result</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='933' end='934'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='934' end='935'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='936' end='936'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='936'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='822'>
+                <Assignment start='815' end='821' operator='EQUAL'>
+                    <Variable start='815' end='817' isDollared='true'>
+                        <Identifier start='816' end='817' name='x'/>
+                    </Variable>
+                    <Scalar start='820' end='821' type='INT' value='3'/>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='823' end='915'>
+                <Assignment start='823' end='914' operator='EQUAL'>
+                    <Variable start='823' end='830' isDollared='true'>
+                        <Identifier start='824' end='830' name='result'/>
+                    </Variable>
+                    <MatchExpression start='833' end='914'>
+                        <Variable start='840' end='842' isDollared='true'>
+                            <Identifier start='841' end='842' name='x'/>
+                        </Variable>
+                        <MatchArms>
+                            <MatchArm start='850' end='864' isDefault='false'>
+                                <Conditions>
+                                    <Scalar start='850' end='851' type='INT' value='1'/>
+                                    <Scalar start='853' end='854' type='INT' value='2'/>
+                                </Conditions>
+                                <Scalar start='858' end='864' type='STRING' value='&apos;1, 2&apos;'/>
+                            </MatchArm>
+                            <MatchArm start='870' end='891' isDefault='false'>
+                                <Conditions>
+                                    <Scalar start='870' end='871' type='INT' value='3'/>
+                                    <Scalar start='873' end='874' type='INT' value='4'/>
+                                    <Scalar start='876' end='877' type='INT' value='5'/>
+                                </Conditions>
+                                <Scalar start='882' end='891' type='STRING' value='&apos;3, 4, 5&apos;'/>
+                            </MatchArm>
+                            <MatchArm start='897' end='911' isDefault='true'>
+                                <Conditions>
+                                    <Identifier start='897' end='904' name='default'/>
+                                </Conditions>
+                                <Scalar start='909' end='911' type='INT' value='10'/>
+                            </MatchArm>
+                        </MatchArms>
+                    </MatchExpression>
+                </Assignment>
+            </ExpressionStatement>
+            <ExpressionStatement start='917' end='935'>
+                <FunctionInvocation start='917' end='934'>
+                    <FucntionName start='917' end='925'>
+                        <NamespaceName start='917' end='925' isCurrent='false' isGlobal='false'>
+                            <Identifier start='917' end='925' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Variable start='926' end='933' isDollared='true'>
+                            <Identifier start='927' end='933' name='result'/>
+                        </Variable>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

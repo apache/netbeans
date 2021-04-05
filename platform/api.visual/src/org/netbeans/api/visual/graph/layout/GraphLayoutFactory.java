@@ -82,7 +82,7 @@ public class GraphLayoutFactory {
      * @since 2.25
      */
     public static <N, E> GraphLayout<N, E> createTreeGraphLayout(int originX, int originY, int verticalGap, int horizontalGap, boolean vertical, boolean minimizeGap, TreeGraphLayoutAlignment alignment) {
-        return new TreeGraphLayout<N, E>(originX, originY, verticalGap, horizontalGap, vertical, minimizeGap, alignment);
+        return new TreeGraphLayout<>(originX, originY, verticalGap, horizontalGap, vertical, minimizeGap, alignment);
     }
 
     /**
@@ -95,7 +95,7 @@ public class GraphLayoutFactory {
      * @return a GraphLayout to be invoked from the calling class.
      */
     public static <N, E> GraphLayout<N, E> createOrthogonalGraphLayout(GraphScene<N, E> graphScene, boolean animate) {
-        return new OrthogonalLayout(graphScene, animate);
+        return new OrthogonalLayout<>(graphScene, animate);
     }
 
     /**
@@ -108,7 +108,7 @@ public class GraphLayoutFactory {
      * @return a GraphLayout to be invoked from the calling class.
      */
     public static <N, E> GraphLayout<N, E> createHierarchicalGraphLayout(GraphScene<N, E> graphScene, boolean animate) {
-        return new HierarchicalLayout(graphScene, animate);
+        return new HierarchicalLayout<>(graphScene, animate);
     }
 
     /**
@@ -123,7 +123,7 @@ public class GraphLayoutFactory {
      * @return a GraphLayout to be invoked from the calling class.
      */
     public static <N, E> GraphLayout<N, E> createHierarchicalGraphLayout(GraphScene<N, E> graphScene, boolean animate, boolean inverted) {
-        return new HierarchicalLayout(graphScene, animate, inverted);
+        return new HierarchicalLayout<>(graphScene, animate, inverted);
     }
     
     /**
@@ -141,7 +141,7 @@ public class GraphLayoutFactory {
      */
     public static <N, E> GraphLayout<N, E> createHierarchicalGraphLayout(GraphScene<N, E> graphScene, boolean animate, boolean inverted,
             int xOffset, int layerOffset) {
-        return new HierarchicalLayout(graphScene, animate, inverted, xOffset, layerOffset);
+        return new HierarchicalLayout<>(graphScene, animate, inverted, xOffset, layerOffset);
     }
     
 

@@ -1,0 +1,7 @@
+Code completion result for source line:
+$country = $session->getUser()::create("test")?->|getAddress()->country;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     create(string $name)            [STATIC]   User
+METHOD     getAddress()                    [PUBLIC]   User
+METHOD     test()                          [STATIC]   User
+VARIABLE   int id                          [PUBLIC]   User

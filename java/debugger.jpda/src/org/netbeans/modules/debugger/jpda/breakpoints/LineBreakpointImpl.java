@@ -44,6 +44,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -242,7 +244,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
         if (!isInSources) {
             String relativePath = EditorContextBridge.getRelativePath(className);
             String classURL = getDebugger().getEngineContext().getURL(relativePath, true);
-            if (classURL != null && !classURL.equals(breakpoint.getURL())) {
+            if (classURL != null && !areURLEqual(classURL, breakpoint.getURL())) {
                 // Silently ignore breakpoints from other sources that resolve to a different URL.
                 logger.log(Level.FINE,
                        "LineBreakpoint {0} NOT submitted, because it's URL ''{1}'' differes from class ''{2}'' URL ''{3}''.",
@@ -290,6 +292,17 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
             for (String cn : names) {
                 checkLoadedClasses (cn, excludedNames);
             }
+        }
+    }
+
+    private static boolean areURLEqual(String url1, String url2) {
+        if (url1.equals(url2)) {
+            return true;
+        }
+        try {
+            return new URI(url1).equals(new URI(url2));
+        } catch (URISyntaxException ex) {
+            return false;
         }
     }
 

@@ -986,4 +986,62 @@ public class PHPFormatterWrappingTest extends PHPFormatterTestBase {
         options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_NEVER);
         reformatFileContents("testfiles/formatting/wrapping/functionCallTrailingCommas04.php", options);
     }
+
+    // PHP 8.0
+    public void testAllowTrailingCommaInParameterListAlways_01() throws Exception {
+        // parameters are on each new line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/declarationsAlways01.php", options);
+    }
+
+    public void testAllowTrailingCommaInParameterListAlways_02() throws Exception {
+        // all parameters are on the same line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/declarationsAlways02.php", options);
+    }
+
+    public void testAllowTrailingCommaInParameterListWithClosureInArrayAlways_01() throws Exception {
+        // parameters are on each new line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/closureInArrayAlways01.php", options);
+    }
+
+    public void testAllowTrailingCommaInParameterListWithClosureInArrayAlways_02() throws Exception {
+        // all parameters are on the same line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/closureInArrayAlways02.php", options);
+    }
+
+    public void testAllowTrailingCommaInParameterListNever_01() throws Exception {
+        // parameters are on each new line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_NEVER);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/declarationsNever01.php", options);
+    }
+
+    public void testAllowTrailingCommaInParameterListNever_02() throws Exception {
+        // all parameters are on each new line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_NEVER);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/declarationsNever02.php", options);
+    }
+
+    public void testAllowTrailingCommaInParameterListWithClosureInArrayNever_01() throws Exception {
+        // parameters are on each new line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_NEVER);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/closureInArrayNever01.php", options);
+    }
+
+    public void testAllowTrailingCommaInParameterListWithClosureInArrayNever_02() throws Exception {
+        // all parameters are on the same line
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_NEVER);
+        reformatFileContents("testfiles/formatting/wrapping/php80/AllowTrailingCommaInParameterList/closureInArrayNever02.php", options);
+    }
+
 }

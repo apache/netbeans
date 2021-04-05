@@ -263,7 +263,7 @@ implements PropertyChangeListener, DebuggerManagerListener {
         Properties p = Properties.getDefault().getProperties("debugger.options.JPDA");
         boolean doCatchExceptions = p.getBoolean("CatchExceptions", false);
         if (doCatchExceptions) {
-            ExceptionBreakpoint eb = ExceptionBreakpoint.create(java.lang.Throwable.class.getName(), ExceptionBreakpoint.TYPE_EXCEPTION_UNCATCHED);
+            ExceptionBreakpoint eb = ExceptionBreakpoint.create(java.lang.Throwable.class.getName(), ExceptionBreakpoint.TYPE_EXCEPTION_UNCAUGHT);
             createBreakpointImpl(eb);
         }
     }

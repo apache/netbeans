@@ -40,7 +40,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>3.7</specification-version>
+                        <specification-version>3.18</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -210,7 +210,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>2.49</specification-version>
+                        <specification-version>2.65</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -359,6 +359,7 @@
                 <package>org.netbeans.modules.debugger.jpda.ui</package>
                 <package>org.netbeans.modules.debugger.jpda.ui.options</package>
                 <package>org.netbeans.modules.debugger.jpda.ui.breakpoints</package>
+                <package>org.netbeans.modules.debugger.jpda.ui.debugging</package>
             </friend-packages>
         </data>
     </configuration>

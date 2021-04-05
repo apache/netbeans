@@ -46,8 +46,10 @@
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application-client_6.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application-client_7.mdd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application-client_7.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application-client_8.mdd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application-client_8.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/connector_1_5.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/connector_1_6.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/connector_1_7.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_2_1.mdd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_2_1.xsd</file>

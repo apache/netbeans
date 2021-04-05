@@ -77,7 +77,7 @@ public class TargetMappingPanel extends JPanel implements ActionListener, HelpCt
     private CustomTargetsModel customTargetsModel;
     private String antScript;
     
-    private List<JComboBox> combos = new ArrayList<JComboBox>();
+    private List<JComboBox> combos = new ArrayList<>();
     private List<TargetDescriptor> targetDescs = new ArrayList<TargetDescriptor>();
     
     /** Any change in standard tasks which needs to be persisted? */

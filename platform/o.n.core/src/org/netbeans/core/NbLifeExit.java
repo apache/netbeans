@@ -18,6 +18,7 @@
  */
 package org.netbeans.core;
 
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -110,7 +111,9 @@ final class NbLifeExit implements Runnable {
     private void doExit(int status) {
         // save all open files
         Future<Boolean> res;
-        if (System.getProperty("netbeans.close") != null || ExitDialog.showDialog()) { // NOI18N
+        boolean noDialog = GraphicsEnvironment.isHeadless() 
+            || System.getProperty("netbeans.close") != null; // NOI18N
+        if (noDialog || ExitDialog.showDialog()) {
             res = Main.getModuleSystem().shutDownAsync(new NbLifeExit(1, status, null, onExit));
         } else {
             res = null;

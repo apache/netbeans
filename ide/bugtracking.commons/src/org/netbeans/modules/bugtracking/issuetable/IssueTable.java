@@ -413,7 +413,7 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
     private Map<Integer, Integer> getColumnSorting() {
         String sortingString = getColumnSorting(repositoryId);
         if(sortingString == null || sortingString.equals("")) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
         Map<Integer, Integer> map = new HashMap<>();
         String[] sortingArray = sortingString.split(CONFIG_DELIMITER);
@@ -444,7 +444,7 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
     }
 
     private void setFilterIntern(Filter filter) {
-        final List<IssueNode> filteredNodes = new ArrayList<IssueNode>(nodes.size());
+        final List<IssueNode> filteredNodes = new ArrayList<>(nodes.size());
         for (IssueNode node : nodes) {
             if (filter == null || filter.accept(node)) {
                 filteredNodes.add(node);
@@ -669,7 +669,7 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
     public void ancestorRemoved(AncestorEvent event) { }
 
     private void setModelProperties() {
-        List<ColumnDescriptor> properties = new ArrayList<ColumnDescriptor>(descriptors.length + (isSaved ? 2 : 0));
+        List<ColumnDescriptor> properties = new ArrayList<>(descriptors.length + (isSaved ? 2 : 0));
         int i = 0;
         for (; i < descriptors.length; i++) {
             ColumnDescriptor desc = descriptors[i];
@@ -697,7 +697,7 @@ public class IssueTable implements MouseListener, AncestorListener, KeyListener,
         String columns = getColumns(repositoryId);
         String[] visibleColumns = columns.split(CONFIG_DELIMITER);                         // NOI18N
         if(visibleColumns.length <= 1) {
-            return Collections.EMPTY_MAP;
+            return Collections.emptyMap();
         }
         Map<String, Integer> ret = new HashMap<String, Integer>();
         for (int i = 0; i < visibleColumns.length; i=i+2) {

@@ -1,51 +1,290 @@
 {
 	"name": "apache-netbeans-java",
-	"description": "An Apache NetBeans Java plugin for Visual Studio Code",
+	"displayName": "Apache NetBeans Language Server",
+	"description": "Apache NetBeans Language Server Extension for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
-	"version": "0.0.1",
+	"version": "12.3.9",
+	"preview": true,
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/apache/netbeans"
 	},
-	"publisher": "jlahoda",
-	"categories": [],
+	"publisher": "asf",
+	"icon": "images/Apache_NetBeans_Logo.png",
+	"categories": [
+		"Programming Languages",
+		"Debuggers",
+		"Other"
+	],
 	"keywords": [
 		"multi-root ready"
 	],
 	"engines": {
-		"vscode": "^1.26.0"
+		"vscode": "^1.49.0"
 	},
 	"activationEvents": [
-		"onLanguage:java"
+		"onLanguage:java",
+		"workspaceContains:**/*.java",
+		"workspaceContains:pom.xml",
+		"workspaceContains:build.gradle",
+		"onDebug"
 	],
-	"main": "./out/extension",
+	"main": "./out/extension.js",
+	"contributes": {
+		"languages": [
+			{
+				"id": "javascript",
+				"mimetypes": [
+					"text/javascript",
+					"application/javascript"
+				]
+			}
+		],
+		"configuration": {
+			"title": "Java",
+			"properties": {
+				"netbeans.jdkhome": {
+					"type": [
+						"string",
+						"null"
+					],
+					"default": null,
+					"description": "Specifies JDK for the Apache NetBeans Language Server"
+				},
+				"netbeans.verbose": {
+					"type": "boolean",
+					"default": false,
+					"description": "Enables verbose messages from the Apache NetBeans Language Server"
+				},
+				"netbeans.conflict.check": {
+					"type": "boolean",
+					"default": true,
+					"description": "Avoid conflicts with other Java extensions"
+				},
+				"java.test.editor.enableShortcuts": {
+					"type": "boolean",
+					"default": false,
+					"description": "Enable Run/Debug test in editor"
+				}
+			}
+		},
+		"breakpoints": [
+			{
+				"language": "java"
+			}
+		],
+		"debuggers": [
+			{
+				"type": "java8+",
+				"label": "Java 8+",
+				"runtime": "node",
+				"languages": [
+					"java"
+				],
+				"configurationAttributes": {
+					"launch": {
+						"required": [
+							"mainClass"
+						],
+						"properties": {
+							"mainClass": {
+								"type": "string",
+								"description": "Absolute path to the program main class.",
+								"default": "${file}"
+							},
+							"classPaths": {
+								"type": "array",
+								"items": {
+									"type": "string"
+								},
+								"description": "The classpaths for launching the JVM.",
+								"default": []
+							},
+							"console": {
+								"type": "string",
+								"enum": [
+									"internalConsole"
+								],
+								"description": "The specified console to launch the program.",
+								"default": "internalConsole"
+							},
+							"args": {
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "Arguments for the executed class",
+								"default": null
+							},
+							"vmArgs": {
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "Arguments for the Java VM",
+								"default": null
+							}
+						}
+					}
+				},
+				"initialConfigurations": [
+					{
+						"type": "java8+",
+						"request": "launch",
+						"name": "Launch Java 8+ App",
+						"mainClass": "${file}"
+					}
+				],
+				"configurationSnippets": [
+					{
+						"label": "Java 8+: Launch Java 8+ Application",
+						"description": "Launch a Java 8+ Application in debug mode",
+						"body": {
+							"type": "java8+",
+							"request": "launch",
+							"name": "Launch Java 8+ App",
+							"mainClass": "^\"${1:\\${file\\}}\""
+						}
+					}
+				]
+			},
+			{
+				"type": "nativeimage",
+				"label": "Native Image",
+				"runtime": "node",
+				"languages": [
+					"java"
+				],
+				"configurationAttributes": {
+					"launch": {
+						"required": [
+							"nativeImagePath"
+						],
+						"properties": {
+							"nativeImagePath": {
+								"type": "string",
+								"description": "Absolute path to the application native image.",
+								"default": "${workspaceFolder}/build/native-image/application"
+							},
+							"miDebugger": {
+								"type": "string",
+								"description": "MI Debugger",
+								"default": "gdb"
+							},
+							"console": {
+								"type": "string",
+								"enum": [
+									"internalConsole"
+								],
+								"description": "The specified console to launch the program.",
+								"default": "internalConsole"
+							}
+						}
+					}
+				},
+				"initialConfigurations": [
+					{
+						"type": "nativeimage",
+						"request": "launch",
+						"name": "Launch Native Image",
+						"nativeImagePath": "${workspaceFolder}/build/native-image/application"
+					}
+				],
+				"configurationSnippets": [
+					{
+						"label": "Launch Native Image",
+						"description": "Launch a native image with MI debugger.",
+						"body": {
+							"type": "nativeimage",
+							"request": "launch",
+							"name": "Launch Native Image",
+							"nativeImagePath": "^\"${1:\\${workspaceFolder\\}/build/native-image/application}\""
+						}
+					}
+				]
+			}
+		],
+		"commands": [
+			{
+				"command": "java.workspace.compile",
+				"title": "Compile Workspace",
+				"category": "Java"
+			},
+			{
+				"command": "java.goto.super.implementation",
+				"title": "Go to Super Implementation",
+				"category": "Java"
+			},
+			{
+				"command": "graalvm.pause.script",
+				"title": "Pause in Script",
+				"category": "GraalVM"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "java.workspace.compile",
+				"key": "shift+alt+b",
+				"when": "nbJavaLSReady"
+			},
+			{
+				"command": "editor.action.sourceAction",
+				"key": "alt+insert",
+				"when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
+			}
+		],
+		"menus": {
+			"editor/context": [
+				{
+					"command": "java.goto.super.implementation",
+					"when": "nbJavaLSReady && editorLangId == java && editorTextFocus",
+					"group": "navigation@100"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "java.workspace.compile",
+					"when": "nbJavaLSReady"
+				},
+				{
+					"command": "java.goto.super.implementation",
+					"when": "nbJavaLSReady && editorLangId == java"
+				},
+				{
+					"command": "graalvm.pause.script",
+					"when": "nbJavaLSReady"
+				}
+			]
+		}
+	},
 	"scripts": {
-		"vscode:prepublish": "npm run update-vscode && npm run compile",
-		"compile": "tsc -p ./tsconfig.json",
-		"watch": "tsc -w -p ./tsconfig.json",
-		"postinstall": "vscode-install",
-		"update-vscode": "vscode-install"
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"test": "node ./out/test/runTest.js",
+		"nbcode": "node ./out/nbcode.js",
+		"nbjavac": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*"
 	},
 	"devDependencies": {
-		"@types/mocha": "5.2.7",
-		"@types/node": "13.1.7",
-		"typescript": "3.7.4",
-		"vscode": "1.1.36"
+		"@types/vscode": "^1.49.0",
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^7.0.2",
+		"@types/node": "^13.11.0",
+		"@types/ps-node": "^0.1.0",
+		"glob": "^7.1.6",
+		"mocha": "^7.1.2",
+		"typescript": "^3.8.3",
+		"vscode-test": "^1.3.0",
+		"ps-node": "^0.1.6"
 	},
 	"dependencies": {
-		"vscode-languageclient": "4.4.2"
+		"vscode-debugadapter": "1.42.1",
+		"vscode-languageclient": "6.1.3",
+		"vscode-test-adapter-api": "^1.9.0",
+		"vscode-test-adapter-util": "^0.7.1"
 	},
-        "contributes": {
-            "configuration": {
-                "title": "Java",
-                "properties": {
-                    "netbeans.jdkhome": {
-                         "type": ["string", "null"],
-                         "default": null,
-                         "description": "Specifies the JDK on which the Java language server should be run"
-                    }
-                }
-            }
-        }
+	"extensionDependencies": [
+		"hbenl.vscode-test-explorer"
+	]
 }

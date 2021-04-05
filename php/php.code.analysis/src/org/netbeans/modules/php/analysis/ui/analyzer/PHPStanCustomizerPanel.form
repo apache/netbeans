@@ -25,7 +25,7 @@
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
-    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
@@ -42,24 +42,35 @@
               <EmptySpace max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="0" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="phpStanConfigurationLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="phpStanLevelLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="phpStanMemoryLimitLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="phpStanLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="phpStanConfigurationLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="phpStanLevelLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="phpStanMemoryLimitLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="phpStanConfigurationTextField" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="phpStanConfigurationBrowseButton" min="-2" max="-2" attributes="0"/>
-                  </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="phpStanLevelComboBox" min="-2" max="-2" attributes="0"/>
                           <Component id="phpStanMemoryLimitTextField" min="-2" pref="100" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="phpStanConfigurationTextField" max="32767" attributes="0"/>
+                          <Component id="phpStanTextField" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="phpStanBrowseButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="phpStanConfigurationBrowseButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="phpStanSearchButton" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -69,7 +80,14 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Component id="phpStanEnabledCheckBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="phpStanLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="phpStanTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="phpStanBrowseButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="phpStanSearchButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="phpStanConfigurationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="phpStanConfigurationTextField" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -159,6 +177,40 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="phpStanMemoryLimitTextField">
+    </Component>
+    <Component class="javax.swing.JLabel" name="phpStanLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/analysis/ui/analyzer/Bundle.properties" key="PHPStanCustomizerPanel.phpStanLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="phpStanTextField">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/analysis/ui/analyzer/Bundle.properties" key="PHPStanCustomizerPanel.phpStanTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="phpStanBrowseButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/analysis/ui/analyzer/Bundle.properties" key="PHPStanCustomizerPanel.phpStanBrowseButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="phpStanBrowseButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="phpStanSearchButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/analysis/ui/analyzer/Bundle.properties" key="PHPStanCustomizerPanel.phpStanSearchButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="phpStanSearchButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

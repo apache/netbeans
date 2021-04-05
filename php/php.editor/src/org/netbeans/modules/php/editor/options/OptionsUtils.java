@@ -152,7 +152,7 @@ public final class OptionsUtils {
     }
 
     /**
-     * Classes including Members after "->", "::", "new", "extends", ...
+     * Classes including Members after "->", "?->", "::", "new", "extends", ...
      */
     public static boolean autoCompletionTypes() {
         lazyInit();
@@ -176,7 +176,7 @@ public final class OptionsUtils {
     }
 
     /**
-     * Also Static Methods after "->".
+     * Also Static Methods after "->", "?->".
      */
     public static boolean codeCompletionStaticMethods() {
         lazyInit();

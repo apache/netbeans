@@ -921,6 +921,14 @@ public class TreeFactory {
             throw throwAny(t);
         }
     }
+    
+    public Tree BindingPattern(VariableTree vt) {
+        try {
+            return (Tree) make.getClass().getMethod("BindingPattern",JCVariableDecl.class).invoke(make.at(NOPOS), vt);
+        } catch (Throwable t) {
+            throw throwAny(t);
+        }
+    }
 
     public VariableTree Variable(VariableElement variable, ExpressionTree initializer) {
         return make.at(NOPOS).VarDef((Symbol.VarSymbol)variable, (JCExpression)initializer);
@@ -1921,6 +1929,10 @@ public class TreeFactory {
                 lbl.append((JCTree) t);
             }
             paramTypesList = lbl.toList();
+        }
+        ReferenceTree refrenceTree = TreeShims.getRefrenceTree(docMake, qualExpr, member, paramTypes, names, paramTypesList);
+        if (refrenceTree != null) {
+            return refrenceTree;
         }
         return docMake.at(NOPOS).newReferenceTree("", (JCExpression) qualExpr, member != null ? (Name) names.fromString(member.toString()) : null, paramTypesList);
     }

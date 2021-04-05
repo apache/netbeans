@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.quicksearch;
 
+import java.util.concurrent.Semaphore;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.RandomlyFails;
 import org.netbeans.spi.quicksearch.SearchProvider;
@@ -41,7 +42,7 @@ public class SlowProviderTest extends NbTestCase {
 
     @RandomlyFails
     public void testResponsiveness () throws Exception {
-        UnitTestUtils.prepareTest(new String [] { "/org/netbeans/modules/quicksearch/resources/testSlowProvider.xml" });
+        UnitTestUtils.prepareTest(new String [] { "org/netbeans/modules/quicksearch/resources/testSlowProvider.xml" });
 
         System.out.println("Testing resposiveness against slow providers...");
         
@@ -61,7 +62,7 @@ public class SlowProviderTest extends NbTestCase {
 
         // should be still running
         assertFalse(t.isFinished());
-
+        
         // wait for all providers
         t.waitFinished();
 
@@ -73,13 +74,47 @@ public class SlowProviderTest extends NbTestCase {
 
 
     }
+    
+    /**
+     * Checks that the slow search is given a flag to terminate even though
+     * it does not find anything
+     */
+    public void testSlowSearchObsoleted() throws Exception {
+        UnitTestUtils.prepareTest(new String [] { "org/netbeans/modules/quicksearch/resources/testSlowProvider.xml" });
+        
+        ResultsModel mod = ResultsModel.getInstance();
+        org.openide.util.Task t =
+                CommandEvaluator.evaluate("sample text", mod);
 
+        RequestProcessor.getDefault().post(t);
+
+        // should be still running
+        assertFalse(t.isFinished());
+        
+        assertFalse("Resultset must be valid initially", obsoleteAtStart);
+        
+        sync.acquire();
+        // cancel as if ESC was pressed in popup
+        mod.setContent(null);
+        
+        // wait for all providers
+        assertTrue("Must complete in approx 5secs", t.waitFinished(WAIT_TIME * 2));
+        
+        assertTrue("The provider must saw obsoleted resultset", obsoleteAtEnd);
+    }
+
+    private static final Semaphore sync = new Semaphore(0);
+    private volatile static boolean obsoleteAtStart;
+    private volatile static boolean obsoleteAtEnd;
     
     public static class SlowProvider implements SearchProvider {
-
+        
         public void evaluate(SearchRequest request, SearchResponse response) {
             try {
+                obsoleteAtStart = response.isObsolete();
+                sync.release();
                 Thread.sleep(5000);
+                obsoleteAtEnd = response.isObsolete();
             } catch (InterruptedException ex) {
                 System.err.println("SlowProvider interrupted...");
             }

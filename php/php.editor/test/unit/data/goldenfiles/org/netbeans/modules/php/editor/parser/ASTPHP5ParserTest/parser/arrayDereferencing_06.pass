@@ -56,7 +56,7 @@
                                 <Scalar start='30' end='36' type='STRING' value='"test"'/>
                             </Index>
                         </ArrayDimension>
-                        <MethodInvocation start='7' end='29'>
+                        <MethodInvocation start='7' end='29' isNullsafe='false'>
                             <Variable start='7' end='14' isDollared='true'>
                                 <Identifier start='8' end='14' name='object'/>
                             </Variable>

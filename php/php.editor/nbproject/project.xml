@@ -304,7 +304,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>2.68</specification-version>
+                        <specification-version>2.74</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -606,6 +606,8 @@
                 <friend>org.netbeans.modules.php.refactoring</friend>
                 <friend>org.netbeans.modules.php.smarty</friend>
                 <friend>org.netbeans.modules.php.symfony</friend>
+                <friend>org.netbeans.modules.php.zend</friend>
+                <friend>org.netbeans.modules.php.zend2</friend>
                 <friend>org.netbeans.modules.spellchecker.bindings.php</friend>
                 <package>org.netbeans.modules.php.editor.api</package>
                 <package>org.netbeans.modules.php.editor.api.elements</package>

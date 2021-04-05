@@ -36,6 +36,7 @@ import org.netbeans.api.debugger.jpda.DeadlockDetector;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.api.debugger.jpda.JPDAThreadGroup;
+import org.netbeans.api.debugger.jpda.ThreadsCollector;
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadGroupImpl;
 import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
@@ -43,6 +44,7 @@ import org.netbeans.modules.debugger.jpda.ui.models.DebuggingNodeModel;
 import org.netbeans.modules.debugger.jpda.util.WeakCacheMap;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.ui.DebuggingView;
+import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
@@ -61,7 +63,9 @@ public class DebuggingViewSupportImpl extends DebuggingView.DVSupport {
     public DebuggingViewSupportImpl(ContextProvider lookupProvider) {
         debugger = (JPDADebuggerImpl) lookupProvider.lookupFirst(null, JPDADebugger.class);
         ChangeListener chl = new ChangeListener();
-        debugger.addPropertyChangeListener(chl);
+        debugger.addPropertyChangeListener(JPDADebugger.PROP_STATE, chl);
+        debugger.addPropertyChangeListener(JPDADebugger.PROP_CURRENT_THREAD, chl);
+        debugger.getThreadsCollector().addPropertyChangeListener(chl);
         debugger.getThreadsCollector().getDeadlockDetector().addPropertyChangeListener(chl);
     }
     
@@ -216,6 +220,14 @@ public class DebuggingViewSupportImpl extends DebuggingView.DVSupport {
         return dvGroups;
     }
     
+    protected int getFrameCount(JPDADVThread thread) {
+        return thread.getKey().getStackDepth();
+    }
+    
+    protected List<DVFrame> getFrames(JPDADVThread thread, int from, int to) {
+        return JPDADVThread.getFrames(thread, from, to);
+    }
+
     private class ChangeListener implements PropertyChangeListener {
         
         private STATE state = STATE.DISCONNECTED;
@@ -223,18 +235,28 @@ public class DebuggingViewSupportImpl extends DebuggingView.DVSupport {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             String propertyName = evt.getPropertyName();
-            if (JPDADebugger.PROP_THREAD_STARTED.equals(propertyName)) {
+            if (ThreadsCollector.PROP_THREAD_STARTED.equals(propertyName)) {
                 firePropertyChange(DebuggingView.DVSupport.PROP_THREAD_STARTED,
                                    get((JPDAThreadImpl) evt.getOldValue()),
                                    get((JPDAThreadImpl) evt.getNewValue()));
             } else
-            if (JPDADebugger.PROP_THREAD_DIED.equals(propertyName)) {
+            if (ThreadsCollector.PROP_THREAD_DIED.equals(propertyName)) {
                 firePropertyChange(DebuggingView.DVSupport.PROP_THREAD_DIED,
                                    get((JPDAThreadImpl) evt.getOldValue()),
                                    get((JPDAThreadImpl) evt.getNewValue()));
             } else
             if (JPDADebugger.PROP_CURRENT_THREAD.equals(propertyName)) {
                 firePropertyChange(DebuggingView.DVSupport.PROP_CURRENT_THREAD,
+                                   get((JPDAThreadImpl) evt.getOldValue()),
+                                   get((JPDAThreadImpl) evt.getNewValue()));
+            } else
+            if (ThreadsCollector.PROP_THREAD_SUSPENDED.equals(propertyName)) {
+                firePropertyChange(DebuggingView.DVSupport.PROP_THREAD_SUSPENDED,
+                                   get((JPDAThreadImpl) evt.getOldValue()),
+                                   get((JPDAThreadImpl) evt.getNewValue()));
+            } else
+            if (ThreadsCollector.PROP_THREAD_RESUMED.equals(propertyName)) {
+                firePropertyChange(DebuggingView.DVSupport.PROP_THREAD_RESUMED,
                                    get((JPDAThreadImpl) evt.getOldValue()),
                                    get((JPDAThreadImpl) evt.getNewValue()));
             } else

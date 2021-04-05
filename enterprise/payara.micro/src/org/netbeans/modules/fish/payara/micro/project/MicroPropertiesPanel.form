@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,6 +20,7 @@
     under the License.
 
 -->
+
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
@@ -68,7 +70,7 @@
     <Component class="javax.swing.JComboBox" name="microVersionCombobox">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new DefaultComboBoxModel(getMicroVersion())" type="code"/>
+          <Connection code="new DefaultComboBoxModel(getPayaraVersion())" type="code"/>
         </Property>
       </Properties>
     </Component>

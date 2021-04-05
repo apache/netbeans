@@ -1,0 +1,3 @@
+    public static string $|>MARK_OCCURRENCES:test<| = "test";
+        return self::$^|>MARK_OCCURRENCES:test<|;
+$country = $session?->user::$|>MARK_OCCURRENCES:test<|;

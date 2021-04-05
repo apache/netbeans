@@ -1,0 +1,5 @@
+Code completion result for source line:
+private function traitMethod(TestInterface|\Test1\TestUnionTypes2 $object, bool|ca|llable $param): TestInterface|false|null {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    callable                                   null

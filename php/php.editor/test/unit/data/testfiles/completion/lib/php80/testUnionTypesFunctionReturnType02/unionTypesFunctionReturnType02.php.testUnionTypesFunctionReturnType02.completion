@@ -1,0 +1,5 @@
+Code completion result for source line:
+function union_types(int|\Test\UnionTypes|null $param): null|\Test\|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      UnionTypes1                     [PUBLIC]   Test
+CLASS      UnionTypes2                     [PUBLIC]   Test

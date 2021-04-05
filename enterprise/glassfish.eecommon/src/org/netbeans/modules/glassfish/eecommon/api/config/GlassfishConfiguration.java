@@ -136,6 +136,10 @@ public abstract class GlassfishConfiguration implements
         if (version == null) {
             return new int[]{0,1};
         }
+        // glassfish-resources.xml for v6
+        if (GlassFishVersion.ge(version, GlassFishVersion.GF_6)) {
+            return new int[]{0};
+        }
         // glassfish-resources.xml for v5
         if (GlassFishVersion.ge(version, GlassFishVersion.GF_5) || GlassFishVersion.ge(version, GlassFishVersion.GF_5_1_0)) {
             return new int[]{0};
@@ -191,7 +195,7 @@ public abstract class GlassfishConfiguration implements
      * <li><i>Configuration directory</i> is checked first, <i>resources directory</i>
      *        as fallback.</li>
      * </ul>
-     * 
+     *
      * @param module  Java EE module (project).
      * @param version Resources file names depend on GlassFish server version.
      * @return Existing GlassFish resources file together with boolean flag
@@ -391,7 +395,7 @@ public abstract class GlassfishConfiguration implements
 
         GlassfishConfiguration storedCfg = getConfiguration(primarySunDD);
         if (storedCfg != this) {
-            LOGGER.log(Level.INFO, 
+            LOGGER.log(Level.INFO,
                     "Stored DeploymentConfiguration ({0}) instance not the one being disposed of ({1}).",
                     new Object[]{storedCfg, this});
         }
@@ -502,7 +506,9 @@ public abstract class GlassfishConfiguration implements
         "gfv3",
         "gfv3ee6",
         "gfv3ee6wc",
-        "gfv5ee8"
+        "gfv5ee8",
+        "gfv510ee8",
+        "gfv6ee9"
     };
 
     protected ASDDVersion getTargetAppServerVersion() {
@@ -521,7 +527,7 @@ public abstract class GlassfishConfiguration implements
             if (Utils.notEmpty(instance)) {
                 try {
                     String asInstallPath = instance.substring(1, instance.indexOf("]deployer:"));
-                    if (asInstallPath.contains(File.pathSeparator)) 
+                    if (asInstallPath.contains(File.pathSeparator))
                         asInstallPath = asInstallPath.substring(0, asInstallPath.indexOf(File.pathSeparator));
                     File asInstallFolder = new File(asInstallPath);
                     if (asInstallFolder.exists()) {
@@ -546,20 +552,26 @@ public abstract class GlassfishConfiguration implements
     protected ASDDVersion getInstalledAppServerVersion(File asInstallFolder) {
         return getInstalledAppServerVersionFromDirectory(asInstallFolder);
     }
-    
+
     static ASDDVersion getInstalledAppServerVersionFromDirectory(File asInstallFolder) {
         File dtdFolder = new File(asInstallFolder, "lib/dtds/"); // NOI18N
         File schemaFolder = new File(asInstallFolder, "lib/schemas");
-        
+
         boolean geGF5 = false;
+        boolean geGF6 = false;
         if(schemaFolder.exists()){
-            if(new File(schemaFolder, "javaee_8.xsd").exists() &&
+            if(new File(schemaFolder, "jakartaee9.xsd").exists() &&
+                    new File(dtdFolder, "glassfish-web-app_3_0-1.dtd").exists()){
+              geGF6 = true;
+              return ASDDVersion.GLASSFISH_6;
+            }
+            if(!geGF6 && new File(schemaFolder, "javaee_8.xsd").exists() &&
                     new File(dtdFolder, "glassfish-web-app_3_0-1.dtd").exists()){
               geGF5 = true;
               return ASDDVersion.GLASSFISH_5_1;
             }
         }
-        if (!geGF5 && dtdFolder.exists()) {
+        if (!geGF5 && !geGF6 && dtdFolder.exists()) {
             if (new File(dtdFolder, "glassfish-web-app_3_0-1.dtd").exists()) {
                 return ASDDVersion.SUN_APPSERVER_10_1;
             }
@@ -831,7 +843,7 @@ public abstract class GlassfishConfiguration implements
         }
         return contextRoot;
     }
-    
+
     private static final RequestProcessor RP = new RequestProcessor("GlassFishConfiguration.setContextRoot");
 
     @Override

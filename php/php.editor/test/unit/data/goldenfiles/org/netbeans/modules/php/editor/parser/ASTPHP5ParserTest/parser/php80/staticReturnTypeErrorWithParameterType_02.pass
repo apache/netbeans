@@ -1,0 +1,66 @@
+<testresult testFile='staticReturnTypeErrorWithParameterType_02.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='837'>
+            <text>StaticReturnType</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='838' end='839'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='844' end='850'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='851' end='859'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='860' end='864'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='864' end='865'>
+            <text>(</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='865' end='866'>
+            <text>?</text>
+        </token>
+        <token id='T_STATIC' start='866' end='872'>
+            <text>static</text>
+        </token>
+        <token id='T_VARIABLE' start='873' end='879'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='879' end='880'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='880' end='881'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='882' end='886'>
+            <text>void</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='887' end='888'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='893' end='894'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='895' end='896'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='897' end='897'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='897'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='815' end='866'/>
+            <ASTError start='866' end='879'/>
+            <ASTError start='882' end='894'/>
+        </Statements>
+    </Program>
+</testresult>

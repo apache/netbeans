@@ -40,6 +40,7 @@ import org.netbeans.modules.gsf.testrunner.api.Report;
 import org.netbeans.modules.gsf.testrunner.api.TestSession;
 import org.netbeans.modules.gsf.testrunner.api.TestSuite;
 import org.netbeans.modules.gsf.testrunner.ui.api.Manager;
+import org.netbeans.modules.gsf.testrunner.ui.api.TestResultDisplayHandler;
 import org.openide.ErrorManager;
 import org.openide.util.Lookup;
 import org.openide.windows.IOContainer;
@@ -51,7 +52,7 @@ import org.openide.windows.OutputWriter;
  *
  * @author Marian Petras. Erno Mononen
  */
-public final class ResultDisplayHandler {
+public final class ResultDisplayHandler implements TestResultDisplayHandler.Spi<ResultDisplayHandler> {
 
     private static final Logger LOGGER = Logger.getLogger(ResultDisplayHandler.class.getName());
 
@@ -118,7 +119,7 @@ public final class ResultDisplayHandler {
                 dividerSettings.getLocation());
     }
 
-    public int getTotalTests() {
+    public int getTotalTests(final ResultDisplayHandler token) {
         return statisticsPanel.getTreePanel().getTotalTests();
     }
 
@@ -178,7 +179,7 @@ public final class ResultDisplayHandler {
 
     /**
      */
-    public void displayOutput(final String text, final boolean error) {
+    public void displayOutput(final ResultDisplayHandler token, final String text, final boolean error) {
 
         /* Called from the AntLogger's thread */
 
@@ -220,7 +221,7 @@ public final class ResultDisplayHandler {
      * @param  suiteName  name of the running suite; or {@code null} in the case
      *                    of anonymous suite
      */
-    public void displaySuiteRunning(String suiteName) {
+    public void displaySuiteRunning(final ResultDisplayHandler token, String suiteName) {
 
         synchronized (this) {
 
@@ -240,7 +241,7 @@ public final class ResultDisplayHandler {
      *
      * @param  suite  name of the running suite
      */
-    public void displaySuiteRunning(TestSuite suite) {
+    public void displaySuiteRunning(final ResultDisplayHandler token, TestSuite suite) {
         synchronized (this) {
             assert runningSuite == null;
             suite = (suite != null) ? suite : TestSuite.ANONYMOUS_TEST_SUITE;
@@ -254,7 +255,7 @@ public final class ResultDisplayHandler {
 
     /**
      */
-    public void displayReport(final Report report) {
+    public void displayReport(final ResultDisplayHandler token, final Report report) {
 
         synchronized (this) {
             if (treePanel == null) {
@@ -272,7 +273,7 @@ public final class ResultDisplayHandler {
 
     /**
      */
-    public void displayMessage(final String msg) {
+    public void displayMessage(final ResultDisplayHandler token, final String msg) {
 
         /* Called from the AntLogger's thread */
 
@@ -289,7 +290,7 @@ public final class ResultDisplayHandler {
 
     /**
      */
-    public void displayMessageSessionFinished(final String msg) {
+    public void displayMessageSessionFinished(final ResultDisplayHandler token, final String msg) {
 
         /* Called from the AntLogger's thread */
 
@@ -394,5 +395,10 @@ public final class ResultDisplayHandler {
 
     Lookup getLookup() {
         return l;
+    }
+
+    @Override
+    public ResultDisplayHandler create(TestSession session) {
+        return null;
     }
 }

@@ -387,7 +387,7 @@ public abstract class AbstractRefactoring {
         if (cause != null && (cause.getClass().getName().equals("org.netbeans.api.java.source.JavaSource$InsufficientMemoryException") ||  //NOI18N
             (cause.getCause()!=null ) && cause.getCause().getClass().getName().equals("org.netbeans.api.java.source.JavaSource$InsufficientMemoryException"))) { //NOI18N
             newProblem = new Problem(true, NbBundle.getMessage(Util.class, "ERR_OutOfMemory"));
-            Logger.global.log(Level.INFO, "There is not enough memory to complete this task.", t);
+            Logger.getGlobal().log(Level.INFO, "There is not enough memory to complete this task.", t);
         } else {
             newProblem = new Problem(false, createMessage(source, t));
             Exceptions.printStackTrace(t);

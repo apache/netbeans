@@ -78,7 +78,7 @@ public class ClassesController extends AbstractTopLevelController implements Fie
         this.heapFragmentWalker = heapFragmentWalker;
 
         classesListController = new ClassesListController(this);
-        staticFieldsBrowserController = new FieldsBrowserController(this, FieldsBrowserController.ROOT_CLASS);
+        staticFieldsBrowserController = new FieldsBrowserController(this, FieldsBrowserController.ROOT_CLASS, true);
     }
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------

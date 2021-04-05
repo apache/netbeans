@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.90
+#Version 1.94
 
 CLSS public abstract interface java.io.Serializable
 
@@ -329,6 +329,7 @@ fld public final static org.netbeans.modules.css.lib.api.CssTokenId H
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId HASH
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId HASH_SYMBOL
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId HEXCHAR
+fld public final static org.netbeans.modules.css.lib.api.CssTokenId HEXCHAR_WILDCARD
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId I
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId IDENT
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId IMPORTANT_SYM
@@ -422,6 +423,7 @@ fld public final static org.netbeans.modules.css.lib.api.CssTokenId TOPRIGHTCORN
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId TOPRIGHT_SYM
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId U
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId UNICODE
+fld public final static org.netbeans.modules.css.lib.api.CssTokenId URANGE
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId URI
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId URL
 fld public final static org.netbeans.modules.css.lib.api.CssTokenId V
@@ -779,7 +781,7 @@ meth public void enableFeature(org.netbeans.modules.css.lib.api.properties.Gramm
 meth public void removeGrammarResolverListener(org.netbeans.modules.css.lib.api.properties.GrammarResolverListener)
 meth public void setFeature(org.netbeans.modules.css.lib.api.properties.GrammarResolver$Feature,java.lang.Object)
 supr java.lang.Object
-hfds FEATURES,LISTENERS,LOG,LOGGER,LOGGERS,grammar,lastResolved,resolvedSomething,resolvedTokens,tokenizer
+hfds FEATURES,LISTENERS,LOG,LOGGER,LOGGERS,globalValues,grammar,lastResolved,resolvedSomething,resolvedTokens,tokenizer
 hcls InputState
 
 CLSS public final static !enum org.netbeans.modules.css.lib.api.properties.GrammarResolver$Feature
@@ -1048,6 +1050,7 @@ innr public static Angle
 innr public static Anything
 innr public static Date
 innr public static Decibel
+innr public static Flex
 innr public static Frequency
 innr public static HashColor
 innr public static HashColorAplha
@@ -1062,6 +1065,7 @@ innr public static Resolution
 innr public static Semitones
 innr public static StringAcceptor
 innr public static Time
+innr public static Urange
 innr public static Uri
 innr public static Variable
 meth public abstract boolean accepts(org.netbeans.modules.css.lib.api.properties.Token)
@@ -1092,6 +1096,13 @@ meth public boolean accepts(java.lang.String)
 supr org.netbeans.modules.css.lib.api.properties.TokenAcceptor$TokenImageAcceptor
 
 CLSS public static org.netbeans.modules.css.lib.api.properties.TokenAcceptor$Decibel
+ outer org.netbeans.modules.css.lib.api.properties.TokenAcceptor
+cons public init(java.lang.String)
+meth protected java.util.List<java.lang.String> postfixes()
+supr org.netbeans.modules.css.lib.api.properties.TokenAcceptor$NumberPostfixAcceptor
+hfds POSTFIXES
+
+CLSS public static org.netbeans.modules.css.lib.api.properties.TokenAcceptor$Flex
  outer org.netbeans.modules.css.lib.api.properties.TokenAcceptor
 cons public init(java.lang.String)
 meth protected java.util.List<java.lang.String> postfixes()
@@ -1210,6 +1221,13 @@ cons public init(java.lang.String)
 meth public abstract boolean accepts(java.lang.String)
 meth public boolean accepts(org.netbeans.modules.css.lib.api.properties.Token)
 supr org.netbeans.modules.css.lib.api.properties.TokenAcceptor
+
+CLSS public static org.netbeans.modules.css.lib.api.properties.TokenAcceptor$Urange
+ outer org.netbeans.modules.css.lib.api.properties.TokenAcceptor
+cons public init(java.lang.String)
+meth public boolean accepts(org.netbeans.modules.css.lib.api.properties.Token)
+supr org.netbeans.modules.css.lib.api.properties.TokenAcceptor
+hfds URANGE_TOKEN_IMAGE
 
 CLSS public static org.netbeans.modules.css.lib.api.properties.TokenAcceptor$Uri
  outer org.netbeans.modules.css.lib.api.properties.TokenAcceptor

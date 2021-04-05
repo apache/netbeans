@@ -30,33 +30,56 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.ToolTipManager;
 
 /**
- * Custom component for painting code coverage.
- * I was initially using a JProgressBar, with the BasicProgressBarUI associated with it
- * (to get red/green colors set correctly even on OSX), but it was pretty plain
- * and ugly looking - no nice gradients etc. Hence this component.
+ * Custom component for painting code coverage. I was initially using a JProgressBar, with the
+ * BasicProgressBarUI associated with it (to get red/green colors set correctly even on OSX), but it
+ * was pretty plain and ugly looking - no nice gradients etc. Hence this component.
+ *
  * @todo Add a getBaseline
  *
  * @author Tor Norbye
  */
 public class CoverageBar extends JComponent {
+
     private static final Color NOT_COVERED_LIGHT = new Color(255, 160, 160);
     private static final Color NOT_COVERED_DARK = new Color(180, 50, 50);
     private static final Color COVERED_LIGHT = new Color(160, 255, 160);
     private static final Color COVERED_DARK = new Color(30, 180, 30);
     private boolean emphasize;
     private boolean selected;
-    /** Coverage percentage:  0.0f <= x <= 100f */
+    /**
+     * Coverage percentage: 0.0f <= x <= 100f
+     */
     private float coveragePercentage;
+    private int totalLines;
+    private int executedLines;
+    private int partialLines;
+    private int inferredLines;
 
     public CoverageBar() {
+        addHierarchyListener(new HierarchyListener() {
+            @Override
+            public void hierarchyChanged(HierarchyEvent e) {
+                if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0) {
+                    if (isShowing()) {
+                        ToolTipManager.sharedInstance().registerComponent(CoverageBar.this);
+                    } else {
+                        ToolTipManager.sharedInstance().unregisterComponent(CoverageBar.this);
+                    }
+                }
+            }
+        });
         updateUI();
     }
 
@@ -95,7 +118,7 @@ public class CoverageBar extends JComponent {
     }
 
     @Override
-    public void updateUI() {
+    public final void updateUI() {
         Font f = new JLabel().getFont();
         f = new Font(f.getName(), Font.BOLD, f.getSize());
         setFont(f);
@@ -103,8 +126,7 @@ public class CoverageBar extends JComponent {
         repaint();
     }
 
-    public
-    @Override
+    public @Override
     void paint(Graphics g) {
         // Antialiasing if necessary
         Object value = (Map) (Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
@@ -163,19 +185,19 @@ public class CoverageBar extends JComponent {
         }
 
         g2.setPaint(new GradientPaint(0, 0, notCoveredLight,
-                0, height / 2, notCoveredDark));
+            0, height / 2, notCoveredDark));
         g2.fillRect(amountFull, 1, width - 1, height / 2);
         g2.setPaint(new GradientPaint(0, height / 2, notCoveredDark,
-                0, 2 * height, notCoveredLight));
+            0, 2 * height, notCoveredLight));
         g2.fillRect(amountFull, height / 2, width - 1, height / 2);
 
         g2.setColor(getForeground());
 
         g2.setPaint(new GradientPaint(0, 0, coveredLight,
-                0, height / 2, coveredDark));
+            0, height / 2, coveredDark));
         g2.fillRect(1, 1, amountFull, height / 2);
         g2.setPaint(new GradientPaint(0, height / 2, coveredDark,
-                0, 2 * height, coveredLight));
+            0, 2 * height, coveredLight));
         g2.fillRect(1, height / 2, amountFull, height / 2);
 
         Rectangle oldClip = g2.getClipBounds();
@@ -208,8 +230,8 @@ public class CoverageBar extends JComponent {
         if (stringWidth > size.width) {
             size.width = stringWidth;
         }
-        int stringHeight = fontSizer.getHeight() +
-                fontSizer.getDescent();
+        int stringHeight = fontSizer.getHeight()
+            + fontSizer.getDescent();
         if (stringHeight > size.height) {
             size.height = stringHeight;
         }
@@ -233,6 +255,7 @@ public class CoverageBar extends JComponent {
     }
 
     //@Override JDK6
+    @Override
     public int getBaseline(int w, int h) {
         FontMetrics fm = getFontMetrics(getFont());
         return h - fm.getDescent() - ((h - fm.getHeight()) / 2);
@@ -334,73 +357,44 @@ public class CoverageBar extends JComponent {
         FontMetrics fm = g.getFontMetrics();
         int textWidth = fm.stringWidth(text);
         g.drawString(text, (w - textWidth) / 2,
-                h - fm.getDescent() - ((h - fm.getHeight()) / 2));
+            h - fm.getDescent() - ((h - fm.getHeight()) / 2));
     }
 
-// More specific stats. TODO:
-//  (1) Show in tooltips. This works (commented out below) but requires component
-//      visible/unvisible listening. Just adding to addNotify/removeNotify leaves a bunch
-//      of components registered with the tooltip manager. (Just overriding getToolTipText() itself
-//      doesn't work in an editor sidebar
-//  (2) Paint more detailed coverage bars, showing partial coverage explicitly.
-//
-//    private int totalLines;
-//    private int executedLines;
-//    private int partialLines;
-//    private int inferredLines;
-//
-//    public void setStats(int totalLines, int executedLines, int partialLines, int inferredLines) {
-//        this.totalLines = totalLines;
-//        this.executedLines = executedLines;
-//        this.partialLines = partialLines;
-//        this.inferredLines = inferredLines;
-//    }
-//
-//
-//    @Override
-//    public String getToolTipText() {
-//        return getToolTipText(null);
-//    }
-//
-//    @Override
-//    public String getToolTipText(MouseEvent arg0) {
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("<html><body>"); // NOI18N
-//        sb.append("Total Lines: ");
-//        sb.append(Integer.toString(totalLines));
-//        sb.append("<br>"); // NOI18N
-//        sb.append("Executed Lines: ");
-//        sb.append(Integer.toString(executedLines));
-//        sb.append("<br>"); // NOI18N
-//        if (partialLines >= 0) {
-//            sb.append("&nbsp;&nbsp;"); // NOI18N
-//            sb.append("Partial Lines: ");
-//            sb.append(Integer.toString(partialLines));
-//            sb.append("<br>"); // NOI18N
-//        }
-//        if (inferredLines >= 0) {
-//            sb.append("&nbsp;&nbsp;"); // NOI18N
-//            sb.append("Inferred Executed Lines: ");
-//            sb.append(Integer.toString(inferredLines));
-//            sb.append("<br>"); // NOI18N
-//        }
-//
-//        sb.append("Not Executed Lines: ");
-//        int notExecutedLines = totalLines - executedLines;
-//        sb.append(Integer.toString(notExecutedLines));
-//        sb.append("<br>"); // NOI18N
-//        return sb.toString();
-//    }
-//
-//    @Override
-//    public void addNotify() {
-//        super.addNotify();
-//        ToolTipManager.sharedInstance().registerComponent(this);
-//    }
-//
-//    @Override
-//    public void removeNotify() {
-//        super.removeNotify();
-//        ToolTipManager.sharedInstance().unregisterComponent(this);
-//    }
+    public void setStats(int totalLines, int executedLines, int partialLines, int inferredLines) {
+        this.totalLines = totalLines;
+        this.executedLines = executedLines;
+        this.partialLines = partialLines;
+        this.inferredLines = inferredLines;
+    }
+
+    @Override
+    public String getToolTipText(MouseEvent arg0) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html><body>"); // NOI18N
+        sb.append("Total Lines: ");
+        sb.append(Integer.toString(totalLines));
+        sb.append("<br>"); // NOI18N
+        sb.append("Executed Lines: ");
+        sb.append(Integer.toString(executedLines));
+        sb.append("<br>"); // NOI18N
+        if (partialLines >= 0) {
+            sb.append("&nbsp;&nbsp;"); // NOI18N
+            sb.append("Partial Lines: ");
+            sb.append(Integer.toString(partialLines));
+            sb.append("<br>"); // NOI18N
+        }
+        if (inferredLines >= 0) {
+            sb.append("&nbsp;&nbsp;"); // NOI18N
+            sb.append("Inferred Executed Lines: ");
+            sb.append(Integer.toString(inferredLines));
+            sb.append("<br>"); // NOI18N
+        }
+
+        sb.append("Not Executed Lines: ");
+        int notExecutedLines = totalLines - executedLines;
+        sb.append(Integer.toString(notExecutedLines));
+        sb.append("<br>"); // NOI18N
+        return sb.toString();
+    }
+
 }

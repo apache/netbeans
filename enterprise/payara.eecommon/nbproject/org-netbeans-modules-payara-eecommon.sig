@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.3.0
+#Version 2.7.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,8 +159,6 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
-meth public java.awt.peer.ComponentPeer getPeer()
- anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -744,7 +742,7 @@ meth public org.w3c.dom.Document getDomainDocument()
 meth public org.w3c.dom.Document getDomainDocument(java.lang.String)
 meth public void createSampleDatasource()
 supr java.lang.Object
-hfds CONST_AO,CONST_CP,CONST_DATABASE_NAME,CONST_DERBY_CONN_ATTRS,CONST_DRIVER_CLASS,CONST_DS_CLASS,CONST_ENABLED,CONST_JDBC,CONST_JNDINAME,CONST_JVM_OPTIONS,CONST_LOWER_DATABASE_NAME,CONST_LOWER_PORT_NUMBER,CONST_NAME,CONST_OBJTYPE,CONST_PASSWORD,CONST_POOLNAME,CONST_PORT_NUMBER,CONST_PROP,CONST_RES_TYPE,CONST_SERVER_NAME,CONST_SID,CONST_URL,CONST_USER,CONST_VALUE,HTTPS_PROXY_HOST,HTTPS_PROXY_PORT,HTTP_PROXY_HOST,HTTP_PROXY_NO_HOST,HTTP_PROXY_PORT,LOGGER,NBPROFILERNAME,SAMPLE_CONNPOOL,SAMPLE_DATASOURCE,XML_ENTITY,dmLoc,dmName,sysDatasources
+hfds CONST_AO,CONST_CP,CONST_DATABASE_NAME,CONST_DRIVER_CLASS,CONST_DS_CLASS,CONST_ENABLED,CONST_JDBC,CONST_JNDINAME,CONST_JVM_OPTIONS,CONST_LOWER_DATABASE_NAME,CONST_LOWER_PORT_NUMBER,CONST_NAME,CONST_OBJTYPE,CONST_PASSWORD,CONST_POOLNAME,CONST_PORT_NUMBER,CONST_PROP,CONST_RES_TYPE,CONST_SERVER_NAME,CONST_SID,CONST_URL,CONST_USER,CONST_VALUE,HTTPS_PROXY_HOST,HTTPS_PROXY_PORT,HTTP_PROXY_HOST,HTTP_PROXY_NO_HOST,HTTP_PROXY_PORT,LOGGER,NBPROFILERNAME,SAMPLE_CONNPOOL,SAMPLE_DATASOURCE,XML_ENTITY,dmLoc,dmName,sysDatasources
 hcls InnerResolver
 
 CLSS public org.netbeans.modules.payara.eecommon.api.ExecSupport
@@ -1152,6 +1150,7 @@ fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVers
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAVAEE_6_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAVAEE_7_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAVAEE_8_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_8_0
 meth public int compareTo(java.lang.Object)
 meth public static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion getJ2EEVersion(java.lang.String)
 supr org.netbeans.modules.payara.eecommon.api.config.J2EEBaseVersion
@@ -1235,6 +1234,8 @@ hfds LOGGER,j2eeModuleTypeToValue,moduleType
 CLSS public abstract org.netbeans.modules.payara.eecommon.api.config.PayaraConfiguration
 cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper,org.netbeans.modules.payara.tooling.data.PayaraVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+cons protected init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 cons public init()
  anno 0 java.lang.Deprecated()
 fld protected final java.io.File primaryDD
@@ -1258,6 +1259,7 @@ meth protected void createDefaultSunDD(java.io.File) throws java.io.IOException
 meth protected void displayError(java.lang.Exception,java.lang.String)
 meth protected void handleEventRelatedException(java.lang.Exception)
 meth protected void handleEventRelatedIOException(java.io.IOException)
+meth protected org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI getPlatformVersion()
 meth public <%0 extends java.lang.Object> org.netbeans.modules.j2ee.metadata.model.api.MetadataModel<{%%0}> getMetadataModel(java.lang.Class<{%%0}>)
 meth public abstract boolean supportsCreateDatasource()
 meth public abstract boolean supportsCreateMessageDestination()
@@ -1269,6 +1271,8 @@ meth public final org.netbeans.modules.j2ee.dd.api.common.RootInterface getStand
 meth public final org.netbeans.modules.j2ee.dd.api.webservices.Webservices getWebServicesRootDD()
 meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getExistingResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion)
 meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getNewResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraVersion)
+meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getExistingResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
+meth public final static org.openide.util.Pair<java.io.File,java.lang.Boolean> getNewResourceFile(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public java.lang.String findDatasourceJndiName(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 meth public java.lang.String findDatasourceJndiNameForEjb(java.lang.String,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 meth public java.lang.String findJndiNameForEjb(java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException

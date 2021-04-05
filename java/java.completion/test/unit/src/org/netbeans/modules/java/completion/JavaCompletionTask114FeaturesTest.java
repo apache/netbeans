@@ -18,9 +18,15 @@
  */
 package org.netbeans.modules.java.completion;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.lang.model.SourceVersion;
+import javax.swing.event.ChangeListener;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
+import org.openide.filesystems.FileObject;
+import org.openide.util.lookup.ServiceProvider;
 /**
  *
  * @author arusinha
@@ -48,11 +54,70 @@ public class JavaCompletionTask114FeaturesTest extends CompletionTestBase {
     public void testBindingUse() throws Exception {
         performTest("GenericMethodInvocation", 1231, "boolean b = argO instanceof String str && st", "BindingUse.pass", SOURCE_LEVEL);
     }
+    
 
+    public void testBeforeLeftRecordBraces() throws Exception {
+        EXTRA_OPTIONS.add("--enable-preview");
+        performTest("Records", 896, null, "implementsKeyword.pass", getLatestSource());
+    }
+        
+    public void testBeforeRecParamsLeftParen() throws Exception {
+        EXTRA_OPTIONS.add("--enable-preview");
+        performTest("Records", 892, null, "empty.pass", getLatestSource());
+    }
+
+    public void testAfterTypeParamInRecParam() throws Exception {
+        performTest("Records", 890, null, "extendsKeyword.pass", SOURCE_LEVEL);
+    }
+    
+    public void testInsideRecAfterStaticKeyWord() throws Exception {
+        performTest("Records", 918, "R", "typesRecordStaticMembersAndVars.pass", SOURCE_LEVEL);
+    }
+    
+    public void testAnnotationInRecordParam() throws Exception {
+        performTest("Records", 999, null, "override.pass", SOURCE_LEVEL);
+    } 
+    
+    public void testRecordKeywordInsideClass() throws Exception {
+        performTest("Records", 1014, "rec", "record.pass", SOURCE_LEVEL);
+    } 
+    
+    public void testVariableNameSuggestion() throws Exception {
+        EXTRA_OPTIONS.add("--enable-preview");
+        performTest("Records", 1071, null, "recordVariableSuggestion.pass", getLatestSource());
+    } 
+    
     public void noop() {
     }
 
     static {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+    }
+    
+    private String getLatestSource(){
+        return SourceVersion.latest().name().substring(SourceVersion.latest().name().indexOf("_")+1);
+    }
+    private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
+    @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
+    public static class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {
+
+        @Override
+        public CompilerOptionsQueryImplementation.Result getOptions(FileObject file) {
+            return new CompilerOptionsQueryImplementation.Result() {
+                @Override
+                public List<? extends String> getArguments() {
+                    return EXTRA_OPTIONS;
+                }
+
+                @Override
+                public void addChangeListener(ChangeListener listener) {
+                }
+
+                @Override
+                public void removeChangeListener(ChangeListener listener) {
+                }
+            };
+        }
+
     }
 }

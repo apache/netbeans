@@ -8,12 +8,26 @@ package ${package};
 
 </#if>
 import java.applet.Applet;
+<#if interfaces?? && interfaces != "">
+    <#list "${interfaces}"?split("\n") as interface>
+        <#if interface?? && interface != "" && !interface?starts_with("java.lang") && !interface?matches(package + "\\.\\w+")>
+import ${interface};
+        </#if>
+    </#list>
 
+</#if>
 /**
  *
  * @author ${user}
  */
-public class ${name} extends Applet {
+<#if interfaces?? && interfaces != "">
+    <#assign implementation = "">
+    <#list "${interfaces}"?split("\n") as interface>
+        <#assign implementation += "${interface}"[("${interface}"?last_index_of(".") + 1)..] + ", ">
+    </#list>
+    <#assign implementation = "${implementation}"?remove_ending(", ")>
+</#if>
+public class ${name} extends Applet<#if implementation?? && implementation != ""> implements ${implementation}</#if> {
 
     /**
      * Initialization method that will be called after the applet is loaded

@@ -90,10 +90,6 @@
                     <attr name="regex1" stringvalue="\s*\&lt;/\w+\>"/>
                 </file>
 
-                <folder name="CompletionProviders">
-                    <file name="org-netbeans-modules-xml-text-completion-XMLCompletionProvider.instance"/>
-                </folder>
-
                 <folder name="BracesMatchers">
                     <file name="org-netbeans-modules-xml-text-bracematch-XMLBraceMatcherFactory.instance">
                         <attr name="position" intvalue="50"/>
@@ -197,10 +193,6 @@
                     <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit,org.netbeans.modules.xml.text.syntax.ENTKit"/>
                     <attr name="beaninfo" boolvalue="false"/>
                 </file>
-                
-                <folder name="CompletionProviders">
-                    <file name="org-netbeans-modules-xml-text-completion-XMLCompletionProvider.instance"/>
-                </folder>
                 
                 <folder name="FontsColors">
                     <folder name="NetBeans">

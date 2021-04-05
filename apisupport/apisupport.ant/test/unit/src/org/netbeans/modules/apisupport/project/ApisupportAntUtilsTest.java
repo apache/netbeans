@@ -49,7 +49,7 @@ public class ApisupportAntUtilsTest extends TestBase {
     }
     
     public void testFindLocalizedBundleInfoFromNetBeansOrgModule() throws Exception {
-        FileObject dir = nbRoot().getFileObject("apisupport.project");
+        FileObject dir = nbRoot().getFileObject("apisupport/apisupport.project");
         assertNotNull("have apisupport.project checked out", dir);
         NbModuleProject apisupport = (NbModuleProject) ProjectManager.getDefault().findProject(dir);
         LocalizedBundleInfo info = ApisupportAntUtils.findLocalizedBundleInfo(
@@ -58,7 +58,7 @@ public class ApisupportAntUtilsTest extends TestBase {
     }
     
     public void testFindLocalizedBundleInfoFromSourceDirectory() throws Exception {
-        LocalizedBundleInfo info = ApisupportAntUtils.findLocalizedBundleInfo(file("apisupport.project"));
+        LocalizedBundleInfo info = ApisupportAntUtils.findLocalizedBundleInfo(file("apisupport/apisupport.project"));
         assertApiSupportInfo(info);
     }
     

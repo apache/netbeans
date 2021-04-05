@@ -39,7 +39,7 @@ import org.netbeans.modules.j2ee.sun.dd.impl.DTDRegistry;
  * @author Peter Williams
  */
 public final class ASDDVersion {
-    
+
     /** Represents SunONE Application Server 7.0
      */
     public static final ASDDVersion SUN_APPSERVER_7_0 = new ASDDVersion(
@@ -66,7 +66,7 @@ public final class ASDDVersion {
         130,
         "SunONE Application Server 7.0" // NOI18N
     );
-    
+
     /** Represents SunONE Application Server 7.1
      */
     // 7.1 not supported by DDAPI yet.
@@ -94,7 +94,7 @@ public final class ASDDVersion {
 //        131,
 //        "SunONE Application Server 7.1" // NOI18N
 //    );
-    
+
     /** Represents Sun Java System Application Server 8.0
      */
     public static final ASDDVersion SUN_APPSERVER_8_0 = new ASDDVersion(
@@ -121,8 +121,8 @@ public final class ASDDVersion {
         140,
         "Sun Java System Application Server 8.0" // NOI18N
     );
-    
-    
+
+
     /** Represents Sun Java System Application Server 8.1 (8.2 is the same)
      */
     public static final ASDDVersion SUN_APPSERVER_8_1 = new ASDDVersion(
@@ -149,7 +149,7 @@ public final class ASDDVersion {
         141,
         "Sun Java System Application Server 8.1" // NOI18N
     );
-    
+
     /** Represents Sun Java System Application Server 9.0
      */
     public static final ASDDVersion SUN_APPSERVER_9_0 = new ASDDVersion(
@@ -176,7 +176,7 @@ public final class ASDDVersion {
         500,
         "Sun Java System Application Server 9.0" // NOI18N
     );
-    
+
     /** Represents Sun Java System Application Server 9.1.1
      */
     public static final ASDDVersion SUN_APPSERVER_9_1_1 = new ASDDVersion(
@@ -257,8 +257,8 @@ public final class ASDDVersion {
         601,
         "GlassFish Server 3.1" // NOI18N
     );
-    
-     /** Represents GF Server 5.1
+
+     /** Represents GF Server 5.0
      */
     public static final ASDDVersion GLASSFISH_5_0 = new ASDDVersion(
         "5.0", 100,	// NOI18N
@@ -310,6 +310,32 @@ public final class ASDDVersion {
         601,
         "GlassFish Server 5.1" // NOI18N
     );
+    /** Represents GF Server 6
+     */
+    public static final ASDDVersion GLASSFISH_6 = new ASDDVersion(
+        "6.0", 100,	// NOI18N
+        DTDRegistry.GLASSFISH_WEBAPP_301_DTD_PUBLIC_ID,
+        DTDRegistry.GLASSFISH_WEBAPP_301_DTD_SYSTEM_ID,
+        SunWebApp.VERSION_3_0_1,
+        301,
+        DTDRegistry.GLASSFISH_EJBJAR_311_DTD_PUBLIC_ID,
+        DTDRegistry.GLASSFISH_EJBJAR_311_DTD_SYSTEM_ID,
+        SunEjbJar.VERSION_3_1_1,
+        311,
+        DTDRegistry.SUN_CMP_MAPPING_810_DTD_PUBLIC_ID,
+        DTDRegistry.SUN_CMP_MAPPING_810_DTD_SYSTEM_ID,
+        "1.2",
+        120,
+        DTDRegistry.GLASSFISH_APPLICATION_601_DTD_PUBLIC_ID,
+        DTDRegistry.GLASSFISH_APPLICATION_601_DTD_SYSTEM_ID,
+        SunApplication.VERSION_6_0_1,
+        601,
+        DTDRegistry.GLASSFISH_APPCLIENT_601_DTD_PUBLIC_ID,
+        DTDRegistry.GLASSFISH_APPCLIENT_601_DTD_SYSTEM_ID,
+        SunApplicationClient.VERSION_6_0_1,
+        601,
+        "GlassFish Server 6" // NOI18N
+    );
     /** Represents Sun Java System Web Server 7.0
      */
     public static final ASDDVersion SUN_WEBSERVER_7_0 = new ASDDVersion(
@@ -320,7 +346,7 @@ public final class ASDDVersion {
         241,
         "Sun Java System Web Server 7.0" // NOI18N
     );
-    
+
     /** Ordered list of appserver versions.
      */
     public static final ASDDVersion asDDVersions[] = {
@@ -333,36 +359,36 @@ public final class ASDDVersion {
         SUN_APPSERVER_10_0,
         SUN_APPSERVER_10_1,
     };
-    
+
     /** Ordered list of webserver versions.
      */
     public static final ASDDVersion webServerDDVersions[] = {
         SUN_WEBSERVER_7_0
     };
-    
-    
+
+
     /** -----------------------------------------------------------------------
      *  Implementation
      */
-    
+
     private final String version;
     private final BigDecimal numericVersion;
-    
+
     private final String webAppPublicId;
     private final String webAppSystemId;
     private final String servletVersionString;
     private final BigDecimal servletVersion;
-    
+
     private final String ejbJarPublicId;
     private final String ejbJarSystemId;
     private final String ejbVersionString;
     private final BigDecimal ejbVersion;
-    
+
     private final String cmpMappingsPublicId;
     private final String cmpMappingsSystemId;
     private final String cmpMappingsVersionString;
     private final BigDecimal cmpMappingsVersion;
-    
+
     private final String appPublicId;
     private final String appSystemId;
     private final String appVersionString;
@@ -374,11 +400,11 @@ public final class ASDDVersion {
     private final BigDecimal appClientVersion;
 
     private final String displayName;
-    
-    
+
+
     /** Creates a new instance of ASDDVersion for WebServier (Servlet spec only)
      */
-    private ASDDVersion(String v, int nv, 
+    private ASDDVersion(String v, int nv,
             String wapi, String wasi, String svs, int sv,
             String dn) {
         this(v, nv,
@@ -389,34 +415,34 @@ public final class ASDDVersion {
                 "", "", "", 0,
                 dn);
     }
-    
+
     /** Creates a new instance of ASDDVersion
      */
-    private ASDDVersion(String v, int nv, 
+    private ASDDVersion(String v, int nv,
             String wapi, String wasi, String svs, int sv,
             String ejpi, String ejsi, String ejbvs, int ejbv,
             String cmpi, String cmsi, String cmpvs, int cmpv,
-            String api, String asi, String appvs, int appv, 
+            String api, String asi, String appvs, int appv,
             String acpi, String acsi, String acvs, int acpv,
             String dn) {
         version = v;
         numericVersion = new BigDecimal(BigInteger.valueOf(nv), 2);
-        
+
         webAppPublicId = wapi;
         webAppSystemId = wasi;
         servletVersionString = svs;
         servletVersion = new BigDecimal(BigInteger.valueOf(sv), 2);
-        
+
         ejbJarPublicId = ejpi;
         ejbJarSystemId = ejsi;
         ejbVersionString = ejbvs;
         ejbVersion = new BigDecimal(BigInteger.valueOf(ejbv), 2);
-        
+
         cmpMappingsPublicId = cmpi;
         cmpMappingsSystemId = cmsi;
         cmpMappingsVersionString = cmpvs;
         cmpMappingsVersion = new BigDecimal(BigInteger.valueOf(cmpv), 2);
-        
+
         appPublicId = api;
         appSystemId = asi;
         appVersionString = appvs;
@@ -429,13 +455,13 @@ public final class ASDDVersion {
 
         displayName = dn;
     }
-    
+
     /** Display name for property combo chooser (or whereever else needed.)
      */
     public String toString() {
         return displayName;
     }
-    
+
     /** Comparator implementation that works only on ASDDVersion objects
      *
      *  @param obj ASDDVersion to compare with.
@@ -452,7 +478,7 @@ public final class ASDDVersion {
      */
     public static final ASDDVersion getASDDVersion(String version) {
         ASDDVersion result = null;
-        
+
         if(SUN_APPSERVER_7_0.toString().equals(version)) {
             result = SUN_APPSERVER_7_0;
 //        } else if(SUN_APPSERVER_7_1.toString().equals(version)) {
@@ -470,15 +496,15 @@ public final class ASDDVersion {
         } else if(SUN_APPSERVER_10_1.toString().equals(version)) {
             result = SUN_APPSERVER_10_1;
         }
-        
+
         return result;
     }
-    
+
     /** Retrieve the proper ASDDVersion object for the specified version (BigDecimal format).
      */
     public static final ASDDVersion getASDDVersion(BigDecimal bdversion) {
         ASDDVersion result = null;
-        
+
         String version = bdversion.toString();
         if(SUN_APPSERVER_7_0.toString().compareTo(version) == 0) {
             result = SUN_APPSERVER_7_0;
@@ -497,15 +523,15 @@ public final class ASDDVersion {
         } else if(SUN_APPSERVER_10_1.toString().compareTo(version) == 0) {
             result = SUN_APPSERVER_10_1;
         }
-        
+
         return result;
     }
-    
+
     /** Retrieve the proper ASDDVersion object for the specified version (BigDecimal format).
      */
     public static final ASDDVersion getASDDVersionFromServletVersion(BigDecimal version) {
         ASDDVersion result = null;
-        
+
         if(SUN_APPSERVER_7_0.getNumericWebAppVersion().compareTo(version) == 0) {
             result = SUN_APPSERVER_7_0;
 //        } else if(SUN_APPSERVER_7_1.getNumericWebAppVersion().compareTo(version) == 0) {
@@ -523,15 +549,15 @@ public final class ASDDVersion {
         }  else if(SUN_APPSERVER_10_1.getNumericWebAppVersion().compareTo(version) == 0) {
             result = SUN_APPSERVER_10_1;
         }
-        
+
         return result;
     }
-    
+
     /** Retrieve the proper ASDDVersion object for the specified version (BigDecimal format).
      */
     public static final ASDDVersion getASDDVersionFromEjbVersion(BigDecimal version) {
         ASDDVersion result = null;
-        
+
         if(SUN_APPSERVER_7_0.getNumericEjbJarVersion().compareTo(version) == 0) {
             result = SUN_APPSERVER_7_0;
 //        } else if(SUN_APPSERVER_7_1.getNumericEjbJarVersion().compareTo(version) == 0) {
@@ -549,15 +575,15 @@ public final class ASDDVersion {
         } else if(SUN_APPSERVER_10_1.getNumericEjbJarVersion().compareTo(version) == 0) {
             result = SUN_APPSERVER_10_1;
         }
-        
+
         return result;
     }
-    
+
     /** Retrieve the proper ASDDVersion object for the specified version (BigDecimal format).
      */
     public static final ASDDVersion getASDDVersionFromAppVersion(BigDecimal version) {
         ASDDVersion result = null;
-        
+
         if(SUN_APPSERVER_7_0.getNumericApplicationVersion().compareTo(version) == 0) {
             result = SUN_APPSERVER_7_0;
 //        } else if(SUN_APPSERVER_7_1.getNumericApplicationVersion().compareTo(version) == 0) {
@@ -577,7 +603,7 @@ public final class ASDDVersion {
         } else if(SUN_APPSERVER_10_1.getNumericApplicationVersion().compareTo(version) == 0) {
             result = SUN_APPSERVER_10_1;
         }
-        
+
         return result;
     }
 
@@ -604,12 +630,12 @@ public final class ASDDVersion {
         }
         return result;
     }
-    
+
     /** Retrieve the proper ASDDVersion object for the specified version (BigDecimal format).
      */
     public static final ASDDVersion getASDDVersionFromCmpMappingsVersion(BigDecimal version) {
         ASDDVersion result = null;
-        
+
         if(SUN_APPSERVER_7_0.getNumericCmpMappingsVersion().compareTo(version) == 0) {
             result = SUN_APPSERVER_7_0;
 //        } else if(SUN_APPSERVER_7_1.getNumericCmpMappingsVersion().compareTo(version) == 0) {
@@ -627,47 +653,47 @@ public final class ASDDVersion {
         } else if(SUN_APPSERVER_10_1.getNumericCmpMappingsVersion().compareTo(version) == 0) {
             result = SUN_APPSERVER_10_1;
         }
-        
+
         return result;
     }
-    
-    
+
+
     /** Sun web app version as string, from DD API
      */
     public final String getWebAppVersionAsString() {
         return servletVersionString;
     }
-    
+
     /** Sun ejb jar version as string, from DD API
      */
     public final String getEjbJarVersionAsString() {
         return ejbVersionString;
     }
-    
+
     /** Sun cmp mappings version as string, from DD API
      */
     public final String getCmpMappingsVersionAsString() {
         return cmpMappingsVersionString;
     }
-    
+
     /** Sun application version as string, from DD API
      */
     public final String getApplicationVersionAsString() {
         return appVersionString;
     }
-    
+
     /** Sun application client version as string, from DD API
      */
     public final String getAppClientVersionAsString() {
         return appClientVersionString;
     }
-    
+
     /** Version, in the format expected by the sun-* DD API
      */
     public final BigDecimal getNumericServerVersion() {
         return numericVersion;
     }
-    
+
     /** Version, in the format expected by the sun-* DD API
      */
     public final BigDecimal getNumericWebAppVersion() {
@@ -691,7 +717,7 @@ public final class ASDDVersion {
     public final BigDecimal getNumericApplicationVersion() {
         return appVersion;
     }
-    
+
     /** Version, in the format expected by the sun-* DD API
      */
     public final BigDecimal getNumericAppClientVersion() {
@@ -703,7 +729,7 @@ public final class ASDDVersion {
     public final String getSunWebAppPublicId() {
         return webAppPublicId;
     }
-    
+
     /** Returns the system id for sun-web-app.xml for this appserver version
      */
     public final String getSunWebAppSystemId() {
@@ -715,7 +741,7 @@ public final class ASDDVersion {
     public final String getSunEjbJarPublicId() {
         return ejbJarPublicId;
     }
-    
+
     /** Returns the system id for sun-ejb-jar.xml for this appserver version
      */
     public final String getSunEjbJarSystemId() {
@@ -727,31 +753,31 @@ public final class ASDDVersion {
     public final String getSunCmpMappingsPublicId() {
         return cmpMappingsPublicId;
     }
-    
+
     /** Returns the system id for sun-cmp-mappings.xml for this appserver version
      */
     public final String getSunCmpMappingsSystemId() {
         return cmpMappingsSystemId;
     }
-    
+
     /** Returns the public id for sun-application.xml for this appserver version
      */
     public final String getSunApplicationPublicId() {
         return appPublicId;
     }
-    
+
     /** Returns the system id for sun-application.xml for this appserver version
      */
     public final String getSunApplicationSystemId() {
         return appSystemId;
     }
-    
+
     /** Returns the public id for sun-application.xml for this appserver version
      */
     public final String getSunAppClientPublicId() {
         return appClientPublicId;
     }
-    
+
     /** Returns the system id for sun-application.xml for this appserver version
      */
     public final String getSunAppClientSystemId() {

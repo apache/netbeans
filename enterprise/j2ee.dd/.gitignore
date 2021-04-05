@@ -8,6 +8,7 @@ src/org/netbeans/modules/j2ee/dd/impl/client/model_1_4/*
 src/org/netbeans/modules/j2ee/dd/impl/client/model_5_0/*
 src/org/netbeans/modules/j2ee/dd/impl/client/model_6_0/*
 src/org/netbeans/modules/j2ee/dd/impl/client/model_7_0/*
+src/org/netbeans/modules/j2ee/dd/impl/client/model_8_0/*
 src/org/netbeans/modules/j2ee/dd/impl/ejb/model_2_1/*
 src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_0/*
 src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_1/*

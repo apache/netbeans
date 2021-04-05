@@ -323,6 +323,14 @@ public class DebugSession extends SingleThread {
 
     @Override
     public boolean cancel() {
+        // NETBEANS-5080 detach the request
+        // startProcessing() may be called via other ways
+        // e.g. via command line: nc -vz localhost 9003(debugger port)
+        // First of all, get the socket after the above command is run
+        // See: Socket sessionSocket = myServer.accept(); in ServerThread.run()
+        // Then, invokeLater.get() is called in startProcessing()
+        // Finally, infinite loop occurs in run() becuase do not still receive anything
+        detachRequest.set(true);
         return true;
     }
 

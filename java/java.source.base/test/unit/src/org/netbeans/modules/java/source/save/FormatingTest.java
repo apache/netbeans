@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.source.save;
 
 import com.sun.source.tree.*;
+import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
 import com.sun.source.util.SourcePositions;
 import com.sun.tools.javac.code.Flags;
 import java.io.File;
@@ -33,6 +34,7 @@ import java.util.prefs.Preferences;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
 import javax.swing.JEditorPane;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -45,16 +47,19 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.java.JavaDataLoader;
 import org.netbeans.modules.java.source.BootClassPathUtil;
+import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.netbeans.modules.java.ui.FmtOptions;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.SharedClassObject;
 import org.openide.util.Utilities;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Test different formatting options
@@ -64,6 +69,8 @@ import org.openide.util.Utilities;
 public class FormatingTest extends NbTestCase {
 
     File testFile = null;
+    private String sourceLevel = "1.8";
+    private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
 
     /** Creates a new instance of FormatingTest */
     public FormatingTest(String name) {
@@ -95,8 +102,9 @@ public class FormatingTest extends NbTestCase {
                 return null;
             }
         };
+        SourceLevelQueryImplementation slqi = file -> sourceLevel;
         SharedClassObject loader = JavaDataLoader.findObject(JavaDataLoader.class, true);
-        SourceUtilsTestUtil.prepareTest(new String[]{"org/netbeans/modules/java/source/resources/layer.xml","org/netbeans/modules/java/source/base/layer.xml"}, new Object[]{loader/*, cpp*/});
+        SourceUtilsTestUtil.prepareTest(new String[]{"org/netbeans/modules/java/source/resources/layer.xml","org/netbeans/modules/java/source/base/layer.xml"}, new Object[]{loader, slqi/*, cpp*/});
         JEditorPane.registerEditorKitForContentType("text/x-java", "org.netbeans.modules.editor.java.JavaKit");
         File cacheFolder = new File(getWorkDir(), "var/cache/index");
         cacheFolder.mkdirs();
@@ -5131,6 +5139,9 @@ public class FormatingTest extends NbTestCase {
             //OK, no RELEASE_14, skip test
             return;
         }
+        sourceLevel="15";
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
@@ -5165,6 +5176,9 @@ public class FormatingTest extends NbTestCase {
             //OK, no RELEASE_14, skip test
             return;
         }
+        sourceLevel="15";
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
@@ -5205,6 +5219,9 @@ public class FormatingTest extends NbTestCase {
             //OK, no RELEASE_14, skip test
             return;
         }
+        sourceLevel="15";
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
@@ -5225,7 +5242,154 @@ public class FormatingTest extends NbTestCase {
                 + "}\n";
         reformat(doc, content, golden);
     }
-   
+
+    
+    public void testRecord4() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_14"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_14, skip test
+            return;
+        }
+        sourceLevel="15";
+        EXTRA_OPTIONS.add("--enable-preview");
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "public record g3(@Override int a, @Override int b){}}";
+        String golden
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public record g3(@Override int a, @Override int b) {\n\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+    }
+    @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
+    public static class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {
+
+        @Override
+        public CompilerOptionsQueryImplementation.Result getOptions(FileObject file) {
+            return new CompilerOptionsQueryImplementation.Result() {
+                @Override
+                public List<? extends String> getArguments() {
+                    return EXTRA_OPTIONS;
+                }
+
+                @Override
+                public void addChangeListener(ChangeListener listener) {
+                }
+
+                @Override
+                public void removeChangeListener(ChangeListener listener) {
+                }
+            };
+        }
+
+    }
+    public void testSealed() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_15"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_15, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = "sealed class x{}\n"
+                + "non-sealed class y extends x {}\n"
+                + "final class z extends x {}";
+
+        String golden
+                = "\nsealed class x {\n"
+                + "}\n"
+                + "\n"
+                + "non-sealed class y extends x {\n"
+                + "}\n"
+                + "\n"
+                + "final class z extends x {\n"
+                + "}\n";
+        reformat(doc, content, golden);
+    }
+
+    public void testSealed2() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_15"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_15, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content
+                = "sealed class x{}\n"
+                + "non-sealed class y extends x {}";
+
+        String golden
+                = "\nsealed class x {\n"
+                + "}\n"
+                + "\n"
+                + "non-sealed class y extends x {\n"
+                + "}\n";
+        reformat(doc, content, golden);
+    }
+
+    public void testSealed3() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_15"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_15, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content
+                = "sealed class x{}\n"
+                + "final class c1 extends x {}\n"
+                + "non-sealed class c2 extends x {}\n"
+                + "final class c3 extends x {}\n"
+                + "non-sealed class c4 extends x {}";
+
+        String golden
+                = "\nsealed class x {\n"
+                + "}\n"
+                + "\n"
+                + "final class c1 extends x {\n"
+                + "}\n"
+                + "\n"
+                + "non-sealed class c2 extends x {\n"
+                + "}\n"
+                + "\n"
+                + "final class c3 extends x {\n"
+                + "}\n"
+                + "\n"
+                + "non-sealed class c4 extends x {\n"
+                + "}\n";
+        reformat(doc, content, golden);
+    }
+  
     private void reformat(Document doc, String content, String golden) throws Exception {
         reformat(doc, content, golden, 0, content.length());
     }

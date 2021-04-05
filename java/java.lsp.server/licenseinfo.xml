@@ -28,7 +28,17 @@
         <license ref="MIT-vscode-ext" />
     </fileset>
     <fileset>
-        <file>script/etc/nb-java-lsp-server.clusters</file>
+        <file>vscode/.vscodeignore</file>
+        <file>vscode/.eslintrc.json</file>
+        <file>vscode/.vscode/extensions.json</file>
+        <file>vscode/.vscode/launch.json</file>
+        <file>vscode/.vscode/tasks.json</file>
+        <file>vscode/.vscode/settings.json</file>
+        <license ref="Apache-2.0" />
+    </fileset>
+    <fileset>
+        <file>vscode/images/Apache_NetBeans_Logo.png</file>
+        <file>script/etc/nbcode.clusters</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

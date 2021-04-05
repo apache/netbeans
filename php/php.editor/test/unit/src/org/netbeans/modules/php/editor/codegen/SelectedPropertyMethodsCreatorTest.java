@@ -212,24 +212,28 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
 
     public void testGetterWithType_01() throws Exception {
         CGSInfo cgsInfo = getCgsInfo("class Foo {^", PhpVersion.PHP_70);
+        cgsInfo.setPublicModifier(false);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
     }
 
     public void testGetterWithType_02() throws Exception {
         CGSInfo cgsInfo = getCgsInfo("class Foo {^", PhpVersion.PHP_55);
+        cgsInfo.setPublicModifier(false);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
     }
 
     public void testGetterWithMoreTypes_01() throws Exception {
         CGSInfo cgsInfo = getCgsInfo("class Foo {^", PhpVersion.PHP_70);
+        cgsInfo.setPublicModifier(false);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
     }
 
     public void testGetterWithMoreTypes_02() throws Exception {
         CGSInfo cgsInfo = getCgsInfo("class Foo {^", PhpVersion.PHP_56);
+        cgsInfo.setPublicModifier(false);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectAllProperties(cgsInfo.getPossibleGetters()), new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)));
     }
@@ -341,4 +345,298 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
         checkResult(CGSGenerator.GenType.CONSTRUCTOR.getTemplateText(cgsInfo));
     }
 
+    // NETBEANS-4443 PHP 8.0
+    // the same results regardless of versions if union type is used
+    // constructor
+    public void testUnionTypesConstructor_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        selectAllProperties(cgsInfo.getProperties());
+        checkResult(CGSGenerator.GenType.CONSTRUCTOR.getTemplateText(cgsInfo));
+    }
+
+    public void testUnionTypesConstructor_PHP74() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_74);
+        cgsInfo.setPublicModifier(true);
+        selectAllProperties(cgsInfo.getProperties());
+        checkResult(CGSGenerator.GenType.CONSTRUCTOR.getTemplateText(cgsInfo));
+    }
+
+    // getter
+    public void testUnionTypesGetter_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleGetters()),
+                new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesGetter_PHP74() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_74);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleGetters()),
+                new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)
+        ));
+    }
+
+    // setter
+    public void testUnionTypesSetter_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleSetters()),
+                new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesSetter_PHP74() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_74);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleSetters()),
+                new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesOverrideMethod01_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Child extends OverrideMethodTest {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesOverrideMethod01_PHP74() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Child extends OverrideMethodTest {^", PhpVersion.PHP_74);
+        List<MethodProperty> possibleMethods = cgsInfo.getPossibleMethods();
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(possibleMethods, "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesOverrideMethod02_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Child extends OverrideMethodTest {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesOverrideMethod02_PHP74() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Child extends OverrideMethodTest {^", PhpVersion.PHP_74);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesOverrideMethod03_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Child extends OverrideMethodTest {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesOverrideMethod03_PHP74() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Child extends OverrideMethodTest {^", PhpVersion.PHP_74);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesOverrideMethodSpecialTypes01() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Grandchild extends Child {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesOverrideMethodSpecialTypes02() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Grandchild extends Child {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesOverrideMethodSpecialTypes03() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Grandchild extends Child {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesOverrideMethodSpecialTypes04() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Grandchild extends Child {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesImplementMethod01_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Implement implements ImplementMethodTest {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesImplementMethod01_PHP74() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Implement implements ImplementMethodTest {^", PhpVersion.PHP_74);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesImplementMethod02_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Implement implements ImplementMethodTest {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesImplementMethod02_PHP74() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Implement implements ImplementMethodTest {^", PhpVersion.PHP_74);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesImplementMethod03_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Implement implements ImplementMethodTest {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesImplementMethod03_PHP74() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Implement implements ImplementMethodTest {^", PhpVersion.PHP_74);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesImplementMethod04_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Implement extends ImplementMethodTest {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testUnionTypesImplementMethod04_PHP74() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Implement extends ImplementMethodTest {^", PhpVersion.PHP_74);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testStaticReturnTypeOverrideMethod01_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class ChildClass extends ParentClass {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testStaticReturnTypeImplementMethod01_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class TestClass implements TestInterface {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testMixedTypeOverrideMethod01_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Child extends MixedType {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testMixedTypeImplementMethod01_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Child implements MixedType {^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testConstructorPropertyPromotionGetter_01() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^// test1", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleGetters()),
+                new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testConstructorPropertyPromotionGetter_02() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^// test2", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleGetters()),
+                new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testConstructorPropertyPromotionGetter_03() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^// test3", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleGetters()),
+                new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testConstructorPropertyPromotionSetter_01() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^// test1", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleSetters()),
+                new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testConstructorPropertyPromotionSetter_02() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^// test2", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleSetters()),
+                new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testConstructorPropertyPromotionSetter_03() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^// test3", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleSetters()),
+                new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testConstructorPropertyPromotionOverrideConstructor_01() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Child extends ConstructorPropertyPromotionParent {^", PhpVersion.PHP_80);
+        List<MethodProperty> possibleMethods = cgsInfo.getPossibleMethods();
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(possibleMethods, "__construct"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
 }

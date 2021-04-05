@@ -21,11 +21,14 @@
 -->
 <licenseinfo>
     <fileset>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/javaee_7.xsd</file>
         <file>src/org/netbeans/modules/javaee/wildfly/resources/javaee_8.xsd</file>
         <file>src/org/netbeans/modules/javaee/wildfly/resources/javaee_web_services_client_1_4.xsd</file>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/jsp_2_2.xsd</file>
         <file>src/org/netbeans/modules/javaee/wildfly/resources/jsp_2_3.xsd</file>
         <file>src/org/netbeans/modules/javaee/wildfly/resources/web-app_4_0.xsd</file>
         <file>src/org/netbeans/modules/javaee/wildfly/resources/web-common_3_1.xsd</file>
+        <file>src/org/netbeans/modules/javaee/wildfly/resources/web-common_4_0.xsd</file>
         <file>src/org/netbeans/modules/javaee/wildfly/resources/web-fragment_4_0.xsd</file>
         <license ref="CDDL-1.1" />
         <comment type="CATEGORY_B" />

@@ -20,6 +20,8 @@ package org.netbeans.modules.php.editor.parser.astnodes;
 
 import java.util.Collections;
 import java.util.List;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 
 /**
  * Represents a catch clause (as part of a try statement).
@@ -27,18 +29,21 @@ import java.util.List;
  * <pre>e.g.
  * catch (ExceptionClassName $variable) { body; },
  * catch (ExceptionA | ExceptionB $ex) { body; } // PHP7.1
+ * catch (Exception) { echo "message"; } // PHP8.0
+ * catch (ExceptionA | ExceptionB) { echo "message"; } // PHP8.0
  * </pre>
  */
 public class CatchClause extends Statement {
 
     private final List<Expression> classNames;
+    @NullAllowed
     private final Variable variable;
     private final Block body;
 
-    public CatchClause(int start, int end, List<Expression> classNames, Variable variable, Block statement) {
+    public CatchClause(int start, int end, List<Expression> classNames, @NullAllowed Variable variable, Block statement) {
         super(start, end);
 
-        assert !classNames.isEmpty() && variable != null && statement != null;
+        assert !classNames.isEmpty() && statement != null;
         this.classNames = classNames;
         this.variable = variable;
         this.body = statement;
@@ -59,8 +64,10 @@ public class CatchClause extends Statement {
     /**
      * Returns the exception variable declaration of this catch clause.
      *
-     * @return the exception variable declaration node
+     * @return the exception variable declaration node or {@code null} if it's
+     * non-capturing catches
      */
+    @CheckForNull
     public Variable getVariable() {
         return this.variable;
     }
@@ -89,7 +96,10 @@ public class CatchClause extends Statement {
             }
             sb.append(name);
         });
-        return "catch (" + sb.toString() + " " + getVariable() + ")" + getBody(); //NOI18N
+        if (variable != null) {
+            sb.append(" ").append(getVariable()); // NOI18N
+        }
+        return "catch (" + sb.toString() + ")" + getBody(); //NOI18N
     }
 
 }

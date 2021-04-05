@@ -65,7 +65,7 @@ public class DbUtil {
         "datadirect_db2", "datadirect_informix", "datadirect_sybase"
     };
     
-    static Map<String, String> normalizePoolMap(Map<String, String> poolValues) {
+    public static Map<String, String> normalizePoolMap(Map<String, String> poolValues) {
         String driverClassName = poolValues.get("dsClassName"); //NOI18N
         String resType = poolValues.get("resType"); //NOI18N
         String url = ""; //NOI18N

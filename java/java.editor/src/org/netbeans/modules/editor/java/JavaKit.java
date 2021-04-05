@@ -44,15 +44,14 @@ import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.editor.*;
 import org.netbeans.editor.Utilities;
-import org.netbeans.editor.ext.java.*;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.editor.ext.ExtKit;
-import org.netbeans.lib.editor.codetemplates.api.CodeTemplateManager;
 import org.netbeans.modules.editor.MainMenuAction;
 import org.netbeans.modules.editor.NbEditorKit;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.indent.api.Indent;
 import org.netbeans.modules.java.editor.codegen.InsertSemicolonAction;
+import org.netbeans.modules.java.editor.fold.JavaElementFoldManager;
 import org.netbeans.modules.java.editor.imports.ClipboardHandler;
 import org.netbeans.modules.java.editor.imports.FastImportAction;
 import org.netbeans.modules.java.editor.imports.JavaFixAllImports;
@@ -67,7 +66,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 /**
 * Java editor kit with appropriate document
@@ -118,6 +116,10 @@ public class JavaKit extends NbEditorKit {
 //        return new JavaFormatter(this.getClass());
 //    }
 
+    /** Comment with the '//' prefix */
+    public static final BaseTokenID LINE_COMMENT
+        = new BaseTokenID("line-comment", 7 /* magic constant from java.editor.lib */); // NOI18N
+
     protected void initDocument(BaseDocument doc) {
 //        doc.addLayer(new JavaDrawLayerFactory.JavaLayer(),
 //                JavaDrawLayerFactory.JAVA_LAYER_VISIBILITY);
@@ -135,7 +137,8 @@ public class JavaKit extends NbEditorKit {
                   }
       
                   public void syntaxUpdateToken(TokenID id, TokenContextPath contextPath, int offset, int length) {
-                      if (JavaTokenContext.LINE_COMMENT == id) {
+                      // PENDING: this whole init code ought to be factored out to java.editor.lib probably.
+                      if (id != null && id.getNumericID() == LINE_COMMENT.getNumericID()) {
                           tokenList.add(new TokenInfo(id, contextPath, offset, length));
                       }
                   }
@@ -618,7 +621,7 @@ public class JavaKit extends NbEditorKit {
         public void actionPerformed(ActionEvent evt, JTextComponent target) {
             FoldHierarchy hierarchy = FoldHierarchy.get(target);
             // Hierarchy locking done in the utility method
-            FoldUtilities.expand(hierarchy, JavaFoldManager.JAVADOC_FOLD_TYPE);
+            FoldUtilities.expand(hierarchy, JavaElementFoldManager.JAVADOC_FOLD_TYPE);
         }
     }
 
@@ -635,7 +638,7 @@ public class JavaKit extends NbEditorKit {
         public void actionPerformed(ActionEvent evt, JTextComponent target) {
             FoldHierarchy hierarchy = FoldHierarchy.get(target);
             // Hierarchy locking done in the utility method
-            FoldUtilities.collapse(hierarchy, JavaFoldManager.JAVADOC_FOLD_TYPE);
+            FoldUtilities.collapse(hierarchy, JavaElementFoldManager.JAVADOC_FOLD_TYPE);
         }
     }
 
@@ -654,8 +657,8 @@ public class JavaKit extends NbEditorKit {
             FoldHierarchy hierarchy = FoldHierarchy.get(target);
             // Hierarchy locking done in the utility method
             List types = new ArrayList();
-            types.add(JavaFoldManager.CODE_BLOCK_FOLD_TYPE);
-            types.add(JavaFoldManager.IMPORTS_FOLD_TYPE);
+            types.add(JavaElementFoldManager.CODE_BLOCK_FOLD_TYPE);
+            types.add(JavaElementFoldManager.IMPORTS_FOLD_TYPE);
             FoldUtilities.expand(hierarchy, types);
         }
     }
@@ -674,8 +677,8 @@ public class JavaKit extends NbEditorKit {
             FoldHierarchy hierarchy = FoldHierarchy.get(target);
             // Hierarchy locking done in the utility method
             List types = new ArrayList();
-            types.add(JavaFoldManager.CODE_BLOCK_FOLD_TYPE);
-            types.add(JavaFoldManager.IMPORTS_FOLD_TYPE);
+            types.add(JavaElementFoldManager.CODE_BLOCK_FOLD_TYPE);
+            types.add(JavaElementFoldManager.IMPORTS_FOLD_TYPE);
             FoldUtilities.collapse(hierarchy, types);
         }
     }

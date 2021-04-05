@@ -34,11 +34,13 @@ import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.jpda.CallStackFrame;
 import org.netbeans.api.debugger.jpda.InvalidExpressionException;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
+import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleEval;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleStrataProvider;
-import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariableImpl;
+import org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleVariableImpl;
 import org.netbeans.spi.debugger.ui.EditorContextDispatcher;
 import org.openide.cookies.EditorCookie;
 import org.openide.loaders.DataObject;
@@ -136,8 +138,8 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
         if (d == null) {
             return ;
         }
-        CallStackFrame frame = d.getCurrentCallStackFrame();
-        if (frame == null) {
+        JPDAThread thread = d.getCurrentThread();
+        if (thread == null || TruffleAccess.getCurrentPCInfo(thread) == null) {
             return ;
         }
 

@@ -76,6 +76,8 @@ public class ParserTest {
         performTest("    http://hudson.gotdns.com/wiki/display/HUDSON/Structured+Form+Submission(v=vs.85).aspx\n", 4,89);
         performTest("    http://hudson.gotdns.com/wiki/display/#!/api/dd13\n", 4,53);
         performTest("    file:///C:/CodeSourceryG++Lite/share/doc/arm-arm-none-eabi/html/getting-started/sec-cs3-startup.html", 4, 104);
+        // NETBEANS-4593 accept @
+        performTest("    https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js\n", 4, 62);
     }
 
     @Test

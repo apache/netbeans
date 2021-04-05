@@ -18,6 +18,7 @@
  */
 package org.netbeans.lib.nbjavac.services;
 
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Env;
@@ -27,15 +28,12 @@ import com.sun.tools.javac.tree.JCTree.JCCatch;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
-import com.sun.tools.javac.tree.JCTree.JCNewClass;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.reflect.Field;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -79,6 +77,13 @@ public class NBAttr extends Attr {
     }
 
     @Override
+    public void visitVarDef(JCVariableDecl tree) {
+        //for erroneous "var", make sure the synthetic make.Error() has an invalid/synthetic position:
+        tm.at(-1);
+        super.visitVarDef(tree);
+    }
+
+    @Override
     public void visitCatch(JCCatch that) {
         super.visitBlock(tm.Block(0, List.of(that.param, that.body)));
     }
@@ -94,6 +99,20 @@ public class NBAttr extends Attr {
                 MethodHandles.lookup()
                              .findSpecial(Attr.class, "breakTreeFound", MethodType.methodType(void.class, Env.class), NBAttr.class)
                              .invokeExact(this, env);
+            } catch (Throwable ex) {
+                sneakyThrows(ex);
+            }
+        }
+    }
+
+    protected void breakTreeFound(Env<AttrContext> env, Type result) {
+        if (fullyAttribute) {
+            fullyAttributeResult = env;
+        } else {
+            try {
+                MethodHandles.lookup()
+                             .findSpecial(Attr.class, "breakTreeFound", MethodType.methodType(void.class, Env.class, Type.class), NBAttr.class)
+                             .invokeExact(this, env, result);
             } catch (Throwable ex) {
                 sneakyThrows(ex);
             }

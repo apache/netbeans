@@ -34,7 +34,7 @@
         <folder name="Groovy">
             <file name="_view.gsp" url="GspTemplate.gsp">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.groovy.gsp.resources.Bundle"/>
-                <attr name="position" intvalue="120"/>
+                <attr name="position" intvalue="130"/>
                 <attr name="templateCategory" stringvalue="groovy"/>
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                 <attr name="template" boolvalue="true"/>

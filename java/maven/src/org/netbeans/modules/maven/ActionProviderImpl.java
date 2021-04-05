@@ -98,7 +98,6 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
-import org.openide.util.TaskListener;
 import org.openide.util.actions.Presenter;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -145,7 +144,10 @@ public class ActionProviderImpl implements ActionProvider {
         COMMAND_DELETE,
         COMMAND_RENAME,
         COMMAND_MOVE,
-        COMMAND_COPY
+        COMMAND_COPY,
+        
+        // infrastructure
+        COMMAND_PRIME
     };
     
     private static final RequestProcessor RP = new RequestProcessor(ActionProviderImpl.class.getName(), 3);
@@ -241,7 +243,7 @@ public class ActionProviderImpl implements ActionProvider {
             Operations.renameProject(proj.getLookup().lookup(NbMavenProjectImpl.class));
             return;
         }
-
+        
         if (SwingUtilities.isEventDispatchThread()) {
             RP.post(new Runnable() {
                 @Override
@@ -263,9 +265,16 @@ public class ActionProviderImpl implements ActionProvider {
         if (convertedAction == null) {
             convertedAction = action;
         }
-
-        Lookup enhanced = new ProxyLookup(lookup, Lookups.fixed(replacements(proj, convertedAction, lookup)));
         
+        for (InternalActionDelegate del : proj.getLookup().lookupAll(InternalActionDelegate.class)) {
+            ActionProvider ap = del.getActionProvider();
+            if (Arrays.asList(ap.getSupportedActions()).contains(action)) {
+                ap.invokeAction(action, lookup);
+                return;
+            }
+        }
+        Lookup enhanced = new ProxyLookup(lookup, Lookups.fixed(replacements(proj, convertedAction, lookup)));
+
         RunConfig rc = ActionToGoalUtils.createRunConfig(convertedAction, proj.getLookup().lookup(NbMavenProjectImpl.class), enhanced);
         if (rc == null) {
             Logger.getLogger(ActionProviderImpl.class.getName()).log(Level.INFO, "No handling for action: {0}. Ignoring.", action); //NOI18N
@@ -275,10 +284,8 @@ public class ActionProviderImpl implements ActionProvider {
             final ActionProgress listener = ActionProgress.start(lookup);
             final ExecutorTask task = RunUtils.run(rc);
             if (task != null) {
-                task.addTaskListener(new TaskListener() {
-                    @Override public void taskFinished(Task t) {
-                        listener.finished(task.result() == 0);
-                    }
+                task.addTaskListener((Task t) -> {
+                    listener.finished(task.result() == 0);
                 });
             } else {
                 listener.finished(false);
@@ -468,6 +475,13 @@ public class ActionProviderImpl implements ActionProvider {
         if (convertedAction == null) {
             convertedAction = action;
         }
+        
+        for (InternalActionDelegate ap : proj.getLookup().lookupAll(InternalActionDelegate.class)) {
+            if (ap.getActionProvider().isActionEnabled(action, lookup)) {
+                return true;
+            }
+        }
+
         return ActionToGoalUtils.isActionEnable(convertedAction, proj.getLookup().lookup(NbMavenProjectImpl.class), lookup);
     }
 

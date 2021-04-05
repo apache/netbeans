@@ -27,6 +27,7 @@ import com.oracle.truffle.api.debug.Debugger;
 import com.oracle.truffle.api.debug.DebuggerSession;
 import com.oracle.truffle.api.debug.SuspendedEvent;
 import com.oracle.truffle.api.nodes.LanguageInfo;
+import com.oracle.truffle.api.source.SourceSection;
 
 import java.io.IOException;
 import java.net.URI;
@@ -34,10 +35,13 @@ import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.graalvm.polyglot.Engine;
 
 /**
@@ -69,6 +73,13 @@ public class JPDATruffleAccessor extends Object {
     /** A field to test for whether the access loop is sleeping and can be interrupted. */
     static boolean accessLoopSleeping = false;
     private static boolean stepIntoPrepared;
+    /** A cache of thread-local variables which prevents them from GC. */
+    private static final ThreadLocal<Set<Object>> threadVariablesCache = new ThreadLocal<Set<Object>>() {
+        @Override
+        protected Set<Object> initialValue() {
+            return new HashSet<>();
+        }
+    };
 
     /** A step command:
      * 0 no step (continue)
@@ -78,7 +89,10 @@ public class JPDATruffleAccessor extends Object {
      */
     //private static int stepCmd = 0;
 
-    public JPDATruffleAccessor() {}
+    public JPDATruffleAccessor() {
+        // JDI needs to know about String class in this class loader.
+        new String("Initialize String class");
+    }
     
     static Thread startAccessLoop() {
         if (!accessLoopRunning) {
@@ -150,10 +164,15 @@ public class JPDATruffleAccessor extends Object {
                                boolean haltedBefore,
                                DebugValue returnValue,
                                FrameInfo frameInfo,
+                               boolean supportsJavaFrames,
                                Breakpoint[] breakpointsHit,
                                Throwable[] breakpointConditionExceptions,
                                int stepCmd) {
         // Called when the execution is halted. Have a breakpoint here.
+        Set<Object> initialVars = threadVariablesCache.get();
+        assert initialVars != null;
+        // Clear again after execution is resumed.
+        threadVariablesCache.remove();
         return stepCmd;
     }
     
@@ -188,11 +207,31 @@ public class JPDATruffleAccessor extends Object {
     }
     
     /**
+     * Tries to suspend immediately at the current location of the current execution thread.
+     * When called from a suspension in a Java code, it reveals the guest code execution.
+     *
+     * @return the halted info, the array corresponds to the arguments of
+     * {@link #executionHalted(JPDATruffleDebugManager, SourcePosition, boolean, DebugValue, FrameInfo, boolean, Breakpoint[], Throwable[], int)},
+     * or <code>null</code>, when the suspend wasn't successful.
+     */
+    static Object[] suspendHere() {
+        synchronized (debugManagers) {
+            for (JPDATruffleDebugManager tdm : debugManagers.values()) {
+                Object[] haltedInfo = tdm.suspendHere();
+                if (haltedInfo != null) {
+                    return haltedInfo;
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
      * @param frames The array of stack frame infos
      * @return An array of two elements: a String of frame information and
      * an array of code contents.
      */
-    static Object[] getFramesInfo(DebugStackFrame[] frames, boolean includeInternal) {
+    static Object[] getFramesInfo(DebugStackFrame[] frames, boolean includeInternal, boolean supportsJavaFrames) {
         trace("getFramesInfo({0})",includeInternal);
         int n = frames.length;
         StringBuilder frameInfos = new StringBuilder();
@@ -206,17 +245,20 @@ public class JPDATruffleAccessor extends Object {
             if (!includeInternal && isInternal) {
                 continue;
             }
+            boolean isHost = supportsJavaFrames && FrameInfo.isHost(sf);
             String sfName = sf.getName();
             if (sfName == null) {
                 sfName = "";
             }
             frameInfos.append(sfName);
             frameInfos.append('\n');
+            frameInfos.append(isHost);
+            frameInfos.append('\n');
             LanguageInfo sfLang = sf.getLanguage();
             String sfLangId = (sfLang != null) ? sfLang.getId() + " " + sfLang.getName() : "";
             frameInfos.append(sfLangId);
             frameInfos.append('\n');
-            frameInfos.append(DebuggerVisualizer.getSourceLocation(sf.getSourceSection()));
+            frameInfos.append(DebuggerVisualizer.getSourceLocation(sf, isHost));
             frameInfos.append('\n');
             /*if (fi.getCallNode() == null) {
                 /* frames with null call nodes are filtered out by JPDATruffleDebugManager.FrameInfo
@@ -226,14 +268,20 @@ public class JPDATruffleAccessor extends Object {
                 System.err.println("frameInfos = "+frameInfos);
                 *//*
             }*/
-            SourcePosition position = new SourcePosition(sf.getSourceSection());
+            SourcePosition position;
+            if (isHost) {
+                StackTraceElement ste = FrameInfo.getHostTraceElement(sf);
+                position = new SourcePosition(ste);
+            } else {
+                position = new SourcePosition(sf.getSourceSection(), sf.getLanguage());
+            }
             frameInfos.append(createPositionIdentificationString(position));
             if (includeInternal) {
                 frameInfos.append('\n');
                 frameInfos.append(isInternal);
             }
             
-            frameInfos.append("\n\n");
+            frameInfos.append("\n\t\n");
             
             codes[j] = position.code;
             j++;
@@ -243,7 +291,10 @@ public class JPDATruffleAccessor extends Object {
             thiss = Arrays.copyOf(thiss, j);
         }
         boolean areSkippedInternalFrames = j < n;
-        return new Object[] { frameInfos.toString(), codes, thiss, areSkippedInternalFrames };
+        Object[] info = new Object[] { frameInfos.toString(), codes, thiss, areSkippedInternalFrames };
+        Set<Object> varCache = threadVariablesCache.get();
+        varCache.add(info);
+        return info;
     }
     
     private static String createPositionIdentificationString(SourcePosition position) {
@@ -254,7 +305,13 @@ public class JPDATruffleAccessor extends Object {
         str.append('\n');
         str.append(position.path);
         str.append('\n');
+        str.append(position.hostClassName);
+        str.append('\n');
+        str.append(position.hostMethodName);
+        str.append('\n');
         str.append(position.uri.toString());
+        str.append('\n');
+        str.append(position.mimeType);
         str.append('\n');
         str.append(position.sourceSection);
         return str.toString();
@@ -358,7 +415,10 @@ public class JPDATruffleAccessor extends Object {
         } catch (Throwable t) {
             LangErrors.exception("An error when accessing scopes", t);
         }
-        return elements.toArray();
+        Object[] variables = elements.toArray();
+        Set<Object> varCache = threadVariablesCache.get();
+        varCache.add(variables);
+        return variables;
     }
 
     // An array of scope's arguments and variables:
@@ -411,7 +471,10 @@ public class JPDATruffleAccessor extends Object {
         } catch (Throwable t) {
             LangErrors.exception("An error when accessing scope "+scope, t);
         }
-        return elements.toArray();
+        Object[] variables = elements.toArray();
+        Set<Object> varCache = threadVariablesCache.get();
+        varCache.add(variables);
+        return variables;
     }
 
     // Store 12 elements: <name>, <language>, <type>, <readable>, <writable>, <internal>, <String value>,
@@ -446,6 +509,11 @@ public class JPDATruffleAccessor extends Object {
         // A breakpoint is submitted on this method.
         // When accessLoopThread is interrupted, this breakpoint is hit
         // and methods can be executed via JPDA debugger.
+    }
+    
+    static void breakpointResolvedAccess(Breakpoint breakpoint, int startLine, int startColumn) {
+        // A Java breakpoint is submitted on this method.
+        // When a Truffle breakpoint gets resolved, this method is called.
     }
     
     static Breakpoint[] setLineBreakpoint(String uriStr, int line,
@@ -508,15 +576,31 @@ public class JPDATruffleAccessor extends Object {
         if (ignoreCount != 0) {
             bb.ignoreCount(ignoreCount);
         }
+        AtomicBoolean canNotifyResolved = new AtomicBoolean(false);
         if (oneShot) {
             bb.oneShot();
+        } else {
+            bb.resolveListener(new Breakpoint.ResolveListener() {
+                @Override
+                public void breakpointResolved(Breakpoint breakpoint, SourceSection section) {
+                    // Notify breakpoint resolution after we actually install it.
+                    // Resolution that is performed synchronously with the breakpoint installation
+                    // would block doSetLineBreakpoint() method invocation on breakpointResolvedAccess breakpoint
+                    if (canNotifyResolved.get()) {
+                        breakpointResolvedAccess(breakpoint, section.getStartLine(), section.getStartColumn());
+                    }
+                }
+            });
         }
         Breakpoint lb = bb.build();
         if (condition != null) {
             lb.setCondition(condition);
         }
         trace("JPDATruffleAccessor.setLineBreakpoint({0}, {1}, {2}): lb = {3}", debuggerSession, uri, line, lb);
-        return debuggerSession.install(lb);
+        Breakpoint breakpoint =  debuggerSession.install(lb);
+        // We might return a resolved breakpoint already, or notify breakpointResolvedAccess later on
+        canNotifyResolved.set(true);
+        return breakpoint;
     }
     
     static void removeBreakpoint(Object br) {
@@ -525,7 +609,9 @@ public class JPDATruffleAccessor extends Object {
     
     static Object evaluate(DebugStackFrame sf, String expression) {
         DebugValue value = sf.eval(expression);
-        return new GuestObject(value);
+        Object result = new GuestObject(value);
+        threadVariablesCache.get().add(result);
+        return result;
     }
     
     /** Get the suspended event on current thread, if any. */

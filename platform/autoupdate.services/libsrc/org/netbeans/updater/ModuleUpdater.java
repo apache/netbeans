@@ -557,9 +557,9 @@ public final class ModuleUpdater extends Thread {
     }
     
     private boolean unpack200(File src, File dest) {
-        String unpack200Executable = new File(System.getProperty("java.home"),
-                "bin/unpack200" + (isWindows() ? ".exe" : "")).getAbsolutePath();
-        ProcessBuilder pb = new ProcessBuilder(unpack200Executable, src.getAbsolutePath(), dest.getAbsolutePath());
+        String unpack200 = "unpack200" + (isWindows() ? ".exe" : "");
+        File unpack200Executable = findUnpack200Executable(unpack200);
+        ProcessBuilder pb = new ProcessBuilder(unpack200Executable.getAbsolutePath(), src.getAbsolutePath(), dest.getAbsolutePath());
         pb.directory(src.getParentFile());
         int result = 1;
         try {
@@ -577,6 +577,34 @@ public final class ModuleUpdater extends Thread {
             XMLUtil.LOG.log(Level.WARNING, null, e);
         }
         return result == 0;
+    }
+
+    private File findUnpack200Executable(String unpack200) {
+        File unpack200Executable = new File(new File(System.getProperty("java.home"), "bin"), unpack200);
+        if (!unpack200Executable.canExecute()) {
+            for (File clusterRoot : UpdateTracking.clusters(true)) {
+                File uiConfig = new File(new File(new File(new File(new File(new File(new File(
+                        clusterRoot, "config"), "Preferences"), "org"), "netbeans"), "modules"), // NOI18N
+                        "autoupdate"), "services.properties"); // NOI18N
+                if (uiConfig.canRead()) {
+                    Properties p = new Properties();
+                    try (FileInputStream is = new FileInputStream(uiConfig)) {
+                        p.load(is);
+                    } catch (IOException ex) {
+                        // go on
+                    }
+                    String unpackKey = p.getProperty("unpack200"); // NOI18N
+                    if (unpackKey != null) {
+                        File unpackKeyFile = new File(unpackKey);
+                        if (unpackKeyFile.canExecute()) {
+                            unpack200Executable = unpackKeyFile;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return unpack200Executable;
     }
 
     private List<String> readExecutableFilesList(JarFile jarFile) {

@@ -1,0 +1,4 @@
+Code completion result for source line:
+echo WITH_KEYS|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   WITH_KEYS [1 => 'A', 2 => 'B']  [PUBLIC]   globalConst.php

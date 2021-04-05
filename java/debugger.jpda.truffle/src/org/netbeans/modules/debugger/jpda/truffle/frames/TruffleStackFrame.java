@@ -35,7 +35,7 @@ import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
 import org.netbeans.modules.debugger.jpda.truffle.source.Source;
 import org.netbeans.modules.debugger.jpda.truffle.source.SourcePosition;
-import org.netbeans.modules.debugger.jpda.truffle.vars.TruffleScope;
+import org.netbeans.modules.debugger.jpda.truffle.vars.impl.TruffleScope;
 import org.openide.util.Exceptions;
 
 /**
@@ -56,13 +56,17 @@ public final class TruffleStackFrame {
     
     private final int    sourceId;
     private final String sourceName;
+    private final String hostClassName;
+    private final String hostMethodName;
     private final String sourcePath;
     private final URI    sourceURI;
+    private final String mimeType;
     private final String sourceSection;
     private final StringReference codeRef;
     private TruffleScope[] scopes;
     private final ObjectVariable thisObject;
     private final boolean isInternal;
+    private final boolean isHost;
     
     public TruffleStackFrame(JPDADebugger debugger, JPDAThread thread, int depth,
                              ObjectVariable frameInstance,
@@ -90,6 +94,9 @@ public final class TruffleStackFrame {
             methodName = frameDefinition.substring(i1, i2);
             i1 = i2 + 1;
             i2 = frameDefinition.indexOf('\n', i1);
+            isHost = Boolean.valueOf(frameDefinition.substring(i1, i2));
+            i1 = i2 + 1;
+            i2 = frameDefinition.indexOf('\n', i1);
             language = LanguageName.parse(frameDefinition.substring(i1, i2));
             i1 = i2 + 1;
             i2 = frameDefinition.indexOf('\n', i1);
@@ -105,11 +112,20 @@ public final class TruffleStackFrame {
             sourcePath = frameDefinition.substring(i1, i2);
             i1 = i2 + 1;
             i2 = frameDefinition.indexOf('\n', i1);
+            hostClassName = frameDefinition.substring(i1, i2);
+            i1 = i2 + 1;
+            i2 = frameDefinition.indexOf('\n', i1);
+            hostMethodName = stringOrNull(frameDefinition.substring(i1, i2));
+            i1 = i2 + 1;
+            i2 = frameDefinition.indexOf('\n', i1);
             try {
                 sourceURI = new URI(frameDefinition.substring(i1, i2));
             } catch (URISyntaxException usex) {
                 throw new IllegalStateException("Bad URI: "+frameDefinition.substring(i1, i2), usex);
             }
+            i1 = i2 + 1;
+            i2 = frameDefinition.indexOf('\n', i1);
+            mimeType = stringOrNull(frameDefinition.substring(i1, i2));
             i1 = i2 + 1;
             if (includeInternal) {
                 i2 = frameDefinition.indexOf('\n', i1);
@@ -128,6 +144,14 @@ public final class TruffleStackFrame {
         this.isInternal = internalFrame;
     }
     
+    private static String stringOrNull(String str) {
+        if ("null".equals(str)) {
+            return null;
+        } else {
+            return str;
+        }
+    }
+    
     public final JPDADebugger getDebugger() {
         return debugger;
     }
@@ -140,6 +164,14 @@ public final class TruffleStackFrame {
         return depth;
     }
     
+    public String getHostClassName() {
+        return hostClassName;
+    }
+
+    public String getHostMethodName() {
+        return hostMethodName;
+    }
+
     public String getMethodName() {
         return methodName;
     }
@@ -163,7 +195,7 @@ public final class TruffleStackFrame {
     public SourcePosition getSourcePosition() {
         Source src = Source.getExistingSource(debugger, sourceId);
         if (src == null) {
-            src = Source.getSource(debugger, sourceId, sourceName, sourcePath, sourceURI, codeRef);
+            src = Source.getSource(debugger, sourceId, sourceName, hostMethodName, sourcePath, sourceURI, mimeType, codeRef);
         }
         SourcePosition sp = new SourcePosition(debugger, sourceId, src, sourceSection);
         return sp;
@@ -184,7 +216,7 @@ public final class TruffleStackFrame {
         if (depth > 0) {
             boolean unwindScheduled = TruffleAccess.unwind(debugger, thread, depth - 1);
             if (unwindScheduled) {
-                CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentPCInfo(thread);
+                CurrentPCInfo currentPCInfo = TruffleAccess.getCurrentGuestPCInfo(thread);
                 try {
                     currentPCInfo.getStepCommandVar().setFromMirrorObject(-1);
                     thread.resume();
@@ -203,4 +235,7 @@ public final class TruffleStackFrame {
         return isInternal;
     }
     
+    public boolean isHost() {
+        return isHost;
+    }
 }

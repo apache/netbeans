@@ -25,7 +25,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -47,9 +46,9 @@ import org.eclipse.lsp4j.MarkupContent;
 import org.eclipse.lsp4j.ParameterInformation;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SignatureHelp;
+import org.eclipse.lsp4j.SignatureHelpParams;
 import org.eclipse.lsp4j.SignatureInformation;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.completion.Completion;
@@ -96,8 +95,8 @@ public class CompletionProviderImpl implements CompletionProvider {
                             return ;
                         }
                         String uri = Utils.toURI(file);
-                        TextDocumentPositionParams params;
-                        params = new TextDocumentPositionParams(new TextDocumentIdentifier(uri),
+                        SignatureHelpParams params;
+                        params = new SignatureHelpParams(new TextDocumentIdentifier(uri),
                                 Utils.createPosition(doc, caretOffset));
                         SignatureHelp help = server.getTextDocumentService().signatureHelp(params).get();
                         if (help == null || help.getSignatures().isEmpty()) {
@@ -223,8 +222,9 @@ public class CompletionProviderImpl implements CompletionProvider {
                             public void processKeyEvent(KeyEvent ke) {
                                 if (ke.getID() == KeyEvent.KEY_TYPED) {
                                     String commitText = String.valueOf(ke.getKeyChar());
+                                    List<String> commitCharacters = i.getCommitCharacters();
 
-                                    if (i.getCommitCharacters().contains(commitText)) {
+                                    if (commitCharacters != null && commitCharacters.contains(commitText)) {
                                         commit(commitText);
                                         ke.consume();
                                         if (isTriggerCharacter(server, commitText)) {

@@ -212,6 +212,9 @@ public class PrintASTVisitor implements Visitor {
                     "isStatic", (node.isStatic()? "true" : "false")
                 }
         );
+        if (node.isAttributed()) {
+            printNode.addChildrenGroup("Attributes", node.getAttributes());
+        }
         printNode.addChildren(node.getFormalParameters());
         printNode.addChild(node.getReturnType());
         printNode.addChild(node.getExpression());
@@ -235,6 +238,21 @@ public class PrintASTVisitor implements Visitor {
     @Override
     public void visit(ASTErrorExpression astErrorExpression) {
         (new XMLPrintNode(astErrorExpression, "ASTErrorExpression")).print(this);
+    }
+
+    @Override
+    public void visit(Attribute attribute) {
+        XMLPrintNode printNode = new XMLPrintNode(attribute, "Attribute");
+        printNode.addChildrenGroup("AttributeDeclarations", attribute.getAttributeDeclarations());
+        printNode.print(this);
+    }
+
+    @Override
+    public void visit(AttributeDeclaration attributeDeclaration) {
+        XMLPrintNode printNode = new XMLPrintNode(attributeDeclaration, "AttributeDeclaration");
+        printNode.addChild("AttributeName", attributeDeclaration.getAttributeName());
+        printNode.addChildrenGroup("AttributeParameters", attributeDeclaration.getParameters());
+        printNode.print(this);
     }
 
     @Override
@@ -284,6 +302,9 @@ public class PrintASTVisitor implements Visitor {
         } else {
             printNode = new XMLPrintNode(node, "ClassConstantDeclaration", new String[]{"modifier", node.getModifierString() });
         }
+        if (node.isAttributed()) {
+            printNode.addChildrenGroup("Attributes", node.getAttributes());
+        }
         printNode.addChildrenGroup("Names", node.getNames());
         printNode.addChildrenGroup("Initializers", node.getInitializers());
         printNode.print(this);
@@ -293,6 +314,9 @@ public class PrintASTVisitor implements Visitor {
     public void visit(ClassDeclaration classDeclaration) {
         XMLPrintNode printNode = new XMLPrintNode(classDeclaration, "ClassDeclaration",
                 new String[]{"modifier", classDeclaration.getModifier().name()});
+        if (classDeclaration.isAttributed()) {
+            printNode.addChildrenGroup("Attributes", classDeclaration.getAttributes());
+        }
         printNode.addChildrenGroup("ClassName", new ASTNode[]{classDeclaration.getName()});
         printNode.addChildrenGroup("SuperClassName", new ASTNode[]{classDeclaration.getSuperClass()});
         printNode.addChildrenGroup("Interfaces", classDeclaration.getInterfaes());
@@ -307,6 +331,9 @@ public class PrintASTVisitor implements Visitor {
             printNode.addChild(node.getClassName());
             printNode.addChildrenGroup("Parameters", node.ctorParams());
         } else {
+            if (node.isAttributed()) {
+                printNode.addChildrenGroup("Attributes", node.getAttributes());
+            }
             printNode.addChildrenGroup("Parameters", node.ctorParams());
             printNode.addChild("Superclass", node.getSuperClass());
             printNode.addChildrenGroup("Interfaces", node.getInterfaces());
@@ -404,7 +431,7 @@ public class PrintASTVisitor implements Visitor {
 
     @Override
     public void visit(FieldAccess fieldAccess) {
-        XMLPrintNode printNode = new XMLPrintNode(fieldAccess, "FieldAccess");
+        XMLPrintNode printNode = new XMLPrintNode(fieldAccess, "FieldAccess", new String[]{"isNullsafe", fieldAccess.isNullsafe() ? "true" : "false"});
         printNode.addChild(fieldAccess.getDispatcher());
         printNode.addChild("Field", fieldAccess.getField());
         printNode.print(this);
@@ -414,6 +441,9 @@ public class PrintASTVisitor implements Visitor {
     public void visit(FieldsDeclaration node) {
         XMLPrintNode printNode = new XMLPrintNode(node, "FieldsDeclaration",
                 new String[]{"modifier", node.getModifierString() });
+        if (node.isAttributed()) {
+            printNode.addChildrenGroup("Attributes", node.getAttributes());
+        }
         printNode.addChild("FieldType", node.getFieldType());
         printNode.addChildrenGroup("VariableNames", node.getVariableNames());
         printNode.addChildrenGroup("InitialValues", node.getInitialValues());
@@ -439,8 +469,15 @@ public class PrintASTVisitor implements Visitor {
 
     @Override
     public void visit(FormalParameter node) {
-        XMLPrintNode printNode = new XMLPrintNode(node, "FormalParameter",
-                new String[]{"isMandatory", (node.isMandatory()?"true":"false"), "isVariadic", (node.isVariadic() ? "true" : "false")});
+        String modifier = node.getModifierString();
+        String[] attributes = new String[]{"isMandatory", (node.isMandatory() ? "true" : "false"), "isVariadic", (node.isVariadic() ? "true" : "false")};
+        if (modifier != null && !modifier.isEmpty()) {
+            attributes = new String[]{"modifier", node.getModifierString(), "isMandatory", (node.isMandatory() ? "true" : "false"), "isVariadic", (node.isVariadic() ? "true" : "false")};
+        }
+        XMLPrintNode printNode = new XMLPrintNode(node, "FormalParameter", attributes);
+        if (node.isAttributed()) {
+            printNode.addChildrenGroup("Attributes", node.getAttributes());
+        }
         printNode.addChild("ParametrType", node.getParameterType());
         printNode.addChild("ParametrName", node.getParameterName());
         printNode.addChild("DefaultValue", node.getDefaultValue());
@@ -460,7 +497,10 @@ public class PrintASTVisitor implements Visitor {
     @Override
     public void visit(FunctionDeclaration node) {
         XMLPrintNode printNode = new XMLPrintNode(node, "FunctionDeclaration",
-                new String[]{"isReference", (node.isReference()?"true":"false")});
+                new String[]{"isReference", (node.isReference() ? "true" : "false")});
+        if (node.isAttributed()) {
+            printNode.addChildrenGroup("Attributes", node.getAttributes());
+        }
         printNode.addChild(node.getFunctionName());
         printNode.addChildrenGroup("FormalParameters", node.getFormalParameters());
         printNode.addChild(node.getReturnType());
@@ -503,6 +543,30 @@ public class PrintASTVisitor implements Visitor {
     }
 
     @Override
+    public void visit(MatchArm matchArm) {
+        XMLPrintNode printNode = new XMLPrintNode(matchArm, "MatchArm", new String[]{"isDefault", matchArm.isDefault() ? "true" : "false"});
+        printNode.addChildrenGroup("Conditions", matchArm.getConditions());
+        printNode.addChild(matchArm.getExpression());
+        printNode.print(this);
+    }
+
+    @Override
+    public void visit(MatchExpression match) {
+        XMLPrintNode printNode = new XMLPrintNode(match, "MatchExpression");
+        printNode.addChild(match.getExpression());
+        printNode.addChildrenGroup("MatchArms", match.getMatchArms());
+        printNode.print(this);
+    }
+
+    @Override
+    public void visit(NamedArgument namedArgument) {
+        XMLPrintNode printNode = new XMLPrintNode(namedArgument, "NamedArgument");
+        printNode.addChild(namedArgument.getParameterName());
+        printNode.addChild(namedArgument.getExpression());
+        printNode.print(this);
+    }
+
+    @Override
     public void visit(NamespaceName namespaceName) {
         XMLPrintNode printNode = new XMLPrintNode(namespaceName, "NamespaceName",
                 new String[] {"isCurrent", namespaceName.isCurrent() ? "true" : "false",
@@ -540,6 +604,9 @@ public class PrintASTVisitor implements Visitor {
     public void visit(LambdaFunctionDeclaration declaration) {
         XMLPrintNode printNode = new XMLPrintNode(declaration, "LambdaFunctionDeclaration",
                 new String[] {"isReference", declaration.isReference() ? "true" : "false"});
+        if (declaration.isAttributed()) {
+            printNode.addChildrenGroup("Attributes", declaration.getAttributes());
+        }
         printNode.addChildren(declaration.getFormalParameters());
         printNode.addChildren(declaration.getLexicalVariables());
         printNode.addChild(declaration.getReturnType());
@@ -626,6 +693,9 @@ public class PrintASTVisitor implements Visitor {
     @Override
     public void visit(InterfaceDeclaration node) {
         XMLPrintNode printNode = new XMLPrintNode(node, "InterfaceDeclaration");
+        if (node.isAttributed()) {
+            printNode.addChildrenGroup("Attributes", node.getAttributes());
+        }
         printNode.addChild("Name", node.getName());
         printNode.addChild(node.getBody());
         printNode.print(this);
@@ -642,13 +712,16 @@ public class PrintASTVisitor implements Visitor {
     public void visit(MethodDeclaration node) {
         XMLPrintNode printNode = new XMLPrintNode(node, "MethodDeclaration",
                 new String[]{"modifiers", node.getModifierString()});
+        if (node.isAttributed()) {
+            printNode.addChildrenGroup("Attributes", node.getAttributes());
+        }
         printNode.addChild(node.getFunction());
         printNode.print(this);
     }
 
     @Override
     public void visit(MethodInvocation node) {
-        XMLPrintNode printNode = new XMLPrintNode(node, "MethodInvocation");
+        XMLPrintNode printNode = new XMLPrintNode(node, "MethodInvocation", new String[]{"isNullsafe", node.isNullsafe() ? "true" : "false"});
         printNode.addChild(node.getDispatcher());
         printNode.addChild("Method", node.getMethod());
         printNode.print(this);
@@ -781,8 +854,8 @@ public class PrintASTVisitor implements Visitor {
     }
 
     @Override
-    public void visit(ThrowStatement node) {
-        XMLPrintNode printNode = new XMLPrintNode(node, "ThrowStatement");
+    public void visit(ThrowExpression node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "ThrowExpression");
         printNode.addChild(node.getExpression());
         printNode.print(this);
     }
@@ -801,6 +874,13 @@ public class PrintASTVisitor implements Visitor {
         XMLPrintNode printNode = new XMLPrintNode(node, "UnaryOperation",
                 new String[]{"operator", node.getOperator().name()});
         printNode.addChild(node.getExpression());
+        printNode.print(this);
+    }
+
+    @Override
+    public void visit(UnionType node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "UnionType");
+        printNode.addChildren(node.getTypes());
         printNode.print(this);
     }
 
@@ -916,6 +996,9 @@ public class PrintASTVisitor implements Visitor {
     @Override
     public void visit(TraitDeclaration traitDeclaration) {
         XMLPrintNode printNode = new XMLPrintNode(traitDeclaration, "TraitDeclaration");
+        if (traitDeclaration.isAttributed()) {
+            printNode.addChildrenGroup("Attributes", traitDeclaration.getAttributes());
+        }
         printNode.addChildrenGroup("TraitName", new ASTNode[]{traitDeclaration.getName()});
         printNode.addChild(traitDeclaration.getBody());
         printNode.print(this);

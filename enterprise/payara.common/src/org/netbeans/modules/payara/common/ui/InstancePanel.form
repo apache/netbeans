@@ -71,7 +71,7 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="hostLocalField" pref="291" max="32767" attributes="0"/>
+                              <Component id="hostLocalField" pref="207" max="32767" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="localIpCB" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -110,7 +110,6 @@
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="preserveSessions" max="32767" attributes="0"/>
-                          <Component id="startDerby" max="32767" attributes="0"/>
                           <Component id="hotDeploy" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -178,10 +177,7 @@
                   <Component id="preserveSessions" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jdbcDriverDeployment" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="startDerby" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
+              <Component id="jdbcDriverDeployment" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="120" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -376,16 +372,6 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="httpMonitorActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="startDerby">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="org/netbeans/modules/glassfish/common/ui/Bundle.properties" key="InstanceLocalPanel.startDerby" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="startDerbyActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="jdbcDriverDeployment">

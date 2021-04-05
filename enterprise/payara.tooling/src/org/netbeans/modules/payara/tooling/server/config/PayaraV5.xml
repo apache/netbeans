@@ -25,6 +25,7 @@ under the License.
     </tools>
     <java version="1.8">
         <platform version="1.8"/>
+        <platform version="11"/>
     </java>
     <javaee version="1.8">
         <profile version="1.3" type="full"/>
@@ -36,6 +37,8 @@ under the License.
         <profile version="1.7" type="full" check="full"/>
         <profile version="1.8" type="web"/>
         <profile version="1.8" type="full" check="full"/>
+        <profile version="8.0.0" type="web"/>
+        <profile version="8.0.0" type="full" check="full"/>
         <module type="war"/>
         <module type="car" check="full"/>
         <module type="ear" check="full"/>
@@ -49,24 +52,30 @@ under the License.
         <classpath>
             <fileset dir="modules">
                 <include name="javax\..+\.jar"/>
-                <include name="bean-validator.jar"/>
+                <include name="jakarta\..+\.jar"/>
+                <include name="hibernate-validator.jar"/>
                 <include name="cdi-api.jar"/>
                 <include name="jaxb-osgi.jar"/>
-                <include name="jaxr-api-osgi.jar"/>
-                <include name="jaxrpc-api-osgi.jar"/>
                 <include name="webservices-osgi.jar"/>
                 <include name="weld-osgi-bundle.jar"/>
-                <include name="mimepull.+\.jar"/>
             </fileset>            
-            <fileset dir="modules/endorsed">
-                <include name=".+\.jar"/>
-            </fileset>
             <fileset dir="../mq/lib">
                 <include name="jaxm-api.jar"/>
             </fileset>
         </classpath>
         <javadocs>
             <lookup path="docs/javaee-doc-api.jar"/>
+        </javadocs>
+        <sources>
+        </sources>
+    </library>
+    <library id="MicroProfile">
+        <classpath>
+            <fileset dir="modules">
+                <include name="microprofile.*\-api.jar"/>
+            </fileset>
+        </classpath>
+        <javadocs>
         </javadocs>
         <sources>
         </sources>
@@ -79,10 +88,11 @@ under the License.
                 <!-- include name="javax.ws.+\.jar"/ -->
                 <include name="jersey.+\.jar"/>
                 <include name="jettison.*\.jar"/>
+                <include name="mimepull.+\.jar"/>
             </fileset>
         </classpath>
         <javadocs> 
-            <link url="http://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/2.0-m05-2/jersey-documentation-2.0-m05-2-docbook.zip"/>
+            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/2.9.1/jersey-documentation-2.9.1-docbook.zip"/>
         </javadocs>
         <sources>
         </sources>
@@ -90,7 +100,7 @@ under the License.
     <library id="JAX-RS">
         <classpath>
             <fileset dir="modules">
-                <include name="javax.ws.rs-api.jar"/>
+                <include name=".+\.ws.rs-api.jar"/>
             </fileset>
         </classpath>
         <javadocs> 

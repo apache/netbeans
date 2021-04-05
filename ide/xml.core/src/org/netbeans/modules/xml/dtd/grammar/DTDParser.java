@@ -243,7 +243,7 @@ public class DTDParser {
     private class EntityResolverWrapper implements EntityResolver {
         
         private EntityResolver resolver;
-        private ArrayList/*<String>*/ resolvedSystemIds = new ArrayList(3);
+        private ArrayList<String> resolvedSystemIds = new ArrayList(3);
         
         public EntityResolverWrapper(EntityResolver resolver) {
             this.resolver = resolver;

@@ -76,7 +76,7 @@ public abstract class DialogDisplayer {
     public abstract Object notify(NotifyDescriptor descriptor);
 
     /** Notify the user of something in a message box, possibly with feedback,
-     * this method method may be called
+     * this method may be called
      * from any thread. The thread will return immediately and
      * the dialog will be shown <q>later</q>, usually when AWT thread
      * is empty and can handle the request.
@@ -133,13 +133,19 @@ public abstract class DialogDisplayer {
      * @see "#30031"
      */
     private static final class Trivial extends DialogDisplayer {
+        @Override
         public Object notify(NotifyDescriptor nd) {
+            if (GraphicsEnvironment.isHeadless()) {
+                return NotifyDescriptor.CLOSED_OPTION;
+            }
+
             JDialog dialog = new StandardDialog(nd.getTitle(), true, nd, null, null);
             dialog.setVisible(true);
 
             return (nd.getValue() != null) ? nd.getValue() : NotifyDescriptor.CLOSED_OPTION;
         }
 
+        @Override
         public Dialog createDialog(final DialogDescriptor dd) {
             final StandardDialog dialog = new StandardDialog(
                     dd.getTitle(), dd.isModal(), dd, dd.getClosingOptions(), dd.getButtonListener()

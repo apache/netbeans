@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.payara.common;
 
 import java.io.File;
@@ -26,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import org.netbeans.modules.payara.common.parser.TreeParser;
 import org.netbeans.modules.payara.common.wizards.ServerWizardIterator;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 import org.netbeans.modules.payara.tooling.utils.ServerUtils;
 import org.openide.WizardDescriptor;
@@ -38,7 +38,8 @@ import org.xml.sax.SAXException;
  * @author vkraemer
  * @author Gaurav Gupta
  */
-public enum ServerDetails {
+@Deprecated
+public enum ServerDetails implements PayaraPlatformVersionAPI {
     //add new version
     /**
      * details for an instance of Payara Server 4.1.144
@@ -242,28 +243,29 @@ public enum ServerDetails {
     /**
      * Creates an iterator for a wizard to instantiate server objects.
      * <p/>
-     * @return Server wizard iterator initialized with supported Payara
-     * server versions.
+     * @return Server wizard iterator initialized with supported Payara server
+     * versions.
      */
     public static WizardDescriptor.InstantiatingIterator
             getInstantiatingIterator() {
         return new ServerWizardIterator(
-                ServerDetails.values()
+                Arrays.asList(ServerDetails.values())
         );
     }
 
     /**
      * Determine the version of the Payara Server installed in a directory
+     *
      * @param payaraDir the directory that holds a Payara installation
      * @return -1 if the directory is not a Payara server install
      */
-    public static int getVersionFromInstallDirectory(File payaraDir)  {
+    public static int getVersionFromInstallDirectory(File payaraDir) {
         if (payaraDir == null) {
             return -1;
         }
 
-        PayaraVersion version
-                = ServerUtils.getServerVersion(payaraDir.getAbsolutePath());
+        PayaraPlatformVersionAPI version
+                = ServerUtils.getPlatformVersion(payaraDir.getAbsolutePath());
         Optional<ServerDetails> serverDetails = Optional.empty();
         if (version != null) {
             serverDetails = Arrays
@@ -276,7 +278,7 @@ public enum ServerDetails {
 
     /**
      * Determine the version of the Payara Server that wrote the domain.xml file
-     * 
+     *
      * @param domainXml the file to analyze
      * @return -1 if domainXml is null, unreadable or not a directory
      * @throws IllegalStateException if domainXml cannot be parsed
@@ -292,7 +294,7 @@ public enum ServerDetails {
     private static boolean hasDefaultConfig(File domainXml) throws IllegalStateException {
         DomainParser dp = new DomainParser();
         List<TreeParser.Path> paths = new ArrayList<>();
-        paths.add(new TreeParser.Path("/domain/configs/config",dp)); // NOI18N
+        paths.add(new TreeParser.Path("/domain/configs/config", dp)); // NOI18N
         TreeParser.readXml(domainXml, paths);
         return dp.hasDefaultConfig();
     }
@@ -305,7 +307,7 @@ public enum ServerDetails {
     private final String licenseUrl;
     private final int versionInt;
     private final boolean downloadable;
-    
+
     private static final String DOWNLOAD_URL = "https://oss.sonatype.org/service/local/repositories/releases/content/fish/payara/distributions/payara/%s/payara-%s.zip"; // NOI18N
     private static final String CDDL_LICENSE = "https://raw.githubusercontent.com/payara/Payara/master/LICENSE.txt"; // NOI18N
 
@@ -323,8 +325,8 @@ public enum ServerDetails {
         this.licenseUrl = CDDL_LICENSE;
         this.downloadable = downloadable;
     }
-    
-    @Override 
+
+    @Override
     public String toString() {
         return displayName;
     }
@@ -348,6 +350,7 @@ public enum ServerDetails {
     /**
      * Determine if the glassfishDir holds a valid install of this release of
      * Payara Server.
+     *
      * @param payaraDir
      * @return true if the glassfishDir holds this particular server version.
      */
@@ -358,6 +361,7 @@ public enum ServerDetails {
     static class DomainParser extends TreeParser.NodeReader {
 
         private boolean hasDefaultConfig = false;
+
         private boolean hasDefaultConfig() {
             return hasDefaultConfig;
         }
@@ -372,15 +376,68 @@ public enum ServerDetails {
 
     }
 
+    @Override
     public String getDirectUrl() {
         return directUrl;
     }
 
+    @Override
     public String getIndirectUrl() {
         return indirectUrl;
     }
 
+    @Override
     public String getLicenseUrl() {
         return licenseUrl;
+    }
+
+    @Override
+    public short getMajor() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public short getMinor() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public short getUpdate() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public short getBuild() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String toFullString() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isMinimumSupportedVersion() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isEE7Supported() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isEE8Supported() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean equalsMajorMinor(PayaraPlatformVersionAPI version) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean equals(PayaraPlatformVersionAPI version) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

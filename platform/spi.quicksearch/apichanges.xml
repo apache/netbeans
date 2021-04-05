@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="CHANGEME/nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+
+<apichanges>
+    <apidefs>
+        <apidef name="quicksearch_spi">Quicksearch SPI</apidef>
+    </apidefs>
+
+  <changes>
+      <change id="isObsolete">
+          <api name="quicksearch_spi"/>
+          <summary>
+              Allows to check for obsoleted resultset.
+          </summary>
+          <version major="1" minor="37"/>
+          <date day="7" month="8" year="2020"/>
+          <author login="sdedic"/>
+          <compatibility binary="compatible" source="compatible" addition="yes"/>
+          <description>
+              A <a href="@TOP@/org/netbeans/spi/quicksearch/SearchProvider.html">SearchProvider</a> that 
+              is searching and cannot find a result can check whether the result is still valid, using
+              <a href="@TOP@/org/netbeans/spi/quicksearch/SearchResponse.html#isObsolete--"><code>SearchResponse.isObsolete()</code></a>.
+              It was only possible to check for terminated search when a new item was added.
+          </description>
+          <class package="org.netbeans.spi.quicksearch" name="SearchResponse"/>
+      </change>
+      
+  </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE CHANGEME/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Progress API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the Progress API/SPI.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+      <hr/><standard-changelists module-code-name="org.netbeans.spi.quicksearch"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

@@ -99,7 +99,7 @@ public abstract class GraphLayout<N,E> {
             listener.graphLayoutFinished (graph);
     }
 
-    @SuppressWarnings ("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private <N,E> GraphLayoutListener<N,E>[] createListenersCopy () {
         GraphLayoutListener<N,E>[] listeners;
         synchronized (this.listeners) {

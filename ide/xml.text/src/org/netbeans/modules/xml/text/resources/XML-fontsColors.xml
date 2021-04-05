@@ -31,8 +31,8 @@
     </fontcolor>
     <fontcolor name="xml-error" default="error"/>
     <fontcolor name="xml-operator" default="operator"/>
-    <fontcolor name="pi-content" foreColor="ff00007c" default="default"/>
-    <fontcolor name="pi-end" foreColor="ff00007c" default="default">
+    <fontcolor name="xml-pi-content" foreColor="ff00007c" default="default"/>
+    <fontcolor name="xml-pi-end" foreColor="ff00007c" default="default">
         <font style="bold"/>
     </fontcolor>
     <fontcolor name="xml-pi-start" foreColor="ff00007c" default="default">

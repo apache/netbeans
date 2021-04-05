@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.php.api;
 
+import java.time.LocalDate;
 import org.openide.util.NbBundle;
 
 /**
@@ -34,7 +35,8 @@ import org.openide.util.NbBundle;
     "PhpVersion.PHP_71=PHP 7.1",
     "PhpVersion.PHP_72=PHP 7.2",
     "PhpVersion.PHP_73=PHP 7.3",
-    "PhpVersion.PHP_74=PHP 7.4"
+    "PhpVersion.PHP_74=PHP 7.4",
+    "PhpVersion.PHP_80=PHP 8.0",
 })
 public enum PhpVersion {
 
@@ -83,7 +85,12 @@ public enum PhpVersion {
      * PHP 7.4.
      * @since 2.65
      */
-    PHP_74(Bundle.PhpVersion_PHP_74());
+    PHP_74(Bundle.PhpVersion_PHP_74()),
+    /**
+     * PHP 8.0.
+     * @since 2.74
+     */
+    PHP_80(Bundle.PhpVersion_PHP_80());
 
     private final String displayName;
     private final boolean namespaces;
@@ -117,6 +124,11 @@ public enum PhpVersion {
      */
     public static PhpVersion getLegacy() {
         PhpVersion[] phpVersions = PhpVersion.values();
+        for (PhpVersion phpVersion : phpVersions) {
+            if (phpVersion.isSupportedVersion()) {
+                return phpVersion;
+            }
+        }
         return phpVersions[phpVersions.length - 2];
     }
 
@@ -180,9 +192,78 @@ public enum PhpVersion {
         return this.compareTo(PhpVersion.PHP_74) >= 0;
     }
 
+    /**
+     * Check whether this version supports the mixed type.
+     *
+     * @return {@code true} if this version supports mixed type, {@code false}
+     * otherwise
+     * @since 2.74
+     */
+    public boolean hasMixedType() {
+        return this.compareTo(PhpVersion.PHP_80) >= 0;
+    }
+
+    /**
+     * Check whether this is supported version yet by PHP official.
+     *
+     * @return {@code true} if this is supported version, {@code false}
+     * otherwise
+     * @since 2.72
+     */
+    public boolean isSupportedVersion() {
+        return Period.valueOf(name()).isSupportedVersion();
+    }
+
     @Override
     public String toString() {
         return getDisplayName();
+    }
+
+    /**
+     * Valid period for each php version.
+     * https://www.php.net/supported-versions.php
+     */
+    private enum Period {
+        // Use the same name as PhpVersion
+        PHP_5(LocalDate.of(2005, 11, 24), LocalDate.of(2011, 1, 6), LocalDate.of(2011, 1, 6)),
+        PHP_53(LocalDate.of(2009, 6, 30), LocalDate.of(2014, 8, 14), LocalDate.of(2014, 8, 14)),
+        PHP_54(LocalDate.of(2012, 3, 1), LocalDate.of(2014, 9, 14), LocalDate.of(2014, 9, 14)),
+        PHP_55(LocalDate.of(2013, 6, 20), LocalDate.of(2015, 7, 10), LocalDate.of(2015, 7, 10)),
+        PHP_56(LocalDate.of(2014, 8, 28), LocalDate.of(2017, 1, 19), LocalDate.of(2018, 12, 31)),
+        PHP_70(LocalDate.of(2015, 12, 3), LocalDate.of(2017, 12, 3), LocalDate.of(2018, 12, 3)),
+        PHP_71(LocalDate.of(2016, 12, 1), LocalDate.of(2018, 12, 1), LocalDate.of(2019, 12, 1)),
+        PHP_72(LocalDate.of(2017, 11, 30), LocalDate.of(2019, 11, 30), LocalDate.of(2020, 11, 30)),
+        PHP_73(LocalDate.of(2018, 12, 6), LocalDate.of(2020, 12, 6), LocalDate.of(2021, 12, 6)),
+        PHP_74(LocalDate.of(2019, 11, 28), LocalDate.of(2021, 11, 28), LocalDate.of(2022, 11, 28)),
+        PHP_80(LocalDate.of(2020, 11, 26), LocalDate.of(2022, 11, 26), LocalDate.of(2023, 11, 26)),
+        ;
+
+        private final LocalDate initialRelease;
+        private final LocalDate activeSupport;
+        private final LocalDate securitySupport;
+
+        private Period(LocalDate initialRelease, LocalDate activeSupport, LocalDate securitySupport) {
+            this.initialRelease = initialRelease;
+            this.activeSupport = activeSupport;
+            this.securitySupport = securitySupport;
+        }
+
+        public LocalDate getInitialRelease() {
+            return initialRelease;
+        }
+
+        public LocalDate getActiveSupport() {
+            return activeSupport;
+        }
+
+        public LocalDate getSecuritySupport() {
+            return securitySupport;
+        }
+
+        public boolean isSupportedVersion() {
+            return LocalDate.now().isBefore(securitySupport);
+        }
+
     }
 
 };

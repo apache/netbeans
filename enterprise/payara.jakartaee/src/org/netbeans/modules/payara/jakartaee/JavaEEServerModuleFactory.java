@@ -37,7 +37,6 @@ import org.netbeans.api.project.libraries.LibraryManager;
 import org.netbeans.modules.j2ee.deployment.plugins.api.InstanceProperties;
 import org.netbeans.modules.payara.spi.PayaraModule;
 import org.netbeans.modules.payara.spi.PayaraModuleFactory;
-import org.netbeans.modules.payara.spi.RegisteredDerbyServer;
 import org.netbeans.modules.payara.spi.ServerUtilities;
 import org.netbeans.modules.j2ee.deployment.plugins.api.InstanceCreationException;
 import org.netbeans.spi.project.libraries.LibraryTypeProvider;
@@ -109,22 +108,11 @@ public class JavaEEServerModuleFactory implements PayaraModuleFactory {
                 }
             }
 
-            final String installRoot = commonModule.getInstanceProperties().get(
-                    PayaraModule.INSTALL_FOLDER_ATTR);
             RP.post(new Runnable() {
                 @Override
                 public void run() {
                     ensureEclipseLinkSupport(commonModule.getInstance());
                     ensurePayaraApiSupport(commonModule.getInstance());
-                    // lookup the javadb register service here and use it.
-                    RegisteredDerbyServer db = Lookup.getDefault().lookup(RegisteredDerbyServer.class);
-                    if (null != db  && null != installRoot) {
-                        File ir = new File(installRoot);
-                        File f = new File(ir,"javadb");
-                        if (f.exists() && f.isDirectory() && f.canRead()) {
-                            db.initialize(f.getAbsolutePath());
-                        }
-                    }
                 }
             });
         } else {
@@ -184,8 +172,8 @@ public class JavaEEServerModuleFactory implements PayaraModuleFactory {
             LOGGER.log(Level.WARNING, ex.getLocalizedMessage(), ex);
             return false;
         }
-        return addLibrary(ECLIPSE_LINK_LIB + server.getVersion().getMajor(), libraryList, docList,
-                NbBundle.getMessage(JavaEEServerModuleFactory.class, "DNAME_PF_ECLIPSELINK", server.getVersion().getMajor()),  // NOI18N
+        return addLibrary(ECLIPSE_LINK_LIB + server.getPlatformVersion().getMajor(), libraryList, docList,
+                NbBundle.getMessage(JavaEEServerModuleFactory.class, "DNAME_PF_ECLIPSELINK", server.getPlatformVersion().getMajor()),  // NOI18N
                 NbBundle.getMessage(JavaEEServerModuleFactory.class, "DESC_PF_ECLIPSELINK"));  // NOI18N
     }
 
@@ -229,8 +217,8 @@ public class JavaEEServerModuleFactory implements PayaraModuleFactory {
             }
         }
 
-        return addLibrary(JAVA_EE_LIB + server.getVersion().getMajor(), libraryList, docList,
-                NbBundle.getMessage(JavaEEServerModuleFactory.class, "DNAME_PF_JAVA_EE_IMPL", server.getVersion().getMajor()), // NOI18N
+        return addLibrary(JAVA_EE_LIB + server.getPlatformVersion().getMajor(), libraryList, docList,
+                NbBundle.getMessage(JavaEEServerModuleFactory.class, "DNAME_PF_JAVA_EE_IMPL", server.getPlatformVersion().getMajor()), // NOI18N
                 NbBundle.getMessage(JavaEEServerModuleFactory.class, "DESC_PF_JAVA_EE_IMPL")); // NOI18N
     }
 

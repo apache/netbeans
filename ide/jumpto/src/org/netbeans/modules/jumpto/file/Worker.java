@@ -162,8 +162,9 @@ final class Worker implements Runnable {
         @NonNull final String text,
         @NonNull final QuerySupport.Kind searchType,
         @NullAllowed final Project project,
+        final boolean searchByFolders,
         final int lineNr) {
-        return new Request(text, searchType, project, lineNr);
+        return new Request(text, searchType, project, searchByFolders, lineNr);
     }
 
 
@@ -218,6 +219,7 @@ final class Worker implements Runnable {
         private final String text;
         private final QuerySupport.Kind searchType;
         private final Project currentProject;
+        private final boolean searchByFolders;
         private final int lineNr;
         private final Set<FileObject> excludes;
         //@GuardedBy("this")
@@ -229,12 +231,14 @@ final class Worker implements Runnable {
             @NonNull final String text,
             @NonNull final QuerySupport.Kind searchType,
             @NullAllowed final Project currentProject,
+            final boolean searchByFolders,
             final int lineNr) {
             Parameters.notNull("text", text);   //NOI18N
             Parameters.notNull("searchType", searchType);   //NOI18N
             this.text = text;
             this.searchType = searchType;
             this.currentProject = currentProject;
+            this.searchByFolders = searchByFolders;
             this.lineNr = lineNr;
             this.excludes = Collections.newSetFromMap(new ConcurrentHashMap<FileObject, Boolean>());
         }
@@ -247,6 +251,10 @@ final class Worker implements Runnable {
         @NonNull
         QuerySupport.Kind getSearchKind() {
             return searchType;
+        }
+
+        public boolean isSearchByFolders() {
+            return searchByFolders;
         }
 
         @CheckForNull
@@ -617,6 +625,13 @@ final class Worker implements Runnable {
                     indexQueryText = request.getText();
                     break;
             }
+            if (request.isSearchByFolders()) {
+                if (searchField.equals(FileIndexer.FIELD_CASE_INSENSITIVE_NAME)) {
+                    searchField = FileIndexer.FIELD_CASE_INSENSITIVE_RELATIVE_PATH;
+                } else {
+                    searchField = FileIndexer.FIELD_RELATIVE_PATH;
+                }
+            }
             return Pair.<String,String>of(searchField, indexQueryText);
         }
 
@@ -669,7 +684,9 @@ final class Worker implements Runnable {
                         FileObject file = filesInFolder.nextElement();
                         if (file.isFolder()) continue;
 
-                        if (matcher.accept(file.getNameExt())) {
+                        final String rootRelativePath = FileUtil.getRelativePath(root, file);
+
+                        if (matcher.accept(request.isSearchByFolders() ? rootRelativePath : file.getNameExt())) {
                             Project project = ProjectConvertors.getNonConvertorOwner(file);
                             boolean preferred = false;
                             String relativePath = null;

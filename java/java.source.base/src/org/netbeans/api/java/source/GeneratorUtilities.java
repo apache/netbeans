@@ -121,6 +121,8 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.api.scripting.Scripting;
+import org.netbeans.modules.java.source.GeneratorUtilitiesAccessor;
+import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.builder.CommentSetImpl;
 import org.netbeans.modules.java.source.parsing.AbstractSourceFileObject;
@@ -1067,6 +1069,10 @@ public final class GeneratorUtilities {
      * @since 0.86
      */
     public CompilationUnitTree addImports(CompilationUnitTree cut, Set<? extends Element> toImport) {
+        return addImports(cut, cut.getImports(), toImport);
+    }
+
+    private CompilationUnitTree addImports(CompilationUnitTree cut, List<? extends ImportTree> cutImports, Set<? extends Element> toImport) {
         assert cut != null && toImport != null && toImport.size() > 0;
 
         ArrayList<Element> elementsToImport = new ArrayList<Element>(toImport.size());
@@ -1142,7 +1148,13 @@ public final class GeneratorUtilities {
                     el = e.getEnclosingElement();
                     break;
                 default:
-                    assert false : "Illegal element kind: " + e.getKind(); //NOI18N
+                    if (TreeShims.isRecord(e)) {
+                        if (e.getEnclosingElement().getKind() == ElementKind.PACKAGE) {
+                            el = e.getEnclosingElement();
+                        }
+                    } else {
+                        assert false : "Illegal element kind: " + e.getKind(); //NOI18N
+                    }
             }
             if (el != null) {
                 Integer cnt = isStatic ? typeCounts.get((TypeElement)el) : pkgCounts.get((PackageElement)el);
@@ -1168,7 +1180,7 @@ public final class GeneratorUtilities {
                 }
             }
         }
-        List<ImportTree> imports = new ArrayList<ImportTree>(cut.getImports());
+        List<ImportTree> imports = new ArrayList<ImportTree>(cutImports);
         for (ImportTree imp : imports) {
             Element e = getImportedElement(cut, imp);
             if (!elementsToImport.contains(e)) {
@@ -2239,5 +2251,14 @@ public final class GeneratorUtilities {
             }
         }.scan(tree, false);
         return b != null ? b : false;
+    }
+
+    static {
+        GeneratorUtilitiesAccessor.setInstance(new GeneratorUtilitiesAccessor() {
+            @Override
+            public CompilationUnitTree addImports(GeneratorUtilities gu, CompilationUnitTree cut, List<? extends ImportTree> cutImports, Set<? extends Element> toImport) {
+                return gu.addImports(cut, cutImports, toImport);
+            }
+        });
     }
 }

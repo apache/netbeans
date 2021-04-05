@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.2
+#Version 2.6
 
 CLSS public java.lang.Object
 cons public init()
@@ -40,6 +40,7 @@ fld public final static java.lang.String PROP_ARTIFACT_ID = "artifactId"
 fld public final static java.lang.String PROP_AUTO_BIND_HTTP = "autoBindHttp"
 fld public final static java.lang.String PROP_CONTEXT_ROOT = "contextRoot"
 fld public final static java.lang.String PROP_GROUP_ID = "groupId"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PROP_JAVA_EE_VERSION = "javaeeVersion"
 fld public final static java.lang.String PROP_PACKAGE = "package"
 fld public final static java.lang.String PROP_PAYARA_MICRO_VERSION = "payaraMicroVersion"

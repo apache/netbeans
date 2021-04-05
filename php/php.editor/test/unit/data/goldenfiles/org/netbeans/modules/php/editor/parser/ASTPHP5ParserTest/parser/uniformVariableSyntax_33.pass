@@ -159,7 +159,7 @@
                             <Block start='98' end='142' isCurly='true'>
                                 <ExpressionStatement start='108' end='136'>
                                     <Assignment start='108' end='135' operator='EQUAL'>
-                                        <FieldAccess start='108' end='123'>
+                                        <FieldAccess start='108' end='123' isNullsafe='false'>
                                             <Variable start='108' end='113' isDollared='true'>
                                                 <Identifier start='109' end='113' name='this'/>
                                             </Variable>
@@ -187,7 +187,7 @@
                                     <FunctionInvocation start='192' end='211'>
                                         <FucntionName start='192' end='209'>
                                             <DereferencableVariable start='192' end='209'>
-                                                <FieldAccess start='193' end='208'>
+                                                <FieldAccess start='193' end='208' isNullsafe='false'>
                                                     <Variable start='193' end='198' isDollared='true'>
                                                         <Identifier start='194' end='198' name='this'/>
                                                     </Variable>

@@ -258,6 +258,7 @@ public abstract class CLIHandler extends Object {
         public static final int CANNOT_CONNECT = -255;
         public static final int CANNOT_WRITE = -254;
         public static final int ALREADY_RUNNING = -253;
+        public static final int CONNECTED = -252;
         
         private final File lockFile;
         private final int port;
@@ -1293,6 +1294,9 @@ public abstract class CLIHandler extends Object {
             if (ex.getMessage().equals("Broken pipe")) { // NOI18N
                 return true;
             }
+            if (ex.getMessage().contains("SIGPIPE")) { // NOI18N
+                return true;
+            }
             if (ex.getMessage().startsWith("Connection reset by peer")) { // NOI18N
                 return true;
             }
@@ -1345,7 +1349,8 @@ public abstract class CLIHandler extends Object {
                     // read provided data
                     int really = requestedVersion >= 1 ? is.readInt() : is.read ();
                     if (really > 0) {
-                        return is.read(b, off, really);
+                        is.readFully(b, off, really);
+                        return really;
                     } else {
                         if (really < 0) {
                             return really;

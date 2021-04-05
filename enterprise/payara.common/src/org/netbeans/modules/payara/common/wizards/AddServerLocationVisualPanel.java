@@ -33,8 +33,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.netbeans.modules.payara.common.ServerDetails;
+import org.netbeans.modules.payara.common.PayaraPlatformDetails;
 import org.netbeans.modules.payara.spi.Utils;
+import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.openide.awt.HtmlBrowser.URLDisplayer;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
@@ -325,7 +326,7 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
         localDomainRadioButton = new javax.swing.JRadioButton();
         remoteDomainRadioButton = new javax.swing.JRadioButton();
         chooseServerLabel = new javax.swing.JLabel();
-        chooseServerComboBox = new javax.swing.JComboBox<ServerDetails>(wizardIterator.downloadableValues);
+        chooseServerComboBox = new javax.swing.JComboBox<PayaraPlatformVersionAPI>(wizardIterator.downloadableValues.toArray(new PayaraPlatformVersionAPI[0]));
 
         hk2HomeLabel.setLabelFor(hk2HomeTextField);
         org.openide.awt.Mnemonics.setLocalizedText(hk2HomeLabel, org.openide.util.NbBundle.getMessage(AddServerLocationVisualPanel.class, "LBL_InstallLocation")); // NOI18N
@@ -386,7 +387,7 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
         chooseServerLabel.setLabelFor(hk2HomeTextField);
         org.openide.awt.Mnemonics.setLocalizedText(chooseServerLabel, org.openide.util.NbBundle.getMessage(AddServerLocationVisualPanel.class, "LBL_ChooseOne")); // NOI18N
 
-        chooseServerComboBox.setSelectedItem(wizardIterator.downloadableValues[0]);
+        chooseServerComboBox.setSelectedItem(wizardIterator.downloadableValues.get(0));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -456,7 +457,7 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel implements 
 
 private void readlicenseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readlicenseButtonActionPerformed
         try {
-            ServerDetails chosenServerVersion = (ServerDetails) chooseServerComboBox.getSelectedItem();
+            PayaraPlatformVersionAPI chosenServerVersion = (PayaraPlatformVersionAPI) chooseServerComboBox.getSelectedItem();
             URLDisplayer.getDefault().showURL(
                     new URL(chosenServerVersion.getLicenseUrl())); //NOI18N
         } catch (Exception ex){
@@ -466,18 +467,22 @@ private void readlicenseButtonActionPerformed(java.awt.event.ActionEvent evt) {/
 
 private void downloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadButtonActionPerformed
         if(retriever == null) {
-            ServerDetails selectedValue = wizardIterator.downloadableValues[0];
-            if (wizardIterator.downloadableValues.length > 1) {
-                selectedValue = (ServerDetails) chooseServerComboBox.getSelectedItem();
+            PayaraPlatformVersionAPI selectedValue = wizardIterator.downloadableValues.get(0);
+            if (wizardIterator.downloadableValues.size() > 1) {
+                selectedValue = (PayaraPlatformVersionAPI) chooseServerComboBox.getSelectedItem();
             }
             if (null != selectedValue) {
-            updateStatusText("");  // NOI18N
-            retriever = new Retriever(new File(hk2HomeTextField.getText()), 
-                    selectedValue.getIndirectUrl(), DOWNLOAD_PREFIX,
-                    selectedValue.getDirectUrl(),
-                    this, "payara"); // NOI18N
-            new Thread(retriever).start();
-            setDownloadState(DownloadState.DOWNLOADING);
+                updateStatusText("");  // NOI18N
+                retriever = new Retriever(
+                        new File(hk2HomeTextField.getText()),
+                        selectedValue.getIndirectUrl(),
+                        DOWNLOAD_PREFIX,
+                        selectedValue.getDirectUrl(),
+                        this,
+                        "payara" // NOI18N
+                );
+                new Thread(retriever).start();
+                setDownloadState(DownloadState.DOWNLOADING);
             }
         } else {
             retriever.stopRetrieval();
@@ -515,7 +520,7 @@ private void agreeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox agreeCheckBox;
     private javax.swing.JButton browseButton;
-    private javax.swing.JComboBox<ServerDetails> chooseServerComboBox;
+    private javax.swing.JComboBox<PayaraPlatformVersionAPI> chooseServerComboBox;
     private javax.swing.JLabel chooseServerLabel;
     private javax.swing.ButtonGroup domainType;
     private javax.swing.JButton downloadButton;

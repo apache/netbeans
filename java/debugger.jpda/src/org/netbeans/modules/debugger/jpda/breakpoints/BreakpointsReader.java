@@ -192,7 +192,7 @@ public class BreakpointsReader implements Properties.Reader, PropertyChangeListe
                 ),
                 properties.getInt (
                     ExceptionBreakpoint.PROP_CATCH_TYPE, 
-                    ExceptionBreakpoint.TYPE_EXCEPTION_CATCHED_UNCATCHED
+                    ExceptionBreakpoint.TYPE_EXCEPTION_CAUGHT_UNCAUGHT
                 )
             );
             eb.setCondition (

@@ -1,0 +1,12 @@
+public  function setX(int $$x): void {
+$$this->x = $x;
+}
+
+public  function setY(int|string $$y): void {
+$$this->y = $y;
+}
+
+public  function setZ(?int $$z): void {
+$$this->z = $z;
+}
+

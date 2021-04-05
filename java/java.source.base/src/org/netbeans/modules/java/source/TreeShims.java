@@ -18,23 +18,29 @@
  */
 package org.netbeans.modules.java.source;
 
+import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.tree.DocTreeMaker;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.ListBuffer;
+import com.sun.tools.javac.util.Names;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Name;
-import org.openide.util.Exceptions;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
@@ -46,7 +52,8 @@ public class TreeShims {
     public static final String YIELD = "YIELD"; //NOI18N
     public static final String BINDING_VARIABLE = "BINDING_VARIABLE"; //NOI18N
     public static final String RECORD = "RECORD"; //NOI18N
-
+    public static final int PATTERN_MATCHING_INSTANCEOF_PREVIEW_JDK_VERSION = 15; //NOI18N
+    
     public static List<? extends ExpressionTree> getExpressions(CaseTree node) {
         try {
             Method getExpressions = CaseTree.class.getDeclaredMethod("getExpressions");
@@ -64,6 +71,17 @@ public class TreeShims {
             return (Tree) getBody.invoke(node);
         } catch (NoSuchMethodException ex) {
             return null;
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static boolean isRuleCase(CaseTree node) {
+        try {
+            Method getCaseKind = CaseTree.class.getDeclaredMethod("getCaseKind");
+            return "RULE".equals(String.valueOf(getCaseKind.invoke(node)));
+        } catch (NoSuchMethodException ex) {
+            return false;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw TreeShims.<RuntimeException>throwAny(ex);
         }
@@ -139,14 +157,55 @@ public class TreeShims {
 
     public static Name getBinding(Tree node) {
         try {
-            Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree");
-            Method getBinding = bpt.getDeclaredMethod("getBinding");
-            return (Name) getBinding.invoke(node);
+            Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
+            return isJDKVersionSupportEnablePreview() 
+                    ? (Name)bpt.getDeclaredMethod("getBinding").invoke(node)  //NOI18N
+                    : ((VariableTree)bpt.getDeclaredMethod("getVariable").invoke(node)).getName(); //NOI18N
+
         } catch (NoSuchMethodException | ClassNotFoundException ex) {
             return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw TreeShims.<RuntimeException>throwAny(ex);
         }
+    }
+    public static List<? extends Tree> getPermits(ClassTree node) {
+        List<? extends Tree> perms = null;
+        try {
+            Class classTree = Class.forName("com.sun.source.tree.ClassTree");
+            Method getPerms = classTree.getDeclaredMethod("getPermitsClause");
+            perms = (List<? extends Tree>) getPerms.invoke(node);
+        } catch (ClassNotFoundException | NoSuchMethodException ex) {
+            return null;
+        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+        return perms;
+    }
+
+    public static ReferenceTree getRefrenceTree(DocTreeMaker docMake, ExpressionTree qualExpr, CharSequence member, List<? extends Tree> paramTypes, Names names, List<JCTree> paramTypesList) {
+        int NOPOS = -2;
+        try {
+            Class classTree = Class.forName("com.sun.tools.javac.tree.DocTreeMaker");
+            Method newReferenceTree = classTree.getDeclaredMethod("newReferenceTree", java.lang.String.class, com.sun.tools.javac.tree.JCTree.JCExpression.class, com.sun.tools.javac.tree.JCTree.class, javax.lang.model.element.Name.class, java.util.List.class);
+            return (ReferenceTree) newReferenceTree.invoke(docMake.at(NOPOS), "", (JCTree.JCExpression) qualExpr, qualExpr == null ? null : ((JCTree.JCExpression) qualExpr).getTree(), member != null ? (com.sun.tools.javac.util.Name) names.fromString(member.toString()) : null, paramTypesList);
+        } catch (ClassNotFoundException | NoSuchMethodException ex) {
+            return null;
+        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+
+    public static List<? extends Tree> getPermits(JCClassDecl newT) {
+        List<JCTree.JCExpression> newPermitings = new ArrayList<>();
+        try {
+            Class jCClassDecl = Class.forName("com.sun.tools.javac.tree.JCTree$JCClassDecl");
+            newPermitings = (com.sun.tools.javac.util.List<JCTree.JCExpression>) jCClassDecl.getDeclaredField("permitting").get(newT);
+        } catch (ClassNotFoundException | NoSuchFieldException ex) {
+            return null;
+        } catch (IllegalArgumentException | IllegalAccessException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+        return newPermitings;
     }
 
     public static ExpressionTree getYieldValue(Tree node) {
@@ -182,9 +241,11 @@ public class TreeShims {
             return null;
         }
         try {
-            Class bindingPatternTreeClass = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
-            Method getType = bindingPatternTreeClass.getDeclaredMethod("getType");  //NOI18N
-            return (Tree) getType.invoke(node);
+            Class bpt = Class.forName("com.sun.source.tree.BindingPatternTree"); //NOI18N
+            return isJDKVersionSupportEnablePreview()
+                    ? (Tree) bpt.getDeclaredMethod("getType").invoke(node) //NOI18N
+                    : ((VariableTree) bpt.getDeclaredMethod("getVariable").invoke(node)).getType(); //NOI18N
+
         } catch (NoSuchMethodException ex) {
             return null;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException ex) {
@@ -198,6 +259,10 @@ public class TreeShims {
     }
     public static boolean isRecord(Element el) {
         return el != null && "RECORD".equals(el.getKind().name());
+    }
+    
+    public static<N extends Tree> boolean isRecord(final N node) {
+        return node != null && TreeShims.RECORD.equals(node.getKind().name());
     }
 
     public static boolean isRecordComponent(Element el) {
@@ -223,5 +288,31 @@ public class TreeShims {
 
     public static boolean isRecordComponent(ElementKind kind) {
         return "RECORD_COMPONENT".equals(kind.name());
+    }
+
+    public static ElementKind getRecordKind() {
+        try {
+            return ElementKind.valueOf(RECORD); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
+    }
+
+    public static Tree getTarget(Tree node) {
+        if (!node.getKind().name().equals(YIELD)) {
+            throw new IllegalStateException();
+        }
+        try {
+            Field target = node.getClass().getField("target");
+            return (Tree) target.get(node);
+        } catch (NoSuchFieldException ex) {
+            return null;
+        } catch (IllegalAccessException | IllegalArgumentException ex) {
+            throw TreeShims.<RuntimeException>throwAny(ex);
+        }
+    }
+    
+    public static boolean isJDKVersionSupportEnablePreview() {
+        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(PATTERN_MATCHING_INSTANCEOF_PREVIEW_JDK_VERSION) <= 0;
     }
 }

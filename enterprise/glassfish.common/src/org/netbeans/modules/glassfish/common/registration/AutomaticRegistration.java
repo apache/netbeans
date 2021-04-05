@@ -89,6 +89,12 @@ public class AutomaticRegistration {
         } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_5)) {
             deployer = "deployer:gfv5ee8";
             config = "GlassFishEE8/Instances";
+        } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_5_1_0)) {
+            deployer = "deployer:gfv510ee8";
+            config = "GlassFishJakartaEE8/Instances";
+        } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_6)) {
+            deployer = "deployer:gfv6ee9";
+            config = "GlassFishJakartaEE9/Instances";
         }
         StringBuilder sb = new StringBuilder(
                 defaultDisplayNamePrefix.length() + 12);

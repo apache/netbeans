@@ -25,7 +25,7 @@
 
     <target name="nblib" depends="init">
         <mkdir dir="build/antclasses"/>
-        <javac srcdir="antsrc" destdir="build/antclasses" source="${javac.source}" release="8" target="1.8" debug="true" deprecation="true">
+        <javac srcdir="antsrc" destdir="build/antclasses" source="${javac.source}" debug="true" deprecation="true">
             <classpath>
                 <pathelement path="${antsrc.cp}"/>
             </classpath>
@@ -40,18 +40,5 @@
     </target>
 
     <target name="netbeans-extra" depends="nblib"/>
-    
-    <!-- Generate suite 3 platform -->
-    <target name="test-preinit">
-        <zip file="${basedir}/build/test/unit/data/example-external-projects/suite3/nbplatform/platform5/core/core.jar">
-            <fileset dir="${basedir}/test/unit/data/example-external-projects/suite3/nbplatform/platform5/core/core" includes="**" />
-        </zip>
-        <zip file="${basedir}/build/test/unit/data/example-external-projects/suite3/nbplatform/random/modules/random.jar">
-            <fileset dir="${basedir}/test/unit/data/example-external-projects/suite3/nbplatform/random/modules/random" includes="**" />
-        </zip>
-        <zip file="${basedir}/build/test/unit/data/example-external-projects/suite3/nbplatform/random/modules/ext/stuff.jar">
-            <fileset dir="${basedir}/test/unit/data/example-external-projects/suite3/nbplatform/random/modules/ext/stuff" includes="**" />
-        </zip>
-    </target>
 
 </project>

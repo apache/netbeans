@@ -1,5 +1,0 @@
-class Child implements MixedType {
-      -----
-HINT:\Child is not abstract and does not override abstract method  testMixed(mixed $mixed) in \MixedType
-FIX:Implement All Abstract Methods
-FIX:Declare Abstract Class

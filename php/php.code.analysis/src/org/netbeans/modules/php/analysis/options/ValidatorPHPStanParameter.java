@@ -18,19 +18,13 @@
  */
 package org.netbeans.modules.php.analysis.options;
 
-import org.netbeans.api.annotations.common.CheckForNull;
-import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.php.analysis.ui.analyzer.PHPStanCustomizerPanel;
 import org.netbeans.modules.php.analysis.ui.options.PHPStanOptionsPanel;
-import org.netbeans.modules.php.api.util.StringUtils;
 
 public final class ValidatorPHPStanParameter {
 
-    @NullAllowed
     private final String phpStanPath;
-    @NullAllowed
     private final String configuration;
-    @NullAllowed
     private final String memoryLimit;
 
     public static ValidatorPHPStanParameter create(PHPStanOptionsPanel panel) {
@@ -54,26 +48,19 @@ public final class ValidatorPHPStanParameter {
     }
 
     private ValidatorPHPStanParameter(PHPStanCustomizerPanel panel) {
-        if (StringUtils.hasText(panel.getPHPStanPath())) {
-            phpStanPath = panel.getPHPStanPath();
-        } else {
-            phpStanPath = AnalysisOptions.getInstance().getPHPStanPath();
-        }
+        phpStanPath = null;
         configuration = panel.getConfiguration();
         memoryLimit = panel.getMemoryLimit();
     }
 
-    @CheckForNull
     public String getPHPStanPath() {
         return phpStanPath;
     }
 
-    @CheckForNull
     public String getConfiguration() {
         return configuration;
     }
 
-    @CheckForNull
     public String getMemoryLimit() {
         return memoryLimit;
     }

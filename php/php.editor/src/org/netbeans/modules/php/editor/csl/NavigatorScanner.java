@@ -56,7 +56,6 @@ import org.netbeans.modules.php.editor.model.Scope;
 import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.model.UseScope;
-import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.openide.util.ImageUtilities;
 
@@ -349,7 +348,7 @@ public final class NavigatorScanner {
                                 QualifiedName typeName = typeResolver.getTypeName(false);
                                 if (typeName != null) {
                                     if (i > 1) {
-                                        formatter.appendText(Type.SEPARATOR);
+                                        formatter.appendText("|"); //NOI18N
                                     }
                                     if (typeResolver.isNullableType()) {
                                         formatter.appendText(CodeUtils.NULLABLE_TYPE_PREFIX);

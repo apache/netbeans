@@ -30,8 +30,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.ClasspathInfo;
-import org.netbeans.api.java.source.CompilationController;
-import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.java.source.parsing.ClasspathInfoProvider;
@@ -132,7 +131,7 @@ public class FXMLCompletion2 implements CompletionProvider {
             private int queryType;
             private boolean fxmlParsing = true;
             private CompletionContext ctx;
-            private CompilationController cc;
+            private CompilationInfo ci;
             private FxmlParserResult fxmlResult;
 
             public Task(ClasspathInfo cpInfo, JTextComponent component, CompletionResultSet resultSet, Document doc, int caretOffset, int queryType) {
@@ -161,9 +160,7 @@ public class FXMLCompletion2 implements CompletionProvider {
                     return;
                 }
                 Parser.Result result = resultIterator.getParserResult();
-                // [NETBEANS-4832] CompController (not CompInfo) for module info (partial fix)
-                cc = CompilationController.get(result);
-                cc.toPhase(Phase.ELEMENTS_RESOLVED);
+                ci = CompilationInfo.get(result);
 
                 ctx = new CompletionContext(doc, caretOffset, queryType);
 
@@ -174,7 +171,7 @@ public class FXMLCompletion2 implements CompletionProvider {
                 // bug in parsing API: snapshot source not modified just after modification to the source file
                 try {
                     TokenHierarchy<?> th = TokenHierarchy.get(doc);
-                    ctx.init(th, cc, fxmlResult); 
+                    ctx.init(th, ci, fxmlResult); 
                 } finally {
                     if (doc instanceof AbstractDocument) {
                         ((AbstractDocument)doc).readUnlock();

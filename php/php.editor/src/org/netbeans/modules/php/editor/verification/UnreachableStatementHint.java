@@ -31,7 +31,6 @@ import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.BreakStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.ContinueStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.DoStatement;
-import org.netbeans.modules.php.editor.parser.astnodes.ExpressionStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.ForEachStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.ForStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.IfStatement;
@@ -39,7 +38,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Statement;
 import org.netbeans.modules.php.editor.parser.astnodes.SwitchCase;
-import org.netbeans.modules.php.editor.parser.astnodes.ThrowExpression;
+import org.netbeans.modules.php.editor.parser.astnodes.ThrowStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.WhileStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
@@ -247,23 +246,12 @@ public class UnreachableStatementHint extends HintRule {
         }
 
         @Override
-        public void visit(ExpressionStatement node) {
+        public void visit(ThrowStatement node) {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
             super.visit(node);
-            // NETBEANS-4443 PHP 8.0: throw statement -> throw expression
-            // https://wiki.php.net/rfc/throw_expression
-            // i.e.
-            // PHP 7.x:
-            // <ThrowStatement></ThrowStatement>
-            // PHP 8.0:
-            // <ExpressionStatement>
-            //     <ThrowExpression></ThrowExpression>
-            // </ExpressionStatement>
-            if (node.getExpression() instanceof ThrowExpression) {
-                processLastStatement(node);
-            }
+            processLastStatement(node);
         }
 
         private void processLastStatement(Statement node) {

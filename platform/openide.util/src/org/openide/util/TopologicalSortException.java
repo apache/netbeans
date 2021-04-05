@@ -85,7 +85,7 @@ public final class TopologicalSortException extends Exception {
     public final Set[] unsortableSets() {
         Set[] all = topologicalSets();
 
-        List<Set> unsort = new ArrayList<>();
+        ArrayList<Set> unsort = new ArrayList<Set>();
 
         for (int i = 0; i < all.length; i++) {
             if ((all[i].size() > 1) || !(all[i] instanceof HashSet)) {
@@ -189,15 +189,15 @@ public final class TopologicalSortException extends Exception {
         // now connect vertexes that cannot be sorted into own
         // sets
         // map from the original objects to 
-        Map<Object, Set<Object>> objectsToSets = new HashMap<>();
+        Map<Object,Set> objectsToSets = new HashMap<Object,Set>();
 
-        List<Set<Object>> sets = new ArrayList<>();
+        ArrayList<Set> sets = new ArrayList<Set>();
 
         while (!dualGraph.isEmpty()) {
             Vertex v = dualGraph.pop();
 
             if (!v.visited) {
-                Set<Object> set = new HashSet<>();
+                Set<Object> set = new HashSet<Object>();
                 visitDualGraph(v, set);
 
                 if ((set.size() == 1) && v.edgesFrom.contains(v)) {
@@ -223,7 +223,7 @@ public final class TopologicalSortException extends Exception {
 
         // now topologically sort the sets
         // 1. prepare the map
-        Map<Set, Collection<Set>> edgesBetweenSets = new HashMap<>();
+        HashMap<Set,Collection<Set>> edgesBetweenSets = new HashMap<Set,Collection<Set>>();
         it = edges.entrySet().iterator();
 
         while (it.hasNext()) {
@@ -355,7 +355,7 @@ public final class TopologicalSortException extends Exception {
         /** Iterator over edges
          * @return iterator of Vertex items
          */
-        public Iterator<Vertex> edges() {
+        public Iterator edges() {
             if (!sorted) {
                 Collections.sort(edgesFrom);
                 sorted = true;

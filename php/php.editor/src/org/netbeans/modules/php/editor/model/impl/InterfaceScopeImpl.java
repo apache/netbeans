@@ -169,7 +169,7 @@ class InterfaceScopeImpl extends TypeScopeImpl implements InterfaceScope {
             sb.append(iface);
         }
         if (!superInterfaces.isEmpty()) {
-            sb.append(Type.SEPARATOR);
+            sb.append("|"); //NOI18N
             StringBuilder fqIfaceSb = new StringBuilder();
             Collection<QualifiedName> fQSuperInterfaceNames = getFQSuperInterfaceNames();
             for (QualifiedName fQSuperInterfaceName : fQSuperInterfaceNames) {

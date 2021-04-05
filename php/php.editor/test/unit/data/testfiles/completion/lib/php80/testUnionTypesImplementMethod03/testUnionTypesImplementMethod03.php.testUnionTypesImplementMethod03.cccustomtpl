@@ -1,4 +1,0 @@
-Name: testMethod
-public function testMethod(float|int|array|\Test1\Foo|null $param): \Test1\Foo|\Test1\Bar {
-${cursor};
-}

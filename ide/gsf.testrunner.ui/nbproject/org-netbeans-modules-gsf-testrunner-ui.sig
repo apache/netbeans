@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.21
+#Version 1.17
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -152,22 +152,6 @@ CLSS public static org.netbeans.modules.gsf.testrunner.ui.api.TestCreatorPanelDi
  outer org.netbeans.modules.gsf.testrunner.ui.api.TestCreatorPanelDisplayer
 cons public init(org.netbeans.api.project.Project)
 supr java.lang.Object
-
-CLSS public org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController
-cons public init()
-innr public final static TestMethod
-meth public static void setTestMethods(javax.swing.text.Document,java.util.List<org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod>)
-supr java.lang.Object
-hfds DOCUMENT_METHOD_KEYS
-
-CLSS public final static org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController$TestMethod
- outer org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController
-cons public init(org.netbeans.spi.project.SingleMethod,javax.swing.text.Position,javax.swing.text.Position)
-meth public javax.swing.text.Position end()
-meth public javax.swing.text.Position start()
-meth public org.netbeans.spi.project.SingleMethod method()
-supr java.lang.Object
-hfds end,method,start
 
 CLSS public abstract org.netbeans.modules.gsf.testrunner.ui.api.TestMethodDebuggerProvider
 cons public init()

@@ -24,11 +24,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import org.openide.util.BaseUtilities;
-import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.MutexException;
 import org.openide.util.Union2;
-import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.spi.MutexEventProvider;
 import org.openide.util.spi.MutexImplementation;
@@ -96,10 +94,7 @@ public class NbMutexEventProvider implements MutexEventProvider {
            if (EventQueue.isDispatchThread()) {
                run.run();
            } else {
-               Lookup inherit = Lookup.getDefault();
-               EventQueue.invokeLater(() -> {
-                   Lookups.executeWith(inherit, run);
-               });
+               EventQueue.invokeLater(run);
            }
        }
 
@@ -107,10 +102,7 @@ public class NbMutexEventProvider implements MutexEventProvider {
         * @param run runabble to post later
         */
         private static void doEventRequest(Runnable run) {
-            Lookup inherit = Lookup.getDefault();
-            EventQueue.invokeLater(() -> {
-                Lookups.executeWith(inherit, run);
-            });
+            EventQueue.invokeLater(run);
         }
 
         /** Methods for access to event queue and waiting for result.
@@ -132,25 +124,22 @@ public class NbMutexEventProvider implements MutexEventProvider {
             final AtomicBoolean started = new AtomicBoolean(); // #210991
             final AtomicBoolean finished = new AtomicBoolean();
             final AtomicBoolean invoked = new AtomicBoolean();
-            final Lookup inherit = Lookup.getDefault();
             try {
                 class AWTWorker implements Runnable {
                     @Override
                     public void run() {
                         started.set(true);
-                        Lookups.executeWith(inherit, () -> {
-                            try {
-                                res.set(Union2.<T,Throwable>createFirst(run.run()));
-                            } catch (Exception e) {
-                                res.set(Union2.<T,Throwable>createSecond(e));
-                            } catch (LinkageError e) {
-                                // #20467
-                                res.set(Union2.<T,Throwable>createSecond(e));
-                            } catch (StackOverflowError e) {
-                                // #20467
-                                res.set(Union2.<T,Throwable>createSecond(e));
-                            }
-                        });
+                        try {
+                            res.set(Union2.<T,Throwable>createFirst(run.run()));
+                        } catch (Exception e) {
+                            res.set(Union2.<T,Throwable>createSecond(e));
+                        } catch (LinkageError e) {
+                            // #20467
+                            res.set(Union2.<T,Throwable>createSecond(e));
+                        } catch (StackOverflowError e) {
+                            // #20467
+                            res.set(Union2.<T,Throwable>createSecond(e));
+                        }
                         finished.set(true);
                     }
                 }

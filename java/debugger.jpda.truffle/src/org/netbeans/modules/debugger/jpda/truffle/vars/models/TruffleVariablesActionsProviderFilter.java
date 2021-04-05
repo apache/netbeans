@@ -61,8 +61,7 @@ public class TruffleVariablesActionsProviderFilter implements NodeActionsProvide
         new Models.ActionPerformer () {
             @Override
             public boolean isEnabled (Object node) {
-                TruffleVariable var = (TruffleVariable) node;
-                return var.hasValueSource();
+                return true;
             }
             @Override
             public void perform (final Object[] nodes) {
@@ -79,8 +78,7 @@ public class TruffleVariablesActionsProviderFilter implements NodeActionsProvide
         new Models.ActionPerformer () {
             @Override
             public boolean isEnabled (Object node) {
-                TruffleVariable var = (TruffleVariable) node;
-                return var.hasTypeSource();
+                return true;
             }
             @Override
             public void perform (final Object[] nodes) {
@@ -100,7 +98,9 @@ public class TruffleVariablesActionsProviderFilter implements NodeActionsProvide
                 if (source == null) {
                     source = var.getTypeSource();
                 }
-                showSource(source);
+                if (source != null) {
+                    showSource(source);
+                }
             });
         } else {
             original.performDefaultAction(node);
@@ -148,9 +148,6 @@ public class TruffleVariablesActionsProviderFilter implements NodeActionsProvide
 
     @NbBundle.Messages({"# {0} - The file path", "MSG_NoSourceFile=Cannot find source file {0}."})
     private void showSource(SourcePosition source) {
-        if (source == null) {
-            return ;
-        }
         URL url = source.getSource().getUrl();
         int lineNumber = source.getStartLine();
         SwingUtilities.invokeLater (() -> {

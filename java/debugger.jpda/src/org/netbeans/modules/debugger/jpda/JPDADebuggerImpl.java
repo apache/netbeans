@@ -173,6 +173,7 @@ public class JPDADebuggerImpl extends JPDADebugger {
     private AbstractDICookie            attachingCookie;
     private JavaEngineProvider          javaEngineProvider;
     private Set<String>                 languages;
+    private String                      lastStratumn;
     private ContextProvider             lookupProvider;
     private ObjectTranslation           threadsTranslation;
     private ObjectTranslation           localsTranslation;
@@ -884,16 +885,12 @@ public class JPDADebuggerImpl extends JPDADebugger {
                 }
             }
         }
-        JPDAThread frameThread;
-        if (csf != null) {
-            frameThread = csf.getThread();
-        } else {
-            frameThread = getCurrentThread();
-        }
-        if (frameThread == null) {
+        if (csf == null) {
             throw new InvalidExpressionException
-                (NbBundle.getMessage(JPDADebuggerImpl.class, "MSG_NoCurrentContext"));
+                (NbBundle.getMessage(JPDADebuggerImpl.class, "MSG_NoCurrentContextStackFrame"));
         }
+
+        JPDAThread frameThread = csf.getThread();
         JPDAThreadImpl frameThreadImpl = (JPDAThreadImpl) frameThread;
         //Object pendingAction = frameThreadImpl.getPendingAction();
         //if (pendingAction != null) { For the case that evaluation should be blocked by pending action
@@ -922,8 +919,8 @@ public class JPDADebuggerImpl extends JPDADebugger {
             Evaluator.Result result;
             final JPDAThreadImpl[] resumedThread = new JPDAThreadImpl[] { null };
             try {
-                StackFrame sf = csf != null ? csf.getStackFrame() : null;
-                int stackDepth = csf != null ? csf.getFrameDepth() : -1;
+                StackFrame sf = csf.getStackFrame();
+                int stackDepth = csf.getFrameDepth();
                 final ThreadReference tr = frameThreadImpl.getThreadReference();
                 Runnable methodToBeInvokedNotifier = new Runnable() {
                         @Override
@@ -944,21 +941,16 @@ public class JPDADebuggerImpl extends JPDADebugger {
                             }
                         }
                     };
-                List<Object> lookupVars = new ArrayList<>();
-                lookupVars.add(frameThread);
-                lookupVars.add(stackDepth);
-                if (csf != null) {
-                    lookupVars.add(csf);
-                    lookupVars.add(sf);
-                }
+                Lookup context;
                 if (var != null) {
-                    lookupVars.add(var);
+                    if (v != null) {
+                        context = Lookups.fixed(csf, var, sf, stackDepth, v, methodToBeInvokedNotifier);
+                    } else {
+                        context = Lookups.fixed(csf, var, sf, stackDepth, methodToBeInvokedNotifier);
+                    }
+                } else {
+                    context = Lookups.fixed(csf, sf, stackDepth, methodToBeInvokedNotifier);
                 }
-                if (v != null) {
-                    lookupVars.add(v);
-                }
-                lookupVars.add(methodToBeInvokedNotifier);
-                Lookup context = Lookups.fixed(lookupVars.toArray());
                 result = expression.evaluate(e, new Evaluator.Context(context));
             } catch (InternalExceptionWrapper ex) {
                 return null;
@@ -2395,9 +2387,12 @@ public class JPDADebuggerImpl extends JPDADebugger {
                 languages.add (language);
             }
         } // for
-        if (stratum != null) {
+        if ( (stratum != null) &&
+             (!stratum.equals (lastStratumn))
+        ) {
             javaEngineProvider.getSession ().setCurrentLanguage (stratum);
         }
+        lastStratumn = stratum;
     }
 
     private Set<JSR45DebuggerEngineProvider> jsr45EngineProviders;

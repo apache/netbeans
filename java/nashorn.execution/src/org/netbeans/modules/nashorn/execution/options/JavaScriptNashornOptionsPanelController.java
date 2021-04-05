@@ -33,7 +33,7 @@ import org.openide.util.Lookup;
  */
 @OptionsPanelController.SubRegistration(
     location=JavaOptions.JAVA,
-    displayName="#LBL_JSonJVM",
+    displayName="#LBL_Nashorn",
     keywords="#KW_JavaScript",
     keywordsCategory=JavaOptions.JAVA+"/JavaScript")
 public final class JavaScriptNashornOptionsPanelController extends OptionsPanelController {

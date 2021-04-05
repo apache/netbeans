@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.51
+#Version 6.47
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,6 +159,8 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
+meth public java.awt.peer.ComponentPeer getPeer()
+ anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -1377,8 +1379,8 @@ meth public static void setBranding(java.lang.String)
 meth public static void setClassLoaderFinder(org.openide.util.NbBundle$ClassLoaderFinder)
  anno 0 java.lang.Deprecated()
 supr java.lang.Object
-hfds LOG,USE_DEBUG_LOADER,brandingToken,bundleCache,localizedFileCache,utfThenIsoCharset,utfThenIsoCharsetOnlyUTF8
-hcls AttributesMap,DebugLoader,LocaleIterator,MergedBundle,PBundle,UtfThenIsoCharset
+hfds LOG,USE_DEBUG_LOADER,brandingToken,bundleCache,localizedFileCache
+hcls AttributesMap,DebugLoader,LocaleIterator,MergedBundle,PBundle
 
 CLSS public abstract interface static org.openide.util.NbBundle$ClassLoaderFinder
  outer org.openide.util.NbBundle

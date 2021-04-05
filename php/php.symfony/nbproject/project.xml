@@ -146,7 +146,6 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>2</release-version>
                         <implementation-version/>
                     </run-dependency>
                 </dependency>

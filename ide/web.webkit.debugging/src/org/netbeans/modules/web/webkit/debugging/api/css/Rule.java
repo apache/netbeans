@@ -89,7 +89,7 @@ public class Rule {
                 media.add(new Media((JSONObject)o));
             }
         } else {
-            media = Collections.emptyList();
+            media = Collections.EMPTY_LIST;
         }
         if (rule.containsKey("selectorList")) { // NOI18N
             JSONObject selectorList = (JSONObject)rule.get("selectorList"); // NOI18N

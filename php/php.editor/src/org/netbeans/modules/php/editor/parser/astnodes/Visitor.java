@@ -42,10 +42,6 @@ public interface Visitor {
 
     public void visit(ASTErrorExpression astErrorExpression);
 
-    public void visit(Attribute attribute);
-
-    public void visit(AttributeDeclaration attributeDeclaration);
-
     //public void endVisit(ASTError astError);
     public void visit(BackTickExpression backTickExpression);
 
@@ -135,12 +131,6 @@ public interface Visitor {
 
     //public void endVisit(GlobalStatement globalStatement);
     public void visit(Identifier identifier);
-
-    public void visit(MatchArm matchArm);
-
-    public void visit(MatchExpression matchExpression);
-
-    public void visit(NamedArgument namedArgument);
 
     //public void endVisit(Identifier identifier);
     public void visit(NamespaceName namespaceName);
@@ -257,7 +247,7 @@ public interface Visitor {
     public void visit(SwitchStatement switchStatement);
 
     //public void endVisit(SwitchStatement switchStatement);
-    public void visit(ThrowExpression throwStatement);
+    public void visit(ThrowStatement throwStatement);
 
     public void visit(TraitDeclaration traitDeclaration);
 
@@ -270,8 +260,6 @@ public interface Visitor {
 
     //public void endVisit(TryStatement tryStatement);
     public void visit(UnaryOperation unaryOperation);
-
-    public void visit(UnionType unionType);
 
     public void visit(UnpackableArrayElement unpackableArrayElement);
 

@@ -19,6 +19,7 @@
 package org.netbeans.modules.apisupport.project;
 
 import java.io.File;
+import static junit.framework.Assert.assertNotNull;
 import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;

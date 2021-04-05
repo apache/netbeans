@@ -42,6 +42,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.Assert;
 import org.openide.util.Utilities;
+import sun.security.util.SecurityConstants;
 
 /**
  *
@@ -112,8 +113,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
 
     static void assertReflection(int maxCount, String whitelist) {
         System.setProperty("counting.reflection.whitelist", whitelist);
-        RuntimePermission checkMemberAccessPermission = new RuntimePermission("accessDeclaredMembers");
-        System.getSecurityManager().checkPermission(checkMemberAccessPermission);
+        System.getSecurityManager().checkPermission( SecurityConstants.CHECK_MEMBER_ACCESS_PERMISSION); 
         System.getProperties().remove("counting.reflection.whitelist");
     }
 

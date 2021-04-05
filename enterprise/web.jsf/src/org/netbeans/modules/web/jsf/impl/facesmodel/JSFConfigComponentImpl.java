@@ -101,7 +101,7 @@ public abstract class JSFConfigComponentImpl extends AbstractDocumentComponent <
     }
     
     protected Map<String,Integer> getOrderedMapOfLocalNames(){
-        return Collections.<String,Integer>emptyMap();
+        return Collections.EMPTY_MAP;
     }
     
     protected void reorderChildren(){

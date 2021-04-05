@@ -22,21 +22,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.netbeans.api.annotations.common.CheckForNull;
-import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.EditList;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
-import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
-import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
@@ -56,7 +53,6 @@ import org.openide.util.NbBundle;
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
 public class InitializeFieldSuggestion extends SuggestionRule {
-
     private static final String SUGGESTION_ID = "Initialize.Field.Suggestion"; //NOI18N
 
     @Override
@@ -83,12 +79,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
         }
     }
 
-    protected PhpVersion getPhpVersion(@NullAllowed FileObject fileObject) {
-        return fileObject == null ? PhpVersion.getDefault() : CodeUtils.getPhpVersion(fileObject);
-    }
-
     private final class ConstructorVisitor extends DefaultVisitor {
-
         private final FileObject fileObject;
         private final BaseDocument baseDocument;
         private final ArrayList<Hint> hints;
@@ -106,7 +97,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
         }
 
         public List<Hint> getHints() {
-            return Collections.unmodifiableList(hints);
+            return hints;
         }
 
         @Override
@@ -171,10 +162,6 @@ public class InitializeFieldSuggestion extends SuggestionRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            // [NETBEANS-4443] PHP 8.0 Constructor Property Promotion
-            if (CodeUtils.isConstructor(node)) {
-                processConstructorPropertyPromotion(node);
-            }
             FunctionDeclaration function = node.getFunction();
             if (CodeUtils.isConstructor(node) && function.getBody() != null) {
                 formalParameters = new ArrayList<>(function.getFormalParameters());
@@ -183,26 +170,6 @@ public class InitializeFieldSuggestion extends SuggestionRule {
                 scan(function.getBody());
                 isInConstructor = false;
                 createHints();
-            }
-        }
-
-        private void processConstructorPropertyPromotion(MethodDeclaration node) {
-            for (FormalParameter formalParameter : node.getFunction().getFormalParameters()) {
-                if (CancelSupport.getDefault().isCancelled()) {
-                    return;
-                }
-                // scan paramters as fields
-                FieldsDeclaration fieldsDeclaration = FieldsDeclaration.create(formalParameter);
-                if (fieldsDeclaration != null) {
-                    // e.g.
-                    // private int $param,
-                    // private string $param = "default value"
-                    String paramName = CodeUtils.extractFormalParameterName(formalParameter);
-                    if (paramName != null) {
-                        usedVariables.add(paramName);
-                    }
-                    scan(fieldsDeclaration);
-                }
             }
         }
 
@@ -222,7 +189,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
                         initializers.add(new FieldAssignmentInitializer(constructorBodyEndOffset, parameterName));
                     }
                     if (!declaredFields.contains(parameterName)) {
-                        initializers.add(new FieldDeclarationInitializer(typeBodyStartOffset, formalParameter, getPhpVersion(fileObject)));
+                        initializers.add(new FieldDeclarationInitializer(typeBodyStartOffset, formalParameter));
                     }
                     if (!initializers.isEmpty()) {
                         result.add(new ParameterToInit(formalParameter, initializers));
@@ -248,7 +215,6 @@ public class InitializeFieldSuggestion extends SuggestionRule {
     }
 
     private final class ParameterToInit {
-
         private final FormalParameter formalParameter;
         private final List<Initializer> initializers;
 
@@ -291,7 +257,6 @@ public class InitializeFieldSuggestion extends SuggestionRule {
     }
 
     private abstract static class InitializerImpl implements Initializer {
-
         private final int offset;
 
         public InitializerImpl(int offset) {
@@ -308,10 +273,9 @@ public class InitializeFieldSuggestion extends SuggestionRule {
     }
 
     private static class FieldDeclarationInitializer extends InitializerImpl {
-
         private final String initString;
 
-        public FieldDeclarationInitializer(int offset, FormalParameter node, PhpVersion phpVersion) {
+        public FieldDeclarationInitializer(int offset, FormalParameter node) {
             super(offset);
 
             Expression parameterType = node.getParameterType();
@@ -323,7 +287,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
 
             StringBuilder sb = new StringBuilder();
             sb.append("\n"); // NOI18N
-            if (typeName != null && !phpVersion.hasPropertyTypes()) {
+            if (typeName != null) {
                 // type part
                 sb.append("/**\n * @var "); // NOI18N
                 sb.append(typeName);
@@ -332,16 +296,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
                 }
                 sb.append("\n */\n"); // NOI18N
             }
-            sb.append("private "); // NOI18N
-            if (typeName != null && phpVersion.hasPropertyTypes()) {
-                // typed properties are supported since PHP 7.4
-                // https://wiki.php.net/rfc/typed_properties_v2
-                if (node.isNullableType()) {
-                    sb.append(CodeUtils.NULLABLE_TYPE_PREFIX);
-                }
-                sb.append(typeName).append(" "); // NOI18N
-            }
-            sb.append(parameterName).append(";\n"); // NOI18N
+            sb.append("private ").append(parameterName).append(";\n"); // NOI18N
             initString = sb.toString();
         }
 
@@ -353,7 +308,6 @@ public class InitializeFieldSuggestion extends SuggestionRule {
     }
 
     private static class FieldAssignmentInitializer extends InitializerImpl {
-
         private final String initString;
 
         public FieldAssignmentInitializer(int offset, String parameterName) {
@@ -369,7 +323,6 @@ public class InitializeFieldSuggestion extends SuggestionRule {
     }
 
     private static final class Fix implements HintFix {
-
         private final ParameterToInit parameterToInit;
         private final BaseDocument baseDocument;
 

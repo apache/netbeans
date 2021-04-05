@@ -101,8 +101,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy;
-import org.netbeans.api.java.source.support.CancellableTreeScanner;
-import org.netbeans.modules.editor.java.TreeShims;
+import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.spi.java.hints.HintContext;
 
@@ -354,7 +353,7 @@ public class Flow {
      * that are qualified to belong to other scopes are ignored at the moment.
      * 
      */
-    private static final class VisitorImpl extends CancellableTreeScanner<Boolean, ConstructorData> {
+    private static final class VisitorImpl extends CancellableTreePathScanner<Boolean, ConstructorData> {
         
         private final CompilationInfo info;
         private final TypeElement undefinedSymbolScope;
@@ -445,45 +444,11 @@ public class Flow {
             return cancel.isCanceled();
         }
 
-        private TreePath currentPath;
-
-        public TreePath getCurrentPath() {
-            return currentPath;
-        }
-
-        public Boolean scan(TreePath path, ConstructorData p) {
-            TreePath oldPath = currentPath;
-            try {
-                currentPath = path;
-                return super.scan(path.getLeaf(), p);
-            } finally {
-                currentPath = oldPath;
-            }
-        }
-
         @Override
         public Boolean scan(Tree tree, ConstructorData p) {
             resume(tree, resumeBefore);
             
-            Boolean result;
-
-            if (tree != null) {
-                TreePath oldPath = currentPath;
-                try {
-                    currentPath = new TreePath(currentPath, tree);
-                    if (TreeShims.SWITCH_EXPRESSION.equals(tree.getKind().name())) {
-                        result = visitSwitchExpression(tree, p);
-                    } else if (TreeShims.YIELD.equals(tree.getKind().name())) {
-                        result = visitYield(tree, p);
-                    } else {
-                        result = super.scan(tree, p);
-                    }
-                } finally {
-                    currentPath = oldPath;
-                }
-            } else {
-                result = null;
-            }
+            Boolean result = super.scan(tree, p);
 
             resume(tree, resumeAfter);
             
@@ -995,7 +960,7 @@ public class Flow {
         }
         
         private boolean isConstructor(TreePath what) {
-            return what.getLeaf().getKind() == Kind.METHOD && ((MethodTree) what.getLeaf()).getName().contentEquals("<init>"); //TODO: not really a proper way to detect constructors
+            return what.getLeaf().getKind() == Kind.METHOD && ((MethodTree) what.getLeaf()).getReturnType() == null; //TODO: not really a proper way to detect constructors
         }
 
         @Override
@@ -1207,39 +1172,15 @@ public class Flow {
 
             Tree target = info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath());
             
-            breakTo(target);
-
-            return null;
-        }
-
-        public Boolean visitYield(Tree node, ConstructorData p) {
-            scan(TreeShims.getYieldValue(node), p);
-
-            Tree target = info.getTreeUtilities().getBreakContinueTargetTree(getCurrentPath());
-            
-            breakTo(target);
-
-            return null;
-        }
-
-        private void breakTo(Tree target) {
             resumeAfter(target, variable2State);
 
-            variable2State = new HashMap<>();
+            variable2State = new HashMap< Element, State>();
+            
+            return null;
         }
 
         public Boolean visitSwitch(SwitchTree node, ConstructorData p) {
-            generalizedSwitch(node, node.getExpression(), node.getCases());
-            return null;
-        }
-
-        public Boolean visitSwitchExpression(Tree node, ConstructorData p) {
-            generalizedSwitch(node, TreeShims.getExpressions(node).get(0), TreeShims.getCases(node));
-            return null; //never a constant expression
-        }
-
-        private void generalizedSwitch(Tree switchTree, ExpressionTree expression, List<? extends CaseTree> cases) {
-            scan(expression, null);
+            scan(node.getExpression(), null);
 
             Map< Element, State> origVariable2State = new HashMap< Element, State>(variable2State);
 
@@ -1247,7 +1188,7 @@ public class Flow {
 
             boolean exhaustive = false;
 
-            for (CaseTree ct : cases) {
+            for (CaseTree ct : node.getCases()) {
                 variable2State = mergeOr(variable2State, origVariable2State);
 
                 if (ct.getExpression() == null) {
@@ -1255,15 +1196,13 @@ public class Flow {
                 }
 
                 scan(ct, null);
-
-                if (TreeShims.isRuleCase(ct)) {
-                    breakTo(switchTree);
-                }
             }
 
             if (!exhaustive) {
                 variable2State = mergeOr(variable2State, origVariable2State);
             }
+            
+            return null;
         }
 
         public Boolean visitEnhancedForLoop(EnhancedForLoopTree node, ConstructorData p) {

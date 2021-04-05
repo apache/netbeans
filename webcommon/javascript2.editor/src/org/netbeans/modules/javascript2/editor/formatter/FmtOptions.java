@@ -47,9 +47,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import org.netbeans.api.editor.document.AtomicLockDocument;
-import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.settings.SimpleValueNames;
+import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.editor.indent.api.Reformat;
 import org.netbeans.modules.options.editor.spi.PreferencesCustomizer;
 import org.netbeans.modules.options.editor.spi.PreviewProvider;
@@ -564,12 +563,11 @@ public class FmtOptions {
             pane.setIgnoreRepaint(true);
 
             final Document doc = pane.getDocument();
-            final AtomicLockDocument ald = LineDocumentUtils.as(doc, AtomicLockDocument.class);
-            if (ald != null) {
+            if (doc instanceof BaseDocument) {
                 final Reformat reformat = Reformat.get(doc);
                 reformat.lock();
                 try {
-                    ald.runAtomic(new Runnable() {
+                    ((BaseDocument) doc).runAtomic(new Runnable() {
                         @Override
                         public void run() {
 

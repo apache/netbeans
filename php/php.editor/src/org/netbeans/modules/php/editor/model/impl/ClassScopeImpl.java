@@ -458,7 +458,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
         final QualifiedName superClassName = getSuperClassName();
         if (superClassName != null) {
             sb.append(superClassName.toString());
-            sb.append(Type.SEPARATOR);
+            sb.append("|");
             boolean first = true;
             for (QualifiedName qualifiedName : possibleFQSuperClassNames) {
                 if (!first) {
@@ -483,7 +483,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
         }
         sb.append(ifaceSb);
         if (ifaceSb.length() > 0) {
-            sb.append(Type.SEPARATOR);
+            sb.append("|"); //NOI18N
             StringBuilder fqIfaceSb = new StringBuilder();
             Collection<QualifiedName> fQSuperInterfaceNames = getFQSuperInterfaceNames();
             for (QualifiedName fQSuperInterfaceName : fQSuperInterfaceNames) {

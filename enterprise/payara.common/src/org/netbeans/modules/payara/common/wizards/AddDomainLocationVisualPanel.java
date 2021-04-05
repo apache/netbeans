@@ -29,7 +29,6 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.DefaultComboBoxModel;
@@ -37,10 +36,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.modules.payara.tooling.utils.NetUtils;
 import org.netbeans.modules.payara.common.PayaraInstance;
-import org.netbeans.modules.payara.common.PayaraPlatformDetails;
+import org.netbeans.modules.payara.common.ServerDetails;
 import org.netbeans.modules.payara.common.ui.IpComboBox;
 import org.netbeans.modules.payara.spi.Utils;
-import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 import org.openide.awt.HtmlBrowser;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -164,8 +162,8 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
         httpPortField.addKeyListener(kl);
         initPortsFields();
         // make sure the target field is ok...
-        Optional<PayaraPlatformVersionAPI> serverDetails = PayaraPlatformDetails.getVersionFromInstallDirectory(new File(gfRoot));
-        if (serverDetails.isPresent() && !serverDetails.get().isMinimumSupportedVersion()) {
+        if (ServerDetails.getVersionFromInstallDirectory(new File(gfRoot)) < 
+                ServerDetails.PAYARA_SERVER_4_1_144.getVersionInt()) {
             targetValueField.setText(""); // NOI18N
             targetValueField.setEnabled(false);
         } else {

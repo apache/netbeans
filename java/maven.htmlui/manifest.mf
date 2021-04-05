@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.maven.htmlui
+OpenIDE-Module-Provides: org.netbeans.modules.maven.archetype
+OpenIDE-Module-Requires: org.netbeans.api.templates.wizard
+OpenIDE-Module-Recommends: org.netbeans.modules.ko4j.debugging,org.netbeans.modules.ko4j.editing
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/maven/htmlui/Bundle.properties
+OpenIDE-Module-Needs: org.netbeans.api.templates.wizard, javax.script.ScriptEngine.freemarker
+OpenIDE-Module-Specification-Version: 1.8

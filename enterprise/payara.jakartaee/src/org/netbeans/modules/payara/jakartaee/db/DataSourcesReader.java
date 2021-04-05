@@ -22,13 +22,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.netbeans.modules.glassfish.javaee.db.JDBCConnectionPool;
-import org.netbeans.modules.glassfish.javaee.db.JDBCResource;
 import org.netbeans.modules.payara.tooling.TaskState;
 import org.netbeans.modules.payara.tooling.admin.CommandGetProperty;
 import org.netbeans.modules.payara.tooling.admin.ResultMap;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
-import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 import org.netbeans.modules.payara.tooling.utils.StringPrefixTree;
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
 
@@ -179,10 +177,11 @@ public class DataSourcesReader {
             buildJDBCContentObjects(properties, pools, resources);
             assignConnectionPoolsToResources(pools, resources);
             // Add Java EE 7 comp/DefaultDataSource data source (since PF 4).
-            if (server.getPlatformVersion().isEE7Supported()) {
+            if (server.getVersion().ordinal()
+                    >= PayaraVersion.PF_4_1_144.ordinal()) {
                 addNewJavaEE7dataSource(resources);
             }
-            return new HashSet<>(resources.values());
+            return new HashSet<Datasource>(resources.values());
         } else {
             return null;
         }

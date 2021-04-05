@@ -81,25 +81,20 @@ public class SingleModulePropertiesTest extends TestBase {
         super(name);
     }
 
-    @Override
     protected void setUp() throws Exception {
         noDataDir = true;
         clearWorkDir();
         super.setUp();
-        //RestrictThreadCreation.permitStandard();
-        //RestrictThreadCreation.permit("org.netbeans.modules.masterfs.GlobalVisibilityQueryImpl.getIgnoredFiles","org.openide.util.lookup.MetaInfServicesLookup.beforeLookup");
-        //RestrictThreadCreation.forbidNewThreads(true);
+        RestrictThreadCreation.permitStandard();
+        RestrictThreadCreation.permit("org.netbeans.modules.masterfs.GlobalVisibilityQueryImpl.getIgnoredFiles",
+                "org.openide.util.lookup.MetaInfServicesLookup.beforeLookup");
+        RestrictThreadCreation.forbidNewThreads(true);
     }
 
     @Override protected Level logLevel() {
         return Level.FINE;
     }
-
-    @Override
-    protected boolean runInEQ() {
-        return true;
-    }
-
+    
     /** Tests few basic properties to be sure that loading works. */
     public void testThatBasicPropertiesAreLoaded() throws Exception {
         NbModuleProject p = generateStandaloneModule("module1");
@@ -243,7 +238,7 @@ public class SingleModulePropertiesTest extends TestBase {
     // cannot be run in binary dist, requires sources; test against fake platform
     public void testGetPublicPackagesForNBOrg() throws Exception {
         // libs.xerces properties
-        NbModuleProject libP = (NbModuleProject) ProjectManager.getDefault().findProject(nbRoot().getFileObject("ide/libs.xerces"));
+        NbModuleProject libP = (NbModuleProject) ProjectManager.getDefault().findProject(nbRoot().getFileObject("libs.xerces"));
         SingleModuleProperties props = loadProperties(libP);
         PublicPackagesTableModel pptm = props.getPublicPackagesModel();
         assertEquals("number of available public packages", 38, pptm.getRowCount());
@@ -379,9 +374,7 @@ public class SingleModulePropertiesTest extends TestBase {
         assertEquals("one public packages in the ModuleEntry", 1, props.getModuleList().getEntry("org.example.module1a").getPublicPackages().length);
     }
     
-    
     /** Test that a module doesn't offer itself in its dependency list. */
-    /* FIXME: Unable to run this test in EQ
     public void testThatTheModuleDoesNotOfferItself_61232() throws Exception {
         NbModuleProject p = generateStandaloneModule("module1");
         SingleModuleProperties props = loadProperties(p);
@@ -391,7 +384,6 @@ public class SingleModulePropertiesTest extends TestBase {
                     p.getCodeNameBase().equals(me.getCodeNameBase()));
         }
     }
-    */
     
     public void testGetAvailableFriends() throws Exception {
         // standalone
@@ -409,14 +401,12 @@ public class SingleModulePropertiesTest extends TestBase {
     }
 
     // XXX cannot be run in binary dist, requires sources; test against fake platform
-    /* FIXME: Unable to run this test in EQ
     public void testGetAvailableFriendsForNBOrg() throws Exception {
         // netbeans.org
-        Project javaProject = ProjectManager.getDefault().findProject(nbRoot().getFileObject("java/java.project"));
+        Project javaProject = ProjectManager.getDefault().findProject(nbRoot().getFileObject("java.project"));
         SingleModuleProperties props = loadProperties((NbModuleProject) javaProject);
         assertTrue("There are two available friends for component2.", props.getAvailableFriends().length > 50);
     }
-    */
 
     public void testSimulateLocalizedBundlePackageRefactoring() throws Exception {
         NbModuleProject p = generateStandaloneModule("module1");
@@ -512,7 +502,6 @@ public class SingleModulePropertiesTest extends TestBase {
         assertEquals("time for bundle has not changed", bundleTime, bundle.lastModified().getTime());
     }
     
-    /* FIXME: Unable to run this test in EQ
     public void testGetUniverseDependencies() throws Exception {
         SuiteProject suite = generateSuite("suite");
         
@@ -573,7 +562,6 @@ public class SingleModulePropertiesTest extends TestBase {
         assertTrue(allDepsFilterExcluded.contains(friendPrjDep));
         assertTrue(allDepsFilterExcluded.contains(nonApiPrjDep));
     }
-    */
     
     public void testDefaultPackageIsNotOffered_71532() throws Exception {
         NbModuleProject p = generateStandaloneModule("module1");

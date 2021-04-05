@@ -36,12 +36,10 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lexer.TokenUtilities;
-import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.AliasedName;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
-import org.netbeans.modules.php.editor.api.QualifiedNameKind;
 import org.netbeans.modules.php.editor.elements.TypeNameResolverImpl;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.model.ArrowFunctionScope;
@@ -94,7 +92,6 @@ import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticDispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
-import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 import org.netbeans.modules.php.editor.parser.astnodes.VariableBase;
 import org.netbeans.modules.php.project.api.PhpSourcePath;
@@ -225,58 +222,14 @@ public final class VariousUtils {
     public static String getReturnType(Program root, FunctionDeclaration functionDeclaration) {
         Expression returnType = functionDeclaration.getReturnType();
         if (returnType != null) {
-            String typeName;
-            if (returnType instanceof UnionType) {
-                typeName = getUnionType((UnionType) returnType);
-            } else {
-                QualifiedName name = QualifiedName.create(returnType);
-                assert name != null : returnType;
-                typeName = name.toString();
-            }
-            if (Type.ARRAY.equals(typeName) || Type.SELF.equals(typeName)) {
-                // For "array" type PHPDoc can contain more specific definition, i.e. MyClass[]
-                // For "self" type PHPDoc can contain more specific definition, i.e. static or $this
-                String typeFromPHPDoc = getReturnTypeFromPHPDoc(root, functionDeclaration);
-                if (typeFromPHPDoc != null) {
-                    return typeFromPHPDoc;
-                }
-            }
+            QualifiedName name = QualifiedName.create(returnType);
+            assert name != null : returnType;
             if (returnType instanceof NullableType) {
-                return CodeUtils.NULLABLE_TYPE_PREFIX + typeName;
+                return CodeUtils.NULLABLE_TYPE_PREFIX + name.toString();
             }
-            return typeName;
+            return name.toString();
         }
         return getReturnTypeFromPHPDoc(root, functionDeclaration);
-    }
-
-    /**
-     * Get the types separated by "|".
-     *
-     * @param unionType
-     * @return types separated by "|"
-     */
-    public static String getUnionType(UnionType unionType) {
-        StringBuilder sb = new StringBuilder();
-        for (Expression type : unionType.getTypes()) {
-            QualifiedName name = QualifiedName.create(type);
-            if (sb.length() > 0) {
-                sb.append(Type.SEPARATOR);
-            }
-            assert name != null : type;
-            sb.append(name.toString());
-        }
-        return sb.toString();
-    }
-
-    public static List<Pair<QualifiedName, Boolean/* isNullableType */>> getParamTypesFromUnionTypes(UnionType unionType) {
-        List<Pair<QualifiedName, Boolean>> types = new ArrayList<>();
-        for (Expression type : unionType.getTypes()) {
-            QualifiedName name = QualifiedName.create(type);
-            if (name != null) {
-                types.add(Pair.of(name, false));
-            }
-        }
-        return types;
     }
 
     public static String getReturnTypeFromPHPDoc(Program root, FunctionDeclaration functionDeclaration) {
@@ -711,35 +664,21 @@ public final class VariousUtils {
             }
         } else if (semiTypeName != null) {
             String typeName = CodeUtils.removeNullableTypePrefix(semiTypeName);
-            List<String> typeNames = StringUtils.explode(typeName, Type.SEPARATOR);
-            final List<QualifiedName> qualifiedNames = new ArrayList<>();
-            for (String name : typeNames) {
-                QualifiedName qn = QualifiedName.create(name);
-                String translatedName = translateSpecialClassName(varScope, qn.getName());
-                QualifiedNameKind kind = QualifiedNameKind.resolveKind(translatedName);
-                // fully qualified name may be returned if qualified name is "parent"
-                if (kind == QualifiedNameKind.UNQUALIFIED) {
-                    qn = qn.toNamespaceName().append(translatedName);
-                } else {
-                    qn = QualifiedName.create(translatedName);
-                }
-                if (name.startsWith("\\")) { // NOI18N
-                    qn = qn.toFullyQualified();
-                } else {
-                    NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(varScope);
-                    if (namespaceScope != null) {
-                        Collection<QualifiedName> possibleFQN = getPossibleFQN(qn, offset, namespaceScope);
-                        if (!possibleFQN.isEmpty()) {
-                            qn = ModelUtils.getFirst(possibleFQN);
-                        }
+            QualifiedName qn = QualifiedName.create(typeName);
+            qn = qn.toNamespaceName().append(translateSpecialClassName(varScope, qn.getName()));
+            if (typeName.startsWith("\\")) { // NOI18N
+                qn = qn.toFullyQualified();
+            } else {
+                NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(varScope);
+                if (namespaceScope != null) {
+                    Collection<QualifiedName> possibleFQN = getPossibleFQN(qn, offset, namespaceScope);
+                    if (!possibleFQN.isEmpty()) {
+                        qn = ModelUtils.getFirst(possibleFQN);
                     }
                 }
-                qualifiedNames.add(qn);
             }
             final IndexScope indexScope = ModelUtils.getIndexScope(varScope);
-            final ArrayList<TypeScope> typeScopes = new ArrayList<>();
-            qualifiedNames.forEach(name -> typeScopes.addAll(indexScope.findTypes(name)));
-            return typeScopes;
+            return indexScope.findTypes(qn);
         }
 
         return recentTypes;
@@ -1499,8 +1438,7 @@ public final class VariousUtils {
     }
 
     private static boolean isReference(Token<PHPTokenId> token) {
-        return token.id().equals(PHPTokenId.PHP_OBJECT_OPERATOR)
-                || token.id().equals(PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR);
+        return token.id().equals(PHPTokenId.PHP_OBJECT_OPERATOR);
     }
 
     private static boolean isNamespaceSeparator(Token<PHPTokenId> token) {
@@ -1813,6 +1751,7 @@ public final class VariousUtils {
      */
     public static String qualifyTypeNames(String typeNames, int offset, Scope inScope) {
         StringBuilder retval = new StringBuilder();
+        final String typeSeparator = "|"; //NOI18N
         if (typeNames != null) {
             if (!typeNames.matches(SPACES_AND_TYPE_DELIMITERS)) { //NOI18N
                 for (String typeName : TYPE_SEPARATOR_PATTERN.split(typeNames)) {
@@ -1829,19 +1768,19 @@ public final class VariousUtils {
                     }
                     if ("$this".equals(typeName)) { //NOI18N
                         // #239987
-                        retval.append("\\this").append(Type.SEPARATOR); //NOI18N
+                        retval.append("\\this").append(typeSeparator); //NOI18N
                     } else if (!typeRawPart.startsWith(NamespaceDeclarationInfo.NAMESPACE_SEPARATOR) && !Type.isPrimitive(typeRawPart)) {
                         QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(QualifiedName.create(typeRawPart), offset, inScope);
                         retval.append(fullyQualifiedName.toString().startsWith(NamespaceDeclarationInfo.NAMESPACE_SEPARATOR)
                                 ? "" //NOI18N
                                 : NamespaceDeclarationInfo.NAMESPACE_SEPARATOR);
-                        retval.append(fullyQualifiedName.toString()).append(typeArrayPart).append(Type.SEPARATOR);
+                        retval.append(fullyQualifiedName.toString()).append(typeArrayPart).append(typeSeparator);
                     } else {
-                        retval.append(typeRawPart).append(typeArrayPart).append(Type.SEPARATOR);
+                        retval.append(typeRawPart).append(typeArrayPart).append(typeSeparator);
                     }
                 }
-                assert retval.length() - Type.SEPARATOR.length() >= 0 : "retval:" + retval + "# typeNames:" + typeNames; //NOI18N
-                retval = new StringBuilder(retval.toString().substring(0, retval.length() - Type.SEPARATOR.length()));
+                assert retval.length() - typeSeparator.length() >= 0 : "retval:" + retval + "# typeNames:" + typeNames; //NOI18N
+                retval = new StringBuilder(retval.toString().substring(0, retval.length() - typeSeparator.length()));
             }
         }
         return retval.toString();

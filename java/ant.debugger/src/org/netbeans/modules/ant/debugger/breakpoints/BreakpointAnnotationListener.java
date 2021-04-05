@@ -40,8 +40,9 @@ import org.netbeans.modules.ant.debugger.DebuggerBreakpointAnnotation;
 public class BreakpointAnnotationListener extends DebuggerManagerAdapter 
 implements PropertyChangeListener {
     
-    private Map<AntBreakpoint, DebuggerBreakpointAnnotation> breakpointToAnnotation = new HashMap<>();
-  
+    private Map breakpointToAnnotation = new HashMap ();
+    
+ 
     @Override
     public String[] getProperties () {
         return new String[] {DebuggerManager.PROP_BREAKPOINTS};

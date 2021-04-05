@@ -40,7 +40,6 @@ public class PhpWhereUsedQueryPlugin extends ProgressProviderAdapter implements 
 
     protected AbstractRefactoring refactoring;
     private WhereUsedSupport usages;
-    private volatile boolean cancelled;
 
     public PhpWhereUsedQueryPlugin(AbstractRefactoring refactoring) {
         this.refactoring = refactoring;
@@ -63,11 +62,6 @@ public class PhpWhereUsedQueryPlugin extends ProgressProviderAdapter implements 
             for (FileObject fileObject : relevantFiles) {
                 if (fileObject == null) {
                     continue;
-                }
-                if (cancelled) {
-                    // Reset cancelled state for repeated search to work.
-                    cancelled = false;
-                    break;
                 }
                 usages.collectUsages(fileObject);
                 fireProgressListenerStep();
@@ -133,7 +127,6 @@ public class PhpWhereUsedQueryPlugin extends ProgressProviderAdapter implements 
 
     @Override
     public void cancelRequest() {
-        cancelled = true;
     }
 
     /**

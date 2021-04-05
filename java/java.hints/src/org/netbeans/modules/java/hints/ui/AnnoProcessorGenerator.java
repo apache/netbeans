@@ -44,7 +44,7 @@ import org.openide.util.NbBundle;
  *
  * @author sdedic
  */
-@MimeRegistration(mimeType = "text/x-java", service = CodeGenerator.Factory.class, position = 1500)
+@MimeRegistration(mimeType = "text/x-java", service = CodeGenerator.Factory.class)
 public class AnnoProcessorGenerator implements CodeGenerator.Factory {
     
     @Override

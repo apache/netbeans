@@ -61,7 +61,6 @@ public class SourcesImpl implements Sources, FileChangeListener, ChangeListener 
 
     public static final String SOURCES_TYPE_JDK_PROJECT = "jdk-project-sources";
     public static final String SOURCES_TYPE_JDK_PROJECT_TESTS = "jdk-project-sources-tests";
-    public static final String SOURCES_TYPE_JDK_PROJECT_NATIVE = "jdk-project-sources-native";
 
     private final ChangeSupport cs = new ChangeSupport(this);
     private final JDKProject project;
@@ -125,9 +124,7 @@ public class SourcesImpl implements Sources, FileChangeListener, ChangeListener 
                     root2SourceGroup.put(root, sg);
                 }
 
-                if (root.kind == RootKind.NATIVE_SOURCES) {
-                    addSourceGroup(SOURCES_TYPE_JDK_PROJECT_NATIVE, sg);
-                } else {
+                if (root.kind != RootKind.NATIVE_SOURCES) {
                     addSourceGroup(JavaProjectConstants.SOURCES_TYPE_JAVA, sg);
                 }
 

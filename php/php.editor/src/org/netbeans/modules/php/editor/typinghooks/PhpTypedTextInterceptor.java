@@ -210,8 +210,7 @@ public class PhpTypedTextInterceptor implements TypedTextInterceptor {
 
                 if (((id == PHPTokenId.PHP_VARIABLE) && (token.length() == 1))
                         || (LexUtilities.textEquals(token.text(), '[')) || (LexUtilities.textEquals(token.text(), ']'))
-                        || (LexUtilities.textEquals(token.text(), '(')) || (LexUtilities.textEquals(token.text(), ')'))
-                        || id == PHPTokenId.PHP_ATTRIBUTE /* #[ */) {
+                        || (LexUtilities.textEquals(token.text(), '(')) || (LexUtilities.textEquals(token.text(), ')'))) {
                     if (ch == ']' || ch == ')') {
                         skipClosingBracket(doc, caret, ch);
                     } else if ((ch == '[') || (ch == '(')) {

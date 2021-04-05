@@ -22,9 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import org.netbeans.modules.visual.graph.layout.orthogonalsupport.DualGraph.FaceEdge;
 import org.netbeans.modules.visual.graph.layout.orthogonalsupport.DualGraph.FaceVertex;
 import org.netbeans.modules.visual.graph.layout.orthogonalsupport.Face.Dart;
@@ -36,7 +34,7 @@ import org.netbeans.modules.visual.graph.layout.orthogonalsupport.MGraph.Vertex;
 /**
  *
  */
-public class GTPlanarizer<N, E> {
+public class GTPlanarizer {
 
     private final int DEFAULT_ITERATIONS = 1;
     private int maxIterations;
@@ -55,8 +53,8 @@ public class GTPlanarizer<N, E> {
      * @param graph
      * @return
      */
-    public Collection<EmbeddedPlanarGraph<N, E>> planarize(MGraph<N, E> graph) {
-        Collection<EmbeddedPlanarGraph<N, E>> epgs = createPlanarSubgraphs(graph);
+    public Collection<EmbeddedPlanarGraph> planarize(MGraph graph) {
+        Collection<EmbeddedPlanarGraph> epgs = createPlanarSubgraphs(graph);
 
         return epgs;
     }
@@ -66,19 +64,19 @@ public class GTPlanarizer<N, E> {
      * @param graph
      * @return
      */
-    private Collection<EmbeddedPlanarGraph<N, E>> createPlanarSubgraphs(MGraph<N, E> graph) {
-        Collection<Edge<?>> LMax = null;
-        Collection<Edge<?>> RMax = null;
-        Collection<Edge<?>> BMax = null;
-        List<Vertex<N>> orderingMax = null;
+    private Collection<EmbeddedPlanarGraph> createPlanarSubgraphs(MGraph graph) {
+        Collection<Edge> LMax = null;
+        Collection<Edge> RMax = null;
+        Collection<Edge> BMax = null;
+        ArrayList<Vertex> orderingMax = null;
 
         for (int i = 0; i < maxIterations; i++) {
 
-            List<Edge<?>> L = new ArrayList<>();
-            List<Edge<?>> R = new ArrayList<>();
-            List<Edge<?>> B = new ArrayList<>();
+            ArrayList<Edge> L = new ArrayList<Edge>();
+            ArrayList<Edge> R = new ArrayList<Edge>();
+            ArrayList<Edge> B = new ArrayList<Edge>();
 
-            List<Vertex<N>> ordering = computeOrdering(graph.getVertices());
+            ArrayList<Vertex> ordering = computeOrdering(graph.getVertices());
 
             computeLRB(L, R, B, ordering);
 
@@ -95,20 +93,20 @@ public class GTPlanarizer<N, E> {
 
         // Restore ordering specified by orderingMax
         int order = 0;
-        for (Vertex<?> v : orderingMax) {
+        for (Vertex v : orderingMax) {
             v.setNumber(order++);
         }
 
-        Collection<Face> leftFaces = new LinkedHashSet<>();
-        Collection<Face> rightFaces = new LinkedHashSet<>();
+        Collection<Face> leftFaces = new LinkedHashSet<Face>();
+        Collection<Face> rightFaces = new LinkedHashSet<Face>();
 
-        Collection<List<Face>> faceLists = createAllFaces(LMax, RMax,
+        Collection<ArrayList<Face>> faceLists = createAllFaces(LMax, RMax,
                 orderingMax, leftFaces, rightFaces);
 
-        Collection<EmbeddedPlanarGraph<N, E>> epgs = new ArrayList<>();
+        Collection<EmbeddedPlanarGraph> epgs = new ArrayList<EmbeddedPlanarGraph>();
 
-        for (List<Face> faceList : faceLists) {
-            EmbeddedPlanarGraph<N, E> epg = EmbeddedPlanarGraph.createGraph(graph);
+        for (ArrayList<Face> faceList : faceLists) {
+            EmbeddedPlanarGraph epg = EmbeddedPlanarGraph.createGraph(graph);
             epgs.add(epg);
             epg.addFaces(faceList);
         }
@@ -116,7 +114,7 @@ public class GTPlanarizer<N, E> {
         // We use the right faces for inserting the remaining edges
         // because there should be less of them.
         insertRemainingEdges(epgs, BMax, rightFaces, false,
-                leftFaces, new HashSet<Edge<?>>(LMax));
+                leftFaces, new HashSet<Edge>(LMax));
 
         return epgs;
     }
@@ -126,31 +124,29 @@ public class GTPlanarizer<N, E> {
      * @param vertices
      * @return
      */
-    private List<Vertex<N>> computeOrdering(Collection<Vertex<N>> vertices) {
-        List<Vertex<N>> ordering = new ArrayList<>();
-        List<Vertex<N>> vertexArray = new ArrayList<>(vertices);
+    private ArrayList<Vertex> computeOrdering(Collection<Vertex> vertices) {
+        ArrayList<Vertex> ordering = new ArrayList<Vertex>();
+        ArrayList<Vertex> vertexArray = new ArrayList<Vertex>(vertices);
         int order = 0;
 
         //determine the lowest degree of any vertex. Creates a collection of 
         //vertices with this degree. Lastly, picks a random vertex with the 
         //lowest degree.
-        Vertex<N> v = getMinimumDegreeVertex(vertexArray);
+        Vertex v = getMinimumDegreeVertex(vertexArray);
 
         //appending v to the oredering list and setting v's "order" to order
         assignOrdering(ordering, v, order++);
         //now that it is added to the ordered array, remove it from the default list
         vertexArray.remove(v);
 
-        List<Vertex<N>> candidates = new ArrayList<>();
+        ArrayList<Vertex> candidates = new ArrayList<Vertex>();
 
         while (!vertexArray.isEmpty()) {
-            Collection<Vertex<?>> neighbors = v.getNeighbors();
+            Collection<Vertex> neighbors = v.getNeighbors();
 
-            for (Vertex<?> nv : neighbors) {
-                @SuppressWarnings("unchecked")
-                Vertex<N> tmp = (Vertex<N>) nv;
-                if (vertexArray.contains(tmp)) {
-                    candidates.add(tmp);
+            for (Vertex nv : neighbors) {
+                if (vertexArray.contains(nv)) {
+                    candidates.add(nv);
                 }
             }
 
@@ -173,15 +169,15 @@ public class GTPlanarizer<N, E> {
      * @param vertices
      * @return
      */
-    private Vertex<N> getMinimumDegreeVertex(Collection<Vertex<N>> vertices) {
+    private Vertex getMinimumDegreeVertex(Collection<Vertex> vertices) {
         if (vertices.size() == 0) {
             return null;
         }
 
-        List<Vertex<N>> candidates = new ArrayList<>();
+        ArrayList<Vertex> candidates = new ArrayList<Vertex>();
         int minDegree = getMinimumDegree(vertices);
 
-        for (Vertex<N> v : vertices) {
+        for (Vertex v : vertices) {
             if (v.getDegree() == minDegree) {
                 candidates.add(v);
             }
@@ -195,10 +191,10 @@ public class GTPlanarizer<N, E> {
      * @param vertices
      * @return
      */
-    private int getMinimumDegree(Collection<Vertex<N>> vertices) {
+    private int getMinimumDegree(Collection<Vertex> vertices) {
         int minDegree = Integer.MAX_VALUE;
 
-        for (Vertex<N> v : vertices) {
+        for (Vertex v : vertices) {
             int degree = v.getDegree();
             if (degree < minDegree) {
                 minDegree = degree;
@@ -213,7 +209,7 @@ public class GTPlanarizer<N, E> {
      * @param candidates
      * @return
      */
-    private Vertex<N> pickVertex(List<Vertex<N>> candidates) {
+    private Vertex pickVertex(ArrayList<Vertex> candidates) {
         int index = 0;
 
         if (isRandom()) {
@@ -230,13 +226,13 @@ public class GTPlanarizer<N, E> {
      * @param B
      * @param ordering
      */
-    private void computeLRB(List<Edge<?>> L, List<Edge<?>> R, List<Edge<?>> B,
-            List<Vertex<N>> ordering) {
-        List<Edge<?>> edges = assignEdgeWeights(ordering);
+    private void computeLRB(ArrayList<Edge> L, ArrayList<Edge> R, ArrayList<Edge> B,
+            ArrayList<Vertex> ordering) {
+        ArrayList<Edge> edges = assignEdgeWeights(ordering);
 
         int size = edges.size();
         for (int i = 0; i < size; i++) {
-            Edge<?> ie = edges.get(i);
+            Edge ie = edges.get(i);
 
             if (R.contains(ie)) {
                 continue;
@@ -253,7 +249,7 @@ public class GTPlanarizer<N, E> {
             L.add(ie);
 
             for (int j = i + 1; j < size; j++) {
-                Edge<?> je = edges.get(j);
+                Edge je = edges.get(j);
 
                 if (R.contains(je)) {
                     continue;
@@ -276,7 +272,7 @@ public class GTPlanarizer<N, E> {
 
         size = R.size();
         for (int i = 0; i < size; i++) {
-            Edge<?> ie = R.get(i);
+            Edge ie = R.get(i);
 
             if (B.contains(ie)) {
                 continue;
@@ -291,7 +287,7 @@ public class GTPlanarizer<N, E> {
             }
 
             for (int j = i + 1; j < size; j++) {
-                Edge<?> je = R.get(j);
+                Edge je = R.get(j);
 
                 if (B.contains(je)) {
                     continue;
@@ -319,34 +315,35 @@ public class GTPlanarizer<N, E> {
      * @param vertices
      * @return
      */
-    private List<Edge<?>> assignEdgeWeights(Collection<Vertex<N>> vertices) {
-        Set<Edge<?>> edges = new LinkedHashSet<>();
+    private ArrayList<Edge> assignEdgeWeights(Collection<Vertex> vertices) {
+        LinkedHashSet<Edge> edges = new LinkedHashSet<Edge>();
 
         // First create all the edges
-        for (Vertex<?> v : vertices) {
-            Collection<Edge<?>> localEdges = v.getEdges();
-            for (Edge<?> e : localEdges) {
+        for (Vertex v : vertices) {
+            Collection<Edge> localEdges = v.getEdges();
+            for (Edge e : localEdges) {
                 edges.add(e);
             }
         }
 
         if (!isRandom) {
-            return new ArrayList<>(edges);
+            return new ArrayList<Edge>(edges);
         } else {
 
             // Randomly assign a weight to each edge
             int size = edges.size();
-            for (Edge<?> e : edges) {
+            for (Edge e : edges) {
                 e.setWeight(0); //random.nextInt(size));
+
             }
 
             // Sort the edges by weight
-            List<Edge<?>> sortedEdges = new ArrayList<>(edges);
+            ArrayList<Edge> sortedEdges = new ArrayList<Edge>(edges);
 
             for (int i = 0; i < size - 2; i++) {
-                Edge<?> ie = sortedEdges.get(i);
+                Edge ie = sortedEdges.get(i);
                 for (int j = i + 1; j < size - 1; j++) {
-                    Edge<?> je = sortedEdges.get(j);
+                    Edge je = sortedEdges.get(j);
                     if (je.getWeight() < ie.getWeight()) {
                         sortedEdges.set(i, je);
                         sortedEdges.set(j, ie);
@@ -365,7 +362,7 @@ public class GTPlanarizer<N, E> {
      * @param v
      * @param order
      */
-    private void assignOrdering(List<Vertex<N>> ordering, Vertex<N> v, int order) {
+    private void assignOrdering(ArrayList<Vertex> ordering, Vertex v, int order) {
         // assume vertices are added in order
         ordering.add(v);
         v.setNumber(order);
@@ -380,10 +377,10 @@ public class GTPlanarizer<N, E> {
      * @param rightFaces
      * @return
      */
-    private Collection<List<Face>> createAllFaces(Collection<Edge<?>> L,
-            Collection<Edge<?>> R, List<Vertex<N>> ordering,
+    private Collection<ArrayList<Face>> createAllFaces(Collection<Edge> L,
+            Collection<Edge> R, ArrayList<Vertex> ordering,
             Collection<Face> leftFaces, Collection<Face> rightFaces) {
-        List<Face> faces = new ArrayList<>();
+        ArrayList<Face> faces = new ArrayList<Face>();
 
         leftFaces.addAll(createFaces(L, null, ordering, false));
         rightFaces.addAll(createFaces(R, L, ordering, true));
@@ -391,8 +388,8 @@ public class GTPlanarizer<N, E> {
         faces.addAll(rightFaces);
         removeFaces(faces);
 
-        Collection<List<Face>> faceLists = computeFaceLists(faces);
-        for (List<Face> faceList : faceLists) {
+        Collection<ArrayList<Face>> faceLists = computeFaceLists(faces);
+        for (ArrayList<Face> faceList : faceLists) {
             Face outerFace = createOuterFace(faceList, L, R);
             faceList.add(0, outerFace);
 
@@ -409,18 +406,18 @@ public class GTPlanarizer<N, E> {
      * @param faces
      * @return
      */
-    private Collection<List<Face>> computeFaceLists(List<Face> faces) {
-        Collection<List<Face>> faceLists = new ArrayList<>();
-        faces = new ArrayList<>(faces);
+    private Collection<ArrayList<Face>> computeFaceLists(ArrayList<Face> faces) {
+        Collection<ArrayList<Face>> faceLists = new ArrayList<ArrayList<Face>>();
+        faces = new ArrayList<Face>(faces);
 
         while (!faces.isEmpty()) {
-            List<Face> faceList = new ArrayList<>();
+            ArrayList<Face> faceList = new ArrayList<Face>();
             faceLists.add(faceList);
             Face firstFace = faces.remove(0);
             faceList.add(firstFace);
 
             for (int i = 0; i < faceList.size(); i++) {
-                Collection<Face> connectedFaces = new ArrayList<>();
+                Collection<Face> connectedFaces = new ArrayList<Face>();
                 Face iface = faceList.get(i);
 
                 for (int j = 0; j < faces.size(); j++) {
@@ -446,13 +443,14 @@ public class GTPlanarizer<N, E> {
      * @param R
      * @return
      */
-    private Face createOuterFace(List<Face> faces, Collection<Edge<?>> L,
-            Collection<Edge<?>> R) {
-        Set<Edge<?>> sharedEdges = new HashSet<>();
-        Set<Dart> outerDarts = new LinkedHashSet<>();
-        Set<Edge<?>> outerEdges = new HashSet<>();
-        List<Dart> reverseDarts = new ArrayList<>();
-        Set<Edge<?>> reverseEdges = new HashSet<>();
+    private Face createOuterFace(ArrayList<Face> faces, Collection<Edge> L,
+            Collection<Edge> R) {
+        HashSet<Edge> sharedEdges = new HashSet<Edge>();
+        HashSet<Dart> outerDarts = new LinkedHashSet<Dart>();
+        HashSet<Edge> outerEdges = new HashSet<Edge>();
+        ArrayList<Dart> reverseDarts = new ArrayList<Dart>();
+        HashSet<Edge> reverseEdges = new HashSet<Edge>();
+        HashSet<Edge> leftEdges = new HashSet<Edge>(L);
 
         int size = faces.size();
         Dart firstDart = null;
@@ -463,7 +461,7 @@ public class GTPlanarizer<N, E> {
 
             for (Dart d : f.getDarts()) {
 
-                Edge<?> e = d.getEdge();
+                Edge e = d.getEdge();
                 boolean isSharedEdge = false;
 
                 if (sharedEdges.contains(e)) {
@@ -501,7 +499,7 @@ public class GTPlanarizer<N, E> {
 
         Face outerFace = new Face();
         outerFace.setOuterFace(true);
-        Vertex<?> v = firstDart.getV();
+        Vertex v = firstDart.getV();
         outerDarts.remove(firstDart);
         outerFace.addEdge(firstDart.getEdge());
 
@@ -541,14 +539,14 @@ public class GTPlanarizer<N, E> {
                         if (nextDart == null) {
                             nextDart = cd;
                         } else {
-                            Vertex<?> cw = null;
+                            Vertex cw = null;
                             if (cd.getW().getNumber() > cd.getV().getNumber()) {
                                 cw = cd.getW();
                             } else {
                                 cw = cd.getV();
                             }
 
-                            Vertex<?> nw = null;
+                            Vertex nw = null;
                             if (nextDart.getW().getNumber() > nextDart.getV().getNumber()) {
                                 nw = nextDart.getW();
                             } else {
@@ -591,20 +589,20 @@ public class GTPlanarizer<N, E> {
      * @param reverseDirection
      * @return
      */
-    private Collection<Face> createFaces(Collection<Edge<?>> subgraph,
-            Collection<Edge<?>> alternateSubgraph,
-            List<Vertex<N>> ordering, boolean reverseDirection) {
+    private Collection<Face> createFaces(Collection<Edge> subgraph,
+            Collection<Edge> alternateSubgraph,
+            ArrayList<Vertex> ordering, boolean reverseDirection) {
         Collection<Face> faces = new ArrayList<Face>(); //new HashSet<Face>();
 
-        for (Vertex<N> v : ordering) {
-            Collection<Edge<?>> connEdges = getIncidentEdges(v, subgraph);
+        for (Vertex v : ordering) {
+            Collection<Edge> connEdges = getIncidentEdges(v, subgraph);
 
             while (!connEdges.isEmpty()) {
                 int maxOrder = v.getNumber();
-                Edge<?> maxEdge = null;
+                Edge maxEdge = null;
 
-                for (Edge<?> e : connEdges) {
-                    Vertex<?> w = e.getOppositeVertex(v);
+                for (Edge e : connEdges) {
+                    Vertex w = e.getOppositeVertex(v);
                     int order = w.getNumber();
                     if (order > maxOrder) {
                         maxOrder = order;
@@ -618,7 +616,7 @@ public class GTPlanarizer<N, E> {
 
                 connEdges.remove(maxEdge);
 
-                Collection<Edge<?>> shortestPath = computeShortedReturnPath(v,
+                Collection<Edge> shortestPath = computeShortedReturnPath(v,
                         maxEdge.getOppositeVertex(v), maxEdge, subgraph,
                         alternateSubgraph);
 
@@ -659,22 +657,22 @@ public class GTPlanarizer<N, E> {
      * @param alternateEdges
      * @return
      */
-    private Collection<Edge<?>> computeShortedReturnPath(Vertex<?> sourceVertex,
-            Vertex<?> currentVertex, Edge<?> currentEdge,
-            Collection<Edge<?>> edges, Collection<Edge<?>> alternateEdges) {
+    private Collection<Edge> computeShortedReturnPath(Vertex sourceVertex,
+            Vertex currentVertex, Edge currentEdge,
+            Collection<Edge> edges, Collection<Edge> alternateEdges) {
 
-        Collection<Edge<?>> result = new ArrayList<>();
-        Collection<Edge<?>> connEdges = getIncidentEdges(currentVertex, edges);
+        Collection<Edge> result = new ArrayList<Edge>();
+        Collection<Edge> connEdges = getIncidentEdges(currentVertex, edges);
         connEdges.remove(currentEdge);
 
         int sourceOrder = sourceVertex.getNumber();
         int currentOrder = currentVertex.getNumber();
-        Edge<?> edge = null;
+        Edge edge = null;
         int minOrder = currentOrder;
         boolean lowerOrderFound = false;
 
-        for (Edge<?> e : connEdges) {
-            Vertex<?> w = e.getOppositeVertex(currentVertex);
+        for (Edge e : connEdges) {
+            Vertex w = e.getOppositeVertex(currentVertex);
             int order = w.getNumber();
 
             if ((order < minOrder) && (order >= sourceOrder)) {
@@ -691,8 +689,8 @@ public class GTPlanarizer<N, E> {
             connEdges = getIncidentEdges(currentVertex, alternateEdges);
             int maxOrder = sourceOrder;
 
-            for (Edge<?> e : connEdges) {
-                Vertex<?> w = e.getOppositeVertex(currentVertex);
+            for (Edge e : connEdges) {
+                Vertex w = e.getOppositeVertex(currentVertex);
                 int order = w.getNumber();
 
                 if ((order >= maxOrder) && (order < currentOrder)) {
@@ -714,8 +712,8 @@ public class GTPlanarizer<N, E> {
             if (edge.contains(sourceVertex)) {
                 result.add(edge);
             } else {
-                Collection<Edge<?>> shortestPath = null;
-                Vertex<?> oppositeVertex = edge.getOppositeVertex(currentVertex);
+                Collection<Edge> shortestPath = null;
+                Vertex oppositeVertex = edge.getOppositeVertex(currentVertex);
                 if (!oppositeVertex.equals(currentVertex) || !edge.equals(currentEdge)) {
                     shortestPath = computeShortedReturnPath(sourceVertex, oppositeVertex,
                             edge, edges, alternateEdges);
@@ -765,8 +763,8 @@ public class GTPlanarizer<N, E> {
      * @param edges
      * @return
      */
-    private Collection<Edge<?>> getIncidentEdges(Vertex<?> v, Collection<Edge<?>> edges) {
-        Collection<Edge<?>> result = new ArrayList<>(v.getEdges());
+    private Collection<Edge> getIncidentEdges(Vertex v, Collection<Edge> edges) {
+        Collection<Edge> result = new ArrayList<Edge>(v.getEdges());
         result.retainAll(edges);
 
         return result;
@@ -781,20 +779,20 @@ public class GTPlanarizer<N, E> {
      * @param facesToIgnore
      * @param edgesToIgnore
      */
-    private void insertRemainingEdges(Collection<EmbeddedPlanarGraph<N, E>> epgs,
-            Collection<Edge<?>> edgesToInsert, Collection<Face> faces,
+    private void insertRemainingEdges(Collection<EmbeddedPlanarGraph> epgs,
+            Collection<Edge> edgesToInsert, Collection<Face> faces,
             boolean isLeftFaces, Collection<Face> facesToIgnore,
-            Collection<Edge<?>> edgesToIgnore) {
+            Collection<Edge> edgesToIgnore) {
         
         if (edgesToInsert.isEmpty()) {
             return;
         }
 
-        for (EmbeddedPlanarGraph<N, E> epg : epgs) {
-            DualGraph<N, E> dualGraph = DualGraph.createGraph(epg, facesToIgnore,
+        for (EmbeddedPlanarGraph epg : epgs) {
+            DualGraph dualGraph = DualGraph.createGraph(epg, facesToIgnore,
                     edgesToIgnore);
 
-            for (Edge<?> edge : edgesToInsert) {
+            for (Edge edge : edgesToInsert) {
                 insertEdge(dualGraph, edge, faces, isLeftFaces);
             }
 
@@ -808,31 +806,32 @@ public class GTPlanarizer<N, E> {
      * @param faces
      * @param isLeftFaces
      */
-    private void insertEdge(DualGraph<?, ?> graph, Edge<?> edgeToInsert,
+    private void insertEdge(DualGraph graph, Edge edgeToInsert,
             Collection<Face> faces, boolean isLeftFaces) {
 
-        EmbeddedPlanarGraph<?, ?> epg = graph.getOriginalGraph();
-        MGraph<?, ?> originalGraph = epg.getOriginalGraph();
+        EmbeddedPlanarGraph epg = graph.getOriginalGraph();
+        MGraph originalGraph = epg.getOriginalGraph();
 
-        Vertex<?> v = edgeToInsert.getV();
-        Vertex<?> w = edgeToInsert.getW();
+        Vertex v = edgeToInsert.getV();
+        Vertex w = edgeToInsert.getW();
         boolean reverse = false;
 
         if (v.getNumber() < w.getNumber()) {
             reverse = true;
         }
         
-        List<FaceEdge> shortestPath = computeShortestPathInDualGraph(graph, v, w, faces);
+        ArrayList<FaceEdge> shortestPath = computeShortestPathInDualGraph(graph, v, w,
+                faces);
 
         // Insert dummy vertices and edges and update the dualGraph
 
         FaceEdge fe = null;
         FaceVertex fv = null;
-        Vertex<?> currentVertex = null;
-        Vertex<?> prevVertex = v;
-        Edge<?> newEdge = null;
-        Edge<?> prevEdge = null;
-        ArrayList<Edge<?>> newFaceEdges = null;
+        Vertex currentVertex = null;
+        Vertex prevVertex = v;
+        Edge newEdge = null;
+        Edge prevEdge = null;
+        ArrayList<Edge> newFaceEdges = null;
         int length = shortestPath.size();
 
         for (int i = 0; i <= length; i++) {
@@ -853,14 +852,14 @@ public class GTPlanarizer<N, E> {
                         fe.getEdge(), DummyVertex.Type.CROSSING);
 
                 ((DummyVertex) currentVertex).setNumber(Integer.MAX_VALUE);
-                newFaceEdges = new ArrayList<>(currentVertex.getEdges());
+                newFaceEdges = new ArrayList<Edge>(currentVertex.getEdges());
 
             }
 
             newEdge = originalGraph.addDummyEdge(prevVertex, currentVertex);
-            ((DummyEdge<?>) newEdge).setOriginalEdge(edgeToInsert);
+            ((DummyEdge) newEdge).setOriginalEdge(edgeToInsert);
 
-            Vertex<?> startingVertex = null;
+            Vertex startingVertex = null;
 
             if (isLeftFaces) {
                 if (reverse) {
@@ -898,13 +897,14 @@ public class GTPlanarizer<N, E> {
      * @param rightFaces
      * @return
      */
-    private Collection<FaceVertex> getIncidentFaceVertices(Vertex<?> v,
-            DualGraph<?, ?> graph, Collection<Face> rightFaces) {
-        Set<FaceVertex> result = new LinkedHashSet<>();
+    private Collection<FaceVertex> getIncidentFaceVertices(Vertex v,
+            DualGraph graph, Collection<Face> rightFaces) {
+
+        HashSet<FaceVertex> result = new LinkedHashSet<FaceVertex>();
         FaceVertex outerFace = null;
 
-        Collection<Edge<?>> edges = v.getEdges();
-        for (Edge<?> e : edges) {
+        Collection<Edge> edges = v.getEdges();
+        for (Edge e : edges) {
             Collection<FaceVertex> faceVertices = graph.getVerticesBorderingEdge(e);
 
             for (FaceVertex fv : faceVertices) {
@@ -938,13 +938,13 @@ public class GTPlanarizer<N, E> {
      * @param rightFaces
      * @return
      */
-    private List<FaceEdge> computeShortestPathInDualGraph(DualGraph<?, ?> graph,
-            Vertex<?> v, Vertex<?> w, Collection<Face> rightFaces) {
-        EmbeddedPlanarGraph<?, ?> epg = graph.getOriginalGraph();
+    private ArrayList<FaceEdge> computeShortestPathInDualGraph(DualGraph graph,
+            Vertex v, Vertex w, Collection<Face> rightFaces) {
+        EmbeddedPlanarGraph epg = graph.getOriginalGraph();
         Collection<FaceVertex> vFaceVertices = getIncidentFaceVertices(v, graph, rightFaces);
         Collection<FaceVertex> wFaceVertices = getIncidentFaceVertices(w, graph, rightFaces);
 
-        List<FaceEdge> shortestPath = null;
+        ArrayList<FaceEdge> shortestPath = null;
         int shortestPathLength = Integer.MAX_VALUE;
 
         for (FaceVertex vfv : vFaceVertices) {
@@ -1045,9 +1045,9 @@ public class GTPlanarizer<N, E> {
      * @param startingVertex
      * @param faces
      */
-    public void subdivide(DualGraph<?, ?> graph, FaceVertex fv, FaceEdge fe,
-            Collection<Edge<?>> newFaceEdges, Edge<?> dividingEdge,
-            Vertex<?> startingVertex, Collection<Face> faces) {
+    public void subdivide(DualGraph graph, FaceVertex fv, FaceEdge fe,
+            Collection<Edge> newFaceEdges, Edge dividingEdge,
+            Vertex startingVertex, Collection<Face> faces) {
 
         Face face = fv.getFace();
         face.replaceEdge(fe.getEdge(), newFaceEdges);
@@ -1066,7 +1066,7 @@ public class GTPlanarizer<N, E> {
         newFace.addEdge(dividingEdge);
         newFace.createDarts(firstDart.getV());
 
-        EmbeddedPlanarGraph<?, ?> epg = graph.getOriginalGraph();
+        EmbeddedPlanarGraph epg = graph.getOriginalGraph();
         epg.addFace(newFace);
         faces.add(newFace);
 

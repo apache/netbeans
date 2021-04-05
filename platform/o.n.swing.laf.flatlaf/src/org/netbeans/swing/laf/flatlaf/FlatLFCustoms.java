@@ -50,13 +50,6 @@ public class FlatLFCustoms extends LFCustoms {
         };
 
         return new Object[] {
-            // options
-            "TitlePane.useWindowDecorations", FlatLafPrefs.isUseWindowDecorations(),
-            "TitlePane.unifiedBackground", FlatLafPrefs.isUnifiedTitleBar(),
-            "TitlePane.menuBarEmbedded", FlatLafPrefs.isMenuBarEmbedded(),
-            "MenuItem.selectionType", FlatLafPrefs.isUnderlineMenuSelection() ? "underline" : null,
-            "Component.hideMnemonics", !FlatLafPrefs.isAlwaysShowMnemonics(),
-
             // necessary for org.openide.explorer.propertysheet.PropertySheet and others
             CONTROLFONT, UIManager.getFont("Label.font"), // NOI18N
 

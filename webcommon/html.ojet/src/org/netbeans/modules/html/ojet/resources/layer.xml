@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="javascript">
+                <!-- code templates -->
+                <folder name="CodeTemplates">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-html-ojet-ui-resources-codetemplates.xml" url="codetemplates.xml">
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Templates">
+        <folder name="ClientSide">
+            <folder name="OJET">
+                <attr name="position" intvalue="10"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.html.ojet.ui.wizard.Bundle#Templates/Clientside/OJET"/>
+                <attr name="templateCategory" stringvalue="notHtml5"/>
+            </folder>
+            <folder name="DummyEmptyJETModule">
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.html.ojet.ui.wizard.NewJetModuleWizardIterator.empty"/>
+                <attr name="position" intvalue="800"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.html.ojet.ui.wizard.Bundle#Templates/Clientside/DummyEmptyJETModule"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/html/ojet/ui/resources/ojet-icon.png"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="html5"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/html/ojet/ui/resources/EmptyJETModuleDescription.html"/>
+            </folder>
+            <folder name="DummyKnockoutJETModule">
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.html.ojet.ui.wizard.NewJetModuleWizardIterator.knockout"/>
+                <attr name="position" intvalue="810"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.html.ojet.ui.wizard.Bundle#Templates/Clientside/DummyKnockoutJETModule"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/html/ojet/ui/resources/ojet-icon.png"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="html5"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/html/ojet/ui/resources/KnockoutJETModuleDescription.html"/>
+            </folder>
+        </folder>
+    </folder>
+
+</filesystem>

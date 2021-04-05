@@ -25,13 +25,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.Action;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.modules.parsing.api.Embedding;
 
@@ -39,6 +39,7 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.editor.BaseAction;
+import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.core.Language;
 import org.netbeans.modules.csl.core.LanguageRegistry;
@@ -148,7 +149,8 @@ public class InstantRenameAction extends BaseAction {
                                     break;
                                 }
 
-                                List<Language> list = LanguageRegistry.getInstance().getEmbeddedLanguages(target.getDocument(), caret);
+                                BaseDocument baseDoc = (BaseDocument)target.getDocument();
+                                List<Language> list = LanguageRegistry.getInstance().getEmbeddedLanguages(baseDoc, caret);
                                 for (Language language : list) {
                                     if (language.getInstantRenamer() != null) {
                                         //the parser result matching with the language is just
@@ -184,7 +186,7 @@ public class InstantRenameAction extends BaseAction {
 
                     if (changePoints[0] != null) {
                         final BadLocationException[] exc = new BadLocationException[1];
-                        final Document baseDoc = target.getDocument();
+                        final BaseDocument baseDoc = (BaseDocument)target.getDocument();
                         baseDoc.render(new Runnable() {
                             public void run() {
                                 try {

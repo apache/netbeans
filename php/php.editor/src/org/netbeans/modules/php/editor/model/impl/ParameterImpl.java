@@ -40,7 +40,6 @@ public class ParameterImpl implements Parameter {
     private final boolean isRawType;
     private final boolean isReference;
     private final boolean isVariadic;
-    private final boolean isUnionType;
 
     public ParameterImpl(
             String name,
@@ -49,8 +48,7 @@ public class ParameterImpl implements Parameter {
             boolean isRawType,
             OffsetRange range,
             boolean isReference,
-            boolean isVariadic,
-            boolean isUnionType) {
+            boolean isVariadic) {
         this.name = name;
         this.defaultValue = defaultValue;
         if (types == null) {
@@ -62,7 +60,6 @@ public class ParameterImpl implements Parameter {
         this.isRawType = isRawType;
         this.isReference = isReference;
         this.isVariadic = isVariadic;
-        this.isUnionType = isUnionType;
     }
 
     @NonNull
@@ -90,11 +87,6 @@ public class ParameterImpl implements Parameter {
     @Override
     public boolean isVariadic() {
         return isVariadic;
-    }
-
-    @Override
-    public boolean isUnionType() {
-        return isUnionType;
     }
 
     @Override
@@ -128,8 +120,6 @@ public class ParameterImpl implements Parameter {
         sb.append(isReference ? 1 : 0);
         sb.append(":"); //NOI18N
         sb.append(isVariadic ? 1 : 0);
-        sb.append(":"); //NOI18N
-        sb.append(isUnionType ? 1 : 0);
         return sb.toString();
     }
 
@@ -153,7 +143,6 @@ public class ParameterImpl implements Parameter {
                     String defValue = (parts.length > 3) ? parts[3] : "";
                     boolean isReference = Integer.parseInt(parts[4]) > 0;
                     boolean isVariadic = Integer.parseInt(parts[5]) > 0;
-                    boolean isUnionType = Integer.parseInt(parts[6]) > 0;
                     parameters.add(new ParameterImpl(
                             paramName,
                             (defValue.length() != 0) ? decode(defValue) : null,
@@ -161,8 +150,7 @@ public class ParameterImpl implements Parameter {
                             isRawType,
                             OffsetRange.NONE,
                             isReference,
-                            isVariadic,
-                            isUnionType));
+                            isVariadic));
                 }
             }
         }

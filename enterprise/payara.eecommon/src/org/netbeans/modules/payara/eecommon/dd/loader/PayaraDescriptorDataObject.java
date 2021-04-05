@@ -28,7 +28,6 @@ import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.modules.j2ee.sun.dd.api.RootInterface;
 import org.netbeans.modules.j2ee.sun.dd.impl.RootInterfaceImpl;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
-import org.netbeans.modules.j2ee.sun.ddloaders.SunDescriptorDataLoader;
 import org.netbeans.modules.j2ee.sun.ddloaders.SunDescriptorDataObject;
 import org.netbeans.modules.j2ee.sun.ddloaders.multiview.appclient.SunAppClientOverviewMultiViewElement;
 import org.netbeans.modules.j2ee.sun.ddloaders.multiview.common.EnvironmentMultiViewElement;
@@ -68,17 +67,12 @@ import org.xml.sax.SAXParseException;
         resource = "../../dd/resources/payara-dd-mime-resolver.xml",
         position = 3500
 )
-/*
-Extra registration not effectively used (PayaraDescriptorDataLoader at position 1500 takes always precedence. See
-NETBEANS-4828.
-
 @DataObject.Registration(
         displayName = "Bundle#PayaraResolver",
         mimeType = DD_MIME_TYPE,
         iconBase = DD_ICON,
         position = 3600
 )
-*/
 @ActionReferences({
     @ActionReference(
             path = DD_ACTION_PATH,
@@ -119,7 +113,7 @@ NETBEANS-4828.
     ),
     @ActionReference(
             path = DD_ACTION_PATH,
-            id = @ActionID(category = "System", id = "org.openide.actions.RenameAction"),
+            id = @ActionID(category = "Edit", id = "org.openide.actions.RenameAction"),
             position = 950,
             separatorAfter = 1000
     ),
@@ -172,7 +166,7 @@ public class PayaraDescriptorDataObject extends SunDescriptorDataObject {
     private final PayaraDDType descriptorType;
     private final int xmlIndex;
 
-    public PayaraDescriptorDataObject(FileObject pf, SunDescriptorDataLoader loader) throws DataObjectExistsException {
+    public PayaraDescriptorDataObject(FileObject pf, PayaraDescriptorDataLoader loader) throws DataObjectExistsException {
         super(pf, loader);
         descriptorType = PayaraDDType.getDDType(pf.getNameExt());
         if (descriptorType != null && descriptorType.equals(PayaraDDType.DD_PAYARA_WEB_APP)) {

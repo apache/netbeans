@@ -28,12 +28,11 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
-import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.ModificationResult.Difference;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.WorkingCopy;
@@ -72,7 +71,7 @@ public class JavaFixImpl implements Fix {
 
         JavaSource js = JavaSource.forFileObject(file);
 
-        ModificationResult result = js.runModificationTask(new Task<WorkingCopy>() {
+        js.runModificationTask(new Task<WorkingCopy>() {
             public void run(WorkingCopy wc) throws Exception {
                 if (wc.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
                     return;
@@ -83,13 +82,9 @@ public class JavaFixImpl implements Fix {
                 BatchUtilities.addResourceContentChanges(resourceContentChanges, resourceContentDiffs);
                 JavaSourceAccessor.getINSTANCE().createModificationResult(resourceContentDiffs, Collections.<Object, int[]>emptyMap()).commit();
             }
-        });
+        }).commit();
 
-        result.commit();
-
-        Function<ModificationResult, ChangeInfo> convertor = Accessor.INSTANCE.getChangeInfoConvertor(jf);
-
-        return convertor != null ? convertor.apply(result) : null;
+        return null;
     }
 
     @Override
@@ -138,7 +133,5 @@ public class JavaFixImpl implements Fix {
         public abstract Fix createSuppressWarningsFix(CompilationInfo compilationInfo, TreePath treePath, String... keys);
         public abstract List<Fix> createSuppressWarnings(CompilationInfo compilationInfo, TreePath treePath, String... keys);
         public abstract List<Fix> resolveDefaultFixes(HintContext ctx, Fix... provided);
-        public abstract void setChangeInfoConvertor(JavaFix jf, Function<ModificationResult, ChangeInfo> modResult2ChangeInfo);
-        public abstract Function<ModificationResult, ChangeInfo> getChangeInfoConvertor(JavaFix jf);
     }
 }

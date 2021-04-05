@@ -72,7 +72,7 @@ public class SourceGroupSupport {
     public static SourceGroup[] getJavaSourceGroups(Project project) {
         SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(
                 JavaProjectConstants.SOURCES_TYPE_JAVA);
-        Set<SourceGroup> testGroups = getTestSourceGroups(sourceGroups);
+        Set testGroups = getTestSourceGroups(sourceGroups);
         List<SourceGroup> result = new ArrayList<>();
         for (int i = 0; i < sourceGroups.length; i++) {
             if (!testGroups.contains(sourceGroups[i])) {
@@ -167,11 +167,11 @@ public class SourceGroupSupport {
     }
 
     private static Map createFoldersToSourceGroupsMap(final SourceGroup[] sourceGroups) {
-        Map<FileObject, SourceGroup> result;
+        Map result;
         if (sourceGroups.length == 0) {
-            result = Collections.<FileObject, SourceGroup>emptyMap();
+            result = Collections.EMPTY_MAP;
         } else {
-            result = new HashMap<>(2 * sourceGroups.length, .5f);
+            result = new HashMap(2 * sourceGroups.length, .5f);
             for (int i = 0; i < sourceGroups.length; i++) {
                 SourceGroup sourceGroup = sourceGroups[i];
                 result.put(sourceGroup.getRootFolder(), sourceGroup);
@@ -180,9 +180,9 @@ public class SourceGroupSupport {
         return result;
     }
 
-    private static Set<SourceGroup> getTestSourceGroups(SourceGroup[] sourceGroups) {
+    private static Set/*<SourceGroup>*/ getTestSourceGroups(SourceGroup[] sourceGroups) {
         Map foldersToSourceGroupsMap = createFoldersToSourceGroupsMap(sourceGroups);
-        Set<SourceGroup> testGroups = new HashSet<>();
+        Set testGroups = new HashSet();
         for (int i = 0; i < sourceGroups.length; i++) {
             testGroups.addAll(getTestTargets(sourceGroups[i], foldersToSourceGroupsMap));
         }

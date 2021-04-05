@@ -1,2 +1,0 @@
-    private $|>MARK_OCCURRENCES:susp^end<| = "suspend state";
-            MatchExpression::SUSPEND => $this->|>MARK_OCCURRENCES:suspend<|,

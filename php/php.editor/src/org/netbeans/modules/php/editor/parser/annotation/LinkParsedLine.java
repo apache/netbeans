@@ -46,7 +46,7 @@ public class LinkParsedLine implements AnnotationParsedLine {
 
     @Override
     public Map<OffsetRange, String> getTypes() {
-        return Collections.<OffsetRange, String>emptyMap();
+        return Collections.EMPTY_MAP;
     }
 
     @Override

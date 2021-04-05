@@ -117,7 +117,6 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         caseSensitiveCheckBox.setSelected(FileSearchOptions.getCaseSensitive());
         hiddenFilesCheckBox.setSelected(FileSearchOptions.getShowHiddenFiles());
         mainProjectCheckBox.setSelected(FileSearchOptions.getPreferMainProject());
-        searchByFolders.setSelected(FileSearchOptions.getSearchByFolders());
 
         if ( currentProject == null ) {
             mainProjectCheckBox.setEnabled(false);
@@ -133,14 +132,12 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         caseSensitiveCheckBox.addActionListener(this);
         hiddenFilesCheckBox.addActionListener(this);
         hiddenFilesCheckBox.setVisible(false);
-	searchByFolders.addActionListener(this);
         
         resultList.setCellRenderer( contentProvider.getListCellRenderer(
                 resultList,
                 fileNameTextField.getDocument(),
                 caseSensitiveCheckBox.getModel(),
-                mainProjectCheckBox.getModel(),
-                searchByFolders.getModel()));
+                mainProjectCheckBox.getModel()));
         resultList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -307,10 +304,6 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         return caseSensitiveCheckBox.isSelected();
     }
     
-    public boolean isSearchByFolders() {
-        return searchByFolders.isSelected();
-    }
-
     private void update() {
         time = System.currentTimeMillis();
         final String text = getText();
@@ -350,7 +343,6 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         caseSensitiveCheckBox = new javax.swing.JCheckBox();
         hiddenFilesCheckBox = new javax.swing.JCheckBox();
         mainProjectCheckBox = new javax.swing.JCheckBox();
-        searchByFolders = new javax.swing.JCheckBox();
         jLabelLocation = new javax.swing.JLabel();
         jTextFieldLocation = new javax.swing.JTextField();
 
@@ -443,20 +435,13 @@ public class FileSearchPanel extends javax.swing.JPanel implements ActionListene
         org.openide.awt.Mnemonics.setLocalizedText(mainProjectCheckBox, org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "LBL_PreferMainProject")); // NOI18N
         mainProjectCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 0);
-        add(mainProjectCheckBox, gridBagConstraints);
-        mainProjectCheckBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "AD_PreferMainProject")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(searchByFolders, "Search by Folders");
-        searchByFolders.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 0);
-        add(searchByFolders, gridBagConstraints);
+        add(mainProjectCheckBox, gridBagConstraints);
+        mainProjectCheckBox.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "AD_PreferMainProject")); // NOI18N
 
         jLabelLocation.setLabelFor(jTextFieldLocation);
         org.openide.awt.Mnemonics.setLocalizedText(jLabelLocation, org.openide.util.NbBundle.getMessage(FileSearchPanel.class, "LBL_Location")); // NOI18N
@@ -593,7 +578,6 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
     private javax.swing.JLabel resultLabel;
     private javax.swing.JList resultList;
     private javax.swing.JScrollPane resultScrollPane;
-    private javax.swing.JCheckBox searchByFolders;
     // End of variables declaration//GEN-END:variables
     
     public void actionPerformed(ActionEvent e) {
@@ -605,9 +589,6 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
         }
         else if ( e.getSource() == mainProjectCheckBox ) {            
             FileSearchOptions.setPreferMainProject(isPreferedProject());            
-        }
-        else if ( e.getSource() == searchByFolders ) {
-            FileSearchOptions.setSearchByFolders(searchByFolders.isSelected());
         }
 
         update();
@@ -673,8 +654,7 @@ private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {/
                 @NonNull JList list,
                 @NonNull Document nameDocument,
                 @NonNull ButtonModel caseSensitive,
-                @NonNull ButtonModel colorPrefered,
-                @NonNull ButtonModel searchFolders);
+                @NonNull ButtonModel colorPrefered);
 
         public boolean setListModel( FileSearchPanel panel, String text );
 

@@ -110,8 +110,6 @@ public class ReturnTypeHintError extends HintErrorRule {
                 continue;
             }
             Set<ReturnStatement> statements = entry.getValue();
-            // void type can never be part of a union type
-            // handle that in UnusableTypesUnhandledError
             if (returnType instanceof NamespaceName) {
                 NamespaceName namespaceName = (NamespaceName) returnType;
                 String name = CodeUtils.extractUnqualifiedName(namespaceName);

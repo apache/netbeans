@@ -28,6 +28,11 @@ import org.netbeans.installer.utils.helper.Platform;
  */
 public class SolarisNativeUtils extends UnixNativeUtils {
     
+    public static final String LIBRARY_PATH_SOLARIS_SPARC =
+            NATIVE_JNILIB_RESOURCE_SUFFIX +
+            "solaris-sparc/" + //NOI18N
+            "solaris-sparc.so"; //NOI18N
+    
     public static final String LIBRARY_PATH_SOLARIS_SPARCV9 =
             NATIVE_JNILIB_RESOURCE_SUFFIX +
             "solaris-sparc/" + //NOI18N
@@ -63,8 +68,10 @@ public class SolarisNativeUtils extends UnixNativeUtils {
     SolarisNativeUtils() {
         String library = null;
         
-        if (System.getProperty("os.arch").contains("sparc")) {
-            library = LIBRARY_PATH_SOLARIS_SPARCV9;
+        if(System.getProperty("os.arch").contains("sparc")) {
+            library = SystemUtils.isCurrentJava64Bit() ? 
+                LIBRARY_PATH_SOLARIS_SPARCV9 : 
+                LIBRARY_PATH_SOLARIS_SPARC;
         } else {
             library = SystemUtils.isCurrentJava64Bit() ? 
                 LIBRARY_PATH_SOLARIS_X64 : 

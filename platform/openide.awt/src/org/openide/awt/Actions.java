@@ -65,6 +65,7 @@ import org.openide.util.LookupListener;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.actions.BooleanStateAction;
+import org.openide.util.actions.Presenter;
 import org.openide.util.actions.SystemAction;
 
 

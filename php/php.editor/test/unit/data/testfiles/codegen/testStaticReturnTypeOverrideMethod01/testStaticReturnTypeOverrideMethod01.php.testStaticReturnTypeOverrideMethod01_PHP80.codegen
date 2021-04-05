@@ -1,9 +1,0 @@
-public function testNullableType(): ?static{
-return parent::testNullableType();
-}
-public function testSimple(): static{
-return parent::testSimple();
-}
-public function testUnionType(): static|string|null{
-return parent::testUnionType();
-}

@@ -86,10 +86,7 @@ public class WhereUsedPanel extends JPanel implements CustomRefactoringPanel {
             case FIELD:
             case ENUM_CONSTANT:
             default: {
-                if (kind.name().equals("RECORD"))   // NOI18N
-                     panel = new WhereUsedPanelClass(parent);
-                else
-                    panel = new WhereUsedPanelVariable(parent);
+                panel = new WhereUsedPanelVariable(parent);
                 break;
             }
         }

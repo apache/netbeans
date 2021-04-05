@@ -78,12 +78,12 @@ public abstract class RunnerAsadmin extends RunnerJava {
         ToolsConfig toolsConfig = getServerConfig(server).getTools();
         if (toolsConfig == null) {
             throw new CommandException(LOGGER.excMsg(METHOD, "noToolsConfig"),
-                    server.getPlatformVersion());
+                    server.getVersion());
         }
         ToolConfig asadmin = toolsConfig.getAsadmin();
         if (asadmin == null) {
             throw new CommandException(LOGGER.excMsg(METHOD, "noAsadminConfig"),
-                    server.getPlatformVersion());
+                    server.getVersion());
         }
         String serverHome = server.getServerHome();
         String asadminJar = asadmin.getJar();

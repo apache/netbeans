@@ -21,10 +21,6 @@ package org.netbeans.modules.javascript2.editor;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
-import javax.swing.text.Document;
-import org.netbeans.api.editor.document.AtomicLockDocument;
-import org.netbeans.api.editor.document.LineDocument;
-import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.Token;
@@ -32,7 +28,7 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.EditorOptions;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.GsfUtilities;
@@ -93,14 +89,9 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
 
     @Override
     public void afterInsert(final Context context) throws BadLocationException {
-        final Document doc = context.getDocument();
-        final LineDocument ld = LineDocumentUtils.as(doc, LineDocument.class);
-        if (ld == null) {
-            return;
-        }
-        final AtomicLockDocument ald = LineDocumentUtils.asRequired(doc, AtomicLockDocument.class);
+        final BaseDocument doc = (BaseDocument) context.getDocument();
         final AtomicReference<BadLocationException> ex = new AtomicReference<BadLocationException>();
-        ald.runAtomicAsUser(new Runnable() {
+        doc.runAtomicAsUser(new Runnable() {
 
             @Override
             public void run() {
@@ -167,9 +158,9 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
 
                             // Reindent blocks (won't do anything if } is not at the beginning of a line
                             if (ch == '}') {
-                                reindent(ld, dotPos, JsTokenId.BRACKET_RIGHT_CURLY, caret);
+                                reindent(doc, dotPos, JsTokenId.BRACKET_RIGHT_CURLY, caret);
                             } else if (ch == ']') {
-                                reindent(ld, dotPos, JsTokenId.BRACKET_RIGHT_BRACKET, caret);
+                                reindent(doc, dotPos, JsTokenId.BRACKET_RIGHT_BRACKET, caret);
                             }
                             break;
                         default:
@@ -308,7 +299,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
     public void cancelled(Context context) {
     }
 
-    private void reindent(LineDocument doc, int offset, TokenId id, Caret caret)
+    private void reindent(BaseDocument doc, int offset, TokenId id, Caret caret)
         throws BadLocationException {
         TokenSequence<? extends JsTokenId> ts = LexUtilities.getTokenSequence(
                 doc, offset, language);
@@ -323,7 +314,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
             Token<? extends JsTokenId> token = ts.token();
 
             if ((token.id() == id)) {
-                final int rowFirstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
+                final int rowFirstNonWhite = Utilities.getRowFirstNonWhite(doc, offset);
                 // Ensure that this token is at the beginning of the line
                 if (ts.offset() > rowFirstNonWhite) {
 //                    if (RubyUtils.isRhtmlDocument(doc)) {
@@ -364,7 +355,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
      * @param caret caret
      * @param bracket the bracket that was inserted
      */
-    private void completeOpeningBracket(Document doc, int dotPos, Caret caret, char bracket)
+    private void completeOpeningBracket(BaseDocument doc, int dotPos, Caret caret, char bracket)
         throws BadLocationException {
         if (isCompletablePosition(doc, dotPos + 1)) {
             String matchingBracket = "" + matching(bracket);
@@ -391,8 +382,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
             return;
         }
         int dotPos = context.getOffset();
-        Document doc = context.getDocument();
-        LineDocument ld = LineDocumentUtils.as(doc, LineDocument.class);
+        BaseDocument doc = (BaseDocument) context.getDocument();
         if (isEscapeSequence(doc, dotPos)) { // \" or \' typed
             return;
         }
@@ -405,7 +395,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
         TokenSequence<? extends JsTokenId> ts = LexUtilities.getTokenSequence(
                 doc, dotPos, language);
 
-        if (ts == null || ld == null) {
+        if (ts == null) {
             return;
         }
 
@@ -422,7 +412,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
             previousToken = ts.token();
         }
 
-        int lastNonWhite = LineDocumentUtils.getLineLastNonWhitespace(ld, dotPos);
+        int lastNonWhite = Utilities.getRowLastNonWhite(doc, dotPos);
 
         // eol - true if the caret is at the end of line (ignoring whitespaces)
         boolean eol = lastNonWhite < dotPos;
@@ -441,7 +431,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
             }
         }
 
-        boolean completablePosition = isQuoteCompletablePosition(ld, dotPos);
+        boolean completablePosition = isQuoteCompletablePosition(doc, dotPos);
 
         boolean insideString = false;
         JsTokenId id = token.id();
@@ -487,7 +477,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
                 return; // do not complete
             } else {
                 //#69524
-                char chr = DocumentUtilities.getText(doc, dotPos, 1).charAt(0);
+                char chr = doc.getChars(dotPos, 1)[0];
 
                 if (chr == bracket) {
                     context.setText(Character.toString(bracket), 1);
@@ -511,39 +501,40 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
      * @param doc the document
      * @param dotPos position to be tested
      */
-    private boolean isCompletablePosition(Document doc, int dotPos)
+    private boolean isCompletablePosition(BaseDocument doc, int dotPos)
         throws BadLocationException {
         if (dotPos == doc.getLength()) { // there's no other character to test
 
             return true;
         } else {
             // test that we are in front of ) , " or '
-            char chr = DocumentUtilities.getText(doc, dotPos, 1).charAt(0);
+            char chr = doc.getChars(dotPos, 1)[0];
+
             return ((chr == ')') || (chr == ',') || (chr == '\"') || (chr == '\'') || (chr == '`') || (chr == ' ') ||
             (chr == ']') || (chr == '}') || (chr == '\n') || (chr == '\t') || (chr == ';'));
         }
     }
 
-    private boolean isQuoteCompletablePosition(LineDocument doc, int dotPos)
+    private boolean isQuoteCompletablePosition(BaseDocument doc, int dotPos)
         throws BadLocationException {
         if (dotPos == doc.getLength()) { // there's no other character to test
 
             return true;
         } else {
             // test that we are in front of ) , " or ' ... etc.
-            int eol = LineDocumentUtils.getLineEnd(doc, dotPos);
+            int eol = Utilities.getRowEnd(doc, dotPos);
 
             if ((dotPos == eol) || (eol == -1)) {
                 return false;
             }
 
-            int firstNonWhiteFwd = LineDocumentUtils.getNextNonWhitespace(doc, dotPos, eol);
+            int firstNonWhiteFwd = Utilities.getFirstNonWhiteFwd(doc, dotPos, eol);
 
             if (firstNonWhiteFwd == -1) {
                 return false;
             }
 
-            char chr = DocumentUtilities.getText(doc, firstNonWhiteFwd, 1).charAt(0);
+            char chr = doc.getChars(firstNonWhiteFwd, 1)[0];
 
             return ((chr == ')') || (chr == ',') || (chr == '+') || (chr == '}') || (chr == ';') ||
                (chr == ']'));
@@ -560,7 +551,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
      * @param caret caret
      * @param bracket the bracket character ']' or ')'
      */
-    private void skipClosingBracket(Document doc, Caret caret, char bracket, TokenId bracketId)
+    private void skipClosingBracket(BaseDocument doc, Caret caret, char bracket, TokenId bracketId)
         throws BadLocationException {
         int caretOffset = caret.getDot();
 
@@ -579,7 +570,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
      * @param doc document into which typing was done.
      * @param caretOffset
      */
-    private boolean isSkipClosingBracket(Document doc, int caretOffset, TokenId bracketId)
+    private boolean isSkipClosingBracket(BaseDocument doc, int caretOffset, TokenId bracketId)
         throws BadLocationException {
         // First check whether the caret is not after the last char in the document
         // because no bracket would follow then so it could not be skipped.
@@ -702,7 +693,7 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
                 bracketBalance = 0;
 
                 //token = lastRBracket.getNext();
-                TokenHierarchy<Document> th = TokenHierarchy.get(doc);
+                TokenHierarchy<BaseDocument> th = TokenHierarchy.get(doc);
 
                 int ofs = lastRBracket.offset(th);
 
@@ -760,13 +751,13 @@ public class JsTypedTextInterceptor implements TypedTextInterceptor {
     // XXX TODO Use embedded string sequence here and see if it
     // really is escaped. I know where those are!
     // TODO Adjust for JavaScript
-    private static boolean isEscapeSequence(Document doc, int dotPos)
+    private static boolean isEscapeSequence(BaseDocument doc, int dotPos)
         throws BadLocationException {
         if (dotPos <= 0) {
             return false;
         }
 
-        char previousChar = DocumentUtilities.getText(doc, dotPos - 1, 1).charAt(0);
+        char previousChar = doc.getChars(dotPos - 1, 1)[0];
 
         return previousChar == '\\';
     }

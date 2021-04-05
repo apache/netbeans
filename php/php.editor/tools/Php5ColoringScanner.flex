@@ -295,8 +295,6 @@ PHP_TYPE_VOID=[v][o][i][d]
 PHP_ITERABLE=[i][t][e][r][a][b][l][e]
 // PHP7.2
 PHP_TYPE_OBJECT=[o][b][j][e][c][t]
-// NETBEANS-4443 PHP8.0
-PHP_TYPE_MIXED=[m][i][x][e][d]
 
 
 
@@ -447,14 +445,6 @@ PHP_TYPE_MIXED=[m][i][x][e][d]
     return PHPTokenId.PHP_RETURN;
 }
 
-// NETBEANS-4443 PHP 8.0: Attribute Syntax
-// https://wiki.php.net/rfc/attributes_v2
-// https://wiki.php.net/rfc/shorter_attribute_syntax
-// https://wiki.php.net/rfc/shorter_attribute_syntax_change
-<ST_PHP_IN_SCRIPTING>"#[" {
-    return PHPTokenId.PHP_ATTRIBUTE;
-}
-
 <ST_PHP_IN_SCRIPTING>"yield"{WHITESPACE}+"from" {
     return PHPTokenId.PHP_YIELD_FROM;
 }
@@ -551,10 +541,6 @@ PHP_TYPE_MIXED=[m][i][x][e][d]
     return PHPTokenId.PHP_ENDSWITCH;
 }
 
-<ST_PHP_IN_SCRIPTING>"match" {
-    return PHPTokenId.PHP_MATCH;
-}
-
 <ST_PHP_IN_SCRIPTING>"case" {
     return PHPTokenId.PHP_CASE;
 }
@@ -631,20 +617,9 @@ PHP_TYPE_MIXED=[m][i][x][e][d]
     return PHPTokenId.PHP_TYPE_OBJECT;
 }
 
-<ST_PHP_IN_SCRIPTING>{PHP_TYPE_MIXED} {
-    return PHPTokenId.PHP_TYPE_MIXED;
-}
-
 <ST_PHP_IN_SCRIPTING>"->" {
     pushState(ST_PHP_LOOKING_FOR_PROPERTY);
     return PHPTokenId.PHP_OBJECT_OPERATOR;
-}
-
-// NETBEANS-4443 PHP 8.0: Nullsafe operator
-// https://wiki.php.net/rfc/nullsafe_operator
-<ST_PHP_IN_SCRIPTING>"?->" {
-    pushState(ST_PHP_LOOKING_FOR_PROPERTY);
-    return PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR;
 }
 
 <ST_PHP_QUOTES_AFTER_VARIABLE> {
@@ -652,11 +627,6 @@ PHP_TYPE_MIXED=[m][i][x][e][d]
     popState();
     pushState(ST_PHP_LOOKING_FOR_PROPERTY);
     return PHPTokenId.PHP_OBJECT_OPERATOR;
-    }
-    "?->" {
-    popState();
-    pushState(ST_PHP_LOOKING_FOR_PROPERTY);
-    return PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR;
     }
     {ANY_CHAR} {
         yypushback(1);
@@ -670,12 +640,6 @@ PHP_TYPE_MIXED=[m][i][x][e][d]
 
 <ST_PHP_LOOKING_FOR_PROPERTY>"->" {
     return PHPTokenId.PHP_OBJECT_OPERATOR;
-}
-
-// NETBEANS-4443 PHP 8.0: Nullsafe operator
-// https://wiki.php.net/rfc/nullsafe_operator
-<ST_PHP_LOOKING_FOR_PROPERTY>"?->" {
-    return PHPTokenId.PHP_NULLSAFE_OBJECT_OPERATOR;
 }
 
 <ST_PHP_LOOKING_FOR_PROPERTY>{LABEL} {

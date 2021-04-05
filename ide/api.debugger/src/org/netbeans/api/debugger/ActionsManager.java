@@ -21,14 +21,7 @@ package org.netbeans.api.debugger;
 
 import java.beans.*;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -112,7 +105,7 @@ public final class ActionsManager {
     
     private final Vector<ActionsManagerListener>    listener = new Vector<ActionsManagerListener>();
     private final HashMap<String, List<ActionsManagerListener>> listeners = new HashMap<String, List<ActionsManagerListener>>();
-    private HashMap<Object, List<ActionsProvider>>  actionProviders;
+    private HashMap<Object, ArrayList<ActionsProvider>>  actionProviders;
     private final Object            actionProvidersLock = new Object();
     private final AtomicBoolean     actionProvidersInitialized = new AtomicBoolean(false);
     private MyActionListener        actionListener = new MyActionListener ();
@@ -144,7 +137,7 @@ public final class ActionsManager {
      */
     public final void doAction (final Object action) {
         doiingDo = true;
-        List<ActionsProvider> l = getActionProvidersForActionWithInit(action);
+        ArrayList<ActionsProvider> l = getActionProvidersForActionWithInit(action);
         boolean done = false;
         if (l != null) {
             int i, k = l.size ();
@@ -192,8 +185,7 @@ public final class ActionsManager {
         if (!inited && Mutex.EVENT.isReadAccess()) { // is EDT
             return postActionWithLazyInit(action);
         }
-        
-        List<ActionsProvider> l = getActionProvidersForActionWithInit(action);
+        ArrayList<ActionsProvider> l = getActionProvidersForActionWithInit(action);
         boolean posted = false;
         int k;
         if (l != null) {
@@ -201,8 +193,7 @@ public final class ActionsManager {
         } else {
             k = 0;
         }
-        
-        List<ActionsProvider> postedActions = new ArrayList<>(k);
+        List<ActionsProvider> postedActions = new ArrayList<ActionsProvider>(k);
         final AsynchActionTask task = new AsynchActionTask(postedActions);
         if (l != null) {
             int i;
@@ -365,7 +356,7 @@ public final class ActionsManager {
         boolean doInit = false;
         synchronized (actionProvidersLock) {
             if (actionProviders == null) {
-                actionProviders = new HashMap<>();
+                actionProviders = new HashMap<Object, ArrayList<ActionsProvider>>();
                 doInit = true;
             }
         }
@@ -383,8 +374,7 @@ public final class ActionsManager {
                 initActionImpls();
             }
         }
-
-        List<ActionsProvider> l = getActionProvidersForAction(action);
+        ArrayList<ActionsProvider> l = getActionProvidersForAction(action);
         if (l != null) {
             int i, k = l.size ();
             for (i = 0; i < k; i++) {
@@ -441,7 +431,7 @@ public final class ActionsManager {
         synchronized (listeners) {
             List<ActionsManagerListener> ls = listeners.get (propertyName);
             if (ls == null) {
-                ls = new ArrayList<>();
+                ls = new ArrayList<ActionsManagerListener>();
                 listeners.put (propertyName, ls);
             }
             ls.add(l);
@@ -508,12 +498,12 @@ public final class ActionsManager {
         final Object action
     ) {
         initListeners ();
-        List<ActionsManagerListener> l = new ArrayList<>(listener);
+        List<ActionsManagerListener> l = new ArrayList<ActionsManagerListener>(listener);
         List<ActionsManagerListener> l1;
         synchronized (listeners) {
             l1 = listeners.get(ActionsManagerListener.PROP_ACTION_PERFORMED);
             if (l1 != null) {
-                l1 = new ArrayList<>(l1);
+                l1 = new ArrayList<ActionsManagerListener>(l1);
             }
         }
         int i, k = l.size ();
@@ -543,12 +533,12 @@ public final class ActionsManager {
     ) {
         boolean enabled = isEnabled (action);
         initListeners ();
-        List<ActionsManagerListener> l = new ArrayList<>(listener);
+        List<ActionsManagerListener> l = new ArrayList<ActionsManagerListener>(listener);
         List<ActionsManagerListener> l1;
         synchronized (listeners) {
             l1 = listeners.get(ActionsManagerListener.PROP_ACTION_STATE_CHANGED);
             if (l1 != null) {
-                l1 = new ArrayList<>(l1);
+                l1 = new ArrayList<ActionsManagerListener>(l1);
             }
         }
         int i, k = l.size ();
@@ -566,22 +556,22 @@ public final class ActionsManager {
     
     // private support .........................................................
     
-    private List<ActionsProvider> getActionProvidersForAction(Object action) {
-        List<ActionsProvider> l;
+    private ArrayList<ActionsProvider> getActionProvidersForAction(Object action) {
+        ArrayList<ActionsProvider> l;
         synchronized (actionProvidersLock) {
             l = actionProviders.get(action);
             if (l != null) {
-                l = new ArrayList<>(l);
+                l = (ArrayList<ActionsProvider>) l.clone ();
             }
         }
         return l;
     }
     
-    private List<ActionsProvider> getActionProvidersForActionWithInit(Object action) {
+    private ArrayList<ActionsProvider> getActionProvidersForActionWithInit(Object action) {
         boolean doInit = false;
         synchronized (actionProvidersLock) {
             if (actionProviders == null) {
-                actionProviders = new HashMap<>();
+                actionProviders = new HashMap<Object, ArrayList<ActionsProvider>>();
                 doInit = true;
             }
         }
@@ -603,9 +593,9 @@ public final class ActionsManager {
     
     private void registerActionsProvider (Object action, ActionsProvider p) {
         synchronized (actionProvidersLock) {
-            List<ActionsProvider> l = actionProviders.get(action);
+            ArrayList<ActionsProvider> l = actionProviders.get (action);
             if (l == null) {
-                l = new ArrayList<>();
+                l = new ArrayList<ActionsProvider>();
                 actionProviders.put (action, l);
             }
             l.add (p);
@@ -731,8 +721,8 @@ public final class ActionsManager {
             }
         }
         synchronized (actionProvidersLock) {
-            Collection<List<ActionsProvider>> apsc = actionProviders.values();
-            for (List<ActionsProvider> aps : apsc) {
+            Collection<ArrayList<ActionsProvider>> apsc = actionProviders.values();
+            for (ArrayList<ActionsProvider> aps : apsc) {
                 for (ActionsProvider ap : aps) {
                     ap.removeActionsProviderListener(actionListener);
                 }

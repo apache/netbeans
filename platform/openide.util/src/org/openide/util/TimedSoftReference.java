@@ -62,19 +62,13 @@ final class TimedSoftReference<T> extends SoftReference<T> implements Runnable {
      * @param m a map in which this reference may serve as a value
      * @param k the key whose value in <code>m</code> may be this reference
      */
-    TimedSoftReference(T o, Map m, Object k) {
+    public TimedSoftReference(T o, Map m, Object k) {
         super(o, BaseUtilities.activeReferenceQueue());
         this.o = o;
         this.m = m;
         this.k = k;
-        try {
-            this.task = RP.create(this);
-            this.task.schedule(TIMEOUT);
-        } catch (SecurityException ex) {
-            // behave as regular SoftReference
-            this.o = null;
-            this.task = null;
-        }
+        task = RP.create(this);
+        task.schedule(TIMEOUT);
     }
 
     public void run() {
@@ -108,9 +102,7 @@ final class TimedSoftReference<T> extends SoftReference<T> implements Runnable {
                 // touch me
                 //System.err.println("Touch " + k);
                 if (touched == 0) {
-                    if (task != null) {
-                        task.schedule(TIMEOUT);
-                    }
+                    task.schedule(TIMEOUT);
                 }
 
                 touched = System.currentTimeMillis();

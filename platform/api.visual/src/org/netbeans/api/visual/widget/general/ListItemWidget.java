@@ -31,7 +31,6 @@ import org.netbeans.modules.visual.util.GeomUtil;
  * @deprecated
  * @author David Kaspar
  */
-@Deprecated
 public class ListItemWidget extends LabelWidget {
 
     /**

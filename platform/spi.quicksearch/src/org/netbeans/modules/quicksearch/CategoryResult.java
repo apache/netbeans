@@ -121,9 +121,7 @@ public final class CategoryResult implements Runnable {
     }
 
     public boolean isObsolete() {
-        synchronized (LOCK) {
-            return obsolete;
-        }
+        return obsolete;
     }
 
     /** Sends notification about category change, always runs in EQ thread */

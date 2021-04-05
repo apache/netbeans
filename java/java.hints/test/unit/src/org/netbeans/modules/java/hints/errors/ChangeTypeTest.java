@@ -201,12 +201,20 @@ public class ChangeTypeTest extends ErrorHintsTestBase {
 
     
     protected List<Fix> computeFixes(CompilationInfo info, int pos, TreePath path) {
-        return new ChangeType().run(info, null, pos, path, null);
+        List<Fix> fixes = new ChangeType().run(info, null, pos, path, null);
+        List<Fix> result=  new LinkedList<Fix>();
+        
+        for (Fix f : fixes) {
+            if (f instanceof ChangeTypeFix)
+                result.add(f);
+        }
+        
+        return result;
     }
 
     @Override
     protected String toDebugString(CompilationInfo info, Fix f) {
-        return f.getText();
+        return ((ChangeTypeFix) f).getText();
     }
     
     static {

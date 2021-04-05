@@ -52,8 +52,7 @@
                 <dependency>
                     <code-name-base>org.netbeans.modules.php.editor</code-name-base>
                     <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>2.0</specification-version>
+                        <specification-version>1.28.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

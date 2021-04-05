@@ -46,7 +46,6 @@ public final class ValidationResult {
 
     /**
      * Copy constructor.
-     * @param anotherResult another validation result
      */
     public ValidationResult(ValidationResult anotherResult) {
         merge(anotherResult);
@@ -82,20 +81,6 @@ public final class ValidationResult {
     }
 
     /**
-     * Get the first error.
-     *
-     * @return the first error or {@code null} if there are no errors
-     * @since 2.72
-     */
-    @CheckForNull
-    public Message getFirstError() {
-        if (hasErrors()) {
-            return errors.get(0);
-        }
-        return null;
-    }
-
-    /**
      * Check whether there are some warnings present.
      * @return {@code true} if the validation result contains any warning
      * @see #isFaultless()
@@ -111,20 +96,6 @@ public final class ValidationResult {
     public List<Message> getWarnings() {
         return new ArrayList<>(warnings);
 
-    }
-
-    /**
-     * Get the first warning.
-     *
-     * @return the first warning or {@code null} if there are no warnings
-     * @since 2.72
-     */
-    @CheckForNull
-    public Message getFirstWarning() {
-        if (hasWarnings()) {
-            return warnings.get(0);
-        }
-        return null;
     }
 
     /**

@@ -27,7 +27,6 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Lookup;
 
 /**
  * Context provider for maven executors and checkers. Never to be implemented by
@@ -112,16 +111,6 @@ public interface RunConfig {
     boolean isInteractive();
 
     FileObject getSelectedFileObject();
-
-    /**
-     * Provides access to possible additional parameters from the action invoker. Must
-     * not return {@code null}, use {@link Lookup#EMPTY} for empty instance.
-     * @return action context Lookup
-     * @since 2.144
-     */
-    default Lookup getActionContext() { 
-        return Lookup.EMPTY;
-    }
 
     public enum ReactorStyle {
         NONE,

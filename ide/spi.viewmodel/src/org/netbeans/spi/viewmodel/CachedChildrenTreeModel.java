@@ -64,12 +64,8 @@ public abstract class CachedChildrenTreeModel extends Object implements TreeMode
         if (cache) {
             ChildrenTree cht;
             synchronized (childrenCache) {
-                if (childrenToRefresh.remove(o)) {
-                    childrenCache.remove(o);
-                    cht = null;
-                } else {
-                    cht = childrenCache.get(o);
-                }
+                //ch = (List) childrenCache.get(o);
+                cht = childrenCache.get(o);
             }
             if (cht != null) {
                 ch = cht.getChildren();

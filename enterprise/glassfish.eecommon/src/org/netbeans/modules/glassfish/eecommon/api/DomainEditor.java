@@ -466,10 +466,10 @@ public class DomainEditor {
     
 
     public HashMap<String,Map> getSunDatasourcesFromXml(){
-        HashMap<String, Map> dSources = new HashMap<>();
+        HashMap<String,Map> dSources = new HashMap<String,Map>();
         Document domainDoc = getDomainDocument();
         if (domainDoc != null) {
-            Map<String,NamedNodeMap> dsMap = getDataSourcesAttrMap(domainDoc);
+            HashMap<String,NamedNodeMap> dsMap = getDataSourcesAttrMap(domainDoc);
             HashMap<String,Node> cpMap = getConnPoolsNodeMap(domainDoc);
             dsMap.keySet().removeAll(Arrays.asList(sysDatasources));
             String[] ds = dsMap.keySet().toArray(new String[dsMap.size()]);
@@ -497,7 +497,7 @@ public class DomainEditor {
         NodeList propsNodeList = cpElement.getElementsByTagName(CONST_PROP);
 
         //Cycle through each property element
-        Map<String, String> map = new HashMap<>();
+        HashMap<String, String> map = new HashMap<>();
         for (int j = 0; j < propsNodeList.getLength(); j++) {
             Node propNode = propsNodeList.item(j);
             NamedNodeMap propsMap = propNode.getAttributes();
@@ -533,7 +533,7 @@ public class DomainEditor {
     }
 
     public HashMap<String,Map> getConnPoolsFromXml(){
-        HashMap<String, Map> pools = new HashMap<>();
+        HashMap<String,Map> pools = new HashMap<String,Map>();
         Document domainDoc = getDomainDocument();
         if (domainDoc != null) {
             HashMap<String,Node> cpMap = getConnPoolsNodeMap(domainDoc);

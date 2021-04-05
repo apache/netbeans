@@ -16,17 +16,17 @@ Names:
 
 Variants:
  \Nette\Utils\Arrays
- Don't import.
+ Don't use type.
 
  <html><font color='#FF0000'>&lt;cannot be resolved&gt;
 
  \Nette\Utils\Html
- Don't import.
+ Don't use type.
 
  \Nette\Application\Request
  \Nette\Http\Request
- Don't import.
+ Don't use type.
 
  \Nette\Utils\Strings
- Don't import.
+ Don't use type.
 

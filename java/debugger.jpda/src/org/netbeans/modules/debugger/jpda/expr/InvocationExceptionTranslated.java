@@ -25,7 +25,6 @@ import com.sun.jdi.Field;
 import com.sun.jdi.IntegerValue;
 import com.sun.jdi.InvocationException;
 import com.sun.jdi.Method;
-import com.sun.jdi.ObjectCollectedException;
 import com.sun.jdi.ObjectReference;
 import com.sun.jdi.ReferenceType;
 import com.sun.jdi.StringReference;
@@ -96,10 +95,6 @@ public class InvocationExceptionTranslated extends Exception {
         this.createdAt = new Throwable().fillInStackTrace();
     }
     
-    public void resetInvocationMessage() {
-        this.invocationMessage = null;
-    }
-
     public void setPreferredThread(JPDAThreadImpl preferredThread) {
         this.preferredThread = preferredThread;
     }
@@ -131,28 +126,14 @@ public class InvocationExceptionTranslated extends Exception {
                     }
                 } else {
                     try {
-                        StringReference sr = null;
-                        while (sr == null) {
-                            sr = (StringReference) debugger.invokeMethod (
+                        StringReference sr = (StringReference) debugger.invokeMethod (
                                 preferredThread,
                                 exeption,
                                 getMessageMethod,
                                 new Value [0],
                                 this
                             );
-                            if (sr == null) break;
-                            try {
-                                sr.disableCollection();
-                            } catch (ObjectCollectedException ex) {
-                                sr = null;
-                            }
-                        }
-                        if (sr != null) {
-                            message = StringReferenceWrapper.value(sr);
-                            sr.enableCollection();
-                        } else {
-                            message = ""; // NOI18N
-                        }
+                        message = sr != null ? StringReferenceWrapper.value(sr) : ""; // NOI18N
                     } catch (InvalidExpressionException ex) {
                         if (ex.getTargetException() == this) {
                             String msg = getMessageFromField();
@@ -261,28 +242,14 @@ public class InvocationExceptionTranslated extends Exception {
                     }
                 } else {
                     try {
-                        StringReference sr = null;
-                        while (sr == null) {
-                            sr = (StringReference) debugger.invokeMethod (
+                        StringReference sr = (StringReference) debugger.invokeMethod (
                                 preferredThread,
                                 exeption,
                                 getMessageMethod,
                                 new Value [0],
                                 this
                             );
-                            if (sr == null) break;
-                            try {
-                                sr.disableCollection();
-                            } catch (ObjectCollectedException ex) {
-                                sr = null;
-                            }
-                        }
-                        if (sr != null) {
-                            localizedMessage = StringReferenceWrapper.value(sr);
-                            sr.enableCollection();
-                        } else {
-                            localizedMessage = ""; // NOI18N
-                        }
+                        localizedMessage = sr == null ? "" : StringReferenceWrapper.value(sr); // NOI18N
                     } catch (InvalidExpressionException ex) {
                         if (ex.getTargetException() == this) {
                             String msg = getMessageFromField();
@@ -526,23 +493,14 @@ public class InvocationExceptionTranslated extends Exception {
                 declaringClass = "unknown";
             } else {
                 try {
-                    StringReference sr = null;
-                    while (sr == null) {
-                        sr = (StringReference) debugger.invokeMethod (
+                    StringReference sr = (StringReference) debugger.invokeMethod (
                             preferredThread,
                             stElement,
                             getMethod,
                             new Value [0],
                             this
                         );
-                        try {
-                            sr.disableCollection();
-                        } catch (ObjectCollectedException ex) {
-                            sr = null;
-                        }
-                    }
                     declaringClass = StringReferenceWrapper.value(sr);
-                    sr.enableCollection();
                 } catch (InvalidExpressionException ex) {
                     declaringClass = ex.getLocalizedMessage();
                 }
@@ -556,25 +514,15 @@ public class InvocationExceptionTranslated extends Exception {
                 methodName = "unknown";
             } else {
                 try {
-                    StringReference sr = null;
-                    while (sr == null) {
-                        sr = (StringReference) debugger.invokeMethod (
+                    StringReference sr = (StringReference) debugger.invokeMethod (
                             preferredThread,
                             stElement,
                             getMethod,
                             new Value [0],
                             this
                         );
-                        if (sr == null) break;
-                        try {
-                            sr.disableCollection();
-                        } catch (ObjectCollectedException ex) {
-                            sr = null;
-                        }
-                    }
                     if (sr != null) {
                         methodName = StringReferenceWrapper.value(sr);
-                        sr.enableCollection();
                     } else {
                         methodName = null;
                     }
@@ -591,27 +539,17 @@ public class InvocationExceptionTranslated extends Exception {
                 fileName = "unknown";
             } else {
                 try {
-                    StringReference sr = null;
-                    while (sr == null) {
-                        sr = (StringReference) debugger.invokeMethod (
+                    StringReference sr = (StringReference) debugger.invokeMethod (
                             preferredThread,
                             stElement,
                             getMethod,
                             new Value [0],
                             this
                         );
-                        if (sr == null) break;
-                        try {
-                            sr.disableCollection();
-                        } catch (ObjectCollectedException ex) {
-                            sr = null;
-                        }
-                    }
                     if (sr == null) {
                         fileName = null;
                     } else {
                         fileName = StringReferenceWrapper.value(sr);
-                        sr.enableCollection();
                     }
                 } catch (InvalidExpressionException ex) {
                     fileName = ex.getLocalizedMessage();

@@ -23,9 +23,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JEditorPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.EditorKit;
 import javax.swing.text.Position;
@@ -361,7 +363,7 @@ final class DocumentOpenClose {
             // Initial part of reload runs in EDT (collects caret positions) but outside "lock"
             Mutex.EVENT.readAccess(reloadEDTTask);
         }
-    }   
+    }
     
     private StyledDocument retainExistingDocLA() { // Lock acquired mandatory
         switch (documentStatus) {
@@ -773,7 +775,7 @@ final class DocumentOpenClose {
                                 caretPositions[i] = null;
                             }
                         }
-                        Mutex.EVENT.postReadRequest(new Runnable() {
+                        SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
                                 for (int i = 0; i < reloadOpenPanes.length; i++) {

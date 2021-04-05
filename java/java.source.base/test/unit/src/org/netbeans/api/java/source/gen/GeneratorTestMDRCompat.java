@@ -33,7 +33,6 @@ import javax.swing.JEditorPane;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.modules.java.source.transform.Transformer;
@@ -74,8 +73,6 @@ public abstract class GeneratorTestMDRCompat extends ClassIndexTestCase {
                         return ClassPathSupport.createClassPath(new FileObject[0]);
                     if (type == ClassPath.BOOT)
                         return BootClassPathUtil.getBootClassPath();
-                    if (type == JavaClassPathConstants.MODULE_BOOT_PATH)
-                        return BootClassPathUtil.getModuleBootPath();
                     return null;
             }
         };
@@ -85,7 +82,7 @@ public abstract class GeneratorTestMDRCompat extends ClassIndexTestCase {
                 return GeneratorTestMDRCompat.this.getSourceLevel();
             }
         };
-        SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/source/resources/layer.xml"}, new Object[] {loader, cpp, slq});
+        SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/source/resources/layer.xml"}, new Object[] {loader, cpp});
         MockMimeLookup.setInstances(MimePath.get("text/x-java"), new Reindenter.Factory());
         
         TestUtil.setupEditorMockServices();
@@ -110,19 +107,19 @@ public abstract class GeneratorTestMDRCompat extends ClassIndexTestCase {
         printFile();
     }
     
-//    static ClassPath createClassPath(String classpath) {
-//        StringTokenizer tokenizer = new StringTokenizer(classpath, File.pathSeparator);
-//        List/*<PathResourceImplementation>*/ list = new ArrayList();
-//        while (tokenizer.hasMoreTokens()) {
-//            String item = tokenizer.nextToken();
-//            File f = FileUtil.normalizeFile(new File(item));
-//            URL url = getRootURL(f);
-//            if (url!=null) {
-//                list.add(ClassPathSupport.createResource(url));
-//            }
-//        }
-//        return ClassPathSupport.createClassPath(list);
-//    }
+    static ClassPath createClassPath(String classpath) {
+        StringTokenizer tokenizer = new StringTokenizer(classpath, File.pathSeparator);
+        List/*<PathResourceImplementation>*/ list = new ArrayList();
+        while (tokenizer.hasMoreTokens()) {
+            String item = tokenizer.nextToken();
+            File f = FileUtil.normalizeFile(new File(item));
+            URL url = getRootURL(f);
+            if (url!=null) {
+                list.add(ClassPathSupport.createResource(url));
+            }
+        }
+        return ClassPathSupport.createClassPath(list);
+    }
     
     // XXX this method could probably be removed... use standard FileUtil stuff
     private static URL getRootURL  (File f) {
@@ -195,7 +192,7 @@ public abstract class GeneratorTestMDRCompat extends ClassIndexTestCase {
     abstract String getSourcePckg();
     
     String getSourceLevel() {
-        return null;
+        return System.getProperty("java.specification.version");
     }
 
     FileObject[] getSourcePath() {

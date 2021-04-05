@@ -27,7 +27,7 @@ public class ConvertToTextBlockTest {
     @Test
     public void testFixWorking() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_15");
+            SourceVersion.valueOf("RELEASE_13");
         } catch (IllegalArgumentException ex) {
             //OK, skip test
             return ;
@@ -42,6 +42,7 @@ public class ConvertToTextBlockTest {
                        "    }\n" +
                        "}\n")
                 .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
                 .run(ConvertToTextBlock.class)
                 .findWarning("3:30-3:37:verifier:" + Bundle.ERR_ConvertToTextBlock())
                 .applyFix()
@@ -61,7 +62,7 @@ public class ConvertToTextBlockTest {
     @Test
     public void testNewLineAtEnd() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_15");
+            SourceVersion.valueOf("RELEASE_13");
         } catch (IllegalArgumentException ex) {
             //OK, skip test
             return ;
@@ -76,6 +77,7 @@ public class ConvertToTextBlockTest {
                        "    }\n" +
                        "}\n")
                 .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
                 .run(ConvertToTextBlock.class)
                 .findWarning("3:30-3:37:verifier:" + Bundle.ERR_ConvertToTextBlock())
                 .applyFix()
@@ -96,7 +98,7 @@ public class ConvertToTextBlockTest {
     @Test
     public void testNewLinesAtEnd() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_15");
+            SourceVersion.valueOf("RELEASE_13");
         } catch (IllegalArgumentException ex) {
             //OK, skip test
             return ;
@@ -111,6 +113,7 @@ public class ConvertToTextBlockTest {
                        "    }\n" +
                        "}\n")
                 .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
                 .run(ConvertToTextBlock.class)
                 .findWarning("3:30-3:37:verifier:" + Bundle.ERR_ConvertToTextBlock())
                 .applyFix()
@@ -131,7 +134,7 @@ public class ConvertToTextBlockTest {
     @Test
     public void testOnlyLiterals() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_15");
+            SourceVersion.valueOf("RELEASE_13");
         } catch (IllegalArgumentException ex) {
             //OK, skip test
             return ;
@@ -145,6 +148,7 @@ public class ConvertToTextBlockTest {
                        "    private int c() { return 0; }\n" +
                        "}\n")
                 .sourceLevel(SourceVersion.latest().name())
+                .options("--enable-preview")
                 .run(ConvertToTextBlock.class)
                 .assertWarnings();
     }

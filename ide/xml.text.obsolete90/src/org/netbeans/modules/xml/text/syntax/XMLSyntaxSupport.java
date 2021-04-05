@@ -361,7 +361,7 @@ public final class XMLSyntaxSupport extends ExtSyntaxSupport implements XMLToken
                     }
                 } else {                                                                // starttag
                     String name = text.substring( 1 );
-                    List<String> attrs = new ArrayList<>();
+                    ArrayList attrs = new ArrayList();
                     
                     // skip attributes
                     

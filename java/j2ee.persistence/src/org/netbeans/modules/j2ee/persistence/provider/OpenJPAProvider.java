@@ -84,12 +84,12 @@ class OpenJPAProvider extends Provider{
 
     @Override
     public Map getUnresolvedVendorSpecificProperties() {
-        return Collections.emptyMap();
+        return Collections.EMPTY_MAP;
     }
 
     @Override
     public Map getDefaultVendorSpecificProperties() {
-        return Collections.emptyMap();
+        return Collections.EMPTY_MAP;
     }
 
 }

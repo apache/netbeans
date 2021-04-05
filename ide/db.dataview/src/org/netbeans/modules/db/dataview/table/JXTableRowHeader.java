@@ -32,7 +32,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
-import javax.swing.SwingUtilities;
 import javax.swing.event.RowSorterEvent;
 import javax.swing.event.RowSorterListener;
 import javax.swing.event.TableModelEvent;
@@ -188,10 +187,8 @@ public final class JXTableRowHeader extends JComponent {
         }
 
         private void tableDataChanged() {
-            SwingUtilities.invokeLater(() -> {
-                setCount(backingTable.getRowCount());
-                fireTableDataChanged();
-            });
+            setCount(backingTable.getRowCount());
+            fireTableDataChanged();
         }
 
         @Override

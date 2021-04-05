@@ -914,7 +914,6 @@ term
         (functionName ws? LPAREN)=>function //"myfunction(" as predicate
         | VARIABLE
         | IDENT
-        | (LBRACKET WS? IDENT (WS IDENT)* WS? RBRACKET)
         | NUMBER
         | URANGE
         | PERCENTAGE

@@ -31,22 +31,22 @@ import org.netbeans.modules.visual.graph.layout.orthogonalsupport.MGraph.Vertex;
  *
  * @author ptliu
  */
-public class OrthogonalRepresentation<N, E> {
+public class OrthogonalRepresentation {
 
     private Map<Face, OrthogonalShape> shapes;
-    private EmbeddedPlanarGraph<N, E> originalGraph;
-    private Vertex<N> cornerVertex;
+    private EmbeddedPlanarGraph originalGraph;
+    private Vertex cornerVertex;
 
-    public static <N, E> OrthogonalRepresentation<N, E> createGraph(EmbeddedPlanarGraph<N, E> graph) {
-        return new OrthogonalRepresentation<>(graph);
+    public static OrthogonalRepresentation createGraph(EmbeddedPlanarGraph graph) {
+        return new OrthogonalRepresentation(graph);
     }
 
-    private OrthogonalRepresentation(EmbeddedPlanarGraph<N, E> graph) {
-        shapes = new LinkedHashMap<>();
+    private OrthogonalRepresentation(EmbeddedPlanarGraph graph) {
+        shapes = new LinkedHashMap<Face, OrthogonalShape>();
         this.originalGraph = graph;
     }
 
-    public EmbeddedPlanarGraph<N, E> getOriginalGraph() {
+    public EmbeddedPlanarGraph getOriginalGraph() {
         return originalGraph;
     }
 
@@ -64,11 +64,11 @@ public class OrthogonalRepresentation<N, E> {
         return shapes.values();
     }
 
-    public void setCornerVertex(Vertex<N> cornerVertex) {
+    public void setCornerVertex(Vertex cornerVertex) {
         this.cornerVertex = cornerVertex;
     }
 
-    public Vertex<N> getCornerVertex() {
+    public Vertex getCornerVertex() {
         return cornerVertex;
     }
 
@@ -83,14 +83,14 @@ public class OrthogonalRepresentation<N, E> {
         return s;
     }
 
-    public static class OrthogonalShape {
+    public class OrthogonalShape {
 
         private Map<Dart, Tuple> tupleMap;
         private Face face;
 
         OrthogonalShape(Face face) {
             this.face = face;
-            tupleMap = new LinkedHashMap<>();
+            tupleMap = new LinkedHashMap<Dart, Tuple>();
             for (Dart d : face.getDarts()) {
                 Tuple t = new Tuple(d);
                 tupleMap.put(d, t);
@@ -105,9 +105,10 @@ public class OrthogonalRepresentation<N, E> {
             return tupleMap.get(dart);
         }
 
-        public void updateTuple(Tuple tuple, Collection<Edge<?>> newEdges) {
+        public void updateTuple(Tuple tuple, Collection<Edge> newEdges) {
+
             Dart originalDart = tuple.getDart();
-            Edge<?> originalEdge = originalDart.getEdge();
+            Edge originalEdge = originalDart.getEdge();
             List<Dart> newDarts = face.replaceDart(originalDart, newEdges);
             tupleMap.remove(originalDart);
             BitSet bends = tuple.getBends();
@@ -142,7 +143,7 @@ public class OrthogonalRepresentation<N, E> {
             }
         }
 
-        public void insertEdge(Edge<?> edge) {
+        public void insertEdge(Edge edge) {
             List<Dart> removedDarts = face.replaceDarts(edge);
 
             if (removedDarts.isEmpty()) {
@@ -173,7 +174,7 @@ public class OrthogonalRepresentation<N, E> {
         }
     }
 
-    public static class Tuple {
+    public class Tuple {
 
         private Dart dart;
         private BitSet bends;

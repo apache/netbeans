@@ -250,11 +250,9 @@ public class CompositeComponentLibrary extends FaceletsLibrary {
                 for (Map<String, String> attrsMap : model.getExistingInterfaceAttributes()) {
                     String attrname = attrsMap.get("name"); //NOI18N
                     boolean required = Boolean.parseBoolean(attrsMap.get("required")); //NOI18N
-                    String attributeDescription = attrsMap.get("shortDescription"); //NOI18N
+                    String attributeDescription = getAttributesDescription(model, true);
                     String defaultValue = attrsMap.get("default"); //NOI18N
-                    String attributeType = attrsMap.get("type"); //NOI18N
-                    String methodSignature = attrsMap.get("method-signature"); //NOI18N
-                    attrs.put(attrname, new Attribute.DefaultAttribute(attrname, attributeDescription, attributeType, required, methodSignature, defaultValue));
+                    attrs.put(attrname, new Attribute.DefaultAttribute(attrname, attributeDescription, null, required, null, defaultValue));
                 }
 
                 StringBuilder sb = new StringBuilder();

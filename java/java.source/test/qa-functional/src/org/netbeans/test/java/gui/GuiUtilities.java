@@ -92,7 +92,7 @@ public class GuiUtilities {
             for (int j=0; j<jto.getChildCount(jto.getRoot()); j++) {
                 if (jto.getChild(jto.getRoot(), j).toString() == Bundle.getString(
                         "org.netbeans.modules.java.j2seproject.ui.wizards.Bundle",
-                        "Templates/Project/AntJava")) {
+                        "Templates/Project/Standard")) {
                     exitLoop = true;
                     System.out.println("General found");
                     break;
@@ -103,7 +103,7 @@ public class GuiUtilities {
         
         new Node(jto, Bundle.getString(
                 "org.netbeans.modules.java.j2seproject.ui.wizards.Bundle",
-                "Templates/Project/AntJava")).select();
+                "Templates/Project/Standard")).select();
         // java project
         opc.selectProject(Bundle.getString(
                 "org.netbeans.modules.java.j2seproject.ui.wizards.Bundle",

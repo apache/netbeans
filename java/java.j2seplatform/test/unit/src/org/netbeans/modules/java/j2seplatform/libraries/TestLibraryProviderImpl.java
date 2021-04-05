@@ -23,8 +23,10 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.netbeans.spi.project.libraries.LibraryImplementation;
+import org.openide.util.Lookup;
 
 /**
  * Implementation of library provider for unit testing.

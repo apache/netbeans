@@ -471,7 +471,6 @@ public class Term extends JComponent implements Accessible {
     /*
      * Debugging utilities
      */
-    private static final Integer DEFAULT_DEBUG = Integer.getInteger("org.netbeans.lib.terminalemulator.Term.debug");
     @SuppressWarnings("PointlessBitwiseExpression")
     public static final int DEBUG_OPS = 1 << 0;
     public static final int DEBUG_KEYS = 1 << 1;
@@ -485,8 +484,7 @@ public class Term extends JComponent implements Accessible {
     public void setDebugFlags(int flags) {
         debug = flags;
     }
-
-    private int debug = DEFAULT_DEBUG != null ? DEFAULT_DEBUG : 0;
+    private int debug = /* DEBUG_OPS|DEBUG_KEYS|DEBUG_INPUT|DEBUG_OUTPUT | */ 0;
 
     private boolean debugOps() {
         return (debug & DEBUG_OPS) == DEBUG_OPS;
@@ -505,7 +503,10 @@ public class Term extends JComponent implements Accessible {
     }
 
     private boolean debugMargins() {
-        return (debug & DEBUG_MARGINS) == DEBUG_MARGINS;
+        return true;
+    /* TMP
+    return (debug & DEBUG_MARGINS) == DEBUG_MARGINS;
+     */
     }
 
     /**
@@ -2874,20 +2875,24 @@ public class Term extends JComponent implements Accessible {
         if ((hints != null) && (g instanceof Graphics2D)) {
             ((Graphics2D) g).setRenderingHints(hints);
         }
+        if (metrics.isMultiCell()) {
+            // slow way
+            // This looks expensive but it is in fact a whole lot faster
+            // than issuing a g.drawChars() _per_ character
 
-        // This looks expensive but it is in fact a whole lot faster than
-        // issuing a g.drawChars() _per_ character. drawChars can not be used
-        // directly, as it was observed, that characters are not placed
-        // correctly (observed on HiDPI displays)
-        Graphics2D g2 = (Graphics2D) g;
-        FontRenderContext frc = g2.getFontRenderContext();
-        // Gaaah, why doesn't createGlyphVector() take a (char[],offset,len)
-        // triple?
-        char[] tmp = new char[howmany];
-        System.arraycopy(xferBuf, start, tmp, 0, howmany);
-        GlyphVector gv = getFont().createGlyphVector(frc, tmp);
-        massage_glyphs(gv, start, howmany, l);
-        g2.drawGlyphVector(gv, xoff, baseline);
+            Graphics2D g2 = (Graphics2D) g;
+            FontRenderContext frc = g2.getFontRenderContext();
+            // Gaaah, why doesn't createGlyphVector() take a (char[],offset,len)
+            // triple?
+            char[] tmp = new char[howmany];
+            System.arraycopy(xferBuf, start, tmp, 0, howmany);
+            GlyphVector gv = getFont().createGlyphVector(frc, tmp);
+            massage_glyphs(gv, start, howmany, l);
+            g2.drawGlyphVector(gv, xoff, baseline);
+        } else {
+            // fast way
+            g.drawChars(xferBuf, start, howmany, xoff, baseline);
+        }
     }
 
     /*
@@ -3238,34 +3243,7 @@ public class Term extends JComponent implements Accessible {
      */
     }
 
-    /**
-     * Debug helper to draw a coordinate grid over the terminal to visualise the
-     * cells of the terminal and where the characters are expected to appear
-     *
-     * @param g
-     */
     private void paint_margins(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g.create();
-
-        g2d.setColor(Color.RED);
-        g2d.setStroke(new BasicStroke(1.0f));
-
-        int width = getWidth();
-        int height = getHeight();
-
-        int currX = 0;
-        while(currX <= width) {
-            g2d.drawLine(currX, 0, currX, height);
-            currX += metrics.width;
-        }
-
-        int currY = 0;
-        while(currY <= height) {
-            g2d.drawLine(0, currY, width, currY);
-            currY += metrics.height;
-        }
-
-        g2d.dispose();
     }
 
     private void paint_cursor(Graphics g) {

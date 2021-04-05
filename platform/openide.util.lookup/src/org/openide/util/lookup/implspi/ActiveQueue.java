@@ -72,7 +72,6 @@ public final class ActiveQueue {
     }
 
     private static final class Daemon extends Thread {
-        private static boolean initialized;
         private static Daemon running;
         
         public Daemon() {
@@ -80,19 +79,13 @@ public final class ActiveQueue {
         }
         
         static synchronized void ping() {
-            if (!initialized) {
-                try {
-                    Daemon t = new Daemon();
-                    t.setPriority(Thread.MIN_PRIORITY);
-                    t.setDaemon(true);
-                    t.start();
-                    LOGGER.fine("starting thread");
-                    running = t;
-                } catch (SecurityException ex) {
-                    LOGGER.log(Level.FINE, "cannot start thread", ex);
-                } finally {
-                    initialized = true;
-                }
+            if (running == null) {
+                Daemon t = new Daemon();
+                t.setPriority(Thread.MIN_PRIORITY);
+                t.setDaemon(true);
+                t.start();
+                LOGGER.fine("starting thread");
+                running = t;
             }
         }
         

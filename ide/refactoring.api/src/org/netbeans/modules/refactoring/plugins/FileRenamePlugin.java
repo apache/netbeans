@@ -72,7 +72,7 @@ public class FileRenamePlugin implements RefactoringPlugin {
     public void cancelRequest() {
     }
     
-    public class RenameFile extends SimpleRefactoringElementImplementation {
+    private class RenameFile extends SimpleRefactoringElementImplementation {
         
         private FileObject fo;
         public RenameFile(FileObject fo, RefactoringElementsBag bag) {

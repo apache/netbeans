@@ -31,7 +31,6 @@ final class GraalEngineFactory implements ScriptEngineFactory {
     final String id;
     final Language language;
     final GraalContext ctx;
-    private GraalEngine eng;
 
     GraalEngineFactory(GraalContext ctx, String id, Language language) {
         this.id = id;
@@ -96,14 +95,7 @@ final class GraalEngineFactory implements ScriptEngineFactory {
 
     @Override
     public ScriptEngine getScriptEngine() {
-        // return the same instance to indicate the engines actually
-        // retain all the context through Polyglot Context object.
-        synchronized (this) {
-            if (eng == null) {
-                eng = new GraalEngine(this);
-            }
-            return eng;
-        }
+        return new GraalEngine(this);
     }
 
     @Override

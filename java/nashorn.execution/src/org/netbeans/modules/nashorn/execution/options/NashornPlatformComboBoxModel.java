@@ -53,7 +53,7 @@ class NashornPlatformComboBoxModel implements ComboBoxModel {
         if (selObj == null) {
             return null;
         } else {
-            if (NashornPlatform.isJsJvmPlatform(PlatformUiSupport.getPlatform(selObj))) {
+            if (NashornPlatform.isNashornPlatform(PlatformUiSupport.getPlatform(selObj))) {
                 return selObj;
             } else {
                 return null;
@@ -68,7 +68,7 @@ class NashornPlatformComboBoxModel implements ComboBoxModel {
         if (size == 1) {
             // It's possible that the default platform is there, but is not Nashorn
             Object elm = delegate.getElementAt(0);
-            if (!NashornPlatform.isJsJvmPlatform(PlatformUiSupport.getPlatform(elm))) {
+            if (!NashornPlatform.isNashornPlatform(PlatformUiSupport.getPlatform(elm))) {
                 size = 0;
             }
         }

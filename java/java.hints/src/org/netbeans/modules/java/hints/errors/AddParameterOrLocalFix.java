@@ -31,6 +31,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
@@ -43,35 +44,42 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.TreeMaker;
+import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.errors.ErrorFixesFakeHint.FixKind;
+import org.netbeans.spi.editor.hints.ChangeInfo;
+import org.netbeans.spi.editor.hints.Fix;
 import org.openide.filesystems.FileObject;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
 import org.openide.util.NbBundle;
 import static org.netbeans.modules.java.hints.errors.Utilities.isEnhancedForLoopIdentifier;
-import org.netbeans.spi.java.hints.JavaFix;
+import org.netbeans.spi.editor.hints.EnhancedFix;
 
 
 /**
  *
  * @author Jan Lahoda
  */
-public class AddParameterOrLocalFix extends JavaFix {
+public class AddParameterOrLocalFix implements EnhancedFix {
     
     private FileObject file;
     private TypeMirrorHandle type;
     private String name;
     private ElementKind kind;
     
+    private TreePathHandle[] tpHandle;
+    
     public AddParameterOrLocalFix(CompilationInfo info,
                                   TypeMirror type, String name,
                                   ElementKind kind,
                                   int /*!!!Position*/ unresolvedVariable) {
-        super(info, info.getTreeUtilities().pathFor(unresolvedVariable + 1), getSortText(kind, name));
         this.file = info.getFileObject();
         if (type.getKind() == TypeKind.NULL || type.getKind() == TypeKind.NONE) {
             TypeElement te = info.getElements().getTypeElement("java.lang.Object"); // NOI18N
@@ -86,6 +94,10 @@ public class AddParameterOrLocalFix extends JavaFix {
         }
         this.name = name;
         this.kind = kind;
+
+        TreePath treePath = info.getTreeUtilities().pathFor(unresolvedVariable + 1);
+        tpHandle = new TreePathHandle[1];
+        tpHandle[0] = TreePathHandle.create(treePath, info);
     }
 
     public String getText() {
@@ -98,66 +110,75 @@ public class AddParameterOrLocalFix extends JavaFix {
         }
     }
 
-    @Override
-    protected void performRewrite(TransformationContext ctx) throws Exception {
-        WorkingCopy working = ctx.getWorkingCopy();
-        TypeMirror proposedType = type.resolve(working);
+    public ChangeInfo implement() throws IOException {
+        //use the original cp-info so it is "sure" that the proposedType can be resolved:
+        JavaSource js = JavaSource.forFileObject(file);
 
-        if (proposedType == null) {
-            ErrorHintsProvider.LOG.log(Level.INFO, "Cannot resolve proposed type."); // NOI18N
-            return;
-        }
+        js.runModificationTask(new Task<WorkingCopy>() {
+            public void run(final WorkingCopy working) throws IOException {
+                working.toPhase(Phase.RESOLVED);
 
-        TreeMaker make = working.getTreeMaker();
+                TypeMirror proposedType = type.resolve(working);
 
-        //TreePath tp = working.getTreeUtilities().pathFor(unresolvedVariable + 1);
-        //Use TreePathHandle instead of position supplied as field (#143318)
-        TreePath tp = ctx.getPath();
-        if (tp == null || tp.getLeaf().getKind() != Kind.IDENTIFIER)
-            return;
-
-        switch (kind) {
-            case PARAMETER:
-                TreePath targetPath = findMethod(tp);
-
-                if (targetPath == null) {
-                    Logger.getLogger("global").log(Level.WARNING, "Add parameter - cannot find the method."); // NOI18N
+                if (proposedType == null) {
+                    ErrorHintsProvider.LOG.log(Level.INFO, "Cannot resolve proposed type."); // NOI18N
                     return;
                 }
 
-                MethodTree targetTree = (MethodTree) targetPath.getLeaf();
+                TreeMaker make = working.getTreeMaker();
 
-                Element el = working.getTrees().getElement(targetPath);
-                if (el == null) {
+                //TreePath tp = working.getTreeUtilities().pathFor(unresolvedVariable + 1);
+                //Use TreePathHandle instead of position supplied as field (#143318)
+                TreePath tp = tpHandle[0].resolve(working);
+                if (tp == null || tp.getLeaf().getKind() != Kind.IDENTIFIER)
                     return;
+
+                switch (kind) {
+                    case PARAMETER:
+                        TreePath targetPath = findMethod(tp);
+
+                        if (targetPath == null) {
+                            Logger.getLogger("global").log(Level.WARNING, "Add parameter - cannot find the method."); // NOI18N
+                            return;
+                        }
+
+                        MethodTree targetTree = (MethodTree) targetPath.getLeaf();
+
+                        Element el = working.getTrees().getElement(targetPath);
+                        if (el == null) {
+                            return;
+                        }
+                        int index = targetTree.getParameters().size();
+
+                        if (el != null && (el.getKind() == ElementKind.METHOD || el.getKind() == ElementKind.CONSTRUCTOR)) {
+                            ExecutableElement ee = (ExecutableElement) el;
+
+                            if (ee.isVarArgs()) {
+                                index = ee.getParameters().size() - 1;
+                            }
+                        }
+
+                        MethodTree result = make.insertMethodParameter(targetTree, index, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), name, make.Type(proposedType), null));
+
+                        working.rewrite(targetTree, result);
+                        break;
+                    case LOCAL_VARIABLE:
+                        if (ErrorFixesFakeHint.isCreateLocalVariableInPlace(ErrorFixesFakeHint.getPreferences(working.getFileObject(), FixKind.CREATE_LOCAL_VARIABLE)) || isEnhancedForLoopIdentifier(tp)) {
+                            resolveLocalVariable(working, tp, make, proposedType);
+                        } else {
+                            resolveLocalVariable55(working, tp, make, proposedType);
+                        }
+                        break;
+                    case RESOURCE_VARIABLE:
+                        resolveResourceVariable(working, tp, make, proposedType);
+                        break;
+                    default:
+                        throw new IllegalStateException(kind.name());
                 }
-                int index = targetTree.getParameters().size();
-
-                if (el != null && (el.getKind() == ElementKind.METHOD || el.getKind() == ElementKind.CONSTRUCTOR)) {
-                    ExecutableElement ee = (ExecutableElement) el;
-
-                    if (ee.isVarArgs()) {
-                        index = ee.getParameters().size() - 1;
-                    }
-                }
-
-                MethodTree result = make.insertMethodParameter(targetTree, index, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), name, make.Type(proposedType), null));
-
-                working.rewrite(targetTree, result);
-                break;
-            case LOCAL_VARIABLE:
-                if (ErrorFixesFakeHint.isCreateLocalVariableInPlace(ErrorFixesFakeHint.getPreferences(working.getFileObject(), FixKind.CREATE_LOCAL_VARIABLE)) || isEnhancedForLoopIdentifier(tp)) {
-                    resolveLocalVariable(working, tp, make, proposedType);
-                } else {
-                    resolveLocalVariable55(working, tp, make, proposedType);
-                }
-                break;
-            case RESOURCE_VARIABLE:
-                resolveResourceVariable(working, tp, make, proposedType);
-                break;
-            default:
-                throw new IllegalStateException(kind.name());
-        }
+            }
+        }).commit();
+        
+        return null;
     }
 
     /** In case statement is an Assignment, replace it with variable declaration */
@@ -483,15 +504,16 @@ public class AddParameterOrLocalFix extends JavaFix {
         return hash;
     }
     
-    private static String getSortText(ElementKind kind, String name) {
+    @Override
+    public CharSequence getSortText() {
         //see usage at org.netbeans.modules.editor.hints.FixData.getSortText(org.netbeans.spi.editor.hints.Fix):java.lang.CharSequence
     
         //creates ordering top to bottom: create resource>local variable>create field>create parameter
         //see org.netbeans.modules.java.hints.errors.CreateFieldFix.getSortText():java.lang.CharSequence
         switch (kind) {
-            case PARAMETER: return "Create 7000 " + name;
-            case LOCAL_VARIABLE: return "Create 5000 " + name;
-            case RESOURCE_VARIABLE: return "Create 3000 " + name;
+            case PARAMETER: return "Create 7000 " + getText();
+            case LOCAL_VARIABLE: return "Create 5000 " + getText();
+            case RESOURCE_VARIABLE: return "Create 3000 " + getText();
             default:
                 throw new IllegalStateException();
         }

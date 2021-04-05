@@ -35,6 +35,5 @@ public interface FunctionScope extends Scope, VariableScope, FullyQualifiedEleme
     Collection<? extends String> getReturnTypeNames();
     Collection<? extends TypeScope> getReturnTypes();
     Collection<? extends TypeScope> getReturnTypes(boolean resolve, Collection<? extends TypeScope> callerTypes);
-    boolean isReturnUnionType();
 
 }

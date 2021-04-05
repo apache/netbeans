@@ -20,7 +20,6 @@
 package org.netbeans.modules.java.examples;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
@@ -100,7 +99,7 @@ public class J2SESampleProjectIterator implements WizardDescriptor.AsynchronousI
         FileObject prjLoc = J2SESampleProjectGenerator.createProjectFromTemplate(
                               templateFO, projectLocation, name);
 
-        Set<DataObject> set = new HashSet<>();
+        java.util.Set set = new java.util.HashSet();
         set.add(DataObject.find(prjLoc));
 
         // open file from the project specified in the "defaultFileToOpen" attribute

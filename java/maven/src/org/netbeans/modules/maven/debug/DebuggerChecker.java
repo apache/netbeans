@@ -229,9 +229,8 @@ public class DebuggerChecker implements LateBoundPrerequisitesChecker, Execution
                 config.setProperty(key, orig != null ? orig + ' ' + vmargs : vmargs);
             }
             try {
-                final Project p = config.getProject();
-                NbMavenProject prj = p.getLookup().lookup(NbMavenProject.class);
-                MavenJPDAStart start = p.getLookup().lookup(MavenJPDAStart.class);
+                JPDAStart start = new JPDAStart(context.getInputOutput(), config.getActionName());
+                NbMavenProject prj = config.getProject().getLookup().lookup(NbMavenProject.class);
                 start.setName(prj.getMavenProject().getArtifactId());
                 String stopClass = config.getProperties().get("jpda.stopclass");
                 if (stopClass == null) {
@@ -246,7 +245,7 @@ public class DebuggerChecker implements LateBoundPrerequisitesChecker, Execution
                 if (addCP != null) {
                     start.setAdditionalSourcePath(addCP);
                 }
-                String val = start.execute(context.getInputOutput());
+                String val = start.execute(config.getProject());
                 for (Map.Entry<String,String> entry : NbCollections.checkedMapByFilter(config.getProperties(), String.class, String.class, true).entrySet()) {
                     StringBuilder buf = new StringBuilder(entry.getValue());
                     String replaceItem = "${jpda.address}"; //NOI18N

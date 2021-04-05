@@ -120,12 +120,6 @@ final class MethodScopeImpl extends FunctionScopeImpl implements MethodScope, Va
     }
 
     @Override
-    public boolean isReturnUnionType() {
-        scan();
-        return super.isReturnUnionType();
-    }
-
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getPhpModifiers().toString()).append(" "); //NOI18N
@@ -259,14 +253,13 @@ final class MethodScopeImpl extends FunctionScopeImpl implements MethodScope, Va
         }
         sb.append(Signature.ITEM_DELIMITER);
         String returnType = getReturnType();
-        if (returnType != null) {
+        if (returnType != null && !Type.MIXED.equalsIgnoreCase(returnType)) {
             sb.append(returnType);
         }
         sb.append(Signature.ITEM_DELIMITER);
         sb.append(getPhpModifiers().toFlags()).append(Signature.ITEM_DELIMITER);
         sb.append(isDeprecated() ? 1 : 0).append(Signature.ITEM_DELIMITER);
         sb.append(getFilenameUrl()).append(Signature.ITEM_DELIMITER);
-        sb.append(isReturnUnionType() ? 1 : 0).append(Signature.ITEM_DELIMITER);
         return sb.toString();
     }
 

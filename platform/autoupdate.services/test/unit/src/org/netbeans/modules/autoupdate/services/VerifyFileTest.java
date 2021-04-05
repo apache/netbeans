@@ -30,7 +30,6 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.Certificate;
 import java.security.cert.TrustAnchor;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -76,9 +75,9 @@ public class VerifyFileTest extends NbTestCase {
         try {
             Collection<CodeSigner> nbmCerts = Utilities.getNbmCertificates(jar);
             Collection<Certificate> trustedCerts = Utilities.getCertificates(ks);
-            Set<TrustAnchor> trustedCACerts = Collections.emptySet();
+            Set<TrustAnchor> trustedCACerts = Collections.EMPTY_SET;
             Collection<Certificate> validationAnchors = new HashSet<>(Utilities.getCertificates(validateKs));
-            Set<TrustAnchor> validationCACerts = Collections.emptySet();
+            Set<TrustAnchor> validationCACerts = Collections.EMPTY_SET;
             if (nbmCerts == null) {
                 res = Utilities.N_A;
             } else if (nbmCerts.isEmpty()) {

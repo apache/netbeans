@@ -96,11 +96,12 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.html.indexing</code-name-base>
+                    <code-name-base>org.netbeans.modules.html.editor</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.0</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>2.38</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

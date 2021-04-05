@@ -45,6 +45,7 @@ public class ServerTest extends NbTestCase {
                 addTest(StartStopServer.class, "restartPreludeServer").
                 addTest(StartStopServer.class, "stopPreludeServer", "startDebugPreludeServer", "stopPreludeServer").
                 addTest(StartStopServer.class, "startPreludeServer").
+                addTest(ServerResourceProperties.class, "VerifyPreludeDerbyPool").
                 addTest(StartStopServer.class, "stopPreludeServer");
 
         String javaExe = System.getProperty("v3.server.javaExe");
@@ -54,8 +55,8 @@ public class ServerTest extends NbTestCase {
                     addTest(StartStopServer.class, "restartServer").
                     addTest(StartStopServer.class, "stopServer", "startDebugServer", "stopServer").
                     addTest(StartStopServer.class, "startServer").
-                    addTest(ServerResourceProperties.class, "VerifyDefaultH2Pool").
-                    addTest(ServerResourceProperties.class, "VerifyDefaultTimerResource").
+                    addTest(ServerResourceProperties.class, "VerifyDefaultDerbyPool").
+                    addTest(ServerResourceProperties.class, "VerifyDefaultTimerResouce").
                     addTest(StartStopServer.class, "stopServer");
         }
         return conf.enableModules(".*").clusters(".*").suite();

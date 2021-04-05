@@ -43,8 +43,6 @@ public class LatteParserErrorTest extends LatteTestBase {
         checkErrors("testfiles/parser/issue245728_03.latte");
     }
 
-    /*
-    Tests are disabled because test files were not donated.
     public void testIssue245728_04() throws Exception {
         checkErrors("testfiles/parser/issue245728_04.latte");
     }
@@ -56,7 +54,6 @@ public class LatteParserErrorTest extends LatteTestBase {
     public void testIssue245728_06() throws Exception {
         checkErrors("testfiles/parser/issue245728_06.latte");
     }
-    */
 
     public void testIssue245728_07() throws Exception {
         checkErrors("testfiles/parser/issue245728_07.latte");

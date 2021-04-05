@@ -50,6 +50,18 @@ public class ServerResourceProperties extends NbTestCase {
         Util.sleep(SLEEP);
     }
 
+    public void VerifyPreludeDerbyPool() {
+        RuntimeTabOperator rto;
+        rto = RuntimeTabOperator.invoke();
+        Node derbynode = new Node(rto.tree(), "Servers|Prelude V3|Resources|JDBC|Connection Pools|DerbyPool");
+        if (derbynode.isPresent()) {
+            System.out.printf("Found JDBC Connection DerbyPool");
+        }
+        else {
+            fail("JDBC Connection DerbyPool missing!");
+        }
+    }
+
     public void serverProperties() {
         RuntimeTabOperator rto;
         String[] serverList;
@@ -66,27 +78,27 @@ public class ServerResourceProperties extends NbTestCase {
         Util.sleep(SLEEP);
     }
 
-    public void VerifyDefaultH2Pool() {
+    public void VerifyDefaultDerbyPool() {
         RuntimeTabOperator rto;
         rto = RuntimeTabOperator.invoke();
-        Node h2Node = new Node(rto.tree(), "Servers|Payara V3|Resources|JDBC|Connection Pools|H2Pool");
-        if (h2Node.isPresent()) {
-            System.out.printf("Found JDBC Connection H2Pool");
+        Node derbynode = new Node(rto.tree(), "Servers|Payara V3|Resources|JDBC|Connection Pools|DerbyPool");
+        if (derbynode.isPresent()) {
+            System.out.printf("Found JDBC Connection DerbyPool");
         }
         else {
-            fail("JDBC Connection H2Pool missing!");
+            fail("JDBC Connection DerbyPool missing!");
         }
     }
 
-    public void VerifyDefaultTimerResource() {
+    public void VerifyDefaultTimerResouce() {
         RuntimeTabOperator rto;
         rto = RuntimeTabOperator.invoke();
-        Node h2Node = new Node(rto.tree(), "Servers|Payara V3|Resources|JDBC|JDBC Resources|jdbc/__TimerPool");
-        if (h2Node.isPresent()) {
-            System.out.printf("Found JDBC Resource jdbc/__TimerPool");
+        Node derbynode = new Node(rto.tree(), "Servers|Payara V3|Resources|JDBC|JDBC Resources|jdbc/__TimerPool");
+        if (derbynode.isPresent()) {
+            System.out.printf("Found JDBC Resouce jdbc/sample");
         }
         else {
-            fail("JDBC Resource jdbc/__TimerPool missing!");
+            fail("JDBC Resoucec jdbc/sample missing!");
         }
     }
 

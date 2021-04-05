@@ -40,14 +40,16 @@ import org.openide.filesystems.FileObject;
  * @author pfiala
  */
 public class DDUtils {
-    
     public static EjbJarProxy createEjbJarProxy(InputStream inputStream) throws IOException {
         return createEjbJarProxy(new InputSource(inputStream));
     }
 
     public static EjbJarProxy createEjbJarProxy(FileObject fo) throws IOException {
-        try (InputStream inputStream = fo.getInputStream()) {
+        InputStream inputStream = fo.getInputStream();
+        try {
             return createEjbJarProxy(new InputSource(inputStream));
+        } finally {
+            inputStream.close();
         }
     }
 
@@ -130,8 +132,11 @@ public class DDUtils {
     }
 
     public static WebApp createWebApp(FileObject fo, String version) throws IOException, SAXException {
-        try (InputStream inputStream = fo.getInputStream()) {
+        InputStream inputStream = fo.getInputStream();
+        try {
             return createWebApp(inputStream, version);
+        } finally {
+            inputStream.close();
         }
     }
 
@@ -145,8 +150,6 @@ public class DDUtils {
                 return org.netbeans.modules.j2ee.dd.impl.client.model_6_0.ApplicationClient.createGraph(is);
             } else if (AppClient.VERSION_7_0.equals(version)) {
                 return org.netbeans.modules.j2ee.dd.impl.client.model_7_0.ApplicationClient.createGraph(is);
-            } else if (AppClient.VERSION_8_0.equals(version)) {
-                return org.netbeans.modules.j2ee.dd.impl.client.model_8_0.ApplicationClient.createGraph(is);
             }
         } catch (RuntimeException ex) {
             throw new SAXException(ex);
@@ -155,8 +158,11 @@ public class DDUtils {
     }
 
     public static AppClient createAppClient(FileObject fo, String version) throws IOException, SAXException {
-        try (InputStream inputStream = fo.getInputStream()) {
+        InputStream inputStream = fo.getInputStream();
+        try {
             return createAppClient(inputStream, version);
+        } finally {
+            inputStream.close();
         }
     }
 }

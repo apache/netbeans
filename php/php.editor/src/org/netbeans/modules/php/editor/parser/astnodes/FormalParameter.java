@@ -18,44 +18,29 @@
  */
 package org.netbeans.modules.php.editor.parser.astnodes;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
- * Represents a function formal parameter.
- *
- * <pre>e.g.
- * $a,
+ * Represents a function formal parameter
+ * <pre>e.g.<pre> $a,
  * MyClass $a,
  * $a = 3,
- * int $a = 3,
- * #[A(1)] int $a, // [NETBEANS-4443] PHP8.0 Attribute Syntax
- * public int $x = 0, // [NETBEANS-4443] PHP8.0 Constructor Property Promotion
- * </pre>
+ * int $a = 3
  */
-public class FormalParameter extends ASTNode implements Attributed {
+public class FormalParameter extends ASTNode {
 
-    private int modifier;
     private Expression parameterType;
     private Expression parameterName;
     private Expression defaultValue;
-    private final List<Attribute> attributes = new ArrayList<>();
-
-    public FormalParameter(int start, int end, Integer modifier, Expression type, final Expression parameterName, Expression defaultValue) {
-        this(start, end, modifier == null ? 0 : modifier, type, parameterName, defaultValue, Collections.emptyList());
-    }
 
     public FormalParameter(int start, int end, Expression type, final Expression parameterName, Expression defaultValue) {
-        this(start, end, 0, type, parameterName, defaultValue, Collections.emptyList());
+        super(start, end);
+
+        this.parameterName = parameterName;
+        this.parameterType = type;
+        this.defaultValue = defaultValue;
     }
 
     public FormalParameter(int start, int end, Expression type, final Reference parameterName, Expression defaultValue) {
         this(start, end, type, (Expression) parameterName, defaultValue);
-    }
-
-    public FormalParameter(int start, int end, Integer modifier, Expression type, final Expression parameterName) {
-        this(start, end, modifier, type, parameterName, null);
     }
 
     public FormalParameter(int start, int end, Expression type, final Expression parameterName) {
@@ -64,38 +49,6 @@ public class FormalParameter extends ASTNode implements Attributed {
 
     public FormalParameter(int start, int end, Expression type, final Reference parameterName) {
         this(start, end, type, (Expression) parameterName, null);
-    }
-
-    private FormalParameter(int start, int end, int modifier, Expression parameterType, Expression parameterName, Expression defaultValue, List<Attribute> attributes) {
-        super(start, end);
-        this.attributes.addAll(attributes);
-        this.modifier = modifier;
-        this.parameterType = parameterType;
-        this.parameterName = parameterName;
-        this.defaultValue = defaultValue;
-    }
-
-    public static FormalParameter create(FormalParameter parameter, List<Attribute> attributes) {
-        assert attributes != null;
-        int start = attributes.isEmpty() ? parameter.getStartOffset() : attributes.get(0).getStartOffset();
-        return new FormalParameter(
-                start,
-                parameter.getEndOffset(),
-                parameter.getModifier(),
-                parameter.getParameterType(),
-                parameter.getParameterName(),
-                parameter.getDefaultValue(),
-                attributes
-        );
-
-    }
-
-    public int getModifier() {
-        return modifier;
-    }
-
-    public String getModifierString() {
-        return BodyDeclaration.Modifier.toString(modifier);
     }
 
     public Expression getDefaultValue() {
@@ -112,7 +65,7 @@ public class FormalParameter extends ASTNode implements Attributed {
 
     public boolean isVariadic() {
         if (isReference()) {
-            return ((Reference) getParameterName()).getExpression() instanceof Variadic;
+            return ((Reference)getParameterName()).getExpression() instanceof Variadic;
         }
         return getParameterName() instanceof Variadic;
     }
@@ -125,10 +78,6 @@ public class FormalParameter extends ASTNode implements Attributed {
         return getParameterType() instanceof NullableType;
     }
 
-    public boolean isUnionType() {
-        return getParameterType() instanceof UnionType;
-    }
-
     public Expression getParameterName() {
         return parameterName;
     }
@@ -138,33 +87,13 @@ public class FormalParameter extends ASTNode implements Attributed {
     }
 
     @Override
-    public List<Attribute> getAttributes() {
-        return Collections.unmodifiableList(attributes);
-    }
-
-    @Override
-    public boolean isAttributed() {
-        return !attributes.isEmpty();
-    }
-
-    @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
 
     @Override
     public String toString() {
-        StringBuilder sbAttributes = new StringBuilder();
-        getAttributes().forEach(attribute -> sbAttributes.append(attribute).append(" ")); // NOI18N
-        String modifierString = getModifierString();
-        if (modifierString != null && !modifierString.isEmpty()) {
-            modifierString += " "; // NOI18N
-        }
-        return sbAttributes.toString()
-                + modifierString
-                + (getParameterType() == null ? "" : getParameterType() + " ") // NOI18N
-                + getParameterName()
-                + (isMandatory() ? "" : " = " + getDefaultValue()); // NOI18N
+        return getParameterType() + " " + getParameterName() + (isMandatory() ? "" : " = " + getDefaultValue()); //NOI18N
     }
 
 }

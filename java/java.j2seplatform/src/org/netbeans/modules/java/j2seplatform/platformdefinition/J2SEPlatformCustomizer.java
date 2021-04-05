@@ -31,7 +31,6 @@ import java.io.File;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.net.URL;
 import java.net.URI;
 import java.net.MalformedURLException;
@@ -567,7 +566,7 @@ public class J2SEPlatformCustomizer extends JTabbedPane {
         }
 
         private void removePath (int[] indices) {
-            List<URL> data = getData();
+            java.util.List data = getData();
             for (int i=indices.length-1; i>=0; i--) {
                 data.remove(indices[i]);
             }
@@ -576,7 +575,7 @@ public class J2SEPlatformCustomizer extends JTabbedPane {
         }
 
         private void moveUpPath (int[] indices) {
-            List<URL> data = getData ();
+            java.util.List<URL> data = getData ();
             for (int i=0; i<indices.length; i++) {
                 URL p2 = data.get (indices[i]);
                 URL p1 = data.set (indices[i]-1,p2);
@@ -587,7 +586,7 @@ public class J2SEPlatformCustomizer extends JTabbedPane {
         }
 
         private void moveDownPath (int[] indices) {
-            List<URL> data = getData ();
+            java.util.List<URL> data = getData ();
             for (int i=indices.length-1; i>=0; i--) {
                 URL p1 = data.get (indices[i]);
                 URL p2 = data.set (indices[i]+1,p1);

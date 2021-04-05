@@ -88,10 +88,6 @@ public abstract class AbstractMavenActionsProvider implements MavenActionsProvid
             files.add(method.getFile());
         }
 
-        if (files.isEmpty()) {
-            files.addAll(lookup.lookupAll(FileObject.class));
-        }
-        
         return files.toArray(new FileObject[files.size()]);
     }
 

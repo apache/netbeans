@@ -34,25 +34,26 @@ import org.netbeans.api.visual.widget.Widget;
 public class MGraph<N, E> {
 
     private Collection<N> nodes;
-    private Map<N, Vertex<N>> vertexMap;
-    private Map<E, Edge<E>> edgeMap;
-    private Collection<Vertex<N>> vertices;
+    private Map<N, Vertex> vertexMap;
+    private Map<E, Edge> edgeMap;
+    private Collection<Vertex> vertices;
+    private Collection<Edge> edges;
     private UniversalGraph<N, E> uGraph = null;
-    private GraphScene<N, E> scene = null;
+    private GraphScene scene = null;
 
     /**
      * 
      * @param uGraph
      * @param scene
      */
-    protected MGraph(UniversalGraph<N, E> uGraph, GraphScene<N, E> scene) {
+    protected MGraph(UniversalGraph<N, E> uGraph, GraphScene scene) {
         this.uGraph = uGraph;
         this.scene = scene;
         this.nodes = uGraph.getNodes();
 
-        vertexMap = new HashMap<>();
-        edgeMap = new LinkedHashMap<>();
-        vertices = new ArrayList<>();
+        vertexMap = new HashMap<N, Vertex>();
+        edgeMap = new LinkedHashMap<E, Edge>();
+        vertices = new ArrayList<Vertex>();
 
         DummyVertex.resetCounter();
     }
@@ -63,7 +64,7 @@ public class MGraph<N, E> {
      * @param scene
      * @return
      */
-    public static <N, E> MGraph<N, E> createGraph(UniversalGraph<N, E> uGraph, GraphScene<N, E> scene) {
+    public static <N, E> MGraph createGraph(UniversalGraph<N, E> uGraph, GraphScene scene) {
         MGraph<N, E> graph = new MGraph<N, E>(uGraph, scene);
         graph.createGraph();
         return graph;
@@ -75,7 +76,7 @@ public class MGraph<N, E> {
     protected void createGraph() {
         for (N node : nodes) {
             //will create a vertex if one does not exist.
-            Vertex<N> v = getVertex(node);
+            Vertex v = getVertex(node);
             Widget widget = scene.findWidget(node);
             Rectangle bounds = widget.getBounds();
 
@@ -89,10 +90,10 @@ public class MGraph<N, E> {
             for (E edge : nodeEdges) {
 
                 N destNode = uGraph.getEdgeTarget(edge);
-                Vertex<N> nv = getVertex(destNode);
+                Vertex nv = getVertex(destNode);
 
                 // Implicitly preserve the direction of the edge
-                Edge<E> e = getEdge(edge, v, nv);
+                Edge e = getEdge(edge, v, nv);
                 v.addNeighbor(nv);
                 v.addEdge(e);
                 nv.addEdge(e);
@@ -102,10 +103,10 @@ public class MGraph<N, E> {
             nodeEdges = uGraph.findNodeEdges(node, false, true);
             for (E edge : nodeEdges) {
                 N destNode = uGraph.getEdgeSource(edge);
-                Vertex<N> nv = getVertex(destNode);
+                Vertex nv = getVertex(destNode);
 
                 // Implicitly preserve the direction of the edge.
-                Edge<E> e = getEdge(edge, nv, v);
+                Edge e = getEdge(edge, nv, v);
                 v.addNeighbor(nv);
                 v.addEdge(e);
                 nv.addEdge(e);
@@ -117,7 +118,7 @@ public class MGraph<N, E> {
      * 
      * @return
      */
-    public Collection<Vertex<N>> getVertices() {
+    public Collection<Vertex> getVertices() {
         return Collections.unmodifiableCollection(vertices);
     }
 
@@ -125,7 +126,7 @@ public class MGraph<N, E> {
      * 
      * @return
      */
-    public Collection<Edge<E>> getEdges() {
+    public Collection<Edge> getEdges() {
         return Collections.unmodifiableCollection(edgeMap.values());
     }
 
@@ -134,8 +135,8 @@ public class MGraph<N, E> {
      * @param node
      * @return
      */
-    protected Vertex<N> getVertex(N node) {
-        Vertex<N> vertex = vertexMap.get(node);
+    protected Vertex getVertex(N node) {
+        Vertex vertex = vertexMap.get(node);
 
         if (vertex == null) {
             vertex = createVertex(node);
@@ -151,8 +152,8 @@ public class MGraph<N, E> {
      * @param node
      * @return
      */
-    protected Vertex<N> createVertex(N node) {
-        return new Vertex<>(node);
+    protected Vertex createVertex(N node) {
+        return new Vertex(node);
     }
 
     /**
@@ -162,8 +163,8 @@ public class MGraph<N, E> {
      * @param w
      * @return
      */
-    protected Edge<E> getEdge(E edgeDE, Vertex<N> v, Vertex<N> w) {
-        Edge<E> edge = edgeMap.get(edgeDE);
+    protected Edge getEdge(E edgeDE, Vertex v, Vertex w) {
+        Edge edge = edgeMap.get(edgeDE);
 
         if (edge == null) {
             edge = createEdge(v, w, edgeDE);
@@ -180,8 +181,8 @@ public class MGraph<N, E> {
      * @param edgeDE
      * @return
      */
-    protected Edge<E> createEdge(Vertex<N> v, Vertex<N> w, E edgeDE) {
-        return new Edge<>(v, w, edgeDE);
+    protected Edge createEdge(Vertex v, Vertex w, E edgeDE) {
+        return new Edge(v, w, edgeDE);
     }
 
     /**
@@ -190,30 +191,24 @@ public class MGraph<N, E> {
      * @param type
      * @return
      */
-    public DummyVertex<N> insertDummyVertex(Edge<?> edge, DummyVertex.Type type) {
-        Edge<E> originalEdge;
+    public DummyVertex insertDummyVertex(Edge edge, DummyVertex.Type type) {
+        Edge originalEdge = edge;
 
         if (edge instanceof DummyEdge) {
-            @SuppressWarnings("unchecked")
-            Edge<E> tmp = (Edge<E>) ((DummyEdge<?>) edge).getOriginalEdge();
-            originalEdge = tmp;
-        } else {
-            @SuppressWarnings("unchecked")
-            Edge<E> tmp = (Edge<E>) edge;
-            originalEdge = tmp;
+            originalEdge = ((DummyEdge) edge).getOriginalEdge();
         }
 
-        DummyVertex<N> dv = createDummyVertex(originalEdge, type);
+        DummyVertex dv = createDummyVertex(originalEdge, type);
         vertices.add(dv);
 
-        Vertex<?> v = edge.getV();
-        Vertex<?> w = edge.getW();
+        Vertex v = edge.getV();
+        Vertex w = edge.getW();
 
         v.removeEdge(edge);
         v.removeNeighbor(w);
         v.addNeighbor(dv);
         dv.addNeighbor(v);
-        DummyEdge<E> de = createDummyEdge(v, dv, originalEdge);
+        DummyEdge de = createDummyEdge(v, dv, originalEdge);
         v.addEdge(de);
         dv.addEdge(de);
 
@@ -234,8 +229,8 @@ public class MGraph<N, E> {
      * @param type
      * @return
      */
-    protected DummyVertex<N> createDummyVertex(Edge<?> originalEdge, DummyVertex.Type type) {
-        return new DummyVertex<>(originalEdge, type);
+    protected DummyVertex createDummyVertex(Edge originalEdge, DummyVertex.Type type) {
+        return new DummyVertex(originalEdge, type);
     }
 
     /**
@@ -244,8 +239,8 @@ public class MGraph<N, E> {
      * @param w
      * @return
      */
-    public DummyEdge<E> addDummyEdge(Vertex<?> v, Vertex<?> w) {
-        DummyEdge<E> de = createDummyEdge(v, w, null);
+    public DummyEdge addDummyEdge(Vertex v, Vertex w) {
+        DummyEdge de = createDummyEdge(v, w, null);
         v.addEdge(de);
         w.addEdge(de);
         v.addNeighbor(w);
@@ -261,9 +256,9 @@ public class MGraph<N, E> {
      * @param originalEdge
      * @return
      */
-    protected DummyEdge<E> createDummyEdge(Vertex<?> v, Vertex<?> w,
-            Edge<E> originalEdge) {
-        return new DummyEdge<>(v, w, originalEdge);
+    protected DummyEdge createDummyEdge(Vertex v, Vertex w,
+            Edge originalEdge) {
+        return new DummyEdge(v, w, originalEdge);
     }
 
     /**
@@ -271,8 +266,8 @@ public class MGraph<N, E> {
      * @param type
      * @return
      */
-    public DummyVertex<N> addDummyVertex(DummyVertex.Type type) {
-        DummyVertex<N> dv = createDummyVertex(null, type);
+    public DummyVertex addDummyVertex(DummyVertex.Type type) {
+        DummyVertex dv = createDummyVertex(null, type);
         vertices.add(dv);
 
         return dv;
@@ -307,8 +302,8 @@ public class MGraph<N, E> {
             }
 
             Logger.log(1, "\tneighbors:");
-            Collection<Vertex<?>> neighbors = v.getNeighbors();
-            for (Vertex<?> nv : neighbors) {
+            Collection<Vertex> neighbors = v.getNeighbors();
+            for (Vertex nv : neighbors) {
                 Logger.log(1, "\t\t" + nv);
             }
 
@@ -316,7 +311,7 @@ public class MGraph<N, E> {
 
         Logger.log(1, "------------------\n------------------");
         count = 0;
-        for (Edge<E> e : getEdges()) {
+        for (Edge e : getEdges()) {
             Logger.log(1, count + ") edge = " + e);
             count++;
         }
@@ -329,8 +324,8 @@ public class MGraph<N, E> {
     public static class Vertex<N> {
 
         private N node;
-        private Collection<Vertex<?>> neighbors;
-        private Collection<Edge<?>> edges;
+        private Collection<Vertex> neighbors;
+        private Collection<Edge> edges;
         private int number = -1;
         private Object vertexData;
         private float x;
@@ -343,8 +338,8 @@ public class MGraph<N, E> {
          */
         public Vertex(N node) {
             this.node = node;
-            neighbors = new LinkedHashSet<>();
-            edges = new LinkedHashSet<>();
+            neighbors = new LinkedHashSet<Vertex>();
+            edges = new LinkedHashSet<Edge>();
         }
 
         /**
@@ -399,7 +394,7 @@ public class MGraph<N, E> {
          * 
          * @param vertex
          */
-        public void addNeighbor(Vertex<?> vertex) {
+        public void addNeighbor(Vertex vertex) {
             neighbors.add(vertex);
         }
 
@@ -407,7 +402,7 @@ public class MGraph<N, E> {
          * 
          * @param vertex
          */
-        public void removeNeighbor(Vertex<?> vertex) {
+        public void removeNeighbor(Vertex vertex) {
             neighbors.remove(vertex);
         }
 
@@ -415,7 +410,7 @@ public class MGraph<N, E> {
          * 
          * @return
          */
-        public Collection<Vertex<?>> getNeighbors() {
+        public Collection<Vertex> getNeighbors() {
             return neighbors;
         }
 
@@ -426,8 +421,8 @@ public class MGraph<N, E> {
          * @param neighbor
          * @return
          */
-        public Edge<?> getEdge(Vertex<?> neighbor) {
-            for (Edge<?> e : edges) {
+        public Edge getEdge(Vertex neighbor) {
+            for (Edge e : edges) {
                 if (e.contains(neighbor)) {
                     return e;
                 }
@@ -440,7 +435,7 @@ public class MGraph<N, E> {
          * 
          * @param edge
          */
-        public void addEdge(Edge<?> edge) {
+        public void addEdge(Edge edge) {
             edges.add(edge);
         }
 
@@ -448,7 +443,7 @@ public class MGraph<N, E> {
          * 
          * @param edge
          */
-        public void removeEdge(Edge<?> edge) {
+        public void removeEdge(Edge edge) {
             edges.remove(edge);
         }
 
@@ -456,7 +451,7 @@ public class MGraph<N, E> {
          * 
          * @return
          */
-        public Collection<Edge<?>> getEdges() {
+        public Collection<Edge> getEdges() {
             return edges;
         }
 
@@ -508,7 +503,10 @@ public class MGraph<N, E> {
             return vertexData;
         }
 
-        @Override
+        /**
+         * 
+         * @return
+         */
         public String toString() {
             return "vertex : " + node;// + " number = " + number;
 
@@ -524,8 +522,8 @@ public class MGraph<N, E> {
 
             HORIZONTAL, VERTICAL, UP, DOWN, LEFT, RIGHT
         }
-        private Vertex<?> v;
-        private Vertex<?> w;
+        private Vertex v;
+        private Vertex w;
         private E edge;
         private Direction direction;
         private int weight;
@@ -537,7 +535,7 @@ public class MGraph<N, E> {
          * @param w
          * @param edge
          */
-        public Edge(Vertex<?> v, Vertex<?> w, E edge) {
+        public Edge(Vertex v, Vertex w, E edge) {
             this.v = v;
             this.w = w;
             this.edge = edge;
@@ -547,7 +545,7 @@ public class MGraph<N, E> {
          * 
          * @return
          */
-        public Vertex<?> getV() {
+        public Vertex getV() {
             return v;
         }
 
@@ -555,7 +553,7 @@ public class MGraph<N, E> {
          * 
          * @return
          */
-        public Vertex<?> getW() {
+        public Vertex getW() {
             return w;
         }
 
@@ -604,7 +602,7 @@ public class MGraph<N, E> {
          * @param vertex
          * @return
          */
-        public boolean contains(Vertex<?> vertex) {
+        public boolean contains(Vertex vertex) {
             return (this.v == vertex || this.w == vertex);
         }
 
@@ -613,7 +611,7 @@ public class MGraph<N, E> {
          * @param edge
          * @return
          */
-        public boolean shareVertex(Edge<?> edge) {
+        public boolean shareVertex(Edge edge) {
             return contains(edge.v) || contains(edge.w);
         }
 
@@ -622,7 +620,7 @@ public class MGraph<N, E> {
          * @param vertex
          * @return
          */
-        public Vertex<?> getOppositeVertex(Vertex<?> vertex) {
+        public Vertex getOppositeVertex(Vertex vertex) {
             if (v == vertex) {
                 return w;
             } else if (w == vertex) {
@@ -648,7 +646,10 @@ public class MGraph<N, E> {
             return direction;
         }
 
-        @Override
+        /**
+         * 
+         * @return
+         */
         public String toString() {
             return "edge : " + edge + "\n  v = " + v + "\n  w = " + w;
         }
@@ -657,7 +658,7 @@ public class MGraph<N, E> {
     /**
      * 
      */
-    public static class DummyVertex<N> extends Vertex<N> {
+    public static class DummyVertex extends Vertex {
 
         public enum Type {
 
@@ -665,7 +666,7 @@ public class MGraph<N, E> {
         };
         
         private static int counter = 0;
-        private Edge<?> originalEdge;
+        private Edge originalEdge;
         private Type type;
         private int index;
 
@@ -674,7 +675,7 @@ public class MGraph<N, E> {
          * @param originalEdge
          * @param type
          */
-        public DummyVertex(Edge<?> originalEdge, Type type) {
+        public DummyVertex(Edge originalEdge, Type type) {
             super(null);
             this.originalEdge = originalEdge;
             this.type = type;
@@ -700,7 +701,7 @@ public class MGraph<N, E> {
          * 
          * @param originalEdge
          */
-        public void setOriginalEdge(Edge<?> originalEdge) {
+        public void setOriginalEdge(Edge originalEdge) {
             this.originalEdge = originalEdge;
         }
 
@@ -708,7 +709,7 @@ public class MGraph<N, E> {
          * 
          * @return
          */
-        public Edge<?> getOriginalEdge() {
+        public Edge getOriginalEdge() {
             return originalEdge;
         }
 
@@ -720,7 +721,10 @@ public class MGraph<N, E> {
             return type;
         }
 
-        @Override
+        /**
+         * 
+         * @return
+         */
         public String toString() {
             return "dummy vertex " + index;
         }
@@ -729,9 +733,9 @@ public class MGraph<N, E> {
     /**
      * 
      */
-    public static class DummyEdge<E> extends Edge<E> {
+    public static class DummyEdge extends Edge {
 
-        private Edge<?> originalEdge;
+        private Edge originalEdge;
 
         /**
          * 
@@ -739,7 +743,7 @@ public class MGraph<N, E> {
          * @param w
          * @param originalEdge
          */
-        public DummyEdge(Vertex<?> v, Vertex<?> w, Edge<E> originalEdge) {
+        public DummyEdge(Vertex v, Vertex w, Edge originalEdge) {
             super(v, w, null);
             this.originalEdge = originalEdge;
         }
@@ -749,7 +753,7 @@ public class MGraph<N, E> {
          * @param v
          * @param w
          */
-        public DummyEdge(Vertex<?> v, Vertex<?> w) {
+        public DummyEdge(Vertex v, Vertex w) {
             this(v, w, null);
         }
 
@@ -757,7 +761,7 @@ public class MGraph<N, E> {
          * 
          * @param originalEdge
          */
-        public void setOriginalEdge(Edge<?> originalEdge) {
+        public void setOriginalEdge(Edge originalEdge) {
             this.originalEdge = originalEdge;
         }
 
@@ -765,11 +769,14 @@ public class MGraph<N, E> {
          * 
          * @return
          */
-        public Edge<?> getOriginalEdge() {
+        public Edge getOriginalEdge() {
             return originalEdge;
         }
 
-        @Override
+        /**
+         * 
+         * @return
+         */
         public String toString() {
             return "dummy " + super.toString();
         }

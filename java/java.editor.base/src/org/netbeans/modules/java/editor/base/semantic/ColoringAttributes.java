@@ -30,6 +30,7 @@ import java.util.Set;
 public enum ColoringAttributes {
 
     UNUSED,
+
     ABSTRACT,
 
     FIELD,

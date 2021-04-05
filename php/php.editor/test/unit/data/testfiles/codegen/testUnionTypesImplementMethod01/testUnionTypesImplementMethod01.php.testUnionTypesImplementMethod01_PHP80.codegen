@@ -1,4 +1,0 @@
-public function testMethod(float|int|array|Foo|null $param): Foo|Bar{
-}
-public function testPHPDoc($param): object{
-}

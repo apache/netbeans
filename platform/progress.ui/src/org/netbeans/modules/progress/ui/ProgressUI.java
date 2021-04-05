@@ -36,9 +36,9 @@ public class ProgressUI implements ProgressEnvironment {
     @Override
     public ProgressHandle createHandle(String displayname, Cancellable c, boolean userInit) {
         if (userInit) {
-            return ProgressHandleFactory.createUIHandle(displayname, c, null);
+            return ProgressHandleFactory.createHandle(displayname, c, null);
         } else {
-            return ProgressHandleFactory.createSystemUIHandle(displayname, c, null);
+            return ProgressHandleFactory.createSystemHandle(displayname, c, null);
         }
     }
 

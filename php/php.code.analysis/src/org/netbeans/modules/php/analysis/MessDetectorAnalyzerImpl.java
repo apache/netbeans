@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.php.analysis;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,13 +37,11 @@ import org.netbeans.modules.php.analysis.ui.analyzer.MessDetectorCustomizerPanel
 import org.netbeans.modules.php.analysis.util.AnalysisUtils;
 import org.netbeans.modules.php.analysis.util.Mappers;
 import org.netbeans.modules.php.api.executable.InvalidPhpExecutableException;
-import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
 import org.netbeans.modules.refactoring.api.Scope;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.HintsController;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -79,8 +76,8 @@ public class MessDetectorAnalyzerImpl implements Analyzer {
             return Collections.emptyList();
         }
 
-        MessDetectorParams messDetectorParams = getValidMessDetectorParams();
-        if (messDetectorParams == null) {
+        List<String> messDetectorRuleSets = getValidMessDetectorRuleSets();
+        if (messDetectorRuleSets == null) {
             context.reportAnalysisProblem(Bundle.MessDetectorAnalyzerImpl_messDetector_ruleSets_error(), Bundle.MessDetectorAnalyzerImpl_messDetector_ruleSets_error_description());
             return Collections.emptyList();
         }
@@ -95,7 +92,7 @@ public class MessDetectorAnalyzerImpl implements Analyzer {
 
         context.start(totalCount);
         try {
-            return doAnalyze(scope, messDetector, messDetectorParams, fileCount);
+            return doAnalyze(scope, messDetector, messDetectorRuleSets, fileCount);
         } finally {
             context.finish();
         }
@@ -112,8 +109,7 @@ public class MessDetectorAnalyzerImpl implements Analyzer {
         "MessDetectorAnalyzerImpl.analyze.error=Mess detector analysis error",
         "MessDetectorAnalyzerImpl.analyze.error.description=Error occurred during mess detector analysis, review Output window for more information.",
     })
-    private Iterable<? extends ErrorDescription> doAnalyze(Scope scope, MessDetector messDetector,
-            MessDetectorParams params, Map<FileObject, Integer> fileCount) {
+    private Iterable<? extends ErrorDescription> doAnalyze(Scope scope, MessDetector messDetector, List<String> messDetectorRuleSets, Map<FileObject, Integer> fileCount) {
         List<ErrorDescription> errors = new ArrayList<>();
         int progress = 0;
         messDetector.startAnalyzeGroup();
@@ -121,7 +117,7 @@ public class MessDetectorAnalyzerImpl implements Analyzer {
             if (cancelled.get()) {
                 return Collections.emptyList();
             }
-            List<org.netbeans.modules.php.analysis.results.Result> results = messDetector.analyze(params, root);
+            List<org.netbeans.modules.php.analysis.results.Result> results = messDetector.analyze(messDetectorRuleSets, root);
             if (results == null) {
                 context.reportAnalysisProblem(Bundle.MessDetectorAnalyzerImpl_analyze_error(), Bundle.MessDetectorAnalyzerImpl_analyze_error_description());
                 return Collections.emptyList();
@@ -135,7 +131,7 @@ public class MessDetectorAnalyzerImpl implements Analyzer {
             if (cancelled.get()) {
                 return Collections.emptyList();
             }
-            List<org.netbeans.modules.php.analysis.results.Result> results = messDetector.analyze(params, file);
+            List<org.netbeans.modules.php.analysis.results.Result> results = messDetector.analyze(messDetectorRuleSets, file);
             if (results == null) {
                 context.reportAnalysisProblem(Bundle.MessDetectorAnalyzerImpl_analyze_error(), Bundle.MessDetectorAnalyzerImpl_analyze_error_description());
                 return Collections.emptyList();
@@ -159,7 +155,7 @@ public class MessDetectorAnalyzerImpl implements Analyzer {
             if (dataChildren.isEmpty()) {
                 continue;
             }
-            List<org.netbeans.modules.php.analysis.results.Result> results = messDetector.analyze(params, dataChildren);
+            List<org.netbeans.modules.php.analysis.results.Result> results = messDetector.analyze(messDetectorRuleSets, dataChildren);
             if (results == null) {
                 context.reportAnalysisProblem(Bundle.MessDetectorAnalyzerImpl_analyze_error(), Bundle.MessDetectorAnalyzerImpl_analyze_error_description());
                 return Collections.emptyList();
@@ -173,35 +169,12 @@ public class MessDetectorAnalyzerImpl implements Analyzer {
 
     @CheckForNull
     private MessDetector getValidMessDetector() {
-        Preferences settings = context.getSettings();
-        String messDetectorPath = null;
-        if (settings != null) {
-            messDetectorPath = settings.get(MessDetectorCustomizerPanel.PATH, null);
-        }
         try {
-            if (StringUtils.hasText(messDetectorPath)) {
-                return MessDetector.getCustom(messDetectorPath);
-            }
             return MessDetector.getDefault();
         } catch (InvalidPhpExecutableException ex) {
             LOGGER.log(Level.INFO, null, ex);
         }
         return null;
-    }
-
-    @CheckForNull
-    private MessDetectorParams getValidMessDetectorParams() {
-        MessDetectorParams messDetectorParams = new MessDetectorParams()
-                .setRuleSets(getValidMessDetectorRuleSets())
-                .setRuleSetFile(getValidRuleSetFile())
-                .setOptions(getValidOptions());
-        ValidationResult result = new AnalysisOptionsValidator()
-                .validateMessDetector(messDetectorParams)
-                .getResult();
-        if (result.hasErrors() || result.hasWarnings()) {
-            return null;
-        }
-        return messDetectorParams;
     }
 
     private List<String> getValidMessDetectorRuleSets() {
@@ -210,39 +183,14 @@ public class MessDetectorAnalyzerImpl implements Analyzer {
             messDetectorRuleSets = AnalysisOptions.getInstance().getMessDetectorRuleSets();
         }
         assert messDetectorRuleSets != null;
-        if (messDetectorRuleSets.isEmpty()) {
+        ValidationResult result = new AnalysisOptionsValidator()
+                .validateMessDetectorRuleSets(messDetectorRuleSets)
+                .getResult();
+        if (result.hasErrors()
+                || result.hasWarnings()) {
             return null;
         }
         return messDetectorRuleSets;
-    }
-
-    @CheckForNull
-    private FileObject getValidRuleSetFile() {
-        String ruleSetFile = null;
-        Preferences settings = context.getSettings();
-        if (settings != null) {
-            ruleSetFile = settings.get(MessDetectorCustomizerPanel.RULE_SET_FILE, null);
-        }
-        if (ruleSetFile == null) {
-            ruleSetFile = AnalysisOptions.getInstance().getMessDetectorRuleSetFilePath();
-        }
-        if (StringUtils.isEmpty(ruleSetFile)) {
-            return null;
-        }
-        return FileUtil.toFileObject(new File(ruleSetFile));
-    }
-
-    @CheckForNull
-    private String getValidOptions() {
-        String options = null;
-        Preferences settings = context.getSettings();
-        if (settings != null) {
-            options = settings.get(MessDetectorCustomizerPanel.OPTIONS, null);
-        }
-        if (options == null) {
-            options = AnalysisOptions.getInstance().getMessDetectorOptions();
-        }
-        return options;
     }
 
     //~ Inner classes

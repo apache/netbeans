@@ -6,4 +6,3 @@ METHOD     staticReturnStatic()            [STATIC]   B
 METHOD     staticTestA()                   [STATIC]   A
 METHOD     staticTestB()                   [STATIC]   B
 METHOD     staticTestC()                   [STATIC]   C
-CONSTANT   class \C                        [PUBLIC]   Magic Constant

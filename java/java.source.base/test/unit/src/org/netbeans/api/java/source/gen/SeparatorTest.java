@@ -18,6 +18,7 @@
  */
 package org.netbeans.api.java.source.gen;
 
+import com.sun.org.apache.bcel.internal.generic.ARRAYLENGTH;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

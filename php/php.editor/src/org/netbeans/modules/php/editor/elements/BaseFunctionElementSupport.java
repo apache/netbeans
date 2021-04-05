@@ -30,14 +30,11 @@ import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.elements.BaseFunctionElement;
 import org.netbeans.modules.php.editor.api.elements.BaseFunctionElement.PrintAs;
-import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.ParameterElement;
 import org.netbeans.modules.php.editor.api.elements.ParameterElement.OutputType;
-import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.api.elements.TypeMemberElement;
 import org.netbeans.modules.php.editor.api.elements.TypeNameResolver;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
-import org.netbeans.modules.php.editor.model.impl.Type;
 
 /**
  * @author Radek Matous
@@ -59,10 +56,6 @@ public class BaseFunctionElementSupport  {
 
     public final Collection<TypeResolver> getReturnTypes() {
         return returnTypes.getReturnTypes();
-    }
-
-    public final boolean isReturnUnionType() {
-        return returnTypes.isUnionType();
     }
 
     public final String asString(PrintAs as, BaseFunctionElement element, TypeNameResolver typeNameResolver) {
@@ -92,14 +85,17 @@ public class BaseFunctionElementSupport  {
                 if (phpVersion != null
                         && phpVersion.compareTo(PhpVersion.PHP_70) >= 0) {
                     Collection<TypeResolver> returns1 = getReturnTypes();
-                    // we can also write the union type in phpdoc e.g. @return int|float
-                    // check whether the union type is the actual declared return type to avoid adding the union type for phpdoc
-                    if (returns1.size() == 1 || isReturnUnionType()) {
+                    if (returns1.size() == 1) {
                         String returnType = asString(PrintAs.ReturnTypes, element, typeNameResolver, phpVersion);
                         if (StringUtils.hasText(returnType)) {
                             boolean isNullableType = CodeUtils.isNullableType(returnType);
                             if (isNullableType) {
                                 returnType = returnType.substring(1);
+                            }
+                            if ("\\self".equals(returnType) // NOI18N
+                                    && element instanceof TypeMemberElement) {
+                                // #267563
+                                returnType = ((TypeMemberElement) element).getType().getFullyQualifiedName().toString();
                             }
                             template.append(": "); // NOI18N
                             if (isNullableType) {
@@ -133,7 +129,7 @@ public class BaseFunctionElementSupport  {
                         QualifiedName typeName = typeResolver.getTypeName(false);
                         if (typeName != null) {
                             if (template.length() > 0) {
-                                template.append(Type.SEPARATOR);
+                                template.append("|"); //NOI18N
                             }
                             template.append(typeNameResolver.resolve(typeName).toString());
                         }
@@ -141,7 +137,7 @@ public class BaseFunctionElementSupport  {
                         String typeName = typeResolver.getRawTypeName();
                         if (typeName != null) {
                             if (template.length() > 0) {
-                                template.append(Type.SEPARATOR);
+                                template.append("|"); //NOI18N
                             }
                             template.append(typeName);
                         }
@@ -154,30 +150,12 @@ public class BaseFunctionElementSupport  {
                         QualifiedName typeName = typeResolver.getTypeName(false);
                         if (typeName != null) {
                             if (template.length() > 0) {
-                                template.append(Type.SEPARATOR);
+                                template.append("|"); //NOI18N
                             }
                             if (typeResolver.isNullableType()) {
                                 template.append(CodeUtils.NULLABLE_TYPE_PREFIX);
                             }
-                            String returnType = typeNameResolver.resolve(typeName).toString();
-                            if (("\\" + Type.SELF).equals(returnType) // NOI18N
-                                    && element instanceof TypeMemberElement) {
-                                // #267563
-                                returnType = typeNameResolver.resolve(((TypeMemberElement) element).getType().getFullyQualifiedName()).toString();
-                            }
-                            if (("\\" + Type.PARENT).equals(returnType) // NOI18N
-                                    && element instanceof TypeMemberElement) {
-                                TypeElement typeElement = ((TypeMemberElement) element).getType();
-                                if (typeElement instanceof ClassElement) {
-                                    QualifiedName superClassName = ((ClassElement) typeElement).getSuperClassName();
-                                    if (superClassName != null) {
-                                        returnType = typeNameResolver.resolve(superClassName).toString();
-                                    } else {
-                                        returnType = Type.PARENT;
-                                    }
-                                }
-                            }
-                            template.append(returnType);
+                            template.append(typeNameResolver.resolve(typeName).toString());
                         }
                     }
                 }
@@ -202,7 +180,11 @@ public class BaseFunctionElementSupport  {
                 if (isNullableType) {
                     paramInfo = paramInfo.substring(1);
                 }
-                paramInfo = resolveSpecialTypes(paramInfo, element, typeNameResolver, param);
+                if (paramInfo.startsWith("self ") // NOI18N
+                        && element instanceof TypeMemberElement) {
+                    // #267563
+                    paramInfo = ((TypeMemberElement) element).getType().getFullyQualifiedName().toString() + paramInfo.substring(4);
+                }
                 if (isNullableType) {
                     paramSb.append(CodeUtils.NULLABLE_TYPE_PREFIX);
                 }
@@ -211,68 +193,6 @@ public class BaseFunctionElementSupport  {
             }
         }
         return template.toString();
-    }
-
-    private static String resolveSpecialTypes(String paramInfo, final BaseFunctionElement element, TypeNameResolver typeNameResolver, final ParameterElement param) {
-        String parameterInfo = paramInfo;
-        if (parameterInfo.startsWith(Type.SELF + " ") // NOI18N
-                && element instanceof TypeMemberElement) {
-            // #267563
-            parameterInfo = typeNameResolver.resolve(((TypeMemberElement) element).getType().getFullyQualifiedName()).toString() + parameterInfo.substring(Type.SELF.length());
-        }
-        if (parameterInfo.startsWith(Type.PARENT + " ") // NOI18N
-                && element instanceof TypeMemberElement) {
-            TypeElement typeElement = ((TypeMemberElement) element).getType();
-            if (typeElement instanceof ClassElement) {
-                QualifiedName superClassName = ((ClassElement) typeElement).getSuperClassName();
-                if (superClassName != null) {
-                    parameterInfo = typeNameResolver.resolve(superClassName).toString() + parameterInfo.substring(Type.PARENT.length());
-                }
-            }
-        }
-        if (param.isUnionType()
-                && element instanceof TypeMemberElement) {
-            parameterInfo = resolveSpecialTypesInUnionType(parameterInfo, element, typeNameResolver);
-        }
-        return parameterInfo;
-    }
-
-    private static String resolveSpecialTypesInUnionType(String paramInfo, final BaseFunctionElement element, TypeNameResolver typeNameResolver) {
-        // NETBEANS-4443 PHP 8.0: Union Types 2.0
-        String parameterInfo = paramInfo;
-        // e.g. int|float|Foo|null $param
-        int indexOfWhitespace = parameterInfo.indexOf(' ');
-        if (indexOfWhitespace == -1) {
-            // no types e.g. $param
-            return parameterInfo;
-        }
-        String unionType = parameterInfo.substring(0, indexOfWhitespace);
-        List<String> unionTypeList = StringUtils.explode(unionType, Type.SEPARATOR);
-        StringBuilder sb = new StringBuilder();
-        if (unionTypeList.contains(Type.SELF) || unionTypeList.contains(Type.PARENT)) {
-            for (String type : unionTypeList) {
-                if (sb.length() > 0) {
-                    sb.append(Type.SEPARATOR);
-                }
-                if (Type.SELF.equals(type)) {
-                    sb.append(typeNameResolver.resolve(((TypeMemberElement) element).getType().getFullyQualifiedName()).toString());
-                } else if (Type.PARENT.equals(type)) {
-                    TypeElement typeElement = ((TypeMemberElement) element).getType();
-                    if (typeElement instanceof ClassElement) {
-                        QualifiedName superClassName = ((ClassElement) typeElement).getSuperClassName();
-                        if (superClassName != null) {
-                            sb.append(typeNameResolver.resolve(superClassName).toString());
-                        } else {
-                            sb.append(type);
-                        }
-                    }
-                } else {
-                    sb.append(type);
-                }
-            }
-            parameterInfo = sb.toString() + parameterInfo.substring(indexOfWhitespace);
-        }
-        return parameterInfo;
     }
 
     public interface Parameters {
@@ -304,39 +224,25 @@ public class BaseFunctionElementSupport  {
             public Set<TypeResolver> getReturnTypes() {
                 return Collections.<TypeResolver>emptySet();
             }
-
-            @Override
-            public boolean isUnionType() {
-                return false;
-            }
         };
 
         Set<TypeResolver> getReturnTypes();
-        boolean isUnionType();
     }
 
     public static final class ReturnTypesImpl implements ReturnTypes {
-
         private final Set<TypeResolver> returnTypes;
-        private final boolean isUnionType;
 
-        public static ReturnTypes create(Set<TypeResolver> returnTypes, boolean isUnionType) {
-            return new ReturnTypesImpl(returnTypes, isUnionType);
+        public static ReturnTypes create(Set<TypeResolver> returnTypes) {
+            return new ReturnTypesImpl(returnTypes);
         }
 
-        private ReturnTypesImpl(Set<TypeResolver> returnTypes, boolean isUnionType) {
+        private ReturnTypesImpl(Set<TypeResolver> returnTypes) {
             this.returnTypes = returnTypes;
-            this.isUnionType = isUnionType;
         }
 
         @Override
         public Set<TypeResolver> getReturnTypes() {
             return Collections.unmodifiableSet(returnTypes);
-        }
-
-        @Override
-        public boolean isUnionType() {
-            return isUnionType;
         }
 
     }

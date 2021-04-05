@@ -34,7 +34,6 @@ import java.awt.*;
  * @deprecated
  * @author David Kaspar
  */
-@Deprecated
 public class ListWidget extends Widget {
 
     private Widget header;

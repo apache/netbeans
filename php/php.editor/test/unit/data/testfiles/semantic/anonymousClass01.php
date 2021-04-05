@@ -1,8 +1,6 @@
 <?php
 
 new class {
-    private const USED_PRIVATE_CONST = 1;
-    private const UNUSED_PRIVATE_CONST = 2;
     private $usedField;
     private $unusedField;
     private static $usedStaticField;
@@ -10,7 +8,6 @@ new class {
 
 
     public function publicMethod() {
-        self::USED_PRIVATE_CONST;
         $this->usedField = 10;
         self::$usedStaticField = 20;
         $this->usedPrivateMethod();

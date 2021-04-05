@@ -26,20 +26,19 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 
 /**
- * Represents a class creation. It can be just calling ctor of existing class or
- * creating new anonymous class. This class holds the class name as an
- * expression and array of constructor parameters
- *
+ * Represents a class creation. It can be just calling ctor
+ * of existing class or creating new anonymous class.
+ * This class holds the class name as an expression and
+ * array of constructor parameters
  * <pre>e.g.
  * new MyClass(),
  * new $a('start'),
  * new foo()(1, $a),
  * new class {...},
- * new class(10) extends SomeClass implements SomeInterface {...},
- * #[A(1)] new class {...} // [NETBEANS-4443] PHP 8.0
+ * new class(10) extends SomeClass implements SomeInterface {...}
  * </pre>
  */
-public class ClassInstanceCreation extends Expression implements Attributed {
+public class ClassInstanceCreation extends Expression {
 
     // common
     private final List<Expression> ctorParams = new ArrayList<>();
@@ -53,7 +52,7 @@ public class ClassInstanceCreation extends Expression implements Attributed {
     private Expression superClass;
     private final List<Expression> interfaces = new ArrayList<>();
     private Block body;
-    private final List<Attribute> attributes = new ArrayList<>();
+
 
     // ctor
     public ClassInstanceCreation(int start, int end, @NonNull ClassName className, @NullAllowed List<Expression> ctorParams) {
@@ -70,7 +69,7 @@ public class ClassInstanceCreation extends Expression implements Attributed {
 
     // anonymous
     private ClassInstanceCreation(String fileName, int classCounter, int start, int end, int classStartOffset, @NullAllowed List<Expression> ctorParams,
-            @NullAllowed Expression superClass, @NullAllowed List<Expression> interfaces, @NonNull Block body, List<Attribute> attributes) {
+            @NullAllowed Expression superClass, @NullAllowed List<Expression> interfaces, @NonNull Block body) {
         super(start, end);
         assert classCounter > 0 : classCounter;
         assert classStartOffset > -1 : classStartOffset;
@@ -86,17 +85,11 @@ public class ClassInstanceCreation extends Expression implements Attributed {
             this.interfaces.addAll(interfaces);
         }
         this.body = body;
-        this.attributes.addAll(attributes);
-    }
-
-    public static ClassInstanceCreation anonymous(String fileName, int classCounter, int start, int end, int classStartOffset, List<Expression> ctorParams,
-            Expression superClass, List<Expression> interfaces, Block body, List<Attribute> attributes) {
-        return new ClassInstanceCreation(fileName, classCounter, start, end, classStartOffset, ctorParams, superClass, interfaces, body, attributes);
     }
 
     public static ClassInstanceCreation anonymous(String fileName, int classCounter, int start, int end, int classStartOffset, List<Expression> ctorParams,
             Expression superClass, List<Expression> interfaces, Block body) {
-        return new ClassInstanceCreation(fileName, classCounter, start, end, classStartOffset, ctorParams, superClass, interfaces, body, Collections.emptyList());
+        return new ClassInstanceCreation(fileName, classCounter, start, end, classStartOffset, ctorParams, superClass, interfaces, body);
     }
 
     public boolean isAnonymous() {
@@ -106,8 +99,7 @@ public class ClassInstanceCreation extends Expression implements Attributed {
     /**
      * Class name of this instance creation node.
      * <p>
-     * Syntetic name for anonymous class
-     * (<tt>#anon#&lt;fileName>#&lt;counter></tt>).
+     * Syntetic name for anonymous class (<tt>#anon#&lt;fileName>#&lt;counter></tt>).
      *
      * @return class name
      */
@@ -143,16 +135,6 @@ public class ClassInstanceCreation extends Expression implements Attributed {
     }
 
     @Override
-    public List<Attribute> getAttributes() {
-        return Collections.unmodifiableList(attributes);
-    }
-
-    @Override
-    public boolean isAttributed() {
-        return !attributes.isEmpty();
-    }
-
-    @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
@@ -163,7 +145,6 @@ public class ClassInstanceCreation extends Expression implements Attributed {
         sb.append("new "); // NOI18N
         boolean anonymous = isAnonymous();
         if (anonymous) {
-            getAttributes().forEach(attribute -> sb.append(attribute).append(" ")); // NOI18N
             sb.append("class"); // NOI18N
         } else {
             sb.append(className);

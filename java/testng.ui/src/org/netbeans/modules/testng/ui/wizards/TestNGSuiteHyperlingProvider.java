@@ -268,7 +268,7 @@ public class TestNGSuiteHyperlingProvider implements HyperlinkProvider {
                 break;
             case JAVA_SOURCE:
                 final ClasspathInfo cp = ClasspathInfo.create(doc);
-                JavaSource js = JavaSource.create(cp, Collections.<FileObject>emptyList());
+                JavaSource js = JavaSource.create(cp, Collections.EMPTY_LIST);
                 try {
                     js.runUserActionTask(new Task<CompilationController>() {
 

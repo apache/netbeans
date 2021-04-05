@@ -39,7 +39,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -449,9 +448,9 @@ public class BeanNode<T> extends AbstractNode {
     * @return three property lists
     */
     public static Descriptor computeProperties(Object bean, BeanInfo info) {
-        List<Node.Property> property = new ArrayList<>();
-        List<Node.Property> expert = new ArrayList<>();
-        List<Node.Property> hidden = new ArrayList<>();
+        ArrayList<Node.Property> property = new ArrayList<Node.Property>();
+        ArrayList<Node.Property> expert = new ArrayList<Node.Property>();
+        ArrayList<Node.Property> hidden = new ArrayList<Node.Property>();
 
         PropertyDescriptor[] propertyDescriptor = info.getPropertyDescriptors();
 
@@ -788,7 +787,7 @@ public class BeanNode<T> extends AbstractNode {
         public final Node.Property[] hidden;
 
         /** private constructor */
-        Descriptor(List<Node.Property> p, List<Node.Property> e, List<Node.Property> h) {
+        Descriptor(ArrayList<Node.Property> p, ArrayList<Node.Property> e, ArrayList<Node.Property> h) {
             property = new Node.Property[p.size()];
             p.toArray(property);
 

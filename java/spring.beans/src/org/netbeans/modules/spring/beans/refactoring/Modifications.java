@@ -225,7 +225,7 @@ public final class Modifications implements org.netbeans.modules.refactoring.spi
 
     @Override
     public Collection<? extends File> getNewFiles() {
-        return Collections.<File>emptyList();
+        return Collections.EMPTY_LIST;
     }
 
     public static final class Difference {

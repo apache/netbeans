@@ -41,7 +41,6 @@ import org.netbeans.modules.php.editor.index.Signature;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.model.nodes.FunctionDeclarationInfo;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
-import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.openide.util.Parameters;
 
 /**
@@ -99,11 +98,10 @@ public final class FunctionElementImpl extends FullyQualifiedElementImpl impleme
         Parameters.notNull("fileQuery", fileQuery);
         FunctionDeclarationInfo info = FunctionDeclarationInfo.create(node);
         final QualifiedName fullyQualifiedName = namespace != null ? namespace.getFullyQualifiedName() : QualifiedName.createForDefaultNamespaceName();
-        boolean isUnionType = node.getReturnType() instanceof UnionType;
         return new FunctionElementImpl(
                 fullyQualifiedName.append(info.getName()), info.getRange().getStart(),
                 fileQuery.getURL().toExternalForm(), fileQuery, BaseFunctionElementSupport.ParametersImpl.create(info.getParameters()),
-                BaseFunctionElementSupport.ReturnTypesImpl.create(TypeResolverImpl.parseTypes(VariousUtils.getReturnType(fileQuery.getResult().getProgram(), node)), isUnionType),
+                BaseFunctionElementSupport.ReturnTypesImpl.create(TypeResolverImpl.parseTypes(VariousUtils.getReturnType(fileQuery.getResult().getProgram(), node))),
                 VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node));
     }
 
@@ -130,25 +128,24 @@ public final class FunctionElementImpl extends FullyQualifiedElementImpl impleme
 
     private String getSignatureLastPart() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getOffset()).append(Separator.SEMICOLON);
+        sb.append(getOffset()).append(Separator.SEMICOLON); //NOI18N
         List<ParameterElement> parameterList = getParameters();
         for (int idx = 0; idx < parameterList.size(); idx++) {
             ParameterElementImpl parameter = (ParameterElementImpl) parameterList.get(idx);
             if (idx > 0) {
-                sb.append(Separator.COMMA);
+                sb.append(Separator.COMMA); //NOI18N
             }
             sb.append(parameter.getSignature());
         }
-        sb.append(Separator.SEMICOLON);
+        sb.append(Separator.SEMICOLON); //NOI18N
         for (TypeResolver typeResolver : getReturnTypes()) {
             TypeResolverImpl resolverImpl = (TypeResolverImpl) typeResolver;
             sb.append(resolverImpl.getSignature());
         }
-        sb.append(Separator.SEMICOLON);
+        sb.append(Separator.SEMICOLON); //NOI18N
         sb.append(getPhpModifiers().toFlags()).append(Separator.SEMICOLON);
         sb.append(isDeprecated() ? 1 : 0).append(Separator.SEMICOLON);
         sb.append(getFilenameUrl()).append(Separator.SEMICOLON);
-        sb.append(isReturnUnionType() ? 1 : 0).append(Separator.SEMICOLON);
         return sb.toString();
     }
 
@@ -174,11 +171,6 @@ public final class FunctionElementImpl extends FullyQualifiedElementImpl impleme
     @Override
     public Collection<TypeResolver> getReturnTypes() {
         return this.functionSupport.getReturnTypes();
-    }
-
-    @Override
-    public boolean isReturnUnionType() {
-        return this.functionSupport.isReturnUnionType();
     }
 
     @Override
@@ -234,10 +226,6 @@ public final class FunctionElementImpl extends FullyQualifiedElementImpl impleme
         String getFileUrl() {
             return signature.string(7);
         }
-
-        boolean isReturnUnionType() {
-            return signature.integer(8) == 1;
-        }
     }
 
     private static final class ParametersFromSignature implements BaseFunctionElementSupport.Parameters {
@@ -262,11 +250,9 @@ public final class FunctionElementImpl extends FullyQualifiedElementImpl impleme
         private final FunctionSignatureParser functionSignatureParser;
         //@GuardedBy("this")
         private Set<TypeResolver> retrievedReturnTypes = null;
-        private final boolean isUnionType;
 
         public ReturnTypesFromSignature(FunctionSignatureParser functionSignatureParser) {
             this.functionSignatureParser = functionSignatureParser;
-            this.isUnionType = functionSignatureParser.isReturnUnionType();
         }
 
         @Override
@@ -275,11 +261,6 @@ public final class FunctionElementImpl extends FullyQualifiedElementImpl impleme
                 retrievedReturnTypes = functionSignatureParser.getReturnTypes();
             }
             return retrievedReturnTypes;
-        }
-
-        @Override
-        public boolean isUnionType() {
-            return isUnionType;
         }
 
     }

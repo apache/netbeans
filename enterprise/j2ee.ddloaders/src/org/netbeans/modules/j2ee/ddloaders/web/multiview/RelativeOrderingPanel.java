@@ -421,7 +421,7 @@ public class RelativeOrderingPanel extends SectionInnerPanel implements java.awt
     
     private void refreshDdModel() {
         if (!(webApp instanceof WebFragment)) {
-            Logger.getGlobal().log(Level.SEVERE, "refreshDdModel failed, not a WebFragment instance of DD passed!");
+            Logger.global.log(Level.SEVERE, "refreshDdModel failed, not a WebFragment instance of DD passed!");
             return;
         }
         WebFragment webFrag = (WebFragment)webApp;

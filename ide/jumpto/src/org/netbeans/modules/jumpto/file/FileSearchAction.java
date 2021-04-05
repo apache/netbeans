@@ -162,8 +162,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
             @NonNull final JList list,
             @NonNull final Document nameDocument,
             @NonNull final ButtonModel caseSensitive,
-            @NonNull final ButtonModel colorPrefered,
-            @NonNull final ButtonModel searchFolders) {
+            @NonNull final ButtonModel colorPrefered) {
         Parameters.notNull("list", list);   //NOI18N
         Parameters.notNull("nameDocument", nameDocument);   //NOI18N
         Parameters.notNull("caseSensitive", caseSensitive); //NOI18N
@@ -173,7 +172,6 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
                     new FileDescriptorConvertor(nameDocument)).
                 setCamelCaseSeparator(CAMEL_CASE_SEPARATOR).
                 setColorPreferedProject(colorPrefered).
-                setSearchFolders(searchFolders).
                 build();
     }
 
@@ -218,11 +216,10 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
         // Compute in other thread
         synchronized(this) {
             final SearchType searchType = Utils.toSearchType(nameKind);
-            if (currentSearch.isNarrowing(searchType, text, getSearchScope(panel), true)) {
+            if (currentSearch.isNarrowing(searchType, text, null, true)) {
                 itemsComparator.setUsePreferred(panel.isPreferedProject());
                 itemsComparator.setText(text);
                 filterFactory.setLineNumber(lineNr);
-                filterFactory.setSearchByFolders(panel.isSearchByFolders());
                 currentSearch.filter(
                         searchType,
                         text,
@@ -274,7 +271,6 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
             searchText,
             slidingTaskData.kind,
             panel.getCurrentProject(),
-            panel.isSearchByFolders(),
             slidingTaskData.lineNo);
         final Worker.Collector collector = Worker.newCollector(
                 baseListModel,
@@ -284,7 +280,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
                         enableOK(baseListModel.getSize() > 0);
                     });},
                 () -> {
-                    currentSearch.searchCompleted(slidingTaskData.type, searchText, getSearchScope(panel));
+                    currentSearch.searchCompleted(slidingTaskData.type, searchText, null);
                     SwingUtilities.invokeLater(() -> {
                         panel.searchCompleted(true);
                     });
@@ -308,11 +304,6 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
                 "Worker posted after {0} ms.",  //NOI18N
                 System.currentTimeMillis() - panel.time );
         }
-    }
-
-    private static String getSearchScope(final FileSearchPanel panel) {
-        //the string constant doesn't really matter, just that they are different values
-        return panel.isSearchByFolders() ? "folders-scope" : null;
     }
 
     private void enableOK(final boolean enable) {
@@ -673,11 +664,6 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
     //@NotThreadSafe
     private static final class FilterFactory implements Callable<Models.Filter<FileDescriptor>> {
         private int currentLineNo;
-        private boolean searchByFolders = false;
-
-        void setSearchByFolders(boolean searchByFolders) {
-            this.searchByFolders = searchByFolders;
-        }
 
         void setLineNumber(final int lineNo) {
             this.currentLineNo = lineNo;
@@ -689,7 +675,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
                 @NonNull
                 @Override
                 protected String getItemValue(@NonNull final FileDescriptor item) {
-                    return searchByFolders ? item.getOwnerPath() : item.getFileName();
+                    return item.getFileName();
                 }
                 @Override
                 protected void update(@NonNull final FileDescriptor item) {

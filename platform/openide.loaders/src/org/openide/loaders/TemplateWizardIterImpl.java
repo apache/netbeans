@@ -138,7 +138,7 @@ implements WizardDescriptor.Iterator, ChangeListener, Runnable {
      * @return <code>true</code> if so
      */
     public boolean hasPrevious() {
-        return !showingPanel && getIterator().hasPrevious();
+        return !showingPanel;
     }
 
     /** Move to the next panel.

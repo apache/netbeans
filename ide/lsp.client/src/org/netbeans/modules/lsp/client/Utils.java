@@ -248,31 +248,26 @@ public class Utils {
         return edits;
     }
 
-    public static FileObject fromURI(String targetUri) {
+    public static void open(String targetUri, Range targetRange) {
         try {
             URI target = URI.create(targetUri);
-            return URLMapper.findFileObject(target.toURL());
+            FileObject targetFile = URLMapper.findFileObject(target.toURL());
+
+            if (targetFile != null) {
+                LineCookie lc = targetFile.getLookup().lookup(LineCookie.class);
+
+                //TODO: expecting lc != null!
+
+                Line line = lc.getLineSet().getCurrent(targetRange.getStart().getLine());
+
+                SwingUtilities.invokeLater(() ->
+                    line.show(Line.ShowOpenType.OPEN, Line.ShowVisibilityType.FOCUS, targetRange.getStart().getCharacter())
+                );
+            } else {
+                //TODO: beep
+            }
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
-            return null;
-        }
-    }
-
-    public static void open(String targetUri, Range targetRange) {
-        FileObject targetFile = fromURI(targetUri);
-
-        if (targetFile != null) {
-            LineCookie lc = targetFile.getLookup().lookup(LineCookie.class);
-
-            //TODO: expecting lc != null!
-
-            Line line = lc.getLineSet().getCurrent(targetRange.getStart().getLine());
-
-            SwingUtilities.invokeLater(() ->
-                line.show(Line.ShowOpenType.OPEN, Line.ShowVisibilityType.FOCUS, targetRange.getStart().getCharacter())
-            );
-        } else {
-            //TODO: beep
         }
     }
 
@@ -287,8 +282,4 @@ public class Utils {
             return c2 - c1;
         }
     };
-
-    public static boolean isTrue(Boolean b) {
-        return b != null && b;
-    }
 }

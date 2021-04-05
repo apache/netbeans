@@ -53,7 +53,6 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.TestUtil;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -74,7 +73,6 @@ public class ElementHandleTest extends NbTestCase {
     
     private FileObject src;
     private FileObject data;
-    private String orignalNetbeansUsr;
     
     
     static {
@@ -131,15 +129,9 @@ public class ElementHandleTest extends NbTestCase {
         ClassPathProviderImpl.getDefault().setClassPaths(TestUtil.getBootClassPath(),
                                                          ClassPathSupport.createClassPath(new URL[0]),
                                                          ClassPathSupport.createClassPath(new FileObject[]{this.src}));
-        orignalNetbeansUsr = System.getProperty("netbeans.user");
-        System.setProperty("netbeans.user", getWorkDirPath());
     }
 
     protected void tearDown() throws Exception {
-        if (orignalNetbeansUsr != null)
-            System.setProperty("netbeans.user", orignalNetbeansUsr);
-        else
-            System.clearProperty("netbeans.user");
     }
 
 
@@ -434,9 +426,6 @@ public class ElementHandleTest extends NbTestCase {
             ElementKind.ENUM,
             ElementKind.ANNOTATION_TYPE
         }));
-        ElementKind recordKind = TreeShims.getRecordKind();
-        if (recordKind != null)
-            allowed.add(recordKind);
         for (ElementKind aek : allowed) {
             ElementHandle<TypeElement> eh = ElementHandle.createTypeElementHandle(aek, "org.me.Foo");    //NOI18N
             assertEquals(aek, eh.getKind());

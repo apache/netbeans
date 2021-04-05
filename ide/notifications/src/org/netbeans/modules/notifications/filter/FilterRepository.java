@@ -37,8 +37,7 @@ public final class FilterRepository {
     /**
      * the set of filters of this repository *
      */
-    private final LinkedList<NotificationFilter> filters = new LinkedList<>();
-    
+    private LinkedList<NotificationFilter> filters = new LinkedList<NotificationFilter>();
     private int active = -1;   // index of the active filter
 
     /**
@@ -74,7 +73,7 @@ public final class FilterRepository {
     }
 
     public List<NotificationFilter> getAllFilters() {
-        return new ArrayList<>(filters);
+        return new ArrayList<NotificationFilter>(filters);
     }
 
     // Implementation of java.util.Set
@@ -189,6 +188,6 @@ public final class FilterRepository {
     }
 
     List<NotificationFilter> getFilters() {
-        return new ArrayList<>(filters);
+        return new ArrayList<NotificationFilter>(filters);
     }
 }

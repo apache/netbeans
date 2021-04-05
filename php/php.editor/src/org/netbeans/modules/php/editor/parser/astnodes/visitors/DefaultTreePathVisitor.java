@@ -29,8 +29,6 @@ import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
-import org.netbeans.modules.php.editor.parser.astnodes.Attribute;
-import org.netbeans.modules.php.editor.parser.astnodes.AttributeDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.BackTickExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.BreakStatement;
@@ -69,11 +67,8 @@ import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InstanceOfExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ListVariable;
-import org.netbeans.modules.php.editor.parser.astnodes.MatchArm;
-import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
-import org.netbeans.modules.php.editor.parser.astnodes.NamedArgument;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocBlock;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocMethodTag;
@@ -98,7 +93,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.SwitchCase;
 import org.netbeans.modules.php.editor.parser.astnodes.SwitchStatement;
-import org.netbeans.modules.php.editor.parser.astnodes.ThrowExpression;
+import org.netbeans.modules.php.editor.parser.astnodes.ThrowStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitConflictResolutionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitMethodAliasDeclaration;
@@ -204,20 +199,6 @@ public class DefaultTreePathVisitor extends DefaultVisitor {
     @Override
     public void visit(ASTErrorExpression astErrorExpression) {
         super.visit(astErrorExpression);
-    }
-
-    @Override
-    public void visit(Attribute node) {
-        addToPath(node);
-        super.visit(node);
-        removeFromPath();
-    }
-
-    @Override
-    public void visit(AttributeDeclaration node) {
-        addToPath(node);
-        super.visit(node);
-        removeFromPath();
     }
 
     @Override
@@ -480,20 +461,6 @@ public class DefaultTreePathVisitor extends DefaultVisitor {
     }
 
     @Override
-    public void visit(MatchArm node) {
-        addToPath(node);
-        super.visit(node);
-        removeFromPath();
-    }
-
-    @Override
-    public void visit(MatchExpression node) {
-        addToPath(node);
-        super.visit(node);
-        removeFromPath();
-    }
-
-    @Override
     public void visit(MethodDeclaration node) {
         addToPath(node);
         super.visit(node);
@@ -502,13 +469,6 @@ public class DefaultTreePathVisitor extends DefaultVisitor {
 
     @Override
     public void visit(MethodInvocation node) {
-        addToPath(node);
-        super.visit(node);
-        removeFromPath();
-    }
-
-    @Override
-    public void visit(NamedArgument node) {
         addToPath(node);
         super.visit(node);
         removeFromPath();
@@ -627,7 +587,7 @@ public class DefaultTreePathVisitor extends DefaultVisitor {
     }
 
     @Override
-    public void visit(ThrowExpression node) {
+    public void visit(ThrowStatement node) {
         addToPath(node);
         super.visit(node);
         removeFromPath();

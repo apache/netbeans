@@ -49,6 +49,11 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.Action;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.netbeans.core.startup.layers.LayerCacheManager;
@@ -70,6 +75,13 @@ import org.openide.util.Enumerations;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbCollections;
+import org.openide.xml.EntityCatalog;
+import org.openide.xml.XMLUtil;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /** Checks consistency of System File System contents.
  */
@@ -77,7 +89,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
 
     static {
         System.setProperty("java.awt.headless", "true");
-//        System.setProperty("org.openide.util.lookup.level", "FINE");
+        System.setProperty("org.openide.util.lookup.level", "FINE");
     }
 
     private static final String SFS_LB = "SystemFileSystem.localizingBundle";
@@ -126,35 +138,16 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
                 clusters("platform|ide").enableClasspathModules(false).enableModules(".*").gui(false).suite());
         return suite;
     }
-    
-    private List<String> failures = new ArrayList<>();
-    
-    private String appendFailure(String message,  Collection<String> warnings) {
+
+    private void assertNoErrors(String message, Collection<String> warnings) {
         if (warnings.isEmpty()) {
-            return null;
+            return;
         }
         StringBuilder b = new StringBuilder(message);
         for (String warning : new TreeSet<String>(warnings)) {
             b.append('\n').append(warning);
         }
-        String s = b.toString();
-        failures.add(s);
-        return s;
-    }
-    
-    private void assertNoFailures() {
-        if (failures.isEmpty()) {
-            return;
-        }
-        fail(String.join("", failures));
-    }
-
-    private void assertNoErrors(String message, Collection<String> warnings) {
-        String s = appendFailure(message, warnings);
-        if (s == null) {
-            return;
-        }
-        fail(s);
+        fail(b.toString());
     }
 
     /* Causes mysterious failure in otherwise OK-looking UI/Runtime/org-netbeans-modules-db-explorer-nodes-RootNode.instance: 
@@ -614,11 +607,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
                         overrides = new TreeMap<String,ContentAndAttrs>();
                         files.put(weightedPath, overrides);
                     }
-                    try {
-                        overrides.put(module, new ContentAndAttrs(fo.asBytes(), attributes, layerURL));
-                    } catch (IOException ex) {
-                        // will be reported by a different test
-                    }
+                    overrides.put(module, new ContentAndAttrs(fo.asBytes(), attributes, layerURL));
                 }
                 // make sure the filesystem closes the stream
                 connect.getInputStream ().close ();
@@ -805,30 +794,24 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
         }
         assertNoErrors("No warnings relating to folder ordering; " +
                 "cf: http://deadlock.netbeans.org/job/nbms-and-javadoc/lastSuccessfulBuild/artifact/nbbuild/build/generated/layers.txt", h.errors());
-        if (false) {
-            // temporarily disable multi-level checking of order, see discussion on dev@ mailing list on how
-            // the situation with some MIME types requiring positions and some not should be solved.
-            for (List<String> multiPath : editorMultiFolders) {
-                List<FileSystem> layers = new ArrayList<FileSystem>(3);
-                for (final String path : multiPath) {
-                    FileObject folder = FileUtil.getConfigFile(path);
-                    if (folder != null) {
-                        layers.add(new MultiFileSystem(folder.getFileSystem()) {
-                            protected @Override FileObject findResourceOn(FileSystem fs, String res) {
-                                FileObject f = fs.findResource(path + '/' + res);
-                                return Boolean.TRUE.equals(f.getAttribute("hidden")) ? null : f;
-                            }
-                        });
-                    }
+        for (List<String> multiPath : editorMultiFolders) {
+            List<FileSystem> layers = new ArrayList<FileSystem>(3);
+            for (final String path : multiPath) {
+                FileObject folder = FileUtil.getConfigFile(path);
+                if (folder != null) {
+                    layers.add(new MultiFileSystem(folder.getFileSystem()) {
+                        protected @Override FileObject findResourceOn(FileSystem fs, String res) {
+                            FileObject f = fs.findResource(path + '/' + res);
+                            return Boolean.TRUE.equals(f.getAttribute("hidden")) ? null : f;
+                        }
+                    });
                 }
-                loadChildren(new MultiFileSystem(layers.toArray(new FileSystem[layers.size()])).getRoot());
-                appendFailure("\nNo warnings relating to folder ordering in " + multiPath + 
-                        "; cf: http://deadlock.netbeans.org/job/nbms-and-javadoc/lastSuccessfulBuild/artifact/nbbuild/build/generated/layers.txt",
-                        h.errors());
-                h.errors.clear();
             }
+            loadChildren(new MultiFileSystem(layers.toArray(new FileSystem[layers.size()])).getRoot());
+            assertNoErrors("No warnings relating to folder ordering in " + multiPath + 
+                    "; cf: http://deadlock.netbeans.org/job/nbms-and-javadoc/lastSuccessfulBuild/artifact/nbbuild/build/generated/layers.txt",
+                    h.errors());
         }
-        assertNoFailures();
     }
     private static void loadChildren(FileObject folder) {
         List<FileObject> kids = new ArrayList<FileObject>();
@@ -922,11 +905,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
 
     public void testKeymapOverrides() throws Exception { // #170677
         List<String> warnings = new ArrayList<String>();
-        FileObject keymapRoot = FileUtil.getConfigFile("Keymaps");
-        if (keymapRoot == null) {
-            return;
-        }
-        FileObject[] keymaps = keymapRoot.getChildren();
+        FileObject[] keymaps = FileUtil.getConfigFile("Keymaps").getChildren();
         Map<String,Integer> definitionCountById = new HashMap<String,Integer>();
         assertTrue("Too many keymaps for too little bitfield", keymaps.length < 31);
         int keymapFlag = 1;

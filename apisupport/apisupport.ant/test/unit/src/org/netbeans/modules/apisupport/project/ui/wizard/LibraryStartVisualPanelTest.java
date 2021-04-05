@@ -37,7 +37,7 @@ public class LibraryStartVisualPanelTest extends NbTestCase {
     }
 
     public void testPopulateProjectData() throws Exception {
-        Map<String, String> contents = new HashMap<>();
+        Map<String, String> contents = new HashMap<String, String>();
         contents.put("org/apache/commons/logging/Log.class", "");
         contents.put("1.0-beta/X.class", ""); // #72669
         contents.put("org/apache/commons/logging/impl/NoOpLog.class", "");

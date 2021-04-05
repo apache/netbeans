@@ -145,7 +145,7 @@ public abstract class MavenAction extends AbstractAction {
                 }
             }
         }
-        List<GraphEdge> edges2Exclude = new ArrayList<>();
+        List<GraphEdge> edges2Exclude = new ArrayList<GraphEdge>();
         Collection<GraphEdge<MavenDependencyNode>> incoming = scene.findNodeEdges(node, false, true);
         GraphNode<MavenDependencyNode> sourceNode = null;
         boolean primaryExcluded = false;

@@ -1,2 +1,0 @@
-            protected int|string|\Test2\Foo $|>MARK_OCCURRENCES:field2<|,
-            echo $|>MARK_OCCURRENCES:fiel^d2<|;

@@ -103,7 +103,12 @@ public final class PhpProjectConvertor implements ProjectConvertor {
         assert content != null;
         Object name = content.get("name"); // NOI18N
         if (name instanceof String) {
-            return (String) name;
+            String fullName = (String) name;
+            String[] parts = fullName.split("/", 2); // NOI18N
+            if (parts.length == 2) {
+                return parts[1];
+            }
+            return fullName;
         }
         return null;
     }

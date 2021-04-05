@@ -33,14 +33,6 @@ $greet = function($name) {
       printf("Hello %s\r\n", $name);
     };
 
-$lambda = function($param) use($parent) {
-    echo "$param\n";
-};
-
-$staticLambda = static function($param) use($parent) {
-    echo "$param\n";
-};
-
 
 ?>
 

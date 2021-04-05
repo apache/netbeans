@@ -58,6 +58,7 @@ public class PHPCodeCompletion262141UVSTest extends PHPCodeCompletionTestBase {
     }
 
     public void testUVSNestedStaticFieldAccess_04() throws Exception {
+        // no "class" magic constant
         checkCompletion("testfiles/completion/lib/php70/uniformVariableSyntax/testUVSNestedStaticFieldAccess.php", "test()::^$INSTANCE1::$INSTANCE2::MAX;", false);
     }
 

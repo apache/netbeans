@@ -19,8 +19,6 @@
 
 package org.netbeans.modules.php.editor.js;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import junit.framework.Test;
 import org.netbeans.api.html.lexer.HTMLTokenId;
 import org.netbeans.junit.NbModuleSuite;
@@ -29,9 +27,6 @@ import org.netbeans.modules.html.editor.lib.api.HtmlVersion;
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 import org.netbeans.modules.php.editor.PHPTestBase;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
-import org.netbeans.spi.queries.FileEncodingQueryImplementation;
-import org.openide.filesystems.FileObject;
-import org.openide.util.test.MockLookup;
 
 public class JsFormatterEmbeddedTest extends PHPTestBase {
 
@@ -63,13 +58,6 @@ public class JsFormatterEmbeddedTest extends PHPTestBase {
         } catch (IllegalStateException ise) {
             // Ignore -- we've already registered this either via layers or other means
         }
-
-        MockLookup.setInstances(new FileEncodingQueryImplementation() {
-            @Override
-            public Charset getEncoding(FileObject file) {
-                return StandardCharsets.UTF_8;
-            }
-        });
     }
 
     public void testEmbeddedSimple1() throws Exception {

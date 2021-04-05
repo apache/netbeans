@@ -23,7 +23,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import org.netbeans.modules.javascript2.model.ModelTestBase;
 
 /**
@@ -37,15 +36,12 @@ public class ExtModelTest extends ModelTestBase {
     }
 
     @Override
-    @SuppressWarnings("NestedAssignment")
     protected void setUp() throws Exception {
         super.setUp();
         File classManagerJs = new File(getDataDir(), "testfiles/completion/applyMethod/ClassManager.js");
         if(! classManagerJs.exists()) {
             URL source = new URL("https://cdnjs.cloudflare.com/ajax/libs/extjs/4.2.1/src/class/ClassManager.js");
-            URLConnection connection = source.openConnection();
-            connection.addRequestProperty("User-Agent", "NetBeans Unittesting");
-            try(InputStream is = connection.getInputStream();
+            try(InputStream is = source.openStream();
                 OutputStream os = new FileOutputStream(classManagerJs)) {
                 byte[] buffer = new byte[1024 * 10];
                 int read;

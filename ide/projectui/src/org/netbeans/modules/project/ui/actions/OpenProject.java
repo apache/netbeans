@@ -165,7 +165,6 @@ public class OpenProject extends BasicAction {
                             });
                             OpenProjectList.getDefault().open( 
                                 projectsArray,                    // Put the project into OpenProjectList
-                                opls.isTrustAndPrime(),
                                 opls.isOpenSubprojects(),         // And optionaly open subprojects
                                 true,                             // open asynchronously
                                 null);

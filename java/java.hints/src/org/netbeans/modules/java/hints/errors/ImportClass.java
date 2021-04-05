@@ -532,7 +532,7 @@ public final class ImportClass implements ErrorRule<Void>{
         
     }
     
-    public static final class FixImport extends FixBase {
+    static final class FixImport extends FixBase {
         private final @NullAllowed TreePathHandle replacePathHandle;
         private final @NullAllowed String suffix;
         private final boolean statik;
@@ -741,10 +741,5 @@ public final class ImportClass implements ErrorRule<Void>{
                 s.save();
             }
         }
-
-        public ElementHandle<Element> getToImport() {
-            return toImport;
-        }
-
     }
 }

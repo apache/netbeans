@@ -19,11 +19,10 @@
 package org.netbeans.modules.apisupport.project;
 
 import java.io.File;
-import junit.framework.Test;
+import static junit.framework.Assert.assertNotNull;
 import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
-import org.netbeans.junit.NbTestSuite;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.execution.ExecutorTask;
@@ -43,23 +42,6 @@ public class UseFxTest extends TestBase {
     private FileObject dir;
     public UseFxTest(String name) {
         super(name);
-    }
-    
-    public static Test suite() {
-        try {
-            Class.forName("javafx.application.Platform");
-            return new NbTestSuite(UseFxTest.class);
-        } catch (ClassNotFoundException ex) {
-            return new NbTestSuite(Skip.class);
-        }
-    }
-    public static class Skip extends TestBase {
-        public Skip(String name) {
-            super(name);
-        }
-        
-        public void testEmpty() {
-        }
     }
 
     @Override

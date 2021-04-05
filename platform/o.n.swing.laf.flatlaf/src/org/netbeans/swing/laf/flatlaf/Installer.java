@@ -18,7 +18,6 @@
  */
 package org.netbeans.swing.laf.flatlaf;
 
-import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.UIManager;
@@ -35,9 +34,6 @@ public class Installer extends ModuleInstall {
     public void validate() throws IllegalStateException {
         UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo(Bundle.LBL_FLATLAF_LIGHT(), FlatLightLaf.class.getName()));
         UIManager.installLookAndFeel(new UIManager.LookAndFeelInfo(Bundle.LBL_FLATLAF_DARK(), FlatDarkLaf.class.getName()));
-
-        // tell FlatLaf that it should look for .properties files in the given package
-        FlatLaf.registerCustomDefaultsSource("org.netbeans.swing.laf.flatlaf", getClass().getClassLoader());
     }
 
 }

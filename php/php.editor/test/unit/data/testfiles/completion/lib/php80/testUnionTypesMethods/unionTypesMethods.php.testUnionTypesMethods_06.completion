@@ -1,5 +1,0 @@
-Code completion result for source line:
-string|int|float|n|ull $param,
-(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-------------------------------------
-KEYWORD    null                                       null

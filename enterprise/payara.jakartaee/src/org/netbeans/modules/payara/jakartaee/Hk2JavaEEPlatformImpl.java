@@ -26,7 +26,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 import org.netbeans.modules.payara.tooling.server.config.JavaEEProfile;
 import org.netbeans.modules.payara.tooling.server.config.JavaSEPlatform;
 import org.netbeans.modules.payara.tooling.server.config.ModuleType;
@@ -43,8 +43,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.libraries.Library;
-import org.netbeans.modules.glassfish.javaee.Hk2JaxRpcStack;
-import org.netbeans.modules.glassfish.javaee.Hk2JaxWsStack;
 import org.netbeans.modules.payara.spi.PayaraModule;
 import org.netbeans.modules.payara.spi.ServerUtilities;
 import org.netbeans.modules.payara.tooling.data.PayaraServer;
@@ -66,13 +64,13 @@ import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
-
+    
 /**
  *
  * @author Ludo, Tomas Kraus
  */
 public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
-
+    
     /** Deployment manager. */
     private final Hk2DeploymentManager dm;
 
@@ -151,8 +149,8 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
         }
         return platforms;
     }
-
-
+            
+    
     /**
      * Map Payara tooling SDK JavaEE profiles to NetBeans JavaEE profiles.
      * <p/>
@@ -192,10 +190,6 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                 case v1_8_web: profiles[index++] = Profile.JAVA_EE_8_WEB;
                                break;
                 case v1_8:     profiles[index++] = Profile.JAVA_EE_8_FULL;
-                               break;
-                case v8_0_0_web: profiles[index++] = Profile.JAKARTA_EE_8_WEB;
-                               break;
-                case v8_0_0:     profiles[index++] = Profile.JAKARTA_EE_8_FULL;
                                break;
             }
         } else {
@@ -286,7 +280,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
     ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
     ////////////////////////////////////////////////////////////////////////////
-
+    
     /**
      * Creates an instance of Payara JavaEE platform.
      * <p/>
@@ -366,7 +360,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
     // Persistence provider strings
     private static final String PERSISTENCE_PROV_ECLIPSELINK = "org.eclipse.persistence.jpa.PersistenceProvider"; //NOI18N
 
-    // WEB SERVICES PROPERTIES
+    // WEB SERVICES PROPERTIES 
     // TODO - shall be removed and usages replaced by values from j2eeserver or websvc apis after api redesign
     private static final String TOOL_WSCOMPILE = "wscompile";
     private static final String TOOL_JSR109 = "jsr109";
@@ -391,9 +385,9 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
     private static final String GF_ACC_XML = "glassfish-acc.xml";
 
     /**
-     *
-     * @param toolName
-     * @return
+     * 
+     * @param toolName 
+     * @return 
      */
     @Override
     public boolean isToolSupported(String toolName) {
@@ -408,7 +402,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                 "org.apache.openjpa.persistence.PersistenceProviderImpl".equals(toolName)) { //NOI18N
             return true;
         }
-
+        
         if("defaultPersistenceProviderJavaEE5".equals(toolName)) {  //NOI18N
             return true;
         }
@@ -422,7 +416,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
         }
 
         File wsLib = null;
-
+        
         if (gfRootStr != null) {
             wsLib = ServerUtilities.getJarName(gfRootStr, "webservices(|-osgi).jar");
         }
@@ -463,14 +457,14 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                 return true;
             }
         }
-
-        return false;
+        
+        return false;     
     }
-
+    
     /**
-     *
-     * @param toolName
-     * @return
+     * 
+     * @param toolName 
+     * @return 
      */
     @Override
     public File[] getToolClasspathEntries(String toolName) {
@@ -532,7 +526,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
         } else {
             Logger.getLogger("payara-jakartaee").log(Level.INFO, "dm has no root???", new Exception());
         }
-
+        
         return new File[0];
     }
 
@@ -545,7 +539,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
     public Set<Profile> getSupportedProfiles() {
         return profilesSetFromArray(profiles);
     }
-
+    
     /**
      * Get supported JavaEE profiles.
      * <p/>
@@ -566,10 +560,10 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
         return moduleTypesSetFromArray(types);
     }
 
-
+    
     /**
-     *
-     * @return
+     * 
+     * @return 
      */
     @Override
     public java.io.File[] getPlatformRoots() {
@@ -594,26 +588,26 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
     public File getMiddlewareHome() {
         return getExistingFolder(dm.getProperties().getInstallRoot());
     }
-
+    
     /**
-     *
-     * @return
+     * 
+     * @return 
      */
     @Override
     public LibraryImplementation[] getLibraries() {
         addFcl();
         return libraries.clone();
     }
-
+    
     /**
-     *
-     * @return
+     * 
+     * @return 
      */
     @Override
     public java.awt.Image getIcon() {
         return ImageUtilities.loadImage("org/netbeans/modules/j2ee/hk2/resources/server.gif"); // NOI18N
     }
-
+    
     /**
      * Get Payara JavaEE platform display name.
      * <p/>
@@ -623,7 +617,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
     public String getDisplayName() {
         return displayName;
     }
-
+    
     /**
      * Get supported JavaSE platforms.
      * <p/>
@@ -633,7 +627,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
     public Set getSupportedJavaPlatformVersions() {
         return platformsSetFromArray(platforms);
     }
-
+    
     /**
      * Get default Payara JavaSE platform.
      * <p/>
@@ -645,9 +639,9 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
     public JavaPlatform getJavaPlatform() {
         return null;
     }
-
+    
     /**
-     *
+     * 
      */
     public void notifyLibrariesChanged() {
         initLibraries();
@@ -655,7 +649,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
 
     private static final RequestProcessor libInitThread =
             new RequestProcessor("init libs -- Hk2JavaEEPlatformImpl");
-
+    
      private void initLibraries() {
         libInitThread.post(new Runnable() {
 
@@ -696,15 +690,15 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
 
     /**
      * Get Payara version.
-     * Returns {@see PayaraPlatformVersionAPI} for current Payara server instance.
+     * Returns {@see PayaraVersion} for current Payara server instance.
      * <p/>
      * @return Payara version.
      */
-    private PayaraPlatformVersionAPI getPFVersion() {
-        PayaraPlatformVersionAPI version = null;
+    private PayaraVersion getPFVersion() {
+        PayaraVersion version = null;
         try {
             version = dm
-                    .getCommonServerSupport().getInstance().getPlatformVersion();
+                    .getCommonServerSupport().getInstance().getVersion();
         } catch (NullPointerException npe) {
             Logger.getLogger("payara-jakartaee").log(Level.INFO,
                     "Caught NullPointerException in Hk2JavaEEPlatformImpl "
@@ -721,9 +715,10 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
      *         for Payara.
      */
     private String getAccConfigFile() {
-        final PayaraPlatformVersionAPI version = getPFVersion();
+        final PayaraVersion version = getPFVersion();
         final String accConfigFile;
-        if (version != null && version.isMinimumSupportedVersion()) {
+        if (version != null
+                && version.ordinal() >= PayaraVersion.PF_4_1_144.ordinal()) {
             accConfigFile = GF_ACC_XML;
         } else {
             accConfigFile = SUN_ACC_XML;
@@ -736,7 +731,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
         sb.append(accConfigFile);
         return sb.toString();
     }
-
+    
     @Override
     public String getToolProperty(String toolName, String propertyName) {
         if (J2eePlatform.TOOL_APP_CLIENT_RUNTIME.equals(toolName)) {
@@ -803,7 +798,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
     }
 
     private class JaxRsStackSupportImpl implements JaxRsStackSupportImplementation {
-
+        
         // Bug# 233840 - Fixing to avoid AssertionError and provide library
         // for GF4. But JAR names remain hardcoded. This shall be rewritten
         // to use Hk2LibraryProvider!
@@ -827,16 +822,15 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
             }
             // TODO: Rewrite to use Hk2LibraryProvider#getJaxRsName()
             // or getJaxRsClassPathURLs()
-            final PayaraPlatformVersionAPI version = getPFVersion();
+            final PayaraVersion version = getPFVersion();
             try {
                 if (version == null) {
                     return false;
-                } else if (version.getMajor() == 4) {
-                    final File javaxWsRs = ServerUtilities.getJarName(
-                            dm.getProperties().getPayaraRoot(),
-                            "javax.ws.rs-api.jar" // NOI18N
-                    );
-                    if (javaxWsRs == null || !javaxWsRs.exists()) {
+                }
+                else if (version.equalsMajorMinor(PayaraVersion.PF_4_1_144)) {
+                    final File javaxWsRs = ServerUtilities.getJarName(dm.getProperties().
+                            getPayaraRoot(), "javax.ws.rs-api.jar"); // NOI18N
+                    if ( javaxWsRs== null || !javaxWsRs.exists()){
                         return false;
                     }
                     return addJars(project, Collections.singletonList(
@@ -877,24 +871,24 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                 return addJars( project , urls );
             }*/
         }
-
+        
         @Override
         public void removeJaxRsLibraries(final Project project) {
             final Library library = libraryProvider.getJerseyLibrary();
             final FileObject sourceRoot = getSourceRoot(project);
             if ( sourceRoot != null){
-                final String[] classPathTypes = new String[]{ ClassPath.COMPILE ,
+                final String[] classPathTypes = new String[]{ ClassPath.COMPILE , 
                         JavaClassPathConstants.COMPILE_ONLY };
                 for (String type : classPathTypes) {
                     try {
                         ProjectClassPathModifier.removeLibraries( new Library[]{
                                 library} ,sourceRoot, type);
-                    }
+                    }    
                     catch (UnsupportedOperationException | IOException ex) {
                         Logger.getLogger(JaxRsStackSupportImpl.class.getName()).
                                 log (Level.INFO, null , ex );
                     }
-                }
+                }     
             }
             /*List<URL> urls = getJerseyLibraryURLs();
             if ( urls.sdkSize() >0 ){
@@ -907,9 +901,9 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                 String[] classPathTypes = new String[]{ ClassPath.COMPILE , ClassPath.EXECUTE };
                 for (String type : classPathTypes) {
                     try {
-                        ProjectClassPathModifier.removeRoots(urls.toArray(
+                        ProjectClassPathModifier.removeRoots(urls.toArray( 
                             new URL[ urls.sdkSize()]), sourceRoot, type);
-                    }
+                    }    
                     catch(UnsupportedOperationException ex) {
                         Logger.getLogger( JaxRsStackSupportImpl.class.getName() ).
                                 log (Level.INFO, null , ex );
@@ -918,14 +912,14 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                         Logger.getLogger( JaxRsStackSupportImpl.class.getName() ).
                                 log(Level.INFO, null , e );
                     }
-                }
+                }     
             }*/
         }
-
+        
         @Override
         public void configureCustomJersey( Project project ){
         }
-
+        
         /* (non-Javadoc)
          * @see org.netbeans.modules.javaee.specs.support.spi.JaxRsStackSupportImplementation#isBundled(java.lang.String)
          */
@@ -953,13 +947,13 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
             }
             return sourceGroups[0].getRootFolder();
         }
-
+        
         private boolean hasJee6Profile(){
             final Set<Profile> profiles = getSupportedProfiles();
-            return profiles.contains(Profile.JAVA_EE_6_FULL) ||
+            return profiles.contains(Profile.JAVA_EE_6_FULL) || 
                 profiles.contains(Profile.JAVA_EE_6_WEB) ;
         }
-
+        
         private void addURL(final Collection<URL> urls, final File file ){
             if ( file == null || !file.exists()) {
                 return;
@@ -970,7 +964,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                 // ignore the file
             }
         }
-
+        
         private boolean addJars(final Project project, Collection<URL> jars ){
             final List<URL> urls = new ArrayList<>();
             for (URL url : jars) {
@@ -992,25 +986,25 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                 else {
                     classPathType = ClassPath.COMPILE;
                 }
-                ProjectClassPathModifier.addRoots(urls.toArray( new URL[ urls.size()]),
+                ProjectClassPathModifier.addRoots(urls.toArray( new URL[ urls.size()]), 
                         sourceRoot, classPathType );
-            }
+            } 
             catch (UnsupportedOperationException | IOException ex) {
                 return false;
             }
             return true;
         }
-
+        
         /**
          * Get Payara version from instance stored in deployment manager.
          * <p/>
          * @return Payara version from instance stored in deployment manager.
          */
-        private PayaraPlatformVersionAPI getPFVersion() {
-            PayaraPlatformVersionAPI version = null;
+        private PayaraVersion getPFVersion() {
+            PayaraVersion version = null;
             try {
                 version = dm
-                        .getCommonServerSupport().getInstance().getPlatformVersion();
+                        .getCommonServerSupport().getInstance().getVersion();
             } catch (NullPointerException npe) {
                 Logger.getLogger("payara-jakartaee").log(Level.INFO,
                         "Caught NullPointerException in Hk2JavaEEPlatformImpl "

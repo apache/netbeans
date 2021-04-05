@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.netbeans.modules.php.editor.model.nodes;
 
 import java.util.ArrayList;
@@ -24,12 +25,13 @@ import org.netbeans.modules.php.editor.model.nodes.ASTNodeInfo.Kind;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
+import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
+import org.netbeans.modules.php.editor.parser.astnodes.UnaryOperation;
 
 /**
  * @author Radek Matous
  */
 public class ConstantDeclarationInfo extends ClassConstantDeclarationInfo {
-
     ConstantDeclarationInfo(final Identifier node, final String value, final ConstantDeclaration constantDeclaration) {
         super(node, value, constantDeclaration);
     }
@@ -40,9 +42,17 @@ public class ConstantDeclarationInfo extends ClassConstantDeclarationInfo {
         for (Identifier identifier : names) {
             String value = null;
             for (final Expression expression : constantDeclaration.getInitializers()) {
-                value = getConstantValue(expression);
-                if (value != null) {
+                if (expression instanceof Scalar) {
+                    value = ((Scalar) expression).getStringValue();
                     break;
+                }
+                if (expression instanceof UnaryOperation) {
+                    UnaryOperation up = (UnaryOperation) expression;
+                    if (up.getOperator() == UnaryOperation.Operator.MINUS
+                            && up.getExpression() instanceof Scalar) {
+                        value = "-" + ((Scalar) up.getExpression()).getStringValue();
+                        break;
+                    }
                 }
             }
             retval.add(new ConstantDeclarationInfo(identifier, value, constantDeclaration));
@@ -54,5 +64,4 @@ public class ConstantDeclarationInfo extends ClassConstantDeclarationInfo {
     public Kind getKind() {
         return Kind.CONSTANT;
     }
-
 }

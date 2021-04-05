@@ -685,15 +685,11 @@ public class CommandLineOutputHandler extends AbstractOutputHandler {
 
         public void stopInput() {
             stopIn = true;
-            // Do not close synchronously as BufferedReaders waiting on input
-            // would block. See https://bugs.openjdk.java.net/browse/JDK-4859836
-            PROCESSOR.post(() -> {
-                try {
-                    inputOutput.getIn().close();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            });
+            try {
+                inputOutput.getIn().close();
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
 
         public @Override void run() {

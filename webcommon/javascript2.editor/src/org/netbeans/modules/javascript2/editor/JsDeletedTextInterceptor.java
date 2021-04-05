@@ -19,13 +19,12 @@
 package org.netbeans.modules.javascript2.editor;
 
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.EditorOptions;
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 import org.netbeans.modules.javascript2.lexer.api.LexUtilities;
@@ -78,8 +77,7 @@ public class JsDeletedTextInterceptor implements DeletedTextInterceptor {
 
     @Override
     public void remove(Context context) throws BadLocationException {
-        // Can be replaced by LineDocument, except perhaps the getChars(), which is optimized.
-        Document doc = context.getDocument();
+        BaseDocument doc = (BaseDocument) context.getDocument();
 
         int dotPos = context.getOffset() - 1;
         // FIXME
@@ -150,9 +148,9 @@ public class JsDeletedTextInterceptor implements DeletedTextInterceptor {
             }
         case '\"': {
             if (isSmartQuotingEnabled()) {
-                CharSequence match = DocumentUtilities.getText(doc, dotPos, 1);
+                char[] match = doc.getChars(dotPos, 1);
 
-                if ((match != null) && (match.length() > 0) && (match.charAt(0) == ch)) {
+                if ((match != null) && (match[0] == ch)) {
                     doc.remove(dotPos, 1);
                 }
             }

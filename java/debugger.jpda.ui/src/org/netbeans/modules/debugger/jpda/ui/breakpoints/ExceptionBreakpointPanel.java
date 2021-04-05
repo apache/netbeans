@@ -64,7 +64,7 @@ public class ExceptionBreakpointPanel extends JPanel implements Controller, org.
         }
         ExceptionBreakpoint mb = ExceptionBreakpoint.create (
             className,
-            ExceptionBreakpoint.TYPE_EXCEPTION_CAUGHT_UNCAUGHT
+            ExceptionBreakpoint.TYPE_EXCEPTION_CATCHED_UNCATCHED
         );
         mb.setPrintText (
             NbBundle.getBundle (ExceptionBreakpointPanel.class).getString 
@@ -101,13 +101,13 @@ public class ExceptionBreakpointPanel extends JPanel implements Controller, org.
         cbBreakpointType.addItem (bundle.getString("LBL_Exception_Breakpoint_Type_Uncatched"));
         cbBreakpointType.addItem (bundle.getString("LBL_Exception_Breakpoint_Type_Catched_or_Uncatched"));
         switch (b.getCatchType ()) {
-            case ExceptionBreakpoint.TYPE_EXCEPTION_CAUGHT:
+            case ExceptionBreakpoint.TYPE_EXCEPTION_CATCHED:
                 cbBreakpointType.setSelectedIndex (0);
                 break;
-            case ExceptionBreakpoint.TYPE_EXCEPTION_UNCAUGHT:
+            case ExceptionBreakpoint.TYPE_EXCEPTION_UNCATCHED:
                 cbBreakpointType.setSelectedIndex (1);
                 break;
-            case ExceptionBreakpoint.TYPE_EXCEPTION_CAUGHT_UNCAUGHT:
+            case ExceptionBreakpoint.TYPE_EXCEPTION_CATCHED_UNCATCHED:
                 cbBreakpointType.setSelectedIndex (2);
                 break;
         }
@@ -247,13 +247,13 @@ public class ExceptionBreakpointPanel extends JPanel implements Controller, org.
         
         switch (cbBreakpointType.getSelectedIndex ()) {
             case 0:
-                breakpoint.setCatchType (ExceptionBreakpoint.TYPE_EXCEPTION_CAUGHT);
+                breakpoint.setCatchType (ExceptionBreakpoint.TYPE_EXCEPTION_CATCHED);
                 break;
             case 1:
-                breakpoint.setCatchType (ExceptionBreakpoint.TYPE_EXCEPTION_UNCAUGHT);
+                breakpoint.setCatchType (ExceptionBreakpoint.TYPE_EXCEPTION_UNCATCHED);
                 break;
             case 2:
-                breakpoint.setCatchType (ExceptionBreakpoint.TYPE_EXCEPTION_CAUGHT_UNCAUGHT);
+                breakpoint.setCatchType (ExceptionBreakpoint.TYPE_EXCEPTION_CATCHED_UNCATCHED);
                 break;
         }
         breakpoint.setClassFilters(conditionsPanel.getClassMatchFilter());

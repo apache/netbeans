@@ -81,8 +81,7 @@ class AutoUpdateCatalogParser extends DefaultHandler {
     
     private static enum ELEMENTS {
         module_updates, module_group, notification, module, description,
-        module_notification, external_package, manifest, l10n, license,
-        message_digest, UNKNOWN;
+        module_notification, external_package, manifest, l10n, license, UNKNOWN;
 
         private static ELEMENTS valueOfOrUnknown(String qName) {
             try {
@@ -241,8 +240,6 @@ class AutoUpdateCatalogParser extends DefaultHandler {
                 break;
             case manifest :
                 break;
-            case message_digest:
-                break;
             case description :
                 ERR.info ("Not supported yet.");
                 break;
@@ -350,8 +347,6 @@ class AutoUpdateCatalogParser extends DefaultHandler {
                 // put module into UpdateItems
                 items.put (desc.getId (), m);
                 
-                break;
-            case message_digest:
                 break;
             case description :
                 ERR.info ("Not supported yet.");

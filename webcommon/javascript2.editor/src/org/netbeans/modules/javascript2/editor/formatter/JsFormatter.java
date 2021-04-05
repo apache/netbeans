@@ -34,14 +34,13 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.api.editor.document.AtomicLockDocument;
-import org.netbeans.api.editor.document.LineDocument;
-import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.editor.BaseDocument;
+import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.Formatter;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.GsfUtilities;
@@ -103,11 +102,11 @@ public class JsFormatter implements Formatter {
     public void reformat(final Context context, final ParserResult compilationInfo) {
         processed.clear();
         lastOffsetDiff = 0;
-        final Document doc = context.document();
+        final BaseDocument doc = (BaseDocument) context.document();
         final boolean templateEdit = doc.getProperty(CT_HANDLER_DOC_PROPERTY) != null;
-        AtomicLockDocument ald = LineDocumentUtils.as(doc, AtomicLockDocument.class);
-        
-        Runnable r = new Runnable() {
+
+        doc.runAtomic(new Runnable() {
+
             @Override
             public void run() {
                 long startTime = System.nanoTime();
@@ -338,13 +337,7 @@ public class JsFormatter implements Formatter {
                         initialIndent, continuationIndent, continuations, 0);
                 LOGGER.log(Level.FINE, "Formatting changes: {0} ms", (System.nanoTime() - startTime) / 1000000);
             }
-        };
-        if (ald == null) {
-            r.run();
-        } else {
-            // review: shouldn't be runAsUser ?
-            ald.runAtomic(r);
-        }
+        });
     }
 
     private void indentLine(@NonNull FormatToken token, @NonNull FormatContext formatContext, @NonNull CodeStyle.Holder codeStyle,
@@ -1228,7 +1221,7 @@ public class JsFormatter implements Formatter {
     }
 
     // FIXME can we movet his to FormatContext ?
-    private Indentation checkIndentation(Document doc, FormatToken token, FormatToken indentationEnd,
+    private Indentation checkIndentation(BaseDocument doc, FormatToken token, FormatToken indentationEnd,
             FormatContext formatContext, Context context, int indentationSize) {
 
         assert indentationEnd != null && !indentationEnd.isVirtual() : indentationEnd;
@@ -1760,7 +1753,7 @@ public class JsFormatter implements Formatter {
         return false;
     }
 
-    private int getFormatStableStart(Document doc, Language<JsTokenId> language,
+    private int getFormatStableStart(BaseDocument doc, Language<JsTokenId> language,
             int offset, int startOffset, boolean embedded) {
 
         TokenSequence<? extends JsTokenId> ts = LexUtilities.getTokenSequence(
@@ -1800,34 +1793,29 @@ public class JsFormatter implements Formatter {
         } while (ts.movePrevious());
 
         if (embedded && !ts.movePrevious()) {
-            LineDocument ld = LineDocumentUtils.as(doc, LineDocument.class);
-            if (ld != null) {
-                // I may have moved to the front of an embedded JavaScript area, e.g. in
-                // an attribute or in a <script> tag. If this is the end of the line,
-                // go to the next line instead since the reindent code will go to the beginning
-                // of the stable formatting start.
-                int sequenceBegin = ts.offset();
-                try {
-                    int lineTextEnd = LineDocumentUtils.getLineLastNonWhitespace(ld, sequenceBegin);
-                    if (lineTextEnd == -1 || sequenceBegin > lineTextEnd) {
-                        return Math.min(doc.getLength(), LineDocumentUtils.getLineEnd(ld, sequenceBegin) + 1);
-                    }
-                } catch (BadLocationException ex) {
-                    LOGGER.log(Level.INFO, null, ex);
+            // I may have moved to the front of an embedded JavaScript area, e.g. in
+            // an attribute or in a <script> tag. If this is the end of the line,
+            // go to the next line instead since the reindent code will go to the beginning
+            // of the stable formatting start.
+            int sequenceBegin = ts.offset();
+            try {
+                int lineTextEnd = Utilities.getRowLastNonWhite(doc, sequenceBegin);
+                if (lineTextEnd == -1 || sequenceBegin > lineTextEnd) {
+                    return Math.min(doc.getLength(), Utilities.getRowEnd(doc, sequenceBegin) + 1);
                 }
+
+            } catch (BadLocationException ex) {
+                LOGGER.log(Level.INFO, null, ex);
             }
         }
 
         return ts.offset();
     }
 
-    private boolean isContinuation(Document doc, int offset, int bracketBalance,
+    private boolean isContinuation(BaseDocument doc, int offset, int bracketBalance,
             boolean continued, int bracketBalanceDelta, IndentContext.BlockDescription block) throws BadLocationException {
-        LineDocument ld = LineDocumentUtils.as(doc, LineDocument.class);
-        if (ld == null) {
-            return false;
-        }
-        offset = LineDocumentUtils.getLineLastNonWhitespace(ld, offset);
+
+        offset = Utilities.getRowLastNonWhite(doc, offset);
         if (offset == -1) {
             return false;
         }
@@ -1918,18 +1906,15 @@ public class JsFormatter implements Formatter {
         int continuationIndent = CodeStyle.get(indentContext).getContinuationIndentSize();
 
         try {
-            final Document doc = document; // document.getText(0, document.getLength())
-            LineDocument ld = LineDocumentUtils.as(doc, LineDocument.class);
-            if (ld == null) {
-                return;
-            }
-            startOffset = LineDocumentUtils.getLineStart(ld, startOffset);
-            int endLineOffset = LineDocumentUtils.getLineStart(ld, endOffset);
+            final BaseDocument doc = (BaseDocument)document; // document.getText(0, document.getLength())
+
+            startOffset = Utilities.getRowStart(doc, startOffset);
+            int endLineOffset = Utilities.getRowStart(doc, endOffset);
             final boolean indentOnly = (startOffset == endLineOffset)
                     && (endOffset == context.caretOffset() || startOffset == context.caretOffset())
-                    && (LineDocumentUtils.isLineEmpty(ld, startOffset)
-                    || LineDocumentUtils.isLineWhitespace(ld, startOffset)
-                    || LineDocumentUtils.getNextNonWhitespace(ld, startOffset) == context.caretOffset());
+                    && (Utilities.isRowEmpty(doc, startOffset)
+                    || Utilities.isRowWhite(doc, startOffset)
+                    || Utilities.getFirstNonWhiteFwd(doc, startOffset) == context.caretOffset());
             if (indentOnly && indentContext.isEmbedded()) {
                 // Make sure we're not messing with indentation in HTML
                 Token<? extends JsTokenId> token = LexUtilities.getToken(doc, startOffset, language);
@@ -1947,7 +1932,7 @@ public class JsFormatter implements Formatter {
             int initialOffset = 0;
             int initialIndent = 0;
             if (startOffset > 0) {
-                int prevOffset = LineDocumentUtils.getLineStart(ld, startOffset-1);
+                int prevOffset = Utilities.getRowStart(doc, startOffset-1);
                 initialOffset = getFormatStableStart(doc, language, prevOffset, startOffset, indentContext.isEmbedded());
                 initialIndent = GsfUtilities.getLineIndent(doc, initialOffset);
             }
@@ -1971,8 +1956,7 @@ public class JsFormatter implements Formatter {
             computeIndents(indentContext, initialIndent, indentationSize, continuationIndent, initialOffset, endOffset,
                     indentEmptyLines, includeEnd, indentOnly);
 
-            AtomicLockDocument ald = LineDocumentUtils.asRequired(doc, AtomicLockDocument.class);
-            ald.runAtomic(new Runnable() {
+            doc.runAtomic(new Runnable() {
                 public void run() {
                     try {
                         List<IndentContext.Indentation> indents = indentContext.getIndentations();
@@ -2007,7 +1991,7 @@ public class JsFormatter implements Formatter {
                                 // remove blank lines condition completely?
                                 if (actualPrevIndent != prevIndent) {
                                     // For blank lines, indentation may be 0, so don't adjust in that case
-                                    if (indentOnly || !(LineDocumentUtils.isLineEmpty(ld, prevOffset) || LineDocumentUtils.isLineWhitespace(ld, prevOffset))) {
+                                    if (indentOnly || !(Utilities.isRowEmpty(doc, prevOffset) || Utilities.isRowWhite(doc, prevOffset))) {
                                         indent = actualPrevIndent + (indent-prevIndent);
                                     }
                                 }
@@ -2035,11 +2019,7 @@ public class JsFormatter implements Formatter {
     private void computeIndents(IndentContext context, int initialIndent, int indentSize, int continuationIndent,
             int startOffset, int endOffset, boolean indentEmptyLines, boolean includeEnd, boolean indentOnly) {
 
-        Document doc = context.getDocument();
-        LineDocument ld = LineDocumentUtils.as(doc, LineDocument.class);
-        if (ld == null) {
-            return;
-        }
+        BaseDocument doc = context.getDocument();
         // PENDING:
         // The reformatting APIs in NetBeans should be lexer based. They are still
         // based on the old TokenID apis. Once we get a lexer version, convert this over.
@@ -2059,7 +2039,7 @@ public class JsFormatter implements Formatter {
             // This can be used either to reformat the buffer, or indent a new line.
 
             // State:
-            int offset = LineDocumentUtils.getLineStart(ld, startOffset); // The line's offset
+            int offset = Utilities.getRowStart(doc, startOffset); // The line's offset
             int end = endOffset;
 
 
@@ -2109,7 +2089,7 @@ public class JsFormatter implements Formatter {
 
 
                 int lineType = IN_CODE;
-                int pos = LineDocumentUtils.getLineFirstNonWhitespace(ld, offset);
+                int pos = Utilities.getRowFirstNonWhite(doc, offset);
                 TokenSequence<?extends JsTokenId> ts = null;
 
                 if (pos != -1) {
@@ -2199,7 +2179,7 @@ public class JsFormatter implements Formatter {
                     indent = 0;
                 }
 
-                int lineBegin = LineDocumentUtils.getLineFirstNonWhitespace(ld, offset);
+                int lineBegin = Utilities.getRowFirstNonWhite(doc, offset);
 
                 // Insert whitespace on empty lines too -- needed for abbreviations expansion
                 if (lineBegin != -1 || indentEmptyLines) {
@@ -2208,7 +2188,7 @@ public class JsFormatter implements Formatter {
                     context.addIndentation(new IndentContext.Indentation(offset, indent, continued));
                 }
 
-                int endOfLine = LineDocumentUtils.getLineEnd(ld, offset) + 1;
+                int endOfLine = Utilities.getRowEnd(doc, offset) + 1;
 
                 if (lineBegin != -1) {
                     balance += getTokenBalance(context, ts, lineBegin, endOfLine, true, indentOnly);
@@ -2226,12 +2206,15 @@ public class JsFormatter implements Formatter {
 
     private int getTokenBalance(IndentContext context, TokenSequence<? extends JsTokenId> ts, int begin, int end, boolean includeKeywords, boolean indentOnly) {
         int balance = 0;
-        Document doc = context.getDocument();
+        BaseDocument doc = context.getDocument();
 
         if (ts == null) {
-            LineDocument ld = LineDocumentUtils.as(doc, LineDocument.class);
-            // remember indent of previous html tag
-            context.setEmbeddedIndent(GsfUtilities.getLineIndent(doc, begin));
+            try {
+                // remember indent of previous html tag
+                context.setEmbeddedIndent(Utilities.getRowIndent(doc, begin));
+            } catch (BadLocationException ex) {
+                Exceptions.printStackTrace(ex);
+            }
             return 0;
         }
 
@@ -2280,8 +2263,7 @@ public class JsFormatter implements Formatter {
 
     private int getTokenBalanceDelta(IndentContext context, JsTokenId id, TokenSequence<? extends JsTokenId> ts, boolean indentOnly) {
         try {
-            Document doc = context.getDocument();
-            LineDocument ld = LineDocumentUtils.asRequired(doc, LineDocument.class);
+            BaseDocument doc = context.getDocument();
             OffsetRange range = OffsetRange.NONE;
             if (id == JsTokenId.BRACKET_LEFT_BRACKET) {
                 // block with braces, just record it to stack and return 1
@@ -2359,7 +2341,7 @@ public class JsFormatter implements Formatter {
                 int delta = -1;
                 IndentContext.BlockDescription lastPop = context.getBlocks().empty() ? null : context.getBlocks().pop();
                 if (lastPop != null && lastPop.getRange().getStart() <= (doc.getLength() + 1)
-                        && LineDocumentUtils.getLineIndex(ld, lastPop.getRange().getStart()) != LineDocumentUtils.getLineIndex(ld, ts.offset())) {
+                        && Utilities.getLineOffset(doc, lastPop.getRange().getStart()) != Utilities.getLineOffset(doc, ts.offset())) {
                     int blocks = 0;
                     while (!context.getBlocks().empty() && context.getBlocks().peek().isBraceless()) {
                         context.getBlocks().pop();
@@ -2407,8 +2389,8 @@ public class JsFormatter implements Formatter {
                             inner = LexUtilities.getPositionedSequence(doc, ts.offset(), language);
                             prevToken = LexUtilities.findPrevious(inner, Arrays.asList(JsTokenId.WHITESPACE, JsTokenId.EOL));
 
-                            int beginLine = LineDocumentUtils.getLineIndex(ld, offset);
-                            int eolLine = LineDocumentUtils.getLineIndex(ld, ts.offset());
+                            int beginLine = Utilities.getLineOffset(doc, offset);
+                            int eolLine = Utilities.getLineOffset(doc, ts.offset());
 
                             // we need to take care of case like this:
                             // case 'a':
@@ -2446,7 +2428,7 @@ public class JsFormatter implements Formatter {
                                     }
                                 }
                             } else {
-                                int commentLine = LineDocumentUtils.getLineIndex(ld, inner.offset());
+                                int commentLine = Utilities.getLineOffset(doc, inner.offset());
                                 if (beginLine != eolLine && commentLine == beginLine) {
                                     return -1;
                                 }
@@ -2466,8 +2448,8 @@ public class JsFormatter implements Formatter {
                                 return 1;
                             }
                             // we are in the braceless block statement
-                            int stackEndLine = LineDocumentUtils.getLineIndex(ld, stackOffset.getEnd());
-                            int offsetLine = LineDocumentUtils.getLineIndex(ld, ts.offset());
+                            int stackEndLine = Utilities.getLineOffset(doc, stackOffset.getEnd());
+                            int offsetLine = Utilities.getLineOffset(doc, ts.offset());
                             if (stackEndLine == offsetLine) {
                                 // if we are at the last line of braceless block statement
                                 // increse indent by 1
@@ -2493,12 +2475,8 @@ public class JsFormatter implements Formatter {
     }
 
     private int isEndIndent(IndentContext context, int offset) throws BadLocationException {
-        Document doc = context.getDocument();
-        LineDocument ld = LineDocumentUtils.as(doc, LineDocument.class);
-        if (ld == null) {
-            return 0;
-        }
-        int lineBegin = LineDocumentUtils.getLineFirstNonWhitespace(ld, offset);
+        BaseDocument doc = context.getDocument();
+        int lineBegin = Utilities.getRowFirstNonWhite(doc, offset);
 
         if (lineBegin != -1) {
             Token<?extends JsTokenId> token = getFirstToken(context, offset);
@@ -2519,7 +2497,7 @@ public class JsFormatter implements Formatter {
                 // Check if there are multiple end markers here... if so increase indent level.
                 // This should really do an iteration... for now just handling the most common
                 // scenario in JavaScript where we have }) in object literals
-                int lineEnd = LineDocumentUtils.getLineEnd(ld, offset);
+                int lineEnd = Utilities.getRowEnd(doc, offset);
                 int newOffset = offset;
                 while (newOffset < lineEnd && token != null) {
                     newOffset = newOffset + token.length();
@@ -2544,12 +2522,9 @@ public class JsFormatter implements Formatter {
     }
 
     private Token<? extends JsTokenId> getFirstToken(IndentContext context, int offset) throws BadLocationException {
-        Document doc = context.getDocument();
-        LineDocument ld = LineDocumentUtils.as(doc, LineDocument.class);
-        if (ld == null) {
-            return null;
-        }
-        int lineBegin = LineDocumentUtils.getLineFirstNonWhitespace(ld, offset);
+        BaseDocument doc = context.getDocument();
+        int lineBegin = Utilities.getRowFirstNonWhite(doc, offset);
+
         if (lineBegin != -1) {
             if (context.isEmbedded()) {
                 TokenSequence<? extends JsTokenId> ts = LexUtilities.getTokenSequence(

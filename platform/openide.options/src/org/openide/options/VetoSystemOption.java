@@ -84,14 +84,14 @@ public abstract class VetoSystemOption extends SystemOption {
     throws PropertyVetoException {
         PropertyChangeEvent ev = new PropertyChangeEvent(this, name, oldValue, newValue);
 
-        Iterator<VetoableChangeListener> en;
+        Iterator en;
 
         synchronized (getLock()) {
-            en = ((HashSet<VetoableChangeListener>)getVeto().clone()).iterator();
+            en = ((HashSet) getVeto().clone()).iterator();
         }
 
         while (en.hasNext()) {
-            en.next().vetoableChange(ev);
+            ((VetoableChangeListener) en.next()).vetoableChange(ev);
         }
     }
 }

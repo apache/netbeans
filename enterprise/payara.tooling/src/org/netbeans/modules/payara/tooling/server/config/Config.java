@@ -19,8 +19,6 @@
 package org.netbeans.modules.payara.tooling.server.config;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 
 /**
@@ -35,54 +33,40 @@ public class Config {
     ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
     ////////////////////////////////////////////////////////////////////////////
+
     /**
-     * Class used to pass library builder configuration for next (newer) Payara
-     * versions to library builder configuration constructor.
+     * Class used to pass library builder configuration for next (newer)
+     * Payara versions to library builder configuration constructor.
      * <p/>
-     * Contains pair of Payara version and related libraries configuration file
-     * to define configuration file change points in version sequence.
+     * Contains pair of Payara version and related libraries configuration
+     * file to define configuration file change points in version sequence.
      */
     public static class Next {
 
         ////////////////////////////////////////////////////////////////////////
         // Instance attributes                                                //
         ////////////////////////////////////////////////////////////////////////
-        /**
-         * Libraries XML configuration file.
-         */
+
+        /** Libraries XML configuration file. */
         URL configFile;
 
-        /**
-         * Payara version.
-         */
-        short majorVersion;
+        /** Payara version. */
+        PayaraVersion version;
 
         ////////////////////////////////////////////////////////////////////////
         // Constructors                                                       //
         ////////////////////////////////////////////////////////////////////////
-        /**
-         * Creates an instance of libraries configuration for given version.
-         * <p/>
-         * @param version Payara Server version.
-         * @param configFile Libraries XML configuration file associated to
-         * given version.
-         */
-        @Deprecated
-        public Next(PayaraVersion version, URL configFile) {
-            this.configFile = configFile;
-            this.majorVersion = version.getMajor();
-        }
 
         /**
          * Creates an instance of libraries configuration for given version.
          * <p/>
-         * @param majorVersion Payara Server major version.
-         * @param configFile Libraries XML configuration file associated to
-         * given version.
+         * @param version        Payara version.
+         * @param configFile     Libraries XML configuration file associated
+         *                       to given version.
          */
-        public Next(short majorVersion, URL configFile) {
+        public Next(PayaraVersion version, URL configFile) {
             this.configFile = configFile;
-            this.majorVersion = majorVersion;
+            this.version = version;
         }
 
     }
@@ -90,19 +74,13 @@ public class Config {
     ////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                //
     ////////////////////////////////////////////////////////////////////////
-    /**
-     * Configuration files.
-     */
-    final Map<Short, URL> libraryConfigFiles = new HashMap<>();
-    
-    
+
     /** Configuration files. */
-    @Deprecated
     final URL[] configFiles;
 
     /** Version to configuration file mapping table. */
-    @Deprecated
     final int[] index;
+
     
     /**
      * Creates an instance of library builder configuration.
@@ -112,7 +90,6 @@ public class Config {
      *                      provided version. Versions must be passed
      *                      in ascending order.
      */
-    @Deprecated
     public Config(URL defaultConfig,
             Next... nextConfig) {
         int indexSize
@@ -126,26 +103,12 @@ public class Config {
         for (PayaraVersion version : PayaraVersion.values()) {
             int versionIndex = version.ordinal();
             if (config != null
-                    && config.majorVersion <= version.getMajor()) {
+                    && config.version.ordinal() <= version.ordinal()) {
                 configFiles[++i] = config.configFile;
                 config = i < nextConfig.length
                         ? nextConfig[i] : null;
             }
             index[versionIndex] = i;
-        }
-    }
-
-    /**
-     * Creates an instance of library builder configuration.
-     * <p/>
-     * @param nextConfig Next libraries configuration file(s) starting from
-     * provided version. Major versions must be passed in ascending order.
-     */
-    public Config(Next... nextConfig) {
-        configFiles = null;
-        index = null;
-        for (Next next : nextConfig) {
-            libraryConfigFiles.put(next.majorVersion, next.configFile);
         }
     }
 

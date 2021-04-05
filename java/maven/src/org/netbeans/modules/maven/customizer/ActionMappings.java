@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.maven.customizer;
 
-import org.netbeans.modules.maven.runjar.PropertySplitter;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;

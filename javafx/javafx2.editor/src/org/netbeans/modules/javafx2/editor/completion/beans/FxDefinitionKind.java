@@ -48,11 +48,6 @@ public enum FxDefinitionKind {
     LIST,
 
     /**
-     * Readonly/immutable object, type is getter return type.
-     */
-    GETTER,
-
-    /**
      * Attached property
      */
     ATTACHED;

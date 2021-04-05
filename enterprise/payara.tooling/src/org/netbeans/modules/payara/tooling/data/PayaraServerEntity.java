@@ -73,17 +73,8 @@ public class PayaraServerEntity implements PayaraServer {
      *  (PayaraModule.INSTALL_FOLDER_ATTR). */
     private String serverRoot;
 
-    /**
-     * Payara server version.
-     */
-    @Deprecated
+    /** Payara server version. */
     private PayaraVersion version;
-
-    /**
-     * Payara Platform Version.
-     */
-    private PayaraPlatformVersionAPI platformVersion;
-
 
     /** Payara server administration interface type. */
     private PayaraAdminInterface adminInterface;
@@ -129,8 +120,8 @@ public class PayaraServerEntity implements PayaraServer {
             throw new DataException(DataException.SERVER_HOME_NONEXISTENT,
                     serverHome);
         }
-        this.platformVersion = ServerUtils.getPlatformVersion(serverHome);
-        if (this.platformVersion == null) {
+        this.version = ServerUtils.getServerVersion(serverHome);
+        if (this.version == null) {
             throw new DataException(DataException.SERVER_HOME_NO_VERSION,
                     serverHome);
         }
@@ -368,20 +359,9 @@ public class PayaraServerEntity implements PayaraServer {
      * <p/>
      * @return The version.
      */
-    @Deprecated
     @Override
     public PayaraVersion getVersion() {
         return version;
-    }
-
-    /**
-     * Get Payara Platform version.
-     * <p/>
-     * @return The platformVersion.
-     */
-    @Override
-    public PayaraPlatformVersionAPI getPlatformVersion() {
-        return platformVersion;
     }
 
     /**
@@ -389,18 +369,8 @@ public class PayaraServerEntity implements PayaraServer {
      * <p/>
      * @param version The version to set.
      */
-    @Deprecated
     public void setVersion(final PayaraVersion version) {
         this.version = version;
-    }
-    
-    /**
-     * Set Payara Platform version.
-     * <p/>
-     * @param platformVersion The platformVersion to set.
-     */
-    public void setPlatformVersion(final PayaraPlatformVersionAPI platformVersion) {
-        this.platformVersion = platformVersion;
     }
 
     /**

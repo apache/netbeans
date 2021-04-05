@@ -305,11 +305,7 @@ public class MoveClassUI implements RefactoringUI, RefactoringUIBypass {
                 Collection<TreePathHandle> tphs = new ArrayList<TreePathHandle>();
                 SourcePositions sourcePositions = info.getTrees().getSourcePositions();
                 for (Element ele : e.getEnclosedElements()) {
-                    TreePath path = info.getTrees().getPath(ele);
-                    if (path == null) {
-                        continue;
-                    }
-                    Tree leaf = path.getLeaf();
+                    Tree leaf = info.getTrees().getPath(ele).getLeaf();
                     long start = sourcePositions.getStartPosition(info.getCompilationUnit(), leaf);
                     long end = sourcePositions.getEndPosition(info.getCompilationUnit(), leaf);
                     if ((start >= startOffset && start <= endOffset)

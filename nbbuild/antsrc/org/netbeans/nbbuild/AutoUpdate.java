@@ -32,7 +32,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -58,7 +57,6 @@ import org.apache.tools.ant.taskdefs.Get;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.FileUtils;
 import org.netbeans.nbbuild.AutoUpdateCatalogParser.ModuleItem;
-import org.netbeans.nbbuild.extlibs.DownloadBinaries;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.Attributes;
@@ -407,17 +405,12 @@ public class AutoUpdate extends Task {
                     }
                     url = url.substring(0, index) + propVal + url.substring(end + 1);
                 }
+                log("Trying external URL: " + url, Project.MSG_INFO);
                 try {
-                    URI u = new URI(url);
-                    if ("m2".equals(u.getScheme())) {
-                        log("Trying external Maven URL: " + u, Project.MSG_INFO);
-                        return DownloadBinaries.downloadMaven(this, u);
-                    }
-                    log("Trying external URL: " + u, Project.MSG_INFO);
-                    conn = u.toURL().openConnection();
+                    conn = new URL(url).openConnection();
                     conn.connect();
                     return conn.getInputStream();
-                } catch (URISyntaxException | IOException ex) {
+                } catch (IOException ex) {
                     log("Cannot connect to " + url, Project.MSG_WARN);
                     try {
                         logThrowable(ex);
@@ -430,7 +423,7 @@ public class AutoUpdate extends Task {
         throw new IOException("Cannot resolve external references");
     }
 
-    private void logThrowable(Exception ex) {
+    private void logThrowable(IOException ex) {
         log("Details", ex, Project.MSG_VERBOSE);
     }
 

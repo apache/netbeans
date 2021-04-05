@@ -1,4 +1,0 @@
-Name: testMethod
-public function testMethod(float|int|array|Foo|null $param): Foo|Bar {
-${cursor};
-}

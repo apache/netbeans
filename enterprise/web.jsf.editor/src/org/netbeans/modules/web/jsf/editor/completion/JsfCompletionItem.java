@@ -254,35 +254,12 @@ public class JsfCompletionItem {
         private String getHelpContent() {
             StringBuilder sb = new StringBuilder();
             sb.append(getLibraryHelpHeader(library));
-            sb.append("<div><b>"); //NOI18N
-            sb.append(NbBundle.getMessage(JsfCompletionItem.class, "MSG_Tag"));
-            sb.append(":</b> "); //NOI18N
+            sb.append("<div><b>Tag:</b> "); //NOI18N
             sb.append(tag.getName());
             sb.append("</div>"); //NOI18N
             sb.append("<h1>"); //NOI18N
             sb.append(attr.getName());
             sb.append("</h1>"); //NOI18N
-            if (attr.getType() != null) {
-                sb.append("<div><b>"); //NOI18N
-                sb.append(NbBundle.getMessage(JsfCompletionItem.class, "MSG_Type"));
-                sb.append(":</b> "); //NOI18N
-                sb.append(attr.getType());
-                sb.append("</div>"); //NOI18N
-            }
-            if (attr.getMethodSignature() != null) {
-                sb.append("<div><b>"); //NOI18N
-                sb.append(NbBundle.getMessage(JsfCompletionItem.class, "MSG_MethodSignature"));
-                sb.append(":</b> "); //NOI18N
-                sb.append(attr.getMethodSignature());
-                sb.append("</div>"); //NOI18N
-            }
-            if (attr.getDefaultValue() != null) {
-                sb.append("<div><b>"); //NOI18N
-                sb.append(NbBundle.getMessage(JsfCompletionItem.class, "MSG_DefaultValue"));
-                sb.append(":</b> "); //NOI18N
-                sb.append(attr.getDefaultValue());
-                sb.append("</div>"); //NOI18N
-            }
             if(attr.isRequired()) {
                 sb.append("<p>");
                 sb.append(NbBundle.getMessage(JsfCompletionItem.class, "MSG_RequiredAttribute"));
@@ -301,8 +278,7 @@ public class JsfCompletionItem {
 
         @Override
         public boolean hasHelp() {
-            // show the type info anyway
-            return true;
+            return attr.getDescription() != null;
         }
 
          @Override
@@ -314,19 +290,16 @@ public class JsfCompletionItem {
 
     private static String getLibraryHelpHeader(Library library) {
         StringBuilder sb = new StringBuilder();
-        sb.append("<div><b>"); //NOI18N
-        sb.append(NbBundle.getMessage(JsfCompletionItem.class, "MSG_Library"));
-        sb.append(":</b> "); //NOI18N
+        sb.append("<div><b>Library:</b> "); //NOI18N
         sb.append(library.getNamespace());
         if (library.getLegacyNamespace() != null) {
             sb.append(", ").append(library.getLegacyNamespace()); //NOI18N
         }
-        if (library.getDisplayName() != null && !library.getDisplayName().equals(library.getNamespace())) {
+        if(library.getDisplayName() != null) {
             sb.append(" ("); //NOI18N
             sb.append(library.getDisplayName());
-            sb.append(")"); //NOI18N
+            sb.append(")</div>"); //NOI18N
         }
-        sb.append("</div>"); //NOI18N
         return sb.toString();
 
     }

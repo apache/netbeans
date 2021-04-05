@@ -46,6 +46,7 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -562,7 +563,7 @@ public abstract class Group {
         } else {
             handleLabel = Group_open_handle(NONE_GROUP);
         }
-        final ProgressHandle h = ProgressHandle.createHandle(handleLabel);
+        final ProgressHandle h = ProgressHandleFactory.createHandle(handleLabel);
         try {
             h.start(200);
             ProjectUtilities.WaitCursor.show();
@@ -587,7 +588,7 @@ public abstract class Group {
                 h.switchToIndeterminate();
                 h.progress(Group_progress_opening(toOpen.size()));
                 //open the projects with current group
-                opl.open(toOpen.toArray(new Project[toOpen.size()]), false, false, h, null);
+                opl.open(toOpen.toArray(new Project[toOpen.size()]), false, h, null);
                 
                 if(!isNewGroup) {
                     //for old and new group project intersection, save the old files list,

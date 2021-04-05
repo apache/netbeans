@@ -50,7 +50,6 @@ import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.model.VariableName;
 import org.netbeans.modules.php.editor.model.VariableScope;
 import org.netbeans.modules.php.editor.NavUtils;
-import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -116,7 +115,7 @@ public class PHPCodeTemplateProcessor implements CodeTemplateProcessor {
         List<? extends VariableName> variables = ModelUtils.filter(declaredVariables, varName);
         VariableName first = ModelUtils.getFirst(variables);
         if (first != null) {
-            String typeNames = Type.asUnionType(getUniqueTypeNames(first, offset));
+            String typeNames = StringUtils.implode(getUniqueTypeNames(first, offset), "|"); // NOI18N
             if (!StringUtils.hasText(typeNames)) {
                 return null;
             }

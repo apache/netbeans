@@ -32,6 +32,7 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.html.angular.model.Directive;
 import org.openide.modules.Places;
 import org.openide.util.Enumerations;
@@ -82,7 +83,7 @@ public class AngularDoc {
         LOG.fine("start loading doc"); //NOI18N
         Directive[] dirs = Directive.values();
         directives = Enumerations.array(dirs);
-        progress = ProgressHandle.createHandle(Bundle.doc_building());
+        progress = ProgressHandleFactory.createHandle(Bundle.doc_building());
         progress.start(dirs.length);
 
         buildDoc();

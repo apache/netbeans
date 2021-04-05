@@ -21,7 +21,7 @@ package org.netbeans.modules.visual.graph.layout.orthogonalsupport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import org.netbeans.modules.visual.graph.layout.orthogonalsupport.Face.Dart;
 import org.netbeans.modules.visual.graph.layout.orthogonalsupport.MGraph.Edge;
@@ -31,23 +31,23 @@ import org.netbeans.modules.visual.graph.layout.orthogonalsupport.MGraph.Vertex;
  *
  * @author ptliu
  */
-public class FlowNetwork<N, E> {
+public class FlowNetwork {
 
-    private EmbeddedPlanarGraph<N, E> originalGraph;
-    private Map<Vertex<N>, Node<N>> vertexNodeMap;
-    private Map<Face, Node<N>> faceNodeMap;
-    public Collection<Node<N>> nodes;
-    public Collection<Arc<N>> arcs;
-    public Node<N> source;
-    public Node<N> sink;
+    private EmbeddedPlanarGraph originalGraph;
+    private Map<Vertex, Node> vertexNodeMap;
+    private Map<Face, Node> faceNodeMap;
+    public Collection<Node> nodes;
+    public Collection<Arc> arcs;
+    public Node source;
+    public Node sink;
 
     /**
      * 
      * @param graph
      * @return
      */
-    public static <N, E> FlowNetwork<N, E> createGraph(EmbeddedPlanarGraph<N, E> graph) {
-        FlowNetwork<N, E> network = new FlowNetwork<>(graph);
+    public static FlowNetwork createGraph(EmbeddedPlanarGraph graph) {
+        FlowNetwork network = new FlowNetwork(graph);
         network.createGraph();
 
         return network;
@@ -57,29 +57,29 @@ public class FlowNetwork<N, E> {
      * 
      * @param graph
      */
-    private FlowNetwork(EmbeddedPlanarGraph<N, E> graph) {
+    private FlowNetwork(EmbeddedPlanarGraph graph) {
         this.originalGraph = graph;
-        vertexNodeMap = new HashMap<>();
-        faceNodeMap = new HashMap<>();
-        nodes = new ArrayList<>();
-        arcs = new ArrayList<>();
+        vertexNodeMap = new HashMap<Vertex, Node>();
+        faceNodeMap = new HashMap<Face, Node>();
+        nodes = new ArrayList<Node>();
+        arcs = new ArrayList<Arc>();
     }
 
     /**
      * 
      */
     private void createGraph() {
-        Collection<Vertex<N>> vertices = originalGraph.getOriginalGraph().getVertices();
+        Collection<Vertex> vertices = originalGraph.getOriginalGraph().getVertices();
 
         Collection<Face> faces = originalGraph.getFaces();
 
-        for (Vertex<N> v : vertices) {
+        for (Vertex v : vertices) {
 
-            Node<N> vn = getNode(v);
+            Node vn = getNode(v);
 
             for (Face f : faces) {
                 if (f.containsVertex(v)) {
-                    Node<N> fn = getNode(f);
+                    Node fn = getNode(f);
                     Collection<Dart> darts = f.getDartsFrom(v);
                     for (Dart d : darts) {
                         addArc(vn, fn, d);
@@ -90,31 +90,31 @@ public class FlowNetwork<N, E> {
 
 
         for (Face f : faces) {
-            Node<N> fn = getNode(f);
+            Node fn = getNode(f);
 
             for (Dart d : f.getDarts()) {
                 Face nf = originalGraph.getOppositeFace(f, d);
-                Node<N> nfn = getNode(nf);
+                Node nfn = getNode(nf);
                 addArc(fn, nfn, d);
             }
         }
 
         // Now create source and sink
-        source = new Node<>();
+        source = new Node();
         source.isSource = true;
-        sink = new Node<>();
+        sink = new Node();
         sink.isSink = true;
 
         int sourceProduction = 0;
         int sinkProduction = 0;
-        for (Node<N> n : getNodes()) {
+        for (Node n : getNodes()) {
             if (n.production > 0) {
-                Arc<N> arc = addArc(source, n);
+                Arc arc = addArc(source, n);
                 arc.capacity = n.production;
                 arc.cost = 0;
                 sourceProduction += n.production;
             } else if (n.production < 0) {
-                Arc<N> arc = addArc(n, sink);
+                Arc arc = addArc(n, sink);
                 arc.capacity = -n.production;
                 arc.cost = 0;
                 sinkProduction += n.production;
@@ -129,7 +129,7 @@ public class FlowNetwork<N, E> {
      * 
      * @return
      */
-    public EmbeddedPlanarGraph<N, E> getOriginalGraph() {
+    public EmbeddedPlanarGraph getOriginalGraph() {
         return originalGraph;
     }
 
@@ -138,11 +138,11 @@ public class FlowNetwork<N, E> {
      * @param vertex
      * @return
      */
-    public Node<N> getNode(Vertex<N> vertex) {
-        Node<N> node = vertexNodeMap.get(vertex);
+    public Node getNode(Vertex vertex) {
+        Node node = vertexNodeMap.get(vertex);
 
         if (node == null) {
-            node = new Node<>(vertex);
+            node = new Node(vertex);
             vertexNodeMap.put(vertex, node);
             nodes.add(node);
         }
@@ -155,11 +155,11 @@ public class FlowNetwork<N, E> {
      * @param face
      * @return
      */
-    public Node<N> getNode(Face face) {
-        Node<N> node = faceNodeMap.get(face);
+    public Node getNode(Face face) {
+        Node node = faceNodeMap.get(face);
 
         if (node == null) {
-            node = new Node<>(face);
+            node = new Node(face);
             faceNodeMap.put(face, node);
             nodes.add(node);
         }
@@ -171,7 +171,7 @@ public class FlowNetwork<N, E> {
      * 
      * @return
      */
-    public Node<N> getSource() {
+    public Node getSource() {
         return source;
     }
 
@@ -179,7 +179,7 @@ public class FlowNetwork<N, E> {
      * 
      * @return
      */
-    public Node<N> getSink() {
+    public Node getSink() {
         return sink;
     }
 
@@ -190,8 +190,8 @@ public class FlowNetwork<N, E> {
      * @param dart
      * @return
      */
-    public Arc<N> addArc(Node<N> sourceNode, Node<N> destNode, Dart dart) {
-        Arc<N> arc = new Arc<>(sourceNode, destNode, dart);
+    public Arc addArc(Node sourceNode, Node destNode, Dart dart) {
+        Arc arc = new Arc(sourceNode, destNode, dart);
         arcs.add(arc);
         return arc;
     }
@@ -202,7 +202,7 @@ public class FlowNetwork<N, E> {
      * @param destNode
      * @return
      */
-    public Arc<N> addArc(Node<N> sourceNode, Node<N> destNode) {
+    public Arc addArc(Node sourceNode, Node destNode) {
         return addArc(sourceNode, destNode, null);
     }
 
@@ -210,10 +210,10 @@ public class FlowNetwork<N, E> {
      * 
      * @param arc
      */
-    public void removeArc(Arc<N> arc) {
+    public void removeArc(Arc arc) {
         arcs.remove(arc);
 
-        Node<N> node = arc.getSourceNode();
+        Node node = arc.getSourceNode();
         if (node != null) {
             node.removeOutputArc(arc);
         }
@@ -228,7 +228,7 @@ public class FlowNetwork<N, E> {
      * 
      * @return
      */
-    public Collection<Node<N>> getNodes() {
+    public Collection<Node> getNodes() {
         return nodes;
     }
 
@@ -236,7 +236,7 @@ public class FlowNetwork<N, E> {
      * 
      * @return
      */
-    public Collection<Arc<N>> getArcs() {
+    public Collection<Arc> getArcs() {
         return arcs;
     }
 
@@ -247,13 +247,13 @@ public class FlowNetwork<N, E> {
         nodes.remove(source);
         nodes.remove(sink);
 
-        List<Arc<N>> _arcs = new ArrayList<>(source.getOutputArcs());
-        for (Arc<N> a : _arcs) {
+        ArrayList<Arc> _arcs = new ArrayList<Arc>(source.getOutputArcs());
+        for (Arc a : _arcs) {
             removeArc(a);
         }
 
-        _arcs = new ArrayList<>(sink.getInputArcs());
-        for (Arc<N> a : _arcs) {
+        _arcs = new ArrayList<Arc>(sink.getInputArcs());
+        for (Arc a : _arcs) {
             removeArc(a);
         }
     }
@@ -267,7 +267,7 @@ public class FlowNetwork<N, E> {
         s = s + "Source:\n" + source + "\n";
         s = s + "Sink:\n" + sink + "\n";
         s = s + "Nodes:\n";
-        for (Node<N> n : nodes) {
+        for (Node n : nodes) {
             s = s + n + "\n";
         }
 
@@ -277,12 +277,12 @@ public class FlowNetwork<N, E> {
     /**
      * 
      */
-    public static class Node<N> {
+    public static class Node {
 
         private Face face;
-        private Vertex<N> vertex;
-        private Collection<Arc<N>> inputArcs;
-        private Collection<Arc<N>> outputArcs;
+        private Vertex vertex;
+        private Collection<Arc> inputArcs;
+        private Collection<Arc> outputArcs;
         private int production;
         private boolean isSource;
         private boolean isSink;
@@ -291,8 +291,8 @@ public class FlowNetwork<N, E> {
          * 
          */
         public Node() {
-            inputArcs = new ArrayList<>();
-            outputArcs = new ArrayList<>();
+            inputArcs = new ArrayList<Arc>();
+            outputArcs = new ArrayList<Arc>();
         }
 
         /**
@@ -319,7 +319,7 @@ public class FlowNetwork<N, E> {
          * 
          * @param vertex
          */
-        public Node(Vertex<N> vertex) {
+        public Node(Vertex vertex) {
             this();
             this.vertex = vertex;
 
@@ -332,7 +332,7 @@ public class FlowNetwork<N, E> {
          * 
          * @return
          */
-        public Vertex<N> getVertex() {
+        public Vertex getVertex() {
             return vertex;
         }
 
@@ -364,7 +364,7 @@ public class FlowNetwork<N, E> {
          * 
          * @param arc
          */
-        public void addInputArc(Arc<N> arc) {
+        public void addInputArc(Arc arc) {
             inputArcs.add(arc);
         }
 
@@ -372,7 +372,7 @@ public class FlowNetwork<N, E> {
          * 
          * @param arc
          */
-        public void removeInputArc(Arc<N> arc) {
+        public void removeInputArc(Arc arc) {
             inputArcs.remove(arc);
         }
 
@@ -380,7 +380,7 @@ public class FlowNetwork<N, E> {
          * 
          * @param arc
          */
-        public void addOutputArc(Arc<N> arc) {
+        public void addOutputArc(Arc arc) {
             outputArcs.add(arc);
         }
 
@@ -388,7 +388,7 @@ public class FlowNetwork<N, E> {
          * 
          * @param arc
          */
-        public void removeOutputArc(Arc<N> arc) {
+        public void removeOutputArc(Arc arc) {
             outputArcs.remove(arc);
         }
 
@@ -396,7 +396,7 @@ public class FlowNetwork<N, E> {
          * 
          * @return
          */
-        public Collection<Arc<N>> getInputArcs() {
+        public Collection<Arc> getInputArcs() {
             return inputArcs;
         }
 
@@ -404,7 +404,7 @@ public class FlowNetwork<N, E> {
          * 
          * @return
          */
-        public Collection<Arc<N>> getOutputArcs() {
+        public Collection<Arc> getOutputArcs() {
             return outputArcs;
         }
 
@@ -414,9 +414,9 @@ public class FlowNetwork<N, E> {
          * @param dart
          * @return
          */
-        public Arc<N> getArcToVia(Node<N> node, Dart dart) {
-            Edge<?> edge = dart.getEdge();
-            for (Arc<N> arc : outputArcs) {
+        public Arc getArcToVia(Node node, Dart dart) {
+            Edge edge = dart.getEdge();
+            for (Arc arc : outputArcs) {
                 if (arc.getDestinationNode() == node &&
                         arc.getDart().getEdge() == edge) {
                     return arc;
@@ -474,10 +474,10 @@ public class FlowNetwork<N, E> {
         }
     }
 
-    public static class Arc<N> {
+    public static class Arc {
 
-        private Node<N> sourceNode;
-        private Node<N> destinationNode;
+        private Node sourceNode;
+        private Node destinationNode;
         private int capacity;
         private int cost;
         private int flow;
@@ -490,7 +490,7 @@ public class FlowNetwork<N, E> {
          * @param destination
          * @param dart
          */
-        public Arc(Node<N> source, Node<N> destination, Dart dart) {
+        public Arc(Node source, Node destination, Dart dart) {
             this.sourceNode = source;
             this.destinationNode = destination;
             this.dart = dart;
@@ -515,7 +515,7 @@ public class FlowNetwork<N, E> {
          * 
          * @return
          */
-        public Node<N> getSourceNode() {
+        public Node getSourceNode() {
             return sourceNode;
         }
 
@@ -523,7 +523,7 @@ public class FlowNetwork<N, E> {
          * 
          * @return
          */
-        public Node<N> getDestinationNode() {
+        public Node getDestinationNode() {
             return destinationNode;
         }
 
@@ -645,30 +645,30 @@ public class FlowNetwork<N, E> {
         }
     }
 
-    public static class ResidualFlowNetwork<N, E> extends FlowNetwork<N, E> {
+    public static class ResidualFlowNetwork extends FlowNetwork {
 
-        private Map<Arc<N>, ResidualArc<N>> arcToResidualArcMap;
-        private Map<Arc<N>, ResidualArc<N>> arcToReverseResidualArcMap;
-        private FlowNetwork<N, E> network;
-        private Map<Node<N>, Node<N>> nodeMap;
+        private Map<Arc, ResidualArc> arcToResidualArcMap;
+        private Map<Arc, ResidualArc> arcToReverseResidualArcMap;
+        private FlowNetwork network;
+        private Map<Node, Node> nodeMap;
 
         /**
          * 
          * @param network
          */
-        public ResidualFlowNetwork(FlowNetwork<N, E> network) {
+        public ResidualFlowNetwork(FlowNetwork network) {
             super(null);
 
             this.network = network;
-            nodeMap = new HashMap<>();
-            arcToResidualArcMap = new HashMap<>();
-            arcToReverseResidualArcMap = new HashMap<>();
+            nodeMap = new HashMap<Node, Node>();
+            arcToResidualArcMap = new HashMap<Arc, ResidualArc>();
+            arcToReverseResidualArcMap = new HashMap<Arc, ResidualArc>();
 
             source = getNode(network.getSource());
             source.isSource = true;
             sink = getNode(network.getSink());
             sink.isSink = true;
-            for (Arc<N> arc : network.getArcs()) {
+            for (Arc arc : network.getArcs()) {
                 addResidualArc(arc);
             }
         }
@@ -677,17 +677,17 @@ public class FlowNetwork<N, E> {
          * 
          * @param arc
          */
-        private void addResidualArc(Arc<N> arc) {
+        private void addResidualArc(Arc arc) {
             // Assume all flow equals zero at the start
-            Node<N> sourceNode = getNode(arc.getSourceNode());
-            Node<N> destNode = getNode(arc.getDestinationNode());
+            Node sourceNode = getNode(arc.getSourceNode());
+            Node destNode = getNode(arc.getDestinationNode());
 
             // Forward arc
-            ResidualArc<N> residualArc = new ResidualArc<>(sourceNode, destNode, arc, false);
+            ResidualArc residualArc = new ResidualArc(sourceNode, destNode, arc, false);
             arcToResidualArcMap.put(arc, residualArc);
 
             // Reverse arc
-            ResidualArc<N> reverseResidualArc = new ResidualArc<>(destNode, sourceNode, arc, true);
+            ResidualArc reverseResidualArc = new ResidualArc(destNode, sourceNode, arc, true);
             arcToReverseResidualArcMap.put(arc, reverseResidualArc);
         }
 
@@ -696,7 +696,7 @@ public class FlowNetwork<N, E> {
          * @param arc
          * @return
          */
-        public ResidualArc<N> getResidualArcFromArc(Arc<N> arc) {
+        public ResidualArc getResidualArcFromArc(Arc arc) {
             return arcToResidualArcMap.get(arc);
         }
 
@@ -705,7 +705,7 @@ public class FlowNetwork<N, E> {
          * @param arc
          * @return
          */
-        public ResidualArc<N> getReverseResidualArcFromArc(Arc<N> arc) {
+        public ResidualArc getReverseResidualArcFromArc(Arc arc) {
             return arcToReverseResidualArcMap.get(arc);
         }
 
@@ -714,8 +714,8 @@ public class FlowNetwork<N, E> {
          * @param node
          * @return
          */
-        private Node<N> getNode(Node<N> node) {
-            Node<N> residualNode = nodeMap.get(node);
+        private Node getNode(Node node) {
+            Node residualNode = nodeMap.get(node);
 
             if (residualNode == null) {
                 if (node.isVertexNode()) {
@@ -723,7 +723,7 @@ public class FlowNetwork<N, E> {
                 } else if (node.isFaceNode()) {
                     residualNode = getNode(node.getFace());
                 } else {
-                    residualNode = new Node<>();
+                    residualNode = new Node();
                     residualNode.setProduction(node.getProduction());
                     nodes.add(residualNode);
                 }
@@ -738,10 +738,10 @@ public class FlowNetwork<N, E> {
     /**
      * 
      */
-    public static class ResidualArc<N> extends Arc<N> {
+    public static class ResidualArc extends Arc {
 
         private boolean isReverse;
-        private Arc<N> arc;
+        private Arc arc;
 
         /**
          * 
@@ -750,8 +750,8 @@ public class FlowNetwork<N, E> {
          * @param arc
          * @param isReverse
          */
-        public ResidualArc(Node<N> sourceNode, Node<N> destNode,
-                Arc<N> arc, boolean isReverse) {
+        public ResidualArc(Node sourceNode, Node destNode,
+                Arc arc, boolean isReverse) {
             super(sourceNode, destNode, null);
             this.isReverse = isReverse;
             this.arc = arc;
@@ -777,7 +777,7 @@ public class FlowNetwork<N, E> {
          * 
          * @return
          */
-        public Arc<N> getArc() {
+        public Arc getArc() {
             return arc;
         }
 

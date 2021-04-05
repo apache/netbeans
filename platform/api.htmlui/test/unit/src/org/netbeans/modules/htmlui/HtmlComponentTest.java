@@ -48,10 +48,6 @@ public class HtmlComponentTest {
 
     @BeforeClass(timeOut = 9000)
     public static void initializeContext() throws Exception {
-        if (!EnsureJavaFXPresent.check()) {
-            return;
-        }
-        
         final HtmlComponent tc = new HtmlComponent();
         final URL u = HtmlComponent.class.getResource("/org/netbeans/api/htmlui/empty.html");
         Platform.runLater(new Runnable() {
@@ -72,7 +68,6 @@ public class HtmlComponentTest {
     
     @Test(timeOut = 9000)
     public void updateContext() throws Exception {
-        EnsureJavaFXPresent.checkAndThrow();
         CheckContext cc = assertContext();
         
         assertNull(lkp.lookup(DefCnstr.class), "No instance yet");
@@ -86,7 +81,6 @@ public class HtmlComponentTest {
 
     @Test(timeOut = 9000)
     public void closedWhenRemoved() throws Exception {
-        EnsureJavaFXPresent.checkAndThrow();
         CheckContext cc = assertContext();
         
         cc.addContext(ClsblCnstr.class.getName());
@@ -102,7 +96,6 @@ public class HtmlComponentTest {
 
     @Test(timeOut = 9000)
     public void updateContextWithNonDefaultCnstr() throws Exception {
-        EnsureJavaFXPresent.checkAndThrow();
         CheckContext cc = assertContext();
         
         assertNull(lkp.lookup(MdlCnstr.class), "No instance yet");

@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.Set;
 import org.netbeans.modules.visual.graph.layout.orthogonalsupport.Face.Dart;
 import org.netbeans.modules.visual.graph.layout.orthogonalsupport.FlowNetwork.Arc;
 import org.netbeans.modules.visual.graph.layout.orthogonalsupport.FlowNetwork.Node;
@@ -51,17 +50,17 @@ public class MinimumBendOrthogonalizer {
      * @param epgs
      * @return
      */
-    public <N, E> Collection<OrthogonalRepresentation<N, E>> orthogonalize(
-            Collection<EmbeddedPlanarGraph<N, E>> epgs) {
-        Collection<OrthogonalRepresentation<N, E>> ors = new ArrayList<>();
+    public Collection<OrthogonalRepresentation> orthogonalize(
+            Collection<EmbeddedPlanarGraph> epgs) {
+        Collection<OrthogonalRepresentation> ors = new ArrayList<OrthogonalRepresentation>();
 
-        for (EmbeddedPlanarGraph<N, E> epg : epgs) {
-            FlowNetwork<N, E> network = FlowNetwork.createGraph(epg);
+        for (EmbeddedPlanarGraph epg : epgs) {
+            FlowNetwork network = FlowNetwork.createGraph(epg);
 
             computeMinimumCostFlowNetwork(network);
 
             network.removeSourceAndSink();
-            OrthogonalRepresentation<N, E> or = computeOrthogonalRepresentation(network);
+            OrthogonalRepresentation or = computeOrthogonalRepresentation(network);
             ors.add(or);
 
         }
@@ -73,15 +72,15 @@ public class MinimumBendOrthogonalizer {
      * 
      * @param network
      */
-    private <N, E> void computeMinimumCostFlowNetwork(FlowNetwork<N, E> network) {
-        ResidualFlowNetwork<N, E> residualNetwork = new ResidualFlowNetwork<>(network);
+    private void computeMinimumCostFlowNetwork(FlowNetwork network) {
+        ResidualFlowNetwork residualNetwork = new ResidualFlowNetwork(network);
 
         int totalFlow = 0;
         int production = network.getSource().getProduction();
 
 
         while (totalFlow < production) {
-            Collection<ResidualArc<N>> path = computeDijkstraShortestPath(residualNetwork);
+            Collection<ResidualArc> path = computeDijkstraShortestPath(residualNetwork);
 
             // Flow is blocked, we simply return;
             if (path == null) {
@@ -89,7 +88,7 @@ public class MinimumBendOrthogonalizer {
             }
             int minFlow = Integer.MAX_VALUE;
 
-            for (Arc<N> arc : path) {
+            for (Arc arc : path) {
                 int capacity = arc.getCapacity();
                 if (capacity < minFlow) {
                     minFlow = capacity;
@@ -98,10 +97,10 @@ public class MinimumBendOrthogonalizer {
 
             totalFlow += minFlow;
 
-            for (ResidualArc<N> ra : path) {
-                Arc<N> arc = ra.getArc();
-                ResidualArc<N> residualArc = null;
-                ResidualArc<N> reverseResidualArc = null;
+            for (ResidualArc ra : path) {
+                Arc arc = ra.getArc();
+                ResidualArc residualArc = null;
+                ResidualArc reverseResidualArc = null;
                 int flow = minFlow;
 
                 if (!ra.isReverse()) {
@@ -127,26 +126,26 @@ public class MinimumBendOrthogonalizer {
      * @param network
      * @return
      */
-    private <N, E> Collection<ResidualArc<N>> computeDijkstraShortestPath(ResidualFlowNetwork<N, E> network) {
-        Collection<Node<N>> nodes = network.getNodes();
-        Map<Node<N>, ResidualArc<N>> paths = new HashMap<>();
-        final Map<Node<N>, Integer> distances = new HashMap<>();
-        Node<N> sourceNode = network.getSource();
+    private Collection<ResidualArc> computeDijkstraShortestPath(ResidualFlowNetwork network) {
+        Collection<Node> nodes = network.getNodes();
+        Map<Node, ResidualArc> paths = new HashMap<Node, ResidualArc>();
+        final Map<Node, Integer> distances = new HashMap<Node, Integer>();
+        Node sourceNode = network.getSource();
 
-        for (Node<N> node : nodes) {
+        for (Node node : nodes) {
             distances.put(node, Integer.MAX_VALUE);
         }
         distances.put(sourceNode, 0);
 
-        PriorityQueue<Node<N>> priorityQueue = createPriorityQueue(distances);
-        for (Node<N> node : nodes) {
+        PriorityQueue<Node> priorityQueue = createPriorityQueue(distances);
+        for (Node node : nodes) {
             priorityQueue.offer(node);
         }
 
-        Set<Node<N>> visitedNodes = new HashSet<Node<N>>();
+        HashSet<Node> visitedNodes = new HashSet<Node>();
 
         while (priorityQueue.size() > 0) {
-            Node<N> node = priorityQueue.poll();
+            Node node = priorityQueue.poll();
 
             if (distances.get(node) == Integer.MAX_VALUE) {
                 continue;
@@ -154,7 +153,7 @@ public class MinimumBendOrthogonalizer {
             if (visitedNodes.contains(node)) {
                 continue;
             }
-            for (Arc<N> arc : node.getOutputArcs()) {
+            for (Arc arc : node.getOutputArcs()) {
                 if (arc.getCapacity() > 0) {
                     computeRelaxation(arc, paths, distances, priorityQueue);
                 }
@@ -163,16 +162,16 @@ public class MinimumBendOrthogonalizer {
             visitedNodes.add(node);
         }
 
-        Collection<ResidualArc<N>> shortestPath = new ArrayList<>();
-        Node<N> currentNode = network.getSink();
+        Collection<ResidualArc> shortestPath = new ArrayList<ResidualArc>();
+        Node currentNode = network.getSink();
 
         while (currentNode != sourceNode) {
-            Arc<N> arc = paths.get(currentNode);
+            Arc arc = paths.get(currentNode);
 
             if (arc == null) {
                 return null;
             }
-            shortestPath.add((ResidualArc<N>) arc);
+            shortestPath.add((ResidualArc) arc);
             currentNode = arc.getSourceNode();
         }
 
@@ -186,17 +185,17 @@ public class MinimumBendOrthogonalizer {
      * @param distances
      * @param queue
      */
-    private <N> void computeRelaxation(Arc<N> arc, Map<Node<N>, ResidualArc<N>> paths,
-            Map<Node<N>, Integer> distances, PriorityQueue<Node<N>> queue) {
-        Node<N> srcNode = arc.getSourceNode();
-        Node<N> destNode = arc.getDestinationNode();
+    private void computeRelaxation(Arc arc, Map<Node, ResidualArc> paths,
+            Map<Node, Integer> distances, PriorityQueue<Node> queue) {
+        Node srcNode = arc.getSourceNode();
+        Node destNode = arc.getDestinationNode();
         int sd = distances.get(srcNode);
         int dd = distances.get(destNode);
         int cost = arc.getCost();
 
         if (dd > sd + cost) {
             distances.put(destNode, sd + cost);
-            paths.put(destNode, (ResidualArc<N>) arc);
+            paths.put(destNode, (ResidualArc) arc);
 
             // There can be multiple instance of the same node in the queue.
             // This is the only way to update the queue.
@@ -209,12 +208,12 @@ public class MinimumBendOrthogonalizer {
      * @param distances
      * @return
      */
-    private <N> PriorityQueue<Node<N>> createPriorityQueue(final Map<Node<N>, Integer> distances) {
-        return new PriorityQueue<>(
+    private PriorityQueue<Node> createPriorityQueue(final Map<Node, Integer> distances) {
+        return new PriorityQueue<Node>(
                 distances.size(),
-                new Comparator<Node<?>>() {
+                new Comparator<Node>() {
 
-                    public int compare(Node<?> o1, Node<?> o2) {
+                    public int compare(Node o1, Node o2) {
                         int d1 = distances.get(o1);
                         int d2 = distances.get(o2);
 
@@ -239,23 +238,23 @@ public class MinimumBendOrthogonalizer {
      * @param network
      * @return
      */
-    private <N, E> OrthogonalRepresentation<N, E> computeOrthogonalRepresentation(FlowNetwork<N, E> network) {
-        OrthogonalRepresentation<N, E> or = OrthogonalRepresentation.createGraph(network.getOriginalGraph());
+    private OrthogonalRepresentation computeOrthogonalRepresentation(FlowNetwork network) {
+        OrthogonalRepresentation or = OrthogonalRepresentation.createGraph(network.getOriginalGraph());
 
-        for (Arc<N> arc : network.getArcs()) {
+        for (Arc arc : network.getArcs()) {
             if (arc.isVertexArc()) {
-                Vertex<N> v = arc.getSourceNode().getVertex();
+                Vertex v = arc.getSourceNode().getVertex();
                 Face f = arc.getDestinationNode().getFace();
                 OrthogonalShape shape = or.getShape(f);
-                Dart d = arc.getDart();
+                Dart d = (Dart) arc.getDart();
 
                 Tuple t = shape.getTuple(d);
                 t.setAngles(arc.getFlow() + 1);
             } else if (arc.isFaceArc()) {
-                Node<N> srcNode = arc.getSourceNode();
-                Node<N> destNode = arc.getDestinationNode();
+                Node srcNode = arc.getSourceNode();
+                Node destNode = arc.getDestinationNode();
                 Face f = srcNode.getFace();
-                Arc<N> reverseArc = destNode.getArcToVia(srcNode, arc.getDart());
+                Arc reverseArc = destNode.getArcToVia(srcNode, arc.getDart());
                 OrthogonalShape shape = or.getShape(f);
                 Dart d = arc.getDart();
                 Tuple t = shape.getTuple(d);

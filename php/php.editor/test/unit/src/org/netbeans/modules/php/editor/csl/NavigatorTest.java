@@ -109,8 +109,4 @@ public class NavigatorTest extends PhpNavigatorTestBase{
         performTest("structure/magicMethods");
     }
 
-    public void testPHP80ConstructorPropertyPromotion() throws Exception {
-        performTest("structure/php80ConstructorPropertyPromotion");
-    }
-
 }

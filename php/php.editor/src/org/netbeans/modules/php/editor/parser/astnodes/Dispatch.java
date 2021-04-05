@@ -19,49 +19,28 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
- * Represents a base class for method invocation and field access.
- *
- * e.g.
- * <pre>
- * $a->$b,
+ * Represents a base class for method invocation and field access
+ * <pre>e.g.<pre> $a->$b,
  * foo()->bar(),
  * $myClass->foo()->bar(),
- * A::$a->foo(),
- * $a?->$b // NETBEANS-4443 PHP 8.0
- * </pre>
+ * A::$a->foo()
  */
 public abstract class Dispatch extends VariableBase {
 
-    private final VariableBase dispatcher;
-    private final boolean isNullsafe; // NETBEANS-4443 PHP 8.0 Support
+    private VariableBase dispatcher;
 
     public Dispatch(int start, int end, VariableBase dispatcher) {
-        this(start, end, dispatcher, false);
-    }
-
-    public Dispatch(int start, int end, VariableBase dispatcher, boolean isNullsafe) {
         super(start, end);
         this.dispatcher = dispatcher;
-        this.isNullsafe = isNullsafe;
     }
 
     /**
-     * The dispatcher component of this dispatch expression.
+     * The dispatcher component of this dispatch expression
      *
      * @return dispatcher component of this dispatch expression
      */
     public VariableBase getDispatcher() {
         return dispatcher;
-    }
-
-    /**
-     * Check whether the access operator is the nullsafe.
-     *
-     * @return {@code true} if the operator is the nullsafe, {@code false}
-     * otherwise
-     */
-    public boolean isNullsafe() {
-        return isNullsafe;
     }
 
     /**
@@ -71,7 +50,7 @@ public abstract class Dispatch extends VariableBase {
 
     @Override
     public String toString() {
-        return getDispatcher() + (isNullsafe ? "?->" : "->") + getMember(); //NOI18N
+        return getDispatcher() + "->" + getMember(); //NOI18N
     }
 
 }

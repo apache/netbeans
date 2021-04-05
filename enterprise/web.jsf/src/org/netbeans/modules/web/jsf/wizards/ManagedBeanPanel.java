@@ -123,8 +123,7 @@ final class ManagedBeanPanel implements WizardDescriptor.Panel, WizardDescriptor
         }
         return component.isAddBeanToConfig();
     }
-
-    private final Set<ChangeListener> listeners = new HashSet<>(1);
+    private final Set/*<ChangeListener>*/ listeners = new HashSet(1);
 
     @Override
     public final void addChangeListener(ChangeListener l) {

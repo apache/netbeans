@@ -1,2 +1,0 @@
-            public ?string $|>MARK_OCCURRENCES:field3<| = "default value",
-            echo $|>MARK_OCCURRENCES:fiel^d3<|;

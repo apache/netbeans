@@ -83,7 +83,7 @@ public final class NbModuleProjectProfilingSupportProvider extends JavaProjectPr
                                                                                                     // ask first subproject for its JavaPlatform
 
             SubprojectProvider spp = project.getLookup().lookup(SubprojectProvider.class);
-            Set<? extends Project> subProjects;
+            Set subProjects;
 
             if (ProfilerLogger.isDebug()) {
                 ProfilerLogger.debug("NB Suite " + projectDir.getPath()); //NOI18N
@@ -99,7 +99,7 @@ public final class NbModuleProjectProfilingSupportProvider extends JavaProjectPr
                 return null;
             }
 
-            return getProjectJavaPlatform(subProjects.iterator().next());
+            return getProjectJavaPlatform((Project) subProjects.iterator().next());
         }
 
         ClassPath bootCp = ClassPath.getClassPath(projectDir, ClassPath.BOOT);

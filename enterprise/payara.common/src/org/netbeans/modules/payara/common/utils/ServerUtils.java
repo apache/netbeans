@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.payara.common.PayaraLogger;
 import org.netbeans.modules.payara.common.PayaraInstance;
@@ -154,7 +154,7 @@ public class ServerUtils {
      * @return Domains folder.
      */
     public static String getDomainsFolder(@NonNull PayaraInstance instance) {
-        PayaraPlatformVersionAPI version = instance.getPlatformVersion();
+        PayaraVersion version = instance.getVersion();
         if (version == null) {
             throw new IllegalStateException(NbBundle.getMessage(PayaraInstance.class,
                     "PayaraInstance.getDomainsFolder.versionIsNull",
@@ -168,13 +168,13 @@ public class ServerUtils {
                 + (useUpdate ? (useBuild ? 6 : 3) : 0));
         sb.append(DOMAINS_FOLDER_PREFIX);
         sb.append(Short.toString(version.getMajor()));
-        sb.append(PayaraPlatformVersionAPI.SEPARATOR);
+        sb.append(PayaraVersion.SEPARATOR);
         sb.append(Short.toString(version.getMinor()));
         if (useUpdate) {
-            sb.append(PayaraPlatformVersionAPI.SEPARATOR);
+            sb.append(PayaraVersion.SEPARATOR);
             sb.append(Short.toString(version.getUpdate()));
             if (useBuild) {
-                sb.append(PayaraPlatformVersionAPI.SEPARATOR);
+                sb.append(PayaraVersion.SEPARATOR);
                 sb.append(Short.toString(version.getBuild()));
             }
         }

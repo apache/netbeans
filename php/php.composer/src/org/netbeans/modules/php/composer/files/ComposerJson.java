@@ -20,10 +20,8 @@ package org.netbeans.modules.php.composer.files;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -41,7 +39,6 @@ public final class ComposerJson {
     private static final String FIELD_REQUIRE_DEV = "require-dev"; // NOI18N
     private static final String FIELD_CONFIG = "config"; // NOI18N
     private static final String FIELD_VENDOR_DIR = "vendor-dir"; // NOI18N
-    private static final String FIELD_SCRIPTS = "scripts"; // NOI18N
     // default values
     static final String DEFAULT_VENDOR_DIR = "vendor"; // NOI18N
 
@@ -76,14 +73,6 @@ public final class ComposerJson {
             vendorDir = DEFAULT_VENDOR_DIR;
         }
         return new File(getFile().getParentFile(), vendorDir);
-    }
-
-    public Set<String> getScripts() {
-        Map<String, Object> scripts = composerJson.getContentValue(Map.class, FIELD_SCRIPTS);
-        if (scripts == null) {
-            return Collections.emptySet();
-        }
-        return scripts.keySet();
     }
 
     public void addPropertyChangeListener(PropertyChangeListener composerJsonListener) {

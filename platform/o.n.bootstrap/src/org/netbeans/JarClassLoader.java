@@ -673,9 +673,7 @@ public class JarClassLoader extends ProxyClassLoader {
         @Override
         protected void destroy() throws IOException {
             super.destroy();
-            if (dead) {
-                return;
-            }
+            assert dead == false : "Already had dead JAR: " + file;
             
             File orig = file;
 

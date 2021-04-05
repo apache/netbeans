@@ -46,10 +46,8 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.util.Iterators;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.BaseUtilities;
-import org.openide.util.Exceptions;
 import org.openide.util.Pair;
 
 /**
@@ -285,7 +283,7 @@ final class PatchModuleFileManager implements JavaFileManager {
     }
     //</editor-fold>
 
-    private Set<PatchLocation> moduleLocations(final Location baseLocation) throws IOException {
+    private Set<PatchLocation> moduleLocations(final Location baseLocation) {
         if (baseLocation != StandardLocation.PATCH_MODULE_PATH) {
             throw new IllegalStateException(baseLocation.toString());
         }
@@ -302,13 +300,12 @@ final class PatchModuleFileManager implements JavaFileManager {
     @NonNull
     private static PatchLocation createPatchLocation(
             @NonNull final String modName,
-            @NonNull final List<? extends URL> roots) throws IOException {
+            @NonNull final List<? extends URL> roots) {
         Collection<URL> bin = new ArrayList<>(roots.size());
         Collection<URL> src = new ArrayList<>(roots.size());
         for (URL root : roots) {
             if (JavaIndex.hasSourceCache(root, false)) {
                 src.add(root);
-                bin.add(FileUtil.urlForArchiveOrDir(JavaIndex.getClassFolder(root)));
             } else {
                 bin.add(root);
             }

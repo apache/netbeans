@@ -1,6 +1,0 @@
-Code completion result for source line:
-->|testStaticReturnUnionTypeTrait(); // trait test19
-(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-METHOD     testStaticReturnNullableTypeTr  [PUBLIC]   TestTrait
-METHOD     testStaticReturnTypeTrait()     [PUBLIC]   TestTrait
-METHOD     testStaticReturnUnionTypeTrait  [PUBLIC]   TestTrait

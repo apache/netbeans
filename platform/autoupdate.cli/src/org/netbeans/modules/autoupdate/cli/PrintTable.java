@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.autoupdate.cli;
 
-import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +45,7 @@ final class PrintTable {
         data.add(fields);
     }
     
-    public void write(Appendable ps) throws IOException {
+    public void write(PrintStream ps) {
         int[] lengths = new int[names.length];
         length(names, lengths, limits);
         for (String[] arr : data) {
@@ -73,33 +73,33 @@ final class PrintTable {
         }
     }
 
-    private static void printRow(Appendable ps, String[] data, int[] lengths, int[] limits) throws IOException {
+    private static void printRow(PrintStream ps, String[] data, int[] lengths, int[] limits) {
         assert data.length == lengths.length;
         String sep = "";
         for (int i = 0; i < data.length; i++) {
-            ps.append(sep);
+            ps.print(sep);
             String d = data[i];
             if (limits != null && limits[i] >= 0 && d.length() > limits[i]) {
                 d = d.substring(0, limits[i]);
             }
-            ps.append(d);
+            ps.print(d);
             int missing = lengths[i] - d.length();
             while (missing-- > 0) {
-                ps.append(' ');
+                ps.print(' ');
             }
             sep = " ";
         }
-        ps.append('\n');
+        ps.println();
     }
-    private static void printSeparator(Appendable ps, int[] lengths) throws IOException {
+    private static void printSeparator(PrintStream ps, int[] lengths) {
         String sep = "";
         for (int i = 0; i < lengths.length; i++) {
-            ps.append(sep);
+            ps.print(sep);
             for (int j = 0; j < lengths[i]; j++) {
-                ps.append('-');
+                ps.print('-');
             }
             sep = " ";
         }
-        ps.append('\n');
+        ps.println();
     }
 }

@@ -66,7 +66,7 @@ public class ProgressEventSupport {
     public synchronized void addProgressListener (ProgressListener lsnr) {
         boolean notify = false;
         if (listeners == null) {
-            listeners = new Vector<ProgressListener>();
+            listeners = new java.util.Vector<ProgressListener>();
         }
         listeners.addElement(lsnr);
         if (status != null && !status.isRunning ()) {
@@ -97,17 +97,17 @@ public class ProgressEventSupport {
         status = sCode;
         tmID = targetModuleID;
         
-	Vector<ProgressListener> targets = null;
+	Vector targets = null;
 	synchronized (this) {
 	    if (listeners != null) {
-	        targets = (Vector<ProgressListener>)listeners.clone();
+	        targets = (Vector) listeners.clone();
 	    }
 	}
 
 	if (targets != null) {
 	    for (int i = 0; i < targets.size(); i++) {
-	        ProgressListener target = targets.elementAt(i);
-	        target.handleProgressEvent(evt);
+	        ProgressListener target = (ProgressListener)targets.elementAt(i);
+	        target.handleProgressEvent (evt);
 	    }
 	}
     }

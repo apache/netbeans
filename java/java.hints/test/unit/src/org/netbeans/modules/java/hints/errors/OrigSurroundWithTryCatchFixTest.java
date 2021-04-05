@@ -25,7 +25,6 @@ import java.util.prefs.Preferences;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.errors.ErrorFixesFakeHint.FixKind;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
-import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
 import org.netbeans.spi.editor.hints.Fix;
 
 /**
@@ -460,7 +459,7 @@ public class OrigSurroundWithTryCatchFixTest extends ErrorHintsTestBase {
 
     @Override
     protected String toDebugString(CompilationInfo info, Fix f) {
-        if (f instanceof JavaFixImpl && ((JavaFixImpl) f).jf instanceof OrigSurroundWithTryCatchFix) {
+        if (f instanceof OrigSurroundWithTryCatchFix) {
             return "FixImpl";
         }
         

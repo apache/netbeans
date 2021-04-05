@@ -254,7 +254,7 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
     }
 
     private Collection<FileObject>  getFileRoots(Iterable<? extends URL> roots) {
-        Collection<FileObject> c = new ArrayList<>(5);
+        Collection c = new ArrayList<FileObject>(5);
         for (Iterator<? extends URL> it = roots.iterator(); it.hasNext(); ) {
             URL rootURL = it.next();
             FileObject fo = URLMapper.findFileObject(rootURL);
@@ -550,7 +550,7 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
         private final int         size;
         private final Project     project;
         
-        NameIndex(Project p, FileObject root, String files, List<Object[]> indices) {
+        NameIndex(Project p, FileObject root, String files, ArrayList indices) {
             this.project = p;
             this.root = new WeakReference(root);
             this.size = indices.size();
@@ -615,7 +615,7 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
         private Project             project;
         
         private Map<FileObject, NameIndex>  nameIndexes = new HashMap<FileObject, NameIndex>();
-        private List<Object[]>     dirPositions;
+        private ArrayList          dirPositions;
         private int                charPtr;
 
         public IndexBuilder(Project project, Collection<FileObject> rootsToScan, Collection<FileObject> removedRoots) {
@@ -626,7 +626,7 @@ class OpenProjectFastIndex implements ClassIndexManagerListener {
         
         private void reset() {
             filenames = new StringBuilder();
-            dirPositions = new ArrayList<>();
+            dirPositions = new ArrayList();
             charPtr = 0;
         }
         

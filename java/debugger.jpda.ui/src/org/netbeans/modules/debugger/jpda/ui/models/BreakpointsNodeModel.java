@@ -225,7 +225,7 @@ public class BreakpointsNodeModel implements NodeModel {
         } else
         if (o instanceof ExceptionBreakpoint) {
             ExceptionBreakpoint b = (ExceptionBreakpoint) o;
-            if (b.getCatchType () == b.TYPE_EXCEPTION_CAUGHT)
+            if (b.getCatchType () == b.TYPE_EXCEPTION_CATCHED)
                 return bold (b,
                     NbBundle.getMessage (
                         BreakpointsNodeModel.class,
@@ -234,7 +234,7 @@ public class BreakpointsNodeModel implements NodeModel {
                     )
                 );
             else
-            if (b.getCatchType () == b.TYPE_EXCEPTION_UNCAUGHT)
+            if (b.getCatchType () == b.TYPE_EXCEPTION_UNCATCHED)
                 return bold (b,
                     NbBundle.getMessage (
                         BreakpointsNodeModel.class,
@@ -391,7 +391,7 @@ public class BreakpointsNodeModel implements NodeModel {
         } else
         if (o instanceof ExceptionBreakpoint) {
             ExceptionBreakpoint b = (ExceptionBreakpoint) o;
-            if (b.getCatchType () == b.TYPE_EXCEPTION_CAUGHT)
+            if (b.getCatchType () == b.TYPE_EXCEPTION_CATCHED)
                 description = 
                     NbBundle.getMessage (
                         BreakpointsNodeModel.class,
@@ -399,7 +399,7 @@ public class BreakpointsNodeModel implements NodeModel {
                         b.getExceptionClassName ()
                     );
             else
-            if (b.getCatchType () == b.TYPE_EXCEPTION_UNCAUGHT)
+            if (b.getCatchType () == b.TYPE_EXCEPTION_UNCATCHED)
                 description = 
                     NbBundle.getMessage (
                         BreakpointsNodeModel.class,

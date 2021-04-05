@@ -24,8 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -80,12 +78,7 @@ final class StandardModuleData extends ModuleData {
         if (classPath != null) {
             StringTokenizer tok = new StringTokenizer(classPath);
             while (tok.hasMoreTokens()) {
-                String ext;
-                try {
-                    ext = URLDecoder.decode(tok.nextToken(), "UTF-8");
-                } catch (UnsupportedEncodingException ex) {
-                    throw new IllegalStateException(ex);
-                }
+                String ext = tok.nextToken().replace("%20", " "); // NOI18N
                 File extfile;
                 if (ext.equals("${java.home}/lib/ext/jfxrt.jar")) { // NOI18N
                     // special handling on JDK7

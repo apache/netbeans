@@ -92,7 +92,7 @@ public final class DatabaseExplorerUIs {
 
         @Override
         public void newItemActionPerformed() {
-            Set<DatabaseConnection> oldConnections = new HashSet<>(Arrays.<DatabaseConnection>asList(connectionManager.getConnections()));
+            Set oldConnections = new HashSet(Arrays.asList(connectionManager.getConnections()));
             connectionManager.showAddConnectionDialog(null);
 
             // try to find the new connection

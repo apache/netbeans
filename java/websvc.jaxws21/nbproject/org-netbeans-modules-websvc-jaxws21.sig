@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.43
+#Version 1.39
 
 CLSS public abstract com.sun.codemodel.CodeWriter
 cons public init()
@@ -5423,6 +5423,8 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
+meth public java.awt.peer.ComponentPeer getPeer()
+ anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -6083,7 +6085,7 @@ meth public static void setDataContentHandlerFactory(javax.activation.DataConten
 meth public void setCommandMap(javax.activation.CommandMap)
 meth public void writeTo(java.io.OutputStream) throws java.io.IOException
 supr java.lang.Object
-hfds currentCommandMap,dataContentHandler,dataSource,emptyFlavors,factory,factoryDCH,objDataSource,object,objectMimeType,oldFactory,shortType,transferFlavors
+hfds class$javax$activation$DataHandler,currentCommandMap,dataContentHandler,dataSource,emptyFlavors,factory,factoryDCH,objDataSource,object,objectMimeType,oldFactory,shortType,transferFlavors
 
 CLSS public abstract interface javax.activation.DataSource
 meth public abstract java.io.InputStream getInputStream() throws java.io.IOException

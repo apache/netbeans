@@ -67,7 +67,6 @@ public final class BuildImplTest extends NbTestCase {
 
     private File junitJar;
     private File testNGJar;
-    private File jcommanderJar;
 
     @Override protected Level logLevel() {
         return Level.FINE;
@@ -92,10 +91,6 @@ public final class BuildImplTest extends NbTestCase {
         assertNotNull("must set test.testng.jar", tngJarProp);
         testNGJar = new File(tngJarProp);
         assertTrue("file " + testNGJar + " exists", testNGJar.isFile());
-        String jcommanderJarProp = System.getProperty("test.jcommander.jar");
-        assertNotNull("must set test.jcommander.jar", jcommanderJarProp);
-        jcommanderJar = new File(jcommanderJarProp);
-        assertTrue("file " + jcommanderJar + " exists", jcommanderJar.isFile());
         MockLookup.setLayersAndInstances(new IOP(), new IFL());
     }
 
@@ -147,7 +142,7 @@ public final class BuildImplTest extends NbTestCase {
 
     private Properties getProperties() {
         Properties p = new Properties();
-        p.setProperty("libs.junit.classpath", testNGJar.getAbsolutePath()  + ":" + junitJar.getAbsolutePath()+ ":" + jcommanderJar.getAbsolutePath());
+        p.setProperty("libs.junit.classpath", testNGJar.getAbsolutePath()  + ":" + junitJar.getAbsolutePath());
         return p;
     }
 

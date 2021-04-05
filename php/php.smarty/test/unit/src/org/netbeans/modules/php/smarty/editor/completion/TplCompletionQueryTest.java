@@ -43,15 +43,11 @@ public class TplCompletionQueryTest extends CslTestBase {
 
     // 
     public void testTagAttributeValues() throws Exception {
-        // Original test fails because completion data were not donated.
-        // assertItems("{|", arr("append", "if", "section"), Match.CONTAINS);
-        assertItems("{|", arr(), Match.EMPTY);
+        assertItems("{|", arr("append", "if", "section"), Match.CONTAINS);
     }
 
     public void testIssue22376() throws Exception {
-        // Original test fails because completion data were not donated.
-        // assertItems("{|\n", arr("append", "if", "section"), Match.CONTAINS);
-        assertItems("{|\n", arr(), Match.EMPTY);
+        assertItems("{|\n", arr("append", "if", "section"), Match.CONTAINS);
     }
 
     protected void assertItems(String documentText, final String[] expectedItemsNames, final Match type) throws Exception {

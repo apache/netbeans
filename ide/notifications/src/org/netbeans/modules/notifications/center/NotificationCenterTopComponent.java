@@ -109,8 +109,6 @@ public final class NotificationCenterTopComponent extends TopComponent {
         lblEmptyDetails.setEnabled(false);
 
         JScrollPane scrollPane = new JScrollPane(detailsPanel);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
-        scrollPane.getHorizontalScrollBar().setUnitIncrement(10);
         splitPane.setRightComponent(scrollPane);
 
         toolBar.setFocusable(false);

@@ -26,7 +26,6 @@ import org.netbeans.modules.payara.tooling.data.PayaraVersion;
  * <p/>
  * @author Tomas Kraus
  */
-@Deprecated
 public class JpaSupport {
 
     ////////////////////////////////////////////////////////////////////////////

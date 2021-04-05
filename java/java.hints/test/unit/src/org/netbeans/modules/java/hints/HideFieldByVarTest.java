@@ -19,7 +19,6 @@
 package org.netbeans.modules.java.hints;
 
 import com.sun.source.util.TreePath;
-import java.io.File;
 import java.util.List;
 import java.util.Locale;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -27,7 +26,7 @@ import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.modules.java.hints.infrastructure.TreeRuleTestBase;
 import org.netbeans.spi.editor.hints.ErrorDescription;
-import org.netbeans.junit.RandomlyFails;
+
 /**
  *
  * @author Jaroslav Tulach
@@ -44,7 +43,7 @@ public class HideFieldByVarTest extends TreeRuleTestBase {
         SourceUtilsTestUtil.setLookup(new Object[0], getClass().getClassLoader());
     }
     
-    @RandomlyFails
+    
     public void testDoesNotHideItself() throws Exception {
         String before = "package test; class Test {" +
             "  protected  int va";
@@ -53,7 +52,7 @@ public class HideFieldByVarTest extends TreeRuleTestBase {
         
         performAnalysisTest("test/Test.java", before + after, before.length());
     }
-    @RandomlyFails
+    
     public void testLocaVarAgainsInstanceVar() throws Exception {
         String before = "package test; class Test {" +
             "  protected  int value;" +
@@ -68,7 +67,6 @@ public class HideFieldByVarTest extends TreeRuleTestBase {
             "0:82-0:87:verifier:Local variable hides a field"
         );
     }
-    @RandomlyFails
     public void testLocaVarInStaticMethod() throws Exception {
         String text = "package test; class Test {" +
             "  protected  int value;" +
@@ -79,11 +77,11 @@ public class HideFieldByVarTest extends TreeRuleTestBase {
             "}";
         
         for (int i = 0; i < text.length(); i++) {
-            workDirIndex = i;
+            clearWorkDir();
             performAnalysisTest("test/Test.java", "// index: " + i + "\n" + text, i);
+            SourceUtils.waitScanFinished();
         }
     }
-    @RandomlyFails
     public void testLocaVarAgainsInhVar() throws Exception {
         String before = "package test; class Test {" +
             "  protected  int value;" +
@@ -100,7 +98,6 @@ public class HideFieldByVarTest extends TreeRuleTestBase {
             "0:109-0:114:verifier:Local variable hides a field"
         );
     }
-    @RandomlyFails
     public void testParamIsOkAgainstInhVar() throws Exception {
         String before = "package test; class Test {" +
             "  protected  int value;" +
@@ -119,16 +116,5 @@ public class HideFieldByVarTest extends TreeRuleTestBase {
     }
     
     private String sourceLevel = "1.5";
-
-    private int workDirIndex = -1;
-
-    @Override
-    public String getWorkDirPath() {
-        String basePath = super.getWorkDirPath();
-        if (workDirIndex != (-1)) {
-            basePath += File.separator + workDirIndex;
-        }
-        return basePath;
-    }
     
 }

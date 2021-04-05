@@ -23,22 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.csl.api.OffsetRange;
-import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
-import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
-import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
-import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 
 /**
  *
  * @author Radek Matous
  */
 public final class SingleFieldDeclarationInfo extends ASTNodeInfo<SingleFieldDeclaration> {
-
     private final FieldsDeclaration fieldsDeclaration;
 
     private SingleFieldDeclarationInfo(FieldsDeclaration fieldsDeclaration, SingleFieldDeclaration node) {
@@ -78,13 +73,9 @@ public final class SingleFieldDeclarationInfo extends ASTNodeInfo<SingleFieldDec
     public String getFieldType() {
         Expression fieldType = fieldsDeclaration.getFieldType();
         if (fieldType != null) {
-            if (fieldType instanceof UnionType) {
-                return VariousUtils.getUnionType((UnionType) fieldType);
-            }
-            boolean isNullableType = fieldType instanceof NullableType;
             QualifiedName fieldTypeName = QualifiedName.create(fieldType);
             if (fieldTypeName != null) {
-                return (isNullableType ? CodeUtils.NULLABLE_TYPE_PREFIX : "") + fieldTypeName.toString(); // NOI18N
+                return fieldTypeName.toString();
             }
         }
         return null;

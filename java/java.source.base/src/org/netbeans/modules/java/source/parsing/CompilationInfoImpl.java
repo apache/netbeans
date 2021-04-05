@@ -28,8 +28,6 @@ import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
 
 import java.io.IOException;
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -86,15 +84,12 @@ public final class CompilationInfoImpl {
     final AbstractSourceFileObject jfo;
     //@NotThreadSafe    //accessed under parser lock
     private Snapshot snapshot;
-    private Reference<Snapshot> partialReparseLastGoodSnapshot;
     private final JavacParser parser;
     private final boolean isClassFile;
     private final boolean isDetached;
     JavaSource.Phase parserCrashed = JavaSource.Phase.UP_TO_DATE;      //When javac throws an error, the moveToPhase sets this to the last safe phase
     private final Map<CacheClearPolicy, Map<Object, Object>> userCache = new EnumMap<CacheClearPolicy, Map<Object, Object>>(CacheClearPolicy.class);
-    //cache of already parsed files
-    private Map<String, CompilationUnitTree> parsedTrees;
-    
+
     /**
      * Creates a new CompilationInfoImpl for given source file
      * @param parser used to parse the file
@@ -105,7 +100,7 @@ public final class CompilationInfoImpl {
      * @param detached true if the CompilationInfoImpl is detached from parsing infrastructure.
      * @throws java.io.IOException
      */
-    public CompilationInfoImpl (final JavacParser parser,
+    CompilationInfoImpl (final JavacParser parser,
                          final FileObject file,
                          final FileObject root,
                          final JavacTaskImpl javacTask,
@@ -119,7 +114,6 @@ public final class CompilationInfoImpl {
         this.file = file;
         this.root = root;
         this.snapshot = snapshot;
-        this.partialReparseLastGoodSnapshot = new SoftReference<>(snapshot);
         assert file == null || snapshot != null;
         this.jfo = file != null ?
             FileObjects.sourceFileObject(file, root, JavaFileFilterQuery.getFilter(file), snapshot.getText()) :
@@ -179,16 +173,7 @@ public final class CompilationInfoImpl {
     public Snapshot getSnapshot () {
         return this.snapshot;
     }
-
-    public Snapshot getPartialReparseLastGoodSnapshot() {
-        return partialReparseLastGoodSnapshot != null ? partialReparseLastGoodSnapshot.get()
-                                                      : null;
-    }
-
-    public void setPartialReparseLastGoodSnapshot(Snapshot snapshot) {
-        this.partialReparseLastGoodSnapshot = new SoftReference<>(snapshot);
-    }
-
+    
     /**
      * Returns the current phase of the {@link JavaSource}.
      * @return {@link JavaSource.Phase} the state which was reached by the {@link JavaSource}.
@@ -345,11 +330,7 @@ public final class CompilationInfoImpl {
         }
         return null;
     }
-
-    public Map<String, CompilationUnitTree> getParsedTrees() {
-        return this.parsedTrees;
-    }
-
+        
                                 
     /**
      * Moves the state to required phase. If given state was already reached 
@@ -502,12 +483,8 @@ public final class CompilationInfoImpl {
         assert compilationUnit != null;
         this.compilationUnit = compilationUnit;
     }
-
-    public void setParsedTrees(Map<String, CompilationUnitTree> parsedTrees) {
-        this.parsedTrees = parsedTrees;
-    }
-
-    private boolean hasSource() {
+                
+    private boolean hasSource () {
         return this.jfo != null && !isClassFile;
     }
 
@@ -569,13 +546,13 @@ public final class CompilationInfoImpl {
                     if (errors == null) {
                         source2Errors.put(file, errors = new Diagnostics());
                         if (this.jfo != null && this.jfo == file) {
-                            errors.add(0, new IncompleteClassPath(this.jfo));
+                            errors.add(-1, new IncompleteClassPath(this.jfo));
                         }
                     }
                 } else {
                     errors = new Diagnostics();
                     if (this.jfo != null && this.jfo == file) {
-                        errors.add(0, new IncompleteClassPath(this.jfo));
+                        errors.add(-1, new IncompleteClassPath(this.jfo));
                     }
                 }
             } else {
@@ -715,7 +692,7 @@ public final class CompilationInfoImpl {
 
             IncompleteClassPath(final JavaFileObject file) {
                 this.file = file;
-            }
+    }
 
             @Override
             public Kind getKind() {
@@ -729,7 +706,7 @@ public final class CompilationInfoImpl {
 
             @Override
             public long getPosition() {
-                return 0;
+                return -1;
             }
 
             @Override

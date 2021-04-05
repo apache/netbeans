@@ -627,7 +627,7 @@ public class JPDAStart extends Task implements Runnable {
     }
 
     private ExceptionBreakpoint createCompilationErrorBreakpoint() {
-        ExceptionBreakpoint b = ExceptionBreakpoint.create("java.lang.RuntimeException", ExceptionBreakpoint.TYPE_EXCEPTION_UNCAUGHT);
+        ExceptionBreakpoint b = ExceptionBreakpoint.create("java.lang.RuntimeException", ExceptionBreakpoint.TYPE_EXCEPTION_UNCATCHED);
         b.setHidden (true);
         b.addJPDABreakpointListener(new JPDABreakpointListener() {
             @Override

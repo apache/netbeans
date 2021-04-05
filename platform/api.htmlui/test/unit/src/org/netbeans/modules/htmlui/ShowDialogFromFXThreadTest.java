@@ -38,9 +38,6 @@ public class ShowDialogFromFXThreadTest implements Runnable {
     
     @BeforeClass(timeOut = 9000)
     public static void initFX() {
-        if (!EnsureJavaFXPresent.check()) {
-            return;
-        }
         JFXPanel p = new JFXPanel();
         JFrame f = new JFrame();
         f.getContentPane().add(p);
@@ -56,7 +53,6 @@ public class ShowDialogFromFXThreadTest implements Runnable {
 
     @Test(timeOut = 9000)
     public void showDialog() throws Exception {
-        EnsureJavaFXPresent.checkAndThrow();
         cdl = new CountDownLatch(1);
         Platform.runLater(this);
         cdl.await();

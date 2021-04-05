@@ -49,7 +49,7 @@ import org.openide.util.NbBundle;
  *
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
-@NbBundle.Messages("DoNotUseType=Don't import.")
+@NbBundle.Messages("DoNotUseType=Don't use type.")
 public class ImportDataCreator {
     public static final String NS_SEPARATOR = "\\"; //NOI18N
     private final Map<String, List<UsedNamespaceName>> usedNames;

@@ -19,19 +19,16 @@
 
 package org.netbeans.modules.web.monitor.data;
 
-import java.beans.PropertyChangeListener;
-import java.util.Vector;
+import org.w3c.dom.*;
+import org.netbeans.modules.schema2beans.*;
+import java.beans.*;
+import java.util.*;
 import javax.servlet.http.Cookie;
-
-import org.netbeans.modules.schema2beans.BaseBean;
-import org.netbeans.modules.schema2beans.BeanComparator;
-import org.netbeans.modules.schema2beans.BeanProp;
-import org.netbeans.modules.schema2beans.Common;
 
 public class CookieOut extends BaseBean
 {
 
-    static Vector<BeanComparator> comparators = new Vector<>();
+    static Vector comparators = new Vector();
 
     public CookieOut()
     {

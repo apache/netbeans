@@ -19,35 +19,28 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
- * Represents a dispaching expression.
- *
- * e.g.
- * <pre>
- * foo()->bar(),
+ * Represents a dispaching expression
+ * <pre>e.g.<pre> foo()->bar(),
  * $myClass->foo()->bar(),
- * A::$a->foo(),
- * foo()?->bar() // NETBEANS-4443 PHP 8.0
- * </pre>
+ * A::$a->foo()
  */
 public class MethodInvocation extends Dispatch {
 
-    private final FunctionInvocation method;
+    private FunctionInvocation method;
 
-    public MethodInvocation(int start, int end, VariableBase dispatcher, FunctionInvocation method, boolean isNullsafe) {
-        super(start, end, dispatcher, isNullsafe);
+    public MethodInvocation(int start, int end, VariableBase dispatcher, FunctionInvocation method) {
+        super(start, end, dispatcher);
         this.method = method;
     }
 
     /**
-     * The method component of this method invocation expression.
-     *
+     * The method component of this method invocation expression
      * @return method component of this method invocation expression
      */
     public FunctionInvocation getMethod() {
         return method;
     }
 
-    @Override
     public FunctionInvocation getMember() {
         return getMethod();
     }

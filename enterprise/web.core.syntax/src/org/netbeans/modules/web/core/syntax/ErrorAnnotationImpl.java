@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
@@ -60,12 +59,12 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
     /** Jsp file, for which is the ErrorAnnotation */
     private FileObject jspFo;
     
-    private List annotations;
+    private ArrayList annotations;
     
     /** Creates a new instance of ErrorAnnotation */
     public ErrorAnnotationImpl(FileObject jspFo) {
         this.jspFo = jspFo;
-        annotations = new ArrayList<>();
+        annotations = new ArrayList();
     }
     
     /** Adds annotation for the errors. If the error is already annotated, does nothing. If there are 
@@ -75,7 +74,7 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
      */
     @Override
     public void annotate(ErrorInfo[] errors){
-        List added, removed, unchanged;
+        ArrayList added, removed, unchanged;
         Collection newAnnotations;
         
         // obtain data object
@@ -114,10 +113,10 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
         // create annotations from errors
         newAnnotations = getAnnotations(errors, document);
         // which annotations are really new
-        added=new ArrayList<>(newAnnotations);
+        added=new ArrayList(newAnnotations);
         added.removeAll(annotations);
         // which annotations were here before
-        unchanged=new ArrayList<>(annotations);
+        unchanged=new ArrayList(annotations);
         unchanged.retainAll(newAnnotations);
         // which annotations are obsolete
         removed = annotations;
@@ -126,7 +125,7 @@ public class ErrorAnnotationImpl implements ErrorAnnotation {
 
         // are there new annotations?
         if (!added.isEmpty()) {
-            final List finalAdded = added;
+            final ArrayList finalAdded = added;
             final DataObject doJsp2 = doJsp;
             Runnable docRenderer = new Runnable() {
                 @Override

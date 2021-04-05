@@ -128,7 +128,7 @@ public class PrimitiveArrayNode extends ArrayNode {
             public HeapWalkerNode[] computeChildren() {
                 HeapWalkerNode[] children = null;
 
-                if (isModeFields()) {
+                if (getMode() == HeapWalkerNode.MODE_FIELDS) {
                     int fieldsSize = getInstance().getLength();
 
                     if (fieldsSize == 0) {

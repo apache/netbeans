@@ -86,7 +86,6 @@ public final class LayoutFactory {
      * @return the vertical flow layout
      * @deprecated use createVerticalFlowLayout method instead
      */
-    @Deprecated
     public static Layout createVerticalLayout () {
         GeomUtil.LOG.warning ("LayoutFactory.createVerticalLayout() method is deprecated. Use LayoutFactory.createVerticalFlowLayout() method instead."); // NOI18N
         return createVerticalFlowLayout (null, 0);
@@ -102,7 +101,6 @@ public final class LayoutFactory {
      * @return the vertical flow layout
      * @deprecated use createVerticalFlowLayout (alignment, gap) method instead
      */
-    @Deprecated
     public static Layout createVerticalLayout (SerialAlignment alignment, int gap) {
         GeomUtil.LOG.warning ("LayoutFactory.createVerticalLayout(alignment,gap) method is deprecated. Use LayoutFactory.createVerticalFlowLayout(alignment,gap) method instead."); // NOI18N
         return new FlowLayout (true, alignment != null ? alignment : SerialAlignment.JUSTIFY, gap);
@@ -140,7 +138,6 @@ public final class LayoutFactory {
      * @return the horizontal flow layout
      * @deprecated use createHorizontalFlowLayout method instead
      */
-    @Deprecated
     public static Layout createHorizontalLayout () {
         GeomUtil.LOG.warning ("LayoutFactory.createHorizontalLayout() method is deprecated. Use LayoutFactory.createHorizontalFlowLayout() method instead."); // NOI18N
         return createHorizontalFlowLayout (null, 0);
@@ -156,7 +153,6 @@ public final class LayoutFactory {
      * @return the horizontal flow layout
      * @deprecated use createHorizontalFlowLayout (alignment, gap) method instead
      */
-    @Deprecated
     public static Layout createHorizontalLayout (SerialAlignment alignment, int gap) {
         GeomUtil.LOG.warning ("LayoutFactory.createHorizontalLayout(alignment,gap) method is deprecated. Use LayoutFactory.createHorizontalFlowLayout(alignment,gap) method instead."); // NOI18N
         return new FlowLayout (false, alignment != null ? alignment : SerialAlignment.JUSTIFY, gap);
@@ -226,7 +222,6 @@ public final class LayoutFactory {
      * @return the fill layout
      * @deprecated use createOverlayLayout method instead
      */
-    @Deprecated
     public static Layout createFillLayout () {
         GeomUtil.LOG.warning ("LayoutFactory.createFillLayout() method is deprecated. Use LayoutFactory.createOverlayLayout() method instead."); // NOI18N
         return createOverlayLayout ();

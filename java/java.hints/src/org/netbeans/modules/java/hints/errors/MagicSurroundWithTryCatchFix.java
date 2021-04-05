@@ -36,6 +36,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,19 +53,22 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.ElementUtilities;
+import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
 import org.netbeans.api.java.source.GeneratorUtilities;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreeMaker;
-import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.hints.errors.ErrorFixesFakeHint.FixKind;
-import org.netbeans.modules.java.hints.spiimpl.JavaFixImpl;
-import org.netbeans.spi.java.hints.JavaFix;
+import org.netbeans.spi.editor.hints.ChangeInfo;
+import org.netbeans.spi.editor.hints.Fix;
 import org.openide.util.NbBundle;
 
 
@@ -72,22 +76,20 @@ import org.openide.util.NbBundle;
  *
  * @author Jan Lahoda
  */
-final class MagicSurroundWithTryCatchFix extends JavaFix {
+final class MagicSurroundWithTryCatchFix implements Fix {
 
-    private final TreePathHandle tph;
+    private JavaSource js;
     private List<TypeMirrorHandle> thandles;
     private int offset;
     private ElementHandle<ExecutableElement> method;
     List<String> fqns;
     
-    public MagicSurroundWithTryCatchFix(TreePathHandle tph, List<TypeMirrorHandle> thandles, int offset, ElementHandle<ExecutableElement> method, List<String> fqns) {
-        super(tph);
-        this.tph = tph;
+    public MagicSurroundWithTryCatchFix(JavaSource js, List<TypeMirrorHandle> thandles, int offset, ElementHandle<ExecutableElement> method, List<String> fqns) {
+        this.js = js;
         this.thandles = thandles;
         this.offset = offset;
         this.method = method;
         this.fqns = fqns;
-        JavaFixImpl.Accessor.INSTANCE.setChangeInfoConvertor(this, r -> Utilities.computeChangeInfo(tph.getFileObject(), r, Utilities.TAG_SELECT));
     }
     
     public String getText() {
@@ -115,44 +117,49 @@ final class MagicSurroundWithTryCatchFix extends JavaFix {
         return false;
     }
 
-    @Override
-    protected void performRewrite(TransformationContext ctx) throws Exception {
-        WorkingCopy wc = ctx.getWorkingCopy();
-        TreePath currentPath = wc.getTreeUtilities().pathFor(offset + 1);
+    public ChangeInfo implement() throws IOException {
+        ModificationResult mr = js.runModificationTask(new Task<WorkingCopy>() {
+            public void run(WorkingCopy wc) throws Exception {
+                wc.toPhase(Phase.RESOLVED);
+                TreePath currentPath = wc.getTreeUtilities().pathFor(offset + 1);
 
-        //find statement:
-        while (currentPath != null && !UncaughtException.STATEMENT_KINDS.contains(currentPath.getLeaf().getKind()))
-            currentPath = currentPath.getParentPath();
+                //find statement:
+                while (currentPath != null && !UncaughtException.STATEMENT_KINDS.contains(currentPath.getLeaf().getKind()))
+                    currentPath = currentPath.getParentPath();
 
-        //TODO: test for final??
-        TreePath statement = currentPath;
-        boolean streamAlike = false;
+                //TODO: test for final??
+                TreePath statement = currentPath;
+                boolean streamAlike = false;
 
-        if (statement.getLeaf().getKind() == Kind.VARIABLE) {
-            //special case variable declarations which intializers create streams or readers/writers:
-            Element curType = wc.getTrees().getElement(statement);
+                if (statement.getLeaf().getKind() == Kind.VARIABLE) {
+                    //special case variable declarations which intializers create streams or readers/writers:
+                    Element curType = wc.getTrees().getElement(statement);
 
-            streamAlike = isStreamAlike(wc, curType.asType());
-        }
+                    streamAlike = isStreamAlike(wc, curType.asType());
+                }
 
-        //find try block containing this statement, if exists:
-        TreePath tryPath = enclosingTry(currentPath);
+                //find try block containing this statement, if exists:
+                TreePath tryPath = enclosingTry(currentPath);
 
-        if (tryPath != null) {
-            //only add catches for uncaught exceptions:
-            new TransformerImpl(wc, thandles, streamAlike, statement).scan(tryPath, null);
-        } else {
-            //find block containing this statement, if exists:
-            TreePath blockTree = currentPath;
+                if (tryPath != null) {
+                    //only add catches for uncaught exceptions:
+                    new TransformerImpl(wc, thandles, streamAlike, statement).scan(tryPath, null);
+                } else {
+                    //find block containing this statement, if exists:
+                    TreePath blockTree = currentPath;
 
-            while (blockTree != null
-                    && blockTree.getLeaf().getKind() != Kind.BLOCK)
-                blockTree = blockTree.getParentPath();
+                    while (blockTree != null
+                            && blockTree.getLeaf().getKind() != Kind.BLOCK)
+                        blockTree = blockTree.getParentPath();
 
-            GeneratorUtilities.get(wc).importComments(blockTree.getLeaf(), blockTree.getCompilationUnit());
-
-            new TransformerImpl(wc, thandles, streamAlike, statement).scan(blockTree, null);
-        }
+                    GeneratorUtilities.get(wc).importComments(blockTree.getLeaf(), blockTree.getCompilationUnit());
+                    
+                    new TransformerImpl(wc, thandles, streamAlike, statement).scan(blockTree, null);
+                }
+            }
+        });
+        
+        return Utilities.commitAndComputeChangeInfo(js.getFileObjects().iterator().next(), mr);
     }
     
     static TreePath enclosingTry(TreePath from) {
@@ -336,6 +343,9 @@ final class MagicSurroundWithTryCatchFix extends JavaFix {
             return false;
         }
         final MagicSurroundWithTryCatchFix other = (MagicSurroundWithTryCatchFix) obj;
+        if (this.js != other.js && (this.js == null || !this.js.equals(other.js))) {
+            return false;
+        }
         if (!this.fqns.equals(other.fqns)) {
             return false;
         }
@@ -348,6 +358,7 @@ final class MagicSurroundWithTryCatchFix extends JavaFix {
     @Override
     public int hashCode() {
         int hash = 5;
+        hash = 23 * hash + (this.js != null ? this.js.hashCode() : 0);
         hash = 23 * hash + (this.method != null ? this.method.hashCode() : 0);
         return hash;
     }

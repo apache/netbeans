@@ -55,10 +55,7 @@ public final class PhpDocumentorProvider extends PhpDocumentationProvider {
     @Override
     public void generateDocumentation(PhpModule phpModule) {
         try {
-            PhpDocScript phpDocScript = PhpDocScript.getForPhpModule(phpModule, true);
-            if (phpDocScript != null) {
-                phpDocScript.generateDocumentation(phpModule);
-            }
+            PhpDocScript.getDefault().generateDocumentation(phpModule);
         } catch (InvalidPhpExecutableException ex) {
             UiUtils.invalidScriptProvided(ex.getLocalizedMessage(), PhpDocScript.OPTIONS_SUB_PATH);
         }

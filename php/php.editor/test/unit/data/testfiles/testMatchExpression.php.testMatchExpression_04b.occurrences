@@ -1,2 +1,0 @@
-    private static $|>MARK_OCCURRENCES:start<| = "start state";
-            MatchExpression::START => self::$|>MARK_OCCURRENCES:st^art<|,

@@ -24,6 +24,7 @@ import java.util.List;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.HintSeverity;
 import org.netbeans.modules.csl.api.Rule;
+import org.netbeans.modules.html.editor.lib.api.SyntaxAnalyzerResult;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintsProvider;
@@ -37,8 +38,6 @@ import org.netbeans.modules.html.editor.api.gsf.ErrorBadgingRule;
 import org.netbeans.modules.html.editor.api.gsf.HtmlErrorFilterContext;
 import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
 import org.netbeans.modules.html.editor.hints.HtmlHintsProvider;
-import org.netbeans.modules.parsing.spi.Parser;
-import org.netbeans.modules.web.common.api.WebPageMetadata;
 import org.openide.filesystems.FileObject;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -134,17 +133,17 @@ public class HtmlErrorFilter implements ErrorFilter {
         return filtered;
     }
     
-    public static boolean isErrorCheckingEnabled(Parser.Result result) {
+    public static boolean isErrorCheckingEnabled(SyntaxAnalyzerResult result) {
         return !isErrorCheckingDisabledForFile(result) && isErrorCheckingEnabledForMimetype(result);
     }
 
-    public static boolean isErrorCheckingDisabledForFile(Parser.Result result) {
-        FileObject fo = result.getSnapshot().getSource().getFileObject();
+    public static boolean isErrorCheckingDisabledForFile(SyntaxAnalyzerResult result) {
+        FileObject fo = result.getSource().getSourceFileObject();
         return fo != null && fo.getAttribute(DISABLE_ERROR_CHECKS_KEY) != null;
     }
 
-    public static boolean isErrorCheckingEnabledForMimetype(Parser.Result result) {
-        return HtmlPreferences.isHtmlErrorCheckingEnabledForMimetype(WebPageMetadata.getContentMimeType(result, true));
+    public static boolean isErrorCheckingEnabledForMimetype(SyntaxAnalyzerResult result) {
+        return HtmlPreferences.isHtmlErrorCheckingEnabledForMimetype(org.netbeans.modules.html.editor.api.Utils.getWebPageMimeType(result));
     }
     
     @ServiceProvider(service=ErrorFilter.Factory.class)

@@ -22,8 +22,7 @@ package org.netbeans.modules.csl.api;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
-import org.netbeans.api.editor.document.AtomicLockDocument;
-import org.netbeans.api.editor.document.LineDocumentUtils;
+import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.openide.ErrorManager;
 
@@ -101,17 +100,22 @@ import org.openide.ErrorManager;
             return;
         }
         final Document document = textComponent.getDocument();
-        AtomicLockDocument ld = LineDocumentUtils.asRequired(document, AtomicLockDocument.class);
-        // rely on editor utilities API to provide a stub, one is defined for the base Document class.
-        ld.runAtomic(() -> {
-            try {
-                if (length > 0) {
-                    document.remove(offset, length);
+        Runnable r = new Runnable() {
+            public @Override void run() {
+                try {
+                    if (length > 0) {
+                        document.remove(offset, length);
+                    }
+                    document.insertString(offset, text, null);
+                } catch (BadLocationException ble) {
+                    ErrorManager.getDefault().notify(ble);
                 }
-                document.insertString(offset, text, null);
-            } catch (BadLocationException ble) {
-                ErrorManager.getDefault().notify(ble);
             }
-        });
+        };
+        if (document instanceof BaseDocument) {
+            ((BaseDocument)document).runAtomic(r);
+        } else {
+            r.run();
+        }
     }
 }

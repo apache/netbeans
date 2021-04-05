@@ -24,6 +24,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -32,17 +33,20 @@ import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.platform.JavaPlatform;
+import org.netbeans.api.java.project.runner.JavaRunner;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.nashorn.execution.NashornPlatform;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.support.FileSensitiveActions;
+import org.openide.awt.Actions;
 import org.openide.awt.DynamicMenuContent;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
+import org.openide.util.WeakListeners;
 import org.openide.util.actions.Presenter;
 
 /**
@@ -58,7 +62,9 @@ abstract class ExecJSAction extends AbstractAction implements ContextAwareAction
     protected ExecJSAction(String name) {
         putValue(Action.NAME, name);
         js = null;
-        setEnabled(true);
+        NashornPlatform.getDefault().addChangeListener(WeakListeners.change(this, NashornPlatform.getDefault()));
+        JavaPlatform platform = NashornPlatform.getDefault().getPlatform();
+        setEnabled(platform != null && JavaRunner.isSupported(JavaRunner.QUICK_RUN, Collections.<String, Object>emptyMap()));
     }
     
     protected ExecJSAction(String name, FileObject js, String command) {
@@ -66,7 +72,7 @@ abstract class ExecJSAction extends AbstractAction implements ContextAwareAction
         this.js = js;
         KeyStroke actionKeyStroke = getActionKeyStroke(command);
         putValue(Action.ACCELERATOR_KEY, actionKeyStroke);
-        setEnabled(true);
+        setEnabled(JavaRunner.isSupported(command, Collections.<String, Object>emptyMap()));
     }
     
     @Override

@@ -236,7 +236,7 @@ final class CreateFromTemplateImpl {
         
         if (defaultMode != FileBuilder.Mode.COPY && frm instanceof MapFormat) {
             MapFormat mf = (MapFormat)frm;
-            Map<String, Object> m = mf.getMap();
+            Map m = mf.getMap();
             Map x = null;
             for (String s: params.keySet()) {
                 if (m.containsKey(s)) {

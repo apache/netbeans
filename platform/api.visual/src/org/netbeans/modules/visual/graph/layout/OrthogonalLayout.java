@@ -24,7 +24,6 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import org.netbeans.api.visual.graph.GraphScene;
 import org.netbeans.api.visual.router.RouterFactory;
 import org.netbeans.api.visual.widget.ConnectionWidget;
@@ -42,9 +41,9 @@ import org.netbeans.modules.visual.graph.layout.orthogonalsupport.RectangularCom
  * Note that the OrthogonalRouter is used to route the edges instead of adding
  * extra control points during the orthogonalizing.
  */
-public class OrthogonalLayout<N, E> extends GraphLayout<N, E> {
+public class OrthogonalLayout<N, E> extends GraphLayout {
 
-    private MGraph<N, E> mGraph = null;
+    private MGraph mGraph = null;
     private GraphScene<N, E> scene = null;
     private final boolean animate;
 
@@ -68,17 +67,17 @@ public class OrthogonalLayout<N, E> extends GraphLayout<N, E> {
      * @param graph the UniversalGraph created in UniversalGraph.layoutGraph
      */
     @Override
-    protected void performGraphLayout(UniversalGraph<N, E> graph) {
+    protected void performGraphLayout(UniversalGraph graph) {
 
         mGraph = MGraph.createGraph(graph, scene);
 
-        GTPlanarizer<N, E> planarizer = new GTPlanarizer<>();
-        Collection<EmbeddedPlanarGraph<N, E>> epgs = planarizer.planarize(mGraph);
+        GTPlanarizer planarizer = new GTPlanarizer();
+        Collection<EmbeddedPlanarGraph> epgs = planarizer.planarize(mGraph);
 
         MinimumBendOrthogonalizer orthogonalizer = new MinimumBendOrthogonalizer();
-        Collection<OrthogonalRepresentation<N, E>> ors = orthogonalizer.orthogonalize(epgs);
+        Collection<OrthogonalRepresentation> ors = orthogonalizer.orthogonalize(epgs);
 
-        RectangularCompactor<N, E> compactor = new RectangularCompactor<>();
+        RectangularCompactor compactor = new RectangularCompactor();
         compactor.compact(ors);
 
         layoutNodes();
@@ -97,15 +96,15 @@ public class OrthogonalLayout<N, E> extends GraphLayout<N, E> {
             conn.setRouter(RouterFactory.createOrthogonalSearchRouter());
         }
 
-        List<Widget> singletons = new ArrayList<>() ;
+        ArrayList <Widget> singletons = new ArrayList<Widget>() ;
         
-        Collection<Vertex<N>> vertices = mGraph.getVertices();
+        Collection<Vertex> vertices = mGraph.getVertices();
         int maxX = -1 ;
         int maxY = -1 ;
         
-        for (Vertex<N> v : vertices) {
+        for (Vertex v : vertices) {
 
-            N node = v.getNodeDesignElement();
+            N node = (N) v.getNodeDesignElement();
             if (node == null) {//if the vertex is a dummy, there is no 
                 continue;      //node associated with it.
             }
@@ -173,8 +172,13 @@ public class OrthogonalLayout<N, E> extends GraphLayout<N, E> {
         
     }
 
+    /**
+     * 
+     * @param graph
+     * @param nodes
+     */
     @Override
-    protected void performNodesLayout(UniversalGraph<N, E> graph, Collection<N> nodes) {
+    protected void performNodesLayout(UniversalGraph graph, Collection nodes) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

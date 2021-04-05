@@ -48,11 +48,6 @@ public class AliasedFunction extends AliasedElement implements FunctionElement {
     }
 
     @Override
-    public boolean isReturnUnionType() {
-        return getRealFunction().isReturnUnionType();
-    }
-
-    @Override
     public boolean isAnonymous() {
         return getRealFunction().isAnonymous();
     }

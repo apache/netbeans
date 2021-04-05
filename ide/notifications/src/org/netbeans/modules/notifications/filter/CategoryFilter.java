@@ -33,7 +33,7 @@ import org.openide.awt.NotificationDisplayer.Category;
  */
 class CategoryFilter {
 
-    private final Set<String> enabledCategories = new HashSet<>();
+    private final Set<String> enabledCategories = new HashSet<String>();
 
     public CategoryFilter() {
         addDefaultTypes();

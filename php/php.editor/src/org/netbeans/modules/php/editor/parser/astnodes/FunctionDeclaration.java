@@ -20,14 +20,12 @@ package org.netbeans.modules.php.editor.parser.astnodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 
 /**
- * Represents a function declaration.
- *
+ * Represents a function declaration
  * <pre>e.g.
  * function foo() {}
  *
@@ -40,7 +38,7 @@ import org.netbeans.api.annotations.common.NullAllowed;
  * function foo(); -abstract function in class declaration
  * </pre>
  */
-public class FunctionDeclaration extends Statement implements Attributed {
+public class FunctionDeclaration extends Statement {
 
     private final boolean isReference;
     private final Identifier name;
@@ -48,43 +46,23 @@ public class FunctionDeclaration extends Statement implements Attributed {
     @NullAllowed
     private final Expression returnType;
     private final Block body;
-    private final List<Attribute> attributes = new ArrayList<>();
 
-    private FunctionDeclaration(int start, int end, Identifier functionName, FormalParameter[] formalParameters, Expression returnType, Block body, boolean isReference, List<Attribute> attributes) {
+
+    private FunctionDeclaration(int start, int end, Identifier functionName, FormalParameter[] formalParameters, Expression returnType, Block body, boolean isReference) {
         super(start, end);
         this.isReference = isReference;
         this.name = functionName;
         this.formalParameters.addAll(Arrays.asList(formalParameters));
         this.returnType = returnType;
         this.body = body;
-        this.attributes.addAll(attributes);
-    }
-
-    private FunctionDeclaration(int start, int end, Identifier functionName, List<FormalParameter> formalParameters, Expression returnType, Block body, boolean isReference, List<Attribute> attributes) {
-        this(start, end, functionName, (FormalParameter[]) formalParameters.toArray(new FormalParameter[formalParameters.size()]), returnType, body, isReference, attributes);
     }
 
     public FunctionDeclaration(int start, int end, Identifier functionName, List<FormalParameter> formalParameters, Expression returnType, Block body, boolean isReference) {
-        this(start, end, functionName, formalParameters, returnType, body, isReference, Collections.emptyList());
-    }
-
-    public static FunctionDeclaration create(FunctionDeclaration declaration, List<Attribute> attributes) {
-        assert attributes != null;
-        int start = attributes.isEmpty() ? declaration.getStartOffset() : attributes.get(0).getStartOffset();
-        return new FunctionDeclaration(
-                start,
-                declaration.getEndOffset(),
-                declaration.getFunctionName(),
-                declaration.getFormalParameters(),
-                declaration.getReturnType(),
-                declaration.getBody(),
-                declaration.isReference(),
-                attributes
-        );
+        this(start, end, functionName, (FormalParameter[]) formalParameters.toArray(new FormalParameter[formalParameters.size()]), returnType, body, isReference);
     }
 
     /**
-     * Body of this function declaration.
+     * Body of this function declaration
      *
      * @return Body of this function declaration
      */
@@ -93,16 +71,16 @@ public class FunctionDeclaration extends Statement implements Attributed {
     }
 
     /**
-     * List of the formal parameters of this function declaration.
+     * List of the formal parameters of this function declaration
      *
      * @return the parameters of this declaration
      */
     public List<FormalParameter> getFormalParameters() {
-        return Collections.unmodifiableList(this.formalParameters);
+        return this.formalParameters;
     }
 
     /**
-     * Function name of this declaration.
+     * Function name of this declaration
      *
      * @return Function name of this declaration
      */
@@ -121,22 +99,11 @@ public class FunctionDeclaration extends Statement implements Attributed {
     }
 
     /**
-     * True if this function's return variable will be referenced.
-     *
-     * @return {@code true} if this function's return variable will be referenced
+     * True if this function's return variable will be referenced
+     * @return True if this function's return variable will be referenced
      */
     public boolean isReference() {
         return isReference;
-    }
-
-    @Override
-    public List<Attribute> getAttributes() {
-        return Collections.unmodifiableList(attributes);
-    }
-
-    @Override
-    public boolean isAttributed() {
-        return !attributes.isEmpty();
     }
 
     @Override
@@ -146,13 +113,11 @@ public class FunctionDeclaration extends Statement implements Attributed {
 
     @Override
     public String toString() {
-        StringBuilder sbAttributes = new StringBuilder();
-        getAttributes().forEach(attribute -> sbAttributes.append(attribute).append(" ")); // NOI18N
         StringBuilder sb = new StringBuilder();
         for (FormalParameter formalParameter : getFormalParameters()) {
             sb.append(formalParameter).append(","); //NOI18N
         }
-        return sbAttributes.toString() + "function " + (isReference() ? "&" : "") + getFunctionName() + "(" + sb.toString() + ")" // NOI18N
+        return "function " + (isReference() ? "&" : "") + getFunctionName() + "(" + sb.toString() + ")" // NOI18N
                 + (getReturnType() != null ? ": " + getReturnType() : "") + getBody(); // NOI18N
     }
 

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.52.0
+#Version 1.48.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -159,6 +159,8 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
+meth public java.awt.peer.ComponentPeer getPeer()
+ anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -1407,7 +1409,7 @@ meth public abstract void setKeyName(java.lang.String) throws java.lang.Exceptio
 CLSS public org.netbeans.modules.dbschema.SchemaElement
 cons public init()
 cons public init(org.netbeans.modules.dbschema.SchemaElement$Impl)
-fld protected static java.util.Map<java.lang.String,org.netbeans.modules.dbschema.SchemaElement> schemaCache
+fld protected static java.util.Map schemaCache
 fld public final static int CURRENT_VERSION_NO = 2
 fld public final static int STATUS_ERROR = 1
 fld public final static int STATUS_NOT = 0
@@ -1633,7 +1635,7 @@ hfds bundle,con,dmd,driver,password,schema,url,username
 
 CLSS public org.netbeans.modules.dbschema.jdbcimpl.DBElementsCollection
 cons public init()
-fld protected static java.util.Set<java.lang.String> instances
+fld protected static java.util.HashSet instances
 intf org.netbeans.modules.dbschema.DBElementProperties
 meth public java.lang.Object[] getTemplate()
 meth public org.netbeans.modules.dbschema.DBElement find(org.netbeans.modules.dbschema.DBIdentifier)
@@ -2909,13 +2911,12 @@ meth public static void setDescriptionAsResource(org.openide.loaders.DataObject,
 meth public static void setIterator(org.openide.loaders.DataObject,org.openide.loaders.TemplateWizard$Iterator) throws java.io.IOException
  anno 0 java.lang.Deprecated()
 meth public void setTargetFolder(org.openide.loaders.DataFolder)
-meth public void setTargetFolderLazy(java.util.function.Supplier<org.openide.loaders.DataFolder>)
 meth public void setTargetName(java.lang.String)
 meth public void setTemplate(org.openide.loaders.DataObject)
 meth public void setTemplatesFolder(org.openide.loaders.DataFolder)
 meth public void setTitleFormat(java.text.MessageFormat)
 supr org.openide.WizardDescriptor
-hfds CUSTOM_DESCRIPTION,CUSTOM_ITERATOR,EA_DESCRIPTION,EA_DESC_RESOURCE,EA_ITERATOR,LOG,PREF_DIM,isInstantiating,iterator,lastComp,newObjects,pcl,progressHandle,showTargetChooser,targetChooser,targetDataFolder,targetDataFolderCreator,targetIterator,targetName,template,templateChooser,templatesFolder,titleFormatSet
+hfds CUSTOM_DESCRIPTION,CUSTOM_ITERATOR,EA_DESCRIPTION,EA_DESC_RESOURCE,EA_ITERATOR,LOG,PREF_DIM,isInstantiating,iterator,lastComp,newObjects,pcl,progressHandle,showTargetChooser,targetChooser,targetDataFolder,targetIterator,targetName,template,templateChooser,templatesFolder,titleFormatSet
 hcls DefaultIterator,InstantiatingIteratorBridge
 
 CLSS public abstract interface static org.openide.loaders.TemplateWizard$Iterator

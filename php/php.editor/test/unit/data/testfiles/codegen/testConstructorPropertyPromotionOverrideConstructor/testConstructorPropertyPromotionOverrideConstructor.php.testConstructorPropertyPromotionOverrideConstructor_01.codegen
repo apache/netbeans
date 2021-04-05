@@ -1,3 +1,0 @@
-public function __construct(int $x, int|string $y, ?int $z){
-parent::__construct($x, $y, $z);
-}

@@ -57,7 +57,7 @@ import org.openide.util.NbBundle;
  * 
  * @author Max Sauer
  */
-class CreateEnumConstant extends CreateFixBase implements Fix {
+class CreateEnumConstant implements Fix {
 
     private String name;
     private String inFQN;
@@ -85,22 +85,14 @@ class CreateEnumConstant extends CreateFixBase implements Fix {
         }
     }
 
-    @Override
     public String getText() {
         return NbBundle.getMessage(CreateEnumConstant.class, "LBL_FIX_Create_Enum_Constant", name, inFQN);
     }
 
-    @Override
     public ChangeInfo implement() throws Exception {
-        ModificationResult diff = getModificationResult();
-        return Utilities.commitAndComputeChangeInfo(targetFile, diff, null);
-    }
-
-    @Override
-    public ModificationResult getModificationResult() throws IOException {
         JavaSource js = JavaSource.create(cpInfo, targetFile);
 
-        return js.runModificationTask(new Task<WorkingCopy>() {
+        ModificationResult diff = js.runModificationTask(new Task<WorkingCopy>() {
             public void run(final WorkingCopy working) throws IOException {
                 working.toPhase(Phase.RESOLVED);
                 TypeElement targetType = target.resolve(working);
@@ -140,6 +132,8 @@ class CreateEnumConstant extends CreateFixBase implements Fix {
                 working.rewrite(targetTree, enumm);
             }
         });
+
+        return Utilities.commitAndComputeChangeInfo(targetFile, diff, null);
     }
 
     String toDebugString(CompilationInfo info) {

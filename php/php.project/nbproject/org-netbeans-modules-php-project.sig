@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.150
+#Version 2.143
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -85,7 +85,6 @@ CLSS public final org.netbeans.modules.php.project.api.PhpOptions
 fld public final static java.lang.String PROP_PHP_DEBUGGER_MAX_CHILDREN = "propPhpDebuggerMaxChildren"
 fld public final static java.lang.String PROP_PHP_DEBUGGER_MAX_STRUCTURES_DEPTH = "propPhpDebuggerMaxStructuresDepth"
 fld public final static java.lang.String PROP_PHP_DEBUGGER_PORT = "propPhpDebuggerPort"
-fld public final static java.lang.String PROP_PHP_DEBUGGER_RESOLVE_BREAKPOINTS = "propPhpDebuggerResolveBreakpoints"
 fld public final static java.lang.String PROP_PHP_DEBUGGER_SESSION_ID = "propPhpDebuggerSessionId"
 fld public final static java.lang.String PROP_PHP_DEBUGGER_SHOW_CONSOLE = "propPhpDebuggerShowConsole"
 fld public final static java.lang.String PROP_PHP_DEBUGGER_SHOW_URLS = "propPhpDebuggerShowUrls"
@@ -93,7 +92,6 @@ fld public final static java.lang.String PROP_PHP_DEBUGGER_STOP_AT_FIRST_LINE = 
 fld public final static java.lang.String PROP_PHP_DEBUGGER_WATCHES_AND_EVAL = "propPhpDebuggerWatchesAndEval"
 fld public final static java.lang.String PROP_PHP_GLOBAL_INCLUDE_PATH = "propPhpGlobalIncludePath"
 fld public final static java.lang.String PROP_PHP_INTERPRETER = "propPhpInterpreter"
-meth public boolean isDebuggerResolveBreakpoints()
 meth public boolean isDebuggerShowDebuggerConsole()
 meth public boolean isDebuggerShowRequestedUrls()
 meth public boolean isDebuggerStoppedAtTheFirstLine()

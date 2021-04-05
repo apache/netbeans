@@ -307,13 +307,13 @@ public class BrowserUtils {
     }
     
     private static String pathFromRoot(TreePath path) {
-        final HeapWalkerNode last = (HeapWalkerNode)path.getLastPathComponent();
+        int m = ((HeapWalkerNode)path.getLastPathComponent()).getMode();
         Object[] nodes = path.getPath();
         StringBuilder b = new StringBuilder();
         int s = nodes.length;
         for (int i = 0; i < s; i++) {
             HeapWalkerNode n = (HeapWalkerNode)nodes[i];
-            if (last.isModeFields()) fieldFromRoot(n, b, i, s);
+            if (m == HeapWalkerNode.MODE_FIELDS) fieldFromRoot(n, b, i, s);
             else referenceFromRoot(n, b, i, s);
             b.append("\n"); // NOI18N
         }

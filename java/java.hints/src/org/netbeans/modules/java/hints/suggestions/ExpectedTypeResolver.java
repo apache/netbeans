@@ -25,7 +25,6 @@ import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
-import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
@@ -68,7 +67,6 @@ import com.sun.source.tree.ProvidesTree;
 import com.sun.source.tree.RequiresTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Scope;
-import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.ThrowTree;
@@ -83,7 +81,6 @@ import com.sun.source.tree.UsesTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
-import com.sun.source.tree.YieldTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type.CapturedType;
@@ -1389,18 +1386,6 @@ public class ExpectedTypeResolver implements TreeVisitor<List<? extends TypeMirr
 
     @Override
     public List<? extends TypeMirror> visitUses(UsesTree node, Object p) {
-        return null;
-    }
-   
-    public List<? extends TypeMirror> visitBindingPattern(BindingPatternTree bpt, Object p) {
-        return null;
-    }
-    
-    public List<? extends TypeMirror> visitSwitchExpression(SwitchExpressionTree set, Object p) {
-        return null;
-    }
-
-    public List<? extends TypeMirror> visitYield(YieldTree yt, Object p) {
         return null;
     }
 }

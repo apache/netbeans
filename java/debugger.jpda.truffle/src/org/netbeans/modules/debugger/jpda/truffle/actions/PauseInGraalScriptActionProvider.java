@@ -27,7 +27,6 @@ import com.sun.jdi.InvocationException;
 import com.sun.jdi.Method;
 import com.sun.jdi.ObjectReference;
 import com.sun.jdi.ThreadReference;
-import java.awt.GraphicsEnvironment;
 import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.Map;
@@ -63,13 +62,13 @@ import org.openide.util.Lookup;
 public class PauseInGraalScriptActionProvider extends JPDADebuggerActionProvider {
 
     private static final Logger LOG = Logger.getLogger(PauseInGraalScriptActionProvider.class.getName());
-
+    
     public static final String NAME = "pauseInGraalScript";  // NOI18N
     private static final String ACCESSOR_SUSPEND_NEXT_EXECUTION = "suspendNextExecution";   // NOI18N
     private static final String ACCESSOR_SUSPEND_NEXT_EXECUTION_SIGNAT = "()V";
-
+    
     private static WeakReference<Action> actionReference = new WeakReference<>(null);
-    private static final ThreadLocal<Boolean> AVOID_REENTRANT = new ThreadLocal<>();
+    private static boolean actionState = false;
     private boolean suspendState = false;
 
     public PauseInGraalScriptActionProvider (ContextProvider lookupProvider) {
@@ -78,42 +77,48 @@ public class PauseInGraalScriptActionProvider extends JPDADebuggerActionProvider
 
     @Override
     protected void checkEnabled(int debuggerState) {
-        if (AVOID_REENTRANT.get() != null) {
-            return;
-        }
-        try {
-            AVOID_REENTRANT.set(true);
-            checkEnabledImpl(debuggerState);
-        } finally {
-            AVOID_REENTRANT.set(null);
-        }
-    }
-
-    private void checkEnabledImpl(int debuggerState) {
-        ClassObjectReference serviceClass = RemoteServices.getServiceClass(getDebuggerImpl());
-        boolean hasServiceClass = serviceClass != null;
-        setEnabled(NAME, hasServiceClass);
-        if (hasServiceClass) {
-            JPDAThread currentThread = debugger.getCurrentThread();
-            if (currentThread != null && TruffleAccess.getCurrentGuestPCInfo(currentThread) != null) {
-                suspendState = false;
+        Action action = actionReference.get();
+        if (action != null) {
+            ClassObjectReference serviceClass = RemoteServices.getServiceClass(getDebuggerImpl());
+            boolean hasServiceClass = serviceClass != null;
+            setEnabled(NAME, hasServiceClass);
+            if (hasServiceClass) {
+                JPDAThread currentThread = debugger.getCurrentThread();
+                if (currentThread != null && TruffleAccess.getCurrentPCInfo(currentThread) != null) {
+                    suspendState = false;
+                }
+                if (actionState != suspendState) {
+                    SwingUtilities.invokeLater(() -> {
+                        actionState = suspendState;
+                        action.putValue(Action.SELECTED_KEY, actionState);
+                    });
+                }
+            } else {
+                if (actionState) {
+                    SwingUtilities.invokeLater(() -> {
+                        action.putValue(Action.SELECTED_KEY, false);
+                        actionState = false;
+                    });
+                }
             }
-            updateActionState(true, suspendState);
-        } else {
-            updateActionState(false, false);
         }
     }
 
     @Override
     public void doAction(Object actionName) {
-        assert NAME.equals(actionName);
-        suspendState = !suspendState;
-        if (suspendState) {
-            scheduleSuspend();
-        } else {
-            cancelSuspend();
+        Action action = actionReference.get();
+        if (action != null) {
+            suspendState = !suspendState;
+            actionState = suspendState;
+            SwingUtilities.invokeLater(() -> {
+                action.putValue(Action.SELECTED_KEY, actionState);
+            });
+            if (suspendState) {
+                scheduleSuspend();
+            } else {
+                cancelSuspend();
+            }
         }
-        updateActionState(true, suspendState);
     }
 
     @Override
@@ -171,23 +176,11 @@ public class PauseInGraalScriptActionProvider extends JPDADebuggerActionProvider
             java.lang.reflect.Method createActionMethod = debuggerActionClass.getDeclaredMethod("createAction", Map.class);
             Action action = (Action) createActionMethod.invoke(null, params);
             action.putValue(Actions.ACTION_VALUE_TOGGLE, Boolean.TRUE);
-            action.putValue(Action.SELECTED_KEY, false);
+            action.putValue(Action.SELECTED_KEY, actionState);
             actionReference = new WeakReference<>(action);
             return action;
         } catch (Exception ex) {
             throw new RuntimeException(ex);
-        }
-    }
-
-    private static void updateActionState(boolean active, boolean suspendState) {
-        if (GraphicsEnvironment.isHeadless()) {
-            return;
-        }
-        Action action = actionReference.get();
-        if (action != null) {
-            SwingUtilities.invokeLater(() -> {
-                action.putValue(Action.SELECTED_KEY, active & suspendState);
-            });
         }
     }
 }

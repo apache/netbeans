@@ -67,9 +67,9 @@ public enum XMLTokenId implements TokenId {
     /* PI target <sample>&lt;?<b>target</b> content of pi ?></sample> */
     PI_TARGET("xml-pi-target"),
     /* PI conetnt <sample>&lt;?target <b>content of pi </b>?></sample> */
-    PI_CONTENT("xml-pi-content"),
+    PI_CONTENT("pi-content"),
     /* PI end delimiter <sample>&lt;?target <content of pi <b>?></b></sample> */
-    PI_END("xml-pi-end"),
+    PI_END("pi-end"),
     /** Cdata section including its delimiters. */
     CDATA_SECTION("xml-cdata-section");
 

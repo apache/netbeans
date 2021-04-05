@@ -633,9 +633,8 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
         }
 
         protected void run() {
-            @SuppressWarnings({"unchecked", "rawtypes"})
-            List<LayoutNode>[] layersTmp = new List[layerCount];
-            layers = layersTmp;
+
+            layers = new List[layerCount];
 
             for (int i = 0; i < layerCount; i++) {
                 layers[i] = new ArrayList<LayoutNode>();
@@ -853,17 +852,11 @@ public class HierarchicalLayout<N, E> extends GraphLayout<N, E> {
             }
         }
 
-        @Override
         protected void run() {
-            @SuppressWarnings({"unchecked", "rawtypes"})
-            ArrayList<Integer>[] spaceTmp = new ArrayList[layers.length];
-            space = spaceTmp;
-            @SuppressWarnings({"unchecked", "rawtypes"})
-            ArrayList<LayoutNode>[] downProcessingOrderTmp = new ArrayList[layers.length];
-            downProcessingOrder = downProcessingOrderTmp;
-            @SuppressWarnings({"unchecked", "rawtypes"})
-            ArrayList<LayoutNode>[] upProcessingOrderTmp = new ArrayList[layers.length];
-            upProcessingOrder = upProcessingOrderTmp;
+
+            space = new ArrayList[layers.length];
+            downProcessingOrder = new ArrayList[layers.length];
+            upProcessingOrder = new ArrayList[layers.length];
 
             for (int i = 0; i < layers.length; i++) {
                 space[i] = new ArrayList<Integer>();

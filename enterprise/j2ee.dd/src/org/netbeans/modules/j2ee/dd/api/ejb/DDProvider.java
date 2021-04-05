@@ -57,17 +57,14 @@ import org.openide.util.Exceptions;
 
 public final class DDProvider {
     private static final String EJB_21_DOCTYPE = "http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd"; //NOI18N
-    private static final String EJB_30_DOCTYPE = "http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"; //NOI18N
-    private static final String EJB_31_DOCTYPE = "http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"; //NOI18N
-    private static final String EJB_32_DOCTYPE = "http://xmlns.jcp.org/xml/ns/javaee/ejb-jar_3_2.xsd"; //NOI18N
     private static final DDProvider ddProvider = new DDProvider();
-    private final Map<Object, EjbJarProxy> ddMap;
+    private final Map ddMap;
 
     /** 
      * Creates a new instance of DDProvider.
      */
     private DDProvider() {
-        ddMap = new HashMap<>(5);
+        ddMap = new HashMap(5);
     }
 
     /**
@@ -85,7 +82,6 @@ public final class DDProvider {
      * or to listen to the changes.
      * @param fo FileObject representing the ejb-jar.xml file
      * @return EjbJar object - root of the deployment descriptor bean graph
-     * @throws IOException
      */
     public synchronized EjbJar getDDRoot(FileObject fo) throws java.io.IOException {
         if (fo == null) {
@@ -140,14 +136,22 @@ public final class DDProvider {
      * for writing the changes.
      * @param fo FileObject representing the ejb-jar.xml file
      * @return EjbJar object - root of the deployment descriptor bean graph
-     * @throws IOException
      */
     public EjbJar getDDRootCopy(FileObject fo) throws java.io.IOException {
         return (EjbJar)getDDRoot(fo).clone();
     }
 
     private EjbJarProxy getFromCache (Object o) {
-        return ddMap.get(o);
+        /*       WeakReference wr = (WeakReference) ddMap.get(o);
+       if (wr == null) {
+           return null;
+       }
+       EjbJarProxy ejbJarProxy = (EjbJarProxy) wr.get ();
+       if (ejbJarProxy == null) {
+           ddMap.remove (o);
+       }
+       return ejbJarProxy;*/
+        return (EjbJarProxy) ddMap.get(o);
     }
 
     private void putToCache(Object o, EjbJarProxy ejbJarProxy) {
@@ -159,8 +163,6 @@ public final class DDProvider {
      *
      * @param inputSource source representing the ejb-jar.xml file
      * @return EjbJar object - root of the deployment descriptor bean graph
-     * @throws IOException
-     * @throws SAXException
      */
     public EjbJar getDDRoot(InputSource inputSource) throws IOException, SAXException {
         ErrorHandler errorHandler = new ErrorHandler();
@@ -183,8 +185,6 @@ public final class DDProvider {
     // PENDING j2eeserver needs BaseBean - this is a temporary workaround to avoid dependency of web project on DD impl
     /**  Convenient method for getting the BaseBean object from CommonDDBean object
      *
-     * @param bean
-     * @return 
      */
     public BaseBean getBaseBean(CommonDDBean bean) {
         if (bean instanceof BaseBean) {
@@ -196,11 +196,7 @@ public final class DDProvider {
     }
 
     private static EjbJar createEjbJar(String version, Document document) {
-        if (EjbJar.VERSION_3_2.equals(version)) {
-            return new org.netbeans.modules.j2ee.dd.impl.ejb.model_3_2.EjbJar(document, Common.USE_DEFAULT_VALUES);
-        } else if (EjbJar.VERSION_3_1.equals(version)) {
-            return new org.netbeans.modules.j2ee.dd.impl.ejb.model_3_1.EjbJar(document, Common.USE_DEFAULT_VALUES);
-        } else if (EjbJar.VERSION_3_0.equals(version)) {
+        if (EjbJar.VERSION_3_0.equals(version)) {
             return new org.netbeans.modules.j2ee.dd.impl.ejb.model_3_0.EjbJar(document, Common.USE_DEFAULT_VALUES);
         } else if (EjbJar.VERSION_2_1.equals(version)) {
             return new org.netbeans.modules.j2ee.dd.impl.ejb.model_2_1.EjbJar(document, Common.USE_DEFAULT_VALUES);
@@ -226,18 +222,13 @@ public final class DDProvider {
                 id = schemaLocation.substring(schemaLocation.lastIndexOf(" ") + 1);
             }
         }
+        // This is the default version
         if (id != null) {
-            if(EJB_32_DOCTYPE.equals(id)) {
-                return EjbJar.VERSION_3_2;
-            } else if (EJB_31_DOCTYPE.equals(id)) {
-                return EjbJar.VERSION_3_1;
-            } else if (EJB_30_DOCTYPE.equals(id)) {
-                return EjbJar.VERSION_3_0;
-            } else if (EJB_21_DOCTYPE.equals(id)) {
+            if (EJB_21_DOCTYPE.equals(id)) {
                 return EjbJar.VERSION_2_1;
             }
         }
-        return EjbJar.VERSION_3_2;
+        return EjbJar.VERSION_3_0;
 
     }
 
@@ -263,23 +254,13 @@ public final class DDProvider {
             return resolver;
         }
 
-        /**
-         * Return a proper input source
-         * @param publicId
-         * @param systemId
-         * @return 
-         */
-        @Override
         public InputSource resolveEntity(String publicId, String systemId) {
+            // return a proper input source
             String resource;
-            if (EJB_32_DOCTYPE.equals(systemId)) {
-                resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_3_2.xsd"; //NOI18N
-            } else if (EJB_31_DOCTYPE.equals(systemId)) {
-                resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_3_1.xsd"; //NOI18N
-            } else if (EJB_30_DOCTYPE.equals(systemId)) {
-                resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_3_0.xsd"; //NOI18N
-            } else if (EJB_21_DOCTYPE.equals(systemId)) {
+            if ("http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd".equals(systemId)) {
                 resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_2_1.xsd"; //NOI18N
+            } else if ("http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd".equals(systemId)) {
+                resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_3_0.xsd"; //NOI18N
             } else {
                 return null;
             }
@@ -292,7 +273,6 @@ public final class DDProvider {
         private int errorType=-1;
         SAXParseException error;
 
-        @Override
         public void warning(org.xml.sax.SAXParseException sAXParseException) throws org.xml.sax.SAXException {
             if (errorType<0) {
                 errorType=0;
@@ -300,7 +280,6 @@ public final class DDProvider {
             }
             //throw sAXParseException;
         }
-        @Override
         public void error(org.xml.sax.SAXParseException sAXParseException) throws org.xml.sax.SAXException {
             if (errorType<1) {
                 errorType=1;
@@ -308,7 +287,6 @@ public final class DDProvider {
             }
             //throw sAXParseException;
         }
-        @Override
         public void fatalError(org.xml.sax.SAXParseException sAXParseException) throws org.xml.sax.SAXException {
             errorType=2;
             throw sAXParseException;
@@ -330,12 +308,15 @@ public final class DDProvider {
                 synchronized (ddMap) {
                     EjbJarProxy ejbJarProxy = getFromCache(fo);
                     if (ejbJarProxy != null) {
-                        try (InputStream inputStream = fo.getInputStream()) {
+                        InputStream inputStream = fo.getInputStream();
+                        try {
                             String encoding = EncodingUtil.detectEncoding(new BufferedInputStream(inputStream));
                             if (encoding == null) {
                                 encoding = "UTF8";
                             }
                             DDUtils.merge(ejbJarProxy, new InputStreamReader(inputStream, encoding));
+                        } finally {
+                            inputStream.close();
                         }
                     }
                 }

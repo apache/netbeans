@@ -22,9 +22,9 @@ import org.netbeans.modules.csl.api.OffsetRange;
 
 public class Entry {
 
-    private final String name;
-    private final OffsetRange astRange;
-    private final OffsetRange documentRange;
+    private String name;
+    private OffsetRange astRange;
+    private OffsetRange documentRange;
 
     protected Entry(String name, OffsetRange astRange, OffsetRange documentRange) {
         this.name = name;

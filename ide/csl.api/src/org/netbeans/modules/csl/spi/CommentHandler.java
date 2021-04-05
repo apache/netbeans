@@ -21,8 +21,7 @@ package org.netbeans.modules.csl.spi;
 import java.util.ArrayList;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.editor.document.AtomicLockDocument;
-import org.netbeans.api.editor.document.LineDocumentUtils;
+import org.netbeans.editor.BaseDocument;
 import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 
@@ -114,9 +113,9 @@ public interface CommentHandler {
 
                 }
             };
-            AtomicLockDocument ald = LineDocumentUtils.as(doc, AtomicLockDocument.class);
-            if(ald != null) {
-                ald.runAtomic(task);
+
+            if(doc instanceof BaseDocument) {
+                ((BaseDocument)doc).runAtomic(task);
             } else {
                 task.run();
             }

@@ -27,8 +27,6 @@ class Connection {
      * comment for field2
      */
     public $field2;
-    #[Attr(1, "param")]
-    public $field3;
 }
 function connect() {
 }

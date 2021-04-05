@@ -29,13 +29,11 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
-import org.netbeans.api.java.lexer.JavaTokenId;
 
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource.Phase;
@@ -43,7 +41,6 @@ import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.WorkingCopy;
-import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -81,30 +78,12 @@ public class RenameConstructor implements ErrorRule<Void> {
             }
             for (Tree member : ct.getMembers()) {
                 TreePath memberPath = new TreePath(parentPath, member);
-                if (mt != member && member.getKind() == Kind.METHOD && "<init>".contentEquals(((MethodTree)member).getName()) //NOI18N
+                if (member.getKind() == Kind.METHOD && "<init>".contentEquals(((MethodTree)member).getName()) //NOI18N
                         && !tu.isSynthetic(memberPath) && types.isSameType(types.erasure(trees.getTypeMirror(memberPath)), type)) {
                     return null;
                 }
             }
-            CompilationUnitTree cut = treePath.getCompilationUnit();
-            int startPos = (int) trees.getSourcePositions().getStartPosition(cut, mt);
-            int modEndPos = (int) trees.getSourcePositions().getEndPosition(cut, mt.getModifiers());
-            int typeEndPos = (int) trees.getSourcePositions().getEndPosition(cut, mt.getReturnType());
-            int namePos = typeEndPos != (-1) ? typeEndPos
-                                             : modEndPos != (-1) ? modEndPos
-                                                                 : startPos;
-            String originalName = mt.getName().toString();
-            //XXX!!!
-            TokenSequence<?> ts = compilationInfo.getTokenHierarchy().tokenSequence();
-            int end = (int) trees.getSourcePositions().getEndPosition(cut, mt);
-            ts.move(namePos);
-            while (ts.moveNext() && ts.offset() < end) {
-                if (ts.token().id() == JavaTokenId.IDENTIFIER) {
-                    originalName = ts.token().text().toString();
-                    break;
-                }
-            }
-            RenameConstructorFix fix = new RenameConstructorFix(compilationInfo.getSnapshot().getSource(), TreePathHandle.create(treePath, compilationInfo), offset, originalName, ct.getSimpleName().toString());
+            RenameConstructorFix fix = new RenameConstructorFix(compilationInfo.getSnapshot().getSource(), TreePathHandle.create(treePath, compilationInfo), offset, mt.getName(), ct.getSimpleName());
             return Collections.<Fix>singletonList(fix);
         }
         return null;
@@ -135,10 +114,10 @@ public class RenameConstructor implements ErrorRule<Void> {
         private Source source;
         private TreePathHandle pathHandle;
         private int offset;
-        private String oldConstructorName;
-        private String newConstructorName;
+        private Name oldConstructorName;
+        private Name newConstructorName;
 
-        private RenameConstructorFix(Source source, TreePathHandle pathHandle, int offset, String oldConstructorName, String newConstructorName) {
+        private RenameConstructorFix(Source source, TreePathHandle pathHandle, int offset, Name oldConstructorName, Name newConstructorName) {
             this.source = source;
             this.pathHandle = pathHandle;
             this.offset = offset;

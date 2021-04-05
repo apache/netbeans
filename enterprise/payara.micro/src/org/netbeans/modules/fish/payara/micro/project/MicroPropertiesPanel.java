@@ -19,11 +19,9 @@
 package org.netbeans.modules.fish.payara.micro.project;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.prefs.Preferences;
-import static java.util.stream.Collectors.toList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 import org.netbeans.api.project.Project;
@@ -31,8 +29,6 @@ import static org.netbeans.api.project.ProjectUtils.getPreferences;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.VERSION;
 import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import org.netbeans.modules.maven.api.customizer.support.ComboBoxUpdater;
-import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
-import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 
 /**
  *
@@ -40,45 +36,42 @@ import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
  */
 public class MicroPropertiesPanel extends JPanel {
 
+    private static final MicroVersion DEFAULT_VERSION = new MicroVersion("", "", "defined in pom.xml");
+    
     private final Preferences pref;
     
-    private final ComboBoxUpdater<PayaraPlatformVersionAPI> microVersionComboBoxUpdater;
+    private final ComboBoxUpdater<MicroVersion> microVersionComboBoxUpdater;
     
-    private PayaraPlatformVersionAPI selectedPayaraVersion;
+    private MicroVersion selectedMicroVersion;
     
     public MicroPropertiesPanel(ModelHandle2 handle, Project project) {
         pref = getPreferences(project, MicroApplication.class, true);
         initComponents();
         String microVersionText = pref.get(VERSION, "");
-        PayaraPlatformVersionAPI microVersion = PayaraPlatformVersion.toValue(microVersionText);
-        microVersionComboBoxUpdater = new ComboBoxUpdater<PayaraPlatformVersionAPI>(microVersionCombobox, microVersionLabel)  {
+        Optional<MicroVersion> microVersionOptional = VersionRepository.toMicroVersion(microVersionText);
+        microVersionComboBoxUpdater = new ComboBoxUpdater<MicroVersion>(microVersionCombobox, microVersionLabel)  {
             @Override
-            public PayaraPlatformVersionAPI getValue() {
-                return microVersion != null ? microVersion : PayaraPlatformVersion.EMPTY;
+            public MicroVersion getValue() {
+                return microVersionOptional.orElse(DEFAULT_VERSION);
             }
 
             @Override
-            public PayaraPlatformVersionAPI getDefaultValue() {
-                return null;
+            public MicroVersion getDefaultValue() {
+                return DEFAULT_VERSION;
             }
 
             @Override
-            public void setValue(PayaraPlatformVersionAPI microVersion) {
-                selectedPayaraVersion = microVersion;
+            public void setValue(MicroVersion microVersion) {
+                selectedMicroVersion = microVersion;
             }
         };
     }
     
-    private PayaraPlatformVersionAPI[] getPayaraVersion() {
-        List<PayaraPlatformVersionAPI> microVersions = new ArrayList<>();
-        microVersions.add(PayaraPlatformVersion.EMPTY);
-        microVersions.addAll(
-                PayaraPlatformVersion.getVersions()
-                        .stream()
-                        .sorted(Collections.reverseOrder())
-                        .collect(toList())
-        );
-        return microVersions.toArray(new PayaraPlatformVersionAPI[]{});
+    private MicroVersion[] getMicroVersion() {
+        List<MicroVersion> microVersions = new ArrayList<>();
+        microVersions.add(DEFAULT_VERSION);
+        microVersions.addAll(VersionRepository.getInstance().getMicroVersion());
+        return microVersions.toArray(new MicroVersion[]{});
     }
 
     @SuppressWarnings("unchecked")
@@ -90,7 +83,7 @@ public class MicroPropertiesPanel extends JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(microVersionLabel, org.openide.util.NbBundle.getMessage(MicroPropertiesPanel.class, "MicroPropertiesPanel.microVersionLabel.text")); // NOI18N
 
-        microVersionCombobox.setModel(new DefaultComboBoxModel(getPayaraVersion()));
+        microVersionCombobox.setModel(new DefaultComboBoxModel(getMicroVersion()));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -121,7 +114,7 @@ public class MicroPropertiesPanel extends JPanel {
     // End of variables declaration//GEN-END:variables
 
     public void applyChanges() {
-       pref.put(VERSION, selectedPayaraVersion.toString());
+       pref.put(VERSION, selectedMicroVersion.getVersion());
     }
 
 }

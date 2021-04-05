@@ -246,7 +246,7 @@ public class SoapClientOperationInfo {
             ;
             return WSDLModelFactory.getDefault().getModel(Utilities.createModelSource(wsdlFO, true));
         } catch (CatalogModelException ex) {
-            Logger.getGlobal().log(Level.INFO, "", ex);
+            Logger.global.log(Level.INFO, "", ex);
         }
         return null;
     }

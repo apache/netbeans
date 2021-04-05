@@ -461,9 +461,8 @@ public class ModuleOraculumTest extends NbTestCase {
             final DiagnosticListener<? super JavaFileObject> diagnosticListener,
             final boolean detached) {
         try {
-            JavaFileObject jfo = file != null ? FileObjects.sourceFileObject(file, root, null, false) : null;
-            Iterable<? extends JavaFileObject> jfos = jfo != null ? Arrays.asList(jfo) : Collections.emptyList();
-            return JavacParser.createJavacTask(file, jfos, root, cpInfo, parser, diagnosticListener, detached);
+            List<JavaFileObject> jfo = file != null ? Arrays.asList(FileObjects.sourceFileObject(file, root, null, false)) : Collections.emptyList();
+            return JavacParser.createJavacTask(file, jfo, root, cpInfo, parser, diagnosticListener, detached);
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }

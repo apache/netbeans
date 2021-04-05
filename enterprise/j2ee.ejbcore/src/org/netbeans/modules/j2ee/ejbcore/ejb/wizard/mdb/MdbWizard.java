@@ -80,8 +80,6 @@ public final class MdbWizard implements WizardDescriptor.InstantiatingIterator {
         MAVEN_JAVAEE_API_LIBS.put(Profile.JAVA_EE_6_FULL, "javaee-api-6.0"); //NOI18N
         MAVEN_JAVAEE_API_LIBS.put(Profile.JAVA_EE_7_FULL, "javaee-api-7.0"); //NOI18N
         MAVEN_JAVAEE_API_LIBS.put(Profile.JAVA_EE_8_FULL, "javaee-api-8.0"); //NOI18N
-        MAVEN_JAVAEE_API_LIBS.put(Profile.JAKARTA_EE_8_FULL, "jakartaee-api-8.0.0"); //NOI18N
-        MAVEN_JAVAEE_API_LIBS.put(Profile.JAKARTA_EE_9_FULL, "jakartaee-api-9.0.0"); //NOI18N
     }
 
     @Override
@@ -179,11 +177,7 @@ public final class MdbWizard implements WizardDescriptor.InstantiatingIterator {
     private Profile getTargetFullProfile() {
         Profile profile = JavaEEProjectSettings.getProfile(Templates.getProject(wiz));
         if (profile != null) {
-          if (profile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
-            return Profile.JAKARTA_EE_9_FULL;
-          } else if (profile.isAtLeast(Profile.JAKARTA_EE_8_WEB)) {
-              return Profile.JAKARTA_EE_8_FULL;
-            } else if (profile.isAtLeast(Profile.JAVA_EE_8_WEB)) {
+            if (profile.isAtLeast(Profile.JAVA_EE_8_WEB)) {
                 return Profile.JAVA_EE_8_FULL;
             } else if (profile.isAtLeast(Profile.JAVA_EE_7_WEB)) {
                 return Profile.JAVA_EE_7_FULL;

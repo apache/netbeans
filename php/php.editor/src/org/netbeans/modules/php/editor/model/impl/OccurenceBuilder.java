@@ -150,7 +150,6 @@ class OccurenceBuilder {
     private Map<SingleFieldDeclarationInfo, FieldElementImpl> fldDeclarations;
     private Map<ASTNodeInfo<FieldAccess>, Scope> fieldInvocations;
     private volatile ElementInfo elementInfo;
-    private volatile ElementInfo promotedVariableElementInfo;
     private Map<ASTNodeInfo<GotoLabel>, Scope> gotoLabel;
     private Map<ASTNodeInfo<GotoStatement>, Scope> gotoStatement;
     private Map<ASTNodeInfo<Expression>, Scope> useAliases;
@@ -662,12 +661,6 @@ class OccurenceBuilder {
                     break;
                 case FIELD:
                     buildFields(index, fileScope, cachedOccurences);
-                    if (promotedVariableElementInfo != null) {
-                        // [NETBEANS-4443] PHP 8.0 Constructor Property Promotion
-                        buildVariables(promotedVariableElementInfo, fileScope, cachedOccurences);
-                        buildDocTagsForVars(promotedVariableElementInfo, fileScope, cachedOccurences);
-                        promotedVariableElementInfo = null;
-                    }
                     break;
                 case STATIC_FIELD:
                     buildStaticFields(index, fileScope, cachedOccurences);
@@ -2027,13 +2020,10 @@ class OccurenceBuilder {
                         return;
                     }
                     SingleFieldDeclarationInfo nodeInfo = entry.getKey();
-                    Scope inScope = entry.getValue().getInScope();
-                    if (inScope instanceof TypeScope) {
-                        TypeScope typeScope = (TypeScope) inScope;
-                        if (typeName.matchesName(typeScope)) {
-                            if (fieldName.matchesName(PhpElementKind.FIELD, nodeInfo.getName())) {
-                                occurences.add(new OccurenceImpl(phpElement, nodeInfo.getRange()));
-                            }
+                    TypeScope typeScope = (TypeScope) entry.getValue().getInScope();
+                    if (typeName.matchesName(typeScope)) {
+                        if (fieldName.matchesName(PhpElementKind.FIELD, nodeInfo.getName())) {
+                            occurences.add(new OccurenceImpl(phpElement, nodeInfo.getRange()));
                         }
                     }
                 }
@@ -2258,17 +2248,7 @@ class OccurenceBuilder {
             if (nextElementInfo.getName() != null && nextElementInfo.getName().trim().length() > 0) {
                 OffsetRange range = nextElementInfo.getRange();
                 if (range != null && range.containsInclusive(offset)) {
-                    if (elementInfo != null
-                            && elementInfo.getKind() == Kind.FIELD
-                            && nextElementInfo.getKind() == Kind.VARIABLE) {
-                        // [NETBEANS-4443] PHP 8.0 Constructor Property Promotion
-                        // public function __construct(private int $x){}
-                        // $x is both a field and a parameter
-                        // so, we have to check both elements
-                        promotedVariableElementInfo = nextElementInfo;
-                    } else {
-                        elementInfo = nextElementInfo;
-                    }
+                    elementInfo = nextElementInfo;
                 }
             }
         }

@@ -219,9 +219,9 @@ public class ExtFormatter extends Formatter implements FormatLayer {
             fw.setChainModified(false);
             fw.setRestartFormat(false);
 
-            Iterator<FormatLayer> it = formatLayerIterator();
+            Iterator it = formatLayerIterator();
             while (it.hasNext()) {
-                it.next().format(fw);
+                ((FormatLayer)it.next()).format(fw);
                 if (fw.isRestartFormat()) {
                     break;
                 }

@@ -26,9 +26,9 @@ import org.netbeans.modules.visual.graph.layout.orthogonalsupport.Face.Dart;
  *
  * @author ptliu
  */
-public class EmbeddedPlanarGraph<N, E> {
+public class EmbeddedPlanarGraph {
 
-    private MGraph<N, E> originalGraph;
+    private MGraph originalGraph;
     private ArrayList<Face> faces;
 
     /**
@@ -36,24 +36,24 @@ public class EmbeddedPlanarGraph<N, E> {
      * @param graph
      * @return
      */
-    public static <N, E> EmbeddedPlanarGraph<N, E> createGraph(MGraph<N, E> graph) {
-        return new EmbeddedPlanarGraph<>(graph);
+    public static EmbeddedPlanarGraph createGraph(MGraph graph) {
+        return new EmbeddedPlanarGraph(graph);
     }
 
     /**
      * 
      * @param graph
      */
-    private EmbeddedPlanarGraph(MGraph<N, E> graph) {
+    private EmbeddedPlanarGraph(MGraph graph) {
         this.originalGraph = graph;
-        faces = new ArrayList<>();
+        faces = new ArrayList<Face>();
     }
 
     /**
      * 
      * @return
      */
-    public MGraph<N, E> getOriginalGraph() {
+    public MGraph getOriginalGraph() {
         return originalGraph;
     }
 

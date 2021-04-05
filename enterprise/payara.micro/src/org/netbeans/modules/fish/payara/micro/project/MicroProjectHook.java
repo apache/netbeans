@@ -21,7 +21,6 @@ package org.netbeans.modules.fish.payara.micro.project;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.MAVEN_WAR_PROJECT_TYPE;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
-import org.netbeans.modules.maven.j2ee.ProjectHookImpl;
 import org.netbeans.modules.maven.spi.nodes.SpecialIcon;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
@@ -34,12 +33,11 @@ import org.netbeans.spi.project.ui.ProjectOpenedHook;
         service = ProjectOpenedHook.class,
         projectType = MAVEN_WAR_PROJECT_TYPE
 )
-public class MicroProjectHook extends ProjectHookImpl {
+public class MicroProjectHook extends ProjectOpenedHook {
 
     private final Project project;
 
     public MicroProjectHook(Project project) {
-        super(project);
         this.project = project;
     }
 
@@ -48,8 +46,6 @@ public class MicroProjectHook extends ProjectHookImpl {
         if (MicroApplication.getInstance(project) != null) {
             addDeployOnSaveManager(project);
             updateMicroIcon();
-        } else {
-            super.projectOpened();
         }
     }
 
@@ -57,8 +53,6 @@ public class MicroProjectHook extends ProjectHookImpl {
     public void projectClosed() {
         if (MicroApplication.getInstance(project) != null) {
             removeDeployOnSaveManager(project);
-        } else {
-            super.projectOpened();
         }
     }
 

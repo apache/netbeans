@@ -1,2 +1,0 @@
-        $|>MARK_OCCURRENCES:sta^te<| = self::STOP;
-        return match ($|>MARK_OCCURRENCES:state<|) {

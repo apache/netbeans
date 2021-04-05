@@ -27,7 +27,6 @@ import org.netbeans.modules.gsf.codecoverage.api.FileCoverageDetails;
  * @author Tor Norbye
  */
 public class CoverageDocInfo {
-
     private final PropertyChangeSupport pcs;
     private final FileCoverageDetails details;
 

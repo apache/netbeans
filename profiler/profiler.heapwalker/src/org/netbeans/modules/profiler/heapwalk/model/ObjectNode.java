@@ -24,7 +24,6 @@ import org.openide.util.NbBundle;
 import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import org.netbeans.lib.profiler.heap.Field;
 import org.netbeans.lib.profiler.heap.FieldValue;
 import org.netbeans.lib.profiler.heap.GCRoot;
 import org.netbeans.lib.profiler.heap.Instance;
@@ -142,21 +141,13 @@ public class ObjectNode extends InstanceNode {
             public HeapWalkerNode[] computeChildren() {
                 HeapWalkerNode[] children = null;
 
-                if (isModeFields()) {
+                if (getMode() == HeapWalkerNode.MODE_FIELDS) {
                     if (hasInstance()) {
                         ArrayList fieldValues = new ArrayList();
                         fieldValues.addAll(getInstance().getFieldValues());
-                        final boolean skipClassLoaders = getMode() == HeapWalkerNode.MODE_FIELDS_NO_CLASSLOADER;
-                        for (Object v : getInstance().getStaticFieldValues()) {
-                            FieldValue fv = (FieldValue) v;
-                            final Field field = fv.getField();
-                            if (skipClassLoaders && field.isStatic() && "<classLoader>".equals(field.getName())) { // NOI18N
-                                continue;
-                            }
-                            fieldValues.add(v);
-                        }
+                        fieldValues.addAll(getInstance().getStaticFieldValues());
 
-                        if (fieldValues.isEmpty()) {
+                        if (fieldValues.size() == 0) {
                             // Instance has no fields
                             children = new HeapWalkerNode[1];
                             children[0] = HeapWalkerNodeFactory.createNoFieldsNode(ObjectNode.this);

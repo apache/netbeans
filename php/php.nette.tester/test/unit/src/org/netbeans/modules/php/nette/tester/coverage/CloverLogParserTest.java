@@ -32,6 +32,10 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.php.spi.testing.coverage.Coverage;
 import org.netbeans.modules.php.spi.testing.coverage.FileMetrics;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+
 public class CloverLogParserTest extends NbTestCase {
 
     public CloverLogParserTest(String name) {
@@ -51,32 +55,32 @@ public class CloverLogParserTest extends NbTestCase {
         assertEquals(new File(getDataDir(), "testdata/Calculator.php").getAbsolutePath(), file.getPath());
         FileMetrics metrics = file.getMetrics();
         assertNotNull(metrics);
-        assertEquals(49, metrics.getLineCount());
+        assertEquals(72, metrics.getLineCount());
         assertEquals(7, metrics.getStatements());
         assertEquals(6, metrics.getCoveredStatements());
         assertNotNull(file.getLines());
         assertEquals(9, file.getLines().size());
         Coverage.Line line = file.getLines().get(0);
-        assertEquals(23, line.getNumber());
+        assertEquals(47, line.getNumber());
         assertEquals(1, line.getHitCount());
         line = file.getLines().get(1);
-        assertEquals(26, line.getNumber());
+        assertEquals(50, line.getNumber());
         assertEquals(1, line.getHitCount());
         line = file.getLines().get(2);
-        assertEquals(30, line.getNumber());
+        assertEquals(54, line.getNumber());
         assertEquals(1, line.getHitCount());
         line = file.getLines().get(7);
-        assertEquals(46, line.getNumber());
+        assertEquals(69, line.getNumber());
         assertEquals(0, line.getHitCount());
         line = file.getLines().get(8);
-        assertEquals(50, line.getNumber());
+        assertEquals(73, line.getNumber());
         assertEquals(1, line.getHitCount());
 
         file = files.get(1);
         assertEquals(new File(getDataDir(), "testdata/Calculator2.php").getAbsolutePath(), file.getPath());
         metrics = file.getMetrics();
         assertNotNull(metrics);
-        assertEquals(49, metrics.getLineCount());
+        assertEquals(72, metrics.getLineCount());
         assertEquals(0, metrics.getStatements());
         assertEquals(0, metrics.getCoveredStatements());
         assertNotNull(file.getLines());
@@ -94,8 +98,7 @@ public class CloverLogParserTest extends NbTestCase {
         Path path = file.toPath();
         Charset charset = StandardCharsets.UTF_8;
         String content = new String(Files.readAllBytes(path), charset);
-        content = content.replace("%WORKDIR%", getDataDir().getAbsolutePath());
-        content = content.replace("%SEP%", File.separator);
+        content = content.replaceAll("%WORKDIR%", getDataDir().getAbsolutePath());
         Files.write(path, content.getBytes(charset));
     }
 

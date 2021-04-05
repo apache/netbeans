@@ -33,7 +33,7 @@ import java.util.Vector;
 public abstract class ActionsProviderSupport extends ActionsProvider {
 
     private HashSet enabled = new HashSet ();
-    private Vector<ActionsProviderListener> listeners = new Vector<>();
+    private Vector listeners = new Vector ();
 
 
     /**
@@ -80,10 +80,10 @@ public abstract class ActionsProviderSupport extends ActionsProvider {
      * @param enabled the new state
      */
     protected void fireActionStateChanged (Object action, boolean enabled) {
-        Vector<ActionsProviderListener> v = (Vector<ActionsProviderListener>)listeners.clone();
+        Vector v = (Vector) listeners.clone ();
         int i, k = v.size ();
         for (i = 0; i < k; i++)
-            v.elementAt (i).actionStateChange (
+            ((ActionsProviderListener) v.elementAt (i)).actionStateChange (
                 action, enabled
             );
     }

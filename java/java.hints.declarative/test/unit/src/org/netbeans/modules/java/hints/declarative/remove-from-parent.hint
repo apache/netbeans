@@ -25,6 +25,3 @@
    double d
 => <!error="err",remove-from-parent=true>
 ;;
-    @Deprecated
-=> /*remove-from-parent*/
-;;

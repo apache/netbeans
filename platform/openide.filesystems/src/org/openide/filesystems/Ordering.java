@@ -53,8 +53,6 @@ class Ordering {
         if (!it.hasNext()) {
             return Collections.emptyList();
         }
-        int unordered = 0;
-        int ordered = 0;
         Map<String,FileObject> childrenByName = new HashMap<String,FileObject>();
         class ChildAndPosition implements Comparable<ChildAndPosition> {
             ChildAndPosition(FileObject child, Number position) {
@@ -93,7 +91,6 @@ class Ordering {
             Object pos = child.getAttribute(ATTR_POSITION);
             if (pos instanceof Number) {
                 childrenByPosition.add(new ChildAndPosition(child, (Number) pos));
-                ordered |= child.isFolder() ? 1 : 2;
             } else if (logWarnings && pos != null) {
                 LOG.log(Level.WARNING, "Encountered nonnumeric position attribute {0} of {1} for {2}\nChildren: {3}", new Object[]{pos, pos.getClass(), child.getPath(), children});
             }
@@ -103,9 +100,6 @@ class Ordering {
                 if (child.getParent() != parent) {
                     throw new IllegalArgumentException("All children must have the same parent: " + child.getParent().getPath() + " vs. " + parent.getPath() + "\nChildren: " + children); // NOI18N
                 }
-            }
-            if (pos == null) {
-                unordered |= child.isFolder() ? 1 : 2;
             }
         }
         Map<FileObject,Set<FileObject>> edges = new HashMap<FileObject,Set<FileObject>>();
@@ -164,18 +158,7 @@ class Ordering {
                 previousChild = subsequentChild;
             }
         }
-        boolean shouldLog = logWarnings && !childrenByPosition.isEmpty() && childrenByPosition.size() < children.size();
-        if (shouldLog) {
-            // exceptions:  See Bugzilla#201893 
-            if (parent.getPath().matches("Projects/.+/Lookup")) {
-                // do not report any order issues for Projects/Lookup, even between files, or between folders.
-                shouldLog = false;
-            } else if (FileUtil.isParentOf(FileUtil.getConfigRoot(), parent) && ((ordered & unordered) == 0)) {
-                // do not report folder / file mismatch on configfs, but DO report mismatch inside folder/file category.
-                shouldLog = false;
-            }
-        }
-        if (shouldLog) {
+        if (logWarnings && /* #201893*/ !parent.getPath().matches("Projects/.+/Lookup") && !childrenByPosition.isEmpty() && childrenByPosition.size() < children.size()) {
             List<FileObject> missingPositions = new ArrayList<FileObject>(children);
             for (ChildAndPosition cap : childrenByPosition) {
                 missingPositions.remove(cap.child);

@@ -1,3 +1,0 @@
-            default =>  MatchExpression::|>MARK_OCCURRENCES:default<|() . MatchExpression::match . $this->match(),
-    public static function |>MARK_OCCURRENCES:default<|(): string {
-    default => MatchExpression::|>MARK_OCCURRENCES:defa^ult<|(),

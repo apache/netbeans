@@ -182,16 +182,7 @@ public class ElementsService {
     }
     
     public boolean isLocal(Element element) {
-        Element encl = element.getEnclosingElement();
-        if (encl == null ||
-            encl.getKind() == ElementKind.PACKAGE ||
-            encl.getKind() == ElementKind.MODULE) {
-            return false;
-        }
-        if (encl.getKind().isClass() || encl.getKind().isInterface()) {
-            return isLocal(encl);
-        }
-        return true;
+        return ((Symbol)element).isLocal();
     }
     
     public CharSequence getFullName(Element element) {

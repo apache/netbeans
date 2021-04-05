@@ -191,7 +191,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         out.addTrimObserver(this);
         this.indentSize = cs.getIndentSize();
         this.tree2Tag = tree2Tag;
-        this.tree2Doc = tree2Doc == null ? Collections.<Tree, DocCommentTree>emptyMap(): tree2Doc;
+        this.tree2Doc = tree2Doc == null ? Collections.EMPTY_MAP : tree2Doc;
         this.tag2Span = (Map<Object, int[]>) tag2Span;//XXX
         this.origText = origText;
         this.comments = CommentHandlerService.instance(context);
@@ -2077,11 +2077,14 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     public void visitTree(JCTree tree) {
         if ("BINDING_PATTERN".equals(tree.getKind().name())) {
             try {
-                print((JCTree) TreeShims.getBindingPatternType(tree));
+                Class bindingPatternClass = Class.forName("com.sun.source.tree.BindingPatternTree");
+                Method getBinding = bindingPatternClass.getMethod("getBinding");
+                Method getType = bindingPatternClass.getMethod("getType");
+                print((JCTree) getType.invoke(tree));
                 print(' ');
-                print((Name) TreeShims.getBinding(tree));
+                print((Name) getBinding.invoke(tree));
                 return ;
-            } catch (RuntimeException ex) {
+            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ClassNotFoundException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }

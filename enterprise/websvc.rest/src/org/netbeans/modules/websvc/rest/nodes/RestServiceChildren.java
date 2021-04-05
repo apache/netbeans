@@ -51,7 +51,7 @@ public class RestServiceChildren extends Children.Keys {
     protected void removeNotify() {
         super.removeNotify();
         
-        setKeys(Collections.emptySet());
+        setKeys(Collections.EMPTY_SET);
     }
     
     private void updateKeys() {

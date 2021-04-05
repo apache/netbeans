@@ -22,6 +22,7 @@ package org.openide.execution;
 import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import org.openide.execution.ExecutionEngine;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -40,18 +41,13 @@ public class ExecutionCompatibilityTest {
      * ExecutionEngine.
      */
     public static Test suite() {
-        return suite(null, ExecutionEngineHid.WithLookup.class);
+        return suite(null);
     }
     
     /** Executes the execution compatibility kit tests on the provided instance
-     * of execution engine. Consider to use {@link #suite(org.openide.execution.ExecutionEngine, java.lang.Class)}
-     * with the {@link ExecutionEngineHid.WithLookup}.class to check default Lookup propagation compatibility.
+     * of execution engine.
      */
     public static Test suite(ExecutionEngine engine) {
-        return suite(engine, ExecutionEngineHid.class);
-    }
-    
-    public static Test suite(ExecutionEngine engine, Class<? extends ExecutionEngineHid> testClass) {
         System.setProperty("org.openide.util.Lookup", ExecutionCompatibilityTest.class.getName() + "$Lkp");
         Object o = Lookup.getDefault();
         if (!(o instanceof Lkp)) {
@@ -70,7 +66,7 @@ public class ExecutionCompatibilityTest {
         }
         
         TestSuite ts = new TestSuite();
-        ts.addTestSuite(testClass);
+        ts.addTestSuite(ExecutionEngineHid.class);
         
         return ts;
     }

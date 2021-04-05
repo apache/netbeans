@@ -761,7 +761,7 @@ function wrapHeapSnapshot(heap) {
          */
         finalizables: function() {
             var tmp = this.snapshot.getFinalizerObjects();
-            return wrapIterator(tmp);
+            return wrapperIterator(tmp);
         },
  
         /**

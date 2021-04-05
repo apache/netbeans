@@ -48,7 +48,6 @@ import javax.lang.model.type.TypeMirror;
 import javax.swing.JButton;
 import javax.swing.text.BadLocationException;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
@@ -133,14 +132,6 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
         return pathToClass;
     }
 
-    private TreePath findOutermostClass(WorkingCopy copy, TreePath resolved) {
-        TreePath pathToClass = resolved;
-        while (pathToClass != null && (!TreeUtilities.CLASS_TREE_KINDS.contains(pathToClass.getLeaf().getKind()) || pathToClass.getParentPath().getLeaf().getKind() != Tree.Kind.COMPILATION_UNIT)) {
-            pathToClass = pathToClass.getParentPath();
-        }
-        return pathToClass;
-    }
-
     @Override
     public ChangeInfo implement() throws IOException, BadLocationException {
         JButton btnOk = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Ok"));
@@ -166,12 +157,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
                 panel.isRefactorExisting())).commit();
         return null;
     }
-
-    @Override
-    public ModificationResult getModificationResult() throws IOException {
-        return js.runModificationTask(new Worker(guessedName, permitDuplicates, false, EnumSet.of(Modifier.PRIVATE), IntroduceFieldPanel.INIT_FIELD, null, false));
-    }
-
+    
     /**
      * The actual modification. Some javac related data are recorded in fields, inner class prevents
      * unintentional leak if someone keeps a reference to the Fix
@@ -308,7 +294,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
             allNewUses.add(resolved.getLeaf());
             Collection<TreePath> duplicates = new ArrayList<>();
             if (replaceAll) {
-                for (TreePath p : SourceUtils.computeDuplicates(parameter, resolved, findOutermostClass(parameter, resolved), new AtomicBoolean())) {
+                for (TreePath p : SourceUtils.computeDuplicates(parameter, resolved, new TreePath(parameter.getCompilationUnit()), new AtomicBoolean())) {
                     if (variableRewrite) {
                         IntroduceHint.removeFromParent(parameter, p);
                     } else {
@@ -331,9 +317,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
             VariableTree field;
             expressionStatementRewrite = parentTree.getKind() == Tree.Kind.EXPRESSION_STATEMENT;
             if (!variableRewrite) {
-                Tree varType = make.Type(tm);
-                field = make.Variable(modsTree, name, varType, initializeIn == IntroduceFieldPanel.INIT_FIELD ? expression : null);
-                parameter.tag(varType, TYPE_TAG);
+                field = make.Variable(modsTree, name, make.Type(tm), initializeIn == IntroduceFieldPanel.INIT_FIELD ? expression : null);
                 if (!expressionStatementRewrite) {
                     Tree nueParent = parameter.getTreeUtilities().translate(parentTree, Collections.singletonMap(resolved.getLeaf(), make.Identifier(name)));
                     parameter.rewrite(parentTree, nueParent);
@@ -342,9 +326,8 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
                     toRemoveFromParent = resolved.getParentPath();
                 }
             } else {
-                Tree originalVarType = ((VariableTree) original).getType();
-                field = make.Variable(modsTree, name, originalVarType, initializeIn == IntroduceFieldPanel.INIT_FIELD ? expression : null);
-                parameter.tag(originalVarType, TYPE_TAG);
+                VariableTree originalVar = (VariableTree) original;
+                field = make.Variable(modsTree, name, originalVar.getType(), initializeIn == IntroduceFieldPanel.INIT_FIELD ? expression : null);
                 toRemoveFromParent = resolved;
             }
             nueClass = IntroduceHint.insertField(parameter, (ClassTree) pathToClass.getLeaf(), field, allNewUses, offset);

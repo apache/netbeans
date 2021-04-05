@@ -48,7 +48,7 @@ abstract class AbstractWinEditorTabDisplayerUI extends BasicScrollingTabDisplaye
     @Override
     public Dimension getPreferredSize(JComponent c) {
         int prefHeight = 22;
-        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics(c);
+        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics();
         if (g != null) {
             FontMetrics fm = g.getFontMetrics(displayer.getFont());
             Insets ins = getTabAreaInsets();

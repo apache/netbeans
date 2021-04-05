@@ -43,7 +43,6 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.hints.errors.Utilities;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
@@ -139,9 +138,9 @@ public class ConvertToPatternInstanceOf {
             IfTree it = (IfTree) main.getLeaf();
             InstanceOfTree iot = (InstanceOfTree) ((ParenthesizedTree) it.getCondition()).getExpression();
             StatementTree bt = it.getThenStatement();
-            InstanceOfTree cond = wc.getTreeMaker().InstanceOf(iot.getExpression(), TreeShims.isJDKVersionSupportEnablePreview()
-                    ? wc.getTreeMaker().BindingPattern(varName, iot.getType())
-                    : wc.getTreeMaker().BindingPattern(wc.getTreeMaker().Variable(wc.getTreeMaker().Modifiers(EnumSet.noneOf(Modifier.class)), varName, iot.getType(), null)));
+//            wc.rewrite(iot.getType(), wc.getTreeMaker().BindingPattern(var.getName(), iot.getType()));
+//            wc.rewrite(bt, wc.getTreeMaker().removeBlockStatement(bt, 0));
+            InstanceOfTree cond = wc.getTreeMaker().InstanceOf(iot.getExpression(), wc.getTreeMaker().BindingPattern(varName, iot.getType()));
             StatementTree thenBlock = removeFirst ? wc.getTreeMaker().removeBlockStatement((BlockTree) bt, 0) : bt;
             wc.rewrite(it, wc.getTreeMaker().If(wc.getTreeMaker().Parenthesized(cond), thenBlock, it.getElseStatement()));
             replaceOccurrences.stream().map(tph -> tph.resolve(wc)).forEach(tp -> {

@@ -1,0 +1,34 @@
+<#-- FreeMarker template (see http://freemarker.org/) -->
+<#if plugins??>
+<#list plugins as plugin>
+apply plugin: '${plugin}'
+</#list>
+
+</#if>
+<#if description?? && description != ''>
+
+description = '${description}'
+</#if>
+<#if group != "">
+    group = '${group}'
+</#if>
+<#if mainClassName??>
+
+mainClassName = '${packageBase}.${mainClassName}'
+
+</#if>
+<#if javaVersion??>
+sourceCompatibility = ${javaVersion}
+targetCompatibility = ${javaVersion}
+</#if>
+repositories {
+    jcenter()
+}
+
+<#if dependencies??>
+dependencies {
+<#list dependencies as dep>
+    ${dep}
+</#list>
+}
+</#if>

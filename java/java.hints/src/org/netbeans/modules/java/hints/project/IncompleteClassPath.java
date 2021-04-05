@@ -78,7 +78,8 @@ public class IncompleteClassPath implements ErrorRule<Void> {
     public void cancel() {
     }
 
-    public static final class ResolveFix implements Fix {
+    private static final class ResolveFix implements Fix {
+
         private final Project prj;
 
         ResolveFix(@NonNull final Project prj) {

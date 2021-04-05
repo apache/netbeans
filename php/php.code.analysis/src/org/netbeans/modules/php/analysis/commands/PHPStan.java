@@ -75,10 +75,6 @@ public final class PHPStan {
             ERROR_FORMAT_PARAM
     );
 
-     // configuration files
-    public static final String CONFIG_FILE_NAME = "phpstan.neon";  // NOI18N
-    public static final String DIST_CONFIG_FILE_NAME = "phpstan.neon.dist";  // NOI18N
-
     private final String phpStanPath;
     private int analyzeGroupCounter = 1;
 
@@ -87,10 +83,7 @@ public final class PHPStan {
     }
 
     public static PHPStan getDefault() throws InvalidPhpExecutableException {
-        return getCustom(AnalysisOptions.getInstance().getPHPStanPath());
-    }
-
-    public static PHPStan getCustom(String phpStanPath) throws InvalidPhpExecutableException {
+        String phpStanPath = AnalysisOptions.getInstance().getPHPStanPath();
         String error = validate(phpStanPath);
         if (error != null) {
             throw new InvalidPhpExecutableException(error);

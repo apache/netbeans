@@ -634,12 +634,7 @@ public final class ElementHandle<T extends Element> {
                     }
                     return new ElementHandle<VariableElement> (kind, descriptors);
                 default:
-                    if (kind.name().equals(TreeShims.RECORD) && (descriptors.length == 1)) {
-                        return new ElementHandle<TypeElement>(kind, descriptors);
-                    } else {
-                        throw new IllegalArgumentException();
-                    }
-                    
+                    throw new IllegalArgumentException ();
             }            
         }
 

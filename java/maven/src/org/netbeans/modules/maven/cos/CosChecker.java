@@ -41,7 +41,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.modules.java.api.common.project.BaseActionProvider;
 import org.netbeans.modules.maven.ActionProviderImpl;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.NbMavenProject;
@@ -54,7 +53,6 @@ import org.netbeans.modules.maven.configurations.M2Configuration;
 import static org.netbeans.modules.maven.cos.Bundle.*;
 import org.netbeans.modules.maven.customizer.CustomizerProviderImpl;
 import org.netbeans.modules.maven.execute.BeanRunConfig;
-import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.modules.maven.spi.cos.CompileOnSaveSkipper;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ActionProvider;
@@ -79,6 +77,7 @@ import org.openide.util.Utilities;
 @ProjectServiceProvider(service={PrerequisitesChecker.class, LateBoundPrerequisitesChecker.class}, projectType="org-netbeans-modules-maven")
 public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesChecker {
 
+    static final String NB_COS = ".netbeans_automatic_build"; //NOI18N
     private static final Logger LOG = Logger.getLogger(CosChecker.class.getName());
     static final RequestProcessor RP = new RequestProcessor(CosChecker.class);
     // a maven property name denoting that the old, javarunner based execution is to be used.    
@@ -356,7 +355,7 @@ public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesC
         }
         File fl = new File(path);
         fl = FileUtil.normalizeFile(fl);
-        return new File(fl, BaseActionProvider.AUTOMATIC_BUILD_TAG);
+        return  new File(fl, NB_COS);
     }
 
     /**
@@ -437,7 +436,33 @@ public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesC
 
 
     static List<String> extractDebugJVMOptions(String argLine) throws Exception {
-        return MavenExecuteUtils.extractDebugJVMOptions(argLine);
+        String[] split = CommandLineUtils.translateCommandline(argLine);
+        List<String> toRet = new ArrayList<String>();
+        for (String arg : split) {
+            if ("-Xdebug".equals(arg)) { //NOI18N
+                continue;
+            }
+            if ("-Djava.compiler=none".equals(arg)) { //NOI18N
+                continue;
+            }
+            if ("-Xnoagent".equals(arg)) { //NOI18N
+                continue;
+            }
+            if (arg.startsWith("-Xrunjdwp")) { //NOI18N
+                continue;
+            }
+            if (arg.equals("-agentlib:jdwp")) { //NOI18N
+                continue;
+            }
+            if (arg.startsWith("-agentlib:jdwp=")) { //NOI18N
+                continue;
+            }
+            if (arg.trim().length() == 0) {
+                continue;
+            }
+            toRet.add(arg);
+        }
+        return toRet;
     }
     
     static void touchProject(Project project) {

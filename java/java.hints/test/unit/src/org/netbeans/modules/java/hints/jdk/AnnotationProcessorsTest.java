@@ -35,7 +35,6 @@ public class AnnotationProcessorsTest {
                        "    @Override public java.util.Set<String> getSupportedAnnotationTypes() {return null;}\n" +
                        "}\n")
                 .run(AnnotationProcessors.class)
-                .assertWarnings("1:0-1:82:verifier:" + Bundle.HINT_AnnoProcessor_NoSupportedSource(),
-                                "2:43-2:70:verifier:ERR_AnnotationProcessors.overridingGetSupportedAnnotations");
+                .assertWarnings("2:43-2:70:verifier:ERR_AnnotationProcessors.overridingGetSupportedAnnotations");
     }
 }

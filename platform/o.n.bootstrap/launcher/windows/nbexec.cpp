@@ -43,16 +43,9 @@ extern "C" BOOL APIENTRY DllMain(HANDLE hModule,
     return TRUE;
 }
 
-volatile int exitStatus = 0;
-
 void exitHook(int status) {
-    exitStatus = status;
     logMsg("Exit hook called with status %d", status);
-    // do not handle possible restarts, if we are just CLI-connecting to a running process.
-    if (status != -252) {
-        launcher.onExit();
-    }
-    logMsg("Exit hook terminated.");
+    launcher.onExit();
 }
 
 #define NBEXEC_EXPORT extern "C" __declspec(dllexport)

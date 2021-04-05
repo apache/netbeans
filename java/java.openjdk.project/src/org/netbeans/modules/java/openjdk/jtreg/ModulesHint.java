@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
@@ -39,7 +38,6 @@ import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
@@ -94,9 +92,7 @@ public class ModulesHint {
         Pair<Map<String, Set<String>>, Set<Project>> computeModulesAndPackagesAndProjects = computeModulesAndPackages(info, tags);
         Map<String, Set<String>> projectDependencies = projectDependencies(computeModulesAndPackagesAndProjects.second());
         Map<String, Set<String>> expected = normalize(computeModulesAndPackagesAndProjects.first(), projectDependencies);
-        Map<String, Set<String>> actual = normalize(readModulesAndPackages(tags).first(), projectDependencies);
-
-        expected = transferOpen(actual, expected);
+        Map<String,Set<String>> actual = normalize(readModulesAndPackages(tags).first(), projectDependencies);
 
         if (Objects.equals(expected, actual))
             return null;
@@ -182,29 +178,6 @@ public class ModulesHint {
         return modulesAndPackages;
     }
 
-    private static Map<String, Set<String>> transferOpen(Map<String, Set<String>> from, Map<String, Set<String>> to) {
-        for (Entry<String, Set<String>> e : from.entrySet()) {
-            for (String packAndFlags : e.getValue()) {
-                int colon = packAndFlags.indexOf(':');
-                if (colon == (-1))
-                    continue;
-                String pack = packAndFlags.substring(0, colon);
-                String flags = packAndFlags.substring(colon + 1);
-                if ("open".equals(flags) || "+open".equals(flags)) {
-                    Set<String> targetPackages = to.computeIfAbsent(e.getKey(), d -> new HashSet<>());
-                    if (targetPackages.contains(pack)) {
-                        targetPackages.remove(pack);
-                        targetPackages.add(pack + ":+open");
-                    } else {
-                        targetPackages.add(pack + ":open");
-                    }
-                }
-            }
-        }
-
-        return to;
-    }
-
     static Pair<Map<String, Set<String>>, Set<Project>> computeModulesAndPackages(final CompilationInfo info, Result tags) {
         Map<String, Set<String>> module2UsedUnexportedPackages = new HashMap<>();
         Set<TypeElement> seenClasses = new HashSet<>();
@@ -255,21 +228,8 @@ public class ModulesHint {
                 if (tree == null)
                     return null;
 
-                TreePath path = new TreePath(getCurrentPath(), tree);
-                Element el = info.getTrees().getElement(path);
+                Element el = info.getTrees().getElement(new TreePath(getCurrentPath(), tree));
 
-                handleElement(el);
-
-                TypeMirror type = info.getTrees().getTypeMirror(path);
-
-                if (type != null) {
-                    handleElement(info.getTypes().asElement(type));
-                }
-
-                return super.scan(tree, p);
-            }
-
-            private void handleElement(Element el) {
                 if (el != null && el.getKind() != ElementKind.PACKAGE && el.getKind() != ElementKind.OTHER) {
                     TypeElement outermost = info.getElementUtilities().outermostTypeElement(el);
                     if (outermost != null) {
@@ -278,6 +238,8 @@ public class ModulesHint {
                         }
                     } else ;//XXX: array .length!
                 }
+
+                return super.scan(tree, p);
             }
         }.scan(cut, null);
 

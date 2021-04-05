@@ -19,8 +19,6 @@
 
 package org.netbeans.modules.xsl.grammar;
 
-import java.util.Vector;
-
 import org.w3c.dom.*;
 
 /**
@@ -222,10 +220,10 @@ public class ResultNode implements Node {
     }
     
     public class ResultNodeList implements NodeList{
-        Vector<Node> nodeVector;
+        java.util.Vector nodeVector;
         
         public ResultNodeList(NodeList list) {
-            nodeVector = new Vector<>(list.getLength());
+            nodeVector = new java.util.Vector(list.getLength());
             for (int ind = 0; ind < list.getLength(); ind++) {
                 Node node = list.item(ind);
                 if (node.getNodeName() != null && hasAllowedPrefix(node.getNodeName())) {

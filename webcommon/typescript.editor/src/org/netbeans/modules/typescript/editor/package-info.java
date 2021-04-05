@@ -19,8 +19,7 @@
 @TemplateRegistration(folder = "Other",
                       content = "TypeScriptDataObjectTemplate.ts",
                       displayName = "#DN_TypeScriptDataObjectTemplate",
-                      scriptEngine = "freemarker",
-                      position = 430)
+                      scriptEngine = "freemarker")
 @Messages("DN_TypeScriptDataObjectTemplate=TypeScript File")
 package org.netbeans.modules.typescript.editor;
 

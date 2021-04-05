@@ -509,8 +509,7 @@ public class ObjectScene extends Scene {
      * @param object the object
      * @return the identity code of the object; null, if the object is null
      */
-    @SuppressWarnings("rawtypes")
-    public Comparable getIdentityCode(Object object) {
+    public Comparable getIdentityCode (Object object) {
         return object != null ? System.identityHashCode (object) : null;
     }
 

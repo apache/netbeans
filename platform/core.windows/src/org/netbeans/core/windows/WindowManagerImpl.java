@@ -1163,9 +1163,16 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         // PENDING When #37529 finished, then uncomment the next row and move the
         // checks of AWT thread away.
         //  WindowManagerImpl.assertEventDispatchThread();
-        Mutex.EVENT.readAccess(() ->  
-            changeSupport.firePropertyChange(propName, oldValue, newValue)
-        );
+        if(SwingUtilities.isEventDispatchThread()) {
+            changeSupport.firePropertyChange(propName, oldValue, newValue);
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    changeSupport.firePropertyChange(propName, oldValue, newValue);
+                }
+            });
+        }
     }
 
     // PENDING used in persistence only, revise how to restrict its usage only there.
@@ -1200,9 +1207,16 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
 
         
         // #37457 It is needed to ensure the activation calls are in AWT thread.
-        Mutex.EVENT.readAccess(() -> 
-            WindowManagerImpl.getInstance().activateComponent(tc)
-        );
+        if(SwingUtilities.isEventDispatchThread()) {
+            WindowManagerImpl.getInstance().activateComponent(tc);
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    WindowManagerImpl.getInstance().activateComponent(tc);
+                }
+            });
+        }
     }
     
     private static void notifyRegistryTopComponentOpened(TopComponent tc) {
@@ -1520,8 +1534,8 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
                     FloatingWindowTransparencyManager.getDefault().start();
                 }
             });
-            
-            Mutex.EVENT.postReadRequest(getExclusive());
+
+            SwingUtilities.invokeLater(getExclusive());
         }
     }
 
@@ -1573,7 +1587,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
          */
         public synchronized void register(Runnable r) {
             arr.add(r);
-            Mutex.EVENT.postReadRequest(this);
+            SwingUtilities.invokeLater(this);
         }
 
         @Override
@@ -1592,7 +1606,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
                 }
                 
                 final Runnable toRun = arr.remove(0);
-                Mutex.EVENT.postReadRequest(new Runnable() {
+                SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         Logger perf = Logger.getLogger("org.netbeans.log.startup"); // NOI18N
@@ -1604,7 +1618,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
                             Logger.getLogger(WindowManagerImpl.class.getName()).log(
                                     Level.WARNING, null, ex);
                         }
-                        Mutex.EVENT.postReadRequest(Exclusive.this);
+                        SwingUtilities.invokeLater(Exclusive.this);
                     }
                 });
             }
@@ -1769,7 +1783,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         + "http://core.netbeans.org/proposals/threading/"; // NOI18N
     
     static void assertEventDispatchThread() {
-        assert Mutex.EVENT.isReadAccess() : ASSERTION_ERROR_MESSAGE;
+        assert SwingUtilities.isEventDispatchThread() : ASSERTION_ERROR_MESSAGE;
     }
 
     static {
@@ -2015,7 +2029,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         if( null != editorToActivate )
             editorToActivate.requestActive();
         
-        Mutex.EVENT.postReadRequest(new Runnable() {
+        SwingUtilities.invokeLater( new Runnable() {
             @Override
             public void run() {
                 Frame mainWindow = getMainWindow();

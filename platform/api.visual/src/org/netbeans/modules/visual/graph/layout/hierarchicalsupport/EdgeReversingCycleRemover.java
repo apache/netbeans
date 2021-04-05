@@ -32,7 +32,7 @@ public class EdgeReversingCycleRemover {
      * @param graph
      * @return
      */
-    public <N, E> DirectedGraph<N, E> removeCycles(DirectedGraph<N, E> graph) {
+    public DirectedGraph removeCycles(DirectedGraph graph) {
         return graph;
     }
 }

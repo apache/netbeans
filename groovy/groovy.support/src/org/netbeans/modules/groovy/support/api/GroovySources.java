@@ -22,6 +22,7 @@ package org.netbeans.modules.groovy.support.api;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 
@@ -60,6 +61,7 @@ public class GroovySources {
     public static List<SourceGroup> getGroovySourceGroups(Sources sources) {
         List<SourceGroup> result = new ArrayList<SourceGroup>();
         result.addAll(Arrays.asList(sources.getSourceGroups(GroovySources.SOURCES_TYPE_GROOVY)));
+        result.addAll(Arrays.asList(sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)));
         result.addAll(Arrays.asList(sources.getSourceGroups(GroovySources.SOURCES_TYPE_GRAILS)));
         result.addAll(Arrays.asList(sources.getSourceGroups(GroovySources.SOURCES_TYPE_GRAILS_UNKNOWN)));
         return result;

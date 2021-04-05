@@ -32,7 +32,7 @@ public class FileObjectPropertyEditor extends PropertyEditorSupport {
 
     public String getAsText() {
         try {
-            List<FileObject> fileobjs = (List<FileObject>)this.getValue();
+            List fileobjs = (List) this.getValue();
             StringBuffer result = new StringBuffer ();
             boolean first = true;
             for (Iterator<FileObject> it = fileobjs.iterator(); it.hasNext();) {

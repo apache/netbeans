@@ -57,11 +57,7 @@ public final class OperationException extends Exception {
          * @since 1.33
          */
         WRITE_PERMISSION,
-        MODIFIED,
-        /** missing and required Unpack200 implementation
-         * @since 1.65
-         */
-        MISSING_UNPACK200
+        MODIFIED
     }       
  
     /**

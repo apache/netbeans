@@ -19,18 +19,14 @@
 
 package org.netbeans.modules.web.monitor.data;
 
-import java.beans.PropertyChangeListener;
-import java.util.Vector;
-
-import org.netbeans.modules.schema2beans.BaseBean;
-import org.netbeans.modules.schema2beans.BeanComparator;
-import org.netbeans.modules.schema2beans.BeanProp;
-import org.netbeans.modules.schema2beans.Common;
-import org.netbeans.modules.schema2beans.Version;
+import org.w3c.dom.*;
+import org.netbeans.modules.schema2beans.*;
+import java.beans.*;
+import java.util.*;
 
 public class ClientData extends BaseBean {
 
-    static Vector<BeanComparator> comparators = new Vector<>();
+    static Vector comparators = new Vector();
 
 
     public ClientData() {
@@ -38,7 +34,7 @@ public class ClientData extends BaseBean {
     }
 
     public ClientData(int options) {
-	super(ClientData.comparators, new Version(1, 0, 6));
+	super(ClientData.comparators, new org.netbeans.modules.schema2beans.Version(1, 0, 6));
 	// Properties (see root bean comments for the bean graph)
 	this.initialize(options);
     }

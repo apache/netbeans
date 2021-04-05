@@ -20,22 +20,14 @@ package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
  * Holds a class name.
- *
  * note that the class name can be expression,
- * e.g.
- * <pre>
- * MyClass,
+ * <pre>e.g.<pre> MyClass,
  * getClassName() - the function getClassName return a class name
  * $className - the variable $a holds the class name
- * new $this->property,
- *     ^^^^^^^^^^^^^^^
- * if ($a instanceof $this->test){}
- *                   ^^^^^^^^^^^
- * </pre>
  */
 public class ClassName extends ASTNode {
 
-    private final Expression name;
+    private Expression name;
 
     public ClassName(int start, int end, Expression className) {
         super(start, end);

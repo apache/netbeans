@@ -195,8 +195,8 @@ public class DefaultSourceLevelQueryImpl implements SourceLevelQueryImplementati
                     null,
                     null,
                     null,
-                    Collections.<String>emptyList(),
-                    Collections.<String>emptyList(),
+                    Collections.EMPTY_LIST,
+                    Collections.EMPTY_LIST,
                     Collections.singleton(new JFO(javaFile)));
             final Iterator<? extends CompilationUnitTree> cus = jt.parse().iterator();
             if (cus.hasNext()) {
@@ -205,7 +205,7 @@ public class DefaultSourceLevelQueryImpl implements SourceLevelQueryImplementati
                     .map((xt) -> xt.toString())
                     .orElse(pkg);
             }
-        } catch (Exception e) {
+        } catch (IOException ioe) {
             //TODO: Log & pass
         }
         return pkg;

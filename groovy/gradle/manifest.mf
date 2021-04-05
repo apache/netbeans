@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.gradle/2
+OpenIDE-Module-Layer: org/netbeans/modules/gradle/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/gradle/Bundle.properties
+OpenIDE-Module-Specification-Version: 2.0
+OpenIDE-Module-Requires: cnb.org.netbeans.modules.groovy.kit

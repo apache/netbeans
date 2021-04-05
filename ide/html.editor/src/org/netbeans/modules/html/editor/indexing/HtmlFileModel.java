@@ -28,12 +28,11 @@ import java.util.logging.Logger;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.html.editor.api.HtmlKit;
 import org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem;
+import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
 import org.netbeans.modules.html.editor.completion.AttrValuesCompletion;
-import org.netbeans.modules.html.editor.lib.api.HtmlParsingResult;
 import org.netbeans.modules.html.editor.lib.api.elements.*;
 import org.netbeans.modules.parsing.api.*;
 import org.netbeans.modules.parsing.spi.ParseException;
-import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.web.common.api.LexerUtils;
 import org.netbeans.modules.web.common.api.ValueCompletion;
 import org.netbeans.modules.web.common.api.WebUtils;
@@ -50,8 +49,7 @@ public class HtmlFileModel {
     private static final boolean LOG = LOGGER.isLoggable(Level.FINE);
     private List<HtmlLinkEntry> references;
     private List<OffsetRange> embeddedCssSections;
-    private HtmlParsingResult htmlResult;
-    private Parser.Result parserResult;
+    private HtmlParserResult parserResult;
 
     public HtmlFileModel(Source source) throws ParseException {
         ParserManager.parse(Collections.singletonList(source), new UserTask() {
@@ -59,22 +57,20 @@ public class HtmlFileModel {
             public void run(ResultIterator resultIterator) throws Exception {
                 ResultIterator ri = WebUtils.getResultIterator(resultIterator, HtmlKit.HTML_MIME_TYPE);
                 if (ri != null) {
-                    parserResult = ri.getParserResult();
-                    htmlResult = (HtmlParsingResult) ri.getParserResult();
+                    parserResult = (HtmlParserResult) ri.getParserResult();
                     init();
                 }
             }
         });
     }
 
-    public HtmlFileModel(Parser.Result parserResult, HtmlParsingResult htmlResult) {
+    public HtmlFileModel(HtmlParserResult parserResult) {
         this.parserResult = parserResult;
-        this.htmlResult = htmlResult;
         init();
     }
 
-    public HtmlParsingResult getParserResult() {
-        return htmlResult;
+    public HtmlParserResult getParserResult() {
+        return parserResult;
     }
 
     public Snapshot getSnapshot() {
@@ -117,7 +113,7 @@ public class HtmlFileModel {
     }
 
     private void init() {
-        Iterator<Element> elements = htmlResult.getSyntaxAnalyzerResult().getElementsIterator();
+        Iterator<Element> elements = parserResult.getSyntaxAnalyzerResult().getElementsIterator();
         while (elements.hasNext()) {
             Element element = elements.next();
             switch (element.type()) {

@@ -56,8 +56,7 @@ class CliParser implements Parser {
             }
             // current
             split = line.split(" ", 2); // NOI18N
-            String description = split.length == 2 ? split[1].trim() : ""; // NOI18N
-            result.add(new SearchResult(split[0].trim(), description));
+            result.add(new SearchResult(split[0].trim(), split[1].trim()));
         }
         return result;
     }

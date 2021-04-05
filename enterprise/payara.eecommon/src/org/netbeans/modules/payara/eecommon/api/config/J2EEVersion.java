@@ -73,12 +73,6 @@ public final class J2EEVersion extends J2EEBaseVersion {
             "8.0", 8000, // NOI18N
             "8.0", 8000);   // NOI18N
 
-    /** Represents Jakarta EE version 8.0.0
-     */
-    public static final J2EEVersion JAKARTAEE_8_0 = new J2EEVersion(
-            "8.0.0", 80000,    // NOI18N
-            "8.0.0", 80000);   // NOI18N
-
     /**
      * -----------------------------------------------------------------------
      * Implementation
@@ -118,8 +112,6 @@ public final class J2EEVersion extends J2EEBaseVersion {
             result = JAVAEE_7_0;
         } else if(JAVAEE_8_0.toString().equals(version)) {
             result = JAVAEE_8_0;
-        } else if(JAKARTAEE_8_0.toString().equals(version)) {
-            result = JAKARTAEE_8_0;
         }
 
         return result;

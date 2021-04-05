@@ -21,12 +21,12 @@ package org.netbeans.modules.payara.jakartaee;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.payara.common.PayaraInstance;
 import org.netbeans.modules.payara.common.PayaraInstanceProvider;
-import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
+import org.netbeans.modules.payara.eecommon.api.config.J2eeModuleHelper;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 import org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.modules.j2ee.deployment.plugins.spi.config.ModuleConfiguration;
 import org.netbeans.modules.j2ee.deployment.plugins.spi.config.ModuleConfigurationFactory2;
-import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
 
 /**
  * Abstract factory to construct Java EE server configuration API support object.
@@ -63,8 +63,13 @@ abstract class AbstractHk2ConfigurationFactory implements ModuleConfigurationFac
             throws ConfigurationException {
         ModuleConfiguration retVal = null;
         try {
-            retVal = new ModuleConfigurationImpl(
-                    module, new Hk2Configuration(module, PayaraPlatformVersion.getLatestVersion()), hk2dm);
+            if (J2eeModuleHelper.isPayaraWeb(module) || J2eeModuleHelper.isGlassFishWeb(module)) {
+                retVal = new ModuleConfigurationImpl(
+                        module, new Three1Configuration(module, PayaraVersion.PF_4_1_144), hk2dm);
+            } else {
+                retVal = new ModuleConfigurationImpl(
+                        module, new Hk2Configuration(module, PayaraVersion.PF_4_1_144), hk2dm);
+            }
         } catch (ConfigurationException ce) {
             throw ce;
         } catch (Exception ex) {
@@ -91,15 +96,21 @@ abstract class AbstractHk2ConfigurationFactory implements ModuleConfigurationFac
         final PayaraInstance instance
                 = PayaraInstanceProvider.getProvider()
                 .getPayaraInstance(instanceUrl);
-        final PayaraPlatformVersionAPI version = instance != null
-                ? instance.getPlatformVersion() : null;
+        final PayaraVersion version = instance != null
+                ? instance.getVersion() : null;
         try {
             final Hk2DeploymentManager dm = hk2dm != null
                     ? hk2dm
                     : (Hk2DeploymentManager) Hk2DeploymentFactory.createEe(version)
                             .getDisconnectedDeploymentManager(instanceUrl);
-            retVal = new ModuleConfigurationImpl(
-                    module, new Hk2Configuration(module, version), dm);
+            if (version != null
+                    && PayaraVersion.ge(version, PayaraVersion.PF_4_1_144)) {
+                retVal = new ModuleConfigurationImpl(
+                        module, new Three1Configuration(module, version), dm);
+            } else {
+                retVal = new ModuleConfigurationImpl(
+                        module, new Hk2Configuration(module, version), dm);
+            }
         } catch (ConfigurationException ce) {
             throw ce;
         } catch (Exception ex) {

@@ -23,6 +23,7 @@ import java.util.Collection;
 import org.netbeans.api.editor.fold.FoldTemplate;
 import org.netbeans.api.editor.fold.FoldType;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.editor.ext.java.JavaFoldManager;
 import org.netbeans.spi.editor.fold.FoldTypeProvider;
 import org.openide.util.NbBundle;
 
@@ -35,11 +36,11 @@ public class JavaFoldTypeProvider implements FoldTypeProvider {
     private Collection<FoldType>   types = new ArrayList<FoldType>(5);
 
     public JavaFoldTypeProvider() {
-        types.add(JavaElementFoldManager.CODE_BLOCK_FOLD_TYPE);
-        types.add(JavaElementFoldManager.INNERCLASS_TYPE);
-        types.add(JavaElementFoldManager.IMPORTS_FOLD_TYPE);
-        types.add(JavaElementFoldManager.JAVADOC_FOLD_TYPE);
-        types.add(JavaElementFoldManager.INITIAL_COMMENT_FOLD_TYPE);
+        types.add(JavaFoldManager.CODE_BLOCK_FOLD_TYPE);
+        types.add(JavaFoldManager.INNERCLASS_TYPE);
+        types.add(JavaFoldManager.IMPORTS_FOLD_TYPE);
+        types.add(JavaFoldManager.JAVADOC_FOLD_TYPE);
+        types.add(JavaFoldManager.INITIAL_COMMENT_FOLD_TYPE);
         types.add(JavaFoldTypeProvider.BUNDLE_STRING);
     }
     

@@ -16,18 +16,18 @@ Names:
 
 Variants:
  \Nette\Utils\Arrays
- Don't import.
+ Don't use type.
 
  \Nette\Utils\Html
- Don't import.
+ Don't use type.
 
  \Nette\Application\UI\Presenter
- Don't import.
+ Don't use type.
 
  \Nette\Application\Request
  \Nette\Http\Request
- Don't import.
+ Don't use type.
 
  \Nette\Utils\Strings
- Don't import.
+ Don't use type.
 

@@ -59,7 +59,6 @@ public class JsEmbeddingProvider extends EmbeddingProvider {
     private static final Logger LOGGER = Logger.getLogger(JsEmbeddingProvider.class.getSimpleName());
     private static final String JS_MIMETYPE = "text/javascript"; //NOI18N
     private static final String BABEL_MIMETYPE = "text/babel"; //NOI18N
-    private static final String SCRIPT_TYPE_MODULE = "module"; //NOI18N
     private static final String NETBEANS_IMPORT_FILE = "__netbeans_import__"; // NOI18N
     private boolean cancelled = true;
     private final Language JS_LANGUAGE;
@@ -211,7 +210,7 @@ public class JsEmbeddingProvider extends EmbeddingProvider {
 
     private void handleScript(Snapshot snapshot, TokenSequence<HTMLTokenId> ts, JsAnalyzerState state, List<Embedding> embeddings) {
         String scriptType = (String) ts.token().getProperty(HTMLTokenId.SCRIPT_TYPE_TOKEN_PROPERTY);
-        if (isValidScriptTypeAttributeValue(scriptType)) {
+        if (scriptType == null || JS_MIMETYPE.equals(scriptType) || BABEL_MIMETYPE.equals(scriptType)) {
             state.in_javascript = true;
             // Emit the block verbatim
             int sourceStart = ts.offset();
@@ -221,13 +220,6 @@ public class JsEmbeddingProvider extends EmbeddingProvider {
                 embeddings.addAll(createEmbedding(snapshot, embedding.getOffset(), embedding.getLength()));
             }
         }
-    }
-
-    private boolean isValidScriptTypeAttributeValue(String scriptType) {
-        return scriptType == null
-                || JS_MIMETYPE.equals(scriptType)
-                || BABEL_MIMETYPE.equals(scriptType)
-                || SCRIPT_TYPE_MODULE.equals(scriptType);
     }
 
     private void handleOpenTag(Snapshot snapshot, TokenSequence<HTMLTokenId> ts, List<Embedding> embeddings) {

@@ -24,7 +24,7 @@ import javax.enterprise.deploy.spi.DeploymentManager;
 import javax.enterprise.deploy.spi.exceptions.DeploymentManagerCreationException;
 import javax.enterprise.deploy.spi.factories.DeploymentFactory;
 import org.netbeans.modules.payara.spi.ServerUtilities;
-import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
+import org.netbeans.modules.payara.tooling.data.PayaraVersion;
 import org.openide.util.NbBundle;
 
 
@@ -35,12 +35,13 @@ import org.openide.util.NbBundle;
  */
 public class Hk2DeploymentFactory implements DeploymentFactory {
 
+    private static Hk2DeploymentFactory preludeInstance;
     private static Hk2DeploymentFactory ee6Instance;
     private static Hk2DeploymentFactory ee7Instance;
     private static Hk2DeploymentFactory ee8Instance;
-    private final String[] uriFragments;
-    private final String version;
-    private final String displayName;
+    private String[] uriFragments;
+    private String version;
+    private String displayName;
     private ServerUtilities su;
 
     private Hk2DeploymentFactory(String[] uriFragments, String version, String displayName) {
@@ -53,10 +54,12 @@ public class Hk2DeploymentFactory implements DeploymentFactory {
         this.su = su;
     }
 
-    public static synchronized DeploymentFactory createEe(PayaraPlatformVersionAPI version) {
-        if (version.isEE8Supported()) {
+    public static synchronized DeploymentFactory createEe(PayaraVersion version) {
+        if (version != null
+                && PayaraVersion.ge(version, PayaraVersion.PF_5_181)) {
             return createEe8();
-        } else if (version.isEE7Supported()) {
+        } else if (version != null
+                && PayaraVersion.ge(version, PayaraVersion.PF_4_1_144)) {
             return createEe7();
         }
         return createEe6();

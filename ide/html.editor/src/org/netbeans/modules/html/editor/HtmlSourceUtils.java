@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.html.editor;
 
+import java.net.URL;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -33,14 +34,15 @@ import org.netbeans.modules.csl.spi.support.ModificationResult;
 import org.netbeans.modules.csl.spi.support.ModificationResult.Difference;
 import org.netbeans.modules.editor.NbEditorDocument;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
-import org.netbeans.modules.html.editor.lib.api.HtmlParsingResult;
+import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
 import org.netbeans.modules.html.editor.lib.api.elements.*;
 import org.netbeans.modules.html.editor.refactoring.ExtractInlinedStyleRefactoringPlugin;
-import org.netbeans.modules.parsing.api.Snapshot;
+import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.web.common.api.LexerUtils;
 import org.netbeans.modules.web.common.api.WebUtils;
 import org.netbeans.spi.lexer.MutableTextInput;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
 import org.openide.text.CloneableEditorSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -105,8 +107,7 @@ public class HtmlSourceUtils {
      * @return true if the import was successful
      */
     public static boolean importStyleSheet(ModificationResult modificationResult, 
-            HtmlParsingResult result,
-            Snapshot snapshot, 
+            HtmlParserResult result, 
             FileObject targetFile) {
         
         try {
@@ -170,24 +171,24 @@ public class HtmlSourceUtils {
                 //TODO probably missing head tag? - generate? html tag may be missing as well
                 return false;
             }
-            int insertOffset = snapshot.getOriginalOffset(embeddedInsertOffset);
+            int insertOffset = result.getSnapshot().getOriginalOffset(embeddedInsertOffset);
             if (insertOffset == -1) {
                 return false; //cannot properly map back
             }
-            int baseIndent = Utilities.getRowIndent((BaseDocument) snapshot.getSource().getDocument(true), insertOffset);
+            int baseIndent = Utilities.getRowIndent((BaseDocument) result.getSnapshot().getSource().getDocument(true), insertOffset);
             if (baseIndent == -1) {
                 //in case of empty line
                 baseIndent = 0;
             }
             
-            Document document = snapshot.getSource().getDocument(true);
+            Document document = result.getSnapshot().getSource().getDocument(true);
             if (increaseIndent.get()) {
                 //add one indent level (after HEAD open tag)
                 baseIndent += IndentUtils.indentLevelSize(document);
             }
 
             //generate the embedded id selector section
-            FileObject file = snapshot.getSource().getFileObject();
+            FileObject file = result.getSnapshot().getSource().getFileObject();
             String baseIndentString = IndentUtils.createIndentString(document, baseIndent);
             String linkRelativePath = WebUtils.getRelativePath(file, targetFile);
             String linkText = new StringBuilder().append('\n').

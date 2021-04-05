@@ -57,7 +57,7 @@ public final class HtmlSourceTask extends ParserResultTask<HtmlParserResult> {
             if (mimeType.equals("text/html")) { //NOI18N
                 return Collections.singletonList(new HtmlSourceTask());
             } else {
-                return Collections.<SchedulerTask>emptyList();
+                return Collections.EMPTY_LIST;
             }
         }
     }

@@ -161,7 +161,6 @@ public final class EjbJarProvider extends J2eeModuleProvider
         return f;
     }
     
-    @Override
     public File getDeploymentConfigurationFile(String name) {
         String path = getConfigSupport().getContentRelativePath(name);
         if (path == null) {
@@ -199,7 +198,6 @@ public final class EjbJarProvider extends J2eeModuleProvider
         return null;
     }
     
-    @Override
     public synchronized J2eeModule getJ2eeModule () {
         if (j2eeModule == null) {
             j2eeModule = J2eeModuleFactory.createJ2eeModule(this);
@@ -207,7 +205,6 @@ public final class EjbJarProvider extends J2eeModuleProvider
         return j2eeModule;
     }
     
-    @Override
     public org.netbeans.modules.j2ee.deployment.devmodules.api.ModuleChangeReporter getModuleChangeReporter() {
         return this;
     }
@@ -239,20 +236,17 @@ public final class EjbJarProvider extends J2eeModuleProvider
         return helper.getStandardPropertyEvaluator().getProperty(EjbJarProjectProperties.J2EE_SERVER_INSTANCE);
     }
     
-    @Override
     public void setServerInstanceID(String serverInstanceID) {
         assert serverInstanceID != null : "passed serverInstanceID cannot be null"; // NOI18N
         EjbJarProjectProperties.setServerInstance(project, helper, serverInstanceID);
     }
     
-    @Override
     public Iterator<J2eeModule.RootedEntry> getArchiveContents() throws java.io.IOException {
         FileObject content = getContentDirectory();
         content.refresh();
         return new IT(content);
     }
     
-    @Override
     public FileObject getContentDirectory() {
         return getFileObject(ProjectProperties.BUILD_CLASSES_DIR);
     }
@@ -265,7 +259,6 @@ public final class EjbJarProvider extends J2eeModuleProvider
         return getFile(ProjectProperties.BUILD_CLASSES_DIR);
     }
     
-    @Override
     public <T> MetadataModel<T> getMetadataModel(Class<T> type) {
         if (type == EjbJarMetadata.class) {
             @SuppressWarnings("unchecked") // NOI18N
@@ -287,17 +280,14 @@ public final class EjbJarProvider extends J2eeModuleProvider
         return metaInfFo.getFileObject(WebServicesConstants.WEBSERVICES_DD, "xml"); // NOI18N
     }
     
-    @Override
     public org.netbeans.modules.j2ee.deployment.common.api.EjbChangeDescriptor getEjbChanges(long timestamp) {
         return this;
     }
     
-    @Override
     public J2eeModule.Type getModuleType() {
         return J2eeModule.Type.EJB;
     }
     
-    @Override
     public String getModuleVersion() {
         // return a version based on the Java EE version
         Profile platformVersion = getJ2eeProfile();
@@ -316,7 +306,6 @@ public final class EjbJarProvider extends J2eeModuleProvider
         }
     }
     
-    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.PROPERTY_VERSION)) {
             String oldVersion = (String) evt.getOldValue();
@@ -337,14 +326,12 @@ public final class EjbJarProvider extends J2eeModuleProvider
         }
     }
     
-    @Override
     public String getUrl() {
         EditableProperties ep =  helper.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
         String name = ep.getProperty(EjbJarProjectProperties.JAR_NAME);
         return name == null ? "" : ('/' + name);
     }
     
-    @Override
     public boolean isManifestChanged(long timestamp) {
         return false;
     }
@@ -353,12 +340,10 @@ public final class EjbJarProvider extends J2eeModuleProvider
         throw new UnsupportedOperationException("Cannot customize URL of EJB module"); // NOI18N
     }
     
-    @Override
     public boolean ejbsChanged() {
         return false;
     }
     
-    @Override
     public String[] getChangedEjbs() {
         return new String[] {};
     }
@@ -421,7 +406,6 @@ public final class EjbJarProvider extends J2eeModuleProvider
             // thread -- deadlock-prone, see issue #64888. therefore invoking
             // only in the AWT thread
             Runnable r = new Runnable() {
-                @Override
                 public void run() {
                     if (!SwingUtilities.isEventDispatchThread()) {
                         SwingUtilities.invokeLater(this);
@@ -456,12 +440,10 @@ public final class EjbJarProvider extends J2eeModuleProvider
         }
     }
 
-    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         getPropertyChangeSupport().addPropertyChangeListener(listener);
     }
 
-    @Override
     public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
         if (propertyChangeSupport == null) {
             return;
@@ -500,17 +482,17 @@ public final class EjbJarProvider extends J2eeModuleProvider
                     FileUtil.toFile(project.getProjectDirectory()), project.evaluator(), new String[]{"javac.classpath"}));
         List<File> files = new ArrayList<File>();
         for (FileObject fo : cp.getRoots()) {
-            if (FileUtil.getArchiveFile(fo) == null) {
+            fo = FileUtil.getArchiveFile(fo);
+            if (fo == null) {
                 continue;
             }
-            files.add(FileUtil.toFile(FileUtil.getArchiveFile(fo)));
+            files.add(FileUtil.toFile(fo));
         }
         return files.toArray(new File[files.size()]);
     }
 
     private class EjbJarResourceChangeReporter implements ResourceChangeReporterImplementation {
 
-        @Override
         public boolean isServerResourceChanged(long lastDeploy) {
             File resDir = getResourceDirectory();
             if (resDir != null && resDir.exists() && resDir.isDirectory()) {
@@ -536,18 +518,15 @@ public final class EjbJarProvider extends J2eeModuleProvider
             this.root = f;
         }
         
-        @Override
         public boolean hasNext() {
             return ch.hasMoreElements();
         }
         
-        @Override
         public J2eeModule.RootedEntry next() {
             FileObject f = (FileObject) ch.nextElement();
             return new FSRootRE(root, f);
         }
         
-        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }
@@ -563,12 +542,10 @@ public final class EjbJarProvider extends J2eeModuleProvider
             this.root = root;
         }
         
-        @Override
         public FileObject getFileObject() {
             return f;
         }
         
-        @Override
         public String getRelativePath() {
             return FileUtil.getRelativePath(root, f);
         }

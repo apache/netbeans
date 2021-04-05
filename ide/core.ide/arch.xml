@@ -48,11 +48,9 @@
         </question>
 -->
  <answer id="arch-overall">
-  Right now the <api name="core.ide" category="stable" group="java" type="export"> provides handy
-  <a href="@TOP@/org/netbeans/api/core/ide/ServicesTabNodeRegistration.html">
-    ServicesTabNodeRegistration</a>
-    accompanied with few UI elements.
-  </api>
+  <p>
+   This module contains various generic IDE-like extensions.
+  </p>
  </answer>
 
 
@@ -135,7 +133,12 @@
         </question>
 -->
  <answer id="arch-what">
-     This module contains various generic IDE-like extensions.
+  <api name="core.ide" category="stable" group="java" type="export">
+  Right now this module provides handy
+  <a href="@TOP@/org/netbeans/api/core/ide/ServicesTabNodeRegistration.html">
+    ServicesTabNodeRegistration</a>
+    accompanied with few UI elements.
+  </api>
  </answer>
 
 

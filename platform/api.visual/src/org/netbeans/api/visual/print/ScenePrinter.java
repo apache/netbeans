@@ -167,9 +167,9 @@ public final class ScenePrinter {
                     if (scene instanceof ObjectScene) {
                         ObjectScene gScene = (ObjectScene) scene;
                         // hide unselected widget
-                        HashSet<Object> invisible = new HashSet<>();
+                        HashSet<Object> invisible = new HashSet<Object>();
                         invisible.addAll(gScene.getObjects());
-                        Set<?> selectedObjects = gScene.getSelectedObjects();
+                        Set selectedObjects = gScene.getSelectedObjects();
                         invisible.removeAll(selectedObjects);
 
                         for (Object o : invisible) {

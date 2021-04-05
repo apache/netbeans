@@ -77,7 +77,7 @@ public final class NimbusEditorTabDisplayerUI extends BasicScrollingTabDisplayer
 
     public Dimension getPreferredSize(JComponent c) {
         int prefHeight = 28;
-        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics(c);
+        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics();
         if (g != null) {
             FontMetrics fm = g.getFontMetrics(displayer.getFont());
             Insets ins = getTabAreaInsets();

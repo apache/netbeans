@@ -67,16 +67,6 @@
     </file>
     <file>
         <ext name="xml"/>
-        <resolver mime="text/x-dd-servlet4.0">
-            <xml-rule>
-            	<element name="web-app" ns="http://xmlns.jcp.org/xml/ns/javaee">
-                    <attr name="version" text="4.0"/>
-                </element>
-            </xml-rule>
-        </resolver>
-    </file>
-    <file>
-        <ext name="xml"/>
         <resolver mime="text/x-dd-servlet-fragment3.0">
             <xml-rule>
             	<element name="web-fragment" ns="http://java.sun.com/xml/ns/javaee">
@@ -91,16 +81,6 @@
             <xml-rule>
             	<element name="web-fragment" ns="http://xmlns.jcp.org/xml/ns/javaee">
                     <attr name="version" text="3.1"/>
-                </element>
-            </xml-rule>
-        </resolver>
-    </file>
-    <file>
-        <ext name="xml"/>
-        <resolver mime="text/x-dd-servlet-fragment4.0">
-            <xml-rule>
-            	<element name="web-fragment" ns="http://xmlns.jcp.org/xml/ns/javaee">
-                    <attr name="version" text="4.0"/>
                 </element>
             </xml-rule>
         </resolver>
@@ -203,16 +183,6 @@
     </file>
     <file>
         <ext name="xml"/>
-        <resolver mime="text/x-dd-client8.0">
-            <xml-rule>
-                <element name="application-client" ns="http://xmlns.jcp.org/xml/ns/javaee">
-                    <attr name="version" text="8"/>
-                </element>
-            </xml-rule>
-        </resolver>
-    </file>
-    <file>
-        <ext name="xml"/>
         <resolver mime="text/x-dd-application1.4">
             <xml-rule>
                 <element name="application" ns="http://java.sun.com/xml/ns/j2ee">
@@ -247,16 +217,6 @@
             <xml-rule>
                 <element name="application" ns="http://xmlns.jcp.org/xml/ns/javaee">
                     <attr name="version" text="7"/>
-                </element>
-            </xml-rule>
-        </resolver>
-    </file>
-    <file>
-        <ext name="xml"/>
-        <resolver mime="text/x-dd-application8.0">
-            <xml-rule>
-                <element name="application" ns="http://xmlns.jcp.org/xml/ns/javaee">
-                    <attr name="version" text="8"/>
                 </element>
             </xml-rule>
         </resolver>

@@ -1,0 +1,88 @@
+{\rtf1\mac\ansicpg10000\cocoartf102
+{\fonttbl\f0\fswiss\fcharset77 Helvetica-Bold;\f1\fswiss\fcharset77 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww17260\viewh13700\viewkind0
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
+
+\f0\b\fs36 \cf0 NetBeansLaucher 1.4.1\
+
+\f1\b0\fs24 \
+
+\f0\b System requirements:\
+
+\f1\b0         - Mac OS X 10.2 \
+        - JDK 1.4.x\
+\
+
+\f0\b Overview:\
+
+\f1\b0 NetBeansLaucher is a small Cocoa application acting as frontend for bin/runide.sh script, which is normally used to launch NetBeans on Mac OS X. \
+\
+
+\f0\b Usage:\
+
+\f1\b0 The usage should be straightforward. When launched for the first time, NetBeansLauncher needs to find NetBeans root directory. First it looks into NetBeansLauncher.app itself. If it does not find NetBeans root directory there user must specify NetBeans root directory manually. Once NetBeans distribution was found you can use Preferences panel to specify Look&Feel, your userdir, font size etc. Use 
+\f0\b File->Launch NetBeans IDE
+\f1\b0  to launch NetBeans. NetBeansLaucher 
+\f0\b cannot
+\f1\b0  be also used to launch Forte For Java.\
+\
+
+\f0\b What is new in version 1.1\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\li720\fi-720\ql\qnatural
+
+\f1\b0 \cf0 - support for hardware acceleration was added.  There is new textfield 
+\f0\b Use hardware accel. 
+\f1\b0 and 
+\f0\b Autodetect
+\f1\b0  button in Expert tab. Autodetect executes /usr/local/bin/hwaccel_info_tool and fills in correct value in 
+\f0\b Use hardware accel.
+\f1\b0  field. The filed can also be edited manually just in case when autodetect fails. hwaccel_info_tool is available for ADC members only from http://connect.apple.com\
+- fixed problem when launching NetBeans in debug mode\
+- Preferences window now remembers its size and position\
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
+
+\f0\b \cf0 What is new in version 1.2\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\li720\fi-720\ql\qnatural
+
+\f1\b0 \cf0 - There is new 
+\f0\b Open IDE log
+\f1\b0  item in menu.  This opens NetBeans log file ide.log, if NetBeans user directory is explicitly set in Preferences panel and if it points to valid  NetBeans user directory.\
+- some UI polishing in Preference panel.\
+- added possibility to specify maximum heap size\
+- added field for specifying extra parameters for bin/runide.sh script \
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
+
+\f0\b \cf0 What is new in version 1.2.1\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\li720\fi-720\ql\qnatural
+
+\f1\b0 \cf0 - Transparency of NetBeansLauncher icon was modified, so that  user does not need to double-click on the red borders of NetBeans cube.\
+- NetBeans IDE detected in NetBeansLauncher.app/Contents/Resources/netbeans is launched regardless of NetBeans IDE root directory stored in defaults database. \
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
+
+\f0\b \cf0 \
+What is new in version 1.3\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\li720\fi-720\ql\qnatural
+
+\f1\b0 \cf0 - Updated to Mac OS X 10.2 (Jaguar) and JDK 1.4.1\
+- support for hardware acceleration removed, it is not needed in Jaguar\
+- removed unsupported system property 'Live resize window'\
+- if you need to run NetBeans under JDK 1.3.1 with Aqua L&F, set Look&Feel to Default and add '-ui com.apple.mrj.swing.MacLookAndFeel' line to 'Extra parameters' field in Expert tab \
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
+
+\f0\b \cf0 What is new in version 1.4\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\li720\fi-720\ql\qnatural
+
+\f1\b0 \cf0 - Updated to work with new NetBeans installation structure \
+\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\ql\qnatural
+
+\f0\b \cf0 What is new in version 1.4\
+\pard\tx1440\tx2880\tx4320\tx5760\tx7200\li720\fi-720\ql\qnatural
+
+\f1\b0 \cf0 - fixed problem when launching NetBeans with Metal Look and Feel (Issue #41874)\
+ \
+}

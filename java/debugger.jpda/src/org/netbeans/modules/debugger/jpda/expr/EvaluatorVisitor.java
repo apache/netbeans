@@ -1719,15 +1719,15 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
             }
             Method iteratorMethod = null;
             try {
-                iteratorMethod = getConcreteMethod(objType, "iterator", Collections.<TypeMirror>emptyList());
+                iteratorMethod = getConcreteMethod(objType, "iterator", Collections.EMPTY_LIST);
             } catch (UnsuitableArgumentsException ex) {
             }
             iterator = (ObjectReference)invokeMethod(arg0, iteratorMethod, Boolean.FALSE, (ClassType)objRef.type(),
-                    objRef, Collections.<Value>emptyList(), evaluationContext, false);
+                    objRef, Collections.EMPTY_LIST, evaluationContext, false);
             try {
                 ReferenceType iteratorType = iterator.referenceType();
-                nextMethod = getConcreteMethod(iteratorType, "next", Collections.<TypeMirror>emptyList());
-                hasNextMethod = getConcreteMethod(iteratorType, "hasNext", Collections.<TypeMirror>emptyList());
+                nextMethod = getConcreteMethod(iteratorType, "next", Collections.EMPTY_LIST);
+                hasNextMethod = getConcreteMethod(iteratorType, "hasNext", Collections.EMPTY_LIST);
             } catch (UnsuitableArgumentsException ex) {
             }
         } else {
@@ -1752,12 +1752,12 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
                     index++;
                 } else {
                     value = invokeMethod(arg0, hasNextMethod, Boolean.FALSE, (ClassType)iterator.type(),
-                        iterator, Collections.<Value>emptyList(), evaluationContext, false);
+                        iterator, Collections.EMPTY_LIST, evaluationContext, false);
                     if (!((BooleanValue)value).value()) {
                         break;
                     }
                     value = invokeMethod(arg0, nextMethod, Boolean.FALSE, (ClassType)iterator.type(),
-                        iterator, Collections.<Value>emptyList(), evaluationContext, false);
+                        iterator, Collections.EMPTY_LIST, evaluationContext, false);
                 }
                 scriptVar.setValue(value); // [TODO] check if value is assignable to variable
                 try {
@@ -5496,7 +5496,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
 
         @Override
         public List<ReferenceType> nestedTypes() {
-            return Collections.<ReferenceType>emptyList();
+            return Collections.EMPTY_LIST;
         }
 
         @Override
@@ -5600,7 +5600,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
 
         @Override
         public List<ObjectReference> instances(long l) {
-            return Collections.<ObjectReference>emptyList();
+            return Collections.EMPTY_LIST;
         }
 
         @Override

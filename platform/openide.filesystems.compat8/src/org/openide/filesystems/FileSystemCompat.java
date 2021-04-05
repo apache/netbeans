@@ -43,9 +43,6 @@ import org.openide.util.actions.SystemAction;
  */
 @PatchFor(FileSystem.class)
 public abstract class FileSystemCompat {
-    /** system actions for this FS */
-    private static final SystemAction[] NO_SYSTEM_ACTIONS = new SystemAction[0];
-
     /** Property name giving capabilities state. @deprecated No more capabilities. */
     static final String PROP_CAPABILITIES = "capabilities"; // NOI18N    
 
@@ -70,14 +67,7 @@ public abstract class FileSystemCompat {
     *
     * @return array of available actions
     */
-    @SuppressWarnings("ReturnOfCollectionOrArrayField")
-    public SystemAction[] getActions() {
-        // If implementations don't override getActions, an empty array is
-        // returned to satisfy the FileSystem#getActions contract. As the
-        // empty array is immutable, it is save to return a singleton in this
-        // case
-        return NO_SYSTEM_ACTIONS;
-    }
+    public abstract SystemAction[] getActions();
 
     /**
      * Get actions appropriate to a certain file selection.

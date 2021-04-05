@@ -1,6 +1,0 @@
-Code completion result for source line:
-private mixe|d $mixed;
-(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-CLASS      MixedType                       [PUBLIC]   mixedType.php
-------------------------------------
-KEYWORD    mixed                                      null

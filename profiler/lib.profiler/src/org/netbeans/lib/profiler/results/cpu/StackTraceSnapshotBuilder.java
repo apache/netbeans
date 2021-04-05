@@ -259,8 +259,7 @@ public class StackTraceSnapshotBuilder {
     final Object stampLock = new Object();
     // @GuardedBy stampLock
     long currentDumpTimeStamp = -1L;
-    final AtomicReference<Map<Long, SampledThreadInfo>> lastStackTrace =
-          new AtomicReference<Map<Long, SampledThreadInfo>>(Collections.<Long, SampledThreadInfo>emptyMap());
+    final AtomicReference<Map<Long, SampledThreadInfo>> lastStackTrace = new AtomicReference<Map<Long, SampledThreadInfo>>(Collections.EMPTY_MAP);
     int stackTraceCount = 0;
     //    int builderBatchSize;
     final Set<String> ignoredThreadNames = new HashSet<String>();
@@ -620,7 +619,7 @@ public class StackTraceSnapshotBuilder {
             threadIds.clear();
             threadNames.clear();
             stackTraceCount = 0;
-            lastStackTrace.set(Collections.<Long, SampledThreadInfo>emptyMap());
+            lastStackTrace.set(Collections.EMPTY_MAP);
             registerNewMethodInfo(new MethodInfo("Thread","")); // NOI18N
             synchronized(stampLock) {
                 currentDumpTimeStamp = -1L;

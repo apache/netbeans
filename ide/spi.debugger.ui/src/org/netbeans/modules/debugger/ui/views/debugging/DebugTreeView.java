@@ -165,7 +165,7 @@ public class DebugTreeView extends BeanTreeView {
             try {
                 Field drawingCacheField = BasicTreeUI.class.getDeclaredField("drawingCache");
                 drawingCacheField.setAccessible(true);
-                Map<BasicTreeUI, Map> table = (Map) drawingCacheField.get(tui);
+                Map table = (Map) drawingCacheField.get(tui);
                 table.clear();
             } catch (Exception ex) {}
         }

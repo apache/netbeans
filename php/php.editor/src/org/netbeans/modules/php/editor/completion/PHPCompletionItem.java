@@ -595,10 +595,7 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                             param.isMandatory(),
                             param.hasDeclaredType(),
                             param.isReference(),
-                            param.isVariadic(),
-                            param.isUnionType(),
-                            param.getModifier()
-                    );
+                            param.isVariadic());
                 }
             }
             return param;
@@ -1070,10 +1067,8 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                 if (phpVersion != null
                         && phpVersion.compareTo(PhpVersion.PHP_70) >= 0) {
                     Collection<TypeResolver> returnTypes = getBaseFunctionElement().getReturnTypes();
-                    // we can also write a union type in phpdoc e.g. @return int|float
-                    // check whether the union type is actual declared return type to avoid adding the union type for phpdoc
-                    if (returnTypes.size() == 1 || getBaseFunctionElement().isReturnUnionType()) {
-                        String returnType = getBaseFunctionElement().asString(PrintAs.ReturnTypes, typeNameResolver, phpVersion);
+                    if (returnTypes.size() == 1) {
+                        String returnType = getBaseFunctionElement().asString(PrintAs.ReturnTypes);
                         if (StringUtils.hasText(returnType)) {
                             boolean nullableType = CodeUtils.isNullableType(returnType);
                             if (nullableType) {
@@ -1114,12 +1109,7 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             if (isMagic() || type.isInterface() || method.isAbstract()) {
                 template.append("${cursor};\n"); //NOI18N
             } else {
-                Collection<TypeResolver> returnTypes = getBaseFunctionElement().getReturnTypes();
-                if (returnTypes.size() == 1 || getBaseFunctionElement().isReturnUnionType()) {
-                    template.append("${cursor}return parent::").append(getSignature().replace("&$", "$")).append(";\n"); //NOI18N
-                } else {
-                    template.append("${cursor}parent::").append(getSignature().replace("&$", "$")).append(";\n"); //NOI18N
-                }
+                template.append("${cursor}parent::").append(getSignature().replace("&$", "$")).append(";\n"); //NOI18N
             }
             return template.toString();
         }
@@ -1195,13 +1185,12 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
     static class KeywordItem extends PHPCompletionItem {
 
-        final String keyword;
+        String keyword = null;
         private static final List<String> CLS_KEYWORDS =
                 Arrays.asList(PHPCodeCompletion.PHP_CLASS_KEYWORDS);
 
         KeywordItem(String keyword, CompletionRequest request) {
             super(null, request);
-            assert keyword != null;
             this.keyword = keyword;
         }
 
@@ -1280,8 +1269,7 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                             appendSpace = codeStyle.spaceBeforeSwitchParen();
                             break;
                         case "array": //NOI18N
-                            if (request.context == CompletionContext.TYPE_NAME
-                                    || request.context == CompletionContext.VISIBILITY_MODIFIER_OR_TYPE_NAME) {
+                            if (request.context == CompletionContext.TYPE_NAME) {
                                 // e.g. return type
                                 appendBrackets = false;
                                 appendSpace = false;

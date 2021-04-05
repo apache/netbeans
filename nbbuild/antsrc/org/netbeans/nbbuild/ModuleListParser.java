@@ -32,8 +32,6 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -889,8 +887,7 @@ final class ModuleListParser {
                 String[] pieces = cp.split(" +");
                 exts = new File[pieces.length];
                 for (int l = 0; l < pieces.length; l++) {
-                    String append = URLDecoder.decode(pieces[l].replace('/', File.separatorChar), "UTF-8");
-                    exts[l] = fixFxRtJar(new File(dir, append), null);
+                    exts[l] = fixFxRtJar(new File(dir, pieces[l].replace('/', File.separatorChar)), null);
                 }
             }
             String moduleDependencies = attr.getValue("OpenIDE-Module-Module-Dependencies");

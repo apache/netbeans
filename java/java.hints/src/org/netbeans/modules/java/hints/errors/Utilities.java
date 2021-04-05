@@ -449,13 +449,10 @@ public class Utilities {
             return null;
         }
         
-        diff.commit();
-        return computeChangeInfo(target, diff, tag);
-    }
-        
-    public static ChangeInfo computeChangeInfo(FileObject target, final ModificationResult diff, final Object tag) {
         List<? extends Difference> differences = diff.getDifferences(target);
         ChangeInfo result = null;
+        
+        diff.commit();
         
         try {
             if (differences != null) {
@@ -1647,7 +1644,7 @@ public class Utilities {
         if (outterMostSource != null) {
             sourcePackage = outterMostSource.getEnclosingElement();
         } else if (info.getCompilationUnit().getPackageName() != null) {
-            sourcePackage = info.getTrees().getElement(new TreePath(new TreePath(info.getCompilationUnit()), info.getCompilationUnit().getPackage()));
+            sourcePackage = info.getTrees().getElement(new TreePath(new TreePath(info.getCompilationUnit()), info.getCompilationUnit().getPackageName()));
         } else {
             sourcePackage = info.getElements().getPackageElement("");
         }
@@ -3137,8 +3134,7 @@ public class Utilities {
                             }
                             break;
                         } else {
-                            Name exprTree = getLeftTreeName(statements.get(0));
-                            if (leftTreeName != null && exprTree != null && leftTreeName.contentEquals(exprTree)) {
+                            if (leftTreeName != null && leftTreeName.contentEquals(getLeftTreeName(statements.get(0)))) {
                                 break;
                             } else {
                                 return false;
@@ -3156,8 +3152,7 @@ public class Utilities {
                             }
                             firstCase = false;
                         }
-                        Name exprTree = getLeftTreeName(statements.get(0));
-                        if (leftTreeName != null && exprTree != null && leftTreeName.contentEquals(exprTree)) {
+                        if (leftTreeName != null && leftTreeName.contentEquals(getLeftTreeName(statements.get(0)))) {
                             break;
                         } else {
                             return false;

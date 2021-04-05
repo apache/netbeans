@@ -39,19 +39,19 @@ import org.netbeans.modules.xml.spi.dom.*;
 class DTDGrammar implements ExtendedGrammarQuery {
     
     // element name keyed
-    private Map<String, Set>  elementDecls, attrDecls;
+    private Map elementDecls, attrDecls;
     
     // Map<elementName:String, model:String || model:ContentModel || null>
     // this map is filled asynchronously as it takes some time
     private Map contentModels;
     
     // Map<elementname + " " + attributename, List<String>>
-    private Map<String, List> attrEnumerations;
+    private Map attrEnumerations;
     
     // Map<elementname + " " + attributename, String>
-    private Map<String, String> defaultAttributeValues;
+    private Map defaultAttributeValues;
     
-    private Set<String> entities, notations;
+    private Set entities, notations;
 
     /** Set&lt;elementName:String> holding all emenets with <code>EMPTY</code> content model.*/
     private Set emptyElements;
@@ -138,7 +138,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
         
         NamedNodeMap existingAttributes = el.getAttributes();        
         
-        Set<String> possibleAttributes = (Set<String>) attrDecls.get(el.getTagName());
+        Set possibleAttributes = (Set) attrDecls.get(el.getTagName());
         if (possibleAttributes == null) return org.openide.util.Enumerations.empty();
         
         String prefix = ctx.getCurrentPrefix();
@@ -171,7 +171,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
         if (elementDecls == null) return org.openide.util.Enumerations.empty();;
         
         Node node = ((Node)ctx).getParentNode();        
-        Set<String> elements = null;
+        Set elements = null;
         
         if (node instanceof Element) {
             Element el = (Element) node;
@@ -195,7 +195,7 @@ class DTDGrammar implements ExtendedGrammarQuery {
                 Enumeration en = ((ContentModel)model).whatCanFollow(new PreviousEnumeration(el, ctx));
                 if (en == null) return org.openide.util.Enumerations.empty();
                 String prefix = ctx.getCurrentPrefix();
-                elements = new TreeSet<>();
+                elements = new TreeSet();
                 while (en.hasMoreElements()) {
                     String next = (String) en.nextElement();
                     if (next.startsWith(prefix)) {

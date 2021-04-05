@@ -69,7 +69,7 @@ abstract class AbstractFolder extends FileObject {
 
     /** If root changes, all AbstractFolders in hierarchy are invalidated.
      *@see #isValid()*/
-    private final AbstractFolder validRoot;
+    private final FileObject validRoot;
 
     /** list of children */
     private String[] children;
@@ -90,8 +90,8 @@ abstract class AbstractFolder extends FileObject {
         this.system = fs;
         this.parent = parent;
         this.name = name;
-        validFlag = true;
-        validRoot = (parent instanceof AbstractFolder) ? (AbstractFolder) fs.getRoot() : null;
+        this.validFlag = true;
+        this.validRoot = (parent != null) ? fs.getRoot() : null;
     }
 
     /* Get the name without extension of this file or folder.

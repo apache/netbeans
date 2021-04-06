@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.BaseUtilities;
@@ -40,6 +41,7 @@ import org.openide.xml.XMLUtil;
  * rules and if all matches returning MIME type.
  */
 final class FileElement {
+    private static final Logger LOGGER = Logger.getLogger(MIMEResolverImpl.class.getName());
     FileElement() {
     }
     Type fileCheck = new Type();
@@ -54,6 +56,10 @@ final class FileElement {
 
     List<Type.FileName> getNames() {
         return fileCheck.names;
+    }
+
+    List<Type.FileNamePattern> getFileNamePatterns() {
+        return fileCheck.fileNamePatterns;
     }
 
     String getMimeType() {
@@ -85,7 +91,7 @@ final class FileElement {
                 return mime;
             }
         } catch (IOException io) {
-            Logger.getLogger(MIMEResolverImpl.class.getName()).log(Level.INFO, "IOException in resolver " + this, io);
+            LOGGER.log(Level.INFO, "IOException in resolver " + this, io);
         }
         return null;
     }
@@ -143,6 +149,7 @@ final class FileElement {
         private byte[]   mask;
         private List<FilePattern> patterns;
         private List<FileName> names;
+        private List<FileNamePattern> fileNamePatterns;
         private transient FilePattern lastAddedPattern;
         
         /** Checks whether the type is valid. At least one of the fields has
@@ -154,6 +161,7 @@ final class FileElement {
                    fatts != null ||
                    patterns != null ||
                    names != null ||
+                   fileNamePatterns != null ||
                    magic != null;
         }
 
@@ -181,6 +189,14 @@ final class FileElement {
                     n.writeExternal(out);
                 }
             }
+            if (fileNamePatterns == null) {
+                out.writeInt(-1);
+            } else {
+                out.writeInt(fileNamePatterns.size());
+                for (FileNamePattern p : fileNamePatterns) {
+                    p.writeExternal(out);
+                }
+            }
         }
 
         private void readExternal(DataInput in) throws IOException {
@@ -203,6 +219,18 @@ final class FileElement {
                 names = new ArrayList<FileName>(namesSize);
                 for (int i = 0; i < namesSize; i++) {
                     names.add(new FileName(in));
+                }
+            }
+            int fileNamePatternsSize = -1;
+            try {
+                fileNamePatternsSize = in.readInt();
+            } catch (EOFException eofe) {
+                // old version does not contain FileNamePattern: ignore
+            }
+            if (fileNamePatternsSize >= 0) {
+                fileNamePatterns = new ArrayList<>(fileNamePatternsSize);
+                for (int i = 0; i < fileNamePatternsSize; i++) {
+                    fileNamePatterns.add(new FileNamePattern(in));
                 }
             }
         }
@@ -392,6 +420,42 @@ final class FileElement {
             }
         }
 
+        class FileNamePattern {
+            static final int DEFAULT_FLAGS = 0;
+            private final String regex;
+            private final int flags;
+            private final Pattern pattern;
+            
+            public FileNamePattern(String regex, int flags) {
+                this.regex = regex;
+                this.flags = flags;
+                this.pattern = Pattern.compile(regex, flags);
+            }
+
+            public FileNamePattern(DataInput is) throws IOException {
+                this(
+                    Util.readUTF(is), is.readInt()
+                );
+            }
+            
+            public void writeExternal(DataOutput os) throws IOException {
+                Util.writeUTF(os, regex);
+                os.writeInt(flags);
+            }
+
+            public boolean match(FileObject fo) {
+                String nameAndExt = fo.getNameExt();
+                final boolean matches = pattern.matcher(nameAndExt).matches();
+                LOGGER.fine(String.format("Matching '%s' with regex=%s, flags=%d? %s", nameAndExt, regex, flags, Boolean.toString(matches))); // NOI18N
+                return matches;
+            }
+
+            @Override
+            public String toString() {
+                return "[" + regex + ", " + flags + "]";
+            }
+        }
+
         /**
          * For debug purposes only.
          */
@@ -431,6 +495,13 @@ final class FileElement {
                 buf.append("names:");
                 for (FileName name : names) {
                     buf.append(name.toString()).append(", ");
+                }
+            }
+
+            if (fileNamePatterns != null) {
+                buf.append("fileNamePatterns:");
+                for (FileNamePattern fileNamePattern : fileNamePatterns) {
+                    buf.append(fileNamePattern.toString()).append(", ");
                 }
             }
 
@@ -479,6 +550,13 @@ final class FileElement {
                 names = new ArrayList<FileName>();
             }
             names.add(new FileName(name, substring, ignoreCase));
+        }
+
+        final void addFileNamePattern(String regex, int flags) {
+            if (fileNamePatterns == null) {
+                fileNamePatterns = new ArrayList<>();
+            }
+            fileNamePatterns.add(new FileNamePattern(regex, flags));
         }
 
         final boolean setMagic(byte[] magic, byte[] mask) {
@@ -628,6 +706,21 @@ final class FileElement {
                 boolean matched = false;
                 for (FileName name : names) {
                     if(name.match(fo)) {
+                        // at least one matched => escape loop, otherwise continue
+                        matched = true;
+                        break;
+                    }
+                }
+                if (!matched) {
+                    return false;
+                }
+            }
+
+            // check file name
+            if (fileNamePatterns != null) {
+                boolean matched = false;
+                for (FileNamePattern fileNamePattern : fileNamePatterns) {
+                    if(fileNamePattern.match(fo)) {
                         // at least one matched => escape loop, otherwise continue
                         matched = true;
                         break;

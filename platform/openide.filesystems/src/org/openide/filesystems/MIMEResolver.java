@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.*;
+import java.util.regex.Pattern;
 import org.netbeans.modules.openide.filesystems.declmime.MIMEResolverImpl;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.util.NbBundle;
@@ -179,6 +180,10 @@ public abstract class MIMEResolver {
         /** Display name to present this type of objects to the user.
          */
         public String displayName();
+        /** Display filter to present this type of objects to the user, such as
+         * {@literal "*.html"}.
+         */
+        public String displayFilter() default "";
         /** Mime type to be assigned to files with {@link #extension}.
          */
         public String mimeType();
@@ -237,6 +242,10 @@ public abstract class MIMEResolver {
         /** Display name to present this type of objects to the user.
          */
         public String displayName();
+        /** Display filter to present this type of objects to the user, such as
+         * {@literal "*.form"}.
+         */
+        public String displayFilter() default "";
         /** Mime type to be assigned to files that match description of this
          * annotation.
          */
@@ -277,6 +286,44 @@ public abstract class MIMEResolver {
         public String[] doctypePublicId() default {};
     }
     
+    /**
+     * Often a mime type can be deduced just by looking at a file name. If that is
+     * your case, this annotation is for you. It associates a file name with
+     * provided mime type.
+     */
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface PatternRegistration {
+        /** Display name to present this type of objects to the user.
+         */
+        public String displayName();
+        /** Display filter to present this type of objects to the user, such as
+         * {@literal "*.Snnnn"}.
+         */
+        public String displayFilter() default "";
+        /** Mime type to be assigned to files with file name matching {@link #regex}.
+         */
+        public String mimeType();
+        /** Regex used in {@link Pattern#compile(java.lang.String, int)} for the file
+         * name that should be recognized as given {@link #mimeType}.
+         */
+        public String regex();
+        /** Flags used in {@link Pattern#compile(java.lang.String, int)} for the file
+         * name that should be recognized as given {@link #mimeType}.
+         */
+        public int flags() default 0;
+        /** In case ordering of mime resolvers is important, one can specify it by
+         * defining their {@link LayerBuilder#position() position}.
+         */
+        public int position() default Integer.MAX_VALUE;
+        /** Show file filters for this MIME type. Set localized names of file filters
+         * that should contain files resolved by this resolver.
+         *
+         * @see FileChooserBuilder#addDefaultFileFilters()
+         * @since 8.1
+         */
+        public String[] showInFileChooser() default {};
+    }
+
     /** Registration that allows effective, declarative registration of 
      * complex {@link MIMEResolver mime resolvers}. 
      * For simpler cases rather consider using
@@ -321,6 +368,12 @@ public abstract class MIMEResolver {
         /** Display name to present this type of objects to the user.
          */
         public String displayName();
+
+        /** Display filter to present this type of objects to the user, such as
+         * {@literal "*.txt"}.
+         */
+        public String displayFilter() default "";
+
         /**
          * Show file filters for registered MIME types. Set localized names of
          * file filters that should accept files resolved by this resolver. Only

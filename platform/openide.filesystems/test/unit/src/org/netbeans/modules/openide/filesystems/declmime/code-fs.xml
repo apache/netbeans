@@ -249,6 +249,15 @@
                 </file>
             </MIME-resolver>]]>
         </file>
+        <file name="s1234-resolver.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <!-- Filename pattern matches file.s1234, FiLe.S5678, .... -->
+                    <filenamepattern regex=".*\.S[\d]{4}" flags="2"/>
+                    <resolver mime="application/x-eclipse-non-unified-summary"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
         <file name="empty-extension-resolver.xml"><![CDATA[<?xml version="1.0"?>
             <MIME-resolver>
                 <file>

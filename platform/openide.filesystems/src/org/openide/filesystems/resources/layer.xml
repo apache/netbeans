@@ -48,6 +48,9 @@
                 <file name="DTD_MIME_Resolver_1_1" url="nbres:/org/netbeans/modules/openide/filesystems/declmime/resolver1_1.dtd">
                     <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD MIME Resolver 1.1//EN"/>
                 </file>
+                <file name="DTD_MIME_Resolver_1_2" url="nbres:/org/netbeans/modules/openide/filesystems/declmime/resolver1_2.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD MIME Resolver 1.2//EN"/>
+                </file>
 
                 <file name="DTD_MIME_Resolver_XML_Rules_1_0" url="nbres:/org/netbeans/modules/openide/filesystems/declmime/xml-rules.dtd">
                     <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD MIME Resolver XML Rules 1.0//EN"/>

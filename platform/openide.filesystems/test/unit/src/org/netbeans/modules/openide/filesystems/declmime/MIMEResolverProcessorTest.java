@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.*;
 import org.openide.util.Lookup;
@@ -44,6 +45,8 @@ import org.openide.util.lookup.Lookups;
 @NbBundle.Messages({
     "MYNAME=My Name",
     "EXTNAME=XYZ extension",
+    "PATTERN_NAME=S files",
+    "PATTERN_FILTER=*.Snnnn",
     "SPACENAME=Cosmic space",
     "ABCXYX_FILES=ABC and XYZ Files",
     "TEST_FILES=Test Files",
@@ -65,6 +68,14 @@ import org.openide.util.lookup.Lookups;
     elementName="myandyour",
     elementNS="http://some.org/ns/123",
     position=93
+)
+@MIMEResolver.PatternRegistration(
+    displayName="#PATTERN_NAME",
+    displayFilter="#PATTERN_FILTER",
+    mimeType = "application/x-s-files",
+    regex=".+\\.S[\\d]{4}$",
+    flags=Pattern.CASE_INSENSITIVE,
+    position=94
 )
 public class MIMEResolverProcessorTest extends NbTestCase {
     private FileObject root;
@@ -155,6 +166,42 @@ public class MIMEResolverProcessorTest extends NbTestCase {
         assertEquals("text/x-yz", fo.getAttribute("mimeType"));
         assertEquals("ABC and XYZ Files", fo.getAttribute("fileChooser.0"));
         assertEquals("Test Files", fo.getAttribute("fileChooser.1"));
+    }
+
+    public void testPatternResolver() throws Exception {
+        final String PATH = "Services/MIMEResolver/"
+                + "org-netbeans-modules-openide-filesystems-declmime-MIMEResolverProcessorTest-Pattern.xml";
+        FileObject fo = FileUtil.getConfigFile(PATH);
+        assertNotNull("Registration found", fo);
+        String dispName = fo.getFileSystem().getDecorator().annotateName(fo.getName(), Collections.singleton(fo));
+        assertEquals("Proper display name", Bundle.PATTERN_NAME(), dispName);
+
+        assertNotNull("Declaration found", fo);
+        MIMEResolver mime = FileUtil.getConfigObject(PATH, MIMEResolver.class);
+        assertNotNull("Mime type found", mime);
+
+        FileObject check = FileUtil.createMemoryFileSystem().getRoot().createData("my.S1234");
+        FileObject check2 = FileUtil.createMemoryFileSystem().getRoot().createData("my.s5678");
+        assertEquals("S1234 recognized OK", "application/x-s-files", mime.findMIMEType(check));        
+        assertEquals("s5678 recognized OK", "application/x-s-files", mime.findMIMEType(check2));        
+
+        Map<String, Set<String>> map = MIMEResolverImpl.getMIMEToExtensions(fo);
+        assertNotNull("Map is provided", map);
+        assertFalse("Map is not empty", map.isEmpty());
+        Set<String> arr = map.get("application/x-s-files");
+        assertTrue("No extensions", arr.isEmpty());
+    }
+
+    public void testResourceFilePatternRegistration() {
+        final String PATH = "Services/MIMEResolver/"
+                + "org-netbeans-modules-openide-filesystems-declmime-MIMEResolverProcessorTest-Pattern.xml";
+        FileObject fo = FileUtil.getConfigFile(PATH);
+        assertNotNull(fo);
+        assertEquals(Bundle.PATTERN_NAME(), fo.getAttribute("displayName"));
+        assertEquals(Bundle.PATTERN_FILTER(), fo.getAttribute("displayFilter"));
+        assertEquals("application/x-s-files", fo.getAttribute("mimeType"));
+        assertEquals(".+\\.S[\\d]{4}$", fo.getAttribute("regex"));
+        assertEquals(Pattern.CASE_INSENSITIVE, fo.getAttribute("flags"));
     }
 
     public void testNameElement() throws Exception {

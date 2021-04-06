@@ -82,8 +82,8 @@ public final class MIMEResolverImpl {
         return new Impl(fo);
     }
 
-    static MIMEResolver forStream(FileObject def, byte[] serialData) throws IOException {
-        return new Impl(def, serialData);
+    static MIMEResolver forStream(FileObject def, String displayName, String displayFilter, byte[] serialData) throws IOException {
+        return new Impl(def, displayName, displayFilter, serialData);
     }
     
     static byte[] toStream(MIMEResolver mime) throws IOException {
@@ -288,6 +288,18 @@ public final class MIMEResolverImpl {
         return orderedResolvers.values();
     }
 
+    private static FileElement fileNamePatternElem(String regex, Integer flags, String mimeType) {
+        FileElement e = new FileElement();
+        e.fileCheck.addFileNamePattern(regex, flags);
+        e.setMIME(mimeType);
+        return e;
+    }
+
+    private static MIMEResolver forPattern(FileObject def, String displayName, String displayFilter, String mimeType, String regex, Integer flags) throws IOException {
+        FileElement[] e = { fileNamePatternElem(regex, flags, mimeType) };
+        return new Impl(def, displayName, displayFilter, e, mimeType);
+    }
+
     private static FileElement extensionElem(List<String> exts, String mimeType) {
         FileElement e = new FileElement();
         for (String ext : exts) {
@@ -298,12 +310,13 @@ public final class MIMEResolverImpl {
     }
 
 
-    private static MIMEResolver forExts(FileObject def, String mimeType, List<String> exts) throws IOException {
+    private static MIMEResolver forExts(FileObject def, String displayName, String displayFilter, String mimeType, List<String> exts) throws IOException {
         FileElement[] e = { extensionElem(exts, mimeType) };
-        return new Impl(def, e, mimeType);
+        return new Impl(def, displayName, displayFilter, e, mimeType);
     }
 
     private static MIMEResolver forXML(FileObject def, 
+        String displayName, String displayFilter,
         String mimeType, List<String> exts, List<String> acceptExts,
         String elem, List<String> namespace, List<String> dtds
     ) throws IOException {
@@ -314,18 +327,21 @@ public final class MIMEResolverImpl {
         e.rule = new XMLMIMEComponent(elem, namespace, dtds);
         e.setMIME(mimeType);
         if (acceptExts.isEmpty()) {
-            return new Impl(def, new FileElement[] { e }, mimeType);
+            return new Impl(def, displayName, displayFilter, new FileElement[] { e }, mimeType);
         } else {
             FileElement direct = extensionElem(acceptExts, mimeType);
-            return new Impl(def, new FileElement[] { e, direct }, mimeType);
+            return new Impl(def, displayName, displayFilter, new FileElement[] { e, direct }, mimeType);
         }
     }
 
     /** factory method for {@link MIMEResolver.Registration} */
     public static MIMEResolver create(FileObject fo) throws IOException {
+        String displayName = (String) fo.getAttribute("displayName"); // NOI18N
+        String displayFilter = (String) fo.getAttribute("displayFilter"); // NOI18N
+        
         byte[] arr = (byte[]) fo.getAttribute("bytes");
         if (arr != null) {
-            return forStream(fo, arr);
+            return forStream(fo, displayName, displayFilter, arr);
         }
         String mimeType = (String) fo.getAttribute("mimeType"); // NOI18Ns
         String element = (String) fo.getAttribute("element"); // NOI18N
@@ -334,12 +350,19 @@ public final class MIMEResolverImpl {
             List<String> accept = readArray(fo, "accept."); // NOI18N
             List<String> nss = readArray(fo, "ns."); // NOI18N
             List<String> dtds = readArray(fo, "doctype."); // NOI18N
-            return forXML(fo, mimeType, exts, accept, element, nss, dtds);
+            return forXML(fo, displayName, displayFilter, mimeType, exts, accept, element, nss, dtds);
         }
         
         if (!exts.isEmpty()) {
-            return forExts(fo, mimeType, exts);
+            return forExts(fo, displayName, displayFilter, mimeType, exts);
         }
+        
+        String regex = (String) fo.getAttribute("regex"); // NOI18N
+        Integer flags = (Integer) fo.getAttribute("flags"); // NOI18N
+        if (regex != null) {
+            return forPattern(fo, displayName, displayFilter, mimeType, regex, flags);
+        }
+        
         throw new IllegalArgumentException("" + fo);
     }
 
@@ -378,6 +401,10 @@ public final class MIMEResolverImpl {
         private FileElement[] smell;
                 
         private short state;
+        
+        private String displayName;
+
+        private String displayFilter;
 
         private String[] implResolvableMIMETypes;
 
@@ -390,7 +417,9 @@ public final class MIMEResolverImpl {
         }
 
         @SuppressWarnings("deprecation")
-        private Impl(FileObject def, byte[] serialData) throws IOException {
+        private Impl(FileObject def, String displayName, String displayFilter, byte[] serialData) throws IOException {
+            this.displayName = displayName;
+            this.displayFilter = displayFilter;
             data = def;
             state = DescParser.LOAD;
             ByteArrayInputStream is = new ByteArrayInputStream(serialData);
@@ -399,7 +428,9 @@ public final class MIMEResolverImpl {
 
         }
         @SuppressWarnings("deprecation")
-        private Impl(FileObject def, FileElement[] arr, String... mimeType) throws IOException {
+        private Impl(FileObject def, String displayName, String displayFilter, FileElement[] arr, String... mimeType) throws IOException {
+            this.displayName = displayName;
+            this.displayFilter = displayFilter;
             this.data = def;
             this.implResolvableMIMETypes = mimeType;
             this.smell = arr;
@@ -600,6 +631,9 @@ public final class MIMEResolverImpl {
         private static final String RESOLVER = "resolver"; // NOI18N
         private static final String FATTR = "fattr"; // NOI18N
         private static final String NAME = "name"; // NOI18N
+        private static final String FILE_NAME_PATTERN = "filenamepattern"; // NOI18N
+        private static final String REGEX = "regex"; // NOI18N
+        private static final String FLAGS = "flags"; // NOI18N
         private static final String PATTERN = "pattern"; // NOI18N
         private static final String VALUE = "value"; // NOI18N
         private static final String RANGE = "range"; // NOI18N
@@ -726,6 +760,17 @@ public final class MIMEResolverImpl {
                             ignoreCase = Boolean.valueOf(ignoreCaseAttr);
                         }
                         template[0].fileCheck.addName(s, substring, ignoreCase);
+                        break;
+
+                    } else if (FILE_NAME_PATTERN.equals(qName)) {
+
+                        String regex = atts.getValue(REGEX); if (regex == null) error();
+                        int flags = Type.FileNamePattern.DEFAULT_FLAGS;
+                        String flagsAttr = atts.getValue(FLAGS);
+                        if (flagsAttr != null) {
+                            flags = Integer.valueOf(flagsAttr);
+                        }
+                        template[0].fileCheck.addFileNamePattern(regex, flags);
                         break;
 
                     } else if (RESOLVER.equals(qName)) {

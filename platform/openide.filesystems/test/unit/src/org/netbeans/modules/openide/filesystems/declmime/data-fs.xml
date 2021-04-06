@@ -104,6 +104,11 @@ define
         <file name="makefile.Rakefile"/>
         <file name="rakefile"/>
         <file name="Rakefile"/>
+        <file name="file.s1234"/>
+        <file name="FiLe.S5678"/>
+        <file name="file.txt"/>
+        <file name="file.S12AA"/>
+        <file name="FiLe.SAA56"/>
         <file name="empty-extension"/>
         <file name="cpp"><![CDATA[
 //    -*- C++ -*-

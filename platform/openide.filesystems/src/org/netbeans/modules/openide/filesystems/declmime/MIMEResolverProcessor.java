@@ -35,6 +35,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.filesystems.MIMEResolver.ExtensionRegistration;
 import org.openide.filesystems.MIMEResolver.NamespaceRegistration;
+import org.openide.filesystems.MIMEResolver.PatternRegistration;
 import org.openide.filesystems.MIMEResolver.Registration;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerBuilder.File;
@@ -55,6 +56,7 @@ public class MIMEResolverProcessor extends LayerGeneratingProcessor {
         set.add(MIMEResolver.Registration.class.getCanonicalName());
         set.add(MIMEResolver.ExtensionRegistration.class.getCanonicalName());
         set.add(MIMEResolver.NamespaceRegistration.class.getCanonicalName());
+        set.add(MIMEResolver.PatternRegistration.class.getCanonicalName());
         return set;
     }
     
@@ -72,6 +74,10 @@ public class MIMEResolverProcessor extends LayerGeneratingProcessor {
         for (Element e : roundEnv.getElementsAnnotatedWith(MIMEResolver.NamespaceRegistration.class)) {
             MIMEResolver.NamespaceRegistration r = e.getAnnotation(MIMEResolver.NamespaceRegistration.class);
             registerNamespace(e, r);
+        }
+        for (Element e : roundEnv.getElementsAnnotatedWith(MIMEResolver.PatternRegistration.class)) {
+            MIMEResolver.PatternRegistration r = e.getAnnotation(MIMEResolver.PatternRegistration.class);
+            registerPattern(e, r);
         }
         return true;
     }
@@ -92,6 +98,29 @@ public class MIMEResolverProcessor extends LayerGeneratingProcessor {
             f.bundlevalue("fileChooser." + (ccnt++), chooser);
         }
         f.bundlevalue("displayName", r.displayName()); // NOI18N
+        if (!"".equals(r.displayFilter())) {
+            f.bundlevalue("displayFilter", r.displayFilter()); // NOI18N
+        }
+        f.write();
+    }
+
+    private void registerPattern(Element e, PatternRegistration r) throws LayerGenerationException {
+        final LayerBuilder b = layer(e);
+        File f = b.file("Services/MIMEResolver/" + getName(e).replace('.', '-') + "-Pattern" + SUFFIX); // NOI18N
+        f.methodvalue("instanceCreate", MIMEResolver.class.getName(), "create"); // NOI18N
+        f.stringvalue("instanceClass", MIMEResolver.class.getName()); // NOI18N
+        f.stringvalue("mimeType", r.mimeType()); // NOI18N
+        f.stringvalue("regex", r.regex()); // NOI18N
+        f.intvalue("flags", r.flags()); // NOI18N
+        f.position(r.position());
+        int ccnt = 0;
+        for (String chooser : r.showInFileChooser()) {
+            f.bundlevalue("fileChooser." + (ccnt++), chooser);
+        }
+        f.bundlevalue("displayName", r.displayName()); // NOI18N
+        if (!"".equals(r.displayFilter())) {
+            f.bundlevalue("displayFilter", r.displayFilter()); // NOI18N
+        }
         f.write();
     }
 
@@ -109,6 +138,9 @@ public class MIMEResolverProcessor extends LayerGeneratingProcessor {
             f.bundlevalue("fileChooser." + (ccnt++), chooser);
         }
         f.bundlevalue("displayName", r.displayName()); // NOI18N
+        if (!"".equals(r.displayFilter())) {
+            f.bundlevalue("displayFilter", r.displayFilter()); // NOI18N
+        }
         f.write();
     }
 
@@ -169,6 +201,9 @@ public class MIMEResolverProcessor extends LayerGeneratingProcessor {
         }
         f.position(r.position());
         f.bundlevalue("displayName", r.displayName()); // NOI18N
+        if (!"".equals(r.displayFilter())) {
+            f.bundlevalue("displayFilter", r.displayFilter()); // NOI18N
+        }
         f.write();
     }
 

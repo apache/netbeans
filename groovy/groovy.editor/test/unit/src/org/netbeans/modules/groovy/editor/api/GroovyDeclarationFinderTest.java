@@ -21,6 +21,7 @@ package org.netbeans.modules.groovy.editor.api;
 
 import java.util.Collections;
 import java.util.Map;
+import org.junit.Ignore;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.csl.api.DeclarationFinder.DeclarationLocation;
 import org.netbeans.modules.groovy.editor.test.GroovyTestBase;
@@ -125,6 +126,7 @@ public class GroovyDeclarationFinderTest extends GroovyTestBase {
                 "class Declaration2 extends Declaration1 implements Interface1, Int^erface2 {", "Interface2.java", 12);
     }
 
+    @Ignore
     public void testInnerClasses1() throws Exception {
         checkDeclaration(TEST_BASE + "a/Declaration3.groovy",
                 "        return Inner^Classes.Type.DUMMY_1;", "InnerClasses.java", 12);

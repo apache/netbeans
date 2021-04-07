@@ -42,6 +42,7 @@ import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
@@ -56,7 +57,6 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.swing.JButton;
-import org.netbeans.modules.proxy.Base64Encoder;
 import org.netbeans.modules.subversion.Subversion;
 import org.netbeans.modules.subversion.client.SvnClientFactory.ConnectionType;
 import org.netbeans.modules.subversion.kenai.SvnKenaiAccessor;
@@ -504,7 +504,7 @@ public class SvnClientExceptionHandler {
               .append("Connection: Keep-Alive\r\n");                    //NOI18N
       if (userName != null && password != null && userName.length() > 0) {
           Subversion.LOG.info("connectProxy: adding proxy authorization field"); //NOI18N
-          sb.append("Proxy-Authorization: Basic ").append(Base64Encoder.encode((userName + ":" + password).getBytes())).append("\r\n"); //NOI18N
+          sb.append("Proxy-Authorization: Basic ").append(Base64.getEncoder().encodeToString((userName + ":" + password).getBytes())).append("\r\n"); //NOI18N
       }
       String connectString = sb.append("\r\n").toString();
       byte connectBytes[];

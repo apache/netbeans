@@ -16,37 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.diff.builtin;
+package org.netbeans.modules.proxy;
 
-import java.io.ByteArrayOutputStream;
-import java.util.List;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-/**
- * Base64 utility methods.
- *
- * @author Maros Sandor
- */
-class Base64 {
-
-    private static final java.util.Base64.Decoder DECODER = java.util.Base64.getDecoder();
-
-    private Base64() {
-    }
+public class ProxySocketFactoryTest {
 
     /**
-     * Decodes multiple Base64 strings into a single byteArray
+     * Test of encodeCredentials method, of class ProxySocketFactory.
      */
-    public static byte[] decode(List<String> ls) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        for (String s : ls) {
-            decode(s, bos);
-        }
-        return bos.toByteArray();
-    }
-
-    private static void decode(String s, ByteArrayOutputStream bos) {
-        final byte[] decoded = DECODER.decode(s);
-        bos.write(decoded, 0, decoded.length);
+    @Test
+    public void testEncodeCredentials() throws Exception {
+        final String creds = "user:password";
+        final String encoded = "dXNlcjpwYXNzd29yZA==";
+        assertEquals(encoded, ProxySocketFactory.encodeCredentials(creds));
     }
 
 }

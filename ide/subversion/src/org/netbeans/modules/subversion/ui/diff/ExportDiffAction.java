@@ -42,7 +42,6 @@ import java.io.*;
 import java.util.*;
 import java.util.List;
 import org.netbeans.modules.subversion.client.SvnClientExceptionHandler;
-import org.netbeans.modules.proxy.Base64Encoder;
 import org.netbeans.modules.versioning.util.ExportDiffSupport;
 import org.openide.filesystems.FileUtil;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
@@ -351,8 +350,29 @@ public class ExportDiffAction extends ContextAction {
         }
         sb.append("MIME: application/octet-stream; encoding: Base64; length: ").append(file.canRead() ? file.length() : -1); // NOI18N
         sb.append(System.getProperty("line.separator")); // NOI18N
-        sb.append(Base64Encoder.encode(baos.toByteArray(), true));
+        sb.append(encodeToWrappedBase64(baos.toByteArray()));
         sb.append(System.getProperty("line.separator")); // NOI18N
         return sb.toString();
+    }
+
+    static String encodeToWrappedBase64(byte[] data) {
+        return wrapText(Base64.getEncoder().encodeToString(data), 60, System.getProperty("line.separator"));
+    }
+
+    static String wrapText(String text, int length, String separator) {
+        if (length > 0) {
+            StringBuilder sb = new StringBuilder(text.length() + (((text.length() - 1) / length) * separator.length()));
+            int idx = 0;
+            while (idx < text.length()) {
+                if (idx > 0) {
+                    sb.append(separator);
+                }
+                sb.append(text.substring(idx, Math.min(idx + length, text.length())));
+                idx += length;
+            }
+            return sb.toString();
+        } else {
+            return text;
+        }
     }
 }

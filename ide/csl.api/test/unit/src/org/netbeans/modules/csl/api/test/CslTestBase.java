@@ -115,6 +115,7 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import junit.framework.Assert;
+import static org.junit.Assert.assertNotEquals;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
@@ -4589,11 +4590,7 @@ public abstract class CslTestBase extends NbTestCase {
 
     protected void checkDeclaration(String relFilePath, String caretLine, String file, int offset) throws Exception {
         DeclarationLocation location = findDeclaration(relFilePath, caretLine);
-        if (location == DeclarationLocation.NONE) {
-            // if we dont found a declaration, bail out.
-            assertTrue("DeclarationLocation.NONE", false);
-        }
-
+        assertNotEquals("if we dont found a declaration, bail out", DeclarationLocation.NONE, location);
         assertEquals(file, location.getFileObject() != null ? location.getFileObject().getNameExt() : "<none>");
         assertEquals(offset, location.getOffset());
     }

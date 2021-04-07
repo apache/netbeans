@@ -92,7 +92,7 @@ public class CodeSnippetCompilerTest extends NbTestCase {
             cc.getTreeUtilities().attributeTree(tree, cc.getTrees().getScope(posPath));
             TreePath tp = new TreePath(posPath, tree);
             ClassToInvoke cti = CodeSnippetCompiler.compileToClass(cc, watch, 0, cc.getJavaSource(), java, -1, tp, tree, false);
-
+            assertNotNull("Class was generated", cti);
             ClassFile cf = ClassFile.read(new ByteArrayInputStream(cti.bytecode));
 
             for (Method m : cf.methods) {

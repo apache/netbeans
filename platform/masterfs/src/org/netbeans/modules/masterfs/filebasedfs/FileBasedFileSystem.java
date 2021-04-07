@@ -116,7 +116,7 @@ public class FileBasedFileSystem extends FileSystem {
             if (file.getParentFile() == null && BaseUtilities.isUnix()) {
                 retval = FileBasedFileSystem.getInstance().getRoot();
             } else {
-                retval = fs.getValidFileObject(file,caller);
+                retval = fs.getValidFileObject(file,caller, true);
             }                
         }         
         return retval;

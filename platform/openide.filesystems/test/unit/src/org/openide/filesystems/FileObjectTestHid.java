@@ -3465,7 +3465,35 @@ public class FileObjectTestHid extends TestBaseHid {
             // OK
         }
     }
- 
+
+    public void testNonExistingFileObject() throws Exception {
+        nonExistingFileObject("non-existing-child.xyz");
+    }
+
+    public void testNonExistingFileObjectInFolder() throws Exception {
+        nonExistingFileObject("non-existing-folder/non-existing-child.xyz");
+    }
+
+    private void nonExistingFileObject(String childName) throws Exception {
+        checkSetUp();
+        final FileObject fold = getTestFolder1(root);
+
+        FileObject ch1 = fold.getFileObject(childName);
+        assertNull("Not existing child", ch1);
+
+        FileObject ch2 = fold.getFileObject(childName, false);
+        assertNotNull("Non existing child created", ch2);
+        assertEquals("non-existing-child.xyz", ch2.getNameExt());
+        assertFalse("It is not valid to begin with", ch2.isValid());
+
+        URI foldUri = fold.toURI();
+        URI ch2Uri = ch2.toURI();
+
+        if (!ch2Uri.toString().startsWith(foldUri.toString())) {
+            fail("Expecting the child url:\n" + ch2Uri + "\nto begin with folder URL:\n" + foldUri);
+        }
+    }
+
     /*#46885: File not refreshed in editor if modified externally the first time after an internal modification*/
     public void testExternalChange () throws Exception {        
         checkSetUp();

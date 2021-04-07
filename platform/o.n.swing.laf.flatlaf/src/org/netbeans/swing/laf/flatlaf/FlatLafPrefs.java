@@ -44,11 +44,11 @@ class FlatLafPrefs {
     }
 
     static boolean isUnifiedTitleBar() {
-        return prefs.getBoolean(UNIFIED_TITLE_BAR, false);
+        return prefs.getBoolean(UNIFIED_TITLE_BAR, true);
     }
 
     static void setUnifiedTitleBar(boolean value) {
-        putBoolean(UNIFIED_TITLE_BAR, value, false);
+        putBoolean(UNIFIED_TITLE_BAR, value, true);
     }
 
     static boolean isMenuBarEmbedded() {

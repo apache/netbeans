@@ -19,35 +19,19 @@
 
 package org.netbeans.modules.db.sql.editor.completion;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
-import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
-import org.netbeans.api.db.explorer.JDBCDriver;
-import org.netbeans.api.db.explorer.JDBCDriverManager;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.db.api.sql.execute.SQLExecution;
 import org.netbeans.modules.db.sql.editor.ui.actions.SQLExecutionBaseAction;
 import org.netbeans.modules.db.sql.lexer.SQLTokenId;
-import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionTask;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
-import org.netbeans.spi.editor.hints.ChangeInfo;
-import org.netbeans.spi.editor.hints.ErrorDescription;
-import org.netbeans.spi.editor.hints.ErrorDescriptionFactory;
-import org.netbeans.spi.editor.hints.Fix;
-import org.netbeans.spi.editor.hints.HintsController;
-import org.netbeans.spi.editor.hints.Severity;
 import org.openide.awt.StatusDisplayer;
-import org.openide.text.Line;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
@@ -68,7 +52,7 @@ public class SQLCompletionProvider implements CompletionProvider {
             /* to support DB related completion tasks (i.e. auto populating table 
             names or db columns for given schema) check for connection */
             DatabaseConnection dbconn = findDBConn(component);
-            
+
             return new AsyncCompletionTask(new SQLCompletionQuery(dbconn), component);
         }
         
@@ -113,7 +97,7 @@ public class SQLCompletionProvider implements CompletionProvider {
         if (dbconn != null && dbconn.getJDBCConnection() == null) {
             String message = NbBundle.getMessage(SQLCompletionProvider.class, "MSG_NotConnected");
             StatusDisplayer.getDefault().setStatusText(message);
-            SQLExecutionBaseAction.notifyNoDatabaseConnection();
+            SQLExecutionBaseAction.notifyNoDatabaseConnection();            
             // XXX: Maybe add content specific "fixs"
         }
         return COMPLETION_QUERY_TYPE;

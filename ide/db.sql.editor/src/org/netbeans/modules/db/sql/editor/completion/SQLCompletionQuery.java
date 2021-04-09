@@ -212,10 +212,6 @@ public class SQLCompletionQuery extends AsyncCompletionQuery {
         substitutionOffset = ident.substitutionOffset;
         SQLStatementKind kind = statement.getKind();
         
-        // give warning
-        if (dbconn == null) {
-              SQLExecutionBaseAction.notifyNoDatabaseConnection();
-        }
         switch (kind) {
             case SELECT:
                 completeSelect();

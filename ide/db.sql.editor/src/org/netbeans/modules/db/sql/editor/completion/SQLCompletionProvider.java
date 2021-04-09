@@ -68,10 +68,6 @@ public class SQLCompletionProvider implements CompletionProvider {
             /* to support DB related completion tasks (i.e. auto populating table 
             names or db columns for given schema) check for connection */
             DatabaseConnection dbconn = findDBConn(component);
-            // No database connection set or active
-            if (SQLCompletionProvider.dbconn == null) {
-                createSuggestions(component,dbconn);
-            }
             
             return new AsyncCompletionTask(new SQLCompletionQuery(dbconn), component);
         }
@@ -95,7 +91,7 @@ public class SQLCompletionProvider implements CompletionProvider {
      */
     public int getAutoQueryTypes(JTextComponent component, String typedText) {
         // XXX: Check if "enable/disable" autocomplete is setting.  See NETBEANS-188
-
+        
         // If "." has not been typed then acceptable to start checking for options.
         if (!".".equals(typedText)) { // NOI18N
             return 0;
@@ -110,7 +106,6 @@ public class SQLCompletionProvider implements CompletionProvider {
         if (dbconn == null) {
             String message = NbBundle.getMessage(SQLCompletionProvider.class, "MSG_NoDatabaseConnection");
             StatusDisplayer.getDefault().setStatusText(message);
-            createSuggestions(component, dbconn);
             SQLExecutionBaseAction.notifyNoDatabaseConnection();
         }
 
@@ -122,81 +117,6 @@ public class SQLCompletionProvider implements CompletionProvider {
             // XXX: Maybe add content specific "fixs"
         }
         return COMPLETION_QUERY_TYPE;
-    }
-
-    private void createSuggestions(JTextComponent component, DatabaseConnection dbconn) {
-        // setup hints and fixes for possible resolution to connection issue
-        List<Fix> fixes = new ArrayList<>(Collections.emptyList());
-        List<ErrorDescription> warnings = new ArrayList<>(Collections.emptyList());
-        
-        // determine the selected line
-        String selection = component.getSelectedText();
-        Document doc = component.getDocument();
-
-        // for selected lines with content
-        if (selection != null && selection.length() > 0) {
-            // use NbEditorUtilities.getLine() to get line from current document and offset,
-            int lineOffset = component.getSelectionStart() - 1;
-            int endOffset = lineOffset + selection.length();
-            
-            Line currentLine = NbEditorUtilities.getLine(doc, lineOffset, false);
-            
-            // setup sql hints/fixes
-            try {
-                // identify possible fixes
-                
-                // hint to create a new connection
-                fixes.add(new SqlNewConnectionFix());  
-                // hint to add a new driver for connection
-                fixes.add(new SqlNewDriveFix());
-                // hint to correction connection - show dialog to do so
-                fixes.add(new SqlConnectFix(component));
-                                
-                // setup ErrorDescription and add to warnings
-                warnings.add(
-                        ErrorDescriptionFactory.createErrorDescription(
-                                Severity.WARNING,
-                                "DB Connection Issue",
-                                fixes,
-                                doc,
-                                doc.createPosition(lineOffset),
-                                doc.createPosition(endOffset)
-                        )
-                );
-            } catch (BadLocationException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        } else {
-            // for non-selected lines
-                        
-            // setup sql hints/fixes
-            try {
-                // identify possible fixes
-                
-                // hint to create a new connection
-                fixes.add(new SqlNewConnectionFix());  
-                // hint to add a new driver for connection
-                fixes.add(new SqlNewDriveFix());
-                // hint to correction connection - show dialog to do so
-                fixes.add(new SqlConnectFix(component));
-
-                // no line is selected so add to initial position
-                // setup ErrorDescription and add to warnings
-                warnings.add(
-                        ErrorDescriptionFactory.createErrorDescription(
-                                Severity.WARNING,
-                                "DB Connection Issue",
-                                fixes,
-                                doc,
-                                doc.createPosition(0),
-                                doc.createPosition(0)
-                        )
-                );
-            } catch (BadLocationException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            HintsController.setErrors(doc, SQL_CONNECTION_HINT_ID, warnings);
-        }
     }
 
     private static DatabaseConnection findDBConn(JTextComponent component) {
@@ -263,93 +183,6 @@ public class SQLCompletionProvider implements CompletionProvider {
         }
         TokenHierarchy<?> hierarchy = TokenHierarchy.get(doc);
         return hierarchy.tokenSequence(SQLTokenId.language());
-    }
-        
-    private static class SqlNewConnectionFix implements Fix {
-        @Override
-        public String getText() {
-            return "Create New Database connection."; 
-        }
-
-        @Override
-        public ChangeInfo implement() throws Exception {
-  
-            // select given connection
-            ConnectionManager cm = ConnectionManager.getDefault();
-            DatabaseConnection dbconn = findDBConn(component);
-                
-            JDBCDriver driver = null;
-            if (dbconn == null) {
-                // no connection, have to establish driver and related details
-                cm.showAddConnectionDialog(null);
-            }
-            ChangeInfo results = new ChangeInfo();
-            
-            return results;
-        }
-
-        private void setupDriver() {
-            JDBCDriverManager dm = JDBCDriverManager.getDefault();
-            JDBCDriver[] drivers = dm.getDrivers();
-            
-            if (drivers == null || drivers.length ==0) {
-                dm.showAddDriverDialog();
-            }
-        }
-
-        public SqlNewConnectionFix() {
-        }
-        public SqlNewConnectionFix(DatabaseConnection conn) {
-        }
-    }
-    
-    /**
-     * This case handles when driver and connections are available but not connected
-     */
-    private static class SqlConnectFix implements Fix {
-
-        @Override
-        public String getText() {
-            return "Connect to database"; 
-        }
-
-        @Override
-        public ChangeInfo implement() throws Exception {
-            
-            SQLExecutionBaseAction.notifyNoDatabaseConnection();
-            ChangeInfo results = new ChangeInfo();
-            return results;
-        }
-
-         public SqlConnectFix(JTextComponent applicableComponent) {
-             component = applicableComponent;
-        }
-        public SqlConnectFix() {
-        }
-    }
-    
-    /**
-     * This case handles when driver and connections are available but not connected
-     */
-    private static class SqlNewDriveFix implements Fix {
-
-        @Override
-        public String getText() {
-            return "Add a New Database Driver"; 
-        }
-
-        @Override
-        public ChangeInfo implement() throws Exception {
-            ConnectionManager cm = ConnectionManager.getDefault();
-            JDBCDriverManager dm = JDBCDriverManager.getDefault();
-            dm.showAddDriverDialog();
-                        
-            ChangeInfo results = new ChangeInfo();
-            return results;
-        }
-        
-        public SqlNewDriveFix() {
-        }
     }
 }
 

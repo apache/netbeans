@@ -238,9 +238,9 @@ public class SQLStatementAnalyzer {
     }
 
     protected String getUnquotedIdentifier() {
-        // when quoter unavailable likely due to lack of connection
+        // quoter unavailable so returnas is
         if (quoter == null) {
-            return "";
+            return seq.token().text().toString();
         }
         return quoter.unquote(seq.token().text().toString());
     }

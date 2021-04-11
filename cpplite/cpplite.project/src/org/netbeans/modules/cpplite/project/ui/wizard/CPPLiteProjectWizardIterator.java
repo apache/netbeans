@@ -33,7 +33,9 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.netbeans.modules.cpplite.project.BuildConfiguration;
 import org.netbeans.modules.cpplite.project.CPPLiteProject;
+import static org.netbeans.modules.cpplite.project.CPPLiteProject.KEY_COMPILE_COMMANDS;
 import static org.netbeans.modules.cpplite.project.CPPLiteProject.getBuildPreferences;
+import static org.netbeans.modules.cpplite.project.CPPLiteProject.getRootPreferences;
 import org.netbeans.modules.cpplite.project.ui.Build;
 import org.netbeans.modules.cpplite.project.ui.Editor;
 import org.netbeans.spi.project.ActionProvider;
@@ -78,6 +80,7 @@ public class CPPLiteProjectWizardIterator implements WizardDescriptor.Instantiat
         Preferences prefs = CPPLiteProject.getRootPreferences(projectDirectory);
         prefs.putBoolean(CPPLiteProject.KEY_IS_PROJECT, true);
         settings.getBuildConfig().save(getBuildPreferences(projectDirectory));
+        getRootPreferences(projectDirectory).put(KEY_COMPILE_COMMANDS, settings.getEditorConfigPath());
         return Collections.singleton(projectDirectory);
     }
 

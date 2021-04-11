@@ -57,6 +57,7 @@ import org.netbeans.modules.db.sql.analyzer.SelectStatement;
 import org.netbeans.modules.db.sql.analyzer.SQLStatementKind;
 import org.netbeans.modules.db.sql.analyzer.UpdateStatement;
 import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletionResultSet;
+import org.netbeans.modules.db.sql.editor.ui.actions.SQLExecutionBaseAction;
 import org.netbeans.modules.db.sql.lexer.SQLTokenId;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
@@ -210,6 +211,7 @@ public class SQLCompletionQuery extends AsyncCompletionQuery {
         anchorOffset = ident.anchorOffset;
         substitutionOffset = ident.substitutionOffset;
         SQLStatementKind kind = statement.getKind();
+        
         switch (kind) {
             case SELECT:
                 completeSelect();
@@ -515,6 +517,7 @@ public class SQLCompletionQuery extends AsyncCompletionQuery {
         if (tablesClause != null && !(tablesClause.getUnaliasedTableNames().isEmpty() && tablesClause.getAliasedTableNames().isEmpty())) {
             completeSimpleIdentBasedOnFromClause(typedPrefix, quoted);
         } else {
+            // have database metadata to populate
             if (metadata != null) {
                 Schema defaultSchema = metadata.getDefaultSchema();
                 if (defaultSchema != null) {

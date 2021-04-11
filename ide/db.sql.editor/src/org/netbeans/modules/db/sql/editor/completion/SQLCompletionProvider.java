@@ -168,3 +168,5 @@ public class SQLCompletionProvider implements CompletionProvider {
         return hierarchy.tokenSequence(SQLTokenId.language());
     }
 }
+
+

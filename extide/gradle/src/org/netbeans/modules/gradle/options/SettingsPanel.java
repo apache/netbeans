@@ -28,6 +28,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.ButtonModel;
@@ -44,7 +45,6 @@ import org.netbeans.modules.gradle.api.execute.GradleDistributionManager;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.openide.LifecycleManager;
 import org.openide.awt.NotificationDisplayer;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
@@ -744,19 +744,24 @@ public class SettingsPanel extends javax.swing.JPanel {
 
             @Override
             protected List<GradleDistribution> doInBackground() throws Exception {
-                return gdm.availableDistributions(true);
+                try {
+                    return gdm.availableDistributions(true);
+                } catch (IOException ex) {
+                    return gdm.availableLocalDistributions();
+                }
             }
 
             @Override
             protected void done() {
+                GradleDistribution[] items = new GradleDistribution[0];
                 try {
-                    GradleDistribution[] items = get().toArray(new GradleDistribution[0]);
-                    ComboBoxModel<GradleDistribution> model = new DefaultComboBoxModel<>(items);
-                    cbGradleVersion.setModel(model);
-                    model.setSelectedItem(gdm.distributionFromVersion(settings.getGradleVersion()));
+                    items = get().toArray(new GradleDistribution[0]);
                 } catch (InterruptedException | ExecutionException ex) {
-                    Exceptions.printStackTrace(ex);
+                    // Something happened, let's have the combo list box empty;
                 }
+                ComboBoxModel<GradleDistribution> model = new DefaultComboBoxModel<>(items);
+                cbGradleVersion.setModel(model);
+                model.setSelectedItem(gdm.distributionFromVersion(settings.getGradleVersion()));
             }
 
         }.execute();
@@ -775,7 +780,10 @@ public class SettingsPanel extends javax.swing.JPanel {
         } else {
             settings.setGradleUserHome(new File(tfGradleUserHome.getText()));
         }
-        settings.setGradleVersion(((GradleDistribution) cbGradleVersion.getSelectedItem()).getVersion());
+        GradleDistribution distVersion = (GradleDistribution) cbGradleVersion.getSelectedItem();
+        if (distVersion != null) {
+            settings.setGradleVersion(distVersion.getVersion());
+        }
         settings.setDistributionHome(tfUseCustomGradle.getText());
         settings.setWrapperPreferred(cbPreferWrapper.isSelected());
         boolean useCustomGradle = bgUsedDistribution.getSelection() == rbUseCustomGradle.getModel();
@@ -894,10 +902,6 @@ public class SettingsPanel extends javax.swing.JPanel {
             return cmp;
         }
 
-    }
-
-    private static String getRawGradleUserHome() {
-        return GradleSettings.getDefault().getPreferences().get(GradleSettings.PROP_GRADLE_USER_HOME, null);
     }
 
     private static String getDefaultGradleUserHome() {

@@ -31,8 +31,15 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +83,7 @@ public final class GradleDistributionManager {
     private static final RequestProcessor RP = new RequestProcessor("Gradle Installer", 1); //NOI18N
 
     private static final String DOWNLOAD_URI = "https://services.gradle.org/distributions/gradle-%s-%s.zip"; //NOI18N
-    private static final Pattern DIST_VERSION_PATTERN = Pattern.compile(".*gradle-(\\d+\\.\\d+.*)-(bin|all)\\.zip"); //NOI18N
+    private static final Pattern DIST_VERSION_PATTERN = Pattern.compile(".*(gradle-(\\d+\\.\\d+.*))-(bin|all)\\.zip"); //NOI18N
     private static final Set<String> VERSION_BLACKLIST = new HashSet<>(Arrays.asList("2.3", "2.13")); //NOI18N
     private static final Map<File, GradleDistributionManager> CACHE = new WeakHashMap<>();
     private static final GradleVersion MINIMUM_SUPPORTED_VERSION = GradleVersion.version("2.0"); //NOI18N
@@ -206,7 +213,7 @@ public final class GradleDistributionManager {
         URI uri = getWrapperDistributionURI(gradleProjectRoot);
         Matcher m = DIST_VERSION_PATTERN.matcher(uri.getPath());
         if (m.matches()) {
-            String version = m.group(1);
+            String version = m.group(2);
             return new GradleDistribution(distributionBaseDir(uri, version), uri, version);
         } else {
             throw new URISyntaxException(uri.getPath(), "Cannot get the Gradle distribution version from the URI"); //NOI18N
@@ -308,6 +315,46 @@ public final class GradleDistributionManager {
         return ret;
     }
 
+    /**
+     * Lists all the {@link GradleDistribution}s available on the Gradle Home
+     * of this distribution manager. It looks for the <code>$GRADLE_HOME/wrapper/dists</code>
+     * directory for already downloaded distributions.
+     * @return the list of available Gradle distributions from the Gradle Home.
+     * @since 2.10
+     */
+    public List<GradleDistribution> availableLocalDistributions() {
+        List<GradleDistribution> ret = new ArrayList<>();
+        Path dists = gradleUserHome.toPath().resolve("wrapper").resolve("dists"); //NOI18N
+        if (Files.isDirectory(dists)) {
+            try {
+                Files.walkFileTree(dists, EnumSet.noneOf(FileVisitOption.class), 2, new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path f, BasicFileAttributes attrs) throws IOException {
+                        String fname = f.getFileName().toString();
+                        Matcher m = DIST_VERSION_PATTERN.matcher(fname);
+                        if (m.matches()) {
+                            Path dist = f.resolveSibling(m.group(1));
+                            if (Files.isDirectory(dist)) {
+                                try {
+                                    GradleDistribution d = distributionFromDir(dist.toFile());
+                                    if (GradleVersion.version(d.getVersion()).compareTo(MINIMUM_SUPPORTED_VERSION) >= 0) {
+                                        ret.add(d);
+                                    }
+                                } catch (IOException ex) {
+                                    // This might be a broken distribution
+                                }
+                            }
+                        }
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            } catch (IOException ex) {
+                //Do nothing if we fail to scan the files
+            }
+        }
+        return ret;
+    }
+    
     File distributionBaseDir(URI downloadLocation, String version) {
         WrapperConfiguration conf = new WrapperConfiguration();
         conf.setDistribution(downloadLocation);

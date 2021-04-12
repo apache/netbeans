@@ -83,6 +83,18 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="local-gradle-version-discovery">
+            <api name="general"/>
+            <summary>GradleDistributionManager can detect local Gradle Distributions</summary>
+            <version major="2" minor="10"/>
+            <date day="12" month="4" year="2021"/>
+            <author login="lkishalmi"/>
+            <compatibility semantic="compatible" addition="yes"/>
+            <description>
+                Added <code><a href="@TOP@/org/netbeans/modules/gradle/api/execute/GradleDistributionManager.html#availableLocalDistributions--">GradleDistributionManager.availableLocalDistributions()</a></code> 
+                method to help detection the already available GradleDistribution-s installed in the system.
+            </description>
+        </change>
         <change id="tooling-runJvmArgs">
             <api name="general"/>
             <summary>NetBeans Tooling plugin recognizes "runJvmArgs" property</summary>

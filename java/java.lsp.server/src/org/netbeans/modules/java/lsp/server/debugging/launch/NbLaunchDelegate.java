@@ -29,6 +29,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -93,14 +95,21 @@ public abstract class NbLaunchDelegate {
             singleMethod = null;
         }
         ActionProgress progress = new ActionProgress() {
+            private final AtomicInteger count = new AtomicInteger(0);
+            private final AtomicBoolean finalSuccess = new AtomicBoolean(true);
             @Override
             protected void started() {
+                count.incrementAndGet();
             }
 
             @Override
             public void finished(boolean success) {
-                ioContext.stop();
-                notifyFinished(context, success);
+                if (count.decrementAndGet() <= 0) {
+                    ioContext.stop();
+                    notifyFinished(context, success && finalSuccess.get());
+                } else if (!success) {
+                    finalSuccess.set(success);
+                }
             }
         };
         if (toRun != null) {

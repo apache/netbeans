@@ -237,7 +237,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     /**
      * Documents actually opened by the client.
      */
-    private final Map<String, Document> openedDocuments = new HashMap<>();
+    private final Map<String, Document> openedDocuments = new ConcurrentHashMap<>();
     private final Map<String, RequestProcessor.Task> diagnosticTasks = new HashMap<>();
     private final LspServerState server;
     private NbCodeLanguageClient client;

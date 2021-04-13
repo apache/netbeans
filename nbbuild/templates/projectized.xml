@@ -705,7 +705,7 @@
         <property name="sigtest.public.packages" value="${public.packages}"/>
         <property name="sigtest.fail.on.error" value="true"/>
         <taskdef name="sigtest" classname="org.netbeans.nbbuild.Sigtest" classpath="${nbantext.jar}"/>
-        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/sigtest-maven-plugin-1.2.jar"/>
+        <property name="sigtest.jar" location="${nb_all}/nbbuild/external/sigtest-maven-plugin-1.4.jar"/>
         <loadproperties srcFile="${manifest.mf}" prefix="mf.">
             <filterchain>
                 <replaceregex pattern="[\n\r]+ ([^ ][^\n\r]*)"
@@ -757,6 +757,7 @@
                  classpath="${sigtest.class.path}"
                  version="${mf.OpenIDE-Module-Specification-Version}"
                  action="generate"
+                 release="${javac.target}"
                  packages="${sigtest.public.packages}"
                  report="${sigtest.output.dir}/generate-${code.name.base.dashes}.xml"
                  failonerror="${sigtest.gen.fail.on.error}"
@@ -769,6 +770,7 @@
                  sigtestJar="${sigtest.jar}"
                  classpath="${sigtest.class.path}"
                  version="${mf.OpenIDE-Module-Specification-Version}"
+                 release="${javac.target}"
                  action="${sigtest.check.type}"
                  packages="${sigtest.public.packages}"
                  report="${sigtest.output.dir}/${code.name.base.dashes}.xml"

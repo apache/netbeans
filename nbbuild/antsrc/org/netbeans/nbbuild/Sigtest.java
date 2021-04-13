@@ -49,6 +49,7 @@ public class Sigtest extends Task {
     File report;
     boolean failOnError = true;
     String version;
+    private String release;
     
     public void setFileName(File f) {
         fileName = f;
@@ -64,6 +65,10 @@ public class Sigtest extends Task {
 
     public void setAction(ActionType s) {
         action = s;
+    }
+
+    public void setRelease(String r) {
+        release = r;
     }
 
     public void setClasspath(Path p) {
@@ -270,6 +275,7 @@ public class Sigtest extends Task {
         setM(task, "setReport", File.class, report);
         setM(task, "setPackages", String.class, packages);
         setM(task, "setVersion", String.class, version);
+        setM(task, "setRelease", String.class, release);
         
         Class<? extends EnumeratedAttribute> actionType = url.loadClass("org.netbeans.apitest.Sigtest$ActionType").asSubclass(EnumeratedAttribute.class);
         setM(task, "setAction", EnumeratedAttribute.getInstance(actionType, action.getValue()));

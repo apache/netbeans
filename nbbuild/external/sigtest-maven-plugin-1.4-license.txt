@@ -1,5 +1,5 @@
 Name: API Signature Testing Tool
-Version: 1.2
+Version: 1.4
 License: GPL-2-CP
 Source: http://hg.netbeans.org/apitest/
 Description: Signature test modified for NetBeans

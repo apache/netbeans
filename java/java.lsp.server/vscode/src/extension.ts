@@ -182,6 +182,19 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('nativeimage', debugDescriptionFactory));
 
     // register commands
+    context.subscriptions.push(commands.registerCommand('java.workspace.new', async (ctx) => {
+        let c : LanguageClient = await client;
+        const commands = await vscode.commands.getCommands();
+        if (commands.includes('java.new.from.template')) {
+            const res = await vscode.commands.executeCommand('java.new.from.template', ctx?.fsPath);
+            if (typeof res === 'string') {
+                let newFile = vscode.Uri.parse(res as string);
+                await vscode.window.showTextDocument(newFile);
+            }
+        } else {
+            throw `Client ${c} doesn't support new from template`;
+        }
+    }));
     context.subscriptions.push(commands.registerCommand('java.workspace.compile', () => {
         return window.withProgress({ location: ProgressLocation.Window }, p => {
             return new Promise(async (resolve, reject) => {

@@ -212,6 +212,11 @@
 				"category": "Java"
 			},
 			{
+				"command": "java.workspace.new",
+				"title": "New from Template...",
+				"category": "Java"
+			},
+			{
 				"command": "java.goto.super.implementation",
 				"title": "Go to Super Implementation",
 				"category": "Java"
@@ -242,7 +247,18 @@
 					"group": "navigation@100"
 				}
 			],
+			"explorer/context": [
+				{
+					"command": "java.workspace.new",
+					"when": "nbJavaLSReady",
+					"group": "navigation@3"
+				}
+			],
 			"commandPalette": [
+				{
+					"command": "java.workspace.new",
+					"when": "nbJavaLSReady"
+				},
 				{
 					"command": "java.workspace.compile",
 					"when": "nbJavaLSReady"

@@ -26,6 +26,9 @@ apisupport.feedreader/external/jdom-1.0.jar mobility.deployment.webdav/external/
 # db.sql.visualeditor/external/javacc-3.2.jar is used at compile-time only
 ide/db.sql.visualeditor/external/javacc-3.2.jar java/performance/external/javacc-3.2.jar
 
+# probably a good idea to make a common module at some point
+ide/db.dataview/external/commons-compress-1.20.jar java/java.disco/external/commons-compress-1.20.jar
+
 # It happens that maven 3.3.9 uses commons-lang-2.6.jar, same as o.apache.commons.lang
 # and commons-io-2.5.jar, same as java.lsp.server
 # These are used independently, different functional goals

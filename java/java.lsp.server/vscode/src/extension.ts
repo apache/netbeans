@@ -359,11 +359,18 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
         }, time);
     };
 
+    const ownName = "asf.apache-netbeans-java";
+    const ownExtension = vscode.extensions.getExtension(ownName);
+    if (!ownExtension) {
+        throw `Cannot find ${ownName} extension!`;
+    }
+    const version = ownExtension.packageJSON.version;
     const beVerbose : boolean = workspace.getConfiguration('netbeans').get('verbose', false);
     let info = {
         clusters : findClusters(context.extensionPath),
         extensionPath: context.extensionPath,
         storagePath : context.globalStoragePath,
+        version: version,
         jdkHome : specifiedJDK,
         verbose: beVerbose
     };

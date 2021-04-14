@@ -186,7 +186,15 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
         let c : LanguageClient = await client;
         const commands = await vscode.commands.getCommands();
         if (commands.includes('java.new.from.template')) {
-            const res = await vscode.commands.executeCommand('java.new.from.template', ctx?.fsPath);
+            function ctxUri(): vscode.Uri | undefined {
+                if (ctx && ctx.fsPath) {
+                    return ctx as vscode.Uri;
+                }
+                return vscode.window.activeTextEditor?.document?.uri;
+            }
+
+            const res = await vscode.commands.executeCommand('java.new.from.template', ctxUri()?.toString());
+
             if (typeof res === 'string') {
                 let newFile = vscode.Uri.parse(res as string);
                 await vscode.window.showTextDocument(newFile);

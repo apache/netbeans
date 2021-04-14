@@ -250,7 +250,7 @@
 			"explorer/context": [
 				{
 					"command": "java.workspace.new",
-					"when": "nbJavaLSReady",
+					"when": "nbJavaLSReady && explorerResourceIsFolder",
 					"group": "navigation@3"
 				}
 			],

@@ -19,23 +19,31 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.JsonPrimitive;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.function.Function;
 import org.eclipse.lsp4j.ExecuteCommandParams;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.WorkspaceFolder;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.Node;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.UserCancelException;
 
 class LspTemplateUI {
     private LspTemplateUI() {
@@ -48,85 +56,104 @@ class LspTemplateUI {
     }
 
     @NbBundle.Messages({
-        "CTL_TemplateUI_SelectGroup=Select Group of Objects",
-        "CTL_TemplateUI_SelectTemplate=Select Object Template",
+        "CTL_TemplateUI_SelectGroup=Select Template Type",
+        "CTL_TemplateUI_SelectTemplate=Select Template",
         "CTL_TemplateUI_SelectTarget=Where to put the object?",
         "CTL_TemplateUI_SelectName=Name of the object?",
+        "# {0} - path",
+        "ERR_InvalidPath={0} isn't valid folder",
     })
     private static CompletableFuture<Object> displayUI(DataFolder templates, NbCodeLanguageClient client, ExecuteCommandParams params) {
-        final FileObject[] group = { null };
-        final DataObject[] source = { null };
-        final DataFolder[] target = findTargetFolder(params);
-
         final List<QuickPickItem> categories = quickPickTemplates(templates);
         final CompletionStage<List<QuickPickItem>> pickGroup = client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectGroup(), false, categories));
-        final CompletionStage<List<QuickPickItem>> pickProject = pickGroup.thenCompose(selectedGroups -> {
-            group[0] = templates.getPrimaryFile().getFileObject(singleSelection(selectedGroups));
-            List<QuickPickItem> projectTypes = quickPickTemplates(DataFolder.findFolder(group[0]));
+        final CompletionStage<DataFolder> group = pickGroup.thenApply((selectedGroups) -> {
+            final String chosen = singleSelection(selectedGroups);
+            FileObject chosenFo = templates.getPrimaryFile().getFileObject(chosen);
+            return DataFolder.findFolder(chosenFo);
+        });
+        final CompletionStage<List<QuickPickItem>> pickProject = group.thenCompose(chosenGroup -> {
+            List<QuickPickItem> projectTypes = quickPickTemplates(chosenGroup);
             return client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectTemplate(), false, projectTypes));
         });
-        final CompletionStage<DataObject> findTemplate = pickProject.thenApply((selectedTemplates) -> {
+        final CompletionStage<DataObject> findTemplate = pickProject.thenCombine(group, (selectedTemplates, chosenGroup) -> {
             try {
                 final String templateName = singleSelection(selectedTemplates);
-                final FileObject templateFo = group[0].getFileObject(templateName);
-                source[0] = DataObject.find(templateFo);
+                final FileObject templateFo = chosenGroup.getPrimaryFile().getFileObject(templateName);
+                return DataObject.find(templateFo);
             } catch (DataObjectNotFoundException ex) {
                 throw raise(RuntimeException.class, ex);
             }
-            return source[0];
         });
-        final CompletionStage<DataFolder> findTarget;
-        if (target[0] == null) {
-            findTarget = findTemplate.thenCompose(any -> client.workspaceFolders()).thenCompose(folders -> {
-                return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectTarget(), findWorkspaceRoot(folders)));
-            }).thenApply((path) -> {
-                target[0] = DataFolder.findFolder(FileUtil.toFileObject(new File(path)));
-                return target[0];
-            });
-        } else {
-            findTarget = findTemplate.thenApply(any -> target[0]);
-        }
-        CompletionStage<String> findTargetName = findTarget.thenCompose((t) -> {
-            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), source[0].getName()));
-        }).thenApply((nameWithExtension) -> {
-            String templateExtension = source[0].getPrimaryFile().getExt();
+        final CompletionStage<DataFolder> findTarget = findTemplate.thenCompose(any -> client.workspaceFolders()).thenCompose(folders -> {
+            boolean[] suggestionIsExact = { true };
+            DataFolder suggestion = findTargetFolder(params, folders, suggestionIsExact);
+            if (suggestionIsExact[0]) {
+                return CompletableFuture.completedFuture(suggestion);
+            }
+
+            class VerifyPath implements Function<String, CompletionStage<DataFolder>> {
+                @Override
+                public CompletionStage<DataFolder> apply(String path) {
+                    if (path == null) {
+                        throw raise(RuntimeException.class, new UserCancelException(path));
+                    }
+                    FileObject fo = FileUtil.toFileObject(new File(path));
+                    if (fo == null || !fo.isFolder()) {
+                        client.showMessage(new MessageParams(MessageType.Error, Bundle.ERR_InvalidPath(path)));
+                        return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectTarget(), suggestion.getPrimaryFile().getPath())).thenCompose(this);
+                    }
+                    return CompletableFuture.completedFuture(DataFolder.findFolder(fo));
+                }
+            }
+            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectTarget(), suggestion.getPrimaryFile().getPath())).thenCompose(new VerifyPath());
+        });
+        CompletionStage<String> findTargetName = findTarget.thenCombine(findTemplate, (target, source) -> source).thenCompose((source) -> {
+            return client.showInputBox(new ShowInputBoxParams(Bundle.CTL_TemplateUI_SelectName(), source.getName()));
+        }).thenCombine(findTemplate, (nameWithExtension, source) -> {
+            String templateExtension = source.getPrimaryFile().getExt();
             return removeExtensionFromFileName(nameWithExtension, templateExtension);
         });
-        return findTargetName.thenApply((name) -> {
+        return findTargetName.thenCombine(findTemplate.thenCombine(findTarget, (source, target) -> new DataObject[] { source, target }), (name, sourceAndTarget) -> {
             try {
-                DataObject newPrj = source[0].createFromTemplate(target[0], name);
+                DataObject source = sourceAndTarget[0];
+                DataFolder target = (DataFolder) sourceAndTarget[1];
+                DataObject newPrj = source.createFromTemplate(target, name);
                 return (Object) newPrj.getPrimaryFile().toURI().toString();
             } catch (IOException ex) {
                 throw raise(RuntimeException.class, ex);
             }
+        }).exceptionally((error) -> {
+            if (error instanceof UserCancelException || error.getCause() instanceof UserCancelException) {
+                return null;
+            }
+            Exceptions.printStackTrace(error);
+            return null;
         }).toCompletableFuture();
     }
 
-    private static String findWorkspaceRoot(List<WorkspaceFolder> folders) {
-        String root = System.getProperty("user.home"); // NOI18N
+    private static DataFolder findWorkspaceRoot(List<WorkspaceFolder> folders) {
         for (WorkspaceFolder f : folders) {
             try {
-                File file = new File(new URI(f.getUri()));
-                if (file.exists()) {
-                    root = file.getPath();
-                    break;
+                FileObject fo = URLMapper.findFileObject(new URL(f.getUri()));
+                if (fo != null && fo.isFolder()) {
+                    return DataFolder.findFolder(fo);
                 }
-            } catch (URISyntaxException ex) {
+            } catch (MalformedURLException ex) {
                 continue;
             }
         }
-        return root;
+        String root = System.getProperty("user.home"); // NOI18N
+        return DataFolder.findFolder(FileUtil.toFileObject(new File(root)));
     }
 
-    private static String singleSelection(List<QuickPickItem> selectedGroups) throws IllegalStateException {
+    private static String singleSelection(List<QuickPickItem> selectedGroups) {
         if (selectedGroups == null || selectedGroups.size() != 1) {
-            throw new IllegalStateException("Unexpected selection: " + selectedGroups);
+            throw raise(RuntimeException.class, new UserCancelException(""));
         }
         return selectedGroups.get(0).getUserData().toString();
     }
 
-    private static DataFolder[] findTargetFolder(ExecuteCommandParams params) {
-        final DataFolder[] target = { null };
+    private static DataFolder findTargetFolder(ExecuteCommandParams params, List<WorkspaceFolder> folders, boolean[] defaultTargetExact) {
         for (Object arg : params.getArguments()) {
             if (arg == null) {
                 continue;
@@ -138,12 +165,25 @@ class LspTemplateUI {
             } else {
                 path = arg.toString();
             }
-            File file = new File(path);
-            if (file.exists()) {
-                target[0] = DataFolder.findFolder(FileUtil.toFileObject(file));
+            try {
+                FileObject fo = URLMapper.findFileObject(new URL(path));
+                for (;;) {
+                    if (fo == null) {
+                        break;
+                    }
+                    if (!fo.isFolder()) {
+                        fo = fo.getParent();
+                        defaultTargetExact[0] = false;
+                        continue;
+                    }
+                    return DataFolder.findFolder(fo);
+                }
+            } catch (MalformedURLException ex) {
+                continue;
             }
         }
-        return target;
+        defaultTargetExact[0] = false;
+        return findWorkspaceRoot(folders);
     }
 
     private static String removeExtensionFromFileName(String nameWithExtension, String templateExtension) {
@@ -170,19 +210,44 @@ class LspTemplateUI {
             }
 
             if (display) {
+                String detail = findDetail(obj);
+                final String displayName = n.getDisplayName();
+                String description = n.getShortDescription();
+                if (description != null && description.equals(displayName)) {
+                    description = null;
+                }
                 categories.add(new QuickPickItem(
-                        n.getDisplayName(),
-                        n.getShortDescription(),
-                        null,
-                        false,
-                        fo.getNameExt()
+                    displayName, description, detail,
+                    false, fo.getNameExt()
                 ));
             }
         }
         return categories;
     }
 
-    private static <T extends Exception> T raise(Class<T> aClass, Exception ex) throws T {
+    private static String findDetail(DataObject obj) {
+        URL description = org.openide.loaders.TemplateWizard.getDescription(obj);
+        String descriptionText = null;
+        if (description != null) {
+            try (ByteArrayOutputStream os = new ByteArrayOutputStream(); InputStream is = description.openStream()) {
+                FileUtil.copy(is, os);
+                descriptionText = os.toString("UTF-8");
+                int bodyBegin = descriptionText.toUpperCase().indexOf("<BODY>");
+                int bodyEnd = descriptionText.toUpperCase().indexOf("</BODY>");
+                if (bodyBegin >= 0 && bodyEnd > bodyBegin) {
+                    descriptionText = descriptionText.substring(bodyBegin + 6, bodyEnd);
+                } else {
+                    descriptionText = null;
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+                return descriptionText;
+            }
+        }
+        return descriptionText;
+    }
+
+    private static <T extends Exception> T raise(Class<T> clazz, Exception ex) throws T {
         throw (T)ex;
     }
 }

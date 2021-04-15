@@ -44,28 +44,28 @@
             </module-dependencies>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>ext/javafx-base-16-mac.jar</runtime-relative-path>
-                <binary-origin>external/javafx-base-16-mac.jar</binary-origin>
+                <runtime-relative-path>ext/javafx-base-13-mac.jar</runtime-relative-path>
+                <binary-origin>external/javafx-base-13-mac.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/javafx-controls-16-mac.jar</runtime-relative-path>
-                <binary-origin>external/javafx-controls-16-mac.jar</binary-origin>
+                <runtime-relative-path>ext/javafx-controls-13-mac.jar</runtime-relative-path>
+                <binary-origin>external/javafx-controls-13-mac.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/javafx-graphics-16-mac.jar</runtime-relative-path>
-                <binary-origin>external/javafx-graphics-16-mac.jar</binary-origin>
+                <runtime-relative-path>ext/javafx-graphics-13-mac.jar</runtime-relative-path>
+                <binary-origin>external/javafx-graphics-13-mac.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/javafx-media-16-mac.jar</runtime-relative-path>
-                <binary-origin>external/javafx-media-16-mac.jar</binary-origin>
+                <runtime-relative-path>ext/javafx-media-13-mac.jar</runtime-relative-path>
+                <binary-origin>external/javafx-media-13-mac.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/javafx-swing-16-mac.jar</runtime-relative-path>
-                <binary-origin>external/javafx-swing-16-mac.jar</binary-origin>
+                <runtime-relative-path>ext/javafx-swing-13-mac.jar</runtime-relative-path>
+                <binary-origin>external/javafx-swing-13-mac.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/javafx-web-16-mac.jar</runtime-relative-path>
-                <binary-origin>external/javafx-web-16-mac.jar</binary-origin>
+                <runtime-relative-path>ext/javafx-web-13-mac.jar</runtime-relative-path>
+                <binary-origin>external/javafx-web-13-mac.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

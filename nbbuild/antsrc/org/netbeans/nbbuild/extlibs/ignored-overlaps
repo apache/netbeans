@@ -65,6 +65,9 @@ extide/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/hamcr
 extide/gradle/external/gradle-4.10.2-bin.zip platform/libs.junit4/external/junit-4.12.jar
 extide/gradle/external/gradle-4.10.2-bin.zip java/maven/external/aether-api-1.13.1.jar
 
+# cnd/libs.clank uses a zip file that is expanded at compile time into different jar files.
+cnd/libs.clank/external/clank_0.3.9.zip cnd/libs.clank/external/clank_0.3.9.zip
+
 # These are the endorsed version of the javaee apis and create libraries, so they are better kept separate
 enterprise/javaee.api/external/javax.annotation-api-1.2.jar enterprise/javaee7.api/external/javax.annotation-api-1.2.jar
 enterprise/javaee7.api/external/javax.annotation-api-1.2.jar enterprise/websvc.restlib/external/javax.annotation-api-1.2.jar
@@ -96,3 +99,5 @@ webcommon/javascript2.doc/external/testfiles-jsdoc-1.zip webcommon/javascript2.e
 webcommon/javascript2.editor/external/testfiles-jsdoc-1.zip webcommon/javascript2.extdoc/external/testfiles-jsdoc-1.zip are identical
 webcommon/javascript2.extdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip are identical
 webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2.sdoc/external/testfiles-jsdoc-1.zip are identical</failure>
+
+

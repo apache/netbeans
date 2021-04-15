@@ -1,10 +1,24 @@
+<#if fileEncoding??>
 <?xml version="1.0" encoding="${fileEncoding}"?>
+<#else>
+<?xml version="1.0" encoding="UTF-8"?>
+</#if>
 <#assign licenseFirst = "<!--">
 <#assign licensePrefix = "">
 <#assign licenseLast = "-->">
 <#include "${project.licensePath}">
 
+<#if doctype??>
 ${doctype}
+</#if>
+<#if !rootTagNs??>
+  <#assign rootTagNs = "demo">
+  <#assign nsDeclarations = "">
+</#if>
+<#if !generatedContent??>
+  <#assign generatedContent = "Hello World!">
+</#if>
+
 <${rootTagNs}${nsDeclarations}>
     ${generatedContent}
 </${rootTagNs}>

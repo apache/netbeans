@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.Test;
+import org.netbeans.api.actions.Editable;
 import org.netbeans.api.actions.Openable;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
@@ -41,6 +42,7 @@ public class VerifySimpleTemplatesTest extends NbTestCase {
 
     public static Test suite() {
         return NbModuleSuite.emptyConfiguration().
+            clusters("(extide|java).*").
             enableModules(".*", ".*").
             honorAutoloadEager(true).
             failOnException(Level.INFO).
@@ -68,12 +70,18 @@ public class VerifySimpleTemplatesTest extends NbTestCase {
             for (DataObject t : simpleTemplates) {
                 LOG.log(Level.WARNING, "Processing {0}", t.getPrimaryFile().getPath());
                 DataObject generated = t.createFromTemplate(scratch, "Test" + ++cnt);
-                Openable open = generated.getLookup().lookup(Openable.class);
-                if (open != null) {
-                    LOG.log(Level.WARNING, "Opening {0}", generated.getPrimaryFile().getPath());
-                    open.open();
+                Editable edit = generated.getLookup().lookup(Editable.class);
+                if (edit != null) {
+                    LOG.log(Level.WARNING, "Editing {0}", generated.getPrimaryFile().getPath());
+                    edit.edit();
                 } else {
-                    LOG.log(Level.WARNING, "Cannot open {0}", generated.getPrimaryFile().getPath());
+                    Openable open = generated.getLookup().lookup(Openable.class);
+                    if (open != null) {
+                        LOG.log(Level.WARNING, "Opening {0}", generated.getPrimaryFile().getPath());
+                        open.open();
+                    } else {
+                        LOG.log(Level.WARNING, "Cannot open {0}", generated.getPrimaryFile().getPath());
+                    }
                 }
             }
         }

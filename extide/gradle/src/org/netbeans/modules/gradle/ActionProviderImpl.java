@@ -126,6 +126,8 @@ public class ActionProviderImpl implements ActionProvider {
         }
         // add a fixed 'prime build' action
         actions.add(ActionProvider.COMMAND_PRIME);
+        actions.add(COMMAND_DL_SOURCES);
+        actions.add(COMMAND_DL_JAVADOC);
         return actions.toArray(new String[actions.size()]);
     }
     
@@ -263,7 +265,13 @@ public class ActionProviderImpl implements ActionProvider {
                 return;
             }
         }
-
+        
+        final String loadReason;
+        if  (mapping.getDisplayName() != null && !mapping.getDisplayName().equals(mapping.getName())) {
+            loadReason = mapping.getDisplayName();
+        } else {
+            loadReason = null;
+        }
 
         boolean reloadOnly = !showUI && (args.length == 0);
         if (!reloadOnly) {
@@ -293,7 +301,7 @@ public class ActionProviderImpl implements ActionProvider {
             if (needReload && canReload) {
                 String[] reloadArgs = RunUtils.evaluateActionArgs(project, mapping.getName(), mapping.getReloadArgs(), ctx);
                 final ActionProgress g = ActionProgress.start(context);
-                RequestProcessor.Task reloadTask = prj.reloadProject(true, maxQualily, reloadArgs);
+                RequestProcessor.Task reloadTask = prj.reloadProject(loadReason, true, maxQualily, reloadArgs);
                 reloadTask.addTaskListener((t) -> {
                     g.finished(true);
                 });

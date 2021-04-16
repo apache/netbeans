@@ -80,12 +80,11 @@ public class PartialReparserService {
         this.context = context;
     }
 
-    public JCBlock reparseMethodBody(CompilationUnitTree topLevel, MethodTree methodToReparse, String newBodyText, int annonIndex,
+    public JCBlock reparseMethodBody(CompilationUnitTree topLevel, MethodTree methodToReparse, String newBodyText,
             final Map<? super JCTree,? super LazyDocCommentTable.Entry> docComments) {
         CharBuffer buf = CharBuffer.wrap((newBodyText+"\u0000").toCharArray(), 0, newBodyText.length());
         JavacParser parser = newParser(context, buf, ((JCBlock)methodToReparse.getBody()).pos, ((JCCompilationUnit)topLevel).endPositions);
         final JCStatement statement = parser.parseStatement();
-        NBParserFactory.assignAnonymousClassIndices(Names.instance(context), statement, Names.instance(context).empty, annonIndex);
         if (statement.getKind() == Tree.Kind.BLOCK) {
             if (docComments != null) {
                 docComments.putAll(((LazyDocCommentTable) parser.getDocComments()).table);

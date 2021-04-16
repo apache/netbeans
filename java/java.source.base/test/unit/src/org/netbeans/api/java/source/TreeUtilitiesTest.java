@@ -48,6 +48,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.Comment.Style;
@@ -77,6 +78,10 @@ public class TreeUtilitiesTest extends NbTestCase {
     private CompilationInfo info;
     
     private void prepareTest(String filename, String code) throws Exception {
+        prepareTest(filename, code, Phase.RESOLVED);
+    }
+
+    private void prepareTest(String filename, String code, Phase resolutionPhase) throws Exception {
         File work = getWorkDir();
         FileObject workFO = FileUtil.toFileObject(work);
         
@@ -99,7 +104,7 @@ public class TreeUtilitiesTest extends NbTestCase {
         
         assertNotNull(js);
         
-        info = SourceUtilsTestUtil.getCompilationInfo(js, JavaSource.Phase.RESOLVED);
+        info = SourceUtilsTestUtil.getCompilationInfo(js, resolutionPhase);
         
         assertNotNull(info);
     }
@@ -734,5 +739,33 @@ public class TreeUtilitiesTest extends NbTestCase {
         TreePath tp4 = info.getTreeUtilities().pathFor(146 - 30);
         assertEquals(Kind.METHOD_INVOCATION, tp4.getLeaf().getKind());
         assertEquals("subList", ((MemberSelectTree) ((MethodInvocationTree) tp4.getLeaf()).getMethodSelect()).getIdentifier().toString());
+    }
+
+    public void testAttributeTreesInnerClasses() throws Exception {
+        String code = "package test; public class Test { public void test1() { new Object() {}; new Object() {}; } public void test2() { new Object() {}; new Object() {}; } }";
+        prepareTest("Test", code, Phase.ELEMENTS_RESOLVED);
+
+        List<String> expectedNames = Arrays.asList("test.Test",
+                                                   "test.Test$1",
+                                                   "test.Test$2",
+                                                   "test.Test$3",
+                                                   "test.Test$4");
+
+        for (int i = 0; i < 2; i++) {
+            TreePath tp = info.getTreeUtilities().pathFor(code.indexOf("{}"));
+            Scope scope = info.getTrees().getScope(tp);
+            StatementTree parsed = info.getTreeUtilities().parseStatement("{ new Object() {}; new Object() {}; }", new SourcePositions[1]);
+            info.getTreeUtilities().attributeTree(parsed, scope);
+            info.impl.toPhase(Phase.RESOLVED);
+            List<String> actualNames = new ArrayList<>();
+            new TreePathScanner<Void, Void>() {
+                @Override
+                public Void visitClass(ClassTree node, Void p) {
+                    actualNames.add(info.getElements().getBinaryName((TypeElement) info.getTrees().getElement(getCurrentPath())).toString());
+                    return super.visitClass(node, p);
+                }
+            }.scan(info.getCompilationUnit(), null);
+            assertEquals(expectedNames, actualNames);
+        }
     }
 }

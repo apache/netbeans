@@ -34,6 +34,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -292,6 +293,10 @@ public class DatabaseConnectionConvertor implements Environment.Provider, Instan
         return lookup;
     }
     
+    static byte[] decodeBase64(String value) {
+        return Base64.getDecoder().decode(value);
+    }
+
     static String decodePassword(byte[] bytes) throws CharacterCodingException {
         CharsetDecoder decoder = Charset.forName("UTF-8").newDecoder(); // NOI18N
         ByteBuffer input = ByteBuffer.wrap(bytes);
@@ -503,7 +508,7 @@ public class DatabaseConnectionConvertor implements Environment.Provider, Instan
                 // reading old settings
                 byte[] bytes = null;
                 try {
-                    bytes = org.netbeans.modules.db.util.Base64.base64ToByteArray(value);
+                    bytes = decodeBase64(value);
                 } catch (IllegalArgumentException e) {
                     LOGGER.log(Level.WARNING,
                             "Illegal Base 64 string in password for connection " 

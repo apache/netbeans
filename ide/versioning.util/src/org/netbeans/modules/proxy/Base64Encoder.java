@@ -16,102 +16,58 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.proxy;
 
-import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * Bas64 encode utility class.
  *
  * @author Maros Sandor
+ * @deprecated prefer java.util.Base64 instead
  */
+@Deprecated
 public class Base64Encoder {
 
-    private static final char [] characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
+    private static final Base64.Encoder MIME_ENCODER = Base64.getMimeEncoder(
+            60,
+            System.getProperty("line.separator").getBytes(StandardCharsets.ISO_8859_1)
+    );
 
     private Base64Encoder() {
     }
 
-    public static String encode(byte [] data) {
+    /**
+     *
+     * @deprecated use {@link java.util.Base64#getEncoder()}.encode(data)
+     * instead.
+     */
+    @Deprecated
+    public static String encode(byte[] data) {
         return encode(data, false);
     }
-    
-    public static String encode(byte [] data, boolean useNewlines) {
-        int length = data.length;
-        StringBuffer sb = new StringBuffer(data.length * 3 / 2);
 
-        int end = length - 3;
-        int i = 0;
-        int lineCount = 0;
-
-        while (i <= end) {
-            int d = ((((int) data[i]) & 0xFF) << 16) | ((((int) data[i + 1]) & 0xFF) << 8) | (((int) data[i + 2]) & 0xFF);
-            sb.append(characters[(d >> 18) & 0x3F]);
-            sb.append(characters[(d >> 12) & 0x3F]);
-            sb.append(characters[(d >> 6) & 0x3F]);
-            sb.append(characters[d & 0x3F]);
-            i += 3;
-            
-            if (useNewlines && lineCount++ >= 14) {
-                lineCount = 0;
-                sb.append(System.getProperty("line.separator"));
-            }
-        }
-
-        if (i == length - 2) {
-            int d = ((((int) data[i]) & 0xFF) << 16) | ((((int) data[i + 1]) & 0xFF) << 8);
-            sb.append(characters[(d >> 18) & 0x3F]);
-            sb.append(characters[(d >> 12) & 0x3F]);
-            sb.append(characters[(d >> 6) & 0x3F]);
-            sb.append("=");
-        } else if (i == length - 1) {
-            int d = (((int) data[i]) & 0xFF) << 16;
-            sb.append(characters[(d >> 18) & 0x3F]);
-            sb.append(characters[(d >> 12) & 0x3F]);
-            sb.append("==");
-        }
-        return sb.toString();
-    }
-    
-    public static byte [] decode(String s) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        decode(s, bos);
-        return bos.toByteArray();
-}
-  
-    private static void decode(String s, ByteArrayOutputStream bos) {
-        int i = 0;
-        int len = s.length();
-        for (;;) {
-            while (i < len && s.charAt(i) <= ' ') i++;
-            if (i == len) break;
-            int tri = (decode(s.charAt(i)) << 18) + (decode(s.charAt(i+1)) << 12) + (decode(s.charAt(i+2)) << 6) + (decode(s.charAt(i+3)));
-            bos.write((tri >> 16) & 255);
-            if (s.charAt(i+2) == '=') break;
-            bos.write((tri >> 8) & 255);
-            if (s.charAt(i+3) == '=') break;
-            bos.write(tri & 255);
-            i += 4;
+    /**
+     * @deprecated use
+     * {@link java.util.Base64#getMimeEncoder(int, byte[])}.encode(s) instead.
+     */
+    public static String encode(byte[] data, boolean useNewlines) {
+        if (useNewlines) {
+            return MIME_ENCODER.encodeToString(data);
+        } else {
+            return Base64.getEncoder().encodeToString(data);
         }
     }
 
-    private static int decode(char c) {
-        if (c >= 'A' && c <= 'Z') {
-            return ((int) c) - 65;
-        } else if (c >= 'a' && c <= 'z') {
-            return ((int) c) - 97 + 26;
-        } else if (c >= '0' && c <= '9') {
-            return ((int) c) - 48 + 26 + 26;
-        } else switch (c) {
-            case '+': 
-                return 62;
-            case '/': 
-                return 63;
-            case '=': 
-                return 0;
-            default:
-                throw new RuntimeException("Base64: unexpected code: " + c);
-        }
+    /**
+     *
+     * @deprecated use {@link java.util.Base64#getMimeDecoder()}.decode(s)
+     * instead.
+     */
+    @Deprecated
+    public static byte[] decode(String s) {
+        return Base64.getMimeDecoder().decode(s);
     }
+
 }

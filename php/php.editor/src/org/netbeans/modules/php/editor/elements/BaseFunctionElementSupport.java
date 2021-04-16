@@ -149,6 +149,7 @@ public class BaseFunctionElementSupport  {
                 }
                 break;
             case ReturnTypes:
+                boolean hasArray = false;
                 for (TypeResolver typeResolver : getReturnTypes()) {
                     if (typeResolver.isResolved()) {
                         QualifiedName typeName = typeResolver.getTypeName(false);
@@ -176,6 +177,16 @@ public class BaseFunctionElementSupport  {
                                         returnType = Type.PARENT;
                                     }
                                 }
+                            }
+                            // NETBEANS-5370: related to NETBEANS-4509
+                            if (returnType.endsWith("[]")) { // NOI18N
+                                returnType = Type.ARRAY;
+                            }
+                            if (returnType.equals(Type.ARRAY)) {
+                                if (hasArray) {
+                                    continue;
+                                }
+                                hasArray = true;
                             }
                             template.append(returnType);
                         }

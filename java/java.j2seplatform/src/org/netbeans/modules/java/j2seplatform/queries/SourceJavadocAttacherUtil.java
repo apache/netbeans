@@ -25,17 +25,19 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.queries.SourceJavadocAttacher.AttachmentListener;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.java.j2seplatform.api.J2SEPlatformCreator;
-import org.netbeans.modules.java.j2seplatform.spi.J2SEPlatformDefaultJavadoc;
 import org.netbeans.spi.java.project.support.JavadocAndSourceRootDetection;
 import org.netbeans.spi.java.queries.SourceJavadocAttacherImplementation;
 import org.openide.DialogDescriptor;
@@ -43,7 +45,10 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
+import org.openide.util.RequestProcessor.Task;
 import org.openide.util.Utilities;
 
 /**
@@ -63,7 +68,114 @@ public final class SourceJavadocAttacherUtil {
             listener.attachmentFailed();
         }
     }
+    
+    private static Collection<SourceJavadocAttacherImplementation.Definer> filterPlugins(URL root, Collection<? extends SourceJavadocAttacherImplementation.Definer> plugins) {
+        if (plugins == null || plugins.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Collection<SourceJavadocAttacherImplementation.Definer> result = new ArrayList<>();
+        List<SourceJavadocAttacherImplementation.Definer> filtered = new ArrayList<>();
+        for (SourceJavadocAttacherImplementation.Definer d : plugins) {
+            if (d instanceof SourceJavadocAttacherImplementation.Definer2) {
+                SourceJavadocAttacherImplementation.Definer2 d2 = (SourceJavadocAttacherImplementation.Definer2)d;
+                if (d2.accepts(root)) {
+                    filtered.add(d);
+                }
+            } else {
+                filtered.add(d);
+            }
+        }
+        return filtered;
+    }
+    
+    private static final RequestProcessor RP = new RequestProcessor(SelectRootsPanel.class);
 
+    /**
+     * Downloads / obtains sources using Definer. Should run in a separate thread (use {@link #runAsync}).
+     */
+    static class Downloader extends AtomicBoolean implements Callable<Boolean>, Runnable, Cancellable {
+        private final Collection<? extends SourceJavadocAttacherImplementation.Definer> plugins;
+        private final URL root;
+        private final boolean source;
+        private volatile List<? extends URI> result = Collections.emptyList();
+        
+        public Downloader(Collection<? extends SourceJavadocAttacherImplementation.Definer> plugins, URL root, boolean source) {
+            this.plugins = plugins;
+            this.root = root;
+            this.source = source;
+        }
+        
+        @Override
+        public Boolean call() {
+            return get();
+        }
+
+        @Override
+        public boolean cancel() {
+            return compareAndSet(false, true);
+        }
+        
+        String getTitle() {
+            return source ? Bundle.TITLE_ObtainingSource() : Bundle.TITLE_ObtainingJavadoc();
+        }
+
+        public List<? extends URI> getResult() {
+            return result;
+        }
+        
+        public void runAsync(Consumer<List<? extends URI>> callback) {
+            Task t = RP.post(this);
+            t.addTaskListener((x) -> {
+                callback.accept(result);
+            });
+        }
+
+        @Override
+        public void run() {
+            for (SourceJavadocAttacherImplementation.Definer d : plugins) {
+                if (get()) {
+                    // cancelled.
+                    return;
+                }
+                List<? extends URL> s = source ? d.getSources(root, this) : d.getJavadoc(root, this);
+                if (s != null || s.isEmpty()) {
+                    List<URI> r = new ArrayList<>();
+                    for (URL u : s) {
+                        try {
+                            r.add(u.toURI());
+                        } catch (URISyntaxException ex) {
+                            // ignore
+                        }
+                    }
+                    if (!r.isEmpty()) {
+                        result = r;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+    
+    @NbBundle.Messages({
+        "TITLE_ObtainingSource=Obtaining source",
+        "TITLE_ObtainingJavadoc=Obtaining javadoc",
+    })
+    private static List<? extends URI> waitAttachUsingPlugins(
+            @NonNull final URL root,
+            final boolean source,
+            @NullAllowed final Collection<? extends SourceJavadocAttacherImplementation.Definer> plugins) {
+        if (plugins == null || plugins.isEmpty()) {
+            return null;
+        }
+        Downloader h = new Downloader(plugins, root, source);
+        
+        // waits for the Downloader to finish.
+        BaseProgressUtils.runOffEventDispatchThread(h, 
+                source ? Bundle.TITLE_ObtainingSource() : Bundle.TITLE_ObtainingJavadoc(), 
+                h, false);
+        return h.getResult();
+    }            
+    
     @CheckForNull
     @NbBundle.Messages({
         "TXT_SelectJavadoc=Select Javadoc",
@@ -74,25 +186,13 @@ public final class SourceJavadocAttacherUtil {
             @NonNull final List<? extends URI> attachedRoots,
             @NonNull final Callable<List<? extends String>> browseCall,
             @NonNull final Function<String,Collection<? extends URI>> convertor,
-            @NullAllowed final SourceJavadocAttacherImplementation.Definer plugin) {
+            @NullAllowed final Collection<? extends SourceJavadocAttacherImplementation.Definer> plugins) {
         assert root != null;
         assert browseCall != null;
         assert convertor != null;
         String action = NbBundle.getMessage(J2SEPlatformCreator.class, "API_Ask_attachJavadocQuestion");
         if ("yes".equalsIgnoreCase(action)) { // NOI18N
-            if (plugin == null) {
-                return null;
-            }
-            List<? extends URI> sources = plugin.getSources(root, () -> false).stream().map(url -> {
-                try {
-                    return url.toURI();
-                } catch (URISyntaxException ex) {
-                }
-                return null;
-            }).filter(uri -> uri != null).collect(Collectors.toList());
-            if (!sources.isEmpty()) {
-                return sources;
-            }
+            return waitAttachUsingPlugins(root, false, filterPlugins(root, plugins));
         } else if ("ask".equalsIgnoreCase(action)) { // NOI18N
             final SelectRootsPanel selectJavadoc = new SelectRootsPanel(
                     SelectRootsPanel.JAVADOC,
@@ -100,7 +200,7 @@ public final class SourceJavadocAttacherUtil {
                     attachedRoots,
                     browseCall,
                     convertor,
-                    plugin);
+                    filterPlugins(root, plugins));
             final DialogDescriptor dd = new DialogDescriptor(selectJavadoc, Bundle.TXT_SelectJavadoc());
             dd.setButtonListener(selectJavadoc);
             if (DialogDisplayer.getDefault().notify(dd) == DialogDescriptor.OK_OPTION) {
@@ -127,25 +227,13 @@ public final class SourceJavadocAttacherUtil {
             @NonNull final List<? extends URI> attachedRoots,
             @NonNull final Callable<List<? extends String>> browseCall,
             @NonNull final Function<String,Collection<? extends URI>> convertor,
-            @NullAllowed final SourceJavadocAttacherImplementation.Definer plugin) {
+            Collection<? extends SourceJavadocAttacherImplementation.Definer> plugins) {
         assert root != null;
         assert browseCall != null;
         assert convertor != null;
         String action = NbBundle.getMessage(J2SEPlatformCreator.class, "API_Ask_attachSourcesQuestion");
         if ("yes".equalsIgnoreCase(action)) { // NOI18N
-            if (plugin == null) {
-                return null;
-            }
-            List<? extends URI> sources = plugin.getSources(root, () -> false).stream().map(url -> {
-                try {
-                    return url.toURI();
-                } catch (URISyntaxException ex) {
-                }
-                return null;
-            }).filter(uri -> uri != null).collect(Collectors.toList());
-            if (!sources.isEmpty()) {
-                return sources;
-            }
+            return waitAttachUsingPlugins(root, true, filterPlugins(root, plugins));
         } else if ("ask".equalsIgnoreCase(action)) { // NOI18N
             final SelectRootsPanel selectSources = new SelectRootsPanel(
                     SelectRootsPanel.SOURCES,
@@ -153,7 +241,7 @@ public final class SourceJavadocAttacherUtil {
                     attachedRoots,
                     browseCall,
                     convertor,
-                    plugin);
+                    filterPlugins(root, plugins));
             final DialogDescriptor dd = new DialogDescriptor(selectSources, Bundle.TXT_SelectSources());
             dd.setButtonListener(selectSources);
             if (DialogDisplayer.getDefault().notify(dd) == DialogDescriptor.OK_OPTION) {

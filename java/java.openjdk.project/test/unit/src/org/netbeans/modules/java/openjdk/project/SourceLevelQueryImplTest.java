@@ -124,6 +124,21 @@ public class SourceLevelQueryImplTest extends NbTestCase {
         assertEquals("11", SourceLevelQuery.getSourceLevel(jlObject));
     }
 
+    public void testModuleInfoNewLayoutWithOpen() throws IOException {
+        FileObject javaBase = FileUtil.createFolder(root, "open/src/java.base");
+        FileObject jlObject = FileUtil.createData(javaBase, "share/classes/java/lang/Object.java");
+        copyString2File(jlObject, "");
+        copyString2File(FileUtil.createData(javaBase, "share/classes/module-info.java"), "module java.base {}");
+        copyString2File(FileUtil.createData(root, "open/src/java.compiler/share/classes/module-info.java"), "module java.compiler {}");
+        copyString2File(FileUtil.createData(root, "open/src/java.compiler/share/classes/javax/lang/model/SourceVersion.java"), "RELEASE_3 RELEASE_12");
+
+        Project javaBaseProject = FileOwnerQuery.getOwner(javaBase);
+
+        assertNotNull(javaBaseProject);
+
+        assertEquals("12", SourceLevelQuery.getSourceLevel(jlObject));
+    }
+
     private void copyString2File(FileObject file, String content) throws IOException {
         try (OutputStream out = file.getOutputStream()) {
             out.write(content.getBytes("UTF-8"));
